@@ -1840,12 +1840,9 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal.confirm .modal-content,
-.arbitration-modal.prerequisite .modal-content {
-  width: 450px;
-}
-
+.arbitration-modal.prerequisite .modal-content,
 .arbitration-modal.complete-purchase .modal-content {
-  width: 475px;
+  width: 450px;
 }
 
 .arbitration-modal.issue textarea {
@@ -1895,7 +1892,8 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal.confirm .heading,
-.arbitration-modal.prerequisite .heading {
+.arbitration-modal.prerequisite .heading,
+.arbitration-modal.complete-purchase .heading {
   margin-top: auto;
 }
 
@@ -1905,7 +1903,8 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal.confirm .text,
-.arbitration-modal.prerequisite .text {
+.arbitration-modal.prerequisite .text,
+.arbitration-modal.complete-purchase .text {
   margin: 0px;
 }
 
@@ -1915,7 +1914,8 @@ textarea:-moz-ui-invalid {
 
 .arbitration-modal.confirm .button-container,
 .arbitration-modal.issue .button-container,
-.arbitration-modal.prerequisite .button-container {
+.arbitration-modal.prerequisite .button-container,
+.arbitration-modal.complete-purchase .button-container {
   display: inline-flex;
 }
 

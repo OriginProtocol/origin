@@ -12,7 +12,7 @@ import {
 
 import {
   ConfirmationModal,
-  CompleteSaleModal,
+  CompletePurchaseModal,
   IssueModal,
   PrerequisiteModal
 } from 'components/modals/arbitration-modals'
@@ -378,7 +378,7 @@ class PurchaseDetail extends Component {
     }
 
     if (rating >= 3 && rating<=5) {
-      this.toggleModal('completeSale')
+      this.toggleModal('completePurchase')
     }
   }
 
@@ -1221,11 +1221,11 @@ class PurchaseDetail extends Component {
             }
           }}
         />
-        <CompleteSaleModal
-          isOpen={modalsOpen.completeSale}
-          onCancel={() => this.toggleModal('completeSale')}
+        <CompletePurchaseModal
+          isOpen={modalsOpen.completePurchase}
+          onCancel={() => this.toggleModal('completePurchase')}
           onSubmit={() => {
-            this.toggleModal('completeSale')
+            this.toggleModal('completePurchase')
             this.completePurchase()
           }}
         />
