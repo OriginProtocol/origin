@@ -21,9 +21,11 @@ class ListingsGrid extends Component {
   }
 
   handleOnChange(page) {
-    if (this.props.renderMode === 'home-page')
+    if (this.props.renderMode === 'home-page') {
       this.props.history.push(`/page/${page}`)
-    else this.props.handleChangePage(page)
+    } else {
+      this.props.handleChangePage(page)
+    }
   }
 
   render() {
@@ -42,14 +44,22 @@ class ListingsGrid extends Component {
 
       activePage = parseInt(this.props.match.params.activePage) || 1
 
-      // Calc listings to show for given page
-      showListingsIds = visibleListingsIds.slice(
-        LISTINGS_PER_PAGE * (activePage - 1),
-        LISTINGS_PER_PAGE * activePage
-      )
-
-      if (activePage === 1)
+      if (activePage === 1) {
         featuredListings = featured
+      }
+
+      /* Calc listings to show for given page. Example of start/end slice positions when there are
+       * 4 featured listings:
+       * Page number   sliceStart     sliceEnd
+       *     1             0              8
+       *     2             8              20
+       *     3             20             32
+       */
+      const startSlicePosition = Math.max(0, LISTINGS_PER_PAGE * (activePage - 1) - featured.length)
+      showListingsIds = visibleListingsIds.slice(
+        startSlicePosition,
+        Math.max(0, startSlicePosition + LISTINGS_PER_PAGE - featuredListings.length)
+      )
 
       allListingsLength = visibleListingsIds.length
     } else if (this.props.renderMode === 'search') {
