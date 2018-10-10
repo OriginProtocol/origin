@@ -40,12 +40,12 @@ class ListingsGrid extends Component {
       const visibleListingsIds = listingIds
         .filter(listingId => !hidden.includes(listingId))
         // remove featured listings so they are not shown twice
-        .filter(listingId => !featured.includes(listingId))
+        .filter(listingId => !featuredListings.includes(listingId))
 
       activePage = parseInt(this.props.match.params.activePage) || 1
 
       if (activePage === 1) {
-        featuredListings = featured
+        shownFeaturedListings = featuredListings
       }
 
       /* Calc listings to show for given page. Example of start/end slice positions when there are
@@ -55,7 +55,7 @@ class ListingsGrid extends Component {
        *     2             8              20
        *     3             20             32
        */
-      const startSlicePosition = Math.max(0, LISTINGS_PER_PAGE * (activePage - 1) - featured.length)
+      const startSlicePosition = Math.max(0, LISTINGS_PER_PAGE * (activePage - 1) - featuredListings.length)
       showListingsIds = visibleListingsIds.slice(
         startSlicePosition,
         Math.max(0, startSlicePosition + LISTINGS_PER_PAGE - featuredListings.length)
