@@ -108,35 +108,22 @@ const NotWeb3EnabledMobile = props => (
     </div>
     <div className="button-container">
       <a
+        href="https://wallet.coinbase.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-clear"
+      >
+        <FormattedMessage id={'web3-provider.coinbase'} defaultMessage={'Coinbase Wallet'} />
+      </a>
+    </div>
+    <div className="button-container">
+      <a
         href="https://trustwalletapp.com/"
         target="_blank"
         rel="noopener noreferrer"
         className="btn btn-clear"
       >
-        <FormattedMessage id={'web3-provider.trust'} defaultMessage={'Trust'} />
-      </a>
-    </div>
-    <div className="button-container">
-      <a
-        href="https://www.cipherbrowser.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn btn-clear"
-      >
-        <FormattedMessage
-          id={'web3-provider.cipher'}
-          defaultMessage={'Cipher'}
-        />
-      </a>
-    </div>
-    <div className="button-container">
-      <a
-        href="https://www.toshi.org/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn btn-clear"
-      >
-        <FormattedMessage id={'web3-provider.toshi'} defaultMessage={'Toshi'} />
+        <FormattedMessage id={'web3-provider.trust'} defaultMessage={'Trust Wallet'} />
       </a>
     </div>
   </Modal>
@@ -188,28 +175,66 @@ const UnconnectedNetwork = () => (
   </Modal>
 )
 
-const UnsupportedNetwork = props => (
-  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
-    <div className="image-container">
-      <img src="images/flat_cross_icon.svg" role="presentation" />
-    </div>
-    <p>
+const UnsupportedNetwork = props => {
+  const { currentProvider, networkId, currentNetworkName, supportedNetworkName } = props
+  const url = new URL(window.location)
+  const path = url.pathname + url.hash
+  const goToUrl = (url) => () => window.location.href = url + path
+  const getRedirectInfo = () => {
+    if (networkId === 1 && mainnetDappBaseUrl) {
+      return { url: mainnetDappBaseUrl, label: 'Mainnet Beta' }
+    } else if (networkId === 4 && rinkebyDappBaseUrl) {
+      return { url: rinkebyDappBaseUrl, label: 'Testnet Beta' }
+    }
+  }
+  const redirectInfo = getRedirectInfo()
+
+  return (
+    <Modal
+      backdrop="static"
+      className="unsupported-provider"
+      data-modal="web3-unavailable"
+      isOpen={true}>
+
+      <div className="image-container">
+        <img src="images/flat_cross_icon.svg" role="presentation" />
+      </div>
+      <p>
+        <FormattedMessage
+          id={'web3-provider.shouldBeOnRinkeby'}
+          defaultMessage={'{currentProvider} should be set to {supportedNetworkName}.'}
+          values={{ currentProvider, supportedNetworkName }}
+        />
+      </p>
       <FormattedMessage
-        id={'web3-provider.shouldBeOnRinkeby'}
-        defaultMessage={'{currentProvider} should be on {supportedNetworkName}'}
-        values={{
-          currentProvider: props.currentProvider,
-          supportedNetworkName: props.supportedNetworkName
-        }}
+        id={'web3-provider.currentlyOnNetwork'}
+        defaultMessage={'It is currently on {currentNetworkName}.'}
+        values={{ currentNetworkName }}
       />
-    </p>
-    <FormattedMessage
-      id={'web3-provider.currentlyOnNetwork'}
-      defaultMessage={'Currently on {currentNetworkName}.'}
-      values={{ currentNetworkName: props.currentNetworkName }}
-    />
-  </Modal>
-)
+      { redirectInfo && (
+        <Fragment>
+          <p className="redirect-message">
+            <FormattedMessage
+              id={'web3-provider.redirectMessage'}
+              defaultMessage={'If you are looking for {label}, visit {url}.'}
+              values={{ label: redirectInfo.label, url: redirectInfo.url }}
+            />
+          </p>
+          <button
+            className="btn btn-outline align-self-center redirect-btn"
+            onClick={goToUrl(redirectInfo.url)}>
+
+            <FormattedMessage
+              id={'web3-provider.redirectInfoButton'}
+              defaultMessage={'Go to {website}'}
+              values={{ website: redirectInfo.label }}
+            />
+          </button>
+        </Fragment>
+      )}
+    </Modal>
+  )
+}
 
 const Web3Unavailable = props => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
@@ -261,21 +286,11 @@ const Web3Unavailable = props => (
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://itunes.apple.com/us/app/toshi-ethereum/id1278383455"
+          href="https://itunes.apple.com/app/coinbase-wallet/id1278383455"
         >
           <FormattedMessage
-            id={'web3-provider.toshi'}
-            defaultMessage={'Toshi'}
-          />
-        </a>&nbsp;&nbsp;|&nbsp;
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970"
-        >
-          <FormattedMessage
-            id={'web3-provider.cipher'}
-            defaultMessage={'Cipher'}
+            id={'web3-provider.coinbase'}
+            defaultMessage={'Coinbase Wallet'}
           />
         </a>&nbsp;&nbsp;|&nbsp;
         <a
@@ -447,16 +462,6 @@ class Web3Provider extends Component {
     const networkNotSupported = supportedNetworkId !== networkId
     const supportedNetworkName = supportedNetwork && supportedNetwork.name
 
-    // Redirect if we know a DApp instalation that supports their network.
-    if (currentProvider && networkId && isProduction && networkNotSupported) {
-      const url = new URL(window.location)
-      if (networkId === 1 && mainnetDappBaseUrl) {
-        window.location.href = mainnetDappBaseUrl + url.pathname + url.hash
-      } else if (networkId === 4 && rinkebyDappBaseUrl) {
-        window.location.href = rinkebyDappBaseUrl + url.pathname + url.hash
-      }
-    }
-
     return (
       <Fragment>
         {/* currentProvider should always be present */
@@ -473,6 +478,7 @@ class Web3Provider extends Component {
             <UnsupportedNetwork
               currentNetworkName={currentNetworkName}
               currentProvider={currentProvider}
+              networkId={networkId}
               supportedNetworkName={supportedNetworkName}
             />
           )}
@@ -518,7 +524,7 @@ const mapStateToProps = state => {
   return {
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,
-    onMobile: state.app.onMobile
+    onMobile: true || state.app.onMobile
   }
 }
 
