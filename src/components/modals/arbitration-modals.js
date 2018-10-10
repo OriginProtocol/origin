@@ -204,13 +204,13 @@ export const CompletePurchaseModal = ({
       <button className="btn btn-clear" onClick={onCancel}>
         <FormattedMessage
           id={'arbitrationModals.completePurchaseCancel'}
-          defaultMessage={'Cancel'}
+          defaultMessage={'Oops, no wait...'}
         />
       </button>
       <button className="btn btn-clear" onClick={onSubmit}>
         <FormattedMessage
           id={'arbitrationModals.completePurchaseSubmit'}
-          defaultMessage={'Purchase'}
+          defaultMessage={'Yes, please'}
         />
       </button>
     </div>
