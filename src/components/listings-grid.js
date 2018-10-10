@@ -54,7 +54,7 @@ class ListingsGrid extends Component {
         (LISTINGS_PER_PAGE - featuredListings.length) * activePage
       )
 
-      allListingsLength = visibleListingsIds.length + featured.length
+      allListingsLength = visibleListingsIds.length
     } else if (this.props.renderMode === 'search') {
       activePage = this.props.searchPage
       allListingsLength = search.listingsLength
