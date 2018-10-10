@@ -378,8 +378,10 @@ class PurchaseDetail extends Component {
     }
 
     if (rating >= 3 && rating <= 5) {
-      this.toggleModal('completePurchase')
+      return this.toggleModal('completePurchase')
     }
+
+    this.completePurchase()
   }
 
   async completePurchase() {
