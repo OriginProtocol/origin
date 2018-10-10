@@ -41,13 +41,13 @@ class PriceFilter extends Component {
     return [
       {
         name: this.props.filter.searchParameterName,
-        value: getCryptoPrice(this.state.value[0], 'USD', 'ETH'),
+        value: await getCryptoPrice(this.state.value[0], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_GREATER_OR_EQUAL
       },
       {
         name: this.props.filter.searchParameterName,
-        value: getCryptoPrice(this.state.value[1], 'USD', 'ETH'),
+        value: await getCryptoPrice(this.state.value[1], 'USD', 'ETH'),
         valueType: VALUE_TYPE_FLOAT,
         operator: FILTER_OPERATOR_LESSER_OR_EQUAL
       }
