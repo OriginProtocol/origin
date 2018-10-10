@@ -136,10 +136,6 @@
     "defaultMessage": "Listing Details"
   },
   {
-    "id": "purchase-detail.viewOnIPFS",
-    "defaultMessage": "View on IPFS"
-  },
-  {
     "id": "purchase-detail.summaryPending",
     "defaultMessage": "Pending"
   },
