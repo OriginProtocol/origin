@@ -2073,6 +2073,10 @@ textarea:-moz-ui-invalid {
   width: 100%;
 }
 
+.listing-card .photo {
+  border: 1px solid #ced4da;
+}
+
 .listing-card .image-container {
   background-color: var(--light);
   height: 240px;
@@ -2341,13 +2345,6 @@ textarea:-moz-ui-invalid {
   margin-right: 4px;
 }
 
-.listing-container .debug {
-  display: none;
-  unicode-bidi: embed;
-  font-family: monospace;
-  white-space: pre;
-}
-
 .info-box .link-container a {
   font-weight: bold;
 }
@@ -2464,7 +2461,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .schema-details .pictures .image-container {
-  border: 1px solid var(--light);
+  border: 1px solid #ced4da;
   border-radius: 0.25rem;
   position: relative;
   padding: 0;
@@ -3458,11 +3455,6 @@ select.form-control:not([size]):not([multiple]) {
 
 .purchase-detail .carousel {
   margin-bottom: 1rem;
-}
-
-.purchase-detail .ipfs-link {
-  font-weight: normal;
-  margin-top: 20px;
 }
 
 .purchase-detail .prompt + form {
