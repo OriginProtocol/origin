@@ -29,23 +29,23 @@ class ListingsGrid extends Component {
   }
 
   render() {
-    const { contractFound, listingIds, search, featured, hidden } = this.props
+    const { contractFound, listingIds, search, featuredListings, hidden } = this.props
 
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
 
     let allListingsLength, activePage, showListingsIds
-    let featuredListings = []
+    let shownFeaturedListings = []
     if (this.props.renderMode === 'home-page') {
       const visibleListingsIds = listingIds
         .filter(listingId => !hidden.includes(listingId))
         // remove featured listings so they are not shown twice
-        .filter(listingId => !featured.includes(listingId))
+        .filter(listingId => !featuredListings.includes(listingId))
 
       activePage = parseInt(this.props.match.params.activePage) || 1
 
       if (activePage === 1) {
-        featuredListings = featured
+        shownFeaturedListings = featuredListings
       }
 
       /* Calc listings to show for given page. Example of start/end slice positions when there are
@@ -55,12 +55,11 @@ class ListingsGrid extends Component {
        *     2             8              20
        *     3             20             32
        */
-      const startSlicePosition = Math.max(0, LISTINGS_PER_PAGE * (activePage - 1) - featured.length)
+      const startSlicePosition = Math.max(0, LISTINGS_PER_PAGE * (activePage - 1) - featuredListings.length)
       showListingsIds = visibleListingsIds.slice(
         startSlicePosition,
         Math.max(0, startSlicePosition + LISTINGS_PER_PAGE - featuredListings.length)
       )
-
       allListingsLength = visibleListingsIds.length
     } else if (this.props.renderMode === 'search') {
       activePage = this.props.searchPage
@@ -105,7 +104,7 @@ class ListingsGrid extends Component {
               </h1>
             )}
             <div className="row">
-              {featuredListings.concat(showListingsIds).map(listingId => (
+              {shownFeaturedListings.concat(showListingsIds).map(listingId => (
                 <ListingCard
                   listingId={listingId}
                   key={listingId}
@@ -134,7 +133,7 @@ const mapStateToProps = state => ({
   listingIds: state.marketplace.ids,
   contractFound: state.listings.contractFound,
   hidden: state.listings.hidden,
-  featured: state.listings.featured
+  featuredListings: state.listings.featured
 })
 
 const mapDispatchToProps = dispatch => ({
