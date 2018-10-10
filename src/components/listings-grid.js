@@ -48,10 +48,17 @@ class ListingsGrid extends Component {
         featuredListings = featured
       }
 
-      // Calc listings to show for given page
+      /* Calc listings to show for given page. Example of start/end slice positions when there are
+       * 4 featured listings:
+       * Page number   sliceStart     sliceEnd
+       *     1             0              8
+       *     2             8              20
+       *     3             20             32
+       */
+      const startSlicePosition = Math.max(0, LISTINGS_PER_PAGE * (activePage - 1) - featured.length)
       showListingsIds = visibleListingsIds.slice(
-        LISTINGS_PER_PAGE * (activePage - 1),
-        (LISTINGS_PER_PAGE - featuredListings.length) * activePage
+        startSlicePosition,
+        Math.max(0, startSlicePosition + LISTINGS_PER_PAGE - featuredListings.length)
       )
 
       allListingsLength = visibleListingsIds.length
