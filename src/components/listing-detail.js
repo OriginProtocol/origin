@@ -254,10 +254,11 @@ class ListingsDetail extends Component {
     const isPending = currentOfferAvailability === 'pending'
     const isSold = currentOfferAvailability === 'sold'
     const isAvailable = !isPending && !isSold && !isWithdrawn
+    const showPendingBadge = isPending && !isWithdrawn
+    const showSoldBadge = isSold || isWithdrawn
+    const showFeaturedBadge = featured && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
-    const showFeaturedBadge =
-      isAvailable && featured.includes(this.props.listingId)
 
     return (
       <div className="listing-detail">
@@ -436,8 +437,8 @@ class ListingsDetail extends Component {
                 <div>{category}</div>
                 {!loading && (
                   <div className="badges">
-                    {isPending && <PendingBadge />}
-                    {isSold && <SoldBadge />}
+                    {showPendingBadge && <PendingBadge />}
+                    {showSoldBadge && <SoldBadge />}
                     {showFeaturedBadge && <FeaturedBadge />}
                     {/*boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
@@ -757,6 +758,7 @@ class ListingsDetail extends Component {
                   )}
                   {!loading &&
                     userIsSeller &&
+                    !currentOffer &&
                     isWithdrawn && (
                     <Link
                       to={`/listings/create`}
