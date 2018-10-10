@@ -89,7 +89,9 @@ class ListingCard extends Component {
       o => offerStatusToListingAvailability(o.status) === 'sold'
     )
     const isWithdrawn = status === 'inactive'
-    const showFeaturedBadge = this.props.featured && !isSold && !isPending
+    const showPendingBadge = isPending && !isWithdrawn
+    const showSoldBadge = isSold || isWithdrawn
+    const showFeaturedBadge = this.props.featured && !showSoldBadge && !showPendingBadge
 
     return (
       <div
@@ -115,8 +117,8 @@ class ListingCard extends Component {
           )}
           <div className="category placehold d-flex justify-content-between">
             <div>{category}</div>
-            {!loading && isPending && !isWithdrawn && <PendingBadge />}
-            {!loading && (isSold || isWithdrawn) && <SoldBadge />}
+            {!loading && showPendingBadge && <PendingBadge />}
+            {!loading && showSoldBadge && <SoldBadge />}
             {!loading && showFeaturedBadge && <FeaturedBadge />}
             {/*!loading &&
               boostLevelIsPastSomeThreshold && (

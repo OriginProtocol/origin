@@ -163,3 +163,56 @@ export const PrerequisiteModal = ({
     </div>
   </Modal>
 )
+
+export const CompletePurchaseModal = ({
+  isOpen = false,
+  onCancel,
+  onSubmit
+}) => (
+  <Modal
+    className="arbitration-modal complete-purchase"
+    isOpen={isOpen}
+    handleToggle={onCancel}
+  >
+    <p className="heading">
+      <FormattedMessage
+        id={'arbitrationModals.completePurchaseHeading'}
+        defaultMessage={'Ready to release the funds?'}
+      />
+    </p>
+    <div className="text">
+      <p>
+        <FormattedMessage
+          id={'arbitrationModals.completePurchaseText1'}
+          defaultMessage={
+            `By completing your purchase and leaving a review, you will be
+            releasing your escrowed funds to the seller.`
+          }
+        />
+      </p>
+      <p>
+        <FormattedMessage
+          id={'arbitrationModals.completePurchaseText2'}
+          defaultMessage={
+            `If you don't want to do this, cancel and either
+            report a problem or contact the seller with your concerns.`
+          }
+        />
+      </p>
+    </div>
+    <div className="button-container">
+      <button className="btn btn-clear" onClick={onCancel}>
+        <FormattedMessage
+          id={'arbitrationModals.completePurchaseCancel'}
+          defaultMessage={'Oops, no wait...'}
+        />
+      </button>
+      <button className="btn btn-clear" onClick={onSubmit}>
+        <FormattedMessage
+          id={'arbitrationModals.completePurchaseSubmit'}
+          defaultMessage={'Yes, please'}
+        />
+      </button>
+    </div>
+  </Modal>
+)

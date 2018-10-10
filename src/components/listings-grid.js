@@ -21,34 +21,45 @@ class ListingsGrid extends Component {
   }
 
   handleOnChange(page) {
-    if (this.props.renderMode === 'home-page')
+    if (this.props.renderMode === 'home-page') {
       this.props.history.push(`/page/${page}`)
-    else this.props.handleChangePage(page)
+    } else {
+      this.props.handleChangePage(page)
+    }
   }
 
   render() {
-    const { contractFound, listingIds, search, featured, hidden } = this.props
+    const { contractFound, listingIds, search, featuredListings, hidden } = this.props
 
     // const pinnedListingIds = [0, 1, 2, 3, 4]
     // const arrangedListingIds = [...pinnedListingIds, ...listingIds.filter(id => !pinnedListingIds.includes(id))]
 
     let allListingsLength, activePage, showListingsIds
-    let featuredListings = []
+    let shownFeaturedListings = []
     if (this.props.renderMode === 'home-page') {
-      const visibleListingsIds = listingIds.filter(listingId => !hidden.includes(listingId))
+      const visibleListingsIds = listingIds
+        .filter(listingId => !hidden.includes(listingId))
+        // remove featured listings so they are not shown twice
+        .filter(listingId => !featuredListings.includes(listingId))
+
       activePage = parseInt(this.props.match.params.activePage) || 1
 
-      // Calc listings to show for given page
+      if (activePage === 1) {
+        shownFeaturedListings = featuredListings
+      }
+
+      /* Calc listings to show for given page. Example of start/end slice positions when there are
+       * 4 featured listings:
+       * Page number   sliceStart     sliceEnd
+       *     1             0              8
+       *     2             8              20
+       *     3             20             32
+       */
+      const startSlicePosition = Math.max(0, LISTINGS_PER_PAGE * (activePage - 1) - featuredListings.length)
       showListingsIds = visibleListingsIds.slice(
-        LISTINGS_PER_PAGE * (activePage - 1),
-        LISTINGS_PER_PAGE * activePage
+        startSlicePosition,
+        Math.max(0, startSlicePosition + LISTINGS_PER_PAGE - featuredListings.length)
       )
-
-      if (activePage === 1)
-        featuredListings = featured
-
-      // remove featured listings so they are not shown twice
-      showListingsIds = showListingsIds.filter(listingId => !featured.includes(listingId))
       allListingsLength = visibleListingsIds.length
     } else if (this.props.renderMode === 'search') {
       activePage = this.props.searchPage
@@ -93,7 +104,7 @@ class ListingsGrid extends Component {
               </h1>
             )}
             <div className="row">
-              {featuredListings.concat(showListingsIds).map(listingId => (
+              {shownFeaturedListings.concat(showListingsIds).map(listingId => (
                 <ListingCard
                   listingId={listingId}
                   key={listingId}
@@ -122,7 +133,7 @@ const mapStateToProps = state => ({
   listingIds: state.marketplace.ids,
   contractFound: state.listings.contractFound,
   hidden: state.listings.hidden,
-  featured: state.listings.featured
+  featuredListings: state.listings.featured
 })
 
 const mapDispatchToProps = dispatch => ({
