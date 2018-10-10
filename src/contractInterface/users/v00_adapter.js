@@ -120,11 +120,12 @@ class V00_UsersAdapter {
 
       if (identityAddress) {
         // batch add claims to existing identity
+        const gas = 170000 + attestations.length * 230000
         return await this.contractService.call(
           'ClaimHolderRegistered',
           'addClaims',
           [topics, issuers, sigs, data, dataOffsets],
-          { ...options, from: account, gas: 400000, contractAddress: identityAddress }
+          { ...options, from: account, gas, contractAddress: identityAddress }
         )
       } else {
         // create identity with presigned claims
