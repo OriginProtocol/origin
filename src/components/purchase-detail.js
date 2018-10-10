@@ -12,6 +12,7 @@ import {
 
 import {
   ConfirmationModal,
+  CompletePurchaseModal,
   IssueModal,
   PrerequisiteModal
 } from 'components/modals/arbitration-modals'
@@ -69,6 +70,7 @@ class PurchaseDetail extends Component {
     super(props)
 
     this.acceptOffer = this.acceptOffer.bind(this)
+    this.validateReview = this.validateReview.bind(this)
     this.completePurchase = this.completePurchase.bind(this)
     this.handleProblem = this.handleProblem.bind(this)
     this.handleRating = this.handleRating.bind(this)
@@ -225,7 +227,7 @@ class PurchaseDetail extends Component {
           ),
           buttons: [
             {
-              functionName: 'completePurchase',
+              functionName: 'validateReview',
               text: this.props.intl.formatMessage(
                 this.intlMessages.confirmAndReview
               ),
@@ -366,17 +368,27 @@ class PurchaseDetail extends Component {
     }
   }
 
-  async completePurchase() {
-    const { offerId } = this.props
-    const { rating, reviewText } = this.state.form
-    const { purchase, listing } = this.state
-    const offer = purchase
+  validateReview() {
+    const { rating } = this.state.form
 
     if (rating < 1) {
       return this.setState(prevState => {
         return { form: { ...prevState.form, invalid: true } }
       })
     }
+
+    if (rating >= 3 && rating <= 5) {
+      return this.toggleModal('completePurchase')
+    }
+
+    this.completePurchase()
+  }
+
+  async completePurchase() {
+    const { offerId } = this.props
+    const { rating, reviewText } = this.state.form
+    const { purchase, listing } = this.state
+    const offer = purchase
 
     try {
       this.setState({ processing: true })
@@ -1209,6 +1221,14 @@ class PurchaseDetail extends Component {
             } else {
               this.toggleModal('prerequisite')
             }
+          }}
+        />
+        <CompletePurchaseModal
+          isOpen={modalsOpen.completePurchase}
+          onCancel={() => this.toggleModal('completePurchase')}
+          onSubmit={() => {
+            this.toggleModal('completePurchase')
+            this.completePurchase()
           }}
         />
         <IssueModal

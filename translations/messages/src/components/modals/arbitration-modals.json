@@ -54,5 +54,25 @@
   {
     "id": "arbitrationModals.enableMessaging",
     "defaultMessage": "Enable Messaging"
+  },
+  {
+    "id": "arbitrationModals.completePurchaseHeading",
+    "defaultMessage": "Ready to release the funds?"
+  },
+  {
+    "id": "arbitrationModals.completePurchaseText1",
+    "defaultMessage": "By completing your purchase and leaving a review, you will be\n            releasing your escrowed funds to the seller."
+  },
+  {
+    "id": "arbitrationModals.completePurchaseText2",
+    "defaultMessage": "If you don't want to do this, cancel and either\n            report a problem or contact the seller with your concerns."
+  },
+  {
+    "id": "arbitrationModals.completePurchaseCancel",
+    "defaultMessage": "Oops, no wait..."
+  },
+  {
+    "id": "arbitrationModals.completePurchaseSubmit",
+    "defaultMessage": "Yes, please"
   }
 ]
