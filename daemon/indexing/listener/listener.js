@@ -243,8 +243,8 @@ async function withRetrys(fn) {
     }
     if (tryCount >= MAX_RETRYS) {
       console.log('Exiting. Maximum number of retrys reached.')
-      // Now it's up to our enviroment to restart us.
-      // Hopefuly with a clean start, things will work better
+      // Now it's up to our environment to restart us.
+      // Hopefully with a clean start, things will work better
       process.exit(1)
     }
   }
@@ -252,12 +252,6 @@ async function withRetrys(fn) {
 
 // handleLog - annotates, runs rule, and ouputs a particular log
 async function handleLog(log, rule, contractVersion, context) {
-  console.log(
-    `Processing log blockNumber=${log.blockNumber} transactionIndex=${
-      log.transactionIndex
-    }`
-  )
-
   log.decoded = web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
     log.data,
@@ -268,18 +262,23 @@ async function handleLog(log, rule, contractVersion, context) {
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
 
+  console.log(
+    `Processing log \
+    blockNumber=${log.blockNumber} \
+    transactionIndex=${log.transactionIndex} \
+    eventName=${log.eventName} \
+    contractName=${log.contractName}`
+  )
+
+  // Note: we run the rule with a retry since we've seen in production cases where we fail loading
+  // from smart contracts the data pointed to by the event. This may occur due to load balancing
+  // across ethereum nodes and if some nodes are lagging. For example the ethereum node we
+  // end up connecting to for reading the data may lag compared to the node received the event from.
   let ruleResults = undefined
-  // If for any reason, origin-js can't read the listings, then we don't index that listing
-  try {
+  await withRetrys(async () => {
     ruleResults = await rule.ruleFn(log)
-  } catch (e) {
-    console.log(
-      'Error: could not get information for',
-      `${log.contractName} ${log.eventName}`
-    )
-    console.log(e)
-    return
-  }
+  })
+
   const output = {
     log: log,
     related: ruleResults
