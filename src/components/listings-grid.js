@@ -35,11 +35,11 @@ class ListingsGrid extends Component {
     let allListingsLength, activePage, showListingsIds
     let shownFeaturedListings = []
     if (this.props.renderMode === 'home-page') {
-      allListingsLength = listingIds.length
+      const visibleListingsIds = listingIds.filter(listingId => !hidden.includes(listingId))
       activePage = parseInt(this.props.match.params.activePage) || 1
 
       // Calc listings to show for given page
-      showListingsIds = listingIds.slice(
+      showListingsIds = visibleListingsIds.slice(
         LISTINGS_PER_PAGE * (activePage - 1),
         LISTINGS_PER_PAGE * activePage
       )
@@ -49,14 +49,12 @@ class ListingsGrid extends Component {
 
       // remove featured listings so they are not shown twice
       showListingsIds = showListingsIds.filter(listingId => !featuredListings.includes(listingId))
-
+      allListingsLength = visibleListingsIds.length
     } else if (this.props.renderMode === 'search') {
       activePage = this.props.searchPage
       allListingsLength = search.listingsLength
-      showListingsIds = search.listingIds
+      showListingsIds = search.listingIds.filter(listingId => !hidden.includes(listingId))
     }
-    // remove hidden listings
-    showListingsIds = showListingsIds.filter(listingId => !hidden.includes(listingId))
 
     return (
       <div className="listings-wrapper">

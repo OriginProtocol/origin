@@ -232,7 +232,6 @@ class ListingsDetail extends Component {
       // boostValue,
       category,
       description,
-      ipfsHash,
       loading,
       name,
       offers,
@@ -463,50 +462,6 @@ class ListingsDetail extends Component {
                   />
                 </div>
               */}
-              {ipfsHash && (
-                <div className="ipfs link-container">
-                  <a
-                    href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    ga-category="listing"
-                    ga-label="view_on_ipfs"
-                  >
-                    <FormattedMessage
-                      id={'listing-detail.viewOnIpfs'}
-                      defaultMessage={'View on IPFS'}
-                    />
-                    <img
-                      src="images/carat-blue.svg"
-                      className="carat"
-                      alt="right carat"
-                    />
-                  </a>
-                </div>
-              )}
-              <div className="debug">
-                <li>
-                  <FormattedMessage
-                    id={'listing-detail.IPFS'}
-                    defaultMessage={'IPFS: {ipfsHash}'}
-                    values={{ ipfsHash }}
-                  />
-                </li>
-                <li>
-                  <FormattedMessage
-                    id={'listing-detail.seller'}
-                    defaultMessage={'Seller: {sellerAddress}'}
-                    values={{ sellerAddress: seller }}
-                  />
-                </li>
-                <li>
-                  <FormattedMessage
-                    id={'listing-detail.IPFS'}
-                    defaultMessage={'IPFS: {ipfsHash}'}
-                    values={{ ipfsHash }}
-                  />
-                </li>
-              </div>
             </div>
             <div className="col-12 col-md-4">
               {isAvailable &&
