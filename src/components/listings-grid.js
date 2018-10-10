@@ -44,15 +44,15 @@ class ListingsGrid extends Component {
 
       activePage = parseInt(this.props.match.params.activePage) || 1
 
-      // Calc listings to show for given page
-      showListingsIds = visibleListingsIds.slice(
-        LISTINGS_PER_PAGE * (activePage - 1),
-        LISTINGS_PER_PAGE * activePage
-      )
-
       if (activePage === 1) {
         featuredListings = featured
       }
+
+      // Calc listings to show for given page
+      showListingsIds = visibleListingsIds.slice(
+        LISTINGS_PER_PAGE * (activePage - 1),
+        (LISTINGS_PER_PAGE - featuredListings.length) * activePage
+      )
 
       allListingsLength = visibleListingsIds.length + featured.length
     } else if (this.props.renderMode === 'search') {
