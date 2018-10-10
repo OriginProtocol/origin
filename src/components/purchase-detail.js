@@ -1155,27 +1155,6 @@ class PurchaseDetail extends Component {
                     {/*!!listing.unitsRemaining && listing.unitsRemaining < 5 &&
                       <div className="units-remaining text-danger">Just {listing.unitsRemaining.toLocaleString()} left!</div>
                     */}
-                    {listing.ipfsHash && (
-                      <div className="link-container">
-                        <a
-                          href={origin.ipfsService.gatewayUrlForHash(
-                            listing.ipfsHash
-                          )}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FormattedMessage
-                            id={'purchase-detail.viewOnIPFS'}
-                            defaultMessage={'View on IPFS'}
-                          />
-                          <img
-                            src="images/carat-blue.svg"
-                            className="carat"
-                            alt="right carat"
-                          />
-                        </a>
-                      </div>
-                    )}
                   </div>
                   <hr />
                   <Reviews userAddress={listing.seller} />

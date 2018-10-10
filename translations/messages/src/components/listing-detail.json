@@ -56,18 +56,6 @@
     "defaultMessage": "OK"
   },
   {
-    "id": "listing-detail.viewOnIpfs",
-    "defaultMessage": "View on IPFS"
-  },
-  {
-    "id": "listing-detail.IPFS",
-    "defaultMessage": "IPFS: {ipfsHash}"
-  },
-  {
-    "id": "listing-detail.seller",
-    "defaultMessage": "Seller: {sellerAddress}"
-  },
-  {
     "id": "listing-detail.ethereumCurrencyAbbrev",
     "defaultMessage": "ETH"
   },
