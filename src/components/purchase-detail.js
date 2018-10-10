@@ -377,7 +377,7 @@ class PurchaseDetail extends Component {
       })
     }
 
-    if (rating >= 3 && rating<=5) {
+    if (rating >= 3 && rating <= 5) {
       this.toggleModal('completePurchase')
     }
   }
