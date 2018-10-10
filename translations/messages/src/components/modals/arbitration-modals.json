@@ -69,10 +69,10 @@
   },
   {
     "id": "arbitrationModals.completePurchaseCancel",
-    "defaultMessage": "Cancel"
+    "defaultMessage": "Oops, no wait..."
   },
   {
     "id": "arbitrationModals.completePurchaseSubmit",
-    "defaultMessage": "Purchase"
+    "defaultMessage": "Yes, please"
   }
 ]
