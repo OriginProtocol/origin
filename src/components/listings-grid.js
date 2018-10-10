@@ -21,9 +21,11 @@ class ListingsGrid extends Component {
   }
 
   handleOnChange(page) {
-    if (this.props.renderMode === 'home-page')
+    if (this.props.renderMode === 'home-page') {
       this.props.history.push(`/page/${page}`)
-    else this.props.handleChangePage(page)
+    } else {
+      this.props.handleChangePage(page)
+    }
   }
 
   render() {
@@ -48,10 +50,11 @@ class ListingsGrid extends Component {
         LISTINGS_PER_PAGE * activePage
       )
 
-      if (activePage === 1)
+      if (activePage === 1) {
         featuredListings = featured
+      }
 
-      allListingsLength = visibleListingsIds.length
+      allListingsLength = visibleListingsIds.length + featured.length
     } else if (this.props.renderMode === 'search') {
       activePage = this.props.searchPage
       allListingsLength = search.listingsLength
