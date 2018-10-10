@@ -35,7 +35,11 @@ class ListingsGrid extends Component {
     let allListingsLength, activePage, showListingsIds
     let featuredListings = []
     if (this.props.renderMode === 'home-page') {
-      const visibleListingsIds = listingIds.filter(listingId => !hidden.includes(listingId))
+      const visibleListingsIds = listingIds
+        .filter(listingId => !hidden.includes(listingId))
+        // remove featured listings so they are not shown twice
+        .filter(listingId => !featured.includes(listingId))
+
       activePage = parseInt(this.props.match.params.activePage) || 1
 
       // Calc listings to show for given page
@@ -47,8 +51,6 @@ class ListingsGrid extends Component {
       if (activePage === 1)
         featuredListings = featured
 
-      // remove featured listings so they are not shown twice
-      showListingsIds = showListingsIds.filter(listingId => !featured.includes(listingId))
       allListingsLength = visibleListingsIds.length
     } else if (this.props.renderMode === 'search') {
       activePage = this.props.searchPage
