@@ -54,5 +54,25 @@
   {
     "id": "arbitrationModals.enableMessaging",
     "defaultMessage": "Enable Messaging"
+  },
+  {
+    "id": "arbitrationModals.completeSaleHeading",
+    "defaultMessage": "Complete your sale?"
+  },
+  {
+    "id": "arbitrationModals.completeSaleText1",
+    "defaultMessage": "Are you sure you want to complete your purchase?"
+  },
+  {
+    "id": "arbitrationModals.completeSaleText2",
+    "defaultMessage": "In the next step, the funds will be released to the seller."
+  },
+  {
+    "id": "arbitrationModals.completeSaleCancel",
+    "defaultMessage": "Oops, no wait..."
+  },
+  {
+    "id": "arbitrationModals.completeSaleSubmit",
+    "defaultMessage": "Yes, please"
   }
 ]

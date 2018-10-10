@@ -1844,6 +1844,10 @@ textarea:-moz-ui-invalid {
   width: 450px;
 }
 
+.arbitration-modal.complete-purchase .modal-content {
+  width: 475px;
+}
+
 .arbitration-modal.issue textarea {
   background-color: var(--dark);
   border-radius: 5px;
