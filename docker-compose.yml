@@ -65,7 +65,7 @@ services:
       context: .
       dockerfile: development/dockerfiles/origin-discovery
     volumes:
-      - ./origin-js/daemon/indexing:/app
+      - ./origin-discovery:/app
       # Mount compiled origin-js inside node modules, this is not actually a
       # dependency of the graphql server, but it is required here because the
       # event-listener and origin-discovery share the same package.json
@@ -99,7 +99,7 @@ services:
       context: .
       dockerfile: development/dockerfiles/event-listener
     volumes:
-      - ./origin-js/daemon/indexing:/app
+      - ./origin-discovery:/app
       # Mount compiled origin-js inside node modules
       - ./origin-js:/usr/local/lib/node_modules/origin
       - origin_js_node_modules:/usr/local/lib/node_modules/origin/node_modules

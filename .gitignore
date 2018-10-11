@@ -1,8 +1,4 @@
-/origin-js/
-/origin-bridge/
-/origin-dapp/
-/origin-docs/
-/origin-website/
+*/node_modules/
 /development/.ipfs
 /deployment/kubernetes/values/secrets-dev.yaml
 /deployment/kubernetes/values/secrets-staging.yaml
