@@ -60,7 +60,7 @@ class ListingsGrid extends Component {
         startSlicePosition,
         Math.max(0, startSlicePosition + LISTINGS_PER_PAGE - featuredListings.length)
       )
-      allListingsLength = visibleListingsIds.length
+      allListingsLength = visibleListingsIds.length + featuredListings.length
     } else if (this.props.renderMode === 'search') {
       activePage = this.props.searchPage
       allListingsLength = search.listingsLength
