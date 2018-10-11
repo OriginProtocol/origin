@@ -524,7 +524,7 @@ const mapStateToProps = state => {
   return {
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,
-    onMobile: true || state.app.onMobile
+    onMobile: state.app.onMobile
   }
 }
 
