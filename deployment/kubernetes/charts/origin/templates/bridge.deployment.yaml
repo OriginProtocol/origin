@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "bridge.fullname" . }}
+  labels:
+    app: {{ template "bridge.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ default 1 .Values.bridgeReplicas }}
+  selector:
+    matchLabels:
+      app: {{ template "bridge.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "bridge.fullname" . }}
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: origin-bridge
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.bridgeImage }}:{{ .Values.bridgeImageTag }}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: ENVKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "bridge.fullname" . }}
+              key: ENVKEY
+        - name: HOST
+          value: {{ template "bridge.host" . }}
+        - name: HTTPS
+          value: "true"
+        - name: DATABASE_HOST
+          value: "localhost"
+        - name: DATABASE_PORT
+          value: "5432"
+        - name: DATABASE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "bridge.fullname" . }}
+              key: DATABASE_USERNAME
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "bridge.fullname" . }}
+              key: DATABASE_PASSWORD
+        - name: DATABASE_NAME
+          value: "origin"
+        - name: FLASK_APP
+          value: "/app/main.py"
+        command: ["/bin/sh"]
+        args:
+        - "-c"
+        - |-
+          set -e
+          echo "Running database migrations for bridge"
+          export DATABASE_URL=postgres://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+          flask db upgrade
+          echo "Starting bridge"
+          gunicorn -b :5000 --access-logfile - --error-logfile - main:app
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances={{ .Values.databaseInstance }}=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+        - name: cloudsql-instance-credentials
+          mountPath: /secrets/cloudsql
+          readOnly: true
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials

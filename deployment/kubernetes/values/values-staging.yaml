@@ -1,0 +1,38 @@
+databaseInstance: origin-214503:us-west1:staging
+
+# origin-bridge
+bridgeImage: origin-bridge
+bridgeImageTag: '30b42fc'
+bridgeReplicas: 1
+
+# origin-dapp
+dappImage: origin-dapp
+dappImageTag: '4aa5b10'
+dappReplicas: 2
+
+# Rinkeby network configuration
+gethTxReplicas: 1
+gethTxMemoryRequest: 6Gi
+
+# IPFS server
+ipfsImageTag: ipfs/go-ipfs
+ipfsImageTag: master
+
+faucetImage: origin-faucet
+faucetImageTag: '90ecb10'
+
+eventlistenerImage: event-listener
+eventlistenerImageTag: '90ecb10'
+eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
+eventlistenerContinueBlock: 3000000
+
+discoveryImage: origin-discovery
+discoveryImageTag: '90ecb10'
+
+# IPFS server for OrbitDB
+messagingIpfsImage: ipfs/go-ipfs
+messagingIpfsImageTag: v0.4.17
+
+# OrbitDB
+messagingImage: origin-messaging
+messagingImageTag: '4327155'

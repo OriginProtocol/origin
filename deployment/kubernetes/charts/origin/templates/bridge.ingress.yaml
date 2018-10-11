@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "bridge.fullname" . }}
+  labels:
+    app: {{ template "bridge.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # Disable CORS annotations because we have manually injected a snippet into
+    # the nginx configuration that this will overwrite
+    # nginx.ingress.kubernetes.io/enable-cors: "true"
+    # nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST"
+    # nginx.ingress.kubernetes.io/cors-allow-origin: {{ template "dapp.host" . }}
+spec:
+  tls:
+    - secretName: {{ template "bridge.host" . }}
+      hosts:
+        - {{ template "bridge.host" . }}
+  rules:
+  - host: {{ template "bridge.host" . }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "bridge.fullname" . }}
+          servicePort: 5000
