@@ -43,7 +43,7 @@ WORKDIR /app
 RUN npm install --quiet --no-progress
 
 # Link previously built Origin.js
-COPY --from=origin-js-build /app/ /usr/local/lib/node_modules/origin
+COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
 RUN npm link origin
 
 RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-only
