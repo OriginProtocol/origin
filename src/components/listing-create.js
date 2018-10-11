@@ -781,7 +781,7 @@ class ListingCreate extends Component {
                   <p>
                     <FormattedMessage
                       id={'listing-create.form-help-details'}
-                      defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing.`}
+                      defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if they want to buy your listing.`}
                     />
                   </p>
                 </div>
@@ -841,8 +841,9 @@ class ListingCreate extends Component {
                         'When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it.'
                       }
                     />
-                    {selectedBoostAmount && (
+                    {!!selectedBoostAmount && (
                       <div className="boost-reminder">
+                        <br />
                         <FormattedMessage
                           id={'listing-create.whatHappensNextContent2'}
                           defaultMessage={
