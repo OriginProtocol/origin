@@ -5,18 +5,18 @@
 
 FROM node:9 as origin-js-build
 
-WORKDIR /app
-
 # Invalidate Docker cache if necessary by adding the hash of the current commit
 # from the remote repository
-ADD https://api.github.com/repos/OriginProtocol/origin-js/git/refs/heads/master /version.json
+ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/master /version.json
 # Clone origin-js from master (development) branch
-RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin-js.git /app
+RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin.git /app
+
+WORKDIR /app/origin-js
 
 RUN npm install --quiet --no-progress
 RUN npm run build
 
-# --- Origin Discovery
+# --- Event listener
 
 FROM node:9 as build
 
@@ -25,12 +25,12 @@ WORKDIR /app
 # Invalidate Docker cache if necessary
 COPY --from=origin-js-build /version.json /
 # Copy indexing code out of origin-js
-COPY --from=origin-js-build /app/daemon/indexing/ /app/
+COPY --from=origin-js-build /app/origin-discovery/ /app/
 
 RUN npm install --quiet --no-progress
 
 # Link previously built Origin.js
-COPY --from=origin-js-build /app/ /usr/local/lib/node_modules/origin
+COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
 RUN npm link origin
 
 CMD ["node", "apollo/index.js"]

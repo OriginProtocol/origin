@@ -2,10 +2,10 @@ FROM node:9
 
 # Invalidate Docker cache if necessary by adding the hash of the current commit
 # from the remote repository
-ADD https://api.github.com/repos/OriginProtocol/origin-box/git/refs/heads/master /version.json
+ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/master /version.json
 
-# Clone origin-box from master (development) branch
-RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin-box.git /app
+# Clone origin from master (development) branch
+RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin.git /app
 
 WORKDIR /app/origin-messaging
 
