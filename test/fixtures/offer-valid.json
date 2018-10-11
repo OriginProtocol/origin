@@ -1,0 +1,13 @@
+{
+  "schemaId": "http://schema.originprotocol.com/offer_v1.0.0",
+  "listingType": "unit",
+  "unitsPurchased": 1,
+  "totalPrice": {
+    "currency": "ETH",
+    "amount": "0.033"
+  },
+  "commission": {
+    "currency": "OGN",
+    "amount": "0"
+  }
+}

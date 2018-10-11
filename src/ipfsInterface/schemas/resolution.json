@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "http://schema.originprotocol.com/resolution_v1.0.0",
+  "title": "Origin Protocol offer resolution schema",
+  "type": "object",
+  "properties": {
+    "schemaId": {
+      "type": "string"
+    }
+  },
+  "required": ["schemaId"]
+}
