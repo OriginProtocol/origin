@@ -48,7 +48,7 @@ const AboutTokens = () => {
               <FormattedMessage
                 id={'about-tokens.boosting-text'}
                 defaultMessage={
-                  'Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have a higher chance of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.'
+                  'Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.'
                 }
               />
             </p>

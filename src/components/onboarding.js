@@ -41,7 +41,7 @@ class Onboarding extends Component {
           'You can use Origin Messaging to chat with other users. ' +
           'Origin Messaging allows you to communicate with other users in a secure and decentralized way. ' +
           'Messages are private and, usually, can only be read by you or the recipient. ' +
-          'In the case that either of you opens a dispute, messages can also be read by a third party arbitrator.\n' +
+          'In the case that either of you opens a dispute, messages can also be read by a third-party arbitrator.\n' +
           '\n' +
           'Get started with messaging in two steps. ' +
           'First, you will use your Ethereum wallet to enable Origin Messaging. ' +
