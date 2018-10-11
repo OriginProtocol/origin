@@ -5,7 +5,7 @@ FROM node:9 as build
 # Invalidate Docker cache if necessary by adding the hash of the current commit
 # from the remote repository
 ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/stable /version.json
-# Clone origin-js from stable (development) branch
+# Clone origin-js from stable (production) branch
 RUN git clone --depth 1 --branch stable https://github.com/OriginProtocol/origin.git /app
 
 WORKDIR /app/origin-discovery

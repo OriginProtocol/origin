@@ -1,13 +1,10 @@
 FROM node:9 as build
 
-WORKDIR /app
-
 ARG DEPLOY_TAG
 
 # Invalidate Docker cache if necessary
-ADD https://api.github.com/repos/OriginProtocol/origin-dapp/git/refs/heads/stable /version.json
-# Clone origin-dapp from stable branch
-RUN git clone --depth 1 --branch stable https://github.com/OriginProtocol/origin-dapp.git /app
+ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/stable /version.json
+RUN git clone --depth 1 --branch stable https://github.com/OriginProtocol/origin.git /app
 
 ENV BRIDGE_SERVER_DOMAIN=bridge.originprotocol.com \
     BRIDGE_SERVER_PROTOCOL=https \
@@ -26,10 +23,11 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.originprotocol.com \
     DEPLOY_TAG=$DEPLOY_TAG \
     BLOCK_EPOCH=6400000
 
+WORKDIR /app/origin-dapp
 RUN npm install --quiet --no-progress
 RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-only
 
 # Nginx to service static files
 FROM nginx:1.15.2
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/origin-dapp/build /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]

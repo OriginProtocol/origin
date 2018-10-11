@@ -5,13 +5,13 @@ RUN apt-get upgrade -y
 RUN apt-get install libsecp256k1-dev -y
 RUN pip install gunicorn
 
-WORKDIR /app
-
 # Invalidate Docker cache if necessary by adding the hash of the current commit
 # from the remote repository
-ADD https://api.github.com/repos/OriginProtocol/origin-bridge/git/refs/heads/staging /version.json
+ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/staging /version.json
 # Clone origin-bridge from staging branch
-RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin-bridge.git /app
+RUN git clone --depth 1 --branch staging https://github.com/OriginProtocol/origin.git /app
+
+WORKDIR /app/origin-bridge
 
 RUN pip install -r requirements.txt
 

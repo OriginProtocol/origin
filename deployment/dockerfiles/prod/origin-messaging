@@ -1,11 +1,7 @@
 FROM node:9
 
-# TODO origin-box doesn't have staging/stable branches, only master
-
-# Invalidate Docker cache if necessary by adding the hash of the current commit
-# from the remote repository
-ADD https://api.github.com/repos/OriginProtocol/origin-box/git/refs/heads/master /version.json
-RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin-box.git /app
+ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/stable /version.json
+RUN git clone --depth 1 --branch stable https://github.com/OriginProtocol/origin.git /app
 
 WORKDIR /app/origin-messaging
 
