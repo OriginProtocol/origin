@@ -112,7 +112,7 @@
   "listing-create.create-a-listing": "Crea un annuncio su Origin DApp",
   "listing-create.form-help-schema": "Inizia selezionando il tipo di annuncio che desideri creare. Sarai quindi in grado di impostare un prezzo e i dettagli dell'inserzione.",
   "listing-create.add-details": "Aggiungi dettagli all'inserzione",
-  "listing-create.form-help-details": "Assicurati di fornire al tuo annuncio un titolo e una descrizione appropriati per far sapere agli altri cosa stai offrendo. L'aggiunta di alcune foto del tuo annuncio aiuterà i potenziali acquirenti a decidere se vogliono acquistare il tuo annuncio.",
+  "listing-create.form-help-details": "Assicurati di fornire al tuo annuncio un titolo e una descrizione appropriati per far sapere agli altri cosa stai offrendo. L'aggiunta di alcune foto del tuo annuncio aiuterà i potenziali acquirenti a decidere se vogliono acquistare.",
   "listing-create.about-visibility": "A proposito di Visibilità",
   "listing-create.form-help-visibility": "Origin ordina e visualizza elenchi in base a pertinenza, recency e livello di boost. Gli annunci con visibilità più elevata vengono mostrati agli acquirenti più spesso.",
   "listing-create.origin-tokens": "Token di Origin",
