@@ -1,0 +1,87 @@
+{
+  "name": "Origin Protocol bridge server",
+  "description": "Development version of bridge.originprotocol.com",
+  "website": "https://bridge.originprotocol.com/",
+  "repository": "https://github.com/OriginProtocol/bridge-server",
+  "logo": "https://avatars1.githubusercontent.com/u/30638653",
+  "success_url": "/",
+  "env": {
+    "FLASK_SECRET_KEY": {
+      "description": "Secret key for the Flask framework",
+      "generator": "secret",
+      "required": true
+    },
+    "PROJECTPATH": {
+      "description": "Root directory for the app (you don't need to change this)",
+      "value": "/app",
+      "required": true
+    },
+    "HOST": {
+      "description": "Replace 'app-name' with the App Name you chose above",
+      "value": "app-name.herokuapp.com",
+      "required": true
+    },
+    "TWILIO_VERIFY_API_KEY": {
+      "description": "Twilio Verify API key",
+      "required": false
+    },
+    "RPC_SERVER": {
+      "description": "RPC server URL",
+      "required": false
+    },
+    "RPC_PROTOCOL": {
+      "description": "RPC server protocol [wss, https]",
+      "required": false
+    },
+    "IPFS_DOMAIN": {
+      "description": "IPFS domain name",
+      "required": false
+    },
+    "IPFS_PORT": {
+      "description": "IPFS port",
+      "required": false
+    },
+    "ATTESTATION_SIGNING_KEY": {
+      "description": "Origin signing key",
+      "value": "0x0000000000000000000000000000000000000000000000000000000000000001"
+    },
+    "FACEBOOK_CLIENT_ID": {
+      "description": "Facebook client ID given to your app",
+      "required": false
+    },
+    "FACEBOOK_CLIENT_SECRET": {
+      "description": "A unique secret associated with your application",
+      "required": false
+    },
+    "SENDGRID_FROM_EMAIL": {
+      "description": "This will display to the user as the email address who sent this email.",
+      "required": false
+    },
+    "SENDGRID_API_KEY": {
+      "description": "Sendgrid API key associated with your account",
+      "required": false
+    },
+    "TWITTER_CONSUMER_KEY": {
+      "description": "Twitter consumer key associated with your account",
+      "value": "xxxxxx"
+    },
+    "TWITTER_CONSUMER_SECRET": {
+      "description": "Twitter consumer secret associated with your key",
+      "value": "xxxxxx"
+    }
+  },
+  "addons": [{
+      "plan": "heroku-postgresql:hobby-dev"
+    },
+    {
+      "plan": "heroku-redis:hobby-dev"
+    },
+    {
+      "plan": "bonsai:sandbox-6"
+    }
+  ],
+  "buildpacks": [{
+      "url": "heroku/python"
+    }
+  ]
+}
