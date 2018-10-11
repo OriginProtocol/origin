@@ -9,7 +9,6 @@ ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/staging /v
 RUN git clone --depth 1 --branch staging https://github.com/OriginProtocol/origin.git /app
 
 WORKDIR /app/origin-js
-
 RUN npm install --quiet --no-progress
 RUN npm run build
 
@@ -17,13 +16,12 @@ RUN npm run build
 
 FROM node:9 as build
 
-WORKDIR /app
-
 # Invalidate Docker cache if necessary
 COPY --from=origin-js-build /version.json /
 # Copy indexing code out of origin-js
 COPY --from=origin-js-build /app/origin-discovery/ /app/
 
+WORKDIR /app
 RUN npm install --quiet --no-progress
 
 # Link previously built Origin.js

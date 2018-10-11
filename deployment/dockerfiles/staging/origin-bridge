@@ -12,7 +12,6 @@ ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/staging /v
 RUN git clone --depth 1 --branch staging https://github.com/OriginProtocol/origin.git /app
 
 WORKDIR /app/origin-bridge
-
 RUN pip install -r requirements.txt
 
 EXPOSE 5000

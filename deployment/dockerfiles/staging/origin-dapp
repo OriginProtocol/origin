@@ -9,7 +9,6 @@ ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/staging /v
 RUN git clone --depth 1 --branch staging https://github.com/OriginProtocol/origin.git /app
 
 WORKDIR /app/origin-js
-
 RUN npm install --quiet --no-progress
 RUN npm run build
 
