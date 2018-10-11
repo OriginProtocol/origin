@@ -1,7 +1,8 @@
 const BigNumber = require('bignumber.js')
 
-const TokenContract = require('../../contracts/build/contracts/OriginToken.json')
-const { withRetries } = require('../../src/utils/retries.js')
+// TODO find a better way to handle these dependencies
+const TokenContract = require('../../origin-js/contracts/build/contracts/OriginToken.json')
+const { withRetries } = require('../../origin-js/src/utils/retries.js')
 
 const ContractHelper = require('./_contractHelper.js')
 
