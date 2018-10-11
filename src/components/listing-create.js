@@ -15,6 +15,9 @@ import BoostSlider from 'components/boost-slider'
 import PhotoPicker from 'components/form-widgets/photo-picker'
 import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
+import Calendar from './calendar'
+
+import { generateCalendarSlots } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
@@ -37,13 +40,19 @@ class ListingCreate extends Component {
     this.STEP = {
       PICK_SCHEMA: 1,
       DETAILS: 2,
-      BOOST: 3,
-      PREVIEW: 4,
-      METAMASK: 5,
-      PROCESSING: 6,
-      SUCCESS: 7,
-      ERROR: 8
+      AVAILABILITY: 3,
+      BOOST: 4,
+      PREVIEW: 5,
+      METAMASK: 6,
+      PROCESSING: 7,
+      SUCCESS: 8,
+      ERROR: 9
     }
+
+    this.fractionalSchemaTypes = [
+      'housing',
+      'services'
+    ]
 
     this.schemaList = listingSchemaMetadata.listingTypes.map(listingType => {
       listingType.name = props.intl.formatMessage(listingType.translationName)
@@ -57,6 +66,9 @@ class ListingCreate extends Component {
       translatedSchema: null,
       schemaExamples: null,
       schemaFetched: false,
+      isFractionalListing: false,
+      isEditMode: false,
+      fractionalTimeIncrement: null,
       showNoSchemaSelectedError: false,
       formListing: {
         formData: {
@@ -81,12 +93,36 @@ class ListingCreate extends Component {
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
+    this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
+    this.onGoBackToDetails = this.onGoBackToDetails.bind(this)
+    this.backFromReviewStep = this.backFromReviewStep.bind(this)
+    this.onBackToPickSchema = this.onBackToPickSchema.bind(this)
     this.onFormDataChange = this.onFormDataChange.bind(this)
     this.onReview = this.onReview.bind(this)
     this.pollOgnBalance = this.pollOgnBalance.bind(this)
     this.resetForm = this.resetForm.bind(this)
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
+  }
+
+  async componentDidMount() {
+    if (this.props.listingAddress) {
+      try {
+        const listing = await origin.listings.get(this.props.listingAddress)
+        this.setState({ selectedSchemaType: listing.schemaType })
+        await this.handleSchemaSelection()
+        listing.slots = generateCalendarSlots(listing.slots)
+
+        this.setState({
+          formData: listing,
+          step: this.STEP.DETAILS,
+          isEditMode: true
+        })
+      } catch (error) {
+        console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
+        console.error(error)
+      }
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -161,6 +197,8 @@ class ListingCreate extends Component {
         this.setState({
           selectedSchemaType,
           schemaFetched: true,
+          step: this.STEP.DETAILS,
+          fractionalTimeIncrement: (selectedSchemaType === 'housing' ? 'daily' : 'hourly'),
           showNoSchemaSelectedError: false,
           translatedSchema,
           schemaExamples:
@@ -170,6 +208,8 @@ class ListingCreate extends Component {
             translatedSchema.properties.examples.enumNames
         })
       })
+
+    window.scrollTo(0, 0)
   }
 
   goToDetailsStep() {
@@ -183,6 +223,44 @@ class ListingCreate extends Component {
         showNoSchemaSelectedError: true
       })
     }
+  }
+
+  onAvailabilityEntered(slots) {
+    slots.forEach((slot) => {
+      if (typeof slot.priceWei !== 'number') {
+        delete slot.priceWei
+      }
+    })
+
+    this.setState({
+      formData: {
+        ...this.state.formData,
+        timeIncrement: this.state.fractionalTimeIncrement,
+        slots
+      }
+    })
+
+    this.setState({
+      step: this.STEP.PREVIEW
+    })
+  }
+
+  onBackToPickSchema() {
+    this.setState({
+      step: this.STEP.PICK_SCHEMA,
+      selectedSchema: null,
+      schemaFetched: false,
+      formData: null
+    })
+  }
+
+  onGoBackToDetails() {
+    this.setState({ step: this.STEP.DETAILS })
+  }
+
+  backFromReviewStep() {
+    const previousStep = this.state.isFractionalListing ? this.STEP.AVAILABILITY : this.STEP.DETAILS
+    this.setState({ step: previousStep })
   }
 
   onDetailsEntered(formListing) {
@@ -262,12 +340,14 @@ class ListingCreate extends Component {
     try {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
-      const transactionReceipt = await origin.marketplace.createListing(
+      const methodName = this.state.isEditMode ? 'updateListing' : 'createListing'
+      const transactionReceipt = await origin.marketplace[methodName](
         listing,
         (confirmationCount, transactionReceipt) => {
           this.props.updateTransaction(confirmationCount, transactionReceipt)
         }
       )
+
       this.props.upsertTransaction({
         ...transactionReceipt,
         transactionTypeKey: 'createListing'
@@ -435,7 +515,7 @@ class ListingCreate extends Component {
                       type="button"
                       className="btn btn-other btn-listing-create"
                       onClick={() =>
-                        this.setState({ step: this.STEP.PICK_SCHEMA })
+                        this.onBackToPickSchema()
                       }
                       ga-category="create_listing"
                       ga-label="details_step_back"
@@ -460,6 +540,18 @@ class ListingCreate extends Component {
                 </Form>
               </div>
             )}
+            { (step === this.STEP.AVAILABILITY) &&
+              <div className="step-container listing-availability">
+                <Calendar
+                  slots={ formData && formData.slots }
+                  userType="seller"
+                  viewType={ this.state.fractionalTimeIncrement }
+                  step={ 60 }
+                  onComplete={ this.onAvailabilityEntered }
+                  onGoBack={ this.onGoBackToDetails }
+                />
+              </div>
+            }
             {step === this.STEP.BOOST && (
               <div className="col-md-6 col-lg-5 select-boost">
                 <label>

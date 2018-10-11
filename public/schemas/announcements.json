@@ -1,7 +1,7 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["name","category","description","price"],
+  "required": ["name","category","description","priceWei"],
   "properties": {
     "name": {
       "type": "string",
@@ -46,7 +46,7 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "price": {
+    "priceWei": {
       "type": "number",
       "title": "schema.announcements.priceInETH",
       "default": 0,

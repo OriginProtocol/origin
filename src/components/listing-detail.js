@@ -19,6 +19,7 @@ import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Modal from 'components/modal'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
+import Calendar from './calendar'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
@@ -67,6 +68,13 @@ class ListingsDetail extends Component {
       }
     })
 
+    this.handleBuyClicked = this.handleBuyClicked.bind(this)
+    this.reserveSlots = this.reserveSlots.bind(this)
+    this.loadListing = this.loadListing.bind(this)
+  }
+
+  async handleBuyClicked() {
+    this.props.storeWeb3Intent('buy this listing')
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
   }
@@ -223,6 +231,30 @@ class ListingsDetail extends Component {
 
   resetToStepOne() {
     this.setState({ step: this.STEP.VIEW })
+  }
+
+  async reserveSlots(slotsToReserve) {
+    this.props.storeWeb3Intent('reserve this listing')
+
+    if (web3.givenProvider && this.props.web3Account) {
+      const totalPrice = slotsToReserve.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.priceWei, 0)
+      this.setState({step: this.STEP.METAMASK})
+      try {
+        this.setState({step: this.STEP.PROCESSING})
+        const { created, transactionReceipt } = await origin.listings.request(this.state.address, slotsToReserve, totalPrice, this.props.updateTransaction)
+        this.props.upsertTransaction({
+          ...transactionReceipt,
+          created,
+          transactionTypeKey: 'reserveListing',
+        })
+        console.log('Reservation request sent.')
+        this.setState({ step: this.STEP.PURCHASED })
+      } catch (error) {
+        window.err = error
+        console.error(error)
+        this.setState({step: this.STEP.ERROR})
+      }
+    }
   }
 
   render() {
@@ -736,6 +768,18 @@ class ListingsDetail extends Component {
                 />
               )}
             </div>
+            { !this.state.loading && this.state.listingType === 'fractional' && !userIsSeller &&
+              <div className="col-12">
+                <Calendar 
+                  slots={ this.state.slots }
+                  purchases={ this.state.purchases }
+                  userType="buyer"
+                  viewType={ this.state.schemaType === 'housing' ? 'daily' : 'hourly' }
+                  onComplete={ this.reserveSlots }
+                  step={ 60 }
+                />
+              </div>
+            }
           </div>
           {this.props.withReviews && (
             <div className="row">

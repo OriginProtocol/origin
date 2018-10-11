@@ -377,6 +377,7 @@
   "transaction.acceptOffer": "You accepted an offer.",
   "transaction.makeOffer": "You made an offer.",
   "transaction.withdrawOffer": "You withdrew an offer.",
+  "transaction.reserveListing": "You reserved a listing.",
   "transaction.closeListing": "You closed a listing.",
   "transaction.completePurchase": "You completed a purchase.",
   "transaction.createListing": "You created a listing.",
