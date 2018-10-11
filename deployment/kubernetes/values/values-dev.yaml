@@ -2,12 +2,12 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'cc2e4a7'
+bridgeImageTag: '1e881e0-1539293369'
 bridgeReplicas: 1
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '843e5fe'
+dappImageTag: '1e881e0'
 dappReplicas: 2
 
 # Origin network configuration
@@ -20,14 +20,14 @@ ipfsImageTag: ipfs/go-ipfs
 ipfsImageTag: master
 
 faucetImage: origin-faucet
-faucetImageTag: '28438d2'
+faucetImageTag: '3066fa3'
 
 eventlistenerImage: event-listener
-eventlistenerImageTag: '2b21d78'
+eventlistenerImageTag: 'db88884'
 eventlistenerWeb3Url: https://eth.dev.originprotocol.com/rpc
 
 discoveryImage: origin-discovery
-discoveryImageTag: '2b21d78'
+discoveryImageTag: 'db88884'
 
 # IPFS server for OrbitDB
 messagingIpfsImage: ipfs/go-ipfs
