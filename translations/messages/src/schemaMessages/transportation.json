@@ -1,0 +1,74 @@
+[
+  {
+    "id": "schema.transportation.title",
+    "defaultMessage": "Title"
+  },
+  {
+    "id": "schema.transportation.examples",
+    "defaultMessage": "Examples"
+  },
+  {
+    "id": "schema.transportation.category",
+    "defaultMessage": "Category"
+  },
+  {
+    "id": "schema.transportation.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "schema.transportation.priceInETH",
+    "defaultMessage": "Price in ETH"
+  },
+  {
+    "id": "schema.transportation.selectPhotos",
+    "defaultMessage": "Select photos"
+  },
+  {
+    "id": "schema.transportation.airplaneCharter",
+    "defaultMessage": "Airplane Charter"
+  },
+  {
+    "id": "schema.transportation.bikeRentals",
+    "defaultMessage": "Bike Rentals"
+  },
+  {
+    "id": "schema.transportation.boatRentals",
+    "defaultMessage": "Boat Rentals"
+  },
+  {
+    "id": "schema.transportation.carRentals",
+    "defaultMessage": "Car Rentals"
+  },
+  {
+    "id": "schema.transportation.other",
+    "defaultMessage": "Other"
+  },
+  {
+    "id": "schema.transportation.scooterRentals",
+    "defaultMessage": "Scooter Rentals"
+  },
+  {
+    "id": "schema.transportation.taxiService",
+    "defaultMessage": "Taxi Service"
+  },
+  {
+    "id": "schema.transportation.yachtCharters",
+    "defaultMessage": "Yacht Charters"
+  },
+  {
+    "id": "schema.transportation.messageBuyer",
+    "defaultMessage": "Message the buyer with any relevant details"
+  },
+  {
+    "id": "schema.transportation.provideService",
+    "defaultMessage": "Provide your transportation service to the buyer"
+  },
+  {
+    "id": "schema.transportation.rateBuyer",
+    "defaultMessage": "Leave a review of the buyer"
+  },
+  {
+    "id": "schema.transportation.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
+  }
+]

@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+build/
+.env
+
+# Build folders
+build_webpack/

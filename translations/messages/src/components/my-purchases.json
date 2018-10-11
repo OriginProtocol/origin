@@ -1,0 +1,34 @@
+[
+  {
+    "id": "my-purchases.loading",
+    "defaultMessage": "Loading..."
+  },
+  {
+    "id": "my-purchases.no-purchases",
+    "defaultMessage": "You haven’t bought anything yet."
+  },
+  {
+    "id": "my-purchases.view-listings",
+    "defaultMessage": "Click below to view all listings."
+  },
+  {
+    "id": "my-purchases.browse-listings",
+    "defaultMessage": "Browse Listings"
+  },
+  {
+    "id": "my-purchases.myPurchasesHeading",
+    "defaultMessage": "My Purchases"
+  },
+  {
+    "id": "my-purchases.pending",
+    "defaultMessage": "Pending"
+  },
+  {
+    "id": "my-purchases.complete",
+    "defaultMessage": "Complete"
+  },
+  {
+    "id": "my-purchases.all",
+    "defaultMessage": "All"
+  }
+]

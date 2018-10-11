@@ -1,0 +1,902 @@
+[
+  {
+    "id": "_countryOptions.andorra",
+    "defaultMessage": "Andorra"
+  },
+  {
+    "id": "_countryOptions.unitedArabEmirates",
+    "defaultMessage": "United Arab Emirates"
+  },
+  {
+    "id": "_countryOptions.afghanistan",
+    "defaultMessage": "Afghanistan"
+  },
+  {
+    "id": "_countryOptions.antiguaAndBarbuda",
+    "defaultMessage": "Antigua and Barbuda"
+  },
+  {
+    "id": "_countryOptions.anguilla",
+    "defaultMessage": "Anguilla"
+  },
+  {
+    "id": "_countryOptions.albania",
+    "defaultMessage": "Albania"
+  },
+  {
+    "id": "_countryOptions.armenia",
+    "defaultMessage": "Armenia"
+  },
+  {
+    "id": "_countryOptions.angola",
+    "defaultMessage": "Angola"
+  },
+  {
+    "id": "_countryOptions.antarctica",
+    "defaultMessage": "Antarctica"
+  },
+  {
+    "id": "_countryOptions.argentina",
+    "defaultMessage": "Argentina"
+  },
+  {
+    "id": "_countryOptions.austria",
+    "defaultMessage": "Austria"
+  },
+  {
+    "id": "_countryOptions.australia",
+    "defaultMessage": "Australia"
+  },
+  {
+    "id": "_countryOptions.aruba",
+    "defaultMessage": "Aruba"
+  },
+  {
+    "id": "_countryOptions.azerbaijan",
+    "defaultMessage": "Azerbaijan"
+  },
+  {
+    "id": "_countryOptions.bosniaAndHerzegovina",
+    "defaultMessage": "Bosnia and Herzegovina"
+  },
+  {
+    "id": "_countryOptions.barbados",
+    "defaultMessage": "Barbados"
+  },
+  {
+    "id": "_countryOptions.bangladesh",
+    "defaultMessage": "Bangladesh"
+  },
+  {
+    "id": "_countryOptions.belgium",
+    "defaultMessage": "Belgium"
+  },
+  {
+    "id": "_countryOptions.burkinaFaso",
+    "defaultMessage": "Burkina Faso"
+  },
+  {
+    "id": "_countryOptions.bulgaria",
+    "defaultMessage": "Bulgaria"
+  },
+  {
+    "id": "_countryOptions.bahrain",
+    "defaultMessage": "Bahrain"
+  },
+  {
+    "id": "_countryOptions.burundi",
+    "defaultMessage": "Burundi"
+  },
+  {
+    "id": "_countryOptions.benin",
+    "defaultMessage": "Benin"
+  },
+  {
+    "id": "_countryOptions.bermuda",
+    "defaultMessage": "Bermuda"
+  },
+  {
+    "id": "_countryOptions.bruneiDarussalam",
+    "defaultMessage": "Brunei Darussalam"
+  },
+  {
+    "id": "_countryOptions.bolivia",
+    "defaultMessage": "Bolivia, Plurinational State of"
+  },
+  {
+    "id": "_countryOptions.brazil",
+    "defaultMessage": "Brazil"
+  },
+  {
+    "id": "_countryOptions.bahamas",
+    "defaultMessage": "Bahamas"
+  },
+  {
+    "id": "_countryOptions.bhutan",
+    "defaultMessage": "Bhutan"
+  },
+  {
+    "id": "_countryOptions.botswana",
+    "defaultMessage": "Botswana"
+  },
+  {
+    "id": "_countryOptions.belarus",
+    "defaultMessage": "Belarus"
+  },
+  {
+    "id": "_countryOptions.belize",
+    "defaultMessage": "Belize"
+  },
+  {
+    "id": "_countryOptions.canada",
+    "defaultMessage": "Canada"
+  },
+  {
+    "id": "_countryOptions.democraticRepublicOfTheCongo",
+    "defaultMessage": "Congo, The Democratic Republic of the"
+  },
+  {
+    "id": "_countryOptions.centralAfricanRepublic",
+    "defaultMessage": "Central African Republic"
+  },
+  {
+    "id": "_countryOptions.congo",
+    "defaultMessage": "Congo"
+  },
+  {
+    "id": "_countryOptions.switzerland",
+    "defaultMessage": "Switzerland"
+  },
+  {
+    "id": "_countryOptions.ivoryCoast",
+    "defaultMessage": "Côte d'Ivoire"
+  },
+  {
+    "id": "_countryOptions.cookIslands",
+    "defaultMessage": "Cook Islands"
+  },
+  {
+    "id": "_countryOptions.chile",
+    "defaultMessage": "Chile"
+  },
+  {
+    "id": "_countryOptions.cameroon",
+    "defaultMessage": "Cameroon"
+  },
+  {
+    "id": "_countryOptions.china",
+    "defaultMessage": "China"
+  },
+  {
+    "id": "_countryOptions.colombia",
+    "defaultMessage": "Colombia"
+  },
+  {
+    "id": "_countryOptions.costaRica",
+    "defaultMessage": "Costa Rica"
+  },
+  {
+    "id": "_countryOptions.cuba",
+    "defaultMessage": "Cuba"
+  },
+  {
+    "id": "_countryOptions.caboVerde",
+    "defaultMessage": "Cabo Verde"
+  },
+  {
+    "id": "_countryOptions.curacao",
+    "defaultMessage": "Curaçao"
+  },
+  {
+    "id": "_countryOptions.cyprus",
+    "defaultMessage": "Cyprus"
+  },
+  {
+    "id": "_countryOptions.czechia",
+    "defaultMessage": "Czechia"
+  },
+  {
+    "id": "_countryOptions.germany",
+    "defaultMessage": "Germany"
+  },
+  {
+    "id": "_countryOptions.djibouti",
+    "defaultMessage": "Djibouti"
+  },
+  {
+    "id": "_countryOptions.denmark",
+    "defaultMessage": "Denmark"
+  },
+  {
+    "id": "_countryOptions.dominica",
+    "defaultMessage": "Dominica"
+  },
+  {
+    "id": "_countryOptions.dominicanRepublic",
+    "defaultMessage": "Dominican Republic"
+  },
+  {
+    "id": "_countryOptions.algeria",
+    "defaultMessage": "Algeria"
+  },
+  {
+    "id": "_countryOptions.ecuador",
+    "defaultMessage": "Ecuador"
+  },
+  {
+    "id": "_countryOptions.estonia",
+    "defaultMessage": "Estonia"
+  },
+  {
+    "id": "_countryOptions.egypt",
+    "defaultMessage": "Egypt"
+  },
+  {
+    "id": "_countryOptions.eritrea",
+    "defaultMessage": "Eritrea"
+  },
+  {
+    "id": "_countryOptions.spain",
+    "defaultMessage": "Spain"
+  },
+  {
+    "id": "_countryOptions.ethiopia",
+    "defaultMessage": "Ethiopia"
+  },
+  {
+    "id": "_countryOptions.finland",
+    "defaultMessage": "Finland"
+  },
+  {
+    "id": "_countryOptions.fiji",
+    "defaultMessage": "Fiji"
+  },
+  {
+    "id": "_countryOptions.falklandIslands",
+    "defaultMessage": "Falkland Islands (Malvinas)"
+  },
+  {
+    "id": "_countryOptions.micronesia",
+    "defaultMessage": "Micronesia, Federated States of"
+  },
+  {
+    "id": "_countryOptions.faroeIslands",
+    "defaultMessage": "Faroe Islands"
+  },
+  {
+    "id": "_countryOptions.france",
+    "defaultMessage": "France"
+  },
+  {
+    "id": "_countryOptions.gabon",
+    "defaultMessage": "Gabon"
+  },
+  {
+    "id": "_countryOptions.unitedKingdom",
+    "defaultMessage": "United Kingdom"
+  },
+  {
+    "id": "_countryOptions.grenada",
+    "defaultMessage": "Grenada"
+  },
+  {
+    "id": "_countryOptions.georgia",
+    "defaultMessage": "Georgia"
+  },
+  {
+    "id": "_countryOptions.frenchGuiana",
+    "defaultMessage": "French Guiana"
+  },
+  {
+    "id": "_countryOptions.ghana",
+    "defaultMessage": "Ghana"
+  },
+  {
+    "id": "_countryOptions.gibraltar",
+    "defaultMessage": "Gibraltar"
+  },
+  {
+    "id": "_countryOptions.greenland",
+    "defaultMessage": "Greenland"
+  },
+  {
+    "id": "_countryOptions.gambia",
+    "defaultMessage": "Gambia"
+  },
+  {
+    "id": "_countryOptions.guinea",
+    "defaultMessage": "Guinea"
+  },
+  {
+    "id": "_countryOptions.guadeloupe",
+    "defaultMessage": "Guadeloupe"
+  },
+  {
+    "id": "_countryOptions.equatorialGuinea",
+    "defaultMessage": "Equatorial Guinea"
+  },
+  {
+    "id": "_countryOptions.greece",
+    "defaultMessage": "Greece"
+  },
+  {
+    "id": "_countryOptions.guatemala",
+    "defaultMessage": "Guatemala"
+  },
+  {
+    "id": "_countryOptions.guineaBissau",
+    "defaultMessage": "Guinea-Bissau"
+  },
+  {
+    "id": "_countryOptions.guyana",
+    "defaultMessage": "Guyana"
+  },
+  {
+    "id": "_countryOptions.hongKong",
+    "defaultMessage": "Hong Kong"
+  },
+  {
+    "id": "_countryOptions.honduras",
+    "defaultMessage": "Honduras"
+  },
+  {
+    "id": "_countryOptions.croatia",
+    "defaultMessage": "Croatia"
+  },
+  {
+    "id": "_countryOptions.haiti",
+    "defaultMessage": "Haiti"
+  },
+  {
+    "id": "_countryOptions.hungary",
+    "defaultMessage": "Hungary"
+  },
+  {
+    "id": "_countryOptions.indonesia",
+    "defaultMessage": "Indonesia"
+  },
+  {
+    "id": "_countryOptions.ireland",
+    "defaultMessage": "Ireland"
+  },
+  {
+    "id": "_countryOptions.israel",
+    "defaultMessage": "Israel"
+  },
+  {
+    "id": "_countryOptions.india",
+    "defaultMessage": "India"
+  },
+  {
+    "id": "_countryOptions.iraq",
+    "defaultMessage": "Iraq"
+  },
+  {
+    "id": "_countryOptions.iran",
+    "defaultMessage": "Iran, Islamic Republic of"
+  },
+  {
+    "id": "_countryOptions.iceland",
+    "defaultMessage": "Iceland"
+  },
+  {
+    "id": "_countryOptions.italy",
+    "defaultMessage": "Italy"
+  },
+  {
+    "id": "_countryOptions.jamaica",
+    "defaultMessage": "Jamaica"
+  },
+  {
+    "id": "_countryOptions.jordan",
+    "defaultMessage": "Jordan"
+  },
+  {
+    "id": "_countryOptions.japan",
+    "defaultMessage": "Japan"
+  },
+  {
+    "id": "_countryOptions.kenya",
+    "defaultMessage": "Kenya"
+  },
+  {
+    "id": "_countryOptions.kyrgyzstan",
+    "defaultMessage": "Kyrgyzstan"
+  },
+  {
+    "id": "_countryOptions.cambodia",
+    "defaultMessage": "Cambodia"
+  },
+  {
+    "id": "_countryOptions.kiribati",
+    "defaultMessage": "Kiribati"
+  },
+  {
+    "id": "_countryOptions.comoros",
+    "defaultMessage": "Comoros"
+  },
+  {
+    "id": "_countryOptions.saintKittsAndNevis",
+    "defaultMessage": "Saint Kitts and Nevis"
+  },
+  {
+    "id": "_countryOptions.northKorea",
+    "defaultMessage": "North Korea"
+  },
+  {
+    "id": "_countryOptions.southKorea",
+    "defaultMessage": "South Korea"
+  },
+  {
+    "id": "_countryOptions.kuwait",
+    "defaultMessage": "Kuwait"
+  },
+  {
+    "id": "_countryOptions.caymanIslands",
+    "defaultMessage": "Cayman Islands"
+  },
+  {
+    "id": "_countryOptions.lao",
+    "defaultMessage": "Lao People's Democratic Republic"
+  },
+  {
+    "id": "_countryOptions.lebanon",
+    "defaultMessage": "Lebanon"
+  },
+  {
+    "id": "_countryOptions.saintLucia",
+    "defaultMessage": "Saint Lucia"
+  },
+  {
+    "id": "_countryOptions.liechtenstein",
+    "defaultMessage": "Liechtenstein"
+  },
+  {
+    "id": "_countryOptions.sriLanka",
+    "defaultMessage": "Sri Lanka"
+  },
+  {
+    "id": "_countryOptions.liberia",
+    "defaultMessage": "Liberia"
+  },
+  {
+    "id": "_countryOptions.lesotho",
+    "defaultMessage": "Lesotho"
+  },
+  {
+    "id": "_countryOptions.lithuania",
+    "defaultMessage": "Lithuania"
+  },
+  {
+    "id": "_countryOptions.luxembourg",
+    "defaultMessage": "Luxembourg"
+  },
+  {
+    "id": "_countryOptions.latvia",
+    "defaultMessage": "Latvia"
+  },
+  {
+    "id": "_countryOptions.libya",
+    "defaultMessage": "Libya"
+  },
+  {
+    "id": "_countryOptions.morocco",
+    "defaultMessage": "Morocco"
+  },
+  {
+    "id": "_countryOptions.monaco",
+    "defaultMessage": "Monaco"
+  },
+  {
+    "id": "_countryOptions.moldova",
+    "defaultMessage": "Moldova, Republic of"
+  },
+  {
+    "id": "_countryOptions.montenegro",
+    "defaultMessage": "Montenegro"
+  },
+  {
+    "id": "_countryOptions.madagascar",
+    "defaultMessage": "Madagascar"
+  },
+  {
+    "id": "_countryOptions.marshallIslands",
+    "defaultMessage": "Marshall Islands"
+  },
+  {
+    "id": "_countryOptions.macedonia",
+    "defaultMessage": "Macedonia, Republic of"
+  },
+  {
+    "id": "_countryOptions.mali",
+    "defaultMessage": "Mali"
+  },
+  {
+    "id": "_countryOptions.myanmar",
+    "defaultMessage": "Myanmar"
+  },
+  {
+    "id": "_countryOptions.mongolia",
+    "defaultMessage": "Mongolia"
+  },
+  {
+    "id": "_countryOptions.macao",
+    "defaultMessage": "Macao"
+  },
+  {
+    "id": "_countryOptions.northernMarianaIslands",
+    "defaultMessage": "Northern Mariana Islands"
+  },
+  {
+    "id": "_countryOptions.martinique",
+    "defaultMessage": "Martinique"
+  },
+  {
+    "id": "_countryOptions.mauritania",
+    "defaultMessage": "Mauritania"
+  },
+  {
+    "id": "_countryOptions.montserrat",
+    "defaultMessage": "Montserrat"
+  },
+  {
+    "id": "_countryOptions.malta",
+    "defaultMessage": "Malta"
+  },
+  {
+    "id": "_countryOptions.mauritius",
+    "defaultMessage": "Mauritius"
+  },
+  {
+    "id": "_countryOptions.maldives",
+    "defaultMessage": "Maldives"
+  },
+  {
+    "id": "_countryOptions.malawi",
+    "defaultMessage": "Malawi"
+  },
+  {
+    "id": "_countryOptions.mexico",
+    "defaultMessage": "Mexico"
+  },
+  {
+    "id": "_countryOptions.malaysia",
+    "defaultMessage": "Malaysia"
+  },
+  {
+    "id": "_countryOptions.mozambique",
+    "defaultMessage": "Mozambique"
+  },
+  {
+    "id": "_countryOptions.namibia",
+    "defaultMessage": "Namibia"
+  },
+  {
+    "id": "_countryOptions.newCaledonia",
+    "defaultMessage": "New Caledonia"
+  },
+  {
+    "id": "_countryOptions.niger",
+    "defaultMessage": "Niger"
+  },
+  {
+    "id": "_countryOptions.nigeria",
+    "defaultMessage": "Nigeria"
+  },
+  {
+    "id": "_countryOptions.nicaragua",
+    "defaultMessage": "Nicaragua"
+  },
+  {
+    "id": "_countryOptions.netherlands",
+    "defaultMessage": "Netherlands"
+  },
+  {
+    "id": "_countryOptions.norway",
+    "defaultMessage": "Norway"
+  },
+  {
+    "id": "_countryOptions.nepal",
+    "defaultMessage": "Nepal"
+  },
+  {
+    "id": "_countryOptions.nauru",
+    "defaultMessage": "Nauru"
+  },
+  {
+    "id": "_countryOptions.niue",
+    "defaultMessage": "Niue"
+  },
+  {
+    "id": "_countryOptions.newZealand",
+    "defaultMessage": "New Zealand"
+  },
+  {
+    "id": "_countryOptions.oman",
+    "defaultMessage": "Oman"
+  },
+  {
+    "id": "_countryOptions.panama",
+    "defaultMessage": "Panama"
+  },
+  {
+    "id": "_countryOptions.peru",
+    "defaultMessage": "Peru"
+  },
+  {
+    "id": "_countryOptions.frenchPolynesia",
+    "defaultMessage": "French Polynesia"
+  },
+  {
+    "id": "_countryOptions.papuaNewGuinea",
+    "defaultMessage": "Papua New Guinea"
+  },
+  {
+    "id": "_countryOptions.philippines",
+    "defaultMessage": "Philippines"
+  },
+  {
+    "id": "_countryOptions.pakistan",
+    "defaultMessage": "Pakistan"
+  },
+  {
+    "id": "_countryOptions.poland",
+    "defaultMessage": "Poland"
+  },
+  {
+    "id": "_countryOptions.saintPierreAndMiquelon",
+    "defaultMessage": "Saint Pierre and Miquelon"
+  },
+  {
+    "id": "_countryOptions.puertoRico",
+    "defaultMessage": "Puerto Rico"
+  },
+  {
+    "id": "_countryOptions.portugal",
+    "defaultMessage": "Portugal"
+  },
+  {
+    "id": "_countryOptions.palau",
+    "defaultMessage": "Palau"
+  },
+  {
+    "id": "_countryOptions.paraguay",
+    "defaultMessage": "Paraguay"
+  },
+  {
+    "id": "_countryOptions.qatar",
+    "defaultMessage": "Qatar"
+  },
+  {
+    "id": "_countryOptions.reunion",
+    "defaultMessage": "Réunion"
+  },
+  {
+    "id": "_countryOptions.romania",
+    "defaultMessage": "Romania"
+  },
+  {
+    "id": "_countryOptions.serbia",
+    "defaultMessage": "Serbia"
+  },
+  {
+    "id": "_countryOptions.russianFederation",
+    "defaultMessage": "Russian Federation"
+  },
+  {
+    "id": "_countryOptions.rwanda",
+    "defaultMessage": "Rwanda"
+  },
+  {
+    "id": "_countryOptions.saudiArabia",
+    "defaultMessage": "Saudi Arabia"
+  },
+  {
+    "id": "_countryOptions.solomonIslands",
+    "defaultMessage": "Solomon Islands"
+  },
+  {
+    "id": "_countryOptions.seychelles",
+    "defaultMessage": "Seychelles"
+  },
+  {
+    "id": "_countryOptions.sudan",
+    "defaultMessage": "Sudan"
+  },
+  {
+    "id": "_countryOptions.sweden",
+    "defaultMessage": "Sweden"
+  },
+  {
+    "id": "_countryOptions.singapore",
+    "defaultMessage": "Singapore"
+  },
+  {
+    "id": "_countryOptions.saintHelena",
+    "defaultMessage": "Saint Helena, Ascension and Tristan da Cunha"
+  },
+  {
+    "id": "_countryOptions.slovenia",
+    "defaultMessage": "Slovenia"
+  },
+  {
+    "id": "_countryOptions.slovakia",
+    "defaultMessage": "Slovakia"
+  },
+  {
+    "id": "_countryOptions.sierraLeone",
+    "defaultMessage": "Sierra Leone"
+  },
+  {
+    "id": "_countryOptions.sanMarino",
+    "defaultMessage": "San Marino"
+  },
+  {
+    "id": "_countryOptions.senegal",
+    "defaultMessage": "Senegal"
+  },
+  {
+    "id": "_countryOptions.somalia",
+    "defaultMessage": "Somalia"
+  },
+  {
+    "id": "_countryOptions.suriname",
+    "defaultMessage": "Suriname"
+  },
+  {
+    "id": "_countryOptions.southSudan",
+    "defaultMessage": "South Sudan"
+  },
+  {
+    "id": "_countryOptions.saoTomeAndPrincipe",
+    "defaultMessage": "Sao Tome and Principe"
+  },
+  {
+    "id": "_countryOptions.elSalvador",
+    "defaultMessage": "El Salvador"
+  },
+  {
+    "id": "_countryOptions.sintMaarten",
+    "defaultMessage": "Sint Maarten (Dutch part)"
+  },
+  {
+    "id": "_countryOptions.syrianArabRepublic",
+    "defaultMessage": "Syrian Arab Republic"
+  },
+  {
+    "id": "_countryOptions.swaziland",
+    "defaultMessage": "Swaziland"
+  },
+  {
+    "id": "_countryOptions.turksAndCaicosIslands",
+    "defaultMessage": "Turks and Caicos Islands"
+  },
+  {
+    "id": "_countryOptions.chad",
+    "defaultMessage": "Chad"
+  },
+  {
+    "id": "_countryOptions.togo",
+    "defaultMessage": "Togo"
+  },
+  {
+    "id": "_countryOptions.thailand",
+    "defaultMessage": "Thailand"
+  },
+  {
+    "id": "_countryOptions.tajikistan",
+    "defaultMessage": "Tajikistan"
+  },
+  {
+    "id": "_countryOptions.tokelau",
+    "defaultMessage": "Tokelau"
+  },
+  {
+    "id": "_countryOptions.timorLeste",
+    "defaultMessage": "Timor-Leste"
+  },
+  {
+    "id": "_countryOptions.turkmenistan",
+    "defaultMessage": "Turkmenistan"
+  },
+  {
+    "id": "_countryOptions.tunisia",
+    "defaultMessage": "Tunisia"
+  },
+  {
+    "id": "_countryOptions.tonga",
+    "defaultMessage": "Tonga"
+  },
+  {
+    "id": "_countryOptions.turkey",
+    "defaultMessage": "Turkey"
+  },
+  {
+    "id": "_countryOptions.trinidadAndTobago",
+    "defaultMessage": "Trinidad and Tobago"
+  },
+  {
+    "id": "_countryOptions.tuvalu",
+    "defaultMessage": "Tuvalu"
+  },
+  {
+    "id": "_countryOptions.taiwan",
+    "defaultMessage": "Taiwan, Province of China"
+  },
+  {
+    "id": "_countryOptions.tanzania",
+    "defaultMessage": "Tanzania, United Republic of"
+  },
+  {
+    "id": "_countryOptions.ukraine",
+    "defaultMessage": "Ukraine"
+  },
+  {
+    "id": "_countryOptions.uganda",
+    "defaultMessage": "Uganda"
+  },
+  {
+    "id": "_countryOptions.unitedStates",
+    "defaultMessage": "United States"
+  },
+  {
+    "id": "_countryOptions.uruguay",
+    "defaultMessage": "Uruguay"
+  },
+  {
+    "id": "_countryOptions.uzbekistan",
+    "defaultMessage": "Uzbekistan"
+  },
+  {
+    "id": "_countryOptions.holySee",
+    "defaultMessage": "Holy See (Vatican City State)"
+  },
+  {
+    "id": "_countryOptions.saintVincentAndTheGrenadines",
+    "defaultMessage": "Saint Vincent and the Grenadines"
+  },
+  {
+    "id": "_countryOptions.venezuela",
+    "defaultMessage": "Venezuela, Bolivarian Republic of"
+  },
+  {
+    "id": "_countryOptions.britishVirginIslands",
+    "defaultMessage": "Virgin Islands, British"
+  },
+  {
+    "id": "_countryOptions.usVirginIslands",
+    "defaultMessage": "Virgin Islands, U.S."
+  },
+  {
+    "id": "_countryOptions.vietNam",
+    "defaultMessage": "Viet Nam"
+  },
+  {
+    "id": "_countryOptions.vanuatu",
+    "defaultMessage": "Vanuatu"
+  },
+  {
+    "id": "_countryOptions.wallisAndFutuna",
+    "defaultMessage": "Wallis and Futuna"
+  },
+  {
+    "id": "_countryOptions.samoa",
+    "defaultMessage": "Samoa"
+  },
+  {
+    "id": "_countryOptions.yemen",
+    "defaultMessage": "Yemen"
+  },
+  {
+    "id": "_countryOptions.southAfrica",
+    "defaultMessage": "South Africa"
+  },
+  {
+    "id": "_countryOptions.zambia",
+    "defaultMessage": "Zambia"
+  },
+  {
+    "id": "_countryOptions.zimbabwe",
+    "defaultMessage": "Zimbabwe"
+  }
+]

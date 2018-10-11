@@ -1,0 +1,54 @@
+[
+  {
+    "id": "about-tokens.about",
+    "defaultMessage": "About Origin Tokens"
+  },
+  {
+    "id": "about-tokens.overview",
+    "defaultMessage": "Overview"
+  },
+  {
+    "id": "about-tokens.overview-text",
+    "defaultMessage": "Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin."
+  },
+  {
+    "id": "about-tokens.uses",
+    "defaultMessage": "What are Origin Tokens used for?"
+  },
+  {
+    "id": "about-tokens.boosting",
+    "defaultMessage": "Boosting"
+  },
+  {
+    "id": "about-tokens.boosting-text",
+    "defaultMessage": "Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost."
+  },
+  {
+    "id": "about-tokens.rewards",
+    "defaultMessage": "Referral Rewards"
+  },
+  {
+    "id": "about-tokens.coming-soon-1",
+    "defaultMessage": "Coming soon"
+  },
+  {
+    "id": "about-tokens.governance",
+    "defaultMessage": "Platform Governance"
+  },
+  {
+    "id": "about-tokens.coming-soon-2",
+    "defaultMessage": "Coming soon"
+  },
+  {
+    "id": "about-tokens.vendors",
+    "defaultMessage": "Where can I buy Origin Tokens?"
+  },
+  {
+    "id": "about-tokens.exchanges",
+    "defaultMessage": "Exchanges"
+  },
+  {
+    "id": "about-tokens.exchanges-text",
+    "defaultMessage": "During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform."
+  }
+]

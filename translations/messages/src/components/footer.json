@@ -1,0 +1,14 @@
+[
+  {
+    "id": "footer.description",
+    "defaultMessage": "The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS."
+  },
+  {
+    "id": "footer.websiteLink",
+    "defaultMessage": "Visit our Website"
+  },
+  {
+    "id": "footer.githubLink",
+    "defaultMessage": "Visit our Github"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "User.verifiedInto",
+    "defaultMessage": "Verified Info"
+  },
+  {
+    "id": "User.phone",
+    "defaultMessage": "Phone"
+  },
+  {
+    "id": "User.email",
+    "defaultMessage": "Email"
+  },
+  {
+    "id": "User.facebook",
+    "defaultMessage": "Facebook"
+  },
+  {
+    "id": "User.twitter",
+    "defaultMessage": "Twitter"
+  },
+  {
+    "id": "User.airbnb",
+    "defaultMessage": "Airbnb"
+  }
+]

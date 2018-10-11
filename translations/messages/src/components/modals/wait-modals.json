@@ -1,0 +1,18 @@
+[
+  {
+    "id": "listing-detail.processingPurchase",
+    "defaultMessage": "Processing your purchase"
+  },
+  {
+    "id": "listing-detail.pleaseStandBy",
+    "defaultMessage": "Please stand by..."
+  },
+  {
+    "id": "listing-detail.confirmTransaction",
+    "defaultMessage": "Confirm Transaction"
+  },
+  {
+    "id": "listing-detail.pressSubmitInMetaMask",
+    "defaultMessage": "Please accept or confirm this transaction in {currentProvider}."
+  }
+]

@@ -1,0 +1,50 @@
+:root {
+  --default-font: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
+  --heading-font: 'Poppins', 'Helvetica Neue', 'Arial', sans-serif;
+
+  --dark: #111d28;
+  --dark-two: #213040;
+  --light: #c2cbd3;
+  --clear-blue: #1a82ff;
+  --pale-clear-blue: #f5fafc;
+  --dark-grey-blue: #2e3f53;
+  --dark-clear-blue: #0169e6;
+  --dark-grey: #282727;
+  --pale-grey: #ebf0f3;
+  --pale-grey-two: #dfe6ea;
+  --pale-grey-three: #f6f7f8;
+  --pale-grey-four: #fafbfc;
+  --pale-grey-five: #f7f8f9;
+  --pale-grey-six: #fafafa;
+  --pale-grey-seven: #eaeef1;
+  --pale-grey-two-darker: #cfd8dd;
+  --pale-grey-eight: #f1f6f9;
+  --dusk: #455d75;
+  --light-dusk: #889fb7;
+  --steel: #6f8294;
+  --greenblue: #26d198;
+  --pale-greenblue: #f5fcfa;
+  --pale-yellow: #fcf0c3;
+  --mustard: #fae088;
+  --gold: #f7d14c;
+  --golden-rod: #f4c110;
+  --golden-rod-light: rgba(244, 193, 16, 0.1);
+  --light-greenblue: #59ffcb;
+  --bluish-purple: #6e3bea;
+  --bluey-grey: #98a7b4;
+  --dark-blue-grey: #0c2033;
+  --orange-red: #ff1a1a;
+  --orange-red-light: rgba(255, 26, 26, 0.03);
+  --red: #f34755;
+  --dark-red: #a2686c;
+  --light-red: #fbdbdb;
+  --dark-purple: #a27cff;
+
+  --default-radius: 5px;
+
+  /* Boost Colors */
+  --boost-low: var(--pale-yellow);
+  --boost-medium: var(--mustard);
+  --boost-high: var(--gold);
+  --boost-premium: var(--golden-rod);
+}

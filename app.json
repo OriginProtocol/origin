@@ -1,0 +1,42 @@
+{
+  "name": "Origin Protocol demo DApp",
+  "description": "Demo DApp for a peer to peer marketplace using origin.js",
+  "website": "https://demo.originprotocol.com/",
+  "repository": "https://github.com/OriginProtocol/demo-dapp",
+  "logo": "https://avatars1.githubusercontent.com/u/30638653",
+  "success_url": "/",
+  "env": {
+    "PROVIDER_URL": {
+      "description": "Sign up for your own Infura key at https://infura.io/ and append it to the end of this URL",
+      "value": "https://rinkeby.infura.io/",
+      "required": false
+    },
+    "IPFS_DOMAIN": {
+      "value": "bridge.originprotocol.com",
+      "required": true
+    },
+    "IPFS_API_PORT": {
+      "value": "443",
+      "required": true
+    },
+    "IPFS_GATEWAY_PROTOCOL": {
+      "value": "https",
+      "required": true
+    },
+    "IPFS_GATEWAY_PORT": {
+      "value": "443",
+      "required": true
+    },
+    "BRIDGE_SERVER_DOMAIN": {
+      "value": "bridge.originprotocol.com",
+      "required": true
+    },
+    "BRIDGE_SERVER_PROTOCOL": {
+      "value": "https",
+      "required": true
+    }
+  },
+  "buildpacks": [{
+    "url": "heroku/nodejs"
+  }]
+}
