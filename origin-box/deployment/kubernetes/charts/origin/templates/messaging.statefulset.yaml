@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "messaging.fullname" . }}
+  labels:
+    app: {{ template "messaging.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "messaging.fullname" . }}
+  serviceName: {{ template "messaging.fullname" . }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "messaging.fullname" . }}
+    spec:
+      containers:
+      - name: origin-messaging
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.messagingImage }}:{{ .Values.messagingImageTag }}"
+        imagePullPolicy: Always
+        env:
+          - name: MESSAGING_NAMESPACE
+            {{- if ne .Release.Namespace "prod" }}
+            value: "origin:{{ .Release.Namespace }}"
+            {{- else }}
+            value: "origin"
+            {{- end }}
+          - name: IPFS_REPO_PATH
+            value: "/data/ipfs"
+          - name: ORBIT_DB_PATH
+            value: "/data/odb"
+        port:
+          - name: websocket
+            containerPort: 9012
+        volumeMounts:
+          - mountPath: /data/ipfs
+            name: {{ template "messaging.fullname" . }}-data
+        resources:
+          requests:
+            memory: 1Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "messaging.fullname" . }}-data
+      labels:
+        app: {{ template "messaging.fullname" . }}
+    spec:
+      accessModes:
+        - ReadWriteOnce  # Read-write for a single node only
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: {{ default "8Gi" .Values.messagingIpfsStorageRequestSize }}

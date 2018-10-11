@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "discovery.fullname" . }}
+  labels:
+    app: {{ template "discovery.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ default 2 .Values.discoveryReplicas }}
+  selector:
+    matchLabels:
+      app: {{ template "discovery.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "discovery.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: origin-discovery
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.discoveryImage }}:{{ .Values.discoveryImageTag }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 4000
+        env:
+          - name: DATABASE_HOST
+            value: "localhost"
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "discovery.fullname" . }}
+                key: DATABASE_USERNAME
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "discovery.fullname" . }}
+                key: DATABASE_PASSWORD
+          - name: DATABASE_NAME
+            value: "discovery"
+          - name: ELASTICSEARCH_HOST
+            value: "elasticsearch-elasticsearch-svc:9200"
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances={{ .Values.databaseInstance }}=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
