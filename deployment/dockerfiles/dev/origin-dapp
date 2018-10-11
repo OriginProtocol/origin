@@ -6,10 +6,10 @@ FROM node:9 as origin-js-build
 # from the remote repository
 ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/master /version.json
 # Clone origin-js from master (development) branch
+
 RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin.git /app
 
 WORKDIR /app/origin-js
-
 RUN npm install --quiet --no-progress
 RUN npm run build
 
@@ -39,7 +39,7 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.dev.originprotocol.com \
     DEPLOY_TAG=$DEPLOY_TAG \
     BLOCK_EPOCH=0
 
-WORKDIR /app/origin-dapp
+WORKDIR /app/
 RUN npm install --quiet --no-progress
 
 # Link previously built Origin.js
@@ -51,5 +51,5 @@ RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-on
 
 # Copy static files to nginx for serving
 FROM nginx:1.15.2
-COPY --from=build /app/origin-dapp/build /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]
