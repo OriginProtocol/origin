@@ -32,13 +32,8 @@ function build_and_push_container() {
 
   echo -e "Deployed container tag is \033[94m${DEPLOYED_TAG}\033[0m"
 
-  # TODO origin-box does not yet have staging branches configured
-  if [ "$REPO" = "origin-box" ]; then
-    BRANCH="master"
-  fi
-
   # Get short git hash from remote repo
-  GIT_HASH=$(git ls-remote -h git@github.com:OriginProtocol/$REPO.git ${BRANCH} | cut -c1-7)
+  GIT_HASH=$(git ls-remote -h git@github.com:OriginProtocol/origin.git ${BRANCH} | cut -c1-7)
   DEPLOY_TAG=${GIT_HASH}
 
   if [ "$DEPLOYED_TAG" == "$GIT_HASH" ]; then
@@ -110,27 +105,21 @@ while getopts ":c:n:h" opt; do
       case "$CONTAINER" in
         origin-dapp)
 	  IMAGE_TAG_FIELD=dappImageTag
-	  REPO=origin-dapp
 	  ;;
         origin-bridge)
 	  IMAGE_TAG_FIELD=bridgeImageTag
-	  REPO=origin-bridge
 	  ;;
         origin-messaging)
 	  IMAGE_TAG_FIELD=messagingImageTag
-	  REPO=origin-box
 	  ;;
 	origin-faucet)
 	  IMAGE_TAG_FIELD=faucetImageTag
-	  REPO=origin-js
 	  ;;
 	origin-discovery)
 	  IMAGE_TAG_FIELD=discoveryImageTag
-	  REPO=origin-js
 	  ;;
 	event-listener)
 	  IMAGE_TAG_FIELD=eventlistenerImageTag
-	  REPO=origin-js
 	  ;;
 	*)
 	  echo -e "\033[31mContainer not yet implemented\033[0m"
