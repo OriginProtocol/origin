@@ -26,8 +26,8 @@ export function fetchFeaturedHiddenListings(networkId) {
 
   return async function(dispatch) {
     try{
-      const featuredListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/featurelist_${networkId}.txt`)
-      const hiddenListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hidefeature_list/hidelist_${networkId}.txt`)
+      const featuredListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-bridge/hidefeature_list/featurelist_${networkId}.txt`)
+      const hiddenListings = await readListingsFromUrl(`https://raw.githubusercontent.com/OriginProtocol/origin-bridge/hidefeature_list/hidelist_${networkId}.txt`)
       dispatch({
         type: ListingConstants.FETCH_FEATURED_HIDDEN,
         hidden: hiddenListings,
