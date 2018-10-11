@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '30b42fc'
+bridgeImageTag: '4aa5387'
 bridgeReplicas: 1
 
 # origin-dapp
@@ -19,7 +19,7 @@ ipfsImageTag: ipfs/go-ipfs
 ipfsImageTag: master
 
 faucetImage: origin-faucet
-faucetImageTag: '90ecb10'
+faucetImageTag: '13d0e21'
 
 eventlistenerImage: event-listener
 eventlistenerImageTag: '90ecb10'
@@ -27,7 +27,7 @@ eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
 eventlistenerContinueBlock: 3000000
 
 discoveryImage: origin-discovery
-discoveryImageTag: '90ecb10'
+discoveryImageTag: '4aa5387'
 
 # IPFS server for OrbitDB
 messagingIpfsImage: ipfs/go-ipfs
@@ -35,4 +35,4 @@ messagingIpfsImageTag: v0.4.17
 
 # OrbitDB
 messagingImage: origin-messaging
-messagingImageTag: '4327155'
+messagingImageTag: '4aa5387'
