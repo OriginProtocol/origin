@@ -1,0 +1,3 @@
+files:
+  - source: /origin-dapp/translations/all-messages.json
+    translation: /languages/%locale%/%original_file_name%
