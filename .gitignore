@@ -41,8 +41,6 @@ node_modules/
 # Logs
 /origin-bridge/logs
 /origin-bridge/*.log
-/origin-bridge/yarn-debug.log*
-/origin-bridge/yarn-error.log*
 
 # Runtime data
 /origin-bridge/pids
@@ -62,37 +60,12 @@ node_modules/
 # Bower dependency directory (https://bower.io/)
 /origin-bridge/bower_components
 
-# node-waf configuration
-/origin-bridge/.lock-wscript
-
-# Dependency directories
-/origin-bridge/jspm_packages/
-
-# Typescript v1 declaration files
-/origin-bridge/typings/
-
-# Optional npm cache directory
-/origin-bridge/.npm
-
-# Optional eslint cache
-/origin-bridge/.eslintcache
-
 # Optional REPL history
 /origin-bridge/.node_repl_history
-
-# Output of 'npm pack'
-/origin-bridge/*.tgz
-
-# Yarn Integrity file
-/origin-bridge/.yarn-integrity
 
 # Python
 /origin-bridge/*.pyc
 /origin-bridge/ve
-
-# celery
-/origin-bridge/celerybeat-schedule
-/origin-bridge/celerybeat-schedule.db
 
 # pytest
 /origin-bridge/.pytest_cache
@@ -100,9 +73,6 @@ node_modules/
 
 # Flask Session files
 /origin-bridge/*flask_session/
-
-# Development contract directory
-/origin-bridge/contracts_dev
 
 # origin-docs #
 ###############
@@ -127,7 +97,6 @@ node_modules/
 # origin-js #
 #############
 
-/origin-js/contracts/secret/
 /origin-js/dist
 /origin-js/connect.lock
 /origin-js/libpeerconnection.log
