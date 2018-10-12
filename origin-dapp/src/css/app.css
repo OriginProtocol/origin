@@ -3,6 +3,7 @@
 @import 'bootstrap.css';
 @import '../../node_modules/rc-slider/assets/index.css';
 @import '../../node_modules/react-dates/lib/css/_datepicker.css';
+@import '../../node_modules/react-image-crop/dist/ReactCrop.css';
 
 html {
   font-size: 16px;
@@ -2464,14 +2465,16 @@ select.form-control:not([size]):not([multiple]) {
   flex-wrap: wrap;
 }
 
+.schema-details .pictures .image-container img {
+  max-width: 100%;
+}
+
 .schema-details .pictures .image-container {
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
   position: relative;
   padding: 0;
-  height: 240px;
   margin-bottom: 10px;
-  width: 100%;
 }
 
 .cancel-image {
