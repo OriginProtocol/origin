@@ -21,9 +21,15 @@ spec:
     - secretName: {{ template "ipfs.host" . }}
       hosts:
         - {{ template "ipfs.host" . }}
+    {{- if eq .Release.Namespace "prod" }}
+    # Additional domain that was originally used for the IPFS gateway
+    - secretName: gateway.originprotocol.com
+      hosts:
+        - gateway.originprotocol.com
+    {{- end }}
   rules:
     - host: {{ template "ipfs.host" . }}
-      http:
+      http: &http_rules
         paths:
           # Only allow the add API call through to the IPFS API
           - path: /api/v0/add
@@ -35,3 +41,7 @@ spec:
             backend:
               serviceName: {{ template "ipfs.fullname" . }}
               servicePort: 8080
+    {{- if eq .Release.Namespace "prod" }}
+    - host: gateway.originprotocol.com
+      http: *http_rules
+    {{- end }}
