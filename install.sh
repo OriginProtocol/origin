@@ -75,15 +75,6 @@ function run_step() {
 function install_origin_environment() {
 	print_origin_start
 
-	run_step "Cloning origin-js" \
-		git clone git@github.com:OriginProtocol/origin-js.git --branch stable || true
-
-	run_step "Cloning origin-bridge" \
-		git clone git@github.com:OriginProtocol/origin-bridge.git --branch stable || true
-
-	run_step "Cloning origin-dapp" \
-		git clone git@github.com:OriginProtocol/origin-dapp.git --branch stable || true
-
 	run_step "Building containers" \
 		docker-compose build
 
