@@ -266,12 +266,11 @@ async function handleLog(log, rule, contractVersion, context) {
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
 
-  const logDetails = `Processing log \
-    blockNumber=${log.blockNumber} \
+  const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
     eventName=${log.eventName} \
     contractName=${log.contractName}`
-  console.log(logDetails)
+  console.log(`Processing log: $[logDetails}`)
 
   // Note: we run the rule with a retry since we've seen in production cases where we fail loading
   // from smart contracts the data pointed to by the event. This may occur due to load balancing
@@ -322,7 +321,7 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   if (context.config.elasticsearch) {
-    console.log('INDEXING ', listingId)
+    console.log(`Indexing listing in Elastic: id=${listingId}`)
     await withRetrys(async () => {
       await search.Listing.index(
         listingId,
@@ -333,16 +332,21 @@ async function handleLog(log, rule, contractVersion, context) {
     })
     if (output.related.offer !== undefined) {
       const offer = output.related.offer
+      console.log(`Indexing offer in Elastic: id=${offer.id} `)
       await withRetrys(async () => {
         await search.Offer.index(offer, listing)
       })
     }
     if (output.related.seller !== undefined) {
+      const seller = output.related.seller
+      console.log(`Indexing seller in Elastic: addr=${seller.address}`)
       await withRetrys(async () => {
-        await search.User.index(output.related.seller)
+        await search.User.index(seller)
       })
     }
     if (output.related.buyer !== undefined) {
+      const buyer = output.related.buyer
+      console.log(`Indexing buyer in Elastic: addr=${buyer.address}`)
       await withRetrys(async () => {
         await search.User.index(output.related.buyer)
       })
@@ -350,6 +354,7 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   if (context.config.db) {
+    console.log(`Indexing listing in DB: id=${listingId}`)
     await withRetrys(async () => {
       await db.Listing.insert(
         listingId,
