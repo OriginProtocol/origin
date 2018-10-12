@@ -4,12 +4,14 @@
 [![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin-js/blob/master/LICENSE)
 [![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-js/master.svg?style=flat-square&colorA=111d28)](https://travis-ci.org/OriginProtocol/origin-js)
 
-**Origin is empowering developers to build decentralized marketplaces on the blockchain!** Head out our [Developer's page](https://www.originprotocol.com/developers) to learn more about what we're building and how to get involved.
+**Origin is empowering developers to build decentralized marketplaces on the blockchain!**
 
-You can see the Origin ecosystem in action at https://dapp.originprotocol.com!
+Visit our [Developer's page](https://www.originprotocol.com/developers) to learn more about what we're building and how to get involved.
+
+You can see the Origin ecosystem in action at https://dapp.originprotocol.com.
 
 
-## Our projects:
+## Our Projects:
 
 * [origin-js](https://github.com/OriginProtocol/origin/tree/master/origin-js) is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces.
 * Our [dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp) is a the first marketplace powered by the Origin Protocol. Make the code your own!
