@@ -1,7 +1,9 @@
+{{- if eq .Release.Namespace "staging" }}
+# Permanent redirect for demo.originprotocol.com
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "dapp.fullname" . }}
+  name: demo-originprotocol-redirect
   labels:
     app: {{ template "dapp.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -11,17 +13,17 @@ metadata:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/permanent-redirect: {{ template "dapp.host" . }}
 spec:
   tls:
-    - secretName: {{ template "dapp.host" . }}
+    - secretName: demo.originprotocol.com
       hosts:
-        - {{ template "dapp.host" . }}
+        - demo.originprotocol.com
   rules:
-  - host: {{ template "dapp.host" . }}
+  - host: demo.originprotocol.com
     http:
       paths:
-        - path: /
-          backend:
-            serviceName: {{ template "dapp.fullname" . }}
-            servicePort: 80
+      - backend:
+          serviceName: {{ template "dapp.fullname" . }}
+          servicePort: 80
+{{- end }}
