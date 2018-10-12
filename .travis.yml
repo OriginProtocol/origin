@@ -1,7 +1,7 @@
 language: node_js
 node_js:
   - "lts/*"
-env:
-  - TEST_DIR=origin-dapp
-  - TEST_DIR=origin-js
-script: cd $TEST_DIR && npm install && npm test
+# FIXME: remove dependency between origin-faucet and origin-js/contracts/test-alt
+script:
+  - cd origin-dapp && npm install && npm test
+  - cd ../origin-faucet && npm install && cd ../origin-js && npm install && npm test

@@ -1,6 +1,6 @@
 import assert from 'assert'
 import helper, { contractPath } from './_helper'
-import Token from '../../token/lib/token'
+import Token from '../../../origin-faucet/lib/token'
 
 // These tests are for the token library that the token CLI uses. We don't
 // validate the effects of various operations. That is left to the contract
