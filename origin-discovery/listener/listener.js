@@ -243,12 +243,12 @@ async function withRetrys(fn, exitOnError=true) {
     }
     if (tryCount >= MAX_RETRYS) {
       if (exitOnError) {
-        console.log(`EXITING: Maximum number of retrys reached for ${fn.name}.`)
+        console.log('EXITING: Maximum number of retrys reached')
         // Now it's up to our environment to restart us.
         // Hopefully with a clean start, things will work better
         process.exit(1)
       } else {
-        throw new Error(`Maximum number of retrys reached for ${fn.name}`)
+        throw new Error('Maximum number of retrys reached')
       }
     }
   }
@@ -270,7 +270,7 @@ async function handleLog(log, rule, contractVersion, context) {
     transactionIndex=${log.transactionIndex} \
     eventName=${log.eventName} \
     contractName=${log.contractName}`
-  console.log(`Processing log: $[logDetails}`)
+  console.log(`Processing log: ${logDetails}`)
 
   // Note: we run the rule with a retry since we've seen in production cases where we fail loading
   // from smart contracts the data pointed to by the event. This may occur due to load balancing
@@ -282,7 +282,7 @@ async function handleLog(log, rule, contractVersion, context) {
       ruleResults = await rule.ruleFn(log)
     }, exitOnError = false)
   } catch(e) {
-    console.log(`Skipping indexing for ${logDetails}`)
+    console.log(`Skipping indexing for ${logDetails} - ${e}`)
     return
   }
 
