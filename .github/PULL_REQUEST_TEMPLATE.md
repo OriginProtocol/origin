@@ -3,9 +3,11 @@ First pull request? Read our [guide to contributing](http://docs.originprotocol.
 ### Checklist:
 
 - [ ] Test your work and double-check to confirm that you didn't break anything
+- [ ] Ensure all new and existing tests pass
+- [ ] Format code to be consistent with the project
 - [ ] Wrap any new text/strings for translation
 - [ ] Map any new environment variables with a default value in the Webpack config
-- [ ] Update any relevant READMEs and [docs](https://github.com/OriginProtocol/docs)
+- [ ] Update any relevant READMEs and [docs](https://github.com/OriginProtocol/origin/tree/master/origin-docs)
 
 ### Description:
 

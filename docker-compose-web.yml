@@ -34,12 +34,12 @@ services:
     container_name: origin-website
     build:
       context: .
-      dockerfile: dockerfiles/origin-website
+      dockerfile: development/dockerfiles/origin-website
     image: origin-website
     volumes:
       - ./origin-website:/app
       # Set the envfile from the local envfile
-      - ./envfiles/origin-website.env:/app/.env
+      - ./development/envfiles/origin-website.env:/app/.env
     depends_on:
       - postgres_web
       - redis_web
@@ -61,7 +61,7 @@ services:
     volumes:
       - ./origin-website:/app
       # Set the envfile from the local envfile
-      - ./envfiles/origin-website.env:/app/.env
+      - ./development/envfiles/origin-website.env:/app/.env
     environment:
       - FLASK_APP=/app/main.py
     command: "watchmedo auto-restart -d . -p '*.py' -i '*.pyc' --recursive --
