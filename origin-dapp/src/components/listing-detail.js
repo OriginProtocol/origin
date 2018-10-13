@@ -258,7 +258,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { web3Account, featured } = this.props
+    const { featuredListingIds, listingId, web3Account } = this.props
     const {
       // boostLevel,
       // boostValue,
@@ -286,10 +286,11 @@ class ListingsDetail extends Component {
     const isPending = currentOfferAvailability === 'pending'
     const isSold = currentOfferAvailability === 'sold'
     const isAvailable = !isPending && !isSold && !isWithdrawn
+    const showPendingBadge = isPending && !isWithdrawn
+    const showSoldBadge = isSold || isWithdrawn
+    const showFeaturedBadge = featuredListingIds.includes(listingId) && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
-    const showFeaturedBadge =
-      isAvailable && featured.includes(this.props.listingId)
 
     return (
       <div className="listing-detail">
@@ -468,8 +469,8 @@ class ListingsDetail extends Component {
                 <div>{category}</div>
                 {!loading && (
                   <div className="badges">
-                    {isPending && <PendingBadge />}
-                    {isSold && <SoldBadge />}
+                    {showPendingBadge && <PendingBadge />}
+                    {showSoldBadge && <SoldBadge />}
                     {showFeaturedBadge && <FeaturedBadge />}
                     {/*boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
@@ -846,7 +847,7 @@ const mapStateToProps = ({ app, profile, listings }) => {
     onMobile: app.onMobile,
     web3Account: app.web3.account,
     web3Intent: app.web3.intent,
-    featured: listings.featured
+    featuredListingIds: listings.featured
   }
 }
 
