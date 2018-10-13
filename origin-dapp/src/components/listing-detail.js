@@ -19,6 +19,7 @@ import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Modal from 'components/modal'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
+import Calendar from './calendar'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
@@ -67,6 +68,13 @@ class ListingsDetail extends Component {
       }
     })
 
+    this.handleBuyClicked = this.handleBuyClicked.bind(this)
+    this.reserveSlots = this.reserveSlots.bind(this)
+    this.loadListing = this.loadListing.bind(this)
+  }
+
+  async handleBuyClicked() {
+    this.props.storeWeb3Intent('buy this listing')
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
   }
@@ -225,6 +233,30 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.VIEW })
   }
 
+  async reserveSlots(slotsToReserve) {
+    this.props.storeWeb3Intent('reserve this listing')
+
+    if (web3.givenProvider && this.props.web3Account) {
+      const totalPrice = slotsToReserve.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.priceWei, 0)
+      this.setState({step: this.STEP.METAMASK})
+      try {
+        this.setState({step: this.STEP.PROCESSING})
+        const { created, transactionReceipt } = await origin.listings.request(this.state.address, slotsToReserve, totalPrice, this.props.updateTransaction)
+        this.props.upsertTransaction({
+          ...transactionReceipt,
+          created,
+          transactionTypeKey: 'reserveListing',
+        })
+        console.log('Reservation request sent.')
+        this.setState({ step: this.STEP.PURCHASED })
+      } catch (error) {
+        window.err = error
+        console.error(error)
+        this.setState({step: this.STEP.ERROR})
+      }
+    }
+  }
+
   render() {
     const { web3Account, featured } = this.props
     const {
@@ -232,6 +264,7 @@ class ListingsDetail extends Component {
       // boostValue,
       category,
       description,
+      ipfsHash,
       loading,
       name,
       offers,
@@ -253,11 +286,10 @@ class ListingsDetail extends Component {
     const isPending = currentOfferAvailability === 'pending'
     const isSold = currentOfferAvailability === 'sold'
     const isAvailable = !isPending && !isSold && !isWithdrawn
-    const showPendingBadge = isPending && !isWithdrawn
-    const showSoldBadge = isSold || isWithdrawn
-    const showFeaturedBadge = featured && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
+    const showFeaturedBadge =
+      isAvailable && featured.includes(this.props.listingId)
 
     return (
       <div className="listing-detail">
@@ -436,8 +468,8 @@ class ListingsDetail extends Component {
                 <div>{category}</div>
                 {!loading && (
                   <div className="badges">
-                    {showPendingBadge && <PendingBadge />}
-                    {showSoldBadge && <SoldBadge />}
+                    {isPending && <PendingBadge />}
+                    {isSold && <SoldBadge />}
                     {showFeaturedBadge && <FeaturedBadge />}
                     {/*boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
@@ -462,6 +494,50 @@ class ListingsDetail extends Component {
                   />
                 </div>
               */}
+              {ipfsHash && (
+                <div className="ipfs link-container">
+                  <a
+                    href={origin.ipfsService.gatewayUrlForHash(ipfsHash)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    ga-category="listing"
+                    ga-label="view_on_ipfs"
+                  >
+                    <FormattedMessage
+                      id={'listing-detail.viewOnIpfs'}
+                      defaultMessage={'View on IPFS'}
+                    />
+                    <img
+                      src="images/carat-blue.svg"
+                      className="carat"
+                      alt="right carat"
+                    />
+                  </a>
+                </div>
+              )}
+              <div className="debug">
+                <li>
+                  <FormattedMessage
+                    id={'listing-detail.IPFS'}
+                    defaultMessage={'IPFS: {ipfsHash}'}
+                    values={{ ipfsHash }}
+                  />
+                </li>
+                <li>
+                  <FormattedMessage
+                    id={'listing-detail.seller'}
+                    defaultMessage={'Seller: {sellerAddress}'}
+                    values={{ sellerAddress: seller }}
+                  />
+                </li>
+                <li>
+                  <FormattedMessage
+                    id={'listing-detail.IPFS'}
+                    defaultMessage={'IPFS: {ipfsHash}'}
+                    values={{ ipfsHash }}
+                  />
+                </li>
+              </div>
             </div>
             <div className="col-12 col-md-4">
               {isAvailable &&
@@ -713,7 +789,6 @@ class ListingsDetail extends Component {
                   )}
                   {!loading &&
                     userIsSeller &&
-                    !currentOffer &&
                     isWithdrawn && (
                     <Link
                       to={`/listings/create`}
@@ -736,6 +811,18 @@ class ListingsDetail extends Component {
                 />
               )}
             </div>
+            { !this.state.loading && this.state.listingType === 'fractional' && !userIsSeller &&
+              <div className="col-12">
+                <Calendar 
+                  slots={ this.state.slots }
+                  purchases={ this.state.purchases }
+                  userType="buyer"
+                  viewType={ this.state.schemaType === 'housing' ? 'daily' : 'hourly' }
+                  onComplete={ this.reserveSlots }
+                  step={ 60 }
+                />
+              </div>
+            }
           </div>
           {this.props.withReviews && (
             <div className="row">

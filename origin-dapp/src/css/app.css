@@ -1,6 +1,8 @@
 @import 'alertify.css';
 @import 'variables.css';
 @import 'bootstrap.css';
+@import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
+@import 'calendar.css';
 @import '../../node_modules/rc-slider/assets/index.css';
 @import '../../node_modules/react-dates/lib/css/_datepicker.css';
 
@@ -1236,8 +1238,7 @@ textarea:-moz-ui-invalid {
   background-color: #202e3e;
 }
 
-.identity .dropdown-menu .wallet,
-.identity .dropdown-menu .wallet-container {
+.identity .dropdown-menu .wallet {
   margin: 0;
   top: unset;
 }
@@ -1430,6 +1431,22 @@ textarea:-moz-ui-invalid {
   border: solid 1px var(--light);
   background-color: white;
   color: var(--clear-blue);
+}
+
+.btn-dark {
+  border: solid 1px white;
+  background-color: var(--dark);
+  color: white;
+}
+
+.btn-dark:hover {
+  border: solid 1px white;
+}
+
+.btn-light {
+  border: solid 1px var(--dark);
+  background-color: white;
+  color: var(--dark);
 }
 
 .connectivity .indicators {
@@ -1840,8 +1857,7 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal.confirm .modal-content,
-.arbitration-modal.prerequisite .modal-content,
-.arbitration-modal.complete-purchase .modal-content {
+.arbitration-modal.prerequisite .modal-content {
   width: 450px;
 }
 
@@ -1892,8 +1908,7 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal.confirm .heading,
-.arbitration-modal.prerequisite .heading,
-.arbitration-modal.complete-purchase .heading {
+.arbitration-modal.prerequisite .heading {
   margin-top: auto;
 }
 
@@ -1903,8 +1918,7 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal.confirm .text,
-.arbitration-modal.prerequisite .text,
-.arbitration-modal.complete-purchase .text {
+.arbitration-modal.prerequisite .text {
   margin: 0px;
 }
 
@@ -1914,8 +1928,7 @@ textarea:-moz-ui-invalid {
 
 .arbitration-modal.confirm .button-container,
 .arbitration-modal.issue .button-container,
-.arbitration-modal.prerequisite .button-container,
-.arbitration-modal.complete-purchase .button-container {
+.arbitration-modal.prerequisite .button-container {
   display: inline-flex;
 }
 
@@ -2075,10 +2088,6 @@ textarea:-moz-ui-invalid {
   margin-bottom: 1rem;
   overflow: hidden;
   width: 100%;
-}
-
-.listing-card .photo {
-  border: 1px solid #ced4da;
 }
 
 .listing-card .image-container {
@@ -2349,6 +2358,13 @@ textarea:-moz-ui-invalid {
   margin-right: 4px;
 }
 
+.listing-container .debug {
+  display: none;
+  unicode-bidi: embed;
+  font-family: monospace;
+  white-space: pre;
+}
+
 .info-box .link-container a {
   font-weight: bold;
 }
@@ -2465,7 +2481,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .schema-details .pictures .image-container {
-  border: 1px solid #ced4da;
+  border: 1px solid var(--light);
   border-radius: 0.25rem;
   position: relative;
   padding: 0;
@@ -3459,6 +3475,11 @@ select.form-control:not([size]):not([multiple]) {
 
 .purchase-detail .carousel {
   margin-bottom: 1rem;
+}
+
+.purchase-detail .ipfs-link {
+  font-weight: normal;
+  margin-top: 20px;
 }
 
 .purchase-detail .prompt + form {
@@ -4540,7 +4561,12 @@ sup {
   text-transform: uppercase;
 }
 
+.wallet {
+  margin-bottom: 20px;
+}
+
 .wallet.appended {
+  margin-bottom: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -5024,16 +5050,6 @@ a:not([href]):not([tabindex]).span-link {
 .warning p {
   font-weight: normal;
   margin-bottom: 0;
-}
-
-/* Web3 Provider */
-.unsupported-provider .redirect-btn {
-  width: 70%;
-  margin-top: 24px;
-}
-
-.unsupported-provider .redirect-message {
-  margin: 0;
 }
 
 /* Media queries */
