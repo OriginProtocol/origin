@@ -130,7 +130,7 @@ export function localizeApp() {
   }
 
   const messages = translations[bestAvailableLanguage];
-  if(messages['title']){
+  if(messages&&messages['title']){
     document.title = messages['title']
   }
   let selectedLanguageCode = bestAvailableLanguage
