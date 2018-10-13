@@ -129,7 +129,10 @@ export function localizeApp() {
     }
   }
 
-  const messages = translations[bestAvailableLanguage]
+  const messages = translations[bestAvailableLanguage];
+  if(messages['title']){
+    document.title = messages['title']
+  }
   let selectedLanguageCode = bestAvailableLanguage
 
   if (!selectedLanguageCode || !messages) {
