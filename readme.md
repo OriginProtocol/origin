@@ -4,7 +4,7 @@
 [![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin-js/blob/master/LICENSE)
 [![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-js/master.svg?style=flat-square&colorA=111d28)](https://travis-ci.org/OriginProtocol/origin-js)
 
-**Origin is empowering developers to build decentralized marketplaces on the blockchain!**
+Origin is empowering developers to build decentralized marketplaces on the blockchain!
 
 Visit our [Developer's page](https://www.originprotocol.com/developers) to learn more about what we're building and how to get involved.
 
