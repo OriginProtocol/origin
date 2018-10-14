@@ -3,5 +3,7 @@ node_js:
   - "lts/*"
 # FIXME: remove dependency between origin-faucet and origin-js/contracts/test-alt
 script:
+  - set -e
   - cd origin-dapp && npm install && npm test
   - cd ../origin-faucet && npm install && cd ../origin-js && npm install && npm test
+  - set +e
