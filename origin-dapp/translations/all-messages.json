@@ -105,6 +105,7 @@
   "listing-create.category": "Category",
   "listing-create.description": "Description",
   "listing-create.listing-price": "Listing Price",
+  "listing-create.fractional-price-varies": "Price varies by date",
   "listing-create.appropriate-value": "Approximate Value",
   "listing-create.boost-level": "Boost Level",
   "listing-create.backButtonLabel": "Back",

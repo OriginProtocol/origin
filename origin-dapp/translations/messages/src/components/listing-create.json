@@ -80,6 +80,10 @@
     "defaultMessage": "Listing Price"
   },
   {
+    "id": "listing-create.fractional-price-varies",
+    "defaultMessage": "Price varies by date"
+  },
+  {
     "id": "listing-create.appropriate-value",
     "defaultMessage": "Approximate Value"
   },

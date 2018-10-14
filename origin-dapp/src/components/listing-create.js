@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
@@ -95,7 +95,7 @@ class ListingCreate extends Component {
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
     this.onGoBackToDetails = this.onGoBackToDetails.bind(this)
-    this.backFromReviewStep = this.backFromReviewStep.bind(this)
+    this.backFromBoostStep = this.backFromBoostStep.bind(this)
     this.onBackToPickSchema = this.onBackToPickSchema.bind(this)
     this.onFormDataChange = this.onFormDataChange.bind(this)
     this.onReview = this.onReview.bind(this)
@@ -106,11 +106,12 @@ class ListingCreate extends Component {
   }
 
   async componentDidMount() {
+    // If listingAddress prop is passed in, we're in edit mode, so fetch listing data
     if (this.props.listingAddress) {
       try {
         const listing = await origin.listings.get(this.props.listingAddress)
         this.setState({ selectedSchemaType: listing.schemaType })
-        await this.handleSchemaSelection()
+        await this.handleSchemaSelection(listing.schemaType)
         listing.slots = generateCalendarSlots(listing.slots)
 
         this.setState({
@@ -163,6 +164,8 @@ class ListingCreate extends Component {
   }
 
   handleSchemaSelection(selectedSchemaType) {
+    const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
+
     fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
@@ -192,6 +195,12 @@ class ListingCreate extends Component {
           }
         }
 
+        if (isFractionalListing) {
+          this.uiSchema.price = {
+            'ui:widget': 'hidden'
+          }
+        }
+
         const translatedSchema = translateSchema(schemaJson, selectedSchemaType)
 
         this.setState({
@@ -201,6 +210,7 @@ class ListingCreate extends Component {
           fractionalTimeIncrement: (selectedSchemaType === 'housing' ? 'daily' : 'hourly'),
           showNoSchemaSelectedError: false,
           translatedSchema,
+          isFractionalListing,
           schemaExamples:
             translatedSchema &&
             translatedSchema.properties &&
@@ -226,6 +236,10 @@ class ListingCreate extends Component {
   }
 
   onAvailabilityEntered(slots) {
+    if (!slots || !slots.length) {
+      return
+    }
+
     slots.forEach((slot) => {
       if (typeof slot.priceWei !== 'number') {
         delete slot.priceWei
@@ -241,7 +255,7 @@ class ListingCreate extends Component {
     })
 
     this.setState({
-      step: this.STEP.PREVIEW
+      step: this.STEP.BOOST
     })
   }
 
@@ -258,12 +272,18 @@ class ListingCreate extends Component {
     this.setState({ step: this.STEP.DETAILS })
   }
 
-  backFromReviewStep() {
+  backFromBoostStep() {
     const previousStep = this.state.isFractionalListing ? this.STEP.AVAILABILITY : this.STEP.DETAILS
     this.setState({ step: previousStep })
   }
 
   onDetailsEntered(formListing) {
+    // TODO: origin-js throws an error if price is undefined in listing.js - b/c it tries formData.price.toString()
+    // Fix that in origin-js and then remove this conditional
+    if (this.state.isFractionalListing) {
+      formListing.formData.price = 0
+    }
+
     this.setState({
       formListing: {
         ...this.state.formListing,
@@ -273,7 +293,7 @@ class ListingCreate extends Component {
           ...formListing.formData
         }
       },
-      step: this.STEP.BOOST,
+      step: this.state.isFractionalListing ? this.STEP.AVAILABILITY : this.STEP.BOOST,
       showDetailsFormErrorMsg: false
     })
     window.scrollTo(0, 0)
@@ -381,7 +401,8 @@ class ListingCreate extends Component {
       step,
       translatedSchema,
       showDetailsFormErrorMsg,
-      showBoostTutorial
+      showBoostTutorial,
+      isFractionalListing
     } = this.state
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
@@ -540,8 +561,8 @@ class ListingCreate extends Component {
                 </Form>
               </div>
             )}
-            { (step === this.STEP.AVAILABILITY) &&
-              <div className="step-container listing-availability">
+            {step === this.STEP.AVAILABILITY &&
+              <div className="col-md-12 listing-availability">
                 <Calendar
                   slots={ formData && formData.slots }
                   userType="seller"
@@ -629,7 +650,7 @@ class ListingCreate extends Component {
                   <button
                     type="button"
                     className="btn btn-other btn-listing-create"
-                    onClick={() => this.setState({ step: this.STEP.DETAILS })}
+                    onClick={this.backFromBoostStep}
                     ga-category="create_listing"
                     ga-label="boost_listing_step_back"
                   >
@@ -734,36 +755,51 @@ class ListingCreate extends Component {
                     </div>
                     <div className="col-md-9">
                       <p>
-                        <img
-                          className="eth-icon"
-                          src="images/eth-icon.svg"
-                          role="presentation"
-                        />
-                        <span className="text-bold">
-                          {Number(formData.price).toLocaleString(undefined, {
-                            minimumFractionDigits: 5,
-                            maximumFractionDigits: 5
-                          })}
-                        </span>&nbsp;
-                        <a
-                          className="eth-abbrev"
-                          href="https://en.wikipedia.org/wiki/Ethereum"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          ETH
-                        </a>
-                        <span className="help-block">
-                          &nbsp;| {usdListingPrice} USD&nbsp;
-                          <span className="text-uppercase">
-                            {'('}
-                            <FormattedMessage
-                              id={'listing-create.appropriate-value'}
-                              defaultMessage={'Approximate Value'}
+                        {isFractionalListing &&
+                          <FormattedMessage
+                            id={'listing-create.fractional-price-varies'}
+                            defaultMessage={'Price varies by date'}
+                          />
+                        }
+                        {!isFractionalListing &&
+                          <Fragment>
+                            <img
+                              className="eth-icon"
+                              src="images/eth-icon.svg"
+                              role="presentation"
                             />
-                            {')'}
-                          </span>
-                        </span>
+                            <span className="text-bold">
+                              {isFractionalListing &&
+                                'Varies by date'
+                              }
+                              {!isFractionalListing &&
+                                Number(formData.price).toLocaleString(undefined, {
+                                  minimumFractionDigits: 5,
+                                  maximumFractionDigits: 5
+                                })
+                              }
+                            </span>&nbsp;
+                            <a
+                              className="eth-abbrev"
+                              href="https://en.wikipedia.org/wiki/Ethereum"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              ETH
+                            </a>
+                            <span className="help-block">
+                              &nbsp;| {usdListingPrice} USD&nbsp;
+                              <span className="text-uppercase">
+                                {'('}
+                                <FormattedMessage
+                                  id={'listing-create.appropriate-value'}
+                                  defaultMessage={'Approximate Value'}
+                                />
+                                {')'}
+                              </span>
+                            </span>
+                          </Fragment>
+                        }
                       </p>
                     </div>
                   </div>
@@ -835,121 +871,123 @@ class ListingCreate extends Component {
                 </div>
               </div>
             )}
-            <div
-              className={`pt-xs-4 pt-sm-4 col-md-5 col-lg-4${
-                step >= this.STEP.PREVIEW ? '' : ' offset-md-1 offset-lg-3'
-              }`}
-            >
-              <WalletCard
-                wallet={wallet}
-                withBalanceTooltip={!this.props.wallet.ognBalance}
-                withMenus={true}
-                withProfile={false}
-              />
-              {step === this.STEP.PICK_SCHEMA && (
-                <div className="info-box">
-                  <h2>
-                    <FormattedMessage
-                      id={'listing-create.create-a-listing'}
-                      defaultMessage={'Create A Listing On The Origin DApp'}
-                    />
-                  </h2>
-                  <p>
-                    <FormattedMessage
-                      id={'listing-create.form-help-schema'}
-                      defaultMessage={`Get started by selecting the type of listing you want to create. You will then be able to set a price and listing details.`}
-                    />
-                  </p>
-                </div>
-              )}
-              {step === this.STEP.DETAILS && (
-                <div className="info-box">
-                  <h2>
-                    <FormattedMessage
-                      id={'listing-create.add-details'}
-                      defaultMessage={'Add Listing Details'}
-                    />
-                  </h2>
-                  <p>
-                    <FormattedMessage
-                      id={'listing-create.form-help-details'}
-                      defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing.`}
-                    />
-                  </p>
-                </div>
-              )}
-              {step === this.STEP.BOOST && (
-                <div className="info-box">
-                  <h2>
-                    <FormattedMessage
-                      id={'listing-create.about-visibility'}
-                      defaultMessage={'About Visibility'}
-                    />
-                  </h2>
-                  <p>
-                    <FormattedMessage
-                      id={'listing-create.form-help-visibility'}
-                      defaultMessage={`Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often.`}
-                    />
-                  </p>
-                  <h2>
-                    <FormattedMessage
-                      id={'listing-create.origin-tokens'}
-                      defaultMessage={'Origin Tokens'}
-                    />
-                  </h2>
-                  <p>
-                    <FormattedMessage
-                      id={'listing-create.form-help-ogn'}
-                      defaultMessage={`OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance.`}
-                    />
-                  </p>
-                  <div className="link-container">
-                    <Link
-                      to="/about-tokens"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FormattedMessage
-                        id={'listing-create.learn-more'}
-                        defaultMessage={'Learn More'}
-                      />
-                    </Link>
-                  </div>
-                </div>
-              )}
-              {step >= this.STEP.PREVIEW && (
-                <div className="info-box">
-                  <div>
+            {step !== this.STEP.AVAILABILITY &&
+              <div
+                className={`pt-xs-4 pt-sm-4 col-md-5 col-lg-4${
+                  step >= this.STEP.PREVIEW ? '' : ' offset-md-1 offset-lg-3'
+                }`}
+              >
+                <WalletCard
+                  wallet={wallet}
+                  withBalanceTooltip={!this.props.wallet.ognBalance}
+                  withMenus={true}
+                  withProfile={false}
+                />
+                {step === this.STEP.PICK_SCHEMA && (
+                  <div className="info-box">
                     <h2>
                       <FormattedMessage
-                        id={'listing-create.whatHappensNextHeading'}
-                        defaultMessage={'What happens next?'}
+                        id={'listing-create.create-a-listing'}
+                        defaultMessage={'Create A Listing On The Origin DApp'}
                       />
                     </h2>
-                    <FormattedMessage
-                      id={'listing-create.whatHappensNextContent1'}
-                      defaultMessage={
-                        'When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it.'
-                      }
-                    />
-                    {selectedBoostAmount && (
-                      <div className="boost-reminder">
-                        <FormattedMessage
-                          id={'listing-create.whatHappensNextContent2'}
-                          defaultMessage={
-                            '{selectedBoostAmount} OGN will be transferred for boosting. If you close your listing before accepting an offer, the OGN will be refunded to you.'
-                          }
-                          values={{
-                            selectedBoostAmount
-                          }}
-                        />
-                      </div>
-                    )}
+                    <p>
+                      <FormattedMessage
+                        id={'listing-create.form-help-schema'}
+                        defaultMessage={`Get started by selecting the type of listing you want to create. You will then be able to set a price and listing details.`}
+                      />
+                    </p>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+                {step === this.STEP.DETAILS && (
+                  <div className="info-box">
+                    <h2>
+                      <FormattedMessage
+                        id={'listing-create.add-details'}
+                        defaultMessage={'Add Listing Details'}
+                      />
+                    </h2>
+                    <p>
+                      <FormattedMessage
+                        id={'listing-create.form-help-details'}
+                        defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing.`}
+                      />
+                    </p>
+                  </div>
+                )}
+                {step === this.STEP.BOOST && (
+                  <div className="info-box">
+                    <h2>
+                      <FormattedMessage
+                        id={'listing-create.about-visibility'}
+                        defaultMessage={'About Visibility'}
+                      />
+                    </h2>
+                    <p>
+                      <FormattedMessage
+                        id={'listing-create.form-help-visibility'}
+                        defaultMessage={`Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often.`}
+                      />
+                    </p>
+                    <h2>
+                      <FormattedMessage
+                        id={'listing-create.origin-tokens'}
+                        defaultMessage={'Origin Tokens'}
+                      />
+                    </h2>
+                    <p>
+                      <FormattedMessage
+                        id={'listing-create.form-help-ogn'}
+                        defaultMessage={`OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance.`}
+                      />
+                    </p>
+                    <div className="link-container">
+                      <Link
+                        to="/about-tokens"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FormattedMessage
+                          id={'listing-create.learn-more'}
+                          defaultMessage={'Learn More'}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+                {step >= this.STEP.PREVIEW && (
+                  <div className="info-box">
+                    <div>
+                      <h2>
+                        <FormattedMessage
+                          id={'listing-create.whatHappensNextHeading'}
+                          defaultMessage={'What happens next?'}
+                        />
+                      </h2>
+                      <FormattedMessage
+                        id={'listing-create.whatHappensNextContent1'}
+                        defaultMessage={
+                          'When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it.'
+                        }
+                      />
+                      {selectedBoostAmount && (
+                        <div className="boost-reminder">
+                          <FormattedMessage
+                            id={'listing-create.whatHappensNextContent2'}
+                            defaultMessage={
+                              '{selectedBoostAmount} OGN will be transferred for boosting. If you close your listing before accepting an offer, the OGN will be refunded to you.'
+                            }
+                            values={{
+                              selectedBoostAmount
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            }
             {step === this.STEP.METAMASK && <ProviderModal />}
             {step === this.STEP.PROCESSING && <ProcessingModal />}
             {step === this.STEP.SUCCESS && (
