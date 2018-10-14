@@ -10,10 +10,11 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
   annotations:
-    kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
-    nginx.ingress.kubernetes.io/permanent-redirect: dapp.originprotocol.com
+    # Disable SSL redirect to prevent double redirect
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://dapp.originprotocol.com"
 spec:
   tls:
     - secretName: demo.originprotocol.com
