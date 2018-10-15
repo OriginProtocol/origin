@@ -4,6 +4,7 @@ import asAccount from './helpers/as-account'
 import IpfsService from '../src/services/ipfs-service.js'
 import { expect } from 'chai'
 import Web3 from 'web3'
+
 import listingValid from './fixtures/listing-valid.json'
 import offerValid from './fixtures/offer-valid.json'
 import reviewValid from './fixtures/review-valid.json'
@@ -47,6 +48,55 @@ class StoreMock {
   set(key, value) {
     this.storage[key] = value
   }
+}
+
+const itIsAValidListing = (listing) => {
+  expect(listing).to.be.an('object')
+  expect(listing).to.have.property('id').that.is.a('string')
+  expect(listing).to.have.property('media').that.is.an('array')
+  expect(listing).to.have.property('schemaId').that.is.a('string')
+  expect(listing).to.have.property('type').that.is.a('string')
+  expect(listing.type).to.equal('unit')
+
+  expect(listing).to.have.property('category').that.is.a('string')
+  expect(listing.category).to.equal('schema.forSale')
+  expect(listing).to.have.property('subCategory').that.is.a('string')
+  expect(listing.subCategory).to.equal('schema.forSale.mushrooms')
+
+  expect(listing).to.have.property('title').that.is.a('string')
+  expect(listing.title).to.equal('my listing')
+  expect(listing).to.have.property('description').that.is.a('string')
+  expect(listing.description).to.equal('my description')
+
+  expect(listing).to.have.property('expiry')
+  expect(new Date(listing.expiry).getMonth).to.be.a('function')
+  expect(listing).to.have.property('price').that.is.an('object')
+  expect(listing.price).to.have.property('currency', 'ETH')
+  expect(listing.price).to.have.property('amount', '0.033')
+  expect(listing).to.have.property('commission').that.is.an('object')
+  expect(listing.commission).to.have.property('currency', 'OGN')
+  expect(listing.commission).to.have.property('amount', '0')
+
+  expect(listing).to.have.property('ipfsHash').startsWith('0x')
+  expect(listing).to.have.property('depositManager').startsWith('0x')
+  expect(listing).to.have.property('seller').startsWith('0x')
+  expect(listing).to.have.property('status', 'active')
+  expect(listing).to.have.property('offers').that.is.an('object')
+  expect(listing).to.have.property('events').that.is.an('array')
+
+  const event = listing.events[0]
+
+  expect(event).to.have.property('id').that.is.a('string')
+  expect(event).to.have.property('blockNumber').that.is.a('number')
+  expect(event).to.have.property('logIndex', 0)
+  expect(event).to.have.property('transactionIndex', 0)
+  expect(event).to.have.property('transactionHash').startsWith('0x')
+  expect(event).to.have.property('blockHash').startsWith('0x')
+  expect(event).to.have.property('address').startsWith('0x')
+  expect(event).to.have.property('signature').startsWith('0x')
+  expect(event).to.have.property('type', 'mined')
+  expect(event).to.have.property('event', 'ListingCreated')
+  expect(event).to.have.property('returnValues').that.is.an('object')
 }
 
 describe('Marketplace Resource', function() {
@@ -116,9 +166,18 @@ describe('Marketplace Resource', function() {
   })
 
   describe('getListings', () => {
-    it('should return all listings', async () => {
+    it ('should return all listings', async () => {
+      await marketplace.createListing(listingData)
+      const listings = await marketplace.getListings()
+      expect(listings).to.have.lengthOf(2)
+
+      listings.map(itIsAValidListing)
+    })
+
+    it('should return all listing ids when idsOnly is true', async () => {
       await marketplace.createListing(listingData)
       const listings = await marketplace.getListings({ idsOnly: true })
+
       expect(listings.length).to.equal(2)
       expect(listings).to.include('999-000-0')
       expect(listings).to.include('999-000-1')
@@ -130,9 +189,8 @@ describe('Marketplace Resource', function() {
       const listings = await marketplace.getListings({ idsOnly: true })
       expect(listings.length).to.equal(1)
       const listing = await marketplace.getListing(listings[0])
-      expect(listing.type).to.equal('unit')
-      expect(listing.title).to.equal('my listing')
-      expect(listing.description).to.equal('my description')
+
+      itIsAValidListing(listing)
     })
   })
 
@@ -142,7 +200,10 @@ describe('Marketplace Resource', function() {
       expect(listings.length).to.equal(1)
       await marketplace.createListing(listingData)
       listings = await marketplace.getListings()
+
       expect(listings.length).to.equal(2)
+
+      itIsAValidListing(listings[1])
     })
   })
 
@@ -162,7 +223,9 @@ describe('Marketplace Resource', function() {
     it('should get offer ids', async () => {
       await marketplace.makeOffer('999-000-0', offerData)
       const offers = await marketplace.getOffers('999-000-0', { idsOnly: true })
-      expect(offers.length).to.equal(2)
+
+      expect(offers).be.an('array')
+      expect(offers).to.have.lengthOf(2)
       expect(offers[0]).to.equal('999-000-0-0')
       expect(offers[1]).to.equal('999-000-0-1')
     })
@@ -172,17 +235,39 @@ describe('Marketplace Resource', function() {
     it('should get offers with data', async () => {
       await marketplace.makeOffer('999-000-0', offerData)
       const offers = await marketplace.getOffers('999-000-0')
+      const listings = await marketplace.getListings()
+
       expect(offers.length).to.equal(2)
       expect(offers[0].status).to.equal('created')
       expect(offers[0].unitsPurchased).to.exist
-      expect(offers[1].status).to.equal('created')
-      expect(offers[1].unitsPurchased).to.exist
+
+      const latestOffer = offers[1]
+
+      expect(latestOffer).to.have.property('status', 'created')
+      expect(latestOffer).to.have.property('unitsPurchased', 1)
+      expect(latestOffer).to.have.property('listingId', listings[0].id)
+      expect(latestOffer).to.have.property('createdAt').that.is.a('number')
+      expect(latestOffer).to.have.property('schemaId').that.is.a('string')
+      expect(latestOffer).to.have.property('buyer').that.is.a('string')
+      expect(latestOffer.buyer).to.startWith('0x')
+
+      expect(latestOffer).to.have.property('refund', '0')
+      expect(latestOffer).to.have.property('listingType', 'unit')
+      expect(latestOffer).to.have.property('totalPrice').that.is.an('object')
+      expect(latestOffer.totalPrice).to.have.property('currency', 'ETH')
+      expect(latestOffer.totalPrice).to.have.property('amount').that.is.a('string')
+      expect(latestOffer).to.have.property('ipfs').that.is.an('object')
+      expect(latestOffer).to.have.property('events').that.is.an('array')
+
+      expect(latestOffer.ipfs).to.have.property('hash').that.is.a('string')
+      expect(latestOffer.ipfs).to.have.property('data').that.is.an('object')
     })
 
     it('should exclude invalid offers', async () => {
       await marketplace.makeOffer('999-000-0', invalidPriceOffer)
       const offers = await marketplace.getOffers('999-000-0')
       expect(offers.length).to.equal(1)
+      expect(offers).not.to.include(invalidPriceOffer)
       expect(offers[0].status).to.equal('created')
       expect(offers[0].unitsPurchased).to.exist
     })
@@ -292,7 +377,8 @@ describe('Marketplace Resource', function() {
       await marketplace.createListing(commissionListing)
       await marketplace.makeOffer('999-000-1', commissionOffer)
       const offer = await marketplace.getOffer('999-000-1-0')
-      expect(offer).to.be.ok
+
+      expect(offer).to.be.an('object')
     })
   })
 

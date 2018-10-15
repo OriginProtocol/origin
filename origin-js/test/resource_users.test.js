@@ -320,7 +320,7 @@ describe('User Resource', function() {
             expect(confirmationCount).is.a('number')
             expect(transactionReceipt).is.a('object')
             // transactionHashCallback should always execute before confirmationCallback
-            expect(transactionHash).to.startsWith('0x')
+            expect(transactionHash).to.startWith('0x')
 
             // prevent done being called multiple times
             if (!doneCalled){
@@ -344,7 +344,7 @@ describe('User Resource', function() {
       expect(user.attestations).to.be.empty
 
       expect(user).to.have.property('address', this.userAddress)
-      expect(user.address).startsWith('0x')
+      expect(user.address).to.startWith('0x')
       expect(user).to.have.property('identityAddress', this.identityAddress)
       expect(user.identityAddress).startsWith('0x')
 
