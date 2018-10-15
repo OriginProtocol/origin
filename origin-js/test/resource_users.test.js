@@ -278,7 +278,7 @@ describe('User Resource', function() {
       expect(user.profile.lastName).to.equal('Pool')
     })
 
-    it.only('should fail setting an invalid profile', () => {
+    it('should fail setting an invalid profile', () => {
       const badProfile = { profile: { bad: 'profile' } }
       const dataErrors = [
         {
