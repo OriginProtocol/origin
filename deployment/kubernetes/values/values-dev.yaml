@@ -20,10 +20,10 @@ ipfsImageTag: ipfs/go-ipfs
 ipfsImageTag: master
 
 faucetImage: origin-faucet
-faucetImageTag: '3066fa3'
+faucetImageTag: '389fd1f'
 
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'db88884'
+eventlistenerImageTag: '389fd1f'
 eventlistenerWeb3Url: https://eth.dev.originprotocol.com/rpc
 
 discoveryImage: origin-discovery
