@@ -67,7 +67,7 @@ class Calendar extends Component {
           id: uuid(),
           start: moment(slot.startDate).toDate(),
           end: moment(slot.endDate).subtract(1, 'second').toDate(),
-          price: slot.priceWei,
+          price: slot.price,
           isAvailable: slot.isAvailable,
           slots: slot.slots,
           isRecurringEvent: (slot.recurs === 'weekly')

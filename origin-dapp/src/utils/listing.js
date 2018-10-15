@@ -17,21 +17,34 @@ export function dappFormDataToOriginListing(formData) {
     .slice(0, 2)
     .join('.')
 
-  const listingData = {
+  let listingData = {
     category: category,
     subCategory: subCategory,
     language: 'en-US', // TODO(franck) Get language from DApp.
     title: formData.name,
     description: formData.description,
-    listingType: 'unit',
-    unitsTotal: 1, // Note: for V1 we only support single unit listings.
-    price: {
-      amount: formData.price.toString(),
-      currency: 'ETH'
-    },
+    listingType: formData.listingType,
     commission: {
       amount: formData.boostValue.toString(),
       currency: 'OGN'
+    }
+  }
+
+  if (formData.listingType === 'unit') {
+    listingData = {
+      ...listingData,
+      unitsTotal: 1, // Note: for V1 we only support single unit listings.
+      price: {
+        amount: formData.price.toString(),
+        currency: 'ETH'
+      }
+    }
+  } else {
+    listingData = {
+      ...listingData,
+      timeIncrement: formData.timeIncrement,
+      slots: formData.slots,
+      calendarStep: '60' // Note: this is currently always 60 minutes but may change later to allow for sub-1hr slots
     }
   }
 
@@ -77,7 +90,8 @@ export function originToDAppListing(originListing) {
     boostValue: commission,
     boostLevel: getBoostLevel(commission),
     unitsRemaining: originListing.unitsRemaining,
-    ipfsHash: originListing.ipfs.hash
+    ipfsHash: originListing.ipfs.hash,
+    listingType: originListing.listingType
   }
 }
 

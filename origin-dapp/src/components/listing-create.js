@@ -241,8 +241,8 @@ class ListingCreate extends Component {
     }
 
     slots.forEach((slot) => {
-      if (typeof slot.priceWei !== 'number') {
-        delete slot.priceWei
+      if (typeof slot.price !== 'number') {
+        delete slot.price
       }
     })
 
@@ -278,11 +278,11 @@ class ListingCreate extends Component {
   }
 
   onDetailsEntered(formListing) {
-    // TODO: origin-js throws an error if price is undefined in listing.js - b/c it tries formData.price.toString()
-    // Fix that in origin-js and then remove this conditional
-    if (this.state.isFractionalListing) {
-      formListing.formData.price = 0
-    }
+    const [nextStep, listingType] = this.state.isFractionalListing ?
+      [this.STEP.AVAILABILITY, 'fractional'] :
+      [this.STEP.BOOST, 'unit']
+
+    formListing.formData.listingType = listingType
 
     this.setState({
       formListing: {
@@ -293,7 +293,7 @@ class ListingCreate extends Component {
           ...formListing.formData
         }
       },
-      step: this.state.isFractionalListing ? this.STEP.AVAILABILITY : this.STEP.BOOST,
+      step: nextStep,
       showDetailsFormErrorMsg: false
     })
     window.scrollTo(0, 0)

@@ -812,7 +812,7 @@ class ListingsDetail extends Component {
                 />
               )}
             </div>
-            { !this.state.loading && this.state.listingType === 'fractional' && !userIsSeller &&
+            { !this.state.loading && this.state.listingType === 'fractional' &&
               <div className="col-12">
                 <Calendar 
                   slots={ this.state.slots }
