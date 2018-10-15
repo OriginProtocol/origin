@@ -357,7 +357,8 @@ class VerificationService:
             response.raise_for_status()
         except requests.exceptions.HTTPError as exc:
             logger.exception(exc)
-            raise TwitterVerificationError('Invalid response from Twitter.')
+            #raise TwitterVerificationError('Invalid response from Twitter.')
+            raise TwitterVerificationError(str(exc))
 
         as_bytes = urllib.parse.parse_qs(response.content)
         token_bytes = as_bytes[b'oauth_token'][0]
@@ -421,7 +422,8 @@ class VerificationService:
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': CLAIM_TYPES['twitter'],
-            'data': data
+            'data': data,
+            'external_id': airbnbUserId
         })
 
     def generate_airbnb_verification_code(eth_address, airbnbUserId):

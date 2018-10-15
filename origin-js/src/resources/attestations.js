@@ -22,7 +22,8 @@ class Attestations {
       return new AttestationObject({
         topic: resp['claim-type'],
         data: Web3.utils.soliditySha3(resp['data']),
-        signature: resp['signature']
+        signature: resp['signature'],
+        externalId: resp['external_id']
       })
     }
   }
