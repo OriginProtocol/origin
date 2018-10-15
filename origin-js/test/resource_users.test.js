@@ -13,6 +13,7 @@ chai.use(chaiAsPromised)
 chai.use(chaiString)
 const expect = chai.expect
 
+const base64Regex = /(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)/;
 const issuerPrivatekey =
   '0000000000000000000000000000000000000000000000000000000000000001'
 
@@ -56,6 +57,7 @@ describe('User Resource', function() {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     const web3 = new Web3(provider)
     const accounts = await web3.eth.getAccounts()
+    this.userAddress = accounts[0]
     const contractService = new ContractService({ web3 })
     await contractService.deployed(contractService.contracts.OriginIdentity)
     const ipfsService = new IpfsService({
@@ -72,9 +74,11 @@ describe('User Resource', function() {
     const userRegistry = await contractService.deployed(
       contractService.contracts.V00_UserRegistry
     )
-    await userRegistry.methods.clearUser().send({ from: accounts[0] })
+    await userRegistry.methods.clearUser().send({ from: this.userAddress })
 
     const identityAddress = await attestations.getIdentityAddress(accounts[0])
+    this.identityAddress = identityAddress
+
     phoneAttestation = await generateAttestation({
       identityAddress,
       web3,
@@ -277,28 +281,45 @@ describe('User Resource', function() {
       await users.set({
         profile: { firstName: 'Baby', lastName: 'Groot' },
       })
-      let user = await users.get()
+      let user = await users.get(this.userAddress)
 
-      expect(user.attestations.length).to.equal(0)
-      expect(user.profile.firstName).to.equal('Baby')
-      expect(user.profile.lastName).to.equal('Groot')
+      expect(user.attestations).to.be.an('array')
+      expect(user.attestations).to.be.empty
+
+      expect(user).to.have.property('address', this.userAddress);
+      expect(user).to.have.property('identityAddress', this.identityAddress);
+
+      expect(user).to.have.property('profile').that.is.an('object');
+      expect(user.profile).to.have.property('firstName').that.is.a('string');
+      expect(user.profile).to.have.property('lastName').that.is.a('string');
+      expect(user.profile.firstName).to.equal('Baby');
+      expect(user.profile.lastName).to.equal('Groot');
+
+      expect(user.profile).to.have.property('ipfs').that.is.an('object');
+      expect(user.profile).to.have.property('schemaId').that.is.a('string');
+      expect(user.profile.ipfs).to.have.property('hash').that.is.a('string');
+      expect(user.profile.ipfs).to.have.property('data').that.is.an('object');
+
+      const avatar = 'data:image/jpeg;base64,/OxEs0sALySAAJvQAHvJ/cnpmxLAZagGx174/9k='
 
       await users.set({
         profile: {
           firstName: 'Daddy',
           lastName: 'Groot',
           description: 'Grown up',
-          avatar: 'good looking pic'
+          avatar
         },
         attestations: [phoneAttestation]
       })
       user = await users.get()
 
-      expect(user.attestations.length).to.equal(1)
+      expect(user.attestations).to.have.lengthOf(1)
       expect(user.profile.firstName).to.equal('Daddy')
       expect(user.profile.lastName).to.equal('Groot')
+      expect(user.profile).to.have.property('description').that.is.a('string');
       expect(user.profile.description).to.equal('Grown up')
-      expect(user.profile.avatar).to.equal('good looking pic')
+      expect(user.profile).to.have.property('avatar', avatar)
+      expect(base64Regex.test(user.profile.avatar)).to.equal(true)
     })
   })
 
