@@ -13,7 +13,7 @@ chai.use(chaiAsPromised)
 chai.use(chaiString)
 const expect = chai.expect
 
-const base64Regex = /(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)/;
+const base64Regex = /(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)/
 const issuerPrivatekey =
   '0000000000000000000000000000000000000000000000000000000000000001'
 
@@ -121,11 +121,11 @@ describe('User Resource', function() {
       expect(user.attestations).to.be.an('array')
       expect(user.attestations).to.be.empty
 
-      expect(user).to.have.property('profile').that.is.an('object');
-      expect(user.profile).to.have.property('firstName').that.is.a('string');
-      expect(user.profile).to.have.property('lastName').that.is.a('string');
-      expect(user.profile.firstName).to.equal('Wonder');
-      expect(user.profile.lastName).to.equal('Woman');
+      expect(user).to.have.property('profile').that.is.an('object')
+      expect(user.profile).to.have.property('firstName').that.is.a('string')
+      expect(user.profile).to.have.property('lastName').that.is.a('string')
+      expect(user.profile.firstName).to.equal('Wonder')
+      expect(user.profile.lastName).to.equal('Woman')
     })
 
     it('should be able to update profile and claims after creation', async () => {
@@ -278,22 +278,22 @@ describe('User Resource', function() {
       expect(user.profile.lastName).to.equal('Pool')
     })
 
-    it('should fail setting an invalid profile', () => {
+    it.only('should fail setting an invalid profile', () => {
       const badProfile = { profile: { bad: 'profile' } }
       const dataErrors = [
         {
-          keyword: "required",
-          dataPath: "",
-          schemaPath: "#/required",
-          params: {"missingProperty":"firstName"},
-          message: "should have required property 'firstName'"
+          keyword: 'required',
+          dataPath: '',
+          schemaPath: '#/required',
+          params: { missingProperty:'firstName'},
+          message: 'should have required property \'firstName\''
         },
         {
-          keyword: "required",
-          dataPath: "",
-          schemaPath: "#/required",
-          params: {"missingProperty":"lastName"},
-          message: "should have required property 'lastName'"
+          keyword: 'required',
+          dataPath: '',
+          schemaPath: '#/required',
+          params: { missingProperty: 'lastName'},
+          message: 'should have required property \'lastName\''
         }
       ]
 
@@ -343,21 +343,21 @@ describe('User Resource', function() {
       expect(user.attestations).to.be.an('array')
       expect(user.attestations).to.be.empty
 
-      expect(user).to.have.property('address', this.userAddress);
+      expect(user).to.have.property('address', this.userAddress)
       expect(user.address).startsWith('0x')
-      expect(user).to.have.property('identityAddress', this.identityAddress);
+      expect(user).to.have.property('identityAddress', this.identityAddress)
       expect(user.identityAddress).startsWith('0x')
 
-      expect(user).to.have.property('profile').that.is.an('object');
-      expect(user.profile).to.have.property('firstName').that.is.a('string');
-      expect(user.profile).to.have.property('lastName').that.is.a('string');
-      expect(user.profile.firstName).to.equal('Baby');
-      expect(user.profile.lastName).to.equal('Groot');
+      expect(user).to.have.property('profile').that.is.an('object')
+      expect(user.profile).to.have.property('firstName').that.is.a('string')
+      expect(user.profile).to.have.property('lastName').that.is.a('string')
+      expect(user.profile.firstName).to.equal('Baby')
+      expect(user.profile.lastName).to.equal('Groot')
 
-      expect(user.profile).to.have.property('ipfs').that.is.an('object');
-      expect(user.profile).to.have.property('schemaId').that.is.a('string');
-      expect(user.profile.ipfs).to.have.property('hash').that.is.a('string');
-      expect(user.profile.ipfs).to.have.property('data').that.is.an('object');
+      expect(user.profile).to.have.property('ipfs').that.is.an('object')
+      expect(user.profile).to.have.property('schemaId').that.is.a('string')
+      expect(user.profile.ipfs).to.have.property('hash').that.is.a('string')
+      expect(user.profile.ipfs).to.have.property('data').that.is.an('object')
 
       const avatar = 'data:image/jpeg;base64,/OxEs0sALySAAJvQAHvJ/cnpmxLAZagGx174/9k='
 
@@ -384,7 +384,7 @@ describe('User Resource', function() {
 
       expect(user.profile.firstName).to.equal('Daddy')
       expect(user.profile.lastName).to.equal('Groot')
-      expect(user.profile).to.have.property('description').that.is.a('string');
+      expect(user.profile).to.have.property('description').that.is.a('string')
       expect(user.profile.description).to.equal('Grown up')
       expect(user.profile).to.have.property('avatar', avatar)
       expect(base64Regex.test(user.profile.avatar)).to.equal(true)
