@@ -66,6 +66,7 @@ node_modules/
 # Python
 /origin-bridge/*.pyc
 /origin-bridge/ve
+/origin-bridge/**/__pycache__
 
 # pytest
 /origin-bridge/.pytest_cache
@@ -102,6 +103,10 @@ node_modules/
 /origin-js/libpeerconnection.log
 /origin-js/testem.log
 /origin-js/typings
+#
+# origin-js #
+#############
+/origin-website
 
 # Recommended rules per https://gist.github.com/octocat/9257657 #
 # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv #
