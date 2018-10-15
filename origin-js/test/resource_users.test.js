@@ -118,9 +118,14 @@ describe('User Resource', function() {
       })
       const user = await users.get()
 
-      expect(user.attestations.length).to.equal(0)
-      expect(user.profile.firstName).to.equal('Wonder')
-      expect(user.profile.lastName).to.equal('Woman')
+      expect(user.attestations).to.be.an('array')
+      expect(user.attestations).to.be.empty
+
+      expect(user).to.have.property('profile').that.is.an('object');
+      expect(user.profile).to.have.property('firstName').that.is.a('string');
+      expect(user.profile).to.have.property('lastName').that.is.a('string');
+      expect(user.profile.firstName).to.equal('Wonder');
+      expect(user.profile.lastName).to.equal('Woman');
     })
 
     it('should be able to update profile and claims after creation', async () => {
@@ -139,7 +144,16 @@ describe('User Resource', function() {
       })
       user = await users.get()
 
-      expect(user.attestations.length).to.equal(1)
+      expect(user.attestations).to.have.lengthOf(1)
+      expect(user.attestations).to.deep.equal([phoneAttestation])
+
+      expect(user.attestations[0]).to.have.property('topic').that.is.a('number')
+      expect(user.attestations[0]).to.have.property('service').that.is.a('string')
+      expect(user.attestations[0]).to.have.property('data').that.is.a('string')
+      expect(user.attestations[0]).to.have.property('signature').that.is.a('string')
+
+      expect(user.attestations[0].topic).to.equal(10)
+      expect(user.attestations[0].service).to.equal('phone')
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Panther')
 
@@ -157,7 +171,8 @@ describe('User Resource', function() {
       })
       user = await users.get()
 
-      expect(user.attestations.length).to.equal(2)
+      expect(user.attestations).to.have.lengthOf(2)
+      expect(user.attestations).to.deep.equal([phoneAttestation, emailAttestation])
       expect(user.profile.firstName).to.equal('Bat')
       expect(user.profile.lastName).to.equal('Man')
     })
@@ -171,6 +186,8 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(1)
+      expect(user.attestations).to.deep.equal([phoneAttestation])
+
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -183,6 +200,8 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(2)
+      expect(user.attestations).to.deep.equal([phoneAttestation, emailAttestation])
+
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -195,6 +214,12 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(3)
+      expect(user.attestations).to.deep.equal([
+        phoneAttestation,
+        emailAttestation,
+        facebookAttestation
+      ])
+
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -213,6 +238,14 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(5)
+      expect(user.attestations).to.deep.equal([
+        phoneAttestation,
+        emailAttestation,
+        facebookAttestation,
+        twitterAttestation,
+        airbnbAttestation
+      ])
+
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -225,6 +258,8 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(2)
+      expect(user.attestations).to.not.include(invalidAttestation)
+      expect(user.attestations).to.deep.equal([phoneAttestation, emailAttestation])
       expect(user.profile.firstName).to.equal('Dead')
       expect(user.profile.lastName).to.equal('Pool')
     })
@@ -237,13 +272,35 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(2)
+      expect(user.attestations).to.not.include(invalidSignatureAttestation)
+      expect(user.attestations).to.deep.equal([phoneAttestation, emailAttestation])
       expect(user.profile.firstName).to.equal('Dead')
       expect(user.profile.lastName).to.equal('Pool')
     })
 
-    it('should fail setting an invalid profile', async () => {
+    it('should fail setting an invalid profile', () => {
       const badProfile = { profile: { bad: 'profile' } }
-      return expect(users.set(badProfile)).to.eventually.be.rejectedWith(Error)
+      const dataErrors = [
+        {
+          keyword: "required",
+          dataPath: "",
+          schemaPath: "#/required",
+          params: {"missingProperty":"firstName"},
+          message: "should have required property 'firstName'"
+        },
+        {
+          keyword: "required",
+          dataPath: "",
+          schemaPath: "#/required",
+          params: {"missingProperty":"lastName"},
+          message: "should have required property 'lastName'"
+        }
+      ]
+
+      return users.set(badProfile).then().catch(({ message }) => {
+        expect(message).to.include('Data failed schema validation.')
+        expect(message).to.include(JSON.stringify(dataErrors))
+      })
     })
 
     it('should be able to receive transactionHash and onComplete callbacks', (done) => {
@@ -287,7 +344,9 @@ describe('User Resource', function() {
       expect(user.attestations).to.be.empty
 
       expect(user).to.have.property('address', this.userAddress);
+      expect(user.address).startsWith('0x')
       expect(user).to.have.property('identityAddress', this.identityAddress);
+      expect(user.identityAddress).startsWith('0x')
 
       expect(user).to.have.property('profile').that.is.an('object');
       expect(user.profile).to.have.property('firstName').that.is.a('string');
@@ -314,6 +373,15 @@ describe('User Resource', function() {
       user = await users.get()
 
       expect(user.attestations).to.have.lengthOf(1)
+      expect(user.attestations).to.deep.equal([phoneAttestation])
+
+      expect(user.attestations[0]).to.have.property('topic').that.is.a('number')
+      expect(user.attestations[0]).to.have.property('service').that.is.a('string')
+      expect(user.attestations[0]).to.have.property('data').that.is.a('string')
+      expect(user.attestations[0]).to.have.property('signature').that.is.a('string')
+      expect(user.attestations[0].topic).to.equal(10)
+      expect(user.attestations[0].service).to.equal('phone')
+
       expect(user.profile.firstName).to.equal('Daddy')
       expect(user.profile.lastName).to.equal('Groot')
       expect(user.profile).to.have.property('description').that.is.a('string');
