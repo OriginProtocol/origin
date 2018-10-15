@@ -152,7 +152,12 @@ async function liveTracking(config) {
         return scheduleNextCheck()
       }
       console.log('New block: ' + currentBlockNumber)
-      const toBlock = Math.min(lastLogBlock+MAX_BATCH_BLOCKS, currentBlockNumber)
+      const toBlock = Math.min( // Pick the smallest of either
+        // the last log we processed, plus the max batch size
+        lastLogBlock + MAX_BATCH_BLOCKS, 
+         // or the current block number, minus any trailing blocks we waiting on
+        Math.max(currentBlockNumber - config.trailBlocks, 0),
+      )
       const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
       await runBatch(opts, context)
       lastLogBlock = toBlock
@@ -542,6 +547,8 @@ const config = {
   verbose: args['--verbose'],
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'],
+  // Trail X number of blocks behind
+  trailBlocks: args['--trail-behind-blocks'] || 0,
   // web3 provider url
   web3Url: args['--web3-url'] || 'http://localhost:8545',
   // ipfs url
