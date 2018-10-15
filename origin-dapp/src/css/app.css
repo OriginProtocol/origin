@@ -5039,6 +5039,20 @@ a:not([href]):not([tabindex]).span-link {
 /* Media queries */
 /* xs */
 @media (max-width: 576px) {
+
+  .warning .badge {
+    display:none;
+  }
+
+  .warning p {
+    font-size: 0.875rem;
+  }
+
+  .beta .modal-content .image-container img {
+    height: 70px;
+    margin-bottom: 20px;
+  }
+
   .onboarding .modal-dialog {
     margin: 1rem;
   }
