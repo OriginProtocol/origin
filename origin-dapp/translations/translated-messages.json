@@ -16884,7 +16884,6 @@
     "schema.transportation.sellerSteps": "Danh sách thực hiện"
   },
   "zh-CN": {
-    "title": "Origin协议演示分布式应用",
     "about-tokens.about": "关于Origin Tokens",
     "about-tokens.overview": "概观",
     "about-tokens.overview-text": "Origin Tokens是在Origin DApp和平台上使用的ERC-20令牌。 Origin Tokens可用于奖励市场运营商，DApp创建者，用户，开发者和/或购买，销售和贡献Origin的其他人。",
