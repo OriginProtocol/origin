@@ -14,7 +14,7 @@ You can see the Origin ecosystem in action at https://dapp.originprotocol.com.
 ## Our Projects:
 
 * [origin-js](https://github.com/OriginProtocol/origin/tree/master/origin-js) is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces.
-* Our [dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp) is a the first marketplace powered by the Origin Protocol. Make the code your own!
+* Our [DApp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp) is a the first marketplace powered by the Origin Protocol. Make the code your own!
 * The [discovery server](https://github.com/OriginProtocol/origin/tree/master/origin-discovery) provides a graphql service for quickly searching origin blockchain data.
 * Our [bridge server](https://github.com/OriginProtocol/origin/tree/master/origin-bridge) provides identity attestations. 
 * Run every part of our infastructure localy for developement and testing with [origin-box](https://github.com/OriginProtocol/origin/tree/master/development) - a set of docker containers.
