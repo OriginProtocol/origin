@@ -1,7 +1,7 @@
 const request = require('supertest')
 
-describe('Upload', () => {
-  let server
+describe('upload', () => {
+  var server
 
   beforeEach(() => {
     server = require('./src/index')
@@ -13,7 +13,6 @@ describe('Upload', () => {
 
   it('should prevent uploads larger than size limit', (done) => {
     const image = './fixtures/sample_5mb.jpg'
-
     request(server)
       .post('/api/v0/add')
       .attach('image', image)
@@ -53,7 +52,12 @@ describe('Upload', () => {
       .expect(200, done)
   })
 
-  it('should allow json uploads', () => {
+  it('should allow json uploads', (done) => {
+    const json = './fixtures/sample.json'
+    request(server)
+      .post('/api/v0/add')
+      .attach('json', json)
+      .expect(200, done)
   })
 
   it('should prevent svg uploads', (done) => {
@@ -68,13 +72,26 @@ describe('Upload', () => {
   })
 })
 
-describe('Download', () => {
-  it('should allow gif uploads', () => {
+describe('download', () => {
+  var server
+
+  beforeEach(() => {
+    server = require('./src/index')
   })
 
-  it('should allow png uploads', () => {
+  afterEach(() => {
+    server.close()
   })
 
-  it('should allow jpg uploads', () => {
+  it('should allow gif downloads', (done) => {
+    done()
+  })
+
+  it('should allow png downloads', (done) => {
+    done()
+  })
+
+  it('should allow jpg downloads', (done) => {
+    done()
   })
 })

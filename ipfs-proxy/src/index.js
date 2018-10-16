@@ -5,6 +5,8 @@ const Busboy = require('connect-busboy')
 const config = require('./config')
 const logger = require('./logger')
 
+const validImageTypes = ['image/jpeg', 'image/gif', 'image/png']
+
 function validate(req, res, next) {
   req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
     file.fileRead = []
@@ -26,20 +28,32 @@ function validate(req, res, next) {
       const image = imageType(buffer)
       if (image) {
         logger.debug(`Detected image of type ${image.mime}`)
-        next()
+        if (validImageTypes.includes(image.mime)) {
+          logger.debug(`Image type accepted`)
+          res.writeHead(200, { 'Connection': 'close' })
+          res.end()
+          next()
+        } else {
+          logger.warning(`Image type not accepted`)
+          res.writeHead(415, { 'Connection': 'close' })
+          res.end()
+          req.unpipe(req.busboy)
+        }
       } else {
         // Not an image, must be JSON
         try {
-          JSON.parse(data)
+          JSON.parse(buffer)
+          logger.debug('Detected JSON file')
+          res.writeHead(200, { 'Connection': 'close' })
+          res.end()
+          next()
         } catch (error) {
-          logger.error('Could not parse JSON')
+          logger.error('File type not accepted')
           res.writeHead(415, { 'Connection': 'close' })
           res.end()
           req.unpipe(req.busboy)
         }
       }
-      res.writeHead(200, { 'Connection': 'close' })
-      res.end()
     })
   })
 
