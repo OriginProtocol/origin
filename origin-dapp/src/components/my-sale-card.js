@@ -22,12 +22,6 @@ class MySaleCard extends Component {
 
     this.setSoldAtTime = this.setSoldAtTime.bind(this)
 
-    this.intlMessages = defineMessages({
-      ETH: {
-        id: 'my-sale-card.ethereumCurrencyAbbrev',
-        defaultMessage: 'ETH'
-      }
-    })
   }
 
   componentWillMount() {

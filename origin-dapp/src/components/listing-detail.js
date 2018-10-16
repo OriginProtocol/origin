@@ -474,11 +474,7 @@ class ListingsDetail extends Component {
                       maximumFractionDigits: 5,
                       minimumFractionDigits: 5
                     })}
-                      &nbsp;
-                    <FormattedMessage
-                      id={'listing-detail.ethereumCurrencyAbbrev'}
-                      defaultMessage={'ETH'}
-                    />
+                      &nbsp;ETH
                   </div>
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
                   {/*
