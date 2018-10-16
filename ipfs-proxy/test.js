@@ -1,14 +1,47 @@
+const chai = require('chai')
+const ipfsdCtl = require('ipfsd-ctl')
 const request = require('supertest')
+const logger = require('./src/logger')
+
+const expect = chai.expect
 
 describe('upload', () => {
-  var server
+  let server
+  let ipfsServer
+  let ipfsFactory
+  let ipfsd
 
-  beforeEach(() => {
-    server = require('./src/index')
+  before((done) => {
+    ipfsServer = ipfsdCtl.createServer()
+    ipfsServer.start((err) => {
+      expect(err).to.be.null
+      logger.debug('IPFS endpoint is running')
+      done()
+    })
   })
 
-  afterEach(() => {
+  after((done) => {
+    ipfsServer.stop(done)
+  })
+
+  beforeEach((done) => {
+    server = require('./src/index')
+    ipfsFactory = ipfsdCtl.create({
+      remote: true,
+      exec: require('ipfs'),
+      type: 'proc'
+    })
+
+    ipfsFactory.spawn({ disposable: true }, (err, node) => {
+      expect(err).to.be.null
+      ipfsd = node
+      done()
+    })
+  })
+
+  afterEach((done) => {
     server.close()
+    ipfsd.stop(done)
   })
 
   it('should prevent uploads larger than size limit', (done) => {
@@ -73,7 +106,7 @@ describe('upload', () => {
 })
 
 describe('download', () => {
-  var server
+  let server
 
   beforeEach(() => {
     server = require('./src/index')

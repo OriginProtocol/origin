@@ -4,7 +4,7 @@
   "description": "A proxy that validates Origin content being uploaded and download from Origin's IPFS servers",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:@babel/register"
+    "test": "mocha --compilers js:@babel/register --timeout=10000"
   },
   "repository": {
     "type": "git",
@@ -20,14 +20,15 @@
     "connect-busboy": "0.0.2",
     "express": "^4.16.4",
     "image-type": "^3.0.0",
+    "ipfs": "^0.32.3",
+    "ipfsd-ctl": "^0.39.2",
     "logplease": "^1.2.15"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
-    "ipfs": "^0.32.3",
-    "ipfsd-ctl": "^0.39.2",
+    "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "supertest": "^3.3.0"
   }
