@@ -5,13 +5,20 @@ const logger = require('./src/logger')
 
 const expect = chai.expect
 const ipfsPort = 9998
+const ipfsHashes = {
+  'sample.gif': 'QmQdXfnZihuWnBvWsGTC1XXXLukmVGUHfGhsiaxon1A5cK',
+  'sample.png': 'QmfUkCVtuFr9nVRzbkorrVh3Yrkzsx1m8P43VhqQK5f5VG',
+  'sample_1mb.jpg': 'QmcJwbSPxVgpLsnN3ESAeZ7FRSapYKa27pWFhY9orsZat7',
+  'sample_5mb.jpg': 'QmSojSdiRtS1uC9T6HEVXjcUim62RZXfER8he9iCm2KTZJ',
+  'sample.json': 'QmPc1WfXnWDxQreha2fr1aXskmjJ7PSiKXs6Er726kGy2R'
+}
 
 describe('upload', () => {
   let server
   let ipfsFactory
   let ipfsd
 
-  beforeEach((done) => {
+  before((done) => {
     server = require('./src/index')
     ipfsFactory = ipfsdCtl.create({
       type: 'js',
@@ -27,7 +34,7 @@ describe('upload', () => {
     })
   })
 
-  afterEach((done) => {
+  after((done) => {
     server.close()
     ipfsd.stop(done)
   })
@@ -98,8 +105,9 @@ describe('download', () => {
   let ipfsFactory
   let ipfsd
 
-  beforeEach((done) => {
+  before((done) => {
     server = require('./src/index')
+
     ipfsFactory = ipfsdCtl.create({
       type: 'js',
     })
@@ -110,24 +118,57 @@ describe('download', () => {
     }, (err, node) => {
       expect(err).to.be.null
       ipfsd = node
+      ipfsd.api.util.addFromFs('./fixtures/sample_1mb.jpg')
+      ipfsd.api.util.addFromFs('./fixtures/sample_5mb.jpg')
+      ipfsd.api.util.addFromFs('./fixtures/sample.gif')
+      ipfsd.api.util.addFromFs('./fixtures/sample.json')
+      ipfsd.api.util.addFromFs('./fixtures/sample.png')
       done()
     })
   })
 
-  afterEach((done) => {
+  after((done) => {
     server.close()
     ipfsd.stop(done)
   })
 
   it('should allow gif downloads', (done) => {
-    done()
+    request(server)
+      .get(`/ipfs/${ipfsHashes['sample.gif']}`)
+      .then((response) => {
+        expect(response.status).to.equal(200)
+        expect(response.headers['content-type']).to.equal('image/gif')
+        done()
+      })
   })
 
   it('should allow png downloads', (done) => {
-    done()
+    request(server)
+      .get(`/ipfs/${ipfsHashes['sample.png']}`)
+      .then((response) => {
+        expect(response.status).to.equal(200)
+        expect(response.headers['content-type']).to.equal('image/png')
+        done()
+      })
   })
 
   it('should allow jpg downloads', (done) => {
-    done()
+    request(server)
+      .get(`/ipfs/${ipfsHashes['sample_1mb.jpg']}`)
+      .then((response) => {
+        expect(response.status).to.equal(200)
+        expect(response.headers['content-type']).to.equal('image/jpeg')
+        done()
+      })
+  })
+
+  it('should allow json downloads', (done) => {
+    request(server)
+      .get(`/ipfs/${ipfsHashes['sample.json']}`)
+      .then((response) => {
+        expect(response.status).to.equal(200)
+        expect(response.headers['content-type']).to.equal('application/json')
+        done()
+      })
   })
 })

@@ -72,6 +72,13 @@ function handleFileUpload (req, res) {
 }
 
 function handleFileDownload(req, res) {
+  const url = config.IPFS_GATEWAY_URL + req.url
+  request.get(url)
+    .set(req.headers)
+    .then((response) => {
+      res.writeHead(response.status, response.headers)
+      res.end(response.body)
+    })
 }
 
 const server = http.createServer((req, res) => {
