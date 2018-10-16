@@ -371,3 +371,20 @@ export function getDateAvailabilityAndPrice(date, events, purchases) {
 
   return toReturn
 }
+
+export const prepareSlotsToSave = (slots) => {
+  return slots.map((slot) => {
+    let amount = '0'
+
+    if (slot.price && (typeof slot.price === 'number' || typeof slot.price.amount === 'number')) {
+      amount = slot.price.toString()
+    }
+
+    slot.price = {
+      currency: 'ETH',
+      amount
+    }
+
+    return slot
+  })
+}

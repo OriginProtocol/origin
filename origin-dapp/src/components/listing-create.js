@@ -17,7 +17,7 @@ import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
 
-import { generateCalendarSlots } from 'utils/calendarHelpers'
+import { generateCalendarSlots, prepareSlotsToSave } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
@@ -240,18 +240,7 @@ class ListingCreate extends Component {
       return
     }
 
-    slots.forEach((slot) => {
-      let amount = '0'
-
-      if (typeof slot.price === 'number') {
-        amount = slot.price.toString()
-      }
-
-      slot.price = {
-        currency: 'ETH',
-        amount
-      }
-    })
+    slots = prepareSlotsToSave(slots)
 
     this.setState({
       formListing: {

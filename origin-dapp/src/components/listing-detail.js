@@ -25,6 +25,7 @@ import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
+import { prepareSlotsToSave } from 'utils/calendarHelpers'
 
 import origin from '../services/origin'
 
@@ -58,7 +59,8 @@ class ListingsDetail extends Component {
       step: this.STEP.VIEW,
       boostLevel: null,
       boostValue: 0,
-      onboardingCompleted: false
+      onboardingCompleted: false,
+      slotsToReserve: []
     }
 
     this.intlMessages = defineMessages({
@@ -69,14 +71,13 @@ class ListingsDetail extends Component {
     })
 
     this.handleBuyClicked = this.handleBuyClicked.bind(this)
-    this.reserveSlots = this.reserveSlots.bind(this)
     this.loadListing = this.loadListing.bind(this)
+    this.handleMakeOffer = this.handleMakeOffer.bind(this)
+    this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
   }
 
   async handleBuyClicked() {
     this.props.storeWeb3Intent('buy this listing')
-    this.handleMakeOffer = this.handleMakeOffer.bind(this)
-    this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
   }
 
   async componentWillMount() {
@@ -102,7 +103,31 @@ class ListingsDetail extends Component {
     }
   }
 
-  async handleMakeOffer(skip) {
+  // async reserveSlots(slotsToReserve) {
+  //   this.props.storeWeb3Intent('reserve this listing')
+
+  //   if (web3.givenProvider && this.props.web3Account) {
+  //     const totalPrice = slotsToReserve.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
+  //     this.setState({ step: this.STEP.METAMASK })
+  //     try {
+  //       this.setState({ step: this.STEP.PROCESSING })
+  //       const { created, transactionReceipt } = await origin.listings.request(this.state.address, slotsToReserve, totalPrice, this.props.updateTransaction)
+  //       this.props.upsertTransaction({
+  //         ...transactionReceipt,
+  //         created,
+  //         transactionTypeKey: 'reserveListing',
+  //       })
+  //       console.log('Reservation request sent.')
+  //       this.setState({ step: this.STEP.PURCHASED })
+  //     } catch (error) {
+  //       window.err = error
+  //       console.error(error)
+  //       this.setState({ step: this.STEP.ERROR })
+  //     }
+  //   }
+  // }
+
+  async handleMakeOffer(skip, slotsToReserve) {
     // onboard if no identity, purchases, and not already completed
     const shouldOnboard =
       !this.props.profile.strength &&
@@ -115,19 +140,27 @@ class ListingsDetail extends Component {
       if (!skip && shouldOnboard) {
         return this.setState({
           onboardingCompleted: true,
-          step: this.STEP.ONBOARDING
+          step: this.STEP.ONBOARDING,
+          slotsToReserve
         })
       }
 
       this.setState({ step: this.STEP.METAMASK })
 
+      const isFractional = this.state.listingType === 'fractional'
+      const slots = slotsToReserve || this.state.slotsToReserve
+      const price =
+        isFractional ?
+          slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
+          this.state.price
+
       try {
         const offerData = {
           listingId: this.props.listingId,
-          listingType: 'unit',
+          listingType: this.state.listingType,
           unitsPurchased: 1,
           totalPrice: {
-            amount: this.state.price,
+            amount: price,
             currency: 'ETH'
           },
           commission: {
@@ -138,6 +171,11 @@ class ListingsDetail extends Component {
           // This is the window during which the buyer may file a dispute.
           finalizes: 365 * 24 * 60 * 60
         }
+
+        if (isFractional) {
+          offerData.slots = prepareSlotsToSave(slots)
+        }
+
         const transactionReceipt = await origin.marketplace.makeOffer(
           this.props.listingId,
           offerData,
@@ -231,30 +269,6 @@ class ListingsDetail extends Component {
 
   resetToStepOne() {
     this.setState({ step: this.STEP.VIEW })
-  }
-
-  async reserveSlots(slotsToReserve) {
-    this.props.storeWeb3Intent('reserve this listing')
-
-    if (web3.givenProvider && this.props.web3Account) {
-      const totalPrice = slotsToReserve.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
-      this.setState({ step: this.STEP.METAMASK })
-      try {
-        this.setState({ step: this.STEP.PROCESSING })
-        const { created, transactionReceipt } = await origin.listings.request(this.state.address, slotsToReserve, totalPrice, this.props.updateTransaction)
-        this.props.upsertTransaction({
-          ...transactionReceipt,
-          created,
-          transactionTypeKey: 'reserveListing',
-        })
-        console.log('Reservation request sent.')
-        this.setState({ step: this.STEP.PURCHASED })
-      } catch (error) {
-        window.err = error
-        console.error(error)
-        this.setState({ step: this.STEP.ERROR })
-      }
-    }
   }
 
   render() {
@@ -819,7 +833,7 @@ class ListingsDetail extends Component {
                   purchases={ this.state.purchases }
                   userType="buyer"
                   viewType={ this.state.schemaType === 'housing' ? 'daily' : 'hourly' }
-                  onComplete={ this.reserveSlots }
+                  onComplete={(slots) => this.handleMakeOffer(false, slots) }
                   step={ 60 }
                 />
               </div>
