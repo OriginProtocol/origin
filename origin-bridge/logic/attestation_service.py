@@ -33,6 +33,7 @@ signing_key = settings.ATTESTATION_SIGNING_KEY
 twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
+twitter_show_user_url = 'https://api.twitter.com/1.1/users/show.json'
 
 CLAIM_TYPES = {
     'phone': 10,
@@ -357,8 +358,7 @@ class VerificationService:
             response.raise_for_status()
         except requests.exceptions.HTTPError as exc:
             logger.exception(exc)
-            #raise TwitterVerificationError('Invalid response from Twitter.')
-            raise TwitterVerificationError(str(exc))
+            raise TwitterVerificationError('Invalid response from Twitter.')
 
         as_bytes = urllib.parse.parse_qs(response.content)
         token_bytes = as_bytes[b'oauth_token'][0]
@@ -423,7 +423,7 @@ class VerificationService:
             'signature': signature,
             'claim_type': CLAIM_TYPES['twitter'],
             'data': data,
-            'external_id': airbnbUserId
+            'external_id': screen_name
         })
 
     def generate_airbnb_verification_code(eth_address, airbnbUserId):
@@ -481,7 +481,8 @@ class VerificationService:
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': CLAIM_TYPES['airbnb'],
-            'data': data
+            'data': data,
+            'external_id': airbnbUserId
         })
 
 
