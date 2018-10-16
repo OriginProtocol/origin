@@ -14,5 +14,8 @@
     "url": "^0.11.0",
     "web3": "^1.0.0-beta.35"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "scripts": {
+    "install:dev": "npm install && npm link origin"
+  }
 }
