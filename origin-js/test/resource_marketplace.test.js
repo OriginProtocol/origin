@@ -1,6 +1,7 @@
 import Marketplace from '../src/resources/marketplace.js'
 import contractServiceHelper from './helpers/contract-service-helper'
 import asAccount from './helpers/as-account'
+import { offerValidation, listingValidation } from './helpers/schema-validation-helper'
 import IpfsService from '../src/services/ipfs-service.js'
 import { expect } from 'chai'
 import Web3 from 'web3'
@@ -48,55 +49,6 @@ class StoreMock {
   set(key, value) {
     this.storage[key] = value
   }
-}
-
-const itIsAValidListing = (listing) => {
-  expect(listing).to.be.an('object')
-  expect(listing).to.have.property('id').that.is.a('string')
-  expect(listing).to.have.property('media').that.is.an('array')
-  expect(listing).to.have.property('schemaId').that.is.a('string')
-  expect(listing).to.have.property('type').that.is.a('string')
-  expect(listing.type).to.equal('unit')
-
-  expect(listing).to.have.property('category').that.is.a('string')
-  expect(listing.category).to.equal('schema.forSale')
-  expect(listing).to.have.property('subCategory').that.is.a('string')
-  expect(listing.subCategory).to.equal('schema.forSale.mushrooms')
-
-  expect(listing).to.have.property('title').that.is.a('string')
-  expect(listing.title).to.equal('my listing')
-  expect(listing).to.have.property('description').that.is.a('string')
-  expect(listing.description).to.equal('my description')
-
-  expect(listing).to.have.property('expiry')
-  expect(new Date(listing.expiry).getMonth).to.be.a('function')
-  expect(listing).to.have.property('price').that.is.an('object')
-  expect(listing.price).to.have.property('currency', 'ETH')
-  expect(listing.price).to.have.property('amount', '0.033')
-  expect(listing).to.have.property('commission').that.is.an('object')
-  expect(listing.commission).to.have.property('currency', 'OGN')
-  expect(listing.commission).to.have.property('amount', '0')
-
-  expect(listing).to.have.property('ipfsHash').startsWith('0x')
-  expect(listing).to.have.property('depositManager').startsWith('0x')
-  expect(listing).to.have.property('seller').startsWith('0x')
-  expect(listing).to.have.property('status', 'active')
-  expect(listing).to.have.property('offers').that.is.an('object')
-  expect(listing).to.have.property('events').that.is.an('array')
-
-  const event = listing.events[0]
-
-  expect(event).to.have.property('id').that.is.a('string')
-  expect(event).to.have.property('blockNumber').that.is.a('number')
-  expect(event).to.have.property('logIndex', 0)
-  expect(event).to.have.property('transactionIndex', 0)
-  expect(event).to.have.property('transactionHash').startsWith('0x')
-  expect(event).to.have.property('blockHash').startsWith('0x')
-  expect(event).to.have.property('address').startsWith('0x')
-  expect(event).to.have.property('signature').startsWith('0x')
-  expect(event).to.have.property('type', 'mined')
-  expect(event).to.have.property('event', 'ListingCreated')
-  expect(event).to.have.property('returnValues').that.is.an('object')
 }
 
 describe('Marketplace Resource', function() {
@@ -171,7 +123,7 @@ describe('Marketplace Resource', function() {
       const listings = await marketplace.getListings()
       expect(listings).to.have.lengthOf(2)
 
-      listings.map(itIsAValidListing)
+      listings.map(listingValidation)
     })
 
     it('should return all listing ids when idsOnly is true', async () => {
@@ -190,7 +142,7 @@ describe('Marketplace Resource', function() {
       expect(listings.length).to.equal(1)
       const listing = await marketplace.getListing(listings[0])
 
-      itIsAValidListing(listing)
+      listingValidation(listing)
     })
   })
 
@@ -203,7 +155,7 @@ describe('Marketplace Resource', function() {
 
       expect(listings.length).to.equal(2)
 
-      itIsAValidListing(listings[1])
+      listings.map(listingValidation)
     })
   })
 
@@ -240,27 +192,15 @@ describe('Marketplace Resource', function() {
       expect(offers.length).to.equal(2)
       expect(offers[0].status).to.equal('created')
       expect(offers[0].unitsPurchased).to.exist
+      offerValidation(offers[0])
 
       const latestOffer = offers[1]
 
-      expect(latestOffer).to.have.property('status', 'created')
-      expect(latestOffer).to.have.property('unitsPurchased', 1)
-      expect(latestOffer).to.have.property('listingId', listings[0].id)
-      expect(latestOffer).to.have.property('createdAt').that.is.a('number')
-      expect(latestOffer).to.have.property('schemaId').that.is.a('string')
-      expect(latestOffer).to.have.property('buyer').that.is.a('string')
-      expect(latestOffer.buyer).to.startWith('0x')
+      offerValidation(latestOffer)
 
-      expect(latestOffer).to.have.property('refund', '0')
-      expect(latestOffer).to.have.property('listingType', 'unit')
-      expect(latestOffer).to.have.property('totalPrice').that.is.an('object')
-      expect(latestOffer.totalPrice).to.have.property('currency', 'ETH')
-      expect(latestOffer.totalPrice).to.have.property('amount').that.is.a('string')
-      expect(latestOffer).to.have.property('ipfs').that.is.an('object')
-      expect(latestOffer).to.have.property('events').that.is.an('array')
-
-      expect(latestOffer.ipfs).to.have.property('hash').that.is.a('string')
-      expect(latestOffer.ipfs).to.have.property('data').that.is.an('object')
+      expect(latestOffer.status).to.equal('created')
+      expect(latestOffer.unitsPurchased).to.equal(1)
+      expect(latestOffer.listingId).to.equal(listings[0].id)
     })
 
     it('should exclude invalid offers', async () => {
@@ -276,6 +216,8 @@ describe('Marketplace Resource', function() {
   describe('getOffer', () => {
     it('should get offer data', async () => {
       const offer = await marketplace.getOffer('999-000-0-0')
+
+      offerValidation(offer)
       expect(offer.status).to.equal('created')
       expect(offer.unitsPurchased).to.exist
     })
@@ -363,12 +305,15 @@ describe('Marketplace Resource', function() {
       await marketplace.makeOffer('999-000-0', anotherOffer)
       const offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.totalPrice.amount).to.equal('0.033')
+      expect(offer.totalPrice.currency).to.equal('ETH')
     })
 
     it('should make an offer in ERC20', async () => {
       await marketplace.createListing(originTokenListing)
       await marketplace.makeOffer('999-000-1', originTokenOffer)
       const offer = await marketplace.getOffer('999-000-1-0')
+
+      offerValidation(offer)
       expect(offer.totalPrice.amount).to.equal('1')
       expect(offer.totalPrice.currency).to.equal('OGN')
     })
@@ -378,7 +323,7 @@ describe('Marketplace Resource', function() {
       await marketplace.makeOffer('999-000-1', commissionOffer)
       const offer = await marketplace.getOffer('999-000-1-0')
 
-      expect(offer).to.be.an('object')
+      offerValidation(offer)
     })
   })
 
@@ -388,6 +333,8 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.equal('created')
       await marketplace.withdrawOffer(offer.id)
       offer = await marketplace.getOffer('999-000-0-0')
+
+      offerValidation(offer)
       expect(offer.status).to.equal('withdrawn')
     })
   })
@@ -398,6 +345,8 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.equal('created')
       await marketplace.acceptOffer('999-000-0-0')
       offer = await marketplace.getOffer('999-000-0-0')
+
+      offerValidation(offer)
       expect(offer.status).to.equal('accepted')
     })
   })
@@ -409,6 +358,8 @@ describe('Marketplace Resource', function() {
       await marketplace.acceptOffer('999-000-0-0')
       await marketplace.finalizeOffer('999-000-0-0', reviewData)
       offer = await marketplace.getOffer('999-000-0-0')
+
+      offerValidation(offer)
       expect(offer.status).to.equal('finalized')
     })
   })
@@ -421,6 +372,8 @@ describe('Marketplace Resource', function() {
       await marketplace.finalizeOffer('999-000-0-0', reviewData)
       await marketplace.addData(0, offer.id, reviewData)
       offer = await marketplace.getOffer('999-000-0-0')
+
+      offerValidation(offer)
       expect(offer.status).to.equal('sellerReviewed')
     })
   })
@@ -437,12 +390,16 @@ describe('Marketplace Resource', function() {
   })
 
   describe('getNotifications', () => {
-    it('should return notifications', async () => {
-      let notifications = await marketplace.getNotifications()
+    let notifications
+
+    beforeEach(async function() {
+      notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
       expect(notifications[0].type).to.equal('seller_listing_purchased')
       expect(notifications[0].status).to.equal('unread')
+    })
 
+    it('should return notifications', async () => {
       await marketplace.acceptOffer('999-000-0-0')
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
@@ -507,6 +464,8 @@ describe('Marketplace Resource', function() {
         await marketplace.resolveDispute('999-000-0-1', {}, 1, offerPrice)
       })
       offer = await marketplace.getOffer('999-000-0-1')
+
+      offerValidation(offer)
       expect(offer.status).to.be.equal('ruling')
     })
   })
