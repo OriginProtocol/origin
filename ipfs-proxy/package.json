@@ -22,7 +22,8 @@
     "image-type": "^3.0.0",
     "ipfs": "^0.32.3",
     "ipfsd-ctl": "^0.39.2",
-    "logplease": "^1.2.15"
+    "logplease": "^1.2.15",
+    "request": "^2.88.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

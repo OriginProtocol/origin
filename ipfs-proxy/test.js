@@ -4,6 +4,7 @@ const request = require('supertest')
 const logger = require('./src/logger')
 
 const expect = chai.expect
+const ipfsPort = 9998
 
 describe('upload', () => {
   let server
@@ -11,28 +12,16 @@ describe('upload', () => {
   let ipfsFactory
   let ipfsd
 
-  before((done) => {
-    ipfsServer = ipfsdCtl.createServer()
-    ipfsServer.start((err) => {
-      expect(err).to.be.null
-      logger.debug('IPFS endpoint is running')
-      done()
-    })
-  })
-
-  after((done) => {
-    ipfsServer.stop(done)
-  })
-
   beforeEach((done) => {
     server = require('./src/index')
     ipfsFactory = ipfsdCtl.create({
-      remote: true,
-      exec: require('ipfs'),
-      type: 'proc'
+      type: 'js',
     })
 
-    ipfsFactory.spawn({ disposable: true }, (err, node) => {
+    ipfsFactory.spawn({
+      disposable: true,
+      defaultAddrs: true
+    }, (err, node) => {
       expect(err).to.be.null
       ipfsd = node
       done()

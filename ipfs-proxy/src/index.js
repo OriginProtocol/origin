@@ -1,6 +1,7 @@
-const express = require('express')
+const busboy = require('connect-busboy')
 const imageType = require('image-type')
-const Busboy = require('connect-busboy')
+const express = require('express')
+const request = require('request')
 
 const config = require('./config')
 const logger = require('./logger')
@@ -62,11 +63,18 @@ function validate(req, res, next) {
 
 function uploadToIpfs(req, res, next) {
   logger.debug(`Uploading file to IPFS`)
+  const pipe = req.pipe(request(config.IPFS_API_URL + '/api/v0/add')).pipe(res)
+  console.log(pipe)
+  next()
+}
+
+function downloadFromIpfs(req, res, next) {
+  logger.debug(`Retrieving file from IPFS`)
 }
 
 const app = express()
 
-app.use(Busboy({
+app.use(busboy({
   limits: {
     fileSize: 2 * 1024 * 1024
   }
@@ -75,9 +83,7 @@ app.use(Busboy({
 app.use('/api/v0/add', validate)
 app.use('/api/v0/add', uploadToIpfs)
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.use('/ipfs', downloadFromIpfs)
 
 const server = app.listen(config.IPFS_PROXY_PORT, () =>
   logger.debug(`Listening on port ${config.IPFS_PROXY_PORT}`)
