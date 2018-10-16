@@ -17,13 +17,13 @@
   },
   "homepage": "https://github.com/OriginProtocol/origin#readme",
   "dependencies": {
-    "connect-busboy": "0.0.2",
-    "express": "^4.16.4",
+    "busboy": "^0.2.14",
     "image-type": "^3.0.0",
     "ipfs": "^0.32.3",
     "ipfsd-ctl": "^0.39.2",
+    "is-json": "^2.0.1",
     "logplease": "^1.2.15",
-    "request": "^2.88.0"
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -31,6 +31,7 @@
     "@babel/register": "^7.0.0",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
     "supertest": "^3.3.0"
   }
 }

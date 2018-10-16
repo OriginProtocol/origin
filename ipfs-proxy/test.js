@@ -8,7 +8,6 @@ const ipfsPort = 9998
 
 describe('upload', () => {
   let server
-  let ipfsServer
   let ipfsFactory
   let ipfsd
 
@@ -76,7 +75,7 @@ describe('upload', () => {
 
   it('should allow json uploads', (done) => {
     const json = './fixtures/sample.json'
-    request(server)
+    const res = request(server)
       .post('/api/v0/add')
       .attach('json', json)
       .expect(200, done)
@@ -96,13 +95,28 @@ describe('upload', () => {
 
 describe('download', () => {
   let server
+  let ipfsFactory
+  let ipfsd
 
-  beforeEach(() => {
+  beforeEach((done) => {
     server = require('./src/index')
+    ipfsFactory = ipfsdCtl.create({
+      type: 'js',
+    })
+
+    ipfsFactory.spawn({
+      disposable: true,
+      defaultAddrs: true
+    }, (err, node) => {
+      expect(err).to.be.null
+      ipfsd = node
+      done()
+    })
   })
 
-  afterEach(() => {
+  afterEach((done) => {
     server.close()
+    ipfsd.stop(done)
   })
 
   it('should allow gif downloads', (done) => {
