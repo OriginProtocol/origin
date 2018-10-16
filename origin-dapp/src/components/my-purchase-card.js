@@ -37,7 +37,7 @@ class MyPurchaseCard extends Component {
     let price
 
     if (this.state.listing.listingType === 'fractional') {
-      price = this.state.purchasedSlots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.priceWei, 0)
+      price = this.state.purchasedSlots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
     } else {
       price = Number(this.state.listing.price).toLocaleString(undefined, { minimumFractionDigits: 3 })
     }

@@ -241,16 +241,26 @@ class ListingCreate extends Component {
     }
 
     slots.forEach((slot) => {
-      if (typeof slot.price !== 'number') {
-        delete slot.price
+      let amount = '0'
+
+      if (typeof slot.price === 'number') {
+        amount = slot.price.toString()
+      }
+
+      slot.price = {
+        currency: 'ETH',
+        amount
       }
     })
 
     this.setState({
-      formData: {
-        ...this.state.formData,
-        timeIncrement: this.state.fractionalTimeIncrement,
-        slots
+      formListing: {
+        ...this.state.formListing,
+        formData: {
+          ...this.state.formListing.formData,
+          timeIncrement: this.state.fractionalTimeIncrement,
+          slots
+        }
       }
     })
 

@@ -27,13 +27,13 @@ export function dappFormDataToOriginListing(formData) {
     commission: {
       amount: formData.boostValue.toString(),
       currency: 'OGN'
-    }
+    },
+    unitsTotal: 1 // Note: for V1 we only support single unit listings.
   }
 
   if (formData.listingType === 'unit') {
     listingData = {
       ...listingData,
-      unitsTotal: 1, // Note: for V1 we only support single unit listings.
       price: {
         amount: formData.price.toString(),
         currency: 'ETH'
@@ -79,19 +79,20 @@ export function originToDAppListing(originListing) {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
-    schemaType: originListing.category,
+    schemaType: originListing.category.replace('schema.', ''),
     category: originListing.subCategory,
     name: originListing.title,
     description: originListing.description,
     pictures: originListing.media
       ? originListing.media.map(medium => medium.url)
       : [],
-    price: originListing.price.amount,
+    price: originListing.price && originListing.price.amount,
     boostValue: commission,
     boostLevel: getBoostLevel(commission),
     unitsRemaining: originListing.unitsRemaining,
     ipfsHash: originListing.ipfs.hash,
-    listingType: originListing.listingType
+    listingType: originListing.type,
+    slots: originListing.ipfs && originListing.ipfs.data && originListing.ipfs.data.slots
   }
 }
 

@@ -237,10 +237,10 @@ class ListingsDetail extends Component {
     this.props.storeWeb3Intent('reserve this listing')
 
     if (web3.givenProvider && this.props.web3Account) {
-      const totalPrice = slotsToReserve.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.priceWei, 0)
-      this.setState({step: this.STEP.METAMASK})
+      const totalPrice = slotsToReserve.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
+      this.setState({ step: this.STEP.METAMASK })
       try {
-        this.setState({step: this.STEP.PROCESSING})
+        this.setState({ step: this.STEP.PROCESSING })
         const { created, transactionReceipt } = await origin.listings.request(this.state.address, slotsToReserve, totalPrice, this.props.updateTransaction)
         this.props.upsertTransaction({
           ...transactionReceipt,
@@ -252,7 +252,7 @@ class ListingsDetail extends Component {
       } catch (error) {
         window.err = error
         console.error(error)
-        this.setState({step: this.STEP.ERROR})
+        this.setState({ step: this.STEP.ERROR })
       }
     }
   }

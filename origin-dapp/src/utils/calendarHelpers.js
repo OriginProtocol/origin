@@ -293,7 +293,7 @@ export function getSlotsToReserve(buyerSelectedSlotData) {
             const toReturn = {
               startDate: slot.start,
               endDate: slot.end,
-              priceWei: slot.price,
+              price: slot.price,
             }
 
             if (slot.isRecurringEvent) {
@@ -316,7 +316,7 @@ export function getCleanEvents(events) {
         startDate: event.start.toISOString(),
         endDate: event.end.toISOString(),
         isAvailable: event.isAvailable,
-        priceWei: event.price
+        price: event.price
       }
 
       if (event.isRecurringEvent) {
