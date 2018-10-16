@@ -1,9 +1,9 @@
-// Migration to add an attestation key specific to staging
+// Migration to add an attestation key specific to staging on Rinkeby
 // (vs using same signing key as prod which was the behavior prior to this change).
-var OriginIdentity = artifacts.require("./OriginIdentity.sol");
-var Web3 = require("web3")
+var OriginIdentity = artifacts.require('./OriginIdentity.sol');
+var Web3 = require('web3')
 
-const ISSUER_STAGING = "0x5be37555816d258f5e316e0f84D59335DB2400B2"
+const ISSUER_STAGING = '0x5be37555816d258f5e316e0f84D59335DB2400B2'
 const keyPurpose = 3
 const keyType = 1
 
@@ -26,7 +26,7 @@ async function add_sample_issuer(network) {
   let defaultAccount = accounts[0]
   let originIdentity = await OriginIdentity.deployed()
 
-  if (network === "rinkeby") {
+  if (network === 'rinkeby') {
     await originIdentity.addKey(
       Web3.utils.soliditySha3(ISSUER_STAGING),
       keyPurpose,
