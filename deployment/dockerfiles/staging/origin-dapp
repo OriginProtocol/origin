@@ -37,13 +37,14 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.staging.originprotocol.com \
     PROVIDER_URL=https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP \
     MESSAGING_NAMESPACE=origin:staging \
     DEPLOY_TAG=$DEPLOY_TAG \
-    BLOCK_EPOCH=3050000
+    BLOCK_EPOCH=3050000 \
+    INSTRUCTIONS_URL=https://medium.com/originprotocol/draft-origin-launches-beta-on-mainnet-draft-e3b70161ae86
 
 WORKDIR /app
 RUN npm install --quiet --no-progress
 
 # Link previously built Origin.js
-COPY --from=origin-js-build /app/ /usr/local/lib/node_modules/origin
+COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
 RUN npm link origin
 
 RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-only

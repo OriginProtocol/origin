@@ -2,12 +2,12 @@ databaseInstance: origin-214503:us-west1:prod
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '32de267'
+bridgeImageTag: '916795e'
 bridgeReplicas: 1
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'cd222ad'
+dappImageTag: 'a5eb4e0'
 dappReplicas: 2
 
 # Mainnet nodes
@@ -21,7 +21,7 @@ faucetImage: origin-faucet
 faucetImageTag: '28438d2'
 
 eventlistenerImage: event-listener
-eventlistenerImageTag: '82b40e6'
+eventlistenerImageTag: '916795e'
 eventlistenerWeb3Url: https://mainnet.infura.io/emIXjs9eDuy57IlTYsIP
 eventlistenerContinueBlock: 6425000
 

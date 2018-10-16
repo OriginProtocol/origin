@@ -109,6 +109,9 @@ const LISTEN_RULES = {
 // Section 2: The following engine
 // -------------------------------
 
+/**
+ * setup Origin JS according to the config.
+ */ 
 function setupOriginJS(config){
   const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
   // global
@@ -126,9 +129,11 @@ function setupOriginJS(config){
   console.log(`IPFS URL: ${config.ipfsUrl}`)
 }
 
-// liveTracking
-// - checks for a new block every checkIntervalSeconds
-// - if new block appeared, look for all events after the last found event
+/**
+ *  liveTracking
+ * - checks for a new block every checkIntervalSeconds
+ * - if new block appeared, look for all events after the last found event
+ */ 
 async function liveTracking(config) {
   setupOriginJS(config)
   const context = await new Context(config).init()
@@ -147,7 +152,12 @@ async function liveTracking(config) {
         return scheduleNextCheck()
       }
       console.log('New block: ' + currentBlockNumber)
-      const toBlock = Math.min(lastLogBlock+MAX_BATCH_BLOCKS, currentBlockNumber)
+      const toBlock = Math.min( // Pick the smallest of either
+        // the last log we processed, plus the max batch size
+        lastLogBlock + MAX_BATCH_BLOCKS, 
+         // or the current block number, minus any trailing blocks we waiting on
+        Math.max(currentBlockNumber - config.trailBlocks, 0),
+      )
       const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
       await runBatch(opts, context)
       lastLogBlock = toBlock
@@ -165,6 +175,11 @@ async function liveTracking(config) {
   check()
 }
 
+/**
+ * The first block the listener should start at for following events.
+ * This either uses the value stored in the the continue file, if given
+ * or defaults to 0.
+ */ 
 function getLastBlock(config) {
   if (config.continueFile == undefined || !fs.existsSync(config.continueFile)) {
     return 0
@@ -177,6 +192,10 @@ function getLastBlock(config) {
   return 0
 }
 
+/**
+ * Stores the last block we have read up to in the continue file.
+ * If no continue file configured, does nothing.
+ */  
 function setLastBlock(config, blockNumber) {
   if (config.continueFile == undefined) {
     return
@@ -185,7 +204,9 @@ function setLastBlock(config, blockNumber) {
   fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
 }
 
-// runBatch - gets and processes logs for a range of blocks
+/**
+ * runBatch - gets and processes logs for a range of blocks
+ */ 
 async function runBatch(opts, context) {
   const fromBlock = opts.fromBlock
   const toBlock = opts.toBlock
@@ -223,8 +244,11 @@ async function runBatch(opts, context) {
   return lastLogBlock
 }
 
-// Retrys up to 10 times, with exponential backoff, then exits the process
-async function withRetrys(fn) {
+/**
+ * Retrys up to N times, with exponential backoff.
+ * If still failing after N times, exits the process.
+ */ 
+async function withRetrys(fn, exitOnError=true) {
   let tryCount = 0
   while (true) {
     try {
@@ -242,15 +266,22 @@ async function withRetrys(fn) {
       await new Promise(resolve => setTimeout(resolve, waitTime))
     }
     if (tryCount >= MAX_RETRYS) {
-      console.log('Exiting. Maximum number of retrys reached.')
-      // Now it's up to our environment to restart us.
-      // Hopefully with a clean start, things will work better
-      process.exit(1)
+      if (exitOnError) {
+        console.log('EXITING: Maximum number of retrys reached')
+        // Now it's up to our environment to restart us.
+        // Hopefully with a clean start, things will work better
+        process.exit(1)
+      } else {
+        throw new Error('Maximum number of retrys reached')
+      }
     }
   }
 }
 
-// handleLog - annotates, runs rule, and ouputs a particular log
+/**
+ *  Takes and event/log and a matching rule 
+ *  then annotates the event/log, runs the rule, and ouputs everything.
+ */ 
 async function handleLog(log, rule, contractVersion, context) {
   log.decoded = web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
@@ -262,22 +293,25 @@ async function handleLog(log, rule, contractVersion, context) {
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
 
-  console.log(
-    `Processing log \
-    blockNumber=${log.blockNumber} \
+  const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
     eventName=${log.eventName} \
     contractName=${log.contractName}`
-  )
+  console.log(`Processing log: ${logDetails}`)
 
   // Note: we run the rule with a retry since we've seen in production cases where we fail loading
   // from smart contracts the data pointed to by the event. This may occur due to load balancing
   // across ethereum nodes and if some nodes are lagging. For example the ethereum node we
   // end up connecting to for reading the data may lag compared to the node received the event from.
   let ruleResults = undefined
-  await withRetrys(async () => {
-    ruleResults = await rule.ruleFn(log)
-  })
+  try {
+    await withRetrys(async () => {
+      ruleResults = await rule.ruleFn(log)
+    }, exitOnError = false)
+  } catch(e) {
+    console.log(`Skipping indexing for ${logDetails} - ${e}`)
+    return
+  }
 
   const output = {
     log: log,
@@ -314,7 +348,7 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   if (context.config.elasticsearch) {
-    console.log('INDEXING ', listingId)
+    console.log(`Indexing listing in Elastic: id=${listingId}`)
     await withRetrys(async () => {
       await search.Listing.index(
         listingId,
@@ -325,16 +359,21 @@ async function handleLog(log, rule, contractVersion, context) {
     })
     if (output.related.offer !== undefined) {
       const offer = output.related.offer
+      console.log(`Indexing offer in Elastic: id=${offer.id} `)
       await withRetrys(async () => {
         await search.Offer.index(offer, listing)
       })
     }
     if (output.related.seller !== undefined) {
+      const seller = output.related.seller
+      console.log(`Indexing seller in Elastic: addr=${seller.address}`)
       await withRetrys(async () => {
-        await search.User.index(output.related.seller)
+        await search.User.index(seller)
       })
     }
     if (output.related.buyer !== undefined) {
+      const buyer = output.related.buyer
+      console.log(`Indexing buyer in Elastic: addr=${buyer.address}`)
       await withRetrys(async () => {
         await search.User.index(output.related.buyer)
       })
@@ -342,6 +381,7 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   if (context.config.db) {
+    console.log(`Indexing listing in DB: id=${listingId}`)
     await withRetrys(async () => {
       await db.Listing.insert(
         listingId,
@@ -360,6 +400,9 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 }
 
+/**
+ * Sends a blob of json to a webhook.
+ */  
 async function postToWebhook(urlString, json) {
   const url = urllib.parse(urlString)
   const postOptions = {
@@ -403,12 +446,32 @@ class Context {
 
   async init() {
     this.signatureToRules = buildSignatureToRules()
-    this.addressToVersion = await buildVersionList()
+    this.addressToVersion = await buildAddressToVersion()
     this.networkId = await web3.eth.net.getId()
     return this
   }
 }
 
+/**
+ * Builds a lookup object that allows you to start from an ETH event signature,
+ * and find out what contract and what event fired it. Each event also includes a 
+ * list of our javascript event handler functions we want to fire for that log.
+ * @example
+ * buildSignatureToRules()
+ * // { '0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c':
+ * //     { V00_Marketplace:
+ * //          { contractName: 'V00_Marketplace',
+ * //            eventName: 'ListingCreated',
+ * //            eventAbi: [Object],
+ * //            ruleFn: [...] } },
+ * //      '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
+ * //      { V00_Marketplace:
+ * //          { contractName: 'V00_Marketplace',
+ * //            eventName: 'ListingUpdated',
+ * //            eventAbi: [Object],
+ * //            ruleFn: [...] } }
+ * //   }
+ */
 function buildSignatureToRules() {
   const signatureLookup = {}
   for (const contractName in LISTEN_RULES) {
@@ -437,7 +500,16 @@ function buildSignatureToRules() {
   return signatureLookup
 }
 
-async function buildVersionList() {
+/**  
+ * Builds a lookup object of marketplace contract names and versions 
+ * by ETH contract addresses.
+ * @example
+ * buildAddressToVersion()
+ * //  { '0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF':
+ * //      { versionKey: '000', contractName: 'V00_Marketplace' }
+ * //  }
+ */
+async function buildAddressToVersion() {
   const versionList = {}
   const adapters = o.marketplace.resolver.adapters
   const versionKeys = Object.keys(adapters)
@@ -475,9 +547,13 @@ const config = {
   verbose: args['--verbose'],
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'],
+  // Trail X number of blocks behind
+  trailBlocks: args['--trail-behind-blocks'] || 0,
   // web3 provider url
   web3Url: args['--web3-url'] || 'http://localhost:8545',
   // ipfs url
   ipfsUrl: args['--ipfs-url'] || 'http://origin-js:8080',
 }
+
+// Start the listener running
 liveTracking(config)

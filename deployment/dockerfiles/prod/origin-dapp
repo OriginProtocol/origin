@@ -21,7 +21,8 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.originprotocol.com \
     PROVIDER_URL=https://mainnet.infura.io/emIXjs9eDuy57IlTYsIP \
     MESSAGING_NAMESPACE=origin \
     DEPLOY_TAG=$DEPLOY_TAG \
-    BLOCK_EPOCH=6400000
+    BLOCK_EPOCH=6400000 \
+    INSTRUCTIONS_URL=https://medium.com/originprotocol/draft-origin-launches-beta-on-mainnet-draft-e3b70161ae86
 
 WORKDIR /app/origin-dapp
 RUN npm install --quiet --no-progress
@@ -29,5 +30,5 @@ RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-on
 
 # Nginx to service static files
 FROM nginx:1.15.2
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/origin-dapp/build /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]

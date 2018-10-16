@@ -7,9 +7,7 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 Origin Box is a [Docker](https://www.docker.com/) container setup for running all core Origin components together in a single environment, preconfigured to work together.
 
 Origin Box currently supports the following components:
-- [origin-dapp](https://github.com/OriginProtocol/origin-dapp)
-- [origin-js](https://github.com/OriginProtocol/origin-js)
-- [origin-bridge](https://github.com/originprotocol/origin-bridge)
+- [origin-dapp](https://github.com/OriginProtocol/origin)
 - [origin-website](https://github.com/originprotocol/origin-website)
 
 Each repo is symlinked from the container to a local directory. You may edit the source code using your favorite editor. The repo directories are just normal git repositories, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches — and the container will be automatically kept in sync.
@@ -35,28 +33,20 @@ Origin Box has several intended use cases:
 
 ## Getting started
 
-1. Clone this repository via SSH. If you haven't enabled SSH authentication on Github, [here's how to do it.](https://help.github.com/articles/about-ssh/)
+1. Clone the origin repository via SSH. If you haven't enabled SSH authentication on Github, [here's how to do it.](https://help.github.com/articles/about-ssh/).
+```
+git clone git@github.com:OriginProtocol/origin.git
+cd origin
+```
+
+2. Optional: Pick which version of the code you want to run. The latest code is on the master branch (which is checked out by default), while the code currently deployed in production is on the stable branch. For example, to use the stable branch, run:
+```
+git checkout --track origin/stable
+```
 
 2. Run `./install.sh -e origin` for the standard stack, or `./install.sh -e origin-website` for the website stack.
 
 ![install.sh](https://raw.githubusercontent.com/OriginProtocol/origin-box/master/screenshot.png)
-
-The install script will clone the origin repositories into subdirectories and checkout the stable branches. You can then `cd` into any one of them and run `git` commands as you would in any other cloned repository. For example, if you would like to run the bleeding-edge versions that are under active development, you would need to checkout the master branch in each repository:
-
-```
-# to explore active development
-cd origin-dapp
-git checkout --track origin/master
-cd ../origin-js
-git checkout --track origin/master
-cd ../origin-bridge
-git checkout --track origin/master
-```
-or
-```
-cd origin-website
-git checkout --track origin/master
-```
 
 If the install script doesn't complete the most likely reason is you don't have the [required ports](#port-errors) open.
 
@@ -105,10 +95,6 @@ Restart DApp (needed after changing branches). In a new terminal window:
 Connect to the origin_bridge postgresql database:
 
 	docker exec -ti postgres /bin/bash -c "psql -h localhost -U origin origin_bridge"
-
-Connect to redis:
-
-	docker exec -ti redis /bin/bash -c "redis-cli"
 
 ### Package management
 
