@@ -19,6 +19,7 @@
   "dependencies": {
     "connect-busboy": "0.0.2",
     "express": "^4.16.4",
+    "image-type": "^3.0.0",
     "logplease": "^1.2.15"
   },
   "devDependencies": {
