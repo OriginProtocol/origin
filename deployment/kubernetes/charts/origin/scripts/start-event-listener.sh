@@ -12,4 +12,4 @@ echo "Starting event listener"
 echo "{ \"lastLogBlock\": ${CONTINUE_BLOCK} }" > ./continue.json
 
 # Start event listener
-node listener/listener.js --elasticsearch --db --web3-url=${WEB3_URL} --ipfs-url=${IPFS_URL} --continue-file=./continue.json
+node listener/listener.js --elasticsearch --db --web3-url=${WEB3_URL} --ipfs-url=${IPFS_URL} --continue-file=./continue.json --trail-behind-blocks=1
