@@ -500,6 +500,7 @@ def test_verify_twitter_valid_code(mock_session, app):
     assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
     assert verification_response.data['claim_type'] == CLAIM_TYPES['twitter']
     assert verification_response.data['data'] == 'twitter verified'
+    assert verification_response.data['external_id'] == 'originprotocol'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
@@ -599,6 +600,7 @@ def test_verify_airbnb(mock_urllib_request, app):
     assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
     assert verification_response.data['claim_type'] == CLAIM_TYPES['airbnb']
     assert verification_response.data['data'] == 'airbnbUserId:' + airbnbUserId
+    assert verification_response.data['external_id'] == str(airbnbUserId)
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
