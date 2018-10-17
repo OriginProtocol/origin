@@ -117,20 +117,3 @@ export const validateNotification = (notification) => {
   expect(notification.resources).to.have.property('offerId').that.is.a('string')
   expect(notification.resources).to.have.property('listing').that.is.an('object')
 }
-
-export default function schemaValidation(type, schema) {
-  switch(type) {
-  case 'listing':
-    return validateListing(schema)
-  case 'user':
-    return validateUser(schema)
-  case 'attestation':
-    return validateAttestation(schema)
-  case 'offer':
-    return validateOffer(schema)
-  case 'notification':
-    return validateNotification(schema)
-  default:
-    return validateListing(schema)
-  }
-}

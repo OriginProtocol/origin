@@ -1,7 +1,7 @@
 import Marketplace from '../src/resources/marketplace.js'
 import contractServiceHelper from './helpers/contract-service-helper'
 import asAccount from './helpers/as-account'
-import schemaValidation, { validateOffer, validateListing, validateNotification } from './helpers/schema-validation-helper'
+import { validateOffer, validateListing, validateNotification } from './helpers/schema-validation-helper'
 import IpfsService from '../src/services/ipfs-service.js'
 import { expect } from 'chai'
 import Web3 from 'web3'
@@ -156,6 +156,8 @@ describe('Marketplace Resource', function() {
       expect(listings.length).to.equal(2)
 
       listings.map(validateListing)
+
+      expect(listings[1]).to.equal(listingData.title)
     })
   })
 
@@ -395,7 +397,7 @@ describe('Marketplace Resource', function() {
     beforeEach(async function() {
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
-      schemaValidation('notification', notifications[0])
+      validateNotification(notifications[0])
       expect(notifications[0].type).to.equal('seller_listing_purchased')
       expect(notifications[0].status).to.equal('unread')
     })
@@ -404,7 +406,7 @@ describe('Marketplace Resource', function() {
       await marketplace.acceptOffer('999-000-0-0')
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
-      schemaValidation('notification', notifications[0])
+      validateNotification(notifications[0])
 
       expect(notifications[0].type).to.equal('buyer_listing_shipped')
       expect(notifications[0].status).to.equal('unread')
@@ -413,7 +415,7 @@ describe('Marketplace Resource', function() {
       await marketplace.finalizeOffer('999-000-0-0', reviewData)
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
-      schemaValidation('notification', notifications[0])
+      validateNotification(notifications[0])
 
       expect(notifications[0].type).to.equal('seller_review_received')
       expect(notifications[0].status).to.equal('unread')
@@ -426,7 +428,7 @@ describe('Marketplace Resource', function() {
       const notifications = await marketplace.getNotifications()
 
       expect(notifications.length).to.equal(1)
-      schemaValidation('notification', notifications[0])
+      validateNotification(notifications[0])
       expect(notifications).to.not.include(invalidPriceOffer)
     })
   })
@@ -440,7 +442,7 @@ describe('Marketplace Resource', function() {
       const updatedNotification = { ...notifications[0], status: 'read' }
       marketplace.setNotification(updatedNotification)
       notifications = await marketplace.getNotifications()
-      schemaValidation('notification', notifications[0])
+      validateNotification(notifications[0])
 
       expect(notifications[0].status).to.equal('read')
     })
