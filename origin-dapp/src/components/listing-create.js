@@ -65,7 +65,8 @@ class ListingCreate extends Component {
         }
       },
       showDetailsFormErrorMsg: false,
-      showBoostTutorial: false
+      showBoostTutorial: false,
+      ETH_NOT_ENOUGH: false
     }
 
     this.state = { ...this.defaultState }
@@ -127,6 +128,12 @@ class ListingCreate extends Component {
   }
 
   handleSchemaSelection(selectedSchemaType) {
+    if (parseFloat(this.props.wallet.ethBalance) < 0.01){
+      this.setState({
+        ETH_NOT_ENOUGH: true
+      })
+      return
+    }
     fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
@@ -974,6 +981,37 @@ class ListingCreate extends Component {
                 </div>
               </Modal>
             )}
+            <Modal backdrop="static" isOpen={this.state.ETH_NOT_ENOUGH}>
+              <div className="image-container">
+                <img src="images/flat_cross_icon.svg" role="presentation" />
+              </div>
+              <FormattedMessage
+                id={'eth-not-enough.error1'}
+                defaultMessage={'Your ETH is not enough.'}
+              />
+              <br />
+              <FormattedMessage
+                id={'eth-not-enough.error2'}
+                defaultMessage={'Please funding your wallet.'}
+              />
+              <div className="button-container">
+                <a
+                  className="btn btn-clear"
+                  onClick={()=>{
+                    this.setState({
+                      ETH_NOT_ENOUGH: false
+                    })
+                  }}
+                  ga-category="create_listing"
+                  ga-label="error_dismiss"
+                >
+                  <FormattedMessage
+                    id={'listing-create.OK'}
+                    defaultMessage={'OK'}
+                  />
+                </a>
+              </div>
+            </Modal>
           </div>
         </div>
         <Prompt

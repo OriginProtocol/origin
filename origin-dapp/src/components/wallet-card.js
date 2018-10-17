@@ -61,12 +61,20 @@ class WalletCard extends Component {
       wallet: { address }
     } = this.props
 
-    getEthBalance()
-    getOgnBalance()
+    // getEthBalance()
+    // getOgnBalance()
+    this.pollBalance = setInterval(() => {
+      getEthBalance()
+      getOgnBalance()
+    }, 10000)
 
     address && fetchUser(address)
 
     this.initiateBootstrapTooltip()
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.pollBalance)
   }
 
   componentDidUpdate(prevProps) {
