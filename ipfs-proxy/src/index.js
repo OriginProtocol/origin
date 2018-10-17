@@ -2,6 +2,7 @@ const Busboy = require('busboy')
 const imageType = require('image-type')
 const isJSON = require('is-json')
 const http = require('http')
+const httpProxy = require('http-proxy')
 const request = require('superagent')
 const zlib = require('zlib')
 
@@ -10,8 +11,12 @@ const logger = require('./logger')
 
 const validImageTypes = ['image/jpeg', 'image/gif', 'image/png']
 
-function isValidImage(data) {
-  const image = imageType(data)
+function isValidFile(buffer) {
+  return isValidImage(buffer) || isJSON(buffer.toString())
+}
+
+function isValidImage(buffer) {
+  const image = imageType(buffer)
   return image && validImageTypes.includes(image.mime)
 }
 
@@ -40,13 +45,13 @@ function handleFileUpload (req, res) {
     file.on('end', function() {
       let buffer = Buffer.concat(file.fileRead);
 
-      if (!isValidImage(buffer) && !isJSON(buffer.toString())) {
-        logger.warn(`Invalid upload attempted`)
+      if (!isValidFile(buffer)) {
+        logger.warn(`Upload of invalid file type attempted`)
         res.writeHead(415, { 'Connection': 'close' })
         res.end()
         req.unpipe(req.busboy)
       } else {
-        const url = config.IPFS_API_URL + req.url + '?stream=false'
+        const url = config.IPFS_API_URL + req.url + '?stream-channels=false'
         request.post(url)
           .set(req.headers)
           .attach('file', buffer)
@@ -72,14 +77,36 @@ function handleFileUpload (req, res) {
 }
 
 function handleFileDownload(req, res) {
-  const url = config.IPFS_GATEWAY_URL + req.url
-  request.get(url)
-    .set(req.headers)
-    .then((response) => {
-      res.writeHead(response.status, response.headers)
-      res.end(response.body)
-    })
+  // Proxy download requests to gateway
+  proxy.web(req, res, {
+    target: config.IPFS_GATEWAY_URL,
+    selfHandleResponse: true
+  })
 }
+
+const proxy = httpProxy.createProxyServer({})
+
+// Validate downloads. It is necessary to inspect the file type for downloads
+// because it is possible to add IPFS content to a peer and request it using an
+// Origin IPFS server which would cause it to be available.
+proxy.on('proxyRes', (proxyResponse, req, res) => {
+  let buffer = []
+
+  proxyResponse.on('data', (data) => {
+    buffer.push(data)
+  })
+
+  proxyResponse.on('end', () => {
+    buffer = Buffer.concat(buffer)
+    if (isValidFile(buffer)) {
+      res.writeHead(proxyResponse.statusCode, proxyResponse.headers)
+      res.end(buffer)
+    } else {
+      res.writeHead(415, { 'Connection': 'close' })
+      res.end()
+    }
+  })
+})
 
 const server = http.createServer((req, res) => {
   if (req.url == '/api/v0/add') {
