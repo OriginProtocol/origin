@@ -12,6 +12,12 @@ const sampleAttestation = {
   signature: '0x1a2b3c'
 }
 
+const sampleTwitterAttestation = {
+  'claim-type': 4,
+  data: '0x7b2273637265656e5f6e616d65223a202264677261626563227d',
+  signature: '0x6a825add3edd9b884bb384907fcca9bf0672eb33f30a593ffb9367418ea30936684f97e89231fe0eed6a62113358fcca83ee399a6cb431a4c4266e419e98a5201c'
+}
+
 const expectPostParams = (requestBody, params) => {
   params.forEach(param => {
     expect(requestBody[param], `Param ${param} should be in the request`).to
@@ -203,13 +209,17 @@ describe('Attestation Resource', function() {
         expectedMethod: 'POST',
         expectedPath: 'twitter/verify',
         expectedParams: ['identity', 'oauth-verifier'],
-        responseStub: sampleAttestation
+        responseStub: sampleTwitterAttestation
       })
       const response = await attestations.twitterVerify({
         wallet: sampleWallet,
         code: 'foo.bar'
       })
-      expectAttestation(response)
+
+      const jsonData = JSON.parse(await attestations.contractService.decodeHex(response.data))
+      expect(jsonData).to.eql({ screen_name: 'dgrabec' })
+      expect(response.signature).to.equal(sampleTwitterAttestation.signature)
+      expect(response.topic).to.equal(sampleTwitterAttestation['claim-type'])
     })
   })
 

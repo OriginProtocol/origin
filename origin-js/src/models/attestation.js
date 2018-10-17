@@ -7,7 +7,7 @@ const topicMapping = {
 }
 
 export default class Attestation {
-  constructor({ topic, data, signature}) {
+  constructor({ topic, data, signature }) {
     topic = Number(topic)
     this.topic = topic
     this.service = topicMapping[topic]
