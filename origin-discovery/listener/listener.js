@@ -406,7 +406,7 @@ async function handleLog(log, rule, contractVersion, context) {
 async function postToWebhook(urlString, json) {
   const url = urllib.parse(urlString)
   const postOptions = {
-    host: url.host,
+    host: url.hostname,
     port: url.port,
     path: url.path,
     method: 'POST',
