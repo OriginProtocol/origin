@@ -410,7 +410,7 @@ describe('Marketplace Resource', function() {
 
       expect(notifications[0].type).to.equal('buyer_listing_shipped')
       expect(notifications[0].status).to.equal('unread')
-      expect(notifications[0].event.event).to.equal('buyer_listing_shipped')
+      expect(notifications[0].event.event).to.equal('OfferAccepted')
 
       await marketplace.finalizeOffer('999-000-0-0', reviewData)
       notifications = await marketplace.getNotifications()
@@ -419,7 +419,7 @@ describe('Marketplace Resource', function() {
 
       expect(notifications[0].type).to.equal('seller_review_received')
       expect(notifications[0].status).to.equal('unread')
-      expect(notifications[0].event.event).to.equal('seller_review_received')
+      expect(notifications[0].event.event).to.equal('OfferFinalized')
     })
 
     it('should exclude notifications for invalid offers', async () => {
