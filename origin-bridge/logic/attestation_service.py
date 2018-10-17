@@ -35,7 +35,6 @@ signing_key = settings.ATTESTATION_SIGNING_KEY
 twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
-twitter_show_user_url = 'https://api.twitter.com/1.1/users/show.json'
 
 TOPICS = {
     'phone': 10,
