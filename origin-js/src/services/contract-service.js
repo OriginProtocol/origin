@@ -102,17 +102,13 @@ class ContractService {
 
   // For decoding hex encoded data fields on attestations
   decodeHex(hexToDecode) {
-    var j
-    var hexes = hexToDecode
-      .slice(2)
-      .match(/.{1,2}/g) || []
-
-    var back = ''
-    for(j = 0; j < hexes.length; j++) {
-        back += String.fromCharCode(parseInt(hexes[j], 16))
-    }
-
-    return back
+    return (
+      hexToDecode
+        .slice(2)
+        .match(/.{1,2}/g) || []
+    )
+      .map(letter => String.fromCharCode(parseInt(letter, 16)))
+      .join('')
   }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,

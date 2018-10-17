@@ -26,8 +26,7 @@ class Attestations {
         data: dontHashDataTopics.includes(topic) ?
           resp['data'] :
           Web3.utils.soliditySha3(resp['data']),
-        signature: resp['signature'],
-        externalId: resp['external_id']
+        signature: resp['signature']
       })
     }
   }
