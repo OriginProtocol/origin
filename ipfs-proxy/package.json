@@ -4,6 +4,7 @@
   "description": "A proxy that validates Origin content being uploaded and download from Origin's IPFS servers",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
     "test": "mocha --compilers js:@babel/register --timeout=10000"
   },
   "repository": {
