@@ -85,7 +85,6 @@ class VerifyTwitterResponse(StandardResponse):
     signature = fields.Str()
     claim_type = fields.Integer(data_key='claim-type')
     data = fields.Str()
-    external_id = fields.Str()
 
 
 class AirbnbRequest(StandardRequest):
@@ -101,7 +100,6 @@ class VerifyAirbnbResponse(StandardResponse):
     signature = fields.Str()
     claim_type = fields.Integer(data_key='claim-type')
     data = fields.Str()
-    external_id = fields.Str()
 
 
 class PhoneVerificationCode(Resource):

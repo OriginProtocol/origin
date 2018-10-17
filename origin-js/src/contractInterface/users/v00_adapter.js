@@ -116,7 +116,7 @@ class V00_UsersAdapter {
             return data.substr(2)
           })
           .join('')
-      const dataOffsets = attestations.map(() => 32) // all data hashes will be 32 bytes
+      const dataOffsets = attestations.map(({ data }) => (data.length - 2) / 2) // deduct 2 because '0x' is removed
 
       if (identityAddress) {
         // batch add claims to existing identity
@@ -183,8 +183,13 @@ class V00_UsersAdapter {
     if (profileClaims.length) {
       const bytes32 = profileClaims[profileClaims.length - 1].data
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(bytes32)
-      profile = await this.ipfsDataStore.load(PROFILE_DATA_TYPE, ipfsHash)
+      try {
+        profile = await this.ipfsDataStore.load(PROFILE_DATA_TYPE, ipfsHash)
+      } catch (error) {
+        console.error(`Can not read profile data from ipfs: ${error.message}`)
+      }
     }
+
     const validAttestations = await this.validAttestations(
       identityAddress,
       nonProfileClaims

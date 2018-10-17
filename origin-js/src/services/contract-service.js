@@ -100,6 +100,21 @@ class ContractService {
     }
   }
 
+  // For decoding hex encoded data fields on attestations
+  decodeHex(hexToDecode) {
+    var j
+    var hexes = hexToDecode
+      .slice(2)
+      .match(/.{1,2}/g) || []
+
+    var back = ''
+    for(j = 0; j < hexes.length; j++) {
+        back += String.fromCharCode(parseInt(hexes[j], 16))
+    }
+
+    return back
+  }
+
   // Return bytes32 hex string from base58 encoded ipfs hash,
   // stripping leading 2 bytes from 34 byte IPFS hash
   // Assume IPFS defaults: function:0x12=sha2, size:0x20=256 bits

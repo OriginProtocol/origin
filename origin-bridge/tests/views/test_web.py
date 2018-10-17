@@ -164,4 +164,5 @@ def test_twitter_verify(client):
         response_json = json_of_response(response)
         assert response.status_code == 200
         assert len(response_json['signature']) == 132
-        assert response_json['data'] == 'twitter verified'
+        assert response_json['data'] \
+            == '0x7b2273637265656e5f6e616d65223a20226f726967696e70726f746f636f6c227d'

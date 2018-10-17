@@ -5,6 +5,8 @@ import sendgrid
 import re
 from random import randint
 import urllib
+import json
+import binascii
 
 from marshmallow.exceptions import ValidationError
 from urllib.request import Request, urlopen, HTTPError, URLError
@@ -35,7 +37,7 @@ twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
 twitter_show_user_url = 'https://api.twitter.com/1.1/users/show.json'
 
-CLAIM_TYPES = {
+TOPICS = {
     'phone': 10,
     'email': 11,
     'facebook': 3,
@@ -166,7 +168,7 @@ class VerificationService:
             data = 'phone verified'
             # TODO: determine claim type integer code for phone verification
             signature = attestations.generate_signature(
-                signing_key, eth_address, CLAIM_TYPES['phone'], data
+                signing_key, eth_address, TOPICS['phone'], data
             )
 
             attestation = Attestation(
@@ -181,7 +183,7 @@ class VerificationService:
 
             return VerificationServiceResponse({
                 'signature': signature,
-                'claim_type': CLAIM_TYPES['phone'],
+                'claim_type': TOPICS['phone'],
                 'data': data
             })
 
@@ -269,7 +271,7 @@ class VerificationService:
         data = 'email verified'
         # TODO: determine claim type integer code for email verification
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['email'], data
+            signing_key, eth_address, TOPICS['email'], data
         )
 
         attestation = Attestation(
@@ -284,7 +286,7 @@ class VerificationService:
 
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': CLAIM_TYPES['email'],
+            'claim_type': TOPICS['email'],
             'data': data
         })
 
@@ -324,7 +326,7 @@ class VerificationService:
         data = 'facebook verified'
         # TODO: determine claim type integer code for phone verification
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['facebook'], data
+            signing_key, eth_address, TOPICS['facebook'], data
         )
 
         attestation = Attestation(
@@ -339,7 +341,7 @@ class VerificationService:
 
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': CLAIM_TYPES['facebook'],
+            'claim_type': TOPICS['facebook'],
             'data': data
         })
 
@@ -399,15 +401,16 @@ class VerificationService:
                 'The verifier you provided is invalid.'
             )
 
-        # TODO: determine what the text should be
-        data = 'twitter verified'
-        # TODO: determine claim type integer code for phone verification
-        signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['twitter'], data
-        )
-
         query_string = urllib.parse.parse_qs(response.content)
         screen_name = query_string[b'screen_name'][0].decode('utf-8')
+
+        data = '0x' + binascii.hexlify(
+            json.dumps({'screen_name': screen_name}).encode()
+        ).decode()
+
+        signature = attestations.generate_signature(
+            signing_key, eth_address, TOPICS['twitter'], data
+        )
 
         attestation = Attestation(
             method=AttestationTypes.TWITTER,
@@ -421,9 +424,8 @@ class VerificationService:
 
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': CLAIM_TYPES['twitter'],
-            'data': data,
-            'external_id': screen_name
+            'claim_type': TOPICS['twitter'],
+            'data': data
         })
 
     def generate_airbnb_verification_code(eth_address, airbnbUserId):
@@ -462,10 +464,12 @@ class VerificationService:
                 " has not been found in user's Airbnb profile."
             )
 
-        # TODO: determine the schema for claim data
-        data = 'airbnbUserId:' + airbnbUserId
+        data = '0x' + binascii.hexlify(
+            json.dumps({'airbnb_user_id': airbnbUserId}).encode()
+        ).decode()
+
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['airbnb'], data
+            signing_key, eth_address, TOPICS['airbnb'], data
         )
 
         attestation = Attestation(
@@ -480,9 +484,8 @@ class VerificationService:
 
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': CLAIM_TYPES['airbnb'],
-            'data': data,
-            'external_id': airbnbUserId
+            'claim_type': TOPICS['airbnb'],
+            'data': data
         })
 
 

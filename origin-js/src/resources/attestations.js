@@ -19,9 +19,13 @@ class Attestations {
     this.usersResolver = new UsersResolver({ contractService, blockEpoch })
 
     this.responseToAttestation = (resp = {}) => {
+      const topic = resp['claim-type']
+      const dontHashDataTopics = [4, 5] // twitter & airbnb
       return new AttestationObject({
-        topic: resp['claim-type'],
-        data: Web3.utils.soliditySha3(resp['data']),
+        topic: topic,
+        data: dontHashDataTopics.includes(topic) ?
+          resp['data'] :
+          Web3.utils.soliditySha3(resp['data']),
         signature: resp['signature'],
         externalId: resp['external_id']
       })

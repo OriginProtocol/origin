@@ -13,7 +13,7 @@ from logic.attestation_service import (
     VerificationService,
     VerificationServiceResponse
 )
-from logic.attestation_service import CLAIM_TYPES
+from logic.attestation_service import TOPICS
 from logic.attestation_service import twitter_access_token_url
 from logic.attestation_service import twitter_request_token_url
 from logic.service_utils import (
@@ -139,7 +139,7 @@ def test_verify_phone_valid_code(app):
     assert isinstance(response, VerificationServiceResponse)
 
     assert len(response.data['signature']) == SIGNATURE_LENGTH
-    assert response.data['claim_type'] == CLAIM_TYPES['phone']
+    assert response.data['claim_type'] == TOPICS['phone']
     assert response.data['data'] == 'phone verified'
 
     attestations = Attestation.query.all()
@@ -254,7 +254,7 @@ def test_verify_email_valid_code(mock_session, app):
     assert isinstance(response, VerificationServiceResponse)
 
     assert len(response.data['signature']) == SIGNATURE_LENGTH
-    assert response.data['claim_type'] == CLAIM_TYPES['email']
+    assert response.data['claim_type'] == TOPICS['email']
     assert response.data['data'] == 'email verified'
 
     # Verify attestation stored in database
@@ -410,7 +410,7 @@ def test_verify_facebook_valid_code(app):
         verification_response = VerificationService.verify_facebook(**args)
     assert isinstance(verification_response, VerificationServiceResponse)
     assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
-    assert verification_response.data['claim_type'] == CLAIM_TYPES['facebook']
+    assert verification_response.data['claim_type'] == TOPICS['facebook']
     assert verification_response.data['data'] == 'facebook verified'
 
     # Verify attestation stored in database
@@ -498,9 +498,9 @@ def test_verify_twitter_valid_code(mock_session, app):
     assert isinstance(verification_response, VerificationServiceResponse)
 
     assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
-    assert verification_response.data['claim_type'] == CLAIM_TYPES['twitter']
-    assert verification_response.data['data'] == 'twitter verified'
-    assert verification_response.data['external_id'] == 'originprotocol'
+    assert verification_response.data['claim_type'] == TOPICS['twitter']
+    assert verification_response.data['data'] \
+        == '0x7b2273637265656e5f6e616d65223a20226f726967696e70726f746f636f6c227d'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
@@ -598,9 +598,9 @@ def test_verify_airbnb(mock_urllib_request, app):
     assert isinstance(verification_response, VerificationServiceResponse)
 
     assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
-    assert verification_response.data['claim_type'] == CLAIM_TYPES['airbnb']
-    assert verification_response.data['data'] == 'airbnbUserId:' + airbnbUserId
-    assert verification_response.data['external_id'] == str(airbnbUserId)
+    assert verification_response.data['claim_type'] == TOPICS['airbnb']
+    assert verification_response.data['data'] \
+        == '0x7b22616972626e625f757365725f6964223a2022313233343536227d'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
