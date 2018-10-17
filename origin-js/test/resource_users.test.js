@@ -334,25 +334,16 @@ describe('User Resource', function() {
         profile: { firstName: 'Baby', lastName: 'Groot' },
       })
       let user = await users.get(this.userAddress)
+      validateUser(user)
 
       expect(user.attestations).to.be.an('array')
       expect(user.attestations).to.be.empty
 
       expect(user).to.have.property('address', this.userAddress)
-      expect(user.address).to.startWith('0x')
       expect(user).to.have.property('identityAddress', this.identityAddress)
-      expect(user.identityAddress).startsWith('0x')
 
-      expect(user).to.have.property('profile').that.is.an('object')
-      expect(user.profile).to.have.property('firstName').that.is.a('string')
-      expect(user.profile).to.have.property('lastName').that.is.a('string')
       expect(user.profile.firstName).to.equal('Baby')
       expect(user.profile.lastName).to.equal('Groot')
-
-      expect(user.profile).to.have.property('ipfs').that.is.an('object')
-      expect(user.profile).to.have.property('schemaId').that.is.a('string')
-      expect(user.profile.ipfs).to.have.property('hash').that.is.a('string')
-      expect(user.profile.ipfs).to.have.property('data').that.is.an('object')
 
       const avatar = 'data:image/jpeg;base64,/OxEs0sALySAAJvQAHvJ/cnpmxLAZagGx174/9k='
 
@@ -366,14 +357,10 @@ describe('User Resource', function() {
         attestations: [phoneAttestation]
       })
       user = await users.get()
+      validateUser(user)
 
       expect(user.attestations).to.have.lengthOf(1)
       expect(user.attestations).to.deep.equal([phoneAttestation])
-
-      expect(user.attestations[0]).to.have.property('topic').that.is.a('number')
-      expect(user.attestations[0]).to.have.property('service').that.is.a('string')
-      expect(user.attestations[0]).to.have.property('data').that.is.a('string')
-      expect(user.attestations[0]).to.have.property('signature').that.is.a('string')
       expect(user.attestations[0].topic).to.equal(10)
       expect(user.attestations[0].service).to.equal('phone')
 
@@ -381,8 +368,7 @@ describe('User Resource', function() {
       expect(user.profile.lastName).to.equal('Groot')
       expect(user.profile).to.have.property('description').that.is.a('string')
       expect(user.profile.description).to.equal('Grown up')
-      expect(user.profile).to.have.property('avatar', avatar)
-      expect(base64Regex.test(user.profile.avatar)).to.equal(true)
+      expect(user.profile.avatar).to.equal(avatar)
     })
   })
 
