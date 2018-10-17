@@ -119,14 +119,31 @@ function setupOriginJS(config){
   console.log(`Web3 URL: ${config.web3Url}`)
 
   const ipfsUrl = urllib.parse(config.ipfsUrl)
+  console.log(`IPFS URL: ${ipfsUrl}`)
+
+  // Error out if any mandatory env var is not set.
+  if (!process.env.ARBITRATOR_ACCOUNT) {
+    throw new Error('ARBITRATOR_ACCOUNT not set')
+  }
+  if (!process.env.AFFILIATE_ACCOUNT) {
+    throw new Error('AFFILIATE_ACCOUNT not set')
+  }
+
+  // Issue a warning for any recommended env var that is not set.
+  if (!process.env.BLOCK_EPOCH) {
+    console.log('WARNING: For performance reason it is recommended to set BLOCK_EPOCH')
+  }
+
   // global
   o = new Origin({
     ipfsDomain: ipfsUrl.hostname,
     ipfsGatewayProtocol: ipfsUrl.protocol.replace(':',''),
     ipfsGatewayPort: ipfsUrl.port,
+    arbitrator: process.env.ARBITRATOR_ACCOUNT,
+    affiliate: process.env.AFFILIATE_ACCOUNT,
+    blockEpoch: process.env.BLOCK_EPOCH || 0,
     web3
   })
-  console.log(`IPFS URL: ${config.ipfsUrl}`)
 }
 
 /**
