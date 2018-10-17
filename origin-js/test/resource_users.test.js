@@ -8,6 +8,7 @@ import { Attestations } from '../src/resources/attestations'
 import AttestationObject from '../src/models/attestation'
 import ContractService from '../src/services/contract-service'
 import IpfsService from '../src/services/ipfs-service'
+import { validateUser } from './helpers/schema-validation-helper'
 
 chai.use(chaiAsPromised)
 chai.use(chaiString)
@@ -117,13 +118,9 @@ describe('User Resource', function() {
         profile: { firstName: 'Wonder', lastName: 'Woman' }
       })
       const user = await users.get()
+      validateUser(user)
 
-      expect(user.attestations).to.be.an('array')
       expect(user.attestations).to.be.empty
-
-      expect(user).to.have.property('profile').that.is.an('object')
-      expect(user.profile).to.have.property('firstName').that.is.a('string')
-      expect(user.profile).to.have.property('lastName').that.is.a('string')
       expect(user.profile.firstName).to.equal('Wonder')
       expect(user.profile.lastName).to.equal('Woman')
     })
@@ -133,8 +130,9 @@ describe('User Resource', function() {
         profile: { firstName: 'Iron', lastName: 'Man' }
       })
       let user = await users.get()
+      validateUser(user)
 
-      expect(user.attestations.length).to.equal(0)
+      expect(user.attestations).to.be.empty
       expect(user.profile.firstName).to.equal('Iron')
       expect(user.profile.lastName).to.equal('Man')
 
@@ -143,14 +141,10 @@ describe('User Resource', function() {
         attestations: [phoneAttestation]
       })
       user = await users.get()
+      validateUser(user)
 
       expect(user.attestations).to.have.lengthOf(1)
       expect(user.attestations).to.deep.equal([phoneAttestation])
-
-      expect(user.attestations[0]).to.have.property('topic').that.is.a('number')
-      expect(user.attestations[0]).to.have.property('service').that.is.a('string')
-      expect(user.attestations[0]).to.have.property('data').that.is.a('string')
-      expect(user.attestations[0]).to.have.property('signature').that.is.a('string')
 
       expect(user.attestations[0].topic).to.equal(10)
       expect(user.attestations[0].service).to.equal('phone')
@@ -162,7 +156,7 @@ describe('User Resource', function() {
       })
       user = await users.get()
 
-      expect(user.attestations.length).to.equal(1)
+      expect(user.attestations).to.have.lengthOf(1)
       expect(user.profile.firstName).to.equal('Bat')
       expect(user.profile.lastName).to.equal('Man')
 
@@ -184,10 +178,10 @@ describe('User Resource', function() {
         attestations: [phoneAttestation]
       })
       const user = await users.get()
+      validateUser(user)
 
-      expect(user.attestations.length).to.equal(1)
+      expect(user.attestations).to.have.lengthOf(1)
       expect(user.attestations).to.deep.equal([phoneAttestation])
-
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -201,7 +195,6 @@ describe('User Resource', function() {
 
       expect(user.attestations.length).to.equal(2)
       expect(user.attestations).to.deep.equal([phoneAttestation, emailAttestation])
-
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -256,6 +249,7 @@ describe('User Resource', function() {
         attestations: [phoneAttestation, emailAttestation, invalidAttestation]
       })
       const user = await users.get()
+      validateUser(user)
 
       expect(user.attestations.length).to.equal(2)
       expect(user.attestations).to.not.include(invalidAttestation)
@@ -270,6 +264,7 @@ describe('User Resource', function() {
         attestations: [phoneAttestation, emailAttestation, invalidSignatureAttestation]
       })
       const user = await users.get()
+      validateUser(user)
 
       expect(user.attestations.length).to.equal(2)
       expect(user.attestations).to.not.include(invalidSignatureAttestation)

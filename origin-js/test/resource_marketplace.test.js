@@ -1,7 +1,7 @@
 import Marketplace from '../src/resources/marketplace.js'
 import contractServiceHelper from './helpers/contract-service-helper'
 import asAccount from './helpers/as-account'
-import { offerValidation, listingValidation } from './helpers/schema-validation-helper'
+import { validateOffer, validateListing } from './helpers/schema-validation-helper'
 import IpfsService from '../src/services/ipfs-service.js'
 import { expect } from 'chai'
 import Web3 from 'web3'
@@ -118,21 +118,21 @@ describe('Marketplace Resource', function() {
   })
 
   describe('getListings', () => {
-    it ('should return all listings', async () => {
+    it ('should return all detailed listings', async () => {
       await marketplace.createListing(listingData)
       const listings = await marketplace.getListings()
       expect(listings).to.have.lengthOf(2)
 
-      listings.map(listingValidation)
+      listings.map(validateListing)
     })
 
     it('should return all listing ids when idsOnly is true', async () => {
       await marketplace.createListing(listingData)
       const listings = await marketplace.getListings({ idsOnly: true })
 
+      expect(listings).to.be.an('array')
       expect(listings.length).to.equal(2)
-      expect(listings).to.include('999-000-0')
-      expect(listings).to.include('999-000-1')
+      expect(listings).to.deep.equal(['999-000-1', '999-000-0'])
     })
   })
 
@@ -142,7 +142,7 @@ describe('Marketplace Resource', function() {
       expect(listings.length).to.equal(1)
       const listing = await marketplace.getListing(listings[0])
 
-      listingValidation(listing)
+      validateListing(listing)
     })
   })
 
@@ -155,7 +155,7 @@ describe('Marketplace Resource', function() {
 
       expect(listings.length).to.equal(2)
 
-      listings.map(listingValidation)
+      listings.map(validateListing)
     })
   })
 
@@ -192,11 +192,11 @@ describe('Marketplace Resource', function() {
       expect(offers.length).to.equal(2)
       expect(offers[0].status).to.equal('created')
       expect(offers[0].unitsPurchased).to.exist
-      offerValidation(offers[0])
+      validateOffer(offers[0])
 
       const latestOffer = offers[1]
 
-      offerValidation(latestOffer)
+      validateOffer(latestOffer)
 
       expect(latestOffer.status).to.equal('created')
       expect(latestOffer.unitsPurchased).to.equal(1)
@@ -217,7 +217,7 @@ describe('Marketplace Resource', function() {
     it('should get offer data', async () => {
       const offer = await marketplace.getOffer('999-000-0-0')
 
-      offerValidation(offer)
+      validateOffer(offer)
       expect(offer.status).to.equal('created')
       expect(offer.unitsPurchased).to.exist
     })
@@ -313,7 +313,7 @@ describe('Marketplace Resource', function() {
       await marketplace.makeOffer('999-000-1', originTokenOffer)
       const offer = await marketplace.getOffer('999-000-1-0')
 
-      offerValidation(offer)
+      validateOffer(offer)
       expect(offer.totalPrice.amount).to.equal('1')
       expect(offer.totalPrice.currency).to.equal('OGN')
     })
@@ -323,7 +323,7 @@ describe('Marketplace Resource', function() {
       await marketplace.makeOffer('999-000-1', commissionOffer)
       const offer = await marketplace.getOffer('999-000-1-0')
 
-      offerValidation(offer)
+      validateOffer(offer)
     })
   })
 
@@ -334,7 +334,7 @@ describe('Marketplace Resource', function() {
       await marketplace.withdrawOffer(offer.id)
       offer = await marketplace.getOffer('999-000-0-0')
 
-      offerValidation(offer)
+      validateOffer(offer)
       expect(offer.status).to.equal('withdrawn')
     })
   })
@@ -346,7 +346,7 @@ describe('Marketplace Resource', function() {
       await marketplace.acceptOffer('999-000-0-0')
       offer = await marketplace.getOffer('999-000-0-0')
 
-      offerValidation(offer)
+      validateOffer(offer)
       expect(offer.status).to.equal('accepted')
     })
   })
@@ -359,7 +359,7 @@ describe('Marketplace Resource', function() {
       await marketplace.finalizeOffer('999-000-0-0', reviewData)
       offer = await marketplace.getOffer('999-000-0-0')
 
-      offerValidation(offer)
+      validateOffer(offer)
       expect(offer.status).to.equal('finalized')
     })
   })
@@ -373,7 +373,7 @@ describe('Marketplace Resource', function() {
       await marketplace.addData(0, offer.id, reviewData)
       offer = await marketplace.getOffer('999-000-0-0')
 
-      offerValidation(offer)
+      validateOffer(offer)
       expect(offer.status).to.equal('sellerReviewed')
     })
   })
@@ -417,6 +417,7 @@ describe('Marketplace Resource', function() {
       await marketplace.makeOffer('999-000-0', invalidPriceOffer)
 
       const notifications = await marketplace.getNotifications()
+      expect(notifications).to.not.include(invalidPriceOffer)
       expect(notifications.length).to.equal(1)
     })
   })
@@ -440,6 +441,8 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.equal('accepted')
       await marketplace.initiateDispute('999-000-0-0')
       offer = await marketplace.getOffer('999-000-0-0')
+
+      validateOffer(offer)
       expect(offer.status).to.equal('disputed')
     })
   })
@@ -453,6 +456,7 @@ describe('Marketplace Resource', function() {
       await marketplace.acceptOffer('999-000-0-1')
       offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.status).to.equal('accepted')
+      validateOffer(offer)
 
       await marketplace.initiateDispute('999-000-0-1')
       offer = await marketplace.getOffer('999-000-0-1')
@@ -465,7 +469,7 @@ describe('Marketplace Resource', function() {
       })
       offer = await marketplace.getOffer('999-000-0-1')
 
-      offerValidation(offer)
+      validateOffer(offer)
       expect(offer.status).to.be.equal('ruling')
     })
   })

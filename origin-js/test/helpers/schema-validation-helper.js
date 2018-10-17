@@ -1,6 +1,8 @@
 import { expect } from 'chai'
 
-export const listingValidation = (listing) => {
+const base64Regex = /(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)/
+
+export const validateListing = (listing) => {
   expect(listing).to.be.an('object')
   expect(listing).to.have.property('id').that.is.a('string')
   expect(listing).to.have.property('media').that.is.an('array')
@@ -49,7 +51,7 @@ export const listingValidation = (listing) => {
   expect(event).to.have.property('returnValues').that.is.an('object')
 }
 
-export const offerValidation = (offer) => {
+export const validateOffer = (offer) => {
   expect(offer).to.have.property('status').that.is.a('string')
   expect(offer).to.have.property('unitsPurchased').that.is.a('number')
   expect(offer).to.have.property('listingId').that.is.a('string')
@@ -68,4 +70,34 @@ export const offerValidation = (offer) => {
 
   expect(offer.ipfs).to.have.property('hash').that.is.a('string')
   expect(offer.ipfs).to.have.property('data').that.is.an('object')
+}
+
+export const validateUser = (user) => {
+  expect(user.attestations).to.be.an('array')
+  expect(user).to.have.property('profile').that.is.an('object')
+  expect(user.profile).to.have.property('firstName').that.is.a('string')
+  expect(user.profile).to.have.property('lastName').that.is.a('string')
+
+  expect(user.profile).to.have.property('ipfs').that.is.an('object')
+  expect(user.profile).to.have.property('schemaId').that.is.a('string')
+  expect(user.profile.ipfs).to.have.property('hash').that.is.a('string')
+  expect(user.profile.ipfs).to.have.property('data').that.is.an('object')
+
+  if (user.attestations.length) {
+    user.attestations.map((attestation) => {
+      expect(attestation).to.have.property('topic').that.is.a('number')
+      expect(attestation).to.have.property('service').that.is.a('string')
+      expect(attestation).to.have.property('data').that.is.a('string')
+      expect(attestation).to.have.property('signature').that.is.a('string')
+    })
+  }
+
+  if (user.profile.avatar) {
+    expect(user.profile.avatar).to.be.a('string')
+    expect(base64Regex.test(user.profile.avatar)).to.equal(true)
+  }
+
+  if (user.profile.description) {
+    expect(user.profile.description).to.be.a('string')
+  }
 }
