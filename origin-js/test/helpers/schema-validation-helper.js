@@ -2,6 +2,20 @@ import { expect } from 'chai'
 
 const base64Regex = /(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)/
 
+export const validateEvent = (event) => {
+  expect(event).to.have.property('id').that.is.a('string')
+  expect(event).to.have.property('blockNumber').that.is.a('number')
+  expect(event).to.have.property('logIndex').that.is.a('number')
+  expect(event).to.have.property('transactionIndex').that.is.a('number')
+  expect(event).to.have.property('transactionHash').startsWith('0x')
+  expect(event).to.have.property('blockHash').startsWith('0x')
+  expect(event).to.have.property('address').startsWith('0x')
+  expect(event).to.have.property('signature').startsWith('0x')
+  expect(event).to.have.property('type', 'mined')
+  expect(event).to.have.property('event').that.is.a('string')
+  expect(event).to.have.property('returnValues').that.is.an('object')
+}
+
 export const validateListing = (listing) => {
   expect(listing).to.be.an('object')
   expect(listing).to.have.property('id').that.is.a('string')
@@ -36,19 +50,7 @@ export const validateListing = (listing) => {
   expect(listing).to.have.property('offers').that.is.an('object')
   expect(listing).to.have.property('events').that.is.an('array')
 
-  const event = listing.events[0]
-
-  expect(event).to.have.property('id').that.is.a('string')
-  expect(event).to.have.property('blockNumber').that.is.a('number')
-  expect(event).to.have.property('logIndex', 0)
-  expect(event).to.have.property('transactionIndex', 0)
-  expect(event).to.have.property('transactionHash').startsWith('0x')
-  expect(event).to.have.property('blockHash').startsWith('0x')
-  expect(event).to.have.property('address').startsWith('0x')
-  expect(event).to.have.property('signature').startsWith('0x')
-  expect(event).to.have.property('type', 'mined')
-  expect(event).to.have.property('event', 'ListingCreated')
-  expect(event).to.have.property('returnValues').that.is.an('object')
+  validateEvent(listing.events[0])
 }
 
 export const validateOffer = (offer) => {
@@ -72,6 +74,13 @@ export const validateOffer = (offer) => {
   expect(offer.ipfs).to.have.property('data').that.is.an('object')
 }
 
+export const validateAttestation = (attestation) => {
+  expect(attestation).to.have.property('topic').that.is.a('number')
+  expect(attestation).to.have.property('service').that.is.a('string')
+  expect(attestation).to.have.property('data').that.is.a('string')
+  expect(attestation).to.have.property('signature').that.is.a('string')
+}
+
 export const validateUser = (user) => {
   expect(user.attestations).to.be.an('array')
   expect(user).to.have.property('profile').that.is.an('object')
@@ -83,14 +92,7 @@ export const validateUser = (user) => {
   expect(user.profile.ipfs).to.have.property('hash').that.is.a('string')
   expect(user.profile.ipfs).to.have.property('data').that.is.an('object')
 
-  if (user.attestations.length) {
-    user.attestations.map((attestation) => {
-      expect(attestation).to.have.property('topic').that.is.a('number')
-      expect(attestation).to.have.property('service').that.is.a('string')
-      expect(attestation).to.have.property('data').that.is.a('string')
-      expect(attestation).to.have.property('signature').that.is.a('string')
-    })
-  }
+  if (user.attestations.length) user.attestations.map(validateAttestation)
 
   if (user.profile.avatar) {
     expect(user.profile.avatar).to.be.a('string')
@@ -99,5 +101,36 @@ export const validateUser = (user) => {
 
   if (user.profile.description) {
     expect(user.profile.description).to.be.a('string')
+  }
+}
+
+export const validateNotification = (notification) => {
+  expect(notification).to.have.property('id').that.is.a('string')
+  expect(notification).to.have.property('type').that.is.a('string')
+  expect(notification).to.have.property('status').that.is.a('string')
+  expect(notification).to.have.property('event').that.is.an('object')
+  expect(notification).to.have.property('resources').that.is.an('object')
+
+  validateEvent(notification.event)
+
+  expect(notification.resources).to.have.property('listingId').that.is.a('string')
+  expect(notification.resources).to.have.property('offerId').that.is.a('string')
+  expect(notification.resources).to.have.property('listing').that.is.an('object')
+}
+
+export default function schemaValidation(type, schema) {
+  switch(type) {
+  case 'listing':
+    return validateListing(schema)
+  case 'user':
+    return validateUser(schema)
+  case 'attestation':
+    return validateAttestation(schema)
+  case 'offer':
+    return validateOffer(schema)
+  case 'notification':
+    return validateNotification(schema)
+  default:
+    return validateListing(schema)
   }
 }
