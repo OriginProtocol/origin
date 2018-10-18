@@ -1,6 +1,4 @@
 import Messaging from '../src/resources/messaging'
-import chai, { expect } from 'chai'
-chai.use(require('chai-string'))
 
 import Web3 from 'web3'
 import contractServiceHelper from './helpers/contract-service-helper'
