@@ -26,6 +26,8 @@ Output:
 
 `--webhook=yoururl` Post json for each event to the URL
 
+`--discord-webhook=discordurl` Post a short Discord notification for each marketplace event.
+
 `--elasticsearch` Experimental support for recording listings directly into elastic search
 
 `--db` Experimental support for recording listings directly into postgres (see instructions for setting up the db [here](../README.md))
