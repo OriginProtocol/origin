@@ -109,6 +109,9 @@ const LISTEN_RULES = {
 // Section 2: The following engine
 // -------------------------------
 
+/**
+ * setup Origin JS according to the config.
+ */ 
 function setupOriginJS(config){
   const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
   // global
@@ -116,19 +119,38 @@ function setupOriginJS(config){
   console.log(`Web3 URL: ${config.web3Url}`)
 
   const ipfsUrl = urllib.parse(config.ipfsUrl)
+  console.log(`IPFS URL: ${ipfsUrl}`)
+
+  // Error out if any mandatory env var is not set.
+  if (!process.env.ARBITRATOR_ACCOUNT) {
+    throw new Error('ARBITRATOR_ACCOUNT not set')
+  }
+  if (!process.env.AFFILIATE_ACCOUNT) {
+    throw new Error('AFFILIATE_ACCOUNT not set')
+  }
+
+  // Issue a warning for any recommended env var that is not set.
+  if (!process.env.BLOCK_EPOCH) {
+    console.log('WARNING: For performance reason it is recommended to set BLOCK_EPOCH')
+  }
+
   // global
   o = new Origin({
     ipfsDomain: ipfsUrl.hostname,
     ipfsGatewayProtocol: ipfsUrl.protocol.replace(':',''),
     ipfsGatewayPort: ipfsUrl.port,
+    arbitrator: process.env.ARBITRATOR_ACCOUNT,
+    affiliate: process.env.AFFILIATE_ACCOUNT,
+    blockEpoch: process.env.BLOCK_EPOCH || 0,
     web3
   })
-  console.log(`IPFS URL: ${config.ipfsUrl}`)
 }
 
-// liveTracking
-// - checks for a new block every checkIntervalSeconds
-// - if new block appeared, look for all events after the last found event
+/**
+ *  liveTracking
+ * - checks for a new block every checkIntervalSeconds
+ * - if new block appeared, look for all events after the last found event
+ */ 
 async function liveTracking(config) {
   setupOriginJS(config)
   const context = await new Context(config).init()
@@ -147,7 +169,12 @@ async function liveTracking(config) {
         return scheduleNextCheck()
       }
       console.log('New block: ' + currentBlockNumber)
-      const toBlock = Math.min(lastLogBlock+MAX_BATCH_BLOCKS, currentBlockNumber)
+      const toBlock = Math.min( // Pick the smallest of either
+        // the last log we processed, plus the max batch size
+        lastLogBlock + MAX_BATCH_BLOCKS, 
+         // or the current block number, minus any trailing blocks we waiting on
+        Math.max(currentBlockNumber - config.trailBlocks, 0),
+      )
       const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
       await runBatch(opts, context)
       lastLogBlock = toBlock
@@ -165,6 +192,11 @@ async function liveTracking(config) {
   check()
 }
 
+/**
+ * The first block the listener should start at for following events.
+ * This either uses the value stored in the the continue file, if given
+ * or defaults to 0.
+ */ 
 function getLastBlock(config) {
   if (config.continueFile == undefined || !fs.existsSync(config.continueFile)) {
     return 0
@@ -177,6 +209,10 @@ function getLastBlock(config) {
   return 0
 }
 
+/**
+ * Stores the last block we have read up to in the continue file.
+ * If no continue file configured, does nothing.
+ */  
 function setLastBlock(config, blockNumber) {
   if (config.continueFile == undefined) {
     return
@@ -185,7 +221,9 @@ function setLastBlock(config, blockNumber) {
   fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
 }
 
-// runBatch - gets and processes logs for a range of blocks
+/**
+ * runBatch - gets and processes logs for a range of blocks
+ */ 
 async function runBatch(opts, context) {
   const fromBlock = opts.fromBlock
   const toBlock = opts.toBlock
@@ -223,7 +261,10 @@ async function runBatch(opts, context) {
   return lastLogBlock
 }
 
-// Retrys up to 10 times, with exponential backoff
+/**
+ * Retrys up to N times, with exponential backoff.
+ * If still failing after N times, exits the process.
+ */ 
 async function withRetrys(fn, exitOnError=true) {
   let tryCount = 0
   while (true) {
@@ -254,7 +295,10 @@ async function withRetrys(fn, exitOnError=true) {
   }
 }
 
-// handleLog - annotates, runs rule, and ouputs a particular log
+/**
+ *  Takes and event/log and a matching rule 
+ *  then annotates the event/log, runs the rule, and ouputs everything.
+ */ 
 async function handleLog(log, rule, contractVersion, context) {
   log.decoded = web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
@@ -373,10 +417,13 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 }
 
+/**
+ * Sends a blob of json to a webhook.
+ */  
 async function postToWebhook(urlString, json) {
   const url = urllib.parse(urlString)
   const postOptions = {
-    host: url.host,
+    host: url.hostname,
     port: url.port,
     path: url.path,
     method: 'POST',
@@ -416,12 +463,32 @@ class Context {
 
   async init() {
     this.signatureToRules = buildSignatureToRules()
-    this.addressToVersion = await buildVersionList()
+    this.addressToVersion = await buildAddressToVersion()
     this.networkId = await web3.eth.net.getId()
     return this
   }
 }
 
+/**
+ * Builds a lookup object that allows you to start from an ETH event signature,
+ * and find out what contract and what event fired it. Each event also includes a 
+ * list of our javascript event handler functions we want to fire for that log.
+ * @example
+ * buildSignatureToRules()
+ * // { '0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c':
+ * //     { V00_Marketplace:
+ * //          { contractName: 'V00_Marketplace',
+ * //            eventName: 'ListingCreated',
+ * //            eventAbi: [Object],
+ * //            ruleFn: [...] } },
+ * //      '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
+ * //      { V00_Marketplace:
+ * //          { contractName: 'V00_Marketplace',
+ * //            eventName: 'ListingUpdated',
+ * //            eventAbi: [Object],
+ * //            ruleFn: [...] } }
+ * //   }
+ */
 function buildSignatureToRules() {
   const signatureLookup = {}
   for (const contractName in LISTEN_RULES) {
@@ -450,7 +517,16 @@ function buildSignatureToRules() {
   return signatureLookup
 }
 
-async function buildVersionList() {
+/**  
+ * Builds a lookup object of marketplace contract names and versions 
+ * by ETH contract addresses.
+ * @example
+ * buildAddressToVersion()
+ * //  { '0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF':
+ * //      { versionKey: '000', contractName: 'V00_Marketplace' }
+ * //  }
+ */
+async function buildAddressToVersion() {
   const versionList = {}
   const adapters = o.marketplace.resolver.adapters
   const versionKeys = Object.keys(adapters)
@@ -488,9 +564,13 @@ const config = {
   verbose: args['--verbose'],
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'],
+  // Trail X number of blocks behind
+  trailBlocks: args['--trail-behind-blocks'] || 0,
   // web3 provider url
   web3Url: args['--web3-url'] || 'http://localhost:8545',
   // ipfs url
   ipfsUrl: args['--ipfs-url'] || 'http://origin-js:8080',
 }
+
+// Start the listener running
 liveTracking(config)
