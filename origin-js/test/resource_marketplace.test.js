@@ -61,6 +61,8 @@ describe('Marketplace Resource', function() {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     web3 = new Web3(provider)
     const accounts = await web3.eth.getAccounts()
+
+    this.userAddress = accounts[0]
     validAffiliate = accounts[3]
     validArbitrator = accounts[4]
     evilAddress = accounts[5]
@@ -157,7 +159,10 @@ describe('Marketplace Resource', function() {
 
       listings.map(validateListing)
 
+      expect(listings[1].status).to.equal('active')
       expect(listings[1].title).to.equal(listingData.title)
+      expect(listings[1].seller).to.equal(this.userAddress)
+      expect(listings[1].price).to.deep.equal(listingData.price)
     })
   })
 
