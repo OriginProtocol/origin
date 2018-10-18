@@ -143,13 +143,13 @@ class PhotoPicker extends Component {
   }
 
   render() {
-    const { schema, required } = this.props
+    const { schema, required, value } = this.props
     const {
       helpText,
       oversizeImages,
-      pictures,
       showMaxImageCountMsg
     } = this.state
+    const pictures = value
 
     return (
       <div className="photo-picker">

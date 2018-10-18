@@ -26,6 +26,7 @@ import {
   translateSchema,
   translateListingCategory
 } from 'utils/translationUtils'
+import { updateState, clearState } from 'actions/ListingCreate'
 
 import origin from '../services/origin'
 
@@ -66,7 +67,7 @@ class ListingCreate extends Component {
       },
       showDetailsFormErrorMsg: false,
       showBoostTutorial: false,
-      ETH_NOT_ENOUGH: false
+      showEthNotEnough: false
     }
 
     this.state = { ...this.defaultState }
@@ -88,11 +89,14 @@ class ListingCreate extends Component {
     this.resetForm = this.resetForm.bind(this)
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
+    this.checkETH = this.checkETH.bind(this)
+
+    if( props.selectedSchemaType ) this.handleSchemaSelection(props.selectedSchemaType)
   }
 
   componentDidUpdate(prevProps) {
     // conditionally show boost tutorial
-    if (!this.state.showBoostTutorial) {
+    if (!this.props.showBoostTutorial) {
       this.detectNeedForBoostTutorial()
     }
 
@@ -100,8 +104,8 @@ class ListingCreate extends Component {
     // apply OGN detection to slider
     if (ognBalance !== prevProps.wallet.ognBalance) {
       // only if prior to boost selection step
-      this.state.step < this.STEP.BOOST &&
-        this.setState({
+      this.props.step < this.STEP.BOOST &&
+        this.props.updateState({
           selectedBoostAmount: ognBalance ? defaultBoostValue : 0
         })
     }
@@ -116,7 +120,7 @@ class ListingCreate extends Component {
     !this.props.wallet.ognBalance &&
       // ...tutorial has not been expanded or skipped via "Review"
       // !JSON.parse(localStorage.getItem('boostTutorialViewed')) &&
-      this.setState({
+      this.props.updateState({
         showBoostTutorial: true
       })
   }
@@ -128,12 +132,7 @@ class ListingCreate extends Component {
   }
 
   handleSchemaSelection(selectedSchemaType) {
-    if (parseFloat(this.props.wallet.ethBalance) < 0.01){
-      this.setState({
-        ETH_NOT_ENOUGH: true
-      })
-      return
-    }
+
     fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
@@ -165,7 +164,7 @@ class ListingCreate extends Component {
 
         const translatedSchema = translateSchema(schemaJson, selectedSchemaType)
 
-        this.setState({
+        this.props.updateState({
           selectedSchemaType,
           schemaFetched: true,
           showNoSchemaSelectedError: false,
@@ -179,26 +178,37 @@ class ListingCreate extends Component {
       })
   }
 
+  checkETH() {
+    if (parseFloat(this.props.wallet.ethBalance) < 0.01){
+      this.props.updateState({
+        showEthNotEnough: true
+      })
+      return false
+    }
+    return true
+  }
+
   goToDetailsStep() {
-    if (this.state.schemaFetched) {
-      this.setState({
+
+    if (this.props.schemaFetched) {
+      this.props.updateState({
         step: this.STEP.DETAILS
       })
       window.scrollTo(0, 0)
     } else {
-      this.setState({
+      this.props.updateState({
         showNoSchemaSelectedError: true
       })
     }
   }
 
   onDetailsEntered(formListing) {
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         ...formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           ...formListing.formData
         }
       },
@@ -210,11 +220,11 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           ...formData
         }
       }
@@ -227,18 +237,18 @@ class ListingCreate extends Component {
       this.props.wallet.ognBalance &&
       parseFloat(this.props.wallet.ognBalance) > 0
     ) {
-      this.setState({
+      this.props.updateState({
         showBoostTutorial: false
       })
     }
   }
 
   setBoost(boostValue, boostLevel) {
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           boostValue,
           boostLevel
         }
@@ -254,11 +264,11 @@ class ListingCreate extends Component {
       localStorage.setItem('boostTutorialViewed', true)
     }
 
-    if (ognBalance < this.state.formListing.formData.boostValue) {
+    if (ognBalance < this.props.formListing.formData.boostValue) {
       this.setBoost(ognBalance, getBoostLevel(ognBalance))
     }
 
-    this.setState({
+    this.props.updateState({
       step: this.STEP.PREVIEW
     })
 
@@ -266,8 +276,13 @@ class ListingCreate extends Component {
   }
 
   async onSubmitListing(formListing) {
+
+    if (!this.checkETH()) {
+      return
+    }
+
     try {
-      this.setState({ step: this.STEP.METAMASK })
+      this.props.updateState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
       const transactionReceipt = await origin.marketplace.createListing(
         listing,
@@ -280,21 +295,22 @@ class ListingCreate extends Component {
         transactionTypeKey: 'createListing'
       })
       this.props.getOgnBalance()
-      this.setState({ step: this.STEP.SUCCESS })
+      this.props.updateState({ step: this.STEP.SUCCESS })
     } catch (error) {
       console.error(error)
-      this.setState({ step: this.STEP.ERROR })
+      this.props.updateState({ step: this.STEP.ERROR })
     }
   }
 
   resetForm() {
-    this.setState(this.defaultState)
+    // this.props.updateState(this.defaultState)
+    this.props.clearState()
   }
 
   resetToPreview(e) {
     e.preventDefault()
 
-    this.setState({ step: this.STEP.PREVIEW })
+    this.props.updateState({ step: this.STEP.PREVIEW })
   }
 
   render() {
@@ -308,9 +324,11 @@ class ListingCreate extends Component {
       step,
       translatedSchema,
       showDetailsFormErrorMsg,
-      showBoostTutorial
-    } = this.state
+      showBoostTutorial,
+      showEthNotEnough
+    } = this.props
     const { formData } = formListing
+    console.log('form data',formData)
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
 
@@ -420,7 +438,7 @@ class ListingCreate extends Component {
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
                   onError={() =>
-                    this.setState({ showDetailsFormErrorMsg: true })
+                    this.props.updateState({ showDetailsFormErrorMsg: true })
                   }
                   onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
@@ -442,7 +460,7 @@ class ListingCreate extends Component {
                       type="button"
                       className="btn btn-other btn-listing-create"
                       onClick={() =>
-                        this.setState({ step: this.STEP.PICK_SCHEMA })
+                        this.props.updateState({ step: this.STEP.PICK_SCHEMA })
                       }
                       ga-category="create_listing"
                       ga-label="details_step_back"
@@ -544,7 +562,7 @@ class ListingCreate extends Component {
                   <button
                     type="button"
                     className="btn btn-other btn-listing-create"
-                    onClick={() => this.setState({ step: this.STEP.DETAILS })}
+                    onClick={() => this.props.updateState({ step: this.STEP.DETAILS })}
                     ga-category="create_listing"
                     ga-label="boost_listing_step_back"
                   >
@@ -727,7 +745,7 @@ class ListingCreate extends Component {
                 <div className="btn-container">
                   <button
                     className="btn btn-other float-left btn-listing-create"
-                    onClick={() => this.setState({ step: this.STEP.BOOST })}
+                    onClick={() => this.props.updateState({ step: this.STEP.BOOST })}
                     ga-category="create_listing"
                     ga-label="review_step_back"
                   >
@@ -940,6 +958,7 @@ class ListingCreate extends Component {
                   </button>
                   <Link
                     to="/"
+                    onClick={this.resetForm}
                     className="btn btn-clear"
                     ga-category="create_listing"
                     ga-label="listing_creation_confirmation_modal_see_all_listings"
@@ -981,7 +1000,7 @@ class ListingCreate extends Component {
                 </div>
               </Modal>
             )}
-            <Modal backdrop="static" isOpen={this.state.ETH_NOT_ENOUGH}>
+            <Modal backdrop="static" isOpen={showEthNotEnough}>
               <div className="image-container">
                 <img src="images/flat_cross_icon.svg" role="presentation" />
               </div>
@@ -998,8 +1017,8 @@ class ListingCreate extends Component {
                 <a
                   className="btn btn-clear"
                   onClick={()=>{
-                    this.setState({
-                      ETH_NOT_ENOUGH: false
+                    this.props.updateState({
+                      showEthNotEnough: false
                     })
                   }}
                   ga-category="create_listing"
@@ -1026,7 +1045,8 @@ class ListingCreate extends Component {
 const mapStateToProps = state => {
   return {
     wallet: state.wallet,
-    exchangeRates: state.exchangeRates
+    exchangeRates: state.exchangeRates,
+    ...state.listingCreate
   }
 }
 
@@ -1035,7 +1055,9 @@ const mapDispatchToProps = dispatch => ({
   updateTransaction: (hash, confirmationCount) =>
     dispatch(updateTransaction(hash, confirmationCount)),
   upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
-  getOgnBalance: () => dispatch(getOgnBalance())
+  getOgnBalance: () => dispatch(getOgnBalance()),
+  updateState: payload => dispatch(updateState(payload)),
+  clearState: () => dispatch(clearState())
 })
 
 export default connect(

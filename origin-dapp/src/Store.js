@@ -14,6 +14,7 @@ import search from 'reducers/Search'
 import alert from 'reducers/Alert'
 import users from 'reducers/Users'
 import app from 'reducers/App'
+import listingCreate from 'reducers/ListingsCreate'
 
 const middlewares = [thunkMiddleware]
 
@@ -36,7 +37,8 @@ const store = createStore(
     search,
     alert,
     users,
-    app
+    app,
+    listingCreate
   }),
   applyMiddleware(...middlewares)
 )
