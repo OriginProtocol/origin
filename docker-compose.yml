@@ -33,6 +33,21 @@ services:
     networks:
       - default
 
+  ipfs-proxy:
+    container_name: ipfs-proxy
+    image: ipfs-proxy
+    build:
+      context: .
+      dockerfile: development/dockerfiles/ipfs-proxy
+    ports:
+      - "5002:5002"
+      - "8080:8080"
+    command: >
+      /bin/bash -c "npm install --quiet --no-progress &&
+      node scripts/build.js serve"
+    networks:
+      - default
+
   origin-js:
     container_name: origin-js
     image: origin-js
