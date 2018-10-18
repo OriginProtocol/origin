@@ -108,6 +108,10 @@ proxy.on('proxyRes', (proxyResponse, req, res) => {
   })
 })
 
+proxy.on('error', (err) => {
+  logger.error(err)
+})
+
 const server = http.createServer((req, res) => {
   if (req.url == '/api/v0/add') {
     handleFileUpload(req, res)
@@ -117,5 +121,7 @@ const server = http.createServer((req, res) => {
 }).listen(config.IPFS_PROXY_PORT)
 
 logger.debug(`Listening on ${config.IPFS_PROXY_PORT}`)
+logger.debug(`Proxying to IPFS gateway ${config.IPFS_GATEWAY_URL}`)
+logger.debug(`Proxying to IPFS API ${config.IPFS_API_URL}`)
 
 module.exports = server
