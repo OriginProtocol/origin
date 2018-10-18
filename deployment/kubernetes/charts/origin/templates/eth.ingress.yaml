@@ -14,11 +14,11 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   tls:
-    - secretName: eth.{{ .Release.Namespace }}.originprotocol.com
+    - secretName: {{ template "ethereum.host" . }}
       hosts:
-        - eth.{{ .Release.Namespace }}.originprotocol.com
+        - {{ template "ethereum.host" . }}
   rules:
-  - host: eth.{{ .Release.Namespace }}.originprotocol.com
+  - host: {{ template "ethereum.host" . }}
     http:
       paths:
       - path: /

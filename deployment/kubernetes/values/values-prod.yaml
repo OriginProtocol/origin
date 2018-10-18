@@ -7,7 +7,7 @@ bridgeReplicas: 1
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '916795e-1539384792'
+dappImageTag: 'a5eb4e0'
 dappReplicas: 2
 
 # Mainnet nodes
