@@ -14,6 +14,8 @@ First you'll need a blockchain network to listen to. To get a local network work
 
 A simple way to see the listener in action:
 
+    cd origin-discovery
+    npm run install:dev
     node daemon/indexing/listener/listener.js
 
 ## Command line options
@@ -31,6 +33,18 @@ Output:
 Events:
 
 `--continue-file=path` Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format `{"lastLogBlock":222, "version":1}`.
+
+## Env variables
+
+The listener calls out origin.js to load and validate data from the blockchain. In order to properly configure an origin.js object, the listener uses the following environment variables:
+  - ARBITRATOR_ACCOUNT: Ethereum address of the Origin marketplace arbitrator account.
+  - AFFILIATE_ACCOUNT:  Ethereum address of the Origin marketplace affilicate account.
+  - BLOCK_EPOCH: Start block to use when scanning the blockchain for Origin events.
+
+Those values can be found via the DApp info page:
+  - Mainnet: https://dapp.originprotocol.com/#/dapp-info
+  - Rinkeby: https://dapp.staging.originprotocol.com/#/dapp-info
+  - Local blockchain: http://localhost:3000/#/dapp-info
 
 
 # How the listener works
