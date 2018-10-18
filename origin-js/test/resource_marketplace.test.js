@@ -157,7 +157,7 @@ describe('Marketplace Resource', function() {
 
       listings.map(validateListing)
 
-      expect(listings[1]).to.equal(listingData.title)
+      expect(listings[1].title).to.equal(listingData.title)
     })
   })
 

@@ -117,3 +117,18 @@ export const validateNotification = (notification) => {
   expect(notification.resources).to.have.property('offerId').that.is.a('string')
   expect(notification.resources).to.have.property('listing').that.is.an('object')
 }
+
+export const validateMessaging = (messaging) => {
+  expect(messaging).to.be.an('object')
+  expect(messaging).to.have.property('web3').that.is.an('object')
+  expect(messaging).to.have.property('ipfsCreator').to.be.an('object')
+  expect(messaging).to.have.property('OrbitDB').to.be.an('object')
+  expect(messaging).to.have.property('sharedRooms').to.be.an('object')
+  expect(messaging).to.have.property('convs').to.be.an('object')
+  expect(messaging).to.have.property('ecies').to.be.an('object')
+  expect(messaging).to.have.property('events').to.be.an('object')
+  expect(messaging).to.have.property('GLOBAL_KEYS').to.be.a('string')
+  expect(messaging).to.have.property('CONV').to.be.a('string')
+  expect(messaging).to.have.property('CONV_INIT_PREFIX').to.be.a('string')
+  expect(messaging).to.have.property('cookieStorage').to.be.an('object')
+}
