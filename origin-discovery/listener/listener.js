@@ -464,12 +464,12 @@ async function handleLog(log, rule, contractVersion, context) {
   const listing = data.related.listing
   lines.push(`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,)
   if (data.related.offer !== undefined) { // Offer
-    lines.push(`https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,)
-    lines.push(`Seller: ${personDisp(data.related.seller)}`)
-    lines.push(`Buyer: ${personDisp(data.related.buyer)}`)
+    lines.push(`  https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,)
+    lines.push(`  Seller: ${personDisp(data.related.seller)}`)
+    lines.push(`  Buyer: ${personDisp(data.related.buyer)}`)
   } else { // Listing
-    lines.push(`https://dapp.originprotocol.com/#/listing/${listing.id}`,)
-    lines.push(`Seller: ${personDisp(data.related.seller)}`)
+    lines.push(`  https://dapp.originprotocol.com/#/listing/${listing.id}`,)
+    lines.push(`  Seller: ${personDisp(data.related.seller)}`)
   }
   const json = JSON.stringify(
     { content: lines.join("\n")}
