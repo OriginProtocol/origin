@@ -116,6 +116,6 @@ const server = http.createServer((req, res) => {
   }
 }).listen(config.IPFS_PROXY_PORT)
 
-logger.debug(`ipfs-proxy listening on ${config.IPFS_PROXY_PORT}`)
+logger.debug(`Listening on ${config.IPFS_PROXY_PORT}`)
 
 module.exports = server

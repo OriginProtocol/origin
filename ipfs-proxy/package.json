@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "mocha --compilers js:@babel/register --timeout=10000"
+    "test": "mocha --compilers js:@babel/register --timeout=10000",
+    "test:load": "node load.js"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,9 @@
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
+    "autocannon": "^3.0.1",
     "chai": "^4.2.0",
+    "form-data": "^2.3.3",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.4",
     "supertest": "^3.3.0"

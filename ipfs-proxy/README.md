@@ -16,3 +16,7 @@ This directory contains a node server that sites in front of Origin's IPFS nodes
 ## Running tests
 
 `npm run test`
+
+For some load testing and benchmarking of IPFS-Proxy vs a bare IPFS node run:
+
+`npm run test:load`
