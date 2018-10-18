@@ -29,4 +29,8 @@ RUN npm install --quiet --no-progress
 COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
 RUN npm link origin
 
+ENV ARBITRATOR_ACCOUNT=0xc9c1a92ba54c61045ebf566b154dfd6afedea992 \
+    AFFILIATE_ACCOUNT=0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5 \
+    BLOCK_EPOCH=0
+
 CMD ["node", "listener/listener.js", "--elasticsearch", "--db"]
