@@ -334,7 +334,7 @@ class Calendar extends Component {
 
   dateCellWrapper(data) {
     const { value } = data
-    const dateInfo = getDateAvailabilityAndPrice(value, this.state.events, this.props.purchases)
+    const dateInfo = getDateAvailabilityAndPrice(value, this.state.events, this.props.offers)
     const availability = dateInfo.isAvailable ? 'available' : 'unavailable'
     const isPastDate = moment(value).isBefore(moment().subtract(1, 'day')) ? ' past-date' : ''
     const selectedSlotsMatchingDate = 

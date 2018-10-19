@@ -103,30 +103,6 @@ class ListingsDetail extends Component {
     }
   }
 
-  // async reserveSlots(slotsToReserve) {
-  //   this.props.storeWeb3Intent('reserve this listing')
-
-  //   if (web3.givenProvider && this.props.web3Account) {
-  //     const totalPrice = slotsToReserve.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
-  //     this.setState({ step: this.STEP.METAMASK })
-  //     try {
-  //       this.setState({ step: this.STEP.PROCESSING })
-  //       const { created, transactionReceipt } = await origin.listings.request(this.state.address, slotsToReserve, totalPrice, this.props.updateTransaction)
-  //       this.props.upsertTransaction({
-  //         ...transactionReceipt,
-  //         created,
-  //         transactionTypeKey: 'reserveListing',
-  //       })
-  //       console.log('Reservation request sent.')
-  //       this.setState({ step: this.STEP.PURCHASED })
-  //     } catch (error) {
-  //       window.err = error
-  //       console.error(error)
-  //       this.setState({ step: this.STEP.ERROR })
-  //     }
-  //   }
-  // }
-
   async handleMakeOffer(skip, slotsToReserve) {
     // onboard if no identity, purchases, and not already completed
     const shouldOnboard =
@@ -158,7 +134,6 @@ class ListingsDetail extends Component {
         const offerData = {
           listingId: this.props.listingId,
           listingType: this.state.listingType,
-          unitsPurchased: 1,
           totalPrice: {
             amount: price,
             currency: 'ETH'
@@ -174,6 +149,8 @@ class ListingsDetail extends Component {
 
         if (isFractional) {
           offerData.slots = prepareSlotsToSave(slots)
+        } else {
+          offerData.unitsPurchased = 1
         }
 
         const transactionReceipt = await origin.marketplace.makeOffer(
@@ -258,6 +235,7 @@ class ListingsDetail extends Component {
   async loadOffers() {
     try {
       const offers = await origin.marketplace.getOffers(this.props.listingId)
+console.log('=============================== offers: ', offers)
       this.setState({ offers })
     } catch (error) {
       console.error(
@@ -830,7 +808,7 @@ class ListingsDetail extends Component {
               <div className="col-12">
                 <Calendar 
                   slots={ this.state.slots }
-                  purchases={ this.state.purchases }
+                  offers={ this.state.offers }
                   userType="buyer"
                   viewType={ this.state.schemaType === 'housing' ? 'daily' : 'hourly' }
                   onComplete={(slots) => this.handleMakeOffer(false, slots) }

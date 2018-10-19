@@ -326,14 +326,14 @@ export function getCleanEvents(events) {
     })
 }
 
-export function getDateAvailabilityAndPrice(date, events, purchases) {
+export function getDateAvailabilityAndPrice(date, events, offers) {
   const isDateBooked = function(date) {
     let bookingsMatchingDate = []
-    purchases && purchases.map((purchase) => {
-      const bookingsForThisPurchase = purchase.ipfsData.filter(slot => 
+    offers && offers.map((offer) => {
+      const bookingsForThisOffer = offer.ipfs.data.slots.filter(slot => 
         moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
       )
-      bookingsMatchingDate = [...bookingsMatchingDate, ...bookingsForThisPurchase]
+      bookingsMatchingDate = [...bookingsMatchingDate, ...bookingsForThisOffer]
     })
 
     return !!bookingsMatchingDate.length
@@ -384,6 +384,9 @@ export const prepareSlotsToSave = (slots) => {
       currency: 'ETH',
       amount
     }
+
+    slot.startDate = slot.startDate.toISOString()
+    slot.endDate = slot.endDate.toISOString()
 
     return slot
   })

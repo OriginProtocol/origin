@@ -92,7 +92,7 @@ export function originToDAppListing(originListing) {
     unitsRemaining: originListing.unitsRemaining,
     ipfsHash: originListing.ipfs.hash,
     listingType: originListing.type,
-    slots: originListing.ipfs && originListing.ipfs.data && originListing.ipfs.data.slots
+    slots: originListing.slots
   }
 }
 
