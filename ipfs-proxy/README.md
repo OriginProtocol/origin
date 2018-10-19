@@ -5,7 +5,7 @@
 This directory contains a node server that sites in front of Origin's IPFS nodes to validate files being uploaded and downloaded. It allows the following filetypes:
 
 - png
-- svg
+- gif
 - jpeg
 - json
 
