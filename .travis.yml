@@ -3,7 +3,8 @@ matrix:
   - language: node_js
     node_js: lts/*
     before_script:
-    - cd origin-dapp && npm install
+    - cd origin-dapp
+    - npm install
     script:
     - npm test
 
@@ -11,7 +12,10 @@ matrix:
   - language: node_js
     node_js: lts/*
     before_script:
-    - cd origin-faucet && npm install && cd ../origin-js && npm install
+    - cd origin-faucet
+    - npm install
+    - cd ../origin-js
+    - npm install
     script:
     - npm test
 
