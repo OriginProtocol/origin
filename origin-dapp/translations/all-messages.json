@@ -83,7 +83,6 @@
   "photo-picker.oversizeImages": "Your selected image, {imageName}, is too large. Max allowed size is {maxImageMB}MB",
   "price-field.price-help": "The price is always in {currency}.",
   "price-field.price-usd-disclaimer": "USD is an estimate.",
-  "header.title": "Origin Protocol Demo DApp",
   "listing-card-prices.loadingMessage": "Loading...",
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
