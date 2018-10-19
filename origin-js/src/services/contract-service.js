@@ -100,16 +100,6 @@ class ContractService {
     }
   }
 
-  // For decoding hex encoded data fields on attestations
-  decodeHex(hexToDecode) {
-    return (
-      hexToDecode
-        .slice(2)
-        .match(/.{1,2}/g) || []
-    )
-      .map(letter => String.fromCharCode(parseInt(letter, 16)))
-      .join('')
-  }
 
   // Return bytes32 hex string from base58 encoded ipfs hash,
   // stripping leading 2 bytes from 34 byte IPFS hash
