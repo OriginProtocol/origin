@@ -100,7 +100,6 @@ class ContractService {
     }
   }
 
-
   // Return bytes32 hex string from base58 encoded ipfs hash,
   // stripping leading 2 bytes from 34 byte IPFS hash
   // Assume IPFS defaults: function:0x12=sha2, size:0x20=256 bits
