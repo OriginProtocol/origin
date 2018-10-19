@@ -1,6 +1,6 @@
 {
   "name": "origin",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "",
   "engines": {
     "node": "9.11.1"
