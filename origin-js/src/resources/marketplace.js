@@ -90,6 +90,7 @@ class Marketplace {
           }
         })
       )
+
       // filter out invalid offers
       return allOffers.filter(offer => Boolean(offer))
     }
@@ -108,24 +109,24 @@ class Marketplace {
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
       chainOffer.ipfsHash
     )
+
     const ipfsOffer = await this.ipfsDataStore.load(OFFER_DATA_TYPE, ipfsHash)
 
     // validate offers awaiting approval
     if (chainOffer.status === 'created') {
       const listing = await this.getListing(listingId)
-
       const listingCurrency = listing.price && listing.price.currency
       const listingPrice = await this.contractService.moneyToUnits(listing.price)
       const listingCommision = await this.contractService.moneyToUnits(listing.commission)
       const currencies = await this.contractService.currencies()
-      const currency = currencies[listingCurrency]
+      const currency = listingCurrency && currencies[listingCurrency]
       const currencyAddress = currency && currency.address
 
-      if (currencyAddress !== chainOffer.currency) {
+      if (currencyAddress && currencyAddress !== chainOffer.currency) {
         throw new Error('Invalid offer: currency does not match listing')
       }
 
-      if (listingPrice > chainOffer.value) {
+      if (listingPrice && listingPrice > chainOffer.value) {
         throw new Error('Invalid offer: insufficient offer amount for listing')
       }
 

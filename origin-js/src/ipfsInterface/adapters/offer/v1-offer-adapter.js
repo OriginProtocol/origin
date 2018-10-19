@@ -22,7 +22,7 @@ export default class OfferAdapterV1 extends AdapterBase {
       offer.unitsPurchased = ipfsData.unitsPurchased
       offer.totalPrice = new Money(ipfsData.totalPrice)
     } else if (offer.listingType === 'fractional') {
-      // TODO(franck): fill this in.
+      offer.slots = ipfsData.slots
     } else {
       throw new Error(`Unexpected listing type: ${offer.listingType}`)
     }
