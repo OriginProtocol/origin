@@ -9,10 +9,12 @@ This will return information about the listing, combining information from IPFS 
 > Example: getListings
 
 ```javascript
+
 > origin.marketplace.getListings({ idsOnly: true })
 
 //returns
-  ['0-34-2-34', '000-234']
+
+['0-34-2-34', '000-234']
 
 > origin.marketplace.getListings({ listingsFor: '0x627306090abab3a6e1400e9345bc60c78a8bef57' })
 
@@ -62,25 +64,25 @@ When a listing is successfully created, the `createListing` method takes a callb
 
 ```javascript
 
-  const listing = {
-    category: "schema.forSale",
-    commission: { amount: "0", currency: "OGN" },
-    description: "ojwoifj weofijfoijfewoi qfoiqejqoidjq oidwjqdo",
-    language: "en-US",
-    listingType: "unit",
-    media: [{…}],
-    price: { amount: "0.01", currency: "ETH" },
-    schemaId: "http://schema.originprotocol.com/listing_v1.0.0",
-    subCategory: "schema.forSale.appliances",
-    title: "I am a great appliance listing",
-    unitsTotal: 1
-  }
+const listing = {
+  category: "schema.forSale",
+  commission: { amount: "0", currency: "OGN" },
+  description: "ojwoifj weofijfoijfewoi qfoiqejqoidjq oidwjqdo",
+  language: "en-US",
+  listingType: "unit",
+  media: [{…}],
+  price: { amount: "0.01", currency: "ETH" },
+  schemaId: "http://schema.originprotocol.com/listing_v1.0.0",
+  subCategory: "schema.forSale.appliances",
+  title: "I am a great appliance listing",
+  unitsTotal: 1
+}
 
-  const callback = (confirmationCount, transactionReceipt) => {
-    //manage response
-  }
+const callback = (confirmationCount, transactionReceipt) => {
+  //manage response
+}
 
-  > origin.marketplace.createListing({ listing }, callback)
+> origin.marketplace.createListing({ listing }, callback)
 ```
 
 ### Arguments:
@@ -103,13 +105,13 @@ When a listing is successfully created, the `withdrawListing` method takes a cal
 
 ```javascript
 
-  const listingId = '927-832'
-  const ipfsBites = {}
-  const callback = (confirmationCount, transactionReceipt) => {
-    //manage response
-  }
+const listingId = '927-832'
+const ipfsBites = {}
+const callback = (confirmationCount, transactionReceipt) => {
+  //manage response
+}
 
-  > origin.marketplace.withdrawListing(listingId, ipfsBites, callback)
+> origin.marketplace.withdrawListing(listingId, ipfsBites, callback)
 ```
 
 ### Arguments:
@@ -119,3 +121,31 @@ When a listing is successfully created, the `withdrawListing` method takes a cal
 |**listingId** |string|required|id of the listing to be withdrawn|
 |**ipfsBites**|object|optional|default to `{}` if not needed|
 |**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
+
+## getListingReviews
+
+Reviews are created by the buyer in the receipt stage and by the seller in the payout stage of the purchase process. A review consists of a required 1-5 rating and an optional reviewText text field.
+
+> Example: withdrawListing
+
+```javascript
+
+const listingId = '927-832'
+
+> origin.marketplace.getListingReviews(listingId)
+
+//returns
+
+[{
+  "schemaId": "http://schema.originprotocol.com/review_v1.0.0",
+  "rating": 4,
+  "text": "Solid Listing"
+  "reviewer": "0x29884972398479234792"
+]}
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**listingId** |string|required|id of the listing|
