@@ -198,21 +198,17 @@ class V00_UsersAdapter {
     )
 
     const attestations = validAttestations
-      .map(
-        att => {
-          try {
-            if (ClaimDataIsIpfsHash.includes(att.topic))
-              att.ipfsHash = this.contractService.getIpfsHashFromBytes32(att.data)
-            return att
-          }
-          catch (error) {
-            console.error(`Can not convert to ipfs hash: ${error.message}`)
-          }
+      .map(att => {
+        try {
+          if (ClaimDataIsIpfsHash.includes(att.topic))
+            att.ipfsHash = this.contractService.getIpfsHashFromBytes32(att.data)
+          return att
         }
-      )
-      .map(
-        att => new AttestationObject(att)
-      )
+        catch (error) {
+          console.error(`Can not convert to ipfs hash: ${error.message}`)
+        }
+      })
+      .map(att => new AttestationObject(att))
 
     return { profile, attestations }
   }
