@@ -1,7 +1,7 @@
 {
   "name": "ipfs-proxy",
   "version": "1.0.0",
-  "description": "A proxy that validates Origin content being uploaded and download from Origin's IPFS servers",
+  "description": "A proxy that validates Origin content being uploaded and downloaded from Origin's IPFS servers",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",

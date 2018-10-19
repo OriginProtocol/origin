@@ -115,8 +115,11 @@ proxy.on('error', (err) => {
 const server = http.createServer((req, res) => {
   if (req.url == '/api/v0/add') {
     handleFileUpload(req, res)
-  } else {
+  } else if (req.url.startsWith('/ipfs')) {
     handleFileDownload(req, res)
+  } else {
+    req.writeHead(404, { 'Connection': 'close' })
+    res.end()
   }
 }).listen(config.IPFS_PROXY_PORT)
 

@@ -1,11 +1,11 @@
 'use strict'
 
 const autocannon = require('autocannon')
-
 const FormData = require('form-data')
 const fs = require('fs')
 const ipfsdCtl = require('ipfsd-ctl')
 const logger = require('./src/logger')
+
 const imageHash = 'QmcJwbSPxVgpLsnN3ESAeZ7FRSapYKa27pWFhY9orsZat7'
 const ipfsFactory = ipfsdCtl.create({
   type: 'js',
