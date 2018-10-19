@@ -176,3 +176,25 @@ Notifications do not exist on the blockchain nor are they read from a database. 
   "resources": { listingId: "927-832", offerId: "183", listing: { title: "Whirlpool Microwave" } }
 ]}
 ```
+
+## setNotification
+
+Since notification objects do not live on the blockchain or in a database, this method only records an update to the client's local storage. It accepts a single parameter, which should be an object containing the id of the notification and a status value of either read or unread. Any other properties included in this object will be ignored.
+
+> Example: setNotification
+
+```javascript
+
+const id = "2984803-23433"
+const status = "read"
+
+> origin.marketplace.setNotification({ id, status })
+
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**id** |string|required|id of the notification|
+|**status** |string|required|`"read"` or `"unread"`|
