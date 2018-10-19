@@ -53,7 +53,9 @@ This will return information about the listing, combining information from IPFS 
 
 When you create a listing, the API will create both the IPFS data and the Listing contract on the blockchain.
 When a listing is successfully created, the `createListing` method takes a callback with two arguments:
+
 `confirmationCount` - the number of successfully created listings
+
 `transactionReceipt` - an object with ipfs information about the newly created listing.
 
 > Example: createListing
@@ -86,4 +88,34 @@ When a listing is successfully created, the `createListing` method takes a callb
 |Name|Type|Required|Description|
 |----|-----|-----|-----|
 |**listing** |object|required|
+|**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
+
+## withdrawListing
+
+Withdrawing a transaction will set the `unitsAvailable` to zero. This will stop any further purchases of that Listing.
+When a listing is successfully created, the `withdrawListing` method takes a callback with two arguments:
+
+`confirmationCount` - the number of successfully created listings
+
+`transactionReceipt` - an object with ipfs information about the newly created listing.
+
+> Example: withdrawListing
+
+```javascript
+
+  const listingId = '927-832'
+  const ipfsBites = {}
+  const callback = (confirmationCount, transactionReceipt) => {
+    //manage response
+  }
+
+  > origin.marketplace.withdrawListing(listingId, ipfsBites, callback)
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**listingId** |string|required|id of the listing to be withdrawn|
+|**ipfsBites**|object|optional|default to `{}` if not needed|
 |**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
