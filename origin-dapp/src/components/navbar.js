@@ -11,6 +11,8 @@ import NotificationsDropdown from 'components/dropdowns/notifications'
 import TransactionsDropdown from 'components/dropdowns/transactions'
 import UserDropdown from 'components/dropdowns/user'
 
+import { clearState } from 'actions/ListingCreate'
+
 class NavBar extends Component {
   constructor(props) {
     super(props)
@@ -25,7 +27,7 @@ class NavBar extends Component {
 
   handleLink(e) {
     this.props.storeWeb3Intent('create a listing')
-
+    this.props.initListingCreate()
     if (!web3.givenProvider || !this.props.web3Account) {
       e.preventDefault()
     }
@@ -189,7 +191,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  initListingCreate: () => dispatch(clearState())
 })
 
 export default connect(
