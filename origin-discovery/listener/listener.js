@@ -134,14 +134,31 @@ function setupOriginJS(config){
   console.log(`Web3 URL: ${config.web3Url}`)
 
   const ipfsUrl = urllib.parse(config.ipfsUrl)
+  console.log(`IPFS URL: ${ipfsUrl}`)
+
+  // Error out if any mandatory env var is not set.
+  if (!process.env.ARBITRATOR_ACCOUNT) {
+    throw new Error('ARBITRATOR_ACCOUNT not set')
+  }
+  if (!process.env.AFFILIATE_ACCOUNT) {
+    throw new Error('AFFILIATE_ACCOUNT not set')
+  }
+
+  // Issue a warning for any recommended env var that is not set.
+  if (!process.env.BLOCK_EPOCH) {
+    console.log('WARNING: For performance reason it is recommended to set BLOCK_EPOCH')
+  }
+
   // global
   o = new Origin({
     ipfsDomain: ipfsUrl.hostname,
     ipfsGatewayProtocol: ipfsUrl.protocol.replace(':',''),
     ipfsGatewayPort: ipfsUrl.port,
+    arbitrator: process.env.ARBITRATOR_ACCOUNT,
+    affiliate: process.env.AFFILIATE_ACCOUNT,
+    blockEpoch: process.env.BLOCK_EPOCH || 0,
     web3
   })
-  console.log(`IPFS URL: ${config.ipfsUrl}`)
 }
 
 /**
@@ -489,7 +506,68 @@ async function handleLog(log, rule, contractVersion, context) {
       await postToWebhook(context.config.webhook, json)
     })
   }
+
+  if (context.config.discordWebhook) {
+    postToDiscordWebhook(context.config.discordWebhook, output)
+    console.log('\n-- Discord WEBHOOK to ' + context.config.discordWebhook + ' --')
+  }
 }
+
+/**
+ * Posts a to discord channel via webhook.
+ * This functionality should move out of the listener 
+ * to the notification system, as soon as we have one.
+ */
+ async function postToDiscordWebhook(discordWebhookUrl, data){
+  const eventIcons = {
+    ListingCreated: ':trumpet:',
+    ListingUpdated: ':saxophone:',
+    ListingWithdrawn: ':x:',
+    ListingData: ':cd:',
+    ListingArbitrated: ':boxing_glove:',
+    OfferCreated: ':baby_chick:',
+    OfferWithdrawn: ':feet:',
+    OfferAccepted: ':bird:',
+    OfferDisputed: ':dragon_face:',
+    OfferRuling: ':dove:',
+    OfferFinalized: ':unicorn:',
+    OfferData: ':beetle:'
+  }
+
+  const personDisp = (p)=> {
+    let str = ''
+    if(p.profile && p.profile.firstName){
+      str += ' ' + p.profile.firstName
+    }
+    if(p.profile && p.profile.lastName){
+      str += ' ' + p.profile.lastName
+    }
+    str += ' ' + p.address
+    return str
+  }
+  const priceDisp = (listing) => {
+    const price = listing.price
+    return (price ? `${price.amount}${price.currency}` : '')
+  }
+
+  const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
+  const lines = []
+  const listing = data.related.listing
+  lines.push(`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,)
+  if (data.related.offer !== undefined) { // Offer
+    lines.push(`  https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,)
+    lines.push(`  Seller: ${personDisp(data.related.seller)}`)
+    lines.push(`  Buyer: ${personDisp(data.related.buyer)}`)
+  } else { // Listing
+    lines.push(`  https://dapp.originprotocol.com/#/listing/${listing.id}`,)
+    lines.push(`  Seller: ${personDisp(data.related.seller)}`)
+  }
+  const json = JSON.stringify(
+    { content: lines.join("\n")}
+  )
+  await postToWebhook(discordWebhookUrl, json)
+ }
+
 
 /**
  * Sends a blob of json to a webhook.
@@ -509,7 +587,8 @@ async function postToWebhook(urlString, json) {
   return new Promise((resolve, reject) => {
     const client = url.protocol === 'https:' ? https : http
     const req = client.request(postOptions, res => {
-      if (res.statusCode === 200) {
+      console.log(res.statusCode )
+      if (res.statusCode === 200 || res.statusCode === 204) {
         resolve()
       } else {
         reject()
@@ -630,6 +709,8 @@ process.argv.forEach(arg => {
 const config = {
   // Call webhook to process event.
   webhook: args['--webhook'],
+  // Call post to discord webhook to process event.
+  discordWebhook: args['--discord-webhook'],
   // Index events in the search index.
   elasticsearch: args['--elasticsearch'],
   // Index events in the database.
