@@ -198,3 +198,85 @@ const status = "read"
 |----|-----|-----|-----|
 |**id** |string|required|id of the notification|
 |**status** |string|required|`"read"` or `"unread"`|
+
+
+## getOffer
+
+This will turn a specific offer sent by a buyer for a listing purchase.
+
+
+> Example: getOffer
+
+```javascript
+
+const offerId = "2403-234"
+
+> origin.marketplace.getOffer(offerId)
+
+//returns
+
+{
+  id: "2403-234",
+  listingId: "999-000-0",
+  status: "accepted",
+  createdAt: 1539991086,
+  buyer: "0x627306090274fwfiou97h0c78a8BEf57",
+  events: [...],
+  refund: "0",
+  schemaId: "http://schema.originprotocol.com/offer_v1.0.0",
+  listingType: "unit",
+  unitsPurchased: 1,
+  totalPrice: { currency: "ETH", amount: "0.033" },
+  ipfs: {...}
+}
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**offerId** |string|required|`offer.id`|
+
+## getOffers
+
+This will turn all offers related to a specific listing.
+
+
+> Example: getOffers
+
+```javascript
+
+const listingId = "9903-75"
+
+> origin.marketplace.getOffers(listingId)
+
+//returns
+
+[{
+  id: "999-000-0-0",
+  listingId: "9903-75",
+  status: "created",
+  createdAt: 1539991086,
+  buyer: "0x627306090274fwfiou97h0c78a8BEf57",
+  events: [...],
+  refund: "0",
+  schemaId: "http://schema.originprotocol.com/offer_v1.0.0",
+  listingType: "unit",
+  unitsPurchased: 1,
+  totalPrice: { currency: "ETH", amount: "0.033" },
+  ipfs: {...}
+},
+{
+  id: "82838-247-3-3",
+  listingId: "9903-75",
+  status: "created",
+  buyer: "0x938828348ske02heo92394hwf",
+  ...
+}]
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**listingId** |string|required|`listing.id`|
