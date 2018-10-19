@@ -1,5 +1,4 @@
 import AttestationObject from '../../models/attestation'
-//import DEBUG_IMPORT from '../../resources/users'
 import {
   fromRpcSig,
   ecrecover,
@@ -10,6 +9,7 @@ import {
 import Web3 from 'web3'
 import { PROFILE_DATA_TYPE, IpfsDataStore } from '../../ipfsInterface/store'
 
+const ClaimDataIsIpfsHash = [4, 5] // twitter & airbnb
 const selfAttestationTopic = 13 // TODO: use the correct number here
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
@@ -201,7 +201,7 @@ class V00_UsersAdapter {
       .map(
         att => {
           try {
-            if ([4,5].includes(att.topic))
+            if (ClaimDataIsIpfsHash.includes(att.topic))
               att.ipfsHash = this.contractService.getIpfsHashFromBytes32(att.data)
             return att
           }

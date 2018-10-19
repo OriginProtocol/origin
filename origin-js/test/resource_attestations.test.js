@@ -216,7 +216,7 @@ describe('Attestation Resource', function() {
         code: 'foo.bar'
       })
 
-      expect(response.data).to.eql("0x302bf32404b014ad8bf3013a19e956f827b33530dcb94cc46d113cb0f365d9ee")
+      expect(response.data).to.eql('0x302bf32404b014ad8bf3013a19e956f827b33530dcb94cc46d113cb0f365d9ee')
       expect(response.signature).to.equal(sampleTwitterAttestation.signature)
       expect(response.topic).to.equal(sampleTwitterAttestation['claim-type'])
     })
