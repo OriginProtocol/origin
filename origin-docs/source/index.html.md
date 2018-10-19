@@ -15,6 +15,7 @@ includes:
   - local_development
   - authentication_identity
   - resources/origin
+  - resources/marketplace
   - resources/attestations
   - resources/listings
   - resources/purchases
