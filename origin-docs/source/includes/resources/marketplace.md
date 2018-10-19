@@ -43,8 +43,47 @@ This will return information about the listing, combining information from IPFS 
 
 ### Arguments:
 
-|Name|Type|Required|Default|Description|
-|----|-----|-----|-----|-----|
-|**idsOnly** |bool|optional|false||
-|**listingsFor** | string |optional||user's address|
-|**purchasesFor** | string |optional||user's address|
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**idsOnly** |boolean|optional||
+|**listingsFor** | string |optional|user's address|
+|**purchasesFor** | string |optional|user's address|
+
+## createListing
+
+When you create a listing, the API will create both the IPFS data and the Listing contract on the blockchain.
+When a listing is successfully created, the `createListing` method takes a callback with two arguments:
+`confirmationCount` - the number of successfully created listings
+`transactionReceipt` - an object with ipfs information about the newly created listing.
+
+> Example: createListing
+
+```javascript
+
+  const listing = {
+    category: "schema.forSale",
+    commission: { amount: "0", currency: "OGN" },
+    description: "ojwoifj weofijfoijfewoi qfoiqejqoidjq oidwjqdo",
+    language: "en-US",
+    listingType: "unit",
+    media: [{…}],
+    price: { amount: "0.01", currency: "ETH" },
+    schemaId: "http://schema.originprotocol.com/listing_v1.0.0",
+    subCategory: "schema.forSale.appliances",
+    title: "I am a great appliance listing",
+    unitsTotal: 1
+  }
+
+  const callback = (confirmationCount, transactionReceipt) => {
+    //manage response
+  }
+
+  > origin.marketplace.createListing({ listing }, callback)
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**listing** |object|required|
+|**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
