@@ -131,8 +131,11 @@ def test_facebook_verify(client):
         assert response_json['data'] == 'facebook verified'
 
 
-def test_twitter_verify(client):
+@mock.patch('logic.attestation_service.IPFSHelper')
+def test_twitter_verify(mock_ipfs, client):
     response_content = b'oauth_token=peaches&oauth_token_secret=pears'
+    mock_ipfs.return_value.pin_json.return_value = \
+        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with responses.RequestsMock() as rsps:
         rsps.add(
@@ -165,4 +168,4 @@ def test_twitter_verify(client):
         assert response.status_code == 200
         assert len(response_json['signature']) == 132
         assert response_json['data'] \
-            == '0x7b2273637265656e5f6e616d65223a20226f726967696e70726f746f636f6c227d'
+            == 'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'

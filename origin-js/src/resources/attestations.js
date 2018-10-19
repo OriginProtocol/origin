@@ -11,6 +11,8 @@ const responseToUrl = (resp = {}) => {
   return resp['url']
 }
 
+const ClaimDataIsIpfsHash = [4, 5] // twitter & airbnb
+
 class Attestations {
   constructor({ serverUrl, contractService, fetch, blockEpoch }) {
     this.serverUrl = serverUrl
@@ -20,11 +22,10 @@ class Attestations {
 
     this.responseToAttestation = (resp = {}) => {
       const topic = resp['claim-type']
-      const dontHashDataTopics = [4, 5] // twitter & airbnb
       return new AttestationObject({
         topic: topic,
-        data: dontHashDataTopics.includes(topic) ?
-          resp['data'] :
+        data: ClaimDataIsIpfsHash.includes(topic) ?
+          contractService.getBytes32FromIpfsHash(resp['data']) :
           Web3.utils.soliditySha3(resp['data']),
         signature: resp['signature']
       })
@@ -184,5 +185,6 @@ class Attestations {
 
 module.exports = {
   AttestationObject,
-  Attestations
+  Attestations,
+  ClaimDataIsIpfsHash
 }

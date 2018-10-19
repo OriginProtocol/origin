@@ -1,4 +1,5 @@
 import AttestationObject from '../../models/attestation'
+//import DEBUG_IMPORT from '../../resources/users'
 import {
   fromRpcSig,
   ecrecover,
@@ -162,6 +163,7 @@ class V00_UsersAdapter {
     const claimAddedEvents = await identity.getPastEvents('ClaimAdded', {
       fromBlock: this.blockEpoch
     })
+
     const mapped = claimAddedEvents.map(({ returnValues }) => {
       return {
         claimId: returnValues.claimId,
@@ -194,9 +196,24 @@ class V00_UsersAdapter {
       identityAddress,
       nonProfileClaims
     )
-    const attestations = validAttestations.map(
-      att => new AttestationObject(att)
-    )
+
+    const attestations = validAttestations
+      .map(
+        att => {
+          try {
+            if ([4,5].includes(att.topic))
+              att.ipfsHash = this.contractService.getIpfsHashFromBytes32(att.data)
+            return att
+          }
+          catch (error) {
+            console.error(`Can not convert to ipfs hash: ${error.message}`)
+          }
+        }
+      )
+      .map(
+        att => new AttestationObject(att)
+      )
+
     return { profile, attestations }
   }
 

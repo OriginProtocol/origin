@@ -216,7 +216,7 @@ describe('Attestation Resource', function() {
         code: 'foo.bar'
       })
 
-      const jsonData = JSON.parse(await attestations.contractService.decodeHex(response.data))
+      const jsonData = JSON.parse(attestations.contractService.decodeHex(response.data))
       expect(jsonData).to.eql({ screen_name: 'dgrabec' })
       expect(response.signature).to.equal(sampleTwitterAttestation.signature)
       expect(response.topic).to.equal(sampleTwitterAttestation['claim-type'])

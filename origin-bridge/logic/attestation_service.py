@@ -5,8 +5,6 @@ import sendgrid
 import re
 from random import randint
 import urllib
-import json
-import binascii
 
 from marshmallow.exceptions import ValidationError
 from urllib.request import Request, urlopen, HTTPError, URLError
@@ -28,6 +26,7 @@ from logic.service_utils import (
 )
 from requests_oauthlib import OAuth1
 from util import attestations, urls
+from util.ipfs import IPFSHelper, base58_to_hex
 from web3 import Web3
 
 signing_key = settings.ATTESTATION_SIGNING_KEY
@@ -377,8 +376,8 @@ class VerificationService:
         return VerificationServiceResponse({'url': url})
 
     def verify_twitter(oauth_verifier, eth_address):
+        ipfs_helper = IPFSHelper()
         # Verify authenticity of user
-
         if 'request_token' not in session:
             raise TwitterVerificationError('Session not found.')
 
@@ -403,12 +402,10 @@ class VerificationService:
         query_string = urllib.parse.parse_qs(response.content)
         screen_name = query_string[b'screen_name'][0].decode('utf-8')
 
-        data = '0x' + binascii.hexlify(
-            json.dumps({'screen_name': screen_name}).encode()
-        ).decode()
+        ipfs_hash = ipfs_helper.pin_json({'screen_name': screen_name})
 
         signature = attestations.generate_signature(
-            signing_key, eth_address, TOPICS['twitter'], data
+            signing_key, eth_address, TOPICS['twitter'], base58_to_hex(ipfs_hash)
         )
 
         attestation = Attestation(
@@ -424,7 +421,7 @@ class VerificationService:
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': TOPICS['twitter'],
-            'data': data
+            'data': ipfs_hash
         })
 
     def generate_airbnb_verification_code(eth_address, airbnbUserId):
@@ -435,6 +432,7 @@ class VerificationService:
         })
 
     def verify_airbnb(eth_address, airbnbUserId):
+        ipfs_helper = IPFSHelper()
         validate_airbnb_user_id(airbnbUserId)
 
         code = get_airbnb_verification_code(eth_address, airbnbUserId)
@@ -463,12 +461,10 @@ class VerificationService:
                 " has not been found in user's Airbnb profile."
             )
 
-        data = '0x' + binascii.hexlify(
-            json.dumps({'airbnb_user_id': airbnbUserId}).encode()
-        ).decode()
+        ipfs_hash = ipfs_helper.pin_json({'airbnb_user_id': airbnbUserId})
 
         signature = attestations.generate_signature(
-            signing_key, eth_address, TOPICS['airbnb'], data
+            signing_key, eth_address, TOPICS['airbnb'], base58_to_hex(ipfs_hash)
         )
 
         attestation = Attestation(
@@ -484,7 +480,7 @@ class VerificationService:
         return VerificationServiceResponse({
             'signature': signature,
             'claim_type': TOPICS['airbnb'],
-            'data': data
+            'data': ipfs_hash
         })
 
 
