@@ -6,7 +6,7 @@ const Origin = require('origin')
 const Web3 = require('web3')
 
 const search = require('../lib/search.js')
-const db = require('../lib//db.js')
+const db = require('../models')
 
 // Origin Listener
 // ---------------
@@ -57,10 +57,8 @@ const getListingDetails = async log => {
     listing: listing,
     seller: seller
   }
-  //return {
-  //  listing: await o.marketplace.getListing(generateListingId(log))
-  //}
 }
+
 const getOfferDetails = async log => {
   const listing = await o.marketplace.getListing(generateListingId(log))
   const offer = await o.marketplace.getOffer(generateOfferId(log))
@@ -96,7 +94,7 @@ const LISTEN_RULES = {
     ListingData: getListingDetails,
     ListingArbitrated: getListingDetails,
     OfferCreated: getOfferDetails,
-    OfferWithdrawn: getOfferDetails,
+    OfferCreated: getOfferDetails,
     OfferAccepted: getOfferDetails,
     OfferDisputed: getOfferDetails,
     OfferRuling: getOfferDetails,
@@ -105,6 +103,23 @@ const LISTEN_RULES = {
   }
 }
 
+const LISTING_EVENTS = [
+  'ListingCreated',
+  'ListingUpdated',
+  'ListingWithdrawn',
+  'ListingData',
+  'ListingArbitrated'
+]
+
+const OFFER_EVENTS = [
+  'OfferCreated',
+  'OfferCreated',
+  'OfferAccepted',
+  'OfferDisputed',
+  'OfferRuling',
+  'OfferFinalized',
+  'OfferData'
+]
 // -------------------------------
 // Section 2: The following engine
 // -------------------------------
@@ -344,6 +359,7 @@ async function handleLog(log, rule, contractVersion, context) {
 
   // TODO: This kind of verification logic should live in origin.js
   if(output.related.listing.ipfs.data.price === undefined){
+    console.log(`ERROR: listing ${listingId} has no price. Skipping indexing.`)
     return
   }
 
@@ -381,15 +397,90 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   if (context.config.db) {
-    console.log(`Indexing listing in DB: id=${listingId}`)
-    await withRetrys(async () => {
-      await db.Listing.insert(
-        listingId,
-        userAddress,
-        ipfsHash,
-        listing.ipfs.data
-      )
-    })
+    if (LISTING_EVENTS.includes(rule.eventName)) {
+      let listingData
+      if (rule.eventName === 'ListingCreated') {
+        console.log(`Indexing listing in DB: id=${listingId}`)
+        listingData = {
+          listingId: listingId,
+          active: listing.active,
+          sellerAddress: userAddress,
+          ipfsHash: ipfsHash,
+          data: JSON.stringify(listing),
+          blockNumber: log.blockNumber,
+          blockTimestamp: log.timestamp
+        }
+      } else {
+        // For any other event than ListingCreated, only update certain fields.
+        console.log(`Updating listing in DB: id=${listingId}`)
+        listingData = {
+          listingId: listingId,
+          ipfsHash: ipfsHash,
+          data: JSON.stringify(listing),
+        }
+      }
+      await withRetrys(async () => {
+        await db.Listing.insertOrUpdate(listingData)
+      })
+    }
+
+    if (OFFER_EVENTS.includes(rule.eventName)) {
+      const offer = output.related.offer
+      console.log(`Indexing offer in DB: id=${offer.id}`)
+      let offerData
+      if (rule.eventName === 'OfferCreated') {
+        offerData = {
+          listingId: listingId,
+          offerId: offer.id,
+          status: offer.status,
+          sellerAddress: listing.seller,
+          buyerAddress: offer.buyer,
+          ipfsHash: offer.ipfs.hash,
+          data: JSON.stringify(offer)
+        }
+      } else {
+        // For any other event than OfferCreated, only update certain fields.
+        console.log(`Updating offer in DB: id=${offer.id}`)
+        offerData = {
+          listingId: listingId,
+          offerId: offer.id,
+          status: offer.status,
+          ipfsHash: offer.ipfs.hash,
+          data: JSON.stringify(offer)
+        }
+      }
+      await withRetrys(async () => {
+        await db.Offer.insertOrUpdate(offerData)
+      })
+    }
+
+    if (output.related.seller !== undefined) {
+      const seller = output.related.seller
+      console.log(`Indexing seller in DB: addr=${seller.address}`)
+      await withRetrys(async () => {
+        await db.User.insertOrUpdate({
+          address: seller.address,
+          identityAddress: seller.identityAddress,
+          firstName: seller.profile.firstName,
+          lastName: seller.profile.lastName,
+          description: seller.profile.description
+        })
+      })
+    }
+
+    if (output.related.buyer !== undefined) {
+      const buyer = output.related.buyer
+      console.log(`Indexing buyer in Elastic: addr=${buyer.address}`)
+      await withRetrys(async () => {
+        await db.User.insertOrUpdate({
+          address: buyer.address,
+          identityAddress: buyer.identityAddress,
+          firstName: buyer.profile.firstName,
+          lastName: buyer.profile.lastName,
+          description: buyer.profile.description
+        })
+      })
+    }
   }
 
   if (context.config.webhook) {
@@ -464,7 +555,7 @@ class Context {
  * //            eventName: 'ListingCreated',
  * //            eventAbi: [Object],
  * //            ruleFn: [...] } },
- * //      '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
+ * //   '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
  * //      { V00_Marketplace:
  * //          { contractName: 'V00_Marketplace',
  * //            eventName: 'ListingUpdated',

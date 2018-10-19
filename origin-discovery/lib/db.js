@@ -1,51 +1,16 @@
-const { Pool } = require('pg')
-
-/*
-  Module to interface with Postgres database.
- */
-
-const pool = new Pool(
-  {
-    host: process.env.DATABASE_HOST || 'postgres',
-    port: process.env.DATABASE_PORT || 5432,
-    database: process.env.DATABASE_NAME || 'origin-indexing',
-    user: process.env.DATABASE_USERNAME || 'origin',
-    password: process.env.DATABASE_PASSWORD || 'origin',
-  })
-
+const db = require('../models')
 
 class Listing {
   /*
   * Returns the row from the listing table with the specified id.
   * @throws Throws an error if the read operation failed.
-  * @returns A row or undefined if no row found with the specified listingId.
+  * @returns A row or null if no row found with the specified listingId.
   */
   static async get(listingId) {
-    const res = await pool.query(`SELECT * FROM ${Listing.table} WHERE id=$1`, [listingId])
-    return (res.rows.length > 0) ? res.rows[0] : undefined
+    const res = await db.Listing.findOne({where: {listingId: listingId})
+    return res
   }
 
-  /*
-   * Returns all rows from the listing table.
-   * @throws Throws an error if the read operation failed.
-   * @returns A list of rows.
-   *
-   * TODO(franck): add support for pagination.
-   */
-  static async all() {
-    const res = await pool.query(`SELECT * FROM ${Listing.table}`, [])
-    // Match the format of the data coming from elasticsearch
-    const results = res.rows.map((row)=>{
-      const json = JSON.parse(row.data)
-      return {
-        id: row.id,
-        name: json.name,
-        description: json.description,
-        price: json.price
-      }
-    })
-    return results
-  }
 
   /*
    * Inserts a row into the listing table.
