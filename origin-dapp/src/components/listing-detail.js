@@ -235,7 +235,6 @@ class ListingsDetail extends Component {
   async loadOffers() {
     try {
       const offers = await origin.marketplace.getOffers(this.props.listingId)
-console.log('=============================== offers: ', offers)
       this.setState({ offers })
     } catch (error) {
       console.error(
