@@ -105,7 +105,7 @@ When a listing is successfully created, the `withdrawListing` method takes a cal
 
 ```javascript
 
-const listingId = '927-832'
+const listingId = "927-832"
 const ipfsBites = {}
 const callback = (confirmationCount, transactionReceipt) => {
   //manage response
@@ -130,7 +130,7 @@ Reviews are created by the buyer in the receipt stage and by the seller in the p
 
 ```javascript
 
-const listingId = '927-832'
+const listingId = "927-832"
 
 > origin.marketplace.getListingReviews(listingId)
 
@@ -149,3 +149,30 @@ const listingId = '927-832'
 |Name|Type|Required|Description|
 |----|-----|-----|-----|
 |**listingId** |string|required|id of the listing|
+
+## getNotifications
+
+Each Notification corresponds to a state change of a Purchase. Notifications are currently generated for each of the following purchase stages:
+
+- seller_listing_purchased
+- seller_review_received
+- buyer_listing_shipped
+
+Notifications do not exist on the blockchain nor are they read from a database. They are derived from the blockchain transaction logs of purchases at the time of the API request. Because of this, there is no central record of a notification's status as "read" or "unread". When a client first interacts with the notifications API, Origin.js will record a timestamp in local storage. All notifications resulting from blockchain events that happen prior to this timestamp will be considered to be "read". This ensures that when the same user interacts with the notifications API from a different client for the first time, they will not receive a large number of "unread" notifications that they have previously read from their original client.
+
+> Example: getNotifications
+
+```javascript
+
+> origin.marketplace.getNotifications()
+
+//returns
+
+[{
+  "id": "2984803-23433",
+  "type": "buyer_listing_shipped",
+  "status": "unread",
+  "event": {},
+  "resources": { listingId: "927-832", offerId: "183", listing: { title: "Whirlpool Microwave" } }
+]}
+```
