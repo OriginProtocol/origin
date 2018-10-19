@@ -97,12 +97,14 @@ describe('User Resource', function() {
       identityAddress,
       web3,
       topic: 4,
+      ipfsHash: 'QmRah9ZZngbd2HK9pV9qYgRg8wQpN1QRXfkfuHs6kqJQT7',
       data: 'twitter verified'
     })
     airbnbAttestation = await generateAttestation({
       identityAddress,
       web3,
       topic: 5,
+      ipfsHash: 'QmYwPWjZN2aMvTYKpqkEcPnFCCAxC1u9FR46LVRxtFkRyL',
       data: 'airbnb verified'
     })
   })
