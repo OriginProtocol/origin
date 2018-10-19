@@ -57,9 +57,11 @@ function handleFileUpload (req, res) {
           .attach('file', buffer)
           .then((response) => {
             let responseData = response.text
-            if (response.headers['content-encoding'] == 'gzip') {
+            if (response.headers['content-encoding'] === 'gzip') {
               // Compress the response so the header is correct if necessary
               responseData = zlib.gzipSync(response.text)
+            } else if (response.headers['content-encoding'] === 'deflate') {
+              responseData = zlib.deflateSync(response.text)
             }
             res.writeHead(response.status, response.headers)
             res.end(responseData)
@@ -98,6 +100,7 @@ proxy.on('proxyRes', (proxyResponse, req, res) => {
 
   proxyResponse.on('end', () => {
     buffer = Buffer.concat(buffer)
+
     if (isValidFile(buffer)) {
       res.writeHead(proxyResponse.statusCode, proxyResponse.headers)
       res.end(buffer)

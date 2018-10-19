@@ -109,7 +109,32 @@ describe('upload', () => {
       .expect(415, done)
   })
 
-  it('should prevent binary uploads', () => {
+  it('should deflate the content', (done) => {
+    const image = './fixtures/sample_1mb.jpg'
+
+    request(server)
+      .post('/api/v0/add')
+      .attach('image', image)
+      .set('Accept-Encoding', 'deflate')
+      .then((response) => {
+        expect(response.status).to.equal(200)
+        expect(JSON.parse(response.text)['Hash']).to.equal(ipfsHashes['sample_1mb.jpg'])
+        done()
+      })
+  })
+
+  it('should gzip the content', (done) => {
+    const image = './fixtures/sample_1mb.jpg'
+
+    request(server)
+      .post('/api/v0/add')
+      .attach('image', image)
+      .set('Accept-Encoding', 'gzip')
+      .then((response) => {
+        expect(response.status).to.equal(200)
+        expect(JSON.parse(response.text)['Hash']).to.equal(ipfsHashes['sample_1mb.jpg'])
+        done()
+      })
   })
 })
 
@@ -172,6 +197,7 @@ describe('download', () => {
 
   it('should allow jpg downloads', (done) => {
     const fileBuffer = fs.readFileSync('./fixtures/sample_1mb.jpg')
+
     request(server)
       .get(`/ipfs/${ipfsHashes['sample_1mb.jpg']}`)
       .then((response) => {
