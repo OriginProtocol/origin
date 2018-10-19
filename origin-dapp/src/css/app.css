@@ -1,6 +1,8 @@
 @import 'alertify.css';
 @import 'variables.css';
 @import 'bootstrap.css';
+@import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
+@import 'calendar.css';
 @import '../../node_modules/rc-slider/assets/index.css';
 @import '../../node_modules/react-dates/lib/css/_datepicker.css';
 
@@ -1430,6 +1432,22 @@ textarea:-moz-ui-invalid {
   border: solid 1px var(--light);
   background-color: white;
   color: var(--clear-blue);
+}
+
+.btn-dark {
+  border: solid 1px white;
+  background-color: var(--dark);
+  color: white;
+}
+
+.btn-dark:hover {
+  border: solid 1px white;
+}
+
+.btn-light {
+  border: solid 1px var(--dark);
+  background-color: white;
+  color: var(--dark);
 }
 
 .connectivity .indicators {
