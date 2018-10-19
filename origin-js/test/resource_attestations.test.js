@@ -14,7 +14,7 @@ const sampleAttestation = {
 
 const sampleTwitterAttestation = {
   'claim-type': 4,
-  data: '0x7b2273637265656e5f6e616d65223a202264677261626563227d',
+  data: 'QmRah9ZZngbd2HK9pV9qYgRg8wQpN1QRXfkfuHs6kqJQT7',
   signature: '0x6a825add3edd9b884bb384907fcca9bf0672eb33f30a593ffb9367418ea30936684f97e89231fe0eed6a62113358fcca83ee399a6cb431a4c4266e419e98a5201c'
 }
 
@@ -216,8 +216,7 @@ describe('Attestation Resource', function() {
         code: 'foo.bar'
       })
 
-      const jsonData = JSON.parse(attestations.contractService.decodeHex(response.data))
-      expect(jsonData).to.eql({ screen_name: 'dgrabec' })
+      expect(response.data).to.eql("0x302bf32404b014ad8bf3013a19e956f827b33530dcb94cc46d113cb0f365d9ee")
       expect(response.signature).to.equal(sampleTwitterAttestation.signature)
       expect(response.topic).to.equal(sampleTwitterAttestation['claim-type'])
     })
