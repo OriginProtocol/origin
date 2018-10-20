@@ -89,30 +89,18 @@ class MyPurchaseCard extends Component {
               <h2 className="title text-truncate">
                 <Link to={`/purchases/${offerId}`}>{name}</Link>
               </h2>
-{/* TODO:John - leaving this merge conflict commented out here b/c I think it needs to be merged into the JSX below
-              <p className="timestamp">{timestamp}</p>
-              {this.state.listing.listingType === 'fractional' &&
-                <div className="d-flex">
-                  <p className="booking-dates">{ `${this.getBookingDates('startDate')} - ${this.getBookingDates('endDate')}`}</p>
-                </div>
-              }
-              <div className="d-flex">
-                <p className="price">{`${this.getPrice().toLocaleString(
-                  undefined,
-                  { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                )} ${this.props.intl.formatMessage(this.intlMessages.ETH)}`}</p>
-              </div>
-              <PurchaseProgress
-                currentStep={step}
-                perspective="buyer"
-                subdued={true}
-              />
-*/}
               <p className="timestamp">
                 <OfferStatusEvent offer={offer} />
               </p>
               {!voided && (
                 <Fragment>
+                  {this.state.listing.listingType === 'fractional' &&
+                    <div className="d-flex">
+                      <p className="booking-dates">
+                        { `${this.getBookingDates('startDate')} - ${this.getBookingDates('endDate')}`}
+                      </p>
+                    </div>
+                  }
                   <div className="d-flex">
                     <p className="price">{`${Number(price).toLocaleString(
                       undefined,
