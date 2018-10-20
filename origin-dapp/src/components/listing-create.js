@@ -32,27 +32,45 @@ import {
 
 import origin from '../services/origin'
 
+const enableFractional = process.env.ENABLE_FRACTIONAL === 'true'
+
 class ListingCreate extends Component {
   constructor(props) {
     super(props)
 
-    // Enum of our states
+    // TODO(John) - remove once fractional usage is enabled by default
     this.STEP = {
       PICK_SCHEMA: 1,
       DETAILS: 2,
       AVAILABILITY: 3,
-      BOOST: 4,
-      PREVIEW: 5,
-      METAMASK: 6,
-      PROCESSING: 7,
-      SUCCESS: 8,
-      ERROR: 9
+      PREVIEW: 4,
+      METAMASK: 5,
+      PROCESSING: 6,
+      SUCCESS: 7,
+      ERROR: 8
     }
 
-    this.fractionalSchemaTypes = [
-      'housing',
-      'services'
-    ]
+    // TODO(John) - remove once fractional usage is enabled by default
+    this.fractionalSchemaTypes = []
+
+    if (enableFractional) {
+      this.STEP = {
+        PICK_SCHEMA: 1,
+        DETAILS: 2,
+        AVAILABILITY: 3,
+        BOOST: 4,
+        PREVIEW: 5,
+        METAMASK: 6,
+        PROCESSING: 7,
+        SUCCESS: 8,
+        ERROR: 9
+      }
+
+      this.fractionalSchemaTypes = [
+        'housing',
+        'services'
+      ]
+    }
 
     this.schemaList = listingSchemaMetadata.listingTypes.map(listingType => {
       listingType.name = props.intl.formatMessage(listingType.translationName)
@@ -207,7 +225,8 @@ class ListingCreate extends Component {
           selectedSchemaType,
           schemaFetched: true,
           step: this.STEP.DETAILS,
-          fractionalTimeIncrement: (selectedSchemaType === 'housing' ? 'daily' : 'hourly'),
+          fractionalTimeIncrement: !isFractionalListing ? null : 
+            selectedSchemaType === 'housing' ? 'daily' : 'hourly',
           showNoSchemaSelectedError: false,
           translatedSchema,
           isFractionalListing,
