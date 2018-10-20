@@ -247,8 +247,11 @@ This will turn all offers related to a specific listing.
 ```javascript
 
 const listingId = "9903-75"
+const options = {
+  for: "0x627306090274fwfiou97h0c78a8BEf57"
+}
 
-> origin.marketplace.getOffers(listingId)
+> origin.marketplace.getOffers(listingId, options)
 
 //returns
 
@@ -280,3 +283,137 @@ const listingId = "9903-75"
 |Name|Type|Required|Description|
 |----|-----|-----|-----|
 |**listingId** |string|required|`listing.id`|
+|**options** |object|optional|`const options = { for: "0x627..." }`|
+
+## makeOffer
+
+The `makeOffer` method takes a callback with two arguments:
+
+`confirmationCount` - the number of successfully created listings
+
+`transactionReceipt` - an object with ipfs information about the newly created listing.
+
+> Example: makeOffer
+
+```javascript
+
+const listingId = "9903-75"
+const offer = {
+  id: "82838-247-3-3",
+  listingId: "9903-75",
+  status: "created",
+  buyer: "0x938828348ske02heo92394hwf",
+  ...
+}
+const callback = (confirmationCount, transactionReceipt) => {
+  //manage response
+}
+
+> origin.marketplace.makeOffer(listingId, offer, callback)
+
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**listingId** |string|required|`listing.id`|
+|**offer** |object|required|args see Protocol Schemas: Offer Schema|
+|**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
+
+## acceptOffer
+
+The `acceptOffer` method takes a callback with two arguments:
+
+`confirmationCount` - the number of successfully created listings
+
+`transactionReceipt` - an object with ipfs information about the newly created listing.
+
+> Example: acceptOffer
+
+```javascript
+
+const offerId = "543-0099"
+const ipfsBites = {}
+const callback = (confirmationCount, transactionReceipt) => {
+  //manage response
+}
+
+> origin.marketplace.acceptOffer(offerId, ipfsBites, callback)
+
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**offerId** |string|required|`offer.id`|
+|**ipfsBites**|object|optional|default to `{}` if not needed|
+|**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
+
+## finalizeOffer
+
+The `finalizeOffer` method takes a callback with two arguments:
+
+`confirmationCount` - the number of successfully created listings
+
+`transactionReceipt` - an object with ipfs information about the newly created listing.
+
+> Example: finalizeOffer
+
+```javascript
+
+const offerId = "9903-75"
+const buyerReview = {
+  rating: 5
+  schemaId: "http://schema.originprotocol.com/review_v1.0.0"
+  text: "Great response times. Professional."
+}
+const callback = (confirmationCount, transactionReceipt) => {
+  //manage response
+}
+
+> origin.marketplace.finalizeOffer(offerId, buyerReview, callback)
+
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**offerId** |string|required|`offer.id`|
+|**buyerReview** |object|required|args `rating`, `schemaId`, `text`|
+|**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
+
+## withdrawOffer
+
+Withdrawing an offer will:
+
+-
+
+The `withdrawOffer` method takes a callback with two arguments:
+
+`confirmationCount` - the number of successfully created listings
+
+`transactionReceipt` - an object with ipfs information about the newly created listing.
+
+> Example: withdrawOffer
+
+```javascript
+
+const offerId = "543-0099"
+const ipfsBites = {}
+const callback = (confirmationCount, transactionReceipt) => {
+  //manage response
+}
+
+> origin.marketplace.withdrawOffer(offerId, ipfsBites, callback)
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**offerId** |string|required|`offer.id`|
+|**ipfsBites**|object|optional|default to `{}` if not needed|
+|**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
