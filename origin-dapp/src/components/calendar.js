@@ -85,6 +85,10 @@ class Calendar extends Component {
     this.renderRecurringEvents(this.state.defaultDate)
   }
 
+  componentDidUpdate() {
+    renderHourlyPrices(this.props.viewType, this.props.userType)
+  }
+
   getViewType() {
     return this.props.viewType === 'daily' ? 'month' : 'week'
   }
@@ -158,12 +162,19 @@ class Calendar extends Component {
           selectedEvent: {}
         })
       } else {
+        const price = selectionData.reduce(
+          (totalPrice, nextPrice) => totalPrice + nextPrice.price, 0
+        )
+        const priceFormatted = `${Number(price).toLocaleString(undefined, {
+          minimumFractionDigits: 5,
+          maximumFractionDigits: 5
+        })}`
         this.setState({
           selectionUnavailable: false,
           selectedEvent: {
             start: slotInfo.start,
             end: slotInfo.end,
-            price: selectionData.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
+            price: priceFormatted
           },
           buyerSelectedSlotData: selectionData
         })
@@ -336,7 +347,7 @@ class Calendar extends Component {
     const { value } = data
     const dateInfo = getDateAvailabilityAndPrice(value, this.state.events, this.props.offers)
     const availability = dateInfo.isAvailable ? 'available' : 'unavailable'
-    const isPastDate = moment(value).isBefore(moment().subtract(1, 'day')) ? ' past-date' : ''
+    const isPastDate = moment(value).isBefore(moment().startOf('day')) ? ' past-date' : ''
     const selectedSlotsMatchingDate = 
       this.state.buyerSelectedSlotData &&
       this.state.buyerSelectedSlotData.filter((slot) => 
@@ -602,7 +613,7 @@ class Calendar extends Component {
                 {userType === 'buyer' &&
                   <div>
                     <p className="font-weight-bold">Price</p>
-                    <p>{selectedEvent.price} ETH</p>
+                    <p>{selectedEvent.price && selectedEvent.price} ETH</p>
                     <div className="cta-btns row">
                       <div className="col-md-6">
                         <button className="btn btn-dark" onClick={this.unselectSlots}>Cancel</button>
