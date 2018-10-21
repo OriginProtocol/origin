@@ -193,7 +193,7 @@ class V00_UsersAdapter {
       try {
         profile = await this.ipfsDataStore.load(PROFILE_DATA_TYPE, ipfsHash)
       } catch (error) {
-        console.error(`Can not read profile data from ipfs: ${error.message}`)
+        console.error(`Can not read profile data from ipfs (hash: '${ipfsHash}'): ${error.message}`)
       }
     }
 
