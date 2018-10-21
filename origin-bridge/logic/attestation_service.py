@@ -402,7 +402,10 @@ class VerificationService:
         query_string = urllib.parse.parse_qs(response.content)
         screen_name = query_string[b'screen_name'][0].decode('utf-8')
 
-        ipfs_hash = ipfs_helper.pin_json({'screen_name': screen_name})
+        ipfs_hash = ipfs_helper.pin_json({
+            'schemaId': 'http://schema.originprotocol.com/twitter-attestation_v1.0.0',
+            'screen_name': screen_name
+        })
 
         signature = attestations.generate_signature(
             signing_key, eth_address, TOPICS['twitter'], base58_to_hex(ipfs_hash)
@@ -461,7 +464,10 @@ class VerificationService:
                 " has not been found in user's Airbnb profile."
             )
 
-        ipfs_hash = ipfs_helper.pin_json({'airbnb_user_id': airbnbUserId})
+        ipfs_hash = ipfs_helper.pin_json({
+            'schemaId': 'http://schema.originprotocol.com/airbnb-attestation_v1.0.0',
+            'airbnb_user_id': airbnbUserId
+        })
 
         signature = attestations.generate_signature(
             signing_key, eth_address, TOPICS['airbnb'], base58_to_hex(ipfs_hash)
