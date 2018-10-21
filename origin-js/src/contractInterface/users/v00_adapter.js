@@ -117,7 +117,12 @@ class V00_UsersAdapter {
             return data.substr(2)
           })
           .join('')
-      const dataOffsets = attestations.map(({ data }) => (data.length - 2) / 2) // deduct 2 because '0x' is removed
+
+      /* All the data is currenlty base32 encoded. To calculate the lenght we just deduct 2 (becase '0x') gets
+       * removed. And then divide the remaining lenght by 2 becase the data is twice the size when it is
+       * in its string form representation.
+       */
+      const dataOffsets = attestations.map(({ data }) => (data.length - 2) / 2)
 
       if (identityAddress) {
         // batch add claims to existing identity
