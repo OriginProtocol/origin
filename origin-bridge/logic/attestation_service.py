@@ -469,6 +469,18 @@ class VerificationService:
             'airbnb_user_id': airbnbUserId
         })
 
+        """ - IPFS hash is a base58 encoded string
+            - We store IPFS hashes in solidity claims in byte32 hex encoding to minimise
+              gas cost.
+            - byte32 is not string serialisable so it can not be transmitted in that form
+              from discovery to the DApp
+            - discovery needs to transform ipfs hash to base32 hex encoding (that is how
+              it is going to be stored in the contract) before signing the claim, and then
+              send IPFS hash to the DApp in base58 encoding.
+            - this way claim has a correct signature if IPFS hash has byte32 hex encoding
+            - the DApp takes signature and other claim info and transforms the base58 encoded
+              IPFS hash to base32 hex before submitting the claim to web3.
+        """
         signature = attestations.generate_signature(
             signing_key, eth_address, TOPICS['airbnb'], base58_to_hex(ipfs_hash)
         )
