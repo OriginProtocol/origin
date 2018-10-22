@@ -17,9 +17,7 @@ includes:
   - resources/origin
   - resources/marketplace
   - resources/attestations
-  - resources/listings
   - resources/purchases
-  - resources/notifications
   - resources/reviews
   - resources/users
   - protocol_schemas

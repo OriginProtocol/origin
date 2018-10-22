@@ -18,7 +18,7 @@ This will return information about the listing, combining information from IPFS 
 
 > origin.marketplace.getListings({ listingsFor: '0x627306090abab3a6e1400e9345bc60c78a8bef57' })
 
-//returns
+//returns all listings for '0x627306090abab3a6e1400e9345bc60c78a8bef57'
 
 [{
   id: "99-0023",
@@ -106,12 +106,12 @@ When a listing is successfully created, the `withdrawListing` method takes a cal
 ```javascript
 
 const listingId = "927-832"
-const ipfsBites = {}
+const data = {}
 const callback = (confirmationCount, transactionReceipt) => {
   //manage response
 }
 
-> origin.marketplace.withdrawListing(listingId, ipfsBites, callback)
+> origin.marketplace.withdrawListing(listingId, data, callback)
 ```
 
 ### Arguments:
@@ -119,7 +119,7 @@ const callback = (confirmationCount, transactionReceipt) => {
 |Name|Type|Required|Description|
 |----|-----|-----|-----|
 |**listingId** |string|required|id of the listing to be withdrawn|
-|**ipfsBites**|object|optional|default to `{}` if not needed|
+|**data**|object|optional|default to `{}` if not needed|
 |**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
 
 ## getListingReviews
@@ -166,7 +166,7 @@ Notifications do not exist on the blockchain nor are they read from a database. 
 
 > origin.marketplace.getNotifications()
 
-//returns
+//returns all notifications for the user
 
 [{
   "id": "2984803-23433",
@@ -213,7 +213,7 @@ const offerId = "2403-234"
 
 > origin.marketplace.getOffer(offerId)
 
-//returns
+//returns the specified offer
 
 {
   id: "2403-234",
@@ -253,7 +253,7 @@ const options = {
 
 > origin.marketplace.getOffers(listingId, options)
 
-//returns
+//returns all offers for the specified listing
 
 [{
   id: "999-000-0-0",
@@ -334,12 +334,12 @@ The `acceptOffer` method takes a callback with two arguments:
 ```javascript
 
 const offerId = "543-0099"
-const ipfsBites = {}
+const data = {}
 const callback = (confirmationCount, transactionReceipt) => {
   //manage response
 }
 
-> origin.marketplace.acceptOffer(offerId, ipfsBites, callback)
+> origin.marketplace.acceptOffer(offerId, data, callback)
 
 ```
 
@@ -348,7 +348,7 @@ const callback = (confirmationCount, transactionReceipt) => {
 |Name|Type|Required|Description|
 |----|-----|-----|-----|
 |**offerId** |string|required|`offer.id`|
-|**ipfsBites**|object|optional|default to `{}` if not needed|
+|**data**|object|optional|default to `{}` if not needed|
 |**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
 
 ## finalizeOffer
@@ -387,10 +387,6 @@ const callback = (confirmationCount, transactionReceipt) => {
 
 ## withdrawOffer
 
-Withdrawing an offer will:
-
--
-
 The `withdrawOffer` method takes a callback with two arguments:
 
 `confirmationCount` - the number of successfully created listings
@@ -402,12 +398,20 @@ The `withdrawOffer` method takes a callback with two arguments:
 ```javascript
 
 const offerId = "543-0099"
-const ipfsBites = {}
+const data = {}
 const callback = (confirmationCount, transactionReceipt) => {
   //manage response
 }
 
-> origin.marketplace.withdrawOffer(offerId, ipfsBites, callback)
+> origin.marketplace.withdrawOffer(offerId, data, callback)
+
+// returns the offer with a OfferWithdrawn event
+
+{
+  offerId: "543-0099",
+  events: { OfferWithdrawn: {...} }
+  ...
+}
 ```
 
 ### Arguments:
@@ -415,5 +419,128 @@ const callback = (confirmationCount, transactionReceipt) => {
 |Name|Type|Required|Description|
 |----|-----|-----|-----|
 |**offerId** |string|required|`offer.id`|
-|**ipfsBites**|object|optional|default to `{}` if not needed|
+|**data**|object|optional|default to `{}` if not needed|
+|**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
+
+## addData
+
+The `addData` method takes a callback with two arguments:
+
+`confirmationCount` - the number of successfully created listings
+
+`transactionReceipt` - an object with ipfs information about the newly created listing.
+
+> Example: addData
+
+```javascript
+
+const offerId = "543-0099"
+const listingId = "9900-234"
+const sellerReview = {
+  rating: 4
+  schemaId: "http://schema.originprotocol.com/review_v1.0.0"
+  text: ""
+}
+const callback = (confirmationCount, transactionReceipt) => {
+  //manage response
+}
+
+> origin.marketplace.addData(listingId, offerId, sellerReview, callback)
+
+// returns a timestamp and transaction receipt
+
+{
+  timestamp: 1540221215
+  events: { OfferWithdrawn: {...} }
+  ...
+}
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**listingId** |string|optional|can be `null`|
+|**offerId** |string|optional|can be `null`|
+|**sellerReview**|object|optional|default to `{}` if not needed|
+|**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
+
+## initiateDispute
+
+The `initiateDispute` method takes a callback with two arguments:
+
+`confirmationCount` - the number of successfully created listings
+
+`transactionReceipt` - an object with ipfs information about the newly created listing.
+
+> Example: initiateDispute
+
+```javascript
+
+const offerId = "543-0099"
+const data = {}
+const callback = (confirmationCount, transactionReceipt) => {
+  //manage response
+}
+
+> origin.marketplace.initiateDispute(offerId, data, callback)
+
+// returns a timestamp and transaction receipt
+
+{
+  timestamp: 1540221215
+  events: { OfferDisputed: {...} }
+  ...
+}
+
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**offerId** |string|required||
+|**data**|object|optional|default to `{}` if not needed|
+|**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
+
+## resolveDispute
+
+The `resolveDispute` method takes a callback with two arguments:
+
+`confirmationCount` - the number of successfully created listings
+
+`transactionReceipt` - an object with ipfs information about the newly created listing.
+
+> Example: resolveDispute
+
+```javascript
+
+const offerId = "543-0099"
+const data = {}
+const ruling = 1
+const refund = 33000000000000000
+const callback = (confirmationCount, transactionReceipt) => {
+  //manage response
+}
+
+> origin.marketplace.resolveDispute(offerId, data, ruling, refund, callback)
+
+// returns a timestamp and transaction receipt
+
+{
+  timestamp: 1540221215
+  events: { OfferRuling: {...} }
+  ...
+}
+
+```
+
+### Arguments:
+
+|Name|Type|Required|Description|
+|----|-----|-----|-----|
+|**offerId** |string|required||
+|**data**|object|required|default to `{}` if not needed|
+|**ruling**|number|required|`0` or `1`|
+|**refund**|object|required|price in `wei`|
 |**callback** | function |optional|provides args `confirmationCount` and `transactionReceipt`|
