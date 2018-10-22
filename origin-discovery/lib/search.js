@@ -58,7 +58,7 @@ class Listing {
    * Indexes a listing.
    * @param {string} listingId - The unique ID of the listing.
    * @param {string} buyerAddress - ETH address of the buyer.
-   * @param {string} ipfsHash - 32 bytes IPFS hash, in hexa (not base58 encoded).
+   * @param {string} ipfsHash - 32 bytes IPFS hash, in hex (not base58 encoded).
    * @param {object} listing - JSON listing data.
    * @throws Throws an error if indexing operation failed.
    * @returns The listingId indexed.
@@ -120,7 +120,7 @@ class Listing {
       esQuery.bool.must.push({ match_all: {} })
     }
 
-    /* interestingly JSON.strigify performs pretty well:
+    /* interestingly JSON.stringify performs pretty well:
      * https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript/5344074#5344074
      */
     const esQueryWithoutFilters = JSON.parse(JSON.stringify(esQuery))
