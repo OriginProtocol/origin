@@ -5,15 +5,14 @@ const TableName = 'offer'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(TableName, {
+      // Offer ID format is: <listingId>-<offerIndex>
+      id: {
+        type: Sequelize.STRING(64),
+        primaryKey: true
+      },
       listing_id: {
         type: Sequelize.STRING(32),
         allowNull: false,
-        primaryKey: true
-      },
-      offer_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        primaryKey: true
       },
       status: {
         type: Sequelize.STRING(32),
@@ -39,7 +38,8 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE
       }
-    }).then(() => queryInterface.addIndex(TableName, ['seller_address']))
+    }).then(() => queryInterface.addIndex(TableName, ['listing_id']))
+      .then(() => queryInterface.addIndex(TableName, ['seller_address']))
       .then(() => queryInterface.addIndex(TableName, ['buyer_address']))
 
   },

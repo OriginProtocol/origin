@@ -1,10 +1,10 @@
 module.exports = {
   development: {
-    username: 'origin',
-    password: 'origin',
-    database: 'origin',
-    host: 'localhost',
-    port: 5432,
+    username: process.env.DATABASE_USERNAME || 'origin',
+    password: process.env.DATABASE_PASSWORD || 'origin',
+    database: process.env.DATABASE_NAME || 'origin',
+    host: process.env.DATABASE_HOST || 'localhost',
+    port: process.env.DATABASE_PORT || 5432,
     dialect: 'postgres',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
@@ -12,19 +12,6 @@ module.exports = {
       // Disable the modification of table names.
       freezeTableName: true,
       // Underscore style for field names.
-      underscored: true
-    }
-  },
-  test: {
-    username: 'origin',
-    password: 'origin',
-    database: 'origin',
-    host: 'localhost',
-    port: 5432,
-    dialect: 'postgres',
-    define: {
-      timestamps: true,
-      freezeTableName: true,
       underscored: true
     }
   },
@@ -36,8 +23,11 @@ module.exports = {
     port: process.env.DATABASE_PORT,
     dialect: 'postgres',
     define: {
+      // Add the timestamp attributes (updatedAt, createdAt).
       timestamps: true,
+      // Disable the modification of table names.
       freezeTableName: true,
+      // Underscore style for field names.
       underscored: true
     }
   }

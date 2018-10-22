@@ -325,6 +325,15 @@ async function handleLog(log, rule, contractVersion, context) {
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
 
+  // Fetch block to retrieve timestamp.
+  let block
+  await withRetrys(async () => {
+    block = await web3.eth.getBlock(log.blockNumber)
+  })
+  log.timestamp = block.timestamp
+  log.date = new Date(log.timestamp*1000)
+
+
   const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
     eventName=${log.eventName} \
@@ -415,26 +424,17 @@ async function handleLog(log, rule, contractVersion, context) {
 
   if (context.config.db) {
     if (LISTING_EVENTS.includes(rule.eventName)) {
-      let listingData
+      console.log(`Indexing listing in DB: id=${listingId}`)
+      listingData = {
+        id: listingId,
+        status: listing.status,
+        sellerAddress: listing.seller.toLowerCase(),
+        data: listing,
+      }
       if (rule.eventName === 'ListingCreated') {
-        console.log(`Indexing listing in DB: id=${listingId}`)
-        listingData = {
-          listingId: listingId,
-          active: listing.active,
-          sellerAddress: userAddress,
-          ipfsHash: ipfsHash,
-          data: JSON.stringify(listing),
-          blockNumber: log.blockNumber,
-          blockTimestamp: log.timestamp
-        }
+        listingData.createdAt = log.date
       } else {
-        // For any other event than ListingCreated, only update certain fields.
-        console.log(`Updating listing in DB: id=${listingId}`)
-        listingData = {
-          listingId: listingId,
-          ipfsHash: ipfsHash,
-          data: JSON.stringify(listing),
-        }
+        listingData.updatedAt = log.date
       }
       await withRetrys(async () => {
         await db.Listing.insertOrUpdate(listingData)
@@ -444,58 +444,21 @@ async function handleLog(log, rule, contractVersion, context) {
     if (OFFER_EVENTS.includes(rule.eventName)) {
       const offer = output.related.offer
       console.log(`Indexing offer in DB: id=${offer.id}`)
-      let offerData
+      offerData = {
+        id: offer.id,
+        listingId: listingId,
+        status: offer.status,
+        sellerAddress: listing.seller.toLowerCase(),
+        buyerAddress: offer.buyer.toLowerCase(),
+        data: offer
+      }
       if (rule.eventName === 'OfferCreated') {
-        offerData = {
-          listingId: listingId,
-          offerId: offer.id,
-          status: offer.status,
-          sellerAddress: listing.seller,
-          buyerAddress: offer.buyer,
-          ipfsHash: offer.ipfs.hash,
-          data: JSON.stringify(offer)
-        }
+        listingData.createdAt = log.date
       } else {
-        // For any other event than OfferCreated, only update certain fields.
-        console.log(`Updating offer in DB: id=${offer.id}`)
-        offerData = {
-          listingId: listingId,
-          offerId: offer.id,
-          status: offer.status,
-          ipfsHash: offer.ipfs.hash,
-          data: JSON.stringify(offer)
-        }
+        listingData.updatedAt = log.date
       }
       await withRetrys(async () => {
         await db.Offer.insertOrUpdate(offerData)
-      })
-    }
-
-    if (output.related.seller !== undefined) {
-      const seller = output.related.seller
-      console.log(`Indexing seller in DB: addr=${seller.address}`)
-      await withRetrys(async () => {
-        await db.User.insertOrUpdate({
-          address: seller.address,
-          identityAddress: seller.identityAddress,
-          firstName: seller.profile.firstName,
-          lastName: seller.profile.lastName,
-          description: seller.profile.description
-        })
-      })
-    }
-
-    if (output.related.buyer !== undefined) {
-      const buyer = output.related.buyer
-      console.log(`Indexing buyer in Elastic: addr=${buyer.address}`)
-      await withRetrys(async () => {
-        await db.User.insertOrUpdate({
-          address: buyer.address,
-          identityAddress: buyer.identityAddress,
-          firstName: buyer.profile.firstName,
-          lastName: buyer.profile.lastName,
-          description: buyer.profile.description
-        })
       })
     }
   }
