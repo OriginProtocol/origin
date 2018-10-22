@@ -255,7 +255,6 @@ class ListingsDetail extends Component {
       // boostValue,
       category,
       description,
-      ipfsHash,
       loading,
       name,
       offers,
@@ -263,7 +262,8 @@ class ListingsDetail extends Component {
       price,
       seller,
       status,
-      step
+      step,
+      schemaType
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -766,7 +766,7 @@ class ListingsDetail extends Component {
                   slots={ this.state.slots }
                   offers={ this.state.offers }
                   userType="buyer"
-                  viewType={ this.state.schemaType === 'housing' ? 'daily' : 'hourly' }
+                  viewType={ schemaType === 'housing' ? 'daily' : 'hourly' }
                   onComplete={(slots) => this.handleMakeOffer(false, slots) }
                   step={ 60 }
                 />

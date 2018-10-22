@@ -112,7 +112,6 @@ class ListingCreate extends Component {
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
-    this.onGoBackToDetails = this.onGoBackToDetails.bind(this)
     this.backFromBoostStep = this.backFromBoostStep.bind(this)
     this.onBackToPickSchema = this.onBackToPickSchema.bind(this)
     this.onFormDataChange = this.onFormDataChange.bind(this)
@@ -254,7 +253,7 @@ class ListingCreate extends Component {
     }
   }
 
-  onAvailabilityEntered(slots) {
+  onAvailabilityEntered(slots, step) {
     if (!slots || !slots.length) {
       return
     }
@@ -273,7 +272,7 @@ class ListingCreate extends Component {
     })
 
     this.setState({
-      step: this.STEP.BOOST
+      step: this.STEP[step]
     })
   }
 
@@ -284,10 +283,6 @@ class ListingCreate extends Component {
       schemaFetched: false,
       formData: null
     })
-  }
-
-  onGoBackToDetails() {
-    this.setState({ step: this.STEP.DETAILS })
   }
 
   backFromBoostStep() {
@@ -586,8 +581,8 @@ class ListingCreate extends Component {
                   userType="seller"
                   viewType={ this.state.fractionalTimeIncrement }
                   step={ 60 }
-                  onComplete={ this.onAvailabilityEntered }
-                  onGoBack={ this.onGoBackToDetails }
+                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'BOOST') }
+                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'DETAILS') }
                 />
               </div>
             }

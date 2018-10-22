@@ -393,7 +393,8 @@ class Calendar extends Component {
   }
 
   goBack() {
-    this.props.onGoBack && this.props.onGoBack()
+    const cleanEvents = getCleanEvents(this.state.events)
+    this.props.onGoBack && this.props.onGoBack(cleanEvents)
   }
 
   reserveSlots() {
@@ -489,7 +490,9 @@ class Calendar extends Component {
             }
             {selectedEvent && selectedEvent.start && !this.state.showOverlappingEventsErrorMsg &&
               <div className="calendar-cta">
-                <span className="delete-btn" onClick={this.deleteEvent}>delete</span>
+                {userType === 'seller' &&
+                  <span className="delete-btn" onClick={this.deleteEvent}>delete</span>
+                }
                 <p className="font-weight-bold">Selected { viewType === 'daily' ? 'dates' : 'times' }</p>
                 <div>
                   <div className="row">
