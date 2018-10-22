@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const fs = require('fs')
 const http = require('http')
 const https = require('https')
@@ -119,7 +121,7 @@ function setupOriginJS(config){
   console.log(`Web3 URL: ${config.web3Url}`)
 
   const ipfsUrl = urllib.parse(config.ipfsUrl)
-  console.log(`IPFS URL: ${ipfsUrl}`)
+  console.log(`IPFS URL: ${config.ipfsUrl}`)
 
   // Error out if any mandatory env var is not set.
   if (!process.env.ARBITRATOR_ACCOUNT) {
@@ -309,7 +311,6 @@ async function handleLog(log, rule, contractVersion, context) {
   log.eventName = rule.eventName
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
-
   const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
     eventName=${log.eventName} \
@@ -648,7 +649,7 @@ const config = {
   // web3 provider url
   web3Url: args['--web3-url'] || 'http://localhost:8545',
   // ipfs url
-  ipfsUrl: args['--ipfs-url'] || 'http://origin-js:8080',
+  ipfsUrl: args['--ipfs-url'] || 'http://localhost:8080',
 }
 
 // Start the listener running
