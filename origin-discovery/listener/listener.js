@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const fs = require('fs')
 const http = require('http')
 const https = require('https')
@@ -119,7 +121,7 @@ function setupOriginJS(config){
   console.log(`Web3 URL: ${config.web3Url}`)
 
   const ipfsUrl = urllib.parse(config.ipfsUrl)
-  console.log(`IPFS URL: ${ipfsUrl}`)
+  console.log(`IPFS URL: ${config.ipfsUrl}`)
 
   // Error out if any mandatory env var is not set.
   if (!process.env.ARBITRATOR_ACCOUNT) {
@@ -309,7 +311,6 @@ async function handleLog(log, rule, contractVersion, context) {
   log.eventName = rule.eventName
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
-
   const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
     eventName=${log.eventName} \
@@ -445,13 +446,10 @@ async function handleLog(log, rule, contractVersion, context) {
 
   const personDisp = (p)=> {
     let str = ''
-    if(p.profile && p.profile.firstName){
-      str += ' ' + p.profile.firstName
+    if(p.profile && (p.profile.firstName || p.profile.lastName)){
+      str += `${p.profile.firstName|''} ${p.profile.lastName||''} - `
     }
-    if(p.profile && p.profile.lastName){
-      str += ' ' + p.profile.lastName
-    }
-    str += ' ' + p.address
+    str += p.address
     return str
   }
   const priceDisp = (listing) => {
@@ -462,19 +460,37 @@ async function handleLog(log, rule, contractVersion, context) {
   const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
   const lines = []
   const listing = data.related.listing
-  lines.push(`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,)
+  
+  let discordData = {}
+
   if (data.related.offer !== undefined) { // Offer
-    lines.push(`  https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,)
-    lines.push(`  Seller: ${personDisp(data.related.seller)}`)
-    lines.push(`  Buyer: ${personDisp(data.related.buyer)}`)
+    discordData = {
+      "embeds":[
+        {
+          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
+          "description":[
+            `https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,
+            `Seller: ${personDisp(data.related.seller)}`,
+            `Buyer: ${personDisp(data.related.buyer)}`
+          ].join("\n")
+        }
+      ]
+    }
   } else { // Listing
-    lines.push(`  https://dapp.originprotocol.com/#/listing/${listing.id}`,)
-    lines.push(`  Seller: ${personDisp(data.related.seller)}`)
+    discordData = {
+      "embeds":[
+        {
+          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
+          "description":[
+            `${listing.description.split("\n")[0].slice(0, 60)}...`,
+            `https://dapp.originprotocol.com/#/listing/${listing.id}`,
+            `Seller: ${personDisp(data.related.seller)}`,
+          ].join("\n")
+        }
+      ]
+    }
   }
-  const json = JSON.stringify(
-    { content: lines.join("\n")}
-  )
-  await postToWebhook(discordWebhookUrl, json)
+  await postToWebhook(discordWebhookUrl, JSON.stringify(discordData))
  }
 
 
@@ -633,7 +649,7 @@ const config = {
   // web3 provider url
   web3Url: args['--web3-url'] || 'http://localhost:8545',
   // ipfs url
-  ipfsUrl: args['--ipfs-url'] || 'http://origin-js:8080',
+  ipfsUrl: args['--ipfs-url'] || 'http://localhost:8080',
 }
 
 // Start the listener running
