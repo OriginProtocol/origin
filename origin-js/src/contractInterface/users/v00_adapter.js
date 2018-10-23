@@ -207,11 +207,11 @@ class V00_UsersAdapter {
         try {
           if (ClaimDataIsIpfsHash.includes(att.topic))
             att.ipfsHash = this.contractService.getIpfsHashFromBytes32(att.data)
-          return att
         }
         catch (error) {
           console.error(`Can not convert to ipfs hash: ${error.message}`)
         }
+        return att
       })
       .map(att => new AttestationObject(att))
 
