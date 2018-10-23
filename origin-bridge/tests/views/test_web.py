@@ -134,7 +134,7 @@ def test_facebook_verify(client):
 @mock.patch('logic.attestation_service.IPFSHelper')
 def test_twitter_verify(mock_ipfs, client):
     response_content = b'oauth_token=peaches&oauth_token_secret=pears'
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with responses.RequestsMock() as rsps:

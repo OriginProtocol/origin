@@ -118,9 +118,9 @@ class V00_UsersAdapter {
           })
           .join('')
 
-      /* All the data is currenlty base32 encoded. To calculate the lenght we just deduct 2 (becase '0x') gets
-       * removed. And then divide the remaining lenght by 2 becase the data is twice the size when it is
-       * in its string form representation.
+      /* All the data is in bytes32 binary format in the contract. To calculate the lenght we just
+       * deduct 2 (becase '0x') gets removed. And then divide the remaining lenght by 2 becase
+       * the data is twice the size when it is represented as string (with hex encoding).
        */
       const dataOffsets = attestations.map(({ data }) => (data.length - 2) / 2)
 

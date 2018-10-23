@@ -12,14 +12,14 @@ const responseToUrl = (resp = {}) => {
 }
 
 /* - IPFS hash is a base58 encoded string
-   - We store IPFS hashes in solidity claims in byte32 hex encoding to minimise
+   - We store IPFS hashes in solidity claims in bytes32 binary format to minimise
      gas cost.
-   - byte32 is not string serialisable so it can not be transmitted in that form
-     from discovery to the DApp
-   - discovery needs to transform ipfs hash to base32 hex encoding (that is how
+   - bytes32 is not string serialisable so it can not be transmitted in that form
+     from bridge to the DApp
+   - bridge needs to transform ipfs hash to bytes32 format (that is how
      it is going to be stored in the contract) before signing the claim, and then
-     send IPFS hash to the DApp in base58 encoding.
-   - this way claim has a correct signature if IPFS hash has byte32 hex encoding
+     send IPFS hash to the DApp in base58 string encoding.
+   - this way claim has a correct signature if IPFS hash has bytes32 hex encoding
    - the DApp takes signature and other claim info and transforms the base58 encoded
      IPFS hash to base32 hex before submitting the claim to web3.
 */

@@ -402,7 +402,7 @@ class VerificationService:
         query_string = urllib.parse.parse_qs(response.content)
         screen_name = query_string[b'screen_name'][0].decode('utf-8')
 
-        ipfs_hash = ipfs_helper.pin_json({
+        ipfs_hash = ipfs_helper.add_json({
             'schemaId': 'http://schema.originprotocol.com/twitter-attestation_v1.0.0',
             'screen_name': screen_name
         })
@@ -464,20 +464,20 @@ class VerificationService:
                 " has not been found in user's Airbnb profile."
             )
 
-        ipfs_hash = ipfs_helper.pin_json({
+        ipfs_hash = ipfs_helper.add_json({
             'schemaId': 'http://schema.originprotocol.com/airbnb-attestation_v1.0.0',
             'airbnb_user_id': airbnbUserId
         })
 
         """ - IPFS hash is a base58 encoded string
-            - We store IPFS hashes in solidity claims in byte32 hex encoding to minimise
+            - We store IPFS hashes in solidity claims in bytes32 binary format to minimise
               gas cost.
-            - byte32 is not string serialisable so it can not be transmitted in that form
-              from discovery to the DApp
-            - discovery needs to transform ipfs hash to base32 hex encoding (that is how
+            - bytes32 is not string serialisable so it can not be transmitted in that form
+              from bridge to the DApp
+            - bridge needs to transform ipfs hash to bytes32 format (that is how
               it is going to be stored in the contract) before signing the claim, and then
-              send IPFS hash to the DApp in base58 encoding.
-            - this way claim has a correct signature if IPFS hash has byte32 hex encoding
+              send IPFS hash to the DApp in base58 string encoding.
+            - this way claim has a correct signature if IPFS hash has bytes32 hex encoding
             - the DApp takes signature and other claim info and transforms the base58 encoded
               IPFS hash to base32 hex before submitting the claim to web3.
         """

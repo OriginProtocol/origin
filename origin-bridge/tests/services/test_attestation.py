@@ -492,7 +492,7 @@ def test_verify_twitter_valid_code(mock_session, mock_ipfs, app):
         }
     }
 
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with mock.patch('logic.attestation_service.session', session_dict):
@@ -501,7 +501,7 @@ def test_verify_twitter_valid_code(mock_session, mock_ipfs, app):
 
     assert isinstance(verification_response, VerificationServiceResponse)
 
-    assert str(mock_ipfs().pin_json()) == verification_response.data['data']
+    assert str(mock_ipfs().add_json()) == verification_response.data['data']
     assert verification_response.data['signature'] \
         == '0xd397a2a7ae96714aa7e68c62d400b2786e919fe445c471e574e5' \
         + '20bd2faade13333310b20c5555b416b095bf7fce36ec5b0af2c35b2fcfd3154138677027edb11b'
@@ -539,7 +539,7 @@ def test_verify_twitter_invalid_verifier(mock_session, mock_ipfs, app):
         }
     }
 
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with mock.patch('logic.attestation_service.session', session_dict):
@@ -563,7 +563,7 @@ def test_verify_twitter_invalid_session(mock_session, mock_requests, mock_ipfs):
         'oauth_verifier': 'pineapples'
     }
 
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with pytest.raises(TwitterVerificationError) as service_err:
@@ -605,7 +605,7 @@ def test_verify_airbnb(mock_urllib_request, mock_ipfs, app):
             Origin verification code: art brick aspect accident brass betray antenna
             some more profile description
         </div></html>""".encode('utf-8')
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
     airbnbUserId = "123456"
 
@@ -635,7 +635,7 @@ def test_verify_airbnb_verification_code_missing(mock_urllib_request, mock_ipfs)
         <html><div>
         Airbnb profile description some more profile description
         </div></html>""".encode('utf-8')
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with pytest.raises(AirbnbVerificationError) as service_err:
@@ -661,7 +661,7 @@ def test_verify_airbnb_verification_code_incorrect(mock_urllib_request, mock_ipf
         Origin verification code: art brick aspect pimpmobile
         some more profile description
         </div></html>""".encode('utf-8')
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with pytest.raises(AirbnbVerificationError) as service_err:
@@ -688,7 +688,7 @@ def test_verify_airbnb_verification_code_incorrect_user_id_format(
         Origin verification code: art brick aspect accident brass betray antenna
         some more profile description
         </div></html>""".encode('utf-8')
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with pytest.raises(ValidationError) as validation_error:
@@ -714,7 +714,7 @@ def test_verify_airbnb_verification_code_incorrect_user_id_format(
 ))
 def test_verify_airbnb_verification_code_non_existing_user(
         mock_urllib_request, mock_ipfs):
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
     with pytest.raises(AirbnbVerificationError) as service_err:
         VerificationService.verify_airbnb(
@@ -740,7 +740,7 @@ def test_verify_airbnb_verification_code_non_existing_user(
 ))
 def test_verify_airbnb_verification_code_internal_server_error(
         mock_urllib_request, mock_ipfs):
-    mock_ipfs.return_value.pin_json.return_value = \
+    mock_ipfs.return_value.add_json.return_value = \
         'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
     with pytest.raises(AirbnbVerificationError) as service_err:
         VerificationService.verify_airbnb(

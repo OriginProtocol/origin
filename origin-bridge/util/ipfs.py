@@ -51,7 +51,7 @@ class IPFSHelper:
         pinned_keys = self.connector.pin_ls()['Keys']
         return [k[0] for k in pinned_keys.items() if k[1]['Type'] in pin_types]
 
-    def pin_json(self, json):
+    def add_json(self, json):
         return self.connector.add_json(json)
 
     def pin_hashes(self, *hashes):
