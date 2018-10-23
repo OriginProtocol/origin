@@ -86,6 +86,7 @@ class Marketplace {
           try {
             return await this.getOffer(offerId)
           } catch(e) {
+console.log('================================ e: ', e)
             return null
           }
         })
@@ -115,9 +116,18 @@ class Marketplace {
     // validate offers awaiting approval
     if (chainOffer.status === 'created') {
       const listing = await this.getListing(listingId)
+console.log('==================================== listing: ', listing)
       const listingCurrency = listing.price && listing.price.currency
-      const listingPrice = await this.contractService.moneyToUnits(listing.price)
-      const listingCommision = await this.contractService.moneyToUnits(listing.commission)
+console.log('======================================= listing.price', listing.price)
+      const listingPrice =
+        listing.price && typeof listing.price === 'object' ?
+          await this.contractService.moneyToUnits(listing.price) :
+          '0'
+console.log('===================================== listingPrice: ', listingPrice)
+      const listingCommision =
+        listing.commission && typeof listing.commission === 'object' ?
+          await this.contractService.moneyToUnits(listing.commission) :
+          '0'
       const currencies = await this.contractService.currencies()
       const currency = listingCurrency && currencies[listingCurrency]
       const currencyAddress = currency && currency.address
