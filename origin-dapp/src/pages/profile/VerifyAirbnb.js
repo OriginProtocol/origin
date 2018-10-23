@@ -100,7 +100,7 @@ class VerifyAirbnb extends Component {
                 id: 'VerifyAirbnb.placeholderAirbnbProfileUrl',
                 defaultMessage: 'https://www.airbnb.com/users/show/123'
               })}
-              pattern="^https?://www\.airbnb\.com/users/show/\d*$"
+              pattern="^https?:\/\/www\.airbnb\.[a-zA-Z.]{2,6}\/users\/show\/\d*$"
               title={this.props.intl.formatMessage({
                 id: 'VerifyAirbnb.airbnbProfileIncorrect',
                 defaultMessage:
@@ -256,7 +256,7 @@ class VerifyAirbnb extends Component {
   }
 
   getUserIdFromAirbnbProfile(airbnbProfileUrl) {
-    const airbnbRegex = /https?:\/\/www.airbnb.com\/users\/show\/(\d*)/g
+    const airbnbRegex = /https?:\/\/www.airbnb.[a-zA-Z.]{2,6}\/users\/show\/(\d*)/g
     const match = airbnbRegex.exec(airbnbProfileUrl)
 
     if (!match.length) {
