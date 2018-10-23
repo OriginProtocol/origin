@@ -56,9 +56,10 @@ This will return information about the listing, combining information from IPFS 
 When you create a listing, the API will create both the IPFS data and the Listing contract on the blockchain.
 When a listing is successfully created, the `createListing` method takes a callback with two arguments:
 
-`confirmationCount` - the number of successfully created listings
+`confirmationCount` - the number of block confirmations
 
-`transactionReceipt` - an object with ipfs information about the newly created listing.
+`transactionReceipt` - an object with a timestamp and information about the
+  transaction and the corresponding block
 
 > Example: createListing
 
@@ -95,11 +96,12 @@ const callback = (confirmationCount, transactionReceipt) => {
 ## withdrawListing
 
 Withdrawing a transaction will set the `unitsAvailable` to zero. This will stop any further purchases of that Listing.
-When a listing is successfully created, the `withdrawListing` method takes a callback with two arguments:
+When a listing is successfully withdrawn, the `withdrawListing` method takes a callback with two arguments:
 
-`confirmationCount` - the number of successfully created listings
+`confirmationCount` - the number of block confirmations
 
-`transactionReceipt` - an object with ipfs information about the newly created listing.
+`transactionReceipt` - an object with a timestamp and information about the
+  transaction and the corresponding block
 
 > Example: withdrawListing
 
@@ -154,9 +156,17 @@ const listingId = "927-832"
 
 Each Notification corresponds to a state change of a Purchase. Notifications are currently generated for each of the following purchase stages:
 
-- seller_listing_purchased
-- seller_review_received
-- buyer_listing_shipped
+- ListingCreated
+- ListingUpdated
+- ListingWithdrawn
+- ListingArbitrated
+- OfferCreated
+- OfferAccepted
+- OfferFinalized
+- OfferWithdrawn
+- OfferFundsAdded
+- OfferDisputed
+- OfferRuling
 
 Notifications do not exist on the blockchain nor are they read from a database. They are derived from the blockchain transaction logs of purchases at the time of the API request. Because of this, there is no central record of a notification's status as "read" or "unread". When a client first interacts with the notifications API, Origin.js will record a timestamp in local storage. All notifications resulting from blockchain events that happen prior to this timestamp will be considered to be "read". This ensures that when the same user interacts with the notifications API from a different client for the first time, they will not receive a large number of "unread" notifications that they have previously read from their original client.
 
@@ -202,7 +212,7 @@ const status = "read"
 
 ## getOffer
 
-This will turn a specific offer sent by a buyer for a listing purchase.
+This will return a specific offer sent by a buyer for a listing purchase.
 
 
 > Example: getOffer
@@ -239,7 +249,7 @@ const offerId = "2403-234"
 
 ## getOffers
 
-This will turn all offers related to a specific listing.
+This will return all offers related to a specific listing.
 
 
 > Example: getOffers
@@ -289,9 +299,10 @@ const options = {
 
 The `makeOffer` method takes a callback with two arguments:
 
-`confirmationCount` - the number of successfully created listings
+`confirmationCount` - the number of block confirmations
 
-`transactionReceipt` - an object with ipfs information about the newly created listing.
+`transactionReceipt` - an object with a timestamp and information about the
+  transaction and the corresponding block
 
 > Example: makeOffer
 
@@ -325,9 +336,10 @@ const callback = (confirmationCount, transactionReceipt) => {
 
 The `acceptOffer` method takes a callback with two arguments:
 
-`confirmationCount` - the number of successfully created listings
+`confirmationCount` - the number of block confirmations
 
-`transactionReceipt` - an object with ipfs information about the newly created listing.
+`transactionReceipt` - an object with a timestamp and information about the
+  transaction and the corresponding block
 
 > Example: acceptOffer
 
@@ -355,9 +367,10 @@ const callback = (confirmationCount, transactionReceipt) => {
 
 The `finalizeOffer` method takes a callback with two arguments:
 
-`confirmationCount` - the number of successfully created listings
+`confirmationCount` - the number of block confirmations
 
-`transactionReceipt` - an object with ipfs information about the newly created listing.
+`transactionReceipt` - an object with a timestamp and information about the
+  transaction and the corresponding block
 
 > Example: finalizeOffer
 
@@ -389,9 +402,10 @@ const callback = (confirmationCount, transactionReceipt) => {
 
 The `withdrawOffer` method takes a callback with two arguments:
 
-`confirmationCount` - the number of successfully created listings
+`confirmationCount` - the number of block confirmations
 
-`transactionReceipt` - an object with ipfs information about the newly created listing.
+`transactionReceipt` - an object with a timestamp and information about the
+  transaction and the corresponding block
 
 > Example: withdrawOffer
 
@@ -426,9 +440,10 @@ const callback = (confirmationCount, transactionReceipt) => {
 
 The `addData` method takes a callback with two arguments:
 
-`confirmationCount` - the number of successfully created listings
+`confirmationCount` - the number of block confirmations
 
-`transactionReceipt` - an object with ipfs information about the newly created listing.
+`transactionReceipt` - an object with a timestamp and information about the
+  transaction and the corresponding block
 
 > Example: addData
 
@@ -469,9 +484,10 @@ const callback = (confirmationCount, transactionReceipt) => {
 
 The `initiateDispute` method takes a callback with two arguments:
 
-`confirmationCount` - the number of successfully created listings
+`confirmationCount` - the number of block confirmations
 
-`transactionReceipt` - an object with ipfs information about the newly created listing.
+`transactionReceipt` - an object with a timestamp and information about the
+  transaction and the corresponding block
 
 > Example: initiateDispute
 
@@ -507,9 +523,10 @@ const callback = (confirmationCount, transactionReceipt) => {
 
 The `resolveDispute` method takes a callback with two arguments:
 
-`confirmationCount` - the number of successfully created listings
+`confirmationCount` - the number of block confirmations
 
-`transactionReceipt` - an object with ipfs information about the newly created listing.
+`transactionReceipt` - an object with a timestamp and information about the
+  transaction and the corresponding block
 
 > Example: resolveDispute
 

@@ -33,22 +33,12 @@ let origin = new Origin(configOptions)
  > For example, if you are running a local IPFS daemon then you could set following config options:
 
 ```javascript
+
 const configOptions = {
   ipfsDomain: '127.0.0.1',
   ipfsApiPort: '5001',
   ipfsGatewayPort: '8080',
-  ipfsGatewayProtocol: 'http',
-  discoveryServerUrl: 'example.com/discovery',
-  attestationServerUrl: 'example.com/attestations',
-  blockEpoch: '0',
-  arbitrator: 'Ox000000000000000000000',
-  affiliate: '0x00000000000000000000'
-  contractAddresses: {},
-  OrbitDB: () => {},
-  web3: Web3,
-  messagingNamespace: 'staging',
-  ipfsCreator: () => {},
-  ecies: { encrypt: () => {}), decrypt: () => {}}
+  ipfsGatewayProtocol: 'http'
 }
 const origin = new Origin(configOptions)
 ```
