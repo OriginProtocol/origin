@@ -6,6 +6,9 @@ The marketplace manages listings from creation to sale as well as disputes betwe
 
 This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
 
+A listing is a published action from a seller to sell something.
+It is active until there are no more units available or its expiration date is reached.
+
 > Example: getListings
 
 ```javascript
@@ -212,6 +215,9 @@ const status = "read"
 
 This will return a specific offer sent by a buyer for a listing offer.
 
+An Offer is a single transaction between a buyer and seller. A single Listing with multiple items for sale could have many Offers related to it, one for each buyer.
+
+A new Offer contract is created when a buyer purchases a Listing.
 
 > Example: getOffer
 
