@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     buyerAddress: DataTypes.CHAR(42),
     // JSON data as returned by the marketplace.getOffer(offerId) method.
     data: DataTypes.JSONB,
-    created_at: DataTypes.DATE,
-    updated_at: DataTypes.DATE
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   }, {
     tableName: 'offer',
     // Do not automatically add the timestamp attributes (updatedAt, createdAt).

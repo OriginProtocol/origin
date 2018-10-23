@@ -94,7 +94,7 @@ const LISTEN_RULES = {
     ListingData: getListingDetails,
     ListingArbitrated: getListingDetails,
     OfferCreated: getOfferDetails,
-    OfferCreated: getOfferDetails,
+    OfferWithdrawn: getOfferDetails,
     OfferAccepted: getOfferDetails,
     OfferDisputed: getOfferDetails,
     OfferRuling: getOfferDetails,
@@ -113,7 +113,7 @@ const LISTING_EVENTS = [
 
 const OFFER_EVENTS = [
   'OfferCreated',
-  'OfferCreated',
+  'OfferWithdrawn',
   'OfferAccepted',
   'OfferDisputed',
   'OfferRuling',
@@ -453,9 +453,9 @@ async function handleLog(log, rule, contractVersion, context) {
         data: offer
       }
       if (rule.eventName === 'OfferCreated') {
-        listingData.createdAt = log.date
+        offerData.createdAt = log.date
       } else {
-        listingData.updatedAt = log.date
+        offerData.updatedAt = log.date
       }
       await withRetrys(async () => {
         await db.Offer.insertOrUpdate(offerData)

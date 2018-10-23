@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING(32),
     // JSON data as returned by the marketplace.getListing(listingId) method.
     data: DataTypes.JSONB,
-    created_at: DataTypes.DATE,
-    updated_at: DataTypes.DATE
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   }, {
     tableName: 'listing',
     // Do not automatically add the timestamp attributes (updatedAt, createdAt).

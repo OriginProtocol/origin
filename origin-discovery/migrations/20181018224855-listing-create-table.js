@@ -23,12 +23,12 @@ module.exports = {
         allowNull: false
       },
       created_at: {
-        allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: true
       },
       updated_at: {
-        allowNull: true,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: true
       }
     }).then(() => queryInterface.addIndex(TableName, ['seller_address']))
   },
