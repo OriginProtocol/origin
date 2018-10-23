@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const fs = require('fs')
 const http = require('http')
 const https = require('https')
@@ -119,14 +121,31 @@ function setupOriginJS(config){
   console.log(`Web3 URL: ${config.web3Url}`)
 
   const ipfsUrl = urllib.parse(config.ipfsUrl)
+  console.log(`IPFS URL: ${config.ipfsUrl}`)
+
+  // Error out if any mandatory env var is not set.
+  if (!process.env.ARBITRATOR_ACCOUNT) {
+    throw new Error('ARBITRATOR_ACCOUNT not set')
+  }
+  if (!process.env.AFFILIATE_ACCOUNT) {
+    throw new Error('AFFILIATE_ACCOUNT not set')
+  }
+
+  // Issue a warning for any recommended env var that is not set.
+  if (!process.env.BLOCK_EPOCH) {
+    console.log('WARNING: For performance reason it is recommended to set BLOCK_EPOCH')
+  }
+
   // global
   o = new Origin({
     ipfsDomain: ipfsUrl.hostname,
     ipfsGatewayProtocol: ipfsUrl.protocol.replace(':',''),
     ipfsGatewayPort: ipfsUrl.port,
+    arbitrator: process.env.ARBITRATOR_ACCOUNT,
+    affiliate: process.env.AFFILIATE_ACCOUNT,
+    blockEpoch: process.env.BLOCK_EPOCH || 0,
     web3
   })
-  console.log(`IPFS URL: ${config.ipfsUrl}`)
 }
 
 /**
@@ -152,7 +171,12 @@ async function liveTracking(config) {
         return scheduleNextCheck()
       }
       console.log('New block: ' + currentBlockNumber)
-      const toBlock = Math.min(lastLogBlock+MAX_BATCH_BLOCKS, currentBlockNumber)
+      const toBlock = Math.min( // Pick the smallest of either
+        // the last log we processed, plus the max batch size
+        lastLogBlock + MAX_BATCH_BLOCKS, 
+         // or the current block number, minus any trailing blocks we waiting on
+        Math.max(currentBlockNumber - config.trailBlocks, 0),
+      )
       const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
       await runBatch(opts, context)
       lastLogBlock = toBlock
@@ -287,7 +311,6 @@ async function handleLog(log, rule, contractVersion, context) {
   log.eventName = rule.eventName
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
-
   const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
     eventName=${log.eventName} \
@@ -393,7 +416,83 @@ async function handleLog(log, rule, contractVersion, context) {
       await postToWebhook(context.config.webhook, json)
     })
   }
+
+  if (context.config.discordWebhook) {
+    postToDiscordWebhook(context.config.discordWebhook, output)
+    console.log('\n-- Discord WEBHOOK to ' + context.config.discordWebhook + ' --')
+  }
 }
+
+/**
+ * Posts a to discord channel via webhook.
+ * This functionality should move out of the listener 
+ * to the notification system, as soon as we have one.
+ */
+ async function postToDiscordWebhook(discordWebhookUrl, data){
+  const eventIcons = {
+    ListingCreated: ':trumpet:',
+    ListingUpdated: ':saxophone:',
+    ListingWithdrawn: ':x:',
+    ListingData: ':cd:',
+    ListingArbitrated: ':boxing_glove:',
+    OfferCreated: ':baby_chick:',
+    OfferWithdrawn: ':feet:',
+    OfferAccepted: ':bird:',
+    OfferDisputed: ':dragon_face:',
+    OfferRuling: ':dove:',
+    OfferFinalized: ':unicorn:',
+    OfferData: ':beetle:'
+  }
+
+  const personDisp = (p)=> {
+    let str = ''
+    if(p.profile && (p.profile.firstName || p.profile.lastName)){
+      str += `${p.profile.firstName|''} ${p.profile.lastName||''} - `
+    }
+    str += p.address
+    return str
+  }
+  const priceDisp = (listing) => {
+    const price = listing.price
+    return (price ? `${price.amount}${price.currency}` : '')
+  }
+
+  const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
+  const lines = []
+  const listing = data.related.listing
+  
+  let discordData = {}
+
+  if (data.related.offer !== undefined) { // Offer
+    discordData = {
+      "embeds":[
+        {
+          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
+          "description":[
+            `https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,
+            `Seller: ${personDisp(data.related.seller)}`,
+            `Buyer: ${personDisp(data.related.buyer)}`
+          ].join("\n")
+        }
+      ]
+    }
+  } else { // Listing
+    discordData = {
+      "embeds":[
+        {
+          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
+          "description":[
+            `${listing.description.split("\n")[0].slice(0, 60)}...`,
+            `https://dapp.originprotocol.com/#/listing/${listing.id}`,
+            `Seller: ${personDisp(data.related.seller)}`,
+          ].join("\n")
+        }
+      ]
+    }
+  }
+  await postToWebhook(discordWebhookUrl, JSON.stringify(discordData))
+ }
+
 
 /**
  * Sends a blob of json to a webhook.
@@ -401,7 +500,7 @@ async function handleLog(log, rule, contractVersion, context) {
 async function postToWebhook(urlString, json) {
   const url = urllib.parse(urlString)
   const postOptions = {
-    host: url.host,
+    host: url.hostname,
     port: url.port,
     path: url.path,
     method: 'POST',
@@ -413,7 +512,8 @@ async function postToWebhook(urlString, json) {
   return new Promise((resolve, reject) => {
     const client = url.protocol === 'https:' ? https : http
     const req = client.request(postOptions, res => {
-      if (res.statusCode === 200) {
+      console.log(res.statusCode )
+      if (res.statusCode === 200 || res.statusCode === 204) {
         resolve()
       } else {
         reject()
@@ -534,6 +634,8 @@ process.argv.forEach(arg => {
 const config = {
   // Call webhook to process event.
   webhook: args['--webhook'],
+  // Call post to discord webhook to process event.
+  discordWebhook: args['--discord-webhook'],
   // Index events in the search index.
   elasticsearch: args['--elasticsearch'],
   // Index events in the database.
@@ -542,10 +644,12 @@ const config = {
   verbose: args['--verbose'],
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'],
+  // Trail X number of blocks behind
+  trailBlocks: args['--trail-behind-blocks'] || 0,
   // web3 provider url
   web3Url: args['--web3-url'] || 'http://localhost:8545',
   // ipfs url
-  ipfsUrl: args['--ipfs-url'] || 'http://origin-js:8080',
+  ipfsUrl: args['--ipfs-url'] || 'http://localhost:8080',
 }
 
 // Start the listener running
