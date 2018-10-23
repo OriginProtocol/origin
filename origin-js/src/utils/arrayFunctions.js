@@ -23,6 +23,9 @@ function groupBy(collection, iteratee){
  * @return {Object} Returns the transformed object
  */
 function mapValues(object, mapFunction){
+  if (object === null || object === undefined || Object.keys(object).length === 0)
+    return {}
+  
   return Object.assign(
     ...Object.keys(object)
       .map(k => ({[k]: mapFunction(object[k])}))
