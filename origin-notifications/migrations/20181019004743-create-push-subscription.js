@@ -4,7 +4,6 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('PushSubscriptions', {
       id: {
-        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
@@ -31,7 +30,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    })
+    }).then(() => queryInterface.addIndex('PushSubscriptions', ['account', 'endpoint'] ))
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('PushSubscriptions')
