@@ -290,9 +290,6 @@ class ContractService {
 
   // Convert money object to correct units for blockchain
   async moneyToUnits(money) {
-    if (!money) {
-      return '0'
-    }
     if (money.currency === 'ETH') {
       return Web3.utils.toWei(money.amount, 'ether')
     } else {
