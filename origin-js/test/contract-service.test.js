@@ -131,7 +131,7 @@ describe('ContractService', function() {
         await callAddClaimsWithParameters(
           {},
           {
-            confirmationCallback: (confirmationNumber, receipt) => {
+            confirmationCallback: () => {
               if (!doneCalled){
                 doneCalled = true
                 done()
@@ -150,7 +150,7 @@ describe('ContractService', function() {
         await callAddClaimsWithParameters(
           {},
           {
-            transactionHashCallback: (hash) => {
+            transactionHashCallback: () => {
               done()
             },
           }
@@ -179,7 +179,7 @@ describe('ContractService', function() {
             emitConfirmation: false
           },
           {
-            confirmationCallback: (confirmationNumber, receipt) => {
+            confirmationCallback: () => {
               if (!doneCalled){
                 doneCalled = true
                 done()
@@ -201,7 +201,7 @@ describe('ContractService', function() {
             emitConfirmation: false
           },
           {
-            transactionHashCallback: (hash) => {
+            transactionHashCallback: () => {
               done()
             },
           }
