@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING(32),
     // JSON data as returned by the marketplace.getListing(listingId) method.
     data: DataTypes.JSONB,
+    // Creation date.
     createdAt: DataTypes.DATE,
+    // Date of most recent update, or null if no update.
     updatedAt: DataTypes.DATE
   }, {
     tableName: 'listing',

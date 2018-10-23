@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     buyerAddress: DataTypes.CHAR(42),
     // JSON data as returned by the marketplace.getOffer(offerId) method.
     data: DataTypes.JSONB,
+    // Creation date.
     createdAt: DataTypes.DATE,
+    // Date of most recent update, or null if no update.
     updatedAt: DataTypes.DATE
   }, {
     tableName: 'offer',

@@ -8,7 +8,7 @@
     "elasticsearch": "^15.1.1",
     "graphql": "^0.13.2",
     "http": "0.0.0",
-    "origin": "^0.8.5",
+    "origin": "^0.8.6",
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "^5.0.0-beta.5",
