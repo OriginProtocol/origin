@@ -14,13 +14,13 @@ export default class OfferAdapterV1 extends AdapterBase {
 
     const offer = {
       schemaId: ipfsData.schemaId,
-      listingType: ipfsData.listingType
+      listingType: ipfsData.listingType,
+      totalPrice: new Money(ipfsData.totalPrice)
     }
 
     // Unit data.
     if (offer.listingType === 'unit') {
       offer.unitsPurchased = ipfsData.unitsPurchased
-      offer.totalPrice = new Money(ipfsData.totalPrice)
     } else if (offer.listingType === 'fractional') {
       offer.slots = ipfsData.slots
     } else {
