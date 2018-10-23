@@ -4,11 +4,11 @@ module.exports = (sequelize, DataTypes) => {
   const Offer = sequelize.define('Offer', {
     id: { type: DataTypes.STRING(64), primaryKey: true },
     listingId: DataTypes.STRING(32),
-    // Offer status as defined by contracts.
+    // Offer status as returned by the marketplace.getOffer(offerId) method.
     status: DataTypes.STRING(32),
-    // Seller's eth wallet address.
+    // Seller's eth wallet address, lowercase.
     sellerAddress: DataTypes.CHAR(42),
-    // Buyer's eth wallet address.
+    // Buyer's eth wallet address, lowercase.
     buyerAddress: DataTypes.CHAR(42),
     // JSON data as returned by the marketplace.getOffer(offerId) method.
     data: DataTypes.JSONB,
