@@ -37,7 +37,8 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.dev.originprotocol.com \
     PROVIDER_URL=https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP \
     MESSAGING_NAMESPACE=origin:dev \
     DEPLOY_TAG=$DEPLOY_TAG \
-    BLOCK_EPOCH=0
+    BLOCK_EPOCH=0 \
+    INSTRUCTIONS_URL=https://medium.com/originprotocol/draft-origin-launches-beta-on-mainnet-draft-e3b70161ae86
 
 WORKDIR /app/
 RUN npm install --quiet --no-progress

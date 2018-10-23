@@ -85,7 +85,6 @@ export default class ListingAdapterV1 extends AdapterBase {
       listing.slots = ipfsData.slots
       listing.timeIncrement = ipfsData.timeIncrement
       listing.calendarStep = ipfsData.calendarStep
-      
     } else {
       throw new Error(`Unexpected listing type: ${listing.type}`)
     }

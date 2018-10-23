@@ -30,7 +30,7 @@ class ListingsGrid extends Component {
 
   render() {
     const { contractFound, listingIds, search, featuredListingIds, hiddenListingIds } = this.props
-    let activePage, currentPageListingIds, includedFeaturedListingIds, listingIdsNotHidden
+    let activePage, currentPageListingIds, includedFeaturedListingIds, listingIdsNotHidden, resultsCount
 
     if (this.props.renderMode === 'home-page') {
       listingIdsNotHidden = listingIds.filter(id => !hiddenListingIds.includes(id))
@@ -54,6 +54,7 @@ class ListingsGrid extends Component {
         Math.max(0, startSlicePosition + LISTINGS_PER_PAGE - includedFeaturedListingIds.length)
       )
       currentPageListingIds = [...includedFeaturedListingIds, ...currentPageListingIds]
+      resultsCount = listingIdsNotHidden.length
     } else if (this.props.renderMode === 'search') {
       listingIdsNotHidden = search.listingIds.filter(id => !hiddenListingIds.includes(id))
       currentPageListingIds = listingIdsNotHidden.sort((a, b) => {
@@ -71,9 +72,8 @@ class ListingsGrid extends Component {
         }
       })
       activePage = this.props.searchPage
+      resultsCount = search.listingsLength - hiddenListingIds.length
     }
-
-    const resultsCount = listingIdsNotHidden.length
 
     return (
       <div className="listings-wrapper">

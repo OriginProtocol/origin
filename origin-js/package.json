@@ -1,6 +1,6 @@
 {
   "name": "origin",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "",
   "engines": {
     "node": "9.11.1"
@@ -12,8 +12,8 @@
     "format:solidity": "solium -d contracts/contracts/ --fix",
     "install:dev": "npm install && npm link",
     "prepare": "npm run build",
-    "start": "node scripts/build.js serve",
-    "start:no-ganache": "node scripts/build.js serve no-ganache",
+    "start": "node scripts/serve.js serve",
+    "start:no-ganache": "node scripts/serve.js no-ganache",
     "test": "node scripts/test.js",
     "test:truffle": "node scripts/test-truffle.js",
     "test:js": "node scripts/test-js.js",
@@ -36,6 +36,7 @@
     "babel-polyfill": "^6.26.0",
     "bignumber.js": "^7.2.1",
     "bs58": "^4.0.1",
+    "chalk": "^2.4.1",
     "cross-fetch": "^2.1.1",
     "crypto-js": "^3.1.9-1",
     "crypto-random-string": "^1.0.0",
@@ -63,7 +64,6 @@
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^2.0.2",
     "chai-string": "1.4.0",
-    "chalk": "^2.4.1",
     "eth-gas-reporter": "^0.1.2",
     "fetch-mock": "^6.3.0",
     "flow-bin": "^0.71.0",

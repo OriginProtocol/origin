@@ -1,7 +1,28 @@
-language: node_js
-node_js:
-  - "lts/*"
-# FIXME: remove dependency between origin-faucet and origin-js/contracts/test-alt
-script:
-  - cd origin-dapp && npm install && npm test
-  - cd ../origin-faucet && npm install && cd ../origin-js && npm install && npm test
+matrix:
+  include:
+  - language: node_js
+    node_js: lts/*
+    before_script:
+    - cd origin-dapp
+    - npm install
+    script:
+    - npm test
+
+  # FIXME: remove dependency between origin-faucet and origin-js/contracts/test-alt
+  - language: node_js
+    node_js: lts/*
+    before_script:
+    - cd origin-faucet
+    - npm install
+    - cd ../origin-js
+    - npm install
+    script:
+    - npm test
+
+  - language: python
+    python: 3.6
+    before_script:
+    - cd origin-bridge
+    - pip install -r requirements.txt
+    script:
+    - pytest --flakes --codestyle
