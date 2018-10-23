@@ -204,8 +204,6 @@ class ContractService {
    * function is not broken we cancel the safety net immediately.
    */
   async checkForTransactionCompletion(hash, contract, confirmationCallback, resolveCallback, promiseStatus) {
-
-    // on.('confirmation') works cancel this fallback functionality
     if (promiseStatus.onConfirmationTriggered)
       return
 
@@ -253,7 +251,8 @@ class ContractService {
       const currentBlockNumber = await this.web3.eth.getBlockNumber()
       // Math.max to prevent the -1 confirmation on Rinkeby. 
       const confirmations = Math.max(0, currentBlockNumber - transactionReceipt.blockNumber)
-      confirmationCallback(confirmations, transactionReceipt)
+      if (confirmationCallback !== undefined)
+        confirmationCallback(confirmations, transactionReceipt)
 
       if (confirmations < NUMBER_CONFIRMATIONS_TO_REPORT) {
         setTimeout(() => {
@@ -284,8 +283,11 @@ class ContractService {
       .on('transactionHash', (hash) => {
         if (transactionHashCallback)
           transactionHashCallback(hash)
-        if (confirmationCallback)
-          this.checkForTransactionCompletion(hash, contract, confirmationCallback, resolveCallback, promiseStatus)
+
+        /* Start looking for completion even if confirmation callback is undefined. This way if we have a broken Metamask
+         * we can still generate a transaction receipt (resolveCallback) even if Metamask does not supply one.
+         */
+        this.checkForTransactionCompletion(hash, contract, confirmationCallback, resolveCallback, promiseStatus)
       })
 
       .on('error', error => {
@@ -357,6 +359,7 @@ class ContractService {
         transactionHashCallback
       )
     })
+
     const block = await this.web3.eth.getBlock(transactionReceipt.blockNumber)
     return {
       // return current time in seconds if block is not found
