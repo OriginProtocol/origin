@@ -14,13 +14,13 @@ Contributions are welcome!
 
 Clone locally with:
 
-    git clone https://github.com/OriginProtocol/docs.git origin-docs && cd origin-docs
+    git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-docs
 
 Make sure you have Ruby >=2.3.1 installed or install with Homebrew/rvm:
 
     brew install ruby
     
-Start serving locally with: 
+Start serving locally with:
 
     bundle install
     bundle exec middleman server

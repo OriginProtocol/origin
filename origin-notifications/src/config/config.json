@@ -1,0 +1,16 @@
+{
+  "development": {
+    "username": null,
+    "password": null,
+    "database": "notifications",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": null,
+    "password": null,
+    "database": "notifications",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

@@ -4,10 +4,6 @@
     "defaultMessage": "Are you sure that you want to permanently close this listing? This cannot be undone."
   },
   {
-    "id": "my-listing-card.ethereumCurrencyAbbrev",
-    "defaultMessage": "ETH"
-  },
-  {
     "id": "my-listing-card.closeListing",
     "defaultMessage": "Close Listing"
   }

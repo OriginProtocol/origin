@@ -1,0 +1,31 @@
+{{ if eq .Release.Namespace "prod" }}
+# Permanent redirect for originprotocol.com
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: originprotocol-com-redirect
+  labels:
+    app: website
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    # Disable SSL redirect to prevent double redirect
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://www.originprotocol.com"
+spec:
+  tls:
+    - secretName: originprotocol.com
+      hosts:
+        - originprotocol.com
+  rules:
+  - host: originprotocol.com
+    http:
+      paths:
+      - backend:
+          serviceName: {{ template "dapp.fullname" . }}
+          servicePort: 80
+{{- end }}
