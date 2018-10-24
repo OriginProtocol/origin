@@ -1,6 +1,7 @@
 matrix:
   include:
-  - language: node_js
+  - name: "DApp unit tests"
+    language: node_js
     node_js: lts/*
     before_script:
     - cd origin-dapp
@@ -9,7 +10,8 @@ matrix:
     - npm test
 
   # FIXME: remove dependency between origin-faucet and origin-js/contracts/test-alt
-  - language: node_js
+  - name: "Origin-js unit tests"
+    language: node_js
     node_js: lts/*
     before_script:
     - cd origin-faucet
@@ -19,7 +21,8 @@ matrix:
     script:
     - npm test
 
-  - language: python
+  - name: "Bridge server unit tests"
+    language: python
     python: 3.6
     before_script:
     - cd origin-bridge

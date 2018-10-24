@@ -202,7 +202,7 @@ class ListingsDetail extends Component {
       })
     } catch (error) {
       this.props.showAlert(
-        this.props.formatMessage(this.intlMessages.loadingError)
+        this.props.intl.formatMessage(this.intlMessages.loadingError)
       )
       console.error(
         `Error fetching contract or IPFS info for listing: ${
