@@ -126,15 +126,17 @@ class Marketplace {
         // to make sure the chainOffer and the listing have the same currency
         const listingCurrency = listing.price && listing.price.currency
         const listingPrice = await this.contractService.moneyToUnits(listing.price)
+        const listingPriceNum = parseFloat(listingPrice)
         const currencies = await this.contractService.currencies()
         const currency = listingCurrency && currencies[listingCurrency]
         const currencyAddress = currency && currency.address
+        const chainOfferValueNum = parseFloat(chainOffer.value)
 
-        if (currencyAddress && currencyAddress !== chainOffer.currency) {
+        if (currencyAddress !== chainOffer.currency) {
           throw new Error('Invalid offer: currency does not match listing')
         }
 
-        if (listingPrice && listingPrice > chainOffer.value) {
+        if (listingPriceNum > chainOfferValueNum) {
           throw new Error('Invalid offer: insufficient offer amount for listing')
         }
       }
