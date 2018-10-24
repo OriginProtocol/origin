@@ -1485,10 +1485,6 @@ textarea:-moz-ui-invalid {
 
 /* Modal */
 
-.modal-open {
-  overflow: auto;
-}
-
 .modal-backdrop {
   background-color: rgba(235, 240, 243, 0.6);
 }
@@ -4128,6 +4124,33 @@ form .stars img {
 
 .notification .no-counterparty {
   margin: auto 0;
+}
+
+.notifications-modal .image-container img {
+  height: auto;
+  width: auto;
+}
+
+.notifications-modal h2 {
+  font-size: 1.375rem;
+}
+
+.notifications-modal .button-container {
+  margin: 0 0 20px 0;
+}
+
+.notifications-modal .modal-content .btn {
+  font-weight: 900;
+  margin: 0;
+}
+
+.notifications-modal .modal-content a {
+  color: white;
+  font-size: 0.875rem;
+}
+
+.notifications-modal .modal-content a:hover {
+  text-decoration: underline;
 }
 
 /* Profile */
