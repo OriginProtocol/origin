@@ -5,8 +5,12 @@ const TableName = 'event'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(TableName, {
-      id: {
-        type: Sequelize.CHAR(16),
+      block_number: {
+        type: Sequelize.INTEGER,
+        primaryKey: true
+      },
+      log_index: {
+        type: Sequelize.INTEGER,
         primaryKey: true
       },
       contract_address: {
@@ -16,10 +20,6 @@ module.exports = {
       transaction_hash: {
         type: Sequelize.CHAR(66),
         allowNull: false,
-      },
-      block_number: {
-        type: Sequelize.INTEGER,
-        allowNull: false
       },
       topic0: {
         type: Sequelize.CHAR(66),
@@ -47,7 +47,6 @@ module.exports = {
       }
   }).then(() => queryInterface.addIndex(TableName, ['contract_address']))
     .then(() => queryInterface.addIndex(TableName, ['transaction_hash']))
-    .then(() => queryInterface.addIndex(TableName, ['block_number']))
     .then(() => queryInterface.addIndex(TableName, ['topic0']))
     .then(() => queryInterface.addIndex(TableName, ['topic1']))
     .then(() => queryInterface.addIndex(TableName, ['topic2']))

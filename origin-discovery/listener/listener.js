@@ -342,18 +342,12 @@ async function handleLog(log, rule, contractVersion, context) {
   console.log(`Processing log: ${logDetails}`)
 
   if (context.config.db) {
-    // Store the event in the database.
-    // Generate a unique id based on concatenation of blockNumber and logIndex.
-    // Numbers are left padded to preserve ordering.
-    const logId =
-      log.blockNumber.toString().padStart(10, '0') + '-' +
-      log.logIndex.toString().padStart(5, '0')
     await withRetrys(async () => {
       await db.Event.insertOrUpdate({
-        id: logId,
+        blockNumber: log.blockNumber,
+        logIndex: log.logIndex,
         contractAddress: log.address,
         transactionHash: log.transactionHash,
-        blockNumber: log.blockNumber,
         topic0: log.topics[0],
         topic1: log.topics[1],
         topic2: log.topics[2],

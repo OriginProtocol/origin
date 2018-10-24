@@ -4,17 +4,14 @@ module.exports = (sequelize, DataTypes) => {
 
   // Note: all addresses and hashes are stored in lowercase hexadecimal notation.
   const Event = sequelize.define('Event', {
-    // Unique event Id. Format: <blockNumber>-<logIndex>.
-    //  - blockNumber is a 10 digits integer, left padded with 0.
-    //  - logIndex is a 5 digits integer, left padded with 0.
-    // Example: '0006400000-00123'
-    id: { type: DataTypes.CHAR(16), primaryKey: true },
+    // Block number at which the event was recorded.
+    blockNumber: { type: DataTypes.INTEGER, primaryKey: true },
+    // Index of the event within the block.
+    logIndex: { type: DataTypes.INTEGER, primaryKey: true },
     // Address of the contract that emitted the event.
     contractAddress: DataTypes.CHAR(42),
     // Hash of the transaction that triggered firing the event,
     transactionHash: DataTypes.CHAR(66),
-    // Block number in which the event was recorded.
-    blockNumber: DataTypes.INTEGER,
     // First topic is the signature of the event.
     topic0: DataTypes.CHAR(66),
     // Next 3 topics are the optional indexed event arguments.
