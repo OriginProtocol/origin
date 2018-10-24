@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import moment from 'moment'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { fetchUser } from 'actions/User'
 
