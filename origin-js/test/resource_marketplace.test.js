@@ -444,8 +444,7 @@ describe('Marketplace Resource', function() {
       expect(notifications.length).to.equal(1)
       expect(notifications[0].status).to.equal('unread')
 
-      const updatedNotification = { ...notifications[0], status: 'read' }
-      marketplace.setNotification(updatedNotification)
+      marketplace.setNotification({ id: notifications[0].id, status: 'read' })
       notifications = await marketplace.getNotifications()
       validateNotification(notifications[0])
 
