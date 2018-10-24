@@ -8,7 +8,7 @@ const Origin = require('origin')
 const Web3 = require('web3')
 
 const search = require('../lib/search.js')
-const db = require('../lib//db.js')
+const db = require('../models')
 
 // Origin Listener
 // ---------------
@@ -59,10 +59,8 @@ const getListingDetails = async log => {
     listing: listing,
     seller: seller
   }
-  //return {
-  //  listing: await o.marketplace.getListing(generateListingId(log))
-  //}
 }
+
 const getOfferDetails = async log => {
   const listing = await o.marketplace.getListing(generateListingId(log))
   const offer = await o.marketplace.getOffer(generateOfferId(log))
@@ -107,6 +105,23 @@ const LISTEN_RULES = {
   }
 }
 
+const LISTING_EVENTS = [
+  'ListingCreated',
+  'ListingUpdated',
+  'ListingWithdrawn',
+  'ListingData',
+  'ListingArbitrated'
+]
+
+const OFFER_EVENTS = [
+  'OfferCreated',
+  'OfferWithdrawn',
+  'OfferAccepted',
+  'OfferDisputed',
+  'OfferRuling',
+  'OfferFinalized',
+  'OfferData'
+]
 // -------------------------------
 // Section 2: The following engine
 // -------------------------------
@@ -311,6 +326,15 @@ async function handleLog(log, rule, contractVersion, context) {
   log.eventName = rule.eventName
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
+
+  // Fetch block to retrieve timestamp.
+  let block
+  await withRetrys(async () => {
+    block = await web3.eth.getBlock(log.blockNumber)
+  })
+  log.timestamp = block.timestamp
+  log.date = new Date(log.timestamp*1000)
+
   const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
     eventName=${log.eventName} \
@@ -362,6 +386,7 @@ async function handleLog(log, rule, contractVersion, context) {
 
   // TODO: This kind of verification logic should live in origin.js
   if(output.related.listing.ipfs.data.price === undefined){
+    console.log(`ERROR: listing ${listingId} has no price. Skipping indexing.`)
     return
   }
 
@@ -399,15 +424,44 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   if (context.config.db) {
-    console.log(`Indexing listing in DB: id=${listingId}`)
-    await withRetrys(async () => {
-      await db.Listing.insert(
-        listingId,
-        userAddress,
-        ipfsHash,
-        listing.ipfs.data
-      )
-    })
+    if (LISTING_EVENTS.includes(rule.eventName)) {
+      console.log(`Indexing listing in DB: id=${listingId}`)
+      listingData = {
+        id: listingId,
+        status: listing.status,
+        sellerAddress: listing.seller.toLowerCase(),
+        data: listing,
+      }
+      if (rule.eventName === 'ListingCreated') {
+        listingData.createdAt = log.date
+      } else {
+        listingData.updatedAt = log.date
+      }
+      await withRetrys(async () => {
+        await db.Listing.insertOrUpdate(listingData)
+      })
+    }
+
+    if (OFFER_EVENTS.includes(rule.eventName)) {
+      const offer = output.related.offer
+      console.log(`Indexing offer in DB: id=${offer.id}`)
+      offerData = {
+        id: offer.id,
+        listingId: listingId,
+        status: offer.status,
+        sellerAddress: listing.seller.toLowerCase(),
+        buyerAddress: offer.buyer.toLowerCase(),
+        data: offer
+      }
+      if (rule.eventName === 'OfferCreated') {
+        offerData.createdAt = log.date
+      } else {
+        offerData.updatedAt = log.date
+      }
+      await withRetrys(async () => {
+        await db.Offer.insertOrUpdate(offerData)
+      })
+    }
   }
 
   if (context.config.webhook) {
@@ -559,7 +613,7 @@ class Context {
  * //            eventName: 'ListingCreated',
  * //            eventAbi: [Object],
  * //            ruleFn: [...] } },
- * //      '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
+ * //   '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
  * //      { V00_Marketplace:
  * //          { contractName: 'V00_Marketplace',
  * //            eventName: 'ListingUpdated',
