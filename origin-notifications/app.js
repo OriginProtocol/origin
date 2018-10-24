@@ -79,7 +79,6 @@ app.all((req, res, next) => {
 
 app.use(bodyParser.json())
 
-// currently showing all subscriptions in an unauthenticated index view - maybe not a good idea in production?
 app.get('/', async (req, res) => {
   let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
 
@@ -125,6 +124,7 @@ app.post('/events', async (req, res) => {
   const subs = await PushSubscription.findAll({
     where: {
       account: {
+        // refrain from sending to the party who initiated the transaction
         [Sequelize.Op.in]: [buyer.address, seller.address].filter(a => a && a !== party)
       }
     }
