@@ -69,7 +69,7 @@ services:
     # https://github.com/docker/compose/issues/4337
     command: >
       /bin/bash -c "npm install --quiet --no-progress &&
-      node scripts/build.js serve"
+      npm start"
     networks:
       - default
 
