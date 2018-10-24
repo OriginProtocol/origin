@@ -51,7 +51,7 @@ The general steps for updating a service are:
 3. Update the tag of the container in the Origin Helm chart
 4. Sync the Helm release
 
-This process is automated by `deploy.sh` found at `origin-box/deployment`. It can be used to update Helm releases and deploy new containers. It uses the Helm chart found in `deployment/kubernetes/charts/origin` and the values files found in `deployment/kubernetes/values`. The containers it builds are found in `origin-box/deployment/dockerfiles`.
+This process is automated by `deploy.sh` found at `origin/deployment`. It can be used to update Helm releases and deploy new containers. It uses the Helm chart found in `origin/deployment/kubernetes/charts/origin` and the values files found in `origin/deployment/kubernetes/values`. The containers it builds are found in `origin/deployment/dockerfiles`.
 
 You can run `deploy.sh` without a `-c` argument  to update the Helm release for a namespace (if you modify values for example):
 
