@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const fs = require('fs')
 const http = require('http')
 const https = require('https')
@@ -6,7 +8,7 @@ const Origin = require('origin')
 const Web3 = require('web3')
 
 const search = require('../lib/search.js')
-const db = require('../lib//db.js')
+const db = require('../models')
 
 // Origin Listener
 // ---------------
@@ -57,10 +59,8 @@ const getListingDetails = async log => {
     listing: listing,
     seller: seller
   }
-  //return {
-  //  listing: await o.marketplace.getListing(generateListingId(log))
-  //}
 }
+
 const getOfferDetails = async log => {
   const listing = await o.marketplace.getListing(generateListingId(log))
   const offer = await o.marketplace.getOffer(generateOfferId(log))
@@ -105,6 +105,23 @@ const LISTEN_RULES = {
   }
 }
 
+const LISTING_EVENTS = [
+  'ListingCreated',
+  'ListingUpdated',
+  'ListingWithdrawn',
+  'ListingData',
+  'ListingArbitrated'
+]
+
+const OFFER_EVENTS = [
+  'OfferCreated',
+  'OfferWithdrawn',
+  'OfferAccepted',
+  'OfferDisputed',
+  'OfferRuling',
+  'OfferFinalized',
+  'OfferData'
+]
 // -------------------------------
 // Section 2: The following engine
 // -------------------------------
@@ -119,14 +136,31 @@ function setupOriginJS(config){
   console.log(`Web3 URL: ${config.web3Url}`)
 
   const ipfsUrl = urllib.parse(config.ipfsUrl)
+  console.log(`IPFS URL: ${config.ipfsUrl}`)
+
+  // Error out if any mandatory env var is not set.
+  if (!process.env.ARBITRATOR_ACCOUNT) {
+    throw new Error('ARBITRATOR_ACCOUNT not set')
+  }
+  if (!process.env.AFFILIATE_ACCOUNT) {
+    throw new Error('AFFILIATE_ACCOUNT not set')
+  }
+
+  // Issue a warning for any recommended env var that is not set.
+  if (!process.env.BLOCK_EPOCH) {
+    console.log('WARNING: For performance reason it is recommended to set BLOCK_EPOCH')
+  }
+
   // global
   o = new Origin({
     ipfsDomain: ipfsUrl.hostname,
     ipfsGatewayProtocol: ipfsUrl.protocol.replace(':',''),
     ipfsGatewayPort: ipfsUrl.port,
+    arbitrator: process.env.ARBITRATOR_ACCOUNT,
+    affiliate: process.env.AFFILIATE_ACCOUNT,
+    blockEpoch: process.env.BLOCK_EPOCH || 0,
     web3
   })
-  console.log(`IPFS URL: ${config.ipfsUrl}`)
 }
 
 /**
@@ -293,6 +327,14 @@ async function handleLog(log, rule, contractVersion, context) {
   log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
 
+  // Fetch block to retrieve timestamp.
+  let block
+  await withRetrys(async () => {
+    block = await web3.eth.getBlock(log.blockNumber)
+  })
+  log.timestamp = block.timestamp
+  log.date = new Date(log.timestamp*1000)
+
   const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
     eventName=${log.eventName} \
@@ -344,6 +386,7 @@ async function handleLog(log, rule, contractVersion, context) {
 
   // TODO: This kind of verification logic should live in origin.js
   if(output.related.listing.ipfs.data.price === undefined){
+    console.log(`ERROR: listing ${listingId} has no price. Skipping indexing.`)
     return
   }
 
@@ -381,15 +424,44 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   if (context.config.db) {
-    console.log(`Indexing listing in DB: id=${listingId}`)
-    await withRetrys(async () => {
-      await db.Listing.insert(
-        listingId,
-        userAddress,
-        ipfsHash,
-        listing.ipfs.data
-      )
-    })
+    if (LISTING_EVENTS.includes(rule.eventName)) {
+      console.log(`Indexing listing in DB: id=${listingId}`)
+      listingData = {
+        id: listingId,
+        status: listing.status,
+        sellerAddress: listing.seller.toLowerCase(),
+        data: listing,
+      }
+      if (rule.eventName === 'ListingCreated') {
+        listingData.createdAt = log.date
+      } else {
+        listingData.updatedAt = log.date
+      }
+      await withRetrys(async () => {
+        await db.Listing.insertOrUpdate(listingData)
+      })
+    }
+
+    if (OFFER_EVENTS.includes(rule.eventName)) {
+      const offer = output.related.offer
+      console.log(`Indexing offer in DB: id=${offer.id}`)
+      offerData = {
+        id: offer.id,
+        listingId: listingId,
+        status: offer.status,
+        sellerAddress: listing.seller.toLowerCase(),
+        buyerAddress: offer.buyer.toLowerCase(),
+        data: offer
+      }
+      if (rule.eventName === 'OfferCreated') {
+        offerData.createdAt = log.date
+      } else {
+        offerData.updatedAt = log.date
+      }
+      await withRetrys(async () => {
+        await db.Offer.insertOrUpdate(offerData)
+      })
+    }
   }
 
   if (context.config.webhook) {
@@ -398,7 +470,83 @@ async function handleLog(log, rule, contractVersion, context) {
       await postToWebhook(context.config.webhook, json)
     })
   }
+
+  if (context.config.discordWebhook) {
+    postToDiscordWebhook(context.config.discordWebhook, output)
+    console.log('\n-- Discord WEBHOOK to ' + context.config.discordWebhook + ' --')
+  }
 }
+
+/**
+ * Posts a to discord channel via webhook.
+ * This functionality should move out of the listener 
+ * to the notification system, as soon as we have one.
+ */
+ async function postToDiscordWebhook(discordWebhookUrl, data){
+  const eventIcons = {
+    ListingCreated: ':trumpet:',
+    ListingUpdated: ':saxophone:',
+    ListingWithdrawn: ':x:',
+    ListingData: ':cd:',
+    ListingArbitrated: ':boxing_glove:',
+    OfferCreated: ':baby_chick:',
+    OfferWithdrawn: ':feet:',
+    OfferAccepted: ':bird:',
+    OfferDisputed: ':dragon_face:',
+    OfferRuling: ':dove:',
+    OfferFinalized: ':unicorn:',
+    OfferData: ':beetle:'
+  }
+
+  const personDisp = (p)=> {
+    let str = ''
+    if(p.profile && (p.profile.firstName || p.profile.lastName)){
+      str += `${p.profile.firstName|''} ${p.profile.lastName||''} - `
+    }
+    str += p.address
+    return str
+  }
+  const priceDisp = (listing) => {
+    const price = listing.price
+    return (price ? `${price.amount}${price.currency}` : '')
+  }
+
+  const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
+  const lines = []
+  const listing = data.related.listing
+  
+  let discordData = {}
+
+  if (data.related.offer !== undefined) { // Offer
+    discordData = {
+      "embeds":[
+        {
+          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
+          "description":[
+            `https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,
+            `Seller: ${personDisp(data.related.seller)}`,
+            `Buyer: ${personDisp(data.related.buyer)}`
+          ].join("\n")
+        }
+      ]
+    }
+  } else { // Listing
+    discordData = {
+      "embeds":[
+        {
+          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
+          "description":[
+            `${listing.description.split("\n")[0].slice(0, 60)}...`,
+            `https://dapp.originprotocol.com/#/listing/${listing.id}`,
+            `Seller: ${personDisp(data.related.seller)}`,
+          ].join("\n")
+        }
+      ]
+    }
+  }
+  await postToWebhook(discordWebhookUrl, JSON.stringify(discordData))
+ }
+
 
 /**
  * Sends a blob of json to a webhook.
@@ -406,7 +554,7 @@ async function handleLog(log, rule, contractVersion, context) {
 async function postToWebhook(urlString, json) {
   const url = urllib.parse(urlString)
   const postOptions = {
-    host: url.host,
+    host: url.hostname,
     port: url.port,
     path: url.path,
     method: 'POST',
@@ -418,7 +566,8 @@ async function postToWebhook(urlString, json) {
   return new Promise((resolve, reject) => {
     const client = url.protocol === 'https:' ? https : http
     const req = client.request(postOptions, res => {
-      if (res.statusCode === 200) {
+      console.log(res.statusCode )
+      if (res.statusCode === 200 || res.statusCode === 204) {
         resolve()
       } else {
         reject()
@@ -464,7 +613,7 @@ class Context {
  * //            eventName: 'ListingCreated',
  * //            eventAbi: [Object],
  * //            ruleFn: [...] } },
- * //      '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
+ * //   '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
  * //      { V00_Marketplace:
  * //          { contractName: 'V00_Marketplace',
  * //            eventName: 'ListingUpdated',
@@ -539,6 +688,8 @@ process.argv.forEach(arg => {
 const config = {
   // Call webhook to process event.
   webhook: args['--webhook'],
+  // Call post to discord webhook to process event.
+  discordWebhook: args['--discord-webhook'],
   // Index events in the search index.
   elasticsearch: args['--elasticsearch'],
   // Index events in the database.
@@ -552,7 +703,7 @@ const config = {
   // web3 provider url
   web3Url: args['--web3-url'] || 'http://localhost:8545',
   // ipfs url
-  ipfsUrl: args['--ipfs-url'] || 'http://origin-js:8080',
+  ipfsUrl: args['--ipfs-url'] || 'http://localhost:8080',
 }
 
 // Start the listener running

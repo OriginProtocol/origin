@@ -7,8 +7,8 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 Origin Box is a [Docker](https://www.docker.com/) container setup for running all core Origin components together in a single environment, preconfigured to work together.
 
 Origin Box currently supports the following components:
-- [origin-dapp](https://github.com/OriginProtocol/origin)
-- [origin-website](https://github.com/originprotocol/origin-website)
+- [origin-dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-demo-dapp)
+- [origin-website](https://github.com/OriginProtocol/origin-website)
 
 Each repo is symlinked from the container to a local directory. You may edit the source code using your favorite editor. The repo directories are just normal git repositories, so you can treat them as you would any other git repository. You can make changes, commit them, and change branches — and the container will be automatically kept in sync.
 
@@ -46,7 +46,7 @@ git checkout --track origin/stable
 
 2. Run `./install.sh -e origin` for the standard stack, or `./install.sh -e origin-website` for the website stack.
 
-![install.sh](https://raw.githubusercontent.com/OriginProtocol/origin-box/master/screenshot.png)
+![install.sh](https://raw.githubusercontent.com/OriginProtocol/origin/master/screenshot.png)
 
 If the install script doesn't complete the most likely reason is you don't have the [required ports](#port-errors) open.
 

@@ -5,6 +5,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
 
 import { showAlert } from 'actions/Alert'
+import { handleNotificationsSubscription } from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
@@ -296,6 +297,7 @@ class ListingCreate extends Component {
       })
       this.props.getOgnBalance()
       this.props.updateState({ step: this.STEP.SUCCESS })
+      this.props.handleNotificationsSubscription('seller', this.props)
     } catch (error) {
       console.error(error)
       this.props.updateState({ step: this.STEP.ERROR })
@@ -1042,15 +1044,21 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, exchangeRates, wallet }) => {
   return {
-    wallet: state.wallet,
-    exchangeRates: state.exchangeRates,
+    exchangeRates,
+    notificationsHardPermission: app.notificationsHardPermission,
+    notificationsSoftPermission: app.notificationsSoftPermission,
+    pushNotificationsSupported: app.pushNotificationsSupported,
+    serviceWorkerRegistration: app.serviceWorkerRegistration,
+    wallet,
+    web3Account: app.web3.account,
     ...state.listingCreate
   }
 }
 
 const mapDispatchToProps = dispatch => ({
+  handleNotificationsSubscription: (role, props) => dispatch(handleNotificationsSubscription(role, props)),
   showAlert: msg => dispatch(showAlert(msg)),
   updateTransaction: (hash, confirmationCount) =>
     dispatch(updateTransaction(hash, confirmationCount)),

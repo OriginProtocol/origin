@@ -8,6 +8,7 @@ import { Attestations } from '../src/resources/attestations'
 import AttestationObject from '../src/models/attestation'
 import ContractService from '../src/services/contract-service'
 import IpfsService from '../src/services/ipfs-service'
+import { validateUser } from './helpers/schema-validation-helper'
 
 chai.use(chaiAsPromised)
 chai.use(chaiString)
@@ -56,6 +57,7 @@ describe('User Resource', function() {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     const web3 = new Web3(provider)
     const accounts = await web3.eth.getAccounts()
+    this.userAddress = accounts[0]
     const contractService = new ContractService({ web3 })
     await contractService.deployed(contractService.contracts.OriginIdentity)
     const ipfsService = new IpfsService({
@@ -72,9 +74,11 @@ describe('User Resource', function() {
     const userRegistry = await contractService.deployed(
       contractService.contracts.V00_UserRegistry
     )
-    await userRegistry.methods.clearUser().send({ from: accounts[0] })
+    await userRegistry.methods.clearUser().send({ from: this.userAddress })
 
     const identityAddress = await attestations.getIdentityAddress(accounts[0])
+    this.identityAddress = identityAddress
+
     phoneAttestation = await generateAttestation({
       identityAddress,
       web3,
@@ -113,8 +117,9 @@ describe('User Resource', function() {
         profile: { firstName: 'Wonder', lastName: 'Woman' }
       })
       const user = await users.get()
+      validateUser(user)
 
-      expect(user.attestations.length).to.equal(0)
+      expect(user.attestations).to.be.empty
       expect(user.profile.firstName).to.equal('Wonder')
       expect(user.profile.lastName).to.equal('Woman')
     })
@@ -124,8 +129,9 @@ describe('User Resource', function() {
         profile: { firstName: 'Iron', lastName: 'Man' }
       })
       let user = await users.get()
+      validateUser(user)
 
-      expect(user.attestations.length).to.equal(0)
+      expect(user.attestations).to.be.empty
       expect(user.profile.firstName).to.equal('Iron')
       expect(user.profile.lastName).to.equal('Man')
 
@@ -134,8 +140,13 @@ describe('User Resource', function() {
         attestations: [phoneAttestation]
       })
       user = await users.get()
+      validateUser(user)
 
-      expect(user.attestations.length).to.equal(1)
+      expect(user.attestations).to.have.lengthOf(1)
+      expect(user.attestations).to.deep.equal([phoneAttestation])
+
+      expect(user.attestations[0].topic).to.equal(10)
+      expect(user.attestations[0].service).to.equal('phone')
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Panther')
 
@@ -144,7 +155,7 @@ describe('User Resource', function() {
       })
       user = await users.get()
 
-      expect(user.attestations.length).to.equal(1)
+      expect(user.attestations).to.have.lengthOf(1)
       expect(user.profile.firstName).to.equal('Bat')
       expect(user.profile.lastName).to.equal('Man')
 
@@ -153,7 +164,8 @@ describe('User Resource', function() {
       })
       user = await users.get()
 
-      expect(user.attestations.length).to.equal(2)
+      expect(user.attestations).to.have.lengthOf(2)
+      expect(user.attestations).to.deep.equal([phoneAttestation, emailAttestation])
       expect(user.profile.firstName).to.equal('Bat')
       expect(user.profile.lastName).to.equal('Man')
     })
@@ -165,8 +177,10 @@ describe('User Resource', function() {
         attestations: [phoneAttestation]
       })
       const user = await users.get()
+      validateUser(user)
 
-      expect(user.attestations.length).to.equal(1)
+      expect(user.attestations).to.have.lengthOf(1)
+      expect(user.attestations).to.deep.equal([phoneAttestation])
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -179,6 +193,7 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(2)
+      expect(user.attestations).to.deep.equal([phoneAttestation, emailAttestation])
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -191,6 +206,12 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(3)
+      expect(user.attestations).to.deep.equal([
+        phoneAttestation,
+        emailAttestation,
+        facebookAttestation
+      ])
+
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -209,6 +230,14 @@ describe('User Resource', function() {
       const user = await users.get()
 
       expect(user.attestations.length).to.equal(5)
+      expect(user.attestations).to.deep.equal([
+        phoneAttestation,
+        emailAttestation,
+        facebookAttestation,
+        twitterAttestation,
+        airbnbAttestation
+      ])
+
       expect(user.profile.firstName).to.equal('Black')
       expect(user.profile.lastName).to.equal('Widow')
     })
@@ -219,8 +248,11 @@ describe('User Resource', function() {
         attestations: [phoneAttestation, emailAttestation, invalidAttestation]
       })
       const user = await users.get()
+      validateUser(user)
 
       expect(user.attestations.length).to.equal(2)
+      expect(user.attestations).to.not.include(invalidAttestation)
+      expect(user.attestations).to.deep.equal([phoneAttestation, emailAttestation])
       expect(user.profile.firstName).to.equal('Dead')
       expect(user.profile.lastName).to.equal('Pool')
     })
@@ -231,15 +263,38 @@ describe('User Resource', function() {
         attestations: [phoneAttestation, emailAttestation, invalidSignatureAttestation]
       })
       const user = await users.get()
+      validateUser(user)
 
       expect(user.attestations.length).to.equal(2)
+      expect(user.attestations).to.not.include(invalidSignatureAttestation)
+      expect(user.attestations).to.deep.equal([phoneAttestation, emailAttestation])
       expect(user.profile.firstName).to.equal('Dead')
       expect(user.profile.lastName).to.equal('Pool')
     })
 
-    it('should fail setting an invalid profile', async () => {
+    it('should fail setting an invalid profile', () => {
       const badProfile = { profile: { bad: 'profile' } }
-      return expect(users.set(badProfile)).to.eventually.be.rejectedWith(Error)
+      const dataErrors = [
+        {
+          keyword: 'required',
+          dataPath: '',
+          schemaPath: '#/required',
+          params: { missingProperty:'firstName'},
+          message: 'should have required property \'firstName\''
+        },
+        {
+          keyword: 'required',
+          dataPath: '',
+          schemaPath: '#/required',
+          params: { missingProperty: 'lastName'},
+          message: 'should have required property \'lastName\''
+        }
+      ]
+
+      return users.set(badProfile).then().catch(({ message }) => {
+        expect(message).to.include('Data failed schema validation.')
+        expect(message).to.include(JSON.stringify(dataErrors))
+      })
     })
 
     it('should be able to receive transactionHash and onComplete callbacks', (done) => {
@@ -259,7 +314,7 @@ describe('User Resource', function() {
             expect(confirmationCount).is.a('number')
             expect(transactionReceipt).is.a('object')
             // transactionHashCallback should always execute before confirmationCallback
-            expect(transactionHash).to.startsWith('0x')
+            expect(transactionHash).to.startWith('0x')
 
             // prevent done being called multiple times
             if (!doneCalled){
@@ -277,28 +332,42 @@ describe('User Resource', function() {
       await users.set({
         profile: { firstName: 'Baby', lastName: 'Groot' },
       })
-      let user = await users.get()
+      let user = await users.get(this.userAddress)
+      validateUser(user)
 
-      expect(user.attestations.length).to.equal(0)
+      expect(user.attestations).to.be.an('array')
+      expect(user.attestations).to.be.empty
+
+      expect(user).to.have.property('address', this.userAddress)
+      expect(user).to.have.property('identityAddress', this.identityAddress)
+
       expect(user.profile.firstName).to.equal('Baby')
       expect(user.profile.lastName).to.equal('Groot')
+
+      const avatar = 'data:image/jpeg;base64,/OxEs0sALySAAJvQAHvJ/cnpmxLAZagGx174/9k='
 
       await users.set({
         profile: {
           firstName: 'Daddy',
           lastName: 'Groot',
           description: 'Grown up',
-          avatar: 'good looking pic'
+          avatar
         },
         attestations: [phoneAttestation]
       })
       user = await users.get()
+      validateUser(user)
 
-      expect(user.attestations.length).to.equal(1)
+      expect(user.attestations).to.have.lengthOf(1)
+      expect(user.attestations).to.deep.equal([phoneAttestation])
+      expect(user.attestations[0].topic).to.equal(10)
+      expect(user.attestations[0].service).to.equal('phone')
+
       expect(user.profile.firstName).to.equal('Daddy')
       expect(user.profile.lastName).to.equal('Groot')
+      expect(user.profile).to.have.property('description').that.is.a('string')
       expect(user.profile.description).to.equal('Grown up')
-      expect(user.profile.avatar).to.equal('good looking pic')
+      expect(user.profile.avatar).to.equal(avatar)
     })
   })
 
