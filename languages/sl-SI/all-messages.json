@@ -83,7 +83,7 @@
   "photo-picker.oversizeImages": "Vaša izbrana slika, {imageName}, je prevelika. Največja dovoljena velikost je {maxImageMB}MB",
   "price-field.price-help": "Cena je vedno v {currency}.",
   "price-field.price-usd-disclaimer": "USD je ocena.",
-  "header.title": "Origin Protocol DApp",
+  "header.title": "Origin Protocol Demo DApp",
   "listing-card-prices.loadingMessage": "Nalaganje...",
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-create.navigationWarning": "Ali ste prepričani, da želite zapzstiti stran? V kolikor jo zapustite, bo vaše delo izgubljeno.",
