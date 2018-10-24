@@ -40,6 +40,7 @@ import {
 import { translateSchema } from 'utils/translationUtils'
 
 import origin from '../services/origin'
+import { Pictures } from 'components/pictures'
 
 const ARBITRATOR_ACCOUNT = process.env.ARBITRATOR_ACCOUNT
 
@@ -758,83 +759,14 @@ class PurchaseDetail extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              {offerFinalized && (
-                <div className="brdcrmb">
-                  {perspective === 'buyer' && (
-                    <FormattedMessage
-                      id={'purchase-detail.purchasedFrom'}
-                      defaultMessage={'Purchased from {sellerLink}'}
-                      values={{
-                        sellerLink: (
-                          <Link
-                            to={`/users/${counterpartyUser.address}`}
-                            ga-category="transaction_flow"
-                            ga-label="buyer_purchased_from_seller_profile"
-                          >
-                            {sellerName}
-                          </Link>
-                        )
-                      }}
-                    />
-                  )}
-                  {perspective === 'seller' && (
-                    <FormattedMessage
-                      id={'purchase-detail.soldTo'}
-                      defaultMessage={'Sold to {buyerLink}'}
-                      values={{
-                        buyerLink: (
-                          <Link
-                            to={`/users/${counterpartyUser.address}`}
-                            ga-category="transaction_flow"
-                            ga-label="seller_sold_to_buyer_profile"
-                          >
-                            {buyerName}
-                          </Link>
-                        )
-                      }}
-                    />
-                  )}
-                </div>
-              )}
-              {!offerFinalized &&
-                !offerWithdrawn && (
-                <div className="brdcrmb">
-                  {perspective === 'buyer' && (
-                    <FormattedMessage
-                      id={'purchase-detail.purchasingFrom'}
-                      defaultMessage={'Purchasing from {sellerLink}'}
-                      values={{
-                        sellerLink: (
-                          <Link
-                            to={`/users/${counterpartyUser.address}`}
-                            ga-category="transaction_flow"
-                            ga-label="buyer_purchasing_from_seller_profile"
-                          >
-                            {sellerName}
-                          </Link>
-                        )
-                      }}
-                    />
-                  )}
-                  {perspective === 'seller' && (
-                    <FormattedMessage
-                      id={'purchase-detail.sellingTo'}
-                      defaultMessage={'Selling to {buyerLink}'}
-                      values={{
-                        buyerLink: (
-                          <Link
-                            to={`/users/${counterpartyUser.address}`}
-                            ga-category="transaction_flow"
-                            ga-label="seller_selling_to_buyer_profile"
-                          >
-                            {buyerName}
-                          </Link>
-                        )
-                      }}
-                    />
-                  )}
-                </div>
-              )}
+              <OfferRemark 
+                offerFinalized={offerFinalized}
+                offerWithdrawn={offerWithdrawn}
+                perspective={perspective}
+                sellerName={sellerName}
+                buyerName={buyerName}
+                counterpartyUser={counterpartyUser}
+              />
               <h1>
                 {listing.name}
                 {isPending && <PendingBadge />}
@@ -1148,13 +1080,10 @@ class PurchaseDetail extends Component {
                     />
                   </h2>
                   {!!pictures.length && (
-                    <div className="carousel small">
-                      {pictures.map(pictureUrl => (
-                        <div className="photo" key={pictureUrl}>
-                          <img src={pictureUrl} role="presentation" />
-                        </div>
-                      ))}
-                    </div>
+                    <Pictures 
+                      pictures={pictures}
+                      className="carousel small"
+                    />
                   )}
                   <div className="detail-info-box">
                     <h2 className="category placehold">{listing.category}</h2>
@@ -1266,6 +1195,95 @@ class PurchaseDetail extends Component {
       </div>
     )
   }
+}
+
+const OfferRemark = ({
+  offerFinalized, 
+  offerWithdrawn, 
+  perspective, 
+  sellerName, 
+  buyerName, 
+  counterpartyUser })=>{
+  if(offerFinalized){
+    return (
+      <div className="brdcrmb">
+        {perspective === 'buyer' && (
+          <FormattedMessage
+            id={'purchase-detail.purchasedFrom'}
+            defaultMessage={'Purchased from {sellerLink}'}
+            values={{
+              sellerLink: (
+                <Link
+                  to={`/users/${counterpartyUser.address}`}
+                  ga-category="transaction_flow"
+                  ga-label="buyer_purchased_from_seller_profile"
+                >
+                  {sellerName}
+                </Link>
+              )
+            }}
+          />
+        )}
+        {perspective === 'seller' && (
+          <FormattedMessage
+            id={'purchase-detail.soldTo'}
+            defaultMessage={'Sold to {buyerLink}'}
+            values={{
+              buyerLink: (
+                <Link
+                  to={`/users/${counterpartyUser.address}`}
+                  ga-category="transaction_flow"
+                  ga-label="seller_sold_to_buyer_profile"
+                >
+                  {buyerName}
+                </Link>
+              )
+            }}
+          />
+        )}
+      </div>
+    )
+  }else if(!offerFinalized && !offerWithdrawn){
+    return (
+      <div className="brdcrmb">
+        {perspective === 'buyer' && (
+          <FormattedMessage
+            id={'purchase-detail.purchasingFrom'}
+            defaultMessage={'Purchasing from {sellerLink}'}
+            values={{
+              sellerLink: (
+                <Link
+                  to={`/users/${counterpartyUser.address}`}
+                  ga-category="transaction_flow"
+                  ga-label="buyer_purchasing_from_seller_profile"
+                >
+                  {sellerName}
+                </Link>
+              )
+            }}
+          />
+        )}
+        {perspective === 'seller' && (
+          <FormattedMessage
+            id={'purchase-detail.sellingTo'}
+            defaultMessage={'Selling to {buyerLink}'}
+            values={{
+              buyerLink: (
+                <Link
+                  to={`/users/${counterpartyUser.address}`}
+                  ga-category="transaction_flow"
+                  ga-label="seller_selling_to_buyer_profile"
+                >
+                  {buyerName}
+                </Link>
+              )
+            }}
+          />
+        )}
+      </div>
+    )
+  }
+  return null
 }
 
 const mapStateToProps = ({ app }) => {
