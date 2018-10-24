@@ -327,10 +327,10 @@ class ListingCreate extends Component {
       translatedSchema,
       showDetailsFormErrorMsg,
       showBoostTutorial,
-      showEthNotEnough
+      showEthNotEnough,
+      schemaFetched
     } = this.props
     const { formData } = formListing
-    console.log('form data',formData)
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
 
@@ -420,7 +420,7 @@ class ListingCreate extends Component {
                 </div>
               </div>
             )}
-            {step === this.STEP.DETAILS && (
+            {step === this.STEP.DETAILS && schemaFetched && (
               <div className="col-md-6 col-lg-5 schema-details">
                 <label>
                   <FormattedMessage
@@ -1044,7 +1044,7 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = ({ app, exchangeRates, wallet }) => {
+const mapStateToProps = ({ app, exchangeRates, wallet, listingCreate }) => {
   return {
     exchangeRates,
     notificationsHardPermission: app.notificationsHardPermission,
@@ -1053,7 +1053,7 @@ const mapStateToProps = ({ app, exchangeRates, wallet }) => {
     serviceWorkerRegistration: app.serviceWorkerRegistration,
     wallet,
     web3Account: app.web3.account,
-    ...state.listingCreate
+    ...listingCreate
   }
 }
 
