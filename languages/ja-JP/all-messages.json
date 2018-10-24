@@ -83,7 +83,7 @@
   "photo-picker.oversizeImages": "選択された画像「{imageName}」は大きすぎます。最大許容サイズは {maxImageMB}MBです。",
   "price-field.price-help": "価格は常に {currency} です。",
   "price-field.price-usd-disclaimer": "USD表示は概算です。",
-  "header.title": "Origin Protocol Dapp（Origin Protocol 分散型アプリ）",
+  "header.title": "Origin Protocol Demo DApp",
   "listing-card-prices.loadingMessage": "読込中...",
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-create.navigationWarning": "このままページを離れて良いですか？今このページを離れると、全ての更新内容が失われます。",
