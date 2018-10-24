@@ -218,8 +218,6 @@ describe('Attestation Resource', function() {
       })
 
       expect(response.data).to.eql('0x7b6d4739164e722b313c3f00dd61ab3e79781e919d7aaeb651c1277d591b6bc2')
-      expect(response.ipfsHash).to.eql('QmWeTW6u1jZ1q9VBfATXsnzgDLEE6EKPrU5etTyBXATMcd')
-      expect(response.isLegacyAttestation).to.equal(false)
       expect(response.signature).to.equal(sampleTwitterAttestation.signature)
       expect(response.topic).to.equal(sampleTwitterAttestation['claim-type'])
     })
