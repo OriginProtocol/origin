@@ -89,17 +89,6 @@ var config = {
           }
         ]
       },
-      {
-        test: /\.js$/,
-        use: "source-map-loader",
-        exclude: [
-          // Don't load source maps from anything in node_modules except for the
-          // origin-js directory
-          /node_modules([\\]+|\/)+(?!origin)/,
-          /\origin([\\]+|\/)node_modules/
-        ],
-        enforce: "pre"
-      }
     ]
   },
   devServer: {
@@ -143,6 +132,18 @@ if (isProduction) {
     filename: '[name].[hash].css',
     chunkFilename: '[id].[hash].css'
   }))
+} else {
+  config.module.rules.push({
+    test: /\.js$/,
+    use: "source-map-loader",
+    exclude: [
+      // Don't load source maps from anything in node_modules except for the
+      // origin-js directory
+      /node_modules([\\]+|\/)+(?!origin)/,
+      /\origin([\\]+|\/)node_modules/
+    ],
+    enforce: "pre"
+  })
 }
 
 module.exports = config
