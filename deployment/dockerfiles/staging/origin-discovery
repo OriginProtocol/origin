@@ -16,7 +16,7 @@ WORKDIR /app/origin-js
 RUN npm install --quiet --no-progress
 RUN npm run build
 
-# --- Event listener
+# --- Discovery server
 
 FROM node:9 as build
 
