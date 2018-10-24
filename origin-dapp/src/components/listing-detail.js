@@ -9,7 +9,10 @@ import {
 } from 'react-intl'
 
 import { showAlert } from 'actions/Alert'
-import { storeWeb3Intent } from 'actions/App'
+import {
+  handleNotificationsSubscription,
+  storeWeb3Intent
+} from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
@@ -143,6 +146,7 @@ class ListingsDetail extends Component {
           transactionTypeKey: 'makeOffer'
         })
         this.setState({ step: this.STEP.PURCHASED })
+        this.props.handleNotificationsSubscription('buyer', this.props)
       } catch (error) {
         console.error(error)
         this.setState({ step: this.STEP.ERROR })
@@ -199,7 +203,7 @@ class ListingsDetail extends Component {
       })
     } catch (error) {
       this.props.showAlert(
-        this.props.formatMessage(this.intlMessages.loadingError)
+        this.props.intl.formatMessage(this.intlMessages.loadingError)
       )
       console.error(
         `Error fetching contract or IPFS info for listing: ${
@@ -692,15 +696,20 @@ const BuyBoxButton = ({ userIsSeller, onClick }) => {
 
 const mapStateToProps = ({ app, profile, listings }) => {
   return {
+    featuredListingIds: listings.featured,
+    notificationsHardPermission: app.notificationsHardPermission,
+    notificationsSoftPermission: app.notificationsSoftPermission,
     profile,
+    pushNotificationsSupported: app.pushNotificationsSupported,
     onMobile: app.onMobile,
+    serviceWorkerRegistration: app.serviceWorkerRegistration,
     web3Account: app.web3.account,
-    web3Intent: app.web3.intent,
-    featuredListingIds: listings.featured
+    web3Intent: app.web3.intent
   }
 }
 
 const mapDispatchToProps = dispatch => ({
+  handleNotificationsSubscription: (role, props) => dispatch(handleNotificationsSubscription(role, props)),
   showAlert: msg => dispatch(showAlert(msg)),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
   updateTransaction: (confirmationCount, transactionReceipt) =>
