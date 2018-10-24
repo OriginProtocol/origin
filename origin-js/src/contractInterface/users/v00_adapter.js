@@ -208,11 +208,8 @@ class V00_UsersAdapter {
       .map(att => {
         try {
           if (ClaimDataIsIpfsHash.includes(att.topic)){
-            att.isLegacyAttestation = true
-            if (att.blockNumber >= this.blockAttestattionV1){
+            if (att.blockNumber >= this.blockAttestattionV1)
               att.ipfsHash = this.contractService.getIpfsHashFromBytes32(att.data)
-              att.isLegacyAttestation = false
-            }
           }
         }
         catch (error) {

@@ -21,13 +21,14 @@ const generateAttestation = async ({
   identityAddress,
   web3,
   topic,
-  data
+  data,
+  ipfsHash
 }) => {
   data = Web3.utils.soliditySha3(data)
   const msg = Web3.utils.soliditySha3(identityAddress, topic, data)
   const signing = web3.eth.accounts.sign(msg, issuerPrivatekey)
   const signature = signing.signature
-  return new AttestationObject({ topic, data, signature })
+  return new AttestationObject({ topic, data, signature, ipfsHash })
 }
 
 const invalidAttestation = new AttestationObject({
@@ -101,17 +102,15 @@ describe('User Resource', function() {
       identityAddress,
       web3,
       topic: 4,
-      ipfsHash: 'QmWeTW6u1jZ1q9VBfATXsnzgDLEE6EKPrU5etTyBXATMcd',
-      data: '0x7b6d4739164e722b313c3f00dd61ab3e79781e919d7aaeb651c1277d591b6bc2',
-      isLegacyAttestation: false
+      ipfsHash: 'QmR8ui1hXztBJ8CGXxXmN5btZXMPZzjgCe9NpeatVdCB8q',
+      data: '0x7b6d4739164e722b313c3f00dd61ab3e79781e919d7aaeb651c1277d591b6bc2'
     })
     airbnbAttestation = await generateAttestation({
       identityAddress,
       web3,
       topic: 5,
-      ipfsHash: 'QmSzEQEEU7N7a9mJkyE9ZzZHRNVLE58ZBsK28jo8MwJp2t',
-      data: '0x450f554220fe1c17db122f2ea8c493e93186143aab8e1b1100f1c535113a7b51',
-      isLegacyAttestation: false
+      ipfsHash: 'QmVA6KZSsx8hutLLM4T8RsU13LA5RvdE57BnF5kyG9CEnX',
+      data: '0x450f554220fe1c17db122f2ea8c493e93186143aab8e1b1100f1c535113a7b51'
     })
   })
 

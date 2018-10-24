@@ -7,13 +7,12 @@ const topicMapping = {
 }
 
 export default class Attestation {
-  constructor({ topic, data, signature, ipfsHash, isLegacyAttestation }) {
+  constructor({ topic, data, signature, ipfsHash }) {
     topic = Number(topic)
     this.topic = topic
     this.service = topicMapping[topic]
     this.data = data
     this.signature = signature
-    this.isLegacyAttestation = isLegacyAttestation
     if (ipfsHash !== undefined)
       this.ipfsHash = ipfsHash
   }
