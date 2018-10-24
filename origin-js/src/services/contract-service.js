@@ -215,13 +215,13 @@ class ContractService {
         this.checkForTransactionCompletion(hash, contract, confirmationCallback, resolveCallback, promiseStatus)
       }, 1500)
     } else {
-      promiseStatus.numberOfTimesTransactionFoundByFallbackFcnt += 1
+      promiseStatus.txnFoundCounter += 1
 
       /* If fallback function detects a valid transaction for the second time and the main function has
        * not registered a transaction receipt, positively resolve the promise with generated receipt. This resolves
        * problems created by Metamask 4.12.0.
        */
-      if (!promiseStatus.receiptReceived && promiseStatus.numberOfTimesTransactionFoundByFallbackFcnt > 1){
+      if (!promiseStatus.receiptReceived && promiseStatus.txnFoundCounter > 1){
         // unfortunately transaction logs in transactionReceipt do not contain all needed event information
         const getEventsEmittedByTransaction = async () => {
           let events = await contract.getPastEvents(
@@ -268,7 +268,7 @@ class ContractService {
     const promiseStatus = {
       onConfirmationTriggered: false,
       receiptReceived: false,
-      numberOfTimesTransactionFoundByFallbackFcnt: 0
+      txnFoundCounter: 0
     }
     sendCallback
       .on('receipt', receipt => {

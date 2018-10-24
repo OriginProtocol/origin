@@ -7,11 +7,11 @@ export default class Web3Mock {
     emitReceipt = true,
     emitTransactionHash = true,
     emitConfirmation = true,
-    nrOfConfirmations = 3,
+    numOfConfirmations = 3,
     gasEstimation = 1000000
   }){
     this.confirmationsEmitted = 0
-    this.nrOfConfirmations = nrOfConfirmations
+    this.numOfConfirmations = numOfConfirmations
 
     const transactionReceipt = {
       blockNumber: 0
@@ -21,7 +21,7 @@ export default class Web3Mock {
         this.confirmationsEmitted++
         myEmitter.emit('confirmation', 0, transactionReceipt)
 
-        if (this.nrOfConfirmations > this.confirmationsEmitted)
+        if (this.numOfConfirmations > this.confirmationsEmitted)
           emitConfirmationFcnt(myEmitter)
       } , 130)
     }
