@@ -33,6 +33,25 @@ services:
     networks:
       - default
 
+  ipfs-proxy:
+    container_name: ipfs-proxy
+    image: ipfs-proxy
+    build:
+      context: .
+      dockerfile: development/dockerfiles/ipfs-proxy
+    ports:
+      - "9999:9999"
+    environment:
+      - IPFS_API_URL=http://origin-js:5002
+      - IPFS_GATEWAY_URL=http://origin-js:8080
+    volumes:
+      - ./ipfs-proxy:/app
+    command: >
+      /bin/bash -c "npm install --quiet --no-progress &&
+      node src/index.js"
+    networks:
+      - default
+
   origin-js:
     container_name: origin-js
     image: origin-js
@@ -42,12 +61,8 @@ services:
     volumes:
       - ./origin-js:/app
       - origin_js_node_modules:/app/node_modules
-    environment:
-      - NODE_ENV=development
     ports:
       - "5001:5000" # Faucet
-      - "5002:5002"
-      - "8080:8080"
       - "8081:8081" # Tests
       - "8545:8545" # Blockchain
     # Run npm install on every container start to avoid volumes issue
@@ -86,8 +101,8 @@ services:
       - "4000:4000" # Apollo
     command: >
       /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
-      npm link origin &&
       npm install --quiet --no-progress &&
+      npm link origin &&
       node apollo/index.js"
     networks:
       - default
@@ -108,18 +123,17 @@ services:
       - postgres
       - elasticsearch
     environment:
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USERNAME=origin
-      - DATABASE_PASSWORD=origin
-      - DATABASE_NAME=origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      # TODO: Add support for .env files to the event-listener and move these env vars in there.
+      - AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
+      - ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
+      - BLOCK_EPOCH=0
     command: >
       /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
-      npm link origin &&
       npm install --quiet --no-progress &&
-      node node_modules/db-migrate/bin/db-migrate up &&
+      npm link origin &&
+      node node_modules/.bin/sequelize db:migrate &&
       node listener/listener.js --elasticsearch --db --web3-url='http://origin-js:8545'"
     networks:
       - default
@@ -185,10 +199,13 @@ services:
       - origin-js
       - origin-messaging
       - origin-bridge
-    environment:
-      - NODE_ENV=development
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - IPFS_API_PORT=9999
+      - IPFS_DOMAIN=localhost
+      - IPFS_GATEWAY_PORT=9999
     command:
       # Waits for origin-messaging to start then uses a script to read the
       # origin-messaging IPFS peer id and write the configuration key/pair to

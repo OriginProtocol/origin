@@ -2,7 +2,7 @@
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
-Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine.
+Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box) for development and testing on your local machine.
 
 # Origin Bridge Server
 
@@ -44,8 +44,7 @@ brew install automake autoconf libtool
 ### Set Up A Virtual Environment
 
 ```bash
-git clone https://github.com/OriginProtocol/origin-bridge.git
-cd origin-bridge
+git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-bridge
 
 python3 -m venv ve
 
@@ -212,7 +211,7 @@ To deploy a development copy of the site on Heroku, just choose which branch you
 
 | `Master` branch <br>(stable) | `Develop` branch<br> (active development) |
 |---------|----------|
-| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin-bridge/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin-bridge/tree/develop) |
+| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin/tree/master/origin-bridge) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin/tree/master/origin-bridge) |
 
 Heroku will prompt you to set config variables. At a minium, you must set these three:
 

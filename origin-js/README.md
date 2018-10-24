@@ -1,7 +1,7 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
 ![origin_npm_version](https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff)
-[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin-js/blob/master/LICENSE)
+[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/origin-js/LICENSE)
 [![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-js/master.svg?style=flat-square&colorA=111d28)](https://travis-ci.org/OriginProtocol/origin-js)
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
@@ -20,7 +20,7 @@ origin-js is a library of javascript code and Ethereum smart contracts which all
 origin-js is showcased in our Demo DApp currently running on the Rinkeby testnet.
 - [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58)
 - [Live Demo](http://demo.originprotocol.com)
-- [Github Repo](https://github.com/OriginProtocol/demo-dapp)
+- [Github Repo](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-demo-dapp)
 
 ## Using origin-js in your project
 
@@ -36,7 +36,7 @@ yarn add origin
 
 ### Plain javascript
 
-A browser-compatible plain javascript file `origin.js` is available in the [Releases section](https://github.com/OriginProtocol/origin-js/releases). A hosted version can be directly included in your html as:
+A browser-compatible plain javascript file `origin.js` is available in the [Releases section](https://github.com/OriginProtocol/origin/releases). A hosted version can be directly included in your html as:
 ```html
 <script src="https://code.originprotocol.com/origin-js/origin-v0.7.1.js"></script>
 ```
@@ -45,22 +45,22 @@ A browser-compatible plain javascript file `origin.js` is available in the [Rele
 
 ## Local development
 
-### Fully integrated with [origin-dapp](https://github.com/OriginProtocol/origin-dapp) and [origin-bridge](https://github.com/OriginProtocol/origin-bridge)
+### Fully integrated with [origin-dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-demo-dapp) and [origin-bridge](https://github.com/OriginProtocol/origin/tree/master/origin-bridge#origin-bridge-server)
 
-We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine. This saves you the headache of spinning up several environments and running multiple, different processes.
+We recommend using [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box) for development and testing on your local machine. This saves you the headache of spinning up several environments and running multiple, different processes.
 
-### Without [origin-bridge](https://github.com/OriginProtocol/origin-bridge)
+### Without [origin-bridge](https://github.com/OriginProtocol/origin/tree/master/origin-bridge#origin-bridge-server)
 
 1.  Clone this repo.
 ```
-git clone https://github.com/OriginProtocol/origin-js.git && cd origin-js
+git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-js
 ```
 
 1.  Install dependencies and link by running `npm run install:dev`. This script is a shortcut for `npm install && npm link`. Linking means that changes to `origin-js` code are immediately available to local DApps without an `npm install`.
 
 1.  Start the local blockchain and build origin-js by running `npm start`. Code changes will trigger a live rebuild.
 
-1.  To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain).
+1.  To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin/blob/master/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain).
 
 
 ## Tests
