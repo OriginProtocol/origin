@@ -6,7 +6,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(TableName, {
       id: {
-        type: Sequelize.STRING(64),
+        type: Sequelize.CHAR(16),
         primaryKey: true
       },
       contract_address: {
@@ -43,7 +43,7 @@ module.exports = {
       },
       created_at: {
         type: Sequelize.DATE,
-          allowNull: true
+        allowNull: true
       }
   }).then(() => queryInterface.addIndex(TableName, ['contract_address']))
     .then(() => queryInterface.addIndex(TableName, ['transaction_hash']))
