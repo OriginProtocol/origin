@@ -83,7 +83,7 @@
   "photo-picker.oversizeImages": "L'immagine selezionata, {imageName}, è troppo grande. La dimensione massima consentita è {maxImageMB}MB",
   "price-field.price-help": "Il prezzo è sempre in {currency}.",
   "price-field.price-usd-disclaimer": "USD è una stima.",
-  "header.title": "Dapp di Origin Protocol",
+  "header.title": "Origin Protocol Demo DApp",
   "listing-card-prices.loadingMessage": "Caricamento...",
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-create.navigationWarning": "Sei sicuro di voler uscire? Se lasci questa pagina le tue modifiche andranno perse.",
