@@ -50,8 +50,13 @@ app.use(bodyParser.json())
 // currently showing all subscriptions in an unauthenticated index view - maybe not a good idea in production?
 app.get('/', async (req, res) => {
   const subs = await PushSubscription.findAll()
+  let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
 
-  res.send(`<h1>${subs.length} Push Subscriptions</h1><ul>${subs.map(s => `<li><pre style="white-space: pre-wrap;word-break: break-all">${JSON.stringify(s)}</pre></li>`)}</ul>`)
+  if (app.get('env') === 'development') {
+    markup += `<h3>${subs.length} Push Subscriptions</h3><ul>${subs.map(s => `<li><pre style="white-space: pre-wrap;word-break: break-all">${JSON.stringify(s)}</pre></li>`)}</ul>`
+  }
+
+  res.send(markup)
 })
 
 app.post('/', async(req, res) => {
