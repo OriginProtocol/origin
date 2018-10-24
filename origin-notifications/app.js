@@ -14,6 +14,38 @@ const emailAddress = process.env.VAPID_EMAIL_ADDRESS
 const privateKey = process.env.VAPID_PRIVATE_KEY
 const publicKey = process.env.VAPID_PUBLIC_KEY
 
+const eventNotificationMap = {
+  OfferCreated: {
+    title: 'New Offer',
+    body: 'A buyer has made an offer on your listing.'
+  },
+  OfferWithdrawn: {
+    title: 'Offer Withdrawn',
+    // does not make sense if offer is rejected by seller
+    body: 'An offer on your listing has been withdrawn.'
+  },
+  OfferAccepted: {
+    title: 'Offer Accepted',
+    body: 'An offer you made has been accepted.'
+  },
+  OfferDisputed: {
+    title: 'Dispute Initiated',
+    body: 'A problem has been reported with your transaction.'
+  },
+  OfferRuling: {
+    title: 'Dispute Resolved',
+    body: 'A ruling has been issued on your disputed transaction.'
+  },
+  OfferFinalized: {
+    title: 'Sale Completed',
+    body: 'Your transaction has been completed.'
+  },
+  OfferData: {
+    title: 'New Review',
+    body: 'A review has been left on your transaction.'
+  }
+}
+
 webpush.setVapidDetails(
   `mailto:${emailAddress}`,
   publicKey,
@@ -49,10 +81,11 @@ app.use(bodyParser.json())
 
 // currently showing all subscriptions in an unauthenticated index view - maybe not a good idea in production?
 app.get('/', async (req, res) => {
-  const subs = await PushSubscription.findAll()
   let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
 
   if (app.get('env') === 'development') {
+    const subs = await PushSubscription.findAll()
+
     markup += `<h3>${subs.length} Push Subscriptions</h3><ul>${subs.map(s => `<li><pre style="white-space: pre-wrap;word-break: break-all">${JSON.stringify(s)}</pre></li>`)}</ul>`
   }
 
@@ -76,7 +109,7 @@ app.post('/', async(req, res) => {
 })
 
 app.post('/events', async (req, res) => {
-  const { log, related } = req.body
+  const { log = {}, related = {} } = req.body
   const { buyer = {}, listing, offer, seller = {} } = related
 
   res.sendStatus(200)
@@ -85,10 +118,14 @@ app.post('/events', async (req, res) => {
     return
   }
 
+  const { decoded = {}, eventName } = log
+  const { party } = decoded
+  const { body, title } = eventNotificationMap[eventName]
+
   const subs = await PushSubscription.findAll({
     where: {
       account: {
-        [Sequelize.Op.in]: [buyer.address, seller.address].filter(a => a)
+        [Sequelize.Op.in]: [buyer.address, seller.address].filter(a => a && a !== party)
       }
     }
   })
@@ -100,8 +137,8 @@ app.post('/events', async (req, res) => {
     try {
       // should safeguard against duplicates
       await webpush.sendNotification(s, JSON.stringify({
-        title: log.eventName,
-        body: listing.title,
+        title,
+        body,
         account: s.account,
         offerId: offer.id
       }))
