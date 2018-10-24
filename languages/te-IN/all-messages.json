@@ -83,7 +83,7 @@
   "photo-picker.oversizeImages": "మీరు ఎంచుకున్న చిత్రం, {imageName}, చాలా పెద్దది. గరిష్ట పరిమాణ పరిమాణం {maxImageMB}MB",
   "price-field.price-help": "ధర ఎల్లప్పుడూ {currency}.",
   "price-field.price-usd-disclaimer": "USD ఒక అంచనా.",
-  "header.title": "నివాస ప్రోటోకాల్ DApp",
+  "header.title": "Origin Protocol Demo DApp",
   "listing-card-prices.loadingMessage": "లోడింగ్...",
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
   "listing-create.navigationWarning": "మీరు ఖచ్చితంగా వెళ్లాలనుకుంటున్నారా? మీరు ఈ పేజీని వదిలేస్తే, మీ పురోగతిని కోల్పోతారు.",
