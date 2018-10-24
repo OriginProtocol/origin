@@ -2,13 +2,10 @@
 
 FROM node:9 as origin-js-build
 
-# Invalidate Docker cache if necessary by adding the hash of the current commit
-# from the remote repository
-ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/staging /version.json
-# Clone origin-js from staging branch
-RUN git clone --depth 1 --branch staging https://github.com/OriginProtocol/origin.git /app
+COPY ./origin-js /app
+WORKDIR /app
 
-WORKDIR /app/origin-js
+ENV NODE_ENV=production
 RUN npm install --quiet --no-progress
 RUN npm run build
 
@@ -16,14 +13,11 @@ RUN npm run build
 
 FROM node:9 as build
 
-# Invalidate Docker cache if necessary
-COPY --from=origin-js-build /version.json /
-# Copy indexing code out of origin-js
-COPY --from=origin-js-build /app/origin-discovery/ /app/
-
+COPY ./origin-discovery /app
 WORKDIR /app
-RUN npm install --quiet --no-progress
 
+ENV NODE_ENV production
+RUN npm install --quiet --no-progress
 # Link previously built Origin.js
 COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
 RUN npm link origin

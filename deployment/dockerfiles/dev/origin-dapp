@@ -2,14 +2,10 @@
 
 FROM node:9 as origin-js-build
 
-# Invalidate Docker cache if necessary by adding the hash of the current commit
-# from the remote repository
-ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/master /version.json
-# Clone origin-js from master (development) branch
+COPY ./origin-js /app
+WORKDIR /app
 
-RUN git clone --depth 1 --branch master https://github.com/OriginProtocol/origin.git /app
-
-WORKDIR /app/origin-js
+ENV NODE_ENV production
 RUN npm install --quiet --no-progress
 RUN npm run build
 
@@ -19,9 +15,8 @@ FROM node:9 as build
 
 ARG DEPLOY_TAG
 
-# Invalidate Docker cache if necessary
-COPY --from=origin-js-build /version.json /version.json
-COPY --from=origin-js-build /app/origin-dapp/ /app/
+COPY ./origin-dapp /app
+WORKDIR /app/
 
 ENV BRIDGE_SERVER_DOMAIN=bridge.dev.originprotocol.com \
     BRIDGE_SERVER_PROTOCOL=https \
@@ -40,17 +35,15 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.dev.originprotocol.com \
     BLOCK_EPOCH=0 \
     INSTRUCTIONS_URL=https://medium.com/originprotocol/draft-origin-launches-beta-on-mainnet-draft-e3b70161ae86
 
-WORKDIR /app/
+ENV NODE_ENV production
 RUN npm install --quiet --no-progress
-
 # Link previously built Origin.js
-COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
+COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
 RUN npm link origin
-
 # Build DApp
-RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-only
+RUN node_modules/.bin/webpack --display errors-only
 
 # Copy static files to nginx for serving
-FROM nginx:1.15.2
+FROM nginx:1.15.2-alpine
 COPY --from=build /app/build /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]
