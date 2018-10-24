@@ -47,6 +47,7 @@ module.exports = {
       }
   }).then(() => queryInterface.addIndex(TableName, ['contract_address']))
     .then(() => queryInterface.addIndex(TableName, ['transaction_hash']))
+    .then(() => queryInterface.addIndex(TableName, ['block_number']))
     .then(() => queryInterface.addIndex(TableName, ['topic0']))
     .then(() => queryInterface.addIndex(TableName, ['topic1']))
     .then(() => queryInterface.addIndex(TableName, ['topic2']))
