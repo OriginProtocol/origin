@@ -4,6 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const webpush = require('web-push')
 const Sequelize = require('sequelize')
+const { RateLimiterMemory } = require('rate-limiter-flexible')
 
 const app = express()
 const port = 3456
@@ -25,6 +26,23 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 
   next()
+})
+
+// limit request to one per minute
+const rateLimiterOptions = {
+  points: 1,
+  duration: 60,
+}
+const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
+// use rate limiter on all root path methods
+app.all((req, res, next) => {
+  rateLimiter.consume(req.connection.remoteAddress)
+    .then(() => {
+      next()
+    })
+    .catch((err) => {
+      res.status(429).send('<h1>Too Many Requests</h1>')
+    })
 })
 
 app.use(bodyParser.json())
