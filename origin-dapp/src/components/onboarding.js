@@ -4,16 +4,24 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
-import { setMessagingEnabled, setMessagingInitialized } from 'actions/App'
+import {
+  handleNotificationsSubscription,
+  setMessagingEnabled,
+  setMessagingInitialized,
+  setNotificationsHardPermission,
+  setNotificationsSoftPermission
+} from 'actions/App'
 import { addMessage } from 'actions/Message'
 import { fetchNotifications } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
 
 import BetaModal from 'components/modals/beta-modal'
+import { RecommendationModal, WarningModal } from 'components/modals/notifications-modals'
 import SellingModal from 'components/onboarding-modal'
 
-import scopedDebounce from 'utils/scopedDebounce'
 import getCurrentNetwork from 'utils/currentNetwork'
+import { createSubscription, requestPermission } from 'utils/notifications'
+import scopedDebounce from 'utils/scopedDebounce'
 
 import origin from '../services/origin'
 
@@ -28,6 +36,9 @@ class Onboarding extends Component {
   constructor(props) {
     super(props)
 
+    this.handleDismissNotificationsPrompt = this.handleDismissNotificationsPrompt.bind(this)
+    this.handleDismissNotificationsWarning = this.handleDismissNotificationsWarning.bind(this)
+    this.handleEnableNotifications = this.handleEnableNotifications.bind(this)
     this.intlMessages = defineMessages({
       congratsMessage: {
         id: 'onboarding.congrats',
@@ -184,8 +195,44 @@ class Onboarding extends Component {
     }
   }
 
+  handleDismissNotificationsPrompt(e) {
+    e.preventDefault()
+
+    this.props.handleNotificationsSubscription('warning', this.props)
+  }
+
+  handleDismissNotificationsWarning(e) {
+    e.preventDefault()
+
+    this.props.setNotificationsSoftPermission('denied')
+    this.props.handleNotificationsSubscription(null, this.props)
+  }
+
+  async handleEnableNotifications() {
+    this.props.setNotificationsSoftPermission('granted')
+    this.props.handleNotificationsSubscription(null, this.props)
+
+    const { serviceWorkerRegistration, web3Account } = this.props
+    // need a registration object to subscribe
+    if (!serviceWorkerRegistration) {
+      return console.error('No service worker registered')
+    }
+
+    try {
+      // will equal 'granted' or otherwise throw
+      await requestPermission()
+
+      createSubscription(serviceWorkerRegistration, web3Account)
+    } catch (error) {
+      // permission not granted
+      console.error(error)
+    }
+
+    this.props.setNotificationsHardPermission(Notification.permission)
+  }
+
   render() {
-    const { children, location, networkId } = this.props
+    const { children, location, networkId, notificationsSubscriptionPrompt } = this.props
     const query = queryString.parse(location.search)
     const currentNetwork = getCurrentNetwork(networkId)
     const networkType = currentNetwork && currentNetwork.type
@@ -199,25 +246,48 @@ class Onboarding extends Component {
             <SellingModal />
           </Fragment>
         )}
+        { ['buyer', 'seller'].includes(notificationsSubscriptionPrompt) &&
+          <RecommendationModal
+            isOpen={true}
+            role={notificationsSubscriptionPrompt}
+            onCancel={this.handleDismissNotificationsPrompt}
+            onSubmit={this.handleEnableNotifications}
+          />
+        }
+        {notificationsSubscriptionPrompt === 'warning' &&
+          <WarningModal
+            isOpen={true}
+            onCancel={this.handleDismissNotificationsWarning}
+            onSubmit={this.handleEnableNotifications}
+          />
+        }
       </Fragment>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  messages: state.messages,
-  messagingEnabled: state.app.messagingEnabled,
-  messagingInitialized: state.app.messagingInitialized,
-  web3Account: state.app.web3.account,
-  networkId: state.app.web3.networkId
+const mapStateToProps = ({ app, messages }) => ({
+  messages,
+  messagingEnabled: app.messagingEnabled,
+  messagingInitialized: app.messagingInitialized,
+  networkId: app.web3.networkId,
+  notificationsHardPermission: app.notificationsHardPermission,
+  notificationsSoftPermission: app.notificationsSoftPermission,
+  notificationsSubscriptionPrompt: app.notificationsSubscriptionPrompt,
+  pushNotificationsSupported: app.pushNotificationsSupported,
+  serviceWorkerRegistration: app.serviceWorkerRegistration,
+  web3Account: app.web3.account
 })
 
 const mapDispatchToProps = dispatch => ({
   addMessage: obj => dispatch(addMessage(obj)),
   fetchNotifications: () => dispatch(fetchNotifications()),
   fetchUser: addr => dispatch(fetchUser(addr)),
+  handleNotificationsSubscription: (role, props) => dispatch(handleNotificationsSubscription(role, props)),
   setMessagingEnabled: bool => dispatch(setMessagingEnabled(bool)),
-  setMessagingInitialized: bool => dispatch(setMessagingInitialized(bool))
+  setMessagingInitialized: bool => dispatch(setMessagingInitialized(bool)),
+  setNotificationsHardPermission: result => dispatch(setNotificationsHardPermission(result)),
+  setNotificationsSoftPermission: result => dispatch(setNotificationsSoftPermission(result))
 })
 
 export default withRouter(
