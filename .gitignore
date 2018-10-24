@@ -37,6 +37,7 @@ node_modules/
 
 # origin-bridge #
 #################
+*__pycache__
 
 # Logs
 /origin-bridge/logs
