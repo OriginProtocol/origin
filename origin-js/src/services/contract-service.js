@@ -292,7 +292,7 @@ class ContractService {
 
       .on('error', error => {
         // an error in Metamask 4.12.0 that we handle with fallback transaction checking function
-        if (error.includes('Failed to subscribe to new newBlockHeaders to confirm the transaction receipts'))
+        if (error.message.includes('Failed to subscribe to new newBlockHeaders to confirm the transaction receipts'))
           return
 
         rejectCallback(error)
