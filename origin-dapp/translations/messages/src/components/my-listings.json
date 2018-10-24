@@ -12,24 +12,12 @@
     "defaultMessage": "Follow the steps below to create your first listing!"
   },
   {
-    "id": "my-listings.number-one",
-    "defaultMessage": "1"
-  },
-  {
     "id": "my-listings.step-one",
     "defaultMessage": "Choose the right category for your listing."
   },
   {
-    "id": "my-listings.number-two",
-    "defaultMessage": "2"
-  },
-  {
     "id": "my-listings.step-two",
     "defaultMessage": "Give your listing a name, description, and price."
-  },
-  {
-    "id": "my-listings.number-three",
-    "defaultMessage": "3"
   },
   {
     "id": "my-listings.step-three",
