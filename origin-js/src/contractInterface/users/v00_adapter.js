@@ -14,12 +14,13 @@ const selfAttestationTopic = 13 // TODO: use the correct number here
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 class V00_UsersAdapter {
-  constructor({ contractService, ipfsService, blockEpoch }) {
+  constructor({ contractService, ipfsService, blockEpoch, blockAttestattionV1 }) {
     this.contractService = contractService
     this.ipfsDataStore = new IpfsDataStore(ipfsService)
     this.web3EthAccounts = this.contractService.web3.eth.accounts
     this.contractName = 'V00_UserRegistry'
     this.blockEpoch = blockEpoch || 0
+    this.blockAttestattionV1 = blockAttestattionV1 || 0
   }
 
   async set({ profile, attestations = [], options = {}}) {
@@ -169,7 +170,7 @@ class V00_UsersAdapter {
       fromBlock: this.blockEpoch
     })
 
-    const mapped = claimAddedEvents.map(({ returnValues }) => {
+    const mapped = claimAddedEvents.map(({ returnValues, blockNumber }) => {
       return {
         claimId: returnValues.claimId,
         topic: Number(returnValues.topic),
@@ -177,7 +178,8 @@ class V00_UsersAdapter {
         issuer: returnValues.issuer,
         scheme: Number(returnValues.scheme),
         signature: returnValues.signature,
-        uri: returnValues.uri
+        uri: returnValues.uri,
+        blockNumber: blockNumber
       }
     })
     const profileClaims = mapped.filter(
@@ -205,8 +207,13 @@ class V00_UsersAdapter {
     const attestations = validAttestations
       .map(att => {
         try {
-          if (ClaimDataIsIpfsHash.includes(att.topic))
-            att.ipfsHash = this.contractService.getIpfsHashFromBytes32(att.data)
+          if (ClaimDataIsIpfsHash.includes(att.topic)){
+            att.isLegacyAttestation = true
+            if (att.blockNumber >= this.blockAttestattionV1){
+              att.ipfsHash = this.contractService.getIpfsHashFromBytes32(att.data)
+              att.isLegacyAttestation = false
+            }
+          }
         }
         catch (error) {
           console.error(`Can not convert to ipfs hash: ${error.message}`)

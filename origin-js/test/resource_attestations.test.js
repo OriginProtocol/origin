@@ -14,8 +14,9 @@ const sampleAttestation = {
 
 const sampleTwitterAttestation = {
   'claim-type': 4,
-  data: 'QmRah9ZZngbd2HK9pV9qYgRg8wQpN1QRXfkfuHs6kqJQT7',
-  signature: '0x6a825add3edd9b884bb384907fcca9bf0672eb33f30a593ffb9367418ea30936684f97e89231fe0eed6a62113358fcca83ee399a6cb431a4c4266e419e98a5201c'
+  // data from bridge server is returned as base58 encoded string
+  data: 'QmWeTW6u1jZ1q9VBfATXsnzgDLEE6EKPrU5etTyBXATMcd',
+  signature: '0x30d931388271b39ca042853c983a0aacf3dc61216970f2b9a73ba5d035bc07204eec913217c1691475273b0bfff02cddcb983eaa3ca88f9f2f016f8cd4a910a51b'
 }
 
 const expectPostParams = (requestBody, params) => {
@@ -216,7 +217,9 @@ describe('Attestation Resource', function() {
         code: 'foo.bar'
       })
 
-      expect(response.data).to.eql('0x302bf32404b014ad8bf3013a19e956f827b33530dcb94cc46d113cb0f365d9ee')
+      expect(response.data).to.eql('0x7b6d4739164e722b313c3f00dd61ab3e79781e919d7aaeb651c1277d591b6bc2')
+      expect(response.ipfsHash).to.eql('QmWeTW6u1jZ1q9VBfATXsnzgDLEE6EKPrU5etTyBXATMcd')
+      expect(response.isLegacyAttestation).to.equal(false)
       expect(response.signature).to.equal(sampleTwitterAttestation.signature)
       expect(response.topic).to.equal(sampleTwitterAttestation['claim-type'])
     })
