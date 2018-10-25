@@ -23,7 +23,7 @@ faucetImage: origin-faucet
 faucetImageTag: '389fd1f'
 
 eventlistenerImage: event-listener
-eventlistenerImageTag: '389fd1f'
+eventlistenerImageTag: 'f9a1525'
 eventlistenerWeb3Url: https://eth.dev.originprotocol.com/rpc
 
 discoveryImage: origin-discovery
