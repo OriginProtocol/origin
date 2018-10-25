@@ -55,6 +55,6 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: {{ template "ipfsProxy.fullname" . }}
+              serviceName: {{ template "ipfs.fullname" . }}
               servicePort: 9999
 {{- end }}
