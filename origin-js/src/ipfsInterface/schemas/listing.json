@@ -54,11 +54,6 @@
     },
     "timeSlot": {
       "type": "object",
-      "required": [
-        "startDate",
-        "endDate",
-        "isAvailable"
-      ],
       "properties": {
         "startDate": {
           "type": "string",
@@ -78,8 +73,7 @@
       "required": [
         "startDate",
         "endDate",
-        "isAvailable",
-        "price"
+        "isAvailable"
       ]
     },
     "unitListing": {
