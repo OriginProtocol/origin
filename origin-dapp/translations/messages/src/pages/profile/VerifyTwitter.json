@@ -5,7 +5,7 @@
   },
   {
     "id": "VerifyTwitter.twitterNotPublic",
-    "defaultMessage": "Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf."
+    "defaultMessage": "Other users will know that you have a verified Twitter account and your username will be published on the blockchain. We will never tweet on your behalf."
   },
   {
     "id": "VerifyTwitter.continue",
