@@ -21,7 +21,7 @@ const SUPPORTED_ERC20 = [
 ]
 
 class ContractService {
-  constructor({ web3, contractAddresses } = {}) {
+  constructor({ web3, contractAddresses, ethereum } = {}) {
     const externalWeb3 = web3 || window.web3
     if (!externalWeb3) {
       throw new Error(
@@ -29,6 +29,7 @@ class ContractService {
       )
     }
     this.web3 = new Web3(externalWeb3.currentProvider)
+    this.ethereum = ethereum
 
     this.marketplaceContracts = { V00_Marketplace }
 
@@ -133,7 +134,7 @@ class ContractService {
   async enableEthereum() {
     try {
       // Request account access if needed
-      await window.ethereum.enable()
+      await this.ethereum.enable()
       this.ethereumIsEnabled = true
       this.onEthereumEnabled = null
     } catch (error) {
@@ -143,7 +144,7 @@ class ContractService {
   }
 
   async ensureEthereumIsEnabled() {
-    if (window.ethereum && !this.ethereumIsEnabled) {
+    if (this.ethereum && !this.ethereumIsEnabled) {
       // This flow allows currentAccount to be called multiple times before the user has dealt with the first popup.
       // Otherwise, if you call this function multiple times before the first one is handled, mutltiple popups will appear.
       if (!this.onEthereumEnabled) {

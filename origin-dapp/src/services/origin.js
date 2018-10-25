@@ -31,6 +31,7 @@ const getWeb3 = () => {
 }
 
 const web3 = getWeb3()
+const ethereum = window.ethereum
 
 const ipfsCreator = repo_key => {
   const ipfsOptions = {
@@ -80,7 +81,8 @@ const config = {
   ipfsCreator,
   OrbitDB,
   ecies,
-  web3
+  web3,
+  ethereum
 }
 
 try {
