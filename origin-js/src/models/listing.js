@@ -35,4 +35,9 @@ export class Listing {
     // Should never be negative.
     return Math.max(this.unitsTotal - this.unitsSold, 0)
   }
+
+  get active() {
+    return this.status === 'active'
+  }
+
 }

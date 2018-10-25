@@ -122,7 +122,7 @@ class V00_MarkeplaceAdapter {
       unitsPurchased
     } = data
     // For V1, we only support quantity of 1.
-    if (unitsPurchased != 1)
+    if (unitsPurchased && unitsPurchased != 1)
       throw new Error(
         `Attempted to purchase ${unitsPurchased} - only 1 allowed.`
       )

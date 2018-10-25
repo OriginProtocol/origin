@@ -69,7 +69,7 @@ services:
     # https://github.com/docker/compose/issues/4337
     command: >
       /bin/bash -c "npm install --quiet --no-progress &&
-      node scripts/build.js serve"
+      npm start"
     networks:
       - default
 
@@ -123,11 +123,6 @@ services:
       - postgres
       - elasticsearch
     environment:
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USERNAME=origin
-      - DATABASE_PASSWORD=origin
-      - DATABASE_NAME=origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       # TODO: Add support for .env files to the event-listener and move these env vars in there.
@@ -138,7 +133,7 @@ services:
       /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
       npm install --quiet --no-progress &&
       npm link origin &&
-      node node_modules/db-migrate/bin/db-migrate up &&
+      node node_modules/.bin/sequelize db:migrate &&
       node listener/listener.js --elasticsearch --db --web3-url='http://origin-js:8545'"
     networks:
       - default
