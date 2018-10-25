@@ -5090,8 +5090,36 @@ a:not([href]):not([tabindex]).span-link {
 }
 
 /* Media queries */
+
+/* xxs */
+@media (max-width: 320px) {
+  .navigation-bar .static.navbar-nav .nav-item {
+    width: 48px;
+  }
+}
+
 /* xs */
 @media (max-width: 576px) {
+
+  .navigation-bar .navbar-toggler {
+    padding-left: 8px;
+  }
+
+  .navigation-bar .static.navbar-nav {
+    margin-left: 0px;
+  }
+
+  @media (min-width: 360px) {
+    .navigation-bar .static.navbar-nav .nav-item {
+      width: 56px;
+    }
+  }
+
+  @media (min-width: 376px) {
+    .navigation-bar .static.navbar-nav .nav-item {
+      width: 67px;
+    }
+  }
 
   .warning .badge {
     display:none;
