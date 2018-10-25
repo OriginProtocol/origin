@@ -7,12 +7,13 @@ from logic.service_utils import AccountNotFoundError
 # http://web3py.readthedocs.io/en/stable/web3.eth.account.html?highlight=private#not-acceptable-for-production
 w3.eth.enable_unaudited_features()
 
+DONT_HASH_DATA_TOPICS = [4, 5]
 
-def generate_signature(private_key, subject, claim_type, data):
+
+def generate_signature(private_key, subject, topic, data):
     try:
-        hashed_data = Web3.sha3(text=data)
         hash_to_sign = Web3.soliditySha3(['address', 'uint256', 'bytes32'], [
-            subject, claim_type, hashed_data])
+            subject, topic, data if topic in DONT_HASH_DATA_TOPICS else Web3.sha3(text=data)])
 
         result = w3.eth.account.signHash(
             message_hash=defunct_hash_message(hexstr=hash_to_sign.hex()),

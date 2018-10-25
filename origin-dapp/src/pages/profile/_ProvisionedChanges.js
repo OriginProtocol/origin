@@ -227,8 +227,8 @@ class ProvisionedChanges extends Component {
             this.intlMessages.twitterAccount
           )}<br />
                 <br />
-                <img src="/images/eye-no.svg" alt="not-visible icon" /> <strong>${this.props.intl.formatMessage(
-            this.intlMessages.notVisibleOnBlockchain
+                <img src="/images/eye-yes.svg" alt="visible icon" /> <strong>${this.props.intl.formatMessage(
+            this.intlMessages.visibleOnBlockchain
           )}</strong>
               </div>
             `}

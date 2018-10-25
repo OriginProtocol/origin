@@ -341,6 +341,23 @@ async function handleLog(log, rule, contractVersion, context) {
     contractName=${log.contractName}`
   console.log(`Processing log: ${logDetails}`)
 
+  if (context.config.db) {
+    await withRetrys(async () => {
+      await db.Event.insertOrUpdate({
+        blockNumber: log.blockNumber,
+        logIndex: log.logIndex,
+        contractAddress: log.address,
+        transactionHash: log.transactionHash,
+        topic0: log.topics[0],
+        topic1: log.topics[1],
+        topic2: log.topics[2],
+        topic3: log.topics[3],
+        data: log,
+        createdAt: log.date,
+      })
+    })
+  }
+
   // Note: we run the rule with a retry since we've seen in production cases where we fail loading
   // from smart contracts the data pointed to by the event. This may occur due to load balancing
   // across ethereum nodes and if some nodes are lagging. For example the ethereum node we
