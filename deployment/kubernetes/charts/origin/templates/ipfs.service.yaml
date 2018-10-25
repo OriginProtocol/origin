@@ -1,3 +1,4 @@
+{{- if eq .Release.Namespace "prod" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -16,3 +17,21 @@ spec:
     port: 5001
   - name: gateway
     port: 8080
+{{- else }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ipfs.fullname" . }}
+  labels:
+    app: {{ template "ipfs.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  type: NodePort
+  selector:
+    app: {{ template "ipfsProxy.fullname" . }}
+  ports:
+  - name: proxy
+    port: 9999
+{{- end }}

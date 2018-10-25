@@ -36,7 +36,20 @@ spec:
           requests:
             memory: 1Gi
             cpu: 500m
-  volumeClaimTemplates:
+      {{- if ne .Release.Namespace "prod" }}
+      containers:
+        - name: {{ template "ipfsProxy.fullname" . }}
+          image: "{{ .Values.ipfsProxyImage }}:{{ .Values.ipfsProxyImageTag }}"
+          ports:
+          - containerPort: 9999
+            name: proxy
+          env:
+          - name: "IPFS_API_URL"
+            value: "http://127.0.0.1:5001"
+          - name: "IPFS_GATEWAY_URL"
+            value: "http://127.0.0.1:8080"
+      {{- end }}
+   volumeClaimTemplates:
   - metadata:
       name: {{ template "ipfs.fullname" . }}-data
     spec:
