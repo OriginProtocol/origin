@@ -60,27 +60,13 @@ function build_and_push_container() {
   docker push ${GCLOUD_REGISTRY}/${GCLOUD_PROJECT}/${NAMESPACE}/${CONTAINER}:${DEPLOY_TAG}
 }
 
-function check_secrets() {
+function decrypt_secrets() {
   VALUES_PATH=kubernetes/values
   VALUES_FILE=values-${NAMESPACE}.yaml
   SECRETS_FILE=secrets-${NAMESPACE}.yaml
   SECRETS_FILE_ENC=secrets-${NAMESPACE}.enc.yaml
 
-  if [ ! -e "${VALUES_PATH}/${SECRETS_FILE}" ]; then
-    echo -e "\033[31mCould not find ${SECRETS_FILE} at ${VALUES_PATH} \033[0m"
-  else
-    return 0
-  fi
-
-  if [ -e "${VALUES_PATH}/secrets-${NAMESPACE}.enc.yaml" ]; then
-    echo -ne "Found encrypted secrets, attempt to decrypt using sops (y/n)? "
-    read answer
-    if [ "$answer" != "${answer#[Nn]}" ] ;then
-      exit
-    else
-      out=$(sops --decrypt ${VALUES_PATH}/${SECRETS_FILE_ENC}) && [[ -n "$out" ]] && echo "$out" > ${VALUES_PATH}/${SECRETS_FILE}
-    fi
-  fi
+  out=$(sops --decrypt ${VALUES_PATH}/${SECRETS_FILE_ENC}) && [[ -n "$out" ]] && echo "$out" > ${VALUES_PATH}/${SECRETS_FILE}
 }
 
 function update_values() {
@@ -163,7 +149,7 @@ if [ ! "$NAMESPACE" ]; then
   exit 1
 fi
 
-check_secrets
+decrypt_secrets
 
 if [ "$CONTAINER" ]; then
   build_and_push_container

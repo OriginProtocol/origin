@@ -51,7 +51,7 @@ export function dismissBetaModal() {
     */
     setTimeout(() => {
       dispatch(unblock())
-    }, 4000)
+    }, 1000)
   }
 }
 
