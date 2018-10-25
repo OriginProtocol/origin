@@ -46,6 +46,6 @@ RUN npm link origin
 RUN node_modules/.bin/webpack --display errors-only
 
 # Copy static files to nginx for serving
-FROM nginx:1.15.2
+FROM nginx:1.15.2-alpine
 COPY --from=build /app/build /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]
