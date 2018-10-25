@@ -130,9 +130,33 @@ class ContractService {
     return hashStr
   }
 
+  async enableEthereum() {
+    try {
+      // Request account access if needed
+      await window.ethereum.enable()
+      this.ethereumIsEnabled = true
+      this.onEthereumEnabled = null
+    } catch (error) {
+      // User denied account access...
+      console.error(`Error enabling ethereum: ${error}`)
+    }
+  }
+
+  async ensureEthereumIsEnabled() {
+    if (window.ethereum && !this.ethereumIsEnabled) {
+      // This flow allows currentAccount to be called multiple times before the user has dealt with the first popup.
+      // Otherwise, if you call this function multiple times before the first one is handled, mutltiple popups will appear.
+      if (!this.onEthereumEnabled) {
+        this.onEthereumEnabled = this.enableEthereum()
+      }
+      await this.onEthereumEnabled
+    }
+  }
+
   // Returns the first account listed, unless a default account has been set
   // explicitly
   async currentAccount() {
+    await this.ensureEthereumIsEnabled()
     const defaultAccount = this.web3.eth.defaultAccount
     if (defaultAccount) {
       return defaultAccount
