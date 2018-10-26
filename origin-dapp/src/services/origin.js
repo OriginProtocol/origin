@@ -22,10 +22,13 @@ const ipfsSwarm = process.env.IPFS_SWARM
 // See: https://gist.github.com/bitpshr/076b164843f0414077164fe7fe3278d9#file-provider-enable-js
 const getWeb3 = () => {
   if (window.ethereum) {
+    // Modern dapp browsers...
     return new Web3(window.ethereum)
   } else if (window.web3) {
+    // Legacy dapp browsers...
     return new Web3(window.web3.currentProvider)
   } else {
+    // Non-dapp browsers...
     return new Web3(Web3.givenProvider || new Web3.providers.HttpProvider(defaultProviderUrl, 20000))
   }
 }
