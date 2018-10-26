@@ -1,5 +1,5 @@
 'use strict';
-const TableName = 'linked_sessions'
+const TableName = 'linked_session'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(TableName, {
@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      Linked_token_id: {
+      linked_token_id: {
         type: Sequelize.INTEGER,
         onDelete: 'cascade',
         references: {
@@ -30,7 +30,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    }).then(() => queryInterface.addIndex(TableName, ['session_token']));
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TableName);

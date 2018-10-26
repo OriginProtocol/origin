@@ -7,6 +7,7 @@
     "node": "9.11.1"
   },
   "scripts": {
+    "install:dev": "npm install && npm link origin",
     "test": "NODE_ENV=test mocha -r babel-register -r babel-polyfill --timeout 10000 --exit",
     "start": "npx babel-node src/index.js --presets es2015"
   },
@@ -19,7 +20,9 @@
     "express": "^4.16.4",
     "express-useragent": "^1.0.12",
     "express-ws": "^4.0.0",
+    "js-sha3": "^0.8.0",
     "lodash": "^4.17.11",
+    "origin": "^0.8.5",
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
     "redis": "^2.8.0",

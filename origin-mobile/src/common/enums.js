@@ -9,7 +9,7 @@ class Enum extends Array {
 
 }
 
-EthNotificationTypes = new Enum("APN", "FCM", "email")
-MessageTypes = new Enum("NETWORK", "ACCOUNTS", "CALL", "CALL_RESPONSE", "LOGOUT")
+const EthNotificationTypes = new Enum("APN", "FCM", "email")
+const MessageTypes = new Enum("SESSION", "CONTEXT", "CALL", "CALL_RESPONSE", "LOGOUT")
 
 module.exports = {EthNotificationTypes, MessageTypes}

@@ -45,26 +45,25 @@ router.get("/link-info/:code", (req, res) => {
 router.post("/call-wallet/:sessionToken", (req, res) => {
   const clientToken = getClientToken(req)
   const {sessionToken} = req.parameters
-  const {account, call, return_url} = req.body
-  const success = linker.callWallet(clientToken, sessionToken, account, call, return_url)
+  const {account, call_id, call, return_url} = req.body
+  const success = linker.callWallet(clientToken, sessionToken, account, call_id, call, return_url)
   res.send({success})
 })
-
 
 router.post("/wallet-called/:walletToken", (req, res) => {
   const {walletToken} = req.parameters
   const {call_id, session_token, result} = req.body
-  const success = linker.walletCalled(walletToken, call_id, session_token, call)
+  const success = linker.walletCalled(walletToken, call_id, session_token, result)
   res.send({success})
 })
 
 router.post("/link-wallet/:walletToken", (req, res) => {
   const {walletToken} = req.parameters
   const {code, current_rpc, current_accounts} = req.body
-  const {returnUrl, linked, pendingCall, appInfo, linkId, linkedAt} 
+  const {linked, pendingCallContext, appInfo, linkId, linkedAt} 
     = linker.linkWallet(wallet_token, code, current_rpc, current_accounts)
 
-  res.send({return_url:returnUrl, linked, pending_call:pendingCall, 
+  res.send({linked, pending_call_context:pendingCallContext, 
     app_info:appInfo, link_id:linkId, linked_at:linkedAt})
 })
 
@@ -84,24 +83,33 @@ router.post("/unlink", (req, res) => {
 router.post("/unlink-wallet/:walletToken", (req, res) => {
   const {walletToken} = req.parameters
   const {link_id} = req.body
-  const success = unlinkWallet(walletToken, link_id)
+  const success = linker.unlinkWallet(walletToken, link_id)
   res.send(success)
 })
 
-router.ws("/linked-messages/:sessionToken", (ws, req) => {
+router.ws("/linked-messages/:sessionToken/:readId", (ws, req) => {
   const client_token = getClientToken(req)
-  const {sessionToken} = req.parameters
-  ws.on("message", message => {
-    // {readId} mark last message...
-    
+  const {sessionToken, readId} = req.parameters
+  const closeHandler = linker.handleMessages(sessionToken, readId, (msg, msgId) =>
+    {
+      ws.send({msg, msgId})
+    })
+
+  ws.on("close", () => {
+    closeHandler()
   })
+
 })
 
-router.ws("/wallet-messages/:walletToken", (ws, req) => {
-  const {walletToken} = req.parameters
-  ws.on("message", message => {
-    // {readId} mark last message...
-    
+router.ws("/wallet-messages/:walletToken/:readId", (ws, req) => {
+  const {walletToken, readId} = req.parameters
+
+  const closeHandler = linker.handleMessages(walletToken, readId, (msg, msgId) =>
+    {
+      ws.send({msg, msgId})
+    })
+  ws.on("close", () => {
+    closeHandler()
   })
 })
 

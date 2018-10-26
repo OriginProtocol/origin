@@ -8,6 +8,8 @@ import OriginToken from './../../contracts/build/contracts/OriginToken.json'
 
 import V00_Marketplace from './../../contracts/build/contracts/V00_Marketplace.json'
 
+import {decodeMethodCall, extractCallParams} from './../utils/contract-decoder'
+
 import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
 import Web3 from 'web3'
@@ -304,6 +306,27 @@ class ContractService {
         return BigNumber(money.amount).multipliedBy(scaling).toString()
       } else {
         return money.amount
+      }
+    }
+  }
+
+  decodeContractCall(networkId, address, callData) {
+    for (const contract of Object.values(this.contracts)) {
+      if(contract.networks[networkId] && contract.networks[networkId].address == address) {
+        const meta = decodeMethodCall(contract.abi, callData)
+        meta.contractName = contract.contractName
+
+        if (meta == 'approveAndCallWithSender') {
+          const subAddress = meta.params[1].value
+          for (const subContract of Object.values(this.contracts)) {
+            if (subContract.networks[networkId] && subContract.networks[networkId].address == subAddress) {
+              const subMeta = extractCallParams(this.web3, subContract.abi, meta.params[2].value, meta.params[3].value)
+              subMeta.contractName = subContract.contractName
+              meta.subMeta = subMeta
+            }
+          }
+        }
+        return meta
       }
     }
   }
