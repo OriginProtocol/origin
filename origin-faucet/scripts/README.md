@@ -80,7 +80,7 @@ Mon Sep 17 2018 13:42:24 GMT-0400 (EDT) transaction hash: 0x7c3fa9b45f731626254f
 Contract owner set to 0xf17f52151ebef6c7334fad080c5704d77216b732
 ```
 
-As a safety measure, the owner must be set to one of the addresses in the [token owner whitelist](https://github.com/OriginProtocol/origin-js/blob/master/token/lib/owner_whitelist.js).
+As a safety measure, the owner must be set to one of the addresses in the [token owner whitelist](https://github.com/OriginProtocol/origin/blob/master/origin-faucet/lib/owner_whitelist.js).
 
 You can override the whitelist if you *really* need to by using the `--OVERRIDE_OWNER_WHITELIST_DO_NOT_USE` parameter.
 

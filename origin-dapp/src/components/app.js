@@ -3,7 +3,7 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 
-import { localizeApp, setMobile } from 'actions/App'
+import { localizeApp, saveServiceWorkerRegistration, setMobile } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
 import {
   getEthBalance,
@@ -41,6 +41,7 @@ import SearchBar from 'components/search/searchbar'
 import 'bootstrap/dist/js/bootstrap'
 
 import { setClickEventHandler } from 'utils/analytics'
+import { initServiceWorker } from 'utils/notifications'
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
@@ -100,13 +101,21 @@ class App extends Component {
     setClickEventHandler()
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.fetchProfile()
     this.props.initWallet()
     this.props.getEthBalance()
     this.props.getOgnBalance()
 
     this.detectMobile()
+
+    try {
+      const reg = await initServiceWorker()
+
+      this.props.saveServiceWorkerRegistration(reg)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   componentDidUpdate() {
@@ -206,6 +215,7 @@ const mapDispatchToProps = dispatch => ({
   getEthBalance: () => dispatch(getEthBalance()),
   getOgnBalance: () => dispatch(getOgnBalance()),
   initWallet: () => dispatch(initWallet()),
+  saveServiceWorkerRegistration: reg => dispatch(saveServiceWorkerRegistration(reg)),
   setMobile: device => dispatch(setMobile(device)),
   localizeApp: () => dispatch(localizeApp()),
   fetchFeaturedHiddenListings: (networkId) => dispatch(fetchFeaturedHiddenListings(networkId))

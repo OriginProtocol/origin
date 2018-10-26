@@ -85,10 +85,13 @@ class Calendar extends Component {
     this.renderRecurringEvents(this.state.defaultDate)
   }
 
+<<<<<<< HEAD
   componentDidUpdate() {
     renderHourlyPrices(this.props.viewType, this.props.userType)
   }
 
+=======
+>>>>>>> master
   getViewType() {
     return this.props.viewType === 'daily' ? 'month' : 'week'
   }
@@ -169,6 +172,7 @@ class Calendar extends Component {
           minimumFractionDigits: 5,
           maximumFractionDigits: 5
         })}`
+
         this.setState({
           selectionUnavailable: false,
           selectedEvent: {

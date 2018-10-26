@@ -1502,10 +1502,6 @@ textarea:-moz-ui-invalid {
 
 /* Modal */
 
-.modal-open {
-  overflow: auto;
-}
-
 .modal-backdrop {
   background-color: rgba(235, 240, 243, 0.6);
 }
@@ -1996,6 +1992,18 @@ textarea:-moz-ui-invalid {
   left: auto;
   right: 20px;
   z-index: 997;
+}
+
+.modal.getting-started.fade .modal-dialog {
+    bottom: -320px;
+    -webkit-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+    -moz-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+    -o-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+    transition: opacity 0.3s linear, bottom 0.3s ease-out;
+}
+
+.modal.getting-started.fade.show .modal-dialog {
+    bottom: 0;
 }
 
 .getting-started img {
@@ -4149,6 +4157,33 @@ form .stars img {
 
 .notification .no-counterparty {
   margin: auto 0;
+}
+
+.notifications-modal .image-container img {
+  height: auto;
+  width: auto;
+}
+
+.notifications-modal h2 {
+  font-size: 1.375rem;
+}
+
+.notifications-modal .button-container {
+  margin: 0 0 20px 0;
+}
+
+.notifications-modal .modal-content .btn {
+  font-weight: 900;
+  margin: 0;
+}
+
+.notifications-modal .modal-content a {
+  color: white;
+  font-size: 0.875rem;
+}
+
+.notifications-modal .modal-content a:hover {
+  text-decoration: underline;
 }
 
 /* Profile */

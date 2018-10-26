@@ -15,6 +15,14 @@
   background-color: var(--greenblue);
 }
 
+.btn-success {
+  background-color: var(--greenblue);
+}
+
+.btn-success:hover {
+  background-color: #0db87f;
+}
+
 .text-danger {
   color: #ff1a1a !important;
 }

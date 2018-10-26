@@ -105,9 +105,7 @@ class MyPurchaseCard extends Component {
                     <p className="price">{`${Number(price).toLocaleString(
                       undefined,
                       { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                    )} ${this.props.intl.formatMessage(
-                      this.intlMessages.ETH
-                    )}`}</p>
+                    )} ETH`}</p>
                     {/* Not Yet Relevant */}
                     {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
                   </div>

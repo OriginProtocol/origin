@@ -72,6 +72,7 @@ const config = {
   arbitrator: process.env.ARBITRATOR_ACCOUNT,
   affiliate: process.env.AFFILIATE_ACCOUNT,
   blockEpoch: process.env.BLOCK_EPOCH,
+  blockAttestattionV1: process.env.BLOCK_ATTESTATION_V1,
   attestationServerUrl,
   ipfsCreator,
   OrbitDB,

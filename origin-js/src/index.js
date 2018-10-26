@@ -34,7 +34,8 @@ class Origin {
     OrbitDB,
     ecies,
     messagingNamespace,
-    blockEpoch
+    blockEpoch,
+    blockAttestattionV1
   } = {}) {
     this.version = VERSION
 
@@ -70,7 +71,8 @@ class Origin {
     this.users = new Users({
       contractService: this.contractService,
       ipfsService: this.ipfsService,
-      blockEpoch
+      blockEpoch,
+      blockAttestattionV1
     })
 
     this.messaging = new Messaging({

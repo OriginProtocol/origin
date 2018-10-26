@@ -3,11 +3,11 @@ databaseInstance: origin-214503:us-west1:prod
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: '916795e'
-bridgeReplicas: 1
+bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'a5eb4e0'
+dappImageTag: 'cca4e4b'
 dappReplicas: 2
 
 # Mainnet nodes
