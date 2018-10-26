@@ -36,10 +36,6 @@ eventlistenerWeb3Url: https://eth.dev.originprotocol.com/rpc
 discoveryImage: origin-discovery
 discoveryImageTag: 'db88884'
 
-# IPFS server for origin-messaging
-messagingIpfsImage: ipfs/go-ipfs
-messagingIpfsImageTag: v0.4.17
-
 # origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: 'a444ac1'

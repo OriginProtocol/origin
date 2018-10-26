@@ -24,11 +24,6 @@ ipfsImageTag: master
 ipfsProxyImage: ipfs-proxy
 ipfsProxyImageTag: latest
 
-# origin-messaging-ipfs
-messagingIpfsImage: ipfs/go-ipfs
-# See https://github.com/libp2p/go-floodsub/issues/93
-messagingIpfsImageTag: v0.4.17
-
 # origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: latest
