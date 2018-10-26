@@ -7,8 +7,35 @@ const arrayFunctions = require('./../../../origin-js/src/utils/arrayFunctions')
 
 
 // Configuration
-const elasticAddress = 'localhost:9200'
+const host = 'localhost'
+const port = '9200'
 const isHttps = false
+
+// Freely alter index below
+const index = {
+  mappings: {
+    listing: {
+      properties: {
+      'price.amount':               { type: "double" },
+      'price.currency':             { type: "text" },
+      'commission.amount':          { type: "double" },
+      'commission.currency':        { type: "text" },
+      'securityDeposit.amount':     { type: "double" },
+      'securityDeposit.currency':   { type: "text" },
+      unitsTotal:                   { type: "integer" },
+      language:                     { type: "keyword" },
+      listingType:                  { type: "keyword" },
+      status:                       { type: "keyword" },
+      category:                     { type: "keyword", copy_to: "all_text" },
+      subCategory:                  { type: "keyword", copy_to: "all_text" },
+      description:                  { type: "text", copy_to: "all_text" },
+      title:                        { type: "text", copy_to: "all_text" },
+      all_text:                     { type: "text" }
+      }
+    }
+  }
+}
+
 // End of Configuration
 
 const rl = readline.createInterface({
@@ -16,10 +43,38 @@ const rl = readline.createInterface({
   output: process.stdout
 })
 
+async function executePayloadRequest(uri, json, method = 'POST') {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: host,
+      port,
+      method,
+      path: uri,
+      headers : {
+        'Content-Type': 'application/json',
+      }
+    }
+
+    postReq = http.request(options, function (res) {
+      res.setEncoding('utf8')
+      res.on('data', function (data) {
+        resolve(data)
+      }).on("error", (err) => {
+        console.error("Error: " + err.message)
+        reject(err.message)
+      })
+    })
+
+    if (json)
+      postReq.write(json)
+    postReq.end()
+  })
+}
+
 async function executeGetRequest(uri) {
   return new Promise((resolve, reject) => {
     const httpObject = isHttps ? https : http
-    httpObject.get(`${isHttps ? 'https' : 'http'}://${elasticAddress}/${uri}`, (resp) => {
+    httpObject.get(`${isHttps ? 'https' : 'http'}://${host}:${port}/${uri}`, (resp) => {
       let data = ''
 
       resp.on('data', (chunk) => {
@@ -40,12 +95,16 @@ async function executeGetRequest(uri) {
 function printUsage(){
   console.log('\x1b[44m%s\x1b[0m', 'Elasticsearh migration tool.')
   console.log(
-`1 show status
+`1 show index info
+2 create index (with mappings defined in configuration)
+3 create alias
+4 delete index
+5 reindex
 9 show usage`
   )
 }
 
-async function showStatus(){
+async function showIndexInfo(){
   const mapping = JSON.parse(await executeGetRequest('_mapping'))
   const indexes = Object.keys(mapping)
 
@@ -81,24 +140,85 @@ async function showStatus(){
   })
 }
 
+async function createIndex(){
+  process.stdout.write('Index to create: ')
+  const indexName = await waitForInput()
 
+  const res = await executePayloadRequest(indexName, JSON.stringify(index), 'PUT')
+  console.log("Response: ", res)
+}
+
+async function deleteIndex(){
+  process.stdout.write('Index to delete: ')
+  const indexName = await waitForInput()
+
+  console.log(`Are you sure you want to delete ${indexName}?`)
+  process.stdout.write('[y/n]: ')
+  const answer = await waitForInput()
+
+  if(answer.toLowerCase() === 'y'){
+    const res = await executePayloadRequest(indexName, null, 'DELETE')
+    console.log("Response: ", res)
+  }
+}
+
+async function reindex(){
+  process.stdout.write('Read documents from index: ')
+  const sourceIndex = await waitForInput()
+  process.stdout.write('Destination index: ')
+  const destinationIndex = await waitForInput()
+
+  const res = await executePayloadRequest('_reindex', `{"source": { "index": "${sourceIndex}" }, "dest": { "index": "${destinationIndex}" }}`)
+  console.log("Response: ", res)
+}
+
+async function createAlias(){
+  process.stdout.write('Name of the index to apply alias to: ')
+  const indexName = await waitForInput()
+  process.stdout.write('Name of the alias: ')
+  const aliasName = await waitForInput()
+
+  const res = await executePayloadRequest('_aliases', `{"actions" : [{ "add" : { "index" : "${indexName}", "alias" : "${aliasName}" } }]}`)
+  console.log("Response: ", res)
+}
+
+let inputResolveCallback = null
+async function waitForInput(){
+  return new Promise((resolve, reject) => {
+    inputResolveCallback = resolve
+  })
+}
 
 (async() => {
   printUsage()
-  process.stdout.write('Select option:')
+  process.stdout.write('Select option: ')
 
   const response = rl.on('line', async (input) => {
     input = input.trim()
 
+    // Some other function was waiting for input. Send the value to it
+    if (inputResolveCallback !== null){
+      inputResolveCallback(input)
+      inputResolveCallback = null
+      return
+    }
+
     if (input === '1'){
-      await showStatus()
+      await showIndexInfo()
+    } else if (input === '2'){
+      await createIndex()
+    } else if (input === '3'){
+      await createAlias()
+    } else if (input === '4'){
+      await deleteIndex()
+    } else if (input === '5'){
+      await reindex()
     } else if (input === '9'){
       printUsage()
     } else {
       console.log('\n\n\x1b[41m%s\x1b[0m', 'Unknown command.')
       printUsage()
     }
-    process.stdout.write('Select option:')
+    process.stdout.write('Select option: ')
   })
-
 })()
