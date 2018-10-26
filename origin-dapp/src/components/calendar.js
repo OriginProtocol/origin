@@ -85,13 +85,10 @@ class Calendar extends Component {
     this.renderRecurringEvents(this.state.defaultDate)
   }
 
-<<<<<<< HEAD
   componentDidUpdate() {
     renderHourlyPrices(this.props.viewType, this.props.userType)
   }
 
-=======
->>>>>>> master
   getViewType() {
     return this.props.viewType === 'daily' ? 'month' : 'week'
   }
