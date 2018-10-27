@@ -14,25 +14,28 @@ dappReplicas: 2
 gethTxReplicas: 1
 gethTxMemoryRequest: 6Gi
 
-# IPFS server
-ipfsImageTag: ipfs/go-ipfs
+# ipfs
+ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
+# ipfs-proxy
+ipfsProxyImage: ipfs-proxy
+ipfsProxyImageTag: "latest"
+
+# origin-faucet
 faucetImage: origin-faucet
 faucetImageTag: '13d0e21'
 
+# event-listener
 eventlistenerImage: event-listener
 eventlistenerImageTag: '0a36fe4'
 eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
 eventlistenerContinueBlock: 3000000
 
+# origin-discovery
 discoveryImage: origin-discovery
 discoveryImageTag: '4aa5387'
 
-# IPFS server for OrbitDB
-messagingIpfsImage: ipfs/go-ipfs
-messagingIpfsImageTag: v0.4.17
-
-# OrbitDB
+# origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: '4aa5387'
