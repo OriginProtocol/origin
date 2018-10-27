@@ -107,6 +107,9 @@ while getopts ":c:n:h" opt; do
 	event-listener)
 	  IMAGE_TAG_FIELD=eventlistenerImageTag
 	  ;;
+	ipfs-proxy)
+	  IMAGE_TAG_FIELD=ipfsProxyImageTag
+	  ;;
 	*)
 	  echo -e "\033[31mContainer not yet implemented\033[0m"
 	  exit 1
