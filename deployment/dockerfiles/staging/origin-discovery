@@ -12,7 +12,7 @@ ENV NODE_ENV=production
 RUN npm install --quiet --no-progress
 RUN npm run build
 
-# --- GraphQL server
+# --- Discovery server
 
 FROM node:9 as build
 

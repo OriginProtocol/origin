@@ -1,10 +1,10 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
-[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin-dapp/blob/master/LICENSE)
+[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/origin-dapp/LICENSE)
 [![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-dapp/master.svg?style=flat-square&colorA=111d28)](https://travis-ci.org/OriginProtocol/origin-dapp)
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
-Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development) for development and testing on your local machine.
+Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box) for development and testing on your local machine.
 
 # Origin Demo DApp
 This is an example DApp (Decentralized Application) that shows how easy it is to create a truly peer to peer marketplace on the Ethereum blockchain with **origin-js**. Using only javascript, you can create and purchase listings, leave reviews, check identity, and more.
@@ -66,7 +66,7 @@ If you want to hack on origin-js code, or if you just want to use a private loca
 
 ### 1. Set up and run origin-js locally
 
-[Follow these instructions to setup and run origin-js.](https://github.com/OriginProtocol/origin/origin-js#local-development)
+[Follow these instructions to setup and run origin-js.](https://github.com/OriginProtocol/origin/tree/master/origin-js#local-development)
 
 ### 2. Set up the DApp for local development
 

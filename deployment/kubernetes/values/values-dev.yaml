@@ -3,7 +3,7 @@ databaseInstance: origin-214503:us-west1:dev
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: '1e881e0-1539293369'
-bridgeReplicas: 1
+bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
@@ -23,7 +23,7 @@ faucetImage: origin-faucet
 faucetImageTag: '389fd1f'
 
 eventlistenerImage: event-listener
-eventlistenerImageTag: '389fd1f'
+eventlistenerImageTag: 'f9a1525'
 eventlistenerWeb3Url: https://eth.dev.originprotocol.com/rpc
 
 discoveryImage: origin-discovery
