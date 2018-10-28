@@ -121,6 +121,7 @@ var config = {
     new webpack.EnvironmentPlugin(env),
     new CopyWebpackPlugin([
       'public/favicon.ico',
+      'public/sw.js',
       { from: 'public/images', to: 'images' },
       { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }
