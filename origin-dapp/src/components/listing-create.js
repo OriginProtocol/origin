@@ -39,34 +39,22 @@ class ListingCreate extends Component {
   constructor(props) {
     super(props)
 
-    // TODO(John) - remove once fractional usage is enabled by default
     this.STEP = {
       PICK_SCHEMA: 1,
       DETAILS: 2,
       AVAILABILITY: 3,
-      PREVIEW: 4,
-      METAMASK: 5,
-      PROCESSING: 6,
-      SUCCESS: 7,
-      ERROR: 8
+      BOOST: 4,
+      PREVIEW: 5,
+      METAMASK: 6,
+      PROCESSING: 7,
+      SUCCESS: 8,
+      ERROR: 9
     }
 
     // TODO(John) - remove once fractional usage is enabled by default
     this.fractionalSchemaTypes = []
 
     if (enableFractional) {
-      this.STEP = {
-        PICK_SCHEMA: 1,
-        DETAILS: 2,
-        AVAILABILITY: 3,
-        BOOST: 4,
-        PREVIEW: 5,
-        METAMASK: 6,
-        PROCESSING: 7,
-        SUCCESS: 8,
-        ERROR: 9
-      }
-
       this.fractionalSchemaTypes = [
         'housing',
         'services'
