@@ -2,7 +2,6 @@ require('dotenv').config()
 
 module.exports = {
   development: {
-    dialect: 'postgres',
     use_env_variable:'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
@@ -16,7 +15,6 @@ module.exports = {
     logging: false
   },
   'test': {
-    dialect: 'postgres',
     use_env_variable:'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
@@ -30,7 +28,6 @@ module.exports = {
     logging: false
   },
   'production': {
-    dialect: 'postgres',
     use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
