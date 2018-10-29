@@ -98,8 +98,9 @@ function printUsage(){
 `1 show index info
 2 create index (with mappings defined in configuration)
 3 create alias
-4 delete index
-5 reindex
+4 delete alias
+5 delete index
+6 reindex
 9 show usage`
   )
 }
@@ -182,6 +183,16 @@ async function createAlias(){
   console.log("Response: ", res)
 }
 
+async function deleteAlias(){
+  process.stdout.write('Name of the index to remove alias: ')
+  const indexName = await waitForInput()
+  process.stdout.write('Name of the alias: ')
+  const aliasName = await waitForInput()
+
+  const res = await executePayloadRequest(`${indexName}/_alias/${aliasName}`, null, 'DELETE')
+  console.log("Response: ", res)
+}
+
 let inputResolveCallback = null
 async function waitForInput(){
   return new Promise((resolve, reject) => {
@@ -210,8 +221,10 @@ async function waitForInput(){
     } else if (input === '3'){
       await createAlias()
     } else if (input === '4'){
-      await deleteIndex()
+      await deleteAlias()
     } else if (input === '5'){
+      await deleteIndex()
+    } else if (input === '6'){
       await reindex()
     } else if (input === '9'){
       printUsage()
