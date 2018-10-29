@@ -119,10 +119,12 @@ while getopts ":c:n:h" opt; do
       NAMESPACE=$OPTARG
       case "$NAMESPACE" in
         dev)
-          BRANCH=master
+	  echo -e "\033[31mDev deployments are now handled by automation\033[0m"
+	  exit 1
 	  ;;
         staging)
-          BRANCH=staging
+	  echo -e "\033[31mStaging deployments are now handled by automation\033[0m"
+	  exit 1
 	  ;;
         prod)
           BRANCH=stable
