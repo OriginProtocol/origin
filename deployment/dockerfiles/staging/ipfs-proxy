@@ -1,14 +1,9 @@
 FROM node:9
 
-# Invalidate Docker cache if necessary by adding the hash of the current commit
-# from the remote repository
-ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/staging /version.json
+COPY ./ipfs-proxy /app
+WORKDIR /app
 
-# Clone origin from staging (development) branch
-RUN git clone --depth 1 --branch staging https://github.com/OriginProtocol/origin.git /app
-
-WORKDIR /app/ipfs-proxy
-
+ENV NODE_ENV production
 RUN npm install --quiet --no-progress
 
 CMD ["node", "src/index.js"]
