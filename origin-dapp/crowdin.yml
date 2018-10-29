@@ -1,3 +1,0 @@
-files:
-  - source: /translations/all-messages.json
-    translation: /translations/languages/%locale%/%original_file_name%

@@ -1,5 +1,0 @@
-FROM node:9
-
-WORKDIR /app
-
-COPY ./development/scripts/wait-for.sh /usr/local/bin

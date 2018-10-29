@@ -1,9 +1,0 @@
-FROM node:9
-
-# Make wait-for.sh available
-COPY ./development/scripts/wait-for.sh /usr/local/bin
-# Script for setting dynamic IPFS_SWARM variable based on origin-messaging
-# container
-COPY ./development/scripts/set-ipfs-swarm.sh /usr/local/bin
-
-WORKDIR /app

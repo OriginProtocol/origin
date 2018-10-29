@@ -1,4 +1,0 @@
-FROM ipfs/go-ipfs:v0.4.17
-
-# Replace startup script with our own
-COPY /development/scripts/start-messaging-ipfs.sh /usr/local/bin/start_ipfs

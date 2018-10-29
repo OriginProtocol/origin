@@ -1,0 +1,2302 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>API Reference</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500%7CPoppins:200,300,400,500"/>
+
+    <!-- Favicons generated with https://realfavicongenerator.net/ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="images/favicon/safari-pinned-tab.svg" color="#2585FB">
+    <link rel="shortcut icon" href="images/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2585FB">
+    <meta name="msapplication-config" content="images/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#2585FB">
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .cd {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .nl {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="index" data-languages="[&quot;javascript&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="toc-wrapper">
+      <div class="logo-container">
+        <img src="images/logo.svg" class="logo" alt="Logo" />
+      </div>
+        <div class="lang-selector">
+              <a href="#" data-language-name="javascript">javascript</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc" class="toc-list-h1">
+          <li>
+            <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#introduction-get-usage" class="toc-h2 toc-link" data-title="Usage">Usage</a>
+                  </li>
+                  <li>
+                    <a href="#introduction-get-notes" class="toc-h2 toc-link" data-title="Notes">Notes</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#platform-components" class="toc-h1 toc-link" data-title="Platform Components">Platform Components</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#platform-components-get-user-registry" class="toc-h2 toc-link" data-title="User Registry">User Registry</a>
+                  </li>
+                  <li>
+                    <a href="#platform-components-get-listing-registry" class="toc-h2 toc-link" data-title="Listing Registry">Listing Registry</a>
+                  </li>
+                  <li>
+                    <a href="#platform-components-get-booking-contracts" class="toc-h2 toc-link" data-title="Booking Contracts">Booking Contracts</a>
+                  </li>
+                  <li>
+                    <a href="#platform-components-get-contract-modularity" class="toc-h2 toc-link" data-title="Contract Modularity">Contract Modularity</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#architecture" class="toc-h1 toc-link" data-title="Architecture">Architecture</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#architecture-get-jsonschema" class="toc-h2 toc-link" data-title="JSONSchema">JSONSchema</a>
+                  </li>
+                  <li>
+                    <a href="#architecture-get-ethereum" class="toc-h2 toc-link" data-title="Ethereum">Ethereum</a>
+                  </li>
+                  <li>
+                    <a href="#architecture-get-ipfs" class="toc-h2 toc-link" data-title="IPFS">IPFS</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#getting-started" class="toc-h1 toc-link" data-title="Getting started">Getting started</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#getting-started-get-download-origin" class="toc-h2 toc-link" data-title="Download Origin">Download Origin</a>
+                  </li>
+                  <li>
+                    <a href="#getting-started-get-use-an-ethereum-enabled-browser" class="toc-h2 toc-link" data-title="Use an Ethereum-enabled browser">Use an Ethereum-enabled browser</a>
+                  </li>
+                  <li>
+                    <a href="#getting-started-get-acquire-test-eth" class="toc-h2 toc-link" data-title="Acquire Test ETH">Acquire Test ETH</a>
+                  </li>
+                  <li>
+                    <a href="#getting-started-get-hello-world" class="toc-h2 toc-link" data-title="Hello World">Hello World</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#local-development" class="toc-h1 toc-link" data-title="Local Development">Local Development</a>
+          </li>
+          <li>
+            <a href="#authentication-amp-identity" class="toc-h1 toc-link" data-title="Authentication &amp; Identity">Authentication &amp; Identity</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#authentication-amp-identity-identity-with-erc-725" class="toc-h2 toc-link" data-title="Identity with ERC 725">Identity with ERC 725</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#origin-object" class="toc-h1 toc-link" data-title="Origin Object">Origin Object</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#origin-object-configuration" class="toc-h2 toc-link" data-title="Configuration">Configuration</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#marketplace" class="toc-h1 toc-link" data-title="Marketplace">Marketplace</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#marketplace-getlistings" class="toc-h2 toc-link" data-title="getListings">getListings</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-createlisting" class="toc-h2 toc-link" data-title="createListing">createListing</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-withdrawlisting" class="toc-h2 toc-link" data-title="withdrawListing">withdrawListing</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-getlistingreviews" class="toc-h2 toc-link" data-title="getListingReviews">getListingReviews</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-getnotifications" class="toc-h2 toc-link" data-title="getNotifications">getNotifications</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-setnotification" class="toc-h2 toc-link" data-title="setNotification">setNotification</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-getoffer" class="toc-h2 toc-link" data-title="getOffer">getOffer</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-getoffers" class="toc-h2 toc-link" data-title="getOffers">getOffers</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-makeoffer" class="toc-h2 toc-link" data-title="makeOffer">makeOffer</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-acceptoffer" class="toc-h2 toc-link" data-title="acceptOffer">acceptOffer</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-finalizeoffer" class="toc-h2 toc-link" data-title="finalizeOffer">finalizeOffer</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-withdrawoffer" class="toc-h2 toc-link" data-title="withdrawOffer">withdrawOffer</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-adddata" class="toc-h2 toc-link" data-title="addData">addData</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-initiatedispute" class="toc-h2 toc-link" data-title="initiateDispute">initiateDispute</a>
+                  </li>
+                  <li>
+                    <a href="#marketplace-resolvedispute" class="toc-h2 toc-link" data-title="resolveDispute">resolveDispute</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#attestation" class="toc-h1 toc-link" data-title="Attestation">Attestation</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#attestation-phonegeneratecode" class="toc-h2 toc-link" data-title="phoneGenerateCode">phoneGenerateCode</a>
+                  </li>
+                  <li>
+                    <a href="#attestation-phoneverify" class="toc-h2 toc-link" data-title="phoneVerify">phoneVerify</a>
+                  </li>
+                  <li>
+                    <a href="#attestation-emailgeneratecode" class="toc-h2 toc-link" data-title="emailGenerateCode">emailGenerateCode</a>
+                  </li>
+                  <li>
+                    <a href="#attestation-emailverify" class="toc-h2 toc-link" data-title="emailVerify">emailVerify</a>
+                  </li>
+                  <li>
+                    <a href="#attestation-facebookauthurl" class="toc-h2 toc-link" data-title="facebookAuthUrl">facebookAuthUrl</a>
+                  </li>
+                  <li>
+                    <a href="#attestation-facebookverify" class="toc-h2 toc-link" data-title="facebookVerify">facebookVerify</a>
+                  </li>
+                  <li>
+                    <a href="#attestation-twitterauthurl" class="toc-h2 toc-link" data-title="twitterAuthUrl">twitterAuthUrl</a>
+                  </li>
+                  <li>
+                    <a href="#attestation-twitterverify" class="toc-h2 toc-link" data-title="twitterVerify">twitterVerify</a>
+                  </li>
+                  <li>
+                    <a href="#attestation-airbnbgeneratecode" class="toc-h2 toc-link" data-title="airbnbGenerateCode">airbnbGenerateCode</a>
+                  </li>
+                  <li>
+                    <a href="#attestation-airbnbverify" class="toc-h2 toc-link" data-title="airbnbVerify">airbnbVerify</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#review" class="toc-h1 toc-link" data-title="Review">Review</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#review-find" class="toc-h2 toc-link" data-title="find">find</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#user" class="toc-h1 toc-link" data-title="User">User</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#user-set" class="toc-h2 toc-link" data-title="set">set</a>
+                  </li>
+                  <li>
+                    <a href="#user-get" class="toc-h2 toc-link" data-title="get">get</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#protocol-schemas" class="toc-h1 toc-link" data-title="Protocol Schemas">Protocol Schemas</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#protocol-schemas-listing-schema" class="toc-h2 toc-link" data-title="Listing Schema">Listing Schema</a>
+                  </li>
+                  <li>
+                    <a href="#protocol-schemas-offer-schema" class="toc-h2 toc-link" data-title="Offer Schema">Offer Schema</a>
+                  </li>
+                  <li>
+                    <a href="#protocol-schemas-dispute-schema" class="toc-h2 toc-link" data-title="Dispute Schema">Dispute Schema</a>
+                  </li>
+                  <li>
+                    <a href="#protocol-schemas-listing-withdraw-schema" class="toc-h2 toc-link" data-title="Listing-Withdraw Schema">Listing-Withdraw Schema</a>
+                  </li>
+                  <li>
+                    <a href="#protocol-schemas-offer-accept-schema" class="toc-h2 toc-link" data-title="Offer-Accept Schema">Offer-Accept Schema</a>
+                  </li>
+                  <li>
+                    <a href="#protocol-schemas-offer-withdraw-schema" class="toc-h2 toc-link" data-title="Offer-Withdraw Schema">Offer-Withdraw Schema</a>
+                  </li>
+                  <li>
+                    <a href="#protocol-schemas-profile-schema" class="toc-h2 toc-link" data-title="Profile Schema">Profile Schema</a>
+                  </li>
+                  <li>
+                    <a href="#protocol-schemas-resolution-schema" class="toc-h2 toc-link" data-title="Resolution Schema">Resolution Schema</a>
+                  </li>
+                  <li>
+                    <a href="#protocol-schemas-review-schema" class="toc-h2 toc-link" data-title="Review Schema">Review Schema</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#getting-help" class="toc-h1 toc-link" data-title="Getting help">Getting help</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#getting-help-discord" class="toc-h2 toc-link" data-title="Discord">Discord</a>
+                  </li>
+                  <li>
+                    <a href="#getting-help-email" class="toc-h2 toc-link" data-title="Email">Email</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#contributing" class="toc-h1 toc-link" data-title="Contributing">Contributing</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#contributing-email-weekly-engineering-call" class="toc-h2 toc-link" data-title="Weekly Engineering Call">Weekly Engineering Call</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-dive-right-in" class="toc-h2 toc-link" data-title="Dive Right In">Dive Right In</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-development-process" class="toc-h2 toc-link" data-title="Development Process">Development Process</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-coding-style" class="toc-h2 toc-link" data-title="Coding Style">Coding Style</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-troubleshooting-a-development-environment" class="toc-h2 toc-link" data-title="Troubleshooting a Development Environment">Troubleshooting a Development Environment</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-protocol-design" class="toc-h2 toc-link" data-title="Protocol Design">Protocol Design</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-community-guidelines" class="toc-h2 toc-link" data-title="Community Guidelines">Community Guidelines</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-reporting-issues" class="toc-h2 toc-link" data-title="Reporting Issues">Reporting Issues</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-security-issues" class="toc-h2 toc-link" data-title="Security Issues">Security Issues</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-community-improvement" class="toc-h2 toc-link" data-title="Community Improvement">Community Improvement</a>
+                  </li>
+                  <li>
+                    <a href="#contributing-email-full-time-positions" class="toc-h2 toc-link" data-title="Full Time Positions">Full Time Positions</a>
+                  </li>
+              </ul>
+          </li>
+      </div>
+        <ul class="toc-footer">
+            <li><a href='http://www.originprotocol.com'>Where it all begins!</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id='introduction'>Introduction</h1>
+<p>Origin provides a simple and powerful javascript library for developers to build decentralized marketplaces, allowing buyers and sellers to meet and transact without requiring any trusted intermediaries.</p>
+<h3 id='introduction-get-usage'>Usage</h3>
+<blockquote>
+<p>Visit our Github: <a href="https://github.com/OriginProtocol">https://github.com/OriginProtocol</a></p>
+</blockquote>
+
+<p>This API documentation will explain how developers can use the origin.js library to create and manage decentralized marketplaces that are built on top of <a href="https://github.com/ipfs">IPFS</a> and the <a href="https://www.ethereum.org/">Ethereum network</a>.</p>
+
+<p>Origin.js aims to create an easy and flexible abstraction layer that:</p>
+
+<ul>
+<li>Generates and deploys secure Ethereum smart contracts to the blockchain.</li>
+<li>Creates and posts user and listing metadata to distributed IPFS nodes</li>
+<li>Queries against open-source indexing servers to render content in decentralized applications (DApps)</li>
+</ul>
+
+<p>Origin.js enables developers to create DApps that onboard new users to the Origin platform, add new listings to the listings registry, create booking contracts, close out bookings (transfer funds, write reviews, etc.), and more.</p>
+<h3 id='introduction-get-notes'>Notes</h3>
+<p>Please note this project is still in heavy development and many of the features described below have not been implemented yet. This library should not be considered as production-ready.</p>
+
+<p>Origin.js and the entire Origin Protocol project is 100% open-source and we welcome contributions from the community. There are many ways to help, from reporting issues and contributing code to helping us improve and grow our community.</p>
+
+<p>If you are interested in getting involved, please read our section on <a href="#contributing">contributing</a>. If at any point you get stuck, please <a href="#getting-help">reach out</a> and we&#39;ll do our best to help. </p>
+<h1 id='platform-components'>Platform Components</h1>
+<p>Origin.js provides the interface for developers to interact with the rest of the Origin platform, all without writing Solidity code or managing IPFS instances.</p>
+
+<p>At a high-level, the Origin platform consists of user, listing, and booking data and logic stored on the decentralized tech stack. Mission-critical data and logic such as booking availability, transaction history, and escrow rules are generally stored on chain in a series of Ethereum smart contracts. Related metadata such as listing descriptions and images are stored on IPFS, with pointers to this data in the form of content hashes being stored on chain.</p>
+<h3 id='platform-components-get-user-registry'>User Registry</h3>
+<p>The Origin user registry is a datastore of all Origin-enabled users. Origin users are identified by their Ethereum wallet addresses. In addition, the user registry also stores a mapping of all forms of identity verification that the user has successfully undertaken.</p>
+
+<p>Origin.js enables developers to register users to the shared user registry, as well as query for identity verifications.</p>
+<h3 id='platform-components-get-listing-registry'>Listing Registry</h3>
+<p>The listing registry stores all valid Origin listings, from cars for rent to freelance design services. Developers will be able to create new listings in JSON, then push them to the Origin listing registry. Under the covers, Origin.js handles the creation of new IPFS content files for static metadata and new entries to the Origin listing registry smart contract.</p>
+
+<p>Note that Origin.js does not support browsing and searching the listing registry directly. It is recommended that developers use our open-source bridge server to efficiently query the blockchain.</p>
+<h3 id='platform-components-get-booking-contracts'>Booking Contracts</h3>
+<p>Booking contracts are automatically created when buyers book listings on Origin-powered DApps. These individual smart contract instances are generated and deployed with rules around price, reservation time, and payment rules. For certain listing types, Origin.js will also generate additional contract code for arbitration, escrow, deposits, payment schedules, etc.</p>
+<h3 id='platform-components-get-contract-modularity'>Contract Modularity</h3>
+<p>Origin smart contracts are designed to be flexible and modular. We recognize the need for developers and entrepreneurs to have a choice in selecting smart contract components that tailor-serve their needs.</p>
+
+<p>To that end, we will provide default contracts for escrow, arbitration, and insurance that will be inherited by our booking smart contracts. However, developers will be able to specify alternative contracts of their choosing (either their own or approved third-party contracts) in Origin.js function calls to generate custom booking contracts.</p>
+<h1 id='architecture'>Architecture</h1>
+<p>If you&#39;re new to the space, it may be helpful to first familiarize yourself with some of the core technologies that we&#39;re using to build Origin, such as <a href="#jsonschema">JSONSchema</a>, <a href="#ipfs">IPFS</a> and <a href="#ethereum">Ethereum</a>.</p>
+
+<p>Origin listings can be created using a frontend DApp to publish a JSON data object to
+any publicly writeable IPFS gateway. This JSON data object must conform to a set of
+standards and validation rules to be considered valid on the network. Users can
+optionally sign their listings cryptographically to verify their identity using
+publicly auditable proofs or trusted third parties. The IPFS gateway will publish the
+listing to the IPFS network making the listing instantly available via hundreds of
+distributed computers around the world to anyone who knows the content hash. The
+content hash of the listing is then sent to a smart contract which formally publishes
+the listing and stores pricing and availability information along with any specified
+booking rules and policies.</p>
+
+<p>Listings can easily be searched, browsed, and booked via a frontend DApp. Since we
+anticipate having too many listings to reasonably parse in a browser, the frontend
+DApp connects to an open-source bridge server of the user’s choosing, making it
+possible to search and filter the entire public corpus of listings. Once a listing has
+been selected, a user can make a booking by sending payment to the booking smart
+contract along with the IPFS hash of the chosen listing and the desired interval to
+book. The smart contract will verify that the booking is valid and handle the transfer
+of tokens between the buyer and the seller, including the escrow of funds when
+applicable.</p>
+
+<p>We anticipate most sellers will prefer to list their prices in fiat currencies which
+often have less volatility than digital currencies. To solve this challenge, both the
+booking smart contract and the bridge servers will use a common set of oracles and a
+shared algorithm to determine the exchange rate to be used. This allows prices to be
+shown to end users in their preferred fiat currencies while the correct amount of
+digital tokens are sent during the booking. A diverse set of oracles will be chosen to
+avoid introducing single points of failure into the system.</p>
+
+<p>Sellers are responsible for disclosing their preferred messaging channels in their
+listings through which buyers can contact them before, during, or after a transaction.
+Buyers can similarly indicate their preferred messaging channels when they complete a
+booking. Non-transactional communication between buyers and sellers will occur
+off-chain, and both parties are encouraged to only use secure and verifiable
+communication channels. For transactions that have a possibility of needing
+arbitration, a multisignature messaging channel should be chosen that includes the
+arbitrator in all communications.</p>
+
+<p>Once a transaction is complete, users are encouraged via economic incentives to leave
+feedback about the interaction in the form of a rating or review. Once again, the
+content is stored on IPFS and only the content hash is stored on Ethereum. Users are
+able to establish their reputations over time with verified transactions, building a
+unified reputation across multiple listing verticals. Buyers can use different wallets
+with varying levels of identity attached for sensitive transactions, or choose to only
+reveal their true identity to the seller while using a throw-away wallet.</p>
+
+<p>Listing policies around escrow, refunds, required deposits, and cancellations are set
+by the seller and are strictly enforced by the booking smart contract. Any exceptions
+to the policies must be handled directly off-chain by the two parties.</p>
+<h3 id='architecture-get-jsonschema'>JSONSchema</h3>
+<p><a href="http://json-schema.org/">Learn more about JSONSchema</a></p>
+<h3 id='architecture-get-ethereum'>Ethereum</h3>
+<p><a href="https://ethereum.org/">Learn more about Ethereum</a></p>
+<h3 id='architecture-get-ipfs'>IPFS</h3>
+<p><a href="https://github.com/ipfs">Learn more about IPFS</a></p>
+<h1 id='getting-started'>Getting started</h1><h3 id='getting-started-get-download-origin'>Download Origin</h3>
+<p>Origin.js is under active development. Our latest releases are available on our <a href="https://github.com/OriginProtocol">Github</a>.</p>
+<h3 id='getting-started-get-use-an-ethereum-enabled-browser'>Use an Ethereum-enabled browser</h3>
+<p>For testing and interacting with your DApp, you will need to use a browser that supports Web3. We recommend using the <a href="https://metamask.io/">Metamask Chrome Browser Extension</a>. This will enable you to connect to the Ethereum network from your browser. Metamask allows you to run Ethereum DApps right in your browser without running a full Ethereum node.</p>
+
+<p>Alternatively, you can run the official Ethereum browser <a href="https://github.com/ethereum/mist">Mist</a>.</p>
+
+<p>On mobile, we recommend trying <a href="https://www.toshi.org/">Toshi</a>, <a href="https://www.cipherbrowser.com/">Cipher</a> and <a href="https://trustwalletapp.com/features/trust-browser">Trust Wallet</a>.</p>
+<h3 id='getting-started-get-acquire-test-eth'>Acquire Test ETH</h3>
+<p>Our smart contracts are currently deployed on the <code>Rinkeby testnet</code>. You will need to have test ETH to use this library. You can request test funds from the <a href="https://faucet.rinkeby.io/">Rinkeby faucet</a>. Do not yet send real ETH on the Origin network. Use Rinkeby testnet ETH instead.</p>
+
+<aside class="notice">
+Always confirm that you are on Rinkeby testnet when testing your DApp. Any Eth on mainnet that is sent to Origin contract addresses may be lost permanently.
+</aside>
+<h3 id='getting-started-get-hello-world'>Hello World</h3>
+<p>Simply include the downloaded javascript library in your html to get started. </p>
+
+<blockquote>
+<p>Sample app</p>
+</blockquote>
+<pre class="highlight html tab-html"><code><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;title&gt;</span>Hello World<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"origin.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">origin</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Origin</span><span class="p">();</span>
+
+<span class="kr">const</span> <span class="nx">listingData</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">name</span><span class="p">:</span> <span class="s2">"Kettlebell For Sale"</span><span class="p">,</span>
+  <span class="na">category</span><span class="p">:</span> <span class="s2">"Health and Beauty"</span><span class="p">,</span>
+  <span class="na">location</span><span class="p">:</span> <span class="s2">"San Fransisco, CA"</span><span class="p">,</span>
+  <span class="na">description</span><span class="p">:</span>
+    <span class="s2">"32kg gorilla kettlebell. Mint condition."</span><span class="p">,</span>
+  <span class="na">pictures</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="na">price</span><span class="p">:</span> <span class="mf">0.134</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">schema</span> <span class="o">=</span> <span class="s2">"for-sale"</span>
+<span class="kr">const</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">listings</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">listingData</span><span class="p">,</span> <span class="nx">schema</span><span class="p">)</span>
+<span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">contractService</span><span class="p">.</span><span class="nx">waitTransactionFinished</span><span class="p">(</span><span class="nx">transaction</span><span class="p">.</span><span class="nx">tx</span><span class="p">)</span>
+</code></pre><h1 id='local-development'>Local Development</h1>
+<p>Ready to get started developing Origin.js and the Demo DApp? You will need two terminal windows: one for origin.js and one for the DApp.</p>
+
+<p>Origin.js:</p>
+
+<pre style="margin-right: 50%; float:none; width: inherit; margin-bottom: 10px">
+    mkdir -p origin
+    cd origin
+    git clone https://github.com/OriginProtocol/origin.git
+    cd origin/origin-js
+    git checkout develop
+    npm run install:dev
+    npm run start
+</pre>
+
+<p>And in another window, let&#39;s get the Demo DApp going:</p>
+
+<pre style="margin-right: 50%; float:none; width: inherit; margin-bottom: 10px">
+    cd .. (or /path/to/origin)
+    git clone https://github.com/OriginProtocol/origin.git
+    cd origin/origin-dapp
+    git checkout develop
+    npm run install:dev
+    npm run start
+</pre>
+
+<p>Your local repos have been setup to use the develop branches, since that&#39;s where all our new work starts from. You have also linked the Demo DApp to use your local copy of the Origin.js library, so that your changes to Origin.js are reflected immediately.</p>
+
+<p>You will now need to have <a href="https://metamask.io/">MetaMask</a> installed in your browser and connect it to &quot;Localhost 8545&quot;. Then visit http://localhost:3000/ to see the DApp.</p>
+
+<p>If you make changes to the contract code, or want to reset the contracts back to their starting states, you will want to stop (<code>ctrl-c</code>) your Origin.js development server. Then start it back up again with <code>npm run start</code>. After doing this, you must clear MetaMask&#39;s caches (or you will be getting old and invalid data). To do this:</p>
+
+<ul>
+<li>Change the MetaMask network to any testnet</li>
+<li>Change back to &quot;Localhost 8545&quot;</li>
+<li>Go to MetaMask &quot;Custom RPC&quot; in the Network menu, and press &quot;Reset Account&quot;</li>
+<li>Reload http://localhost:3000/ in your browser</li>
+</ul>
+<h1 id='authentication-amp-identity'>Authentication &amp; Identity</h1><h2 id='authentication-amp-identity-identity-with-erc-725'>Identity with ERC 725</h2>
+<p>Users identities are tied to Ethereum addresses and your private keys are used as the sole method of authentication on the Origin platform.</p>
+
+<p>Users can always prove ownership of a wallet without sending funds, simply by signing a message using their private keys.</p>
+
+<p>Users can assume multiple identities by creating multiple wallets. In this manner, users can choose how much of their off-line identities they wish to reveal to other users while participating on the Origin network.</p>
+
+<p>We are using the <a href="https://github.com/ethereum/EIPs/issues/725">ERC 725</a> identity standard as proposed by <a href="https://github.com/frozeman">Fabian Vogelsteller</a> as the basis for identity on the Origin platform. We&#39;ve built an <a href="https://erc725.originprotocol.com">identity playground</a> to help people understand ERC 725 and how it works. </p>
+
+<p>The Origin run bridge server will provide identity attestations as a community service. Origin identities are portable not only across marketplaces built on our platform, but also with other DApps that are supporting the ERC 725 standard.</p>
+
+<aside class="notice">
+Make sure to safely store your private keys. We can't help if you lose them.
+</aside>
+<h1 id='origin-object'>Origin Object</h1>
+<p>The Origin object is the base of interaction with origin.js. Other resources are members of this object. For example, <code>origin.listings</code>, <code>origin.purchases</code>, <code>origin.attestations</code>, etc.</p>
+<h2 id='origin-object-configuration'>Configuration</h2>
+<p>Configuration options are passed into the Origin constructor at instantiation.</p>
+<pre class="highlight javascript tab-javascript"><code><span class="kd">let</span> <span class="nx">configOptions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">option</span><span class="p">:</span> <span class="s1">'value'</span>
+<span class="p">}</span>
+<span class="kd">let</span> <span class="nx">origin</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Origin</span><span class="p">(</span><span class="nx">configOptions</span><span class="p">)</span>
+</code></pre>
+<p>Valid options:</p>
+
+<ul>
+<li><code>ipfsDomain</code></li>
+<li><code>ipfsApiPort</code></li>
+<li><code>ipfsGatewayPort</code></li>
+<li><code>ipfsGatewayProtocol</code></li>
+<li><code>discoveryServerUrl</code></li>
+<li><code>messagingNamespace</code></li>
+<li><code>arbitrator</code></li>
+<li><code>affiliate</code></li>
+<li><code>blockEpoch</code></li>
+<li><code>attestationServerUrl</code></li>
+<li><code>ipfsCreator</code></li>
+<li><code>OrbitDB</code></li>
+<li><code>ecies</code></li>
+<li><code>web3</code></li>
+<li><code>contractAddresses</code></li>
+</ul>
+
+<blockquote>
+<p>For example, if you are running a local IPFS daemon then you could set following config options:</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">configOptions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">ipfsDomain</span><span class="p">:</span> <span class="s1">'127.0.0.1'</span><span class="p">,</span>
+  <span class="na">ipfsApiPort</span><span class="p">:</span> <span class="s1">'5001'</span><span class="p">,</span>
+  <span class="na">ipfsGatewayPort</span><span class="p">:</span> <span class="s1">'8080'</span><span class="p">,</span>
+  <span class="na">ipfsGatewayProtocol</span><span class="p">:</span> <span class="s1">'http'</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">origin</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Origin</span><span class="p">(</span><span class="nx">configOptions</span><span class="p">)</span>
+</code></pre><h1 id='marketplace'>Marketplace</h1>
+<p>The marketplace manages listings from creation to sale as well as disputes between users.</p>
+<h2 id='marketplace-getlistings'>getListings</h2>
+<p>This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing&#39;s schema.</p>
+
+<p>A listing is a published action from a seller to sell something.
+It is active until there are no more units available or its expiration date is reached.</p>
+
+<blockquote>
+<p>Example: getListings</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">getListings</span><span class="p">({</span> <span class="na">idsOnly</span><span class="p">:</span> <span class="kc">true</span> <span class="p">})</span>
+
+<span class="c1">//returns</span>
+
+<span class="p">[</span><span class="s1">'0-34-2-34'</span><span class="p">,</span> <span class="s1">'000-234'</span><span class="p">]</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">getListings</span><span class="p">({</span> <span class="na">listingsFor</span><span class="p">:</span> <span class="s1">'0x627306090abab3a6e1400e9345bc60c78a8bef57'</span> <span class="p">})</span>
+
+<span class="c1">//returns all listings for '0x627306090abab3a6e1400e9345bc60c78a8bef57'</span>
+
+<span class="p">[{</span>
+  <span class="na">id</span><span class="p">:</span> <span class="s2">"99-0023"</span><span class="p">,</span>
+  <span class="na">title</span><span class="p">:</span> <span class="s2">"Kettlebell For Sale"</span><span class="p">,</span>
+  <span class="na">media</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"09398482-2834"</span><span class="p">,</span>
+  <span class="na">unitsTotal</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="na">type</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
+  <span class="na">category</span><span class="p">:</span> <span class="s2">"Health and Beauty"</span><span class="p">,</span>
+  <span class="na">subCategory</span><span class="p">:</span> <span class="s2">"daily exercise"</span><span class="p">,</span>
+  <span class="na">language</span><span class="p">:</span> <span class="s2">"English"</span><span class="p">,</span>
+  <span class="na">description</span><span class="p">:</span> <span class="s2">"32kg gorilla kettlebell"</span><span class="p">,</span>
+  <span class="na">price</span><span class="p">:</span> <span class="p">{</span> <span class="na">currency</span><span class="p">:</span> <span class="s1">'ETH'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="s1">'0.5'</span> <span class="p">},</span>
+  <span class="na">commission</span><span class="p">:</span> <span class="p">{</span> <span class="na">currency</span><span class="p">:</span> <span class="s1">'OGN'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="s1">'1'</span> <span class="p">},</span>
+  <span class="na">ipfsHash</span><span class="p">:</span> <span class="s2">"QmWZDcDq4aYGx9XmkPcx4mnKaGW2jCxf5tknrCtbfpJJFf"</span><span class="p">,</span>
+  <span class="na">seller</span><span class="p">:</span> <span class="s2">"0x627306090abab3a6e1400e9345bc60c78a8bef57"</span><span class="p">,</span>
+  <span class="na">depositManager</span><span class="p">:</span> <span class="s1">'0x02394099fu9dfse0920394u329u4024'</span><span class="p">,</span>
+  <span class="na">status</span><span class="p">:</span> <span class="s1">'active'</span><span class="p">,</span>
+  <span class="na">offers</span><span class="p">:</span> <span class="p">[],</span> <span class="c1">//is this supposed to be an array or an object?</span>
+  <span class="na">expiry</span><span class="p">:</span> <span class="s1">'1529674159'</span><span class="p">,</span>
+  <span class="na">events</span><span class="p">:[{</span> <span class="na">id</span><span class="p">:</span> <span class="s1">'20949-345'</span><span class="p">,</span> <span class="na">event</span><span class="p">:</span> <span class="s1">'ListingCreated'</span> <span class="p">}]</span>
+<span class="p">}]</span>
+</code></pre><h3 id='marketplace-getlistings-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>idsOnly</strong></td>
+<td>boolean</td>
+<td>optional</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>listingsFor</strong></td>
+<td>string</td>
+<td>optional</td>
+<td>user&#39;s address</td>
+</tr>
+<tr>
+<td><strong>purchasesFor</strong></td>
+<td>string</td>
+<td>optional</td>
+<td>user&#39;s address</td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-createlisting'>createListing</h2>
+<p>When you create a listing, the API will create both the IPFS data and the Listing contract on the blockchain.
+When a listing is successfully created, the <code>createListing</code> method takes a callback with two arguments:</p>
+
+<p><code>confirmationCount</code> - the number of block confirmations</p>
+
+<p><code>transactionReceipt</code> - an object with a timestamp and information about the transaction and the corresponding block</p>
+
+<blockquote>
+<p>Example: createListing</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">listing</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">category</span><span class="p">:</span> <span class="s2">"schema.forSale"</span><span class="p">,</span>
+  <span class="na">commission</span><span class="p">:</span> <span class="p">{</span> <span class="na">amount</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span> <span class="na">currency</span><span class="p">:</span> <span class="s2">"OGN"</span> <span class="p">},</span>
+  <span class="na">description</span><span class="p">:</span> <span class="s2">"ojwoifj weofijfoijfewoi qfoiqejqoidjq oidwjqdo"</span><span class="p">,</span>
+  <span class="na">language</span><span class="p">:</span> <span class="s2">"en-US"</span><span class="p">,</span>
+  <span class="na">listingType</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
+  <span class="na">media</span><span class="p">:</span> <span class="p">[{</span><span class="err">…</span><span class="p">}],</span>
+  <span class="na">price</span><span class="p">:</span> <span class="p">{</span> <span class="na">amount</span><span class="p">:</span> <span class="s2">"0.01"</span><span class="p">,</span> <span class="na">currency</span><span class="p">:</span> <span class="s2">"ETH"</span> <span class="p">},</span>
+  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/listing_v1.0.0"</span><span class="p">,</span>
+  <span class="na">subCategory</span><span class="p">:</span> <span class="s2">"schema.forSale.appliances"</span><span class="p">,</span>
+  <span class="na">title</span><span class="p">:</span> <span class="s2">"I am a great appliance listing"</span><span class="p">,</span>
+  <span class="na">unitsTotal</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//manage response</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">createListing</span><span class="p">({</span> <span class="nx">listing</span> <span class="p">},</span> <span class="nx">callback</span><span class="p">)</span>
+</code></pre><h3 id='marketplace-createlisting-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>listing</strong></td>
+<td>object</td>
+<td>required</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>callback</strong></td>
+<td>function</td>
+<td>optional</td>
+<td>provides args <code>confirmationCount</code> and <code>transactionReceipt</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-withdrawlisting'>withdrawListing</h2>
+<p>Withdrawing a transaction will set the <code>unitsAvailable</code> to zero. This will stop any further offers for that Listing.
+When a listing is successfully withdrawn, the <code>withdrawListing</code> method takes a callback with two arguments:</p>
+
+<p><code>confirmationCount</code> - the number of block confirmations</p>
+
+<p><code>transactionReceipt</code> - an object with a timestamp and information about the transaction and the corresponding block</p>
+
+<blockquote>
+<p>Example: withdrawListing</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">listingId</span> <span class="o">=</span> <span class="s2">"927-832"</span>
+<span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//manage response</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">withdrawListing</span><span class="p">(</span><span class="nx">listingId</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+</code></pre><h3 id='marketplace-withdrawlisting-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>listingId</strong></td>
+<td>string</td>
+<td>required</td>
+<td>id of the listing to be withdrawn</td>
+</tr>
+<tr>
+<td><strong>data</strong></td>
+<td>object</td>
+<td>optional</td>
+<td>default to <code>{}</code> if not needed</td>
+</tr>
+<tr>
+<td><strong>callback</strong></td>
+<td>function</td>
+<td>optional</td>
+<td>provides args <code>confirmationCount</code> and <code>transactionReceipt</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-getlistingreviews'>getListingReviews</h2>
+<p>Reviews are created by the buyer in the receipt stage and by the seller in the payout stage of the offer process. A review consists of a required 1-5 rating and an optional reviewText text field.</p>
+
+<blockquote>
+<p>Example: withdrawListing</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">listingId</span> <span class="o">=</span> <span class="s2">"927-832"</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">getListingReviews</span><span class="p">(</span><span class="nx">listingId</span><span class="p">)</span>
+
+<span class="c1">//returns</span>
+
+<span class="p">[{</span>
+  <span class="s2">"schemaId"</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/review_v1.0.0"</span><span class="p">,</span>
+  <span class="s2">"rating"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"Solid Listing"</span>
+  <span class="s2">"reviewer"</span><span class="p">:</span> <span class="s2">"0x29884972398479234792"</span>
+<span class="p">]}</span>
+</code></pre><h3 id='marketplace-getlistingreviews-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>listingId</strong></td>
+<td>string</td>
+<td>required</td>
+<td>id of the listing</td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-getnotifications'>getNotifications</h2>
+<p>Each Notification corresponds to the status of a Listing. Notifications are currently generated for each of the following Listing statuses:</p>
+
+<ul>
+<li>ListingCreated</li>
+<li>ListingUpdated</li>
+<li>ListingWithdrawn</li>
+<li>ListingArbitrated</li>
+<li>OfferCreated</li>
+<li>OfferAccepted</li>
+<li>OfferFinalized</li>
+<li>OfferWithdrawn</li>
+<li>OfferFundsAdded</li>
+<li>OfferDisputed</li>
+<li>OfferRuling</li>
+</ul>
+
+<p>Notifications do not exist on the blockchain nor are they read from a database. They are derived from the blockchain transaction logs of the Listing statuses at the time of the API request. Because of this, there is no central record of a notification&#39;s status as &quot;read&quot; or &quot;unread&quot;. When a client first interacts with the notifications API, Origin.js will record a timestamp in local storage. All notifications resulting from blockchain events that happen prior to this timestamp will be considered to be &quot;read&quot;. This ensures that when the same user interacts with the notifications API from a different client for the first time, they will not receive a large number of &quot;unread&quot; notifications that they have previously read from their original client.</p>
+
+<blockquote>
+<p>Example: getNotifications</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">getNotifications</span><span class="p">()</span>
+
+<span class="c1">//returns all notifications for the user</span>
+
+<span class="p">[{</span>
+  <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"2984803-23433"</span><span class="p">,</span>
+  <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"buyer_listing_shipped"</span><span class="p">,</span>
+  <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"unread"</span><span class="p">,</span>
+  <span class="s2">"event"</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s2">"resources"</span><span class="p">:</span> <span class="p">{</span> <span class="na">listingId</span><span class="p">:</span> <span class="s2">"927-832"</span><span class="p">,</span> <span class="na">offerId</span><span class="p">:</span> <span class="s2">"183"</span><span class="p">,</span> <span class="na">listing</span><span class="p">:</span> <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="s2">"Whirlpool Microwave"</span> <span class="p">}</span> <span class="p">}</span>
+<span class="p">]}</span>
+</code></pre><h2 id='marketplace-setnotification'>setNotification</h2>
+<p>Since notification objects do not live on the blockchain or in a database, this method only records an update to the client&#39;s local storage. It accepts a single parameter, which should be an object containing the id of the notification and a status value of either read or unread. Any other properties included in this object will be ignored.</p>
+
+<blockquote>
+<p>Example: setNotification</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="s2">"2984803-23433"</span>
+<span class="kr">const</span> <span class="nx">status</span> <span class="o">=</span> <span class="s2">"read"</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">setNotification</span><span class="p">({</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">status</span> <span class="p">})</span>
+
+</code></pre><h3 id='marketplace-setnotification-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>id</strong></td>
+<td>string</td>
+<td>required</td>
+<td>id of the notification</td>
+</tr>
+<tr>
+<td><strong>status</strong></td>
+<td>string</td>
+<td>required</td>
+<td><code>&quot;read&quot;</code> or <code>&quot;unread&quot;</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-getoffer'>getOffer</h2>
+<p>This will return a specific offer sent by a buyer for a listing offer.</p>
+
+<p>An Offer is a single transaction between a buyer and seller. A single Listing with multiple items for sale could have many Offers related to it, one for each buyer.</p>
+
+<p>A new Offer contract is created when a buyer purchases a Listing.</p>
+
+<blockquote>
+<p>Example: getOffer</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">offerId</span> <span class="o">=</span> <span class="s2">"2403-234"</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">getOffer</span><span class="p">(</span><span class="nx">offerId</span><span class="p">)</span>
+
+<span class="c1">//returns the specified offer</span>
+
+<span class="p">{</span>
+  <span class="nl">id</span><span class="p">:</span> <span class="s2">"2403-234"</span><span class="p">,</span>
+  <span class="nx">listingId</span><span class="p">:</span> <span class="s2">"999-000-0"</span><span class="p">,</span>
+  <span class="nx">status</span><span class="p">:</span> <span class="s2">"accepted"</span><span class="p">,</span>
+  <span class="nx">createdAt</span><span class="p">:</span> <span class="mi">1539991086</span><span class="p">,</span>
+  <span class="nx">buyer</span><span class="p">:</span> <span class="s2">"0x627306090274fwfiou97h0c78a8BEf57"</span><span class="p">,</span>
+  <span class="nx">events</span><span class="p">:</span> <span class="p">[...],</span>
+  <span class="nx">refund</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+  <span class="nx">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/offer_v1.0.0"</span><span class="p">,</span>
+  <span class="nx">listingType</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
+  <span class="nx">unitsPurchased</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">totalPrice</span><span class="p">:</span> <span class="p">{</span> <span class="nl">currency</span><span class="p">:</span> <span class="s2">"ETH"</span><span class="p">,</span> <span class="nx">amount</span><span class="p">:</span> <span class="s2">"0.033"</span> <span class="p">},</span>
+  <span class="nx">ipfs</span><span class="p">:</span> <span class="p">{...}</span>
+<span class="p">}</span>
+</code></pre><h3 id='marketplace-getoffer-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>offerId</strong></td>
+<td>string</td>
+<td>required</td>
+<td><code>offer.id</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-getoffers'>getOffers</h2>
+<p>This will return all offers related to a specific listing.</p>
+
+<blockquote>
+<p>Example: getOffers</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">listingId</span> <span class="o">=</span> <span class="s2">"9903-75"</span>
+<span class="kr">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">for</span><span class="p">:</span> <span class="s2">"0x627306090274fwfiou97h0c78a8BEf57"</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">getOffers</span><span class="p">(</span><span class="nx">listingId</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+
+<span class="c1">//returns all offers for the specified listing</span>
+
+<span class="p">[{</span>
+  <span class="na">id</span><span class="p">:</span> <span class="s2">"999-000-0-0"</span><span class="p">,</span>
+  <span class="na">listingId</span><span class="p">:</span> <span class="s2">"9903-75"</span><span class="p">,</span>
+  <span class="na">status</span><span class="p">:</span> <span class="s2">"created"</span><span class="p">,</span>
+  <span class="na">createdAt</span><span class="p">:</span> <span class="mi">1539991086</span><span class="p">,</span>
+  <span class="na">buyer</span><span class="p">:</span> <span class="s2">"0x627306090274fwfiou97h0c78a8BEf57"</span><span class="p">,</span>
+  <span class="na">events</span><span class="p">:</span> <span class="p">[...],</span>
+  <span class="na">refund</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/offer_v1.0.0"</span><span class="p">,</span>
+  <span class="na">listingType</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
+  <span class="na">unitsPurchased</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="na">totalPrice</span><span class="p">:</span> <span class="p">{</span> <span class="na">currency</span><span class="p">:</span> <span class="s2">"ETH"</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="s2">"0.033"</span> <span class="p">},</span>
+  <span class="na">ipfs</span><span class="p">:</span> <span class="p">{...}</span>
+<span class="p">},</span>
+<span class="p">{</span>
+  <span class="na">id</span><span class="p">:</span> <span class="s2">"82838-247-3-3"</span><span class="p">,</span>
+  <span class="na">listingId</span><span class="p">:</span> <span class="s2">"9903-75"</span><span class="p">,</span>
+  <span class="na">status</span><span class="p">:</span> <span class="s2">"created"</span><span class="p">,</span>
+  <span class="na">buyer</span><span class="p">:</span> <span class="s2">"0x938828348ske02heo92394hwf"</span><span class="p">,</span>
+  <span class="p">...</span>
+<span class="p">}]</span>
+</code></pre><h3 id='marketplace-getoffers-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>listingId</strong></td>
+<td>string</td>
+<td>required</td>
+<td><code>listing.id</code></td>
+</tr>
+<tr>
+<td><strong>options</strong></td>
+<td>object</td>
+<td>optional</td>
+<td><code>const options = { for: &quot;0x627...&quot; }</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-makeoffer'>makeOffer</h2>
+<p>The <code>makeOffer</code> method takes a callback with two arguments:</p>
+
+<p><code>confirmationCount</code> - the number of block confirmations</p>
+
+<p><code>transactionReceipt</code> - an object with a timestamp and information about the transaction and the corresponding block</p>
+
+<blockquote>
+<p>Example: makeOffer</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">listingId</span> <span class="o">=</span> <span class="s2">"9903-75"</span>
+<span class="kr">const</span> <span class="nx">offer</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">id</span><span class="p">:</span> <span class="s2">"82838-247-3-3"</span><span class="p">,</span>
+  <span class="na">listingId</span><span class="p">:</span> <span class="s2">"9903-75"</span><span class="p">,</span>
+  <span class="na">status</span><span class="p">:</span> <span class="s2">"created"</span><span class="p">,</span>
+  <span class="na">buyer</span><span class="p">:</span> <span class="s2">"0x938828348ske02heo92394hwf"</span><span class="p">,</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//manage response</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">makeOffer</span><span class="p">(</span><span class="nx">listingId</span><span class="p">,</span> <span class="nx">offer</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+
+</code></pre><h3 id='marketplace-makeoffer-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>listingId</strong></td>
+<td>string</td>
+<td>required</td>
+<td><code>listing.id</code></td>
+</tr>
+<tr>
+<td><strong>offer</strong></td>
+<td>object</td>
+<td>required</td>
+<td>args see Protocol Schemas: Offer Schema</td>
+</tr>
+<tr>
+<td><strong>callback</strong></td>
+<td>function</td>
+<td>optional</td>
+<td>provides args <code>confirmationCount</code> and <code>transactionReceipt</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-acceptoffer'>acceptOffer</h2>
+<p>The <code>acceptOffer</code> method takes a callback with two arguments:</p>
+
+<p><code>confirmationCount</code> - the number of block confirmations</p>
+
+<p><code>transactionReceipt</code> - an object with a timestamp and information about the transaction and the corresponding block</p>
+
+<blockquote>
+<p>Example: acceptOffer</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">offerId</span> <span class="o">=</span> <span class="s2">"543-0099"</span>
+<span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//manage response</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">acceptOffer</span><span class="p">(</span><span class="nx">offerId</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+
+</code></pre><h3 id='marketplace-acceptoffer-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>offerId</strong></td>
+<td>string</td>
+<td>required</td>
+<td><code>offer.id</code></td>
+</tr>
+<tr>
+<td><strong>data</strong></td>
+<td>object</td>
+<td>optional</td>
+<td>default to <code>{}</code> if not needed</td>
+</tr>
+<tr>
+<td><strong>callback</strong></td>
+<td>function</td>
+<td>optional</td>
+<td>provides args <code>confirmationCount</code> and <code>transactionReceipt</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-finalizeoffer'>finalizeOffer</h2>
+<p>The <code>finalizeOffer</code> method takes a callback with two arguments:</p>
+
+<p><code>confirmationCount</code> - the number of block confirmations</p>
+
+<p><code>transactionReceipt</code> - an object with a timestamp and information about the transaction and the corresponding block</p>
+
+<blockquote>
+<p>Example: finalizeOffer</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">offerId</span> <span class="o">=</span> <span class="s2">"9903-75"</span>
+<span class="kr">const</span> <span class="nx">buyerReview</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">rating</span><span class="p">:</span> <span class="mi">5</span>
+  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/review_v1.0.0"</span>
+  <span class="na">text</span><span class="p">:</span> <span class="s2">"Great response times. Professional."</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//manage response</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">finalizeOffer</span><span class="p">(</span><span class="nx">offerId</span><span class="p">,</span> <span class="nx">buyerReview</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+
+</code></pre><h3 id='marketplace-finalizeoffer-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>offerId</strong></td>
+<td>string</td>
+<td>required</td>
+<td><code>offer.id</code></td>
+</tr>
+<tr>
+<td><strong>buyerReview</strong></td>
+<td>object</td>
+<td>required</td>
+<td>args <code>rating</code>, <code>schemaId</code>, <code>text</code></td>
+</tr>
+<tr>
+<td><strong>callback</strong></td>
+<td>function</td>
+<td>optional</td>
+<td>provides args <code>confirmationCount</code> and <code>transactionReceipt</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-withdrawoffer'>withdrawOffer</h2>
+<p>The <code>withdrawOffer</code> method takes a callback with two arguments:</p>
+
+<p><code>confirmationCount</code> - the number of block confirmations</p>
+
+<p><code>transactionReceipt</code> - an object with a timestamp and information about the transaction and the corresponding block</p>
+
+<blockquote>
+<p>Example: withdrawOffer</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">offerId</span> <span class="o">=</span> <span class="s2">"543-0099"</span>
+<span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//manage response</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">withdrawOffer</span><span class="p">(</span><span class="nx">offerId</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+
+<span class="c1">// returns the offer with a OfferWithdrawn event</span>
+
+<span class="p">{</span>
+  <span class="nl">offerId</span><span class="p">:</span> <span class="s2">"543-0099"</span><span class="p">,</span>
+  <span class="nx">events</span><span class="p">:</span> <span class="p">{</span> <span class="nl">OfferWithdrawn</span><span class="p">:</span> <span class="p">{...}</span> <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre><h3 id='marketplace-withdrawoffer-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>offerId</strong></td>
+<td>string</td>
+<td>required</td>
+<td><code>offer.id</code></td>
+</tr>
+<tr>
+<td><strong>data</strong></td>
+<td>object</td>
+<td>optional</td>
+<td>default to <code>{}</code> if not needed</td>
+</tr>
+<tr>
+<td><strong>callback</strong></td>
+<td>function</td>
+<td>optional</td>
+<td>provides args <code>confirmationCount</code> and <code>transactionReceipt</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-adddata'>addData</h2>
+<p>The <code>addData</code> method takes a callback with two arguments:</p>
+
+<p><code>confirmationCount</code> - the number of block confirmations</p>
+
+<p><code>transactionReceipt</code> - an object with a timestamp and information about the transaction and the corresponding block</p>
+
+<blockquote>
+<p>Example: addData</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">offerId</span> <span class="o">=</span> <span class="s2">"543-0099"</span>
+<span class="kr">const</span> <span class="nx">listingId</span> <span class="o">=</span> <span class="s2">"9900-234"</span>
+<span class="kr">const</span> <span class="nx">sellerReview</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">rating</span><span class="p">:</span> <span class="mi">4</span>
+  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/review_v1.0.0"</span>
+  <span class="na">text</span><span class="p">:</span> <span class="s2">""</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//manage response</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">addData</span><span class="p">(</span><span class="nx">listingId</span><span class="p">,</span> <span class="nx">offerId</span><span class="p">,</span> <span class="nx">sellerReview</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+
+<span class="c1">// returns a timestamp and transaction receipt</span>
+
+<span class="p">{</span>
+  <span class="nl">timestamp</span><span class="p">:</span> <span class="mi">1540221215</span>
+  <span class="nl">events</span><span class="p">:</span> <span class="p">{</span> <span class="nl">OfferWithdrawn</span><span class="p">:</span> <span class="p">{...}</span> <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre><h3 id='marketplace-adddata-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>listingId</strong></td>
+<td>string</td>
+<td>optional</td>
+<td>can be <code>null</code></td>
+</tr>
+<tr>
+<td><strong>offerId</strong></td>
+<td>string</td>
+<td>optional</td>
+<td>can be <code>null</code></td>
+</tr>
+<tr>
+<td><strong>sellerReview</strong></td>
+<td>object</td>
+<td>optional</td>
+<td>default to <code>{}</code> if not needed</td>
+</tr>
+<tr>
+<td><strong>callback</strong></td>
+<td>function</td>
+<td>optional</td>
+<td>provides args <code>confirmationCount</code> and <code>transactionReceipt</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-initiatedispute'>initiateDispute</h2>
+<p>The <code>initiateDispute</code> method takes a callback with two arguments:</p>
+
+<p><code>confirmationCount</code> - the number of block confirmations</p>
+
+<p><code>transactionReceipt</code> - an object with a timestamp and information about the transaction and the corresponding block</p>
+
+<blockquote>
+<p>Example: initiateDispute</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">offerId</span> <span class="o">=</span> <span class="s2">"543-0099"</span>
+<span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//manage response</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">initiateDispute</span><span class="p">(</span><span class="nx">offerId</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+
+<span class="c1">// returns a timestamp and transaction receipt</span>
+
+<span class="p">{</span>
+  <span class="nl">timestamp</span><span class="p">:</span> <span class="mi">1540221215</span>
+  <span class="nl">events</span><span class="p">:</span> <span class="p">{</span> <span class="nl">OfferDisputed</span><span class="p">:</span> <span class="p">{...}</span> <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+
+</code></pre><h3 id='marketplace-initiatedispute-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>offerId</strong></td>
+<td>string</td>
+<td>required</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>data</strong></td>
+<td>object</td>
+<td>optional</td>
+<td>default to <code>{}</code> if not needed</td>
+</tr>
+<tr>
+<td><strong>callback</strong></td>
+<td>function</td>
+<td>optional</td>
+<td>provides args <code>confirmationCount</code> and <code>transactionReceipt</code></td>
+</tr>
+</tbody></table>
+<h2 id='marketplace-resolvedispute'>resolveDispute</h2>
+<p>The <code>resolveDispute</code> method takes a callback with two arguments:</p>
+
+<p><code>confirmationCount</code> - the number of block confirmations</p>
+
+<p><code>transactionReceipt</code> - an object with a timestamp and information about the transaction and the corresponding block</p>
+
+<blockquote>
+<p>Example: resolveDispute</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code>
+<span class="kr">const</span> <span class="nx">offerId</span> <span class="o">=</span> <span class="s2">"543-0099"</span>
+<span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">const</span> <span class="nx">ruling</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="kr">const</span> <span class="nx">refund</span> <span class="o">=</span> <span class="mi">33000000000000000</span>
+<span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//manage response</span>
+<span class="p">}</span>
+
+<span class="o">&gt;</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">marketplace</span><span class="p">.</span><span class="nx">resolveDispute</span><span class="p">(</span><span class="nx">offerId</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">ruling</span><span class="p">,</span> <span class="nx">refund</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+
+<span class="c1">// returns a timestamp and transaction receipt</span>
+
+<span class="p">{</span>
+  <span class="nl">timestamp</span><span class="p">:</span> <span class="mi">1540221215</span>
+  <span class="nl">events</span><span class="p">:</span> <span class="p">{</span> <span class="nl">OfferRuling</span><span class="p">:</span> <span class="p">{...}</span> <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+
+</code></pre><h3 id='marketplace-resolvedispute-arguments'>Arguments:</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>offerId</strong></td>
+<td>string</td>
+<td>required</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>data</strong></td>
+<td>object</td>
+<td>required</td>
+<td>default to <code>{}</code> if not needed</td>
+</tr>
+<tr>
+<td><strong>ruling</strong></td>
+<td>number</td>
+<td>required</td>
+<td><code>0</code> or <code>1</code></td>
+</tr>
+<tr>
+<td><strong>refund</strong></td>
+<td>object</td>
+<td>required</td>
+<td>price in <code>wei</code></td>
+</tr>
+<tr>
+<td><strong>callback</strong></td>
+<td>function</td>
+<td>optional</td>
+<td>provides args <code>confirmationCount</code> and <code>transactionReceipt</code></td>
+</tr>
+</tbody></table>
+<h1 id='attestation'>Attestation</h1>
+<p>An <strong>Attestation</strong> is a confirmation that some piece of identity information has been verified by a trusted 3rd party.</p>
+
+<p>Origin provides an attestation service that users can optionally use to add attestations to their profile.</p>
+
+<p>The following attestations are currently offered:</p>
+
+<ul>
+<li>Email</li>
+<li>Phone</li>
+<li>Facebook</li>
+<li>Twitter</li>
+<li>Airbnb</li>
+</ul>
+
+<p>Currently, an attestation is simply a public <em>confirmation</em> that something has been verified by Origin.
+The information itself is not made public.</p>
+
+<p>For example, when a user adds an email attestation to their profile, all that anyone else will be able to see is that their email has been verified by Origin.
+The email address itself remains private.</p>
+
+<p>Note that these methods are used to simply generate attestation objects.
+Once an attestation object has been created, it needs to be added to a user object for it to take effect.</p>
+<h2 id='attestation-phonegeneratecode'>phoneGenerateCode</h2>
+<blockquote>
+<p>To send an SMS verification code</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">phoneGenerateCode</span><span class="p">({</span>
+  <span class="na">countryCallingCode</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+  <span class="na">phone</span><span class="p">:</span> <span class="s2">"555-555-5555"</span><span class="p">,</span>
+  <span class="na">method</span><span class="p">:</span> <span class="s2">"sms"</span><span class="p">,</span>
+  <span class="na">locale</span><span class="p">:</span> <span class="s2">"en"</span>
+<span class="p">})</span>
+</code></pre>
+<p>This will perform a phone verification by calling or sending a SMS to a phone number.</p>
+
+<p>The phone number that will receive the call or SMS is the <code>countryCallingCode</code> combined with the <code>phone</code>. The <code>phone</code> should therefore be provided in the national format.</p>
+
+<p>The <code>method</code> can either by &quot;call&quot; or &quot;sms&quot;.</p>
+
+<p>The <code>locale</code> parameter is optional and it defines the language of the call or the SMS. If not provided a sensible default is used based on the country of the phone number. Supported languages are af, ar, ca, zh, zh-CN, zh-HK, hr, cs, da, nl, en, fi, fr, de, el, he, hi, hu, id, it, ja, ko, ms, nb, pl, pt-BR, pt, ro, ru, es, sv, tl, th, tr, vi.</p>
+<h2 id='attestation-phoneverify'>phoneVerify</h2>
+<blockquote>
+<p>To verify a ownership of a phone number</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="kd">let</span> <span class="nx">phoneAttestation</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">phoneVerify</span><span class="p">({</span>
+  <span class="na">wallet</span><span class="p">:</span> <span class="nx">myWalletAddress</span><span class="p">,</span>
+  <span class="na">countryCallingCode</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+  <span class="na">phone</span><span class="p">:</span> <span class="s2">"555-555-5555"</span><span class="p">,</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"123456"</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"phone"</span>
+<span class="p">}</span>
+</code></pre>
+<p>This will verify that the <code>code</code> submitted in the request is the one that was sent to the phone number in the <code>phoneGenerateCode</code> call. If it is valid, an attestation object will be returned.</p>
+
+<p>Note that the <code>countryCallingCode</code> and <code>phone</code> must have the same values as the values used in the <code>phoneGenerateCode</code> call.</p>
+<h2 id='attestation-emailgeneratecode'>emailGenerateCode</h2>
+<blockquote>
+<p>To send an email verification code</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">emailGenerateCode</span><span class="p">({</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s2">"me@my.domain"</span>
+<span class="p">})</span>
+</code></pre>
+<p>This will send an email to the given email address containing a verification code.</p>
+<h2 id='attestation-emailverify'>emailVerify</h2>
+<blockquote>
+<p>To verify ownership of an email address</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="kd">let</span> <span class="nx">emailAttestation</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">emailVerify</span><span class="p">({</span>
+  <span class="na">wallet</span><span class="p">:</span> <span class="nx">myWalletAddress</span><span class="p">,</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s2">"me@my.domain"</span><span class="p">,</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"123456"</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"email"</span>
+<span class="p">}</span>
+</code></pre>
+<p>This will verify that the <code>code</code> submitted in the request is the one that was sent to the email address in the <code>emailGenerateCode</code> call. If it is valid, an attestation object will be returned.</p>
+<h2 id='attestation-facebookauthurl'>facebookAuthUrl</h2>
+<blockquote>
+<p>To get Facebook authentication url</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">facebookAuthUrl</span><span class="p">()</span>
+
+<span class="nb">window</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'width=650,height=500'</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">await</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">).</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^origin-code:/</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="kc">false</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'code'</span><span class="p">,</span> <span class="nx">code</span><span class="p">)</span> <span class="c1">// use this value in `facebookVerify`</span>
+</code></pre>
+<p>This will return a url which your dapp should open in a popup window.
+The page will ask the user to grant permissions to the Origin app, which will be used to verify their Facebook identity.
+Once permissions have been granted, the popup window will <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">post a message</a> back to the dapp. You should listen for this message, which will contain the <code>code</code> needed for the <code>facebookVerify</code> call.</p>
+<h2 id='attestation-facebookverify'>facebookVerify</h2>
+<blockquote>
+<p>To verify ownership of a Facebook account</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="kd">let</span> <span class="nx">facebookAttestation</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">facebookVerify</span><span class="p">({</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"12345"</span> <span class="c1">// code obtained from `facebookAuthUrl`</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"facebook"</span>
+<span class="p">}</span>
+</code></pre>
+<p>This will perform Facebook oauth verification on the specified <code>code</code>. If it is valid, an attestation object will be returned.</p>
+
+<p>Note that <code>code</code> is the oauth code generated in <code>facebookAuthUrl</code>.</p>
+<h2 id='attestation-twitterauthurl'>twitterAuthUrl</h2>
+<blockquote>
+<p>To get Twitter authentication url</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">twitterAuthUrl</span><span class="p">()</span>
+
+<span class="nb">window</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'width=650,height=500'</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">await</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">).</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^origin-code:/</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="kc">false</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'code'</span><span class="p">,</span> <span class="nx">code</span><span class="p">)</span> <span class="c1">// use this value in `twitterVerify`</span>
+</code></pre>
+<p>This will return a url which your dapp should open in a popup window.
+The page will ask the user to grant permissions to the Origin app, which will be used to verify their Twitter identity.
+Once permissions have been granted, the popup window will <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">post a message</a> back to the dapp. You should listen for this message, which will contain the <code>code</code> needed for the <code>twitterVerify</code> call.</p>
+<h2 id='attestation-twitterverify'>twitterVerify</h2>
+<blockquote>
+<p>To verify ownership of a Twitter account</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="kd">let</span> <span class="nx">twitterAttestation</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">twitterVerify</span><span class="p">({</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"12345"</span> <span class="c1">// code obtained from `twitterAuthUrl`</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"twitter"</span>
+<span class="p">}</span>
+</code></pre>
+<p>This will perform Twitter oauth verification on the specified <code>code</code>. If it is valid, an attestation object will be returned.</p>
+
+<p>Note that <code>code</code> is the code generated in <code>twitterAuthUrl</code></p>
+<h2 id='attestation-airbnbgeneratecode'>airbnbGenerateCode</h2>
+<blockquote>
+<p>To generate verification code</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">airbnbGenerateCode</span><span class="p">({</span>
+  <span class="na">wallet</span><span class="p">:</span> <span class="nx">myWalletAddress</span><span class="p">,</span>
+  <span class="na">airbnbUserId</span><span class="p">:</span> <span class="c1">// user's id on Airbnb website</span>
+<span class="p">})</span>
+<span class="c1">// Returns (object)</span>
+<span class="p">{</span>
+  <span class="nl">code</span><span class="p">:</span> <span class="s2">"0x0deef6ef"</span>
+<span class="p">}</span>
+</code></pre>
+<p>This will generate a unique code that should be inserted into user&#39;s Airbnb profile description.</p>
+<h2 id='attestation-airbnbverify'>airbnbVerify</h2>
+<blockquote>
+<p>To verify ownership of Airbnb profile</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="kd">let</span> <span class="nx">emailAttestation</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">airbnbVerify</span><span class="p">({</span>
+  <span class="na">wallet</span><span class="p">:</span> <span class="nx">myWalletAddress</span><span class="p">,</span>
+  <span class="na">airbnbUserId</span><span class="p">:</span> <span class="c1">// user's id on Airbnb website</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"airbnb"</span>
+<span class="p">}</span>
+</code></pre>
+<p>If user has inserted the correct <code>code</code> in his Airbnb profile, an attestation object will be returned.</p>
+<h1 id='review'>Review</h1>
+<p>Reviews are created by the buyer in the <a href="/#purchase-buyerconfirmreceipt">receipt</a> stage and by the seller in the <a href="#purchase-sellergetpayout">payout</a> stage of the purchase process. A review consists of a required 1-5 rating and an optional reviewText text field.</p>
+<h2 id='review-find'>find</h2>
+<blockquote>
+<p>To lookup reviews</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">purchaseAddress</span> <span class="o">=</span> <span class="s2">"0x521b8d5f9e432e6b23d79fac02e5792eb8746ce1"</span>
+<span class="kr">const</span> <span class="nx">reviews</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">reviews</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="na">purchaseAddress</span><span class="p">:</span> <span class="nx">purchaseAddress</span><span class="p">})</span>
+<span class="c1">// Returns </span>
+<span class="p">[{</span>
+    <span class="na">blockHash</span><span class="p">:</span> <span class="s2">"0xf8d740a4eb381f99c259129da68df30b6a63cb3596839b4b40f01e8e4b55821b"</span><span class="p">,</span>
+    <span class="na">blockNumber</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="na">ipfsHash</span><span class="p">:</span> <span class="kc">undefined</span><span class="p">,</span>
+    <span class="na">purchaseAddress</span><span class="p">:</span> <span class="s2">"0x521b8d5f9e432e6b23d79fac02e5792eb8746ce1"</span><span class="p">,</span>
+    <span class="na">rating</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="na">reviewText</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="na">revieweeAddress</span><span class="p">:</span> <span class="s2">"0x627306090abaB3A6e1400e9345bC60c78a8BEf57"</span><span class="p">,</span>
+    <span class="na">revieweeRole</span><span class="p">:</span> <span class="s2">"BUYER"</span><span class="p">,</span>
+    <span class="na">reviewerAddress</span><span class="p">:</span> <span class="s2">"0x821aEa9a577a9b44299B9c15c88cf3087F3b5544"</span><span class="p">,</span>
+    <span class="na">timestamp</span><span class="p">:</span> <span class="mi">1526496009</span><span class="p">,</span>
+    <span class="na">transactionHash</span><span class="p">:</span> <span class="s2">"0x94642427369cc50cee75a92df128c654c7d62b644d6c00f76e2404eadadf38bb"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="na">rating</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="na">reviewText</span><span class="p">:</span> <span class="s2">"Very quick payment"</span><span class="p">,</span>
+    <span class="na">blockHash</span><span class="p">:</span> <span class="s2">"0xcce740a4eb381f99c259129da68df30b6a63cb3596839b4b40f01e8e4b55821b"</span><span class="p">,</span>
+    <span class="na">blockNumber</span><span class="p">:</span> <span class="mi">220</span><span class="p">,</span>
+    <span class="na">ipfsHash</span><span class="p">:</span> <span class="s2">"QmfXRgtSbrGggApvaFCa88ofeNQP79G18DpWaSW1Wya1u8"</span><span class="p">,</span>
+    <span class="na">purchaseAddress</span><span class="p">:</span> <span class="s2">"0x521b8d5f9e432e6b23d79fac02e5792eb8746ce1"</span><span class="p">,</span>
+    <span class="na">revieweeAddress</span><span class="p">:</span> <span class="s2">"0x821aEa9a577a9b44299B9c15c88cf3087F3b5544"</span><span class="p">,</span>
+    <span class="na">revieweeRole</span><span class="p">:</span> <span class="s2">"SELLER"</span><span class="p">,</span>
+    <span class="na">reviewerAddress</span><span class="p">:</span> <span class="s2">"0x627306090abaB3A6e1400e9345bC60c78a8BEf57"</span><span class="p">,</span>
+    <span class="na">timestamp</span><span class="p">:</span> <span class="mi">1526496009</span><span class="p">,</span>
+    <span class="na">transactionHash</span><span class="p">:</span> <span class="s2">"0xAC642427369cc50cee75a92df128c654c7d62b644d6c00f76e2404eadadfr91a"</span>
+<span class="p">}]</span>
+</code></pre>
+<p>You can find reviews with the following filter options:</p>
+
+<ul>
+<li><code>purchaseAddress</code></li>
+<li><code>userAddress</code> - support coming soon</li>
+<li><code>sellerAddress</code> - support coming soon</li>
+<li><code>buyerAddress</code> - support coming soon</li>
+<li><code>listingAddress</code> - support coming soon</li>
+</ul>
+<h1 id='user'>User</h1>
+<p>A <strong>User</strong> is an object used to represent a particular user in Origin Protocol.
+Users are implemented as <a href="https://medium.com/originprotocol/managing-identity-with-a-ui-for-erc-725-5c7422b38c09">ERC725 identities</a>. Identities in Origin will be portable across platforms that support ERC725.</p>
+
+<p>A user object consists of 4 properties:</p>
+
+<ul>
+<li><code>address</code>: Ethereum address for the user contract</li>
+<li><code>profile</code>: Profile information a user chooses to reveal publicly
+
+<ul>
+<li><code>firstName</code></li>
+<li><code>lastName</code></li>
+<li><code>description</code></li>
+<li><code>avatar</code></li>
+</ul></li>
+<li><code>attestations</code>: A list of 3rd party attestations that the user has added to their identity (see <a href="#attestation">Attestation documentation</a> for details)</li>
+<li><code>identityAddress</code>: Ethereum address for the identity contract</li>
+</ul>
+<h2 id='user-set'>set</h2>
+<blockquote>
+<p>To create/update a user</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="c1">// Get a phone attestation object</span>
+<span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">phoneGenerateCode</span><span class="p">({</span>
+  <span class="na">phone</span><span class="p">:</span> <span class="s2">"555-555-5555"</span>
+<span class="p">})</span>
+<span class="kd">let</span> <span class="nx">phoneAttestation</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">phoneVerify</span><span class="p">({</span>
+  <span class="na">phone</span><span class="p">:</span> <span class="s2">"555-555-5555"</span><span class="p">,</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"123456"</span>
+<span class="p">})</span>
+
+<span class="c1">// Get a Facebook attestation object</span>
+<span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">facebookAuthUrl</span><span class="p">()</span>
+
+<span class="c1">// Open facebook authentication popup and retrieve authentication code</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'width=650,height=500'</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">await</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">).</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^origin-code:/</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="kc">false</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1">// Send code to obtain attestation</span>
+<span class="kd">let</span> <span class="nx">facebookAttestation</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">facebookVerify</span><span class="p">({</span>
+  <span class="na">code</span><span class="p">:</span> <span class="nx">code</span>
+<span class="p">})</span>
+
+<span class="kd">let</span> <span class="nx">myNewUser</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">firstName</span><span class="p">:</span> <span class="s2">"Wonder"</span><span class="p">,</span> <span class="na">lastName</span><span class="p">:</span> <span class="s2">"Woman"</span> <span class="p">},</span>
+  <span class="na">attestations</span><span class="p">:</span> <span class="p">[</span> <span class="nx">phoneAttestation</span><span class="p">,</span> <span class="nx">facebookAttestation</span> <span class="p">]</span>
+<span class="p">}</span>
+<span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">myNewUser</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">createdUser</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">get</span><span class="p">()</span>
+
+<span class="c1">// User has been created!</span>
+
+<span class="c1">// Get an email attestation object</span>
+<span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">emailGenerateCode</span><span class="p">({</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s2">"me@my.domain"</span>
+<span class="p">})</span>
+<span class="kd">let</span> <span class="nx">emailAttestation</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">emailVerify</span><span class="p">({</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s2">"me@my.domain"</span><span class="p">,</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"123456"</span>
+<span class="p">})</span>
+
+<span class="nx">createdUser</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">emailAttestation</span><span class="p">)</span>
+<span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">createdUser</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">updatedUser</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">get</span><span class="p">()</span>
+
+<span class="c1">// User has been updated!</span>
+<span class="c1">// final `updatedUser`:</span>
+<span class="p">{</span>
+  <span class="p">{</span>
+    <span class="na">address</span><span class="p">:</span> <span class="s2">"0x627306090abaB3A6e1400e9345bC60c78a8BEf57"</span><span class="p">,</span>
+    <span class="na">profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">firstName</span><span class="p">:</span> <span class="s2">"Wonder"</span><span class="p">,</span> <span class="na">lastName</span><span class="p">:</span> <span class="s2">"Woman"</span> <span class="p">},</span>
+    <span class="na">attestations</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="na">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+        <span class="na">claimType</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="na">service</span><span class="p">:</span> <span class="s2">"phone"</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="na">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+        <span class="na">claimType</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="na">service</span><span class="p">:</span> <span class="s2">"facebook"</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="na">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+        <span class="na">claimType</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="na">service</span><span class="p">:</span> <span class="s2">"twitter"</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="na">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+        <span class="na">claimType</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="na">service</span><span class="p">:</span> <span class="s2">"airbnb"</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="na">identityAddress</span><span class="p">:</span> <span class="s2">"0x4E72770760c011647D4873f60A3CF6cDeA896CD8"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<p>If the user does not already exist, it will be created. If it exists, it will be updated.</p>
+
+<p><strong>Note</strong>: this method should be used as if it will completely override the existing data.
+Updates should be made by taking the existing user object, making modifications to it, and then passing the entire updated object into the <code>set</code> method.</p>
+<h2 id='user-get'>get</h2>
+<blockquote>
+<p>To retrieve a user</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="kd">let</span> <span class="nx">myUser</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">get</span><span class="p">()</span>
+<span class="kd">let</span> <span class="nx">anotherUser</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">otherUserAddress</span><span class="p">)</span>
+<span class="c1">// Returns (user object)</span>
+<span class="p">{</span>
+  <span class="nl">address</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+  <span class="nx">profile</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">firstName</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="nx">lastName</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="nx">description</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="nx">avatar</span><span class="p">:</span> <span class="s1">''</span>
+  <span class="p">},</span>
+  <span class="nx">attestations</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="nx">identityAddress</span><span class="p">:</span> <span class="s1">''</span>
+<span class="p">}</span>
+</code></pre>
+<p>With no parameters passed in, this will return the current user.
+If a wallet address is passed in, this will return the user associated with that wallet.</p>
+<h1 id='protocol-schemas'>Protocol Schemas</h1><h2 id='protocol-schemas-listing-schema'>Listing Schema</h2>
+<p>This describes a listing for purchase on the Origin marketplace.</p>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/listing_v1.0.0"</span><span class="p">,</span>
+    <span class="nx">listingType</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
+    <span class="nx">category</span><span class="p">:</span> <span class="s2">"schema.forSale"</span><span class="p">,</span>
+    <span class="nx">subCategory</span><span class="p">:</span> <span class="s2">"schema.forSale.carsTrucks"</span><span class="p">,</span>
+    <span class="nx">language</span><span class="p">:</span> <span class="s2">"en-us"</span><span class="p">,</span>
+    <span class="nx">title</span><span class="p">:</span> <span class="s2">"1997 Lotus Esprit"</span><span class="p">,</span>
+    <span class="nx">description</span><span class="p">:</span> <span class="s2">"Red. 100K miles. Always garaged."</span><span class="p">,</span>
+    <span class="nx">expiry</span><span class="p">:</span> <span class="s2">"2018-09-20T19:59:36.875Z"</span><span class="p">,</span>
+    <span class="nx">media</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="na">url</span><span class="p">:</span> <span class="s2">"ipfs://Ac92fa25B89D37077C7e52BDae22094f7b864e91"</span><span class="p">},</span>
+        <span class="p">{</span><span class="na">url</span><span class="p">:</span> <span class="s2">"ipfs://C9a2fa25B89D37045C7e52BDae22094f7b864b82"</span><span class="p">},</span>
+    <span class="p">],</span>
+    <span class="nx">price</span><span class="p">:</span> <span class="p">{</span><span class="nl">amount</span><span class="p">:</span> <span class="s2">"48.7"</span><span class="p">,</span> <span class="nx">currency</span><span class="p">:</span> <span class="s2">"ETH"</span><span class="p">},</span>
+    <span class="nx">unitsTotal</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">commission</span><span class="p">:</span> <span class="p">{</span><span class="nl">amount</span><span class="p">:</span> <span class="s2">"500"</span><span class="p">,</span> <span class="nx">currency</span><span class="p">:</span> <span class="s2">"OGN"</span><span class="p">},</span>
+<span class="p">}</span>
+</code></pre><h3 id='protocol-schemas-listing-schema-required-fields'>Required Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>schemaId</strong></td>
+<td>Must be set to <code>http://schema.originprotocol.com/listing_v1.0.0</code></td>
+</tr>
+<tr>
+<td><strong>listingType</strong></td>
+<td>Must be set to <code>unit</code></td>
+</tr>
+<tr>
+<td><strong>category</strong></td>
+<td>A category/schema key string from the DApp. See possible values <a href="https://github.com/OriginProtocol/origin/tree/master/origin-dapp/src/schemaMessages">here</a></td>
+</tr>
+<tr>
+<td><strong>subCategory</strong></td>
+<td>A subcategory key string from a schema in the DApp. See possible values inside each DApp schema <a href="https://github.com/OriginProtocol/origin/tree/master/origin-dapp/src/schemaMessages">here</a></td>
+</tr>
+<tr>
+<td><strong>language</strong></td>
+<td>A single language or locale tag that the listing text is written in.</td>
+</tr>
+<tr>
+<td><strong>title</strong></td>
+<td>The short title of the listing</td>
+</tr>
+<tr>
+<td><strong>description</strong></td>
+<td>A full textual description of the listing. Linebreaks are currently ignored, though this will change.</td>
+</tr>
+<tr>
+<td><strong>price</strong></td>
+<td>For currencies, we support <code>ETH</code>, with future plans to support any ERC20 token</td>
+</tr>
+<tr>
+<td><strong>unitsTotal</strong></td>
+<td>The number of units available for sale. Currently limited to <code>1</code></td>
+</tr>
+</tbody></table>
+<h3 id='protocol-schemas-listing-schema-optional-fields'>Optional Fields</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>expiry</td>
+<td>A date that this listing should no longer show in search results. This is suggestion and search engines may ignore it.</td>
+</tr>
+<tr>
+<td>media</td>
+<td>A list of media elements to be shown with the listing. We currently only support <strong>images</strong> on the <strong>ipfs://</strong> protocol.</td>
+</tr>
+<tr>
+<td>commission</td>
+<td>This is the amount the seller is willing to pay the DApp that sells the listing user after the sale is complete. The currency must be <code>OGN</code>. This money comes out of the deposit amount the seller puts into the listing. Note that the deposit amount may very well be too low to actualy pay the commission - this must be checked for before trusting the commission.</td>
+</tr>
+</tbody></table>
+<h2 id='protocol-schemas-offer-schema'>Offer Schema</h2>
+<p>An Offer is sent by a buyer to make a purchase from a listing.</p>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/offer_v1.0.0"</span><span class="p">,</span>
+    <span class="nx">listingType</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
+    <span class="nx">unitsPurchased</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">totalPrice</span><span class="p">:</span> <span class="p">{</span><span class="nl">amount</span><span class="p">:</span> <span class="s2">"48.7"</span><span class="p">,</span> <span class="nx">currency</span><span class="p">:</span> <span class="s2">"ETH"</span><span class="p">},</span>
+    <span class="nx">commission</span><span class="p">:</span> <span class="p">{</span><span class="nl">amount</span><span class="p">:</span> <span class="s2">"500"</span><span class="p">,</span> <span class="nx">currency</span><span class="p">:</span> <span class="s2">"OGN"</span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre><h3 id='protocol-schemas-offer-schema-required-fields'>Required Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>schemaId</strong></td>
+<td>Must be set to <code>http://schema.originprotocol.com/offer_v1.0.0</code></td>
+</tr>
+<tr>
+<td><strong>listingType</strong></td>
+<td>Must be set to <code>unit</code></td>
+</tr>
+<tr>
+<td><strong>unitsPurchased</strong></td>
+<td>The number of units to purchase. Currently must be <code>1</code>.</td>
+</tr>
+<tr>
+<td><strong>totalPrice</strong></td>
+<td>The price the buyer is willing to pay. For currencies, we support <code>ETH</code>, with future plans to support any ERC20 token.</td>
+</tr>
+<tr>
+<td><strong>commission</strong></td>
+<td><strong>UNSAFE FIELD - this data duplicates, and may not match, the actual blockchain contract amount.</strong> The amount the buyer&#39;s DApp will receive for the sale. Must be equal to, or less than, the listing&#39;s commission amount. The currency must be <code>OGN</code>. The amount may be zero if there is no listing commission set.</td>
+</tr>
+</tbody></table>
+<h2 id='protocol-schemas-dispute-schema'>Dispute Schema</h2>
+<p>A dispute can be started by either party. In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion. It is intended that the parties and the arbitrator will communicate over Origin Messenger after the dispute process is started.</p>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/dispute_v1.0.0"</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre><h3 id='protocol-schemas-dispute-schema-required-fields'>Required Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>schemaId</strong></td>
+<td>Must be set to <code>http://schema.originprotocol.com/dispute_v1.0.0</code></td>
+</tr>
+</tbody></table>
+<h2 id='protocol-schemas-listing-withdraw-schema'>Listing-Withdraw Schema</h2>
+<p>In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion.</p>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/listing-withdraw_v1.0.0"</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre><h3 id='protocol-schemas-listing-withdraw-schema-required-fields'>Required Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>schemaId</strong></td>
+<td>Must be set to <code>http://schema.originprotocol.com/listing-withdraw_v1.0.0</code></td>
+</tr>
+</tbody></table>
+<h2 id='protocol-schemas-offer-accept-schema'>Offer-Accept Schema</h2>
+<p>In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion. </p>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/offer-accept_v1.0.0"</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre><h3 id='protocol-schemas-offer-accept-schema-required-fields'>Required Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>schemaId</strong></td>
+<td>Must be set to <code>http://schema.originprotocol.com/offer-accept_v1.0.0</code></td>
+</tr>
+</tbody></table>
+<h2 id='protocol-schemas-offer-withdraw-schema'>Offer-Withdraw Schema</h2>
+<p>In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion.</p>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/offer-withdraw_v1.0.0"</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre><h3 id='protocol-schemas-offer-withdraw-schema-required-fields'>Required Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>schemaId</strong></td>
+<td>Must be set to <code>http://schema.originprotocol.com/offer-withdraw_v1.0.0</code></td>
+</tr>
+</tbody></table>
+<h2 id='protocol-schemas-profile-schema'>Profile Schema</h2>
+<p>A profile allows a user to let the world know a little more about them.</p>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/profile_v1.0.0"</span><span class="p">,</span>
+    <span class="nx">firstName</span><span class="p">:</span> <span class="s2">"Jake"</span><span class="p">,</span>
+    <span class="nx">lastName</span><span class="p">:</span> <span class="s2">"Lewis"</span><span class="p">,</span>
+    <span class="nx">avatar</span><span class="p">:</span> <span class="s2">"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="</span><span class="p">,</span>
+    <span class="nx">description</span><span class="p">:</span> <span class="s2">"Marketing Executive in Belfast."</span>
+<span class="p">}</span>
+</code></pre><h3 id='protocol-schemas-profile-schema-required-fields'>Required Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>schemaId</strong></td>
+<td>Must be set to <code>http://schema.originprotocol.com/profile_v1.0.0</code></td>
+</tr>
+<tr>
+<td><strong>firstName</strong></td>
+<td>The user&#39;s first name.</td>
+</tr>
+<tr>
+<td><strong>lastName</strong></td>
+<td>The user&#39;s last name.</td>
+</tr>
+</tbody></table>
+<h3 id='protocol-schemas-profile-schema-optional-fields'>Optional Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>avatar</strong></td>
+<td>A <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs">data url</a> image for the user&#39;s profile image.</td>
+</tr>
+<tr>
+<td><strong>description</strong></td>
+<td>A textual description by the user about themselves.</td>
+</tr>
+</tbody></table>
+<h2 id='protocol-schemas-resolution-schema'>Resolution Schema</h2>
+<p>In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion.</p>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/resolution_v1.0.0"</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre><h3 id='protocol-schemas-resolution-schema-required-fields'>Required Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>schemaId</strong></td>
+<td>Must be set to <code>http://schema.originprotocol.com/resolution_v1.0.0</code></td>
+</tr>
+</tbody></table>
+<h2 id='protocol-schemas-review-schema'>Review Schema</h2>
+<p>A review of a single purchase by either a seller or a buyer.</p>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/review_v1.0.0"</span><span class="p">,</span>
+    <span class="nx">rating</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">text</span><span class="p">:</span> <span class="s2">"Buyer handled the notary process very quickly."</span>
+<span class="p">}</span>
+</code></pre><h3 id='protocol-schemas-review-schema-required-fields'>Required Fields:</h3>
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>schemaId</strong></td>
+<td>Must be set to <code>http://schema.originprotocol.com/review_v1.0.0</code></td>
+</tr>
+<tr>
+<td><strong>rating</strong></td>
+<td>A number between 1 and 5. May be either an iteger or a decimal.</td>
+</tr>
+<tr>
+<td><strong>text</strong></td>
+<td>A textual review. May be a blank string - in which case it should not be shown by UIs.</td>
+</tr>
+</tbody></table>
+<h1 id='getting-help'>Getting help</h1><h2 id='getting-help-discord'>Discord</h2>
+<p>We work in public and our company Discord is open to all. If you have questions or need help getting started, our <a href="https://www.originprotocol.com/discord">Discord #engineering channel</a> is a great place to get assistance from our team of engineers and developers.</p>
+<h2 id='getting-help-email'>Email</h2>
+<p>You can also reach us by email at <a href="mailto:support@originprotocol.com">support@originprotocol.com</a>.</p>
+<h1 id='contributing'>Contributing</h1>
+<p>Want to hack on Origin? Awesome!</p>
+
+<p>Origin is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.</p>
+
+<p>There are three main repositories that are considered core components of the Origin platform:</p>
+
+<ul>
+<li><a href="https://github.com/OriginProtocol/origin/tree/master/origin-js#origin-js">Origin.js</a> - Solidity contracts and JavaScript API</li>
+<li><a href="https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-demo-dapp">Origin DApp</a> - example React-powered decentralized application</li>
+<li><a href="https://github.com/OriginProtocol/origin/tree/master/origin-bridge#origin-bridge-server">Origin Bridge Server</a> - Python and JavaScript for indexing, attestations, and messaging</li>
+</ul>
+
+<p>We also actively work on these repositories:</p>
+
+<ul>
+<li><a href="https://github.com/OriginProtocol/origin/tree/master/development#origin-box">Origin Box</a> - Docker container for simplifying local development</li>
+<li><a href="https://github.com/OriginProtocol/origin-website">Origin Website</a> - Python/Flask for originprotocol.com</li>
+<li><a href="https://github.com/OriginProtocol/origin-playground#origin-identity-playground">Identity Playground</a> - implementation of ERC 725/735 for blockchain identity</li>
+</ul>
+<h3 id='contributing-email-weekly-engineering-call'>Weekly Engineering Call</h3>
+<p>We have an open weekly engineering call on Google Hangouts every Wednesday at 1pm pacific time. <a href="https://calendar.google.com/event?action=TEMPLATE&amp;tmeid=M2llYjc1MDA1aXVhbzZnYWRmbWhjbmRvcmRfMjAxODA2MTNUMjAwMDAwWiBvcmlnaW5wcm90b2NvbC5jb21fcXY1NWNvNmd2bTN2c3Y3OW9iNXFsZjVhaWtAZw&amp;tmsrc=originprotocol.com_qv55co6gvm3vsv79ob5qlf5aik%40group.calendar.google.com&amp;scp=ALL">Add to Calendar</a></p>
+
+<p><a href="https://meet.google.com/pws-cgyd-tqp"><img src="images/origin_engineering_call.png" /></a></p>
+
+<p>Join the call here: <a href="https://meet.google.com/pws-cgyd-tqp">https://meet.google.com/pws-cgyd-tqp</a></p>
+
+<p>Everyone is welcome to join, even if you&#39;re just lurking. All we ask is that you mute when not speaking to minimize background noise. All our meeting notes are public and can be reviewed here:</p>
+
+<ul>
+<li><a href="https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU">Engineering Notes</a></li>
+<li><a href="https://docs.google.com/document/d/1tVx2O3qeplh9vawJpURTsJxZfUe1B0FrTHOMJbxKm-s">Product/Design Notes</a></li>
+<li><a href="https://docs.google.com/document/d/1DvRWYhrr0UXdvhyZIpEd3WEU-1pQk2Frj1l-mQS8B4M">Sprint Planning Notes</a></li>
+</ul>
+<h3 id='contributing-email-dive-right-in'>Dive Right In</h3>
+<p>If you&#39;re ready to start hacking on Origin right now and you just need an issue to focus on, check out our <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=user%3AOriginProtocol+is%3Aopen+&amp;type=Issues">open issues</a> especially those tagged as a <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=user%3AOriginProtocol+is%3Aopen++label%3A%22good+first+issue%22&amp;type=Issues&amp;ref=advsearch&amp;l=&amp;l=">good first issue</a>.</p>
+
+<p>We use two week development sprints and you can see what we&#39;re currently prioritizing on <a href="https://github.com/orgs/OriginProtocol/projects/2">our Github project board</a>.</p>
+
+<p>Read our <a href="#contributing-email-development-process">development process</a> and <a href="#contributing-email-community-guidelines">community guidelines</a> first and have fun!</p>
+<h3 id='contributing-email-development-process'>Development Process</h3>
+<p>Getting your local environment running is easy with <a href="https://github.com/OriginProtocol/origin/tree/master/development#origin-box">Origin Box</a>. We recommend using this Docker container for any development or testing that involves running a local blockchain.</p>
+
+<p>Our branching strategy is similar to <a href="http://nvie.com/posts/a-successful-git-branching-model/">GitFlow</a>, but we do all of our development in the <code>master</code> branch and have a <code>stable</code> branch for code that has been released.</p>
+
+<p><img src="https://user-images.githubusercontent.com/273937/44440088-78243780-a57b-11e8-9ecf-ec6c9490b302.jpeg" alt="origin git branching model" /></p>
+
+<p>Your development flow should look like:</p>
+
+<ol>
+<li>Find an interesting issue and communicate! Please let the <code>#engineering</code> <a href="https://discord.gg/jyxpUSe">Discord</a> channel know what you want to work on.</li>
+<li>Ping a <a href="https://github.com/orgs/OriginProtocol/teams/core/members">core team member</a> member on Discord and ask to be added to our <a href="https://github.com/orgs/OriginProtocol/teams/contributors">contributors team</a>. Otherwise, you&#39;ll need to fork the relevant repository and push feature branches to your own fork.</li>
+<li>Add a comment to the issue or self-assign so we don&#39;t have multiple contributors unintentionally working on the same task.</li>
+<li>Start with the <code>master</code> branch and check out a new feature branch unless you&#39;re contributing to an existing feature.</li>
+<li>Follow the appropriate <a href="#contributing-email-coding-style">coding style</a> and write some awesome code.</li>
+<li>Pull the latest commits from <code>master</code> and confirm that your code works with any other work that has been merged since you started.</li>
+<li>Push your branch to the upstream repository (i.e. https://github.com/OriginProtocol/[repo]) so that other contributors can easily work off of it if necessary.</li>
+<li>Please request a review in the PR by clicking on the gear icon next to &quot;Reviewers&quot; in the right column.</li>
+</ol>
+
+<p>Both the <code>master</code> and <code>stable</code> branches are locked so that only members of the <a href="https://github.com/orgs/OriginProtocol/teams/core">core team</a> are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the <code>#engineering</code> Discord channel for appropriate reviewers.</p>
+<h3 id='contributing-email-coding-style'>Coding Style</h3>
+<p>We use a variety of programming languages in our repositories. When contributing, please follow existing coding conventions and refer to the CONTRIBUTING.md file in the repository, if one exists. </p>
+
+<p>For JavaScript, we use <a href="https://docs.npmjs.com/misc/coding-style">NPM&#39;s style</a>, which is automatically enforced via <a href="https://prettier.io/">prettier</a>.</p>
+
+<p>For Solidity, we use two space indents.</p>
+<h3 id='contributing-email-troubleshooting-a-development-environment'>Troubleshooting a Development Environment</h3>
+<ul>
+<li><p>If you encounter errors while executing <code>npm install</code> for any of the Origin repositories, try running a recent LTS version of Node.js. <a href="https://github.com/creationix/nvm">nvm</a> is a tool that can install specific versions of Node.js. After installing <code>nvm</code>, run <code>nvm install --lts</code>, remove your <code>node_modules</code> directory, and run <code>npm install</code> again.</p></li>
+<li><p>If you are using <code>origin-box</code> Docker setup and are running OSX Sierra below 10.13.4 Docker volumes might randomly stop syncing. This results in problems where host machine source code updates do not get propagated to file system inside Docker. To resolve this issue update OSX Sierra to 10.13.4 or above. See <a href="https://github.com/EugenMayer/docker-sync/issues/517">this thread</a> for more details. </p></li>
+</ul>
+<h3 id='contributing-email-protocol-design'>Protocol Design</h3>
+<p>When considering protocol or implementation design proposals, we are looking for:</p>
+
+<ul>
+<li>A description of the problem this design proposal solves</li>
+<li>Discussion of the trade-offs involved</li>
+<li>Review of other existing solutions</li>
+<li>Links to relevant literature (RFCs, papers, etc)</li>
+<li>Discussion of the proposed solution</li>
+</ul>
+
+<p>Please note that protocol design is hard and meticulous work. You may need to review existing literature and think through generalized use cases.</p>
+<h3 id='contributing-email-community-guidelines'>Community Guidelines</h3>
+<p>We want to keep the Origin community awesome, growing and collaborative. We need your help to keep it that way. To help with this we&#39;ve come up with some general guidelines for the community as a whole:</p>
+
+<ul>
+<li><p>Be nice: Be courteous, respectful and polite to fellow community members: no regional, racial, gender, or other abuse will be tolerated. We like nice people way better than mean ones!</p></li>
+<li><p>Encourage diversity and participation: Make everyone in our community feel welcome, regardless of their background and the extent of their contributions, and do everything possible to encourage participation in our community.</p></li>
+<li><p>Keep it legal: Basically, don&#39;t get anybody in trouble. Share only content that you own, do not share private or sensitive information, and don&#39;t break laws.</p></li>
+<li><p>Stay on topic: Make sure that you are posting to the correct channel and avoid off-topic discussions. Remember when you update an issue or respond to an email you are potentially sending to a large number of people. Please consider this before you update. Also remember that nobody likes spam.</p></li>
+</ul>
+<h3 id='contributing-email-reporting-issues'>Reporting Issues</h3>
+<p>If you find bugs, mistakes or inconsistencies in the Origin project&#39;s code or
+documents, please let us know by filing an issue at the appropriate issue
+tracker (we use multiple repositories). </p>
+
+<aside class="notice">
+No issue is too small. Help us fix our tpyos!
+</aside>
+
+<ul>
+<li><a href="https://github.com/OriginProtocol/docs/issues">Docs issues</a></li>
+<li><a href="https://github.com/OriginProtocol/origin-js/issues">Origin.js issues (JS API &amp; Solidity contracts)</a></li>
+<li><a href="https://github.com/OriginProtocol/demo-dapp/issues">Demo Dapp issues</a></li>
+<li><a href="https://github.com/OriginProtocol/identity-playground/issues">Identity Playground issues</a></li>
+<li><a href="https://github.com/OriginProtocol/company-website/issues">Company website issues</a></li>
+</ul>
+<h3 id='contributing-email-security-issues'>Security Issues</h3>
+<p>The Origin Protocol and its implementations are still in early development, which means there may be problems with the protocol or in our implementations. We take security vulnerabilities very seriously. If you discover a security issue, please bring it to our attention right away!</p>
+
+<p>If you find a vulnerability please send your report privately to <a href="mailto:security@originprotocol.com">security@originprotocol.com</a> or <a href="https://keybase.io/joshfraser">contact Josh Fraser via Keybase</a>. Please DO NOT file a public issue.</p>
+
+<p>If the issue is a protocol weakness or something not yet deployed, feel free to discuss it openly.</p>
+<h3 id='contributing-email-community-improvement'>Community Improvement</h3>
+<p>Origin is just as much about community as it is about our technology.</p>
+
+<p>We need constant help in improving our documentation, building new tools to interface with our platform, spreading the word to new users, helping new users getting setup and much more.</p>
+
+<p>Please get in touch if you would like to help out. Our <code>general</code> channel on <a href="https://discord.gg/jyxpUSe">Discord</a> is a great place to share ideas and volunteer to help.</p>
+<h3 id='contributing-email-full-time-positions'>Full Time Positions</h3>
+<p>Origin occasionally hires developers for part time or full time positions. </p>
+
+<p>We have a strong preference for hiring people who have already started contributing to the project. If you want a full time position on our team, your best shot is to engage with our team and start contributing code. It is very unlikely that we would offer you a full time position on our engineering team unless you&#39;ve had at least a few pull requests merged.</p>
+
+<p>If you are interested, check out <a href="https://angel.co/originprotocol/jobs">the Origin Protocol job listings</a>. If you&#39;d like to help in other ways, please propose your ideas in the <a href="https://discord.gg/jyxpUSe">Origin Discord</a>.</p>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="javascript">javascript</a>
+          </div>
+      </div>
+    </div>
+    <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+  </body>
+</html>
