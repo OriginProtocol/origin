@@ -370,7 +370,7 @@ class ListingsDetail extends Component {
               <FormattedMessage
                 id={'listing-detail.successDisclaimer'}
                 defaultMessage={
-                  "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
+                  "You have made an offer on this listing. Your offer will be visible within a few seconds. Your ETH payment has been transferred to an escrow contract. Here's what happens next:"
                 }
               />
               <ul>

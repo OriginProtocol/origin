@@ -18,16 +18,23 @@ const hasCustomBridge = bridgeProtocol && bridgeDomain
 const bridgeUrl = hasCustomBridge ? customBridgeUrl : defaultBridgeUrl
 const attestationServerUrl = `${bridgeUrl}/api/attestations`
 const ipfsSwarm = process.env.IPFS_SWARM
-const web3 = new Web3(
-  // Detect MetaMask using global window object
-  window.web3
-    ? // Use MetaMask provider
-    window.web3.currentProvider
-    : // Use wallet-enabled browser provider
-    Web3.givenProvider ||
-      // Create a provider with Infura node
-      new Web3.providers.HttpProvider(defaultProviderUrl, 20000)
-)
+
+// See: https://gist.github.com/bitpshr/076b164843f0414077164fe7fe3278d9#file-provider-enable-js
+const getWeb3 = () => {
+  if (window.ethereum) {
+    // Modern dapp browsers...
+    return new Web3(window.ethereum)
+  } else if (window.web3) {
+    // Legacy dapp browsers...
+    return new Web3(window.web3.currentProvider)
+  } else {
+    // Non-dapp browsers...
+    return new Web3(Web3.givenProvider || new Web3.providers.HttpProvider(defaultProviderUrl, 20000))
+  }
+}
+
+const web3 = getWeb3()
+const ethereum = window.ethereum
 
 const ipfsCreator = repo_key => {
   const ipfsOptions = {
@@ -77,7 +84,8 @@ const config = {
   ipfsCreator,
   OrbitDB,
   ecies,
-  web3
+  web3,
+  ethereum
 }
 
 try {

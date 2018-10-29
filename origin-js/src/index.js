@@ -35,11 +35,12 @@ class Origin {
     ecies,
     messagingNamespace,
     blockEpoch,
-    blockAttestattionV1
+    blockAttestattionV1,
+    ethereum
   } = {}) {
     this.version = VERSION
 
-    this.contractService = new ContractService({ contractAddresses, web3 })
+    this.contractService = new ContractService({ contractAddresses, web3, ethereum })
     this.ipfsService = new IpfsService({
       ipfsDomain,
       ipfsApiPort,
