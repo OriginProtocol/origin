@@ -17,10 +17,10 @@ COPY ./origin-discovery /app
 WORKDIR /app
 
 ENV NODE_ENV production
-RUN npm install --quiet --no-progress
 # Link previously built Origin.js
-COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
+COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
 RUN npm link origin
+RUN npm install --quiet --no-progress
 
 ENV ARBITRATOR_ACCOUNT=0xc9c1a92ba54c61045ebf566b154dfd6afedea992 \
     AFFILIATE_ACCOUNT=0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5 \

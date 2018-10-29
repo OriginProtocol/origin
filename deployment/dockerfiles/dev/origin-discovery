@@ -19,9 +19,9 @@ FROM node:9 as build
 WORKDIR /app
 
 ENV NODE_ENV production
-RUN npm install --quiet --no-progress
 # Link previously built Origin.js
 COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
 RUN npm link origin
+RUN npm install --quiet --no-progress
 
 CMD ["node", "apollo/index.js"]

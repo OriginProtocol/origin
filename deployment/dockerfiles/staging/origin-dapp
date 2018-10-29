@@ -38,11 +38,11 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.staging.originprotocol.com \
 
 ENV NODE_ENV production
 WORKDIR /app
-RUN npm install --quiet --no-progress
 # Link previously built Origin.js
 COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
 RUN npm link origin
 # Build DApp
+RUN npm install --quiet --no-progress
 RUN node_modules/.bin/webpack --display errors-only
 
 # Copy static files to nginx for serving
