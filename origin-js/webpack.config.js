@@ -5,7 +5,7 @@ var nodeExternals = require('webpack-node-externals');
  * This is used by our DApp. 
 */
 var serverConfig = {
-  entry: ["babel-polyfill", './src/index.js'],
+  entry: ['babel-polyfill', './src/index.js'],
   output: {
     filename: './index.js',
     libraryTarget: 'commonjs2'

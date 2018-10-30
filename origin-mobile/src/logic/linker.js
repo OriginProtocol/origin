@@ -3,7 +3,7 @@ import db from './../models/'
 import uuidv4 from 'uuid/v4'
 import { Op } from 'sequelize'
 import { MessageTypes } from './../common/enums'
-import { MessageQeue } from './../utils/message-queue'
+import MessageQueue from './../utils/message-queue'
 import origin from './../services/origin'
 import {sha3_224} from 'js-sha3'
 
@@ -11,7 +11,7 @@ const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
 
 class Linker {
-  constructor({}) {
+  constructor({}={}) {
     this.messages = new MessageQueue()
   }
 
@@ -20,11 +20,11 @@ class Linker {
   }
 
   async findUnexpiredCode(code) {
-    return db.LinkedToken.findAll({where:{code:code, codeExpires:{Op.gte:new Date()}}})
+    return db.LinkedToken.findAll({where:{code:code, codeExpires:{[Op.gte]:new Date()}}})
   }
 
-  async findLinked(clientToken) {
-    return db.LinkedToken.findAll({where:{clientToken, linked:true}})
+  async findLink(clientToken) {
+    return db.LinkedToken.findOne({where:{clientToken}})
   }
 
   async findSession(sessionToken, linkedObj) {
@@ -63,6 +63,28 @@ class Linker {
     throw("We hit max retries without finding a none repreated code!")
   }
 
+  async initClientSession(clientToken, lastMessageId) {
+    const linkObj = await this.findLink(clientToken)
+    if (!linkedObj) {
+      throw("Cannot find link for client token")
+    }
+    // if this is a brand new session ignore all current messages
+    if (!lastMessageId) {
+      const message = await this.messages.getLastMessage(token)
+      if (message)
+      {
+        lastMessageId = message.msgId
+      }
+    }
+
+    //set the lastest device context just in case we missed out on some messages
+    const initMsg = linkObj.linked ? 
+      {type:MessageTypes.CONTEXT, data:linkObj.currentDeviceContext} :
+      null
+    return {initMsg, lastMessageId}
+  }
+
+
 
   //
   // returns a function to call for clean up: cleanUp()
@@ -86,6 +108,21 @@ class Linker {
     return this.messages.subscribeMessage(token, msgFetch)
   }
 
+  async handleSessionMessages(clientToken, sessionToken, _lastMessageId, messageFn) {
+    const {initMsg, lastMessageId} = await this.initClientSession(client_token, _lastMessageId)
+    if (initMsg) {
+      messageFn(msg, msgId)
+    }
+
+    return this.handleMessage(clientToken, lastMessageId, (msg, msgId) => {
+      const {session_token} = msg
+      if (!session_token || session_token == sessionToken)
+      {
+        messageFn(msg, msgId)
+      }
+    })
+  }
+
   sendWalletMessage(linkedObj, type, data) {
     const walletToken = this.getWalletToken(linkedObj)
     if (walletToken)
@@ -94,22 +131,12 @@ class Linker {
     }
   }
 
-  sendSessionMessage(sessionObj, type, data) {
-    return this.messages.addMessage(sessionObj.sessionToken, {type, data})
-  }
-
-  async sendInitMessages(sessionObj, linkedObj) {
-    return this.sendSessionMessage(sessionObj, MessageTypes.CONTEXT, linked_obj.currentDeviceContext)
+  sendSessionMessage(linkedObj, sessionToken, type, data) {
+    return this.messages.addMessage(linkedObj.clientToken, {type, session_token:sessionToken, data})
   }
 
   async generateInitSession(linkedObj) {
     const sessionToken = uuidv4()
-    const sessionObj = await db.LinkedSession.create({sessionToken, linkedId:linkedObj.id})
-
-    if (linkedObj.linked)
-    {
-      await this.sendInitMessages(sessionObj, linkedObj)
-    }
     return sessionToken
   }
 
@@ -117,7 +144,7 @@ class Linker {
     let linkedObj
     if (clientToken)
     {
-      linkedObj = await db.LinkedToken.findOne({clientToken})
+      linkedObj = await db.LinkedToken.findOne({where:{clientToken}})
     }
 
     if (!linkedObj){
@@ -133,7 +160,7 @@ class Linker {
     }
     await linkedObj.save()
 
-    if (!sessionToken || !await this.findSession(sessionToken, linkedObj))
+    if (!sessionToken)
     {
       sessionToken = await this.generateInitSession(linkedObj)
     }
@@ -162,16 +189,15 @@ class Linker {
     }
   }
 
-  callWallet(clientToken, sessionToken, account, call_id, call, return_url) {
+  async callWallet(clientToken, sessionToken, account, call_id, call, return_url) {
     if (!clientToken || !sessionToken){
       return false
     }
-    const linkedObj = await this.findLinked(clientToken)
-    if (!linkedObj) {
+    const linkedObj = await this.findLink(clientToken)
+    if (!linkedObj || !linkedObj.linked) {
       return false
     }
-    const sessionObj = await this.findSession(sessionToken, linkedObj)
-    const call_data = {call_id, call, session_token:sessionToken, return_url, account}
+    const call_data = {call_id, call, link_id:this.getLinkId(linkedObj.id, linkedObj.clientToken), session_token:sessionToken, return_url, account}
 
     const meta = this.getMetaFromCall(call)
 
@@ -180,22 +206,27 @@ class Linker {
     // send push notification via APN or fcm
   }
 
-  walletCalled(walletToken, callId, sessionToken, result) {
-    const sessionObj = await this.findSession(sessionToken)
-    if (!sessionObj) {
-      throw("Session does not exist")
+  async walletCalled(walletToken, callId, linkId, sessionToken, result) {
+    const {deviceType, deviceToken} = this.parseWalletToken(walletToken)
+    const links = await db.LinkedToken.findAll({where:{deviceType, deviceToken, linked:true}})
+
+    let linkedObj = null
+    for (const link of links) {
+      if (linkId == this.getLinkId(link.id, link.clientToken))
+      {
+        linkedObj = link
+      }
     }
-    const linkedObj = await sessionObj.getLinkedToken()
-    if (!linkedObj || !this.getWalletToken(linkedObj) == walletToken) {
+    if (!linkedObj) {
       throw("Session not linked")
     }
 
     const response = {call_id:callId, result}
-    this.sendSessionMessage(sessionObj, MessageTypes.CALL_RESPONSE, response)
+    this.sendSessionMessage(linkedObj, sessionToken, MessageTypes.CALL_RESPONSE, response)
     return true
   }
 
-  linkWallet(walletToken, code, currentDeviceContext) {
+  async linkWallet(walletToken, code, currentDeviceContext) {
     const linkedObj = await this.findUnexpiredCode(code)
     if (!linkedObj)
     {
@@ -215,24 +246,23 @@ class Linker {
     linkedObj.linkedAt = new Date()
     linkedObj.pendingCallContext = null
 
-    for (const linkedSesion of await db.LinkedSession.findAll({where:{LinkedTokenId:linkedObj.id}})) {
-      this.sendInitMessages(linkedSession, linkedObj)
-    }
+    //send a global session message
+    this.sendSessionMessage(linkedObj, undefined, MessageTypes.CONTEXT, linkedObj.currentDeviceContext)
     linkedObj.save()
 
     return {pendingCallContext, appInfo, linked:true, linkId:this.getLinkId(linkedObj.id, linkedObj.clientToken), linkedAt:linkedObj.linkedAt}
   }
 
-  getWalletLinks(walletToken) {
+  async getWalletLinks(walletToken) {
     const {deviceType, deviceToken} = this.parseWalletToken(walletToken)
 
     const links = await db.LinkedToken.findAll({where:{deviceType, deviceToken, linked:true}})
-    return links.map(link => {linked:link.linked, app_info:link.appInfo,  link_id:this.getLinkId(link.id, link.clientToken)})
+    return links.map(link => ({linked:link.linked, app_info:link.appInfo,  link_id:this.getLinkId(link.id, link.clientToken)}))
   }
 
-  unlink(clientToken) {
-    const linkedObj = await this.findLinked(clientToken)
-    if (!linkedObj)
+  async unlink(clientToken) {
+    const linkedObj = await this.findLink(clientToken)
+    if (!linkedObj || !linkedObj.linked)
     {
       return true
     }
@@ -242,7 +272,7 @@ class Linker {
     return true
   }
 
-  unlinkWallet(walletToken, linkId) {
+  async unlinkWallet(walletToken, linkId) {
     const {deviceType, deviceToken} = this.parseWalletToken(walletToken)
     const links = await db.LinkedToken.findAll({where:{deviceType, deviceToken, linked:true}})
 

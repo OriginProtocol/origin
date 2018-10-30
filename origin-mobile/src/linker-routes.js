@@ -20,77 +20,72 @@ const clientTokenHandler = (res, clientToken) => {
 
 const linker = new Linker()
 
-router.get("/", (req, res) => res.send("Hello World!"))
-
-router.ws("/",  (ws, req) => {
-  console.log("Connection initialized...")
-  ws.send("data")
-})
-
-router.post("/generate-code", (req, res) => {
+router.post("/generate-code", async (req, res) => {
   const clientToken = getClientToken(req)
   const {return_url, session_token, pending_call} = req.body
-  const {clientToken, sessionToken, linkCode, linked} = linker.generateCode(clientToken, session_token, req.useragent, return_url, pending_call)
-  clientTokenHandler(res, clientToken)
+  const {outClientToken, sessionToken, linkCode, linked} = await linker.generateCode(clientToken, session_token, req.useragent, return_url, pending_call)
+  clientTokenHandler(res, outClientToken)
   res.send({session_token:sessionToken, link_code:linkCode, linked})
 })
 
-router.get("/link-info/:code", (req, res) => {
+router.get("/link-info/:code", async (req, res) => {
   const {code} = req.parameters
   // this is the context
-  const {appInfo, linkId} = linker.getLinkInfo(code)
+  const {appInfo, linkId} = await linker.getLinkInfo(code)
   res.send({app_info:appInfo, link_id:linkId})
 })
 
-router.post("/call-wallet/:sessionToken", (req, res) => {
+router.post("/call-wallet/:sessionToken", async (req, res) => {
   const clientToken = getClientToken(req)
   const {sessionToken} = req.parameters
   const {account, call_id, call, return_url} = req.body
-  const success = linker.callWallet(clientToken, sessionToken, account, call_id, call, return_url)
+  const success = await linker.callWallet(clientToken, sessionToken, account, call_id, call, return_url)
   res.send({success})
 })
 
-router.post("/wallet-called/:walletToken", (req, res) => {
+router.post("/wallet-called/:walletToken", async (req, res) => {
   const {walletToken} = req.parameters
-  const {call_id, session_token, result} = req.body
-  const success = linker.walletCalled(walletToken, call_id, session_token, result)
+  const {call_id, link_id, session_token, result} = req.body
+  const success = await linker.walletCalled(walletToken, call_id, link_id, session_token, result)
   res.send({success})
 })
 
-router.post("/link-wallet/:walletToken", (req, res) => {
+router.post("/link-wallet/:walletToken", async (req, res) => {
   const {walletToken} = req.parameters
   const {code, current_rpc, current_accounts} = req.body
   const {linked, pendingCallContext, appInfo, linkId, linkedAt} 
-    = linker.linkWallet(wallet_token, code, current_rpc, current_accounts)
+    = await linker.linkWallet(wallet_token, code, current_rpc, current_accounts)
 
   res.send({linked, pending_call_context:pendingCallContext, 
     app_info:appInfo, link_id:linkId, linked_at:linkedAt})
 })
 
-router.get("/wallet-links/:walletToken", (req, res) => {
+router.get("/wallet-links/:walletToken", async (req, res) => {
   const {walletToken} = req.parameters
-  const links = linker.getWalletLinks(walletToken)
-    .map({linked, appInfo, linkId, linkedAt} => {linked, app_info:appInfo, link_id:link_id, linked_at:linkedAt})
+  const links = await linker.getWalletLinks(walletToken)
+    .map(({linked, appInfo, linkId, linkedAt}) => ({linked, app_info:appInfo, link_id:link_id, linked_at:linkedAt}))
   res.send(links)
 })
 
-router.post("/unlink", (req, res) => {
+router.post("/unlink", async (req, res) => {
   const clientToken = getClientToken(req)
-  const success = unlink(clientToken)
+  const success = await unlink(clientToken)
   res.send(success)
 })
 
-router.post("/unlink-wallet/:walletToken", (req, res) => {
+router.post("/unlink-wallet/:walletToken", async (req, res) => {
   const {walletToken} = req.parameters
   const {link_id} = req.body
-  const success = linker.unlinkWallet(walletToken, link_id)
+  const success = await linker.unlinkWallet(walletToken, link_id)
   res.send(success)
 })
 
-router.ws("/linked-messages/:sessionToken/:readId", (ws, req) => {
+router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
   const client_token = getClientToken(req)
   const {sessionToken, readId} = req.parameters
-  const closeHandler = linker.handleMessages(sessionToken, readId, (msg, msgId) =>
+
+  //this prequeues some messages before establishing the connection
+  const closeHandler = await linker.handleSessionMessages(sessionToken, lastReadId, (msg, msgId) =>
     {
       ws.send({msg, msgId})
     })

@@ -7,6 +7,7 @@ import WebSocket from 'ws'
 const expect = chai.expect
 
 describe('API tests', () => {
+  /*
   describe("Base path", () => {
     it ('should return Hellow World!', done => {
       request(app).get('/wallet-linker/').end((err, res) => {
@@ -24,5 +25,5 @@ describe('API tests', () => {
         })
       })
     })
-  })
+  })*/
 })

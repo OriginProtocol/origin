@@ -22,7 +22,7 @@ const SUPPORTED_ERC20 = [
 
 class ContractService {
   constructor({ web3, contractAddresses } = {}) {
-    const externalWeb3 = web3 || window.web3
+    const externalWeb3 = web3 || ((typeof window !== 'undefined') && window.web3)
     if (!externalWeb3) {
       throw new Error(
         'web3 is required for Origin.js. Please pass in web3 as a config option.'
