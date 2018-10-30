@@ -128,6 +128,7 @@ textarea:-moz-ui-invalid {
 
 .ws-aware {
   white-space: pre-line;
+  word-wrap: break-word;
 }
 
 .table {
@@ -1997,6 +1998,18 @@ textarea:-moz-ui-invalid {
   left: auto;
   right: 20px;
   z-index: 997;
+}
+
+.modal.getting-started.fade .modal-dialog {
+    bottom: -320px;
+    -webkit-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+    -moz-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+    -o-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+    transition: opacity 0.3s linear, bottom 0.3s ease-out;
+}
+
+.modal.getting-started.fade.show .modal-dialog {
+    bottom: 0;
 }
 
 .getting-started img {
