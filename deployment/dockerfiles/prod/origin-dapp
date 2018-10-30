@@ -1,10 +1,26 @@
+# --- Origin.js
+
+FROM node:9 as origin-js-build
+
+# Invalidate Docker cache if necessary by adding the hash of the current commit
+# from the remote repository
+ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/stable /version.json
+# Clone origin-js from stable branch
+RUN git clone --depth 1 --branch stable https://github.com/OriginProtocol/origin.git /app
+
+WORKDIR /app/origin-js
+RUN npm install --quiet --no-progress
+RUN npm run build
+
+# --- DApp
+
 FROM node:9 as build
 
 ARG DEPLOY_TAG
 
 # Invalidate Docker cache if necessary
-ADD https://api.github.com/repos/OriginProtocol/origin/git/refs/heads/stable /version.json
-RUN git clone --depth 1 --branch stable https://github.com/OriginProtocol/origin.git /app
+COPY --from=origin-js-build /version.json /version.json
+COPY --from=origin-js-build /app/origin-dapp/ /app/
 
 ENV BRIDGE_SERVER_DOMAIN=bridge.originprotocol.com \
     BRIDGE_SERVER_PROTOCOL=https \
@@ -21,13 +37,19 @@ ENV BRIDGE_SERVER_DOMAIN=bridge.originprotocol.com \
     PROVIDER_URL=https://mainnet.infura.io/emIXjs9eDuy57IlTYsIP \
     MESSAGING_NAMESPACE=origin \
     DEPLOY_TAG=$DEPLOY_TAG \
-    BLOCK_EPOCH=6400000
+    BLOCK_EPOCH=6400000 \
+    INSTRUCTIONS_URL=https://medium.com/originprotocol/draft-origin-launches-beta-on-mainnet-draft-e3b70161ae86
 
-WORKDIR /app/origin-dapp
+WORKDIR /app
 RUN npm install --quiet --no-progress
+
+# Link previously built Origin.js
+COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
+RUN npm link origin
+
 RUN NODE_ENV=production node_modules/.bin/webpack --progress --display errors-only
 
-# Nginx to service static files
+# Copy static files to nginx for serving
 FROM nginx:1.15.2
 COPY --from=build /app/build /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]

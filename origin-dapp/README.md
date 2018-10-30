@@ -1,24 +1,24 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
-[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin-dapp/blob/master/LICENSE)
+[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/origin-dapp/LICENSE)
 [![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-dapp/master.svg?style=flat-square&colorA=111d28)](https://travis-ci.org/OriginProtocol/origin-dapp)
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
-Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine.
+Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box) for development and testing on your local machine.
 
 # Origin Demo DApp
 This is an example DApp (Decentralized Application) that shows how easy it is to create a truly peer to peer marketplace on the Ethereum blockchain with **origin-js**. Using only javascript, you can create and purchase listings, leave reviews, check identity, and more.
 
-- [origin-js repo](https://github.com/OriginProtocol/origin-js)
+- [origin-js code](https://github.com/OriginProtocol/origin/tree/master/origin-js)
 - [origin-js documentation](http://docs.originprotocol.com/)
 
 To learn more about Origin Protocol, please read our [product brief](https://www.originprotocol.com/product-brief) and [whitepaper](https://www.originprotocol.com/whitepaper) for a high-level description of what we're building and why it matters. Our official website is [https://www.originprotocol.com](https://www.originprotocol.com).
 
-## Try Demo DApp on the Rinkeby testnet
+## Try the DApp
 
-This demo is currently running on the Rinkeby testnet. (Note that this demo is slightly behind the current state of this repo.)
-- [Overview and step-by-step instructions](https://medium.com/originprotocol/origin-demo-dapp-is-now-live-on-testnet-835ae201c58)
-- [Live Demo](http://demo.originprotocol.com)
+ - [Mainnet](https://dapp.originprotocol.com). See [instructions](https://medium.com/originprotocol/draft-origin-launches-beta-on-mainnet-draft-e3b70161ae86).
+ - [Testnet (Rinkeby network)](https://demo.staging.originprotocol.com)
+
 
 ## Run Demo DApp
 
@@ -34,7 +34,7 @@ node --version
 
 In a new tab:
 ```
-git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
+git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-dapp
 npm install
 npm run start
 ```
@@ -55,8 +55,7 @@ A browser will open to http://localhost:3000. If you don't have the MetaMask ext
 
 ### 4. Get test ether
 
-- Get Rinkeby ether from the [Rinkeby faucet](https://faucet.rinkeby.io/).
-- Get Ropsten ether from the [Ropsten faucet](https://faucet.metamask.io/).
+Get Rinkeby ether from the [Rinkeby faucet](https://faucet.rinkeby.io/).
 
 ### 5. Try it!
 Create a listing and post it to IPFS and Ethereum.
@@ -67,13 +66,13 @@ If you want to hack on origin-js code, or if you just want to use a private loca
 
 ### 1. Set up and run origin-js locally
 
-[Follow these instructions to setup and run origin-js.](https://github.com/OriginProtocol/origin-js#local-development)
+[Follow these instructions to setup and run origin-js.](https://github.com/OriginProtocol/origin/tree/master/origin-js#local-development)
 
 ### 2. Set up the DApp for local development
 
 Leave origin-js running and create a new terminal window. Then run the following:
 ```bash
-git clone https://github.com/OriginProtocol/demo-dapp origin-demo-dapp && cd origin-demo-dapp
+git clone https://github.com/OriginProtocol/origin.git origin && cd origin/origin-dapp
 cp dev.env .env  # Use development env vars
 npm run install:dev
 npm run start
@@ -118,13 +117,13 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 | PC | Brave with MetaMask | ✅ | Operational |
 |  |  |  |
 | iOS | Trust Wallet | ✅  | Operational |
-| iOS | Toshi  |  🚫  | Main Toshi app does not currently work with test nets |
-| iOS | Toshi Developer  |  🚫  |  [DApp hangs on Toshi client #327](https://github.com/OriginProtocol/origin-dapp/issues/327) |
+| iOS | Coinbase Wallet  |  🚫  |  |
+| iOS | Coinbase Wallet Developer  |  🚫  |  [DApp hangs on Toshi client #327](https://github.com/OriginProtocol/origin-dapp/issues/327) |
 | iOS | Cipher  | ⛔️  | Acquired by Coinbase. Not in development. |
 |   |  |  |
 | Android | Trust Wallet | 🚫 | [Dapp hang + app does not currently work with test nets](https://github.com/OriginProtocol/origin-dapp/issues/331#issuecomment-416364784) |
-| Android | Toshi  |  ✅ |  Operational |
-| Android | Toshi Developer  |  🚫 | Toshi Developer app does not currently work with test nets |
+| Android | Coinbase Wallet  |  ✅ |  Operational |
+| Android | Coinbase Wallet Developer  |  🚫 | Toshi Developer app does not currently work with test nets |
 | Android | Cipher  |  ⛔️  | Not in development |
 
 <sup>Tests for http://demo.originprotocol.com</sup>
@@ -134,20 +133,23 @@ See [translations](translations) directory.
 
 ## Deploy on Heroku or IPFS
 
-To deploy a development copy of the site on Heroku, choose which branch you would like to use and follow the instructions:
+To deploy a development copy of the site on Heroku, follow the instructions:
+```
+git clone https://github.com/OriginProtocol/origin.git && cd origin
+git subtree push --prefix origin-dapp heroku master
+```
 
-| `Master` branch <br>(stable) | `Develop` branch<br> (active development) |
-|---------|----------|
-| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/originprotocol/demo-dapp/tree/develop) |
-
-Heroku will prompt you to set some config variables. You will likely want to stick with the defaults which use [Origin's IPFS Gateway](https://gateway.originprotocol.com) and [Bridge Server](https://github.com/originprotocol/origin-bridge). We also recommend using [Infura](https://infura.io/) for connecting to Ethereum even when visitors don't have web3-enabled browsers.
+You will need to set some configuration variable for your Heroku deployment. We recommend using the same configuration as our Rinkeby testnet deployment. See https://demo.staging.originprotocol.com/#/app-info
 
 Since this app is just a bunch of HTML and JavaScript, you can also deploy and use it directly from IPFS. Just run:
 
-`./scripts/deploy.sh`
+```
+cd origin-dapp/script
+./scripts/deploy-ipfs.sh
+```
 
 ## Contributing
 
 Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
-To get involved, please join our [Discord channel](https://discord.gg/jyxpUSe) and review our [guide to contributing](https://docs.originprotocol.com/#contributing).
+To get involved, please review our [guide to contributing](https://www.originprotocol.com/developers).

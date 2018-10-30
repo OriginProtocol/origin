@@ -34,6 +34,8 @@ const env = {
   MESSAGING_ACCOUNT: '',
   MESSAGING_NAMESPACE: '',
   MAINNET_DAPP_BASEURL: null,
+  NOTIFICATIONS_KEY: null,
+  NOTIFICATIONS_URL: null,
   RINKEBY_DAPP_BASEURL: null,
   PROVIDER_URL: '',
   REDUX_LOGGER: false,
@@ -130,6 +132,7 @@ var config = {
     new webpack.EnvironmentPlugin(env),
     new CopyWebpackPlugin([
       'public/favicon.ico',
+      'public/sw.js',
       { from: 'public/images', to: 'images' },
       { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }

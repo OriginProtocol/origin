@@ -9,7 +9,10 @@ import {
 } from 'react-intl'
 
 import { showAlert } from 'actions/Alert'
-import { storeWeb3Intent } from 'actions/App'
+import {
+  handleNotificationsSubscription,
+  storeWeb3Intent
+} from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
@@ -142,6 +145,7 @@ class ListingsDetail extends Component {
           transactionTypeKey: 'makeOffer'
         })
         this.setState({ step: this.STEP.PURCHASED })
+        this.props.handleNotificationsSubscription('buyer', this.props)
       } catch (error) {
         console.error(error)
         this.setState({ step: this.STEP.ERROR })
@@ -198,7 +202,7 @@ class ListingsDetail extends Component {
       })
     } catch (error) {
       this.props.showAlert(
-        this.props.formatMessage(this.intlMessages.loadingError)
+        this.props.intl.formatMessage(this.intlMessages.loadingError)
       )
       console.error(
         `Error fetching contract or IPFS info for listing: ${
@@ -226,7 +230,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { web3Account, featured } = this.props
+    const { featuredListingIds, listingId, web3Account } = this.props
     const {
       // boostLevel,
       // boostValue,
@@ -255,7 +259,7 @@ class ListingsDetail extends Component {
     const isAvailable = !isPending && !isSold && !isWithdrawn
     const showPendingBadge = isPending && !isWithdrawn
     const showSoldBadge = isSold || isWithdrawn
-    const showFeaturedBadge = featured && isAvailable
+    const showFeaturedBadge = featuredListingIds.includes(listingId) && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
 
@@ -342,7 +346,7 @@ class ListingsDetail extends Component {
               <FormattedMessage
                 id={'listing-detail.successDisclaimer'}
                 defaultMessage={
-                  "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
+                  "You have made an offer on this listing. Your offer will be visible within a few seconds. Your ETH payment has been transferred to an escrow contract. Here's what happens next:"
                 }
               />
               <ul>
@@ -474,11 +478,7 @@ class ListingsDetail extends Component {
                       maximumFractionDigits: 5,
                       minimumFractionDigits: 5
                     })}
-                      &nbsp;
-                    <FormattedMessage
-                      id={'listing-detail.ethereumCurrencyAbbrev'}
-                      defaultMessage={'ETH'}
-                    />
+                      &nbsp;ETH
                   </div>
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
                   {/*
@@ -755,15 +755,20 @@ class ListingsDetail extends Component {
 
 const mapStateToProps = ({ app, profile, listings }) => {
   return {
+    featuredListingIds: listings.featured,
+    notificationsHardPermission: app.notificationsHardPermission,
+    notificationsSoftPermission: app.notificationsSoftPermission,
     profile,
+    pushNotificationsSupported: app.pushNotificationsSupported,
     onMobile: app.onMobile,
+    serviceWorkerRegistration: app.serviceWorkerRegistration,
     web3Account: app.web3.account,
-    web3Intent: app.web3.intent,
-    featured: listings.featured
+    web3Intent: app.web3.intent
   }
 }
 
 const mapDispatchToProps = dispatch => ({
+  handleNotificationsSubscription: (role, props) => dispatch(handleNotificationsSubscription(role, props)),
   showAlert: msg => dispatch(showAlert(msg)),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
   updateTransaction: (confirmationCount, transactionReceipt) =>

@@ -7,8 +7,8 @@ Origin.js:
 <pre style="margin-right: 50%; float:none; width: inherit; margin-bottom: 10px">
     mkdir -p origin
     cd origin
-    git clone https://github.com/OriginProtocol/origin-js.git
-    cd origin-js
+    git clone https://github.com/OriginProtocol/origin.git
+    cd origin/origin-js
     git checkout develop
     npm run install:dev
     npm run start
@@ -18,8 +18,8 @@ And in another window, let's get the Demo DApp going:
 
 <pre style="margin-right: 50%; float:none; width: inherit; margin-bottom: 10px">
     cd .. (or /path/to/origin)
-    git clone https://github.com/OriginProtocol/demo-dapp.git
-    cd demo-dapp
+    git clone https://github.com/OriginProtocol/origin.git
+    cd origin/origin-dapp
     git checkout develop
     npm run install:dev
     npm run start

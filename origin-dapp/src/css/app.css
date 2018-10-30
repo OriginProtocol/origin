@@ -1,6 +1,8 @@
 @import 'alertify.css';
 @import 'variables.css';
 @import 'bootstrap.css';
+@import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
+@import 'calendar.css';
 @import '../../node_modules/rc-slider/assets/index.css';
 @import '../../node_modules/react-dates/lib/css/_datepicker.css';
 @import '../../node_modules/react-image-crop/dist/ReactCrop.css';
@@ -127,6 +129,7 @@ textarea:-moz-ui-invalid {
 
 .ws-aware {
   white-space: pre-line;
+  word-wrap: break-word;
 }
 
 .table {
@@ -1433,6 +1436,22 @@ textarea:-moz-ui-invalid {
   color: var(--clear-blue);
 }
 
+.btn-dark {
+  border: solid 1px white;
+  background-color: var(--dark);
+  color: white;
+}
+
+.btn-dark:hover {
+  border: solid 1px white;
+}
+
+.btn-light {
+  border: solid 1px var(--dark);
+  background-color: white;
+  color: var(--dark);
+}
+
 .connectivity .indicators {
   height: 30px;
 }
@@ -1485,10 +1504,6 @@ textarea:-moz-ui-invalid {
 }
 
 /* Modal */
-
-.modal-open {
-  overflow: auto;
-}
 
 .modal-backdrop {
   background-color: rgba(235, 240, 243, 0.6);
@@ -1984,6 +1999,18 @@ textarea:-moz-ui-invalid {
   left: auto;
   right: 20px;
   z-index: 997;
+}
+
+.modal.getting-started.fade .modal-dialog {
+    bottom: -320px;
+    -webkit-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+    -moz-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+    -o-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+    transition: opacity 0.3s linear, bottom 0.3s ease-out;
+}
+
+.modal.getting-started.fade.show .modal-dialog {
+    bottom: 0;
 }
 
 .getting-started img {
@@ -4133,6 +4160,33 @@ form .stars img {
   margin: auto 0;
 }
 
+.notifications-modal .image-container img {
+  height: auto;
+  width: auto;
+}
+
+.notifications-modal h2 {
+  font-size: 1.375rem;
+}
+
+.notifications-modal .button-container {
+  margin: 0 0 20px 0;
+}
+
+.notifications-modal .modal-content .btn {
+  font-weight: 900;
+  margin: 0;
+}
+
+.notifications-modal .modal-content a {
+  color: white;
+  font-size: 0.875rem;
+}
+
+.notifications-modal .modal-content a:hover {
+  text-decoration: underline;
+}
+
 /* Profile */
 
 .profile-wrapper {
@@ -5042,6 +5096,20 @@ a:not([href]):not([tabindex]).span-link {
 /* Media queries */
 /* xs */
 @media (max-width: 576px) {
+
+  .warning .badge {
+    display:none;
+  }
+
+  .warning p {
+    font-size: 0.875rem;
+  }
+
+  .beta .modal-content .image-container img {
+    height: 70px;
+    margin-bottom: 20px;
+  }
+
   .onboarding .modal-dialog {
     margin: 1rem;
   }
