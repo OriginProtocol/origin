@@ -28,5 +28,5 @@ spec:
           # Prevent external access to the /events path
           - path: /events
             backend:
-              serviceName: default-http-backend
+              serviceName: {{ .Release.Namespace }}-ingress-nginx-ingress-default-backend
               servicePort: 80
