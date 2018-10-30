@@ -89,3 +89,6 @@ CONTRACT_DIR = get_env_default('CONTRACT_DIR') or 'contracts'
 RESOURCES_DIR = get_env_default('RESOURCES_DIR') or 'resources'
 
 INTERNAL_API_TOKEN = get_env_default('INTERNAL_API_TOKEN')
+
+IPFS_DOMAIN = get_env_default('IPFS_DOMAIN')
+IPFS_PORT = get_env_default('IPFS_PORT')

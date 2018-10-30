@@ -124,7 +124,7 @@ const server = http.createServer((req, res) => {
     req.writeHead(404, { 'Connection': 'close' })
     res.end()
   }
-}).listen(config.IPFS_PROXY_PORT)
+}).listen(config.IPFS_PROXY_PORT, config.IPFS_PROXY_ADDRESS)
 
 logger.debug(`Listening on ${config.IPFS_PROXY_PORT}`)
 logger.debug(`Proxying to IPFS gateway ${config.IPFS_GATEWAY_URL}`)

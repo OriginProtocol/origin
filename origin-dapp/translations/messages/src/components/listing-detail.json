@@ -56,10 +56,6 @@
     "defaultMessage": "OK"
   },
   {
-    "id": "listing-detail.ethereumCurrencyAbbrev",
-    "defaultMessage": "ETH"
-  },
-  {
     "id": "listing-detail.purchase",
     "defaultMessage": "Purchase"
   },

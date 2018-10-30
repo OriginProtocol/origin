@@ -3,7 +3,7 @@ databaseInstance: origin-214503:us-west1:dev
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: '1e881e0-1539293369'
-bridgeReplicas: 1
+bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
@@ -15,24 +15,27 @@ gethTxReplicas: 1
 gethMinerReplicas: 2
 gethMinerCpuLimit: 0.5
 
-# IPFS server
-ipfsImageTag: ipfs/go-ipfs
+# ipfs
+ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
+# ipfs-proxy
+ipfsProxyImage: ipfs-proxy
+ipfsProxyImageTag: '9d9ced5'
+
+# origin-faucet
 faucetImage: origin-faucet
 faucetImageTag: '389fd1f'
 
+# event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '389fd1f'
+eventlistenerImageTag: 'f9a1525'
 eventlistenerWeb3Url: https://eth.dev.originprotocol.com/rpc
 
+# origin-discovery
 discoveryImage: origin-discovery
 discoveryImageTag: 'db88884'
 
-# IPFS server for OrbitDB
-messagingIpfsImage: ipfs/go-ipfs
-messagingIpfsImageTag: v0.4.17
-
-# OrbitDB
+# origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: 'a444ac1'
