@@ -32,6 +32,9 @@ class NavBar extends Component {
 
   handleLink(e) {
     this.props.storeWeb3Intent('create a listing')
+    if (!web3.givenProvider || !this.props.web3Account) {
+      e.preventDefault()
+    }
   }
 
   showDraftModal() {
@@ -41,19 +44,23 @@ class NavBar extends Component {
   }
 
   onContinue(e) {
-    e.preventDefault()
     this.props.storeWeb3Intent('create a listing')
     this.setState({
       showDraftModal: false
     })
+    if (!web3.givenProvider || !this.props.web3Account) {
+      e.preventDefault()
+    }
   }
 
   onAddNew(e) {
-    e.preventDefault()
     this.props.initListingCreate()
     this.setState({
       showDraftModal: false
     })
+    if (!web3.givenProvider || !this.props.web3Account) {
+      e.preventDefault()
+    }
   }
 
   render() {
@@ -268,7 +275,7 @@ const DraftModal = ({ isOpen, onContinue, onAddNew }) => {
           <FormattedMessage
             id={'nav-listing-create.descript'}
             defaultMessage={
-              "Are you going to continue or create a new one?"
+              'Are you going to continue or create a new one?'
             }
           />
         </p>
