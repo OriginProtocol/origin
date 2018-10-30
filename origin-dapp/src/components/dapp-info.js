@@ -256,6 +256,10 @@ class DappInfo extends Component {
                   <td>DISCOVERY_SERVER_URL</td>
                   <td>{process.env.DISCOVERY_SERVER_URL}</td>
                 </tr>
+                <tr title="Temp env var for enabling fractional usage.">
+                  <td>ENABLE_FRACTIONAL</td>
+                  <td>{process.env.ENABLE_FRACTIONAL}</td>
+                </tr>
                 <tr>
                   <td>ETH_NETWORK_ID</td>
                   <td>{process.env.ETH_NETWORK_ID}</td>
