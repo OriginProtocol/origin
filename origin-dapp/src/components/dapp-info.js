@@ -309,6 +309,14 @@ class DappInfo extends Component {
                   <td>{process.env.NODE_ENV}</td>
                 </tr>
                 <tr>
+                  <td>NOTIFICATIONS_KEY</td>
+                  <td>{process.env.NOTIFICATIONS_KEY}</td>
+                </tr>
+                <tr>
+                  <td>NOTIFICATIONS_URL</td>
+                  <td>{process.env.NOTIFICATIONS_URL}</td>
+                </tr>
+                <tr>
                   <td>PROVIDER_URL</td>
                   <td>{process.env.PROVIDER_URL}</td>
                 </tr>
