@@ -19,13 +19,15 @@ import {
 import MarketplaceResolver from '../contractInterface/marketplace/resolver'
 
 class Marketplace {
-  constructor({ contractService, ipfsService, store, affiliate, arbitrator }) {
+  constructor({ contractService, ipfsService, discoveryService, store, affiliate, arbitrator, queryBlockchain }) {
     this.contractService = contractService
     this.ipfsService = ipfsService
+    this.discoveryService = discoveryService
     this.affiliate = affiliate
     this.arbitrator = arbitrator
     this.ipfsDataStore = new IpfsDataStore(this.ipfsService)
     this.resolver = new MarketplaceResolver(...arguments)
+    this.queryBlockchain = queryBlockchain
 
     // initialize notifications
     if (!store.get(storeKeys.notificationSubscriptionStart)) {
@@ -42,17 +44,23 @@ class Marketplace {
   }
 
   async getListings(opts = {}) {
-    const listingIds = await this.resolver.getListingIds(opts)
+    if (this.queryBlockchain) {
+      // Use blockchain as source of data.
+      const listingIds = await this.resolver.getListingIds(opts)
 
-    if (opts.idsOnly) {
-      return listingIds
+      if (opts.idsOnly) {
+        return listingIds
+      }
+
+      return Promise.all(
+        listingIds.map(async listingId => {
+          return await this.getListing(listingId)
+        })
+      )
+    } else {
+      // Use back-end as source of data.
+      return await this.discoveryService.getListings(opts)
     }
-
-    return Promise.all(
-      listingIds.map(async listingId => {
-        return await this.getListing(listingId)
-      })
-    )
   }
 
   /**

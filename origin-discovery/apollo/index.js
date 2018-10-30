@@ -1,7 +1,8 @@
 const { ApolloServer, gql } = require('apollo-server')
+const GraphQLJSON = require('graphql-type-json')
 
-var search = require('../lib/search.js')
-var db = require('../lib/db.js')
+const db = require('../models')
+const search = require('../lib/search.js')
 
 /*
  * Implementation of the Origin GraphQL server.
@@ -12,6 +13,8 @@ var db = require('../lib/db.js')
 // Type definitions define the "shape" of the data and specify
 // which ways the data can be fetched from the GraphQL server.
 const typeDefs = gql`
+  scalar JSON
+
   ######################
   #
   # Query output schema.
@@ -81,6 +84,7 @@ const typeDefs = gql`
   # TODO: Add a status indicating if Listing is sold out.
   type Listing {
     id: ID!
+    data: JSON
     ipfsHash: ID!
     seller: User!
     title: String!
@@ -215,14 +219,34 @@ const typeDefs = gql`
 // If caller requests more, page size will be trimmed to MaxResultsPerPage.
 const MaxResultsPerPage = 100
 
-
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
+  JSON: GraphQLJSON,
   Query: {
     async listings(root, args, context, info) {
       // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
+      // Get listing Ids from Elastic.
       let {listings, maxPrice, minPrice, totalNumberOfListings} = await search.Listing
         .search(args.searchQuery, args.filters, args.page.numberOfItems, args.page.offset)
+
+      // Decorate each listing with a data field containing the cached output
+      // of the call to marketplace.getListing.
+      const listingIds = listings.map(listing => listing.id)
+      const rows = db.Listing.findAll({
+        where: {
+          listingId: {
+            [Op.in]: [listingIds]
+          }
+        }
+      })
+      let dataDict = {}
+      rows.forEach(row => {
+        dataDict[row.id] = row.data
+      })
+      listings.forEach(listing => {
+        listing.data = dataDict[listing.id]
+      })
+
       return {
         offset: args.page.offset,
         numberOfItems: listings.length,
@@ -255,19 +279,8 @@ const resolvers = {
     seller(listing, args, context, info) {
       return relatedUserResolver(listing.seller, info)
     },
-    title(listing) {
-      return listing.title
-    },
-    category(listing) {
-      return listing.type
-    },
-    subCategory(listing) {
-      return listing.category
-    },
     price(listing) {
-      if(listing.priceCurrency === undefined
-          || listing.priceAmount === undefined)
-      {
+      if (listing.priceCurrency === undefined || listing.priceAmount === undefined) {
         return undefined
       }
       return {currency: listing.priceCurrency, amount: listing.priceAmount}

@@ -40,6 +40,9 @@ class Origin {
   } = {}) {
     this.version = VERSION
 
+    //
+    // Services (Internal, should not be used directly by the Origin client).
+    //
     this.contractService = new ContractService({ contractAddresses, web3, ethereum })
     this.ipfsService = new IpfsService({
       ipfsDomain,
@@ -47,7 +50,11 @@ class Origin {
       ipfsGatewayPort,
       ipfsGatewayProtocol
     })
+    this.discoveryService = new DiscoveryService(discoveryServerUrl, fetch)
 
+    //
+    // Resources (External, exposed to the Origin client).
+    //
     this.attestations = new Attestations({
       serverUrl: attestationServerUrl,
       contractService: this.contractService,

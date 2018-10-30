@@ -1,30 +1,6 @@
 class Discovery {
-  constructor({ discoveryServerUrl, fetch }) {
-    this.discoveryServerUrl = discoveryServerUrl
-    this.fetch = fetch
-  }
-
-  async query(graphQlQuery){
-    const url = this.discoveryServerUrl
-    const resp = await this.fetch(url, {
-      method: 'POST',
-      body: JSON.stringify({
-        query: graphQlQuery
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    },
-    function(error){
-      if (error !== undefined)
-        throw Error(`An error occured when reaching discovery server: ${error}`)  
-    })
-
-    if(resp.status !== 200){
-      //TODO: also report error message here
-      throw Error(`Discovery server retuned unexpected status code ${resp.status} with error `)
-    }
-    return await resp.json()
+  constructor({ discoveryService }) {
+    this.discoveryService = discoveryService
   }
 
   /**
@@ -75,7 +51,7 @@ class Discovery {
       }
     }`
 
-    return this.query(query)
+    return this.discoveryService.query(query)
   }
 }
 
