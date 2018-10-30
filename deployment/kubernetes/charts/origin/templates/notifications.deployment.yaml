@@ -33,12 +33,12 @@ spec:
           - name: DATABASE_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ template "notifications.fullname" . }}
+                name: {{ template "database.fullname" . }}
                 key: DATABASE_USERNAME
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "notifications.fullname" . }}
+                name: {{ template "database.fullname" . }}
                 key: DATABASE_PASSWORD
           - name: DATABASE_NAME
             value: "origin"

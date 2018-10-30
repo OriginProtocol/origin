@@ -41,6 +41,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
+{{- define "database.fullname" -}}
+{{- printf "%s-%s" .Release.Name "database" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "ethereum.fullname" -}}
 {{- printf "%s-%s" .Release.Name "ethereum" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

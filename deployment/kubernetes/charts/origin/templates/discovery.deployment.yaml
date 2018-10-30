@@ -33,15 +33,15 @@ spec:
           - name: DATABASE_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ template "discovery.fullname" . }}
+                name: {{ template "database.fullname" . }}
                 key: DATABASE_USERNAME
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "discovery.fullname" . }}
+                name: {{ template "database.fullname" . }}
                 key: DATABASE_PASSWORD
           - name: DATABASE_NAME
-            value: "discovery"
+            value: "origin"
           - name: ELASTICSEARCH_HOST
             value: "elasticsearch-elasticsearch-svc:9200"
       - name: cloudsql-proxy
