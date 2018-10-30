@@ -7,6 +7,6 @@ export DATABASE_URL=postgres://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATAB
 # Run database migrations
 node node_modules/.bin/sequelize db:migrate
 
-echo "Starting notiifcation server"
+echo "Starting notification server"
 
 node app.js
