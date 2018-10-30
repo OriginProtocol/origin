@@ -23,6 +23,7 @@ steps:
         docker build \
           -f deployment/dockerfiles/$(cat .namespace)/${_CONTAINER} \
           -t gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA} \
+          --build-arg DEPLOY_TAG=${SHORT_SHA} \
           .
 
   # Push the origin-dapp container image
