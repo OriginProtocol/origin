@@ -15,9 +15,11 @@ const deployContracts = () => {
     truffleMigrate.on('exit', code => {
       if (code === 0) {
         console.log('Truffle migrate finished OK.')
+        minifyContracts()
+        resolve()
+      } else {
+        reject('Truffle migrate failed.')
       }
-      minifyContracts()
-      resolve()
     })
   })
 }
