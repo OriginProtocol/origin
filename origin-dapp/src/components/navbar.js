@@ -32,7 +32,6 @@ class NavBar extends Component {
 
   handleLink(e) {
     this.props.storeWeb3Intent('create a listing')
-    e.preventDefault()
   }
 
   showDraftModal() {
