@@ -720,7 +720,7 @@ const config = {
   // web3 provider url
   web3Url: args['--web3-url'] || 'http://localhost:8545',
   // ipfs url
-  ipfsUrl: args['--ipfs-url'] || 'http://localhost:8080',
+  ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL,
 }
 
 // Start the listener running
