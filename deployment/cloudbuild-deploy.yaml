@@ -21,7 +21,7 @@ steps:
 
         # Build container
         docker build \
-          -f deployment/dockerfiles/$(cat .namespace)/${_CONTAINER} \
+          -f deployment/dockerfiles/${_CONTAINER} \
           -t gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA} \
           --build-arg DEPLOY_TAG=${SHORT_SHA} \
           .
@@ -35,7 +35,7 @@ steps:
         docker push \
           gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA}"
 
-  # Add latest tag for to the container
+  # Add latest tag to the container
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'sh'
     args:

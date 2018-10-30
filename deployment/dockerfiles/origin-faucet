@@ -14,4 +14,4 @@ WORKDIR /app/origin-faucet
 RUN npm install --quiet --no-progress
 
 # Configure for Origin network
-CMD ["node", "faucet/app.js", "--network_ids=2222"]
+CMD ["node", "faucet/app.js", "--network_ids=4,2222"]

@@ -1,6 +1,6 @@
 # --- Origin.js
 
-FROM node:9 as origin-js-build
+FROM node:8 as origin-js-build
 
 COPY ./origin-js /app
 WORKDIR /app
@@ -11,7 +11,7 @@ RUN npm run build
 
 # --- Event listener
 
-FROM node:9 as build
+FROM node:8
 
 COPY ./origin-discovery /app
 WORKDIR /app
@@ -21,9 +21,5 @@ ENV NODE_ENV production
 COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
 RUN npm link origin
 RUN npm install --quiet --no-progress
-
-ENV ARBITRATOR_ACCOUNT=0xc9c1a92ba54c61045ebf566b154dfd6afedea992 \
-    AFFILIATE_ACCOUNT=0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5 \
-    BLOCK_EPOCH=0
 
 CMD ["node", "listener/listener.js", "--elasticsearch", "--db"]

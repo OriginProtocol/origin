@@ -1,0 +1,34 @@
+# --- Origin.js
+
+FROM node:9 as origin-js-build
+
+COPY ./origin-js /app
+WORKDIR /app
+
+ENV NODE_ENV production
+RUN npm install --quiet --no-progress
+RUN npm run build
+
+# --- DApp
+
+FROM node:9 as build
+
+ARG DEPLOY_TAG
+ARG ENVKEY
+
+COPY ./origin-dapp /app
+WORKDIR /app/
+
+ENV NODE_ENV production DEPLOY_TAG=$DEPLOY_TAG
+
+# Link previously built Origin.js
+COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
+RUN npm link origin
+# Build DApp
+RUN npm install --quiet --no-progress
+RUN node_modules/.bin/webpack --display errors-only
+
+# Copy static files to nginx for serving
+FROM nginx:1.15.2-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]

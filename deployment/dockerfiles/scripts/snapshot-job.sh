@@ -1,3 +1,8 @@
+#!/bin/bash
+
+# This script is used by the auto-gke-pvc-snapshots container to take snapshots
+# of all the attached Google PVC disks.
+
 if [ -z "${DAYS_RETENTION}" ]; then
   # Default to 14 days
   DAYS_RETENTION=14

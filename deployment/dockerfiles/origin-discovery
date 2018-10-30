@@ -3,7 +3,7 @@
 #
 # --- Origin.js
 
-FROM node:9 as origin-js-build
+FROM node:8 as origin-js-build
 
 COPY ./origin-js /app
 WORKDIR /app
@@ -12,9 +12,9 @@ ENV NODE_ENV=production
 RUN npm install --quiet --no-progress
 RUN npm run build
 
-# --- Discovery server
+# --- GraphQL server
 
-FROM node:9 as build
+FROM node:8
 
 WORKDIR /app
 
