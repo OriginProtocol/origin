@@ -26,6 +26,11 @@ spec:
         ports:
           - containerPort: 3456
         env:
+          - name: ENVKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "notifications.fullname" . }}
+                key: ENVKEY
           - name: DATABASE_HOST
             value: "localhost"
           - name: DATABASE_PORT
