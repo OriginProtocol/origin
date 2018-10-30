@@ -92,6 +92,9 @@ class ListingCreate extends Component {
     this.setBoost = this.setBoost.bind(this)
     this.checkETH = this.checkETH.bind(this)
 
+    props.updateState({
+      selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0
+    })
     if( props.selectedSchemaType ) this.handleSchemaSelection(props.selectedSchemaType)
   }
 

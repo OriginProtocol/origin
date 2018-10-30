@@ -29,7 +29,7 @@ export default function ListingsCreate(state = initialState, action = {}) {
   case ListingCreateConstants.UPDATE:
     const data = { ...state,...action.payload }
     store.set(data_key,{
-      step: data.step,
+      step: data.step>4 && data.step!==7 ? 4 : data.step,
       selectedBoostAmount: data.selectedBoostAmount,
       selectedSchemaType: data.selectedSchemaType,
       formListing: data.formListing

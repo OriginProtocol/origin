@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
 import { storeWeb3Intent } from 'actions/App'
+import Modal from 'components/modal'
 
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
 import MessagesDropdown from 'components/dropdowns/messages'
@@ -18,19 +19,42 @@ class NavBar extends Component {
     super(props)
 
     this.handleLink = this.handleLink.bind(this)
+    this.onAddNew = this.onAddNew.bind(this)
+    this.onContinue = this.onContinue.bind(this)
+    this.showDraftModal = this.showDraftModal.bind(this)
     this.state = {
       noWeb3Account: false,
       notWeb3EnabledDesktop: false,
-      notWeb3EnabledMobile: false
+      notWeb3EnabledMobile: false,
+      showDraftModal: false
     }
   }
 
   handleLink(e) {
     this.props.storeWeb3Intent('create a listing')
+    e.preventDefault()
+  }
+
+  showDraftModal() {
+    this.setState({
+      showDraftModal: true
+    })
+  }
+
+  onContinue(e) {
+    e.preventDefault()
+    this.props.storeWeb3Intent('create a listing')
+    this.setState({
+      showDraftModal: false
+    })
+  }
+
+  onAddNew(e) {
+    e.preventDefault()
     this.props.initListingCreate()
-    if (!web3.givenProvider || !this.props.web3Account) {
-      e.preventDefault()
-    }
+    this.setState({
+      showDraftModal: false
+    })
   }
 
   render() {
@@ -135,38 +159,76 @@ class NavBar extends Component {
                         defaultMessage={'My Sales'}
                       />
                     </Link>
-                    <Link
-                      to="/create"
-                      className="dropdown-item d-none d-lg-block"
-                      onClick={this.handleLink}
-                      ga-category="top_nav"
-                      ga-label="sell_dropdown_add_listing"
-                    >
-                      <FormattedMessage
-                        id={'navbar.addListing'}
-                        defaultMessage={'Add a Listing'}
-                      />
-                    </Link>
+                    {
+                      this.props.hasDraft?(
+                        <div
+                          className="dropdown-item d-none d-lg-block"
+                          onClick={this.showDraftModal}
+                          ga-category="top_nav"
+                          ga-label="sell_dropdown_add_listing"
+                        >
+                          <FormattedMessage
+                            id={'navbar.addListing'}
+                            defaultMessage={'Add a Listing'}
+                          />
+                        </div>
+                      ):(
+                        <Link
+                          to="/create"
+                          className="dropdown-item d-none d-lg-block"
+                          onClick={this.handleLink}
+                          ga-category="top_nav"
+                          ga-label="sell_dropdown_add_listing"
+                        >
+                          <FormattedMessage
+                            id={'navbar.addListing'}
+                            defaultMessage={'Add a Listing'}
+                          />
+                        </Link>
+                      )
+                    }
+                    
                   </div>
                 </div>
               </div>
-              <Link
-                to="/create"
-                className="nav-item nav-link"
-                onClick={this.handleLink}
-                ga-category="top_nav"
-                ga-label="add_listing"
-              >
-                <img
-                  src="images/add-listing-icon.svg"
-                  alt="Add Listing"
-                  className="add-listing"
-                />
-                <FormattedMessage
-                  id={'navbar.addListing'}
-                  defaultMessage={'Add a Listing'}
-                />
-              </Link>
+              {
+                this.props.hasDraft?(
+                  <div
+                    className="nav-item nav-link"
+                    onClick={this.showDraftModal}
+                    ga-category="top_nav"
+                    ga-label="add_listing"
+                  >
+                    <img
+                      src="images/add-listing-icon.svg"
+                      alt="Add Listing"
+                      className="add-listing"
+                    />
+                    <FormattedMessage
+                      id={'navbar.addListing'}
+                      defaultMessage={'Add a Listing'}
+                    />
+                  </div>
+                ):(
+                  <Link
+                    to="/create"
+                    className="nav-item nav-link"
+                    onClick={this.handleLink}
+                    ga-category="top_nav"
+                    ga-label="add_listing"
+                  >
+                    <img
+                      src="images/add-listing-icon.svg"
+                      alt="Add Listing"
+                      className="add-listing"
+                    />
+                    <FormattedMessage
+                      id={'navbar.addListing'}
+                      defaultMessage={'Add a Listing'}
+                    />
+                  </Link>
+                )
+              }
             </div>
           </div>
           <div className="static navbar-nav order-1 order-lg-2">
@@ -177,16 +239,73 @@ class NavBar extends Component {
             <UserDropdown />
           </div>
         </div>
+        <DraftModal
+          isOpen={this.state.showDraftModal}
+          onContinue={this.onContinue}
+          onAddNew={this.onAddNew}
+        />
       </nav>
     )
   }
+}
+
+const DraftModal = ({ isOpen, onContinue, onAddNew }) => {
+  return(
+    <Modal backdrop="static" isOpen={isOpen}>
+      <div className="image-container">
+        <img
+          src="images/circular-check-button.svg"
+          role="presentation"
+        />
+      </div>
+      <h3>
+        <FormattedMessage
+          id={'nav-listing-create.title'}
+          defaultMessage={'You have unfinished listing'}
+        />
+      </h3>
+      <div className="disclaimer">
+        <p>
+          <FormattedMessage
+            id={'nav-listing-create.descript'}
+            defaultMessage={
+              "Are you going to continue or create a new one?"
+            }
+          />
+        </p>
+      </div>
+      <div className="button-container">
+        <Link
+          to="/create"
+          className="btn btn-clear"
+          onClick={onContinue}
+        >
+          <FormattedMessage
+            id={'nav-listing-create.recover'}
+            defaultMessage={'Continue'}
+          />
+        </Link>
+        <Link
+          to="/create"
+          onClick={onAddNew}
+          className="btn btn-clear"
+        >
+          <FormattedMessage
+            id={'nav-listing-create.addNew'}
+            defaultMessage={'Create a new'}
+          />
+        </Link>
+      </div>
+    </Modal>
+  )
 }
 
 const mapStateToProps = state => {
   return {
     onMobile: state.app.onMobile,
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    web3Intent: state.app.web3.intent,
+    hasDraft: state.listingCreate.step>1 && state.listingCreate.step<=4
   }
 }
 
