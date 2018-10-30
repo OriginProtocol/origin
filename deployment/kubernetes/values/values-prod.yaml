@@ -3,7 +3,7 @@ databaseInstance: origin-214503:us-west1:prod
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: '916795e'
-bridgeReplicas: 1
+bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
@@ -27,10 +27,6 @@ eventlistenerContinueBlock: 6425000
 
 discoveryImage: origin-discovery
 discoveryImageTag: '6e22b35'
-
-# IPFS server for OrbitDB
-messagingIpfsImage: ipfs/go-ipfs
-messagingIpfsImageTag: v0.4.17
 
 # OrbitDB
 messagingImage: origin-messaging

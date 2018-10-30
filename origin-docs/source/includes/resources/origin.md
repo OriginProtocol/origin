@@ -18,18 +18,27 @@ let origin = new Origin(configOptions)
  - `ipfsApiPort`
  - `ipfsGatewayPort`
  - `ipfsGatewayProtocol`
+ - `discoveryServerUrl`
+ - `messagingNamespace`
+ - `arbitrator`
+ - `affiliate`
+ - `blockEpoch`
  - `attestationServerUrl`
+ - `ipfsCreator`
+ - `OrbitDB`
+ - `ecies`
+ - `web3`
+ - `contractAddresses`
 
- For example, if you are running a local IPFS daemon then you could set following config options:
+ > For example, if you are running a local IPFS daemon then you could set following config options:
 
 ```javascript
-let origin = new Origin(configOptions)
 
-{
+const configOptions = {
   ipfsDomain: '127.0.0.1',
   ipfsApiPort: '5001',
   ipfsGatewayPort: '8080',
   ipfsGatewayProtocol: 'http'
 }
-let origin = new Origin(configOptions)
+const origin = new Origin(configOptions)
 ```

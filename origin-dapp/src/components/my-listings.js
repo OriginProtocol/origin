@@ -143,10 +143,7 @@ class MyListings extends Component {
                   <div className="col-12 col-sm-4 col-lg-2 offset-lg-3 text-center">
                     <div className="numberCircle">
                       <h1 className="circle-text">
-                        <FormattedMessage
-                          id={'my-listings.number-one'}
-                          defaultMessage={'1'}
-                        />
+                        1
                       </h1>
                     </div>
                     <p>
@@ -161,10 +158,7 @@ class MyListings extends Component {
                   <div className="col-12 col-sm-4 col-lg-2 text-center">
                     <div className="numberCircle">
                       <h1 className="circle-text">
-                        <FormattedMessage
-                          id={'my-listings.number-two'}
-                          defaultMessage={'2'}
-                        />
+                        2
                       </h1>
                     </div>
                     <p>
@@ -179,10 +173,7 @@ class MyListings extends Component {
                   <div className="col-12 col-sm-4 col-lg-2 text-center">
                     <div className="numberCircle">
                       <h1 className="circle-text">
-                        <FormattedMessage
-                          id={'my-listings.number-three'}
-                          defaultMessage={'3'}
-                        />
+                        3
                       </h1>
                     </div>
                     <p>

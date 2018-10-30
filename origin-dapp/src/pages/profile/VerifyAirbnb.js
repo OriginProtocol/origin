@@ -78,7 +78,7 @@ class VerifyAirbnb extends Component {
             {
               <FormattedMessage
                 id={'VerifyAirbnb.enterAirbnbProfileUrl'}
-                defaultMessage={'Enter Airbnb profile Url below'}
+                defaultMessage={'Enter Airbnb profile URL below'}
               />
             }
           </label>
@@ -116,7 +116,7 @@ class VerifyAirbnb extends Component {
             <FormattedMessage
               id={'VerifyAirbnb.airbnbProfilePublished'}
               defaultMessage={
-                'Other users will know that you have a verified Airbnb profile.'
+                'Other users will know that you have a verified Airbnb profile and your user id will be published on the blockchain.'
               }
             />
           </div>

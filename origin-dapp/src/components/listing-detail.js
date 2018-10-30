@@ -299,7 +299,6 @@ class ListingsDetail extends Component {
             this.resetToStepOne()
           }}
         />
-
         {(loading || (pictures && !!pictures.length)) && (
           <Pictures 
             pictures={pictures}

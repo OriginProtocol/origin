@@ -93,6 +93,7 @@ class PriceField extends Component {
                 )
               }}
             />
+            &nbsp;
             <span className="text-bold">
               <FormattedMessage
                 id={'price-field.price-usd-disclaimer'}
