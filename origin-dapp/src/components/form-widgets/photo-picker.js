@@ -31,6 +31,7 @@ class PhotoPicker extends Component {
   }
 
   onCropComplete(croppedImageUrl) {
+    const imgInput = document.getElementById('photo-picker-input')
     const pictures = [...this.state.pictures, croppedImageUrl]
     let showMaxImageCountMsg = false
 
@@ -46,6 +47,8 @@ class PhotoPicker extends Component {
       },
       () => this.props.onChange(pictures)
     )
+
+    imgInput.value = null
   }
 
   onCropCancel() {
