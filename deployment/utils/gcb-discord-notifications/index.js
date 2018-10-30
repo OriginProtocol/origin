@@ -25,7 +25,6 @@ module.exports.subscribe = async (event, callback) => {
 
 // eventToBuild transforms pubsub event message to a build object.
 const eventToBuild = (data) => {
-  return data;
   return JSON.parse(new Buffer(data, 'base64').toString());
 }
 
