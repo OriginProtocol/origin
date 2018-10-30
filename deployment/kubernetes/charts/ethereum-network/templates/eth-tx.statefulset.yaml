@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "ethereum.fullname" . }}-tx-node
+  labels:
+    app: {{ template "ethereum.fullname" . }}-tx-node
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ .Values.gethTxReplicas }}
+  serviceName: {{ template "ethereum.fullname" . }}-tx-node
+  selector:
+    matchLabels:
+      app: {{ template "ethereum.fullname" . }}-tx-node
+  template:
+    metadata:
+      labels:
+        app: {{ template "ethereum.fullname" . }}-tx-node
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: geth-tx
+        image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}
+        ports:
+        - containerPort: 8545
+          name: rpc
+        - containerPort: 8546
+          name: ws
+        - name: discovery-tcp
+          containerPort: 30303
+        - name: discovery-udp
+          containerPort: 30303
+          protocol: UDP
+        command: ["/bin/sh"]
+        args:
+          - "-c"
+          - "geth
+            --ws
+            --wsaddr 0.0.0.0
+            --wsport 8546
+            --rpc
+            --rpcaddr 0.0.0.0
+            --rpcport 8545
+            --rpcvhosts=\"*\"
+            --ethstats=${HOSTNAME}:${ETHSTATS_SECRET}@${ETHSTATS_SERVICE}
+            --networkid=${NETWORK_ID}
+            --bootnodes=`cat /root/.ethereum/bootnodes`"
+        env:
+        - name: ETHSTATS_SERVICE
+          value: {{ template "ethereum.fullname" . }}-ethstats.{{ .Release.Namespace }}
+        - name: ETHSTATS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "ethereum.fullname" . }}-ethstats
+              key: WS_SECRET
+        - name: NETWORK_ID
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "ethereum.fullname" . }}-genesis-config
+              key: networkid
+        resources:
+          requests:
+            memory: {{ default "2Gi" .Values.gethTxMemoryRequest }}
+            cpu: 500m
+        volumeMounts:
+          - mountPath: /root/.ethereum
+            name: {{ template "ethereum.fullname" . }}-data
+      initContainers:
+      - name: init-genesis
+        image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}
+        args:
+          - "init"
+          - "/etc/geth/genesis.json"
+        volumeMounts:
+          - name: {{ template "ethereum.fullname" . }}-data
+            mountPath: /root/.ethereum
+          - name: genesis-config
+            mountPath: /etc/geth/
+      {{- if .Values.gethAccountPrivateKey }}
+      - name: import-geth-account
+        image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}
+        command: ["/bin/sh"]
+        args:
+        - "-c"
+        - |-
+{{ .Files.Get "scripts/import-account.sh" | indent 10 }}
+        volumeMounts:
+          - name: {{ template "ethereum.fullname" . }}-data
+            mountPath: /root/.ethereum
+          - name: account
+            readOnly: true
+            mountPath: /root/.ethereum/account
+      {{- end }}
+      - name: get-bootnodes
+        image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}
+        command: ["/bin/sh"]
+        args:
+        - "-c"
+        - |-
+{{ .Files.Get "scripts/get-bootnode.sh" | indent 10 }}
+        env:
+        - name: BOOTNODE_SERVICE
+          value: {{ template "ethereum.fullname" . }}-bootnode.{{ .Release.Namespace }}.svc.cluster.local
+        volumeMounts:
+        - name: {{ template "ethereum.fullname" . }}-data
+          mountPath: /geth
+      volumes:
+      - name: genesis-config
+        configMap:
+          name: {{ template "ethereum.fullname" . }}-genesis-config
+      - name: account
+        secret:
+          secretName: {{ template "ethereum.fullname" . }}-account
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ template "ethereum.fullname" . }}-data
+      spec:
+        storageClassName: "standard"
+        accessModes:
+          - ReadWriteOnce  # Read-write for a single node only
+        resources:
+          requests:
+              storage: 5Gi
