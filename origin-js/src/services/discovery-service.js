@@ -47,7 +47,7 @@ class DiscoveryService {
     // clamp numberOfItems between 1 and MAX_NUM_RESULTS.
     const numberOfItems = Math.min(Math.max(opts.numberOfItems || 0, 1), MAX_NUM_RESULTS)
 
-    // TODO: make use of idsOnly + pass listingsFor, purchasesFor as filters
+    // TODO: pass listingsFor, purchasesFor as filters
     const query = `{
       listings(
         filters: []
@@ -57,13 +57,15 @@ class DiscoveryService {
           id
           data
         }
-        offset
-        numberOfItems
-        totalNumberOfItems
       }
     }`
 
-    return this._query(query)
+    const resp = await this._query(query)
+    if (opts.idsOnly) {
+      return resp.data.listings.nodes.map(listing => listing.id)
+    } else {
+      return resp.data.listings.nodes.map(listing => listing.data)
+    }
   }
 }
 
