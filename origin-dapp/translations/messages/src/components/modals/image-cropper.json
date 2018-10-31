@@ -1,0 +1,10 @@
+[
+  {
+    "id": "image-cropper.continue",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "image-cropper.cancel",
+    "defaultMessage": "Cancel"
+  }
+]
