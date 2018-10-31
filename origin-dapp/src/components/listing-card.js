@@ -131,7 +131,7 @@ class ListingCard extends Component {
               </span>
             )*/}
           </div>
-          <h2 className="title placehold text-truncate">{name}</h2>
+          <h2 className="title placehold text-truncate" title={name}>{name}</h2>
           {price > 0 && (
             <ListingCardPrices price={price} unitsRemaining={unitsRemaining} />
           )}

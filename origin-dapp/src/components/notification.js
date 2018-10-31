@@ -91,7 +91,7 @@ class Notification extends Component {
                 }`}
               />
               {listing && (
-                <div className="listing text-truncate">{listing.name}</div>
+                <div className="listing text-truncate" title={listing.name}>{listing.name}</div>
               )}
               {counterpartyAddress && (
                 <div className="counterparty d-flex">
@@ -112,7 +112,7 @@ class Notification extends Component {
                     </strong>: &nbsp;
                     {counterpartyName || <UnnamedUser />}
                   </div>
-                  <div className="text-truncate text-muted">
+                  <div className="text-truncate text-muted" title={counterpartyAddress}>
                     {counterpartyAddress}
                   </div>
                 </div>
