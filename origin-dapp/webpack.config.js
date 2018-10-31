@@ -21,6 +21,7 @@ const env = {
   BRIDGE_SERVER_PROTOCOL: 'https',
   CONTRACT_ADDRESSES: '{}',
   DEPLOY_TAG: false,
+  DECENTRALIZED_MODE: true,
   DISCOVERY_SERVER_URL: '',
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,

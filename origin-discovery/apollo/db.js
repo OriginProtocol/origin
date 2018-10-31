@@ -4,7 +4,7 @@ const db = require('../models')
 
 
 async function getListings(listingIds) {
-  // Load wos from Listing table in DB.
+  // Load rows from the Listing table in the DB.
   const rows = await db.Listing.findAll({
     where: {
       id: {
@@ -23,7 +23,7 @@ async function getListings(listingIds) {
   })
 
   // Create listing objects to return.
-  // Note: we preserve the ordering of passed in listingIds as to not change ranking.
+  // Note: preserve ranking by keeping returned listings in same order as listingIds.
   let listings = []
   listingIds.forEach(id => {
     const row = rowDict[id]
@@ -35,8 +35,8 @@ async function getListings(listingIds) {
       description: row.data.description,
       category: row.data.category,
       subCategory: row.data.subCategory,
-      // TODO: price may not be defined at listing level for
-      // fractional usage (may vary based on time slot).
+      // TODO: price may not be defined at the listing level for all listing types.
+      // For ex. for fractional usage it may vary based on time slot.
       price: row.data.price
     }
     listings.push(listing)

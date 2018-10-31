@@ -57,7 +57,7 @@ class Marketplace {
         })
       )
     } else {
-        return await this.discoveryService.listings(opts)
+      return await this.discoveryService.getListings(opts)
     }
   }
 
@@ -82,7 +82,7 @@ class Marketplace {
       return new Listing(listingId, chainListing, ipfsListing)
 
     } else {
-      return await this.discoveryService.listing(listingId)
+      return await this.discoveryService.getListing(listingId)
     }
   }
 

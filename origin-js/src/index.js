@@ -72,7 +72,7 @@ class Origin {
       arbitrator,
       store,
       blockEpoch,
-      decentralizedMode: false // FIXME: FRANCK REMOVE HARDCODED VALUE
+      decentralizedMode
     })
 
     this.discovery = new Discovery({ discoveryService: this.discoveryService })

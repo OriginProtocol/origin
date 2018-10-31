@@ -85,7 +85,8 @@ const config = {
   OrbitDB,
   ecies,
   web3,
-  ethereum
+  ethereum,
+  decentralizedMode: process.env.DECENTRALIZED_MODE
 }
 
 try {

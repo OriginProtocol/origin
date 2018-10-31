@@ -13,9 +13,10 @@ class DiscoveryService {
    * @return {Promise<*>}
    * @private
    */
-  async _query(graphQlQuery){
+  async _query(graphQlQuery) {
     const resp = await this.fetch(
-      this.discoveryServerUrl, {
+      this.discoveryServerUrl,
+      {
         method: 'POST',
         body: JSON.stringify({
           query: graphQlQuery
@@ -24,14 +25,21 @@ class DiscoveryService {
           'Content-Type': 'application/json'
         }
       },
-      function(error){
+      function(error) {
         if (error !== undefined)
-          throw Error(`An error occurred when reaching discovery server: ${error}`)
-      })
+          throw Error(
+            `An error occurred when reaching discovery server: ${error}`
+          )
+      }
+    )
 
-    if(resp.status !== 200){
+    if (resp.status !== 200) {
       //TODO: also report error message here
-      throw Error(`Discovery server returned unexpected status code ${resp.status} with error `)
+      throw Error(
+        `Discovery server returned unexpected status code ${
+          resp.status
+        } with error `
+      )
     }
     return await resp.json()
   }
@@ -52,8 +60,8 @@ class DiscoveryService {
       listings (
         searchQuery: "${searchQuery}"
         filters: [${filters
-      .map(filter => {
-        return `
+    .map(filter => {
+      return `
     {
       name: "${filter.name}"
       value: "${String(filter.value)}"
@@ -61,8 +69,8 @@ class DiscoveryService {
       operator: ${filter.operator}
     }
     `
-      })
-      .join(',')}]
+    })
+    .join(',')}]
         page:{
           offset: ${offset}
           numberOfItems: ${numberOfItems}
@@ -89,15 +97,16 @@ class DiscoveryService {
    * @param opts: { idsOnly, listingsFor, purchasesFor, offset, numberOfItems }
    * @return {Promise<*>}
    */
-  async listings(opts) {
+  async getListings(opts) {
     // Offset should be bigger than 0.
     const offset = Math.max(opts.offset || 0, 0)
 
     // For numberOfItems, any value between 1 and MAX_NUM_RESULTS is valid.
     // Temporarily, while switching DApp to fetch data from back-end, we use -1 as
     // a special value for requesting all listings. This will get deprecated in the future.
-    const numberOfItems =
-      opts.numberOfItems ? Math.min(Math.max(opts.numberOfItems, 1), MAX_NUM_RESULTS) : -1
+    const numberOfItems = opts.numberOfItems
+      ? Math.min(Math.max(opts.numberOfItems, 1), MAX_NUM_RESULTS)
+      : -1
 
     // TODO: pass listingsFor, purchasesFor as filters
     const query = `{
@@ -125,7 +134,7 @@ class DiscoveryService {
    * @param listingId
    * @return {Promise<*>}
    */
-  async listing(listingId) {
+  async getListing(listingId) {
     const query = `{
       listing(id: "${listingId}") {
         id
@@ -135,7 +144,6 @@ class DiscoveryService {
     const resp = await this._query(query)
     return resp.data.listing.data
   }
-
 }
 
 export default DiscoveryService
