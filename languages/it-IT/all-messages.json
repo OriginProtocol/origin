@@ -139,7 +139,7 @@
   "listing-detail.verifyIdentity": "Verifica l'identità",
   "listing-detail.providerInstruction": "Per fare un'offerta su questo annuncio, si prega di confermare la transazione in {provider}.",
   "listing-detail.purchaseSuccessful": "Successo!",
-  "listing-detail.successDisclaimer": "Hai fatto un'offerta su questo annuncio. La tua offerta sarà visibile entro pochi secondi. Il tuo pagamento {ETH} è stato trasferito su un contratto di deposito a garanzia. Ecco cosa succede dopo:",
+  "listing-detail.successDisclaimer": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your ETH payment has been transferred to an escrow contract. Here's what happens next:",
   "listing-detail.successItem1": "Il venditore può scegliere di accettare o rifiutare la tua offerta.",
   "listing-detail.successItem2": "Se l'offerta è accettata e soddisfatta, sarai in grado di confermare che la vendita è completa. Il tuo pagamento escrowed sarà inviato al venditore.",
   "listing-detail.successItem3": "Se l'offerta viene rifiutata, il pagamento escrowed sarà immediatamente restituito al tuo portafoglio.",
