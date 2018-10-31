@@ -19,6 +19,9 @@ ARG ENVKEY
 COPY ./origin-dapp /app
 WORKDIR /app/
 
+# Install envkey-source
+RUN curl -s https://raw.githubusercontent.com/envkey/envkey-source/master/install.sh | bash
+
 ENV NODE_ENV production DEPLOY_TAG=$DEPLOY_TAG
 
 # Link previously built Origin.js
@@ -26,7 +29,7 @@ COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
 RUN npm link origin
 # Build DApp
 RUN npm install --quiet --no-progress
-RUN node_modules/.bin/webpack --display errors-only
+RUN eval $(envkey-source) && node_modules/.bin/webpack --display errors-only
 
 # Copy static files to nginx for serving
 FROM nginx:1.15.2-alpine
