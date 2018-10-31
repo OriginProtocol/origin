@@ -39,3 +39,7 @@ discoveryImageTag: '4aa5387'
 # origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: '4aa5387'
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: 'latest'

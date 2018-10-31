@@ -21,6 +21,10 @@ class TransactionMessage extends Component {
         id: 'transaction.withdrawOffer',
         defaultMessage: 'You withdrew an offer.'
       },
+      reserveListing: {
+        id: 'transaction.reserveListing',
+        defaultMessage: 'You reserved a listing.',
+      },
       closeListing: {
         id: 'transaction.closeListing',
         defaultMessage: 'You closed a listing.'
