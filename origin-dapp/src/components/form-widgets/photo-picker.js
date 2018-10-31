@@ -134,6 +134,16 @@ class PhotoPicker extends Component {
                 maxImageCount: MAX_IMAGE_COUNT
               }}
             />
+            <br/>
+            <FormattedMessage
+              id={'photo-picker.featuredImageExplainer'}
+              defaultMessage={
+                'First image will be featured - drag and drop images to reorder.'
+              }
+              values={{
+                maxImageCount: MAX_IMAGE_COUNT
+              }}
+            />
           </p>
           <div className="d-flex pictures">
             {showMaxImageCountMsg && (

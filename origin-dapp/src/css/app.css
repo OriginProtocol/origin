@@ -2093,7 +2093,7 @@ textarea:-moz-ui-invalid {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 240px;
+  height: 260px;
   margin-bottom: 1rem;
   overflow: hidden;
   width: 100%;
@@ -2101,7 +2101,7 @@ textarea:-moz-ui-invalid {
 
 .listing-card .image-container {
   background-color: var(--light);
-  height: 240px;
+  height: 260px;
   margin-bottom: 1rem;
 }
 
@@ -2275,8 +2275,6 @@ textarea:-moz-ui-invalid {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  border-top: 1px solid var(--dark-grey);
-  background-color: var(--dark-grey);
   text-align: center;
 }
 
@@ -2291,7 +2289,7 @@ textarea:-moz-ui-invalid {
   width: 600px;
   height: 400px;
   background-color: var(--light);
-  margin-right: 1px;
+  margin-right: 12px;
 }
 
 .carousel.small .photo {

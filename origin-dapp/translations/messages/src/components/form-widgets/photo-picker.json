@@ -4,6 +4,10 @@
     "defaultMessage": "Maximum {maxImageCount} images per listing."
   },
   {
+    "id": "photo-picker.featuredImageExplainer",
+    "defaultMessage": "First image will be featured - drag and drop images to reorder."
+  },
+  {
     "id": "photo-picker.maxImgCountMsg",
     "defaultMessage": "You have reached the upload limit of {maxImageCount} images per listing."
   }
