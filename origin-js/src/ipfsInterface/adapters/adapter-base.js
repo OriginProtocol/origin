@@ -44,6 +44,7 @@ export default class AdapterBase {
     }
 
     const validator = ajv.getSchema(this.schemaId)
+
     if (!validator) {
       throw new Error(`Failed loading schema validator for ${this.schemaId}`)
     }

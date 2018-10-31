@@ -31,3 +31,7 @@ discoveryImageTag: '6e22b35'
 # OrbitDB
 messagingImage: origin-messaging
 messagingImageTag: '3104d23'
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: 'latest'
