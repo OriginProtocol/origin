@@ -2089,8 +2089,7 @@ textarea:-moz-ui-invalid {
   width: 50%;
 }
 
-.listing-card .photo,
-.listing-form .photo {
+.listing-card .photo {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -2642,6 +2641,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .listing-form .photo-row .photo {
   border: 1px solid var(--light);
+  width: 300px;
 }
 
 .listing-form .preview img {

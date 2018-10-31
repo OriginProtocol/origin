@@ -738,11 +738,11 @@ class ListingCreate extends Component {
                     <div className="col-md-9 photo-row">
                       {formData.pictures &&
                         formData.pictures.map((dataUri, idx) => (
-                          <div
+                          <img
                             key={idx}
+                            src={dataUri}
                             className="photo"
                             role="presentation"
-                            style={{ backgroundImage: `url("${dataUri}")` }}
                           />
                         ))}
                     </div>
