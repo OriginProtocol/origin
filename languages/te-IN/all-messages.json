@@ -139,7 +139,7 @@
   "listing-detail.verifyIdentity": "గుర్తింపును ధృవీకరించండి",
   "listing-detail.providerInstruction": "ఈ జాబితాలో ఆఫర్ చేయడానికి, దయచేసి {provider} లో లావాదేవీని నిర్ధారించండి.",
   "listing-detail.purchaseSuccessful": "విజయం!",
-  "listing-detail.successDisclaimer": "మీరు ఈ జాబితాలో ప్రతిపాదన చేసారు. మీ ఆఫర్ కొన్ని సెకన్లలో కనిపిస్తుంది. మీ {ETH} చెల్లింపు ఎస్క్రో ఒప్పందంకి బదిలీ చేయబడింది. ఇక్కడ ఏమి జరుగుతుంది:",
+  "listing-detail.successDisclaimer": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your ETH payment has been transferred to an escrow contract. Here's what happens next:",
   "listing-detail.successItem1": "విక్రేత మీ ఆఫర్ను ఆమోదించడానికి లేదా తిరస్కరించడానికి ఎంచుకోవచ్చు.",
   "listing-detail.successItem2": "ఆఫర్ ఆమోదించబడి, నెరవేరినట్లయితే, మీరు అమ్మకానికి పూర్తయిందని నిర్ధారించగలుగుతారు. మీ ఎస్క్రూటెడ్ చెల్లింపు విక్రేతకు పంపబడుతుంది.",
   "listing-detail.successItem3": "ఆఫర్ తిరస్కరించినట్లయితే, ఎస్కరోడ్ చేయబడిన చెల్లింపు వెంటనే మీ వాలెట్కు తిరిగి వస్తుంది.",
