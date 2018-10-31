@@ -139,7 +139,7 @@
   "listing-detail.verifyIdentity": "身元情報の承認",
   "listing-detail.providerInstruction": "この掲載情報にオファーを行うには、取引を {provider} で確認してください。",
   "listing-detail.purchaseSuccessful": "成功!",
-  "listing-detail.successDisclaimer": "この掲載情報にオファーを送りました。オファーは数秒以内に表示されます。 {ETH} でのお支払いがエスクロー契約に移行されました。手順は以下の通りです：",
+  "listing-detail.successDisclaimer": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your ETH payment has been transferred to an escrow contract. Here's what happens next:",
   "listing-detail.successItem1": "売り手はオファーを受け入れるか拒否するかを選択できます。",
   "listing-detail.successItem2": "オファーが受け入れられ、実行されれば、売却の完了を確認できるようになります。あなたが支払った、エスクロー中の代金が売り手に送られます。",
   "listing-detail.successItem3": "オファーが却下された場合、エスクローされた支払いはすぐにあなたのウォレットに返金されます。",
