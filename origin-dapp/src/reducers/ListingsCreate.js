@@ -11,13 +11,16 @@ const _initialState = {
   translatedSchema: null,
   schemaExamples: null,
   schemaFetched: false,
+  isFractionalListing: false,
+  isEditMode: false,
+  fractionalTimeIncrement: null,
+  showNoSchemaSelectedError: false,
   formListing: {
     formData: {
       boostValue: defaultBoostValue,
       boostLevel: getBoostLevel(defaultBoostValue)
     }
   },
-  showNoSchemaSelectedError: false,
   showDetailsFormErrorMsg: false,
   showBoostTutorial: false,
   showEthNotEnough: false
@@ -29,7 +32,7 @@ export default function ListingsCreate(state = initialState, action = {}) {
   case ListingCreateConstants.UPDATE:
     const data = { ...state,...action.payload }
     store.set(data_key,{
-      step: data.step>4 && data.step!==7 ? 4 : data.step,
+      step: data.step>5 && data.step!==8 ? 5 : data.step,
       selectedBoostAmount: data.selectedBoostAmount,
       selectedSchemaType: data.selectedSchemaType,
       formListing: data.formListing
