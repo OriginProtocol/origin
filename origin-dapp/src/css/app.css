@@ -2554,6 +2554,15 @@ select.form-control:not([size]):not([multiple]) {
   line-height: 0.5;
 }
 
+.photo-picker .image-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.photo-picker .image-container img {
+  width: 100%;
+}
+
 .file-info {
   list-style-type: none;
   padding-left: 0;

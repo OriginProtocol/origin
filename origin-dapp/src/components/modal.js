@@ -36,7 +36,7 @@ class Modal extends Component {
         {...setTabIndex}
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content d-flex" style={{ 'align-items': alignItems ? alignItems : 'stretch' }}>{children}</div>
+          <div className="modal-content d-flex" style={{ 'alignItems': alignItems ? alignItems : 'stretch' }}>{children}</div>
         </div>
       </div>
     )

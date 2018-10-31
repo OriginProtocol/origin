@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import ImageCropper from '../modals/image-cropper'
 
 const MAX_IMAGE_COUNT = 10
@@ -17,6 +18,7 @@ class PhotoPicker extends Component {
     this.onFileSelected = this.onFileSelected.bind(this)
     this.onCropComplete = this.onCropComplete.bind(this)
     this.onCropCancel = this.onCropCancel.bind(this)
+    this.onDragEnd = this.onDragEnd.bind(this)
   }
 
   async onFileSelected(e) {
@@ -61,6 +63,23 @@ class PhotoPicker extends Component {
         (picture, idx) => idx !== indexToRemove
       ),
       showMaxImageCountMsg: false
+    })
+  }
+
+  onDragEnd(result) {
+    if (!result.destination) {
+      return
+    }
+
+    const { pictures } = this.state
+    const draggedItemIdx = result.source.index
+    const destinationIdx = result.destination.index
+    const reordered = Array.from(pictures)
+    const [removed] = reordered.splice(draggedItemIdx, 1)
+    reordered.splice(destinationIdx, 0, removed)
+
+    this.setState({
+      pictures: reordered
     })
   }
 
@@ -130,20 +149,35 @@ class PhotoPicker extends Component {
               </div>
             )}
           </div>
-          <div className="d-flex pictures">
-            {pictures.map((dataUri, idx) => (
-              <div key={idx} className="image-container">
-                <img src={dataUri} />
-                <a
-                  className="cancel-image"
-                  aria-label="Close"
-                  onClick={() => this.removePhoto(idx)}
-                >
-                  <span aria-hidden="true">&times;</span>
-                </a>
-              </div>
-            ))}
-          </div>
+          <DragDropContext onDragEnd={this.onDragEnd} className="d-flex pictures">
+            <Droppable droppableId="droppable">
+              {(provided) => (
+                <div ref={provided.innerRef}>
+                  {pictures.map((dataUri, idx) => (
+                    <Draggable key={idx} draggableId={idx} index={idx}>
+                      {(provided) => (
+                        <div
+                          className="image-container"
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <img src={dataUri} />
+                          <a
+                            className="cancel-image"
+                            aria-label="Close"
+                            onClick={() => this.removePhoto(idx)}
+                          >
+                            <span aria-hidden="true">&times;</span>
+                          </a>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </Fragment>
     )
