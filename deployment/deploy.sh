@@ -110,6 +110,9 @@ while getopts ":c:n:h" opt; do
 	ipfs-proxy)
 	  IMAGE_TAG_FIELD=ipfsProxyImageTag
 	  ;;
+	origin-notifications)
+	  IMAGE_TAG_FIELD=notificationsImageTag
+	  ;;
 	*)
 	  echo -e "\033[31mContainer not yet implemented\033[0m"
 	  exit 1

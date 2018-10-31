@@ -28,6 +28,10 @@ ipfsProxyImageTag: latest
 messagingImage: origin-messaging
 messagingImageTag: latest
 
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: 'latest'
+
 # geth private node bootnode
 bootnodeImage: ethereum/client-go
 bootnodeImageTag: alltools-v1.8.13
