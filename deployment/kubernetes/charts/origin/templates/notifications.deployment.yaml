@@ -8,7 +8,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  replicas: {{ default 2 .Values.notificationsReplicas }}
+  replicas: {{ default 1 .Values.notificationsReplicas }}
   selector:
     matchLabels:
       app: {{ template "notifications.fullname" . }}
