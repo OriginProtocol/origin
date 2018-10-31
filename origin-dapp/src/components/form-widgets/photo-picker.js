@@ -11,7 +11,7 @@ class PhotoPicker extends Component {
     this.state = {
       imageFileObj: null,
       showCropModal: false,
-      pictures: [],
+      pictures: props.value,
       showMaxImageCountMsg: false
     }
 
@@ -78,9 +78,12 @@ class PhotoPicker extends Component {
     const [removed] = reordered.splice(draggedItemIdx, 1)
     reordered.splice(destinationIdx, 0, removed)
 
-    this.setState({
-      pictures: reordered
-    })
+    this.setState(
+      {
+        pictures: reordered
+      },
+      () => this.props.onChange(reordered)
+    )
   }
 
   render() {
