@@ -11,13 +11,9 @@ node node_modules/.bin/sequelize db:migrate
 
 echo "Starting event listener"
 
-echo "{ \"lastLogBlock\": ${BLOCK_EPOCH} }" > ./continue.json
+# Write the BLOCK_EPOCH to the continue file so we don't scan through blocks
+# starting at 0
+echo "{ \"lastLogBlock\": ${BLOCK_EPOCH} }" > ${CONTINUE_FILE}
 
 # Start event listener
-node listener/listener.js \
-	--elasticsearch \
-	--db \
-	--web3-url=${WEB3_URL} \
-	--ipfs-url=${IPFS_URL} \
-	--continue-file=./continue.json \
-	--trail-behind-blocks=1
+node listener/listener.js
