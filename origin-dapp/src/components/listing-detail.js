@@ -486,17 +486,19 @@ class ListingsDetail extends Component {
                     className="featured-image"
                     src={pictures[featuredImageIdx]}
                   />
-                  <div className="photo-row">
-                    {pictures.map((pictureUrl, idx) => (
-                      <img
-                        onClick={() => this.setFeaturedImage(idx)}
-                        src={pictureUrl}
-                        key={idx}
-                        role="presentation"
-                        className={featuredImageIdx === idx ? 'featured-thumb' : ''}
-                      />
-                    ))}
-                  </div>
+                  {pictures.length > 1 &&
+                    <div className="photo-row">
+                      {pictures.map((pictureUrl, idx) => (
+                        <img
+                          onClick={() => this.setFeaturedImage(idx)}
+                          src={pictureUrl}
+                          key={idx}
+                          role="presentation"
+                          className={featuredImageIdx === idx ? 'featured-thumb' : ''}
+                        />
+                      ))}
+                    </div>
+                  }
                 </div>
               )}
               <p className="ws-aware description placehold">{description}</p>
