@@ -2169,6 +2169,36 @@ textarea:-moz-ui-invalid {
   padding-top: 1.125rem;
 }
 
+.listing-detail .image-wrapper {
+  margin-bottom: 40px;
+}
+
+.listing-detail .image-wrapper .featured-image {
+  width: 100%;
+  margin-bottom: 7px;
+}
+
+.listing-detail .image-wrapper .photo-row {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  padding: 5px;
+}
+
+.listing-detail .image-wrapper .photo-row img {
+  width: 150px;
+  margin-right: 12px;
+  cursor: pointer;
+  border: 5px solid transparent;
+}
+
+.listing-detail .image-wrapper .photo-row img.featured-thumb {
+  border: 5px solid white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+}
+
 .buy-box {
   color: white;
   font-weight: normal;
