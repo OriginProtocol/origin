@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('envkey')
 
 const fs = require('fs')
 const http = require('http')
@@ -128,7 +129,7 @@ const OFFER_EVENTS = [
 
 /**
  * setup Origin JS according to the config.
- */ 
+ */
 function setupOriginJS(config){
   const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
   // global
@@ -148,7 +149,7 @@ function setupOriginJS(config){
 
   // Issue a warning for any recommended env var that is not set.
   if (!process.env.BLOCK_EPOCH) {
-    console.log('WARNING: For performance reason it is recommended to set BLOCK_EPOCH')
+    console.log('WARNING: For performance reasons it is recommended to set BLOCK_EPOCH')
   }
 
   // global
@@ -167,7 +168,7 @@ function setupOriginJS(config){
  *  liveTracking
  * - checks for a new block every checkIntervalSeconds
  * - if new block appeared, look for all events after the last found event
- */ 
+ */
 async function liveTracking(config) {
   setupOriginJS(config)
   const context = await new Context(config).init()
@@ -188,7 +189,7 @@ async function liveTracking(config) {
       console.log('New block: ' + currentBlockNumber)
       const toBlock = Math.min( // Pick the smallest of either
         // the last log we processed, plus the max batch size
-        lastLogBlock + MAX_BATCH_BLOCKS, 
+        lastLogBlock + MAX_BATCH_BLOCKS,
          // or the current block number, minus any trailing blocks we waiting on
         Math.max(currentBlockNumber - config.trailBlocks, 0),
       )
@@ -213,7 +214,7 @@ async function liveTracking(config) {
  * The first block the listener should start at for following events.
  * This either uses the value stored in the the continue file, if given
  * or defaults to 0.
- */ 
+ */
 function getLastBlock(config) {
   if (config.continueFile == undefined || !fs.existsSync(config.continueFile)) {
     return 0
@@ -229,7 +230,7 @@ function getLastBlock(config) {
 /**
  * Stores the last block we have read up to in the continue file.
  * If no continue file configured, does nothing.
- */  
+ */
 function setLastBlock(config, blockNumber) {
   if (config.continueFile == undefined) {
     return
@@ -240,7 +241,7 @@ function setLastBlock(config, blockNumber) {
 
 /**
  * runBatch - gets and processes logs for a range of blocks
- */ 
+ */
 async function runBatch(opts, context) {
   const fromBlock = opts.fromBlock
   const toBlock = opts.toBlock
@@ -281,7 +282,7 @@ async function runBatch(opts, context) {
 /**
  * Retrys up to N times, with exponential backoff.
  * If still failing after N times, exits the process.
- */ 
+ */
 async function withRetrys(fn, exitOnError=true) {
   let tryCount = 0
   while (true) {
@@ -313,9 +314,9 @@ async function withRetrys(fn, exitOnError=true) {
 }
 
 /**
- *  Takes and event/log and a matching rule 
+ *  Takes and event/log and a matching rule
  *  then annotates the event/log, runs the rule, and ouputs everything.
- */ 
+ */
 async function handleLog(log, rule, contractVersion, context) {
   log.decoded = web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
@@ -496,7 +497,7 @@ async function handleLog(log, rule, contractVersion, context) {
 
 /**
  * Posts a to discord channel via webhook.
- * This functionality should move out of the listener 
+ * This functionality should move out of the listener
  * to the notification system, as soon as we have one.
  */
  async function postToDiscordWebhook(discordWebhookUrl, data){
@@ -531,7 +532,7 @@ async function handleLog(log, rule, contractVersion, context) {
   const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
   const lines = []
   const listing = data.related.listing
-  
+
   let discordData = {}
 
   if (data.related.offer !== undefined) { // Offer
@@ -567,7 +568,7 @@ async function handleLog(log, rule, contractVersion, context) {
 
 /**
  * Sends a blob of json to a webhook.
- */  
+ */
 async function postToWebhook(urlString, json) {
   const url = urllib.parse(urlString)
   const postOptions = {
@@ -620,7 +621,7 @@ class Context {
 
 /**
  * Builds a lookup object that allows you to start from an ETH event signature,
- * and find out what contract and what event fired it. Each event also includes a 
+ * and find out what contract and what event fired it. Each event also includes a
  * list of our javascript event handler functions we want to fire for that log.
  * @example
  * buildSignatureToRules()
@@ -666,8 +667,8 @@ function buildSignatureToRules() {
   return signatureLookup
 }
 
-/**  
- * Builds a lookup object of marketplace contract names and versions 
+/**
+ * Builds a lookup object of marketplace contract names and versions
  * by ETH contract addresses.
  * @example
  * buildAddressToVersion()
@@ -704,23 +705,23 @@ process.argv.forEach(arg => {
 
 const config = {
   // Call webhook to process event.
-  webhook: args['--webhook'],
+  webhook: args['--webhook'] || process.env.WEBHOOK,
   // Call post to discord webhook to process event.
-  discordWebhook: args['--discord-webhook'],
+  discordWebhook: args['--discord-webhook'] || process.env.DISCORD_WEBHOOK,
   // Index events in the search index.
-  elasticsearch: args['--elasticsearch'],
+  elasticsearch: args['--elasticsearch'] || process.env.ELASTICSEARCH,
   // Index events in the database.
-  db: args['--db'],
+  db: args['--db'] || process.env.DATABASE,
   // Verbose mode, includes dumping events on the console.
-  verbose: args['--verbose'],
+  verbose: args['--verbose'] || process.env.VERBOSE,
   // File to use for picking which block number to restart from
-  continueFile: args['--continue-file'],
+  continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
-  trailBlocks: args['--trail-behind-blocks'] || 0,
+  trailBlocks: args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0,
   // web3 provider url
-  web3Url: args['--web3-url'] || 'http://localhost:8545',
+  web3Url: args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
   // ipfs url
-  ipfsUrl: args['--ipfs-url'] || 'http://localhost:8080',
+  ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
 }
 
 // Start the listener running
