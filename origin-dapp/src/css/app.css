@@ -1323,9 +1323,6 @@ textarea:-moz-ui-invalid {
   margin: -15px 0;
   padding: 15px 0;
   text-align: center;
-}
-
-.navigation-bar .static.navbar-nav .nav-item {
   width: 60px;
 }
 
@@ -5092,37 +5089,35 @@ a:not([href]):not([tabindex]).span-link {
 /* Media queries */
 
 /* xxs */
-@media (max-width: 320px) {
+@media (max-width: 300px) {
   .navigation-bar .static.navbar-nav .nav-item {
-    width: 48px;
+    width: 35px;
   }
 }
 
 /* xs */
 @media (max-width: 576px) {
 
-  .navigation-bar .navbar-toggler {
-    padding-left: 8px;
-  }
-
-  .navigation-bar .static.navbar-nav {
-    margin-left: 0px;
-  }
-
-  @media (min-width: 360px) {
+  @media (min-width: 301px) {
     .navigation-bar .static.navbar-nav .nav-item {
-      width: 56px;
+      width: 40px;
     }
   }
 
-  @media (min-width: 376px) {
+  @media (min-width: 348px) {
     .navigation-bar .static.navbar-nav .nav-item {
-      width: 67px;
+      width: 50px;
+    }
+  }
+
+  @media (min-width: 398px) {
+    .navigation-bar .static.navbar-nav .nav-item {
+      width: 60px;
     }
   }
 
   .warning .badge {
-    display:none;
+    display: none;
   }
 
   .warning p {

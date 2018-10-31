@@ -167,7 +167,7 @@ class NavBar extends Component {
               </Link>
             </div>
           </div>
-          <div className="static navbar-nav order-1 order-lg-2">
+          <div className="static navbar-nav order-1 order-lg-2 d-flex flex-row justify-content-end">
             <ConnectivityDropdown />
             <TransactionsDropdown />
             <MessagesDropdown />
