@@ -1,11 +1,21 @@
 {
-  "name": "origin-indexing",
-  "description": "Indexing servers.",
+  "name": "origin-discovery",
+  "description": "Origin event-listener and discovery server",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OriginProtocol/origin.git"
+  },
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "bugs": {
+    "url": "git+https://github.com/OriginProtocol/origin.git"
+  },
   "dependencies": {
     "apollo-server": "^2.1.0",
     "dotenv": "^6.1.0",
     "elasticsearch": "^15.1.1",
+    "envkey": "^1.2.2",
     "graphql": "^0.13.2",
     "http": "0.0.0",
     "origin": "^0.8.6",
