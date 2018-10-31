@@ -14,8 +14,8 @@ class DiscoveryService {
    * @private
    */
   async _query(graphQlQuery){
-    const url = this.discoveryServerUrl
-    const resp = await this.fetch(url, {
+    const resp = await this.fetch(
+      this.discoveryServerUrl, {
         method: 'POST',
         body: JSON.stringify({
           query: graphQlQuery
@@ -37,15 +37,67 @@ class DiscoveryService {
   }
 
   /**
-   * Queries back-end for all listings, with support for pagination.
+   * Issues a search request against the discovery server.
+   * @param searchQuery {string} general search query
+   * @param filters {object} object with properties: name, value, valueType, operator
+   * @returns {Promise<list(Objects)>}
+   */
+  async search(searchQuery, numberOfItems, offset, filters = []) {
+    // from page should be bigger than 0
+    offset = Math.max(offset, 0)
+    // clamp numberOfItems between 1 and 12
+    numberOfItems = Math.min(Math.max(numberOfItems, 1), 100)
+    const query = `
+    {
+      listings (
+        searchQuery: "${searchQuery}"
+        filters: [${filters
+      .map(filter => {
+        return `
+    {
+      name: "${filter.name}"
+      value: "${String(filter.value)}"
+      valueType: ${filter.valueType}
+      operator: ${filter.operator}
+    }
+    `
+      })
+      .join(',')}]
+        page:{
+          offset: ${offset}
+          numberOfItems: ${numberOfItems}
+        }
+      ) {
+        nodes {
+          id
+        }
+        offset
+        numberOfItems
+        totalNumberOfItems
+        stats {
+          maxPrice
+          minPrice
+        }
+      }
+    }`
+
+    return this._query(query)
+  }
+
+  /**
+   * Queries discovery server for all listings, with support for pagination.
    * @param opts: { idsOnly, listingsFor, purchasesFor, offset, numberOfItems }
    * @return {Promise<*>}
    */
   async listings(opts) {
     // Offset should be bigger than 0.
     const offset = Math.max(opts.offset || 0, 0)
-    // clamp numberOfItems between 1 and MAX_NUM_RESULTS.
-    const numberOfItems = Math.min(Math.max(opts.numberOfItems || 0, 1), MAX_NUM_RESULTS)
+
+    // For numberOfItems, any value between 1 and MAX_NUM_RESULTS is valid.
+    // Temporarily, while switching DApp to fetch data from back-end, we use -1 as
+    // a special value for requesting all listings. This will get deprecated in the future.
+    const numberOfItems =
+      opts.numberOfItems ? Math.min(Math.max(opts.numberOfItems, 1), MAX_NUM_RESULTS) : -1
 
     // TODO: pass listingsFor, purchasesFor as filters
     const query = `{
@@ -67,6 +119,23 @@ class DiscoveryService {
       return resp.data.listings.nodes.map(listing => listing.data)
     }
   }
+
+  /**
+   * Queries discovery server for a listing based on its id.
+   * @param listingId
+   * @return {Promise<*>}
+   */
+  async listing(listingId) {
+    const query = `{
+      listing(id: "${listingId}") {
+        id
+        data
+      }
+    }`
+    const resp = await this._query(query)
+    return resp.data.listing.data
+  }
+
 }
 
 export default DiscoveryService

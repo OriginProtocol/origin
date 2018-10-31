@@ -45,7 +45,6 @@ class Marketplace {
 
   async getListings(opts = {}) {
     if (this.decentralizedMode) {
-      // Use blockchain as source of data.
       const listingIds = await this.resolver.getListingIds(opts)
 
       if (opts.idsOnly) {
@@ -58,32 +57,34 @@ class Marketplace {
         })
       )
     } else {
-      // Use back-end as source of data.
-      return await this.discoveryService.getListings(opts)
+        return await this.discoveryService.listings(opts)
     }
   }
 
   /**
-   * Returns a Listing object based in its id.
+   * Returns a Listing object based on its id.
    * @param listingId
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
   async getListing(listingId) {
-    // Get the on-chain listing data.
-    const chainListing = await this.resolver.getListing(listingId)
+    if (this.decentralizedMode) {
+      // Get the on-chain listing data.
+      const chainListing = await this.resolver.getListing(listingId)
 
-    // Get the off-chain listing data from IPFS.
-    const ipfsHash = this.contractService.getIpfsHashFromBytes32(
-      chainListing.ipfsHash
-    )
-    const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
+      // Get the off-chain listing data from IPFS.
+      const ipfsHash = this.contractService.getIpfsHashFromBytes32(
+        chainListing.ipfsHash
+      )
+      const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
 
-    // Create and return a Listing from on-chain and off-chain data .
-    return new Listing(listingId, chainListing, ipfsListing)
+      // Create and return a Listing from on-chain and off-chain data .
+      return new Listing(listingId, chainListing, ipfsListing)
+
+    } else {
+      return await this.discoveryService.listing(listingId)
+    }
   }
-
-  // async getOffersCount(listingId) {}
 
   async getOffers(listingId, opts = {}) {
     const offerIds = await this.resolver.getOfferIds(listingId, opts)

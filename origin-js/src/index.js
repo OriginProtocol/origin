@@ -1,4 +1,5 @@
 import ContractService from './services/contract-service'
+import DiscoveryService from './services/discovery-service'
 import IpfsService from './services/ipfs-service'
 import { Attestations } from './resources/attestations'
 import Marketplace from './resources/marketplace'
@@ -36,7 +37,8 @@ class Origin {
     messagingNamespace,
     blockEpoch,
     blockAttestattionV1,
-    ethereum
+    ethereum,
+    decentralizedMode
   } = {}) {
     this.version = VERSION
 
@@ -50,7 +52,7 @@ class Origin {
       ipfsGatewayPort,
       ipfsGatewayProtocol
     })
-    this.discoveryService = new DiscoveryService(discoveryServerUrl, fetch)
+    this.discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
 
     //
     // Resources (External, exposed to the Origin client).
@@ -64,17 +66,16 @@ class Origin {
 
     this.marketplace = new Marketplace({
       contractService: this.contractService,
+      discoveryService: this.discoveryService,
       ipfsService: this.ipfsService,
       affiliate,
       arbitrator,
       store,
-      blockEpoch
+      blockEpoch,
+      decentralizedMode: false // FIXME: FRANCK REMOVE HARDCODED VALUE
     })
 
-    this.discovery = new Discovery({
-      discoveryServerUrl,
-      fetch
-    })
+    this.discovery = new Discovery({ discoveryService: this.discoveryService })
 
     this.users = new Users({
       contractService: this.contractService,

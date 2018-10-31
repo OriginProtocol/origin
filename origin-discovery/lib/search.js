@@ -80,10 +80,11 @@ class Listing {
    * @param {array} filters - Array of filter objects
    * @param {integer} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
+   * @param {boolean} idsOnly - only returns listing Ids vs a listing object.
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(query, filters, numberOfItems, offset) {
+  static async search(query, filters, numberOfItems, offset, idsOnly) {
     const esQuery = {
       bool: {
         must: [{
@@ -178,6 +179,11 @@ class Listing {
       }
     }
 
+    // FIXME: This is temporary while switching DApp to use
+    // a paginated interface to fetch listings.
+    if (numberOfItems === -1) {
+      numberOfItems = 1000
+    }
     const searchRequest = client.search({
       index: LISTINGS_INDEX,
       type: LISTINGS_TYPE,
@@ -219,13 +225,17 @@ class Listing {
 
     const maxPrice = aggregationResponse.aggregations.max_price.value
     const minPrice = aggregationResponse.aggregations.min_price.value
-    const totalNumberOfListings = searchResponse.hits.total
-
-    return {
-      listings,
-      totalNumberOfListings,
+    const stats = {
       maxPrice: maxPrice ? maxPrice : 0,
-      minPrice: minPrice ? minPrice : 0
+      minPrice: minPrice ? minPrice : 0,
+      totalNumberOfListings: searchResponse.hits.total
+    }
+
+    if (idsOnly) {
+      const listingIds = listings.map(listing => listing.id)
+      return { listingIds, stats}
+    } else {
+      return { listings, stats}
     }
   }
 }
