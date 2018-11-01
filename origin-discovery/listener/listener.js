@@ -1,5 +1,9 @@
 require('dotenv').config()
-require('envkey')
+try {
+  require('envkey')
+} catch (error) {
+  console.log('EnvKey not configured')
+}
 
 const fs = require('fs')
 const http = require('http')
