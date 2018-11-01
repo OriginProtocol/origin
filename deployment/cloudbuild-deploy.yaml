@@ -22,14 +22,13 @@ steps:
   # Decrypt the secrest file for the current namespace
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'sh'
-    env:
-      - '_VALUES_PATH=./deployment/kubernetes/values/'
     args:
       - '-c'
       - |
+        _VALUES_PATH=./deployment/kubernetes/values
         gcloud kms decrypt \
-          --ciphertext-file=${_VALUES_PATH}/secrets-$(cat .namespace).enc \
-          --plaintext-file=${_VALUES_PATH}/secrets-$(cat .namespace).yaml \
+          --ciphertext-file=$${_VALUES_PATH}/secrets-$(cat .namespace).enc \
+          --plaintext-file=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml \
           --location=global \
           --keyring=origin \
           --key=cloudbuild
@@ -66,9 +65,8 @@ steps:
 
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'sh'
-    env:
-      - '_VALUES_PATH=./deployment/kubernetes/values/'
+    # Must use bash here due to if statement/string cmp
+    entrypoint: '/bin/bash'
     args:
       - '-c'
       - |
@@ -76,10 +74,11 @@ steps:
         # the Docker container to build origin-dapp using webpack with the
         # config for the deployment namespace
         if [[ "${_CONTAINER}" == "origin-dapp" ]]; then
-          SECRETS_FILE=${_VALUES_PATH}/secrets-$(cat .namespace).yaml
-          ENVKEY=$(cat ${_SECRETS_FILE} | grep dappEnvKey | cut -d " " -f 2)
+          _VALUES_PATH=./deployment/kubernetes/values
+          _SECRETS_FILE=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml
+          _ENVKEY=$(cat $${_SECRETS_FILE} | grep dappEnvKey | cut -d " " -f 2)
         else
-          ENVKEY=false
+          _ENVKEY=false
         fi
 
         # Build container
@@ -87,7 +86,7 @@ steps:
           -f deployment/dockerfiles/${_CONTAINER} \
           -t gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA} \
           --build-arg DEPLOY_TAG=${SHORT_SHA} \
-          --build-arg ENVKEY=${ENVKEY} \
+          --build-arg ENVKEY=$${_ENVKEY} \
           .
 
   # Push the origin-dapp container image
@@ -123,6 +122,7 @@ steps:
           "s|^${_IMAGE_TAG_FIELD}: .*|${_IMAGE_TAG_FIELD}: '${SHORT_SHA}'|g" \
           deployment/kubernetes/values/values-$(cat .namespace).yaml
 
+        git remote set-url origin git@github.com:OriginProtocol/origin.git
         git add deployment/kubernetes/values/values-$(cat .namespace).yaml
         git commit -m 'Update deployed image tags'
         git push --set-upstream origin master
