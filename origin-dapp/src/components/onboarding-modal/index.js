@@ -15,6 +15,7 @@ import { getOgnBalance } from 'actions/Wallet'
 import Modal from 'components/modal'
 
 import { getListing } from 'utils/listing'
+import isMobile from 'utils/mobile'
 
 import SplitPanel from './split-panel'
 import steps from './steps'
@@ -132,6 +133,8 @@ class OnboardingModal extends Component {
       onboarding: { blocked, currentStep, learnMore, splitPanel }
     } = this.props
 
+    const onMobileDevice = isMobile()
+
     const learnMoreContent = (
       <Fragment>
         <div className="text-right">
@@ -173,7 +176,7 @@ class OnboardingModal extends Component {
       </Fragment>
     )
 
-    return blocked ? null : (
+    return (blocked || onMobileDevice) ? null : (
       <div className="onboarding">
         {learnMore && (
           <Modal
@@ -183,7 +186,7 @@ class OnboardingModal extends Component {
             backdrop={false}
           />
         )}
-        {splitPanel && (
+        {(splitPanel && !onMobileDevice) && (
           <div className="split-container d-flex align-items-center justify-content-center">
             <SplitPanel
               isOpen={true}
