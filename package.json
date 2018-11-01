@@ -3,5 +3,8 @@
   "private": true,
   "devDependencies": {
     "lerna": "^3.4.3"
+  },
+  "scripts": {
+    "lerna": "./node_modules/.bin/lerna bootstrap"
   }
 }
