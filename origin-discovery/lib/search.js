@@ -202,7 +202,7 @@ class Listing {
       }
     })
 
-    const [searchResponse, aggregationResponse] = await Promise.all([searchRequest, aggregationRequest])  
+    const [searchResponse, aggregationResponse] = await Promise.all([searchRequest, aggregationRequest])
     const listings = []
     searchResponse.hits.hits.forEach((hit) => {
       const listing = {
@@ -234,7 +234,7 @@ class Offer {
   /**
    * Indexes an Offer
    * @param {object} offer - JSON offer data from origin.js
-   * @throws Throws an error if indexing operation failed. 
+   * @throws Throws an error if indexing operation failed.
    */
   static async index(offer, listing){
     const resp = await client.index({
@@ -291,7 +291,7 @@ class Offer {
 class User {
   /**
    * Indexes a user
-   * @param {object} user - JSON user data from origin.js 
+   * @param {object} user - JSON user data from origin.js
    */
   static async index(user){
     const profile = user.profile || {}
