@@ -28,6 +28,8 @@ spec:
             secretKeyRef:
               name: {{ template "eventlistener.fullname" . }}
               key: ENVKEY
+        - name: NAMESPACE
+          value: {{ .Release.Namespace | quote }}
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",
