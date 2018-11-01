@@ -76,11 +76,11 @@ steps:
         # the Docker container to build origin-dapp using webpack with the
         # config for the deployment namespace
         if [[ "${_CONTAINER}" == "origin-dapp" ]]; then
-          SECRETS_FILE=
-          ENVKEY=$(cat ${_VALUES_PATH}/secrets-$(cat .namespace).yaml | grep dappEnvKey | cut -d " " -f 2)
+          SECRETS_FILE=${_VALUES_PATH}/secrets-$(cat .namespace).yaml
+          ENVKEY=$(cat ${_SECRETS_FILE} | grep dappEnvKey | cut -d " " -f 2)
         else
           ENVKEY=false
-        end
+        fi
 
         # Build container
         docker build \
