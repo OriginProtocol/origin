@@ -21,7 +21,7 @@ const env = {
   BRIDGE_SERVER_PROTOCOL: 'https',
   CONTRACT_ADDRESSES: '{}',
   DEPLOY_TAG: false,
-  DISCOVERY_SERVER_URL: 'discovery.originprotocol.com',
+  DISCOVERY_SERVER_URL: 'https://discovery.originprotocol.com',
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
   IMAGE_MAX_SIZE: null,
