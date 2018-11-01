@@ -121,7 +121,7 @@ const server = http.createServer((req, res) => {
   } else if (req.url.startsWith('/ipfs')) {
     handleFileDownload(req, res)
   } else {
-    req.writeHead(404, { 'Connection': 'close' })
+    res.writeHead(404, { 'Connection': 'close' })
     res.end()
   }
 }).listen(config.IPFS_PROXY_PORT, config.IPFS_PROXY_ADDRESS)

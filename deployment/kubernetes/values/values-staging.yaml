@@ -28,7 +28,7 @@ faucetImageTag: '13d0e21'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '0a36fe4'
+eventlistenerImageTag: '7dfaa5d'
 eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
 eventlistenerContinueBlock: 3000000
 
@@ -39,3 +39,7 @@ discoveryImageTag: '4aa5387'
 # origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: '4aa5387'
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: 'latest'
