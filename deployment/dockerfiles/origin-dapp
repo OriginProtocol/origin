@@ -1,6 +1,6 @@
 # --- Origin.js
 
-FROM node:9 as origin-js-build
+FROM node:8 as origin-js-build
 
 COPY ./origin-js /app
 WORKDIR /app
@@ -11,7 +11,7 @@ RUN npm run build
 
 # --- DApp
 
-FROM node:9 as build
+FROM node:8 as build
 
 ARG DEPLOY_TAG
 ARG ENVKEY
