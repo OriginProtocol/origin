@@ -21,18 +21,18 @@ module.exports = {
             keys: {
               type: Sequelize.HSTORE
             },
-            expirationTime: {
+            expiration_time: {
               type: Sequelize.DATE
             },
             // not unique!
             account: {
               type: Sequelize.STRING
             },
-            createdAt: {
+            created_at: {
               allowNull: false,
               type: Sequelize.DATE
             },
-            updatedAt: {
+            updated_at: {
               allowNull: false,
               type: Sequelize.DATE
             }
