@@ -1,7 +1,8 @@
 {
   "packages": [
     "origin-js",
-    "origin-dapp"
+    "origin-dapp",
+    "origin-contracts"
   ],
   "version": "independent"
 }

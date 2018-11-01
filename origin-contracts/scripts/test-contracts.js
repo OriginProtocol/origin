@@ -7,13 +7,11 @@ const testContracts = () => {
   return new Promise((resolve, reject) => {
     const args = [
       '-r',
-      'babel-register',
-      '-r',
-      'babel-polyfill',
+      '@babel/register',
       '-t',
       '10000',
       '--exit',
-      'contracts/test-alt/'
+      'test-alt'
     ]
     const contractTest = spawn('./node_modules/.bin/mocha', args)
     contractTest.stdout.pipe(process.stdout)

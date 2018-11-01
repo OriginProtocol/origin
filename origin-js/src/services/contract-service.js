@@ -1,12 +1,12 @@
-import ClaimHolderRegistered from './../../contracts/build/contracts/ClaimHolderRegistered.json'
-import ClaimHolderPresigned from './../../contracts/build/contracts/ClaimHolderPresigned.json'
-import ClaimHolderLibrary from './../../contracts/build/contracts/ClaimHolderLibrary.json'
-import KeyHolderLibrary from './../../contracts/build/contracts/KeyHolderLibrary.json'
-import V00_UserRegistry from './../../contracts/build/contracts/V00_UserRegistry.json'
-import OriginIdentity from './../../contracts/build/contracts/OriginIdentity.json'
-import OriginToken from './../../contracts/build/contracts/OriginToken.json'
+import ClaimHolderRegistered from 'origin-contracts/build/contracts/ClaimHolderRegistered.json'
+import ClaimHolderPresigned from 'origin-contracts/build/contracts/ClaimHolderPresigned.json'
+import ClaimHolderLibrary from 'origin-contracts/build/contracts/ClaimHolderLibrary.json'
+import KeyHolderLibrary from 'origin-contracts/build/contracts/KeyHolderLibrary.json'
+import V00_UserRegistry from 'origin-contracts/build/contracts/V00_UserRegistry.json'
+import OriginIdentity from 'origin-contracts/build/contracts/OriginIdentity.json'
+import OriginToken from 'origin-contracts/build/contracts/OriginToken.json'
 
-import V00_Marketplace from './../../contracts/build/contracts/V00_Marketplace.json'
+import V00_Marketplace from 'origin-contracts/build/contracts/V00_Marketplace.json'
 
 import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
@@ -274,7 +274,7 @@ class ContractService {
       }
 
       const currentBlockNumber = await this.web3.eth.getBlockNumber()
-      // Math.max to prevent the -1 confirmation on Rinkeby. 
+      // Math.max to prevent the -1 confirmation on Rinkeby.
       const confirmations = Math.max(0, currentBlockNumber - transactionReceipt.blockNumber)
       if (confirmationCallback !== undefined)
         confirmationCallback(confirmations, transactionReceipt)

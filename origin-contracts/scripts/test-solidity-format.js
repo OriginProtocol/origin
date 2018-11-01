@@ -4,7 +4,7 @@ const testSolidityFormat = () => {
   return new Promise((resolve, reject) => {
     const solium = spawn('./node_modules/.bin/solium', [
       '-d',
-      'contracts/contracts/'
+      'contracts/'
     ])
     solium.stdout.pipe(process.stdout)
     solium.on('exit', code => {

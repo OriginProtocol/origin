@@ -13,9 +13,7 @@ const testContracts = () => {
       console.log('running ' + testFile)
       truffleArgs = ['test', 'test/' + testFile, '--compile-all']
     }
-    const truffleTest = spawn('../node_modules/.bin/truffle', truffleArgs, {
-      cwd: './contracts'
-    })
+    const truffleTest = spawn('./node_modules/.bin/truffle', truffleArgs)
     truffleTest.stdout.pipe(process.stdout)
     truffleTest.stderr.on('data', data => {
       reject(String(data))

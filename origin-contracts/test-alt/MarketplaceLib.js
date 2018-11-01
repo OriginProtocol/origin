@@ -1,9 +1,8 @@
-
 import assert from 'assert'
 
 import helper, { contractPath } from './_helper'
 import MarketplaceJson from '../build/contracts/V00_Marketplace'
-import Marketplace from '../../../origin-faucet/lib/marketplace'
+import Marketplace from '../lib/marketplace'
 
 // These tests are for the token library that the token CLI uses. We don't
 // validate the effects of various operations. That is left to the contract

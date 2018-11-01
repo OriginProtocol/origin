@@ -7,7 +7,7 @@ const fs = require('fs-extra')
  */
 const copyReleaseCompiledContracts = (dstDir) => {
   // Get list of release directories.
-  let dirs = fs.readdirSync('contracts/releases')
+  let dirs = fs.readdirSync('releases')
   dirs = dirs.filter(dir => (/^\d+\.\d+\.\d+$/.test(dir)))
 
   // Get latest release directory.
@@ -19,7 +19,7 @@ const copyReleaseCompiledContracts = (dstDir) => {
   }
 
   // Copy compiled contract files from latest release to the build directory.
-  const srcDir = `contracts/releases/${latestVersion}/build/contracts`
+  const srcDir = `releases/${latestVersion}/build/contracts`
   fs.copySync(srcDir, dstDir)
   console.log(chalk.green(`Copied compiled contracts from ${srcDir} to ${dstDir}`))
 }
@@ -27,7 +27,7 @@ const copyReleaseCompiledContracts = (dstDir) => {
 const copyIfNecessary = () => {
   // If the contract build directory does not exist or is empty,
   // copy the compiled contract files from the latest release into it.
-  const dstDir = 'contracts/build/contracts'
+  const dstDir = 'build/contracts'
   if (fs.pathExistsSync(dstDir) && fs.readdirSync(dstDir).length > 0) {
     console.log('Contracts build directory already exists and not empty, skipping copy.')
   } else {

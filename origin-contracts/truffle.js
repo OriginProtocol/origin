@@ -2,7 +2,6 @@ const HDWalletProvider = require("truffle-hdwallet-provider")
 const PrivateKeyProvider = require('truffle-privatekey-provider')
 const NonceTrackerSubprovider = require("web3-provider-engine/subproviders/nonce-tracker")
 
-
 // How many addresses in wallet should we unlock?
 // (For deploying test data, we use other addresses as buyers and sellers)
 // Note: This is not used for Mainnet - only for Testnet and local deployment.
@@ -11,13 +10,6 @@ const numAddressesToUnlock = 4
 // Local setup
 truffleSetup = {
   migrations_directory: "./migrations",
-  mocha: {
-    reporter: 'eth-gas-reporter',
-    reporterOptions : {
-      currency: 'USD',
-      onlyCalledMethods: true
-    }
-  },
   networks: {
     development: {
       host: "localhost",
@@ -118,7 +110,7 @@ if (process.env.ORIGIN_MNEMONIC) {
 
 // These are needed to use ES2015+ syntax, such as import. The token tests
 // imported from OpenZeppelin need these.
-require('babel-register')
+require('@babel/register')
 require('babel-polyfill')
 
 module.exports = truffleSetup

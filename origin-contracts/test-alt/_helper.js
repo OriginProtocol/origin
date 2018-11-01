@@ -103,10 +103,10 @@ export default async function testHelper(contracts, provider) {
       }
 
       const LibContract = new web3.eth.Contract(libObj.abi)
-      const gas = solidityCoverage ? 3000000 * 3 : 3000000
+      const gas = solidityCoverage ? 3000000 * 5 : 3000000
       const libContract = await LibContract.deploy({
         data: libObj.evm.bytecode.object
-      }).send({ from, gas: gas })
+      }).send({ from, gas })
       const libs = { [`${linkedFile}:${linkedLib}`]: libContract._address }
       return linker.linkBytecode(bytecode.object, libs)
     }
@@ -188,7 +188,7 @@ export default async function testHelper(contracts, provider) {
 
     if (contract) {
       // Set some default options on the contract
-      contract.options.gas = 1500000
+      contract.options.gas = solidityCoverage ? 1500000 * 5 : 1500000
       contract.options.from = from
     }
 
