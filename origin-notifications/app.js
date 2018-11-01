@@ -78,7 +78,9 @@ app.all((req, res, next) => {
     })
 })
 
-app.use(bodyParser.json())
+// Note: bump up default payload max size since the event-listener posts
+// payload that may contain user profile with b64 encoded profile picture.
+app.use(bodyParser.json({limit: '10mb'}))
 
 app.get('/', async (req, res) => {
   let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
