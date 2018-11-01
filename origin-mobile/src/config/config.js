@@ -9,7 +9,10 @@ module.exports = {
     },
     'test': {
       'use_env_variable':'DATABASE_URL',
-      operatorsAliases: false
+      define: {
+        freezeTableName: true,
+        underscored: true
+      }
     },
     'production': {
       'use_env_variable':'DATABASE_URL',
