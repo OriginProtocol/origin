@@ -63,7 +63,8 @@ class ListingsDetail extends Component {
       boostLevel: null,
       boostValue: 0,
       onboardingCompleted: false,
-      slotsToReserve: []
+      slotsToReserve: [],
+      featuredImageIdx: 0
     }
 
     this.intlMessages = defineMessages({
@@ -77,6 +78,7 @@ class ListingsDetail extends Component {
     this.loadListing = this.loadListing.bind(this)
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
+    this.setFeaturedImage = this.setFeaturedImage.bind(this)
   }
 
   async handleBuyClicked() {
@@ -252,6 +254,12 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.VIEW })
   }
 
+  setFeaturedImage(idx) {
+    this.setState({
+      featuredImageIdx: idx
+    })
+  }
+
   render() {
     const { featuredListingIds, listingId, web3Account } = this.props
     const {
@@ -267,7 +275,8 @@ class ListingsDetail extends Component {
       seller,
       status,
       step,
-      schemaType
+      schemaType,
+      featuredImageIdx
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -445,21 +454,11 @@ class ListingsDetail extends Component {
             </div>
           </Modal>
         )}
-        {(loading || (pictures && !!pictures.length)) && (
-          <div className="carousel">
-            {pictures.map(pictureUrl => (
-              <div className="photo" key={pictureUrl}>
-                <img src={pictureUrl} role="presentation" />
-              </div>
-            ))}
-          </div>
-        )}
-
         <div
           className={`container listing-container${loading ? ' loading' : ''}`}
         >
           <div className="row">
-            <div className="col-12 col-md-8 detail-info-box">
+            <div className="col-12">
               <div className="category placehold d-flex">
                 <div>{category}</div>
                 {!loading && (
@@ -479,6 +478,29 @@ class ListingsDetail extends Component {
                 )}
               </div>
               <h1 className="title placehold">{name}</h1>
+            </div>
+            <div className="col-12 col-md-8 detail-info-box">
+              {(loading || (pictures && !!pictures.length)) && (
+                <div className="image-wrapper">
+                  <img
+                    className="featured-image"
+                    src={pictures[featuredImageIdx]}
+                  />
+                  {pictures.length > 1 &&
+                    <div className="photo-row">
+                      {pictures.map((pictureUrl, idx) => (
+                        <img
+                          onClick={() => this.setFeaturedImage(idx)}
+                          src={pictureUrl}
+                          key={idx}
+                          role="presentation"
+                          className={featuredImageIdx === idx ? 'featured-thumb' : ''}
+                        />
+                      ))}
+                    </div>
+                  }
+                </div>
+              )}
               <p className="ws-aware description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
               {/*!!unitsRemaining && unitsRemaining < 5 &&

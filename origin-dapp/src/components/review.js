@@ -29,7 +29,7 @@ class Review extends Component {
             />
             <div className="identification d-flex flex-column justify-content-center text-truncate">
               <div className="name">{fullName || <UnnamedUser />}</div>
-              <div className="address text-muted text-truncate">{address}</div>
+              <div className="address text-muted text-truncate" title={address}>{address}</div>
             </div>
             <div className="rating d-flex flex-column justify-content-center text-right">
               <div className="stars">
