@@ -17,6 +17,9 @@ spec:
       labels:
         app: {{ template "eventlistener.fullname" . }}
         release: "{{ .Release.Name }}"
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9499'
     spec:
       containers:
       - name: event-listener
