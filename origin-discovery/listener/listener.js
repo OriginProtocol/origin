@@ -5,15 +5,34 @@ try {
   console.log('EnvKey not configured')
 }
 
+const express = require('express')
 const fs = require('fs')
 const http = require('http')
 const https = require('https')
+const promBundle = require("express-prom-bundle");
 const urllib = require('url')
 const Origin = require('origin')
 const Web3 = require('web3')
 
 const search = require('../lib/search.js')
 const db = require('../models')
+
+// Create an express server for Prometheus to scrape metrics
+const app = express();
+const bundle = promBundle({
+  includeMethod: true,
+  promClient: {
+    collectDefaultMetrics: {
+      timeout: 1000
+    }
+  }
+})
+app.use(bundle)
+
+const blockGauge = new bundle.promClient.Gauge({
+  name: 'event_listener_last_block',
+  help: 'The last block processed by the event listener'}
+)
 
 // Origin Listener
 // ---------------
@@ -191,6 +210,7 @@ async function liveTracking(config) {
         return scheduleNextCheck()
       }
       console.log('New block: ' + currentBlockNumber)
+      blockGauge.set(currentBlockNumber)
       const toBlock = Math.min( // Pick the smallest of either
         // the last log we processed, plus the max batch size
         lastLogBlock + MAX_BATCH_BLOCKS,
@@ -728,5 +748,8 @@ const config = {
   ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
 }
 
-// Start the listener running
-liveTracking(config)
+
+app.listen({ port: 9499 }, () =>
+  // Start the listener running
+  liveTracking(config)
+)
