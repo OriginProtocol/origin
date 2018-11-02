@@ -7,7 +7,7 @@ bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '88a581c'
+dappImageTag: '6ddce7c'
 dappReplicas: 2
 
 # Mainnet nodes
@@ -21,7 +21,7 @@ faucetImage: origin-faucet
 faucetImageTag: '28438d2'
 
 eventlistenerImage: event-listener
-eventlistenerImageTag: '88a581c'
+eventlistenerImageTag: '6ddce7c'
 eventlistenerWeb3Url: https://mainnet.infura.io/emIXjs9eDuy57IlTYsIP
 eventlistenerContinueBlock: 6425000
 
@@ -34,4 +34,4 @@ messagingImageTag: '3104d23'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'latest'
+notificationsImageTag: '6ddce7c'
