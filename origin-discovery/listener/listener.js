@@ -9,7 +9,7 @@ const express = require('express')
 const fs = require('fs')
 const http = require('http')
 const https = require('https')
-const promBundle = require("express-prom-bundle");
+const promBundle = require('express-prom-bundle')
 const urllib = require('url')
 const Origin = require('origin')
 const Web3 = require('web3')
@@ -18,7 +18,7 @@ const search = require('../lib/search.js')
 const db = require('../models')
 
 // Create an express server for Prometheus to scrape metrics
-const app = express();
+const app = express()
 const bundle = promBundle({
   includeMethod: true,
   promClient: {
@@ -31,8 +31,8 @@ app.use(bundle)
 
 const blockGauge = new bundle.promClient.Gauge({
   name: 'event_listener_last_block',
-  help: 'The last block processed by the event listener'}
-)
+  help: 'The last block processed by the event listener'
+})
 
 // Origin Listener
 // ---------------
@@ -75,8 +75,8 @@ const getListingDetails = async log => {
   let seller = undefined
   try {
     seller = await o.users.get(listing.seller)
-  } catch(e) {
-    console.log("Failed to fetch seller", e)
+  } catch (e) {
+    console.log('Failed to fetch seller', e)
     // If fetching the seller fails, we still want to index the listing
   }
   return {
@@ -92,15 +92,15 @@ const getOfferDetails = async log => {
   let buyer = undefined
   try {
     seller = await o.users.get(listing.seller)
-  } catch(e) {
+  } catch (e) {
     // If fetching the seller fails, we still want to index the listing/offer
-    console.log("Failed to fetch seller", e)
+    console.log('Failed to fetch seller', e)
   }
   try {
     buyer = await o.users.get(offer.buyer)
-  } catch(e) {
+  } catch (e) {
     // If fetching the buyer fails, we still want to index the listing/offer
-    console.log("Failed to fetch buyer", e)
+    console.log('Failed to fetch buyer', e)
   }
   return {
     listing: listing,
@@ -153,7 +153,7 @@ const OFFER_EVENTS = [
 /**
  * setup Origin JS according to the config.
  */
-function setupOriginJS(config){
+function setupOriginJS(config) {
   const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
   // global
   web3 = new Web3(web3Provider)
@@ -172,13 +172,15 @@ function setupOriginJS(config){
 
   // Issue a warning for any recommended env var that is not set.
   if (!process.env.BLOCK_EPOCH) {
-    console.log('WARNING: For performance reasons it is recommended to set BLOCK_EPOCH')
+    console.log(
+      'WARNING: For performance reasons it is recommended to set BLOCK_EPOCH'
+    )
   }
 
   // global
   o = new Origin({
     ipfsDomain: ipfsUrl.hostname,
-    ipfsGatewayProtocol: ipfsUrl.protocol.replace(':',''),
+    ipfsGatewayProtocol: ipfsUrl.protocol.replace(':', ''),
     ipfsGatewayPort: ipfsUrl.port,
     arbitrator: process.env.ARBITRATOR_ACCOUNT,
     affiliate: process.env.AFFILIATE_ACCOUNT,
@@ -211,11 +213,12 @@ async function liveTracking(config) {
       }
       console.log('New block: ' + currentBlockNumber)
       blockGauge.set(currentBlockNumber)
-      const toBlock = Math.min( // Pick the smallest of either
+      const toBlock = Math.min(
+        // Pick the smallest of either
         // the last log we processed, plus the max batch size
         lastLogBlock + MAX_BATCH_BLOCKS,
-         // or the current block number, minus any trailing blocks we waiting on
-        Math.max(currentBlockNumber - config.trailBlocks, 0),
+        // or the current block number, minus any trailing blocks we waiting on
+        Math.max(currentBlockNumber - config.trailBlocks, 0)
       )
       const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
       await runBatch(opts, context)
@@ -245,7 +248,7 @@ async function getLastBlock(config) {
     if (!fs.existsSync(config.continueFile)) {
       throw new Error(`Error: continue file ${config.continueFile} not found.`)
     }
-    const json = fs.readFileSync(config.continueFile, {encoding: 'utf8'})
+    const json = fs.readFileSync(config.continueFile, { encoding: 'utf8' })
     const data = JSON.parse(json)
     if (!data.lastLogBlock) {
       throw new Error(`Error: invalid format for continue file.`)
@@ -274,7 +277,7 @@ async function setLastBlock(config, blockNumber) {
     const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
     fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
   } else {
-    await db.Listener.insertOrUpdate({id: config.listenerId, blockNumber})
+    await db.Listener.insertOrUpdate({ id: config.listenerId, blockNumber })
   }
 }
 
@@ -293,7 +296,7 @@ async function runBatch(opts, context) {
   const eventTopics = Object.keys(context.signatureToRules)
   const logs = await web3.eth.getPastLogs({
     fromBlock: web3.utils.toHex(fromBlock), // Hex required for infura
-    toBlock: toBlock ? web3.utils.toHex(toBlock) : "latest",  // Hex required for infura
+    toBlock: toBlock ? web3.utils.toHex(toBlock) : 'latest', // Hex required for infura
     topics: [eventTopics]
   })
 
@@ -322,7 +325,7 @@ async function runBatch(opts, context) {
  * Retrys up to N times, with exponential backoff.
  * If still failing after N times, exits the process.
  */
-async function withRetrys(fn, exitOnError=true) {
+async function withRetrys(fn, exitOnError = true) {
   let tryCount = 0
   while (true) {
     try {
@@ -373,7 +376,7 @@ async function handleLog(log, rule, contractVersion, context) {
     block = await web3.eth.getBlock(log.blockNumber)
   })
   log.timestamp = block.timestamp
-  log.date = new Date(log.timestamp*1000)
+  log.date = new Date(log.timestamp * 1000)
 
   const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
@@ -393,7 +396,7 @@ async function handleLog(log, rule, contractVersion, context) {
         topic2: log.topics[2],
         topic3: log.topics[3],
         data: log,
-        createdAt: log.date,
+        createdAt: log.date
       })
     })
   }
@@ -406,8 +409,8 @@ async function handleLog(log, rule, contractVersion, context) {
   try {
     await withRetrys(async () => {
       ruleResults = await rule.ruleFn(log)
-    }, exitOnError = false)
-  } catch(e) {
+    }, (exitOnError = false))
+  } catch (e) {
     console.log(`Skipping indexing for ${logDetails} - ${e}`)
     return
   }
@@ -442,7 +445,7 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   // TODO: This kind of verification logic should live in origin.js
-  if(output.related.listing.ipfs.data.price === undefined){
+  if (output.related.listing.ipfs.data.price === undefined) {
     console.log(`ERROR: listing ${listingId} has no price. Skipping indexing.`)
     return
   }
@@ -450,12 +453,7 @@ async function handleLog(log, rule, contractVersion, context) {
   if (context.config.elasticsearch) {
     console.log(`Indexing listing in Elastic: id=${listingId}`)
     await withRetrys(async () => {
-      await search.Listing.index(
-        listingId,
-        userAddress,
-        ipfsHash,
-        listing
-      )
+      await search.Listing.index(listingId, userAddress, ipfsHash, listing)
     })
     if (output.related.offer !== undefined) {
       const offer = output.related.offer
@@ -487,7 +485,7 @@ async function handleLog(log, rule, contractVersion, context) {
         id: listingId,
         status: listing.status,
         sellerAddress: listing.seller.toLowerCase(),
-        data: listing,
+        data: listing
       }
       if (rule.eventName === 'ListingCreated') {
         listingData.createdAt = log.date
@@ -526,19 +524,21 @@ async function handleLog(log, rule, contractVersion, context) {
     try {
       await withRetrys(async () => {
         await postToWebhook(context.config.webhook, json)
-      }, exitOnError=false)
-    } catch(e) {
+      }, (exitOnError = false))
+    } catch (e) {
       console.log(`Skipping webhook for ${logDetails}`)
     }
   }
 
   if (context.config.discordWebhook) {
-    console.log('\n-- Discord WEBHOOK to ' + context.config.discordWebhook + ' --')
+    console.log(
+      '\n-- Discord WEBHOOK to ' + context.config.discordWebhook + ' --'
+    )
     try {
       await withRetrys(async () => {
         postToDiscordWebhook(context.config.discordWebhook, output)
-      }, exitOnError=false)
-    } catch(e) {
+      }, (exitOnError = false))
+    } catch (e) {
       console.log(`Skipping discord webhook for ${logDetails}`)
     }
   }
@@ -549,7 +549,7 @@ async function handleLog(log, rule, contractVersion, context) {
  * This functionality should move out of the listener
  * to the notification system, as soon as we have one.
  */
- async function postToDiscordWebhook(discordWebhookUrl, data){
+async function postToDiscordWebhook(discordWebhookUrl, data) {
   const eventIcons = {
     ListingCreated: ':trumpet:',
     ListingUpdated: ':saxophone:',
@@ -565,17 +565,17 @@ async function handleLog(log, rule, contractVersion, context) {
     OfferData: ':beetle:'
   }
 
-  const personDisp = (p)=> {
+  const personDisp = p => {
     let str = ''
-    if(p.profile && (p.profile.firstName || p.profile.lastName)){
-      str += `${p.profile.firstName|''} ${p.profile.lastName||''} - `
+    if (p.profile && (p.profile.firstName || p.profile.lastName)) {
+      str += `${p.profile.firstName | ''} ${p.profile.lastName || ''} - `
     }
     str += p.address
     return str
   }
-  const priceDisp = (listing) => {
+  const priceDisp = listing => {
     const price = listing.price
-    return (price ? `${price.amount}${price.currency}` : '')
+    return price ? `${price.amount}${price.currency}` : ''
   }
 
   const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
@@ -584,36 +584,43 @@ async function handleLog(log, rule, contractVersion, context) {
 
   let discordData = {}
 
-  if (data.related.offer !== undefined) { // Offer
+  if (data.related.offer !== undefined) {
+    // Offer
     discordData = {
-      "embeds":[
+      embeds: [
         {
-          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
-          "description":[
-            `https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,
+          title: `${icon} ${data.log.eventName} - ${
+            listing.title
+          } - ${priceDisp(listing)}`,
+          description: [
+            `https://dapp.originprotocol.com/#/purchases/${
+              data.related.offer.id
+            }`,
             `Seller: ${personDisp(data.related.seller)}`,
             `Buyer: ${personDisp(data.related.buyer)}`
-          ].join("\n")
+          ].join('\n')
         }
       ]
     }
-  } else { // Listing
+  } else {
+    // Listing
     discordData = {
-      "embeds":[
+      embeds: [
         {
-          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
-          "description":[
-            `${listing.description.split("\n")[0].slice(0, 60)}...`,
+          title: `${icon} ${data.log.eventName} - ${
+            listing.title
+          } - ${priceDisp(listing)}`,
+          description: [
+            `${listing.description.split('\n')[0].slice(0, 60)}...`,
             `https://dapp.originprotocol.com/#/listing/${listing.id}`,
-            `Seller: ${personDisp(data.related.seller)}`,
-          ].join("\n")
+            `Seller: ${personDisp(data.related.seller)}`
+          ].join('\n')
         }
       ]
     }
   }
   await postToWebhook(discordWebhookUrl, JSON.stringify(discordData))
- }
-
+}
 
 /**
  * Sends a blob of json to a webhook.
@@ -633,14 +640,14 @@ async function postToWebhook(urlString, json) {
   return new Promise((resolve, reject) => {
     const client = url.protocol === 'https:' ? https : http
     const req = client.request(postOptions, res => {
-      console.log(res.statusCode )
+      console.log(res.statusCode)
       if (res.statusCode === 200 || res.statusCode === 204) {
         resolve()
       } else {
         reject()
       }
     })
-    req.on('error', (err) => {
+    req.on('error', err => {
       reject(err)
     })
     req.write(json)
@@ -769,11 +776,13 @@ const config = {
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
-  trailBlocks: args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0,
+  trailBlocks:
+    args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0,
   // web3 provider url
-  web3Url: args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
+  web3Url:
+    args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
   // ipfs url
-  ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
+  ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080'
 }
 
 const port = 9499
