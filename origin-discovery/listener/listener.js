@@ -508,14 +508,24 @@ async function handleLog(log, rule, contractVersion, context) {
 
   if (context.config.webhook) {
     console.log('\n-- WEBHOOK to ' + context.config.webhook + ' --\n')
-    await withRetrys(async () => {
-      await postToWebhook(context.config.webhook, json)
-    })
+    try {
+      await withRetrys(async () => {
+        await postToWebhook(context.config.webhook, json)
+      }, exitOnError=false)
+    } catch(e) {
+      console.log(`Skipping webhook for ${logDetails}`)
+    }
   }
 
   if (context.config.discordWebhook) {
-    postToDiscordWebhook(context.config.discordWebhook, output)
     console.log('\n-- Discord WEBHOOK to ' + context.config.discordWebhook + ' --')
+    try {
+      await withRetrys(async () => {
+        postToDiscordWebhook(context.config.discordWebhook, output)
+      }, exitOnError=false)
+    } catch(e) {
+      console.log(`Skipping discord webhook for ${logDetails}`)
+    }
   }
 }
 
