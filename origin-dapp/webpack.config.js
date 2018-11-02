@@ -35,7 +35,7 @@ const env = {
   MESSAGING_NAMESPACE: null,
   MAINNET_DAPP_BASEURL: 'https://dapp.originprotocol.com',
   NOTIFICATIONS_KEY: null,
-  NOTIFICATIONS_URL: 'notifications.originprotocol.com',
+  NOTIFICATIONS_URL: 'https://notifications.originprotocol.com',
   RINKEBY_DAPP_BASEURL: 'https://demo.staging.originprotocol.com',
   PROVIDER_URL: null,
   REDUX_LOGGER: false,
