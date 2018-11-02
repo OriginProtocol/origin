@@ -748,8 +748,10 @@ const config = {
   ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
 }
 
+const port = 9499
 
-app.listen({ port: 9499 }, () =>
+app.listen({ port: port }, () => {
+  console.log(`Serving Prometheus metrics on port ${port}`)
   // Start the listener running
   liveTracking(config)
-)
+})
