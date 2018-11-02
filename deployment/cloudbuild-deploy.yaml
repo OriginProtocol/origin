@@ -19,7 +19,7 @@ steps:
             ;;
         esac
 
-  # Decrypt the secrest file for the current namespace
+  # Decrypt the secrets file for the current namespace
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'sh'
     args:
