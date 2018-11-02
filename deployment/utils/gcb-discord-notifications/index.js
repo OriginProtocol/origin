@@ -20,7 +20,9 @@ module.exports.subscribe = async (event, callback) => {
 
   // Send message to Discord.
   const webhook = await createDiscordWebhook(build);
-  hook.send(webhook.message, webhook.options).then(callback);
+  if (webhook.message) {
+    hook.send(webhook.message, webhook.options).then(callback);
+  }
 };
 
 // eventToBuild transforms pubsub event message to a build object.
