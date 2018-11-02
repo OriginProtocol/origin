@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://schema.originprotocol.com/offer_v1.0.0",
-  "title": "Origin Protocol offer schema for data stored in IPFS",
+  "$id": "http://schema.originprotocol.com/offer_complete_v1.0.0",
+  "title": "Origin Protocol offer schema including on-chain data, IPFS data, and computed fields",
   "definitions": {
     "money": {
       "type": "object",
