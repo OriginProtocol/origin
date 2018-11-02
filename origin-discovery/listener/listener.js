@@ -6,9 +6,6 @@ try {
 }
 
 const express = require('express')
-const fs = require('fs')
-const http = require('http')
-const https = require('https')
 const promBundle = require('express-prom-bundle')
 const urllib = require('url')
 const Origin = require('origin')
@@ -16,6 +13,10 @@ const Web3 = require('web3')
 
 const search = require('../lib/search.js')
 const db = require('../models')
+
+const { getLastBlock, setLastBlock, withRetrys } = require('./utils.js')
+const { postToDiscordWebhook, postToWebhook } = require('./webhooks.js')
+
 
 // Create an express server for Prometheus to scrape metrics
 const app = express()
@@ -238,50 +239,6 @@ async function liveTracking(config) {
 }
 
 /**
- * Returns the first block the listener should start at for following events.
- * Reads the persisted state from either DB or continue file.
- */
-async function getLastBlock(config) {
-  let lastBlock
-  if (config.continueFile) {
-    // Read state from continue file.
-    if (!fs.existsSync(config.continueFile)) {
-      throw new Error(`Error: continue file ${config.continueFile} not found.`)
-    }
-    const json = fs.readFileSync(config.continueFile, { encoding: 'utf8' })
-    const data = JSON.parse(json)
-    if (!data.lastLogBlock) {
-      throw new Error(`Error: invalid format for continue file.`)
-    }
-    lastBlock = data.lastLogBlock
-  } else {
-    // Read state from DB.
-    const row = await db.Listener.findById(config.listenerId)
-    if (!row) {
-      // No state in DB. This happens if a listener is started for the first time.
-      // Start at block 0.
-      lastBlock = 0
-    } else {
-      lastBlock = row.blockNumber
-    }
-  }
-  return lastBlock
-}
-
-/**
- * Stores the last block we have read up.
- * Writes in either DB or continue file.
- */
-async function setLastBlock(config, blockNumber) {
-  if (config.continueFile) {
-    const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
-    fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
-  } else {
-    await db.Listener.insertOrUpdate({ id: config.listenerId, blockNumber })
-  }
-}
-
-/**
  * runBatch - gets and processes logs for a range of blocks
  */
 async function runBatch(opts, context) {
@@ -319,40 +276,6 @@ async function runBatch(opts, context) {
     await handleLog(log, rule, contractVersion, context)
   }
   return lastLogBlock
-}
-
-/**
- * Retrys up to N times, with exponential backoff.
- * If still failing after N times, exits the process.
- */
-async function withRetrys(fn, exitOnError = true) {
-  let tryCount = 0
-  while (true) {
-    try {
-      return await fn() // Do our action.
-    } catch (e) {
-      // Roughly double wait time each failure
-      let waitTime = Math.pow(100, 1 + tryCount / 6)
-      // Randomly jiggle wait time by 20% either way. No thundering herd.
-      waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
-      // Max out at two minutes
-      waitTime = Math.min(waitTime, MAX_RETRY_WAIT_MS)
-      console.log('ERROR', e)
-      console.log(`will retry in ${waitTime / 1000} seconds`)
-      tryCount += 1
-      await new Promise(resolve => setTimeout(resolve, waitTime))
-    }
-    if (tryCount >= MAX_RETRYS) {
-      if (exitOnError) {
-        console.log('EXITING: Maximum number of retrys reached')
-        // Now it's up to our environment to restart us.
-        // Hopefully with a clean start, things will work better
-        process.exit(1)
-      } else {
-        throw new Error('Maximum number of retrys reached')
-      }
-    }
-  }
 }
 
 /**
@@ -544,116 +467,7 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 }
 
-/**
- * Posts a to discord channel via webhook.
- * This functionality should move out of the listener
- * to the notification system, as soon as we have one.
- */
-async function postToDiscordWebhook(discordWebhookUrl, data) {
-  const eventIcons = {
-    ListingCreated: ':trumpet:',
-    ListingUpdated: ':saxophone:',
-    ListingWithdrawn: ':x:',
-    ListingData: ':cd:',
-    ListingArbitrated: ':boxing_glove:',
-    OfferCreated: ':baby_chick:',
-    OfferWithdrawn: ':feet:',
-    OfferAccepted: ':bird:',
-    OfferDisputed: ':dragon_face:',
-    OfferRuling: ':dove:',
-    OfferFinalized: ':unicorn:',
-    OfferData: ':beetle:'
-  }
 
-  const personDisp = p => {
-    let str = ''
-    if (p.profile && (p.profile.firstName || p.profile.lastName)) {
-      str += `${p.profile.firstName | ''} ${p.profile.lastName || ''} - `
-    }
-    str += p.address
-    return str
-  }
-  const priceDisp = listing => {
-    const price = listing.price
-    return price ? `${price.amount}${price.currency}` : ''
-  }
-
-  const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
-  const lines = []
-  const listing = data.related.listing
-
-  let discordData = {}
-
-  if (data.related.offer !== undefined) {
-    // Offer
-    discordData = {
-      embeds: [
-        {
-          title: `${icon} ${data.log.eventName} - ${
-            listing.title
-          } - ${priceDisp(listing)}`,
-          description: [
-            `https://dapp.originprotocol.com/#/purchases/${
-              data.related.offer.id
-            }`,
-            `Seller: ${personDisp(data.related.seller)}`,
-            `Buyer: ${personDisp(data.related.buyer)}`
-          ].join('\n')
-        }
-      ]
-    }
-  } else {
-    // Listing
-    discordData = {
-      embeds: [
-        {
-          title: `${icon} ${data.log.eventName} - ${
-            listing.title
-          } - ${priceDisp(listing)}`,
-          description: [
-            `${listing.description.split('\n')[0].slice(0, 60)}...`,
-            `https://dapp.originprotocol.com/#/listing/${listing.id}`,
-            `Seller: ${personDisp(data.related.seller)}`
-          ].join('\n')
-        }
-      ]
-    }
-  }
-  await postToWebhook(discordWebhookUrl, JSON.stringify(discordData))
-}
-
-/**
- * Sends a blob of json to a webhook.
- */
-async function postToWebhook(urlString, json) {
-  const url = urllib.parse(urlString)
-  const postOptions = {
-    host: url.hostname,
-    port: url.port,
-    path: url.path,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(json)
-    }
-  }
-  return new Promise((resolve, reject) => {
-    const client = url.protocol === 'https:' ? https : http
-    const req = client.request(postOptions, res => {
-      console.log(res.statusCode)
-      if (res.statusCode === 200 || res.statusCode === 204) {
-        resolve()
-      } else {
-        reject()
-      }
-    })
-    req.on('error', err => {
-      reject(err)
-    })
-    req.write(json)
-    req.end()
-  })
-}
 
 // -------------------------------------------------------------------
 // Section 3: Getting the contract information we need to track events
