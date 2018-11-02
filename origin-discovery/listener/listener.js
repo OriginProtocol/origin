@@ -196,7 +196,7 @@ async function liveTracking(config) {
   setupOriginJS(config)
   const context = await new Context(config).init()
 
-  let lastLogBlock = getLastBlock(config)
+  let lastLogBlock = await getLastBlock(config)
   let lastCheckedBlock = 0
   const checkIntervalSeconds = 5
   let start
@@ -220,7 +220,7 @@ async function liveTracking(config) {
       const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
       await runBatch(opts, context)
       lastLogBlock = toBlock
-      setLastBlock(config, toBlock)
+      await setLastBlock(config, toBlock)
       lastCheckedBlock = currentBlockNumber
       return scheduleNextCheck()
     })
@@ -235,32 +235,47 @@ async function liveTracking(config) {
 }
 
 /**
- * The first block the listener should start at for following events.
- * This either uses the value stored in the the continue file, if given
- * or defaults to 0.
+ * Returns the first block the listener should start at for following events.
+ * Reads the persisted state from either DB or continue file.
  */
-function getLastBlock(config) {
-  if (config.continueFile == undefined || !fs.existsSync(config.continueFile)) {
-    return 0
+async function getLastBlock(config) {
+  let lastBlock
+  if (config.continueFile) {
+    // Read state from continue file.
+    if (!fs.existsSync(config.continueFile)) {
+      throw new Error(`Error: continue file ${config.continueFile} not found.`)
+    }
+    const json = fs.readFileSync(config.continueFile, {encoding: 'utf8'})
+    const data = JSON.parse(json)
+    if (!data.lastLogBlock) {
+      throw new Error(`Error: invalid format for continue file.`)
+    }
+    lastBlock = data.lastLogBlock
+  } else {
+    // Read state from DB.
+    const row = await db.Listener.findById(config.listenerId)
+    if (!row) {
+      // No state in DB. This happens if a listener is started for the first time.
+      // Start at block 0.
+      lastBlock = 0
+    } else {
+      lastBlock = row.blockNumber
+    }
   }
-  const json = fs.readFileSync(config.continueFile, { encoding: 'utf8' })
-  const data = JSON.parse(json)
-  if (data.lastLogBlock) {
-    return data.lastLogBlock
-  }
-  return 0
+  return lastBlock
 }
 
 /**
- * Stores the last block we have read up to in the continue file.
- * If no continue file configured, does nothing.
+ * Stores the last block we have read up.
+ * Writes in either DB or continue file.
  */
-function setLastBlock(config, blockNumber) {
-  if (config.continueFile == undefined) {
-    return
+async function setLastBlock(config, blockNumber) {
+  if (config.continueFile) {
+    const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
+    fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
+  } else {
+    await db.Listener.insertOrUpdate({id: config.listenerId, blockNumber})
   }
-  const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
-  fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
 }
 
 /**
@@ -738,6 +753,9 @@ process.argv.forEach(arg => {
 })
 
 const config = {
+  // Unique id. Used to differentiate between the several listeners instances
+  // that may run concurrently (ex: main vs webhook vs re-indexing).
+  listenerId: args['--listener-id'] || 'main',
   // Call webhook to process event.
   webhook: args['--webhook'] || process.env.WEBHOOK,
   // Call post to discord webhook to process event.
