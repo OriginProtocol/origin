@@ -29,12 +29,12 @@ faucetImageTag: '389fd1f'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'f9a1525'
+eventlistenerImageTag: '21e0ddb'
 eventlistenerWeb3Url: https://eth.dev.originprotocol.com/rpc
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: 'db88884'
+discoveryImageTag: '21e0ddb'
 
 # origin-messaging
 messagingImage: origin-messaging
