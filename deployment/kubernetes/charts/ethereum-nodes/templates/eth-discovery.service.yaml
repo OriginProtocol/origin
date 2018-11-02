@@ -12,6 +12,9 @@ spec:
   selector:
     app: {{ template "ethereum.fullname" . }}-tx-node
   ports:
-  - name: discovery-udp
-    port: 30303
-    protocol: UDP
+    - name: discovery-udp
+      port: 30303
+      protocol: UDP
+    - name: discovery-tcp
+      port: 30303
+      protocol: TCP

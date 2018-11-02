@@ -1,22 +1,26 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "ethereum.fullname" . }}-tx-node
+  name: {{ .Values.network }}-tx-node
   labels:
-    app: {{ template "ethereum.fullname" . }}-tx-node
+    app: {{ .Values.network }}-tx-node
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  replicas: {{ .Values.gethTxReplicas }}
-  serviceName: {{ template "ethereum.fullname" . }}-tx-node
+  {{ if eq .Values.network "mainnet" }}
+  replicas: {{ .Values.mainnet.replicas }}
+  {{ else }}
+  replicas: {{ .Values.testnet.replicas }}
+  {{ end }}
+  serviceName: {{ .Values.network }}-tx-node
   selector:
     matchLabels:
-      app: {{ template "ethereum.fullname" . }}-tx-node
+      app: {{ .Values.network }}-tx-node
   template:
     metadata:
       labels:
-        app: {{ template "ethereum.fullname" . }}-tx-node
+        app: {{ .Values.network }}-tx-node
         release: {{ .Release.Name }}
     spec:
       containers:
@@ -47,26 +51,38 @@ spec:
             --cache 2048"
         env:
         - name: ETHSTATS_SERVICE
-          value: {{ template "ethereum.fullname" . }}-ethstats.{{ .Release.Namespace }}
+          value: {{ .Values.network }}-ethstats.{{ .Release.Namespace }}
         - name: ETHSTATS_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ template "ethereum.fullname" . }}-ethstats
+              name: {{ .Values.network }}-ethstats
               key: WS_SECRET
         resources:
           requests:
-            memory: {{ default "15Gi" .Values.gethTxMemoryRequest }}
+            {{ if eq .Values.network "mainnet" }}
+            memory: {{ default "15Gi" .Values.mainnet.memoryRequest }}
+            {{ else }}
+            memory: {{ default "2Gi" .Values.testnet.memoryRequest }}
+            {{ end }}
             cpu: 500m
         volumeMounts:
           - mountPath: /root/.ethereum
-            name: {{ template "ethereum.fullname" . }}-data
+            name: {{ .Values.network }}-data
   volumeClaimTemplates:
     - metadata:
-        name: {{ template "ethereum.fullname" . }}-data
+        name: {{ .Values.network }}-data
       spec:
-        storageClassName: "ssd"
+        {{ if eq .Values.network "mainnet" }}
+        storageClassName: {{ .Values.mainnet.storage.class }}
+        {{ else }}
+        storageClassName: {{ .Values.testnet.storage.class }}
+        {{ end }}
         accessModes:
           - ReadWriteOnce  # Read-write for a single node only
         resources:
           requests:
-              storage: 1000Gi
+              {{ if eq .Values.network "mainnet" }}
+              storage: {{ .Values.mainnet.storage.request }}
+              {{ else }}
+              storage: {{ .Values.testnet.storage.request }}
+              {{ end }}
