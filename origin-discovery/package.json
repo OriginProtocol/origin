@@ -12,7 +12,6 @@
     "url": "git+https://github.com/OriginProtocol/origin.git"
   },
   "dependencies": {
-    "apollo-server": "^2.1.0",
     "apollo-server-express": "^2.1.0",
     "dotenv": "^6.1.0",
     "elasticsearch": "^15.1.1",
