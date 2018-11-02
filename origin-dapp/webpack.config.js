@@ -39,7 +39,8 @@ const env = {
   RINKEBY_DAPP_BASEURL: null,
   PROVIDER_URL: '',
   REDUX_LOGGER: false,
-  GA_TRACKING_ID: '' // must also be hard-coded in dev.html - this is used in components/analytics.js
+  GA_TRACKING_ID: '', // must also be hard-coded in dev.html - this is used in components/analytics.js
+  ENABLE_FRACTIONAL: false
 }
 
 var config = {
@@ -132,6 +133,7 @@ var config = {
     new webpack.EnvironmentPlugin(env),
     new CopyWebpackPlugin([
       'public/favicon.ico',
+      'public/sw.js',
       { from: 'public/images', to: 'images' },
       { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }

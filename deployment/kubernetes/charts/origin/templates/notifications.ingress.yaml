@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "notifications.fullname" . }}
+  labels:
+    app: {{ template "notifications.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://{{ template "dapp.host" . }}"
+spec:
+  tls:
+    - secretName: {{ template "notifications.host" . }}
+      hosts:
+        - {{ template "notifications.host" . }}
+  rules:
+    - host: {{ template "notifications.host" . }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ template "notifications.fullname" . }}
+              servicePort: 3456
+          # Prevent external access to the /events path
+          - path: /events
+            backend:
+              serviceName: {{ .Release.Namespace }}-ingress-nginx-ingress-default-backend
+              servicePort: 80
