@@ -5,6 +5,8 @@
     "lerna": "^3.4.3"
   },
   "scripts": {
-    "lerna": "./node_modules/.bin/lerna bootstrap"
+    "postinstall": "./node_modules/.bin/lerna bootstrap",
+    "test": "node ./scripts/test.js",
+    "clean": "git clean -fdX ."
   }
 }
