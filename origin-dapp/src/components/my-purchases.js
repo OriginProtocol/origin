@@ -19,6 +19,7 @@ class MyPurchases extends Component {
       this.loadPurchases()
     } else if (!web3.givenProvider) {
       this.props.storeWeb3Intent('view your purchases')
+      origin.contractService.showLinkPopUp()
     }
   }
 
