@@ -128,6 +128,27 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 
 <sup>Tests for http://demo.originprotocol.com</sup>
 
+## Run Demo DApp with local origin-js and local blockchain via Lerna
+
+### 1. Set up and run origin-js locally
+
+[Follow these instructions to setup and run origin-js via Lerna.](https://github.com/OriginProtocol/origin/tree/master/origin-js#using-lerna)
+
+### 2. Set up the DApp for local development via Lerna
+
+Leave origin-js running and create a new terminal window. Then run the following:
+```bash
+cd origin/origin-dapp
+cp dev.env .env  # Use development env vars
+npm run start
+```
+
+- Changes made to origin-js code will then immediately reflected in Demo DApp without requiring `npm install`.
+
+- Your browser will open to [http://localhost:3000](http://localhost:3000) and display the DApp.
+
+- Follow step 3 (Connect to your local blockchain in MetaMask) from above
+
 ## Localization
 See [translations](translations) directory.
 
