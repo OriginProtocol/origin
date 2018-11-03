@@ -1,5 +1,9 @@
 require('dotenv').config()
-require('envkey')
+try {
+  require('envkey')
+} catch (error) {
+  console.log('EnvKey not configured')
+}
 
 const express = require('express')
 const promBundle = require('express-prom-bundle')
