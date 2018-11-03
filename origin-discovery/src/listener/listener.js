@@ -156,7 +156,7 @@ function setupOriginJS (config) {
   // global
   web3 = new Web3(web3Provider)
 
-  const ipfsUrl = urllib.URL(config.ipfsUrl)
+  const ipfsUrl = new urllib.URL(config.ipfsUrl)
 
   // Error out if any mandatory env var is not set.
   if (!config.arbitratorAccount) {
