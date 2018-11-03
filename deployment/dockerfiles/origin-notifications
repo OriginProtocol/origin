@@ -1,0 +1,12 @@
+FROM node:8
+
+COPY ./origin-notifications /app
+WORKDIR /app
+
+COPY ./deployment/dockerfiles/scripts/start-notification-server.sh \
+	/usr/local/bin/start
+
+ENV NODE_ENV production
+RUN npm install --quiet --progress
+
+CMD ["start"]

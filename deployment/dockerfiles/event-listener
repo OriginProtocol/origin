@@ -1,0 +1,28 @@
+# --- Origin.js
+
+FROM node:8 as origin-js-build
+
+COPY ./origin-js /app
+WORKDIR /app
+
+ENV NODE_ENV=production
+RUN npm install --quiet --no-progress
+RUN npm run build
+
+# --- Event listener
+
+FROM node:8
+
+COPY ./origin-discovery /app
+WORKDIR /app
+
+COPY ./deployment/dockerfiles/scripts/start-event-listener.sh \
+	/usr/local/bin/start
+
+ENV NODE_ENV production
+# Link previously built Origin.js
+COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
+RUN npm link origin
+RUN npm install --quiet --no-progress
+
+CMD ["start"]
