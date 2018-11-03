@@ -4,6 +4,8 @@
 
 set -e
 
+eval $(envkey-source)
+
 echo "Running database migrations for discovery"
 
 # Run database migrations
