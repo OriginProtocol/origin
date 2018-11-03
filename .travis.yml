@@ -32,6 +32,7 @@ matrix:
     - psql -c 'create database travis_ci_test;' -U postgres
     - cd origin-discovery
     - npm install
+    - npm run migrate
     script:
     - npm test
 

@@ -41,7 +41,8 @@
   },
   "scripts": {
     "install:dev": "npm install && npm link origin",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "migrate": "./node_modules/.bin/sequelize db:migrate"
   },
   "eslintConfig": {
     "root": true,
