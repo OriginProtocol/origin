@@ -48,9 +48,7 @@ const blockGauge = new bundle.promClient.Gauge({
 let web3
 let o
 
-MAX_RETRYS = 10
-MAX_RETRY_WAIT_MS = 2 * 60 * 1000
-MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
+const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
 
 // -----------------------------
 // Section 1: Follow rules
@@ -158,21 +156,19 @@ function setupOriginJS(config) {
   const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
   // global
   web3 = new Web3(web3Provider)
-  console.log(`Web3 URL: ${config.web3Url}`)
 
   const ipfsUrl = urllib.parse(config.ipfsUrl)
-  console.log(`IPFS URL: ${config.ipfsUrl}`)
 
   // Error out if any mandatory env var is not set.
-  if (!process.env.ARBITRATOR_ACCOUNT) {
+  if (!config.arbitratorAccount) {
     throw new Error('ARBITRATOR_ACCOUNT not set')
   }
-  if (!process.env.AFFILIATE_ACCOUNT) {
+  if (!config.affiliateAccount) {
     throw new Error('AFFILIATE_ACCOUNT not set')
   }
 
   // Issue a warning for any recommended env var that is not set.
-  if (!process.env.BLOCK_EPOCH) {
+  if (!config.blockEpoch) {
     console.log(
       'WARNING: For performance reasons it is recommended to set BLOCK_EPOCH'
     )
@@ -183,9 +179,9 @@ function setupOriginJS(config) {
     ipfsDomain: ipfsUrl.hostname,
     ipfsGatewayProtocol: ipfsUrl.protocol.replace(':', ''),
     ipfsGatewayPort: ipfsUrl.port,
-    arbitrator: process.env.ARBITRATOR_ACCOUNT,
-    affiliate: process.env.AFFILIATE_ACCOUNT,
-    blockEpoch: process.env.BLOCK_EPOCH || 0,
+    arbitrator: config.arbitratorAccount,
+    affiliate: config.affiliateAccount,
+    blockEpoch: config.blockEpoch,
     web3
   })
 }
@@ -467,8 +463,6 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 }
 
-
-
 // -------------------------------------------------------------------
 // Section 3: Getting the contract information we need to track events
 // -------------------------------------------------------------------
@@ -591,18 +585,26 @@ const config = {
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
   trailBlocks:
-    args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0,
+    parseInt(args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0),
   // web3 provider url
   web3Url:
     args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
   // ipfs url
-  ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080'
+  ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
+  // Origin-js configs
+  arbitratorAccount: process.env.ARBITRATOR_ACCOUNT,
+  affiliateAccount: process.env.AFFILIATE_ACCOUNT,
+  blockEpoch: parseInt(process.env.BLOCK_EPOCH || 0),
+  // Default continue block.
+  defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
 }
 
 const port = 9499
 
 app.listen({ port: port }, () => {
   console.log(`Serving Prometheus metrics on port ${port}`)
-  // Start the listener running
+  // Start the listener.
+  console.log(`Starting event-listener with config:\n${
+    JSON.stringify(config, (k, v) => v === undefined ? null : v, 2)}`)
   liveTracking(config)
 })

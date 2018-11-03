@@ -1,6 +1,9 @@
 const db = require('../models')
 const fs = require('fs')
 
+const MAX_RETRYS = 10
+const MAX_RETRY_WAIT_MS = 2 * 60 * 1000
+
 /**
  * Returns the first block the listener should start at for following events.
  * Reads the persisted state from either DB or continue file.
@@ -10,21 +13,22 @@ async function getLastBlock(config) {
   if (config.continueFile) {
     // Read state from continue file.
     if (!fs.existsSync(config.continueFile)) {
-      throw new Error(`Error: continue file ${config.continueFile} not found.`)
+      // No continue file. This happens if a listener is started for the first time.
+      lastBlock = config.defaultContinueBlock
+    } else {
+      const json = fs.readFileSync(config.continueFile, {encoding: 'utf8'})
+      const data = JSON.parse(json)
+      if (!data.lastLogBlock) {
+        throw new Error(`Error: invalid format for continue file.`)
+      }
+      lastBlock = data.lastLogBlock
     }
-    const json = fs.readFileSync(config.continueFile, { encoding: 'utf8' })
-    const data = JSON.parse(json)
-    if (!data.lastLogBlock) {
-      throw new Error(`Error: invalid format for continue file.`)
-    }
-    lastBlock = data.lastLogBlock
   } else {
     // Read state from DB.
     const row = await db.Listener.findById(config.listenerId)
     if (!row) {
       // No state in DB. This happens if a listener is started for the first time.
-      // Start at block 0.
-      lastBlock = 0
+      lastBlock = config.defaultContinueBlock
     } else {
       lastBlock = row.blockNumber
     }
