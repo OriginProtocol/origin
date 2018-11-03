@@ -33,4 +33,4 @@ RUN npm install --quiet --no-progress
 COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
 RUN npm link origin
 
-CMD ["node", "apollo/index.js"]
+CMD ["node", "src/apollo/index.js"]

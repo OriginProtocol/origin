@@ -3,10 +3,6 @@ const { spawn } = require('child_process')
 const testJavascript = () => {
   return new Promise((resolve, reject) => {
     const mocha = spawn('./node_modules/.bin/mocha', [
-      '--compilers',
-      'js:babel-core/register',
-      '--require',
-      'babel-polyfill',
       '--timeout',
       '10000',
       '--exit'
@@ -16,7 +12,7 @@ const testJavascript = () => {
 
     mocha.on('exit', code => {
       if (code !== 0) {
-        return reject()
+        return reject(new Error(`Exit code ${code}`))
       }
       resolve()
     })
