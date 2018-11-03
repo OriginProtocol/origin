@@ -28,8 +28,12 @@
     "url": "^0.11.0",
     "web3": "^1.0.0-beta.35"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chalk": "^2.4.1",
+    "eslint": "^5.8.0"
+  },
   "scripts": {
-    "install:dev": "npm install && npm link origin"
+    "install:dev": "npm install && npm link origin",
+    "test": "node scripts/test.js"
   }
 }
