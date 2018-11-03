@@ -1,5 +1,12 @@
+require('dotenv').config()
+try {
+  require('envkey')
+} catch (error) {
+  console.log('EnvKey not configured')
+}
+
 const express = require('express')
-const promBundle = require('express-prom-bundle');
+const promBundle = require('express-prom-bundle')
 const { ApolloServer, gql } = require('apollo-server-express')
 
 const search = require('../lib/search.js')
@@ -370,7 +377,7 @@ const server = new ApolloServer({ typeDefs, resolvers })
 
 server.applyMiddleware({ app });
 
-const port = 4000
+const port = process.env.PORT || 4000
 
 app.listen({ port: port }, () =>
   console.log(`Apollo server ready at http://localhost:${port}${server.graphqlPath}`)
