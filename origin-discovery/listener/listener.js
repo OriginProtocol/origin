@@ -570,7 +570,7 @@ process.argv.forEach(arg => {
 const config = {
   // Unique id. Used to differentiate between the several listeners instances
   // that may run concurrently (ex: main vs webhook vs re-indexing).
-  listenerId: args['--listener-id'] || 'main',
+  listenerId: args['--listener-id'] || process.env.LISTENER_ID || 'main',
   // Call webhook to process event.
   webhook: args['--webhook'] || process.env.WEBHOOK,
   // Call post to discord webhook to process event.
