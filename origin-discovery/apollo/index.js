@@ -1,7 +1,26 @@
-const { ApolloServer, gql } = require('apollo-server')
+require('dotenv').config()
+try {
+  require('envkey')
+} catch (error) {
+  console.log('EnvKey not configured')
+}
 
-var search = require('../lib/search.js')
-var db = require('../lib/db.js')
+const express = require('express')
+const promBundle = require('express-prom-bundle')
+const { ApolloServer, gql } = require('apollo-server-express')
+
+const search = require('../lib/search.js')
+const db = require('../models')
+
+const app = express();
+const bundle = promBundle({
+  promClient: {
+    collectDefaultMetrics: {
+      timeout: 1000
+    }
+  }
+})
+app.use(bundle)
 
 /*
  * Implementation of the Origin GraphQL server.
@@ -56,7 +75,7 @@ const typeDefs = gql`
     seller: User!
     status: OfferStatus!
     affiliate: ID,
-    price: Price! 
+    price: Price!
     listing: Listing!
   }
 
@@ -184,7 +203,7 @@ const typeDefs = gql`
 
   enum FilterOperator {
     EQUALS
-    CONTAINS #for array values where at least one must match E.g. list of categories 
+    CONTAINS #for array values where at least one must match E.g. list of categories
     GREATER
     GREATER_OR_EQUAL
     LESSER
@@ -206,7 +225,7 @@ const typeDefs = gql`
 
     offers(buyerAddress: ID, listingId: ID): OfferConnection,
     offer(id: ID!): Offer,
-    
+
     user(walletAddress: ID!): User
   }
 `
@@ -300,8 +319,8 @@ const resolvers = {
       return {currency: 'ETH', amount: offer.priceEth}
     },
     listing(offer, args, context, info) {
-      const requestedSubFields = info.fieldNodes[0].selectionSet.selections 
-      const isIdOnly = requestedSubFields.filter(x=>x.name.value !== "id").length === 0
+      const requestedSubFields = info.fieldNodes[0].selectionSet.selections
+      const isIdOnly = requestedSubFields.filter(x=>x.name.value !== 'id').length === 0
       if(isIdOnly){
         return {id: offer.listingId}
       } else {
@@ -338,8 +357,8 @@ const resolvers = {
  * Gets information on a related user.
  * Includes short-circut code to skip the user look up
  * if the walletAddress is the only field required.
- * @param {string} walletAddress 
- * @param {object} info 
+ * @param {string} walletAddress
+ * @param {object} info
  */
 function relatedUserResolver(walletAddress, info){
   const requestedFields = info.fieldNodes[0].selectionSet.selections
@@ -356,7 +375,10 @@ function relatedUserResolver(walletAddress, info){
 // responsible for fetching the data for those types.
 const server = new ApolloServer({ typeDefs, resolvers })
 
-// The `listen` method launches a web-server.
-server.listen().then(({ url }) => {
-  console.log(`Apollo server ready at ${url}`)
-})
+server.applyMiddleware({ app });
+
+const port = process.env.PORT || 4000
+
+app.listen({ port: port }, () =>
+  console.log(`Apollo server ready at http://localhost:${port}${server.graphqlPath}`)
+)

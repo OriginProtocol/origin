@@ -5,15 +5,35 @@ try {
   console.log('EnvKey not configured')
 }
 
-const fs = require('fs')
-const http = require('http')
-const https = require('https')
+const express = require('express')
+const promBundle = require('express-prom-bundle')
 const urllib = require('url')
 const Origin = require('origin')
 const Web3 = require('web3')
 
 const search = require('../lib/search.js')
 const db = require('../models')
+
+const { getLastBlock, setLastBlock, withRetrys } = require('./utils.js')
+const { postToDiscordWebhook, postToWebhook } = require('./webhooks.js')
+
+
+// Create an express server for Prometheus to scrape metrics
+const app = express()
+const bundle = promBundle({
+  includeMethod: true,
+  promClient: {
+    collectDefaultMetrics: {
+      timeout: 1000
+    }
+  }
+})
+app.use(bundle)
+
+const blockGauge = new bundle.promClient.Gauge({
+  name: 'event_listener_last_block',
+  help: 'The last block processed by the event listener'
+})
 
 // Origin Listener
 // ---------------
@@ -28,9 +48,7 @@ const db = require('../models')
 let web3
 let o
 
-MAX_RETRYS = 10
-MAX_RETRY_WAIT_MS = 2 * 60 * 1000
-MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
+const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
 
 // -----------------------------
 // Section 1: Follow rules
@@ -56,8 +74,8 @@ const getListingDetails = async log => {
   let seller = undefined
   try {
     seller = await o.users.get(listing.seller)
-  } catch(e) {
-    console.log("Failed to fetch seller", e)
+  } catch (e) {
+    console.log('Failed to fetch seller', e)
     // If fetching the seller fails, we still want to index the listing
   }
   return {
@@ -73,15 +91,15 @@ const getOfferDetails = async log => {
   let buyer = undefined
   try {
     seller = await o.users.get(listing.seller)
-  } catch(e) {
+  } catch (e) {
     // If fetching the seller fails, we still want to index the listing/offer
-    console.log("Failed to fetch seller", e)
+    console.log('Failed to fetch seller', e)
   }
   try {
     buyer = await o.users.get(offer.buyer)
-  } catch(e) {
+  } catch (e) {
     // If fetching the buyer fails, we still want to index the listing/offer
-    console.log("Failed to fetch buyer", e)
+    console.log('Failed to fetch buyer', e)
   }
   return {
     listing: listing,
@@ -134,36 +152,36 @@ const OFFER_EVENTS = [
 /**
  * setup Origin JS according to the config.
  */
-function setupOriginJS(config){
+function setupOriginJS(config) {
   const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
   // global
   web3 = new Web3(web3Provider)
-  console.log(`Web3 URL: ${config.web3Url}`)
 
   const ipfsUrl = urllib.parse(config.ipfsUrl)
-  console.log(`IPFS URL: ${config.ipfsUrl}`)
 
   // Error out if any mandatory env var is not set.
-  if (!process.env.ARBITRATOR_ACCOUNT) {
+  if (!config.arbitratorAccount) {
     throw new Error('ARBITRATOR_ACCOUNT not set')
   }
-  if (!process.env.AFFILIATE_ACCOUNT) {
+  if (!config.affiliateAccount) {
     throw new Error('AFFILIATE_ACCOUNT not set')
   }
 
   // Issue a warning for any recommended env var that is not set.
-  if (!process.env.BLOCK_EPOCH) {
-    console.log('WARNING: For performance reasons it is recommended to set BLOCK_EPOCH')
+  if (!config.blockEpoch) {
+    console.log(
+      'WARNING: For performance reasons it is recommended to set BLOCK_EPOCH'
+    )
   }
 
   // global
   o = new Origin({
     ipfsDomain: ipfsUrl.hostname,
-    ipfsGatewayProtocol: ipfsUrl.protocol.replace(':',''),
+    ipfsGatewayProtocol: ipfsUrl.protocol.replace(':', ''),
     ipfsGatewayPort: ipfsUrl.port,
-    arbitrator: process.env.ARBITRATOR_ACCOUNT,
-    affiliate: process.env.AFFILIATE_ACCOUNT,
-    blockEpoch: process.env.BLOCK_EPOCH || 0,
+    arbitrator: config.arbitratorAccount,
+    affiliate: config.affiliateAccount,
+    blockEpoch: config.blockEpoch,
     web3
   })
 }
@@ -177,7 +195,7 @@ async function liveTracking(config) {
   setupOriginJS(config)
   const context = await new Context(config).init()
 
-  let lastLogBlock = getLastBlock(config)
+  let lastLogBlock = await getLastBlock(config)
   let lastCheckedBlock = 0
   const checkIntervalSeconds = 5
   let start
@@ -191,16 +209,18 @@ async function liveTracking(config) {
         return scheduleNextCheck()
       }
       console.log('New block: ' + currentBlockNumber)
-      const toBlock = Math.min( // Pick the smallest of either
+      blockGauge.set(currentBlockNumber)
+      const toBlock = Math.min(
+        // Pick the smallest of either
         // the last log we processed, plus the max batch size
         lastLogBlock + MAX_BATCH_BLOCKS,
-         // or the current block number, minus any trailing blocks we waiting on
-        Math.max(currentBlockNumber - config.trailBlocks, 0),
+        // or the current block number, minus any trailing blocks we waiting on
+        Math.max(currentBlockNumber - config.trailBlocks, 0)
       )
       const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
       await runBatch(opts, context)
       lastLogBlock = toBlock
-      setLastBlock(config, toBlock)
+      await setLastBlock(config, toBlock)
       lastCheckedBlock = currentBlockNumber
       return scheduleNextCheck()
     })
@@ -212,35 +232,6 @@ async function liveTracking(config) {
   }
 
   check()
-}
-
-/**
- * The first block the listener should start at for following events.
- * This either uses the value stored in the the continue file, if given
- * or defaults to 0.
- */
-function getLastBlock(config) {
-  if (config.continueFile == undefined || !fs.existsSync(config.continueFile)) {
-    return 0
-  }
-  const json = fs.readFileSync(config.continueFile, { encoding: 'utf8' })
-  const data = JSON.parse(json)
-  if (data.lastLogBlock) {
-    return data.lastLogBlock
-  }
-  return 0
-}
-
-/**
- * Stores the last block we have read up to in the continue file.
- * If no continue file configured, does nothing.
- */
-function setLastBlock(config, blockNumber) {
-  if (config.continueFile == undefined) {
-    return
-  }
-  const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
-  fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
 }
 
 /**
@@ -258,7 +249,7 @@ async function runBatch(opts, context) {
   const eventTopics = Object.keys(context.signatureToRules)
   const logs = await web3.eth.getPastLogs({
     fromBlock: web3.utils.toHex(fromBlock), // Hex required for infura
-    toBlock: toBlock ? web3.utils.toHex(toBlock) : "latest",  // Hex required for infura
+    toBlock: toBlock ? web3.utils.toHex(toBlock) : 'latest', // Hex required for infura
     topics: [eventTopics]
   })
 
@@ -284,40 +275,6 @@ async function runBatch(opts, context) {
 }
 
 /**
- * Retrys up to N times, with exponential backoff.
- * If still failing after N times, exits the process.
- */
-async function withRetrys(fn, exitOnError=true) {
-  let tryCount = 0
-  while (true) {
-    try {
-      return await fn() // Do our action.
-    } catch (e) {
-      // Roughly double wait time each failure
-      let waitTime = Math.pow(100, 1 + tryCount / 6)
-      // Randomly jiggle wait time by 20% either way. No thundering herd.
-      waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
-      // Max out at two minutes
-      waitTime = Math.min(waitTime, MAX_RETRY_WAIT_MS)
-      console.log('ERROR', e)
-      console.log(`will retry in ${waitTime / 1000} seconds`)
-      tryCount += 1
-      await new Promise(resolve => setTimeout(resolve, waitTime))
-    }
-    if (tryCount >= MAX_RETRYS) {
-      if (exitOnError) {
-        console.log('EXITING: Maximum number of retrys reached')
-        // Now it's up to our environment to restart us.
-        // Hopefully with a clean start, things will work better
-        process.exit(1)
-      } else {
-        throw new Error('Maximum number of retrys reached')
-      }
-    }
-  }
-}
-
-/**
  *  Takes and event/log and a matching rule
  *  then annotates the event/log, runs the rule, and ouputs everything.
  */
@@ -338,7 +295,7 @@ async function handleLog(log, rule, contractVersion, context) {
     block = await web3.eth.getBlock(log.blockNumber)
   })
   log.timestamp = block.timestamp
-  log.date = new Date(log.timestamp*1000)
+  log.date = new Date(log.timestamp * 1000)
 
   const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
@@ -358,7 +315,7 @@ async function handleLog(log, rule, contractVersion, context) {
         topic2: log.topics[2],
         topic3: log.topics[3],
         data: log,
-        createdAt: log.date,
+        createdAt: log.date
       })
     })
   }
@@ -371,8 +328,8 @@ async function handleLog(log, rule, contractVersion, context) {
   try {
     await withRetrys(async () => {
       ruleResults = await rule.ruleFn(log)
-    }, exitOnError = false)
-  } catch(e) {
+    }, (exitOnError = false))
+  } catch (e) {
     console.log(`Skipping indexing for ${logDetails} - ${e}`)
     return
   }
@@ -407,7 +364,7 @@ async function handleLog(log, rule, contractVersion, context) {
   }
 
   // TODO: This kind of verification logic should live in origin.js
-  if(output.related.listing.ipfs.data.price === undefined){
+  if (output.related.listing.ipfs.data.price === undefined) {
     console.log(`ERROR: listing ${listingId} has no price. Skipping indexing.`)
     return
   }
@@ -415,12 +372,7 @@ async function handleLog(log, rule, contractVersion, context) {
   if (context.config.elasticsearch) {
     console.log(`Indexing listing in Elastic: id=${listingId}`)
     await withRetrys(async () => {
-      await search.Listing.index(
-        listingId,
-        userAddress,
-        ipfsHash,
-        listing
-      )
+      await search.Listing.index(listingId, userAddress, ipfsHash, listing)
     })
     if (output.related.offer !== undefined) {
       const offer = output.related.offer
@@ -452,7 +404,7 @@ async function handleLog(log, rule, contractVersion, context) {
         id: listingId,
         status: listing.status,
         sellerAddress: listing.seller.toLowerCase(),
-        data: listing,
+        data: listing
       }
       if (rule.eventName === 'ListingCreated') {
         listingData.createdAt = log.date
@@ -488,119 +440,27 @@ async function handleLog(log, rule, contractVersion, context) {
 
   if (context.config.webhook) {
     console.log('\n-- WEBHOOK to ' + context.config.webhook + ' --\n')
-    await withRetrys(async () => {
-      await postToWebhook(context.config.webhook, json)
-    })
+    try {
+      await withRetrys(async () => {
+        await postToWebhook(context.config.webhook, json)
+      }, (exitOnError = false))
+    } catch (e) {
+      console.log(`Skipping webhook for ${logDetails}`)
+    }
   }
 
   if (context.config.discordWebhook) {
-    postToDiscordWebhook(context.config.discordWebhook, output)
-    console.log('\n-- Discord WEBHOOK to ' + context.config.discordWebhook + ' --')
-  }
-}
-
-/**
- * Posts a to discord channel via webhook.
- * This functionality should move out of the listener
- * to the notification system, as soon as we have one.
- */
- async function postToDiscordWebhook(discordWebhookUrl, data){
-  const eventIcons = {
-    ListingCreated: ':trumpet:',
-    ListingUpdated: ':saxophone:',
-    ListingWithdrawn: ':x:',
-    ListingData: ':cd:',
-    ListingArbitrated: ':boxing_glove:',
-    OfferCreated: ':baby_chick:',
-    OfferWithdrawn: ':feet:',
-    OfferAccepted: ':bird:',
-    OfferDisputed: ':dragon_face:',
-    OfferRuling: ':dove:',
-    OfferFinalized: ':unicorn:',
-    OfferData: ':beetle:'
-  }
-
-  const personDisp = (p)=> {
-    let str = ''
-    if(p.profile && (p.profile.firstName || p.profile.lastName)){
-      str += `${p.profile.firstName|''} ${p.profile.lastName||''} - `
-    }
-    str += p.address
-    return str
-  }
-  const priceDisp = (listing) => {
-    const price = listing.price
-    return (price ? `${price.amount}${price.currency}` : '')
-  }
-
-  const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
-  const lines = []
-  const listing = data.related.listing
-
-  let discordData = {}
-
-  if (data.related.offer !== undefined) { // Offer
-    discordData = {
-      "embeds":[
-        {
-          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
-          "description":[
-            `https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,
-            `Seller: ${personDisp(data.related.seller)}`,
-            `Buyer: ${personDisp(data.related.buyer)}`
-          ].join("\n")
-        }
-      ]
-    }
-  } else { // Listing
-    discordData = {
-      "embeds":[
-        {
-          "title":`${icon} ${data.log.eventName} - ${listing.title} - ${priceDisp(listing)}`,
-          "description":[
-            `${listing.description.split("\n")[0].slice(0, 60)}...`,
-            `https://dapp.originprotocol.com/#/listing/${listing.id}`,
-            `Seller: ${personDisp(data.related.seller)}`,
-          ].join("\n")
-        }
-      ]
+    console.log(
+      '\n-- Discord WEBHOOK to ' + context.config.discordWebhook + ' --'
+    )
+    try {
+      await withRetrys(async () => {
+        postToDiscordWebhook(context.config.discordWebhook, output)
+      }, (exitOnError = false))
+    } catch (e) {
+      console.log(`Skipping discord webhook for ${logDetails}`)
     }
   }
-  await postToWebhook(discordWebhookUrl, JSON.stringify(discordData))
- }
-
-
-/**
- * Sends a blob of json to a webhook.
- */
-async function postToWebhook(urlString, json) {
-  const url = urllib.parse(urlString)
-  const postOptions = {
-    host: url.hostname,
-    port: url.port,
-    path: url.path,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(json)
-    }
-  }
-  return new Promise((resolve, reject) => {
-    const client = url.protocol === 'https:' ? https : http
-    const req = client.request(postOptions, res => {
-      console.log(res.statusCode )
-      if (res.statusCode === 200 || res.statusCode === 204) {
-        resolve()
-      } else {
-        reject()
-      }
-    })
-    req.on('error', (err) => {
-      reject(err)
-    })
-    req.write(json)
-    req.end()
-  })
 }
 
 // -------------------------------------------------------------------
@@ -708,6 +568,9 @@ process.argv.forEach(arg => {
 })
 
 const config = {
+  // Unique id. Used to differentiate between the several listeners instances
+  // that may run concurrently (ex: main vs webhook vs re-indexing).
+  listenerId: args['--listener-id'] || 'main',
   // Call webhook to process event.
   webhook: args['--webhook'] || process.env.WEBHOOK,
   // Call post to discord webhook to process event.
@@ -721,12 +584,27 @@ const config = {
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
-  trailBlocks: args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0,
+  trailBlocks:
+    parseInt(args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0),
   // web3 provider url
-  web3Url: args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
+  web3Url:
+    args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
   // ipfs url
   ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
+  // Origin-js configs
+  arbitratorAccount: process.env.ARBITRATOR_ACCOUNT,
+  affiliateAccount: process.env.AFFILIATE_ACCOUNT,
+  blockEpoch: parseInt(process.env.BLOCK_EPOCH || 0),
+  // Default continue block.
+  defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
 }
 
-// Start the listener running
-liveTracking(config)
+const port = 9499
+
+app.listen({ port: port }, () => {
+  console.log(`Serving Prometheus metrics on port ${port}`)
+  // Start the listener.
+  console.log(`Starting event-listener with config:\n${
+    JSON.stringify(config, (k, v) => v === undefined ? null : v, 2)}`)
+  liveTracking(config)
+})
