@@ -24,6 +24,8 @@ matrix:
   - name: "Origin-discovery unit tests"
     language: node_js
     node_js: 8
+    addons:
+      postgresql: 9.6
     services:
     - postgresql
     env:
