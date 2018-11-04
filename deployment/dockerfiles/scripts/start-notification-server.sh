@@ -2,6 +2,8 @@
 
 set -e
 
+eval $(envkey-source)
+
 echo "Running database migrations for notification server"
 
 # Run database migrations

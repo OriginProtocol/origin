@@ -1,8 +1,8 @@
 // This is intended to be deployed as a Google Cloud Function to relay
 // Google Build events to Discord
 
-const octokit = require('@octokit/rest')()
-const Discord = require('discord.js')
+const octokit = require('@octokit/rest')();
+const Discord = require('discord.js');
 
 const hook = new Discord.WebhookClient(
   process.env.WEBHOOK_ID,
@@ -26,27 +26,27 @@ module.exports.subscribe = async (event, callback) => {
 };
 
 // eventToBuild transforms pubsub event message to a build object.
-const eventToBuild = (data) => {
+const eventToBuild = data => {
   return JSON.parse(new Buffer(data, 'base64').toString());
-}
+};
 
-const getBuildCommitData = async (build) => {
+const getBuildCommitData = async build => {
   let owner = 'OriginProtocol',
     repo = 'origin',
     sha = build.sourceProvenance.resolvedRepoSource.commitSha;
-  return await octokit.repos.getCommit({owner, repo, sha});
+  return await octokit.repos.getCommit({ owner, repo, sha });
 };
 
 // createDiscordMessage create a message from a build object.
-const createDiscordWebhook = async (build) => {
+const createDiscordWebhook = async build => {
   let commitData = await getBuildCommitData(build);
 
   let container = `${build.substitutions._CONTAINER}`;
   let buildId = `${build.id}`;
-  let commitHash = `${build.sourceProvenance.resolvedRepoSource.commitSha}`
-  let shortHash = commitHash.substr(0, 8)
-  let namespace
-  switch(build.source.repoSource.branchName) {
+  let commitHash = `${build.sourceProvenance.resolvedRepoSource.commitSha}`;
+  let shortHash = commitHash.substr(0, 8);
+  let namespace;
+  switch (build.source.repoSource.branchName) {
     case 'master':
       namespace = '`dev`';
       break;
@@ -56,19 +56,23 @@ const createDiscordWebhook = async (build) => {
     case 'prod':
       namespace = '`prod`';
       break;
-  };
+  }
 
   let message;
   // Base options
   let options = {
     username: 'OriginCI',
     avatarURL: 'https://bit.ly/2PgBEnm',
-    embeds: [{
-      fields: [{
-        name: 'Build ID',
-        value: `[${buildId}](${build.logUrl})`
-      }]
-    }]
+    embeds: [
+      {
+        fields: [
+          {
+            name: 'Build ID',
+            value: `[${buildId}](${build.logUrl})`
+          }
+        ]
+      }
+    ]
   };
 
   if (build.status === 'WORKING') {
@@ -94,4 +98,4 @@ const createDiscordWebhook = async (build) => {
     options.embeds[0].color = '16724787';
   }
   return { message: message, options: options };
-}
+};
