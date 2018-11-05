@@ -3,8 +3,8 @@ import { withRouter } from 'react-router'
 
 class Customize extends Component {
 
-  componentDidMount() {
-    const dappConfig = {
+  async loadCustomConfig() {
+    return {
       name: 'Micah\'s Chicken Rental',
       logo: 'ipfs://QmRAQB6YaCyidP37UdDnjFY5vQuiBrcqdyoW1CuDgwxkD4',
       about: 'A place to rent quality chickens',
@@ -56,18 +56,32 @@ class Customize extends Component {
         'light-footer': '#3fdc35'
       }
     }
-    for (let [cssVarName, cssVarValue] of Object.entries(dappConfig.cssVars)) {
-      document.documentElement.style.setProperty(`--${cssVarName}`, cssVarValue);
+  }
+
+  componentDidMount() {
+    // Sample at:
+    // https://gist.githubusercontent.com/wanderingstan/d603b85ae5640f09de6da80dff21af5e/raw/a7ebf6508c91221236c02414dd49bd466feb8b75/dappConfig.js'
+    // http://localhost:3000/?configUrl=https%3A%2F%2Fgist.githubusercontent.com%2Fwanderingstan%2Fd603b85ae5640f09de6da80dff21af5e%2Fraw%2Fa7ebf6508c91221236c02414dd49bd466feb8b75%2FdappConfig.js#/
+    const m = window.location.search.match(/configUrl=([^#]*)/)
+    if (!m) {
+      // No custom URL
+      return
     }
+    const configUrl = decodeURIComponent(m[1])
+    console.log(`Config URL:${configUrl}`)
+    fetch(configUrl)
+    .then(response => response.json())
+    .then(dappConfig => {
+      // Iterate over css vars and set them
+      for (let [cssVarName, cssVarValue] of Object.entries(dappConfig.cssVars)) {
+        document.documentElement.style.setProperty(`--${cssVarName}`, cssVarValue);
+      }
+    })
 
     // Can't set env vars at runtime. :(
     // https://stackoverflow.com/questions/51729775/node-programmatically-set-process-environment-variables-not-available-to-importe
     // process.env.AFFILIATE_ACCOUNT = '0xFFFFFFFF2380a5e0208B25AC69216Bd7Ff206bF8'
     // console.log(`process.env.AFFILIATE_ACCOUNT: ${process.env.AFFILIATE_ACCOUNT}`)
-  }
-
-  componentDidUpdate(prevProps) {
-    console.log('customize in da house!')
   }
 
   render() {
