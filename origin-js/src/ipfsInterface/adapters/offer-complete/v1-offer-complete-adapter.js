@@ -20,7 +20,7 @@ export default class OfferCompleteAdapterV1 extends AdapterBase {
     } else if (offer.listingType === 'fractional') {
       // TODO
     } else {
-      throw new Error(`Unexpected offer type: ${/*TODO*/}`)
+      throw new Error('Unexpected offer type: ${/*TODO*/}')
     }
 
     return offer

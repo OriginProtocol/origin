@@ -20,7 +20,7 @@ export default class ListingCompleteAdapterV1 extends AdapterBase {
     } else if (listing.listingType === 'fractional') {
       // TODO
     } else {
-      throw new Error(`Unexpected listing type: ${/*TODO*/}`)
+      throw new Error('Unexpected listing type: ${/*TODO*/}')
     }
 
     return listing
