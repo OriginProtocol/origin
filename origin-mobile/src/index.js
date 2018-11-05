@@ -2,18 +2,23 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import expressWs from 'express-ws'
 import useragent from 'express-useragent'
+import cors from 'cors'
+import bodyParser from 'body-parser'
 
 const app = express()
 expressWs(app)
 app.use(cookieParser())
 app.use(useragent.express())
+app.use(cors({ origin:true, credentials: true }))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 
 import linkerRoutes from './linker-routes'
 
 const port = 3008
 
-app.use('/wallet-linker', linkerRoutes)
+app.use('/api/wallet-linker', linkerRoutes)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 

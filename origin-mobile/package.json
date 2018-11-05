@@ -9,19 +9,21 @@
   "scripts": {
     "install:dev": "npm install && npm link origin",
     "test": "NODE_ENV=test mocha -r @babel/register --timeout 10000 --exit",
-    "start": "node -r @babel/register src/index.js"
+    "start": "npx nodemon -r @babel/register -r source-map-support src/index.js"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^6.0.0",
     "express": "^4.16.4",
     "express-useragent": "^1.0.12",
     "express-ws": "^4.0.0",
     "js-sha3": "^0.8.0",
     "lodash": "^4.17.11",
+    "nodemon": "^1.18.6",
     "origin": "^0.8.5",
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
@@ -45,6 +47,8 @@
     "presets": [
       "@babel/preset-env"
     ],
+    "sourceMaps": "both",
+    "retainLines":true,
     "plugins": [
       "@babel/plugin-transform-runtime"
     ]

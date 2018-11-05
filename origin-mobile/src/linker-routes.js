@@ -21,15 +21,16 @@ const clientTokenHandler = (res, clientToken) => {
 const linker = new Linker()
 
 router.post("/generate-code", async (req, res) => {
-  const clientToken = getClientToken(req)
+  const _clientToken = getClientToken(req)
+  console.log("generated client token", _clientToken)
   const {return_url, session_token, pending_call} = req.body
-  const {outClientToken, sessionToken, linkCode, linked} = await linker.generateCode(clientToken, session_token, req.useragent, return_url, pending_call)
-  clientTokenHandler(res, outClientToken)
-  res.send({session_token:sessionToken, link_code:linkCode, linked})
+  const {clientToken, sessionToken, code, linked} = await linker.generateCode(_clientToken, session_token, req.useragent, return_url, pending_call)
+  clientTokenHandler(res, clientToken)
+  res.send({session_token:sessionToken, link_code:code, linked})
 })
 
 router.get("/link-info/:code", async (req, res) => {
-  const {code} = req.parameters
+  const {code} = req.params
   // this is the context
   const {appInfo, linkId} = await linker.getLinkInfo(code)
   res.send({app_info:appInfo, link_id:linkId})
@@ -37,21 +38,21 @@ router.get("/link-info/:code", async (req, res) => {
 
 router.post("/call-wallet/:sessionToken", async (req, res) => {
   const clientToken = getClientToken(req)
-  const {sessionToken} = req.parameters
+  const {sessionToken} = req.params
   const {account, call_id, call, return_url} = req.body
   const success = await linker.callWallet(clientToken, sessionToken, account, call_id, call, return_url)
   res.send({success})
 })
 
 router.post("/wallet-called/:walletToken", async (req, res) => {
-  const {walletToken} = req.parameters
+  const {walletToken} = req.params
   const {call_id, link_id, session_token, result} = req.body
   const success = await linker.walletCalled(walletToken, call_id, link_id, session_token, result)
   res.send({success})
 })
 
 router.post("/link-wallet/:walletToken", async (req, res) => {
-  const {walletToken} = req.parameters
+  const {walletToken} = req.params
   const {code, current_rpc, current_accounts} = req.body
   const {linked, pendingCallContext, appInfo, linkId, linkedAt} 
     = await linker.linkWallet(wallet_token, code, current_rpc, current_accounts)
@@ -61,7 +62,7 @@ router.post("/link-wallet/:walletToken", async (req, res) => {
 })
 
 router.get("/wallet-links/:walletToken", async (req, res) => {
-  const {walletToken} = req.parameters
+  const {walletToken} = req.params
   const links = await linker.getWalletLinks(walletToken)
     .map(({linked, appInfo, linkId, linkedAt}) => ({linked, app_info:appInfo, link_id:link_id, linked_at:linkedAt}))
   res.send(links)
@@ -74,18 +75,28 @@ router.post("/unlink", async (req, res) => {
 })
 
 router.post("/unlink-wallet/:walletToken", async (req, res) => {
-  const {walletToken} = req.parameters
+  const {walletToken} = req.params
   const {link_id} = req.body
   const success = await linker.unlinkWallet(walletToken, link_id)
   res.send(success)
 })
 
 router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
-  const client_token = getClientToken(req)
-  const {sessionToken, readId} = req.parameters
+  const clientToken = getClientToken(req)
+  console.log("Linked messages socket has been called", clientToken)
+  const {sessionToken, readId} = req.params
+  //filter out sessionToken
+  const realSessionToken = ["-", "null", "undefined"].includes(sessionToken)?null:sessionToken
+
+  console.log("linked messages socket connect with ", sessionToken, " and readId ", readId)
+
+  if (!clientToken){
+    ws.close(1000, "No client token available.")
+    return
+  }
 
   //this prequeues some messages before establishing the connection
-  const closeHandler = await linker.handleSessionMessages(sessionToken, lastReadId, (msg, msgId) =>
+  const closeHandler = await linker.handleSessionMessages(clientToken, realSessionToken, readId, (msg, msgId) =>
     {
       ws.send({msg, msgId})
     })
@@ -97,7 +108,7 @@ router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
 })
 
 router.ws("/wallet-messages/:walletToken/:readId", (ws, req) => {
-  const {walletToken, readId} = req.parameters
+  const {walletToken, readId} = req.params
 
   if (!walletToken) {
     ws.close()

@@ -66,12 +66,12 @@ class Linker {
   async initClientSession(clientToken, sessionToken, lastMessageId) {
     const linkObj = await this.findLink(clientToken)
     let init = false
-    if (!linkedObj) {
-      throw("Cannot find link for client token")
+    if (!linkObj) {
+      throw("Cannot find link for client token", clientToken)
     }
     // if this is a brand new session ignore all current messages
     if (!lastMessageId) {
-      const message = await this.messages.getLastMessage(token)
+      const message = await this.messages.getLastMessage(clientToken)
       if (message)
       {
         lastMessageId = message.msgId
@@ -80,19 +80,19 @@ class Linker {
     }
     else
     {
-      const message = await this.messages.getFirstMessage(token)
-      if (message[0].msgId > lastMessageId)
+      const message = await this.messages.getFirstMessage(clientToken)
+      if (message && message.msgId > lastMessageId)
       {
         init = true
       }
     }
     if (!sessionToken) {
-      sessionToken = this.generateInitSession(linkedObj)
+      sessionToken = this.generateInitSession(linkObj)
       init = true
     }
 
     //set the lastest device context just in case we missed out on some messages
-    const initMsg = init && this._getContextMsg(linkedObj, sessionToken)
+    const initMsg = init && this._getContextMsg(linkObj, sessionToken)
     return {initMsg, sessionToken, lastMessageId}
   }
 
@@ -121,7 +121,7 @@ class Linker {
   }
 
   async handleSessionMessages(clientToken, _sessionToken, _lastMessageId, messageFn) {
-    const {initMsg, sessionToken, lastMessageId} = await this.initClientSession(client_token, _sessionToken, _lastMessageId)
+    const {initMsg, sessionToken, lastMessageId} = await this.initClientSession(clientToken, _sessionToken, _lastMessageId)
     if (initMsg) {
       messageFn(msg, msgId)
     }

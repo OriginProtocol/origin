@@ -30,7 +30,7 @@ class WalletLinker {
       })
     )
     this.loadSessionStorage()
-    clearInterval(self.interval)
+    //clearInterval(self.interval)
   }
 
   startPlaceholder() {
@@ -257,10 +257,15 @@ class WalletLinker {
   }
 
   startMessagesSync() {
+   /*
     if (!this.interval) {
       //5 second intervals for now
       this.interval = setInterval(this.syncLinkMessages.bind(this), 5 * 1000)
     }
+    */
+    
+    this.syncLinkMessages()
+    
   }
 
   getReturnUrl() {
@@ -304,14 +309,35 @@ class WalletLinker {
     return this.link_code
   }
 
+  closeLinkMessages() {
+    if (this.msg_ws && this.msg_ws.readyState !== this.msg_ws.CLOSED)
+    {
+      this.msg_ws.close()
+    }
+  }
+
   async syncLinkMessages() {
-    const wsUrl = this.serverUrl.replace(/^http/, 'ws')
-    const ws = new WebSocket(wsUrl + 'link-messages/' + (this.session_token || '') + '/' +  (this.last_message_id || 0))
+    this.closeLinkMessages()
+    const wsUrl = appendSlash(this.serverUrl.replace(/^http/, 'ws'))
+    const ws = new WebSocket(wsUrl + 'linked-messages/' + (this.session_token || '-') + '/' +  (this.last_message_id || 0))
 
     ws.onmessage = e => {
       this.processMessage(e)
     }
 
+    ws.onclose = e => {
+      console.log("Websocket closed event:", e)
+      if (e.code != 1000)
+      {
+        //this is an abnormal closure let's try reopen this in a bit
+        setTimeout(() => {
+          if (this.msg_ws === ws) {
+            this.syncLinkMessages()
+          }
+        }, 60000) // check in 60 seconds
+      }
+    }
+    this.msg_ws = ws
   }
 
   async unlink() {
