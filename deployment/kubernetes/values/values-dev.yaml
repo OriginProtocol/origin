@@ -3,12 +3,10 @@ databaseInstance: origin-214503:us-west1:dev
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: '1e881e0-1539293369'
-bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '1e881e0'
-dappReplicas: 2
+dappImageTag: 'd2525d2'
 
 # Origin network configuration
 gethTxReplicas: 1
@@ -29,8 +27,7 @@ faucetImageTag: '389fd1f'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '21e0ddb'
-eventlistenerWeb3Url: https://eth.dev.originprotocol.com/rpc
+eventlistenerImageTag: 'f9a1525'
 
 # origin-discovery
 discoveryImage: origin-discovery

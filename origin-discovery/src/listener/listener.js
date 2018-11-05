@@ -569,17 +569,17 @@ process.argv.forEach(arg => {
 const config = {
   // Unique id. Used to differentiate between the several listeners instances
   // that may run concurrently (ex: main vs webhook vs re-indexing).
-  listenerId: args['--listener-id'] || 'main',
+  listenerId: args['--listener-id'] || process.env.LISTENER_ID || 'main',
   // Call webhook to process event.
   webhook: args['--webhook'] || process.env.WEBHOOK,
   // Call post to discord webhook to process event.
   discordWebhook: args['--discord-webhook'] || process.env.DISCORD_WEBHOOK,
   // Index events in the search index.
-  elasticsearch: args['--elasticsearch'] || process.env.ELASTICSEARCH,
+  elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
   // Index events in the database.
-  db: args['--db'] || process.env.DATABASE,
+  db: args['--db'] || (process.env.DATABASE === 'true'),
   // Verbose mode, includes dumping events on the console.
-  verbose: args['--verbose'] || process.env.VERBOSE,
+  verbose: args['--verbose'] || (process.env.VERBOSE === 'true'),
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
