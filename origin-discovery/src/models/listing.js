@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   })
 
-  Listing.associate = function(models) {
+  Listing.associate = function (models) {
     // associations can be defined here
   }
 

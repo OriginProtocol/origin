@@ -22,11 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   })
 
-  Offer.associate = function(models) {
+  Offer.associate = function (models) {
     // associations can be defined here
   }
 
   return Offer
 }
-
-

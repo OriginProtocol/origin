@@ -16,7 +16,7 @@ A simple way to see the listener in action:
 
     cd origin-discovery
     npm run install:dev
-    node daemon/indexing/listener/listener.js
+    node src/listener/listener.js
 
 ## Command line options
 

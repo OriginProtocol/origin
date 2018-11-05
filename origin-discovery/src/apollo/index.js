@@ -10,9 +10,8 @@ const promBundle = require('express-prom-bundle')
 const { ApolloServer, gql } = require('apollo-server-express')
 
 const search = require('../lib/search.js')
-const db = require('../models')
 
-const app = express();
+const app = express()
 const bundle = promBundle({
   promClient: {
     collectDefaultMetrics: {
@@ -232,15 +231,14 @@ const typeDefs = gql`
 
 // Maximum number of items returned in a page.
 // If caller requests more, page size will be trimmed to MaxResultsPerPage.
-const MaxResultsPerPage = 100
-
+// const MaxResultsPerPage = 100
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
   Query: {
-    async listings(root, args, context, info) {
+    async listings (root, args, context, info) {
       // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
-      let {listings, maxPrice, minPrice, totalNumberOfListings} = await search.Listing
+      const { listings, maxPrice, minPrice, totalNumberOfListings } = await search.Listing
         .search(args.searchQuery, args.filters, args.page.numberOfItems, args.page.offset)
       return {
         offset: args.page.offset,
@@ -253,48 +251,47 @@ const resolvers = {
         nodes: listings
       }
     },
-    async listing(root, args, context, info) {
+    async listing (root, args, context, info) {
       return search.Listing.get(args.id)
     },
-    async offers(root, args, context, info){
+    async offers (root, args, context, info) {
       const opts = {}
       opts.buyerAddress = args.buyerAddress
       opts.listingId = args.listingId
       const offers = search.Offer.search(opts)
-      return {nodes: offers}
+      return { nodes: offers }
     },
-    async offer(root, args, context, info){
+    async offer (root, args, context, info) {
       return search.Offer.get(args.id)
     },
-    user(root, args, context, info) {
+    user (root, args, context, info) {
       return search.User.get(args.walletAddress)
     }
   },
   Listing: {
-    seller(listing, args, context, info) {
+    seller (listing, args, context, info) {
       return relatedUserResolver(listing.seller, info)
     },
-    title(listing) {
+    title (listing) {
       return listing.title
     },
-    category(listing) {
+    category (listing) {
       return listing.type
     },
-    subCategory(listing) {
+    subCategory (listing) {
       return listing.category
     },
-    price(listing) {
-      if(listing.priceCurrency === undefined
-          || listing.priceAmount === undefined)
-      {
+    price (listing) {
+      if (listing.priceCurrency === undefined ||
+          listing.priceAmount === undefined) {
         return undefined
       }
-      return {currency: listing.priceCurrency, amount: listing.priceAmount}
+      return { currency: listing.priceCurrency, amount: listing.priceAmount }
     },
-    offers(listing, args) {
-      const offers = search.Offer.search({listingId:listing.id})
-      return {nodes: offers}
-    },
+    offers (listing, args) {
+      const offers = search.Offer.search({ listingId: listing.id })
+      return { nodes: offers }
+    }
     // reviews(listing, args) {
     //   // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
     //   return {
@@ -309,30 +306,30 @@ const resolvers = {
     // },
   },
   Offer: {
-    seller(offer, args, context, info){
+    seller (offer, args, context, info) {
       return relatedUserResolver(offer.seller, info)
     },
-    buyer(offer, args, context, info){
+    buyer (offer, args, context, info) {
       return relatedUserResolver(offer.buyer, info)
     },
-    price(offer) {
-      return {currency: 'ETH', amount: offer.priceEth}
+    price (offer) {
+      return { currency: 'ETH', amount: offer.priceEth }
     },
-    listing(offer, args, context, info) {
+    listing (offer, args, context, info) {
       const requestedSubFields = info.fieldNodes[0].selectionSet.selections
-      const isIdOnly = requestedSubFields.filter(x=>x.name.value !== 'id').length === 0
-      if(isIdOnly){
-        return {id: offer.listingId}
+      const isIdOnly = requestedSubFields.filter(x => x.name.value !== 'id').length === 0
+      if (isIdOnly) {
+        return { id: offer.listingId }
       } else {
         return search.Listing.get(offer.listingId)
       }
     }
   },
   User: {
-    offers(user, args) {
-      const offers = search.Offer.search({buyer: user.walletAddress})
-      return {nodes: offers}
-    },
+    offers (user, args) {
+      const offers = search.Offer.search({ buyer: user.walletAddress })
+      return { nodes: offers }
+    }
   }
   //   identityAddress(user) {
   //     // TODO fetch identify based on user.walletAddress
@@ -360,7 +357,7 @@ const resolvers = {
  * @param {string} walletAddress
  * @param {object} info
  */
-function relatedUserResolver(walletAddress, info){
+function relatedUserResolver (walletAddress, info) {
   const requestedFields = info.fieldNodes[0].selectionSet.selections
   const isIdOnly = requestedFields.filter(x => x.name.value !== 'walletAddress')
     .length === 0
@@ -375,7 +372,7 @@ function relatedUserResolver(walletAddress, info){
 // responsible for fetching the data for those types.
 const server = new ApolloServer({ typeDefs, resolvers })
 
-server.applyMiddleware({ app });
+server.applyMiddleware({ app })
 
 const port = process.env.PORT || 4000
 

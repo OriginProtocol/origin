@@ -17,7 +17,6 @@ const db = require('../models')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils.js')
 const { postToDiscordWebhook, postToWebhook } = require('./webhooks.js')
 
-
 // Create an express server for Prometheus to scrape metrics
 const app = express()
 const bundle = promBundle({
@@ -71,7 +70,7 @@ const generateOfferId = log => {
 const getListingDetails = async log => {
   const listingId = generateListingId(log)
   const listing = await o.marketplace.getListing(listingId)
-  let seller = undefined
+  let seller
   try {
     seller = await o.users.get(listing.seller)
   } catch (e) {
@@ -87,8 +86,8 @@ const getListingDetails = async log => {
 const getOfferDetails = async log => {
   const listing = await o.marketplace.getListing(generateListingId(log))
   const offer = await o.marketplace.getOffer(generateOfferId(log))
-  let seller = undefined
-  let buyer = undefined
+  let seller
+  let buyer
   try {
     seller = await o.users.get(listing.seller)
   } catch (e) {
@@ -152,12 +151,12 @@ const OFFER_EVENTS = [
 /**
  * setup Origin JS according to the config.
  */
-function setupOriginJS(config) {
+function setupOriginJS (config) {
   const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
   // global
   web3 = new Web3(web3Provider)
 
-  const ipfsUrl = urllib.parse(config.ipfsUrl)
+  const ipfsUrl = new urllib.URL(config.ipfsUrl)
 
   // Error out if any mandatory env var is not set.
   if (!config.arbitratorAccount) {
@@ -191,7 +190,7 @@ function setupOriginJS(config) {
  * - checks for a new block every checkIntervalSeconds
  * - if new block appeared, look for all events after the last found event
  */
-async function liveTracking(config) {
+async function liveTracking (config) {
   setupOriginJS(config)
   const context = await new Context(config).init()
 
@@ -204,7 +203,7 @@ async function liveTracking(config) {
     await withRetrys(async () => {
       start = new Date()
       const currentBlockNumber = await web3.eth.getBlockNumber()
-      if (currentBlockNumber == lastCheckedBlock) {
+      if (currentBlockNumber === lastCheckedBlock) {
         console.log('No new block.')
         return scheduleNextCheck()
       }
@@ -237,10 +236,10 @@ async function liveTracking(config) {
 /**
  * runBatch - gets and processes logs for a range of blocks
  */
-async function runBatch(opts, context) {
+async function runBatch (opts, context) {
   const fromBlock = opts.fromBlock
   const toBlock = opts.toBlock
-  let lastLogBlock = undefined
+  let lastLogBlock
 
   console.log(
     'Looking for logs from block ' + fromBlock + ' to ' + (toBlock || 'Latest')
@@ -259,12 +258,12 @@ async function runBatch(opts, context) {
 
   for (const log of logs) {
     const contractVersion = context.addressToVersion[log.address]
-    if (contractVersion == undefined) {
+    if (contractVersion === undefined) {
       continue // Skip - Not a trusted contract
     }
     const contractName = contractVersion.contractName
     const rule = context.signatureToRules[log.topics[0]][contractName]
-    if (rule == undefined) {
+    if (rule === undefined) {
       continue // Skip - No handler defined
     }
     lastLogBlock = log.blockNumber
@@ -278,7 +277,7 @@ async function runBatch(opts, context) {
  *  Takes and event/log and a matching rule
  *  then annotates the event/log, runs the rule, and ouputs everything.
  */
-async function handleLog(log, rule, contractVersion, context) {
+async function handleLog (log, rule, contractVersion, context) {
   log.decoded = web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
     log.data,
@@ -324,11 +323,11 @@ async function handleLog(log, rule, contractVersion, context) {
   // from smart contracts the data pointed to by the event. This may occur due to load balancing
   // across ethereum nodes and if some nodes are lagging. For example the ethereum node we
   // end up connecting to for reading the data may lag compared to the node received the event from.
-  let ruleResults = undefined
+  let ruleResults
   try {
     await withRetrys(async () => {
       ruleResults = await rule.ruleFn(log)
-    }, (exitOnError = false))
+    }, false)
   } catch (e) {
     console.log(`Skipping indexing for ${logDetails} - ${e}`)
     return
@@ -348,7 +347,7 @@ async function handleLog(log, rule, contractVersion, context) {
   const userAddress = log.decoded.party
   const ipfsHash = log.decoded.ipfsHash
 
-  //TODO: remove binary data from pictures in a proper way.
+  // TODO: remove binary data from pictures in a proper way.
   const listing = output.related.listing
   delete listing.ipfs.data.pictures
   const listingId = listing.id
@@ -360,7 +359,7 @@ async function handleLog(log, rule, contractVersion, context) {
   // an error if this happens.
   const ipfsListingId = listingId.split('-')[2]
   if (ipfsListingId !== log.decoded.listingID) {
-    throw `ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`
+    throw new Error(`ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`)
   }
 
   // TODO: This kind of verification logic should live in origin.js
@@ -400,7 +399,7 @@ async function handleLog(log, rule, contractVersion, context) {
   if (context.config.db) {
     if (LISTING_EVENTS.includes(rule.eventName)) {
       console.log(`Indexing listing in DB: id=${listingId}`)
-      listingData = {
+      const listingData = {
         id: listingId,
         status: listing.status,
         sellerAddress: listing.seller.toLowerCase(),
@@ -419,7 +418,7 @@ async function handleLog(log, rule, contractVersion, context) {
     if (OFFER_EVENTS.includes(rule.eventName)) {
       const offer = output.related.offer
       console.log(`Indexing offer in DB: id=${offer.id}`)
-      offerData = {
+      const offerData = {
         id: offer.id,
         listingId: listingId,
         status: offer.status,
@@ -443,7 +442,7 @@ async function handleLog(log, rule, contractVersion, context) {
     try {
       await withRetrys(async () => {
         await postToWebhook(context.config.webhook, json)
-      }, (exitOnError = false))
+      }, false)
     } catch (e) {
       console.log(`Skipping webhook for ${logDetails}`)
     }
@@ -456,7 +455,7 @@ async function handleLog(log, rule, contractVersion, context) {
     try {
       await withRetrys(async () => {
         postToDiscordWebhook(context.config.discordWebhook, output)
-      }, (exitOnError = false))
+      }, false)
     } catch (e) {
       console.log(`Skipping discord webhook for ${logDetails}`)
     }
@@ -468,14 +467,14 @@ async function handleLog(log, rule, contractVersion, context) {
 // -------------------------------------------------------------------
 
 class Context {
-  constructor(config) {
+  constructor (config) {
     this.config = config
     this.signatureToRules = undefined
     this.addressToVersion = undefined
     this.networkId = undefined
   }
 
-  async init() {
+  async init () {
     this.signatureToRules = buildSignatureToRules()
     this.addressToVersion = await buildAddressToVersion()
     this.networkId = await web3.eth.net.getId()
@@ -503,21 +502,21 @@ class Context {
  * //            ruleFn: [...] } }
  * //   }
  */
-function buildSignatureToRules() {
+function buildSignatureToRules () {
   const signatureLookup = {}
   for (const contractName in LISTEN_RULES) {
     const eventRules = LISTEN_RULES[contractName]
     const contract = o.contractService.contracts[contractName]
-    if (contract == undefined) {
+    if (contract === undefined) {
       throw Error("Can't find contract " + contractName)
     }
-    contract.abi.filter(x => x.type == 'event').forEach(eventAbi => {
+    contract.abi.filter(x => x.type === 'event').forEach(eventAbi => {
       const ruleFn = eventRules[eventAbi.name]
-      if (ruleFn == undefined) {
+      if (ruleFn === undefined) {
         return
       }
       const signature = web3.eth.abi.encodeEventSignature(eventAbi)
-      if (signatureLookup[signature] == undefined) {
+      if (signatureLookup[signature] === undefined) {
         signatureLookup[signature] = {}
       }
       signatureLookup[signature][contractName] = {
@@ -540,7 +539,7 @@ function buildSignatureToRules() {
  * //      { versionKey: '000', contractName: 'V00_Marketplace' }
  * //  }
  */
-async function buildAddressToVersion() {
+async function buildAddressToVersion () {
   const versionList = {}
   const adapters = o.marketplace.resolver.adapters
   const versionKeys = Object.keys(adapters)
@@ -576,11 +575,11 @@ const config = {
   // Call post to discord webhook to process event.
   discordWebhook: args['--discord-webhook'] || process.env.DISCORD_WEBHOOK,
   // Index events in the search index.
-  elasticsearch: args['--elasticsearch'] || process.env.ELASTICSEARCH,
+  elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
   // Index events in the database.
-  db: args['--db'] || process.env.DATABASE,
+  db: args['--db'] || (process.env.DATABASE === 'true'),
   // Verbose mode, includes dumping events on the console.
-  verbose: args['--verbose'] || process.env.VERBOSE,
+  verbose: args['--verbose'] || (process.env.VERBOSE === 'true'),
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind

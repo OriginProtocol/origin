@@ -8,7 +8,7 @@ const MAX_RETRY_WAIT_MS = 2 * 60 * 1000
  * Returns the first block the listener should start at for following events.
  * Reads the persisted state from either DB or continue file.
  */
-async function getLastBlock(config) {
+async function getLastBlock (config) {
   let lastBlock
   if (config.continueFile) {
     // Read state from continue file.
@@ -16,7 +16,7 @@ async function getLastBlock(config) {
       // No continue file. This happens if a listener is started for the first time.
       lastBlock = config.defaultContinueBlock
     } else {
-      const json = fs.readFileSync(config.continueFile, {encoding: 'utf8'})
+      const json = fs.readFileSync(config.continueFile, { encoding: 'utf8' })
       const data = JSON.parse(json)
       if (!data.lastLogBlock) {
         throw new Error(`Error: invalid format for continue file.`)
@@ -40,7 +40,7 @@ async function getLastBlock(config) {
  * Stores the last block we have read up.
  * Writes in either DB or continue file.
  */
-async function setLastBlock(config, blockNumber) {
+async function setLastBlock (config, blockNumber) {
   if (config.continueFile) {
     const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
     fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
@@ -53,7 +53,7 @@ async function setLastBlock(config, blockNumber) {
  * Retries up to N times, with exponential backoff.
  * If still failing after N times, exits the process.
  */
-async function withRetrys(fn, exitOnError = true) {
+async function withRetrys (fn, exitOnError = true) {
   let tryCount = 0
   while (true) {
     try {

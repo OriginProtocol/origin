@@ -1,12 +1,13 @@
 const http = require('http')
 const https = require('https')
+const urllib = require('url')
 
 /**
  * Posts a to discord channel via webhook.
  * This functionality should move out of the listener
  * to the notification system, as soon as we have one.
  */
-async function postToDiscordWebhook(discordWebhookUrl, data) {
+async function postToDiscordWebhook (discordWebhookUrl, data) {
   const eventIcons = {
     ListingCreated: ':trumpet:',
     ListingUpdated: ':saxophone:',
@@ -47,11 +48,11 @@ async function postToDiscordWebhook(discordWebhookUrl, data) {
         {
           title: `${icon} ${data.log.eventName} - ${
             listing.title
-            } - ${priceDisp(listing)}`,
+          } - ${priceDisp(listing)}`,
           description: [
             `https://dapp.originprotocol.com/#/purchases/${
               data.related.offer.id
-              }`,
+            }`,
             `Seller: ${personDisp(data.related.seller)}`,
             `Buyer: ${personDisp(data.related.buyer)}`
           ].join('\n')
@@ -65,7 +66,7 @@ async function postToDiscordWebhook(discordWebhookUrl, data) {
         {
           title: `${icon} ${data.log.eventName} - ${
             listing.title
-            } - ${priceDisp(listing)}`,
+          } - ${priceDisp(listing)}`,
           description: [
             `${listing.description.split('\n')[0].slice(0, 60)}...`,
             `https://dapp.originprotocol.com/#/listing/${listing.id}`,
@@ -81,8 +82,8 @@ async function postToDiscordWebhook(discordWebhookUrl, data) {
 /**
  * Sends a blob of json to a webhook.
  */
-async function postToWebhook(urlString, json) {
-  const url = urllib.parse(urlString)
+async function postToWebhook (urlString, json) {
+  const url = new urllib.URL(urlString)
   const postOptions = {
     host: url.hostname,
     port: url.port,
@@ -100,7 +101,7 @@ async function postToWebhook(urlString, json) {
       if (res.statusCode === 200 || res.statusCode === 204) {
         resolve()
       } else {
-        reject()
+        reject(new Error(`statusCode ${res.statusCode}`))
       }
     })
     req.on('error', err => {

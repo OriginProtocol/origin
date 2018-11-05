@@ -1,7 +1,6 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-
   // Note: all addresses and hashes are stored in lowercase hexadecimal notation.
   const Event = sequelize.define('Event', {
     // Block number at which the event was recorded.
@@ -21,14 +20,14 @@ module.exports = (sequelize, DataTypes) => {
     // JSON data for the event as returned by web3 method getPastEvents.
     data: DataTypes.JSONB,
     // Creation date.
-    createdAt: DataTypes.DATE,
+    createdAt: DataTypes.DATE
   }, {
     tableName: 'event',
     // Do not automatically add the timestamp attributes (updatedAt, createdAt).
     timestamps: false
   })
 
-  Event.associate = function(models) {
+  Event.associate = function (models) {
     // associations can be defined here
   }
 
