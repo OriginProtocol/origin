@@ -44,6 +44,7 @@ const createDiscordWebhook = async build => {
   let container = `${build.substitutions._CONTAINER}`;
   let buildId = `${build.id}`;
   let commitHash = `${build.sourceProvenance.resolvedRepoSource.commitSha}`;
+  let shortCommitMessage = commitData.data.commit.message.split('\n')[0];
   let shortHash = commitHash.substr(0, 8);
   let namespace;
   switch (build.source.repoSource.branchName) {
@@ -85,7 +86,9 @@ const createDiscordWebhook = async build => {
         icon_url: commitData.data.author.avatar_url
       },
       color: '16759552',
-      description: `${shortHash} - ${commitData.data.commit.message}`
+      description: `[${shortHash}](${
+        commitData.data.commit.url
+      }) - ${shortCommitMessage}`
     });
   } else if (build.status === 'SUCCESS') {
     message = `Deployment succeeded for \`${container}\` to \`${namespace}\``;
