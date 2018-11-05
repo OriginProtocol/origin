@@ -3,6 +3,8 @@ matrix:
   - name: "origin-contracts / origin-js / origin-dapp unit tests"
     language: node_js
     node_js: 10
+    before_install:
+      - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CXX=g++-6; fi
     before_script:
     - npm install
     script:
