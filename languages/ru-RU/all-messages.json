@@ -1,8 +1,8 @@
 {
   "about-tokens.about": "О токенах Origin",
   "about-tokens.overview": "Обзор",
-  "about-tokens.overview-text": "Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.",
-  "about-tokens.uses": "What are Origin Tokens used for?",
+  "about-tokens.overview-text": "Токены Origin основаны на стандарте ERC-20 и применяются в децентрализованном приложении и на платформе Origin. Токены Origin могут использоваться для поощрения операторов торговой площадки, создателей децентрализованных приложений, пользователей, разработчиков и/или других лиц, занимающихся торговлей на платформе Origin и вносящих свой вклад в нее.",
+  "about-tokens.uses": "Для чего нужны токены Origin?",
   "about-tokens.boosting": "Boosting",
   "about-tokens.boosting-text": "Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.",
   "about-tokens.rewards": "Referral Rewards",
