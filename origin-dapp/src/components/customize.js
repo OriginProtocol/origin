@@ -74,6 +74,9 @@ class Customize extends Component {
     .then(dappConfig => {
       // Iterate over css vars and set them
       for (let [cssVarName, cssVarValue] of Object.entries(dappConfig.cssVars)) {
+        if (cssVarValue.match(/url *\(/)) {
+          throw "url() not allowed in DApp custom css"
+        }
         document.documentElement.style.setProperty(`--${cssVarName}`, cssVarValue);
       }
     })
