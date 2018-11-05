@@ -7,5 +7,5 @@ function exec(cmd) {
 if (process.env.CI) {
   exec("lerna bootstrap --ci");
 } else {
-  exec("lerna bootstrap");
+  exec("lerna bootstrap --progress");
 }
