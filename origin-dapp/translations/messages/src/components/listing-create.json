@@ -148,6 +148,10 @@
     "defaultMessage": "{selectedBoostAmount} OGN will be transferred for boosting. If you close your listing before accepting an offer, the OGN will be refunded to you."
   },
   {
+    "id": "listing-create.updateSuccessMessage",
+    "defaultMessage": "Your listing has been updated!"
+  },
+  {
     "id": "listing-create.successMessage",
     "defaultMessage": "Your listing has been created!"
   },

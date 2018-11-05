@@ -39,7 +39,7 @@ class MyPurchases extends Component {
     })
     const listingPromises = listingIds.map(listingId => {
       return new Promise(async resolve => {
-        const listing = await getListing(listingId, true)
+        const listing = await getListing(listingId, true, web3Account)
         resolve({ listingId, listing })
       })
     })

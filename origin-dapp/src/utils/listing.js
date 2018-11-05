@@ -92,7 +92,8 @@ export function originToDAppListing(originListing) {
     unitsRemaining: originListing.unitsRemaining,
     ipfsHash: originListing.ipfs.hash,
     listingType: originListing.type,
-    slots: originListing.slots
+    slots: originListing.slots,
+    events: originListing.events
   }
 }
 
@@ -103,8 +104,8 @@ export function originToDAppListing(originListing) {
  * @param {boolean} translate - Whether to translate the listing category or not.
  * @return {Promise<object>} DApp compatible listing object.
  */
-export async function getListing(id, translate = false) {
-  const originListing = await origin.marketplace.getListing(id)
+export async function getListing(id, translate = false, account) {
+  const originListing = await origin.marketplace.getListing(id, account)
   const dappListing = originToDAppListing(originListing)
   if (translate) {
     dappListing.category = translateListingCategory(dappListing.category)

@@ -16,8 +16,6 @@ class BoostSlider extends Component {
   constructor(props) {
     super(props)
 
-    // this.state = { selectedBoostAmountUsd: 0 }
-
     this.onChange = this.onChange.bind(this)
   }
 
