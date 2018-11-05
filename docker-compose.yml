@@ -81,18 +81,12 @@ services:
       dockerfile: development/dockerfiles/origin-discovery
     volumes:
       - ./origin-discovery:/app
+      - ./development/envfiles/origin-discovery.env:/app/.env
       # Mount compiled origin-js inside node modules, this is not actually a
       # dependency of the graphql server, but it is required here because the
       # event-listener and origin-discovery share the same package.json
       - ./origin-js:/usr/local/lib/node_modules/origin
       - origin_js_node_modules:/usr/local/lib/node_modules/origin/node_modules
-    environment:
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USERNAME=origin
-      - DATABASE_PASSWORD=origin
-      - DATABASE_NAME=origin
-      - ELASTICSEARCH_HOST=elasticsearch:9200
     depends_on:
       - origin-js
       - postgres
