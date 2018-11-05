@@ -112,17 +112,25 @@ app.post('/', async(req, res) => {
 
 app.post('/events', async (req, res) => {
   const { log = {}, related = {} } = req.body
+  const { decoded = {}, eventName } = log
   const { buyer = {}, listing, offer, seller = {} } = related
+  const eventDetails = `eventName=${eventName} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`
 
   res.sendStatus(200)
 
   if (!listing || (!buyer.address && !seller.address)) {
+    console.log(`Missing listing or buyer/seller address. Skipping ${eventDetails}`)
     return
   }
 
-  const { decoded = {}, eventName } = log
-  const { party } = decoded
+  if (!eventNotificationMap[eventName]) {
+    console.log(`Not a processable event. Skipping ${eventDetails}`)
+    return
+  }
   const { body, title } = eventNotificationMap[eventName]
+  const { party } = decoded
+
+  console.log(`Processing event ${eventDetails}`)
 
   const subs = await PushSubscription.findAll({
     where: {

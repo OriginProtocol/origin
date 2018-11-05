@@ -3,12 +3,10 @@ databaseInstance: origin-214503:us-west1:staging
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: '0a36fe4'
-bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
 dappImageTag: '0a36fe4'
-dappReplicas: 2
 
 # Rinkeby network configuration
 gethTxReplicas: 1
@@ -29,8 +27,6 @@ faucetImageTag: '13d0e21'
 # event-listener
 eventlistenerImage: event-listener
 eventlistenerImageTag: '7dfaa5d'
-eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
-eventlistenerContinueBlock: 3000000
 
 # origin-discovery
 discoveryImage: origin-discovery
