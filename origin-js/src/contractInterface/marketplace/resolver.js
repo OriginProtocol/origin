@@ -48,9 +48,9 @@ class MarketplaceResolver {
     return listingIds
   }
 
-  async getListing(listingId) {
+  async getListing(listingId, account) {
     const { adapter, listingIndex } = this.parseListingId(listingId)
-    return await adapter.getListing(listingIndex)
+    return await adapter.getListing(listingIndex, account)
   }
 
   async getOfferIds(listingId, opts = {}) {
@@ -90,6 +90,17 @@ class MarketplaceResolver {
     const listingId = generateListingId({ network, version, listingIndex })
 
     return Object.assign({ listingId }, transactionReceipt)
+  }
+
+  async updateListing(listingId, ipfsBytes, additionalDeposit, confirmationCallback) {
+    const { adapter, listingIndex } = this.parseListingId(listingId)
+
+    return await adapter.updateListing(
+      listingIndex,
+      ipfsBytes,
+      additionalDeposit,
+      confirmationCallback
+    )
   }
 
   async withdrawListing(listingId, ipfsBytes, confirmationCallback) {

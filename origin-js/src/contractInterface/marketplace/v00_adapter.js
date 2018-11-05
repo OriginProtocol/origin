@@ -102,6 +102,16 @@ class V00_MarkeplaceAdapter {
     }
   }
 
+  async updateListing(listingId, ipfsBytes, additionalDeposit, confirmationCallback) {
+    const from = await this.contractService.currentAccount()
+    const { transactionReceipt, timestamp } = await this.call(
+      'updateListing',
+      [listingId, from, ipfsBytes],
+      { from, confirmationCallback }
+    )
+    return Object.assign({ timestamp }, transactionReceipt)
+  }
+
   async withdrawListing(listingId, ipfsBytes, confirmationCallback) {
     const from = await this.contractService.currentAccount()
     const { transactionReceipt, timestamp } = await this.call(
@@ -226,7 +236,7 @@ class V00_MarkeplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async getListing(listingId) {
+  async getListing(listingId, account) {
     await this.getContract()
 
     // Get the raw listing data from the contract.
@@ -241,6 +251,15 @@ class V00_MarkeplaceAdapter {
       fromBlock: this.blockEpoch
     })
 
+    // if an account is passed in, we're looking for the listing state at the time
+    // that account made an offer, so find the block number of the offer
+    // and ignore any "ListingUpdated" events after that block number
+    let offerBlockNumber
+    if (account) {
+      const offerCreatedEvent = events.find(event => event.event === 'OfferCreated' && event.party === account)
+      offerBlockNumber = offerCreatedEvent && offerCreatedEvent.blockNumber
+    }
+
     let status = 'active'
 
     // Loop through the events looking and update the IPFS hash and offers appropriately.
@@ -250,7 +269,9 @@ class V00_MarkeplaceAdapter {
       if (event.event === 'ListingCreated') {
         ipfsHash = event.returnValues.ipfsHash
       } else if (event.event === 'ListingUpdated') {
-        ipfsHash = event.returnValues.ipfsHash
+        if (!offerBlockNumber || offerBlockNumber < event.blockNumber) {
+          ipfsHash = event.returnValues.ipfsHash
+        }
       } else if (event.event === 'ListingWithdrawn') {
         status = 'inactive'
       } else if (event.event === 'OfferCreated') {

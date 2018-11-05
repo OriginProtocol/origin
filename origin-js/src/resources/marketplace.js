@@ -61,9 +61,9 @@ class Marketplace {
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
-  async getListing(listingId) {
+  async getListing(listingId, account) {
     // Get the on-chain listing data.
-    const chainListing = await this.resolver.getListing(listingId)
+    const chainListing = await this.resolver.getListing(listingId, account)
 
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
@@ -183,7 +183,26 @@ class Marketplace {
     )
   }
 
-  // updateListing(listingId, data) {}
+  /**
+   * Update a listing.
+   * @param {string} listingId - The ID of the listing to update
+   * @param {object} ipfsData - The new data to store
+   * @param {number} [additionalDeposit] - Amount of additional deposit to send
+   * @param {func(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{listingId, ...transactionReceipt}>}
+   */
+  async updateListing(listingId, ipfsData, additionalDeposit = 0, confirmationCallback) {
+    // Validate and save the data to IPFS.
+    const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
+    return await this.resolver.updateListing(
+      listingId,
+      ipfsBytes,
+      additionalDeposit,
+      confirmationCallback
+    )
+  }
 
   /**
    * Closes a listing.
