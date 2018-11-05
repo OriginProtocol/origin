@@ -127,6 +127,7 @@ class ListingCreate extends Component {
           },
           selectedSchemaType: listing.schemaType,
           selectedBoostAmount: listing.boostValue,
+          isEditMode: true
         })
         await this.handleSchemaSelection(camelCaseToDash(listing.schemaType))
         this.setState({
@@ -379,12 +380,24 @@ class ListingCreate extends Component {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
       const methodName = this.state.isEditMode ? 'updateListing' : 'createListing'
-      const transactionReceipt = await origin.marketplace[methodName](
-        listing,
-        (confirmationCount, transactionReceipt) => {
-          this.props.updateTransaction(confirmationCount, transactionReceipt)
-        }
-      )
+      let transactionReceipt
+      if (this.state.isEditMode) {
+        transactionReceipt = await origin.marketplace[methodName](
+          this.props.listingId,
+          listing,
+          0, // TODO(John) - figure out how a seller would add "additional deposit"
+          (confirmationCount, transactionReceipt) => {
+            this.props.updateTransaction(confirmationCount, transactionReceipt)
+          }
+        )
+      } else {
+        transactionReceipt = await origin.marketplace[methodName](
+          listing,
+          (confirmationCount, transactionReceipt) => {
+            this.props.updateTransaction(confirmationCount, transactionReceipt)
+          }
+        )
+      }
 
       this.props.upsertTransaction({
         ...transactionReceipt,

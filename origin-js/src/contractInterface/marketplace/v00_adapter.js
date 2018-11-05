@@ -106,7 +106,7 @@ class V00_MarkeplaceAdapter {
     const from = await this.contractService.currentAccount()
     const { transactionReceipt, timestamp } = await this.call(
       'updateListing',
-      [listingId, from, ipfsBytes],
+      [listingId, ipfsBytes, additionalDeposit],
       { from, confirmationCallback }
     )
     return Object.assign({ timestamp }, transactionReceipt)
@@ -251,15 +251,6 @@ class V00_MarkeplaceAdapter {
       fromBlock: this.blockEpoch
     })
 
-    // if an account is passed in, we're looking for the listing state at the time
-    // that account made an offer, so find the block number of the offer
-    // and ignore any "ListingUpdated" events after that block number
-    let offerBlockNumber
-    if (account) {
-      const offerCreatedEvent = events.find(event => event.event === 'OfferCreated' && event.party === account)
-      offerBlockNumber = offerCreatedEvent && offerCreatedEvent.blockNumber
-    }
-
     let status = 'active'
 
     // Loop through the events looking and update the IPFS hash and offers appropriately.
@@ -269,7 +260,19 @@ class V00_MarkeplaceAdapter {
       if (event.event === 'ListingCreated') {
         ipfsHash = event.returnValues.ipfsHash
       } else if (event.event === 'ListingUpdated') {
-        if (!offerBlockNumber || offerBlockNumber < event.blockNumber) {
+        // if an account is passed in, we're looking for the listing state at the time
+        // that account made an offer, so find the block number of the offer
+        // and ignore any "ListingUpdated" events after that block number
+        let offerBlockNumber
+        if (account) {
+          const offerCreatedEvent = events.find(event =>
+            event.event === 'OfferCreated' &&
+            event.returnValues.party === account
+          )
+          offerBlockNumber = offerCreatedEvent && offerCreatedEvent.blockNumber
+        }
+
+        if (!offerBlockNumber || event.blockNumber < offerBlockNumber) {
           ipfsHash = event.returnValues.ipfsHash
         }
       } else if (event.event === 'ListingWithdrawn') {
