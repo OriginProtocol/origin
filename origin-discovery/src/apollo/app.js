@@ -17,7 +17,6 @@ const promBundle = require('express-prom-bundle')
 const resolvers = require('./resolvers.js')
 const typeDefs = require('./schema.js')
 
-
 const app = express()
 const bundle = promBundle({
   promClient: {
