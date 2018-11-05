@@ -34,13 +34,14 @@ class MySales extends Component {
   }
 
   async loadPurchases() {
+    const { web3Account } = this.props
     const listingIds = await origin.marketplace.getListings({
       idsOnly: true,
-      listingsFor: this.props.web3Account
+      listingsFor: web3Account
     })
     const listingPromises = listingIds.map(listingId => {
       return new Promise(async resolve => {
-        const listing = await getListing(listingId)
+        const listing = await getListing(listingId, true, web3Account)
         resolve({ listingId, listing })
       })
     })
