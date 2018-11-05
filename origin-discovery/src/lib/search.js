@@ -77,7 +77,7 @@ class Listing {
    * @param {array} filters - Array of filter objects
    * @param {number} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
-   * * @param {boolean} idsOnly - only returns listing Ids vs a listing object.
+   * @param {boolean} idsOnly - only returns listing Ids vs listing object.
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
