@@ -1,4 +1,7 @@
+const GraphQLJSON = require('graphql-type-json')
+
 const search = require('../lib/search.js')
+const { getListings } = require('./db.js')
 
 /**
  * Gets information on a related user.
@@ -20,25 +23,36 @@ function relatedUserResolver (walletAddress, info) {
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
+  JSON: GraphQLJSON,
   Query: {
     async listings (root, args, context, info) {
       // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
-      const { listings, maxPrice, minPrice, totalNumberOfListings } = await search.Listing
-        .search(args.searchQuery, args.filters, args.page.numberOfItems, args.page.offset)
+      // Get listing Ids from Elastic.
+      const { listingIds, stats } = await search.Listing
+        .search(
+          args.searchQuery,
+          args.filters,
+          args.page.numberOfItems,
+          args.page.offset,
+          true // idsOnly
+        )
+      // Get listing objects based on Ids.
+      const listings = await getListings(listingIds)
       return {
+        nodes: listings,
         offset: args.page.offset,
         numberOfItems: listings.length,
-        totalNumberOfItems: totalNumberOfListings,
+        totalNumberOfItems: stats.totalNumberOfListings,
         stats: {
-          maxPrice,
-          minPrice
-        },
-        nodes: listings
+          maxPrice: stats.maxPrice,
+          minPrice: stats.minPrice
+        }
       }
     },
 
     async listing (root, args, context, info) {
-      return search.Listing.get(args.id)
+      const listings = await getListings([args.id])
+      return (listings.length === 1) ? listings[0] : null
     },
 
     async offers (root, args, context, info) {
@@ -66,7 +80,6 @@ const resolvers = {
       const offers = search.Offer.search({ listingId: listing.id })
       return { nodes: offers }
     }
-
   },
 
   Offer: {
@@ -96,7 +109,6 @@ const resolvers = {
       return { nodes: offers }
     }
   }
-
 }
 
 module.exports = resolvers

@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server-express')
 
 const typeDefs = gql`
+  scalar JSON
+
   ######################
   #
   # Query output schema.
@@ -55,6 +57,7 @@ const typeDefs = gql`
   type Listing {
     id: ID!
     ipfsHash: ID!
+    data: JSON!
     seller: User!
     title: String!
     description: String
