@@ -123,11 +123,10 @@ steps:
           deployment/kubernetes/values/values-$(cat .namespace).yaml
 
         git remote set-url origin git@github.com:OriginProtocol/origin.git
+        git pull origin master
         git add deployment/kubernetes/values/values-$(cat .namespace).yaml
         git commit -m 'Update deployed image tags'
         git push --set-upstream origin ${BRANCH_NAME}
-        # Pull to try and avoid race conditions
-        git pull
     volumes:
       - name: 'ssh'
         path: /root/.ssh
