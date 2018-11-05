@@ -9,6 +9,12 @@ matrix:
     - npm install
     script:
     - npm test
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - g++-6
 
   - name: "Origin-discovery unit tests"
     language: node_js
