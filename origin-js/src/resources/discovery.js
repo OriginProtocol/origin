@@ -64,6 +64,7 @@ class Discovery {
       ) {
         nodes {
           id
+          displayType
         }
         offset
         numberOfItems
@@ -76,6 +77,17 @@ class Discovery {
     }`
 
     return this.query(query)
+  }
+
+  async getListing(listingId) {
+    return this.query(`{
+      listing (
+        id: "${listingId}"
+      ) {
+        id
+        displayType
+      }
+    }`)
   }
 }
 

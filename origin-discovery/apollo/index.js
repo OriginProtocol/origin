@@ -1,7 +1,7 @@
 const { ApolloServer, gql } = require('apollo-server')
 
 var search = require('../lib/search.js')
-var db = require('../lib/db.js')
+const fetch = require('node-fetch')
 
 /*
  * Implementation of the Origin GraphQL server.
@@ -60,6 +60,13 @@ const typeDefs = gql`
     listing: Listing!
   }
 
+  enum DisplayType {
+    normal
+    featured
+    hidden
+  }
+
+
   type OfferConnection {
     nodes: [Offer]!
   }
@@ -89,6 +96,7 @@ const typeDefs = gql`
     subCategory: String!
     price: Price!
     offers: OfferConnection
+    displayType: DisplayType!
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
@@ -214,7 +222,16 @@ const typeDefs = gql`
 // Maximum number of items returned in a page.
 // If caller requests more, page size will be trimmed to MaxResultsPerPage.
 const MaxResultsPerPage = 100
+const networkId = process.env.NETWORK_ID
 
+const featuredListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/featurelist_${networkId}.txt`
+const hiddenListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/hidelist_${networkId}.txt`
+
+// how frequently featured/hidden listings list updates
+const LISTINGS_STALE_TIME = 60 * 1000 //60 seconds
+let listingsUpdateTime
+let featuredListings = []
+let hiddenListings = []
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -222,7 +239,7 @@ const resolvers = {
     async listings(root, args, context, info) {
       // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
       let {listings, maxPrice, minPrice, totalNumberOfListings} = await search.Listing
-        .search(args.searchQuery, args.filters, args.page.numberOfItems, args.page.offset)
+        .search(args.searchQuery, args.filters, args.page.numberOfItems, args.page.offset, hiddenListings, featuredListings)
       return {
         offset: args.page.offset,
         numberOfItems: listings.length,
@@ -235,7 +252,7 @@ const resolvers = {
       }
     },
     async listing(root, args, context, info) {
-      return search.Listing.get(args.id)
+      return search.Listing.get(args.id, hiddenListings, featuredListings)
     },
     async offers(root, args, context, info){
       const opts = {}
@@ -352,9 +369,39 @@ function relatedUserResolver(walletAddress, info){
   }
 }
 
+async function readListingsFromUrl(githubUrl){
+  let response = await fetch(githubUrl)
+  return (await response.text())
+    .split(',')
+    .map(listingId => listingId.trim())
+    .filter(listingId => listingId.match(/\d*-\d*-\d*/) !== null)
+}
+ async function updateHiddenFeaturedListings(){
+  if (!listingsUpdateTime || new Date() - listingsUpdateTime > LISTINGS_STALE_TIME){
+    try{
+      listingsUpdateTime = new Date()
+      hiddenListings = await readListingsFromUrl(hiddenListingsUrl)
+      featuredListings = await readListingsFromUrl(featuredListingsUrl)
+    } catch(e) {
+      console.error("Could not update hidden/featured listings ", e)
+    }
+  }
+}
+
 // Start ApolloServer by passing type definitions (typeDefs) and the resolvers
 // responsible for fetching the data for those types.
-const server = new ApolloServer({ typeDefs, resolvers })
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: async ({req}) => {
+    // update listingIds in a non blocking way
+    updateHiddenFeaturedListings()
+     return {}
+  }
+})
+
+// initial fetch of ids at the time of starting the server
+updateHiddenFeaturedListings()
 
 // The `listen` method launches a web-server.
 server.listen().then(({ url }) => {
