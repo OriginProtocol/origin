@@ -13,10 +13,9 @@ const testContracts = () => {
       '--exit',
       'test-alt'
     ]
-    const contractTest = spawn('./node_modules/.bin/mocha', args)
-    contractTest.stdout.pipe(process.stdout)
-    contractTest.stderr.on('data', data => {
-      reject(String(data))
+    const contractTest = spawn('./node_modules/.bin/mocha', args, {
+      stdio: 'inherit',
+      env: process.env
     })
     contractTest.on('exit', code => {
       if (code === 0) {

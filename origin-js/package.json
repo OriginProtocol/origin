@@ -9,16 +9,11 @@
   "scripts": {
     "build": "node scripts/build.js",
     "format": "npx prettier-eslint --write 'src/**/*.js' 'test/**/*test.js' 'scripts/**/*.js'",
-    "install:dev": "npm install && npm link",
     "start": "node scripts/serve.js serve",
     "start:no-ganache": "node scripts/serve.js no-ganache",
     "test": "node scripts/test.js",
-    "test:truffle": "node scripts/test-truffle.js",
     "test:js": "node scripts/test-js.js",
-    "test:jsw": "node scripts/test-js.js --watch",
-    "test:contracts": "mocha -r babel-register -r babel-polyfill -t 10000 --exit contracts/test-alt/",
-    "test:contractsw": "mocha -r babel-register -r babel-polyfill -t 10000 -w --watch-extensions sol contracts/test-alt/",
-    "test:contracts-coverage": "SOLIDITY_COVERAGE=1 npx solidity-coverage"
+    "test:jsw": "node scripts/test-js.js --watch"
   },
   "files": [
     "dist"

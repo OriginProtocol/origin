@@ -1,22 +1,9 @@
 matrix:
   include:
-  - name: "DApp unit tests"
+  - name: "origin-contracts / origin-js / origin-dapp unit tests"
     language: node_js
     node_js: 8
     before_script:
-    - cd origin-dapp
-    - npm install
-    script:
-    - npm test
-
-  # FIXME: remove dependency between origin-faucet and origin-js/contracts/test-alt
-  - name: "Origin-js unit tests"
-    language: node_js
-    node_js: 8
-    before_script:
-    - cd origin-faucet
-    - npm install
-    - cd ../origin-js
     - npm install
     script:
     - npm test
