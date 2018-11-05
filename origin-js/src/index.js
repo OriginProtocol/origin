@@ -26,6 +26,7 @@ class Origin {
     ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
     attestationServerUrl = defaultAttestationServerUrl,
     discoveryServerUrl = defaultDiscoveryServerUrl,
+    walletLinkerUrl = null,
     affiliate,
     arbitrator,
     contractAddresses,
@@ -38,7 +39,7 @@ class Origin {
   } = {}) {
     this.version = VERSION
 
-    this.contractService = new ContractService({ contractAddresses, web3 })
+    this.contractService = new ContractService({ contractAddresses, web3, walletLinkerUrl, fetch})
     this.ipfsService = new IpfsService({
       ipfsDomain,
       ipfsApiPort,

@@ -8,6 +8,8 @@ import OriginToken from './../../contracts/build/contracts/OriginToken.json'
 
 import V00_Marketplace from './../../contracts/build/contracts/V00_Marketplace.json'
 
+import WalletLinker from './../resources/wallet-linker'
+
 import {decodeMethodCall, extractCallParams} from './../utils/contract-decoder'
 
 import BigNumber from 'bignumber.js'
@@ -21,7 +23,7 @@ const SUPPORTED_ERC20 = [
 ]
 
 class ContractService {
-  constructor({ web3, contractAddresses } = {}) {
+  constructor({ web3, contractAddresses, walletLinkerUrl, fetch } = {}) {
     const externalWeb3 = web3 || ((typeof window !== 'undefined') && window.web3)
     if (!externalWeb3) {
       throw new Error(
@@ -29,6 +31,10 @@ class ContractService {
       )
     }
     this.web3 = new Web3(externalWeb3.currentProvider)
+
+    if (walletLinkerUrl && fetch){
+      this.initWalletLinker(walletLinkerUrl, fetch)
+    }
 
     this.marketplaceContracts = { V00_Marketplace }
 
@@ -58,6 +64,43 @@ class ContractService {
       } catch (e) {
         /* Ignore */
       }
+    }
+  }
+
+  newWalletNetwork() {
+    this.web3.setProvider(this.walletLinker.getProvider())
+  }
+
+  initWalletLinker(walletLinkerUrl, fetch) {
+    // if there's no given provider
+    // we do it the funny wallet way
+    if (!Web3.givenProvider && walletLinkerUrl) {
+      if (!this.walletLinker) {
+        this.walletLinker = new WalletLinker({
+          linkerServerUrl: walletLinkerUrl,
+          fetch: fetch,
+          networkChangeCb: this.newWalletNetwork.bind(this),
+          web3: this.web3
+        })
+        this.walletLinker.initSession()
+      }
+    }
+  }
+
+  hasWalletLinker() {
+    return this.walletLinker
+  }
+
+  showLinkPopUp() {
+    if (this.walletLinker) {
+      this.walletLinker.startLink()
+    }
+  }
+
+  getMobileWalletLink() {
+    if (this.walletLinker)
+    {
+      return this.walletLinker.getLinkCode()
     }
   }
 
@@ -275,12 +318,21 @@ class ContractService {
     // set gas
     opts.gas = (opts.gas || (await method.estimateGas(opts))) + additionalGas
     const transactionReceipt = await new Promise((resolve, reject) => {
+      if (!opts.from && this.walletLinker && !this.walletLinker.linked) {
+        opts.from = this.walletLinker.startPlaceholder()
+      }
       method
         .send(opts)
-        .on('receipt', resolve)
+        .on('receipt', receipt => { 
+          this.walletLinker.endPlaceholder()
+          resolve(receipt) 
+        })
         .on('confirmation', confirmationCallback)
         .on('transactionHash', transactionHashCallback)
-        .on('error', reject)
+        .on('error', err => {
+          this.walletLinker.endPlaceholder() 
+          reject(err)
+        })
     })
     const block = await this.web3.eth.getBlock(transactionReceipt.blockNumber)
     return {

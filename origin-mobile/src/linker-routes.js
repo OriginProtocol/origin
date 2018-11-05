@@ -99,6 +99,10 @@ router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
 router.ws("/wallet-messages/:walletToken/:readId", (ws, req) => {
   const {walletToken, readId} = req.parameters
 
+  if (!walletToken) {
+    ws.close()
+  }
+
   const closeHandler = linker.handleMessages(walletToken, readId, (msg, msgId) =>
     {
       ws.send({msg, msgId})

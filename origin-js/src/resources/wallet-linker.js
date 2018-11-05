@@ -212,13 +212,26 @@ class WalletLinker {
     }
   }
 
-  processMessages(messages) {
-    for (const message of messages) {
-      switch (message.type) {
-      case 'ACCOUNTS':
+  processMessage(m) {
+    const message = m.msg
+    const msgId = m.msgId
+    switch (message.type) {
+      case 'CONTEXT':
+        if (message.session_token)
+        {
+          this.session_token = message.session_token
+        }
+
+        if (!message.linked && this.linked) {
+          this.logout()
+        } else {
+          this.linked = message.linked
+          if (this.linked) {
+            this.cancelLink()
+          }
+        }
+
         this.accounts = message.accounts
-        break
-      case 'NETWORK':
         this.changeNetwork(message.network_rpc)
         break
       case 'CALL_RESPONSE':
@@ -237,11 +250,9 @@ class WalletLinker {
           this.logout()
         }
         break
-      }
-      if (message.id != undefined) {
-        this.last_message_id = message.id
-      }
-      this.syncSessionStorage()
+    }
+    if (msgId != undefined) {
+      this.last_message_id = msgId
     }
   }
 
@@ -294,32 +305,13 @@ class WalletLinker {
   }
 
   async syncLinkMessages() {
-    const ret = await this.post('link-messages', {
-      session_token: this.session_token,
-      last_message_id: this.last_message_id
-    })
-    if (ret && ret.session_token) {
-      this.session_token = ret.session_token
+    const wsUrl = this.serverUrl.replace(/^http/, 'ws')
+    const ws = new WebSocket(wsUrl + 'link-messages/' + (this.session_token || '') + '/' +  (this.last_message_id || 0))
 
-      if (!ret.linked && this.linked) {
-        this.logout()
-      } else {
-        this.linked = ret.linked
-      }
-
-      if (this.linked) {
-        this.cancelLink()
-      }
-      this.startMessagesSync()
-      if (ret.messages && ret.messages.length) {
-        this.processMessages(ret.messages)
-      }
-    } else {
-      if (this.linked && ret.session_token == null) {
-        //logout of this
-        this.logout()
-      }
+    ws.onmessage = e => {
+      this.processMessage(e)
     }
+
   }
 
   async unlink() {

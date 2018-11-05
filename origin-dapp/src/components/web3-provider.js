@@ -7,7 +7,7 @@ import QRCode from 'qrcode.react'
 
 import { storeWeb3Account, storeWeb3Intent, storeNetwork } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
-import { getBalance } from 'actions/Wallet'
+import { getEthBalance } from 'actions/Wallet'
 
 import Modal from 'components/modal'
 
@@ -523,7 +523,7 @@ class Web3Provider extends Component {
       } else {
         // load data on account change
         this.props.fetchProfile()
-        this.props.getBalance()
+        this.props.getEthBalance()
       }
 
       // set user_id to wallet address in Google Analytics
@@ -557,7 +557,7 @@ class Web3Provider extends Component {
         {/* production  */
           currentProvider &&
           networkId &&
-          inProductionEnv &&
+          isProduction &&
           networkNotSupported &&
           <UnsupportedNetwork currentNetworkName={currentNetworkName} currentProvider={currentProvider} />
         }
@@ -597,7 +597,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   fetchProfile: () => dispatch(fetchProfile()),
-  getBalance: () => dispatch(getBalance()),
+  getEthBalance: () => dispatch(getEthBalance()),
   storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
   storeNetwork: networkId => dispatch(storeNetwork(networkId))

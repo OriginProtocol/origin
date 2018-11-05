@@ -63,8 +63,9 @@ class Linker {
     throw("We hit max retries without finding a none repreated code!")
   }
 
-  async initClientSession(clientToken, lastMessageId) {
+  async initClientSession(clientToken, sessionToken, lastMessageId) {
     const linkObj = await this.findLink(clientToken)
+    let init = false
     if (!linkedObj) {
       throw("Cannot find link for client token")
     }
@@ -75,13 +76,24 @@ class Linker {
       {
         lastMessageId = message.msgId
       }
+      init = true
+    }
+    else
+    {
+      const message = await this.messages.getFirstMessage(token)
+      if (message[0].msgId > lastMessageId)
+      {
+        init = true
+      }
+    }
+    if (!sessionToken) {
+      sessionToken = this.generateInitSession(linkedObj)
+      init = true
     }
 
     //set the lastest device context just in case we missed out on some messages
-    const initMsg = linkObj.linked ? 
-      {type:MessageTypes.CONTEXT, data:linkObj.currentDeviceContext} :
-      null
-    return {initMsg, lastMessageId}
+    const initMsg = init && this._getContextMsg(linkedObj, sessionToken)
+    return {initMsg, sessionToken, lastMessageId}
   }
 
 
@@ -108,13 +120,13 @@ class Linker {
     return this.messages.subscribeMessage(token, msgFetch)
   }
 
-  async handleSessionMessages(clientToken, sessionToken, _lastMessageId, messageFn) {
-    const {initMsg, lastMessageId} = await this.initClientSession(client_token, _lastMessageId)
+  async handleSessionMessages(clientToken, _sessionToken, _lastMessageId, messageFn) {
+    const {initMsg, sessionToken, lastMessageId} = await this.initClientSession(client_token, _sessionToken, _lastMessageId)
     if (initMsg) {
       messageFn(msg, msgId)
     }
 
-    return this.handleMessage(clientToken, lastMessageId, (msg, msgId) => {
+    return this.handleMessages(clientToken, lastMessageId, (msg, msgId) => {
       const {session_token} = msg
       if (!session_token || session_token == sessionToken)
       {
@@ -135,7 +147,7 @@ class Linker {
     return this.messages.addMessage(linkedObj.clientToken, {type, session_token:sessionToken, data})
   }
 
-  async generateInitSession(linkedObj) {
+  generateInitSession(linkedObj) {
     const sessionToken = uuidv4()
     return sessionToken
   }
@@ -162,7 +174,7 @@ class Linker {
 
     if (!sessionToken)
     {
-      sessionToken = await this.generateInitSession(linkedObj)
+      sessionToken = this.generateInitSession(linkedObj)
     }
 
     if (pendingCall)
@@ -226,6 +238,17 @@ class Linker {
     return true
   }
 
+  _getContexMsg(linkedObj, sessionToken) {
+    const linked = linkedObj.linked
+    return { type:MessageTypes.CONTEXT, 
+      msg:{session_token:sessionToken, linked:linkedObj.linked, device:linked && linkedObj.currentDeviceContext}}
+  }
+
+  async sendGlobalContextChange(linkedObj) {
+    const {type, msg} = this._getContextMsg(linkedObj)
+    return this.sendSessionMessage(linkedObj, undefined, type, msg)
+  }
+
   async linkWallet(walletToken, code, currentDeviceContext) {
     const linkedObj = await this.findUnexpiredCode(code)
     if (!linkedObj)
@@ -247,7 +270,7 @@ class Linker {
     linkedObj.pendingCallContext = null
 
     //send a global session message
-    this.sendSessionMessage(linkedObj, undefined, MessageTypes.CONTEXT, linkedObj.currentDeviceContext)
+    this.sendGlobalContextChange(linkedObj)
     linkedObj.save()
 
     return {pendingCallContext, appInfo, linked:true, linkId:this.getLinkId(linkedObj.id, linkedObj.clientToken), linkedAt:linkedObj.linkedAt}
@@ -269,6 +292,8 @@ class Linker {
 
     linkedObj.linked = false
     linkedObj.save()
+
+    this.sendGlobalContextChange(linkedObj)
     return true
   }
 
@@ -283,6 +308,7 @@ class Linker {
         link.deviceType = null
         link.deviceToken = null
         link.save()
+        this.sendGlobalContextChange(link)
         return true
       }
     }

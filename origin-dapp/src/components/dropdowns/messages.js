@@ -216,8 +216,8 @@ const mapStateToProps = ({ app, messages }) => {
     messages: filteredMessages,
     messagingDismissed,
     messagingEnabled,
-    web3Account
-    web3Intent: state.app.web3.intent,
+    web3Account,
+    web3Intent: web3.intent
   }
 }
 
