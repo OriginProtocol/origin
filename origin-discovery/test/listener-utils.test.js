@@ -1,6 +1,7 @@
 const chai = require('chai')
 
-const { getLastBlock, setLastBlock } = require('../src/listener/utils.js')
+const db = require('../src/models')
+const { getLastBlock, setLastBlock } = require('../src/listener/utils')
 
 const expect = chai.expect
 
@@ -13,7 +14,7 @@ describe('get/setLastBlock with continue file', () => {
     const block = await getLastBlock(config)
     expect(block).to.equal(123)
   })
-  it(`Should return default continue value when continue file not found`, async () => {
+  it(`Should return default continue value when not state found`, async () => {
     const config = {
       continueFile: 'doesNotExist',
       defaultContinueBlock: 456
@@ -31,5 +32,19 @@ describe('get/setLastBlock with DB', () => {
     await setLastBlock(config, 789)
     const block = await getLastBlock(config)
     expect(block).to.equal(789)
+  })
+  it(`Should return default continue value when no state found`, async () => {
+    // Delete listener state in the DB.
+    db.Listener.destroy({
+      where: {
+        id: 'test'
+      }
+    })
+    const config = {
+      listenerId: 'test',
+      defaultContinueBlock: 987
+    }
+    const block = await getLastBlock(config)
+    expect(block).to.equal(987)
   })
 })
