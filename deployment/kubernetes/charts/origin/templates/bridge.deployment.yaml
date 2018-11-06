@@ -35,7 +35,7 @@ spec:
         - name: HTTPS
           value: "true"
         - name: FLASK_APP
-          value: "/app/origin-bridge/main.py"
+          value: "/app/main.py"
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",

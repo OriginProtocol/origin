@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '3a4562c'
+bridgeImageTag: 'd6fe5ca'
 
 # origin-dapp
 dappImage: origin-dapp
@@ -27,11 +27,11 @@ faucetImageTag: '389fd1f'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'f9a1525'
+eventlistenerImageTag: 'ad58cb5'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '21e0ddb'
+discoveryImageTag: '29760d4'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -39,4 +39,4 @@ messagingImageTag: 'a444ac1'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'ca0e5c8'
+notificationsImageTag: '030e21b'
