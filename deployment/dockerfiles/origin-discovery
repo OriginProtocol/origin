@@ -16,12 +16,13 @@ RUN npm run build
 
 FROM node:8
 
+COPY ./origin-discovery /app
 WORKDIR /app
 
 ENV NODE_ENV production
 # Link previously built Origin.js
-COPY --from=origin-js-build /app/origin-js/ /usr/local/lib/node_modules/origin
+COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
 RUN npm link origin
 RUN npm install --quiet --no-progress
 
-CMD ["node", "src/apollo/index.js"]
+CMD ["node", "src/apollo/app.js"]
