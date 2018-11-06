@@ -12,14 +12,14 @@ describe('Discovery service', function() {
 
   describe('getListing', () => {
     it('Should return a listing for an Id that exists', async () => {
-      const listingId = "1-000-57"
+      const listingId = '1-000-57'
       const foundListingResponse = {
         status: 200,
         body: {
-          "data": {
-            "listing": {
-              "data": {
-                "id": listingId,
+          'data': {
+            'listing': {
+              'data': {
+                'id': listingId,
               }
             }
           }
@@ -36,7 +36,7 @@ describe('Discovery service', function() {
       const notFoundListingResponse = {
         status: 200,
         body: {
-          "data": null
+          'data': null
         }
       }
       const fetch = fetchMock.sandbox().mock(discoveryServerUrl, notFoundListingResponse)
@@ -58,19 +58,19 @@ describe('Discovery service', function() {
       const foundListingResponse = {
         status: 200,
         body: {
-          "data": {
-            "listings": {
-              "nodes": [
+          'data': {
+            'listings': {
+              'nodes': [
                 {
-                  "data": {
-                    "id": "1-000-20",
-                    "title": "Test Listing A",
+                  'data': {
+                    'id': '1-000-20',
+                    'title': 'Test Listing A',
                   }
                 },
                 {
-                  "data": {
-                    "id": "1-000-21",
-                    "title": "Test Listing B",
+                  'data': {
+                    'id': '1-000-21',
+                    'title': 'Test Listing B',
                   }
                 }
               ]
@@ -108,14 +108,14 @@ describe('Discovery service', function() {
       const foundListingResponse = {
         status: 200,
         body: {
-          "data": {
-            "listings": {
-              "nodes": [
+          'data': {
+            'listings': {
+              'nodes': [
                 {
-                  "id": "1-000-20"
+                  'id': '1-000-20'
                 },
                 {
-                    "id": "1-000-21"
+                  'id': '1-000-21'
                 }
               ]
             }
@@ -125,7 +125,7 @@ describe('Discovery service', function() {
       const fetch = fetchMock.sandbox().mock(discoveryServerUrl, foundListingResponse)
       const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
 
-      const resp = await discoveryService.search("query", 2, 0, [])
+      const resp = await discoveryService.search('query', 2, 0, [])
       const listings = resp.data.listings.nodes
       expect(listings.length).to.equal(2)
       expect(listings[0].id).to.equal('1-000-20')
