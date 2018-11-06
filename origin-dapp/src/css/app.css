@@ -5127,31 +5127,11 @@ a:not([href]):not([tabindex]).span-link {
 
 /* Media queries */
 
-/* xxs */
-@media (max-width: 300px) {
-  .navigation-bar .static.navbar-nav .nav-item {
-    width: 35px;
-  }
-}
-
 /* xs */
 @media (max-width: 576px) {
-
-  @media (min-width: 301px) {
-    .navigation-bar .static.navbar-nav .nav-item {
-      width: 40px;
-    }
-  }
-
-  @media (min-width: 348px) {
-    .navigation-bar .static.navbar-nav .nav-item {
-      width: 50px;
-    }
-  }
-
-  @media (min-width: 398px) {
-    .navigation-bar .static.navbar-nav .nav-item {
-      width: 60px;
+  @media (max-width: 340px) {
+    .navigation-bar .static.navbar-nav {
+      margin-left: 0;
     }
   }
 
