@@ -1,6 +1,8 @@
+sudo: false
 git:
   depth: 3
 matrix:
+  fast_finish: true
   include:
   - name: "origin-contracts unit tests"
     language: node_js
