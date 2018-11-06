@@ -3,7 +3,7 @@
   "version": "0.8.6",
   "description": "",
   "engines": {
-    "node": "9.11.1"
+    "node": "10.x"
   },
   "scripts": {
     "prepare": "npm run build",
@@ -18,6 +18,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/OriginProtocol/origin/origin-contracts"
+  },
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "license": "MIT",
   "dependencies": {},

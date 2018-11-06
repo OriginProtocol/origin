@@ -2,11 +2,21 @@
   "name": "origin-notifications",
   "version": "0.0.1",
   "description": "Origin Notifications Service",
+  "engines": {
+    "node": "10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/origin-faucet"
+  },
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Micah Alcorn",
+  "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^6.1.0",
