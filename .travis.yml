@@ -1,28 +1,23 @@
 matrix:
   include:
-  - name: "origin-contracts / origin-js / origin-dapp unit tests"
+  - name: "origin-contracts unit tests"
     language: node_js
     cache: npm
     node_js: 10
-    before_install:
-       - if [ $TRAVIS_OS_NAME == "linux" ]; then
-           export CC="gcc-5";
-           export CXX="g++-5";
-           export LINK="gcc-5";
-           export LINKXX="g++-5";
-         fi
     before_script:
       - npm install
+      - cd origin-contracts
     script:
       - npm test
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - gcc-5
-          - g++-5
-
+  - name: "origin-js unit tests"
+    language: node_js
+    cache: npm
+    node_js: 10
+    before_script:
+      - npm install
+      - cd origin-js
+    script:
+      - npm test
   - name: "Origin-discovery unit tests"
     language: node_js
     cache: npm
