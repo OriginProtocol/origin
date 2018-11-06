@@ -83,7 +83,7 @@ const config = {
   ecies,
   web3,
   ethereum,
-  decentralizedMode: process.env.DECENTRALIZED_MODE
+  perfModeEnabled: (process.env.ENABLE_PERFORMANCE_MODE === 'true')
 }
 
 try {

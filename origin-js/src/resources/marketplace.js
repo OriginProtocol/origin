@@ -26,7 +26,7 @@ class Marketplace {
     store,
     affiliate,
     arbitrator,
-    decentralizedMode })
+    perfModeEnabled })
   {
     this.contractService = contractService
     this.ipfsService = ipfsService
@@ -35,7 +35,7 @@ class Marketplace {
     this.arbitrator = arbitrator
     this.ipfsDataStore = new IpfsDataStore(this.ipfsService)
     this.resolver = new MarketplaceResolver(...arguments)
-    this.decentralizedMode = decentralizedMode
+    this.perfModeEnabled = perfModeEnabled
 
     // initialize notifications
     if (!store.get(storeKeys.notificationSubscriptionStart)) {
@@ -59,21 +59,21 @@ class Marketplace {
    * @throws {Error}
    */
   async getListings(opts = {}) {
-    if (this.decentralizedMode) {
-      const listingIds = await this.resolver.getListingIds(opts)
-
-      if (opts.idsOnly) {
-        return listingIds
-      }
-
-      return Promise.all(
-        listingIds.map(async listingId => {
-          return await this.getListing(listingId)
-        })
-      )
-    } else {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch data from the discovery back-end to reduce latency.
       return await this.discoveryService.getListings(opts)
     }
+
+    const listingIds = await this.resolver.getListingIds(opts)
+    if (opts.idsOnly) {
+      return listingIds
+    }
+
+    return Promise.all(
+      listingIds.map(async listingId => {
+        return await this.getListing(listingId)
+      })
+    )
   }
 
   /**
@@ -83,22 +83,22 @@ class Marketplace {
    * @throws {Error}
    */
   async getListing(listingId) {
-    if (this.decentralizedMode) {
-      // Get the on-chain listing data.
-      const chainListing = await this.resolver.getListing(listingId)
-
-      // Get the off-chain listing data from IPFS.
-      const ipfsHash = this.contractService.getIpfsHashFromBytes32(
-        chainListing.ipfsHash
-      )
-      const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
-
-      // Create and return a Listing from on-chain and off-chain data .
-      return new Listing(listingId, chainListing, ipfsListing)
-
-    } else {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch data from the discovery back-end to reduce latency.
       return await this.discoveryService.getListing(listingId)
     }
+
+    // Get the on-chain listing data.
+    const chainListing = await this.resolver.getListing(listingId)
+
+    // Get the off-chain listing data from IPFS.
+    const ipfsHash = this.contractService.getIpfsHashFromBytes32(
+      chainListing.ipfsHash
+    )
+    const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
+
+    // Create and return a Listing from on-chain and off-chain data .
+    return new Listing(listingId, chainListing, ipfsListing)
   }
 
   async getOffers(listingId, opts = {}) {

@@ -38,7 +38,7 @@ class Origin {
     blockEpoch,
     blockAttestattionV1,
     ethereum,
-    decentralizedMode
+    perfModeEnabled
   } = {}) {
     this.version = VERSION
 
@@ -72,7 +72,7 @@ class Origin {
       arbitrator,
       store,
       blockEpoch,
-      decentralizedMode
+      perfModeEnabled
     })
 
     this.discovery = new Discovery({
