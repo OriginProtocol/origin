@@ -10,7 +10,8 @@ class ConversationListItem extends Component {
       conversation,
       handleConversationSelect,
       users,
-      web3Account
+      web3Account,
+      isMobile
     } = this.props
     const lastMessage = conversation.values.sort(
       (a, b) => (a.created < b.created ? -1 : 1)
@@ -27,6 +28,30 @@ class ConversationListItem extends Component {
       return msg.status === 'unread' && msg.senderAddress !== web3Account
     }).length
     const { profile } = counterparty
+
+    if (isMobile) {
+      return (
+        <div
+          onClick={handleConversationSelect}
+          className={`d-flex message mobile-conversation-list-item`}
+        >
+          <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
+          <div className="content-container text-truncate">
+            <div className="sender text-truncate">
+              {counterparty.fullName || counterpartyAddress}
+            </div>
+            <div className="message text-truncate">{content}</div>
+          </div>
+          <div className="meta-container text-right">
+            {!!unreadCount && (
+              <div className="unread count text-right">
+                <div className="d-inline-block">{unreadCount}</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )
+    }
 
     return (
       <div
@@ -55,7 +80,8 @@ class ConversationListItem extends Component {
 const mapStateToProps = state => {
   return {
     users: state.users,
-    web3Account: state.app.web3.account
+    web3Account: state.app.web3.account,
+    isMobile: state.app.isMobile
   }
 }
 

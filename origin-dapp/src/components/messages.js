@@ -80,16 +80,20 @@ class Messages extends Component {
           </div>
         )
       } else {
-        return conversations.map(c => (
-          <ConversationListItem
-          key={c.key}
-          conversation={c}
-          active={selectedConversationId === c.key}
-          handleConversationSelect={() =>
-            this.handleConversationSelect(c.key)
-          }
-          />
-        ))
+        return (
+          <div className="mobile-conversations">
+            {conversations.map(c => (
+              <ConversationListItem
+                key={c.key}
+                conversation={c}
+                active={selectedConversationId === c.key}
+                handleConversationSelect={() =>
+                  this.handleConversationSelect(c.key)
+                }
+              />
+            ))}
+          </div>
+        )
       }
     }
 

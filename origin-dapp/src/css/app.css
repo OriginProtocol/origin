@@ -3826,6 +3826,19 @@ form .stars img {
   color: white;
 }
 
+.mobile-conversations .avatar-container {
+  height: 60px;
+  width: 60px;
+}
+
+.mobile-conversations {
+  padding: 10px;
+}
+
+.mobile-conversations .text-truncate {
+  width: 60%;
+}
+
 .conversations-list-col {
   background-color: var(--pale-grey);
   height: 60px;
