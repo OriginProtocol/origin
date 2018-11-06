@@ -1,23 +1,35 @@
+git:
+  depth: 3
 matrix:
   include:
   - name: "origin-contracts unit tests"
     language: node_js
-    cache: npm
+    cache:
+      directories:
+        - origin-js/node_modules
+        - origin-contracts/node_modules
     node_js: 10
+    install:
+      - npm ci
     before_script:
-      - npm install
       - cd origin-contracts
     script:
       - npm test
+
   - name: "origin-js unit tests"
     language: node_js
-    cache: npm
+    cache:
+      directories:
+        - origin-js/node_modules
+        - origin-contracts/node_modules
     node_js: 10
+    install:
+      - npm ci
     before_script:
-      - npm install
       - cd origin-js
     script:
       - npm test
+
   - name: "Origin-discovery unit tests"
     language: node_js
     cache: npm
