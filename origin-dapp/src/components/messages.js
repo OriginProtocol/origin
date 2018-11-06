@@ -4,6 +4,7 @@ import { withRouter } from 'react-router'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
+import MobileMessages from 'components/mobile-messages'
 
 import groupByArray from 'utils/groupByArray'
 
@@ -55,11 +56,18 @@ class Messages extends Component {
   }
 
   render() {
-    const { conversations, messages } = this.props
+    const { conversations, messages, isMobile } = this.props
     const { selectedConversationId } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
       .sort((a, b) => (a.created < b.created ? -1 : 1))
+
+    if (isMobile) {
+      return <MobileMessages
+        selectedConversationId={selectedConversationId}
+        conversations={conversations}
+      />
+    }
 
     return (
       <div className="d-flex messages-wrapper">
@@ -94,7 +102,7 @@ class Messages extends Component {
 }
 
 const mapStateToProps = ({ app, messages }) => {
-  const { messagingEnabled, web3 } = app
+  const { messagingEnabled, web3, isMobile } = app
   const web3Account = web3.account
   const filteredMessages = messages.filter(({ content, conversationId }) => {
     return (
@@ -118,7 +126,8 @@ const mapStateToProps = ({ app, messages }) => {
     conversations: sortedConversations,
     messages: filteredMessages,
     messagingEnabled,
-    web3Account
+    web3Account,
+    isMobile
   }
 }
 
