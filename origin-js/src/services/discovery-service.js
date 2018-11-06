@@ -38,7 +38,7 @@ class DiscoveryService {
       throw Error(
         `Discovery server returned unexpected status code ${
           resp.status
-          } with error `
+        } with error `
       )
     }
     return await resp.json()
@@ -60,8 +60,8 @@ class DiscoveryService {
       listings (
         searchQuery: "${searchQuery}"
         filters: [${filters
-      .map(filter => {
-        return `
+    .map(filter => {
+      return `
     {
       name: "${filter.name}"
       value: "${String(filter.value)}"
@@ -69,8 +69,8 @@ class DiscoveryService {
       operator: ${filter.operator}
     }
     `
-      })
-      .join(',')}]
+    })
+    .join(',')}]
         page:{
           offset: ${offset}
           numberOfItems: ${numberOfItems}

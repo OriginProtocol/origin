@@ -1,4 +1,4 @@
-import sinon from "sinon"
+import sinon from 'sinon'
 
 import Marketplace from '../src/resources/marketplace.js'
 import contractServiceHelper from './helpers/contract-service-helper'
