@@ -9,7 +9,8 @@ const cwd = process.cwd();
 
 [
   "origin-contracts",
-  "origin-js"
+  "origin-js",
+  "origin-dapp"
 ].forEach(packageName => {
   process.chdir(path.resolve(__dirname, "../" + packageName));
   exec("npm run test");

@@ -2,26 +2,12 @@ git:
   depth: 3
 matrix:
   include:
-  - name: "origin-contracts unit tests"
+  - name: "origin-contracts / js / dapp unit tests"
     language: node_js
     cache: npm
     node_js: 10
     before_script:
       - cd origin-contracts
-
-  - name: "origin-js unit tests"
-    language: node_js
-    cache: npm
-    node_js: 10
-    before_script:
-      - cd origin-js
-
-  - name: "origin-dapp unit tests"
-    language: node_js
-    cache: npm
-    node_js: 10
-    before_script:
-      - cd origin-dapp
 
   - name: "Origin-discovery unit tests"
     language: node_js
