@@ -670,7 +670,6 @@ const mapStateToProps = state => {
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,
     identityAddress: state.profile.user.identityAddress,
-    onMobile: state.app.onMobile,
     wallet: state.wallet,
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,

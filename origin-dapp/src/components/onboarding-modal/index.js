@@ -129,7 +129,8 @@ class OnboardingModal extends Component {
     const {
       updateSteps,
       selectStep,
-      onboarding: { blocked, currentStep, learnMore, splitPanel }
+      onboarding: { blocked, currentStep, learnMore, splitPanel },
+      isMobile
     } = this.props
 
     const learnMoreContent = (
@@ -173,7 +174,7 @@ class OnboardingModal extends Component {
       </Fragment>
     )
 
-    return blocked ? null : (
+    return (blocked || isMobile) ? null : (
       <div className="onboarding">
         {learnMore && (
           <Modal
@@ -183,7 +184,7 @@ class OnboardingModal extends Component {
             backdrop={false}
           />
         )}
-        {splitPanel && (
+        {(splitPanel && !isMobile) && (
           <div className="split-container d-flex align-items-center justify-content-center">
             <SplitPanel
               isOpen={true}
@@ -201,7 +202,7 @@ class OnboardingModal extends Component {
   }
 }
 
-const mapStateToProps = ({ onboarding, wallet }) => ({ onboarding, wallet })
+const mapStateToProps = ({ onboarding, wallet, app }) => ({ onboarding, wallet, isMobile: app.isMobile })
 
 const mapDispatchToProps = dispatch => ({
   fetchSteps: () => dispatch(fetchSteps()),
