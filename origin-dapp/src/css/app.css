@@ -3817,6 +3817,15 @@ form .stars img {
 
 /* Messages */
 
+.mobile-messaging .back {
+  background-color: var(--dark-grey-blue);
+}
+
+.mobile-messaging .back span {
+  height: 40px;
+  color: white;
+}
+
 .conversations-list-col {
   background-color: var(--pale-grey);
   height: 60px;

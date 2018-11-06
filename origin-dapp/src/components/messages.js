@@ -4,7 +4,6 @@ import { withRouter } from 'react-router'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
-import MobileMessages from 'components/mobile-messages'
 
 import groupByArray from 'utils/groupByArray'
 
@@ -25,21 +24,23 @@ class Messages extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { conversations, match } = this.props
+    const { conversations, match, isMobile } = this.props
     const { selectedConversationId } = this.state
     const { conversationId } = match.params
 
-    // on route change
-    if (
-      conversationId &&
-      conversationId !== prevProps.match.params.conversationId
-    ) {
-      this.detectSelectedConversation()
-    }
+    if (!isMobile) {
+      // on route change
+      if (
+        conversationId &&
+        conversationId !== prevProps.match.params.conversationId
+      ) {
+        this.detectSelectedConversation()
+      }
 
-    // autoselect a conversation if none exists
-    if (!selectedConversationId && conversations.length) {
-      this.detectSelectedConversation()
+      // autoselect a conversation if none exists
+      if (!selectedConversationId && conversations.length) {
+        this.detectSelectedConversation()
+      }
     }
   }
 
@@ -63,10 +64,33 @@ class Messages extends Component {
       .sort((a, b) => (a.created < b.created ? -1 : 1))
 
     if (isMobile) {
-      return <MobileMessages
-        selectedConversationId={selectedConversationId}
-        conversations={conversations}
-      />
+      if (selectedConversationId) {
+        return (
+          <div className="mobile-messaging">
+            <div className="back" onClick={() => this.handleConversationSelect('')}>
+              <span>&#60; Back</span>
+            </div>
+            <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
+              <Conversation
+                id={selectedConversationId}
+                messages={filteredAndSorted}
+                withListingSummary={true}
+              />
+            </div>
+          </div>
+        )
+      } else {
+        return conversations.map(c => (
+          <ConversationListItem
+          key={c.key}
+          conversation={c}
+          active={selectedConversationId === c.key}
+          handleConversationSelect={() =>
+            this.handleConversationSelect(c.key)
+          }
+          />
+        ))
+      }
     }
 
     return (
