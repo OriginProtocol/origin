@@ -22,11 +22,13 @@ import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Modal from 'components/modal'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
+import Calendar from './calendar'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
+import { prepareSlotsToSave } from 'utils/calendarHelpers'
 
 import origin from '../services/origin'
 
@@ -60,7 +62,9 @@ class ListingsDetail extends Component {
       step: this.STEP.VIEW,
       boostLevel: null,
       boostValue: 0,
-      onboardingCompleted: false
+      onboardingCompleted: false,
+      slotsToReserve: [],
+      featuredImageIdx: 0
     }
 
     this.intlMessages = defineMessages({
@@ -70,8 +74,15 @@ class ListingsDetail extends Component {
       }
     })
 
+    this.handleBuyClicked = this.handleBuyClicked.bind(this)
+    this.loadListing = this.loadListing.bind(this)
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
+    this.setFeaturedImage = this.setFeaturedImage.bind(this)
+  }
+
+  async handleBuyClicked() {
+    this.props.storeWeb3Intent('buy this listing')
   }
 
   async componentWillMount() {
@@ -97,7 +108,7 @@ class ListingsDetail extends Component {
     }
   }
 
-  async handleMakeOffer(skip) {
+  async handleMakeOffer(skip, slotsToReserve) {
     // onboard if no identity, purchases, and not already completed
     const shouldOnboard =
       !this.props.profile.strength &&
@@ -110,19 +121,26 @@ class ListingsDetail extends Component {
       if (!skip && shouldOnboard) {
         return this.setState({
           onboardingCompleted: true,
-          step: this.STEP.ONBOARDING
+          step: this.STEP.ONBOARDING,
+          slotsToReserve
         })
       }
 
       this.setState({ step: this.STEP.METAMASK })
 
+      const isFractional = this.state.listingType === 'fractional'
+      const slots = slotsToReserve || this.state.slotsToReserve
+      const price =
+        isFractional ?
+          slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
+          this.state.price
+
       try {
         const offerData = {
           listingId: this.props.listingId,
-          listingType: 'unit',
-          unitsPurchased: 1,
+          listingType: this.state.listingType,
           totalPrice: {
-            amount: this.state.price,
+            amount: price,
             currency: 'ETH'
           },
           commission: {
@@ -133,6 +151,13 @@ class ListingsDetail extends Component {
           // This is the window during which the buyer may file a dispute.
           finalizes: 365 * 24 * 60 * 60
         }
+
+        if (isFractional) {
+          offerData.slots = prepareSlotsToSave(slots)
+        } else {
+          offerData.unitsPurchased = 1
+        }
+
         const transactionReceipt = await origin.marketplace.makeOffer(
           this.props.listingId,
           offerData,
@@ -229,6 +254,12 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.VIEW })
   }
 
+  setFeaturedImage(idx) {
+    this.setState({
+      featuredImageIdx: idx
+    })
+  }
+
   render() {
     const { featuredListingIds, listingId, web3Account } = this.props
     const {
@@ -243,7 +274,9 @@ class ListingsDetail extends Component {
       price,
       seller,
       status,
-      step
+      step,
+      schemaType,
+      featuredImageIdx
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -421,21 +454,11 @@ class ListingsDetail extends Component {
             </div>
           </Modal>
         )}
-        {(loading || (pictures && !!pictures.length)) && (
-          <div className="carousel">
-            {pictures.map(pictureUrl => (
-              <div className="photo" key={pictureUrl}>
-                <img src={pictureUrl} role="presentation" />
-              </div>
-            ))}
-          </div>
-        )}
-
         <div
           className={`container listing-container${loading ? ' loading' : ''}`}
         >
           <div className="row">
-            <div className="col-12 col-md-8 detail-info-box">
+            <div className="col-12">
               <div className="category placehold d-flex">
                 <div>{category}</div>
                 {!loading && (
@@ -455,6 +478,29 @@ class ListingsDetail extends Component {
                 )}
               </div>
               <h1 className="title placehold">{name}</h1>
+            </div>
+            <div className="col-12 col-md-8 detail-info-box">
+              {(loading || (pictures && !!pictures.length)) && (
+                <div className="image-wrapper">
+                  <img
+                    className="featured-image"
+                    src={pictures[featuredImageIdx]}
+                  />
+                  {pictures.length > 1 &&
+                    <div className="photo-row">
+                      {pictures.map((pictureUrl, idx) => (
+                        <img
+                          onClick={() => this.setFeaturedImage(idx)}
+                          src={pictureUrl}
+                          key={idx}
+                          role="presentation"
+                          className={featuredImageIdx === idx ? 'featured-thumb' : ''}
+                        />
+                      ))}
+                    </div>
+                  }
+                </div>
+              )}
               <p className="ws-aware description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
               {/*!!unitsRemaining && unitsRemaining < 5 &&
@@ -736,6 +782,18 @@ class ListingsDetail extends Component {
                 />
               )}
             </div>
+            { !this.state.loading && this.state.listingType === 'fractional' &&
+              <div className="col-12">
+                <Calendar 
+                  slots={ this.state.slots }
+                  offers={ this.state.offers }
+                  userType="buyer"
+                  viewType={ schemaType === 'housing' ? 'daily' : 'hourly' }
+                  onComplete={(slots) => this.handleMakeOffer(false, slots) }
+                  step={ 60 }
+                />
+              </div>
+            }
           </div>
           {this.props.withReviews && (
             <div className="row">

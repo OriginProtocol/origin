@@ -1,0 +1,7 @@
+{
+  "packages": [
+    "origin-js",
+    "origin-dapp"
+  ],
+  "version": "independent"
+}

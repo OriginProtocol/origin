@@ -97,7 +97,7 @@ services:
       /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
       npm install --quiet --no-progress &&
       npm link origin &&
-      node apollo/index.js"
+      node src/apollo/app.js"
     networks:
       - default
 
@@ -129,7 +129,7 @@ services:
       npm install --quiet --no-progress &&
       npm link origin &&
       node node_modules/.bin/sequelize db:migrate &&
-      node listener/listener.js --elasticsearch --db --web3-url='http://origin-js:8545'"
+      node src/listener/listener.js --elasticsearch --db --web3-url='http://origin-js:8545'"
     networks:
       - default
 

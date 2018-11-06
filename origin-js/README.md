@@ -62,6 +62,19 @@ git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-js
 
 1.  To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin/blob/master/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain).
 
+### Using Lerna
+
+1.  Clone this repo.
+```
+git clone https://github.com/OriginProtocol/origin.git && cd origin
+```
+
+1.  Install dependencies via Lerna: `npm run lerna`
+
+2.  Start the local blockchain and build origin-js by running `cd origin-js && npm start`. Code changes will trigger a live rebuild.
+
+3.  To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin/blob/master/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain-with-lerna).
+
 
 ## Tests
 

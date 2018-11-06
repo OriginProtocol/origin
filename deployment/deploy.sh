@@ -21,7 +21,7 @@ function usage() {
 }
 
 function build_and_push_container() {
-  DOCKERFILE=dockerfiles/${NAMESPACE}/${CONTAINER}
+  DOCKERFILE=dockerfiles/${CONTAINER}
 
   if [ ! -e "$DOCKERFILE" ]; then
     echo -e "\033[31mDockerfile not found at ./${DOCKERFILE} \033[0m"
@@ -49,12 +49,17 @@ function build_and_push_container() {
   fi
 
   echo -e "Building container for \033[94m${CONTAINER}... \033[0m"
+  if [[ "${CONTAINER}" == "origin-dapp" ]]; then
+    ENVKEY=$(cat ${VALUES_PATH}/${SECRETS_FILE} | grep dappEnvKey | cut -d " " -f 2)
+  else
+    ENVKEY=false
+  fi
 
   docker build ../ \
-    -f dockerfiles/${NAMESPACE}/${CONTAINER} \
-    --build-arg DEPLOY_TAG=${DEPLOY_TAG} \
+    -f ${DOCKERFILE} \
     -t ${GCLOUD_REGISTRY}/${GCLOUD_PROJECT}/${NAMESPACE}/${CONTAINER}:${DEPLOY_TAG} \
-    -t ${GCLOUD_REGISTRY}/${GCLOUD_PROJECT}/${NAMESPACE}/${CONTAINER}:latest \
+    --build-arg DEPLOY_TAG=${DEPLOY_TAG} \
+    --build-arg ENVKEY=${ENVKEY}
 
   echo -e "Pushing container to \033[94m${GCLOUD_REGISTRY}... \033[0m"
   docker push ${GCLOUD_REGISTRY}/${GCLOUD_PROJECT}/${NAMESPACE}/${CONTAINER}:${DEPLOY_TAG}
@@ -110,6 +115,9 @@ while getopts ":c:n:h" opt; do
 	ipfs-proxy)
 	  IMAGE_TAG_FIELD=ipfsProxyImageTag
 	  ;;
+	origin-notifications)
+	  IMAGE_TAG_FIELD=notificationsImageTag
+	  ;;
 	*)
 	  echo -e "\033[31mContainer not yet implemented\033[0m"
 	  exit 1
@@ -119,10 +127,12 @@ while getopts ":c:n:h" opt; do
       NAMESPACE=$OPTARG
       case "$NAMESPACE" in
         dev)
-          BRANCH=master
+	  echo -e "\033[31mDev deployments are now handled by CI/CD\033[0m"
+	  exit 1
 	  ;;
         staging)
-          BRANCH=staging
+	  echo -e "\033[31mStaging deployments are now handled by CI/CD\033[0m"
+	  exit 1
 	  ;;
         prod)
           BRANCH=stable
