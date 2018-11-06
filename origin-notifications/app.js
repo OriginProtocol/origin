@@ -78,7 +78,9 @@ app.all((req, res, next) => {
     })
 })
 
-app.use(bodyParser.json())
+// Note: bump up default payload max size since the event-listener posts
+// payload that may contain user profile with b64 encoded profile picture.
+app.use(bodyParser.json({limit: '10mb'}))
 
 app.get('/', async (req, res) => {
   let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
@@ -110,17 +112,25 @@ app.post('/', async(req, res) => {
 
 app.post('/events', async (req, res) => {
   const { log = {}, related = {} } = req.body
+  const { decoded = {}, eventName } = log
   const { buyer = {}, listing, offer, seller = {} } = related
+  const eventDetails = `eventName=${eventName} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`
 
   res.sendStatus(200)
 
   if (!listing || (!buyer.address && !seller.address)) {
+    console.log(`Missing listing or buyer/seller address. Skipping ${eventDetails}`)
     return
   }
 
-  const { decoded = {}, eventName } = log
-  const { party } = decoded
+  if (!eventNotificationMap[eventName]) {
+    console.log(`Not a processable event. Skipping ${eventDetails}`)
+    return
+  }
   const { body, title } = eventNotificationMap[eventName]
+  const { party } = decoded
+
+  console.log(`Processing event ${eventDetails}`)
 
   const subs = await PushSubscription.findAll({
     where: {

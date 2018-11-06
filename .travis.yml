@@ -21,6 +21,23 @@ matrix:
     script:
     - npm test
 
+  - name: "Origin-discovery unit tests"
+    language: node_js
+    node_js: 8
+    addons:
+      postgresql: 9.6
+    services:
+    - postgresql
+    env:
+    - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+    before_script:
+    - psql -c 'create database travis_ci_test;' -U postgres
+    - cd origin-discovery
+    - npm install
+    - npm run migrate
+    script:
+    - npm test
+
   - name: "Bridge server unit tests"
     language: python
     python: 3.6
