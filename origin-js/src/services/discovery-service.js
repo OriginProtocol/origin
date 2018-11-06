@@ -41,14 +41,22 @@ class DiscoveryService {
         } with error `
       )
     }
-    return await resp.json()
+    return resp.json()
   }
 
   /**
    * Issues a search request against the discovery server.
    * @param searchQuery {string} general search query
-   * @param filters {object} object with properties: name, value, valueType, operator
-   * @returns {Promise<list(Objects)>}
+   * @returns {Promise<list(Object)>}
+   */
+
+  /**
+   * Issues a search request against the discovery server.
+   * @param searchQuery {string} General search query
+   * @param numberOfItems {number} Max number of items to return.
+   * @param offset {number} Pagination offset.
+   * @param filters {object} Object with properties: name, value, valueType, operator
+   * @return {Promise<list(Object)>}
    */
   async search(searchQuery, numberOfItems, offset, filters = []) {
     // from page should be bigger than 0
@@ -115,7 +123,6 @@ class DiscoveryService {
         page: { offset: ${offset}, numberOfItems: ${numberOfItems}}
       ) {
         nodes {
-          id
           data
         }
       }
@@ -123,7 +130,7 @@ class DiscoveryService {
 
     const resp = await this._query(query)
     if (opts.idsOnly) {
-      return resp.data.listings.nodes.map(listing => listing.id)
+      return resp.data.listings.nodes.map(listing => listing.data.id)
     } else {
       return resp.data.listings.nodes.map(listing => listing.data)
     }
@@ -142,6 +149,11 @@ class DiscoveryService {
       }
     }`
     const resp = await this._query(query)
+
+    // Throw an error if no listing found with this id.
+    if (!resp.data) {
+      throw new Error(`No listing found with id ${listingId}`)
+    }
     return resp.data.listing.data
   }
 }
