@@ -1,36 +1,27 @@
-sudo: false
 git:
   depth: 3
 matrix:
-  fast_finish: true
   include:
   - name: "origin-contracts unit tests"
     language: node_js
-    cache:
-      directories:
-        - origin-js/node_modules
-        - origin-contracts/node_modules
+    cache: npm
     node_js: 10
-    install:
-      - npm ci
     before_script:
       - cd origin-contracts
-    script:
-      - npm test
 
   - name: "origin-js unit tests"
     language: node_js
-    cache:
-      directories:
-        - origin-js/node_modules
-        - origin-contracts/node_modules
+    cache: npm
     node_js: 10
-    install:
-      - npm ci
     before_script:
       - cd origin-js
-    script:
-      - npm test
+
+  - name: "origin-dapp unit tests"
+    language: node_js
+    cache: npm
+    node_js: 10
+    before_script:
+      - cd origin-dapp
 
   - name: "Origin-discovery unit tests"
     language: node_js
