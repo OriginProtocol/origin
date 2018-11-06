@@ -4,6 +4,8 @@ matrix:
   include:
   - name: "origin-contracts unit tests"
     language: node_js
+    dist: trusty
+    sudo: false
     cache: npm
     node_js: 10
     before_script:
@@ -11,6 +13,8 @@ matrix:
 
   - name: "origin-js unit tests"
     language: node_js
+    dist: trusty
+    sudo: false
     cache: npm
     node_js: 10
     before_script:
@@ -18,6 +22,8 @@ matrix:
 
   - name: "origin-dapp unit tests"
     language: node_js
+    dist: trusty
+    sudo: false
     cache: npm
     node_js: 10
     before_script:
@@ -25,6 +31,8 @@ matrix:
 
   - name: "Origin-discovery unit tests"
     language: node_js
+    dist: trusty
+    sudo: false
     cache: npm
     node_js: 10
     addons:
@@ -38,8 +46,6 @@ matrix:
       - cd origin-discovery
       - npm install
       - npm run migrate
-    script:
-      - npm test
 
   - name: "Bridge server unit tests"
     language: python
