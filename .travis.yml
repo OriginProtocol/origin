@@ -14,7 +14,12 @@ matrix:
 
   - name: "Origin-discovery unit tests"
     language: node_js
-    cache: npm
+    cache:
+      npm: true
+      directories:
+        - origin-contracts/node_modules
+        - origin-dapp/node_modules
+        - origin-js/node_modules
     node_js: 10
     addons:
       postgresql: 9.6
