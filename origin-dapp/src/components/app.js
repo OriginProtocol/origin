@@ -42,6 +42,7 @@ import 'bootstrap/dist/js/bootstrap'
 
 import { setClickEventHandler } from 'utils/analytics'
 import { initServiceWorker } from 'utils/notifications'
+import isMobile, { mobileDevice } from 'utils/mobile'
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
@@ -130,15 +131,7 @@ class App extends Component {
    * @return {void}
    */
   detectMobile() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera
-
-    if (/android/i.test(userAgent)) {
-      this.props.setMobile('Android')
-    } else if (/iPad|iPhone|iPod/.test(userAgent)) {
-      this.props.setMobile('iOS')
-    } else {
-      this.props.setMobile(null)
-    }
+    this.props.setMobile(isMobile(), mobileDevice())
   }
 
   render() {
@@ -216,7 +209,7 @@ const mapDispatchToProps = dispatch => ({
   getOgnBalance: () => dispatch(getOgnBalance()),
   initWallet: () => dispatch(initWallet()),
   saveServiceWorkerRegistration: reg => dispatch(saveServiceWorkerRegistration(reg)),
-  setMobile: device => dispatch(setMobile(device)),
+  setMobile: (isMobile, device) => dispatch(setMobile(isMobile, device)),
   localizeApp: () => dispatch(localizeApp()),
   fetchFeaturedHiddenListings: (networkId) => dispatch(fetchFeaturedHiddenListings(networkId))
 })
