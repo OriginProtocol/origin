@@ -22,8 +22,8 @@ const env = {
   CONTRACT_ADDRESSES: '{}',
   DEPLOY_TAG: false,
   DISCOVERY_SERVER_URL: 'https://discovery.originprotocol.com',
-  ENABLE_PERFORMANCE_MODE: false,
   ENABLE_FRACTIONAL: false,
+  ENABLE_PERFORMANCE_MODE: false,
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
   GA_TRACKING_ID: null, // must also be hard-coded in dev.html - this is used in components/analytics.js
