@@ -11,9 +11,9 @@ matrix:
         - origin-dapp/node_modules
         - origin-js/node_modules
     before_cache:
-      - rm -f origin-contracts/node_modules/.cache
-      - rm -f origin-dapp/node_modules/.cache
-      - rm -f origin-js/node_modules/.cache
+      - rm -rf origin-contracts/node_modules/.cache
+      - rm -rf origin-dapp/node_modules/.cache
+      - rm -rf origin-js/node_modules/.cache
     node_js: 10
 
   - name: "Origin-discovery unit tests"
@@ -25,9 +25,9 @@ matrix:
         - origin-dapp/node_modules
         - origin-js/node_modules
     before_cache:
-      - rm -f origin-contracts/node_modules/.cache
-      - rm -f origin-dapp/node_modules/.cache
-      - rm -f origin-js/node_modules/.cache
+      - rm -rf origin-contracts/node_modules/.cache
+      - rm -rf origin-dapp/node_modules/.cache
+      - rm -rf origin-js/node_modules/.cache
     node_js: 10
     addons:
       postgresql: 9.6
