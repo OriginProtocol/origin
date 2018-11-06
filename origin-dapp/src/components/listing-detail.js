@@ -784,7 +784,7 @@ class ListingsDetail extends Component {
             </div>
             { !this.state.loading && this.state.listingType === 'fractional' &&
               <div className="col-12">
-                <Calendar 
+                <Calendar
                   slots={ this.state.slots }
                   offers={ this.state.offers }
                   userType="buyer"
@@ -818,7 +818,6 @@ const mapStateToProps = ({ app, profile, listings }) => {
     notificationsSoftPermission: app.notificationsSoftPermission,
     profile,
     pushNotificationsSupported: app.pushNotificationsSupported,
-    onMobile: app.onMobile,
     serviceWorkerRegistration: app.serviceWorkerRegistration,
     web3Account: app.web3.account,
     web3Intent: app.web3.intent

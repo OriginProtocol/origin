@@ -1,5 +1,7 @@
+const userAgent = navigator.userAgent || navigator.vendor || window.opera
+
 export default function isMobile() {
-  if (navigator.userAgent.match(/Mobi/)) {
+  if (userAgent.match(/Mobi/)) {
     return true
   }
 
@@ -8,9 +10,15 @@ export default function isMobile() {
     return true
   }
 
-  if ('screen' in window && window.screen.width <= 1366) {
-    return true
-  }
-
   return false
+}
+
+export function mobileDevice() {
+  if (/android/i.test(userAgent)) {
+    return 'Android'
+  } else if (/iPad|iPhone|iPod/.test(userAgent)) {
+    return 'iOS'
+  } else {
+    return null
+  }
 }
