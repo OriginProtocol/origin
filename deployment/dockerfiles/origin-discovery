@@ -16,6 +16,7 @@ RUN npm run build
 
 FROM node:8
 
+COPY ./origin-discovery /app
 WORKDIR /app
 
 ENV NODE_ENV production
