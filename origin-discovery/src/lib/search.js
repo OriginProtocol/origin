@@ -75,7 +75,7 @@ class Listing {
    * Searches for listings.
    * @param {string} query - The search query.
    * @param {array} filters - Array of filter objects
-   * @param {integer} numberOfItems - number of items to display per page
+   * @param {number} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
    * @param {boolean} idsOnly - only returns listing Ids vs listing object.
    * @throws Throws an error if the search operation failed.

@@ -20,10 +20,13 @@ const env = {
   BRIDGE_SERVER_DOMAIN: 'bridge.originprotocol.com',
   BRIDGE_SERVER_PROTOCOL: 'https',
   CONTRACT_ADDRESSES: '{}',
+  DECENTRALIZED_MODE: true,
   DEPLOY_TAG: false,
   DISCOVERY_SERVER_URL: 'https://discovery.originprotocol.com',
+  ENABLE_FRACTIONAL: false,
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
+  GA_TRACKING_ID: null, // must also be hard-coded in dev.html - this is used in components/analytics.js
   IMAGE_MAX_SIZE: null,
   INSTRUCTIONS_URL: 'https://www.originprotocol.com',
   IPFS_API_PORT: '443',
@@ -36,11 +39,9 @@ const env = {
   MAINNET_DAPP_BASEURL: 'https://dapp.originprotocol.com',
   NOTIFICATIONS_KEY: null,
   NOTIFICATIONS_URL: 'https://notifications.originprotocol.com',
-  RINKEBY_DAPP_BASEURL: 'https://demo.staging.originprotocol.com',
   PROVIDER_URL: null,
   REDUX_LOGGER: false,
-  GA_TRACKING_ID: null, // must also be hard-coded in dev.html - this is used in components/analytics.js
-  ENABLE_FRACTIONAL: false
+  RINKEBY_DAPP_BASEURL: 'https://demo.staging.originprotocol.com'
 }
 
 var config = {

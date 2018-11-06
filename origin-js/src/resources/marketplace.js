@@ -19,13 +19,23 @@ import {
 import MarketplaceResolver from '../contractInterface/marketplace/resolver'
 
 class Marketplace {
-  constructor({ contractService, ipfsService, store, affiliate, arbitrator }) {
+  constructor({
+    contractService,
+    ipfsService,
+    discoveryService,
+    store,
+    affiliate,
+    arbitrator,
+    decentralizedMode })
+  {
     this.contractService = contractService
     this.ipfsService = ipfsService
+    this.discoveryService = discoveryService
     this.affiliate = affiliate
     this.arbitrator = arbitrator
     this.ipfsDataStore = new IpfsDataStore(this.ipfsService)
     this.resolver = new MarketplaceResolver(...arguments)
+    this.decentralizedMode = decentralizedMode
 
     // initialize notifications
     if (!store.get(storeKeys.notificationSubscriptionStart)) {
@@ -41,41 +51,55 @@ class Marketplace {
     return await this.resolver.getListingsCount()
   }
 
+  /**
+   * Returns all listings from the marketplace.
+   * TODO: This won't scale. Add support for pagination.
+   * @param opts
+   * @return {Promise<List(Listing)>>}
+   * @throws {Error}
+   */
   async getListings(opts = {}) {
-    const listingIds = await this.resolver.getListingIds(opts)
+    if (this.decentralizedMode) {
+      const listingIds = await this.resolver.getListingIds(opts)
 
-    if (opts.idsOnly) {
-      return listingIds
+      if (opts.idsOnly) {
+        return listingIds
+      }
+
+      return Promise.all(
+        listingIds.map(async listingId => {
+          return await this.getListing(listingId)
+        })
+      )
+    } else {
+      return await this.discoveryService.getListings(opts)
     }
-
-    return Promise.all(
-      listingIds.map(async listingId => {
-        return await this.getListing(listingId)
-      })
-    )
   }
 
   /**
-   * Returns a Listing object based in its id.
+   * Returns a Listing object based on its id.
    * @param listingId
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
   async getListing(listingId) {
-    // Get the on-chain listing data.
-    const chainListing = await this.resolver.getListing(listingId)
+    if (this.decentralizedMode) {
+      // Get the on-chain listing data.
+      const chainListing = await this.resolver.getListing(listingId)
 
-    // Get the off-chain listing data from IPFS.
-    const ipfsHash = this.contractService.getIpfsHashFromBytes32(
-      chainListing.ipfsHash
-    )
-    const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
+      // Get the off-chain listing data from IPFS.
+      const ipfsHash = this.contractService.getIpfsHashFromBytes32(
+        chainListing.ipfsHash
+      )
+      const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
 
-    // Create and return a Listing from on-chain and off-chain data .
-    return new Listing(listingId, chainListing, ipfsListing)
+      // Create and return a Listing from on-chain and off-chain data .
+      return new Listing(listingId, chainListing, ipfsListing)
+
+    } else {
+      return await this.discoveryService.getListing(listingId)
+    }
   }
-
-  // async getOffersCount(listingId) {}
 
   async getOffers(listingId, opts = {}) {
     const offerIds = await this.resolver.getOfferIds(listingId, opts)
