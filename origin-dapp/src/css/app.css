@@ -3818,12 +3818,25 @@ form .stars img {
 /* Messages */
 
 .mobile-messaging .back {
-  background-color: var(--dark-grey-blue);
+  background-color: var(--dusk);
+  height: 60px;
 }
 
-.mobile-messaging .back span {
-  height: 40px;
-  color: white;
+.mobile-messaging .back i{
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  border: solid var(--white);
+  border-width: 0 4px 4px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.mobile-messaging .back i.icon-arrow-left {
+  margin-left: 14px;
+  margin-top: 17px;
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
 }
 
 .mobile-conversations .avatar-container {

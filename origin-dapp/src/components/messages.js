@@ -77,7 +77,7 @@ class Messages extends Component {
         return (
           <div className="mobile-messaging">
             <div className="back" onClick={() => this.handleConversationSelect('')}>
-              <span>&#60; Back</span>
+              <i className="icon-arrow-left"></i>
             </div>
             <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
               <Conversation
