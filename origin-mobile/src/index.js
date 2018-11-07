@@ -4,10 +4,12 @@ import expressWs from 'express-ws'
 import useragent from 'express-useragent'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+import morgan from 'morgan'
 
 const app = express()
 expressWs(app)
 app.use(cookieParser())
+app.use(morgan('combined'))
 app.use(useragent.express())
 app.use(cors({ origin:true, credentials: true }))
 app.use(bodyParser.json())

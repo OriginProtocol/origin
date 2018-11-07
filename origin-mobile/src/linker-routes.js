@@ -22,7 +22,6 @@ const linker = new Linker()
 
 router.post("/generate-code", async (req, res) => {
   const _clientToken = getClientToken(req)
-  console.log("generated client token", _clientToken)
   const {return_url, session_token, pending_call} = req.body
   const {clientToken, sessionToken, code, linked} = await linker.generateCode(_clientToken, session_token, req.useragent, return_url, pending_call)
   clientTokenHandler(res, clientToken)
@@ -83,12 +82,9 @@ router.post("/unlink-wallet/:walletToken", async (req, res) => {
 
 router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
   const clientToken = getClientToken(req)
-  console.log("Linked messages socket has been called", clientToken)
   const {sessionToken, readId} = req.params
   //filter out sessionToken
   const realSessionToken = ["-", "null", "undefined"].includes(sessionToken)?null:sessionToken
-
-  console.log("linked messages socket connect with ", sessionToken, " and readId ", readId)
 
   if (!clientToken){
     ws.close(1000, "No client token available.")

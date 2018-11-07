@@ -23,6 +23,7 @@
     "express-ws": "^4.0.0",
     "js-sha3": "^0.8.0",
     "lodash": "^4.17.11",
+    "morgan": "^1.9.1",
     "nodemon": "^1.18.6",
     "origin": "^0.8.5",
     "pg": "^7.5.0",
@@ -48,7 +49,7 @@
       "@babel/preset-env"
     ],
     "sourceMaps": "both",
-    "retainLines":true,
+    "retainLines": true,
     "plugins": [
       "@babel/plugin-transform-runtime"
     ]
