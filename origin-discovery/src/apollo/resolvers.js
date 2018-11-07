@@ -22,7 +22,7 @@ function relatedUserResolver (walletAddress, info) {
 }
 
 // Resolvers define the technique for fetching the types in the schema.
-const getResolvers = function (listingInfo) {
+const getResolvers = function (listingMetadata) {
 
   return {
     JSON: GraphQLJSON,
@@ -37,11 +37,11 @@ const getResolvers = function (listingInfo) {
             args.page.numberOfItems,
             args.page.offset,
             true, // idsOnly
-            listingInfo.hiddenListings,
-            listingInfo.featuredListings
+            listingMetadata.hiddenListings,
+            listingMetadata.featuredListings
           )
         // Get listing objects from DB based on Ids.
-        const listings = await getListings(listingIds, listingInfo.hiddenListings, listingInfo.featuredListings)
+        const listings = await getListings(listingIds, listingMetadata.hiddenListings, listingMetadata.featuredListings)
 
         return {
           nodes: listings,
@@ -56,7 +56,7 @@ const getResolvers = function (listingInfo) {
       },
 
       async listing (root, args, context, info) {
-        const listings = await getListings([args.id], listingInfo.hiddenListings, listingInfo.featuredListings)
+        const listings = await getListings([args.id], listingMetadata.hiddenListings, listingMetadata.featuredListings)
         return (listings.length === 1) ? listings[0] : null
       },
 

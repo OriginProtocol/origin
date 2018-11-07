@@ -3,7 +3,6 @@
  * Uses the Apollo framework: https://www.apollographql.com/server
  */
 require('dotenv').config()
-const fetch = require('node-fetch')
 
 try {
   require('envkey')
@@ -17,6 +16,7 @@ const promBundle = require('express-prom-bundle')
 
 const getResolvers = require('./resolvers.js')
 const typeDefs = require('./schema.js')
+const ListingMetadata = require('./listingMetadata')
 
 const app = express()
 const bundle = promBundle({
@@ -28,52 +28,22 @@ const bundle = promBundle({
 })
 app.use(bundle)
 
-// how frequently featured/hidden listings list updates
-const LISTINGS_STALE_TIME = 60 * 1000 //60 seconds
-const networkId = process.env.NETWORK_ID
-const featuredListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/featurelist_${networkId}.txt`
-const hiddenListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/hidelist_${networkId}.txt`
-const listingInfo = {
- hiddenListings: [],
- featuredListings: []
-}
-let listingsUpdateTime
-
-async function readListingsFromUrl(githubUrl){
-  let response = await fetch(githubUrl)
-  return (await response.text())
-    .split(',')
-    .map(listingId => listingId.trim())
-    .filter(listingId => listingId.match(/\d*-\d*-\d*/) !== null)
-}
-
-async function updateHiddenFeaturedListings(){
-  if (!listingsUpdateTime || new Date() - listingsUpdateTime > LISTINGS_STALE_TIME){
-    try{
-      listingsUpdateTime = new Date()
-      listingInfo.hiddenListings = await readListingsFromUrl(hiddenListingsUrl)
-      listingInfo.featuredListings = await readListingsFromUrl(featuredListingsUrl)
-    } catch(e) {
-      console.error("Could not update hidden/featured listings ", e)
-    }
-  }
-}
-
+const listingMetadata = new ListingMetadata()
 // Start ApolloServer by passing type definitions and the resolvers
 // responsible for fetching the data for those types.
 const server = new ApolloServer({
-  resolvers: getResolvers(listingInfo),
+  resolvers: getResolvers(listingMetadata.listingInfo),
   typeDefs,
   context: async ({ req }) => {
     // update listingIds in a non blocking way
-    updateHiddenFeaturedListings()
+    listingMetadata.updateHiddenFeaturedListings()
      return {}
   }})
 
 server.applyMiddleware({ app })
 
 // initial fetch of ids at the time of starting the server
-updateHiddenFeaturedListings()
+listingMetadata.updateHiddenFeaturedListings()
 
 const port = process.env.PORT || 4000
 
