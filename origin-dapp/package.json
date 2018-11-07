@@ -1,5 +1,5 @@
 {
-  "name": "origin-demo-dapp",
+  "name": "origin-dapp",
   "version": "0.3.0",
   "license": "MIT",
   "engines": {
@@ -84,7 +84,6 @@
     "dev": "npx webpack-dev-server --open --host 0.0.0.0 --public localhost:3000",
     "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
-    "prepublish": "npm run build",
     "translations": "node translations/scripts/processTranslatedMessages.js",
     "test": "node scripts/test.js --env=jsdom",
     "format": "npx prettier-eslint --write 'src/**/*.js' 'scripts/**/*.js'"

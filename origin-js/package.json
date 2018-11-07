@@ -9,7 +9,6 @@
   "scripts": {
     "build": "node scripts/build.js",
     "format": "npx prettier-eslint --write 'src/**/*.js' 'test/**/*test.js' 'scripts/**/*.js'",
-    "prepublish": "npm run build",
     "start": "node scripts/serve.js serve",
     "start:no-ganache": "node scripts/serve.js no-ganache",
     "test": "node scripts/test.js",
