@@ -1,8 +1,10 @@
 {
   "packages": [
+    "origin-contracts",
     "origin-js",
     "origin-dapp",
-    "origin-contracts"
+    "origin-discovery",
+    "origin-faucet"
   ],
   "version": "independent"
 }

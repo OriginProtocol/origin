@@ -1,28 +1,26 @@
 # NOTE/TODO: origin-discovery doesn't need Origin.js but it shares a
 # package.json with the event listener which does
-#
-# --- Origin.js
 
-FROM node:8 as origin-js-build
+FROM node:10 as build
 
-COPY ./origin-js /app
 WORKDIR /app
 
 ENV NODE_ENV=production
-RUN npm install --quiet --no-progress
-RUN npm run build
 
-# --- GraphQL server
+# Install envkey-source
+RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
+RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN mv envkey-source /usr/local/bin
 
-FROM node:8
+# Install lerna
+RUN npm i lerna -g --loglevel notice
 
-COPY ./origin-discovery /app
-WORKDIR /app
+COPY package.json .
+COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
+COPY ./origin-discovery ./origin-discovery
+COPY ./scripts ./scripts
+COPY lerna.json .
+RUN npm install --loglevel notice --unsafe-perm
 
-ENV NODE_ENV production
-# Link previously built Origin.js
-COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
-RUN npm link origin
-RUN npm install --quiet --no-progress
-
-CMD ["node", "src/apollo/app.js"]
+CMD ["node", "origin-discovery/src/apollo/app.js"]

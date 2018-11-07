@@ -14,4 +14,4 @@ node node_modules/.bin/sequelize db:migrate
 echo "Starting event listener"
 
 # Start event listener
-node src/listener/listener.js
+node origin-discovery/src/listener/listener.js
