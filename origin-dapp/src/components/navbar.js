@@ -32,7 +32,9 @@ class NavBar extends Component {
   }
 
   render() {
-    return (
+    const { showNav } = this.props
+
+    return showNav && (
       <nav className="navbar navigation-bar navbar-expand-lg navbar-dark">
         <div className="container">
           <button
@@ -183,7 +185,8 @@ class NavBar extends Component {
 const mapStateToProps = state => {
   return {
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    web3Intent: state.app.web3.intent,
+    showNav: state.app.showNav
   }
 }
 

@@ -18,6 +18,7 @@ const initialState = {
   notificationsSubscriptionPrompt: null,
   mobileDevice: null,
   isMobile: false,
+  showNav: true,
   pushNotificationsSupported: !!(process.env.NOTIFICATIONS_KEY && process.env.NOTIFICATIONS_URL),
   serviceWorkerRegistration: null,
   translations: {
@@ -61,6 +62,9 @@ export default function App(state = initialState, action = {}) {
 
   case AppConstants.ON_MOBILE:
     return { ...state, mobileDevice: action.device, isMobile: action.isMobile }
+
+  case AppConstants.SHOW_MAIN_NAV:
+    return { ...state, showNav: action.showNav }
 
   case AppConstants.SAVE_SERVICE_WORKER_REGISTRATION:
     return { ...state, serviceWorkerRegistration: action.registration }

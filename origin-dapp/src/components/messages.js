@@ -5,6 +5,8 @@ import { withRouter } from 'react-router'
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
 
+import { showMainNav } from 'actions/App'
+
 import groupByArray from 'utils/groupByArray'
 
 import origin from '../services/origin'
@@ -14,7 +16,8 @@ class Messages extends Component {
     super(props)
 
     this.state = {
-      selectedConversationId: ''
+      selectedConversationId: '',
+      mainNav: true
     }
   }
 
@@ -53,7 +56,13 @@ class Messages extends Component {
   }
 
   handleConversationSelect(selectedConversationId) {
-    this.setState({ selectedConversationId })
+    const { mainNav } = this.state
+    const { isMobile } = this.props
+
+    const showMainNav = (isMobile && selectedConversationId.length) ? false : true
+
+    this.props.showMainNav(showMainNav)
+    this.setState({ selectedConversationId, mainNav: showMainNav })
   }
 
   render() {
@@ -130,7 +139,7 @@ class Messages extends Component {
 }
 
 const mapStateToProps = ({ app, messages }) => {
-  const { messagingEnabled, web3, isMobile } = app
+  const { messagingEnabled, web3, isMobile, showNav } = app
   const web3Account = web3.account
   const filteredMessages = messages.filter(({ content, conversationId }) => {
     return (
@@ -155,8 +164,16 @@ const mapStateToProps = ({ app, messages }) => {
     messages: filteredMessages,
     messagingEnabled,
     web3Account,
-    isMobile
+    isMobile,
+    showNav
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Messages))
+const mapDispatchToProps = dispatch => ({
+  showMainNav: (showNav) => dispatch(showMainNav(showNav)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Messages)
