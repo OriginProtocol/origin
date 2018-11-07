@@ -3,7 +3,7 @@ import { ListingConstants } from 'actions/Listing'
 const initialState = {
   ids: [],
   hidden: [],
-  featured: [],
+  featuredIds: [],
   contractFound: true
 }
 

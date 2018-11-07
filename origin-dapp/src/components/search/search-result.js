@@ -295,8 +295,9 @@ class SearchResult extends Component {
               listingsLength: this.state.totalNumberOfListings
             }}
             featuredListingIds={this.state.listings
-                .filter(listing => listing.display === 'featured')
-                .map(listing => listing.id)}
+              .filter(listing => listing.display === 'featured')
+              .map(listing => listing.id)
+            }
             handleChangePage={this.handleChangePage}
             searchPage={this.state.page}
           />

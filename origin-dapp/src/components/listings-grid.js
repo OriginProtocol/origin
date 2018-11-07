@@ -30,7 +30,6 @@ class ListingsGrid extends Component {
 
   render() {
     const { contractFound, listingIds, search, featuredListingIds = [] } = this.props
-    console.log("OUTPUT SOOME STUFF", search.listingIds, featuredListingIds)
     let activePage, currentPageListingIds, resultsCount
 
     if (this.props.renderMode === 'home-page') {

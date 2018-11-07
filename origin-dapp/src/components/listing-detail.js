@@ -55,6 +55,7 @@ class ListingsDetail extends Component {
 
     this.state = {
       etherscanDomain: null,
+      display: "normal",
       loading: true,
       offers: [],
       pictures: [],
@@ -261,12 +262,13 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { featuredListingIds, listingId, web3Account } = this.props
+    const { listingId, web3Account } = this.props
     const {
       // boostLevel,
       // boostValue,
       category,
       description,
+      display,
       loading,
       name,
       offers,
@@ -292,7 +294,7 @@ class ListingsDetail extends Component {
     const isAvailable = !isPending && !isSold && !isWithdrawn
     const showPendingBadge = isPending && !isWithdrawn
     const showSoldBadge = isSold || isWithdrawn
-    const showFeaturedBadge = featuredListingIds.includes(listingId) && isAvailable
+    const showFeaturedBadge = display === "featured" && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
 
@@ -813,7 +815,6 @@ class ListingsDetail extends Component {
 
 const mapStateToProps = ({ app, profile, listings }) => {
   return {
-    featuredListingIds: listings.featured,
     notificationsHardPermission: app.notificationsHardPermission,
     notificationsSoftPermission: app.notificationsSoftPermission,
     profile,
