@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
+import moment from 'moment'
 import Avatar from 'components/avatar'
 
 class ConversationListItem extends Component {
@@ -16,7 +16,7 @@ class ConversationListItem extends Component {
     const lastMessage = conversation.values.sort(
       (a, b) => (a.created < b.created ? -1 : 1)
     )[conversation.values.length - 1]
-    const { content, recipients, senderAddress } = lastMessage
+    const { content, recipients, senderAddress, created } = lastMessage
     const role = senderAddress === web3Account ? 'sender' : 'recipient'
     const counterpartyAddress =
       role === 'sender'
@@ -38,14 +38,17 @@ class ConversationListItem extends Component {
           <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
           <div className="content-container text-truncate">
             <div className="sender text-truncate">
-              {counterparty.fullName || counterpartyAddress}
+              <span>{counterparty.fullName || counterpartyAddress}</span>
             </div>
             <div className="message text-truncate">{content}</div>
           </div>
-          <div className="meta-container text-right">
+          <div className="meta-container">
+            <div className="timestamp text-right ml-auto">
+              {moment(created).format('h:mm a')}
+            </div>
             {!!unreadCount && (
               <div className="unread count text-right">
-                <div className="d-inline-block">{unreadCount}</div>
+                <div>{unreadCount}</div>
               </div>
             )}
           </div>

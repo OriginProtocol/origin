@@ -3823,8 +3823,8 @@ form .stars img {
 }
 
 .mobile-messaging .back i{
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   border-radius: 3px;
   border: solid var(--white);
   border-width: 0 4px 4px 0;
@@ -3833,10 +3833,23 @@ form .stars img {
 }
 
 .mobile-messaging .back i.icon-arrow-left {
-  margin-left: 14px;
-  margin-top: 17px;
+  margin-left: 30px;
+  margin-top: 19px;
   transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
+}
+
+.mobile-messaging .back .counterparty {
+  display: inline-block;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--white);
+  /* overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; */
+  width: 60%;
+  text-align: center;
+  padding-left: 80px;
 }
 
 .mobile-conversations .avatar-container {
@@ -3850,6 +3863,14 @@ form .stars img {
 
 .mobile-conversations .text-truncate {
   width: 60%;
+}
+
+.mobile-conversations .text-truncate span {
+  font-weight: bold;
+}
+
+.mobile-conversation-list-item {
+  padding-bottom: 10px;
 }
 
 .conversations-list-col {
@@ -3914,11 +3935,20 @@ form .stars img {
   font-weight: bold;
 }
 
-.conversation-list-item .count div {
-  border-radius: 8px;
-  font-size: 12px;
+.mobile-conversation-list-item .unread.count {
+  font-weight: bold;
+  width: 30px;
   height: 18px;
-  padding: 0 6px;
+  border-radius: 9.5px;
+  background-color: var(--clear-blue);
+}
+
+.mobile-conversation-list-item .unread.count div {
+  padding-right: 10px;
+}
+
+.mobile-conversation-list-item .meta-container {
+  width: 21%;
 }
 
 .messages-wrapper .container {
@@ -4037,20 +4067,20 @@ form .stars img {
 .conversation .sender {
   font-weight: 300;
   font-size: 0.75rem;
-  padding-top: 8px;
 }
 
 .conversation .timestamp {
   color: var(--bluey-grey);
   flex-shrink: 0;
   font-size: 0.75rem;
-  padding-top: 8px;
+  padding: 12px;
 }
 
 .conversation .name {
   font-size: 1rem;
   font-weight: bold;
   margin-right: 0.5rem;
+  line-height: 10px;
 }
 
 .conversation .avatar-container {

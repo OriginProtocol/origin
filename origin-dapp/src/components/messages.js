@@ -52,6 +52,7 @@ class Messages extends Component {
       this.props.match.params.conversationId ||
       (this.props.conversations[0] || {}).key
 
+    if (this.props.isMobile) this.props.showMainNav(false)
     selectedConversationId && this.setState({ selectedConversationId })
   }
 
@@ -66,18 +67,34 @@ class Messages extends Component {
   }
 
   render() {
-    const { conversations, messages, isMobile } = this.props
+    const { conversations, messages, isMobile, users, web3Account } = this.props
     const { selectedConversationId } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
       .sort((a, b) => (a.created < b.created ? -1 : 1))
 
+    const conversation = conversations.find((conv) => conv.key === selectedConversationId)
+    const lastMessage = conversation && conversation.values.sort(
+      (a, b) => (a.created < b.created ? -1 : 1)
+    )[conversation.values.length - 1]
+
+    const { content, recipients, senderAddress } = lastMessage || {}
+    const role = senderAddress === web3Account ? 'sender' : 'recipient'
+    const counterpartyAddress =
+    role === 'sender'
+    ? recipients.find(addr => addr !== senderAddress)
+    : senderAddress
+    const counterparty = users.find(u => u.address === counterpartyAddress) || {}
+    const counterpartyName = counterparty.fullName || counterpartyAddress
+
     if (isMobile) {
+      console.log("CONVERSATIONS", counterparty)
       if (selectedConversationId) {
         return (
           <div className="mobile-messaging">
-            <div className="back" onClick={() => this.handleConversationSelect('')}>
-              <i className="icon-arrow-left"></i>
+            <div className="back row align-items-center" onClick={() => this.handleConversationSelect('')}>
+              <i className="icon-arrow-left align-self-start"></i>
+              <span className="counterparty text-truncate align-self-center">{counterpartyName}</span>
             </div>
             <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
               <Conversation
@@ -138,7 +155,7 @@ class Messages extends Component {
   }
 }
 
-const mapStateToProps = ({ app, messages }) => {
+const mapStateToProps = ({ app, messages, users }) => {
   const { messagingEnabled, web3, isMobile, showNav } = app
   const web3Account = web3.account
   const filteredMessages = messages.filter(({ content, conversationId }) => {
@@ -165,7 +182,8 @@ const mapStateToProps = ({ app, messages }) => {
     messagingEnabled,
     web3Account,
     isMobile,
-    showNav
+    showNav,
+    users
   }
 }
 
