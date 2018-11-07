@@ -7,7 +7,7 @@ const db = require('../models')
  * @param listingIds
  * @return {Promise<Array>}
  */
-async function getListings (listingIds) {
+async function getListings (listingIds, hiddenIds, featuredIds) {
   // Load rows from the Listing table in the DB.
   const rows = await db.Listing.findAll({
     where: {
@@ -30,6 +30,15 @@ async function getListings (listingIds) {
   // Note: preserve ranking by keeping returned listings in same order as listingIds.
   const listings = []
   listingIds.forEach(id => {
+    let displayType = "normal"
+    /* hidden listings are not returned right now, but at some point in the future
+     * we might have admin queries that also return hidden listings
+     */
+    if (hiddenIds.includes(id))
+      displayType = "hidden"
+    else if (featuredIds.includes(id))
+      displayType = "featured"
+
     const row = rowDict[id]
     const listing = {
       id: id,
@@ -41,7 +50,8 @@ async function getListings (listingIds) {
       subCategory: row.data.subCategory,
       // TODO: price may not be defined at the listing level for all listing types.
       // For ex. for fractional usage it may vary based on time slot.
-      price: row.data.price
+      price: row.data.price,
+      displayType: displayType
     }
     listings.push(listing)
   })

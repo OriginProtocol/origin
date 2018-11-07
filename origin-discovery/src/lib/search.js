@@ -41,15 +41,6 @@ class Listing {
     return resp.count
   }
 
-  static async get (id, hiddenIds = [], featuredIds = []) {
-    const resp = await client.get({ id: id, index: LISTINGS_INDEX, type: LISTINGS_TYPE })
-    if (!resp.found) {
-      throw Error('Listing not found')
-    }
-    
-    return this.extractListing(resp, hiddenIds, featuredIds)
-  }
-
   /**
    * Indexes a listing.
    * @param {string} listingId - The unique ID of the listing.
@@ -69,28 +60,6 @@ class Listing {
     console.log(`Indexed listing ${listingId} in search index.`)
     return listingId
   }
-
-  static extractListing(elasticSearchHit, hiddenIds, featuredIds){
-    let displayType = "normal"
-    /* hidden listings are not returned right now, but at some point in the future
-     * we might have admin queries that also return hidden listings
-     */
-    if (hiddenIds.includes(elasticSearchHit._id))
-      displayType = "hidden"
-    else if (featuredIds.includes(elasticSearchHit._id))
-      displayType = "featured"
-     return {
-      id: elasticSearchHit._id,
-      title: elasticSearchHit._source.title,
-      category: elasticSearchHit._source.category,
-      subCategory: elasticSearchHit._source.subCategory,
-      description: elasticSearchHit._source.description,
-      priceAmount: (elasticSearchHit._source.price || {}).amount,
-      priceCurrency: (elasticSearchHit._source.price || {}).currency,
-      displayType: displayType
-    }
-  }
-
 
   /**
    * Searches for listings.
@@ -158,11 +127,16 @@ class Listing {
      * Filters and query string still applies to these listings, but if they match, they shall be on top.
      */
     if (featuredIds.length > 0){
-      esQuery.bool.should.push({
-        ids: {
-          values: featuredIds,
-          boost: 20
-        }
+      let boostAmount = 10000
+      featuredIds.forEach(featuredId => {
+        esQuery.bool.should.push({
+          ids: {
+            values: [featuredId],
+            boost: boostAmount
+          }
+        })
+        // to preserve the order of featured listings degrade the boost of each consequent listing
+        boostAmount -= 100
       })
     }
 
@@ -251,8 +225,15 @@ class Listing {
     const [searchResponse, aggregationResponse] = await Promise.all([searchRequest, aggregationRequest])
     const listings = []
     searchResponse.hits.hits.forEach((hit) => {
-      const listing = this.extractListing(hit, hiddenIds, featuredIds)
-      listings.push(listing)
+      listings.push({
+        id: hit._id,
+        title: hit._source.title,
+        category: hit._source.category,
+        subCategory: hit._source.subCategory,
+        description: hit._source.description,
+        priceAmount: (hit._source.price || {}).amount,
+        priceCurrency: (hit._source.price || {}).currency
+      })
     })
 
     const maxPrice = aggregationResponse.aggregations.max_price.value

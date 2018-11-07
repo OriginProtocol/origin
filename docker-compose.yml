@@ -91,6 +91,8 @@ services:
       - origin-js
       - postgres
       - elasticsearch
+    environment:
+      - DATABASE_URL=postgresql://origin:origin@postgres/origin
     ports:
       - "4000:4000" # Apollo
     command: >
