@@ -70,7 +70,7 @@ const typeDefs = gql`
     subCategory: String!
     price: Price!
     offers: OfferConnection
-    displayType: DisplayType!
+    display: DisplayType!
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
   type Stats {

@@ -30,14 +30,14 @@ async function getListings (listingIds, hiddenIds, featuredIds) {
   // Note: preserve ranking by keeping returned listings in same order as listingIds.
   const listings = []
   listingIds.forEach(id => {
-    let displayType = "normal"
+    let display = "normal"
     /* hidden listings are not returned right now, but at some point in the future
      * we might have admin queries that also return hidden listings
      */
     if (hiddenIds.includes(id))
-      displayType = "hidden"
+      display = "hidden"
     else if (featuredIds.includes(id))
-      displayType = "featured"
+      display = "featured"
 
     const row = rowDict[id]
     const listing = {
@@ -51,7 +51,7 @@ async function getListings (listingIds, hiddenIds, featuredIds) {
       // TODO: price may not be defined at the listing level for all listing types.
       // For ex. for fractional usage it may vary based on time slot.
       price: row.data.price,
-      displayType: displayType
+      display: display
     }
     listings.push(listing)
   })
