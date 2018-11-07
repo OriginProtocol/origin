@@ -2,7 +2,7 @@
 import db from './../models/'
 import uuidv4 from 'uuid/v4'
 import { Op } from 'sequelize'
-import { MessageTypes } from './../common/enums'
+import { MessageTypes } from 'origin/common/enums'
 import MessageQueue from './../utils/message-queue'
 import origin from './../services/origin'
 import {sha3_224} from 'js-sha3'

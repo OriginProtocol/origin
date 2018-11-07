@@ -1,5 +1,5 @@
 'use strict';
-const {EthNotificationTypes} = require('../src/common/enums');
+const {EthNotificationTypes} = require('origin/common/enums');
 const TableName = 'linked_token';
 
 module.exports = {

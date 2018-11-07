@@ -23,7 +23,8 @@
     "test:contracts-coverage": "SOLIDITY_COVERAGE=1 npx solidity-coverage"
   },
   "files": [
-    "dist"
+    "dist",
+    "common"
   ],
   "repository": {
     "type": "git",

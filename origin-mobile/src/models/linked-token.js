@@ -1,5 +1,5 @@
 'use strict';
-const {EthNotificationTypes} = require('../common/enums');
+const {EthNotificationTypes} = require('origin/common/enums');
 
 module.exports = (sequelize, DataTypes) => {
   const LinkedToken = sequelize.define('LinkedToken', {
