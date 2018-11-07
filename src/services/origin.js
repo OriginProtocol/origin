@@ -3,18 +3,19 @@ import Origin from 'origin'
 console.log("POST import origin....")
 import Web3 from 'web3'
 import {localfy} from '../tools'
-import {PROVIDER_URL, BRIDGE_SERVER_PROTOCOL,  
-  BRIDGE_SERVER_DOMAIN, BRIDGE_SERVER_PORT,
+import {PROVIDER_URL, API_SERVER_PROTOCOL,  
+  API_SERVER_DOMAIN, API_SERVER_PORT,
   IPFS_DOMAIN, IPFS_API_PORT, IPFS_GATEWAY_PORT, IPFS_GATEWAY_PROTOCOL, MESSAGE_OPEN_URL} from 'react-native-dotenv'
 
 
-const BRIDGE_SERVER = localfy(BRIDGE_SERVER_PORT ? BRIDGE_SERVER_DOMAIN + ":" + BRIDGE_SERVER_PORT : BRIDGE_SERVER_DOMAIN)
+const API_SERVER = localfy(API_SERVER_PORT ? API_SERVER_DOMAIN + ":" + API_SERVER_PORT : API_SERVER_DOMAIN)
 
 const defaultProviderUrl = PROVIDER_URL
 
-const bridgeUrl = BRIDGE_SERVER_PROTOCOL + "://" + BRIDGE_SERVER 
+const apiUrl = API_SERVER_PROTOCOL + "://" + API_SERVER 
 
-const attestationServerUrl = `${bridgeUrl}/api/attestations`
+// this is not quite right currently
+const attestationServerUrl = `${apiUrl}/api/attestations`
 const walletLinkerUrl = null
 const messageOpenUrl = localfy(MESSAGE_OPEN_URL)
 // create web3 with empty provider for now
@@ -43,5 +44,5 @@ console.log("POST instantiate origin....")
 // Replace global web3 with Origin.js-constructed instance
 global.web3 = origin.contractService.web3
 export default origin
-export {bridgeUrl, defaultProviderUrl, messageOpenUrl}
+export {apiUrl, defaultProviderUrl, messageOpenUrl}
 

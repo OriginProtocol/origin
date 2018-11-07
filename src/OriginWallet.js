@@ -6,12 +6,12 @@ import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
 import EventEmitter from 'events'
 
-import origin, {bridgeUrl, defaultProviderUrl, messageOpenUrl} from './services/origin'
+import origin, {apiUrl, defaultProviderUrl, messageOpenUrl} from './services/origin'
 
 const providerUrl = defaultProviderUrl
 
-const API_ETH_NOTIFICATION = `${bridgeUrl}/api/notifications/eth-endpoint`
-const API_WALLET_LINKER = `${bridgeUrl}/api/wallet-linker`
+const API_ETH_NOTIFICATION = `${apiUrl}/api/notifications/eth-endpoint`
+const API_WALLET_LINKER = `${apiUrl}/api/wallet-linker`
 const API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet"
 const API_WALLET_LINKER_UNLINK = API_WALLET_LINKER + "/unlink-wallet"
 const API_WALLET_LINKER_MESSAGES = API_WALLET_LINKER + "/wallet-messages"
@@ -30,7 +30,7 @@ const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519
 const WALLET_PASSWORD = "TEST_PASS"
 const WALLET_STORE = "WALLET_STORE"
 
-Events = keyMirror({
+const Events = keyMirror({
   PROMPT_LINK:null,
   PROMPT_TRANSACTION:null,
   PROMPT_SIGN:null,
