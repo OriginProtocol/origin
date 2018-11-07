@@ -36,7 +36,7 @@ const resolvers = {
           args.page.offset,
           true // idsOnly
         )
-      // Get listing objects from DB based on Ids.
+      // Get listing objects based on Ids from DB.
       const listings = await getListings(listingIds)
 
       return {
