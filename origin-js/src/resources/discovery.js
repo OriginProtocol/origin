@@ -78,17 +78,6 @@ class Discovery {
 
     return this.query(query)
   }
-
-  async getListing(listingId) {
-    return this.query(`{
-      listing (
-        id: "${listingId}"
-      ) {
-        id
-        displayType
-      }
-    }`)
-  }
 }
 
 module.exports = Discovery
