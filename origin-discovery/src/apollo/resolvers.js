@@ -23,7 +23,6 @@ function relatedUserResolver (walletAddress, info) {
 
 // Resolvers define the technique for fetching the types in the schema.
 const getResolvers = function (listingMetadata) {
-
   return {
     JSON: GraphQLJSON,
     Query: {
