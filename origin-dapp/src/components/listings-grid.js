@@ -29,7 +29,8 @@ class ListingsGrid extends Component {
   }
 
   render() {
-    const { contractFound, listingIds, search, featuredListingIds } = this.props
+    const { contractFound, listingIds, search, featuredListingIds = [] } = this.props
+    console.log("OUTPUT SOOME STUFF", search.listingIds, featuredListingIds)
     let activePage, currentPageListingIds, resultsCount
 
     if (this.props.renderMode === 'home-page') {
@@ -111,8 +112,6 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   contractFound: state.listings.contractFound,
-  featuredListingIds: state.listings.featured,
-  hiddenListingIds: state.listings.hidden,
   listingIds: state.marketplace.ids
 })
 

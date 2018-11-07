@@ -29,7 +29,7 @@ class SearchResult extends Component {
       filterSchema: undefined,
       listingSchema: undefined,
       listingType: undefined,
-      listingIds: [],
+      listings: [],
       totalNumberOfListings: 0,
       searchError: undefined,
       filters: {},
@@ -292,11 +292,11 @@ class SearchResult extends Component {
             renderMode="search"
             search={{
               listingIds: this.state.listings.map(listing => listing.id),
-              featuredListingIds: this.state.listings
-                .filter(listing => listing.display === 'featured')
-                .map(listing => listing.id),
               listingsLength: this.state.totalNumberOfListings
             }}
+            featuredListingIds={this.state.listings
+                .filter(listing => listing.display === 'featured')
+                .map(listing => listing.id)}
             handleChangePage={this.handleChangePage}
             searchPage={this.state.page}
           />
