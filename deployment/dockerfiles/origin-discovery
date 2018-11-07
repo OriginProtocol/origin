@@ -20,4 +20,6 @@ COPY ./scripts ./scripts
 RUN npm install --loglevel notice --unsafe-perm
 RUN lerna run build
 
+WORKDIR /app/origin-discovery
+
 CMD ["npm", "run", "start:discovery"]
