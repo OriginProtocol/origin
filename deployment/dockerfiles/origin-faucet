@@ -7,12 +7,14 @@ ENV NODE_ENV=production
 # Install lerna
 RUN npm i lerna -g --loglevel notice
 
+COPY package-lock.json .
 COPY package.json .
+COPY lerna.json .
 COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-faucet ./origin-faucet
 COPY ./scripts ./scripts
-COPY lerna.json .
 RUN npm install --loglevel notice --unsafe-perm
+RUN lerna run build
 
 CMD ["node", "origin-faucet/faucet/app.js", "--network_ids=4,2222"]

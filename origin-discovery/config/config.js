@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('envkey')
 
 module.exports = {
   development: {

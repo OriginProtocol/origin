@@ -6,7 +6,6 @@
     "node": "10.x"
   },
   "scripts": {
-    "prepare": "npm run build",
     "build": "truffle compile contracts && node lib/minify-contracts",
     "test": "node scripts/test.js",
     "test:contracts": "mocha -r @babel/register -t 10000 --exit test-alt",

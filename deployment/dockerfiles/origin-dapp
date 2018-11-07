@@ -21,7 +21,9 @@ COPY ./origin-contracts ./origin-contracts
 COPY ./origin-dapp ./origin-dapp
 COPY ./scripts ./scripts
 COPY lerna.json .
-RUN eval $(envkey-source) && npm install --loglevel notice --unsafe-perm
+RUN npm install --loglevel notice --unsafe-perm
+# Use EnvKey so that environment variables are available to DApp at build time
+RUN eval $(envkey-source) && lerna run build
 
 # Copy static files to nginx for serving
 FROM nginx:1.15.2-alpine

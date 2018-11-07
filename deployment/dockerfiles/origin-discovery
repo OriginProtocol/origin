@@ -7,20 +7,17 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install envkey-source
-RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
-RUN tar -zxf envkey-source.tar.gz 2> /dev/null
-RUN mv envkey-source /usr/local/bin
-
 # Install lerna
 RUN npm i lerna -g --loglevel notice
 
+COPY package-lock.json .
 COPY package.json .
+COPY lerna.json .
 COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-discovery ./origin-discovery
 COPY ./scripts ./scripts
-COPY lerna.json .
 RUN npm install --loglevel notice --unsafe-perm
+RUN lerna run build
 
-CMD ["node", "origin-discovery/src/apollo/app.js"]
+CMD ["npm", "run", "start:discovery"]
