@@ -83,7 +83,7 @@
   "listing-create.navigationWarning": "Уверены, что хотите выйти? Если вы покинете эту страницу, то данные не сохранятся.",
   "listing-create.stepNumberLabel": "ШАГ {stepNumber}",
   "listing-create.whatTypeOfListing": "Объявление какого типа вы хотите создать?",
-  "listing-create.listingsMayInclude": "{schemaName} listings may include:",
+  "listing-create.listingsMayInclude": "Объявления для раздела «{schemaName}» могут включать:",
   "listing-create.noSchemaSelectedError": "You must first select a listing type",
   "listing-create.next": "Next",
   "listing-create.createListingHeading": "Create Your Listing",
