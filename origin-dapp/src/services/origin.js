@@ -82,7 +82,8 @@ const config = {
   OrbitDB,
   ecies,
   web3,
-  ethereum
+  ethereum,
+  perfModeEnabled: (process.env.ENABLE_PERFORMANCE_MODE === 'true')
 }
 
 try {
