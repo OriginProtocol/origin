@@ -19,13 +19,23 @@ import {
 import MarketplaceResolver from '../contractInterface/marketplace/resolver'
 
 class Marketplace {
-  constructor({ contractService, ipfsService, store, affiliate, arbitrator }) {
+  constructor({
+    contractService,
+    ipfsService,
+    discoveryService,
+    store,
+    affiliate,
+    arbitrator,
+    perfModeEnabled })
+  {
     this.contractService = contractService
     this.ipfsService = ipfsService
+    this.discoveryService = discoveryService
     this.affiliate = affiliate
     this.arbitrator = arbitrator
     this.ipfsDataStore = new IpfsDataStore(this.ipfsService)
     this.resolver = new MarketplaceResolver(...arguments)
+    this.perfModeEnabled = perfModeEnabled
 
     // initialize notifications
     if (!store.get(storeKeys.notificationSubscriptionStart)) {
@@ -41,9 +51,20 @@ class Marketplace {
     return await this.resolver.getListingsCount()
   }
 
+  /**
+   * Returns all listings from the marketplace.
+   * TODO: This won't scale. Add support for pagination.
+   * @param opts: { idsOnly, listingsFor, purchasesFor }
+   * @return {Promise<List(Listing)>>}
+   * @throws {Error}
+   */
   async getListings(opts = {}) {
-    const listingIds = await this.resolver.getListingIds(opts)
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch data from the discovery back-end to reduce latency.
+      return await this.discoveryService.getListings(opts)
+    }
 
+    const listingIds = await this.resolver.getListingIds(opts)
     if (opts.idsOnly) {
       return listingIds
     }
@@ -56,12 +77,17 @@ class Marketplace {
   }
 
   /**
-   * Returns a Listing object based in its id.
+   * Returns a Listing object based on its id.
    * @param listingId
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
   async getListing(listingId) {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch data from the discovery back-end to reduce latency.
+      return await this.discoveryService.getListing(listingId)
+    }
+
     // Get the on-chain listing data.
     const chainListing = await this.resolver.getListing(listingId)
 
@@ -74,8 +100,6 @@ class Marketplace {
     // Create and return a Listing from on-chain and off-chain data .
     return new Listing(listingId, chainListing, ipfsListing)
   }
-
-  // async getOffersCount(listingId) {}
 
   async getOffers(listingId, opts = {}) {
     const offerIds = await this.resolver.getOfferIds(listingId, opts)

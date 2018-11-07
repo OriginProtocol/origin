@@ -1,3 +1,5 @@
+import sinon from 'sinon'
+
 import Marketplace from '../src/resources/marketplace.js'
 import contractServiceHelper from './helpers/contract-service-helper'
 import asAccount from './helpers/as-account'
@@ -492,3 +494,32 @@ describe('Marketplace Resource', function() {
     })
   })
 })
+
+describe('Marketplace Resource - Performance mode', function() {
+  const mockDiscoveryService = new Object()
+  mockDiscoveryService.getListings = sinon.stub()
+  mockDiscoveryService.getListing = sinon.stub()
+
+  const marketplace = new Marketplace({
+    contractService: { web3: null },
+    store: new StoreMock(),
+    discoveryService: mockDiscoveryService,
+    perfModeEnabled: true
+  })
+
+  describe('getListings', () => {
+    it('Should call discovery service to fetch listings', async () => {
+      await marketplace.getListings()
+      expect(mockDiscoveryService.getListings.callCount).to.equal(1)
+    })
+  })
+
+  describe('getListing', () => {
+    it('Should call discovery service to fetch listing', async () => {
+      await marketplace.getListing()
+      expect(mockDiscoveryService.getListing.callCount).to.equal(1)
+    })
+  })
+
+})
+

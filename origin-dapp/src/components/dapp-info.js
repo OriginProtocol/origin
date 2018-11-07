@@ -260,6 +260,10 @@ class DappInfo extends Component {
                   <td>ENABLE_FRACTIONAL</td>
                   <td>{process.env.ENABLE_FRACTIONAL}</td>
                 </tr>
+                <tr title="For enabling fetching data from backend.">
+                  <td>ENABLE_PERFORMANCE_MODE</td>
+                  <td>{process.env.ENABLE_PERFORMANCE_MODE}</td>
+                </tr>
                 <tr>
                   <td>ETH_NETWORK_ID</td>
                   <td>{process.env.ETH_NETWORK_ID}</td>
