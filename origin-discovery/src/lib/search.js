@@ -123,7 +123,7 @@ class Listing {
      * https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript/5344074#5344074
      */
     const esAggregationQuery = JSON.parse(JSON.stringify(esQuery))
-     /* Also query for featured listings and give them such boost that they shall always be presented on top.
+    /* Also query for featured listings and give them such boost that they shall always be presented on top.
      * Filters and query string still applies to these listings, but if they match, they shall be on top.
      */
     if (featuredIds.length > 0){
