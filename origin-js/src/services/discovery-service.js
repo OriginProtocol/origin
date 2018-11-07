@@ -1,4 +1,4 @@
-// Request at most 100 results from the back-end.
+// Max number of results to request from back-end.
 const MAX_NUM_RESULTS = 100
 
 class DiscoveryService {
@@ -46,12 +46,6 @@ class DiscoveryService {
 
   /**
    * Issues a search request against the discovery server.
-   * @param searchQuery {string} general search query
-   * @returns {Promise<list(Object)>}
-   */
-
-  /**
-   * Issues a search request against the discovery server.
    * @param searchQuery {string} General search query
    * @param numberOfItems {number} Max number of items to return.
    * @param offset {number} Pagination offset.
@@ -59,10 +53,10 @@ class DiscoveryService {
    * @return {Promise<list(Object)>}
    */
   async search(searchQuery, numberOfItems, offset, filters = []) {
-    // from page should be bigger than 0
+    // Offset should be bigger than 0.
     offset = Math.max(offset, 0)
-    // clamp numberOfItems between 1 and 12
-    numberOfItems = Math.min(Math.max(numberOfItems, 1), 100)
+    // clamp numberOfItems between 1 and MAX_NUM_RESULTS
+    numberOfItems = Math.min(Math.max(numberOfItems, 1), MAX_NUM_RESULTS)
     const query = `
     {
       listings (

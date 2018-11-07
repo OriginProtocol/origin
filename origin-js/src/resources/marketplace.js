@@ -54,7 +54,7 @@ class Marketplace {
   /**
    * Returns all listings from the marketplace.
    * TODO: This won't scale. Add support for pagination.
-   * @param opts
+   * @param opts: { idsOnly, listingsFor, purchasesFor }
    * @return {Promise<List(Listing)>>}
    * @throws {Error}
    */
