@@ -260,7 +260,7 @@ class DappInfo extends Component {
                   <td>ENABLE_FRACTIONAL</td>
                   <td>{process.env.ENABLE_FRACTIONAL}</td>
                 </tr>
-                <tr title="Temp env var for enabling fetching data from backend.">
+                <tr title="For enabling fetching data from backend.">
                   <td>ENABLE_PERFORMANCE_MODE</td>
                   <td>{process.env.ENABLE_PERFORMANCE_MODE}</td>
                 </tr>
