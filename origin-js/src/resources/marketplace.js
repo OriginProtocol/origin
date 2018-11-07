@@ -41,6 +41,33 @@ class Marketplace {
     return await this.resolver.getListingsCount()
   }
 
+  async getPurchases(account) {
+    const purchases = await this.resolver.getPurchases(account)
+
+    const listingPromises = purchases.map(obj => {
+      const { listingId, blockNumber } = obj
+
+      return new Promise(async resolve => {
+        const listing = await this.getListing(listingId, blockNumber)
+        resolve({ listingId, ...listing })
+      })
+    })
+    const listings = await Promise.all(listingPromises)
+
+    const offerPromises = purchases.map(async obj => {
+      const { offerId } = obj
+      return await this.getOffer(offerId)
+    })
+    const offers = await Promise.all(offerPromises)
+
+    return offers.map(offer => {
+      return {
+        offer,
+        listing: listings.find(listing => listing.listingId === offer.listingId)
+      }
+    })
+  }
+
   async getListings(opts = {}) {
     const listingIds = await this.resolver.getListingIds(opts)
 
@@ -61,9 +88,9 @@ class Marketplace {
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
-  async getListing(listingId, account) {
+  async getListing(listingId, blockNumber) {
     // Get the on-chain listing data.
-    const chainListing = await this.resolver.getListing(listingId, account)
+    const chainListing = await this.resolver.getListing(listingId, blockNumber)
 
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(

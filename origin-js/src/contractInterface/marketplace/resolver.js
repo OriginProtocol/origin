@@ -24,6 +24,30 @@ class MarketplaceResolver {
     this.store = store
   }
 
+  async getPurchases(account) {
+    const network = await this.contractService.web3.eth.net.getId()
+    let allPurchases = []
+
+    for (const version of this.versions) {
+      const purchasesWithIndexes = await this.adapters[version].getPurchases(account)
+      
+      const purchases = purchasesWithIndexes.map(obj => {
+        const { listingIndex, offerIndex, blockNumber } = obj
+        return {
+          listingIndex,
+          listingId: generateListingId({ version, network, listingIndex }),
+          blockNumber,
+          offerIndex,
+          offerId: generateOfferId({ network, version, listingIndex, offerIndex })
+        }
+      })
+
+      allPurchases = [...allPurchases, ...purchases]
+    }
+
+    return allPurchases
+  }
+
   async getListingsCount() {
     let total = 0
     for (const version of this.versions) {
@@ -48,9 +72,9 @@ class MarketplaceResolver {
     return listingIds
   }
 
-  async getListing(listingId, account) {
+  async getListing(listingId, blockNumber) {
     const { adapter, listingIndex } = this.parseListingId(listingId)
-    return await adapter.getListing(listingIndex, account)
+    return await adapter.getListing(listingIndex, blockNumber)
   }
 
   async getOfferIds(listingId, opts = {}) {

@@ -236,7 +236,25 @@ class V00_MarkeplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async getListing(listingId, account) {
+  async getPurchases(account) {
+    await this.getContract()
+
+    const purchases = await this.contract.getPastEvents('OfferCreated', {
+      filter: { party: account },
+      fromBlock: this.blockEpoch
+    })
+
+    return purchases.map(purchase => {
+      const { blockNumber, returnValues } = purchase
+      return {
+        blockNumber: blockNumber,
+        listingIndex: returnValues.listingID,
+        offerIndex: returnValues.offerID
+      }
+    })
+  }
+
+  async getListing(listingId, blockNumber) {
     await this.getContract()
 
     // Get the raw listing data from the contract.
@@ -260,19 +278,7 @@ class V00_MarkeplaceAdapter {
       if (event.event === 'ListingCreated') {
         ipfsHash = event.returnValues.ipfsHash
       } else if (event.event === 'ListingUpdated') {
-        // if an account is passed in, we're looking for the listing state at the time
-        // that account made an offer, so find the block number of the offer
-        // and ignore any "ListingUpdated" events after that block number
-        let offerBlockNumber
-        if (account) {
-          const offerCreatedEvent = events.find(event =>
-            event.event === 'OfferCreated' &&
-            event.returnValues.party === account
-          )
-          offerBlockNumber = offerCreatedEvent && offerCreatedEvent.blockNumber
-        }
-
-        if (!offerBlockNumber || event.blockNumber < offerBlockNumber) {
+        if (!blockNumber || event.blockNumber < blockNumber) {
           ipfsHash = event.returnValues.ipfsHash
         }
       } else if (event.event === 'ListingWithdrawn') {
