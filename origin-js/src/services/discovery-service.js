@@ -7,6 +7,12 @@ class DiscoveryService {
     this.fetch = fetch
   }
 
+  _flattenListingData(listingNode) {
+    let data = listingNode.data
+    data.display = listingNode.display
+    return data
+  }
+
   /**
    * Helper method. Calls discovery server and returns response.
    * @param graphQlQuery
@@ -128,14 +134,8 @@ class DiscoveryService {
     if (opts.idsOnly) {
       return resp.data.listings.nodes.map(listing => listing.data.id)
     } else {
-      return resp.data.listings.nodes.map(listing => this.aggregateListingData(listing))
+      return resp.data.listings.nodes.map(listing => this._flattenListingData(listing))
     }
-  }
-
-  aggregateListingData(listingNode) {
-    let data = listingNode.data
-    data.display = listingNode.display
-    return data
   }
 
   /**
@@ -158,7 +158,7 @@ class DiscoveryService {
       throw new Error(`No listing found with id ${listingId}`)
     }
 
-    return this.aggregateListingData(resp.data.listing)
+    return this._flattenListingData(resp.data.listing)
   }
 }
 
