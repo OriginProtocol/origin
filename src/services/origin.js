@@ -9,6 +9,7 @@ import {PROVIDER_URL, API_SERVER_PROTOCOL,
 
 
 const API_SERVER = localfy(API_SERVER_PORT ? API_SERVER_DOMAIN + ":" + API_SERVER_PORT : API_SERVER_DOMAIN)
+console.log("API_SERVER is at", API_SERVER)
 
 const defaultProviderUrl = PROVIDER_URL
 
@@ -38,9 +39,7 @@ try {
   /* Ignore */
 }
 
-console.log("PRE instantiate origin....")
 const origin = new Origin(config)
-console.log("POST instantiate origin....")
 // Replace global web3 with Origin.js-constructed instance
 global.web3 = origin.contractService.web3
 export default origin

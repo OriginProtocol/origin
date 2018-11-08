@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "react-native start",
-    "install:dev": "npm install && install-local ../origin-js",
+    "install:dev": "npm install && install-local ../origin/origin-js",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest"

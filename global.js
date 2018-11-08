@@ -13,3 +13,5 @@ if (typeof atob === 'undefined') {
     return new Buffer(b64Encoded, 'base64').toString('binary');
   };
 }
+
+global.navigator.userAgent = 'React Native';

@@ -5,20 +5,22 @@ import Web3 from 'web3'
 import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
 import EventEmitter from 'events'
+import {EthNotificationTypes} from 'origin/common/enums'
 
 import origin, {apiUrl, defaultProviderUrl, messageOpenUrl} from './services/origin'
 
 const providerUrl = defaultProviderUrl
 
+const wsApiUrl = apiUrl.replace(/^http/, 'ws')
+
 const API_ETH_NOTIFICATION = `${apiUrl}/api/notifications/eth-endpoint`
 const API_WALLET_LINKER = `${apiUrl}/api/wallet-linker`
-const API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet"
-const API_WALLET_LINKER_UNLINK = API_WALLET_LINKER + "/unlink-wallet"
-const API_WALLET_LINKER_MESSAGES = API_WALLET_LINKER + "/wallet-messages"
+const API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet/"
+const API_WALLET_LINKER_UNLINK = API_WALLET_LINKER + "/unlink-wallet/"
+const WS_API_WALLET_LINKER_MESSAGES = `${wsApiUrl}/api/wallet-linker/wallet-messages/`
 const API_WALLET_LINK_INFO = API_WALLET_LINKER + "/link-info"
 const API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called"
 const API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
-const APN_NOTIFICATION_TYPE = "APN"
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
 
@@ -29,6 +31,9 @@ const LAST_MESSAGE_IDS = "last_message_ids"
 const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
 const WALLET_PASSWORD = "TEST_PASS"
 const WALLET_STORE = "WALLET_STORE"
+
+// This is the format of the walletToken
+const getWalletToken = (deviceType, deviceToken) => `${deviceType}:${deviceToken}`
 
 const Events = keyMirror({
   PROMPT_LINK:null,
@@ -91,9 +96,9 @@ class OriginWallet {
       linkCode: undefined,
     }
 
-    this.new_messages = true
     this.last_message_ids = {}
-    this.check_messages_interval = setInterval(this.checkServerMessages.bind(this), 1000)
+    //sync messages once we have it all ready
+    this.check_messages_interval = setInterval(this.checkSyncMessages.bind(this), 1000)
 
     loadData(LAST_MESSAGE_IDS).then((ids) => { 
       if (ids) {
@@ -104,7 +109,7 @@ class OriginWallet {
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function(device_token) {
-        this.onNotificationRegistered(device_token["token"], APN_NOTIFICATION_TYPE)
+        this.onNotificationRegistered(device_token["token"], this.getNotifyType())
       }.bind(this),
 
       // (required) Called when a remote or local notification is opened or received
@@ -142,6 +147,10 @@ class OriginWallet {
     this.onQRScanned = this.onQRScanned.bind(this)
   }
 
+  getNotifyType() {
+    return EthNotificationTypes.APN
+  }
+
 
   async fireEvent(event_type, event, matcher) {
     if (typeof(event) == 'object')
@@ -175,7 +184,7 @@ class OriginWallet {
   onClearMessages() {
     this.last_message_ids = {}
     this.syncLastMessages()
-    this.new_messages = true
+    this.syncServerMessages()
   }
 
   doFetch(endpoint, method, data){
@@ -201,9 +210,8 @@ class OriginWallet {
     })
   }
 
-  doLink(wallet_token, code, current_rpc, current_accounts) {
-    return this.doFetch(API_WALLET_LINKER_LINK, 'POST', {
-      wallet_token,
+  doLink(code, current_rpc, current_accounts) {
+    return this.doFetch(API_WALLET_LINKER_LINK + getWalletToken(this.getNotifyType(), this.state.deviceToken), 'POST', {
       code,
       current_rpc,
       current_accounts
@@ -231,7 +239,7 @@ class OriginWallet {
         }
         else
         {
-          console.log("We are now linked return url:"+ responseJson.return_url + " on browser:" + app_info.browser)
+          console.log("We are now linked return url:"+ responseJson.return_url + " on browser:" + app_info)
         }
       }
 
@@ -279,7 +287,8 @@ class OriginWallet {
     let state = this.state
     if (state.ethAddress && state.notificationType && state.deviceToken)
     {
-      this.registerNotificationAddress(state.ethAddress, state.deviceToken, state.notificationType)
+      // TODO: figure out where to implement this later
+      //this.registerNotificationAddress(state.ethAddress, state.deviceToken, state.notificationType)
     }
   }
 
@@ -289,7 +298,7 @@ class OriginWallet {
     {
       console.log("linking...")
       let rpc_server = this.copied_code == state.linkCode ? localfy(providerUrl) : providerUrl
-      return this.doLink(state.deviceToken, state.linkCode, rpc_server, [state.ethAddress])
+      return this.doLink(state.linkCode, rpc_server, [state.ethAddress])
     }
   }
 
@@ -548,41 +557,60 @@ class OriginWallet {
     }
   }
 
-  getServerMessages() {
-    let last_message_id = this.last_message_ids[this.state.ethAddress]
-    console.log("Getting messages for last_message_id:", last_message_id)
-    return this.doFetch(API_WALLET_LINKER_MESSAGES, 'POST', {
-        wallet_token:this.state.deviceToken,
-        last_message_id:last_message_id,
-        accounts:[this.state.ethAddress]
-      }).then((responseJson) => {
-        console.log("we got some messages:", responseJson.messages)
-
-        for (let message of responseJson.messages)
-        {
-          if (message.type == "CALL")
-          {
-            this.processCall(message.meta, message.call[0], message.call_id, message.call[1], message.return_url, message.session_token)  
-          }
-          last_message_id = message.id
-        }
-
-        if (responseJson.messages.length){
-          this.last_message_ids[this.state.ethAddress] = last_message_id
-          this.syncLastMessages()
-          //there's some messages here we might have more
-          this.new_messages = true
-        }
-      }).catch((error) => {
-        console.error(error)
-      })
+  closeLinkMessages() {
+    if (this.messages_ws && this.messages_ws.readyState !== this.messages_ws.CLOSED)
+    {
+      this.messages_ws.close()
+    }
   }
 
-  checkServerMessages() {
-    if (this.new_messages && this.state.deviceToken && this.state.ethAddress)
+  isLinkMessagesOpen() {
+    return this.messages_ws && this.messages_ws.readyState === this.messages_ws.OPEN
+  }
+
+  processMessage(m) {
+    const type = m.msg.type
+    const message = m.msg.data
+    const msgId = m.msgId
+    if (type == "CALL")
     {
-       this.getServerMessages()
-       this.new_messages = false
+      this.processCall(message.meta, message.call[0], message.call_id, message.call[1], message.return_url, message.session_token)  
+    }
+    this.last_message_ids[this.state.ethAddress] = msgId
+    this.syncLastMessages()
+  }
+
+  syncServerMessages() {
+    this.closeLinkMessages()
+    let last_message_id = this.last_message_ids[this.state.ethAddress] || '0'
+    console.log("syncing messages on last_message_id:", last_message_id)
+    // Connect the websocket
+    const ws = new WebSocket(WS_API_WALLET_LINKER_MESSAGES + getWalletToken(this.getNotifyType(), this.state.deviceToken) + '/' + last_message_id)
+
+    ws.onmessage = e => {
+      this.processMessage(JSON.parse(e.data))
+    }
+
+    ws.onclose = e => {
+      console.log("Websocket closed event:", e)
+      if (e.code != 1000)
+      {
+        //this is an abnormal closure let's try reopen this in a bit
+        setTimeout(() => {
+          if (this.messages_ws === ws) {
+            this.syncServerMessages()
+          }
+        }, 60000) // check in 60 seconds
+      }
+    }
+    this.messages_ws = ws
+  }
+
+  checkSyncMessages(force) {
+    const doSync = !this.messages_ws || (force && !this.isLinkMessagesOpen())
+    if (this.state.deviceToken && this.state.ethAddress && doSync)
+    {
+      this.syncServerMessages()
     }
   }
 
@@ -596,7 +624,7 @@ class OriginWallet {
     {
       Linking.openURL(messageOpenUrl)
     }
-    this.new_messages = true
+    this.checkSyncMessages(true)
   }
 
   onQRScanned(scan) {
@@ -746,6 +774,7 @@ class OriginWallet {
       let ethAddress = web3.eth.accounts.wallet[0].address
       if (ethAddress != this.state.ethAddress)
       {
+        web3.eth.defaultAccount = ethAddress
         this.fireEvent(Events.NEW_ACCOUNT, {address:ethAddress})
         Object.assign(this.state, {ethAddress})
         this.checkRegisterNotification()
