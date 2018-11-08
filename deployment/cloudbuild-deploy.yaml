@@ -119,7 +119,8 @@ steps:
         git config --global user.email "support@originprotocol.com"
 
         git remote set-url origin git@github.com:OriginProtocol/origin.git
-        git pull origin master
+        git checkout ${BRANCH_NAME}
+        git pull
 
         sed -i \
           "s|^${_IMAGE_TAG_FIELD}: .*|${_IMAGE_TAG_FIELD}: '${SHORT_SHA}'|g" \
