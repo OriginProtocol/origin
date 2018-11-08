@@ -29,7 +29,7 @@ class SearchResult extends Component {
       filterSchema: undefined,
       listingSchema: undefined,
       listingType: undefined,
-      listings: [],
+      listingIds: [],
       totalNumberOfListings: 0,
       searchError: undefined,
       filters: {},
@@ -212,11 +212,7 @@ class SearchResult extends Component {
       })
 
       this.setState({
-        listings: searchResp.data.listings.nodes.map(listing => {
-          let data = listing.data
-          data.display = listing.display
-          return data
-        }),
+        listingIds: searchResp.data.listings.nodes.map(listing => listing.data.id),
         totalNumberOfListings: searchResp.data.listings.totalNumberOfItems,
         // reset the page whenever a user doesn't click on pagination link
         page: onlyPageChanged ? this.state.page : 1
@@ -291,7 +287,7 @@ class SearchResult extends Component {
           <ListingsGrid
             renderMode="search"
             search={{
-              listingIds: this.state.listings.map(listing => listing.id),
+              listingIds: this.state.listingIds,
               listingsLength: this.state.totalNumberOfListings
             }}
             handleChangePage={this.handleChangePage}
