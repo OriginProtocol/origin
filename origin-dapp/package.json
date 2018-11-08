@@ -78,11 +78,9 @@
     "webpack-dev-server": "3.1.4"
   },
   "scripts": {
-    "heroku-postbuild": "npm run build",
     "start": "if [ \"$NODE_ENV\" = \"production\" ]; then npm run serve; else npm run dev; fi",
     "serve": "serve build",
     "dev": "npx webpack-dev-server --open --host 0.0.0.0 --public localhost:3000",
-    "deploy:ipfs": "./scripts/deploy.sh",
     "build": "NODE_ENV=production webpack --progress --display errors-only",
     "translations": "node translations/scripts/processTranslatedMessages.js",
     "test": "node scripts/test.js --env=jsdom",

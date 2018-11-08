@@ -17,7 +17,7 @@
     "migrate": "sequelize db:migrate",
     "start": "node src/app.js",
     "test:jsformat": "./node_modules/.bin/eslint 'src/*/*.js'",
-    "test:js": "echo \"No tests defined\"; exit 0",
+    "test:js": "echo \"Warning: no tests specified\"",
     "test": "npm run test:jsformat && npm run test:js"
   },
   "author": "Origin Protocol Inc",
