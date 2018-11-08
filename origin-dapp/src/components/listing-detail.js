@@ -294,6 +294,14 @@ class ListingsDetail extends Component {
     const isAvailable = !isPending && !isSold && !isWithdrawn
     const showPendingBadge = isPending && !isWithdrawn
     const showSoldBadge = isSold || isWithdrawn
+    /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
+     * show listings with the Featured badge, because listings are loaded from web3. We could
+     * pass along featured information from elasticsearch, but that would increase the code
+     * complexity.
+     *
+     * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to 
+     * true, and show "featured" badge.
+     */
     const showFeaturedBadge = display === "featured" && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
