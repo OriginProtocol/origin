@@ -83,11 +83,11 @@ class Listing {
         }],
         should: [],
         filter: [],
-        must_not:[]
+        must_not: []
       }
     }
 
-    if (hiddenIds.length > 0){
+    if (hiddenIds.length > 0) {
       esQuery.bool.must_not.push({
         ids: {
           values: hiddenIds
@@ -126,7 +126,7 @@ class Listing {
     /* Also query for featured listings and give them such boost that they shall always be presented on top.
      * Filters and query string still applies to these listings, but if they match, they shall be on top.
      */
-    if (featuredIds.length > 0){
+    if (featuredIds.length > 0) {
       let boostAmount = 10000
       featuredIds.forEach(featuredId => {
         esQuery.bool.should.push({

@@ -6,7 +6,7 @@ const db = require('../models')
  * Returns listings from the DB based on list of ids.
  *
  * TODO: in the future store hidden and listing ids in the database.
- * 
+ *
  * @param listingIds
  * @param {Array<string>} [hiddenIds] [list of hidden listing ids]
  * @param {Array<string>} [featuredIds] [list of featured listing ids]
@@ -35,15 +35,16 @@ async function getListings (listingIds, hiddenIds, featuredIds) {
   // Note: preserve ranking by keeping returned listings in same order as listingIds.
   const listings = []
   listingIds.forEach(id => {
-    let display = "normal"
+    let display = 'normal'
     /* hidden listings are not passed to this function right now, but at some point
      * in the future we might have admin queries that could also pass hidden listings
      * to this function.
      */
-    if (hiddenIds.includes(id))
-      display = "hidden"
-    else if (featuredIds.includes(id))
-      display = "featured"
+    if (hiddenIds.includes(id)) {
+      display = 'hidden'
+    } else if (featuredIds.includes(id)) {
+      display = 'featured'
+    }
 
     const row = rowDict[id]
     const listing = {

@@ -55,7 +55,7 @@ class ListingsDetail extends Component {
 
     this.state = {
       etherscanDomain: null,
-      display: "normal",
+      display: 'normal',
       loading: true,
       offers: [],
       pictures: [],
@@ -262,7 +262,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { listingId, web3Account } = this.props
+    const { web3Account } = this.props
     const {
       // boostLevel,
       // boostValue,
@@ -302,7 +302,7 @@ class ListingsDetail extends Component {
      * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to 
      * true, and show "featured" badge.
      */
-    const showFeaturedBadge = display === "featured" && isAvailable
+    const showFeaturedBadge = display === 'featured' && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
 
@@ -821,7 +821,7 @@ class ListingsDetail extends Component {
   }
 }
 
-const mapStateToProps = ({ app, profile, listings }) => {
+const mapStateToProps = ({ app, profile }) => {
   return {
     notificationsHardPermission: app.notificationsHardPermission,
     notificationsSoftPermission: app.notificationsSoftPermission,

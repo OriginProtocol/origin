@@ -8,7 +8,7 @@ class DiscoveryService {
   }
 
   _flattenListingData(listingNode) {
-    let data = listingNode.data
+    const data = listingNode.data
     data.display = listingNode.display
     return data
   }

@@ -3,7 +3,7 @@
  */
 const fetch = require('node-fetch')
 // frequency of featured/hidden listings list updates
-const METADATA_STALE_TIME = 60 * 1000 //60 seconds
+const METADATA_STALE_TIME = 60 * 1000 // 60 seconds
 
 class ListingMetadata {
   constructor () {
@@ -11,14 +11,14 @@ class ListingMetadata {
     this.featuredListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/featurelist_${networkId}.txt`
     this.hiddenListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/hidelist_${networkId}.txt`
     this.listingInfo = {
-     hiddenListings: [],
-     featuredListings: []
+      hiddenListings: [],
+      featuredListings: []
     }
-    this.listingsUpdateTime
+    this.listingsUpdateTime = undefined
   }
 
   async readListingsFromUrl (githubUrl) {
-    let response = await fetch(githubUrl)
+    const response = await fetch(githubUrl)
     return (await response.text())
       .split(',')
       .map(listingId => listingId.trim())
@@ -26,13 +26,13 @@ class ListingMetadata {
   }
 
   async updateHiddenFeaturedListings () {
-    if (!this.listingsUpdateTime || new Date() - this.listingsUpdateTime > METADATA_STALE_TIME){
-      try{
+    if (!this.listingsUpdateTime || new Date() - this.listingsUpdateTime > METADATA_STALE_TIME) {
+      try {
         this.listingsUpdateTime = new Date()
         this.listingInfo.hiddenListings = await this.readListingsFromUrl(this.hiddenListingsUrl)
         this.listingInfo.featuredListings = await this.readListingsFromUrl(this.featuredListingsUrl)
-      } catch(e) {
-        console.error("Could not update hidden/featured listings ", e)
+      } catch (e) {
+        console.error('Could not update hidden/featured listings ', e)
       }
     }
   }

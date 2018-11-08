@@ -37,8 +37,8 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     // update listingIds in a non blocking way
     listingMetadata.updateHiddenFeaturedListings()
-     return {}
-  }})
+    return {}
+  } })
 
 server.applyMiddleware({ app })
 
