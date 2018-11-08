@@ -29,7 +29,7 @@ class ListingsGrid extends Component {
   }
 
   render() {
-    const { contractFound, listingIds, search, featuredListingIds = [] } = this.props
+    const { contractFound, listingIds, search } = this.props
     let activePage, currentPageListingIds, resultsCount
 
     if (this.props.renderMode === 'home-page') {
@@ -88,7 +88,6 @@ class ListingsGrid extends Component {
                 <ListingCard
                   listingId={id}
                   key={id}
-                  featured={featuredListingIds.includes(id)}
                 />
               ))}
             </div>
