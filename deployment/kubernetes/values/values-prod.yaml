@@ -1,37 +1,44 @@
-databaseInstance: origin-214503:us-west1:prod
+
+databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '88a581c'
+bridgeImageTag: '0a36fe4-1540489117'
 bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '6ddce7c'
+dappImageTag: 'b3ba95e'
 dappReplicas: 2
 
-# Mainnet nodes
+# Rinkeby network configuration
 gethTxReplicas: 1
+gethTxMemoryRequest: 6Gi
 
-# IPFS server
-ipfsImageTag: ipfs/go-ipfs
+# ipfs
+ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
+# ipfs-proxy
+ipfsProxyImage: ipfs-proxy
+ipfsProxyImageTag: 'eaf6302'
+
+# origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '28438d2'
+faucetImageTag: '13d0e21'
 
+# event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '6ddce7c'
-eventlistenerWeb3Url: https://mainnet.infura.io/emIXjs9eDuy57IlTYsIP
-eventlistenerContinueBlock: 6425000
+eventlistenerImageTag: '133d3db'
 
+# origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '6e22b35'
+discoveryImageTag: 'b3ba95e'
 
-# OrbitDB
+# origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '3104d23'
+messagingImageTag: 'b8a9ef3'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '6ddce7c'
+notificationsImageTag: 'c3c0ecc'

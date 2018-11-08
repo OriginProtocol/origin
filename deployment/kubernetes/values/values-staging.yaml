@@ -7,7 +7,7 @@ bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '6c05aae'
+dappImageTag: 'b3ba95e'
 dappReplicas: 2
 
 # Rinkeby network configuration
@@ -20,7 +20,7 @@ ipfsImageTag: master
 
 # ipfs-proxy
 ipfsProxyImage: ipfs-proxy
-ipfsProxyImageTag: 'e0e12cd'
+ipfsProxyImageTag: 'eaf6302'
 
 # origin-faucet
 faucetImage: origin-faucet
@@ -28,17 +28,15 @@ faucetImageTag: '13d0e21'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '7dfaa5d'
-eventlistenerWeb3Url: https://rinkeby.infura.io/emIXjs9eDuy57IlTYsIP
-eventlistenerContinueBlock: 3000000
+eventlistenerImageTag: '133d3db'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '4aa5387'
+discoveryImageTag: 'b3ba95e'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '4aa5387'
+messagingImageTag: 'b8a9ef3'
 
 # origin-notifications
 notificationsImage: origin-notifications
