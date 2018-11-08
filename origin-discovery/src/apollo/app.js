@@ -16,7 +16,7 @@ const promBundle = require('express-prom-bundle')
 
 const getResolvers = require('./resolvers.js')
 const typeDefs = require('./schema.js')
-const ListingMetadata = require('./listingMetadata')
+const ListingMetadata = require('./listing-metadata')
 
 const app = express()
 const bundle = promBundle({

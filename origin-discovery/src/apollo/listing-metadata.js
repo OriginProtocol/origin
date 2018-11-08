@@ -1,6 +1,9 @@
-// how frequently featured/hidden listings list updates
-const LISTINGS_STALE_TIME = 60 * 1000 //60 seconds
+/* Catches hidden & featured listings ids and updates them according
+ * to configuration.
+ */
 const fetch = require('node-fetch')
+// frequency of featured/hidden listings list updates
+const METADATA_STALE_TIME = 60 * 1000 //60 seconds
 
 class ListingMetadata {
   constructor () {
@@ -23,7 +26,7 @@ class ListingMetadata {
   }
 
   async updateHiddenFeaturedListings () {
-    if (!this.listingsUpdateTime || new Date() - this.listingsUpdateTime > LISTINGS_STALE_TIME){
+    if (!this.listingsUpdateTime || new Date() - this.listingsUpdateTime > METADATA_STALE_TIME){
       try{
         this.listingsUpdateTime = new Date()
         this.listingInfo.hiddenListings = await this.readListingsFromUrl(this.hiddenListingsUrl)
