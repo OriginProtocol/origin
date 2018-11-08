@@ -118,9 +118,9 @@ steps:
         git config --global user.name "OriginCI"
         git config --global user.email "support@originprotocol.com"
 
-        git remote set-url origin git@github.com:OriginProtocol/origin.git
+        git remote add upstream git@github.com:OriginProtocol/origin.git
+        git pull upstream ${BRANCH_NAME}
         git checkout ${BRANCH_NAME}
-        git pull
 
         sed -i \
           "s|^${_IMAGE_TAG_FIELD}: .*|${_IMAGE_TAG_FIELD}: '${SHORT_SHA}'|g" \
@@ -128,7 +128,7 @@ steps:
 
         git add deployment/kubernetes/values/values-$(cat .namespace).yaml
         git commit -m 'Update deployed image tags'
-        git push --set-upstream origin ${BRANCH_NAME}
+        git push upstream ${BRANCH_NAME}
     volumes:
       - name: 'ssh'
         path: /root/.ssh
