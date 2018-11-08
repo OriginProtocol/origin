@@ -4,7 +4,12 @@ const db = require('../models')
 
 /**
  * Returns listings from the DB based on list of ids.
+ *
+ * TODO: in the future store hidden and listing ids in the database.
+ * 
  * @param listingIds
+ * @param {Array<string>} [hiddenIds] [list of hidden listing ids]
+ * @param {Array<string>} [featuredIds] [list of featured listing ids]
  * @return {Promise<Array>}
  */
 async function getListings (listingIds, hiddenIds, featuredIds) {
@@ -31,8 +36,9 @@ async function getListings (listingIds, hiddenIds, featuredIds) {
   const listings = []
   listingIds.forEach(id => {
     let display = "normal"
-    /* hidden listings are not returned right now, but at some point in the future
-     * we might have admin queries that also return hidden listings
+    /* hidden listings are not passed to this function right now, but at some point
+     * in the future we might have admin queries that could also pass hidden listings
+     * to this function.
      */
     if (hiddenIds.includes(id))
       display = "hidden"
