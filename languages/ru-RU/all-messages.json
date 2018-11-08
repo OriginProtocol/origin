@@ -133,7 +133,7 @@
   "listing-detail.identityDisclaimer": "Сначала рекомендуем верифицировать вашу личность. Продавцы с большей вероятностью согласятся с предложением о покупке, если они будут знать о вас немного больше.",
   "listing-detail.verifyIdentity": "Верифицировать личность",
   "listing-detail.providerInstruction": "Чтобы сделать предложение по данному объявлению, подтвердите транзакцию в {provider}.",
-  "listing-detail.purchaseSuccessful": "Success!",
+  "listing-detail.purchaseSuccessful": "Успех!",
   "listing-detail.successDisclaimer": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your ETH payment has been transferred to an escrow contract. Here's what happens next:",
   "listing-detail.successItem1": "The seller can choose to accept or reject your offer.",
   "listing-detail.successItem2": "If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller.",
