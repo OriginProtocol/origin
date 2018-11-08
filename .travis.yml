@@ -40,7 +40,6 @@ matrix:
     before_script:
       - psql -c 'create database travis_ci_test;' -U postgres
       - cd origin-discovery
-      - npm install
       - npm run migrate
 
   - name: "Bridge server unit tests"
