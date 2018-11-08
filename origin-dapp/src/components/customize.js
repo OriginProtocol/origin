@@ -67,17 +67,29 @@ class Customize extends Component {
       // No custom URL
       return
     }
+
     const configUrl = decodeURIComponent(m[1])
-    console.log(`Config URL:${configUrl}`)
+    console.log(`Configuring DApp based on file here URL:${configUrl}`)
     fetch(configUrl)
     .then(response => response.json())
     .then(dappConfig => {
+      // CSS vars
       // Iterate over css vars and set them
       for (let [cssVarName, cssVarValue] of Object.entries(dappConfig.cssVars)) {
-        if (cssVarValue.match(/url *\(/)) {
+        if (cssVarValue.toString().match(/url *\(/)) {
           throw "url() not allowed in DApp custom css"
         }
         document.documentElement.style.setProperty(`--${cssVarName}`, cssVarValue);
+      }
+
+      // Page title
+      if (dappConfig.name) {
+        // TODO: How to handle localization?
+        document.title = dappConfig.name
+      }
+      // Page about
+      if (dappConfig.about) {
+        document.querySelector('.light-footer .description>p').innerText = dappConfig.about
       }
     })
 

@@ -82,7 +82,7 @@ class Footer extends Component {
                   </p>
                   <p>&copy; {new Date().getFullYear()} Origin Protocol, Inc.</p>
                 </div>
-              </div> 
+              </div>
             </div>
             <div className="col-12 col-lg-6">
               <div className="d-lg-flex footer-links-container justify-content-between">
