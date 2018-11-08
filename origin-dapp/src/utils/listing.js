@@ -97,6 +97,14 @@ export function originToDAppListing(originListing) {
   }
 }
 
+/**
+ * Transforms an array of purchases or sales from a origin-js format to dapp format
+ * and translates the category
+ * @param {array} purchasesOrSales - Array of purchases or sales from origin-js's getPurchases() or getSales()
+ * @param {object} purchasesOrSales.listing - listing object
+ * @param {object} purchasesOrSales.offer - offer object
+ * @return {array} Transformed array of purchases or sales objects
+ */
 export const transformPurchasesOrSales = purchasesOrSales => {
   return purchasesOrSales.map(purchase => {
     const { offer, listing } = purchase
@@ -116,8 +124,8 @@ export const transformPurchasesOrSales = purchasesOrSales => {
  * @param {boolean} translate - Whether to translate the listing category or not.
  * @return {Promise<object>} DApp compatible listing object.
  */
-export async function getListing(id, translate = false, account) {
-  const originListing = await origin.marketplace.getListing(id, account)
+export async function getListing(id, translate = false) {
+  const originListing = await origin.marketplace.getListing(id)
   const dappListing = originToDAppListing(originListing)
   if (translate) {
     dappListing.category = translateListingCategory(dappListing.category)
