@@ -12,7 +12,7 @@ const db = require('../models')
  * @param {Array<string>} [featuredIds] [list of featured listing ids]
  * @return {Promise<Array>}
  */
-async function getListings (listingIds, hiddenIds, featuredIds) {
+async function getListings (listingIds, hiddenIds = [], featuredIds = []) {
   // Load rows from the Listing table in the DB.
   const rows = await db.Listing.findAll({
     where: {
