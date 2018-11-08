@@ -149,3 +149,5 @@ node_modules/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+!origin-contracts/releases/**/*

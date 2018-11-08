@@ -1,0 +1,61 @@
+{
+  "name": "origin-contracts",
+  "version": "0.8.6",
+  "description": "",
+  "engines": {
+    "node": "10.x"
+  },
+  "scripts": {
+    "build": "truffle compile contracts && node lib/minify-contracts",
+    "prepare": "npm run build",
+    "test": "node scripts/test.js",
+    "test:contracts": "mocha -r @babel/register -t 10000 --exit test-alt",
+    "test:watch": "mocha -r babel-register -r babel-polyfill -t 10000 -w --watch-extensions sol test-alt",
+    "test:contracts-coverage": "SOLIDITY_COVERAGE=1 solidity-coverage",
+    "format:solidity": "solium -d contracts/contracts/ --fix",
+    "format": "prettier-eslint --write 'test/**/*.js' 'test-alt/**/*.js' 'lib/**/*.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/origin-contracts"
+  },
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/register": "^7.0.0",
+    "babel-polyfill": "^6.26.0",
+    "openzeppelin-solidity": "^1.10.0",
+    "truffle": "^4.1.14",
+    "truffle-hdwallet-provider": "0.0.6",
+    "truffle-privatekey-provider": "^0.1.0",
+    "web3": "^1.0.0-beta.36"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/runtime": "^7.1.2",
+    "bignumber.js": "^7.2.1",
+    "chai": "^4.2.0",
+    "chai-bignumber": "^2.0.2",
+    "chalk": "^2.4.1",
+    "cli-table": "^0.3.1",
+    "ganache-core": "^2.2.1",
+    "prettier-eslint-cli": "^4.7.1",
+    "solc": "^0.4.25",
+    "solidity-coverage": "^0.5.11",
+    "solium": "^1.1.8",
+    "web3-provider-engine": "^14.1.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-runtime"
+    ]
+  }
+}
