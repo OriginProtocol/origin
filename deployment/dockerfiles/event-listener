@@ -24,4 +24,4 @@ RUN mv envkey-source /usr/local/bin
 
 WORKDIR /app/origin-discovery
 
-CMD eval $(envkey-source) && npm run migrate && npm run start:discovery
+CMD eval $(envkey-source) && npm run migrate && npm run start:listener
