@@ -5,6 +5,7 @@ import useragent from 'express-useragent'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import morgan from 'morgan'
+import 'express-async-errors'
 
 const app = express()
 expressWs(app)

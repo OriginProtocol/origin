@@ -54,7 +54,7 @@ router.post("/link-wallet/:walletToken", async (req, res) => {
   const {walletToken} = req.params
   const {code, current_rpc, current_accounts} = req.body
   const {linked, pendingCallContext, appInfo, linkId, linkedAt} 
-    = await linker.linkWallet(wallet_token, code, current_rpc, current_accounts)
+    = await linker.linkWallet(walletToken, code, current_rpc, current_accounts)
 
   res.send({linked, pending_call_context:pendingCallContext, 
     app_info:appInfo, link_id:linkId, linked_at:linkedAt})
@@ -86,6 +86,8 @@ router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
   //filter out sessionToken
   const realSessionToken = ["-", "null", "undefined"].includes(sessionToken)?null:sessionToken
 
+  console.log(`Messages link sessionToken:${sessionToken} clientToken:${clientToken} readId:${readId}`)
+
   if (!clientToken){
     ws.close(1000, "No client token available.")
     return
@@ -94,7 +96,7 @@ router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
   //this prequeues some messages before establishing the connection
   const closeHandler = await linker.handleSessionMessages(clientToken, realSessionToken, readId, (msg, msgId) =>
     {
-      ws.send({msg, msgId})
+      ws.send(JSON.stringify({msg, msgId}))
     })
 
   ws.on("close", () => {
@@ -106,13 +108,15 @@ router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
 router.ws("/wallet-messages/:walletToken/:readId", (ws, req) => {
   const {walletToken, readId} = req.params
 
+  console.log(`Wallet messages link walletToken:${walletToken} readId:${readId}`)
+
   if (!walletToken) {
     ws.close()
   }
 
   const closeHandler = linker.handleMessages(walletToken, readId, (msg, msgId) =>
     {
-      ws.send({msg, msgId})
+      ws.send(JSON.stringify({msg, msgId}))
     })
   ws.on("close", () => {
     closeHandler()

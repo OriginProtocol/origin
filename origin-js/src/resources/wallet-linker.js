@@ -213,9 +213,10 @@ class WalletLinker {
   }
 
   processMessage(m) {
-    const message = m.msg
+    const type = m.msg.type
+    const message = m.msg.data
     const msgId = m.msgId
-    switch (message.type) {
+    switch (type) {
       case 'CONTEXT':
         if (message.session_token)
         {
@@ -230,9 +231,20 @@ class WalletLinker {
             this.cancelLink()
           }
         }
+        const device = message.device
 
-        this.accounts = message.accounts
-        this.changeNetwork(message.network_rpc)
+        if (device && device.accounts)
+        {
+          this.accounts = device.accounts
+        }
+        else
+        {
+          this.accounts = []
+        }
+        if (device && device.network_rpc)
+        {
+          this.changeNetwork(device.network_rpc)
+        }
         break
       case 'CALL_RESPONSE':
         if (this.callbacks[message.call_id]) {
@@ -296,11 +308,14 @@ class WalletLinker {
       pending_call: this.pending_call
     })
     if (ret) {
-      this.session_token = ret.session_token
       this.link_code = ret.link_code
       this.linked = ret.linked
+      if (this.session_token != ret.session_token)
+      {
+        this.session_token = ret.session_token
+        this.startMessagesSync()
+      }
       this.syncSessionStorage()
-      this.startMessagesSync()
       return ret.link_code
     }
   }
@@ -322,7 +337,7 @@ class WalletLinker {
     const ws = new WebSocket(wsUrl + 'linked-messages/' + (this.session_token || '-') + '/' +  (this.last_message_id || 0))
 
     ws.onmessage = e => {
-      this.processMessage(e)
+      this.processMessage(JSON.parse(e.data))
     }
 
     ws.onclose = e => {

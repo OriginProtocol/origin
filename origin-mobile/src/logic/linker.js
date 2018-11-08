@@ -16,7 +16,7 @@ class Linker {
   }
 
   _generateNewCode(size) {
-    return uuidv4().replace('-', '').substring(0, size)
+    return uuidv4().replace(/-/g, '').substring(0, size)
   }
 
   async findUnexpiredCode(code) {
@@ -123,7 +123,7 @@ class Linker {
   async handleSessionMessages(clientToken, _sessionToken, _lastMessageId, messageFn) {
     const {initMsg, sessionToken, lastMessageId} = await this.initClientSession(clientToken, _sessionToken, _lastMessageId)
     if (initMsg) {
-      messageFn(msg, msgId)
+      messageFn(initMsg)
     }
 
     return this.handleMessages(clientToken, lastMessageId, (msg, msgId) => {
@@ -167,14 +167,18 @@ class Linker {
     if (!linkedObj.linked) {
       const code = await this._generateNonConflictingCode()
       linkedObj.code = code
-      linkedObj.codeExpires = new Date(new Date() + CODE_EXPIRATION_TIME_MINUTES * 60 * 1000)
-      linkedObj.app_info = {user_agent:userAgent, return_url:returnUrl}
+      linkedObj.codeExpires = new Date(new Date().getTime() + CODE_EXPIRATION_TIME_MINUTES * 60 * 1000)
+      linkedObj.appInfo = {user_agent:userAgent, return_url:returnUrl}
     }
     await linkedObj.save()
 
     if (!sessionToken)
     {
       sessionToken = this.generateInitSession(linkedObj)
+    }
+    else
+    {
+      this.sendContextChange(linkedObj, sessionToken)
     }
 
     if (pendingCall)
@@ -238,23 +242,24 @@ class Linker {
     return true
   }
 
-  _getContexMsg(linkedObj, sessionToken) {
+  _getContextMsg(linkedObj, sessionToken) {
     const linked = linkedObj.linked
     return { type:MessageTypes.CONTEXT, 
       msg:{session_token:sessionToken, linked:linkedObj.linked, device:linked && linkedObj.currentDeviceContext}}
   }
 
-  async sendGlobalContextChange(linkedObj) {
+  async sendContextChange(linkedObj, sessionToken) {
     const {type, msg} = this._getContextMsg(linkedObj)
-    return this.sendSessionMessage(linkedObj, undefined, type, msg)
+    return this.sendSessionMessage(linkedObj, sessionToken, type, msg)
   }
 
-  async linkWallet(walletToken, code, currentDeviceContext) {
-    const linkedObj = await this.findUnexpiredCode(code)
-    if (!linkedObj)
+  async linkWallet(walletToken, code, current_rpc, current_accounts) {
+    const linkedCodeObjs = await this.findUnexpiredCode(code)
+    if (!linkedCodeObjs || linkedCodeObjs.length != 1)
     {
       throw("Cannot find code to link to.")
     }
+    const linkedObj = linkedCodeObjs[0]
 
     const pendingCallContext = linkedObj.pendingCallContext
     const appInfo = linkedObj.appInfo
@@ -265,12 +270,12 @@ class Linker {
     linkedObj.deviceType = deviceType
     linkedObj.linked = true
     linkedObj.code = null
-    linkedObj.currentDeviceContext = currentDeviceContext
+    linkedObj.currentDeviceContext = {accounts:current_accounts, network_rpc:current_rpc}
     linkedObj.linkedAt = new Date()
     linkedObj.pendingCallContext = null
 
     //send a global session message
-    this.sendGlobalContextChange(linkedObj)
+    this.sendContextChange(linkedObj)
     linkedObj.save()
 
     return {pendingCallContext, appInfo, linked:true, linkId:this.getLinkId(linkedObj.id, linkedObj.clientToken), linkedAt:linkedObj.linkedAt}
