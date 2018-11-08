@@ -4,8 +4,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { storeWeb3Intent } from 'actions/App'
 import MyPurchaseCard from 'components/my-purchase-card'
-import { originToDAppListing } from 'utils/listing'
-import { translateListingCategory } from 'utils/translationUtils'
+import { transformPurchasesOrSales } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -35,16 +34,7 @@ class MyPurchases extends Component {
   async loadPurchases() {
     const { web3Account } = this.props
     const purchases = await origin.marketplace.getPurchases(web3Account)
-
-    const transformedPurchases = purchases.map(purchase => {
-      const { offer, listing } = purchase
-      const transformedListing = originToDAppListing(listing)
-      transformedListing.category = translateListingCategory(transformedListing.category)
-      return {
-        offer,
-        listing: transformedListing
-      }
-    })
+    const transformedPurchases = transformPurchasesOrSales(purchases)
     this.setState({ loading: false, purchases: transformedPurchases })
   }
 

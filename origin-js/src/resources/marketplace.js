@@ -68,6 +68,66 @@ class Marketplace {
     })
   }
 
+  async getSales(account) {
+    const saleListingIds = await this.resolver.getSales(account)
+
+    const listingPromises = saleListingIds.map(obj => {
+      const { network, version, listingId, listingIndex } = obj
+
+      return new Promise(async resolve => {
+        const listing = await this.getListing(listingId)
+
+        resolve({
+          ...listing,
+          listingIndex,
+          listingId,
+          version,
+          network
+        })
+      })
+    })
+    const listings = await Promise.all(listingPromises)
+
+    const sales = []
+    listings.map(listing => {
+      const { offers, network, version, listingIndex, listingId } = listing
+      for(const key in offers) {
+        const offerCreatedEvent = offers[key].event
+        const { blockNumber, returnValues } = offerCreatedEvent
+        sales.push({
+          offerId: generateOfferId({ network, version, listingIndex, offerIndex: returnValues.offerID }),
+          listingId,
+          blockNumber
+        })
+      }
+    })
+
+    // Since we didn't have the block numbers from the OfferCreated events when we first
+    // fetched the listing data, we now have to re-fetch it, passing in the block number
+    // of the offer to make sure we have the listing data as it was when the offer was made 
+    const listingPromisesWithBlockNum = sales.map(obj => {
+      const { listingId, blockNumber } = obj
+
+      return new Promise(async resolve => {
+        const listing = await this.getListing(listingId, blockNumber)
+        resolve({ listingId, ...listing })
+      })
+    })
+    const listingsAtBlockNumber = await Promise.all(listingPromisesWithBlockNum)
+    const offerPromises = sales.map(async obj => {
+      const { offerId } = obj
+      return await this.getOffer(offerId)
+    })
+    const offers = await Promise.all(offerPromises)
+
+    return offers.map(offer => {
+      return {
+        offer,
+        listing: listingsAtBlockNumber.find(listing => listing.listingId === offer.listingId)
+      }
+    })
+  }
+
   async getListings(opts = {}) {
     const listingIds = await this.resolver.getListingIds(opts)
 

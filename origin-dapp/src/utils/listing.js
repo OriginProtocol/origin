@@ -97,6 +97,18 @@ export function originToDAppListing(originListing) {
   }
 }
 
+export const transformPurchasesOrSales = purchasesOrSales => {
+  return purchasesOrSales.map(purchase => {
+    const { offer, listing } = purchase
+    const transformedListing = originToDAppListing(listing)
+    transformedListing.category = translateListingCategory(transformedListing.category)
+    return {
+      offer,
+      listing: transformedListing
+    }
+  })
+}
+
 /**
  * Loads a listing from origin-js, transforms it into a DApp compatible object and optionally
  * translates the listing's category.

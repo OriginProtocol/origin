@@ -254,6 +254,15 @@ class V00_MarkeplaceAdapter {
     })
   }
 
+  async getSales(account) {
+    await this.getContract()
+
+    return await this.contract.getPastEvents('ListingCreated', {
+      filter: { party: account },
+      fromBlock: this.blockEpoch
+    })
+  }
+
   async getListing(listingId, blockNumber) {
     await this.getContract()
 
