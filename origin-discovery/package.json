@@ -44,7 +44,6 @@
     "mocha": "^5.2.0"
   },
   "scripts": {
-    "install:dev": "npm install && npm link origin",
     "test:jsformat": "./node_modules/.bin/eslint 'src/*/*.js' 'test/**/*test.js'",
     "test:js": "./node_modules/.bin/mocha --timeout 10000 --exit",
     "test": "npm run test:jsformat && npm run test:js",
