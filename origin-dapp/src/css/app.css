@@ -3996,10 +3996,7 @@ form .stars img {
   font-family: Lato;
   font-size: 10px;
   font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
   line-height: normal;
-  letter-spacing: normal;
   color: #455d75;
 }
 
@@ -4009,11 +4006,9 @@ form .stars img {
   font-family: Poppins;
   font-size: 16px;
   font-weight: 300;
-  font-style: normal;
-  font-stretch: normal;
   line-height: 2.13;
-  letter-spacing: normal;
   color: var(--dark);
+  text-transform: capitalize;
 }
 
 .messages-wrapper .state {
@@ -4055,6 +4050,16 @@ form .stars img {
   word-wrap: break-word;
 }
 
+.mobile-messaging.messages-wrapper .message-content,
+.mobile-messaging .compact-message {
+  width: 249px;
+  font-family: Lato;
+  font-size: 1.125rem;
+  font-weight: normal;
+  line-height: normal;
+  color: #000;
+}
+
 .compact-message .image-container,
 .message .image-container {
   padding-top: 10px;
@@ -4082,8 +4087,17 @@ form .stars img {
   margin-bottom: 20px;
 }
 
+.mobile-messaging .conversation .message {
+  margin-bottom: unset;
+}
+
 .conversation .compact-message {
   margin: -20px 0 20px 75px;
+}
+
+.mobile-messaging .conversation .compact-message {
+  margin: unset;
+  margin-left: 65px;
 }
 
 .conversation .message:first-of-type {
@@ -4098,6 +4112,11 @@ form .stars img {
 .conversation .avatar-container {
   height: 60px;
   width: 60px;
+}
+
+.mobile-messaging .conversation .avatar-container {
+  height: 50px;
+  width: 50px;
 }
 
 .conversation .content-container {
@@ -4120,6 +4139,10 @@ form .stars img {
   font-size: 0.75rem;
 }
 
+.mobile-messaging .conversation .sender {
+  padding-bottom: 5px;
+}
+
 .conversation .timestamp {
   color: var(--bluey-grey);
   flex-shrink: 0;
@@ -4132,6 +4155,7 @@ form .stars img {
   font-weight: bold;
   margin-right: 0.5rem;
   line-height: 10px;
+  text-transform: capitalize;
 }
 
 .conversation .avatar-container {
