@@ -211,7 +211,7 @@ Heroku will prompt you to set config variables. At a minium, you must set these 
 |PROJECTPATH     |/app|
 |HOST            |(domain name of your dev heroku app)|
 
-See [dev.env](dev.env) for a full list of other optional config variables.
+See the `dev.env` file for a full list of other optional config variables.
 
 
 We use following buildpacks:

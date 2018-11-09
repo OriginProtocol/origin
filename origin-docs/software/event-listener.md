@@ -40,7 +40,7 @@ Output:
 
 `--elasticsearch` Experimental support for recording listings directly into elastic search
 
-`--db` Experimental support for recording listings directly into postgres (see instructions for setting up the db [here](../README.md))
+`--db` Experimental support for recording listings directly into postgres.
 
 Events:
 

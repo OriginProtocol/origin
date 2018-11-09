@@ -6,7 +6,7 @@ category: Origin.js
 toc: true
 ---
 
-Reviews are created by the buyer in the [receipt](/#purchase-buyerconfirmreceipt) stage and by the seller in the [payout](#purchase-sellergetpayout) stage of the purchase process. A review consists of a required 1-5 rating and an optional reviewText text field.
+Reviews are created by the buyer in the receipt stage and by the seller in the payout stage of the purchase process. A review consists of a required 1-5 rating and an optional reviewText text field.
 
 ## .find
 

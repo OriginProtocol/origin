@@ -27,4 +27,4 @@ Please note this project is still in heavy development and many of the features 
 
 Origin.js and the entire Origin Protocol project is 100% open-source and we welcome contributions from the community. There are many ways to help, from reporting issues and contributing code to helping us improve and grow our community.
 
-If you are interested in getting involved, please read our section on [contributing](#contributing). If at any point you get stuck, please [reach out](#getting-help) and we'll do our best to help. 
+If you are interested in getting involved, please read our section on [contributing](getting_started/contributing.md). If at any point you get stuck, please [reach out](#getting-help) and we'll do our best to help. 

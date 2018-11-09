@@ -111,7 +111,6 @@ tracker (we use multiple repositories).
 No issue is too small. Help us fix our tpyos!
 </aside>
 
- - [Docs issues](https://github.com/OriginProtocol/docs/issues)
  - [Origin.js issues (JS API & Solidity contracts)](https://github.com/OriginProtocol/origin-js/issues)
  - [Demo Dapp issues](https://github.com/OriginProtocol/demo-dapp/issues)
  - [Identity Playground issues](https://github.com/OriginProtocol/identity-playground/issues)
