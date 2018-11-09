@@ -1,33 +1,27 @@
-# --- Origin.js
+FROM node:10 as build
 
-FROM node:8 as origin-js-build
-
-COPY ./origin-js /app
 WORKDIR /app
 
 ENV NODE_ENV=production
-RUN npm install --quiet --no-progress
-RUN npm run build
 
-# --- Event listener
+# Install lerna
+RUN npm i lerna -g --loglevel notice
 
-FROM node:8
+COPY package-lock.json .
+COPY package.json .
+COPY lerna.json .
+COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
+COPY ./origin-discovery ./origin-discovery
+COPY ./scripts ./scripts
+RUN npm install --loglevel notice --unsafe-perm
+RUN lerna run build
 
-# Install envkey-source
+# Install envkey-source to make environment available for sequelize migration
 RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
 RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN mv envkey-source /usr/local/bin
 
-COPY ./origin-discovery /app
-WORKDIR /app
+WORKDIR /app/origin-discovery
 
-COPY ./deployment/dockerfiles/scripts/start-event-listener.sh \
-	/usr/local/bin/start
-
-ENV NODE_ENV production
-# Link previously built Origin.js
-COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
-RUN npm link origin
-RUN npm install --quiet --no-progress
-
-CMD ["start"]
+CMD eval $(envkey-source) && npm run migrate && npm run start:listener

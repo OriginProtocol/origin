@@ -1,48 +1,52 @@
+git:
+  depth: 3
 matrix:
   include:
-  - name: "DApp unit tests"
+  - name: "origin-contracts / js / dapp unit tests"
     language: node_js
-    node_js: 8
-    before_script:
-    - cd origin-dapp
-    - npm install
-    script:
-    - npm test
-
-  # FIXME: remove dependency between origin-faucet and origin-js/contracts/test-alt
-  - name: "Origin-js unit tests"
-    language: node_js
-    node_js: 8
-    before_script:
-    - cd origin-faucet
-    - npm install
-    - cd ../origin-js
-    - npm install
-    script:
-    - npm test
+    cache:
+      npm: true
+      directories:
+        - origin-contracts/node_modules
+        - origin-dapp/node_modules
+        - origin-js/node_modules
+    before_cache:
+      - rm -rf origin-contracts/node_modules/.cache
+      - rm -rf origin-dapp/node_modules/.cache
+      - rm -rf origin-js/node_modules/.cache
+    node_js: 10
 
   - name: "Origin-discovery unit tests"
     language: node_js
-    node_js: 8
+    cache:
+      npm: true
+      directories:
+        - origin-contracts/node_modules
+        - origin-dapp/node_modules
+        - origin-js/node_modules
+        - origin-discovery/node_modules
+    before_cache:
+      - rm -rf origin-contracts/node_modules/.cache
+      - rm -rf origin-dapp/node_modules/.cache
+      - rm -rf origin-js/node_modules/.cache
+      - rm -rf origin-discovery/node_modules/.cache
+    node_js: 10
     addons:
       postgresql: 9.6
     services:
-    - postgresql
+      - postgresql
     env:
-    - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+      - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
     before_script:
-    - psql -c 'create database travis_ci_test;' -U postgres
-    - cd origin-discovery
-    - npm install
-    - npm run migrate
-    script:
-    - npm test
+      - psql -c 'create database travis_ci_test;' -U postgres
+      - cd origin-discovery
+      - npm run migrate
 
   - name: "Bridge server unit tests"
     language: python
     python: 3.6
     before_script:
-    - cd origin-bridge
-    - pip install -r requirements.txt
+      - cd origin-bridge
+      - pip install -r requirements.txt
     script:
-    - pytest --flakes --codestyle
+      - pytest --flakes --codestyle
