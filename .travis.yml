@@ -5,6 +5,8 @@ matrix:
   - name: "javascript linting"
     language: node_js
     node_js: 10
+    install:
+      - npm install --ignore-scripts
     script:
       npm run lint
 
