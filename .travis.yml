@@ -4,12 +4,39 @@ matrix:
   include:
   - name: "javascript linting"
     language: node_js
+    node_js: 10
     script:
       npm run lint
-    node_js: 10
 
-  - name: "origin-contracts / js / dapp unit tests"
+  - name: "origin-contracts unit tests"
     language: node_js
+    node_js: 10
+    cache:
+      npm: true
+      directories:
+        - origin-contracts/node_modules
+    before_cache:
+      - rm -rf origin-contracts/node_modules/.cache
+    script:
+      - lerna run test --scope origin-contracts
+
+  - name: "origin-js unit tests"
+    language: node_js
+    node_js: 10
+    cache:
+      npm: true
+      directories:
+        - origin-contracts/node_modules
+        - origin-js/node_modules
+    before_cache:
+      - rm -rf origin-contracts/node_modules/.cache
+      - rm -rf origin-js/node_modules/.cache
+    script:
+      - lerna run test --scope origin-js
+
+  - name: "origin-dapp unit tests"
+    language: node_js
+    node_js: 10
     cache:
       npm: true
       directories:
@@ -20,10 +47,12 @@ matrix:
       - rm -rf origin-contracts/node_modules/.cache
       - rm -rf origin-dapp/node_modules/.cache
       - rm -rf origin-js/node_modules/.cache
-    node_js: 10
+    script:
+      - lerna run test --scope origin-dapp
 
   - name: "origin-discovery unit tests"
     language: node_js
+    node_js: 10
     cache:
       npm: true
       directories:
@@ -36,7 +65,6 @@ matrix:
       - rm -rf origin-dapp/node_modules/.cache
       - rm -rf origin-js/node_modules/.cache
       - rm -rf origin-discovery/node_modules/.cache
-    node_js: 10
     addons:
       postgresql: 9.6
     services:
@@ -45,8 +73,9 @@ matrix:
       - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
     before_script:
       - psql -c 'create database travis_ci_test;' -U postgres
-      - cd origin-discovery
-      - npm run migrate
+      - lerna run migrate --scope origin-discovery
+    script:
+      - lerna run test --scope origin-discovery
 
   - name: "origin-bridge unit tests"
     language: python
