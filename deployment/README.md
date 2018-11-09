@@ -6,46 +6,27 @@ This directory contains the deployment infrastructure for Origin.
 
 The environments are running on a Kubernetes cluster using separate namespaces. The deployment is managed by a [Helm](https://www.helm.sh/) chart. Each service is a separate Docker container. The Docker containers are built and pushed to a container registry (currently [Google Cloud Container Registry](https://cloud.google.com/container-registry/)).
 
-### Development (In progress)
+## Working with Origin Deployments
 
-| Service | Address | Notes | State |
-| ------- | -------- | ----- | ----- |
-| DApp | demo.dev.originprotocol.com | **Needs `origin-js` contract addresses** | Running |
-| IPFS | ipfs.dev.originprotocol.com | Directed to IPFS API or gateway based on path | Running |
-| Messaging | messaging.dev.originprotocol.com | Exposes websocket at `/` | Running |
-| Bridge | bridge.dev.originprotocol.com | | Running |
-| Eth Node | eth.dev.originprotocol.com | Private node using `geth`. One transaction ndoe and one mining node. RPC exposed at `/rpc` and WS exposed at `/ws`. Ethstats available at `/`. | Running |
-| Discovery | discovery.dev.originprotocol.com | |
-| Faucet | faucet.dev.originprotocol.com | Running |
-| Postgresql | origin-214503:us-west1:dev | Google Cloud provisioned, 9.6 | Running |
-| Elasticsearch | | Running |
- 
-### Staging (In progress)
+### Installing Google Cloud SDK
 
-| Service | Address | Notes | State |
-| ------- | -------- | ----- | ----- |
-| DApp | demo.staging.originprotocol.com | **Needs `origin-js` contract addresses** | Running |
-| IPFS | ipfs.staging.originprotocol.com | Directed to IPFS API or gateway based on path | Running |
-| Messaging | messaging.staging.originprotocol.com | Exposes websocket at `/` | Running |
-| Bridge | bridge.staging.originprotocol.com | | Running |
-| Eth Node | eth.staging.originprotocol.com | Rinkeby node. RPC exposed at `/rpc` and WS exposed at `/ws`. Ethstats available at `/`. | Running |
-| Discovery | discovery.staging.originprotocol.com | |
-| Faucet | faucet.staging.originprotocol.com | |
-| Postgresql | origin-214503:us-west1:staging | Google Cloud provisioned, 9.6 | Running |
-| Elasticsearch | | Running |
+Instructions are available [here.](https://cloud.google.com/sdk/docs/quickstarts)
 
-### Production (In progress)
+### Installing kubectl
 
-The `.prod.` will be removed when the services are made live.
+The kubectl tool is the main utility used to interact with the Kubernetes cluster. You can install it with:
 
-| Service | Address | Notes | State |
-| ------- | -------- | ----- | ----- |
-| DApp | demo.prod.originprotocol.com | | Running |
-| IPFS | ipfs.prod.originprotocol.com | Directed to IPFS API or gateway based on path | Running |
-| Messaging | messaging.prod.originprotocol.com | Exposes websocket at `/` | Running |
-| Bridge | bridge.prod.originprotocol.com | | Running |
-| Eth Node | eth.prod.originprotocol.com | Mainnet node. RPC exposed at `/rpc` and WS exposed at `/ws`. Ethstats available at `/`. | Running |
-| Discovery | discovery.prod.originprotocol.com |  |
-| Faucet | faucet.prod.originprotocol.com | |
-| Postgresql | origin-214503:us-west1:prod | Google Cloud provisioned, 9.6 | Running |
-| Elasticsearch | | Elastic Cloud provisioned | Running |
+`gcloud components install kubectl`
+  
+You will then need to grab the credentials for the Origin Kubernetes cluster, you can do this by running:
+
+`gcloud container clusters get-credentials origin`
+  
+Running this will configure `kubectl` so that every subsequent command runs against the Origin cluster.
+  
+### Installing Helm
+
+Helm is a tool used to manage a deployment that consists of many Kubernetes resources rather than interacting with each resource one by one. It consists of a client side tool called `helm` and a server side tool called `tiller`. The cluster already has `tiller` configured and installed.
+
+The instructions for installing Helm are available [here](https://github.com/helm/helm/blob/master/docs/install.md). You can ignore everything from the "Installing Tiller" heading down.
+
