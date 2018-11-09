@@ -10,7 +10,7 @@ const continueFile = 'continueTest'
 describe('get/setLastBlock with continue file', () => {
   afterEach(function () {
     if (fs.existsSync(continueFile)) {
-      fs.unlink(continueFile)
+      fs.unlink(continueFile, error => { if (error) console.error(`Error occurred deleting continue file: ${error}`) })
     }
   })
 
