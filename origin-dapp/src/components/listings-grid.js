@@ -29,50 +29,22 @@ class ListingsGrid extends Component {
   }
 
   render() {
-    const { contractFound, listingIds, search, featuredListingIds, hiddenListingIds } = this.props
-    let activePage, currentPageListingIds, includedFeaturedListingIds, listingIdsNotHidden, resultsCount
+    const { contractFound, listingIds, search } = this.props
+    let activePage, currentPageListingIds, resultsCount
 
     if (this.props.renderMode === 'home-page') {
-      listingIdsNotHidden = listingIds.filter(id => !hiddenListingIds.includes(id))
-      // prevent featured listings from appearing twice
-      const listingIdsNeitherHiddenNorFeatured = listingIdsNotHidden
-        .filter(id => !featuredListingIds.includes(id))
-
       activePage = parseInt(this.props.match.params.activePage) || 1
-      includedFeaturedListingIds = activePage === 1 ? featuredListingIds : []
 
-      /* Calc listings to show for given page. Example of start/end slice positions when there are
-       * 4 featured listings:
-       * Page number   sliceStart     sliceEnd
-       *     1             0              8
-       *     2             8              20
-       *     3             20             32
-       */
-      const startSlicePosition = Math.max(0, LISTINGS_PER_PAGE * (activePage - 1) - featuredListingIds.length)
-      currentPageListingIds = listingIdsNeitherHiddenNorFeatured.slice(
+      const startSlicePosition = Math.max(0, LISTINGS_PER_PAGE * (activePage - 1))
+      currentPageListingIds = listingIds.slice(
         startSlicePosition,
-        Math.max(0, startSlicePosition + LISTINGS_PER_PAGE - includedFeaturedListingIds.length)
+        Math.max(0, startSlicePosition + LISTINGS_PER_PAGE)
       )
-      currentPageListingIds = [...includedFeaturedListingIds, ...currentPageListingIds]
-      resultsCount = listingIdsNotHidden.length
+      resultsCount = listingIds.length
     } else if (this.props.renderMode === 'search') {
-      listingIdsNotHidden = search.listingIds.filter(id => !hiddenListingIds.includes(id))
-      currentPageListingIds = listingIdsNotHidden.sort((a, b) => {
-        const aIsFeatured = featuredListingIds.includes(a)
-        const bIsFeatured = featuredListingIds.includes(b)
-        // if only one is featured, place it earlier in results
-        if (aIsFeatured !== bIsFeatured) {
-          return aIsFeatured ? -1 : 1
-        }
-        // otherwise sort in descending order of id
-        if (a < b) {
-          return 1
-        } else {
-          return -1
-        }
-      })
+      currentPageListingIds = search.listingIds
       activePage = this.props.searchPage
-      resultsCount = search.listingsLength - hiddenListingIds.length
+      resultsCount = search.listingsLength
     }
 
     return (
@@ -116,7 +88,6 @@ class ListingsGrid extends Component {
                 <ListingCard
                   listingId={id}
                   key={id}
-                  featured={featuredListingIds.includes(id)}
                 />
               ))}
             </div>
@@ -139,8 +110,6 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   contractFound: state.listings.contractFound,
-  featuredListingIds: state.listings.featured,
-  hiddenListingIds: state.listings.hidden,
   listingIds: state.marketplace.ids
 })
 
