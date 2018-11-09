@@ -15,8 +15,7 @@ class Messages extends Component {
     super(props)
 
     this.state = {
-      selectedConversationId: '',
-      mainNav: true
+      selectedConversationId: ''
     }
   }
 
@@ -62,7 +61,7 @@ class Messages extends Component {
     const showMainNav = (isMobile && selectedConversationId.length) ? false : true
 
     this.props.showMainNav(showMainNav)
-    this.setState({ selectedConversationId, mainNav: showMainNav })
+    this.setState({ selectedConversationId })
   }
 
   render() {

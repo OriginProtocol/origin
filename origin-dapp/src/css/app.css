@@ -3873,6 +3873,11 @@ form .stars img {
   padding-bottom: 10px;
 }
 
+.mobile-conversation-list-item .listing-title {
+  font-size: 0.75rem;
+  font-weight: normal;
+}
+
 .conversations-list-col {
   background-color: var(--pale-grey);
   height: 60px;
@@ -4143,6 +4148,18 @@ form .stars img {
 
 .mobile-messaging .conversation .sender {
   padding-bottom: 5px;
+}
+
+.mobile-conversations .sender {
+  font-size: 16px;
+  text-transform: capitalize;
+  line-height: 14px;
+}
+
+.mobile-conversations .message.text-truncate {
+  font-style: italic;
+  font-size: 1rem;
+  font-weight: normal;
 }
 
 .conversation .timestamp {
