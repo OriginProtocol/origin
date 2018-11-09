@@ -317,6 +317,10 @@ textarea:-moz-ui-invalid {
   margin: 20px 0 0;
 }
 
+.mobile-messaging .progress-container {
+  margin: 7px 0 0;
+}
+
 .progress {
   background-color: var(--light);
   border-radius: 3px;
@@ -3885,6 +3889,10 @@ form .stars img {
   overflow: hidden;
 }
 
+.mobile-messaging .conversation-col .content-container {
+  flex-grow: 0;
+}
+
 .conversation-col,
 .no-gutters .conversation-col {
   background-color: white;
@@ -3969,15 +3977,52 @@ form .stars img {
   padding: 20px 0;
 }
 
+.mobile-messaging.messages-wrapper .listing-summary {
+  border-bottom: 1px solid #c2cbd3;
+  min-height: unset;
+  padding-top: 12px;
+  padding-bottom: unset;
+}
+
 .messages-wrapper .listing-summary h1 {
   color: var(--dark);
   font-size: 1.5rem;
   margin-bottom: 0;
 }
 
+.mobile-messaging.messages-wrapper .listing-summary h1.seller {
+  width: 66px;
+  height: 10px;
+  font-family: Lato;
+  font-size: 10px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #455d75;
+}
+
+.mobile-messaging.messages-wrapper .listing-summary h1.listing-title {
+  width: 254px;
+  height: 27px;
+  font-family: Poppins;
+  font-size: 16px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 2.13;
+  letter-spacing: normal;
+  color: var(--dark);
+}
+
 .messages-wrapper .state {
   color: var(--dusk);
   font-size: 0.875rem;
+}
+
+.mobile-messaging.messages-wrapper .state {
+  font-size: 0.75rem;
 }
 
 .messages-wrapper .aspect-ratio {
@@ -3988,8 +4033,17 @@ form .stars img {
   overflow: hidden;
 }
 
+.mobile-messaging.messages-wrapper .aspect-ratio {
+  margin-right: 0;
+  flex-basis: 104px;
+}
+
 .messages-wrapper .aspect-ratio img {
   height: 114px;
+}
+
+.mobile-messaging.messages-wrapper .aspect-ratio img {
+  height: 66.5px;
 }
 
 .messages-wrapper .progress-container {
