@@ -76,10 +76,6 @@ node_modules/
 # Flask Session files
 /origin-bridge/*flask_session/
 
-# origin-discovery #
-####################
-origin-discovery/continueTest
-
 # origin-docs #
 ###############
 /origin-docs/*.gem
