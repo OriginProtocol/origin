@@ -3,6 +3,7 @@ layout: page
 title: Listing
 nav_weight: 1100
 category: "Concepts"
+toc: true
 ---
 
 A Listing is an offer from a seller to sell, rent, announce, or exchange something. Active listings can be searched and browsed in Origin DApps.
