@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint **/*.js --rulesdir ../",
     "start": "node src/index.js",
-    "test": "mocha --compilers js:@babel/register --timeout=10000",
+    "test": "mocha --timeout=10000",
     "test:load": "node load.js"
   },
   "repository": {

@@ -4,7 +4,8 @@ const request = require('supertest')
 const fs = require('fs')
 
 const logger = require('./src/logger')
-logger.setLogLevel('NONE')
+const Logger = require('logplease')
+Logger.setLogLevel('NONE')
 
 const expect = chai.expect
 const ipfsPort = 9998
