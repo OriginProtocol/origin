@@ -3946,14 +3946,18 @@ form .stars img {
 
 .mobile-conversation-list-item .unread.count {
   font-weight: bold;
+  color: var(--white);
   width: 30px;
   height: 18px;
   border-radius: 9.5px;
   background-color: var(--clear-blue);
+  margin-top: 5px;
+  margin-left: 20px;
 }
 
 .mobile-conversation-list-item .unread.count div {
   padding-right: 10px;
+  font-size: 12px;
 }
 
 .mobile-conversation-list-item .meta-container {
@@ -4160,6 +4164,14 @@ form .stars img {
   font-style: italic;
   font-size: 1rem;
   font-weight: normal;
+}
+
+.mobile-conversations .timestamp {
+  font-size: 0.75rem;
+  font-weight: normal;
+  line-height: normal;
+  text-align: center;
+  color: var(--bluey-grey);
 }
 
 .conversation .timestamp {

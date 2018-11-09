@@ -11,7 +11,8 @@ class ConversationListItem extends Component {
       handleConversationSelect,
       users,
       web3Account,
-      isMobile
+      isMobile,
+      listing = {}
     } = this.props
     const lastMessage = conversation.values.sort(
       (a, b) => (a.created < b.created ? -1 : 1)
@@ -40,14 +41,15 @@ class ConversationListItem extends Component {
             <div className="sender text-truncate">
               <span>{counterparty.fullName || counterpartyAddress}</span>
             </div>
+            <div className="message text-truncate">{listing.name}</div>
             <div className="message text-truncate">{content}</div>
           </div>
           <div className="meta-container">
-            <div className="timestamp text-right ml-auto">
+            <div className="timestamp ml-auto">
               {moment(created).format('h:mm a')}
             </div>
             {!!unreadCount && (
-              <div className="unread count text-right">
+              <div className="unread count text-center">
                 <div>{unreadCount}</div>
               </div>
             )}
