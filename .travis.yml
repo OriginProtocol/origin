@@ -61,7 +61,7 @@ matrix:
       - npm run bootstrap -- --scope origin-contracts
       - npm run bootstrap -- --scope origin
       - npm run bootstrap -- --scope origin-dapp
-     script:
+    script:
       - lerna run test --scope origin-dapp
 
   - name: "origin-discovery unit tests"
