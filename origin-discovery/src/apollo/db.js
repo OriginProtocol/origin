@@ -5,7 +5,7 @@ const db = require('../models')
 /**
  * Helper function. Returns a listing object compatible with the GraphQL Listing schema.
  */
-function _makeListing (row) {
+function _makeListing (row, display) {
   return {
     id: row.id,
     ipfsHash: row.data.ipfs.hash,
@@ -17,7 +17,7 @@ function _makeListing (row) {
     // TODO: price may not be defined at the listing level for all listing types.
     // For example, for fractional usage it may vary based on time slot.
     price: row.data.price,
-    display: display
+    display
   }
 }
 
@@ -60,7 +60,7 @@ async function getListings (listingIds, hiddenIds = [], featuredIds = []) {
     }
 
     const row = rowDict[id]
-    const listing = _makeListing(row)
+    const listing = _makeListing(row, display)
     listings.push(listing)
   })
   return listings

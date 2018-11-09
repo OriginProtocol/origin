@@ -139,7 +139,7 @@ class DiscoveryService {
           }
       }`
       const resp = await this._query(query)
-      listings = resp.data.listings.nodes.map(listing => listing.data)
+      listings = resp.data.user.listings.nodes.map(listing => this._flattenListingData(listing))
     } else if (opts.purchasesFor) {
       // Query for all listings the specified buyer address made an offer on.
       query = `{
@@ -155,7 +155,7 @@ class DiscoveryService {
         }
       }`
       const resp = await this._query(query)
-      listings = resp.data.offers.nodes.map(offer => this._flattenListingData(offer.listing.data))
+      listings = resp.data.user.offers.nodes.map(offer => this._flattenListingData(offer.listing))
     } else {
       // General query against all listings. Used for example on Browse and search pages.
       query = `{
@@ -170,7 +170,7 @@ class DiscoveryService {
         }
       }`
       const resp = await this._query(query)
-      listings = resp.data.nodes.map(listing => this._flattenListingData(listing.data))
+      listings = resp.data.listings.nodes.map(listing => this._flattenListingData(listing))
     }
 
     return opts.idsOnly ? listings.map(listing => listing.id) : listings
