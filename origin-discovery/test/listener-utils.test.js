@@ -8,9 +8,10 @@ const expect = chai.expect
 
 const continueFile = 'continueTest'
 describe('get/setLastBlock with continue file', () => {
-  afterEach(function() {
-    if (fs.existsSync(continueFile))
+  afterEach(function () {
+    if (fs.existsSync(continueFile)) {
       fs.unlink(continueFile)
+    }
   })
 
   it(`Should return value set by setLastBlock`, async () => {
