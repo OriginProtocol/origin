@@ -34,7 +34,7 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run build",
+    "build": "lerna run build --stream",
     "clean": "git clean -fdX .",
     "dev": "lerna run dev --stream --parallel",
     "lint": "eslint **/**/*.js --quiet",
