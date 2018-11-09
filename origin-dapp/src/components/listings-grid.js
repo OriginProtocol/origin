@@ -9,15 +9,61 @@ import { getListingIds } from 'actions/Listing'
 import { LISTINGS_PER_PAGE } from 'components/constants'
 import ListingCard from 'components/listing-card'
 
+import getCurrentNetwork from '../utils/currentNetwork'
+import origin from '../services/origin'
+const web3 = origin.contractService.web3
+
+//had to create a HOC for FormattedMessage since it cannot statically evaluate dynamic data
+const FormattedMessageFixed = props => {
+  return <FormattedMessage {...props} />
+}
+
+
 class ListingsGrid extends Component {
   constructor(props) {
     super(props)
-
+    this.state = {
+      network: 'this network',
+      networkError: null,
+      networkId: null
+    }
     this.handleOnChange = this.handleOnChange.bind(this)
   }
 
   componentWillMount() {
     if (this.props.renderMode === 'home-page') this.props.getListingIds()
+    this.fetchNetwork()
+  }
+
+  
+  async fetchNetwork() {
+    const providerExists = web3.currentProvider
+    const networkConnected =
+      web3.currentProvider.connected ||
+      (typeof web3.currentProvider.isConnected === 'function' &&
+        web3.currentProvider.isConnected())
+
+    providerExists &&
+      networkConnected &&
+      web3.version &&
+      (await web3.eth.net.getId((err, netId) => {
+        const networkId = parseInt(netId, 10)
+
+        if (err) {
+          this.setState({
+            networkError: err
+          })
+        } else {
+          if (networkId !== this.state.networkId) {
+            
+
+            this.setState({
+              networkId,
+              network: getCurrentNetwork(networkId).name
+            })
+          }
+        }
+      }))
   }
 
   handleOnChange(page) {
@@ -75,22 +121,24 @@ class ListingsGrid extends Component {
       resultsCount = search.listingsLength - hiddenListingIds.length
     }
 
+    const network = this.state.network
+
     return (
       <div className="listings-wrapper">
         {contractFound === false && (
           <div className="listings-grid">
             <div className="alert alert-warning" role="alert">
-              <FormattedMessage
+              <FormattedMessageFixed
                 id={'listings-grid.originContractNotFound'}
                 defaultMessage={
-                  'No Origin listing contracts were found on this network.'
+                  'No Origin listing contracts were found on ' + network + '.'
                 }
               />
               <br />
               <FormattedMessage
                 id={'listings-grid.changeNetworks'}
                 defaultMessage={
-                  'You may need to change networks, or deploy the contract.'
+                  'You may need to change networks, or deploy the contracts.'
                 }
               />
             </div>
