@@ -19,24 +19,6 @@ const start = async () => {
   await deployContracts()
   console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Starting Local IPFS }\n`)
   await startIpfs()
-
-  // watch js
-  compiler.watch({}, (err, stats) => {
-    if (err || stats.hasErrors()) {
-      console.error(err)
-    } else {
-      console.log(
-        stats.toString({
-          hash: false,
-          modules: false,
-          version: false
-        })
-      )
-    }
-  })
-
-  console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Test Server }\n`)
-  startTestServer()
 }
 
 start()
