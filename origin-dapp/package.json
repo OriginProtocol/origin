@@ -63,6 +63,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.46",
+    "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/register": "^7.0.0-beta.46",
     "detect-port": "^1.2.3",
     "dotenv": "^5.0.1",
