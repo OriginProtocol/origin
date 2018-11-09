@@ -20,6 +20,7 @@ matrix:
     before_cache:
       - rm -rf origin-contracts/node_modules/.cache
     install:
+      - npm install --ignore-scripts
       - npm run bootstrap -- --scope origin-contracts
     script:
       - lerna run test --scope origin-contracts
@@ -36,6 +37,7 @@ matrix:
       - rm -rf origin-contracts/node_modules/.cache
       - rm -rf origin-js/node_modules/.cache
     install:
+      - npm install --ignore-scripts
       - npm run bootstrap -- --scope origin-contracts
       - npm run bootstrap -- --scope origin-js
     script:
