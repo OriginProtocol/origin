@@ -6,6 +6,7 @@ matrix:
     language: node_js
     script:
       npm run lint
+    node_js: 10
 
   - name: "origin-contracts / js / dapp unit tests"
     language: node_js
