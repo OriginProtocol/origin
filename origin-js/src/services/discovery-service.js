@@ -7,6 +7,12 @@ class DiscoveryService {
     this.fetch = fetch
   }
 
+  _flattenListingData(listingNode) {
+    const data = listingNode.data
+    data.display = listingNode.display
+    return data
+  }
+
   /**
    * Helper method. Calls discovery server and returns response.
    * @param graphQlQuery
@@ -52,7 +58,7 @@ class DiscoveryService {
    * @param filters {object} Object with properties: name, value, valueType, operator
    * @return {Promise<list(Object)>}
    */
-  async search(searchQuery, numberOfItems, offset, filters = []) {
+  async search({ searchQuery, numberOfItems, offset, filters = [] }) {
     // Offset should be bigger than 0.
     offset = Math.max(offset, 0)
     // clamp numberOfItems between 1 and MAX_NUM_RESULTS
@@ -79,7 +85,8 @@ class DiscoveryService {
         }
       ) {
         nodes {
-          id
+          data
+          display
         }
         offset
         numberOfItems
@@ -118,6 +125,7 @@ class DiscoveryService {
       ) {
         nodes {
           data
+          display
         }
       }
     }`
@@ -126,7 +134,7 @@ class DiscoveryService {
     if (opts.idsOnly) {
       return resp.data.listings.nodes.map(listing => listing.data.id)
     } else {
-      return resp.data.listings.nodes.map(listing => listing.data)
+      return resp.data.listings.nodes.map(listing => this._flattenListingData(listing))
     }
   }
 
@@ -140,6 +148,7 @@ class DiscoveryService {
       listing(id: "${listingId}") {
         id
         data
+        display
       }
     }`
     const resp = await this._query(query)
@@ -148,7 +157,8 @@ class DiscoveryService {
     if (!resp.data) {
       throw new Error(`No listing found with id ${listingId}`)
     }
-    return resp.data.listing.data
+
+    return this._flattenListingData(resp.data.listing)
   }
 }
 
