@@ -103,7 +103,7 @@ class ListingsDetail extends Component {
 
     this.props.storeWeb3Intent('offer to buy this listing')
 
-    if (web3.givenProvider && this.props.web3Account) {
+    if ((web3.givenProvider && this.props.web3Account) || origin.contractService.walletLinker) {
       if (!skip && shouldOnboard) {
         return this.setState({
           onboardingCompleted: true,

@@ -70,12 +70,11 @@ class Linker {
       throw("Cannot find link for client token", clientToken)
     }
     // if this is a brand new session ignore all current messages
-    if (!lastMessageId) {
-      const message = await this.messages.getLastMessage(clientToken)
-      if (message)
-      {
-        lastMessageId = message.msgId
-      }
+    if (!sessionToken) {
+      sessionToken = this.generateInitSession(linkObj)
+      init = true
+    }
+    else if (!lastMessageId) {
       init = true
     }
     else
@@ -86,9 +85,10 @@ class Linker {
         init = true
       }
     }
-    if (!sessionToken) {
-      sessionToken = this.generateInitSession(linkObj)
-      init = true
+
+    if (init)
+    {
+      lastMessageId = this.messages.getLatestId()
     }
 
     //set the lastest device context just in case we missed out on some messages
@@ -183,7 +183,8 @@ class Linker {
 
     if (pendingCall)
     {
-      linkedObj.pendingCallContext = {call:pendingCall, session_token:sessionToken}
+      pendingCall.session_token = sessionToken
+      linkedObj.pendingCallContext = pendingCall
       linkedObj.save()
     }
 
@@ -199,9 +200,9 @@ class Linker {
     return {}
   }
 
-  getMetaFromCall({net_id, txn_object}){
+  async getMetaFromCall({call, net_id, params:{txn_object}}){
     if (txn_object) {
-      return origin.decodeContractCall(net_id || txn_object.chainId, txn_object.to, txn_object.data)
+      return origin.reflection.extractContractCallMeta(net_id || txn_object.chainId, txn_object.to, txn_object.data)
     }
   }
 
@@ -215,7 +216,8 @@ class Linker {
     }
     const call_data = {call_id, call, link_id:this.getLinkId(linkedObj.id, linkedObj.clientToken), session_token:sessionToken, return_url, account}
 
-    const meta = this.getMetaFromCall(call)
+    const meta = await this.getMetaFromCall(call)
+    console.log("extracted meta is:", meta)
 
     this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
@@ -245,12 +247,12 @@ class Linker {
   _getContextMsg(linkedObj, sessionToken) {
     const linked = linkedObj.linked
     return { type:MessageTypes.CONTEXT, 
-      msg:{session_token:sessionToken, linked:linkedObj.linked, device:linked && linkedObj.currentDeviceContext}}
+      data:{session_token:sessionToken, linked, device:linked && linkedObj.currentDeviceContext}}
   }
 
   async sendContextChange(linkedObj, sessionToken) {
-    const {type, msg} = this._getContextMsg(linkedObj)
-    return this.sendSessionMessage(linkedObj, sessionToken, type, msg)
+    const {type, data} = this._getContextMsg(linkedObj)
+    return this.sendSessionMessage(linkedObj, sessionToken, type, data)
   }
 
   async linkWallet(walletToken, code, current_rpc, current_accounts) {

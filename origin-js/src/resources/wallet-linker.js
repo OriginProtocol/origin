@@ -30,6 +30,7 @@ class WalletLinker {
       })
     )
     this.loadSessionStorage()
+    this.closeLinkMessages()
     //clearInterval(self.interval)
   }
 
@@ -126,7 +127,7 @@ class WalletLinker {
       session_token: this.session_token,
       call_id: call_id,
       accounts: this.accounts,
-      call: ['signTransaction', { txn_object }],
+      call: this.createCall('signTransaction', { txn_object }),
       return_url: this.getReturnUrl()
     })
 
@@ -144,27 +145,30 @@ class WalletLinker {
     this.callbacks[call_id] = handler
   }
 
-  customSignMessage(msg_params, call_id) {
+  createCall(method, params) {
+    return {method, net_id:this.netId, params}
+  }
 
+  customSignMessage(params, call_id) {
+    const call = this.createCall('signMessage', params)
     if (!this.linked) {
       this.pending_call = {
         call_id,
-        session_token: this.session_token,
-        call: ['signMessage', msg_params]
+        call
       }
       this.startLink()
     } else {
-      const result = this.post('call-wallet', {
-        session_token: this.session_token,
+      const result = this.post('call-wallet/' + this.session_token, {
         call_id: call_id,
         accounts: this.accounts,
-        call: ['signMessage', msg_params],
+        call,
         return_url: this.getReturnUrl()
       })
     }
   }
 
   processTransaction(txn_object, callback) {
+    console.log("processTransaction:", txn_object, callback)
     const call_id = uuidv1()
     //translate gas to gasLimit
     txn_object['gasLimit'] = txn_object['gas']
@@ -181,19 +185,18 @@ class WalletLinker {
       callback(undefined, data.hash)
     }
 
+    const call = this.createCall('processTransaction', { txn_object })
     if (!this.linked) {
       this.pending_call = {
         call_id,
-        session_token: this.session_token,
-        call: ['processTransaction', { txn_object }]
+        call,
       }
       this.startLink()
     } else {
-      const result = this.post('call-wallet', {
-        session_token: this.session_token,
-        call_id: call_id,
+      const result = this.post('call-wallet/'+ this.session_token, {
+        call_id,
         accounts: this.accounts,
-        call: ['processTransaction', { txn_object }],
+        call,
         return_url: this.getReturnUrl()
       })
 
@@ -208,7 +211,7 @@ class WalletLinker {
     if (this.networkRpcUrl != networkRpcUrl || force) {
       this.networkRpcUrl = networkRpcUrl
       this.networkChangeCb()
-      //this.netId = await this.web3.eth.net.getId()
+      this.netId = await this.web3.eth.net.getId()
     }
   }
 
@@ -265,6 +268,7 @@ class WalletLinker {
     }
     if (msgId != undefined) {
       this.last_message_id = msgId
+      this.syncSessionStorage()
     }
   }
 

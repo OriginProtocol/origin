@@ -29,6 +29,11 @@ class MessageQueue {
     })
   }
 
+  getLatestId() {
+    const hrtime = process.hrtime()
+    return hrtime[0] * 1000000 + Math.round(hrtime[1] / 1000)
+  }
+
   async addMessage(queueKey, message) {
     const pubsubQueueKey = PUBSUB_PREFIX + queueKey
     const msgCount = await this.getMessageCount(queueKey)
@@ -37,7 +42,7 @@ class MessageQueue {
     return new Promise((resolve, reject) => {
       //two steps, increment the message
       const hrtime = process.hrtime()
-      const timestamp = hrtime[0] * 1000000 + Math.round(hrtime[1] / 1000)
+      const timestamp = this.getLatestId()
       const multi_call = this.redis.multi()
 
       // actually do the multicall

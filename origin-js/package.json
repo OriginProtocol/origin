@@ -33,7 +33,6 @@
   "author": "Stan James <stan@originprotocol.com>",
   "license": "MIT",
   "dependencies": {
-    "abi-decoder": "^1.2.0",
     "ajv": "^6.5.0",
     "babel-polyfill": "^6.26.0",
     "bignumber.js": "^7.2.1",

@@ -5,6 +5,7 @@ import Marketplace from './resources/marketplace'
 import Discovery from './resources/discovery'
 import Users from './resources/users'
 import Messaging from './resources/messaging'
+import Reflection from './resources/reflection'
 import Token from './resources/token'
 import fetch from 'cross-fetch'
 import store from 'store'
@@ -86,6 +87,12 @@ class Origin {
       contractService: this.contractService,
       ipfsService: this.ipfsService,
       marketplace: this.marketplace
+    })
+
+    this.reflection = new Reflection({
+      contractService: this.contractService,
+      marketplace: this.marketplace,
+      token:this.token
     })
   }
 }

@@ -135,8 +135,8 @@ class MessagesDropdown extends Component {
                 )}
               </h3>
               {!messagingEnabled &&
-                <button className="btn btn-sm btn-primary  d-none d-md-block ml-auto" onClick={() => {
-                  enableMessaging()
+                <button className="btn btn-sm btn-primary d-none d-md-block ml-auto" onClick={() => {
+                  this.handleEnable()
                   if(!this.props.web3Account) {
                     this.props.storeWeb3Intent('Enable messaging.')
                     origin.contractService.showLinkPopUp()
