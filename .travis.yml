@@ -39,7 +39,7 @@ matrix:
     install:
       - npm install --ignore-scripts
       - npm run bootstrap -- --scope origin-contracts
-      - npm run bootstrap -- --scope origin-js
+      - npm run bootstrap -- --scope origin
     script:
       - lerna run test --scope origin
 
@@ -56,7 +56,12 @@ matrix:
       - rm -rf origin-contracts/node_modules/.cache
       - rm -rf origin-dapp/node_modules/.cache
       - rm -rf origin-js/node_modules/.cache
-    script:
+    install:
+      - npm install --ignore-scripts
+      - npm run bootstrap -- --scope origin-contracts
+      - npm run bootstrap -- --scope origin
+      - npm run bootstrap -- --scope origin-dapp
+     script:
       - lerna run test --scope origin-dapp
 
   - name: "origin-discovery unit tests"
@@ -66,12 +71,10 @@ matrix:
       npm: true
       directories:
         - origin-contracts/node_modules
-        - origin-dapp/node_modules
         - origin-js/node_modules
         - origin-discovery/node_modules
     before_cache:
       - rm -rf origin-contracts/node_modules/.cache
-      - rm -rf origin-dapp/node_modules/.cache
       - rm -rf origin-js/node_modules/.cache
       - rm -rf origin-discovery/node_modules/.cache
     addons:
