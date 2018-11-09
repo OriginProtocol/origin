@@ -60,6 +60,7 @@
 	"allowTemplateLiterals": true
       }
     ],
+    "react/no-deprecated": "off",
     "react/no-children-prop": "off",
     "react/prop-types": "off",
     "semi": [
