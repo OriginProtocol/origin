@@ -1,4 +1,4 @@
-FROM node:10 as build
+FROM node:10
 
 WORKDIR /app
 
@@ -15,13 +15,13 @@ COPY ./origin-contracts ./origin-contracts
 COPY ./origin-discovery ./origin-discovery
 COPY ./scripts ./scripts
 RUN npm install --loglevel notice --unsafe-perm
-RUN lerna run build
 
 # Install envkey-source to make environment available for sequelize migration
 RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
 RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-WORKDIR /app/origin-discovery
-
-CMD eval $(envkey-source) && npm run migrate && npm run start:listener
+CMD eval $(envkey-source) && \
+	npm run migrate --prefix origin-discovery && \
+	npm run start:listener --prefix origin-discovery

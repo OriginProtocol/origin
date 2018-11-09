@@ -10,6 +10,7 @@ ENV DEPLOY_TAG=$DEPLOY_TAG ENVKEY=$ENVKEY
 # Install envkey-source
 RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
 RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
 # Install lerna
@@ -23,7 +24,7 @@ COPY ./scripts ./scripts
 COPY lerna.json .
 RUN npm install --loglevel notice --unsafe-perm
 # Use EnvKey so that environment variables are available to DApp at build time
-RUN eval $(envkey-source) && lerna run build
+RUN eval $(envkey-source) && npm run build --prefix origin-dapp
 
 # Copy static files to nginx for serving
 FROM nginx:1.15.2-alpine
