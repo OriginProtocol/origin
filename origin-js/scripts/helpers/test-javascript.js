@@ -6,9 +6,9 @@ const testJavascript = () => {
       './node_modules/.bin/mocha',
       [
         '-r',
-        'babel-core/register',
+        '@babel/register',
         '-r',
-        'babel-polyfill',
+        '@babel/polyfill',
         '--timeout',
         '10000',
         '--exit'
