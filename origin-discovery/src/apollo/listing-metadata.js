@@ -1,4 +1,4 @@
-/* Catches hidden & featured listings ids and updates them according
+/* Caches hidden & featured listings ids and updates them according
  * to configuration.
  */
 const fetch = require('node-fetch')
