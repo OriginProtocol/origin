@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
@@ -48,16 +47,16 @@ class Messages extends Component {
   }
 
   detectSelectedConversation() {
+    const { match, conversations, isMobile, showMainNav } = this.props
     const selectedConversationId =
-      this.props.match.params.conversationId ||
-      (this.props.conversations[0] || {}).key
+      match.params.conversationId ||
+      (conversations[0] || {}).key
 
-    if (this.props.isMobile) this.props.showMainNav(false)
+    if (isMobile && selectedConversationId) showMainNav(false)
     selectedConversationId && this.setState({ selectedConversationId })
   }
 
   handleConversationSelect(selectedConversationId) {
-    const { mainNav } = this.state
     const { isMobile } = this.props
 
     const showMainNav = (isMobile && selectedConversationId.length) ? false : true
@@ -78,20 +77,19 @@ class Messages extends Component {
       (a, b) => (a.created < b.created ? -1 : 1)
     )[conversation.values.length - 1]
 
-    const { content, recipients, senderAddress } = lastMessage || {}
+    const { recipients, senderAddress } = lastMessage || {}
     const role = senderAddress === web3Account ? 'sender' : 'recipient'
     const counterpartyAddress =
-    role === 'sender'
-    ? recipients.find(addr => addr !== senderAddress)
-    : senderAddress
+      role === 'sender'
+        ? recipients.find(addr => addr !== senderAddress)
+        : senderAddress
     const counterparty = users.find(u => u.address === counterpartyAddress) || {}
     const counterpartyName = counterparty.fullName || counterpartyAddress
 
     if (isMobile) {
-      console.log("CONVERSATIONS", counterparty)
-      if (selectedConversationId) {
+      if (selectedConversationId && selectedConversationId.length) {
         return (
-          <div className="mobile-messaging">
+          <div className="mobile-messaging messages-wrapper">
             <div className="back row align-items-center" onClick={() => this.handleConversationSelect('')}>
               <i className="icon-arrow-left align-self-start"></i>
               <span className="counterparty text-truncate align-self-center">{counterpartyName}</span>
@@ -101,6 +99,7 @@ class Messages extends Component {
                 id={selectedConversationId}
                 messages={filteredAndSorted}
                 withListingSummary={true}
+                isMobile={isMobile}
               />
             </div>
           </div>
