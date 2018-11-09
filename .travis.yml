@@ -17,6 +17,8 @@ matrix:
         - origin-contracts/node_modules
     before_cache:
       - rm -rf origin-contracts/node_modules/.cache
+    install:
+      - lerna run bootstrap --scope origin-contracts
     script:
       - lerna run test --scope origin-contracts
 
@@ -31,8 +33,11 @@ matrix:
     before_cache:
       - rm -rf origin-contracts/node_modules/.cache
       - rm -rf origin-js/node_modules/.cache
+    install:
+      - lerna run bootstrap --scope origin-contracts
+      - lerna run bootstrap --scope origin-js
     script:
-      - lerna run test --scope origin-js
+      - lerna run test --scope origin
 
   - name: "origin-dapp unit tests"
     language: node_js
