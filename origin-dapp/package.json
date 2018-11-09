@@ -65,7 +65,7 @@
     "start": "if [ \"$NODE_ENV\" = \"production\" ]; then npm run serve; else npm run dev; fi",
     "serve": "serve build",
     "dev": "npx webpack-dev-server --open",
-    "build": "webpack --progress --display errors-only --mode production",
+    "build": "NODE_ENV=production webpack --progress --display errors-only --mode production",
     "translations": "node translations/scripts/processTranslatedMessages.js",
     "test": "node scripts/test.js --env=jsdom",
     "format": "npx prettier-eslint --write 'src/**/*.js' 'scripts/**/*.js'"
