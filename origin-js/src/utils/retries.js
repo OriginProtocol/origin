@@ -6,7 +6,7 @@ const MAX_RETRY_WAIT_MS = 2 * 60 * 1000
  * @param {function} fn - Async function to retry.
  * @returns - Return value of 'fn' if it succeeded.
  */
-async function withRetries(opts, fn) {
+export async function withRetries(opts, fn) {
   const maxRetries = opts.maxRetries || 7
   const verbose = opts.verbose || false
 
@@ -31,5 +31,3 @@ async function withRetries(opts, fn) {
   }
   throw new Error('number of retries exceeded')
 }
-
-module.exports = { withRetries }

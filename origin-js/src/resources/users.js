@@ -1,6 +1,6 @@
 import UsersResolver from '../contractInterface/users/resolver'
 
-class Users {
+export default class Users {
   constructor({ contractService, ipfsService, blockEpoch, blockAttestattionV1 }) {
     this.resolver = new UsersResolver({ contractService, ipfsService, blockEpoch, blockAttestattionV1 })
   }
@@ -17,5 +17,3 @@ class Users {
     return this.resolver.get(address)
   }
 }
-
-module.exports = Users

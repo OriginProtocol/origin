@@ -1,13 +1,13 @@
-const unreadStatus = 'unread'
-const readStatus = 'read'
-const notificationStatuses = [unreadStatus, readStatus]
+export const unreadStatus = 'unread'
+export const readStatus = 'read'
+export const notificationStatuses = [unreadStatus, readStatus]
 
-const storeKeys = {
+export const storeKeys = {
   notificationSubscriptionStart: 'notification_subscription_start',
   notificationStatuses: 'notification_statuses'
 }
 
-class Notification {
+export class Notification {
   constructor({ id, event, type, status, resources = {} } = {}) {
     this.id = id
     this.event = event
@@ -15,12 +15,4 @@ class Notification {
     this.status = status
     this.resources = resources
   }
-}
-
-module.exports = {
-  Notification,
-  readStatus,
-  unreadStatus,
-  notificationStatuses,
-  storeKeys
 }

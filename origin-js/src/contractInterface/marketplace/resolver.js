@@ -12,7 +12,7 @@ import {
   storeKeys
 } from '../../models/notification'
 
-class MarketplaceResolver {
+export default class MarketplaceResolver {
   constructor({ contractService, store, blockEpoch }) {
     this.adapters = {
       '000': new V00_MarkeplaceAdapter({ contractService, store, blockEpoch })
@@ -303,5 +303,3 @@ class MarketplaceResolver {
     return { adapter, listingIndex, offerIndex, version, network }
   }
 }
-
-module.exports = MarketplaceResolver

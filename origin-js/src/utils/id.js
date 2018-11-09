@@ -1,6 +1,6 @@
 const separator = '-'
 
-function parseListingId(listingId) {
+export function parseListingId(listingId) {
   if (typeof listingId !== 'string') {
     throw new Error(`Listing id ${listingId} must be a string`)
   }
@@ -12,11 +12,11 @@ function parseListingId(listingId) {
   return { network, version, listingIndex }
 }
 
-function generateListingId({ version, network, listingIndex }) {
+export function generateListingId({ version, network, listingIndex }) {
   return [network, version, listingIndex].join(separator)
 }
 
-function parseOfferId(offerId) {
+export function parseOfferId(offerId) {
   if (typeof offerId !== 'string') {
     throw new Error(`Offer id ${offerId} must be a string`)
   }
@@ -28,11 +28,11 @@ function parseOfferId(offerId) {
   return { network, version, listingIndex, offerIndex }
 }
 
-function generateOfferId({ version, network, listingIndex, offerIndex }) {
+export function generateOfferId({ version, network, listingIndex, offerIndex }) {
   return [network, version, listingIndex, offerIndex].join(separator)
 }
 
-function parseNotificationId(notificationId) {
+export function parseNotificationId(notificationId) {
   if (typeof notificationId !== 'string') {
     throw new Error(`Notification id ${notificationId} must be a string`)
   }
@@ -44,15 +44,6 @@ function parseNotificationId(notificationId) {
   return { network, version, transactionHash }
 }
 
-function generateNotificationId({ version, network, transactionHash }) {
+export function generateNotificationId({ version, network, transactionHash }) {
   return [network, version, transactionHash].join(separator)
-}
-
-module.exports = {
-  parseListingId,
-  generateListingId,
-  parseOfferId,
-  generateOfferId,
-  parseNotificationId,
-  generateNotificationId
 }

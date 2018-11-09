@@ -1,4 +1,4 @@
-class Discovery {
+export default class Discovery {
   constructor({ discoveryService }) {
     this.discoveryService = discoveryService
   }
@@ -7,5 +7,3 @@ class Discovery {
     return this.discoveryService.search(searchQuery, numberOfItems, offset, filters)
   }
 }
-
-module.exports = Discovery
