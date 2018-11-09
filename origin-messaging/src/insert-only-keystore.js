@@ -6,7 +6,7 @@ class InsertOnlyKeystore {
   }
 
   registerSignVerify(dbSig, signFunc, verifyFunc, postFunc) {
-    this._signVerifyRegistry[dbSig] = {signFunc, verifyFunc, postFunc}
+    this._signVerifyRegistry[dbSig] = { signFunc, verifyFunc, postFunc }
   }
 
   getSignVerify(id) {
@@ -23,14 +23,14 @@ class InsertOnlyKeystore {
     }
   }
 
-  createKey(id) {
+  createKey() {
     return ''
   }
 
-  getKey(id) {
+  getKey() {
     //for some reason Orbit requires a key for verify to be triggered
     return {
-      getPublic:(type) => '-'
+      getPublic: () => '-'
     }
   }
 

@@ -157,8 +157,10 @@ async function run(config) {
   }
   case undefined:
     errorAndExit('--action=ACTION must be specified')
+    break
   default:
     errorAndExit(`Unsupported action ${config.action}`)
+    break
   }
 }
 

@@ -282,14 +282,14 @@ describe('User Resource', function() {
           keyword: 'required',
           dataPath: '',
           schemaPath: '#/required',
-          params: { missingProperty:'firstName'},
+          params: { missingProperty: 'firstName' },
           message: 'should have required property \'firstName\''
         },
         {
           keyword: 'required',
           dataPath: '',
           schemaPath: '#/required',
-          params: { missingProperty: 'lastName'},
+          params: { missingProperty: 'lastName' },
           message: 'should have required property \'lastName\''
         }
       ]

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const TableName = 'event'
 
@@ -53,7 +53,7 @@ module.exports = {
     .then(() => queryInterface.addIndex(TableName, ['topic3']))
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable(TableName)
   }
-};
+}

@@ -55,8 +55,8 @@ webpush.setVapidDetails(
 
 // should be tightened up for security
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 
   next()
 })
@@ -73,14 +73,14 @@ app.all((req, res, next) => {
     .then(() => {
       next()
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(429).send('<h1>Too Many Requests</h1>')
     })
 })
 
 // Note: bump up default payload max size since the event-listener posts
 // payload that may contain user profile with b64 encoded profile picture.
-app.use(bodyParser.json({limit: '10mb'}))
+app.use(bodyParser.json({ limit: '10mb' }))
 
 app.get('/', async (req, res) => {
   let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
