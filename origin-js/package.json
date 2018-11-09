@@ -29,8 +29,8 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "ajv": "^6.5.0",
-    "babel-polyfill": "^6.26.0",
     "bignumber.js": "^7.2.1",
     "bs58": "^4.0.1",
     "chalk": "^2.4.1",
