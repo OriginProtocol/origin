@@ -10,32 +10,10 @@ matrix:
 
   - name: "origin-contracts / js / dapp unit tests"
     language: node_js
-    cache:
-      npm: true
-      directories:
-        - origin-contracts/node_modules
-        - origin-dapp/node_modules
-        - origin-js/node_modules
-    before_cache:
-      - rm -rf origin-contracts/node_modules/.cache
-      - rm -rf origin-dapp/node_modules/.cache
-      - rm -rf origin-js/node_modules/.cache
     node_js: 10
 
   - name: "origin-discovery unit tests"
     language: node_js
-    cache:
-      npm: true
-      directories:
-        - origin-contracts/node_modules
-        - origin-dapp/node_modules
-        - origin-js/node_modules
-        - origin-discovery/node_modules
-    before_cache:
-      - rm -rf origin-contracts/node_modules/.cache
-      - rm -rf origin-dapp/node_modules/.cache
-      - rm -rf origin-js/node_modules/.cache
-      - rm -rf origin-discovery/node_modules/.cache
     node_js: 10
     addons:
       postgresql: 9.6
