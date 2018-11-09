@@ -1,5 +1,6 @@
 const GraphQLJSON = require('graphql-type-json')
 
+const db = require('../models')
 const search = require('../lib/search.js')
 const { getListings } = require('./db.js')
 
@@ -57,19 +58,30 @@ const resolvers = {
     },
 
     async offers (root, args, context, info) {
-      const opts = {}
-      opts.buyerAddress = args.buyerAddress
-      opts.listingId = args.listingId
-      const offers = search.Offer.search(opts)
+      const clause = {}
+      if (args.listingId) {
+        clause.listingId = args.listingId
+      }
+      if (args.buyerAddress) {
+        clause.buyerAddress = args.buyerAddress.toLowerCase()
+      }
+      if (args.sellerAddress) {
+        clause.sellerAddress = args.sellerAddress.toLowerCase()
+      }
+      const rows = await db.Offer.findAll({ where: clause })
+      const offers = rows.map(offer => offer.data)
       return { nodes: offers }
     },
 
     async offer (root, args, context, info) {
-      return search.Offer.get(args.id)
+      const row = await db.Offer.findByPk({ id: args.id })
+      return (row.length === 0) ? row.data : null
     },
 
     user (root, args, context, info) {
-      return search.User.get(args.walletAddress)
+      // FIXME(franck): some users did not get indexed due to attestation overflow bug.
+      // For now only return the address until data gets re-indexed.
+      return { walletAddress: args.walletAddress }
     }
   },
 
@@ -77,8 +89,9 @@ const resolvers = {
     seller (listing, args, context, info) {
       return relatedUserResolver(listing.seller, info)
     },
-    offers (listing, args) {
-      const offers = search.Offer.search({ listingId: listing.id })
+    async offers (listing, args, context, info) {
+      const rows = await db.Offer.findAll({ where: { listingId: listing.id } })
+      const offers = rows.map(offer => offer.data)
       return { nodes: offers }
     }
   },
@@ -93,21 +106,36 @@ const resolvers = {
     price (offer) {
       return { currency: 'ETH', amount: offer.priceEth }
     },
-    listing (offer, args, context, info) {
+    async listing (offer, args, context, info) {
       const requestedSubFields = info.fieldNodes[0].selectionSet.selections
-      const isIdOnly = requestedSubFields.filter(x => x.name.value !== 'id').length === 0
-      if (isIdOnly) {
+      const idsOnly = requestedSubFields.filter(x => x.name.value !== 'id').length === 0
+      if (idsOnly) {
         return { id: offer.listingId }
       } else {
-        return search.Listing.get(offer.listingId)
+        const row = await db.Listing.findByPk(offer.listingId)
+        return row.data
       }
     }
   },
 
   User: {
-    offers (user, args) {
-      const offers = search.Offer.search({ buyer: user.walletAddress })
+    async offers (user, args, context, info) {
+      // Return offers made by the user.
+      console.log('LOADING OFFERS FOR BUYER=', user.walletAddress.toLowerCase())
+      const rows = await db.Offer.findAll(
+        { where: { buyerAddress: user.walletAddress.toLowerCase() } })
+      const offers = rows.map(row => row.data)
+      console.log('FOUND offer ', offers)
       return { nodes: offers }
+    },
+    async listings (user, args, context, info) {
+      // Return listings created by the user.
+      console.log('LOADING LISTING FOR SELLER=', user.walletAddress.toLowerCase())
+      const rows = await db.Listing.findAll(
+        { where: { sellerAddress: user.walletAddress.toLowerCase() } })
+      const listings = rows.map(row => row.data)
+      console.log('FOUND listingS:', listings)
+      return { nodes: listings }
     }
   }
 }
