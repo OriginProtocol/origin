@@ -67,7 +67,7 @@
     "dev": "npx webpack-dev-server --open",
     "build": "NODE_ENV=production webpack --progress --display errors-only --mode production",
     "translations": "node translations/scripts/processTranslatedMessages.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "echo \"No tests defined \"",
     "format": "npx prettier-eslint --write 'src/**/*.js' 'scripts/**/*.js'"
   },
   "babel": {
