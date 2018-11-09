@@ -1,105 +1,106 @@
+---
 git:
   depth: 3
 matrix:
   include:
-  - name: "javascript linting"
-    language: node_js
-    node_js: 10
-    install:
-      - npm install --ignore-scripts
-    script:
-      npm run lint
+    - name: "javascript linting"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+      script:
+        npm run lint
 
-  - name: "origin-contracts unit tests"
-    language: node_js
-    node_js: 10
-    cache:
-      npm: true
-      directories:
-        - origin-contracts/node_modules
-    before_cache:
-      - rm -rf origin-contracts/node_modules/.cache
-    install:
-      - npm install --ignore-scripts
-      - npm run bootstrap -- --scope origin-contracts
-    script:
-      - lerna run test --scope origin-contracts
+    - name: "origin-contracts unit tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-contracts/node_modules
+      before_cache:
+        - rm -rf origin-contracts/node_modules/.cache
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts
+      script:
+        - lerna run test --scope origin-contracts
 
-  - name: "origin-js unit tests"
-    language: node_js
-    node_js: 10
-    cache:
-      npm: true
-      directories:
-        - origin-contracts/node_modules
-        - origin-js/node_modules
-    before_cache:
-      - rm -rf origin-contracts/node_modules/.cache
-      - rm -rf origin-js/node_modules/.cache
-    install:
-      - npm install --ignore-scripts
-      - npm run bootstrap -- --scope origin-contracts
-      - npm run bootstrap -- --scope origin
-    script:
-      - lerna run test --scope origin
+    - name: "origin-js unit tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-contracts/node_modules
+          - origin-js/node_modules
+      before_cache:
+        - rm -rf origin-contracts/node_modules/.cache
+        - rm -rf origin-js/node_modules/.cache
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts
+        - npm run bootstrap -- --scope origin
+      script:
+        - lerna run test --scope origin
 
-# origin-dapp currently does not have any tests so this is disabled
-#
-# - name: "origin-dapp unit tests"
-#   language: node_js
-#   node_js: 10
-#   cache:
-#     npm: true
-#     directories:
-#       - origin-contracts/node_modules
-#       - origin-dapp/node_modules
-#       - origin-js/node_modules
-#   before_cache:
-#     - rm -rf origin-contracts/node_modules/.cache
-#     - rm -rf origin-dapp/node_modules/.cache
-#     - rm -rf origin-js/node_modules/.cache
-#   install:
-#     - npm install --ignore-scripts
-#     - npm run bootstrap -- --scope origin-contracts
-#     - npm run bootstrap -- --scope origin
-#     - npm run bootstrap -- --scope origin-dapp
-#   script:
-#     - lerna run test --scope origin-dapp
+    # origin-dapp currently does not have any tests so this is disabled
+    #
+    # - name: "origin-dapp unit tests"
+    #   language: node_js
+    #   node_js: 10
+    #   cache:
+    #     npm: true
+    #     directories:
+    #       - origin-contracts/node_modules
+    #       - origin-dapp/node_modules
+    #       - origin-js/node_modules
+    #   before_cache:
+    #     - rm -rf origin-contracts/node_modules/.cache
+    #     - rm -rf origin-dapp/node_modules/.cache
+    #     - rm -rf origin-js/node_modules/.cache
+    #   install:
+    #     - npm install --ignore-scripts
+    #     - npm run bootstrap -- --scope origin-contracts
+    #     - npm run bootstrap -- --scope origin
+    #     - npm run bootstrap -- --scope origin-dapp
+    #   script:
+    #     - lerna run test --scope origin-dapp
 
-  - name: "origin-discovery unit tests"
-    language: node_js
-    node_js: 10
-    cache:
-      npm: true
-      directories:
-        - origin-contracts/node_modules
-        - origin-js/node_modules
-        - origin-discovery/node_modules
-    before_cache:
-      - rm -rf origin-contracts/node_modules/.cache
-      - rm -rf origin-js/node_modules/.cache
-      - rm -rf origin-discovery/node_modules/.cache
-    addons:
-      postgresql: 9.6
-    services:
-      - postgresql
-    env:
-      - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
-    before_script:
-      - psql -c 'create database travis_ci_test;' -U postgres
-      - lerna run migrate --scope origin-discovery
-    install:
-      - npm install --ignore-scripts
-      - npm run bootstrap -- --scope origin-contracts
-      - npm run bootstrap -- --scope origin
-     script:
-      - lerna run test --scope origin-discovery
+    - name: "origin-discovery unit tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-contracts/node_modules
+          - origin-js/node_modules
+          - origin-discovery/node_modules
+      before_cache:
+        - rm -rf origin-contracts/node_modules/.cache
+        - rm -rf origin-js/node_modules/.cache
+        - rm -rf origin-discovery/node_modules/.cache
+      addons:
+        postgresql: 9.6
+      services:
+        - postgresql
+      env:
+        - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+      before_script:
+        - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope origin-discovery
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts
+        - npm run bootstrap -- --scope origin
+      script:
+        - lerna run test --scope origin-discovery
 
-  - name: "origin-bridge unit tests"
-    language: python
-    python: 3.6
-    before_script:
-      - cd origin-bridge
-      - pip install -r requirements.txt
-    script:
-      - pytest --flakes --codestyle
+    - name: "origin-bridge unit tests"
+      language: python
+      python: 3.6
+      before_script:
+        - cd origin-bridge
+        - pip install -r requirements.txt
+      script:
+        - pytest --flakes --codestyle
