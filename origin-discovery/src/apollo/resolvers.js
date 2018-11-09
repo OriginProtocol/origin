@@ -79,7 +79,7 @@ const resolvers = {
     },
 
     user (root, args, context, info) {
-      // FIXME(franck): some users did not get indexed due to attestation overflow bug.
+      // FIXME(franck): some users did not get indexed in prod due to a bug in attestations.
       // For now only return the address until data gets re-indexed.
       return { walletAddress: args.walletAddress }
     }
@@ -121,20 +121,16 @@ const resolvers = {
   User: {
     async offers (user, args, context, info) {
       // Return offers made by the user.
-      console.log('LOADING OFFERS FOR BUYER=', user.walletAddress.toLowerCase())
       const rows = await db.Offer.findAll(
         { where: { buyerAddress: user.walletAddress.toLowerCase() } })
       const offers = rows.map(row => row.data)
-      console.log('FOUND offer ', offers)
       return { nodes: offers }
     },
     async listings (user, args, context, info) {
       // Return listings created by the user.
-      console.log('LOADING LISTING FOR SELLER=', user.walletAddress.toLowerCase())
       const rows = await db.Listing.findAll(
         { where: { sellerAddress: user.walletAddress.toLowerCase() } })
       const listings = rows.map(row => row.data)
-      console.log('FOUND listingS:', listings)
       return { nodes: listings }
     }
   }
