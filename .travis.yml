@@ -2,6 +2,11 @@ git:
   depth: 3
 matrix:
   include:
+  - name: "javascript linting"
+    language: node_js
+    script:
+      npm run lint
+
   - name: "origin-contracts / js / dapp unit tests"
     language: node_js
     cache:
@@ -16,7 +21,7 @@ matrix:
       - rm -rf origin-js/node_modules/.cache
     node_js: 10
 
-  - name: "Origin-discovery unit tests"
+  - name: "origin-discovery unit tests"
     language: node_js
     cache:
       npm: true
@@ -42,7 +47,7 @@ matrix:
       - cd origin-discovery
       - npm run migrate
 
-  - name: "Bridge server unit tests"
+  - name: "origin-bridge unit tests"
     language: python
     python: 3.6
     before_script:
