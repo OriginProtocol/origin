@@ -5,10 +5,10 @@
   "engines": {
     "node": "10.x"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/origin.js",
+  "module": "./src/index.js",
   "scripts": {
-    "build": "node scripts/build.js",
-    "format": "npx prettier-eslint --write 'src/**/*.js' 'test/**/*test.js' 'scripts/**/*.js'",
+    "build": "webpack --progress --display errors-only",
     "start": "node scripts/serve.js serve",
     "start:no-ganache": "node scripts/serve.js no-ganache",
     "test": "node scripts/test.js",
