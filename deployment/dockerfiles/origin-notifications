@@ -1,17 +1,10 @@
-FROM node:8
+FROM node:10
 
-# Install envkey-source
-RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
-RUN tar -zxf envkey-source.tar.gz 2> /dev/null
-RUN mv envkey-source /usr/local/bin
-
-COPY ./origin-notifications /app
 WORKDIR /app
 
-COPY ./deployment/dockerfiles/scripts/start-notification-server.sh \
-	/usr/local/bin/start
-
 ENV NODE_ENV production
-RUN npm install --quiet --progress
 
-CMD ["start"]
+COPY ./origin-notifications /app
+RUN npm ci --loglevel notice
+
+CMD ["npm", "run", "migrate", "&&", "npm", "start"]

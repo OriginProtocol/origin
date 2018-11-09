@@ -1,20 +1,28 @@
 {
   "name": "origin-faucet",
-  "description": "Origin TestNet faucet.",
+  "description": "Origin TestNet faucet",
   "version": "0.1.0",
+  "engines": {
+    "node": "10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/origin-faucet"
+  },
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
+  "main": "index.js",
+  "scripts": {},
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
   "dependencies": {
     "bignumber.js": "^7.2.1",
     "express": "^4.16.3",
     "rate-limiter-flexible": "^0.17.1",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
-    "web3": "^1.0.0-beta.35"
+    "web3": "^1.0.0-beta.36"
   },
-  "devDependencies": {},
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Origin Protocol",
-  "license": "MIT"
+  "devDependencies": {}
 }
