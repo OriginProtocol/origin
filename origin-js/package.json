@@ -8,7 +8,7 @@
   "main": "./dist/origin.js",
   "module": "./src/index.js",
   "scripts": {
-    "build": "webpack --progress --display errors-only",
+    "build": "webpack --progress --display errors-only --mode production",
     "dev": "npm run start",
     "start": "node scripts/serve.js serve",
     "start:no-ganache": "node scripts/serve.js no-ganache",
@@ -68,7 +68,7 @@
       "@babel/preset-env"
     ],
     "plugins": [
-      "transform-object-rest-spread"
+      "@babel/plugin-proposal-object-rest-spread"
     ]
   }
 }

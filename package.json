@@ -4,6 +4,8 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.46",
     "@babel/core": "^7.1.5",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.0.0-beta.46",
     "@babel/register": "^7.0.0-beta.46",
@@ -32,7 +34,7 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run build --stream --parallel",
+    "build": "lerna run build",
     "clean": "git clean -fdX .",
     "dev": "lerna run dev --stream --parallel",
     "lint": "eslint **/**/*.js --quiet",
