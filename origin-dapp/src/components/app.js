@@ -10,7 +10,6 @@ import {
   getOgnBalance,
   init as initWallet
 } from 'actions/Wallet'
-import { fetchFeaturedHiddenListings } from 'actions/Listing'
 
 // Components
 import AboutTokens from 'components/about-tokens'
@@ -89,8 +88,6 @@ class App extends Component {
     this.state = {
       redirect: httpsRequired && !window.location.protocol.match('https')
     }
-
-    this.featuredhiddenListingsFetched = false
   }
 
   componentWillMount() {
@@ -116,13 +113,6 @@ class App extends Component {
       this.props.saveServiceWorkerRegistration(reg)
     } catch (error) {
       console.error(error)
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.props.networkId !== null && !this.featuredhiddenListingsFetched) {
-      this.featuredhiddenListingsFetched = true
-      this.props.fetchFeaturedHiddenListings(this.props.networkId)
     }
   }
 
@@ -210,8 +200,7 @@ const mapDispatchToProps = dispatch => ({
   initWallet: () => dispatch(initWallet()),
   saveServiceWorkerRegistration: reg => dispatch(saveServiceWorkerRegistration(reg)),
   setMobile: (isMobile, device) => dispatch(setMobile(isMobile, device)),
-  localizeApp: () => dispatch(localizeApp()),
-  fetchFeaturedHiddenListings: (networkId) => dispatch(fetchFeaturedHiddenListings(networkId))
+  localizeApp: () => dispatch(localizeApp())
 })
 
 export default connect(

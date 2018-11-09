@@ -55,6 +55,7 @@ class ListingsDetail extends Component {
 
     this.state = {
       etherscanDomain: null,
+      display: 'normal',
       loading: true,
       offers: [],
       pictures: [],
@@ -261,12 +262,13 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { featuredListingIds, listingId, web3Account } = this.props
+    const { web3Account } = this.props
     const {
       // boostLevel,
       // boostValue,
       category,
       description,
+      display,
       loading,
       name,
       offers,
@@ -292,7 +294,15 @@ class ListingsDetail extends Component {
     const isAvailable = !isPending && !isSold && !isWithdrawn
     const showPendingBadge = isPending && !isWithdrawn
     const showSoldBadge = isSold || isWithdrawn
-    const showFeaturedBadge = featuredListingIds.includes(listingId) && isAvailable
+    /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
+     * show listings with the Featured badge, because listings are loaded from web3. We could
+     * pass along featured information from elasticsearch, but that would increase the code
+     * complexity.
+     *
+     * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to 
+     * true, and show "featured" badge.
+     */
+    const showFeaturedBadge = display === 'featured' && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
 
@@ -811,9 +821,8 @@ class ListingsDetail extends Component {
   }
 }
 
-const mapStateToProps = ({ app, profile, listings }) => {
+const mapStateToProps = ({ app, profile }) => {
   return {
-    featuredListingIds: listings.featured,
     notificationsHardPermission: app.notificationsHardPermission,
     notificationsSoftPermission: app.notificationsSoftPermission,
     profile,
