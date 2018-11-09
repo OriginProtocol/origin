@@ -204,15 +204,15 @@ class SearchResult extends Component {
         }
       }
 
-      const searchResp = await origin.discovery.search(
-        this.props.query || '',
-        LISTINGS_PER_PAGE,
-        (this.state.page - 1) * LISTINGS_PER_PAGE,
-        Object.values(filters).flatMap(arrayOfFilters => arrayOfFilters)
-      )
+      const searchResp = await origin.discovery.search({
+        searchQuery: this.props.query || '',
+        numberOfItems: LISTINGS_PER_PAGE,
+        offset: (this.state.page - 1) * LISTINGS_PER_PAGE,
+        filters: Object.values(filters).flatMap(arrayOfFilters => arrayOfFilters)
+      })
 
       this.setState({
-        listingIds: searchResp.data.listings.nodes.map(listing => listing.id),
+        listingIds: searchResp.data.listings.nodes.map(listing => listing.data.id),
         totalNumberOfListings: searchResp.data.listings.totalNumberOfItems,
         // reset the page whenever a user doesn't click on pagination link
         page: onlyPageChanged ? this.state.page : 1

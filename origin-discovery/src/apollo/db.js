@@ -15,17 +15,21 @@ function _makeListing (row) {
     category: row.data.category,
     subCategory: row.data.subCategory,
     // TODO: price may not be defined at the listing level for all listing types.
-    // For ex. for fractional usage it may vary based on time slot.
-    price: row.data.price
+    // For example, for fractional usage it may vary based on time slot.
+    price: row.data.price,
+    display: display
   }
 }
 
 /**
  * Returns listings from the DB based on a list of ids.
- * @param listingIds
+ * @param {Array<string>} listingIds - Listing ids.
+ * @param {Array<string>} hiddenIds - Hidden listing ids.
+ * @param {Array<string>} featuredIds - Featured listing ids.
  * @return {Promise<Array>}
+ *
  */
-async function getListings (listingIds) {
+async function getListings (listingIds, hiddenIds = [], featuredIds = []) {
   // Load rows from the Listing table in the DB.
   const rows = await db.Listing.findAll({
     where: {
@@ -48,8 +52,16 @@ async function getListings (listingIds) {
   // Note: preserve ranking by keeping returned listings in same order as listingIds.
   const listings = []
   listingIds.forEach(id => {
+    let display = 'normal'
+    if (hiddenIds.includes(id)) {
+      display = 'hidden'
+    } else if (featuredIds.includes(id)) {
+      display = 'featured'
+    }
+
     const row = rowDict[id]
-    listings.push(_makeListing(row))
+    const listing = _makeListing(row)
+    listings.push(listing)
   })
   return listings
 }

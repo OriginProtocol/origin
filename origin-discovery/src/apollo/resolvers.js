@@ -23,39 +23,42 @@ function relatedUserResolver (walletAddress, info) {
 }
 
 // Resolvers define the technique for fetching the types in the schema.
-const resolvers = {
-  JSON: GraphQLJSON,
-  Query: {
-    async listings (root, args, context, info) {
-      // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
-      // Get listing Ids from Elastic.
-      const { listingIds, stats } = await search.Listing
-        .search(
-          args.searchQuery,
-          args.filters,
-          args.page.numberOfItems,
-          args.page.offset,
-          true // idsOnly
-        )
-      // Get listing objects based on Ids from DB.
-      const listings = await getListings(listingIds)
+const getResolvers = function (listingMetadata) {
+  return {
+    JSON: GraphQLJSON,
+    Query: {
+      async listings (root, args, context, info) {
+        // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
+        // Get listing Ids from Elastic.
+        const { listingIds, stats } = await search.Listing
+          .search(
+            args.searchQuery,
+            args.filters,
+            args.page.numberOfItems,
+            args.page.offset,
+            true, // idsOnly
+            listingMetadata.hiddenListings,
+            listingMetadata.featuredListings
+          )
+        // Get listing objects from DB based on Ids.
+        const listings = await getListings(listingIds, listingMetadata.hiddenListings, listingMetadata.featuredListings)
 
-      return {
-        nodes: listings,
-        offset: args.page.offset,
-        numberOfItems: listings.length,
-        totalNumberOfItems: stats.totalNumberOfListings,
-        stats: {
-          maxPrice: stats.maxPrice,
-          minPrice: stats.minPrice
+        return {
+          nodes: listings,
+          offset: args.page.offset,
+          numberOfItems: listings.length,
+          totalNumberOfItems: stats.totalNumberOfListings,
+          stats: {
+            maxPrice: stats.maxPrice,
+            minPrice: stats.minPrice
+          }
         }
-      }
-    },
+      },
 
     async listing (root, args, context, info) {
-      const listings = await getListings([args.id])
-      return (listings.length === 1) ? listings[0] : null
-    },
+        const listings = await getListings([args.id], listingMetadata.hiddenListings, listingMetadata.featuredListings)
+        return (listings.length === 1) ? listings[0] : null
+      },
 
     async offers (root, args, context, info) {
       const clause = {}
@@ -97,26 +100,26 @@ const resolvers = {
   },
 
   Offer: {
-    seller (offer, args, context, info) {
-      return relatedUserResolver(offer.seller, info)
-    },
-    buyer (offer, args, context, info) {
-      return relatedUserResolver(offer.buyer, info)
-    },
-    price (offer) {
-      return { currency: 'ETH', amount: offer.priceEth }
-    },
-    async listing (offer, args, context, info) {
-      const requestedSubFields = info.fieldNodes[0].selectionSet.selections
-      const idsOnly = requestedSubFields.filter(x => x.name.value !== 'id').length === 0
-      if (idsOnly) {
-        return { id: offer.listingId }
-      } else {
-        const row = await db.Listing.findByPk(offer.listingId)
-        return row.data
+      seller (offer, args, context, info) {
+        return relatedUserResolver(offer.seller, info)
+      },
+      buyer (offer, args, context, info) {
+        return relatedUserResolver(offer.buyer, info)
+      },
+      price (offer) {
+        return { currency: 'ETH', amount: offer.priceEth }
+      },
+      async listing (offer, args, context, info) {
+        const requestedSubFields = info.fieldNodes[0].selectionSet.selections
+        const idsOnly = requestedSubFields.filter(x => x.name.value !== 'id').length === 0
+        if (idsOnly) {
+          return { id: offer.listingId }
+        } else {
+          const row = await db.Listing.findByPk(offer.listingId)
+          return row.data
+        }
       }
-    }
-  },
+   },
 
   User: {
     async offers (user, args, context, info) {
@@ -136,4 +139,4 @@ const resolvers = {
   }
 }
 
-module.exports = resolvers
+module.exports = getResolvers
