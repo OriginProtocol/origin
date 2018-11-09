@@ -319,6 +319,7 @@ textarea:-moz-ui-invalid {
 
 .mobile-messaging .progress-container {
   margin: 7px 0 0;
+  width: 62%;
 }
 
 .progress {
@@ -3845,9 +3846,7 @@ form .stars img {
   font-size: 22px;
   font-weight: bold;
   color: var(--white);
-  /* overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; */
+  margin-bottom: 5px;
   width: 60%;
   text-align: center;
   padding-left: 80px;
@@ -4052,12 +4051,15 @@ form .stars img {
 
 .mobile-messaging.messages-wrapper .message-content,
 .mobile-messaging .compact-message {
-  width: 249px;
   font-family: Lato;
   font-size: 1.125rem;
   font-weight: normal;
   line-height: normal;
   color: #000;
+}
+
+.mobile-messaging .compact-message {
+  width: 75%;
 }
 
 .compact-message .image-container,
@@ -4148,6 +4150,10 @@ form .stars img {
   flex-shrink: 0;
   font-size: 0.75rem;
   padding: 12px;
+}
+
+.mobile-messaging .conversation .timestamp {
+  font-weight: bold;
 }
 
 .conversation .name {
