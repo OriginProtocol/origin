@@ -30,12 +30,12 @@ This contract inherits from OpenZeppelin's `PausableToken` contract and adds a t
 
 Here are the possible combinations of accounts and whether they are allowed to transfer tokens:
 
-| Sender          | Recipient       | Can transfer tokens?
-|---------------------------------------------------------
-| Whitelisted     | Not whitelisted | yes
-| Not whitelisted | Whitelisted     | yes
-| Whitelisted     | Whitelisted     | yes
-| Not whitelisted | Not whitelisted | no
+| Sender          | Recipient       | Can transfer tokens? |
+|---------------- | --------------- | -------------------- |
+| Whitelisted     | Not whitelisted | yes                  |
+| Not whitelisted | Whitelisted     | yes                  |
+| Whitelisted     | Whitelisted     | yes                  |
+| Not whitelisted | Not whitelisted | no                   |
 
 ### Whitelist expiration
 
