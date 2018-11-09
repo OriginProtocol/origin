@@ -7,8 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Warning: no tests specified\"",
-    "start": "npx babel-node src/index.js --presets es2015"
+    "lint": "eslint **/*.js --rulesdir ../",
+    "start": "npx babel-node src/index.js --presets es2015",
+    "test": "echo \"Warning: no tests specified\""
   },
   "repository": {
     "type": "git",

@@ -13,7 +13,10 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint **/*.js --rulesdir ../",
+    "start": "node faucet/app.js"
+  },
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {

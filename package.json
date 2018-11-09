@@ -2,6 +2,9 @@
   "name": "root",
   "private": true,
   "devDependencies": {
+    "babel-eslint": "^9.0.0",
+    "eslint": "^4.18.2",
+    "eslint-plugin-import": "^2.9.0",
     "lerna": "^3.4.3"
   },
   "scripts": {
@@ -9,7 +12,7 @@
     "build": "lerna run build --stream",
     "clean": "git clean -fdX .",
     "dev": "lerna run dev --stream --parallel",
-    "lint": "eslint **/**/*.js --quiet",
+    "lint": "lerna run lint --stream",
     "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "node ./scripts/postinstall.js",
     "test": "node ./scripts/test.js"
