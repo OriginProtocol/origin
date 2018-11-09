@@ -48,7 +48,8 @@
     "truffle-hdwallet-provider": "0.0.5",
     "url-parse": "^1.4.0",
     "web3": "^1.0.0-beta.36",
-    "webpack": "^4.25.1"
+    "webpack": "^4.25.1",
+    "webrtcsupport": "^2.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.46",

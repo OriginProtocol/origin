@@ -79,7 +79,7 @@
     "build": "NODE_ENV=production webpack --progress --display errors-only --mode production",
     "dev": "npx webpack-dev-server --open",
     "format": "npx prettier-eslint --write 'src/**/*.js' 'scripts/**/*.js'",
-    "lint": "eslint **/*.js --rulesdir ../",
+    "lint": "eslint src/**/*.js scripts/**/*.js --rulesdir ../",
     "start": "if [ \"$NODE_ENV\" = \"production\" ]; then npm run serve; else npm run dev; fi",
     "serve": "serve build",
     "translations": "node translations/scripts/processTranslatedMessages.js",
