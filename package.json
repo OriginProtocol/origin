@@ -2,11 +2,31 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "lerna": "^3.4.3"
+    "@babel/cli": "^7.0.0-beta.46",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/register": "^7.0.0-beta.46",
+    "babel-core": "^7.0.0-0",
+    "babel-eslint": "^8.2.6",
+    "babel-loader": "^8.0.0-beta",
+    "chai": "^4.2.0",
+    "chalk": "^2.4.1",
+    "eslint": "^4.18.2",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-react": "^7.7.0",
+    "lerna": "^3.4.3",
+    "mocha": "^5.2.0",
+    "source-map-loader": "^0.2.3",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "3.1.4"
   },
   "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "clean": "git clean -fdX .",
+    "dev": "lerna run dev --stream",
+    "lint": "eslint **/**/*.js --quiet",
+    "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "node ./scripts/postinstall.js",
-    "test": "node ./scripts/test.js",
-    "clean": "git clean -fdX ."
+    "test": "node ./scripts/test.js"
   }
 }
