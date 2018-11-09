@@ -1,24 +1,23 @@
 const { spawn } = require('child_process')
-const minifyContracts = require('./minify-contracts')
 
 const deployContracts = () => {
   return new Promise((resolve, reject) => {
     const truffleMigrate = spawn(
-      '../node_modules/.bin/truffle',
-      ['migrate', '--reset', '--compile-all'],
-      { cwd: './contracts' }
+      './node_modules/.bin/truffle',
+      ['migrate', '--reset'],
+      {
+        cwd: 'node_modules/origin-contracts',
+        stdio: 'inherit',
+        env: process.env
+      }
     )
-    truffleMigrate.stdout.pipe(process.stdout)
-    truffleMigrate.stderr.on('data', data => {
-      reject(String(data))
-    })
     truffleMigrate.on('exit', code => {
       if (code === 0) {
         console.log('Truffle migrate finished OK.')
-        minifyContracts()
         resolve()
       } else {
         reject('Truffle migrate failed.')
+        reject()
       }
     })
   })

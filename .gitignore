@@ -153,3 +153,5 @@ origin-discovery/continueTest
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+!origin-contracts/releases/**/*
