@@ -88,7 +88,6 @@ To run non-contract tests and automatically re-run when files change:
 npm run test:jsw
 ```
 
-
 ### Command Line (Only Solidity Tests)
 
 Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting_started/javascript-tests)) are located at `contracts/test`.

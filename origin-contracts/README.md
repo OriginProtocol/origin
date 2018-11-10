@@ -94,3 +94,27 @@ event OfferFinalized (address indexed party, uint indexed listingID, uint indexe
 ```
 
 Since the parameters are all specified in the same order, events can be filtered by topics efficiently. For example, to find all events related to listing 42, we can call `Marketplace.getLogs('*', '*', '42', '*', '*')`. To get all ListingCreated events we can call `Marketplace.getLogs('ListingCreated', '*', '*', '*')`. To get all events related to a particular party we can call `Marketplace.getLogs('*', '0xPartyWallet', '*', '*')`.
+
+## Running tests
+
+### Command line
+
+Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting_started/javascript-tests)) are located at `contracts/test`.
+
+```
+npm run test:contracts
+```
+
+Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
+
+To run contract tests and automatically re-run when files change:
+
+```
+npm run test:watch
+```
+
+To run contract tests and measure test coverage of Solidity code:
+
+```
+npm run test:contracts-coverage
+```
