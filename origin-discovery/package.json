@@ -33,6 +33,7 @@
     "web3": "^1.0.0-beta.35"
   },
   "scripts": {
+    "lint": "eslint src/**/*.js --rulesdir ../",
     "test": "mocha --timeout 10000 --exit",
     "migrate": "sequelize db:migrate",
     "start:listener": "node src/listener/listener.js",
