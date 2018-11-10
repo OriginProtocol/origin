@@ -4,7 +4,10 @@
     "origin-js",
     "origin-dapp",
     "origin-discovery",
-    "origin-faucet"
+    "origin-faucet",
+    "origin-playground",
+    "origin-graphql",
+    "origin-simple-demo"
   ],
   "version": "independent"
 }
