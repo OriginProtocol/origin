@@ -24,6 +24,7 @@ import { createSubscription, requestPermission } from 'utils/notifications'
 import scopedDebounce from 'utils/scopedDebounce'
 
 import origin from '../services/origin'
+import analytics from '../services/analytics'
 
 const ETH_ADDRESS = process.env.MESSAGING_ACCOUNT
 const ONE_SECOND = 1000
@@ -95,6 +96,7 @@ class Onboarding extends Component {
 
     // To Do: handle incoming messages when no Origin Messaging Private Key is available
     origin.messaging.events.on('emsg', obj => {
+      analytics.event('Notifications', 'ErrorNoDecryption')
       console.error('A message has arrived that could not be decrypted:', obj)
     })
   }
@@ -197,34 +199,37 @@ class Onboarding extends Component {
 
   handleDismissNotificationsPrompt(e) {
     e.preventDefault()
-
+    analytics.event('Notifications', 'PromptDismissed')
     this.props.handleNotificationsSubscription('warning', this.props)
   }
 
   handleDismissNotificationsWarning(e) {
     e.preventDefault()
-
+    analytics.event('Notifications', 'WarningDismissed')
     this.props.setNotificationsSoftPermission('denied')
     this.props.handleNotificationsSubscription(null, this.props)
   }
 
   async handleEnableNotifications() {
+    analytics.event('Notifications', 'SoftPermissionGranted')
     this.props.setNotificationsSoftPermission('granted')
     this.props.handleNotificationsSubscription(null, this.props)
 
     const { serviceWorkerRegistration, web3Account } = this.props
     // need a registration object to subscribe
     if (!serviceWorkerRegistration) {
+      analytics.event('Notifications', 'UnsupportedNoServiceWorker')
       return console.error('No service worker registered')
     }
 
     try {
       // will equal 'granted' or otherwise throw
       await requestPermission()
-
+      analytics.event('Notifications', 'PermissionGranted')
       createSubscription(serviceWorkerRegistration, web3Account)
     } catch (error) {
       // permission not granted
+      analytics.event('Notifications', 'PermissionNotGranted', error)
       console.error(error)
     }
 

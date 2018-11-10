@@ -1,3 +1,5 @@
+import analytics from '../services/analytics'
+
 const vapidKey = process.env.NOTIFICATIONS_KEY
 
 // convert key for use in subscription
@@ -36,10 +38,11 @@ export const createSubscription = (registration, account) => {
         },
         body
       })
-
+      analytics.event('Notifications', 'CreateSubscription')
       resolve(subscription)
     } catch (error) {
       console.error('Failure subscribing to push notifications')
+      analytics.event('Notifications', 'ErrorCreateSubscription')
       reject(error)
     }
   })
@@ -59,6 +62,7 @@ export const initServiceWorker = () => {
     navigator.serviceWorker
       .register('/sw.js')
       .then(registration => {
+        analytics.event('Notifications', 'ServiceWorkerRegistered', 'sw.js')
         console.log('Notifications service worker registered')
         resolve(registration)
       })
@@ -80,11 +84,11 @@ export const requestPermission = () => {
     }
   }).then(permission => {
     /*
-    * Possible permissions (Chome / Firefox):
-    * - 'default': prompt dismissed / Not Now
-    * - 'denied': Block / Never Allow
-    * - 'granted': Allow / Allow Notifications
-    */
+     * Possible permissions (Chome / Firefox):
+     * - 'default': prompt dismissed / Not Now
+     * - 'denied': Block / Never Allow
+     * - 'granted': Allow / Allow Notifications
+     */
     if (permission !== 'granted') {
       throw new Error(`Notifications permission not granted: ${permission}`)
     }
