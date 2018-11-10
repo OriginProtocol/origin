@@ -12,18 +12,6 @@ services:
     networks:
       - default
 
-# ganache:
-#   image: trufflesuite/ganache-cli
-#   ports:
-#     - "8545:8545"
-#   volumes:
-#     - ./.state/ganache:/db
-#   entrypoint:
-#     - node
-#     - ./build/cli.node.js
-#     - --mnemonic="candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
-#     - --db=/db
-
   elasticsearch:
     container_name: elasticsearch
     image: elasticsearch
@@ -60,6 +48,10 @@ services:
       dockerfile: development/dockerfiles/origin-js
     ports:
       - "8545:8545"  # Ganache
+    volumes:
+      # Addresses for deployment of contracts to local blockchain will get
+      # written to the build files
+      - ./origin-contracts/build:/app/origin-contracts/build
 
   origin-discovery:
     container_name: origin-discovery
@@ -107,7 +99,7 @@ services:
       - "9012:9012"
     volumes:
       - ./origin-messaging/src:/app/src
-      - ./development/.ipfs:/ipfs
+      - ./development/.ipfs:/app/ipfs
     environment:
       - MESSAGING_NAMESPACE=dev
 
@@ -135,22 +127,28 @@ services:
       context: .
       dockerfile: development/dockerfiles/origin-dapp
     volumes:
+      # Include origin-contracts build files so the DApp has access to the
+      # address of the contracts on the local blockchain
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/src:/app/origin-js/src
       # Mount origin-dapp inside the container
       - ./origin-dapp/src:/app/src
       - ./origin-dapp/public:/app/public
       # Set the envfile from the local envfile
-      - ./development/envfiles/origin-dapp.env:/app/.env
+      - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
       - ./development/.ipfs:/ipfs
     depends_on:
       - origin-js
       - origin-messaging
       - origin-bridge
-    environment:
-      - IPFS_API_PORT=9999
-      - IPFS_DOMAIN=localhost
-      - IPFS_GATEWAY_PORT=9999
     ports:
       - "3000:3000"
-    command: npm run dev -- --host 0.0.0.0 --watch-poll 500
+    command:
+      # Waits for origin-messaging to start then uses a script to read the
+      # origin-messaging IPFS peer id and write the configuration key/pair to
+      # the .env file.
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 &&
+      . set-ipfs-swarm.sh /ipfs/config &&
+      wait-for.sh -t 0 -q origin-js:8080 --
+      node node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0"
