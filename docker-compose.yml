@@ -82,6 +82,7 @@ services:
       context: .
       dockerfile: development/dockerfiles/event-listener
     volumes:
+      - ./origin-js/dist:/app/origin-js/dist
       - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
       - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
