@@ -40,6 +40,8 @@ services:
     volumes:
       - ./ipfs-proxy:/app
 
+  # NOTE/TODO: This container is only responsible for running ganache and IPFS,
+  # this functionality should be moved to dedicated containers
   origin-js:
     container_name: origin-js
     image: origin-js
