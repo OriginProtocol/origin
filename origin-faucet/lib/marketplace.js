@@ -1,5 +1,5 @@
-const V00_Marketplace_Contract = require('../../origin-js/contracts/build/contracts/V00_Marketplace.json')
-const TokenContract = require('../../origin-js/contracts/build/contracts/OriginToken.json')
+const V00_Marketplace_Contract = require('origin-contracts/build/contracts/V00_Marketplace.json')
+const TokenContract = require('origin-contracts/build/contracts/OriginToken.json')
 
 const ContractHelper = require('./_contractHelper.js')
 
