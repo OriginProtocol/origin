@@ -6,11 +6,9 @@
     "node": "10.x"
   },
   "scripts": {
-    "build": "truffle compile contracts && node lib/minify-contracts",
-    "prepare": "npm run build",
     "test": "node scripts/test.js",
     "test:contracts": "mocha -r @babel/register -t 10000 --exit test-alt",
-    "test:watch": "mocha -r babel-register -r babel-polyfill -t 10000 -w --watch-extensions sol test-alt",
+    "test:watch": "mocha -r @babel/register -r @babel/polyfill -t 10000 -w --watch-extensions sol test-alt",
     "test:contracts-coverage": "SOLIDITY_COVERAGE=1 solidity-coverage",
     "format:solidity": "solium -d contracts/contracts/ --fix",
     "format": "prettier-eslint --write 'test/**/*.js' 'test-alt/**/*.js' 'lib/**/*.js'"

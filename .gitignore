@@ -150,4 +150,5 @@ node_modules/
 ehthumbs.db
 Thumbs.db
 
+!origin-contracts/build/
 !origin-contracts/releases/**/*
