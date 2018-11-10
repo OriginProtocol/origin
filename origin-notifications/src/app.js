@@ -1,5 +1,9 @@
 require('dotenv').config()
-require('envkey')
+try {
+  require('envkey')
+} catch (error) {
+  console.log('EnvKey not configured')
+}
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -10,7 +14,7 @@ const { RateLimiterMemory } = require('rate-limiter-flexible')
 const app = express()
 const port = 3456
 
-const PushSubscription = require('./src/models').PushSubscription
+const PushSubscription = require('./models').PushSubscription
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
 const privateKey = process.env.VAPID_PRIVATE_KEY
 const publicKey = process.env.VAPID_PUBLIC_KEY
