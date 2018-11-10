@@ -12,4 +12,4 @@ RUN npm install --loglevel notice --unsafe-perm
 
 WORKDIR /app/origin-discovery
 
-CMD node src/apollo/app.js
+CMD npm run migrate && npm run start:listener

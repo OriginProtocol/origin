@@ -72,7 +72,8 @@ services:
       - postgres
       - elasticsearch
     ports:
-      - "4000:4000" # Apollo
+      - "4000:4000"
+    command: /bin/bash -c "npm run start:discovery"
 
   event-listener:
     container_name: event-listener
@@ -83,13 +84,12 @@ services:
     volumes:
       - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
+      - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
     depends_on:
       - origin-js
       - postgres
       - elasticsearch
-    environment:
-      - DATABASE_URL=postgres://origin:origin@postgres/origin
-      - ELASTICSEARCH_HOST=elasticsearch:9200
+    command: /bin/bash -c "npm run migrate && npm run start:listener"
 
   origin-messaging:
     container_name: origin-messaging
@@ -121,6 +121,22 @@ services:
       - "5000:5000"
     environment:
       - FLASK_APP=/app/main.py
+    command: flask db upgrade && flask run --host=0.0.0.0
+
+  origin-notifications:
+    container_name: origin-notifications
+    image: origin-notifications
+    build:
+      context: .
+      dockerfile: development/dockerfiles/origin-notifications
+    volumes:
+      - ./origin-notifications/src:/app/src
+      - ./development/envfiles/origin-notifications.env:/app/.env
+    depends_on:
+      - postgres
+    ports:
+      - "3456:3456"
+    command: /bin/bash -c "npm run migrate && npm run start"
 
   origin-dapp:
     container_name: origin-dapp
