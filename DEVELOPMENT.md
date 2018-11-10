@@ -14,16 +14,22 @@ The more full featured development environment uses Docker Compose to orchestrat
 
 1. Check out the repository from GitHub and make sure you have installed all the necessary dependencies:
 
-`git clone https://github.com/OriginProtocol/origin`
-`cd origin && npm install`
+```
+git clone https://github.com/OriginProtocol/origin
+cd origin && npm install
+```
 
 2. Configure the DApp with default environment variables:
 
-`cp origin-dapp/dev.env origin-dapp/.env`
+```
+cp origin-dapp/dev.env origin-dapp/.env
+```
 
 3. You can then start a light development environment by executing:
 
-`npm run dev`
+```
+npm run dev
+```
 
 4. You will then need to connect to your locally running blockchain in MetaMask. Follow these steps:
 
@@ -32,12 +38,14 @@ The more full featured development environment uses Docker Compose to orchestrat
 - Click `Restore from seed phrase`
 
 - Enter the following seed phrase (Mnemonic):
+
 ```
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 ```
+
 This is the default seed phrase used by [Truffle](https://github.com/trufflesuite/truffle) for development.
 
- ⚠️ Be careful not to mix up your test wallet with your real one on the Main Network.
+ ⚠️  Be careful not to mix up your test wallet with your real one on the Main Network.
 
 - Click where it says "Ethereum Main Network" and select "Localhost 8545". Click the back arrow to return to your account.
 
@@ -47,6 +55,7 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 
 The Origin Docker Compose configuration runs the following packages simultaneously:
 
+```
 - ipfs-proxy
 - origin-bridge
 - origin-dapp
@@ -58,6 +67,7 @@ The Origin Docker Compose configuration runs the following packages simultaneous
 - origin-js (ethereum blockchain using ganache)
 - postgresql
 - elasticsearch
+```
 
 ### System Requirements
 
