@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY package*.json /app/
 COPY lerna.json .
-COPY ./origin-contracts /app/origin-contracts
 COPY ./origin-js /app/origin-js
+COPY ./origin-contracts /app/origin-contracts
 COPY ./origin-discovery /app/origin-discovery
 COPY ./scripts ./scripts
 RUN npm install --loglevel notice --unsafe-perm
