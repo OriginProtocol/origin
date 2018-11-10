@@ -59,6 +59,7 @@ class Marketplace {
    * @throws {Error}
    */
   async getListings(opts = {}) {
+    console.log("MARKETPLACE GET LISTINGS CALLED opts=", opts)
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
       return await this.discoveryService.getListings(opts)

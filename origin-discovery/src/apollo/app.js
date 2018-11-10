@@ -14,9 +14,9 @@ const { ApolloServer } = require('apollo-server-express')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
 
-const getResolvers = require('./resolvers.js')
-const typeDefs = require('./schema.js')
-const ListingMetadata = require('./listing-metadata')
+const resolvers = require('./resolvers')
+const typeDefs = require('./schema')
+const listingMetadata = require('./listing-metadata')
 
 const app = express()
 const bundle = promBundle({
@@ -28,21 +28,20 @@ const bundle = promBundle({
 })
 app.use(bundle)
 
-const listingMetadata = new ListingMetadata()
 // Start ApolloServer by passing type definitions and the resolvers
 // responsible for fetching the data for those types.
 const server = new ApolloServer({
-  resolvers: getResolvers(listingMetadata.listingInfo),
+  resolvers,
   typeDefs,
   context: async ({ req }) => {
-    // update listingIds in a non blocking way
+    // Update listing Metadata in a non blocking way
     listingMetadata.updateHiddenFeaturedListings()
     return {}
   } })
 
 server.applyMiddleware({ app })
 
-// initial fetch of ids at the time of starting the server
+// Initial fetch of ids at the time of starting the server.
 listingMetadata.updateHiddenFeaturedListings()
 
 const port = process.env.PORT || 4000

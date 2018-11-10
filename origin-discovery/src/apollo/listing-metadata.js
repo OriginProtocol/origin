@@ -10,10 +10,8 @@ class ListingMetadata {
     const networkId = process.env.NETWORK_ID
     this.featuredListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/featurelist_${networkId}.txt`
     this.hiddenListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/hidelist_${networkId}.txt`
-    this.listingInfo = {
-      hiddenListings: [],
-      featuredListings: []
-    }
+    this.hiddenIds = []
+    this.featuredIds = []
     this.listingsUpdateTime = undefined
   }
 
@@ -29,8 +27,8 @@ class ListingMetadata {
     if (!this.listingsUpdateTime || new Date() - this.listingsUpdateTime > METADATA_STALE_TIME) {
       try {
         this.listingsUpdateTime = new Date()
-        this.listingInfo.hiddenListings = await this.readListingsFromUrl(this.hiddenListingsUrl)
-        this.listingInfo.featuredListings = await this.readListingsFromUrl(this.featuredListingsUrl)
+        this.hiddenIds = await this.readListingsFromUrl(this.hiddenListingsUrl)
+        this.featuredIds = await this.readListingsFromUrl(this.featuredListingsUrl)
       } catch (e) {
         console.error('Could not update hidden/featured listings ', e)
       }
@@ -38,4 +36,6 @@ class ListingMetadata {
   }
 }
 
-module.exports = ListingMetadata
+const metadata = new ListingMetadata()
+
+module.exports = metadata

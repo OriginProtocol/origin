@@ -130,20 +130,21 @@ class DiscoveryService {
     if (opts.listingsFor) {
       // Query for all listings created by the specified seller address.
       query = `{
-        user(sellerAddress: ${opts.ListingsFor}) {
+        user(walletAddress: "${opts.listingsFor}") {
           listings {
             nodes {
               data
               display
             }
           }
+        } 
       }`
       const resp = await this._query(query)
       listings = resp.data.user.listings.nodes.map(listing => this._flattenListingData(listing))
     } else if (opts.purchasesFor) {
       // Query for all listings the specified buyer address made an offer on.
       query = `{
-        user(buyerAddress: ${opts.purchasesFor}) {
+        user(walletAddress: "${opts.purchasesFor}") {
           offers {
             nodes {
               listing {

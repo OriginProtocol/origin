@@ -1,11 +1,11 @@
 const chai = require('chai')
 
 const db = require('../src/models')
-const { getListings } = require('../src/apollo/db')
+const { getListingsById } = require('../src/apollo/db')
 
 const expect = chai.expect
 
-describe('getListings', () => {
+describe('getListingsById', () => {
   it(`Should return listings from DB`, async () => {
     const listingId = '1-000-3'
     const data = {
@@ -29,7 +29,7 @@ describe('getListings', () => {
       status: 'active',
       data
     })
-    const listings = await getListings([listingId])
+    const listings = await getListingsById([listingId])
     expect(listings.length).to.equal(1)
     expect(listings[0].id).to.equal(listingId)
     expect(listings[0].ipfsHash).to.equal(data.ipfs.hash)
@@ -41,7 +41,7 @@ describe('getListings', () => {
   })
 
   it(`Should return no listings from DB`, async () => {
-    const listings = await getListings(['listingIdNotInDB'])
+    const listings = await getListingsById(['listingIdNotInDB'])
     expect(listings.length).to.equal(0)
   })
 })
