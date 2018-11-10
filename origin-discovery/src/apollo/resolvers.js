@@ -27,7 +27,6 @@ const resolvers = {
   JSON: GraphQLJSON,
   Query: {
     async listings (root, args, context, info) {
-      // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
       // Get listing Ids from Elastic.
       const { listingIds, stats } = await search.Listing.search(
         args.searchQuery,
@@ -109,7 +108,7 @@ const resolvers = {
     },
 
     price (offer) {
-      return { currency: 'ETH', amount: offer.priceEth }
+      return offer.totalPrice
     },
 
     async listing (offer, args, context, info) {
