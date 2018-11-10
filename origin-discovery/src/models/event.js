@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   })
 
-  Event.associate = function (models) {
+  Event.associate = function () {
     // associations can be defined here
   }
 
