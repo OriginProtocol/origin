@@ -4,12 +4,10 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install lerna
 RUN npm i lerna -g --loglevel notice
 
-COPY package-lock.json .
-COPY package.json .
-COPY lerna.json .
+COPY package*.json ./
+COPY lerna.json ./
 COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-discovery ./origin-discovery
