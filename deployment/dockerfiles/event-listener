@@ -13,7 +13,8 @@ COPY ./origin-contracts ./origin-contracts
 COPY ./origin-discovery ./origin-discovery
 COPY ./scripts ./scripts
 RUN npm install --loglevel notice --unsafe-perm
-RUN npm run build
+# Build origin-js
+RUN lerna run build --scope origin
 
 # Install envkey-source to make environment available for sequelize migration
 RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
