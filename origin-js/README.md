@@ -43,26 +43,6 @@ A browser-compatible plain javascript file `origin.js` is available in the [Rele
 
 `npm build` will generate this file and save it to `dist/origin.js`.
 
-## Local development
-
-### Fully integrated with [origin-dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-demo-dapp) and [origin-bridge](https://github.com/OriginProtocol/origin/tree/master/origin-bridge#origin-bridge-server)
-
-We recommend using [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box) for development and testing on your local machine. This saves you the headache of spinning up several environments and running multiple, different processes.
-
-### Without [origin-bridge](https://github.com/OriginProtocol/origin/tree/master/origin-bridge#origin-bridge-server)
-
-1.  Clone this repo.
-```
-git clone https://github.com/OriginProtocol/origin.git && cd origin
-```
-
-2.  Install dependencies: `npm install`
-
-3.  Start the local blockchain and build origin-js by running `cd origin-js && npm start`. Code changes will trigger a live rebuild.
-
-4.  To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin/blob/master/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain-with-lerna).
-
-
 ## Tests
 
 ### Command Line (All Tests)
@@ -75,46 +55,10 @@ npm run test
 
  Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
 
-### Command Line (Non-Solidity Tests)
-
-To run non-contract tests (`test/**.js`):
-
-```
-npm run test:js
-```
-
-To run non-contract tests and automatically re-run when files change:
+To run tests and automatically re-run when files change:
 ```
 npm run test:jsw
 ```
-
-### Command Line (Only Solidity Tests)
-
-Our Solidity tests (which use [Truffle](http://truffleframework.com/docs/getting_started/javascript-tests)) are located at `contracts/test`.
-
- ```
- npm run test:contracts
- ```
-
-Note: you should *not* have the server running at this time, as these tests start their own local blockchain instance.
-
-To run contract tests and automatically re-run when files change:
-
-```
-npm run test:contractsw
-```
-
-To run contract tests and measure test coverage of Solidity code:
-
-```
-npm run test:contracts-coverage
-```
-
-### Browser Tests
-
-A subset of our tests can be run from the browser. These tests are automatically served at `http://localhost:8081` when you run `npm start`. These tests are automatically rerun when source or test code is changed.
-
-Run a subset of these tests using the `grep` query string parameter, for example: http://localhost:8081/?grep=IpfsService
 
 ## Using the Ganache GUI
 
