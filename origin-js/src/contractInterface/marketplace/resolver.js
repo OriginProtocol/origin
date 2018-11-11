@@ -24,30 +24,6 @@ class MarketplaceResolver {
     this.store = store
   }
 
-  async getPurchases(account) {
-    const network = await this.contractService.web3.eth.net.getId()
-    let allPurchases = []
-
-    for (const version of this.versions) {
-      const purchasesWithIndexes = await this.adapters[version].getPurchases(account)
-      
-      const purchases = purchasesWithIndexes.map(obj => {
-        const { listingIndex, offerIndex, blockNumber } = obj
-        return {
-          listingIndex,
-          listingId: generateListingId({ version, network, listingIndex }),
-          blockNumber,
-          offerIndex,
-          offerId: generateOfferId({ network, version, listingIndex, offerIndex })
-        }
-      })
-
-      allPurchases = [...allPurchases, ...purchases]
-    }
-
-    return allPurchases
-  }
-
   async getSales(account) {
     const network = await this.contractService.web3.eth.net.getId()
     let allSales = []
@@ -88,9 +64,17 @@ class MarketplaceResolver {
     for (const version of this.versions) {
       const listingIndexes = await this.adapters[version].getListings(opts)
       listingIndexes.forEach(listingIndex => {
-        listingIds.unshift(
-          generateListingId({ version, network, listingIndex })
-        )
+        if (opts.withBlockInfo) {
+          const { listingIndex } = listingIndex
+          listingIds.unshift({
+            listingId: generateListingId({ version, network, listingIndex }),
+            ...listingIndex
+          })
+        } else {
+          listingIds.unshift(
+            generateListingId({ version, network, listingIndex })
+          )
+        }
       })
     }
 

@@ -52,28 +52,22 @@ class Marketplace {
   }
 
   async getPurchases(account) {
-    const purchases = await this.resolver.getPurchases(account)
+    const listings = await this.getListings({
+      purchasesFor: account,
+      withBlockInfo: true
+    })
 
-    const listingPromises = purchases.map(obj => {
-      const { listingId, blockNumber } = obj
-
-      return new Promise(async resolve => {
-        const listing = await this.getListing(listingId, blockNumber)
-        resolve({ listingId, ...listing })
+    const offerArrays = await Promise.all(
+      listings.map(async purchase => {
+        return await this.getOffers(purchase.id)
       })
-    })
-    const listings = await Promise.all(listingPromises)
-
-    const offerPromises = purchases.map(async obj => {
-      const { offerId } = obj
-      return await this.getOffer(offerId)
-    })
-    const offers = await Promise.all(offerPromises)
+    )
+    const offers = offerArrays.reduce((offers = [], offerArr) => offers = [...offers, ...offerArr])
 
     return offers.map(offer => {
       return {
         offer,
-        listing: listings.find(listing => listing.listingId === offer.listingId)
+        listing: listings.find(listing => listing.id === offer.listingId)
       }
     })
   }
@@ -156,11 +150,20 @@ class Marketplace {
       return listingIds
     }
 
-    return Promise.all(
-      listingIds.map(async listingId => {
-        return await this.getListing(listingId)
-      })
-    )
+    if (opts.withBlockInfo) {
+      return Promise.all(
+        listingIds.map(async listingData => {
+          const { listingId, blockNumber, logIndex } = listingData
+          return await this.getListing(listingId, blockNumber, logIndex)
+        })
+      )
+    } else {
+      return Promise.all(
+        listingIds.map(async listingId => {
+          return await this.getListing(listingId)
+        })
+      )
+    }
   }
 
   /**

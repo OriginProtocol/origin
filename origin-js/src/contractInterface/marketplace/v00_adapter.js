@@ -236,24 +236,6 @@ class V00_MarkeplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async getPurchases(account) {
-    await this.getContract()
-
-    const purchases = await this.contract.getPastEvents('OfferCreated', {
-      filter: { party: account },
-      fromBlock: this.blockEpoch
-    })
-
-    return purchases.map(purchase => {
-      const { blockNumber, returnValues } = purchase
-      return {
-        blockNumber: blockNumber,
-        listingIndex: returnValues.listingID,
-        offerIndex: returnValues.offerID
-      }
-    })
-  }
-
   async getSales(account) {
     await this.getContract()
 
@@ -406,8 +388,22 @@ class V00_MarkeplaceAdapter {
       const listingIds = []
       events.forEach(e => {
         const listingId = Number(e.returnValues.listingID)
-        if (listingIds.indexOf(listingId) < 0) {
-          listingIds.push(listingId)
+
+        if (opts.withBlockInfo) {
+          const existingId = listingIds.find(obj => obj.id === listingId)
+
+          if (!existingId) {
+            const { blockNumber, logIndex } = e
+            listingIds.push({
+              listingIndex: listingId,
+              blockNumber,
+              logIndex
+            })
+          }
+        } else {
+          if (listingIds.indexOf(listingId) < 0) {
+            listingIds.push(listingId)
+          }
         }
       })
       return listingIds
