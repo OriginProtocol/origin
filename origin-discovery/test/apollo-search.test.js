@@ -12,7 +12,9 @@ let lastQuery
 
 describe('Search', () => {
   before(function () {
+    // get private variable using rewire
     const client = search.__get__('client')
+    // change behaviour of elasticsearch's search function to store the generated query
     client.search = function (query) {
       // do not cache aggregation query
       if (query.body.aggs === undefined) {
