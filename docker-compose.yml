@@ -90,7 +90,11 @@ services:
       - origin-js
       - postgres
       - elasticsearch
-    command: /bin/bash -c "npm run migrate && npm run start:listener"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8545 --
+      npm run migrate &&
+      npm run start:listener"
 
   origin-messaging:
     container_name: origin-messaging
