@@ -8,7 +8,7 @@
   "main": "./dist/origin.node.js",
   "module": "./src/index.js",
   "scripts": {
-    "build": "webpack --progress --display errors-only --mode production",
+    "build": "webpack --progress",
     "dev": "npm run start",
     "lint": "eslint **/*.js --rulesdir ../",
     "start": "node scripts/serve.js serve",

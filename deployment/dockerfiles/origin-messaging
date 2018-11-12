@@ -5,6 +5,7 @@ WORKDIR /app
 ENV NODE_ENV production
 
 COPY ./origin-messaging /app
+# Install dependencies
 RUN npm ci --loglevel notice
 
-CMD ["node_modules/.bin/babel-node", "src/index.js", "--presets", "es2015"]
+CMD npx babel-node src/index.js --presets es2015
