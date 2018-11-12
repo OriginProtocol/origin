@@ -18,7 +18,7 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
     "clean": "git clean -fdX .",
-    "dev": "lerna run dev --stream --parallel --scope origin origin-dapp",
+    "dev": "lerna run dev --stream --parallel --scope origin --scope origin-dapp",
     "lint": "lerna run lint --stream",
     "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "node ./scripts/postinstall.js",
