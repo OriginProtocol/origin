@@ -4,7 +4,8 @@
     "origin-js",
     "origin-dapp",
     "origin-discovery",
-    "origin-faucet"
+    "origin-faucet",
+    "experimental/*"
   ],
   "version": "independent"
 }
