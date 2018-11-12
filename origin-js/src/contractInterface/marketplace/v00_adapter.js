@@ -449,7 +449,7 @@ class V00_MarkeplaceAdapter {
     })
 
     // Scan through the events to retrieve information of interest.
-    let buyer, ipfsHash, createdAt
+    let buyer, ipfsHash, createdAt, blockNumber, logIndex
     for (const e of events) {
       const timestamp = await this.contractService.getTimestamp(e)
       e.timestamp = timestamp
@@ -459,6 +459,8 @@ class V00_MarkeplaceAdapter {
         buyer = e.returnValues.party
         ipfsHash = e.returnValues.ipfsHash
         createdAt = timestamp
+        blockNumber = e.blockNumber
+        logIndex = e.logIndex
         break
         // In all cases below, the offer was deleted from the blochain
         // rawOffer fields are set to zero => populate rawOffer.status based on event history.
@@ -484,7 +486,7 @@ class V00_MarkeplaceAdapter {
     rawOffer.status = OFFER_STATUS[rawOffer.status]
 
     // Return the raw listing along with events and IPFS hash
-    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt })
+    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt, blockNumber, logIndex })
   }
 
   async addData(ipfsBytes, listingIndex, offerIndex, confirmationCallback) {

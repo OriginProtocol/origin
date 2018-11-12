@@ -98,12 +98,7 @@ class Marketplace {
     // fetched the listing data, we now have to re-fetch it, passing in the block number
     // of the offer to make sure we have the listing data as it was when the offer was made
     const listingsToFetch = offers.map(offer => {
-      const { listingId } = offer
-      const offerCreatedEvent = offer && offer.events && offer.events.find(event => event.event === 'OfferCreated')
-      const { blockNumber } = offerCreatedEvent
-      const blockInfo = {
-        blockNumber
-      }
+      const { listingId, blockInfo } = offer
       return {
         listingId,
         blockInfo

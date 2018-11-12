@@ -124,8 +124,8 @@ export const transformPurchasesOrSales = purchasesOrSales => {
  * @param {boolean} translate - Whether to translate the listing category or not.
  * @return {Promise<object>} DApp compatible listing object.
  */
-export async function getListing(id, translate = false) {
-  const originListing = await origin.marketplace.getListing(id)
+export async function getListing(id, translate = false, blockInfo) {
+  const originListing = await origin.marketplace.getListing(id, blockInfo)
   const dappListing = originToDAppListing(originListing)
   if (translate) {
     dappListing.category = translateListingCategory(dappListing.category)
