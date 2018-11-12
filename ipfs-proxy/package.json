@@ -4,7 +4,7 @@
   "description": "A proxy that validates Origin content being uploaded and downloaded from Origin's IPFS servers",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint **/*.js --rulesdir ../",
+    "lint": "eslint '**/*.js' --rulesdir ../",
     "start": "node src/index.js",
     "test": "mocha --timeout=10000",
     "test:load": "node load.js"

@@ -14,7 +14,7 @@
   },
   "main": "app.js",
   "scripts": {
-    "lint": "eslint **/*.js --rulesdir ../",
+    "lint": "eslint '**/*.js' --rulesdir ../",
     "migrate": "sequelize db:migrate",
     "start": "node src/app.js",
     "test": "echo \"Warning: no tests specified\""

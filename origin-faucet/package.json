@@ -14,7 +14,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "lint": "eslint **/*.js --rulesdir ../",
+    "lint": "eslint '**/*.js' --rulesdir ../",
     "start": "node faucet/app.js"
   },
   "author": "Origin Protocol Inc",
