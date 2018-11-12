@@ -90,7 +90,8 @@ services:
       - ipfs-proxy
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8545 --
+      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8080 --
+      wait-for.sh -t 0 -q elasticsearch:9200 --
       npm run migrate &&
       npm run start:listener"
 
@@ -120,11 +121,11 @@ services:
       - ./development/envfiles/origin-bridge.env:/app/.env
     depends_on:
       - postgres
-    ports:
-      - "5000:5000"
     environment:
       - FLASK_APP=/app/main.py
-    command: flask db upgrade && flask run --host=0.0.0.0
+    ports:
+      - "5000:5000"
+    command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
 
   origin-notifications:
     container_name: origin-notifications
@@ -159,9 +160,13 @@ services:
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
       - ./development/.ipfs:/ipfs
     depends_on:
+      - ipfs-proxy
+      - event-listener
       - origin-js
+      - origin-discovery
       - origin-messaging
       - origin-bridge
+      - origin-notifications
     ports:
       - "3000:3000"
     command:

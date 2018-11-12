@@ -11,6 +11,7 @@ try {
 }
 
 const { ApolloServer } = require('apollo-server-express')
+const cors = require('cors');
 const express = require('express')
 const promBundle = require('express-prom-bundle')
 
@@ -19,6 +20,8 @@ const typeDefs = require('./schema.js')
 const ListingMetadata = require('./listing-metadata')
 
 const app = express()
+app.use(cors())
+
 const bundle = promBundle({
   promClient: {
     collectDefaultMetrics: {

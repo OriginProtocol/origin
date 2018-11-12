@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "apollo-server-express": "^2.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^6.1.0",
     "elasticsearch": "^15.1.1",
     "envkey": "^1.2.2",
