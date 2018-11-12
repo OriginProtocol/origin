@@ -22,8 +22,8 @@ let publicKey = process.env.VAPID_PUBLIC_KEY
 if (!privateKey || !publicKey) {
   console.log('Warning: VAPID public or private key not defined, generating one')
   const vapidKeys = webpush.generateVAPIDKeys()
+  publicKey = vapidKeys.publicKey
   privateKey = vapidKeys.privateKey
-  publicKey = vapidKeys.publickey
 }
 
 const eventNotificationMap = {
