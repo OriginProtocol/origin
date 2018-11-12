@@ -7,10 +7,10 @@ export default class TransactionItem extends Component {
   render() {
     const { item, address, balance, handleApprove, handlePress, handleReject, style } = this.props
     // placeholders
-    const hasSufficientFunds = web3.utils.toBN(balance).gt(web3.utils.toBN(item.cost))
-    const myAddress = address
-    const counterpartyAddress = item.listing && item.listing.sellerAddress
-    const meta = item.transaction.meta
+    const hasSufficientFunds = web3.utils.toBN(balance).gt(item.cost)
+    const myAddress = address || ""
+    const counterpartyAddress = item.listing && item.listing.seller
+    const meta = item.meta
     const status = item.status
 
     return (
@@ -18,18 +18,18 @@ export default class TransactionItem extends Component {
         <View style={[ styles.listItem, style ]}>
           <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
           <View style={styles.content}>
-            {item.listing && <View><Text style={styles.imperative}>{item.action} <Text style={styles.subject}>{item.listingName}{item.listing.name}</Text>?</Text>
+            {item.listing && <View><Text style={styles.imperative}>{item.action_label} <Text style={styles.subject}>{item.listing.title}</Text>?</Text>
             <View style={styles.counterparties}>
               <Text style={styles.address}>{`${myAddress.slice(0, 4)}...${myAddress.slice(38)}`}</Text>
               <Image source={require('../../assets/images/arrow-forward-material.png')} style={styles.arrow} />
               <Text style={styles.address}>{`${counterpartyAddress.slice(0, 4)}...${counterpartyAddress.slice(38)}`}</Text>
               {status && <Text style={styles.address}>Status: {status}</Text>}
             </View></View>}
-            {!item.listing && meta && <View><Text style={styles.imperative}>call <Text style={styles.subject}>{meta.contract}.{meta.call}</Text>?</Text>
+            {!item.listing && meta && <View><Text style={styles.imperative}>call <Text style={styles.subject}>{meta.contract}.{meta.method}</Text>?</Text>
             <View style={styles.counterparties}>
               <Text style={styles.address}>{`${myAddress.slice(0, 4)}...${myAddress.slice(38)}`}</Text>
-              {meta.value && <Text style={styles.imperative}>Value: {meta.value}</Text>}
-              <Text style={styles.imperative}>Gas: {meta.gas}</Text>
+              {item.cost && <Text style={styles.imperative}>Value: {item.cost} Eth</Text>}
+              <Text style={styles.imperative}>Gas: {item.gas_cost}</Text>
               <Text style={styles.address}>{meta.contract}({`${meta.to.slice(0, 4)}...${meta.to.slice(38)}`})</Text>
               {status && <Text style={styles.address}>Status: {status}</Text>}
             </View></View>}

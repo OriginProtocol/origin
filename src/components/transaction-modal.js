@@ -7,11 +7,12 @@ export default class TransactionModal extends Component {
   render() {
     const { item, address, balance, handleApprove, handleReject, toggleModal } = this.props
     const cost = item.cost
-    const { name, pictures} = item.listing || {}
-    const meta = item.transaction.meta
+    const name = item.listing && item.listing.title
+    const pictures = item.listing && item.listing.media && item.listing.media.map( m => m.url)
+    const meta = item.meta
     // placeholders
     const hasSufficientFunds = !cost || web3.utils.toBN(balance).gt(web3.utils.toBN(cost))
-    const counterpartyAddress = item.listing ? item.listing.sellerAddress : item.to
+    const counterpartyAddress = item.listing ? item.listing.seller : item.to
 
     return (
       <Modal
@@ -48,7 +49,7 @@ export default class TransactionModal extends Component {
         {!name && meta && 
           <View style={styles.promptContainer}>
             <Text style={styles.question}>
-              Do you want call {meta.contract}.{meta.call}?
+              Do you want call {meta.contract}.{meta.method}?
             </Text>
           </View>}
           <View style={styles.counterparties}>

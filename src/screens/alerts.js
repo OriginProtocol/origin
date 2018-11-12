@@ -59,9 +59,7 @@ class AlertsScreen extends Component {
           data={this.props.events}
           renderItem={({item}) => {
             switch(item.action) {
-              case 'purchase':
-              case 'list':
-              case 'unknown':
+              case 'transaction':
                 return (
                   <TransactionItem
                     item={item}

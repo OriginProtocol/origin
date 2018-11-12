@@ -19,7 +19,7 @@ const API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet/"
 const API_WALLET_LINKER_UNLINK = API_WALLET_LINKER + "/unlink-wallet/"
 const WS_API_WALLET_LINKER_MESSAGES = `${wsApiUrl}/api/wallet-linker/wallet-messages/`
 const API_WALLET_LINK_INFO = API_WALLET_LINKER + "/link-info"
-const API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called"
+const API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called/"
 const API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
@@ -219,17 +219,13 @@ class OriginWallet {
       const app_info = responseJson.app_info
       console.log("We are now linked to a remote wallet:", responseJson, " browser is:", app_info)
 
-      if (responseJson.link_id)
-      {
-        let link_id = responseJson.link_id
-        this.fireEvent(Events.LINKED, {linked:true, link:{link_id, return_url:responseJson.return_url, app_info:responseJson.app_info, linked_at:new Date(responseJson.linked_at)}})
-      }
+      const link_id = responseJson.link_id
+      this.fireEvent(Events.LINKED, {linked:true, link:{link_id, return_url:app_info.return_url, app_info:responseJson.app_info, linked_at:new Date(responseJson.linked_at)}})
 
       if (responseJson.pending_call)
       {
-        let msg = responseJson.pending_call
-        let call = responseJson.pending_call.call
-        this.processCall(msg.meta, call[0], msg.call_id, call[1], responseJson.return_url, msg.session_token, true)
+        const msg = responseJson.pending_call
+        this.processCall(msg.call, msg.call_id, app_info.return_url, msg.session_token, link_id, true)
       }
       else
       {
@@ -250,8 +246,7 @@ class OriginWallet {
   }
 
   doUnlink(wallet_token, link_id) {
-    return this.doFetch(API_WALLET_LINKER_UNLINK, 'POST', {
-      wallet_token,
+    return this.doFetch(API_WALLET_LINKER_UNLINK + getWalletToken(this.getNotifyType(), this.state.deviceToken), 'POST', {
       link_id
     }).then((responseJson) => {
       console.log("We are now unlinked from remote wallet:", link_id)
@@ -267,7 +262,7 @@ class OriginWallet {
 
 
   doGetLinkedDevices(wallet_token) {
-    return this.doFetch(API_WALLET_GET_LINKS + wallet_token, "GET").then((responseJson) => {
+    return this.doFetch(API_WALLET_GET_LINKS + getWalletToken(this.getNotifyType(), this.state.deviceToken), "GET").then((responseJson) => {
       let devices = []
       for(const l of responseJson){
         devices.push({event_id:l.link_id, linked:l.linked, link:{app_info:l.app_info, link_id:l.link_id, linked_at:new Date(l.linked_at)}})
@@ -279,7 +274,7 @@ class OriginWallet {
   }
 
   getDevices() {
-    this.doGetLinkedDevices(this.state.deviceToken)
+    this.doGetLinkedDevices()
   }
 
 
@@ -307,7 +302,7 @@ class OriginWallet {
     if (this.state.deviceToken)
     {
       console.log("Unlinking...")
-      return this.doUnlink(this.state.deviceToken, link_id)
+      return this.doUnlink(link_id)
     }
   }
 
@@ -319,10 +314,10 @@ class OriginWallet {
     this.checkRegisterNotification()
   }
 
-  returnCall(event_id, wallet_token, call_id, session_token, result, fire_event) {
-    return this.doFetch(API_WALLET_LINKER_RETURN_CALL, 'POST', {
-      wallet_token,
+  returnCall(event_id, call_id, session_token, link_id, result, fire_event) {
+    return this.doFetch(API_WALLET_LINKER_RETURN_CALL + getWalletToken(this.getNotifyType(), this.state.deviceToken), 'POST', {
       call_id,
+      link_id,
       session_token,
       result,
     }).then((responseJson) => {
@@ -339,11 +334,14 @@ class OriginWallet {
     const link = event_data.link
     if (transaction)
     {
-      const cost = transaction && this.extractTransactionValue(transaction)
-      const listing = await this.extractListing(transaction)
-      const to = this.extractTo(transaction)
-      const action = this.extractTransactionAction(transaction)
-      return {...event_data, action, to, cost, listing}
+      const meta = await this.extractMetaFromCall(transaction.call) || {}
+      const cost = this.extractTransactionCost(transaction.call)
+      const gas_cost = this.extractTransactionGasCost(transaction.call)
+      const listing = this.extractListing(meta)
+      const to = this.extractTo(transaction.call)
+      const action_label = this.extractTransactionActionLabel(meta)
+      const action = "transaction"
+      return {...event_data, meta, action, action_label, to, cost, gas_cost, listing}
     }
     else if (link)
     {
@@ -359,16 +357,36 @@ class OriginWallet {
     return event_data
   }
 
-  extractTransactionAction({meta}) {
-    const dot_call = meta.contract + "." + meta.call
-    switch(dot_call)
+  async extractMetaFromCall({net_id, params:{txn_object}}) {
+    const netId = this.state.netId
+    if(netId != net_id)
     {
-      case "UnitListing.buyListing":
-        return "purchase"
-      case "ListingsRegistry.create":
-        return "list"
+      throw(`Remote net id ${net_id} does not match local netId ${netId}`)
     }
-    return "unknown"
+    return origin.reflection.extractContractCallMeta(netId, txn_object.to, txn_object.data)
+  }
+
+  extractTransactionActionLabel({marketplace, originToken, contract, method, params, subMeta}) {
+    if (originToken && subMeta)
+    {
+      method = subMeta.method
+      marketplace = subMeta.marketplace
+      params = subMeta.params
+    }
+
+    if (marketplace)
+    {
+      if (method == "makeOffer")
+      {
+        return "Purchase"
+      }
+      else if (method.startsWith("createListing"))
+      {
+        return "Create listing"
+      }
+    }
+    // TODO: need something better here
+    return contract + "." + method
   }
 
   extractTo({params}) {
@@ -376,28 +394,18 @@ class OriginWallet {
   }
 
 
-  async extractListing({meta, params}) {
-    if (params && params.txn_object && meta)
-    {
-      if (meta.contract == "UnitListing")
-      {
-        return origin.listings.get(params.txn_object.to)
-      }
-      else if(meta.contract == "ListingsRegistry")
-      {
-        if (meta.call == "create")
-        {
-          return origin.ipfsService.getFile(meta._ipfsHash)
-        }
-      }
-    }
+  extractListing({listing, subMeta}) {
+    return listing || (subMeta && subMeta.listing)
   }
 
-  extractTransactionValue({params}){
-    if (params && params.txn_object && params.txn_object.value)
-    {
-        return params.txn_object.value
-    }
+  extractTransactionCost({params}){
+    // might want to format this some how
+    return params && params.txn_object && web3.utils.toBN(params.txn_object.value)
+  }
+
+  extractTransactionGasCost({params}){
+    // might want to format this some how
+    return params && params.txn_object && (web3.utils.toBN(params.txn_object.gas) * web3.utils.toBN(params.txn_object.gasPrice))
   }
 
  
@@ -438,12 +446,14 @@ class OriginWallet {
     return this.setLinkCode(linkCode)
   }
 
-  _handleTransaction(event_id, {meta, call_name, call_id, params, return_url, session_token}){
+  _handleTransaction(event_id, {call, call_id, return_url, session_token, link_id}){
+    const method = call.method
+    const params = call.params
     return new Promise((resolve, reject) => {
-      if (call_name == "signTransaction")
+      if (method == "signTransaction")
       {
         web3.eth.signTransaction(params.txn_object).then(ret => {
-          this.returnCall(event_id, this.state.deviceToken, call_id, session_token, ret["raw"], Events.TRANSACTED).then(
+          this.returnCall(event_id, call_id, session_token, link_id, ret["raw"], Events.TRANSACTED).then(
             (success) => {
               if (return_url)
               {
@@ -456,7 +466,7 @@ class OriginWallet {
           reject(err)
         }
       }
-      else if (call_name == "processTransaction")
+      else if (method == "processTransaction")
       {
         web3.eth.sendTransaction(params.txn_object).on('receipt', (receipt) => {
           console.log("transaction sent:", receipt)
@@ -464,14 +474,8 @@ class OriginWallet {
           console.log("confirmation:", conf_number)
           if (conf_number == 1)  // TODO: set this as a setting
           {
-            // TODO: detect purchase assume it's all purchases for now.
-            let call = undefined
-            if (meta && meta.call)
-            {
-              call = meta.call
-            }
-            let transactionResult = {hash:receipt.transactionHash, call}
-            this.returnCall(event_id, this.state.deviceToken, call_id, session_token, transactionResult, Events.TRANSACTED).then(
+            const transactionResult = {hash:receipt.transactionHash}
+            this.returnCall(event_id, call_id, session_token, link_id, transactionResult, Events.TRANSACTED).then(
               (success) => {
                 if (return_url)
                 {
@@ -492,7 +496,9 @@ class OriginWallet {
     })
   }
 
-  _handleSign(event_id, {meta, call_name, call_id, params, return_url, session_token}){
+  _handleSign(event_id, {call, call_id, return_url, session_token, link_id}){
+    const method = call.method
+    const params = call.params
     return new Promise((resolve, reject) => {
       if (call_name == "signMessage")
       {
@@ -514,7 +520,7 @@ class OriginWallet {
         }
         console.log("Signing result:", ret)
 
-        this.returnCall(event_id, this.state.deviceToken, call_id, session_token, ret, Events.TRANSACTED).then(
+        this.returnCall(event_id, call_id, session_token, link_id, ret, Events.TRANSACTED).then(
             (success) => {
               if (return_url)
               {
@@ -527,33 +533,35 @@ class OriginWallet {
     })
   }
 
-  _handleRejectTransaction(event_id, {meta, call_name, call_id, params, session_token}){
+  _handleRejectTransaction(event_id, {call, call_id, session_token, link_id}){
     //return empty result
-    return this.returnCall(event_id, this.state.deviceToken, call_id, session_token, {}, Events.REJECT)
+    return this.returnCall(event_id, call_id, session_token, link_id, {}, Events.REJECT)
   }
 
-  processCall(meta, call_name, call_id, params, return_url, session_token, force_from = false) {
+  async processCall(call, call_id, return_url, session_token, link_id, force_from = false) {
+    const method = call.method
+    const params = call.params
     if (force_from && params.txn_object)
     {
       params.txn_object.from = this.state.ethAddress
     }
-    if (call_name == "signTransaction")
+    if (method == "signTransaction")
     {
       if (params.txn_object.from.toLowerCase() == this.state.ethAddress.toLowerCase())
       {
-        this.fireEvent(Events.PROMPT_TRANSACTION, {transaction:{meta, call_name, call_id, params, return_url, session_token}})
+        return this.fireEvent(Events.PROMPT_TRANSACTION, {transaction:{call, call_id, return_url, session_token, link_id}})
       }
     }
-    else if (call_name == "processTransaction")
+    else if (method == "processTransaction")
     {
       if (params.txn_object.from.toLowerCase() == this.state.ethAddress.toLowerCase())
       {
-        this.fireEvent(Events.PROMPT_TRANSACTION, {transaction:{meta, call_name, call_id, params, return_url, session_token}})
+        return this.fireEvent(Events.PROMPT_TRANSACTION, {transaction:{call, call_id, return_url, session_token, link_id}})
       }
     }
-    else if (call_name == "signMessage")
+    else if (method == "signMessage")
     {
-      this.fireEvent(Events.PROMPT_SIGN, {sign:{meta, call_name, call_id, params, return_url, session_token}})
+      return this.fireEvent(Events.PROMPT_SIGN, {sign:{call, call_id, return_url, session_token, link_id}})
     }
   }
 
@@ -568,13 +576,14 @@ class OriginWallet {
     return this.messages_ws && this.messages_ws.readyState === this.messages_ws.OPEN
   }
 
-  processMessage(m) {
+  async processMessage(m) {
     const type = m.msg.type
     const message = m.msg.data
     const msgId = m.msgId
     if (type == "CALL")
     {
-      this.processCall(message.meta, message.call[0], message.call_id, message.call[1], message.return_url, message.session_token)  
+      console.log("Processing call:", message)
+      await this.processCall(message.call, message.call_id, message.return_url, message.session_token, message.link_id)  
     }
     this.last_message_ids[this.state.ethAddress] = msgId
     this.syncLastMessages()
@@ -582,7 +591,7 @@ class OriginWallet {
 
   syncServerMessages() {
     this.closeLinkMessages()
-    let last_message_id = this.last_message_ids[this.state.ethAddress] || '0'
+    const last_message_id = this.last_message_ids[this.state.ethAddress] || '0'
     console.log("syncing messages on last_message_id:", last_message_id)
     // Connect the websocket
     const ws = new WebSocket(WS_API_WALLET_LINKER_MESSAGES + getWalletToken(this.getNotifyType(), this.state.deviceToken) + '/' + last_message_id)
@@ -608,7 +617,7 @@ class OriginWallet {
 
   checkSyncMessages(force) {
     const doSync = !this.messages_ws || (force && !this.isLinkMessagesOpen())
-    if (this.state.deviceToken && this.state.ethAddress && doSync)
+    if (this.state.deviceToken && this.state.ethAddress && this.state.netId && doSync)
     {
       this.syncServerMessages()
     }
@@ -720,8 +729,6 @@ class OriginWallet {
     storeData(WALLET_STORE, web3.eth.accounts.wallet.encrypt(WALLET_PASSWORD))
   }
 
-
-
   async giveMeEth (eth_value) {
     if (this.state.ethAddress)
     {
@@ -730,9 +737,9 @@ class OriginWallet {
       {
         const value = web3.utils.toWei(eth_value, 'ether')
         const sig = await web3.eth.accounts.signTransaction({
-            gas: 4000000,
-            to: this.state.ethAddress,
-            value }, TEST_PRIVATE_KEY)
+             gas: 4000000,
+             to: this.state.ethAddress,
+             value }, TEST_PRIVATE_KEY)
         const send_result = await web3.eth.sendSignedTransaction(sig.rawTransaction)
         console.log("Funding result:", send_result)
         this.events.emit(Events.UPDATE)
@@ -759,6 +766,8 @@ class OriginWallet {
       //this should probably also come from the data block
       //in case when we want to let people change providers...
       web3.setProvider(new Web3.providers.HttpProvider(localfy(providerUrl), 20000))
+      // set the net id after the provider
+      this.setNetId()
 
       if (wallet_data)
       {
@@ -780,7 +789,6 @@ class OriginWallet {
         this.checkRegisterNotification()
         this.saveWallet()
       }
-      this.setNetId()
     })
 
     Linking.getInitialURL().then((url) => {

@@ -46,9 +46,7 @@ class HomeScreen extends Component {
           renderItem={({item}) => {
             console.log("Event item:", item)
             switch(item.action) {
-              case 'purchase':
-              case 'list':
-              case 'unknown':
+              case 'transaction':
                 return (
                   <TransactionItem item={item} 
                     address ={myAddress}
