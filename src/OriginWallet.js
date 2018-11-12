@@ -220,22 +220,23 @@ class OriginWallet {
       console.log("We are now linked to a remote wallet:", responseJson, " browser is:", app_info)
 
       const link_id = responseJson.link_id
+      const return_url = app_info && app_info.return_url
       this.fireEvent(Events.LINKED, {linked:true, link:{link_id, return_url:app_info.return_url, app_info:responseJson.app_info, linked_at:new Date(responseJson.linked_at)}})
 
-      if (responseJson.pending_call)
+      if (responseJson.pending_call_context)
       {
-        const msg = responseJson.pending_call
-        this.processCall(msg.call, msg.call_id, app_info.return_url, msg.session_token, link_id, true)
+        const msg = responseJson.pending_call_context
+        this.processCall(msg.call, msg.call_id, return_url, msg.session_token, link_id, true)
       }
       else
       {
-        if (responseJson.return_url && this.copied_code == code)
+        if (return_url && this.copied_code == code)
         {
-          Linking.openURL(responseJson.return_url)
+          Linking.openURL(return_url)
         }
         else
         {
-          console.log("We are now linked return url:"+ responseJson.return_url + " on browser:" + app_info)
+          console.log("We are now linked return url:"+ return_url + " on browser:" + app_info)
         }
       }
 
@@ -359,7 +360,7 @@ class OriginWallet {
 
   async extractMetaFromCall({net_id, params:{txn_object}}) {
     const netId = this.state.netId
-    if(netId != net_id)
+    if(net_id && netId != net_id)
     {
       throw(`Remote net id ${net_id} does not match local netId ${netId}`)
     }
