@@ -1,9 +1,7 @@
 import DisputeAdapterV1 from './dispute/v1-dispute-adapter'
 import ListingAdapterV1 from './listing/v1-listing-adapter'
-import ListingCompleteAdapterV1 from './listing-complete/v1-listing-complete-adapter'
 import ListingWithdrawAdapterV1 from './listing-withdraw/v1-listing-withdraw-adapter'
 import OfferAdapterV1 from './offer/v1-offer-adapter'
-import OfferCompleteAdapterV1 from './offer-complete/v1-offer-complete-adapter'
 import OfferAcceptAdapterV1 from './offer-accept/v1-offer-accept-adapter'
 import OfferWithdrawAdapterV1 from './offer-withdraw/v1-offer-withdraw-adapter'
 import ProfileAdapterV1 from './profile/v1-profile-adapter'
@@ -14,17 +12,11 @@ const adapterConfig = {
   'listing': {
     '1.0.0': ListingAdapterV1
   },
-  'listing-complete': {
-    '1.0.0': ListingCompleteAdapterV1
-  },
   'listing-withdraw': {
     '1.0.0': ListingWithdrawAdapterV1
   },
   'offer': {
     '1.0.0': OfferAdapterV1,
-  },
-  'offer-complete': {
-    '1.0.0': OfferCompleteAdapterV1,
   },
   'offer-withdraw': {
     '1.0.0': OfferWithdrawAdapterV1
