@@ -94,8 +94,7 @@ services:
     ports:
       - "4000:4000" # Apollo
     command: >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
-      npm install --quiet --no-progress &&
+      /bin/bash -c "npm install --quiet --no-progress &&
       npm link origin &&
       node src/apollo/app.js"
     networks:
