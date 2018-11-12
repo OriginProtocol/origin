@@ -34,6 +34,16 @@ class ListingMetadata {
       }
     }
   }
+
+  getDisplay (listingId) {
+    let display = 'normal'
+    if (this.hiddenIds.includes(listingId)) {
+      display = 'hidden'
+    } else if (this.featuredIds.includes(listingId)) {
+      display = 'featured'
+    }
+    return display
+  }
 }
 
 const metadata = new ListingMetadata()

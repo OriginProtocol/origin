@@ -10,14 +10,6 @@ const listingMetadata = require('./listing-metadata')
  * @private
  */
 function _makeListing (row) {
-  // Compute display.
-  let display = 'normal'
-  if (listingMetadata.hiddenIds.includes(row.id)) {
-    display = 'hidden'
-  } else if (listingMetadata.featuredIds.includes(row.id)) {
-    display = 'featured'
-  }
-  // Create listing object compatible with the GraphQL schema.
   return {
     id: row.id,
     ipfsHash: row.data.ipfs.hash,
@@ -29,11 +21,20 @@ function _makeListing (row) {
     // TODO: price may not be defined at the listing level for all listing types.
     // For example, for fractional usage it may vary based on time slot.
     price: row.data.price,
-    display
+    display: listingMetadata.getDisplay(row.id)
   }
 }
 
-async function _getListings (whereClause, orderIds = []) {
+/**
+ * Helper method. Queries DB to get listings.
+ * @param {Object} whereClause - Where clause to use for the DB query.
+ * @param {Array<string>>} orderByIds - Defines the exact order of listings returned.
+ *  Useful for preserving ranking of search results.
+ *  Any listingId returned by the query and not included in orderByIds gets filtered.
+ * @return {Promise<Array<Listing>>}
+ * @private
+ */
+async function _getListings (whereClause, orderByIds = []) {
   // Load rows from the Listing table in the DB.
   const rows = await db.Listing.findAll({ where: whereClause })
   if (rows.length === 0) {
@@ -41,14 +42,13 @@ async function _getListings (whereClause, orderIds = []) {
   }
 
   let listings
-  if (orderIds.length === 0) {
+  if (orderByIds.length === 0) {
     listings = rows.map(row => _makeListing(row))
   } else {
     // Return results in oder specified by orderIds.
-    // Useful for preserving ranking of search results.
     const rowDict = {}
     rows.forEach(row => { rowDict[row.id] = row })
-    listings = orderIds.map(id => _makeListing(rows[id]))
+    listings = orderByIds.map(id => _makeListing(rowDict[id]))
   }
 
   return listings
@@ -61,7 +61,7 @@ async function _getListings (whereClause, orderIds = []) {
  */
 async function getListingsById (listingIds) {
   const whereClause = { id: { [Sequelize.Op.in]: listingIds } }
-  return _getListings(whereClause)
+  return _getListings(whereClause, listingIds)
 }
 
 /**
