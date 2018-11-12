@@ -1,5 +1,6 @@
 'use strict'
 
+import '@babel/polyfill'
 import OrbitDB from 'orbit-db'
 
 const Log = require('ipfs-log')
