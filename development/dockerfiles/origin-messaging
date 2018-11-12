@@ -5,6 +5,7 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY ./origin-messaging/package*.json /app/
 
+# Install dependencies
 RUN npm install --loglevel notice
 
-CMD npx babel-node src/index.js --presets es2015
+CMD npm run dev
