@@ -1,5 +1,4 @@
 **/node_modules/*
-origin-dapp/public/*
 origin-contracts/*
 **/build/*
 **/dist/*
