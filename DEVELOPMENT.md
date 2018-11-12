@@ -53,20 +53,20 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 
 ## Using Docker Compose
 
-The Origin Docker Compose configuration runs the following packages simultaneously:
+The Origin Docker Compose configuration runs the following packages:
 
 ```
-- ipfs-proxy
-- origin-bridge
-- origin-dapp
+- ipfs-proxy on http://localhost:9999
+- origin-bridge on http://localhost:5000
+- origin-dapp on http://localhost:3000
 - origin-discovery (event-listener)
-- origin-discovery (apollo server)
-- origin-messaging
-- origin-notifications
+- origin-discovery (apollo server on http://localhost:4000)
+- origin-messaging on http://localhost:9012
+- origin-notifications on http://localhost:3456)
 - origin-js (ipfs server)
-- origin-js (ethereum blockchain using ganache)
+- origin-js (ethereum blockchain using ganache on http://localhost:8545)
 - postgresql
-- elasticsearch
+- elasticsearch on http://localhost:9200
 ```
 
 ### System Requirements
@@ -78,7 +78,6 @@ The Origin Docker Compose configuration runs the following packages simultaneous
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git):
 `git --version`
 - Unix-based system (OSX or Linux) needed to run the bash scripts
-
 
 ### Getting Started
 
@@ -92,20 +91,23 @@ The Origin Docker Compose configuration runs the following packages simultaneous
 git checkout --track origin/stable
 ```
 
-3. Run `./install.sh`.
+3. From the root of the repository run `docker-compose up`. The first time this command runs it will take some time to complete due to the initial building of the containers.
 
-When the install scripts completes type `docker-compose logs -f` to inspect the output of the containers and ensure everything is functional. You should then be able to access the DApp at `https://localhost:3000`.
-
+Please note this can take some time. If you see an error in the logs please [raise an issue](https://github.com/OriginProtocol/origin/issues). When the containers are running you can access the DApp at `http://localhost:3000`.
 
 ### Usage and commands
 
 Please refer to the [docker-compose](https://docs.docker.com/compose/reference/overview/) documentation for usage. Some commands that may be useful are included below.
 
+Start and stop the environment:
+
+	docker-compose up
+	docker-compose down
+
 Spawn a shell (command line) in a container:
 
 	docker exec -ti <container_name> /bin/bash
 	docker exec -ti origin-dapp /bin/bash
-	docker exec -ti origin-js /bin/bash
 
 Follow log output for all containers: 
 
