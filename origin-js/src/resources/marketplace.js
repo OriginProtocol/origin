@@ -62,7 +62,11 @@ class Marketplace {
         return await this.getOffers(purchase.id)
       })
     )
-    const offers = offerArrays.reduce((offers = [], offerArr) => offers = [...offers, ...offerArr])
+    const offers =
+      offerArrays &&
+      offerArrays.length &&
+      offerArrays.reduce((offers = [], offerArr) => offers = [...offers, ...offerArr]) ||
+      []
 
     return offers.map(offer => {
       return {
@@ -153,8 +157,8 @@ class Marketplace {
     if (opts.withBlockInfo) {
       return Promise.all(
         listingIds.map(async listingData => {
-          const { listingId, blockNumber, logIndex } = listingData
-          return await this.getListing(listingId, blockNumber, logIndex)
+          const { listingId, blockInfo } = listingData
+          return await this.getListing(listingId, blockInfo)
         })
       )
     } else {
@@ -172,14 +176,14 @@ class Marketplace {
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
-  async getListing(listingId, blockNumber) {
+  async getListing(listingId, blockInfo) {
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
-      return await this.discoveryService.getListing(listingId) // TODO(John): add support for passing blockNumber
+      return await this.discoveryService.getListing(listingId, blockInfo)
     }
 
     // Get the on-chain listing data.
-    const chainListing = await this.resolver.getListing(listingId, blockNumber)
+    const chainListing = await this.resolver.getListing(listingId, blockInfo)
 
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(

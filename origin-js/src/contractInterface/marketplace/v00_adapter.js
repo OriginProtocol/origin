@@ -245,7 +245,7 @@ class V00_MarkeplaceAdapter {
     })
   }
 
-  async getListing(listingId, blockNumber) {
+  async getListing(listingId, blockInfo) {
     await this.getContract()
 
     // Get the raw listing data from the contract.
@@ -269,7 +269,10 @@ class V00_MarkeplaceAdapter {
       if (event.event === 'ListingCreated') {
         ipfsHash = event.returnValues.ipfsHash
       } else if (event.event === 'ListingUpdated') {
-        if (!blockNumber || event.blockNumber < blockNumber) {
+        // If a blockInfo is passed in, ignore udpated IPFS data that occurred after that blockInfo.blockNumber.
+        // This is used when we want to see what a listing looked like at the time an offer was made.
+        // Specificatlly, on myPurchases and mySales requests as well as for arbitration.
+        if (!blockInfo || event.blockNumber < blockInfo.blockNumber) {
           ipfsHash = event.returnValues.ipfsHash
         }
       } else if (event.event === 'ListingWithdrawn') {
@@ -396,8 +399,10 @@ class V00_MarkeplaceAdapter {
             const { blockNumber, logIndex } = e
             listingIds.push({
               listingIndex: listingId,
-              blockNumber,
-              logIndex
+              blockInfo: {
+                blockNumber,
+                logIndex
+              }
             })
           }
         } else {

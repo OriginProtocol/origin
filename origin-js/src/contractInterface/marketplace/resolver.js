@@ -63,27 +63,29 @@ class MarketplaceResolver {
 
     for (const version of this.versions) {
       const listingIndexes = await this.adapters[version].getListings(opts)
-      listingIndexes.forEach(listingIndex => {
-        if (opts.withBlockInfo) {
-          const { listingIndex } = listingIndex
+      if (opts.withBlockInfo) {
+        listingIndexes.forEach(listingData => {
+          const { listingIndex } = listingData
           listingIds.unshift({
             listingId: generateListingId({ version, network, listingIndex }),
-            ...listingIndex
+            ...listingData
           })
-        } else {
+        })
+      } else {
+        listingIndexes.forEach(listingIndex => {
           listingIds.unshift(
             generateListingId({ version, network, listingIndex })
           )
-        }
-      })
+        })
+      }
     }
 
     return listingIds
   }
 
-  async getListing(listingId, blockNumber) {
+  async getListing(listingId, blockInfo) {
     const { adapter, listingIndex } = this.parseListingId(listingId)
-    return await adapter.getListing(listingIndex, blockNumber)
+    return await adapter.getListing(listingIndex, blockInfo)
   }
 
   async getOfferIds(listingId, opts = {}) {
