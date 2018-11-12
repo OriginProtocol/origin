@@ -6,6 +6,7 @@ import $ from 'jquery'
 
 import Identicon from 'components/identicon'
 import WalletCard from 'components/wallet-card'
+import origin from '../../services/origin'
 
 class UserDropdown extends Component {
   componentDidMount() {
@@ -52,6 +53,18 @@ class UserDropdown extends Component {
           </div>
           <div className="actual-menu">
             <WalletCard wallet={wallet} withMenus={false} withProfile={true} />
+            {
+              origin.contractService.walletLinker &&
+              origin.contractService.walletLinker.linked &&
+                <Link to="#"
+                  className="btn edit-profile placehold"
+                  onClick={()=>{origin.contractService.walletLinker.unlink(); return false;}}>
+                  <FormattedMessage
+                    id={'user-dropdown.UnlinkMobile'}
+                    defaultMessage ={'Unlink Mobile'}
+                  />
+                </Link>
+            }
             <Link to="/profile" className="btn edit-profile placehold" onClick={this.handleClick}>
               <FormattedMessage
                 id={'user-dropdown.EditProfile'}

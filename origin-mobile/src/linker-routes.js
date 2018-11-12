@@ -69,7 +69,7 @@ router.get("/wallet-links/:walletToken", async (req, res) => {
 
 router.post("/unlink", async (req, res) => {
   const clientToken = getClientToken(req)
-  const success = await unlink(clientToken)
+  const success = await linker.unlink(clientToken)
   res.send(success)
 })
 

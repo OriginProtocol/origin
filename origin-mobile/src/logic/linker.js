@@ -301,7 +301,7 @@ class Linker {
     linkedObj.linked = false
     linkedObj.save()
 
-    this.sendGlobalContextChange(linkedObj)
+    this.sendContextChange(linkedObj)
     return true
   }
 
@@ -316,7 +316,7 @@ class Linker {
         link.deviceType = null
         link.deviceToken = null
         link.save()
-        this.sendGlobalContextChange(link)
+        this.sendContextChange(link)
         return true
       }
     }

@@ -410,7 +410,7 @@ class Web3Provider extends Component {
    * @return {void}
    */
   initAccountsPoll() {
-    if (!this.accountsInterval && web3.givenProvider) {
+    if (!this.accountsInterval && (web3.givenProvider || origin.contractService.walletLinker)) {
       this.accountsInterval = setInterval(this.fetchAccounts, ONE_SECOND)
     }
   }
@@ -513,11 +513,8 @@ class Web3Provider extends Component {
 
     // on account detection
     if (curr !== prev) {
-      // update global state
-      this.props.storeWeb3Account(curr)
-
       // TODO: fix this with some route magic!
-      if(["/my-listings", "/my-purchases","/my-sales"].includes(this.props.location.pathname)) {
+      if(["/my-listings", "/my-purchases","/my-sales"].includes(this.props.location.pathname) || !curr) {
         // reload if changed from a prior account
         prev !== null && window.location.reload()
       } else {
@@ -529,6 +526,9 @@ class Web3Provider extends Component {
       // set user_id to wallet address in Google Analytics
       const gtag = window.gtag || function(){}
       gtag('set', { 'user_id': curr })
+
+      // update global state
+      this.props.storeWeb3Account(curr)
 
       // trigger messaging service
       origin.messaging.onAccount(curr)
