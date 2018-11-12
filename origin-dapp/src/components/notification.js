@@ -97,13 +97,14 @@ class Notification extends Component {
                 <div className="counterparty d-flex">
                   <div className="text-truncate">
                     <strong>
-                      {notification.perspective === 'buyer' && (
+                      {/* This approach is naive and won't work once we include "offer withdrawn/rejected" notifications */}
+                      {notification.perspective === 'seller' && (
                         <FormattedMessage
                           id={'notification.buyer'}
                           defaultMessage={'Buyer'}
                         />
                       )}
-                      {notification.perspective === 'seller' && (
+                      {notification.perspective === 'buyer' && (
                         <FormattedMessage
                           id={'notification.seller'}
                           defaultMessage={'Seller'}
