@@ -24,7 +24,7 @@ To learn more about Origin Protocol, please read our [product brief](https://www
 
 ### 1. Check node version
 
-Make sure you have `node` version 8.5.0 or greater
+Make sure you have `node` version 10.0.0 or greater
 
 ```
 node --version
