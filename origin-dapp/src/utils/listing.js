@@ -81,6 +81,7 @@ export function originToDAppListing(originListing) {
     status: originListing.status,
     schemaType: originListing.category.replace('schema.', ''),
     category: originListing.subCategory,
+    display: originListing.display,
     name: originListing.title,
     description: originListing.description,
     pictures: originListing.media

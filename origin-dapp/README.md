@@ -24,7 +24,7 @@ To learn more about Origin Protocol, please read our [product brief](https://www
 
 ### 1. Check node version
 
-Make sure you have `node` version 8.5.0 or greater
+Make sure you have `node` version 10.0.0 or greater
 
 ```
 node --version
@@ -72,13 +72,10 @@ If you want to hack on origin-js code, or if you just want to use a private loca
 
 Leave origin-js running and create a new terminal window. Then run the following:
 ```bash
-git clone https://github.com/OriginProtocol/origin.git origin && cd origin/origin-dapp
+cd origin/origin-dapp
 cp dev.env .env  # Use development env vars
-npm run install:dev
 npm run start
 ```
-
-The `install:dev` script performs the regular install and then links to your local origin-js from step 1. Changes made to origin-js code will then immediately reflected in Demo DApp without requiring `npm install`.
 
 Your browser will open to [http://localhost:3000](http://localhost:3000) and display the DApp.
 
@@ -127,27 +124,6 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 | Android | Cipher  |  ⛔️  | Not in development |
 
 <sup>Tests for http://demo.originprotocol.com</sup>
-
-## Run Demo DApp with local origin-js and local blockchain via Lerna
-
-### 1. Set up and run origin-js locally
-
-[Follow these instructions to setup and run origin-js via Lerna.](https://github.com/OriginProtocol/origin/tree/master/origin-js#using-lerna)
-
-### 2. Set up the DApp for local development via Lerna
-
-Leave origin-js running and create a new terminal window. Then run the following:
-```bash
-cd origin/origin-dapp
-cp dev.env .env  # Use development env vars
-npm run start
-```
-
-- Changes made to origin-js code will then immediately reflected in Demo DApp without requiring `npm install`.
-
-- Your browser will open to [http://localhost:3000](http://localhost:3000) and display the DApp.
-
-- Follow step 3 (Connect to your local blockchain in MetaMask) from above
 
 ## Localization
 See [translations](translations) directory.

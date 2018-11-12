@@ -1,17 +1,20 @@
-FROM node:8
+FROM node:10
 
-COPY ./origin-js /app/origin-js
-WORKDIR /app/origin-js
+WORKDIR /app
 
 ENV NODE_ENV=production
-# Build origin-js so contract ABI is available for faucet
-RUN npm install --quiet --no-progress
-RUN npm run build
 
-COPY ./origin-faucet /app/origin-faucet
-WORKDIR /app/origin-faucet
-# Install dependencies for origin-faucet
-RUN npm install --quiet --no-progress
+# Install lerna
+RUN npm i lerna -g --loglevel notice
 
-# Configure for Origin network
-CMD ["node", "faucet/app.js", "--network_ids=4,2222"]
+COPY package-lock.json .
+COPY package.json .
+COPY lerna.json .
+COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
+COPY ./origin-faucet ./origin-faucet
+COPY ./scripts ./scripts
+RUN npm install --loglevel notice --unsafe-perm
+RUN lerna run build
+
+CMD ["node", "origin-faucet/faucet/app.js", "--network_ids=4,2222"]

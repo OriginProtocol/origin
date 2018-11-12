@@ -1,8 +1,9 @@
 require('dotenv').config()
+require('envkey')
 
 module.exports = {
   development: {
-    use_env_variable:'DATABASE_URL',
+    use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
       timestamps: true,
@@ -15,7 +16,7 @@ module.exports = {
     logging: false
   },
   'test': {
-    use_env_variable:'DATABASE_URL',
+    use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
       timestamps: true,

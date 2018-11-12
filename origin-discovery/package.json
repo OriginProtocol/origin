@@ -2,14 +2,17 @@
   "name": "origin-discovery",
   "description": "Origin event-listener and discovery server",
   "version": "0.1.0",
+  "engines": {
+    "node": "10.x"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OriginProtocol/origin.git"
+    "url": "https://github.com/OriginProtocol/origin/origin-discovery"
   },
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "bugs": {
-    "url": "git+https://github.com/OriginProtocol/origin.git"
+    "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
     "apollo-server-express": "^2.1.0",
@@ -31,6 +34,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-things": "^0.2.0",
     "chalk": "^2.4.1",
     "eslint": "^5.8.0",
     "eslint-config-standard": "^12.0.0",
@@ -38,14 +42,17 @@
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "rewire": "^4.0.1"
   },
   "scripts": {
     "install:dev": "npm install && npm link origin",
     "test:jsformat": "./node_modules/.bin/eslint 'src/*/*.js' 'test/**/*test.js'",
     "test:js": "./node_modules/.bin/mocha --timeout 10000 --exit",
     "test": "npm run test:jsformat && npm run test:js",
-    "migrate": "./node_modules/.bin/sequelize db:migrate"
+    "migrate": "sequelize db:migrate",
+    "start:listener": "node src/listener/listener.js",
+    "start:discovery": "node src/apollo/app.js"
   },
   "eslintConfig": {
     "root": true,

@@ -1,40 +1,32 @@
-# --- Origin.js
+FROM node:10 as build
 
-FROM node:8 as origin-js-build
-
-COPY ./origin-js /app
 WORKDIR /app
-
-ENV NODE_ENV production
-RUN npm install --quiet --no-progress
-RUN npm run build
-
-# --- DApp
-
-FROM node:8 as build
 
 ARG DEPLOY_TAG
 ARG ENVKEY
 
-COPY ./origin-dapp /app
-WORKDIR /app/
+ENV DEPLOY_TAG=$DEPLOY_TAG ENVKEY=$ENVKEY
 
 # Install envkey-source
 RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
 RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN mv envkey-source /usr/local/bin
 
-ENV NODE_ENV=production DEPLOY_TAG=$DEPLOY_TAG ENVKEY=$ENVKEY
+# Install lerna
+RUN npm i lerna -g --loglevel notice
 
-# Link previously built Origin.js
-COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
-RUN npm link origin
-# Build DApp
-RUN npm install --quiet --no-progress
-RUN eval $(envkey-source) && node_modules/.bin/webpack --display errors-only
+COPY package.json .
+COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
+COPY ./origin-dapp ./origin-dapp
+COPY ./scripts ./scripts
+COPY lerna.json .
+RUN npm install --loglevel notice --unsafe-perm
+# Use EnvKey so that environment variables are available to DApp at build time
+RUN eval $(envkey-source) && lerna run build
 
 # Copy static files to nginx for serving
 FROM nginx:1.15.2-alpine
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/origin-dapp/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

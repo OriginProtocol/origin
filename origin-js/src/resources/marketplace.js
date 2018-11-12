@@ -121,10 +121,10 @@ class Marketplace {
   }
 
   /**
-   * Returns all listings from the marketplace.
+   * Returns listings.
    * TODO: This won't scale. Add support for pagination.
-   * @param opts: { idsOnly, listingsFor, purchasesFor, withBlockInfo }
-   * @return {Promise<List(Listing)>>}
+   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean}
+   * @return {Promise<List(Listing)>}
    * @throws {Error}
    */
   async getListings(opts = {}) {
@@ -179,6 +179,12 @@ class Marketplace {
     return new Listing(listingId, chainListing, ipfsListing)
   }
 
+  /**
+   * Returns all the offers for a listing.
+   * @param listingId
+   * @param opts: {idsOnly:boolean, for:address}
+   * @return {Promise<List(Offer)>}
+   */
   async getOffers(listingId, opts = {}) {
     const offerIds = await this.resolver.getOfferIds(listingId, opts)
     if (opts.idsOnly) {

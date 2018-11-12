@@ -304,7 +304,7 @@ async function handleLog (log, rule, contractVersion, context) {
 
   if (context.config.db) {
     await withRetrys(async () => {
-      await db.Event.insertOrUpdate({
+      await db.Event.upsert({
         blockNumber: log.blockNumber,
         logIndex: log.logIndex,
         contractAddress: log.address,
@@ -411,7 +411,7 @@ async function handleLog (log, rule, contractVersion, context) {
         listingData.updatedAt = log.date
       }
       await withRetrys(async () => {
-        await db.Listing.insertOrUpdate(listingData)
+        await db.Listing.upsert(listingData)
       })
     }
 
@@ -432,7 +432,7 @@ async function handleLog (log, rule, contractVersion, context) {
         offerData.updatedAt = log.date
       }
       await withRetrys(async () => {
-        await db.Offer.insertOrUpdate(offerData)
+        await db.Offer.upsert(offerData)
       })
     }
   }

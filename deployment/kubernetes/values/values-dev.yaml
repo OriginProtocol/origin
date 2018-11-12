@@ -23,20 +23,20 @@ ipfsProxyImageTag: '9d9ced5'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '389fd1f'
+faucetImageTag: '1732882'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'ad58cb5'
+eventlistenerImageTag: 'c58301a'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '461880a'
+discoveryImageTag: 'c58301a'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'a444ac1'
+messagingImageTag: 'beba6fd'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '030e21b'
+notificationsImageTag: 'beba6fd'

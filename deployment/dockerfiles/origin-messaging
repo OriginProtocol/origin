@@ -1,9 +1,10 @@
-FROM node:8
+FROM node:10
 
-COPY ./origin-messaging /app
 WORKDIR /app
 
 ENV NODE_ENV production
-RUN npm install --quiet --no-progress
+
+COPY ./origin-messaging /app
+RUN npm ci --loglevel notice
 
 CMD ["node_modules/.bin/babel-node", "src/index.js", "--presets", "es2015"]

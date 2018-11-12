@@ -3,33 +3,29 @@
   "version": "0.8.6",
   "description": "",
   "engines": {
-    "node": "9.11.1"
+    "node": "10.x"
   },
   "main": "./dist/index.js",
   "scripts": {
     "build": "node scripts/build.js",
-    "format": "npx prettier-eslint --write 'src/**/*.js' 'test/**/*test.js' 'contracts/test/**/*.js' 'scripts/**/*.js'",
-    "format:solidity": "solium -d contracts/contracts/ --fix",
-    "install:dev": "npm install && npm link",
-    "prepare": "npm run build",
+    "format": "npx prettier-eslint --write 'src/**/*.js' 'test/**/*test.js' 'scripts/**/*.js'",
     "start": "node scripts/serve.js serve",
     "start:no-ganache": "node scripts/serve.js no-ganache",
     "test": "node scripts/test.js",
-    "test:truffle": "node scripts/test-truffle.js",
     "test:js": "node scripts/test-js.js",
-    "test:jsw": "node scripts/test-js.js --watch",
-    "test:contracts": "mocha -r babel-register -r babel-polyfill -t 10000 --exit contracts/test-alt/",
-    "test:contractsw": "mocha -r babel-register -r babel-polyfill -t 10000 -w --watch-extensions sol contracts/test-alt/",
-    "test:contracts-coverage": "SOLIDITY_COVERAGE=1 npx solidity-coverage"
+    "test:jsw": "node scripts/test-js.js --watch"
   },
   "files": [
     "dist"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/OriginProtocol/origin-js"
+    "url": "https://github.com/OriginProtocol/origin/origin-js"
   },
-  "author": "Stan James <stan@originprotocol.com>",
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
+  "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
     "ajv": "^6.5.0",
@@ -45,13 +41,14 @@
     "fs-extra": "^7.0.0",
     "map-cache": "^0.2.2",
     "openzeppelin-solidity": "1.10.0",
+    "origin-contracts": "^0.8.6",
     "rlp": "^2.0.0",
     "store": "^2.0.12",
     "truffle": "^4.1.8",
     "truffle-hdwallet-provider": "0.0.5",
     "truffle-privatekey-provider": "^0.1.0",
     "url-parse": "^1.4.0",
-    "web3": "^1.0.0-beta.34",
+    "web3": "^1.0.0-beta.36",
     "webpack": "^4.8.1",
     "webpack-node-externals": "^1.7.2"
   },
@@ -74,8 +71,8 @@
     "flow-bin": "^0.71.0",
     "ganache-core": "^2.1.0",
     "html-webpack-plugin": "^3.2.0",
-    "ipfs": "^0.28.2",
-    "ipfs-api": "^20.2.1",
+    "ipfs": "^0.33.1",
+    "ipfs-api": "^26.1.2",
     "mocha": "^5.1.1",
     "mocha-loader": "^1.1.3",
     "node-watch": "^0.5.8",

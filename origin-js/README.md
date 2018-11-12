@@ -53,27 +53,14 @@ We recommend using [Origin Box](https://github.com/OriginProtocol/origin/tree/ma
 
 1.  Clone this repo.
 ```
-git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-js
-```
-
-1.  Install dependencies and link by running `npm run install:dev`. This script is a shortcut for `npm install && npm link`. Linking means that changes to `origin-js` code are immediately available to local DApps without an `npm install`.
-
-1.  Start the local blockchain and build origin-js by running `npm start`. Code changes will trigger a live rebuild.
-
-1.  To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin/blob/master/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain).
-
-### Using Lerna
-
-1.  Clone this repo.
-```
 git clone https://github.com/OriginProtocol/origin.git && cd origin
 ```
 
-1.  Install dependencies via Lerna: `npm run lerna`
+2.  Install dependencies: `npm install`
 
-2.  Start the local blockchain and build origin-js by running `cd origin-js && npm start`. Code changes will trigger a live rebuild.
+3.  Start the local blockchain and build origin-js by running `cd origin-js && npm start`. Code changes will trigger a live rebuild.
 
-3.  To interact with your local origin-js and local blockahin, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin/blob/master/origin-dapp#run-demo-dapp-with-local-origin-js-and-local-blockchain-with-lerna).
+4.  To interact with your local origin-js and local blockchain, see [the instructions in our Demo DApp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#2-set-up-the-dapp-for-local-development).
 
 
 ## Tests

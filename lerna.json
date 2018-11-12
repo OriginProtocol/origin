@@ -1,7 +1,11 @@
 {
   "packages": [
+    "origin-contracts",
     "origin-js",
-    "origin-dapp"
+    "origin-dapp",
+    "origin-discovery",
+    "origin-faucet",
+    "experimental/*"
   ],
   "version": "independent"
 }
