@@ -105,22 +105,6 @@ function _makeOffer (row) {
 }
 
 /**
- * Helper method. Queries DB to get offers.
- * @param {Object} whereClause - Where clause to use for the DB query.
- * @return {Promise<Array<Offer>>}
- * @private
- */
-async function _getOffers (whereClause) {
-  // Load rows from the Listing table in the DB.
-  const rows = await db.Offer.findAll({ where: whereClause })
-  if (rows.length === 0) {
-    return []
-  }
-
-  return rows.map(row => _makeOffer(row))
-}
-
-/**
  * Queries DB to get offers.
  * @param {string} listingId - optional listing id
  * @param {string} buyerAddress - optional buyer address
@@ -129,7 +113,7 @@ async function _getOffers (whereClause) {
  * @return {Promise<Array<Offer>>}
  */
 async function searchOffers (listingId, buyerAddress, sellerAddress) {
-  let whereClause = {}
+  const whereClause = {}
 
   if (listingId) {
     whereClause.listingId = listingId
@@ -143,11 +127,10 @@ async function searchOffers (listingId, buyerAddress, sellerAddress) {
   if (Object.keys(whereClause).length === 0) {
     throw new Error('A filter must be specified: listingId, buyerAddress or sellerAddress')
   }
-  const rows = await db.Offer.findAll({ where: clause })
-  
+  const rows = await db.Offer.findAll({ where: whereClause })
+
   return rows.map(row => _makeOffer(row))
 }
-
 
 /**
  * Queries DB for an Offer.

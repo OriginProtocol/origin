@@ -1,6 +1,5 @@
 const GraphQLJSON = require('graphql-type-json')
 
-const db = require('../models')
 const search = require('../lib/search')
 const { getListing, getListingsById, getListingsBySeller, getOffer, searchOffers } = require('./db')
 
@@ -59,12 +58,12 @@ const resolvers = {
         args.buyerAddress.toLowerCase(),
         args.sellerAddress.toLowerCase()
       )
-      
+
       return { nodes: offers }
     },
 
     async offer (root, args, context, info) {
-      return await getOffer(args.id)
+      return getOffer(args.id)
     },
 
     user (root, args, context, info) {
