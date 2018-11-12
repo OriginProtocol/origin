@@ -66,7 +66,6 @@
   },
   "devDependencies": {
     "detect-port": "^1.2.3",
-    "dotenv": "^5.0.1",
     "file-loader": "1.1.11",
     "glob": "^7.1.2",
     "prettier-eslint-cli": "^4.7.1",

@@ -16,6 +16,7 @@ class ListingCard extends Component {
 
     this.state = {
       loading: true,
+      display: 'normal',
       offers: []
     }
   }
@@ -91,7 +92,7 @@ class ListingCard extends Component {
     const isWithdrawn = status === 'inactive'
     const showPendingBadge = isPending && !isWithdrawn
     const showSoldBadge = isSold || isWithdrawn
-    const showFeaturedBadge = this.props.featured && !showSoldBadge && !showPendingBadge
+    const showFeaturedBadge = this.state.display == 'featured' && !showSoldBadge && !showPendingBadge
 
     return (
       <div

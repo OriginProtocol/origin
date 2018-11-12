@@ -2,8 +2,8 @@
  * Implementation of the Origin GraphQL server.
  * Uses the Apollo framework: https://www.apollographql.com/server
  */
-
 require('dotenv').config()
+
 try {
   require('envkey')
 } catch (error) {
@@ -14,8 +14,9 @@ const { ApolloServer } = require('apollo-server-express')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
 
-const resolvers = require('./resolvers.js')
+const getResolvers = require('./resolvers.js')
 const typeDefs = require('./schema.js')
+const ListingMetadata = require('./listing-metadata')
 
 const app = express()
 const bundle = promBundle({
@@ -27,11 +28,22 @@ const bundle = promBundle({
 })
 app.use(bundle)
 
+const listingMetadata = new ListingMetadata()
 // Start ApolloServer by passing type definitions and the resolvers
 // responsible for fetching the data for those types.
-const server = new ApolloServer({ typeDefs, resolvers })
+const server = new ApolloServer({
+  resolvers: getResolvers(listingMetadata.listingInfo),
+  typeDefs,
+  context: async ({ req }) => {
+    // update listingIds in a non blocking way
+    listingMetadata.updateHiddenFeaturedListings()
+    return {}
+  } })
 
 server.applyMiddleware({ app })
+
+// initial fetch of ids at the time of starting the server
+listingMetadata.updateHiddenFeaturedListings()
 
 const port = process.env.PORT || 4000
 

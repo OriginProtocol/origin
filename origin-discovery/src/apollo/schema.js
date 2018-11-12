@@ -38,6 +38,11 @@ const typeDefs = gql`
     price: Price! 
     listing: Listing!
   }
+  enum DisplayType {
+    normal
+    featured
+    hidden
+  }
    type OfferConnection {
     nodes: [Offer]!
   }
@@ -65,6 +70,7 @@ const typeDefs = gql`
     subCategory: String!
     price: Price!
     offers: OfferConnection
+    display: DisplayType!
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
   type Stats {

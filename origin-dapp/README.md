@@ -23,7 +23,28 @@ To use the DApp you will need to install and configure the [MetaMask browser ext
 
 If you are running on Rinkeby you can get test Ether from the [Rinkeby faucet](https://faucet.rinkeby.io). You can also get test OGN tokens from the [Origin faucet](https://faucet.originprotocol.com).
 
-Create a listing and post it to IPFS and Ethereum.
+## Run Demo DApp
+
+### 1. Check node version
+
+Make sure you have `node` version 10.0.0 or greater
+
+```
+node --version
+```
+
+### 2. Set up DApp
+
+In a new tab:
+```
+git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-dapp
+npm install
+npm run start
+```
+
+A browser will open to http://localhost:3000. If you don't have the MetaMask extension (or another wallet provider) follow instructions of the next step.
+
+![Origin-homepage](https://user-images.githubusercontent.com/673455/39952325-6d37e3be-5551-11e8-9651-b1697bad3412.png)
 
 ## Browser & Wallet Compatibility
 Browsers with wallets for both desktop and mobile that you can use with the Origin Demo DApp.
@@ -54,17 +75,8 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 <sup>Tests for http://demo.originprotocol.com</sup>
 
 ## Localization
+
 See [translations](translations) directory.
-
-## Deploy on Heroku or IPFS
-
-To deploy a development copy of the site on Heroku, follow the instructions:
-```
-git clone https://github.com/OriginProtocol/origin.git && cd origin
-git subtree push --prefix origin-dapp heroku master
-```
-
-You will need to set some configuration variables for your Heroku deployment. We recommend using the same configuration as our Rinkeby testnet deployment. See https://demo.staging.originprotocol.com/#/dapp-info
 
 ## Contributing
 
