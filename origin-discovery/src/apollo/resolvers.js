@@ -26,7 +26,7 @@ const getResolvers = function (listingMetadata) {
   return {
     JSON: GraphQLJSON,
     Query: {
-      async listings (root, args, context, info) {
+      async listings (root, args) {
         // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
         // Get listing Ids from Elastic.
         const { listingIds, stats } = await search.Listing
@@ -54,12 +54,12 @@ const getResolvers = function (listingMetadata) {
         }
       },
 
-      async listing (root, args, context, info) {
+      async listing (root, args) {
         const listings = await getListings([args.id], listingMetadata.hiddenListings, listingMetadata.featuredListings)
         return (listings.length === 1) ? listings[0] : null
       },
 
-      async offers (root, args, context, info) {
+      async offers (root, args) {
         const opts = {}
         opts.buyerAddress = args.buyerAddress
         opts.listingId = args.listingId
@@ -67,11 +67,11 @@ const getResolvers = function (listingMetadata) {
         return { nodes: offers }
       },
 
-      async offer (root, args, context, info) {
+      async offer (root, args) {
         return search.Offer.get(args.id)
       },
 
-      user (root, args, context, info) {
+      user (root, args) {
         return search.User.get(args.walletAddress)
       }
     },
@@ -80,7 +80,7 @@ const getResolvers = function (listingMetadata) {
       seller (listing, args, context, info) {
         return relatedUserResolver(listing.seller, info)
       },
-      offers (listing, args) {
+      offers (listing) {
         const offers = search.Offer.search({ listingId: listing.id })
         return { nodes: offers }
       }
@@ -108,7 +108,7 @@ const getResolvers = function (listingMetadata) {
     },
 
     User: {
-      offers (user, args) {
+      offers (user) {
         const offers = search.Offer.search({ buyer: user.walletAddress })
         return { nodes: offers }
       }

@@ -34,7 +34,7 @@ const listingMetadata = new ListingMetadata()
 const server = new ApolloServer({
   resolvers: getResolvers(listingMetadata.listingInfo),
   typeDefs,
-  context: async ({ req }) => {
+  context: async () => {
     // update listingIds in a non blocking way
     listingMetadata.updateHiddenFeaturedListings()
     return {}
