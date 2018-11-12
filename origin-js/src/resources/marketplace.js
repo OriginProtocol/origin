@@ -108,6 +108,11 @@ class Marketplace {
    * @return {Promise<List(Offer)>}
    */
   async getOffers(listingId, opts = {}) {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch offers from the discovery back-end to reduce latency.
+      return await this.discoveryService.getOffers(listingId, opts)
+    }
+
     const offerIds = await this.resolver.getOfferIds(listingId, opts)
     if (opts.idsOnly) {
       return offerIds

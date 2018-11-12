@@ -198,6 +198,32 @@ class DiscoveryService {
 
     return this._flattenListingData(resp.data.listing)
   }
+
+  /**
+   * Queries discovery server for all offers
+   * Options:
+   *  - idsOnly(boolean): returns only ids rather than the full Offer object.
+   * @param listingId {string}: listing id of a listing to which offer has been made to 
+   * @param opts: { idsOnly }
+   * @return {Promise<*>}
+   */
+  async getOffers(listingId, opts) {
+    
+    const resp = await this._query(`{
+      listing (id: "${listingId}") {
+      offers {
+        nodes {
+          id
+          data
+        }
+      }
+     }
+    }`)
+    
+    offers = resp.data.listing.offers.nodes.data
+
+    return opts.idsOnly ? offers.map(offer => offer.id) : offers
+  }
 }
 
 export default DiscoveryService

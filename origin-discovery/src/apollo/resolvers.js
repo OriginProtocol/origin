@@ -2,7 +2,7 @@ const GraphQLJSON = require('graphql-type-json')
 
 const db = require('../models')
 const search = require('../lib/search')
-const { getListing, getListingsById, getListingsBySeller } = require('./db')
+const { getListing, getListingsById, getListingsBySeller, getOffer, searchOffers } = require('./db')
 
 /**
  * Gets information on a related user.
@@ -54,27 +54,17 @@ const resolvers = {
     },
 
     async offers (root, args, context, info) {
-      const clause = {}
-      if (args.listingId) {
-        clause.listingId = args.listingId
-      }
-      if (args.buyerAddress) {
-        clause.buyerAddress = args.buyerAddress.toLowerCase()
-      }
-      if (args.sellerAddress) {
-        clause.sellerAddress = args.sellerAddress.toLowerCase()
-      }
-      if (Object.keys(clause).length === 0) {
-        throw new Error('A filter must be specified: listingId, buyerAddress or sellerAddress')
-      }
-      const rows = await db.Offer.findAll({ where: clause })
-      const offers = rows.map(offer => offer.data)
+      const offers = await searchOffers(
+        args.listingId,
+        args.buyerAddress.toLowerCase(),
+        args.sellerAddress.toLowerCase()
+      )
+      
       return { nodes: offers }
     },
 
     async offer (root, args, context, info) {
-      const row = await db.Offer.findByPk(args.id)
-      return row !== null ? row.data : null
+      return await getOffer(args.id)
     },
 
     user (root, args, context, info) {
@@ -90,10 +80,7 @@ const resolvers = {
     },
 
     async offers (listing, args, context, info) {
-      const rows = await db.Offer.findAll({
-        where: { listingId: listing.id }
-      })
-      const offers = rows.map(offer => offer.data)
+      const offers = await searchOffers(args.listingId)
       return { nodes: offers }
     }
   },
@@ -111,6 +98,12 @@ const resolvers = {
       return offer.totalPrice
     },
 
+    // TODO: check if this is correct. Do we need this or should it be read from the 'data' field. Similar question
+    // for total price
+    affiliate (offer) {
+      return offer.affiliate
+    },
+
     async listing (offer, args, context, info) {
       return getListing(offer.listingId)
     }
@@ -119,10 +112,7 @@ const resolvers = {
   User: {
     // Return offers made by a user.
     async offers (user, args, context, info) {
-      const rows = await db.Offer.findAll({
-        where: { buyerAddress: user.walletAddress.toLowerCase() }
-      })
-      const offers = rows.map(row => row.data)
+      const offers = await searchOffers(null, user.walletAddress.toLowerCase())
       return { nodes: offers }
     },
 

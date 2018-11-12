@@ -88,4 +88,84 @@ async function getListing (listingId) {
   return listing
 }
 
-module.exports = { getListing, getListingsById, getListingsBySeller }
+/**
+ * Helper function. Returns an offer object compatible with the GraphQL Offer schema.
+ * @param {Object} row - Row read from DB offer table.
+ * @return {Object}
+ * @private
+ */
+function _makeOffer (row) {
+  return {
+    id: row.id,
+    ipfsHash: row.data.ipfs.hash,
+    data: row.data,
+    status: row.status,
+    price: row.data.price
+  }
+}
+
+/**
+ * Helper method. Queries DB to get offers.
+ * @param {Object} whereClause - Where clause to use for the DB query.
+ * @return {Promise<Array<Offer>>}
+ * @private
+ */
+async function _getOffers (whereClause) {
+  // Load rows from the Listing table in the DB.
+  const rows = await db.Offer.findAll({ where: whereClause })
+  if (rows.length === 0) {
+    return []
+  }
+
+  return rows.map(row => _makeOffer(row))
+}
+
+/**
+ * Queries DB to get offers.
+ * @param {string} listingId - optional listing id
+ * @param {string} buyerAddress - optional buyer address
+ * @param {string} sellerAddress - optional seller address
+ *
+ * @return {Promise<Array<Offer>>}
+ */
+async function searchOffers (listingId, buyerAddress, sellerAddress) {
+  let whereClause = {}
+
+  if (listingId) {
+    whereClause.listingId = listingId
+  }
+  if (buyerAddress) {
+    whereClause.buyerAddress = buyerAddress
+  }
+  if (sellerAddress) {
+    whereClause.sellerAddress = sellerAddress
+  }
+  if (Object.keys(whereClause).length === 0) {
+    throw new Error('A filter must be specified: listingId, buyerAddress or sellerAddress')
+  }
+  const rows = await db.Offer.findAll({ where: clause })
+  
+  return rows.map(row => _makeOffer(row))
+}
+
+
+/**
+ * Queries DB for an Offer.
+ * @param offerId
+ * @return {Promise<Object|null>}
+ */
+async function getOffer (offerId) {
+  const row = await db.Offer.findByPk(offerId)
+  if (!row) {
+    return null
+  }
+  return _makeOffer(row)
+}
+
+module.exports = {
+  getListing,
+  getListingsById,
+  getListingsBySeller,
+  getOffer,
+  searchOffers
+}
