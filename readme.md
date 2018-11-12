@@ -28,3 +28,9 @@ You can see the Origin ecosystem in action at https://dapp.originprotocol.com.
 ## Development
 
 Please refer to our instructions for [developing](https://github.com/OriginProtocol/origin/tree/master/DEVELOPMENT.md) and our [contributing guidelines](https://github.com/OriginProtocol/origin/tree/master/CONTRIBUTING.md).
+
+## Contributing
+
+Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
+
+To get involved, please review our [guide to contributing](https://www.originprotocol.com/developers).
