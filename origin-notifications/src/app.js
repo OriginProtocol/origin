@@ -16,8 +16,15 @@ const port = 3456
 
 const PushSubscription = require('./models').PushSubscription
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
-const privateKey = process.env.VAPID_PRIVATE_KEY
-const publicKey = process.env.VAPID_PUBLIC_KEY
+let privateKey = process.env.VAPID_PRIVATE_KEY
+let publicKey = process.env.VAPID_PUBLIC_KEY
+
+if (!privateKey || !publicKey) {
+  console.log('Warning: VAPID public or private key not defined, generating one')
+  const vapidKeys = webpush.generateVAPIDKeys()
+  privateKey = vapidKeys.privateKey
+  publicKey = vapidKeys.publickey
+}
 
 const eventNotificationMap = {
   OfferCreated: {
