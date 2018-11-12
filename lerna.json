@@ -5,9 +5,7 @@
     "origin-dapp",
     "origin-discovery",
     "origin-faucet",
-    "origin-playground",
-    "origin-graphql",
-    "origin-simple-demo"
+    "experimental/*"
   ],
   "version": "independent"
 }
