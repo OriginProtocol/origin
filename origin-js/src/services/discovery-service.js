@@ -103,10 +103,19 @@ class DiscoveryService {
 
   /**
    * Queries discovery server for all listings, with support for pagination.
+   * Options:
+   *  - idsOnly(boolean): returns only ids rather than the full Listing object.
+   *  - listingsFor(address): returns listing created by a specific seller.
+   *  - purchasesFor(address): returns listing a specific seller made an offer on.
    * @param opts: { idsOnly, listingsFor, purchasesFor, offset, numberOfItems }
    * @return {Promise<*>}
    */
   async getListings(opts) {
+    // Check for incompatible options.
+    if (opts.listingsFor && opts.purchasesFor) {
+      throw new Error('listingsFor and purchasesFor options are incompatible')
+    }
+
     // Offset should be bigger than 0.
     const offset = Math.max(opts.offset || 0, 0)
 
@@ -117,25 +126,55 @@ class DiscoveryService {
       ? Math.min(Math.max(opts.numberOfItems, 1), MAX_NUM_RESULTS)
       : -1
 
-    // TODO: pass listingsFor, purchasesFor as filters
-    const query = `{
-      listings(
-        filters: []
-        page: { offset: ${offset}, numberOfItems: ${numberOfItems}}
-      ) {
-        nodes {
-          data
-          display
+    let query, listings
+    if (opts.listingsFor) {
+      // Query for all listings created by the specified seller address.
+      query = `{
+        user(walletAddress: "${opts.listingsFor}") {
+          listings {
+            nodes {
+              data
+              display
+            }
+          }
+        } 
+      }`
+      const resp = await this._query(query)
+      listings = resp.data.user.listings.nodes.map(listing => this._flattenListingData(listing))
+    } else if (opts.purchasesFor) {
+      // Query for all listings the specified buyer address made an offer on.
+      query = `{
+        user(walletAddress: "${opts.purchasesFor}") {
+          offers {
+            nodes {
+              listing {
+                data
+                display
+              }
+            }
+          }
         }
-      }
-    }`
-
-    const resp = await this._query(query)
-    if (opts.idsOnly) {
-      return resp.data.listings.nodes.map(listing => listing.data.id)
+      }`
+      const resp = await this._query(query)
+      listings = resp.data.user.offers.nodes.map(offer => this._flattenListingData(offer.listing))
     } else {
-      return resp.data.listings.nodes.map(listing => this._flattenListingData(listing))
+      // General query against all listings. Used for example on Browse and search pages.
+      query = `{
+        listings(
+          filters: []
+          page: { offset: ${offset}, numberOfItems: ${numberOfItems} }
+        ) {
+          nodes {
+            data
+            display
+          }
+        }
+      }`
+      const resp = await this._query(query)
+      listings = resp.data.listings.nodes.map(listing => this._flattenListingData(listing))
     }
+
+    return opts.idsOnly ? listings.map(listing => listing.id) : listings
   }
 
   /**
@@ -146,7 +185,6 @@ class DiscoveryService {
   async getListing(listingId) {
     const query = `{
       listing(id: "${listingId}") {
-        id
         data
         display
       }

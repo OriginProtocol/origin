@@ -43,7 +43,7 @@ describe('get/setLastBlock with DB', () => {
   })
   it(`Should return default continue value when no state found`, async () => {
     // Delete listener state in the DB.
-    db.Listener.destroy({
+    await db.Listener.destroy({
       where: {
         id: 'test'
       }
