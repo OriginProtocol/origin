@@ -33,6 +33,11 @@
     "url": "^0.11.0",
     "web3": "^1.0.0-beta.35"
   },
+  "devDependencies": {
+    "chai-things": "^0.2.0",
+    "chalk": "^2.4.1",
+    "rewire": "^4.0.1"
+  },
   "scripts": {
     "lint": "eslint src/**/*.js --rulesdir ../",
     "test": "mocha --timeout 10000 --exit",
