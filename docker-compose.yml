@@ -9,8 +9,6 @@ services:
       - POSTGRES_USER=origin
       - POSTGRES_PASSWORD=origin
       - POSTGRES_DB=origin
-    networks:
-      - default
 
   elasticsearch:
     container_name: elasticsearch
