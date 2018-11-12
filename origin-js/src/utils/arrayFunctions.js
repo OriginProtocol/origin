@@ -28,6 +28,6 @@ export function mapValues(object, mapFunction){
 
   return Object.assign(
     ...Object.keys(object)
-      .map(k => ({[k]: mapFunction(object[k])}))
+      .map(k => ({ [k]: mapFunction(object[k]) }))
   )
 }

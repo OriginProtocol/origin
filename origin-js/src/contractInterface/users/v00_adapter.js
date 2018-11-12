@@ -23,7 +23,7 @@ export default class V00_UsersAdapter {
     this.blockAttestattionV1 = blockAttestattionV1 || 0
   }
 
-  async set({ profile, attestations = [], options = {}}) {
+  async set({ profile, attestations = [], options = {} }) {
     if (profile) {
       const selfAttestation = await this.profileAttestation(profile)
       attestations.push(selfAttestation)

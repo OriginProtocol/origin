@@ -10,7 +10,7 @@
   "scripts": {
     "build": "webpack --progress",
     "dev": "npm run start",
-    "lint": "eslint '**/*.js' --rulesdir ../",
+    "lint": "eslint 'src/**/*.js' --rulesdir ../",
     "start": "node scripts/serve.js serve",
     "start:no-ganache": "node scripts/serve.js no-ganache",
     "test": "node scripts/test.js",
