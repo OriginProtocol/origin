@@ -9,7 +9,6 @@
   "module": "./src/index.js",
   "scripts": {
     "build": "webpack --progress",
-    "dev": "npm run start",
     "lint": "eslint 'src/**/*.js' --rulesdir ../",
     "start": "node scripts/serve.js serve",
     "start:no-ganache": "node scripts/serve.js no-ganache",

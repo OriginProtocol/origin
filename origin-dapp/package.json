@@ -74,10 +74,9 @@
   },
   "scripts": {
     "build": "NODE_ENV=production node --max_old_space_size=4096 node_modules/.bin/webpack --progress",
-    "dev": "npx webpack-dev-server --open",
+    "start": "webpack-dev-server --open",
     "format": "npx prettier-eslint --write 'src/**/*.js''",
     "lint": "eslint 'src/**/*.js' --rulesdir ../",
-    "start": "if [ \"$NODE_ENV\" = \"production\" ]; then npm run serve; else npm run dev; fi",
     "serve": "serve build",
     "translations": "node translations/scripts/processTranslatedMessages.js",
     "test": "echo \"No tests defined \""

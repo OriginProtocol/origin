@@ -28,7 +28,7 @@ cp origin-dapp/dev.env origin-dapp/.env
 3. You can then start a light development environment by executing:
 
 ```
-npm run dev
+npm start
 ```
 
 4. You will then need to connect to your locally running blockchain in MetaMask. Follow these steps:
