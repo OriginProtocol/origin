@@ -77,6 +77,7 @@ matrix:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts
         - npm run bootstrap -- --scope origin
+        - npm run bootstrap -- --scope origin-discovery
       script:
         - lerna run lint --scope origin-discovery
         - lerna run test --scope origin-discovery
