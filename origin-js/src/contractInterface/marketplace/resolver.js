@@ -24,31 +24,6 @@ class MarketplaceResolver {
     this.store = store
   }
 
-  async getSales(account) {
-    const network = await this.contractService.web3.eth.net.getId()
-    let allSales = []
-
-    for (const version of this.versions) {
-      const soldOrPendingListings = await this.adapters[version].getSales(account)
-
-      const sales = soldOrPendingListings.map(sale => {
-        const { returnValues } = sale
-        const listingIndex = returnValues.listingID
-
-        return {
-          listingIndex,
-          listingId: generateListingId({ version, network, listingIndex }),
-          version,
-          network
-        }
-      })
-
-      allSales = [...allSales, ...sales]
-    }
-
-    return allSales
-  }
-
   async getListingsCount() {
     let total = 0
     for (const version of this.versions) {

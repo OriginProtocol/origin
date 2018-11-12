@@ -236,15 +236,6 @@ class V00_MarkeplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async getSales(account) {
-    await this.getContract()
-
-    return await this.contract.getPastEvents('ListingCreated', {
-      filter: { party: account },
-      fromBlock: this.blockEpoch
-    })
-  }
-
   async getListing(listingId, blockInfo) {
     await this.getContract()
 
