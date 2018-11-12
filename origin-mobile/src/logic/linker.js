@@ -230,6 +230,7 @@ class Linker {
 
     let linkedObj = null
     for (const link of links) {
+      console.log("linkId: ", linkId, " gen linkId: ", this.getLinkId(link.id, link.clientToken))
       if (linkId == this.getLinkId(link.id, link.clientToken))
       {
         linkedObj = link
