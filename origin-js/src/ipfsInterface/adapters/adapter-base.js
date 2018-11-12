@@ -1,10 +1,8 @@
 import Ajv from 'ajv'
 
 import listingSchemaV1 from '../schemas/listing.json'
-import listingCompleteSchemaV1 from '../schemas/listing-complete.json'
 import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw.json'
 import offerSchemaV1 from '../schemas/offer.json'
-import offerCompleteSchemaV1 from '../schemas/offer-complete.json'
 import offerWithdrawnSchemaV1 from '../schemas/offer-withdraw.json'
 import offerAcceptedSchemaV1 from '../schemas/offer-accept.json'
 import disputeSchemaV1 from '../schemas/dispute.json'
@@ -17,10 +15,8 @@ const ajv = new Ajv({ allErrors: true })
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
 ajv.addSchema([
   listingSchemaV1,
-  listingCompleteSchemaV1,
   listingWithdrawnSchemaV1,
   offerSchemaV1,
-  offerCompleteSchemaV1,
   offerWithdrawnSchemaV1,
   offerAcceptedSchemaV1,
   disputeSchemaV1,
