@@ -39,7 +39,7 @@
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/runtime": "^7.1.2",
-    "bignumber.js": "^7.2.1",
+    "bignumber.js": "^8.0.1",
     "chai": "^4.2.0",
     "chai-bignumber": "^2.0.2",
     "chalk": "^2.4.1",
