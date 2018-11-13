@@ -13,6 +13,7 @@ const Web3 = require('web3')
 
 const search = require('../lib/search.js')
 const db = require('../models')
+const { upsertListing } = require('../lib/db')
 
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils.js')
 const { postToDiscordWebhook, postToWebhook } = require('./webhooks.js')
@@ -398,20 +399,18 @@ async function handleLog (log, rule, contractVersion, context) {
 
   if (context.config.db) {
     if (LISTING_EVENTS.includes(rule.eventName)) {
-      console.log(`Indexing listing in DB: id=${listingId}`)
+      console.log(`Indexing listing in DB:
+        id=${listingId} blockNumber=${log.blockNumber} logindex=${log.logIndex}`)
       const listingData = {
         id: listingId,
+        blockNumber: log.blockNumber,
+        logIndex: log.logIndex,
         status: listing.status,
         sellerAddress: listing.seller.toLowerCase(),
         data: listing
       }
-      if (rule.eventName === 'ListingCreated') {
-        listingData.createdAt = log.date
-      } else {
-        listingData.updatedAt = log.date
-      }
       await withRetrys(async () => {
-        await db.Listing.upsert(listingData)
+        upsertListing(listingData)
       })
     }
 

@@ -2,11 +2,18 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Listing = sequelize.define('Listing', {
+    // Listing id.
     id: { type: DataTypes.STRING(32), primaryKey: true },
+    // Block number at which the listing event was recorded.
+    blockNumber: { type: DataTypes.INTEGER, primaryKey: true },
+    // Index of the listing event within the block.
+    logIndex: { type: DataTypes.INTEGER, primaryKey: true },
     // Seller's eth wallet address, lowercase.
     sellerAddress: DataTypes.CHAR(42),
     // Offer status as returned by the marketplace.getListing(listingId) method.
     status: DataTypes.STRING(32),
+    // True if this is the most recent row for a listing.
+    latest: DataTypes.BOOLEAN,
     // JSON data as returned by the marketplace.getListing(listingId) method.
     data: DataTypes.JSONB,
     // Creation date.
@@ -14,9 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     // Date of most recent update, or null if no update.
     updatedAt: DataTypes.DATE
   }, {
-    tableName: 'listing',
-    // Do not automatically add the timestamp attributes (updatedAt, createdAt).
-    timestamps: false
+    tableName: 'listing'
   })
 
   Listing.associate = function (models) {

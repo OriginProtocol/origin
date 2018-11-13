@@ -2,7 +2,7 @@ const GraphQLJSON = require('graphql-type-json')
 
 const db = require('../models')
 const search = require('../lib/search')
-const { getListing, getListingsById, getListingsBySeller } = require('./db')
+const { getListing, getListingsById, getListingsBySeller } = require('../lib/db')
 
 /**
  * Gets information on a related user.
