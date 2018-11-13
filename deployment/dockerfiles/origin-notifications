@@ -14,5 +14,5 @@ COPY ./origin-notifications /app
 RUN npm ci --loglevel notice
 
 CMD eval $(envkey-source) && \
-	npm run migrate \
+	npm run migrate && \
 	npm run start
