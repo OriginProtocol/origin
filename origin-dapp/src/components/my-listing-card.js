@@ -20,10 +20,6 @@ class MyListingCard extends Component {
         id: 'my-listing-card.confirmCloseListing',
         defaultMessage:
           'Are you sure that you want to permanently close this listing? This cannot be undone.'
-      },
-      ETH: {
-        id: 'my-listing-card.ethereumCurrencyAbbrev',
-        defaultMessage: 'ETH'
       }
     })
 
@@ -112,7 +108,7 @@ class MyListingCard extends Component {
           <div className="content-container d-flex flex-column">
             <span className={`status ${status}`}>{status}</span>
             <p className="category">{category}</p>
-            <h2 className="title text-truncate">
+            <h2 className="title text-truncate" title={name}>
               <Link to={`/listing/${listing.id}`}>{name}</Link>
             </h2>
             {/*<p className="timestamp">{timestamp}</p>*/}

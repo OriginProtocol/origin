@@ -5,7 +5,7 @@ const appendSlash = url => {
   return url.substr(-1) === '/' ? url : url + '/'
 }
 
-class WalletLinker {
+export default class WalletLinker {
   constructor({ linkerServerUrl, fetch, networkChangeCb, web3 }) {
     this.serverUrl = linkerServerUrl
     this.fetch = fetch
@@ -394,5 +394,3 @@ class WalletLinker {
     return this.http(this.serverUrl, url, undefined, 'GET')
   }
 }
-
-module.exports = WalletLinker

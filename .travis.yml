@@ -1,7 +1,118 @@
-language: node_js
-node_js:
-  - "lts/*"
-# FIXME: remove dependency between origin-faucet and origin-js/contracts/test-alt
-script:
-  - cd origin-dapp && npm install && npm test
-  - cd ../origin-faucet && npm install && cd ../origin-js && npm install && npm test
+---
+git:
+  depth: 3
+matrix:
+  include:
+    - name: "ipfs-proxy tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - ipfs-proxy/node_modules
+      before_cache:
+        - rm -rf ipfs-proxy/node_modules/.cache
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope ipfs-proxy
+      script:
+        - lerna run lint --scope ipfs-proxy
+        - lerna run test --scope ipfs-proxy
+
+    - name: "origin-bridge tests"
+      language: python
+      python: 3.6
+      before_script:
+        - cd origin-bridge
+        - pip install -r requirements.txt
+      script:
+        - pytest --flakes --codestyle
+
+    - name: "origin-contracts tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-contracts/node_modules
+      before_cache:
+        - rm -rf origin-contracts/node_modules/.cache
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts
+      script:
+        - lerna run test --scope origin-contracts
+
+    - name: "origin-dapp tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+      script:
+        - lerna run lint --scope origin-dapp
+
+    - name: "origin-discovery tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-contracts/node_modules
+          - origin-js/node_modules
+          - origin-discovery/node_modules
+      before_cache:
+        - rm -rf origin-contracts/node_modules/.cache
+        - rm -rf origin-js/node_modules/.cache
+        - rm -rf origin-discovery/node_modules/.cache
+      addons:
+        postgresql: 9.6
+      services:
+        - postgresql
+      env:
+        - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+      before_script:
+        - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope origin-discovery
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts
+        - npm run bootstrap -- --scope origin
+        - npm run bootstrap -- --scope origin-discovery
+      script:
+        - lerna run lint --scope origin-discovery
+        - lerna run test --scope origin-discovery
+
+    - name: "origin-js tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-contracts/node_modules
+          - origin-js/node_modules
+      before_cache:
+        - rm -rf origin-contracts/node_modules/.cache
+        - rm -rf origin-js/node_modules/.cache
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts
+        - npm run bootstrap -- --scope origin
+      script:
+        - lerna run lint --scope origin
+        - lerna run test --scope origin
+
+    - name: "origin-messaging tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+      script:
+        - lerna run lint --scope origin-messaging
+
+    - name: "origin-notifications tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+      script:
+        - lerna run lint --scope origin-notifications

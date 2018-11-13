@@ -9,19 +9,21 @@ import {
 import Web3 from 'web3'
 import { PROFILE_DATA_TYPE, IpfsDataStore } from '../../ipfsInterface/store'
 
+const ClaimDataIsIpfsHash = [4, 5] // twitter & airbnb
 const selfAttestationTopic = 13 // TODO: use the correct number here
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
-class V00_UsersAdapter {
-  constructor({ contractService, ipfsService, blockEpoch }) {
+export default class V00_UsersAdapter {
+  constructor({ contractService, ipfsService, blockEpoch, blockAttestattionV1 }) {
     this.contractService = contractService
     this.ipfsDataStore = new IpfsDataStore(ipfsService)
     this.web3EthAccounts = this.contractService.web3.eth.accounts
     this.contractName = 'V00_UserRegistry'
     this.blockEpoch = blockEpoch || 0
+    this.blockAttestattionV1 = blockAttestattionV1 || 0
   }
 
-  async set({ profile, attestations = [], options = {}}) {
+  async set({ profile, attestations = [], options = {} }) {
     if (profile) {
       const selfAttestation = await this.profileAttestation(profile)
       attestations.push(selfAttestation)
@@ -116,7 +118,12 @@ class V00_UsersAdapter {
             return data.substr(2)
           })
           .join('')
-      const dataOffsets = attestations.map(() => 32) // all data hashes will be 32 bytes
+
+      /* All the data is in bytes32 binary format in the contract. To calculate the lenght we just
+       * deduct 2 (becase '0x') gets removed. And then divide the remaining lenght by 2 becase
+       * the data is twice the size when it is represented as string (with hex encoding).
+       */
+      const dataOffsets = attestations.map(({ data }) => (data.length - 2) / 2)
 
       if (identityAddress) {
         // batch add claims to existing identity
@@ -162,7 +169,8 @@ class V00_UsersAdapter {
     const claimAddedEvents = await identity.getPastEvents('ClaimAdded', {
       fromBlock: this.blockEpoch
     })
-    const mapped = claimAddedEvents.map(({ returnValues }) => {
+
+    const mapped = claimAddedEvents.map(({ returnValues, blockNumber }) => {
       return {
         claimId: returnValues.claimId,
         topic: Number(returnValues.topic),
@@ -170,7 +178,8 @@ class V00_UsersAdapter {
         issuer: returnValues.issuer,
         scheme: Number(returnValues.scheme),
         signature: returnValues.signature,
-        uri: returnValues.uri
+        uri: returnValues.uri,
+        blockNumber: blockNumber
       }
     })
     const profileClaims = mapped.filter(
@@ -183,15 +192,33 @@ class V00_UsersAdapter {
     if (profileClaims.length) {
       const bytes32 = profileClaims[profileClaims.length - 1].data
       const ipfsHash = this.contractService.getIpfsHashFromBytes32(bytes32)
-      profile = await this.ipfsDataStore.load(PROFILE_DATA_TYPE, ipfsHash)
+      try {
+        profile = await this.ipfsDataStore.load(PROFILE_DATA_TYPE, ipfsHash)
+      } catch (error) {
+        console.error(`Can not read profile data from ipfs (hash: '${ipfsHash}'): ${error.message}`)
+      }
     }
+
     const validAttestations = await this.validAttestations(
       identityAddress,
       nonProfileClaims
     )
-    const attestations = validAttestations.map(
-      att => new AttestationObject(att)
-    )
+
+    const attestations = validAttestations
+      .map(att => {
+        try {
+          if (ClaimDataIsIpfsHash.includes(att.topic)){
+            if (att.blockNumber >= this.blockAttestattionV1)
+              att.ipfsHash = this.contractService.getIpfsHashFromBytes32(att.data)
+          }
+        }
+        catch (error) {
+          console.error(`Can not convert to ipfs hash: ${error.message}`)
+        }
+        return att
+      })
+      .map(att => new AttestationObject(att))
+
     return { profile, attestations }
   }
 
@@ -229,5 +256,3 @@ class V00_UsersAdapter {
     return filtered.map(({ attestation }) => attestation)
   }
 }
-
-module.exports = V00_UsersAdapter

@@ -173,7 +173,7 @@ class Messaging {
     const sig_phrase = this.getMessagingPhrase()
     // lock in the message to the hardcoded one
     if (sig_key && sig_phrase == PROMPT_MESSAGE) {
-      this.setAccount(sig_key)
+      this.setAccount(sig_key, sig_phrase)
     } else {
       this.promptInit()
     }
@@ -448,7 +448,7 @@ class Messaging {
     })
   }
 
-  setAccount(key_str) {
+  setAccount(key_str, phrase_str) {
     this.account = this.web3.eth.accounts.privateKeyToAccount(key_str)
     this.account.publicKey =
       '0x' +
@@ -459,21 +459,23 @@ class Messaging {
     // send it to local storage
     const scopedMessagingKeyName = `${MESSAGING_KEY}:${this.account_key}`
     this.setKeyItem(scopedMessagingKeyName, key_str)
+    //set phrase in the cookie
+    const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
+    this.setKeyItem(scopedMessagingPhraseName, phrase_str)
     this.initMessaging()
   }
 
   async promptInit() {
+    const sig_phrase = PROMPT_MESSAGE
     const signature = await this.web3.eth.personal.sign(
-      PROMPT_MESSAGE,
+      sig_phrase,
       this.account_key
     )
 
     // 32 bytes in hex + 0x
     const sig_key = signature.substring(0, 66)
-    //set phrase in the cookie
-    const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
-    this.setKeyItem(scopedMessagingPhraseName, PROMPT_MESSAGE)
-    this.setAccount(sig_key)
+
+    this.setAccount(sig_key, sig_phrase)
   }
 
   async promptForSignature() {

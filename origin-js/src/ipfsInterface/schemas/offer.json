@@ -21,10 +21,6 @@
     },
     "timeSlot": {
       "type": "object",
-      "required": [
-        "startDate",
-        "endDate"
-      ],
       "properties": {
         "startDate": {
           "type": "string",
@@ -33,6 +29,9 @@
         "endDate": {
           "type": "string",
           "format": "date-time"
+        },
+        "price": {
+          "$ref": "#/definitions/money"
         }
       },
       "required": [

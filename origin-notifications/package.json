@@ -1,0 +1,35 @@
+{
+  "name": "origin-notifications",
+  "version": "0.0.1",
+  "description": "Origin Notifications Service",
+  "engines": {
+    "node": "10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/origin-notifications"
+  },
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
+  "main": "app.js",
+  "scripts": {
+    "lint": "eslint '**/*.js' --rulesdir ../",
+    "migrate": "sequelize db:migrate",
+    "start": "node src/app.js",
+    "test": "echo \"Warning: no tests specified\""
+  },
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "envkey": "^1.2.2",
+    "express": "^4.16.4",
+    "pg": "^7.5.0",
+    "pg-hstore": "^2.3.2",
+    "rate-limiter-flexible": "^0.18.5",
+    "sequelize": "^5.0.0-beta.5",
+    "sequelize-cli": "^5.2.0",
+    "web-push": "^3.3.3"
+  }
+}

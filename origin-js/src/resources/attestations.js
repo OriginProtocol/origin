@@ -11,7 +11,21 @@ const responseToUrl = (resp = {}) => {
   return resp['url']
 }
 
-class Attestations {
+/* - IPFS hash is a base58 encoded string
+   - We store IPFS hashes in solidity claims in bytes32 binary format to minimise
+     gas cost.
+   - bytes32 is not string serialisable so it can not be transmitted in that form
+     from bridge to the DApp
+   - bridge needs to transform ipfs hash to bytes32 format (that is how
+     it is going to be stored in the contract) before signing the claim, and then
+     send IPFS hash to the DApp in base58 string encoding.
+   - this way claim has a correct signature if IPFS hash has bytes32 hex encoding
+   - the DApp takes signature and other claim info and transforms the base58 encoded
+     IPFS hash to base32 hex before submitting the claim to web3.
+*/
+export const ClaimDataIsIpfsHash = [4, 5] // twitter & airbnb
+
+export class Attestations {
   constructor({ serverUrl, contractService, fetch, blockEpoch }) {
     this.serverUrl = serverUrl
     this.contractService = contractService
@@ -19,9 +33,12 @@ class Attestations {
     this.usersResolver = new UsersResolver({ contractService, blockEpoch })
 
     this.responseToAttestation = (resp = {}) => {
+      const topic = resp['claim-type']
       return new AttestationObject({
-        topic: resp['claim-type'],
-        data: Web3.utils.soliditySha3(resp['data']),
+        topic: topic,
+        data: ClaimDataIsIpfsHash.includes(topic) ?
+          contractService.getBytes32FromIpfsHash(resp['data']) :
+          Web3.utils.soliditySha3(resp['data']),
         signature: resp['signature']
       })
     }
@@ -176,9 +193,4 @@ class Attestations {
       '0x' + Web3.utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
     return Web3.utils.toChecksumAddress(address)
   }
-}
-
-module.exports = {
-  AttestationObject,
-  Attestations
 }

@@ -17,21 +17,34 @@ export function dappFormDataToOriginListing(formData) {
     .slice(0, 2)
     .join('.')
 
-  const listingData = {
+  let listingData = {
     category: category,
     subCategory: subCategory,
     language: 'en-US', // TODO(franck) Get language from DApp.
     title: formData.name,
     description: formData.description,
-    listingType: 'unit',
-    unitsTotal: 1, // Note: for V1 we only support single unit listings.
-    price: {
-      amount: formData.price.toString(),
-      currency: 'ETH'
-    },
+    listingType: formData.listingType,
     commission: {
       amount: formData.boostValue.toString(),
       currency: 'OGN'
+    },
+    unitsTotal: 1 // Note: for V1 we only support single unit listings.
+  }
+
+  if (formData.listingType === 'unit') {
+    listingData = {
+      ...listingData,
+      price: {
+        amount: formData.price.toString(),
+        currency: 'ETH'
+      }
+    }
+  } else {
+    listingData = {
+      ...listingData,
+      timeIncrement: formData.timeIncrement,
+      slots: formData.slots,
+      calendarStep: '60' // Note: this is currently always 60 minutes but may change later to allow for sub-1hr slots
     }
   }
 
@@ -66,18 +79,21 @@ export function originToDAppListing(originListing) {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
-    schemaType: originListing.category,
+    schemaType: originListing.category.replace('schema.', ''),
     category: originListing.subCategory,
+    display: originListing.display,
     name: originListing.title,
     description: originListing.description,
     pictures: originListing.media
       ? originListing.media.map(medium => medium.url)
       : [],
-    price: originListing.price.amount,
+    price: originListing.price && originListing.price.amount,
     boostValue: commission,
     boostLevel: getBoostLevel(commission),
     unitsRemaining: originListing.unitsRemaining,
-    ipfsHash: originListing.ipfs.hash
+    ipfsHash: originListing.ipfs.hash,
+    listingType: originListing.type,
+    slots: originListing.slots
   }
 }
 

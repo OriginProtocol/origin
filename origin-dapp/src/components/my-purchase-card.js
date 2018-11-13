@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
+import moment from 'moment'
 import { defineMessages, injectIntl } from 'react-intl'
 
 import OfferStatusEvent from 'components/offer-status-event'
@@ -12,7 +13,11 @@ class MyPurchaseCard extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { listing: {}, loading: false }
+    this.state = {
+      listing: {},
+      purchasedSlots: [],
+      loading: false 
+    }
 
     this.intlMessages = defineMessages({
       ETH: {
@@ -20,10 +25,32 @@ class MyPurchaseCard extends Component {
         defaultMessage: 'ETH'
       }
     })
+
+    this.getPrice = this.getPrice.bind(this)
   }
 
   componentDidMount() {
     $('[data-toggle="tooltip"]').tooltip()
+  }
+
+  getPrice() {
+    let price
+
+    if (this.state.listing.listingType === 'fractional') {
+      price = this.state.purchasedSlots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
+    } else {
+      price = Number(this.state.listing.price).toLocaleString(undefined, { minimumFractionDigits: 3 })
+    }
+
+    return price
+  }
+
+  getBookingDates(whichDate) {
+    const { purchasedSlots, listing } = this.state
+    const timeFormat = listing.schemaType === 'housing' ? 'LL' : 'l LT'
+    const index = whichDate === 'startDate' ? 0 : purchasedSlots.length - 1
+
+    return moment(purchasedSlots[index][whichDate]).format(timeFormat)
   }
 
   componentWillUnmount() {
@@ -59,7 +86,7 @@ class MyPurchaseCard extends Component {
           {!this.state.loading && (
             <div className="content-container d-flex flex-column">
               <p className="category">{category}</p>
-              <h2 className="title text-truncate">
+              <h2 className="title text-truncate" title={name}>
                 <Link to={`/purchases/${offerId}`}>{name}</Link>
               </h2>
               <p className="timestamp">
@@ -67,13 +94,18 @@ class MyPurchaseCard extends Component {
               </p>
               {!voided && (
                 <Fragment>
+                  {this.state.listing.listingType === 'fractional' &&
+                    <div className="d-flex">
+                      <p className="booking-dates">
+                        { `${this.getBookingDates('startDate')} - ${this.getBookingDates('endDate')}`}
+                      </p>
+                    </div>
+                  }
                   <div className="d-flex">
                     <p className="price">{`${Number(price).toLocaleString(
                       undefined,
                       { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                    )} ${this.props.intl.formatMessage(
-                      this.intlMessages.ETH
-                    )}`}</p>
+                    )} ETH`}</p>
                     {/* Not Yet Relevant */}
                     {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
                   </div>

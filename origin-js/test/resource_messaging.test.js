@@ -1,9 +1,8 @@
 import Messaging from '../src/resources/messaging'
-import chai, { expect } from 'chai'
-chai.use(require('chai-string'))
 
 import Web3 from 'web3'
 import contractServiceHelper from './helpers/contract-service-helper'
+import { validateMessaging } from './helpers/schema-validation-helper'
 
 describe('Messaging Resource', function() {
   let web3, contractService, messaging, ipfsCreator, OrbitDB, ecies, messagingNamespace
@@ -27,7 +26,7 @@ describe('Messaging Resource', function() {
 
   describe('init', () => {
     it('should be instantiated', () => {
-      expect(typeof messaging).to.equal('object')
+      validateMessaging(messaging)
     })
   })
 })

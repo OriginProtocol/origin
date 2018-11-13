@@ -122,7 +122,7 @@ class V00_MarkeplaceAdapter {
       unitsPurchased
     } = data
     // For V1, we only support quantity of 1.
-    if (unitsPurchased != 1)
+    if (unitsPurchased && unitsPurchased != 1)
       throw new Error(
         `Attempted to purchase ${unitsPurchased} - only 1 allowed.`
       )
@@ -356,6 +356,13 @@ class V00_MarkeplaceAdapter {
     }
   }
 
+  /**
+   * Returns list of listing Ids. Options:
+   *  - listingsFor: returns only listings created by the specified address (e.g. seller).
+   *  - purchasesFor: returns only listings the specified address (e.g. buyer) made an offer on.
+   * @param opts {Object} Options: purchasesFor, listingsFor
+   * @return {Promise<*>}
+   */
   async getListings(opts) {
     await this.getContract()
 
@@ -384,6 +391,13 @@ class V00_MarkeplaceAdapter {
     }
   }
 
+  /**
+   * Returns list of offer Ids for a given listing. Options:
+   *  - for: returns only offers made by a specific buyer.
+   * @param listingIndex
+   * @param opts { for: buyer address }
+   * @return {Promise<*>}
+   */
   async getOffers(listingIndex, opts) {
     await this.getContract()
 

@@ -1,9 +1,5 @@
 [
   {
-    "id": "my-sale-card.ethereumCurrencyAbbrev",
-    "defaultMessage": "ETH"
-  },
-  {
     "id": "my-sale-card.pendingBuyerNameLink",
     "defaultMessage": "selling to {linkToBuyer}"
   },

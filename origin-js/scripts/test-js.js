@@ -6,8 +6,8 @@ const startIpfs = require('./helpers/start-ipfs')
 const startGanache = require('./helpers/start-ganache')
 
 const runTests = async watch => {
-  return new Promise((resolve, reject) => {
-    const args = ['-r', 'babel-register', '-r', 'babel-polyfill', '-t', '10000']
+  return new Promise(() => {
+    const args = ['-r', '@babel/register', '-r', '@babel/polyfill', '-t', '10000']
     if (watch) {
       args.push('--watch')
     } else {
@@ -16,10 +16,9 @@ const runTests = async watch => {
     args.push('test')
     console.log('running mocha with args:', args.join(' '))
 
-    const contractTest = spawn('./node_modules/.bin/mocha', args)
-    contractTest.stdout.pipe(process.stdout)
-    contractTest.stderr.on('data', data => {
-      reject(String(data))
+    const contractTest = spawn('./node_modules/.bin/mocha', args, {
+      stdio: 'inherit',
+      env: process.env
     })
     contractTest.on('exit', code => {
       if (code === 0) {

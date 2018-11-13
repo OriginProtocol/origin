@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import ContractService from '../src/services/contract-service'
 import { ipfsHashes } from './fixtures'
+import Web3Mock from './helpers/web3-mock'
 import Money from '../src/models/money'
 import Web3 from 'web3'
 
@@ -100,5 +101,125 @@ describe('ContractService', function() {
       expect(OGN.address).to.include('0x')
       expect(OGN.decimals).to.equal(18)
     })
+  })
+
+  describe('interacting with web3', () => {
+    async function callAddClaimsWithParameters(web3Properties, callArguments){
+      const web3Mock = new Web3Mock(web3Properties)
+
+      contractService.web3 = web3Mock
+      return await contractService.call(
+        'OriginToken',
+        'addClaims',
+        [
+          [13], // topic
+          ['0x0000000000000000000000000000000000000000'], // issuer
+          '0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', // signature
+          '0xa03bfc3f155d4c833cb86f27b403bd353c68601c7cfa646509529aecfed88192', // data
+          [32] // offsets
+        ],
+        callArguments
+      )
+    }
+
+    it('should receive a confirmation callback', (done) => {
+      /* need to double wrap because of mocha doesn't support async function and done callback at the same time
+       * https://github.com/mochajs/mocha/issues/2407
+       */
+      (async () => {
+        let doneCalled = false
+        await callAddClaimsWithParameters(
+          {},
+          {
+            confirmationCallback: () => {
+              if (!doneCalled){
+                doneCalled = true
+                done()
+              }
+            },
+          }
+        )
+      })()
+    })
+
+    it('should receive a transaction hash callback', (done) => {
+      /* need to double wrap because of mocha doesn't support async function and done callback at the same time
+       * https://github.com/mochajs/mocha/issues/2407
+       */
+      (async () => {
+        await callAddClaimsWithParameters(
+          {},
+          {
+            transactionHashCallback: () => {
+              done()
+            },
+          }
+        )
+      })()
+    })
+
+    it('should receive a transaction receipt', async () => {
+      const { transactionReceipt } = await callAddClaimsWithParameters(
+        {},
+        {}
+      )
+
+      expect(transactionReceipt.blockNumber).to.equal(0)
+    })
+
+    it('should receive a confirmation callback using fallback functionality', (done) => {
+      /* need to double wrap because of mocha doesn't support async function and done callback at the same time
+       * https://github.com/mochajs/mocha/issues/2407
+       */
+      (async () => {
+        let doneCalled = false
+        await callAddClaimsWithParameters(
+          {
+            emitReceipt: false,
+            emitConfirmation: false
+          },
+          {
+            confirmationCallback: () => {
+              if (!doneCalled){
+                doneCalled = true
+                done()
+              }
+            },
+          }
+        )
+      })()
+    })
+
+    it('should receive a transaction hash callback using fallback functionality', (done) => {
+      /* need to double wrap because of mocha doesn't support async function and done callback at the same time
+       * https://github.com/mochajs/mocha/issues/2407
+       */
+      (async () => {
+        await callAddClaimsWithParameters(
+          {
+            emitReceipt: false,
+            emitConfirmation: false
+          },
+          {
+            transactionHashCallback: () => {
+              done()
+            },
+          }
+        )
+      })()
+    })
+
+    it('should receive a transaction receipt using fallback functionality', async () => {
+      const { transactionReceipt } = await callAddClaimsWithParameters(
+        {
+          emitReceipt: false,
+          emitConfirmation: false
+        },
+        {}
+      )
+
+      expect(transactionReceipt.blockNumber).to.equal(0)
+    })
+
   })
 })

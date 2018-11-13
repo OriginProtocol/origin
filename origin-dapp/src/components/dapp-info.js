@@ -256,6 +256,14 @@ class DappInfo extends Component {
                   <td>DISCOVERY_SERVER_URL</td>
                   <td>{process.env.DISCOVERY_SERVER_URL}</td>
                 </tr>
+                <tr title="Temp env var for enabling fractional usage.">
+                  <td>ENABLE_FRACTIONAL</td>
+                  <td>{process.env.ENABLE_FRACTIONAL}</td>
+                </tr>
+                <tr title="For enabling fetching data from backend.">
+                  <td>ENABLE_PERFORMANCE_MODE</td>
+                  <td>{process.env.ENABLE_PERFORMANCE_MODE}</td>
+                </tr>
                 <tr>
                   <td>ETH_NETWORK_ID</td>
                   <td>{process.env.ETH_NETWORK_ID}</td>
@@ -303,6 +311,14 @@ class DappInfo extends Component {
                 <tr>
                   <td>NODE_ENV</td>
                   <td>{process.env.NODE_ENV}</td>
+                </tr>
+                <tr>
+                  <td>NOTIFICATIONS_KEY</td>
+                  <td>{process.env.NOTIFICATIONS_KEY}</td>
+                </tr>
+                <tr>
+                  <td>NOTIFICATIONS_URL</td>
+                  <td>{process.env.NOTIFICATIONS_URL}</td>
                 </tr>
                 <tr>
                   <td>PROVIDER_URL</td>

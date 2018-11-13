@@ -1,21 +1,48 @@
 {
-  "name": "origin-indexing",
-  "description": "Indexing servers.",
+  "name": "origin-discovery",
+  "description": "Origin event-listener and discovery server",
   "version": "0.1.0",
+  "engines": {
+    "node": "10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/origin-discovery"
+  },
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
   "dependencies": {
-    "apollo-server": "^2.1.0",
-    "db-migrate": "^0.11.1",
-    "db-migrate-pg": "^0.4.0",
+    "apollo-server-express": "^2.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^6.1.0",
     "elasticsearch": "^15.1.1",
+    "envkey": "^1.2.2",
+    "express": "^4.16.4",
+    "express-prom-bundle": "^4.2.1",
     "graphql": "^0.13.2",
+    "graphql-type-json": "^0.2.1",
     "http": "0.0.0",
-    "origin": "^0.8.5",
-    "pg": "^7.4.3",
+    "origin": "^0.8.6",
+    "pg": "^7.5.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^5.0.0-beta.5",
+    "sequelize-cli": "^5.1.0",
     "url": "^0.11.0",
     "web3": "^1.0.0-beta.35"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai-things": "^0.2.0",
+    "chalk": "^2.4.1",
+    "rewire": "^4.0.1"
+  },
   "scripts": {
-    "install:dev": "npm install && npm link origin"
+    "lint": "eslint 'src/**/*.js' --rulesdir ../",
+    "test": "mocha --timeout 10000 --exit",
+    "migrate": "sequelize db:migrate",
+    "start:listener": "node src/listener/listener.js",
+    "start:discovery": "node src/apollo/app.js"
   }
 }

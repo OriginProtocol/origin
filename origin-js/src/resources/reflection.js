@@ -1,6 +1,6 @@
 import {extractCallParams} from './../utils/contract-decoder'
 
-class Reflection {
+export default class Reflection {
   constructor({ contractService, marketplace, token}) {
     this.contractService = contractService
     this.marketplace = marketplace
@@ -56,4 +56,3 @@ class Reflection {
   }
 }
 
-module.exports = Reflection

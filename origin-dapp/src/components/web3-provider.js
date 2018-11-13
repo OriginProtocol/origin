@@ -19,12 +19,9 @@ import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
 
-const mainnetDappBaseUrl =
-  process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
-const rinkebyDappBaseUrl =
-  process.env.RINKEBY_DAPP_BASEURL || 'https://demo.staging.originprotocol.com'
-const instructionsUrl =
-  process.env.INSTRUCTIONS_URL || 'https://www.originprotocol.com/'
+const mainnetDappBaseUrl = process.env.MAINNET_DAPP_BASEURL
+const rinkebyDappBaseUrl = process.env.RINKEBY_DAPP_BASEURL
+const instructionsUrl = process.env.INSTRUCTIONS_URL
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 
@@ -95,7 +92,6 @@ const LinkerPopUp = props => (
       {detectMobile() && <button className="btn btn-primary" style={{width:"200px"}} onClick={() => 
         clipboard.writeText("orgw:"+ props.linkerCode).then( function(){
           let url = "https://www.originprotocol.com/mobile"
-          console.log("Code copied to clipboard successfully... opening url", url)
           window.open(url)
         }, function(err){
           console.log("Error opening url")
@@ -547,6 +543,7 @@ class Web3Provider extends Component {
     const supportedNetworkName = supportedNetwork && supportedNetwork.name
     const walletLinkerEnabled = origin.contractService.walletLinker
 
+    console.log("Showing Web3Intent:", web3Intent, " !linker:", !walletLinkerEnabled, " !given:", !web3.givenProvider)
     return (
       <Fragment>
         {/* currentProvider should always be present */

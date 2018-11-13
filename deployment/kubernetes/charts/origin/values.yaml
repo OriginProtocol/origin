@@ -20,14 +20,17 @@ faucetImageTag: latest
 ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
-# origin-messaging-ipfs
-messagingIpfsImage: ipfs/go-ipfs
-# See https://github.com/libp2p/go-floodsub/issues/93
-messagingIpfsImageTag: v0.4.17
+# ipfs-proxy
+ipfsProxyImage: ipfs-proxy
+ipfsProxyImageTag: latest
 
 # origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: latest
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: 'latest'
 
 # geth private node bootnode
 bootnodeImage: ethereum/client-go
@@ -40,12 +43,12 @@ ethstatsImageTag: latest
 gethImage: ethereum/client-go
 gethImageTag: v1.8.13
 gethTxReplicas: 1
-gethMinerReplicas: 2
-gethMinerCpuLimit: 0.5
 
+# Origin testnet config
 gethGenesisNetworkId: 2222
 gethGenesisDifficulty: '0x400'
 gethGenesisGasLimit: '0x8000000'
-
+gethMinerReplicas: 2
+gethMinerCpuLimit: 0.5
 gethAccountAddress: 0xee3b32485b5d9eee1e3ceb1ad2e2ea1493192d2d
 gethAccountPublicKey: f1afaa4f22dedc95df4023300ccd64456809624e70d321542ee0af8756c332b8934c362dc54ea37ec327d08b61faa55d428e86f84cfc1e3d08bfbae15ff37327

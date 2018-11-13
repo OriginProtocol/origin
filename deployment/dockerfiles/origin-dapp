@@ -1,0 +1,46 @@
+FROM node:10 as build
+
+WORKDIR /app
+
+ARG DEPLOY_TAG
+ARG ENVKEY
+
+# Set environment variables. NODE_ENV is set to production to avoid installing
+# any dependencies that aren't necessary for the build. The DEPLOY_TAG is to
+# make the commit hash of the currently built version available in the DApp
+# info screen. ENVKEY is used to make the correct environment variables
+# available to the build.
+ENV NODE_ENV=production DEPLOY_TAG=$DEPLOY_TAG ENVKEY=$ENVKEY
+
+# Install envkey-source
+RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
+RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN rm envkey-source.tar.gz
+RUN mv envkey-source /usr/local/bin
+
+# Install lerna
+RUN npm i lerna -g --loglevel notice
+
+# Copy the necessary files for building origin-dapp
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
+# Copy release contracts into build directory
+# TODO: Find a better way to handle this
+COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
+COPY ./origin-dapp ./origin-dapp
+COPY ./scripts ./scripts
+
+# Bootstrap dependencies, --ignore-scripts is necessary to avoid overwriting
+# contracts
+RUN lerna bootstrap --ci --ignore-scripts -- --loglevel notice --unsafe-perm
+
+# Use EnvKey so that environment variables are available to DApp at build time
+RUN eval $(envkey-source) && npm run build --prefix origin-dapp
+
+# Copy built static files to nginx for serving
+FROM nginx:1.15.2-alpine
+COPY --from=build /app/origin-dapp/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

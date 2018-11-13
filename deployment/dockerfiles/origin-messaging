@@ -1,0 +1,13 @@
+FROM node:10
+
+WORKDIR /app
+
+ENV NODE_ENV production
+
+COPY ./origin-messaging /app
+
+# Install dependencies
+RUN npm ci --loglevel notice
+RUN npm run build
+
+CMD npm run start

@@ -8,7 +8,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  replicas: {{ default 1 .Values.bridgeReplicas }}
+  replicas: {{ default 2 .Values.bridgeReplicas }}
   selector:
     matchLabels:
       app: {{ template "bridge.fullname" . }}
@@ -34,34 +34,8 @@ spec:
           value: {{ template "bridge.host" . }}
         - name: HTTPS
           value: "true"
-        - name: DATABASE_HOST
-          value: "localhost"
-        - name: DATABASE_PORT
-          value: "5432"
-        - name: DATABASE_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "bridge.fullname" . }}
-              key: DATABASE_USERNAME
-        - name: DATABASE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "bridge.fullname" . }}
-              key: DATABASE_PASSWORD
-        - name: DATABASE_NAME
-          value: "origin"
         - name: FLASK_APP
-          value: "/app/origin-bridge/main.py"
-        command: ["/bin/sh"]
-        args:
-        - "-c"
-        - |-
-          set -e
-          echo "Running database migrations for bridge"
-          export DATABASE_URL=postgres://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
-          flask db upgrade
-          echo "Starting bridge"
-          gunicorn -b :5000 --access-logfile - --error-logfile - main:app
+          value: "/app/main.py"
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",

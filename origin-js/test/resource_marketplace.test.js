@@ -1,9 +1,13 @@
+import sinon from 'sinon'
+
 import Marketplace from '../src/resources/marketplace.js'
 import contractServiceHelper from './helpers/contract-service-helper'
 import asAccount from './helpers/as-account'
+import { validateOffer, validateListing, validateNotification } from './helpers/schema-validation-helper'
 import IpfsService from '../src/services/ipfs-service.js'
 import { expect } from 'chai'
 import Web3 from 'web3'
+
 import listingValid from './fixtures/listing-valid.json'
 import offerValid from './fixtures/offer-valid.json'
 import reviewValid from './fixtures/review-valid.json'
@@ -59,6 +63,8 @@ describe('Marketplace Resource', function() {
     const provider = new Web3.providers.HttpProvider('http://localhost:8545')
     web3 = new Web3(provider)
     const accounts = await web3.eth.getAccounts()
+
+    this.userAddress = accounts[0]
     validAffiliate = accounts[3]
     validArbitrator = accounts[4]
     evilAddress = accounts[5]
@@ -116,12 +122,21 @@ describe('Marketplace Resource', function() {
   })
 
   describe('getListings', () => {
-    it('should return all listings', async () => {
+    it ('should return all detailed listings', async () => {
+      await marketplace.createListing(listingData)
+      const listings = await marketplace.getListings()
+      expect(listings).to.have.lengthOf(2)
+
+      listings.map(validateListing)
+    })
+
+    it('should return all listing ids when idsOnly is true', async () => {
       await marketplace.createListing(listingData)
       const listings = await marketplace.getListings({ idsOnly: true })
+
+      expect(listings).to.be.an('array')
       expect(listings.length).to.equal(2)
-      expect(listings).to.include('999-000-0')
-      expect(listings).to.include('999-000-1')
+      expect(listings).to.deep.equal(['999-000-1', '999-000-0'])
     })
   })
 
@@ -130,9 +145,8 @@ describe('Marketplace Resource', function() {
       const listings = await marketplace.getListings({ idsOnly: true })
       expect(listings.length).to.equal(1)
       const listing = await marketplace.getListing(listings[0])
-      expect(listing.type).to.equal('unit')
-      expect(listing.title).to.equal('my listing')
-      expect(listing.description).to.equal('my description')
+
+      validateListing(listing)
     })
   })
 
@@ -142,7 +156,15 @@ describe('Marketplace Resource', function() {
       expect(listings.length).to.equal(1)
       await marketplace.createListing(listingData)
       listings = await marketplace.getListings()
+
       expect(listings.length).to.equal(2)
+
+      listings.map(validateListing)
+
+      expect(listings[1].status).to.equal('active')
+      expect(listings[1].title).to.equal(listingData.title)
+      expect(listings[1].seller).to.equal(this.userAddress)
+      expect(listings[1].price).to.deep.equal(listingData.price)
     })
   })
 
@@ -162,7 +184,9 @@ describe('Marketplace Resource', function() {
     it('should get offer ids', async () => {
       await marketplace.makeOffer('999-000-0', offerData)
       const offers = await marketplace.getOffers('999-000-0', { idsOnly: true })
-      expect(offers.length).to.equal(2)
+
+      expect(offers).be.an('array')
+      expect(offers).to.have.lengthOf(2)
       expect(offers[0]).to.equal('999-000-0-0')
       expect(offers[1]).to.equal('999-000-0-1')
     })
@@ -172,17 +196,27 @@ describe('Marketplace Resource', function() {
     it('should get offers with data', async () => {
       await marketplace.makeOffer('999-000-0', offerData)
       const offers = await marketplace.getOffers('999-000-0')
+      const listings = await marketplace.getListings()
+
       expect(offers.length).to.equal(2)
       expect(offers[0].status).to.equal('created')
       expect(offers[0].unitsPurchased).to.exist
-      expect(offers[1].status).to.equal('created')
-      expect(offers[1].unitsPurchased).to.exist
+      validateOffer(offers[0])
+
+      const latestOffer = offers[1]
+
+      validateOffer(latestOffer)
+
+      expect(latestOffer.status).to.equal('created')
+      expect(latestOffer.unitsPurchased).to.equal(1)
+      expect(latestOffer.listingId).to.equal(listings[0].id)
     })
 
     it('should exclude invalid offers', async () => {
       await marketplace.makeOffer('999-000-0', invalidPriceOffer)
       const offers = await marketplace.getOffers('999-000-0')
       expect(offers.length).to.equal(1)
+      expect(offers).not.to.include(invalidPriceOffer)
       expect(offers[0].status).to.equal('created')
       expect(offers[0].unitsPurchased).to.exist
     })
@@ -191,6 +225,8 @@ describe('Marketplace Resource', function() {
   describe('getOffer', () => {
     it('should get offer data', async () => {
       const offer = await marketplace.getOffer('999-000-0-0')
+
+      validateOffer(offer)
       expect(offer.status).to.equal('created')
       expect(offer.unitsPurchased).to.exist
     })
@@ -278,12 +314,15 @@ describe('Marketplace Resource', function() {
       await marketplace.makeOffer('999-000-0', anotherOffer)
       const offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.totalPrice.amount).to.equal('0.033')
+      expect(offer.totalPrice.currency).to.equal('ETH')
     })
 
     it('should make an offer in ERC20', async () => {
       await marketplace.createListing(originTokenListing)
       await marketplace.makeOffer('999-000-1', originTokenOffer)
       const offer = await marketplace.getOffer('999-000-1-0')
+
+      validateOffer(offer)
       expect(offer.totalPrice.amount).to.equal('1')
       expect(offer.totalPrice.currency).to.equal('OGN')
     })
@@ -292,7 +331,8 @@ describe('Marketplace Resource', function() {
       await marketplace.createListing(commissionListing)
       await marketplace.makeOffer('999-000-1', commissionOffer)
       const offer = await marketplace.getOffer('999-000-1-0')
-      expect(offer).to.be.ok
+
+      validateOffer(offer)
     })
   })
 
@@ -302,6 +342,8 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.equal('created')
       await marketplace.withdrawOffer(offer.id)
       offer = await marketplace.getOffer('999-000-0-0')
+
+      validateOffer(offer)
       expect(offer.status).to.equal('withdrawn')
     })
   })
@@ -312,6 +354,8 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.equal('created')
       await marketplace.acceptOffer('999-000-0-0')
       offer = await marketplace.getOffer('999-000-0-0')
+
+      validateOffer(offer)
       expect(offer.status).to.equal('accepted')
     })
   })
@@ -323,6 +367,8 @@ describe('Marketplace Resource', function() {
       await marketplace.acceptOffer('999-000-0-0')
       await marketplace.finalizeOffer('999-000-0-0', reviewData)
       offer = await marketplace.getOffer('999-000-0-0')
+
+      validateOffer(offer)
       expect(offer.status).to.equal('finalized')
     })
   })
@@ -335,6 +381,8 @@ describe('Marketplace Resource', function() {
       await marketplace.finalizeOffer('999-000-0-0', reviewData)
       await marketplace.addData(0, offer.id, reviewData)
       offer = await marketplace.getOffer('999-000-0-0')
+
+      validateOffer(offer)
       expect(offer.status).to.equal('sellerReviewed')
     })
   })
@@ -351,30 +399,44 @@ describe('Marketplace Resource', function() {
   })
 
   describe('getNotifications', () => {
-    it('should return notifications', async () => {
-      let notifications = await marketplace.getNotifications()
+    let notifications
+
+    beforeEach(async function() {
+      notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
+      validateNotification(notifications[0])
       expect(notifications[0].type).to.equal('seller_listing_purchased')
       expect(notifications[0].status).to.equal('unread')
+    })
 
+    it('should return notifications', async () => {
       await marketplace.acceptOffer('999-000-0-0')
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
+      validateNotification(notifications[0])
+
       expect(notifications[0].type).to.equal('buyer_listing_shipped')
       expect(notifications[0].status).to.equal('unread')
+      expect(notifications[0].event.event).to.equal('OfferAccepted')
 
       await marketplace.finalizeOffer('999-000-0-0', reviewData)
       notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
+      validateNotification(notifications[0])
+
       expect(notifications[0].type).to.equal('seller_review_received')
       expect(notifications[0].status).to.equal('unread')
+      expect(notifications[0].event.event).to.equal('OfferFinalized')
     })
 
     it('should exclude notifications for invalid offers', async () => {
       await marketplace.makeOffer('999-000-0', invalidPriceOffer)
 
       const notifications = await marketplace.getNotifications()
+
       expect(notifications.length).to.equal(1)
+      validateNotification(notifications[0])
+      expect(notifications).to.not.include(invalidPriceOffer)
     })
   })
 
@@ -383,9 +445,11 @@ describe('Marketplace Resource', function() {
       let notifications = await marketplace.getNotifications()
       expect(notifications.length).to.equal(1)
       expect(notifications[0].status).to.equal('unread')
-      notifications[0].status = 'read'
-      marketplace.setNotification(notifications[0])
+
+      marketplace.setNotification({ id: notifications[0].id, status: 'read' })
       notifications = await marketplace.getNotifications()
+      validateNotification(notifications[0])
+
       expect(notifications[0].status).to.equal('read')
     })
   })
@@ -397,6 +461,8 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.equal('accepted')
       await marketplace.initiateDispute('999-000-0-0')
       offer = await marketplace.getOffer('999-000-0-0')
+
+      validateOffer(offer)
       expect(offer.status).to.equal('disputed')
     })
   })
@@ -410,6 +476,7 @@ describe('Marketplace Resource', function() {
       await marketplace.acceptOffer('999-000-0-1')
       offer = await marketplace.getOffer('999-000-0-1')
       expect(offer.status).to.equal('accepted')
+      validateOffer(offer)
 
       await marketplace.initiateDispute('999-000-0-1')
       offer = await marketplace.getOffer('999-000-0-1')
@@ -421,7 +488,38 @@ describe('Marketplace Resource', function() {
         await marketplace.resolveDispute('999-000-0-1', {}, 1, offerPrice)
       })
       offer = await marketplace.getOffer('999-000-0-1')
+
+      validateOffer(offer)
       expect(offer.status).to.be.equal('ruling')
     })
   })
 })
+
+describe('Marketplace Resource - Performance mode', function() {
+  const mockDiscoveryService = new Object()
+  mockDiscoveryService.getListings = sinon.stub()
+  mockDiscoveryService.getListing = sinon.stub()
+
+  const marketplace = new Marketplace({
+    contractService: { web3: null },
+    store: new StoreMock(),
+    discoveryService: mockDiscoveryService,
+    perfModeEnabled: true
+  })
+
+  describe('getListings', () => {
+    it('Should call discovery service to fetch listings', async () => {
+      await marketplace.getListings()
+      expect(mockDiscoveryService.getListings.callCount).to.equal(1)
+    })
+  })
+
+  describe('getListing', () => {
+    it('Should call discovery service to fetch listing', async () => {
+      await marketplace.getListing()
+      expect(mockDiscoveryService.getListing.callCount).to.equal(1)
+    })
+  })
+
+})
+

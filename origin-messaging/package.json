@@ -7,33 +7,37 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx babel-node src/index.js --presets es2015"
+    "build": "babel src/* -d dist --presets @babel/env",
+    "dev": "nodemon --exec 'babel-node' src/index.js --presets @babel/env",
+    "lint": "eslint '**/*.js' --rulesdir ../",
+    "start": "node dist/index.js",
+    "test": "echo \"Warning: no tests specified\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OriginProtocol/origin-box.git"
+    "url": "git+https://github.com/OriginProtocol/origin/origin-messaging"
   },
-  "author": "",
+  "author": "Origin Protocol Inc",
   "license": "MIT",
   "bugs": {
-    "url": "git+https://github.com/OriginProtocol/origin-box.git"
+    "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "babel-polyfill": "^6.26.0",
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.5",
     "dotenv": "^6.0.0",
-    "ipfs": "^0.31.4",
+    "ipfs": "^0.33.1",
+    "ipfs-api": "^26.1.2",
+    "ipfs-log": "^4.2.0",
+    "ipfs-pubsub-1on1": "0.0.4",
     "logplease": "^1.2.14",
-    "libp2p-switch": "^0.40.4",
-    "lodash": "^4.17.10",
     "orbit-db": "^0.19.8",
-    "web3": "^1.0.0-beta.34",
-    "websocket": "^1.0.26"
+    "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "webpack": "^4.12.1",
-    "webpack-cli": "^3.0.8"
+    "@babel/node": "^7.0.0",
+    "nodemon": "^1.18.6"
   }
 }

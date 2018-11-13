@@ -25,7 +25,7 @@
   },
   {
     "id": "listing-detail.successDisclaimer",
-    "defaultMessage": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
+    "defaultMessage": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your ETH payment has been transferred to an escrow contract. Here's what happens next:"
   },
   {
     "id": "listing-detail.successItem1",
@@ -54,10 +54,6 @@
   {
     "id": "listing-detail.OK",
     "defaultMessage": "OK"
-  },
-  {
-    "id": "listing-detail.ethereumCurrencyAbbrev",
-    "defaultMessage": "ETH"
   },
   {
     "id": "listing-detail.purchase",

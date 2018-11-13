@@ -37,6 +37,7 @@ node_modules/
 
 # origin-bridge #
 #################
+*__pycache__
 
 # Logs
 /origin-bridge/logs
@@ -108,6 +109,11 @@ node_modules/
 #############
 /origin-website
 
+# origin-messaging #
+#############
+/origin-messaging/ipfs/
+/origin-messaging/odb/
+
 # Recommended rules per https://gist.github.com/octocat/9257657 #
 # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv #
 
@@ -148,3 +154,5 @@ node_modules/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+!origin-contracts/releases/**/*

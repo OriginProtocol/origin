@@ -5,6 +5,7 @@ import { unblock } from 'actions/Onboarding'
 import { showAlert } from 'actions/Alert'
 
 import keyMirror from 'utils/keyMirror'
+import { createSubscription } from 'utils/notifications'
 import {
   addLocales,
   getAvailableLanguages,
@@ -24,10 +25,14 @@ export const AppConstants = keyMirror(
     MESSAGING_ENABLED: null,
     MESSAGING_INITIALIZED: null,
     NOTIFICATIONS_DISMISSED: null,
+    NOTIFICATIONS_HARD_PERMISSION: null,
+    NOTIFICATIONS_SOFT_PERMISSION: null,
+    NOTIFICATIONS_SUBSCRIPTION_PROMPT: null,
     ON_MOBILE: null,
+    SAVE_SERVICE_WORKER_REGISTRATION: null,
+    TRANSLATIONS: null,
     WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
-    TRANSLATIONS: null,
     WEB3_NETWORK: null
   },
   'APP'
@@ -46,7 +51,7 @@ export function dismissBetaModal() {
     */
     setTimeout(() => {
       dispatch(unblock())
-    }, 4000)
+    }, 1000)
   }
 }
 
@@ -61,6 +66,54 @@ export function dismissNotifications(ids) {
   return {
     type: AppConstants.NOTIFICATIONS_DISMISSED,
     ids
+  }
+}
+
+export function handleNotificationsSubscription(role, props = {}) {
+  return async function(dispatch) {
+    const {
+      notificationsHardPermission,
+      notificationsSoftPermission,
+      pushNotificationsSupported,
+      serviceWorkerRegistration,
+      web3Account
+    } = props
+
+    if (!pushNotificationsSupported) {
+      return
+    }
+
+    if (notificationsHardPermission === 'default') {
+      if ([null, 'warning'].includes(notificationsSoftPermission)) {
+        dispatch(handleNotificationsSubscriptionPrompt(role))
+      }
+    // existing subscription may need to be replicated for current account
+    } else if (notificationsHardPermission === 'granted') {
+      createSubscription(serviceWorkerRegistration, web3Account)
+    }
+  }
+}
+
+export function handleNotificationsSubscriptionPrompt(role) {
+  return {
+    type: AppConstants.NOTIFICATIONS_SUBSCRIPTION_PROMPT,
+    role
+  }
+}
+
+export function setNotificationsHardPermission(result) {
+  return {
+    type: AppConstants.NOTIFICATIONS_HARD_PERMISSION,
+    result
+  }
+}
+
+export function setNotificationsSoftPermission(result) {
+  localStorage.setItem('notificationsPermissionResponse', result)
+
+  return {
+    type: AppConstants.NOTIFICATIONS_SOFT_PERMISSION,
+    result
   }
 }
 
@@ -130,6 +183,9 @@ export function localizeApp() {
   }
 
   const messages = translations[bestAvailableLanguage]
+  if (messages && messages['header.title']) {
+    document.title = messages['header.title']
+  }
   let selectedLanguageCode = bestAvailableLanguage
 
   if (!selectedLanguageCode || !messages) {
@@ -150,5 +206,12 @@ export function localizeApp() {
     selectedLanguageFull: getLanguageNativeName(selectedLanguageCode),
     availableLanguages: getAvailableLanguages(),
     messages
+  }
+}
+
+export function saveServiceWorkerRegistration(registration) {
+  return {
+    type: AppConstants.SAVE_SERVICE_WORKER_REGISTRATION,
+    registration
   }
 }

@@ -1,0 +1,14 @@
+FROM python:3.6
+
+WORKDIR /app
+
+COPY ./origin-bridge /app
+RUN pip install -r requirements.txt
+RUN pip install gunicorn
+
+COPY ./deployment/dockerfiles/scripts/start-bridge-server.sh \
+	/usr/local/bin/start
+
+EXPOSE 5000
+
+CMD ["start"]

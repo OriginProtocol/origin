@@ -49,7 +49,7 @@ class VerifyTwitter extends Component {
           <FormattedMessage
             id={'VerifyTwitter.twitterNotPublic'}
             defaultMessage={
-              'Other users will know that you have a verified Twitter account. Your username will not be published on the blockchain. We will never tweet on your behalf.'
+              'Other users will know that you have a verified Twitter account and your username will be published on the blockchain. We will never tweet on your behalf.'
             }
           />
         </div>

@@ -56,11 +56,8 @@ class ListingCardPrices extends Component {
                     {`${Number(this.state.price).toLocaleString(undefined, {
                       minimumFractionDigits: 5,
                       maximumFractionDigits: 5
-                    })}`}&nbsp;
-                    <FormattedMessage
-                      id={'listing-card-prices.ethereumCurrencyAbbrev'}
-                      defaultMessage={'ETH'}
-                    />
+                    })}`}
+                      &nbsp;ETH
                   </div>
                   <div className="fiat">
                     {fiatPrice === null && 'Loading'}

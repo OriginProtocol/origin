@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import { Listing } from '../models/listing'
 import { Offer } from '../models/offer'
 import { Review } from '../models/review'
@@ -17,14 +18,24 @@ import {
 } from '../ipfsInterface/store'
 import MarketplaceResolver from '../contractInterface/marketplace/resolver'
 
-class Marketplace {
-  constructor({ contractService, ipfsService, store, affiliate, arbitrator }) {
+export default class Marketplace {
+  constructor({
+    contractService,
+    ipfsService,
+    discoveryService,
+    store,
+    affiliate,
+    arbitrator,
+    perfModeEnabled })
+  {
     this.contractService = contractService
     this.ipfsService = ipfsService
+    this.discoveryService = discoveryService
     this.affiliate = affiliate
     this.arbitrator = arbitrator
     this.ipfsDataStore = new IpfsDataStore(this.ipfsService)
     this.resolver = new MarketplaceResolver(...arguments)
+    this.perfModeEnabled = perfModeEnabled
 
     // initialize notifications
     if (!store.get(storeKeys.notificationSubscriptionStart)) {
@@ -40,9 +51,20 @@ class Marketplace {
     return await this.resolver.getListingsCount()
   }
 
+  /**
+   * Returns listings.
+   * TODO: This won't scale. Add support for pagination.
+   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress}
+   * @return {Promise<List(Listing)>}
+   * @throws {Error}
+   */
   async getListings(opts = {}) {
-    const listingIds = await this.resolver.getListingIds(opts)
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch data from the discovery back-end to reduce latency.
+      return await this.discoveryService.getListings(opts)
+    }
 
+    const listingIds = await this.resolver.getListingIds(opts)
     if (opts.idsOnly) {
       return listingIds
     }
@@ -55,12 +77,17 @@ class Marketplace {
   }
 
   /**
-   * Returns a Listing object based in its id.
+   * Returns a Listing object based on its id.
    * @param listingId
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
   async getListing(listingId) {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch data from the discovery back-end to reduce latency.
+      return await this.discoveryService.getListing(listingId)
+    }
+
     // Get the on-chain listing data.
     const chainListing = await this.resolver.getListing(listingId)
 
@@ -74,8 +101,12 @@ class Marketplace {
     return new Listing(listingId, chainListing, ipfsListing)
   }
 
-  // async getOffersCount(listingId) {}
-
+  /**
+   * Returns all the offers for a listing.
+   * @param listingId
+   * @param opts: {idsOnly:boolean, for:address}
+   * @return {Promise<List(Offer)>}
+   */
   async getOffers(listingId, opts = {}) {
     const offerIds = await this.resolver.getOfferIds(listingId, opts)
     if (opts.idsOnly) {
@@ -86,10 +117,19 @@ class Marketplace {
           try {
             return await this.getOffer(offerId)
           } catch(e) {
+            // TODO(John) - handle this error better. It's tricky b/c it happens in a map
+            // and we want to throw the error, but we don't want the whole getOffers() call to fail.
+            // We want it to return the offers that it was able to get but still let us know something failed.
+            console.error(
+              `Error getting offer data for offer ${
+                offerId
+              }: ${e}`
+            )
             return null
           }
         })
       )
+
       // filter out invalid offers
       return allOffers.filter(offer => Boolean(offer))
     }
@@ -108,28 +148,37 @@ class Marketplace {
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
       chainOffer.ipfsHash
     )
+
     const ipfsOffer = await this.ipfsDataStore.load(OFFER_DATA_TYPE, ipfsHash)
 
     // validate offers awaiting approval
     if (chainOffer.status === 'created') {
       const listing = await this.getListing(listingId)
+      const listingCommision =
+          listing.commission && typeof listing.commission === 'object' ?
+            await this.contractService.moneyToUnits(listing.commission) :
+            '0'
 
-      const listingCurrency = listing.price && listing.price.currency
-      const listingPrice = await this.contractService.moneyToUnits(listing.price)
-      const listingCommision = await this.contractService.moneyToUnits(listing.commission)
-      const currencies = await this.contractService.currencies()
-      const currency = currencies[listingCurrency]
-      const currencyAddress = currency && currency.address
+      if (listing.type === 'unit') {
+        // TODO(John) - there is currently no way to know the currency of a fractional listing.
+        // We probably need to add a required "currency" field to the listing schema and write a check here
+        // to make sure the chainOffer and the listing have the same currency
+        const listingCurrency = listing.price && listing.price.currency
+        const listingPrice = await this.contractService.moneyToUnits(listing.price)
+        const currencies = await this.contractService.currencies()
+        const currency = listingCurrency && currencies[listingCurrency]
+        const currencyAddress = currency && currency.address
 
-      if (currencyAddress !== chainOffer.currency) {
-        throw new Error('Invalid offer: currency does not match listing')
+        if (currencyAddress !== chainOffer.currency) {
+          throw new Error('Invalid offer: currency does not match listing')
+        }
+
+        if (BigNumber(listingPrice).isGreaterThan(BigNumber(chainOffer.value))) {
+          throw new Error('Invalid offer: insufficient offer amount for listing')
+        }
       }
 
-      if (listingPrice > chainOffer.value) {
-        throw new Error('Invalid offer: insufficient offer amount for listing')
-      }
-
-      if (listingCommision > chainOffer.commission) {
+      if (BigNumber(listingCommision).isGreaterThan(BigNumber(chainOffer.commission))) {
         throw new Error('Invalid offer: insufficient commission amount for listing')
       }
 
@@ -403,5 +452,3 @@ class Marketplace {
     return await this.resolver.getTokenAddress()
   }
 }
-
-module.exports = Marketplace

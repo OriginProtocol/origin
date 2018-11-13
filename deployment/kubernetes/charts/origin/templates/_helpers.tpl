@@ -41,8 +41,20 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
+{{- define "database.fullname" -}}
+{{- printf "%s-%s" .Release.Name "database" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "ethereum.fullname" -}}
 {{- printf "%s-%s" .Release.Name "ethereum" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "ethereum.host" -}}
+{{- if ne .Release.Namespace "prod" -}}
+{{- printf "eth.%s.originprotocol.com" .Release.Namespace -}}
+{{- else -}}
+{{- printf "eth.originprotocol.com" -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "faucet.fullname" -}}
@@ -70,6 +82,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
+{{- define "ipfsProxy.fullname" -}}
+{{- printf "%s-%s" .Release.Name "ipfs-proxy" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "messaging.fullname" -}}
 {{- printf "%s-%s" .Release.Name "messaging" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -93,6 +109,19 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 
 {{- define "discovery.host" -}}
 {{- $prefix := "discovery" -}}
+{{- if ne .Release.Namespace "prod" -}}
+{{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
+{{- else -}}
+{{- printf "%s.originprotocol.com" $prefix -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "notifications.fullname" -}}
+{{- printf "%s-%s" .Release.Name "notifications" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "notifications.host" -}}
+{{- $prefix := "notifications" -}}
 {{- if ne .Release.Namespace "prod" -}}
 {{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
 {{- else -}}

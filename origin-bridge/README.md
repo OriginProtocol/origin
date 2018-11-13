@@ -2,7 +2,7 @@
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
-Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin-box) for development and testing on your local machine.
+Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box) for development and testing on your local machine.
 
 # Origin Bridge Server
 
@@ -20,10 +20,6 @@ DApps can connect to the Bridge Server of their choosing in order to enable the 
 ### Identity
 
 We need a centralized server that can handle tasks like issuing identity attestations and decryptying data that is returned from third-party services like Civic. We also need proxies for fetching public data from services like Facebook and Twitter which require authentication keys.
-
-### Notifications
-
-There is currently no practical way to get email or text notifications when your bookings are made without a centralized monitoring service that can send you a text or an email to let you know about listings you care about.
 
 ## API documentation
 
@@ -44,8 +40,7 @@ brew install automake autoconf libtool
 ### Set Up A Virtual Environment
 
 ```bash
-git clone https://github.com/OriginProtocol/origin-bridge.git
-cd origin-bridge
+git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-bridge
 
 python3 -m venv ve
 
@@ -87,16 +82,6 @@ bridge server deployment as an endpoint for the DApp identity attestation functi
 - [Twitter](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens)
   - TWITTER_CONSUMER_KEY
   - TWITTER_CONSUMER_SECRET
-
-#### Mobile push notification
-If you wish to setup push notification for your mobile apps
-
-- `APNS_CERT_FILE`: Apple notification service certificate(This needs to be .pem file.
-Refer to [this doc](http://www.apptuitions.com/generate-pem-file-for-push-notification/) for how to generate)
-- `APNS_CERT_PASSWORD`: Passphrase for the pem file if you do not strip it out when you exported to pem
-- `APNS_APP_BUNDLE_ID`: The bundle id of your app
-
-FCM support forthcoming.
 
 #### Production configuration
 When deploying to a production system, make sure to set appropriate environment
@@ -187,7 +172,7 @@ autopep8 --in-place --recursive --a --a .
 
 ## Contributing
 
-Please send your pull requests to the `develop` branch. Everything on `master` should be live at `bridge.originprotocol.com`
+Please send your pull requests to the `master` branch.
 
 ## Database changes
 
@@ -212,7 +197,7 @@ To deploy a development copy of the site on Heroku, just choose which branch you
 
 | `Master` branch <br>(stable) | `Develop` branch<br> (active development) |
 |---------|----------|
-| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin-bridge/tree/master) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin-bridge/tree/develop) |
+| [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin/tree/master/origin-bridge) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin/tree/master/origin-bridge) |
 
 Heroku will prompt you to set config variables. At a minium, you must set these three:
 
@@ -227,7 +212,9 @@ See [dev.env](dev.env) for a full list of other optional config variables.
 
 We use following buildpacks:
 
-  heroku buildpacks:set heroku/python
+```
+heroku buildpacks:set heroku/python
+```
 
 ## Contributing
 

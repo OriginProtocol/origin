@@ -5,11 +5,11 @@
   },
   {
     "id": "VerifyAirbnb.enterAirbnbProfileUrl",
-    "defaultMessage": "Enter Airbnb profile Url below"
+    "defaultMessage": "Enter Airbnb profile URL below"
   },
   {
     "id": "VerifyAirbnb.airbnbProfilePublished",
-    "defaultMessage": "Other users will know that you have a verified Airbnb profile."
+    "defaultMessage": "Other users will know that you have a verified Airbnb profile and your user id will be published on the blockchain."
   },
   {
     "id": "VerifyAirbnb.continue",

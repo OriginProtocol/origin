@@ -26,6 +26,7 @@ from logic.service_utils import (
 )
 from requests_oauthlib import OAuth1
 from util import attestations, urls
+from util.ipfs import IPFSHelper, base58_to_hex
 from web3 import Web3
 
 signing_key = settings.ATTESTATION_SIGNING_KEY
@@ -34,7 +35,7 @@ twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
 
-CLAIM_TYPES = {
+TOPICS = {
     'phone': 10,
     'email': 11,
     'facebook': 3,
@@ -165,7 +166,7 @@ class VerificationService:
             data = 'phone verified'
             # TODO: determine claim type integer code for phone verification
             signature = attestations.generate_signature(
-                signing_key, eth_address, CLAIM_TYPES['phone'], data
+                signing_key, eth_address, TOPICS['phone'], data
             )
 
             attestation = Attestation(
@@ -180,7 +181,7 @@ class VerificationService:
 
             return VerificationServiceResponse({
                 'signature': signature,
-                'claim_type': CLAIM_TYPES['phone'],
+                'claim_type': TOPICS['phone'],
                 'data': data
             })
 
@@ -268,7 +269,7 @@ class VerificationService:
         data = 'email verified'
         # TODO: determine claim type integer code for email verification
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['email'], data
+            signing_key, eth_address, TOPICS['email'], data
         )
 
         attestation = Attestation(
@@ -283,7 +284,7 @@ class VerificationService:
 
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': CLAIM_TYPES['email'],
+            'claim_type': TOPICS['email'],
             'data': data
         })
 
@@ -323,7 +324,7 @@ class VerificationService:
         data = 'facebook verified'
         # TODO: determine claim type integer code for phone verification
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['facebook'], data
+            signing_key, eth_address, TOPICS['facebook'], data
         )
 
         attestation = Attestation(
@@ -338,7 +339,7 @@ class VerificationService:
 
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': CLAIM_TYPES['facebook'],
+            'claim_type': TOPICS['facebook'],
             'data': data
         })
 
@@ -375,8 +376,8 @@ class VerificationService:
         return VerificationServiceResponse({'url': url})
 
     def verify_twitter(oauth_verifier, eth_address):
+        ipfs_helper = IPFSHelper()
         # Verify authenticity of user
-
         if 'request_token' not in session:
             raise TwitterVerificationError('Session not found.')
 
@@ -398,15 +399,17 @@ class VerificationService:
                 'The verifier you provided is invalid.'
             )
 
-        # TODO: determine what the text should be
-        data = 'twitter verified'
-        # TODO: determine claim type integer code for phone verification
-        signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['twitter'], data
-        )
-
         query_string = urllib.parse.parse_qs(response.content)
         screen_name = query_string[b'screen_name'][0].decode('utf-8')
+
+        ipfs_hash = ipfs_helper.add_json({
+            'schemaId': 'http://schema.originprotocol.com/twitter-attestation_v1.0.0',
+            'screen_name': screen_name
+        })
+
+        signature = attestations.generate_signature(
+            signing_key, eth_address, TOPICS['twitter'], base58_to_hex(ipfs_hash)
+        )
 
         attestation = Attestation(
             method=AttestationTypes.TWITTER,
@@ -420,8 +423,8 @@ class VerificationService:
 
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': CLAIM_TYPES['twitter'],
-            'data': data
+            'claim_type': TOPICS['twitter'],
+            'data': ipfs_hash
         })
 
     def generate_airbnb_verification_code(eth_address, airbnbUserId):
@@ -432,6 +435,7 @@ class VerificationService:
         })
 
     def verify_airbnb(eth_address, airbnbUserId):
+        ipfs_helper = IPFSHelper()
         validate_airbnb_user_id(airbnbUserId)
 
         code = get_airbnb_verification_code(eth_address, airbnbUserId)
@@ -460,10 +464,25 @@ class VerificationService:
                 " has not been found in user's Airbnb profile."
             )
 
-        # TODO: determine the schema for claim data
-        data = 'airbnbUserId:' + airbnbUserId
+        ipfs_hash = ipfs_helper.add_json({
+            'schemaId': 'http://schema.originprotocol.com/airbnb-attestation_v1.0.0',
+            'airbnb_user_id': airbnbUserId
+        })
+
+        """ - IPFS hash is a base58 encoded string
+            - We store IPFS hashes in solidity claims in bytes32 binary format to minimise
+              gas cost.
+            - bytes32 is not string serialisable so it can not be transmitted in that form
+              from bridge to the DApp
+            - bridge needs to transform ipfs hash to bytes32 format (that is how
+              it is going to be stored in the contract) before signing the claim, and then
+              send IPFS hash to the DApp in base58 string encoding.
+            - this way claim has a correct signature if IPFS hash has bytes32 hex encoding
+            - the DApp takes signature and other claim info and transforms the base58 encoded
+              IPFS hash to base32 hex before submitting the claim to web3.
+        """
         signature = attestations.generate_signature(
-            signing_key, eth_address, CLAIM_TYPES['airbnb'], data
+            signing_key, eth_address, TOPICS['airbnb'], base58_to_hex(ipfs_hash)
         )
 
         attestation = Attestation(
@@ -478,8 +497,8 @@ class VerificationService:
 
         return VerificationServiceResponse({
             'signature': signature,
-            'claim_type': CLAIM_TYPES['airbnb'],
-            'data': data
+            'claim_type': TOPICS['airbnb'],
+            'data': ipfs_hash
         })
 
 

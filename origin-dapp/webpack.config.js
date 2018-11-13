@@ -14,30 +14,34 @@ const isProduction = process.env.NODE_ENV === 'production'
 // will be used as the default. See /#/dapp-info page on running Dapp
 // to see all env vars.
 const env = {
-  ARBITRATOR_ACCOUNT: '',
-  AFFILIATE_ACCOUNT: '',
+  ARBITRATOR_ACCOUNT: null,
+  AFFILIATE_ACCOUNT: null,
   BLOCK_EPOCH: 0,
-  BRIDGE_SERVER_DOMAIN: '',
+  BRIDGE_SERVER_DOMAIN: 'bridge.originprotocol.com',
   BRIDGE_SERVER_PROTOCOL: 'https',
   CONTRACT_ADDRESSES: '{}',
   DEPLOY_TAG: false,
-  DISCOVERY_SERVER_URL: '',
+  DISCOVERY_SERVER_URL: 'https://discovery.originprotocol.com',
+  ENABLE_FRACTIONAL: false,
+  ENABLE_PERFORMANCE_MODE: false,
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
+  GA_TRACKING_ID: null, // must also be hard-coded in dev.html - this is used in components/analytics.js
   IMAGE_MAX_SIZE: null,
-  INSTRUCTIONS_URL: null,
-  IPFS_API_PORT: '',
-  IPFS_DOMAIN: '',
-  IPFS_GATEWAY_PORT: '',
+  INSTRUCTIONS_URL: 'https://www.originprotocol.com',
+  IPFS_API_PORT: '443',
+  IPFS_DOMAIN: 'ipfs.originprotocol.com',
+  IPFS_GATEWAY_PORT: '443',
   IPFS_GATEWAY_PROTOCOL: 'https',
-  IPFS_SWARM: '',
-  MESSAGING_ACCOUNT: '',
-  MESSAGING_NAMESPACE: '',
-  MAINNET_DAPP_BASEURL: null,
-  RINKEBY_DAPP_BASEURL: null,
-  PROVIDER_URL: '',
+  IPFS_SWARM: 'None',
+  MESSAGING_ACCOUNT: null,
+  MESSAGING_NAMESPACE: null,
+  MAINNET_DAPP_BASEURL: 'https://dapp.originprotocol.com',
+  NOTIFICATIONS_KEY: null,
+  NOTIFICATIONS_URL: 'https://notifications.originprotocol.com',
+  PROVIDER_URL: null,
   REDUX_LOGGER: false,
-  GA_TRACKING_ID: '' // must also be hard-coded in dev.html - this is used in components/analytics.js
+  RINKEBY_DAPP_BASEURL: 'https://demo.staging.originprotocol.com'
 }
 
 var config = {
@@ -89,23 +93,13 @@ var config = {
           }
         ]
       },
-      {
-        test: /\.js$/,
-        use: "source-map-loader",
-        exclude: [
-          // Don't load source maps from anything in node_modules except for the
-          // origin-js directory
-          /node_modules([\\]+|\/)+(?!origin)/,
-          /\origin([\\]+|\/)node_modules/
-        ],
-        enforce: "pre"
-      }
     ]
   },
   devServer: {
     contentBase: './public',
     host: "0.0.0.0",
     port: 3000,
+    public: 'localhost:3000',
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
@@ -132,6 +126,7 @@ var config = {
     new webpack.EnvironmentPlugin(env),
     new CopyWebpackPlugin([
       'public/favicon.ico',
+      'public/sw.js',
       { from: 'public/images', to: 'images' },
       { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }
@@ -145,6 +140,18 @@ if (isProduction) {
     filename: '[name].[hash].css',
     chunkFilename: '[id].[hash].css'
   }))
+} else {
+  config.module.rules.push({
+    test: /\.js$/,
+    use: 'source-map-loader',
+    exclude: [
+      // Don't load source maps from anything in node_modules except for the
+      // origin-js directory
+      /node_modules([\\]+|\/)+(?!origin)/,
+      /\origin([\\]+|\/)node_modules/
+    ],
+    enforce: 'pre'
+  })
 }
 
 module.exports = config

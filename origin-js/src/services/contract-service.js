@@ -1,27 +1,29 @@
-import ClaimHolderRegistered from './../../contracts/build/contracts/ClaimHolderRegistered.json'
-import ClaimHolderPresigned from './../../contracts/build/contracts/ClaimHolderPresigned.json'
-import ClaimHolderLibrary from './../../contracts/build/contracts/ClaimHolderLibrary.json'
-import KeyHolderLibrary from './../../contracts/build/contracts/KeyHolderLibrary.json'
-import V00_UserRegistry from './../../contracts/build/contracts/V00_UserRegistry.json'
-import OriginIdentity from './../../contracts/build/contracts/OriginIdentity.json'
-import OriginToken from './../../contracts/build/contracts/OriginToken.json'
+import ClaimHolderRegistered from 'origin-contracts/build/contracts/ClaimHolderRegistered.json'
+import ClaimHolderPresigned from 'origin-contracts/build/contracts/ClaimHolderPresigned.json'
+import ClaimHolderLibrary from 'origin-contracts/build/contracts/ClaimHolderLibrary.json'
+import KeyHolderLibrary from 'origin-contracts/build/contracts/KeyHolderLibrary.json'
+import V00_UserRegistry from 'origin-contracts/build/contracts/V00_UserRegistry.json'
+import OriginIdentity from 'origin-contracts/build/contracts/OriginIdentity.json'
+import OriginToken from 'origin-contracts/build/contracts/OriginToken.json'
 
-import V00_Marketplace from './../../contracts/build/contracts/V00_Marketplace.json'
+import V00_Marketplace from 'origin-contracts/build/contracts/V00_Marketplace.json'
 
 import WalletLinker from './../resources/wallet-linker'
 
 import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
 import Web3 from 'web3'
+import { groupBy, mapValues } from './../utils/arrayFunctions'
 
 const emptyAddress = '0x0000000000000000000000000000000000000000'
-const NUMBER_CONFIRMATIONS_TO_REPORT = 20
+// 24 is the number web3 supplies
+const NUMBER_CONFIRMATIONS_TO_REPORT = 24
 const SUPPORTED_ERC20 = [
   { symbol: 'OGN', decimals: 18, contractName: 'OriginToken' }
 ]
 
 class ContractService {
-  constructor({ web3, contractAddresses, walletLinkerUrl, fetch } = {}) {
+  constructor({ web3, contractAddresses, ethereum, walletLinkerUrl, fetch } = {}) {
     const externalWeb3 = web3 || ((typeof window !== 'undefined') && window.web3)
     if (!externalWeb3) {
       throw new Error(
@@ -29,6 +31,7 @@ class ContractService {
       )
     }
     this.web3 = new Web3(externalWeb3.currentProvider)
+    this.ethereum = ethereum
 
     if (walletLinkerUrl && fetch){
       this.initWalletLinker(walletLinkerUrl, fetch)
@@ -171,9 +174,33 @@ class ContractService {
     return hashStr
   }
 
+  async enableEthereum() {
+    try {
+      // Request account access if needed
+      await this.ethereum.enable()
+      this.ethereumIsEnabled = true
+      this.onEthereumEnabled = null
+    } catch (error) {
+      // User denied account access...
+      console.error(`Error enabling ethereum: ${error}`)
+    }
+  }
+
+  async ensureEthereumIsEnabled() {
+    if (this.ethereum && !this.ethereumIsEnabled) {
+      // This flow allows currentAccount to be called multiple times before the user has dealt with the first popup.
+      // Otherwise, if you call this function multiple times before the first one is handled, mutltiple popups will appear.
+      if (!this.onEthereumEnabled) {
+        this.onEthereumEnabled = this.enableEthereum()
+      }
+      await this.onEthereumEnabled
+    }
+  }
+
   // Returns the first account listed, unless a default account has been set
   // explicitly
   async currentAccount() {
+    await this.ensureEthereumIsEnabled()
     const defaultAccount = this.web3.eth.defaultAccount
     if (defaultAccount) {
       return defaultAccount
@@ -236,59 +263,131 @@ class ContractService {
     return withLibraryAddresses
   }
 
+  /* Confirmation callback does not get triggered in some versions of Metamask so this
+   * function perpetually (until NUMBER_CONFIRMATIONS_TO_REPORT confirmations) checks
+   * for transaction confirmation.
+   *
+   * This function is a safety net just in case send method's `on.('confirmation')` does
+   * not function (e.g. in Metamask 4.12.0 it is broken). But if we detect that the mentioned
+   * function is not broken we cancel the safety net immediately.
+   */
+  async checkForTransactionCompletion(hash, contract, confirmationCallback, resolveCallback, promiseStatus) {
+    if (promiseStatus.onConfirmationTriggered)
+      return
+
+    const transactionReceipt = await this.web3.eth.getTransactionReceipt(hash)
+
+    // transaction not mined
+    if (transactionReceipt === null || transactionReceipt.blockNumber === null){
+      setTimeout(() => {
+        this.checkForTransactionCompletion(hash, contract, confirmationCallback, resolveCallback, promiseStatus)
+      }, 1500)
+    } else {
+      promiseStatus.txnFoundCounter += 1
+
+      /* If fallback function detects a valid transaction for the second time and the main function has
+       * not registered a transaction receipt, positively resolve the promise with generated receipt. This resolves
+       * problems created by Metamask 4.12.0.
+       */
+      if (!promiseStatus.receiptReceived && promiseStatus.txnFoundCounter > 1){
+        // unfortunately transaction logs in transactionReceipt do not contain all needed event information
+        const getEventsEmittedByTransaction = async () => {
+          let events = await contract.getPastEvents(
+            'allEvents',
+            {
+              fromBlock: transactionReceipt.blockNumber
+            }
+          )
+
+          // only keep event emitted by this transaction
+          events = events
+            .filter(event => event.transactionHash === transactionReceipt.transactionHash)
+          /* Send method returns events grouped by name. (https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#methods-mymethod-send)
+           * If more than 1 event of the same name is returned it is an array, otherwise an object.
+           * Just conform to that format
+           */
+          return mapValues(groupBy(events, (event) => event.event),
+            eventList => eventList.length === 1 ? eventList[0] : eventList)
+        }
+
+
+        promiseStatus.receiptReceived = true
+        transactionReceipt.events = await getEventsEmittedByTransaction()
+        resolveCallback(transactionReceipt)
+      }
+
+      const currentBlockNumber = await this.web3.eth.getBlockNumber()
+      // Math.max to prevent the -1 confirmation on Rinkeby.
+      const confirmations = Math.max(0, currentBlockNumber - transactionReceipt.blockNumber)
+      if (confirmationCallback !== undefined)
+        confirmationCallback(confirmations, transactionReceipt)
+
+      if (confirmations < NUMBER_CONFIRMATIONS_TO_REPORT) {
+        setTimeout(() => {
+          this.checkForTransactionCompletion(hash, contract, confirmationCallback, resolveCallback, promiseStatus)
+        }, 1500)
+      }
+    }
+  }
+
+  // Unify the way contract's transactions/deployments are handled
+  handleTransactionCallbacks(contract, sendCallback, resolveCallback, rejectCallback, confirmationCallback, transactionHashCallback) {
+    // needs to be an object because it is passed to functions by reference
+    const promiseStatus = {
+      onConfirmationTriggered: false,
+      receiptReceived: false,
+      txnFoundCounter: 0
+    }
+    sendCallback
+      .on('receipt', receipt => {
+        promiseStatus.receiptReceived = true
+        resolveCallback(receipt)
+      })
+      .on('confirmation', (confirmationNumber, receipt) => {
+        promiseStatus.onConfirmationTriggered = true
+        if (confirmationCallback)
+          confirmationCallback(confirmationNumber, receipt)
+      })
+      .on('transactionHash', (hash) => {
+        if (transactionHashCallback)
+          transactionHashCallback(hash)
+
+        /* Start looking for completion even if confirmation callback is undefined. This way if we have a broken Metamask
+         * we can still generate a transaction receipt (resolveCallback) even if Metamask does not supply one.
+         */
+        this.checkForTransactionCompletion(hash, contract, confirmationCallback, resolveCallback, promiseStatus)
+      })
+
+      .on('error', error => {
+        // an error in Metamask 4.12.0 that we handle with fallback transaction checking function
+        if (error.message.includes('Failed to subscribe to new newBlockHeaders to confirm the transaction receipts'))
+          return
+
+        rejectCallback(error)
+      })
+  }
+
   async deploy(contract, args, options, { confirmationCallback, transactionHashCallback } = {} ) {
     const bytecode = await this.getBytecode(contract)
     const deployed = await this.deployed(contract)
     const txReceipt = await new Promise((resolve, reject) => {
-      deployed
+      const sendCallback = deployed
         .deploy({
           data: bytecode,
           arguments: args
         })
         .send(options)
-        .on('receipt', receipt => {
-          resolve(receipt)
-        })
-        //.on('confirmation', confirmationCallback)
-        //.on('transactionHash', transactionHashCallback)
-        // Workaround for "confirmationCallback" not being triggered with web3 version:1.0.0-beta.34
-        .on('transactionHash', (hash) => {
-          if (transactionHashCallback)
-            transactionHashCallback(hash)
-          if (confirmationCallback)
-            this.checkForDeploymentCompletion(hash, confirmationCallback)
-        })
-        .on('error', err => reject(err))
+
+      this.handleTransactionCallbacks(
+        contract,
+        sendCallback,
+        resolve,
+        reject,
+        confirmationCallback,
+        transactionHashCallback
+      )
     })
     return txReceipt
-  }
-
-  /* confirmation callback does not get triggered in current version of web3 version:1.0.0-beta.34
-   * so this function perpetually (until 20 confirmations) checks for presence of deployed contract.
-   *
-   * This could also be a problem in Ethereum node: https://github.com/ethereum/web3.js/issues/1255
-   */
-  async checkForDeploymentCompletion(hash, confirmationCallback) {
-    const transactionInfo = await this.web3.eth.getTransaction(hash)
-
-    // transaction not mined
-    if (transactionInfo === null || transactionInfo.blockNumber === null){
-      setTimeout(() => {
-        this.checkForDeploymentCompletion(hash, confirmationCallback)
-      }, 1500)
-    } else {
-      const currentBlockNumber = await this.web3.eth.getBlockNumber()
-      const confirmations = currentBlockNumber - transactionInfo.blockNumber
-      confirmationCallback(confirmations, {
-        transactionHash: transactionInfo.hash
-      })
-      // do checks until NUMBER_CONFIRMATIONS_TO_REPORT block confirmations
-      if (confirmations < NUMBER_CONFIRMATIONS_TO_REPORT) {
-        setTimeout(() => {
-          this.checkForDeploymentCompletion(hash, confirmationCallback)
-        }, 1500)
-      }
-    }
   }
 
   async call(
@@ -319,19 +418,26 @@ class ContractService {
       if (!opts.from && this.walletLinker && !this.walletLinker.linked) {
         opts.from = this.walletLinker.startPlaceholder()
       }
-      method
-        .send(opts)
-        .on('receipt', receipt => { 
-          this.walletLinker.endPlaceholder()
-          resolve(receipt) 
-        })
-        .on('confirmation', confirmationCallback)
-        .on('transactionHash', transactionHashCallback)
-        .on('error', err => {
-          this.walletLinker.endPlaceholder() 
-          reject(err)
-        })
+      const wrappedResolved = (this.walletLinker && (ret => {
+        this.walletLinker.endPlaceholder()
+        resolve(ret) 
+      })) || resolved
+    
+      const wrappedReject = (this.walletLinker && (err => {
+        this.walletLinker.endPlaceholder() 
+        reject(err)
+      })) || reject
+
+      this.handleTransactionCallbacks(
+        contract,
+        sendCallback,
+        wrappedResolve,
+        wrappedReject,
+        confirmationCallback,
+        transactionHashCallback
+      )
     })
+
     const block = await this.web3.eth.getBlock(transactionReceipt.blockNumber)
     return {
       // return current time in seconds if block is not found

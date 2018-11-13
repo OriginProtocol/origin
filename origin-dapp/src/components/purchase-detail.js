@@ -876,8 +876,8 @@ class PurchaseDetail extends Component {
                         <div>
                           <SellerBadge />
                         </div>
-                        <div className="name">{sellerName}</div>
-                        <div className="address text-muted text-truncate">
+                        <div className="name" title={sellerName}>{sellerName}</div>
+                        <div className="address text-muted text-truncate" title="{seller.address}">
                           {seller.address}
                         </div>
                       </div>
@@ -895,8 +895,8 @@ class PurchaseDetail extends Component {
                         <div>
                           <BuyerBadge />
                         </div>
-                        <div className="name">{buyerName}</div>
-                        <div className="address text-muted text-truncate">
+                        <div className="name" title={buyerName}>{buyerName}</div>
+                        <div className="address text-muted text-truncate" title={buyer.address}>
                           {buyer.address}
                         </div>
                       </div>
