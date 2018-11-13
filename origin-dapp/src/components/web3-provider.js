@@ -543,7 +543,6 @@ class Web3Provider extends Component {
     const supportedNetworkName = supportedNetwork && supportedNetwork.name
     const walletLinkerEnabled = origin.contractService.walletLinker
 
-    console.log("Showing Web3Intent:", web3Intent, " !linker:", !walletLinkerEnabled, " !given:", !web3.givenProvider)
     return (
       <Fragment>
         {/* currentProvider should always be present */
