@@ -103,11 +103,12 @@ async function getListing (listingId, blockInfo = null) {
       where: { id: listingId, blockNumber: { [Sequelize.Op.lte]: blockInfo.blockNumber } },
       order: [['blockNumber', 'DESC'], ['logIndex', 'DESC']]
     })
-    // Handle the rare case where a row satisfies the blockInfo.blockNumber condition
+    // Handle the rare case where a row satisfies the blockNumber condition
     // but not the logIndex one.
-    if (row && blockInfo.logIndex &&
-      row.blockNumber === blockInfo.blockNumber &&
-      row.logIndex > blockInfo.logIndex) {
+    if (row &&
+      (blockInfo.logIndex !== undefined) &&
+      (row.blockNumber === blockInfo.blockNumber) &&
+      (row.logIndex > blockInfo.logIndex)) {
       row = null
     }
   } else {

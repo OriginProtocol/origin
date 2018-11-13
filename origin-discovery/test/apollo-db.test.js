@@ -79,15 +79,27 @@ describe('Listing DB methods', () => {
       expect(listing.logIndex).to.equal(1)
     })
 
-    it(`Should return listing given an id and a blockInfo`, async () => {
-      const blockInfo = { blockNumber: 500, blockIndex: 1 }
-      const listing = await getListing(listingId1, blockInfo)
-      expect(listing.id).to.equal(listingId1)
+    it(`Should return listing if blockInfo is higher or equal to listing's`, async () => {
+      // BlockInfo block number higher than listing's.
+      let blockInfo = { blockNumber: 500, logIndex: 1 }
+      let listing = await getListing(listingId2, blockInfo)
+      expect(listing.id).to.equal(listingId2)
+
+      // BlockInfo equal to listing's.
+      blockInfo = { blockNumber: 200, logIndex: 2 }
+      listing = await getListing(listingId2, blockInfo)
+      expect(listing.id).to.equal(listingId2)
     })
 
-    it(`Should not return listing given an id and an invalid blockInfo`, async () => {
-      const blockInfo = { blockNumber: 99, blockIndex: 1 }
-      const listing = await getListing(listingId1, blockInfo)
+    it(`Should not return listing if blockInfo lower than the listing's`, async () => {
+      // BlockInfo block number is lower than listing's.
+      let blockInfo = { blockNumber: 100, logIndex: 1 }
+      let listing = await getListing(listingId2, blockInfo)
+      expect(listing).to.equal(null)
+
+      // Blockinfo block number is equal to listing's but logIndex is lower.
+      blockInfo = { blockNumber: 200, logIndex: 1 }
+      listing = await getListing(listingId2, blockInfo)
       expect(listing).to.equal(null)
     })
   })
