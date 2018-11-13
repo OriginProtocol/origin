@@ -12,6 +12,9 @@ const listingMetadata = require('../apollo/listing-metadata')
 function _makeListing (row) {
   return {
     id: row.id,
+    // TODO: expose blockNumber and logIndex in GraphQL schema
+    blockNumber: row.blockNumber,
+    logIndex: row.logIndex
     ipfsHash: row.data.ipfs.hash,
     data: row.data,
     title: row.data.title,
@@ -22,9 +25,6 @@ function _makeListing (row) {
     // For example, for fractional usage it may vary based on time slot.
     price: row.data.price,
     display: listingMetadata.getDisplay(row.id),
-    // TODO: expose blockNumber and logIndex in GraphQL schema
-    blockNumber: row.blockNumber,
-    logIndex: row.logIndex
   }
 }
 
