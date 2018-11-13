@@ -79,7 +79,7 @@ const resolvers = {
     },
 
     async offers (listing) {
-      const offers = await searchOffers(args.listingId)
+      const offers = await searchOffers(listing.id)
       return { nodes: offers }
     }
   },
