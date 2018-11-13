@@ -23,6 +23,6 @@ const port = 3008
 
 app.use('/api/wallet-linker', linkerRoutes)
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Mobile server app listening on port ${port}!`))
 
 export default app
