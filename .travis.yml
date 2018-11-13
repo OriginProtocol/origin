@@ -17,7 +17,7 @@ matrix:
         - npm run bootstrap -- --scope ipfs-proxy
       script:
         - lerna run lint --scope ipfs-proxy
-        - lerna run test --scope ipfs-proxy
+        - lerna run test --scope ipfs-proxy --stream
 
     - name: "origin-bridge tests"
       language: python

@@ -26,10 +26,10 @@ COPY ./scripts ./scripts
 
 # Bootstrap dependencies, --ignore-scripts is necessary to avoid overwriting
 # contracts
-RUN lerna bootstrap --ci --ignore-scripts -- --unsafe perm
+RUN lerna bootstrap --ci --ignore-scripts -- --unsafe-perm
 
 # Build origin-js so it is available for the event-listener to import
-RUN lerna run build --scope origin
+RUN lerna run build --scope origin --stream
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix origin-discovery && \

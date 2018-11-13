@@ -104,10 +104,11 @@ node_modules/
 /origin-js/libpeerconnection.log
 /origin-js/testem.log
 /origin-js/typings
-#
-# origin-js #
-#############
-/origin-website
+
+# origin-messaging #
+####################
+/origin-messaging/ipfs
+/origin-messaging/odb
 
 # origin-messaging #
 #############
