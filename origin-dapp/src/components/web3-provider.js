@@ -545,6 +545,7 @@ class Web3Provider extends Component {
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
     const supportedNetworkName = supportedNetwork && supportedNetwork.name
+    const walletLinkerEnabled = origin.contractService.walletLinker
 
     return (
       <Fragment>
@@ -562,13 +563,37 @@ class Web3Provider extends Component {
           <UnsupportedNetwork currentNetworkName={currentNetworkName} currentProvider={currentProvider} />
         }
 
+        {/* attempting to use web3 in unsupported mobile browser */
+          web3Intent &&
+          !walletLinkerEnabled &&
+          !web3.givenProvider &&
+          onMobile && (
+            <NotWeb3EnabledMobile
+              web3Intent={web3Intent}
+              storeWeb3Intent={storeWeb3Intent}
+            />
+          )}
+
+        {/* attempting to use web3 in unsupported desktop browser */
+          web3Intent &&
+          !walletLinkerEnabled &&
+          !web3.givenProvider &&
+          !onMobile && (
+            <NotWeb3EnabledDesktop
+              web3Intent={web3Intent}
+              storeWeb3Intent={storeWeb3Intent}
+            />
+          )}
+
         { /* attempting to use web3 in unsupported desktop browser */
           web3Intent &&
+          walletLinkerEnabled &&
           !web3.givenProvider &&
           linkerCode &&
           linkerPopUp &&
           <LinkerPopUp web3Intent={web3Intent} cancel={() => { storeWeb3Intent(null); origin.contractService.walletLinker.cancelLink() }} linkerCode={linkerCode} />
         }
+        
 
         { /* attempting to use web3 without being signed in */
           web3Intent &&

@@ -31,7 +31,7 @@ const hasCustomBridge = bridgeProtocol && bridgeDomain
 const bridgeUrl = hasCustomBridge ? customBridgeUrl : defaultBridgeUrl
 const attestationServerUrl = `${bridgeUrl}/api/attestations`
 const walletLinkerBaseUrl = mobilize(process.env.WALLET_LINKER_URL)
-const walletLinkerUrl = `${walletLinkerBaseUrl}/api/wallet-linker`
+const walletLinkerUrl = walletLinkerBaseUrl && `${walletLinkerBaseUrl}/api/wallet-linker`
 const ipfsSwarm = process.env.IPFS_SWARM
 const web3 = new Web3(
   // Detect MetaMask using global window object
