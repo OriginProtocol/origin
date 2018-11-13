@@ -21,4 +21,4 @@ COPY ./scripts ./scripts
 # contracts
 RUN lerna bootstrap --ci --ignore-scripts -- --loglevel notice --unsafe-perm
 
-CMD npm run start --prefix origin-faucet -- --network_ids=4,2222
+CMD npm run start --prefix origin-faucet
