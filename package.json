@@ -2,11 +2,26 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "lerna": "^3.4.3"
+    "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
+    "eslint": "^5.9.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "lerna": "^3.4.3",
+    "mocha": "^5.2.0"
   },
   "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build --stream",
+    "clean": "git clean -fdX .",
+    "start": "lerna run start --stream --parallel --scope origin --scope origin-dapp",
+    "lint": "lerna run lint --stream",
+    "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "node ./scripts/postinstall.js",
-    "test": "node ./scripts/test.js",
-    "clean": "git clean -fdX ."
+    "test": "node ./scripts/test.js"
   }
 }

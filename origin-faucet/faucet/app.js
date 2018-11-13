@@ -31,7 +31,7 @@ function runApp(config) {
           // Allow request and consume 1 point.
           next()
         })
-        .catch((err) => {
+        .catch(() => {
           // Not enough points. Block the request.
           console.log(`Rejecting request due to rate limiting.`)
           res.status(429).send('<h2>Too Many Requests</h2>')

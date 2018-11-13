@@ -55,7 +55,7 @@ async function setLastBlock (config, blockNumber) {
  */
 async function withRetrys (fn, exitOnError = true) {
   let tryCount = 0
-  while (true) {
+  while (true) {  // eslint-disable-line no-constant-condition
     try {
       return await fn() // Do our action.
     } catch (e) {

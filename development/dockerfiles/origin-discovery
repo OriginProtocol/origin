@@ -1,5 +1,15 @@
-FROM node:9
+FROM node:10
 
 WORKDIR /app
 
-COPY ./development/scripts/wait-for.sh /usr/local/bin
+COPY package*.json /app/
+COPY lerna.json .
+COPY ./origin-js /app/origin-js
+COPY ./origin-contracts /app/origin-contracts
+COPY ./origin-discovery /app/origin-discovery
+COPY ./scripts ./scripts
+RUN npm install --loglevel notice --unsafe-perm
+
+WORKDIR /app/origin-discovery
+
+CMD npm run start:discovery

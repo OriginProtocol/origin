@@ -7,14 +7,18 @@ ENV NODE_ENV=production
 # Install lerna
 RUN npm i lerna -g --loglevel notice
 
-COPY package-lock.json .
-COPY package.json .
-COPY lerna.json .
+COPY package*.json ./
+COPY lerna.json ./
 COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
+# Copy release contracts into build directory
+# TODO: Find a better way to handle this
+COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
 COPY ./origin-faucet ./origin-faucet
 COPY ./scripts ./scripts
-RUN npm install --loglevel notice --unsafe-perm
-RUN lerna run build
 
-CMD ["node", "origin-faucet/faucet/app.js", "--network_ids=4,2222"]
+# Bootstrap dependencies, --ignore-scripts is necessary to avoid overwriting
+# contracts
+RUN lerna bootstrap --ci --ignore-scripts -- --loglevel notice --unsafe-perm
+
+CMD npm run start --prefix origin-faucet -- --network_ids=4,2222

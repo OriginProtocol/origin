@@ -6,6 +6,10 @@ import logger from './logger'
 import Web3 from 'web3'
 import * as config from './config'
 
+function joinConversationKey(converser1, converser2) {
+  return [converser1, converser2].sort().join('-')
+}
+
 function verifyConversationSignature(keysMap) {
   return (signature, key, message, buffer) => {
     const verifyAddress = web3.eth.accounts.recover(
@@ -33,7 +37,7 @@ function verifyConversers(conversee, keysMap){
 
     if ((parentKey && verifyAddress == parentKey.address) ||
         (converseeKey && verifyAddress == keysMap.get(conversee).address)) {
-      logger.debug(`Verified conv init for ${conversee}, Signature: ${contentObj.sign}, Signed with: ${verifyAddress}`)
+      logger.debug(`Verified conv init for ${conversee}, Signature: ${contentObject.sign}, Signed with: ${verifyAddress}`)
       return true
     }
     return false
