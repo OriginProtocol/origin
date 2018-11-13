@@ -15,7 +15,7 @@ COPY ./origin-discovery ./origin-discovery
 COPY ./scripts ./scripts
 RUN lerna bootstrap --loglevel notice -- --unsafe-perm
 # Build origin-js
-RUN lerna run build --scope origin
+RUN lerna run build --scope origin -- --progress
 
 WORKDIR /app/origin-discovery
 

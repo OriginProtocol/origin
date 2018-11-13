@@ -81,6 +81,8 @@ The Origin Docker Compose configuration runs the following packages:
 
 ### Getting Started
 
+⚠️  If you have previously used  `docker-compose` with Origin, please ensure you clear out old containers by stopping any running containers and executing `docker system prune --volumes --all` before completing these steps.
+
 1. Clone the repository:
 
 `git clone https://github.com/OriginProtocol/origin`
