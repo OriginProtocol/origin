@@ -29,10 +29,6 @@ module.exports = {
           type: Sequelize.STRING(32),
           allowNull: false
         },
-        latest: {
-          type: Sequelize.BOOLEAN,
-          default: false
-        },
         data: {
           type: Sequelize.JSONB,
           allowNull: false

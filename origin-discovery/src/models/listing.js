@@ -12,8 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     sellerAddress: DataTypes.CHAR(42),
     // Offer status as returned by the marketplace.getListing(listingId) method.
     status: DataTypes.STRING(32),
-    // True if this is the most recent row for a listing.
-    latest: DataTypes.BOOLEAN,
     // JSON data as returned by the marketplace.getListing(listingId) method.
     data: DataTypes.JSONB,
     // Creation date.

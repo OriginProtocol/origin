@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 
 const db = require('../models')
-const listingMetadata = require('../apollo/listing-metadata')
+const listingMetadata = require('./listing-metadata')
 
 /**
  * Helper function. Returns a listing object compatible with the GraphQL Listing schema.
@@ -14,7 +14,7 @@ function _makeListing (row) {
     id: row.id,
     // TODO: expose blockNumber and logIndex in GraphQL schema
     blockNumber: row.blockNumber,
-    logIndex: row.logIndex
+    logIndex: row.logIndex,
     ipfsHash: row.data.ipfs.hash,
     data: row.data,
     title: row.data.title,
@@ -24,7 +24,7 @@ function _makeListing (row) {
     // TODO: price may not be defined at the listing level for all listing types.
     // For example, for fractional usage it may vary based on time slot.
     price: row.data.price,
-    display: listingMetadata.getDisplay(row.id),
+    display: listingMetadata.getDisplay(row.id)
   }
 }
 
@@ -39,7 +39,19 @@ function _makeListing (row) {
  */
 async function _getListings (whereClause, orderByIds = []) {
   // Load rows from the Listing table in the DB.
-  const rows = await db.Listing.findAll({ where: whereClause })
+  // Note: sequelize does not support DISTINCT ON. We work around it
+  // by using a literal clause "DISTINCT ON(id) 1". The static column name 1 is there as
+  // a workaround for sequelize adding a comma right after the literal expression which
+  // otherwise causes the query to fail.
+  // The query generated is equivalent to:
+  //  SELECT DISTINCT ON (id) * FROM listing WHERE <where_clause> ORDER BY id DESC, block_number DESC, log_index DESC;
+  const rows = await db.Listing.findAll({
+    where: whereClause,
+    attributes: [
+      Sequelize.literal('DISTINCT ON(id) 1')
+    ].concat(Object.keys(db.Listing.rawAttributes)),
+    order: [ ['id', 'DESC'], ['blockNumber', 'DESC'], ['logIndex', 'DESC'] ]
+  })
   if (rows.length === 0) {
     return []
   }
@@ -63,7 +75,7 @@ async function _getListings (whereClause, orderByIds = []) {
  * @return {Promise<Array|null>}
  */
 async function getListingsById (listingIds) {
-  const whereClause = { id: { [Sequelize.Op.in]: listingIds }, latest: true }
+  const whereClause = { id: { [Sequelize.Op.in]: listingIds } }
   return _getListings(whereClause, listingIds)
 }
 
@@ -73,15 +85,15 @@ async function getListingsById (listingIds) {
  * @return {Promise<Array|null>}
  */
 async function getListingsBySeller (sellerAddress) {
-  const whereClause = { sellerAddress: sellerAddress.toLowerCase(), latest: true }
+  const whereClause = { sellerAddress: sellerAddress.toLowerCase() }
   return _getListings(whereClause)
 }
 
 /**
  * Queries DB for a listing.
  * @param listingId
- * @param {Object} blockInfo - Optional max blockNumber and logIndex values. This can be used
- *   to get the state of a listing at a given point in history.
+ * @param {Object} blockInfo - Optional max blockNumber and logIndex values (inclusive).
+ *   This can be used to get the state of a listing at a given point in history.
  * @return {Promise<Object|null>}
  */
 async function getListing (listingId, blockInfo = null) {
@@ -99,7 +111,12 @@ async function getListing (listingId, blockInfo = null) {
       row = null
     }
   } else {
-    row = await db.Listing.findOne({ where: { id: listingId, latest: true } })
+    // Return most recent row for the listing.
+    row = await db.Listing.findOne({
+      where: { id: listingId },
+      order: [ ['id', 'DESC'], ['blockNumber', 'DESC'], ['logIndex', 'DESC'] ],
+      limit: 1
+    })
   }
   if (!row) {
     return null
@@ -108,33 +125,4 @@ async function getListing (listingId, blockInfo = null) {
   return listing
 }
 
-/**
- * Inserts or updates listing data.
- * Ensures the listing row with most recent data has the "latest" column set to true.
- * TODO: Add locking to prevent risk of race condition that could cause latest column
- *       to be set on a row that is not the most recent if multiple event-listeners
- *       are running concurrently.
- * @param listingData
- * @return {Promise}
- */
-async function upsertListing (listing) {
-  // Determine if the row being updated/inserted is the latest for the listing.
-  const latestRow = await db.Listing.findOne({
-    where: { id: listing.id },
-    order: [['blockNumber', 'DESC'], ['logIndex', 'DESC']]
-  })
-  const isLatest = !latestRow ||
-    (listing.blockNumber > latestRow.blockNumber) ||
-    (listing.blockNumber === latestRow.blockNumber && listing.logIndex >= latestRow.logIndex)
-  listing.latest = isLatest
-
-  return db.sequelize.transaction(async (t) => {
-    if (isLatest) {
-      // If row being updated/inserted is latest, unset the latest flag on other row.
-      await db.Listing.update({ latest: false }, { where: { id: listing.id } }, { transaction: t })
-    }
-    await db.Listing.upsert(listing, { transaction: t })
-  })
-}
-
-module.exports = { getListing, getListingsById, getListingsBySeller, upsertListing }
+module.exports = { getListing, getListingsById, getListingsBySeller }

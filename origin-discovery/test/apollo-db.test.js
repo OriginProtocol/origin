@@ -1,7 +1,7 @@
 const chai = require('chai')
 
 const db = require('../src/models')
-const { getListing, getListingsById, getListingsBySeller, upsertListing } = require('../src/lib/db')
+const { getListing, getListingsById, getListingsBySeller } = require('../src/apollo/db')
 
 const expect = chai.expect
 
@@ -41,7 +41,7 @@ describe('Listing DB methods', () => {
   before(async () => {
     await db.Listing.destroy({ where: { id: listingId1 } })
     await db.Listing.destroy({ where: { id: listingId2 } })
-    await upsertListing({
+    await db.Listing.upsert({
       id: listingId1,
       blockNumber: 100,
       logIndex: 1,
@@ -49,7 +49,7 @@ describe('Listing DB methods', () => {
       status: 'active',
       data: data1
     })
-    await upsertListing({
+    await db.Listing.upsert({
       id: listingId2,
       blockNumber: 200,
       logIndex: 2,
@@ -124,7 +124,7 @@ describe('Listing DB methods', () => {
 
   describe('upsertListing', () => {
     it('Should handle inserting a more recent version of a listing', async () => {
-      await upsertListing({
+      await db.Listing.upsert({
         id: listingId1,
         blockNumber: 300,
         logIndex: 3,
@@ -138,7 +138,7 @@ describe('Listing DB methods', () => {
     })
 
     it('Should handle updating a less recent version of a listing', async () => {
-      await upsertListing({
+      await db.Listing.upsert({
         id: listingId2,
         blockNumber: 150,
         logIndex: 15,
