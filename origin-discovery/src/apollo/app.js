@@ -11,6 +11,7 @@ try {
 }
 
 const { ApolloServer } = require('apollo-server-express')
+const cors = require('cors')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
 
@@ -19,6 +20,8 @@ const typeDefs = require('./schema')
 const listingMetadata = require('./listing-metadata')
 
 const app = express()
+app.use(cors())
+
 const bundle = promBundle({
   promClient: {
     collectDefaultMetrics: {
@@ -33,7 +36,7 @@ app.use(bundle)
 const server = new ApolloServer({
   resolvers,
   typeDefs,
-  context: async ({ req }) => {
+  context: async () => {
     // Update listing Metadata in a non blocking way
     listingMetadata.updateHiddenFeaturedListings()
     return {}

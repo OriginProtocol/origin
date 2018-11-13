@@ -26,7 +26,7 @@ function relatedUserResolver (walletAddress, info) {
 const resolvers = {
   JSON: GraphQLJSON,
   Query: {
-    async listings (root, args, context, info) {
+    async listings (root, args) {
       // Get listing Ids from Elastic.
       const { listingIds, stats } = await search.Listing.search(
         args.searchQuery,
@@ -49,11 +49,11 @@ const resolvers = {
       }
     },
 
-    async listing (root, args, context, info) {
+    async listing (root, args) {
       return getListing(args.id)
     },
 
-    async offers (root, args, context, info) {
+    async offers (root, args) {
       const clause = {}
       if (args.listingId) {
         clause.listingId = args.listingId
@@ -72,12 +72,12 @@ const resolvers = {
       return { nodes: offers }
     },
 
-    async offer (root, args, context, info) {
+    async offer (root, args) {
       const row = await db.Offer.findByPk(args.id)
       return row !== null ? row.data : null
     },
 
-    user (root, args, context, info) {
+    user (root, args) {
       // FIXME(franck): some users did not get indexed in prod due to a bug in attestations.
       // For now only return the address until data gets re-indexed.
       return { walletAddress: args.walletAddress }
@@ -89,7 +89,7 @@ const resolvers = {
       return relatedUserResolver(listing.seller, info)
     },
 
-    async offers (listing, args, context, info) {
+    async offers (listing) {
       const rows = await db.Offer.findAll({
         where: { listingId: listing.id }
       })
@@ -111,14 +111,14 @@ const resolvers = {
       return offer.totalPrice
     },
 
-    async listing (offer, args, context, info) {
+    async listing (offer) {
       return getListing(offer.listingId)
     }
   },
 
   User: {
     // Return offers made by a user.
-    async offers (user, args, context, info) {
+    async offers (user) {
       const rows = await db.Offer.findAll({
         where: { buyerAddress: user.walletAddress.toLowerCase() }
       })
@@ -127,7 +127,7 @@ const resolvers = {
     },
 
     // Return listings created by a user.
-    async listings (user, args, context, info) {
+    async listings (user) {
       const listings = await getListingsBySeller(user.walletAddress)
       return { nodes: listings }
     }

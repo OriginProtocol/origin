@@ -13,13 +13,17 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint '**/*.js' --rulesdir ../",
+    "start": "node faucet/app.js"
+  },
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
-    "bignumber.js": "^7.2.1",
+    "bignumber.js": "^8.0.1",
     "express": "^4.16.3",
-    "rate-limiter-flexible": "^0.17.1",
+    "origin-contracts": "^0.8.6",
+    "rate-limiter-flexible": "^0.18.5",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
     "web3": "^1.0.0-beta.36"

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'listener'
   })
 
-  Listener.associate = function (models) {
+  Listener.associate = function () {
     // associations can be defined here
   }
 

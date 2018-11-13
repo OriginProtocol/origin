@@ -1,5 +1,9 @@
 require('dotenv').config()
-require('envkey')
+try {
+  require('envkey')
+} catch (error) {
+  console.log('EnvKey not configured')
+}
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -10,10 +14,17 @@ const { RateLimiterMemory } = require('rate-limiter-flexible')
 const app = express()
 const port = 3456
 
-const PushSubscription = require('./src/models').PushSubscription
+const PushSubscription = require('./models').PushSubscription
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
-const privateKey = process.env.VAPID_PRIVATE_KEY
-const publicKey = process.env.VAPID_PUBLIC_KEY
+let privateKey = process.env.VAPID_PRIVATE_KEY
+let publicKey = process.env.VAPID_PUBLIC_KEY
+
+if (!privateKey || !publicKey) {
+  console.log('Warning: VAPID public or private key not defined, generating one')
+  const vapidKeys = webpush.generateVAPIDKeys()
+  publicKey = vapidKeys.publicKey
+  privateKey = vapidKeys.privateKey
+}
 
 const eventNotificationMap = {
   OfferCreated: {
@@ -55,8 +66,8 @@ webpush.setVapidDetails(
 
 // should be tightened up for security
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 
   next()
 })
@@ -73,14 +84,14 @@ app.all((req, res, next) => {
     .then(() => {
       next()
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(429).send('<h1>Too Many Requests</h1>')
     })
 })
 
 // Note: bump up default payload max size since the event-listener posts
 // payload that may contain user profile with b64 encoded profile picture.
-app.use(bodyParser.json({limit: '10mb'}))
+app.use(bodyParser.json({ limit: '10mb' }))
 
 app.get('/', async (req, res) => {
   let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
