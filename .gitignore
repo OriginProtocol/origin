@@ -104,10 +104,16 @@ node_modules/
 /origin-js/libpeerconnection.log
 /origin-js/testem.log
 /origin-js/typings
-#
-# origin-js #
+
+# origin-messaging #
+####################
+/origin-messaging/ipfs
+/origin-messaging/odb
+
+# origin-messaging #
 #############
-/origin-website
+/origin-messaging/ipfs/
+/origin-messaging/odb/
 
 # Recommended rules per https://gist.github.com/octocat/9257657 #
 # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv #

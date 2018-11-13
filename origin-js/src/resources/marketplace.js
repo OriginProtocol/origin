@@ -18,7 +18,7 @@ import {
 } from '../ipfsInterface/store'
 import MarketplaceResolver from '../contractInterface/marketplace/resolver'
 
-class Marketplace {
+export default class Marketplace {
   constructor({
     contractService,
     ipfsService,
@@ -452,5 +452,3 @@ class Marketplace {
     return await this.resolver.getTokenAddress()
   }
 }
-
-module.exports = Marketplace

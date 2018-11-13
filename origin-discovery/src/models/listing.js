@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'listing'
   })
 
-  Listing.associate = function (models) {
+  Listing.associate = function () {
     // associations can be defined here
   }
 

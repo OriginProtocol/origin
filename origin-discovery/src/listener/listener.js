@@ -8,7 +8,7 @@ try {
 const express = require('express')
 const promBundle = require('express-prom-bundle')
 const urllib = require('url')
-const Origin = require('origin')
+const Origin = require('origin').default
 const Web3 = require('web3')
 
 const search = require('../lib/search.js')

@@ -1,10 +1,13 @@
 {
   "packages": [
+    "ipfs-proxy",
     "origin-contracts",
-    "origin-js",
     "origin-dapp",
     "origin-discovery",
     "origin-faucet",
+    "origin-js",
+    "origin-messaging",
+    "origin-notifications",
     "experimental/*"
   ],
   "version": "independent"
