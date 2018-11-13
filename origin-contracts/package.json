@@ -10,7 +10,7 @@
     "prepare": "npm run build",
     "test": "node scripts/test.js",
     "test:contracts": "mocha -r @babel/register -t 10000 --exit test-alt",
-    "test:watch": "mocha -r babel-register -r babel-polyfill -t 10000 -w --watch-extensions sol test-alt",
+    "test:watch": "mocha -r @babel/register -r @babel/polyfill -t 10000 -w --watch-extensions sol test-alt",
     "test:contracts-coverage": "SOLIDITY_COVERAGE=1 solidity-coverage",
     "format:solidity": "solium -d contracts/contracts/ --fix",
     "format": "prettier-eslint --write 'test/**/*.js' 'test-alt/**/*.js' 'lib/**/*.js'"
@@ -25,8 +25,9 @@
   "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.1.2",
+    "@babel/polyfill": "^7.0.0",
     "@babel/register": "^7.0.0",
-    "babel-polyfill": "^6.26.0",
+    "ethereumjs-abi": "^0.6.5",
     "openzeppelin-solidity": "^1.10.0",
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "0.0.6",
@@ -38,7 +39,7 @@
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/runtime": "^7.1.2",
-    "bignumber.js": "^7.2.1",
+    "bignumber.js": "^8.0.1",
     "chai": "^4.2.0",
     "chai-bignumber": "^2.0.2",
     "chalk": "^2.4.1",

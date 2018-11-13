@@ -5,6 +5,7 @@ WORKDIR /app
 ENV NODE_ENV production
 
 COPY ./origin-notifications /app
-RUN npm ci --loglevel notice
+RUN npm install --loglevel notice
 
 CMD npm run migrate && npm run start
+

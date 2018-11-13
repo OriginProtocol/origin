@@ -1,22 +1,22 @@
 const validOwners = {
   // mainnet
-  "1": [
+  '1': [
     '0xe011fa2a6df98c69383457d87a056ed0103aa352',
     '0x8a1a4f77f9f0eb35fb9930696038be6220986c1b'
   ],
 
   // Ropsten
-  "3": [
+  '3': [
     // Empty list means allow all
   ],
 
   // Rinkeby
-  "4": [
+  '4': [
     // Empty list means allow all
   ],
 
   // development / local blockchain
-  "999": [
+  '999': [
     // These are the first two accounts for the default local blockchain started
     // by origin.js. There's no practical reason to have these, other than to
     // test.

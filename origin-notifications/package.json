@@ -7,18 +7,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OriginProtocol/origin/origin-faucet"
+    "url": "https://github.com/OriginProtocol/origin/origin-notifications"
   },
   "bugs": {
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "main": "app.js",
   "scripts": {
+    "lint": "eslint '**/*.js' --rulesdir ../",
     "migrate": "sequelize db:migrate",
     "start": "node src/app.js",
-    "test:jsformat": "./node_modules/.bin/eslint 'src/*/*.js'",
-    "test:js": "echo \"Warning: no tests specified\"",
-    "test": "npm run test:jsformat && npm run test:js"
+    "test": "echo \"Warning: no tests specified\""
   },
   "author": "Origin Protocol Inc",
   "license": "MIT",
@@ -28,63 +27,9 @@
     "express": "^4.16.4",
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
-    "rate-limiter-flexible": "^0.17.3",
+    "rate-limiter-flexible": "^0.18.5",
     "sequelize": "^5.0.0-beta.5",
     "sequelize-cli": "^5.2.0",
     "web-push": "^3.3.3"
-  },
-  "devDependencies": {
-    "eslint": "^5.8.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "standard"
-    ],
-    "env": {
-      "browser": false,
-      "es6": true,
-      "mocha": true,
-      "node": true
-    },
-    "globals": {
-      "artifacts": true,
-      "assert": true,
-      "contract": true,
-      "expect": true,
-      "web3": true
-    },
-    "rules": {
-      "indent": [
-        "error",
-        2
-      ],
-      "no-console": [
-        "off"
-      ],
-      "no-var": [
-        "error"
-      ],
-      "prefer-const": [
-        "error"
-      ],
-      "semi": [
-        "error",
-        "never"
-      ],
-      "quotes": [
-        "error",
-        "single",
-        {
-          "avoidEscape": true,
-          "allowTemplateLiterals": true
-        }
-      ]
-    }
   }
 }

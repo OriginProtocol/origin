@@ -1,12 +1,5 @@
 version: "3"
 
-networks:
-  default:
-
-volumes:
-  origin_js_node_modules:
-  flask_session: # Flask session persistence
-
 services:
   postgres:
     container_name: postgres
@@ -16,8 +9,6 @@ services:
       - POSTGRES_USER=origin
       - POSTGRES_PASSWORD=origin
       - POSTGRES_DB=origin
-    networks:
-      - default
 
   elasticsearch:
     container_name: elasticsearch
@@ -46,32 +37,21 @@ services:
       - IPFS_GATEWAY_URL=http://origin-js:8080
     volumes:
       - ./ipfs-proxy:/app
-    command: >
-      /bin/bash -c "npm install --quiet --no-progress &&
-      node src/index.js"
-    networks:
-      - default
 
+  # NOTE/TODO: This container is only responsible for running ganache and IPFS,
+  # this functionality should be moved to dedicated containers
   origin-js:
     container_name: origin-js
     image: origin-js
     build:
       context: .
       dockerfile: development/dockerfiles/origin-js
-    volumes:
-      - ./origin-js:/app
-      - origin_js_node_modules:/app/node_modules
     ports:
-      - "5001:5000" # Faucet
-      - "8081:8081" # Tests
-      - "8545:8545" # Blockchain
-    # Run npm install on every container start to avoid volumes issue
-    # https://github.com/docker/compose/issues/4337
-    command: >
-      /bin/bash -c "npm install --quiet --no-progress &&
-      npm start"
-    networks:
-      - default
+      - "8545:8545"  # Ganache
+    volumes:
+      # Addresses for deployment of contracts to local blockchain will get
+      # written to the build files
+      - ./origin-contracts/build:/app/origin-contracts/build
 
   origin-discovery:
     container_name: origin-discovery
@@ -80,26 +60,18 @@ services:
       context: .
       dockerfile: development/dockerfiles/origin-discovery
     volumes:
-      - ./origin-discovery:/app
-      - ./development/envfiles/origin-discovery.env:/app/.env
-      # Mount compiled origin-js inside node modules, this is not actually a
-      # dependency of the graphql server, but it is required here because the
-      # event-listener and origin-discovery share the same package.json
-      - ./origin-js:/usr/local/lib/node_modules/origin
-      - origin_js_node_modules:/usr/local/lib/node_modules/origin/node_modules
+      - ./origin-js/src:/app/origin-js/src
+      - ./origin-discovery/src:/app/origin-discovery/src
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ELASTICSEARCH_HOST=elasticsearch:9200
     depends_on:
       - origin-js
       - postgres
       - elasticsearch
     ports:
-      - "4000:4000" # Apollo
-    command: >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
-      npm install --quiet --no-progress &&
-      npm link origin &&
-      node src/apollo/app.js"
-    networks:
-      - default
+      - "4000:4000"
+    command: /bin/bash -c "npm run start:discovery"
 
   event-listener:
     container_name: event-listener
@@ -108,30 +80,20 @@ services:
       context: .
       dockerfile: development/dockerfiles/event-listener
     volumes:
-      - ./origin-discovery:/app
-      # Mount compiled origin-js inside node modules
-      - ./origin-js:/usr/local/lib/node_modules/origin
-      - origin_js_node_modules:/usr/local/lib/node_modules/origin/node_modules
+      - ./origin-js/src:/app/origin-js/src
+      - ./origin-discovery/src:/app/origin-discovery/src
+      - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
     depends_on:
       - origin-js
       - postgres
       - elasticsearch
-    environment:
-      - ELASTICSEARCH_HOST=elasticsearch:9200
-      - DATABASE_URL=postgres://origin:origin@postgres/origin
-      # TODO: Add support for .env files to the event-listener and move these env vars in there.
-      - AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
-      - ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
-      - IPFS_URL=http://ipfs-proxy:9999
-      - BLOCK_EPOCH=0
-    command: >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8081 --
-      npm install --quiet --no-progress &&
-      npm link origin &&
-      node node_modules/.bin/sequelize db:migrate &&
-      node src/listener/listener.js --elasticsearch --db --web3-url='http://origin-js:8545'"
-    networks:
-      - default
+      - ipfs-proxy
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8080 --
+      wait-for.sh -t 0 -q elasticsearch:9200 --
+      npm run migrate &&
+      npm run start:listener"
 
   origin-messaging:
     container_name: origin-messaging
@@ -143,14 +105,9 @@ services:
       - "9012:9012"
     volumes:
       - ./origin-messaging/src:/app/src
-      - ./development/.ipfs:/ipfs
+      - ./development/.ipfs:/app/ipfs
     environment:
       - MESSAGING_NAMESPACE=dev
-    networks:
-      - default
-    # TODO Add nodemon
-    # Waits for origin-messaging-ipfs to be available before starting
-    command: node_modules/.bin/babel-node src/index.js --presets es2015
 
   origin-bridge:
     container_name: origin-bridge
@@ -162,18 +119,28 @@ services:
       - ./origin-bridge:/app
       # Set the envfile from the local envfile
       - ./development/envfiles/origin-bridge.env:/app/.env
-      - flask_session:/app/flask_session
+    depends_on:
+      - postgres
+    environment:
+      - FLASK_APP=/app/main.py
+    ports:
+      - "5000:5000"
+    command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
+
+  origin-notifications:
+    container_name: origin-notifications
+    image: origin-notifications
+    build:
+      context: .
+      dockerfile: development/dockerfiles/origin-notifications
+    volumes:
+      - ./origin-notifications/src:/app/src
+      - ./development/envfiles/origin-notifications.env:/app/.env
     depends_on:
       - postgres
     ports:
-      - "5000:5000"
-    environment:
-      - FLASK_APP=/app/main.py
-      - FLASK_DEBUG=1
-      - DATABASE_URL=postgresql://origin:origin@postgres/origin
-    command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
-    networks:
-      - default
+      - "3456:3456"
+    command: /bin/bash -c "npm run migrate && npm run start"
 
   origin-dapp:
     container_name: origin-dapp
@@ -182,38 +149,32 @@ services:
       context: .
       dockerfile: development/dockerfiles/origin-dapp
     volumes:
+      # Include origin-contracts build files so the DApp has access to the
+      # address of the contracts on the local blockchain
+      - ./origin-contracts/build:/app/origin-contracts/build
+      - ./origin-js/src:/app/origin-js/src
       # Mount origin-dapp inside the container
-      - ./origin-dapp:/app
+      - ./origin-dapp/src:/app/src
+      - ./origin-dapp/public:/app/public
       # Set the envfile from the local envfile
-      - ./development/envfiles/origin-dapp.env:/app/.env
-      # Mount compiled origin-js inside node modules
-      - ./origin-js:/usr/local/lib/node_modules/origin
-      - origin_js_node_modules:/usr/local/lib/node_modules/origin/node_modules
+      - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
       - ./development/.ipfs:/ipfs
     depends_on:
+      - ipfs-proxy
+      - event-listener
       - origin-js
+      - origin-discovery
       - origin-messaging
       - origin-bridge
+      - origin-notifications
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - IPFS_API_PORT=9999
-      - IPFS_DOMAIN=localhost
-      - IPFS_GATEWAY_PORT=9999
     command:
       # Waits for origin-messaging to start then uses a script to read the
       # origin-messaging IPFS peer id and write the configuration key/pair to
       # the .env file.
-      #
-      # The copying is necessary because the .env file is mounted as a volume
-      # and the inode is not allowed to change.
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 --
-      npm install --quiet --no-progress &&
-      npm link origin &&
-      source set-ipfs-swarm.sh /ipfs/config &&
-      wait-for.sh -t 0 -q origin-js:8081 --
-      node node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0 --watch-poll 500"
-    networks:
-      - default
+      /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 &&
+      . set-ipfs-swarm.sh /ipfs/config &&
+      wait-for.sh -t 0 -q origin-js:8080 --
+      node node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0"

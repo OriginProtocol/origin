@@ -10,7 +10,6 @@ Visit our [Developer's page](https://www.originprotocol.com/developers) to learn
 
 You can see the Origin ecosystem in action at https://dapp.originprotocol.com.
 
-
 ## Our Projects:
 
 * [origin-js](https://github.com/OriginProtocol/origin/tree/master/origin-js) is a library of javascript code and Ethereum smart contracts which allows anyone to create decentralized marketplaces.
@@ -20,6 +19,16 @@ You can see the Origin ecosystem in action at https://dapp.originprotocol.com.
 * Run every part of our infrastructure locally for development and testing with [origin-box](https://github.com/OriginProtocol/origin/tree/master/development)—a set of Docker containers orchestrated with Docker Compose.
 * Finally, we have a [testnet faucet](https://github.com/OriginProtocol/origin/tree/master/origin-faucet) and a distributed [messaging hub](https://github.com/OriginProtocol/origin/tree/master/origin-messaging).
 
-
 ## Documentation
+
 [origin-js documentation](http://docs.originprotocol.com/)
+
+## Development
+
+Please refer to our instructions for [developing](https://github.com/OriginProtocol/origin/tree/master/DEVELOPMENT.md) and our [contributing guidelines](https://github.com/OriginProtocol/origin/tree/master/CONTRIBUTING.md).
+
+## Contributing
+
+Origin is an 100% open-source and community-driven project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
+
+To get involved, please review our [guide to contributing](https://www.originprotocol.com/developers).

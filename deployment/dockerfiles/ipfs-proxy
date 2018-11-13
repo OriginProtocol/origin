@@ -1,9 +1,12 @@
 FROM node:10
 
-ENV NODE_ENV production
 WORKDIR /app
 
+ENV NODE_ENV production
+
 COPY ./ipfs-proxy /app
+
+# Install dependencies
 RUN npm ci --loglevel notice
 
-CMD ["npm", "start"]
+CMD npm start
