@@ -95,14 +95,14 @@ function runApp(config) {
 const args = Config.parseArgv()
 const config = {
   // Port server listens on.
-  port: args['--port'] || process.env.PORT || DEFAULT_SERVER_PORT,
+  port: parseInt(args['--port'] || process.env.PORT || DEFAULT_SERVER_PORT),
   // Network ids, comma separated.
   // If no network ids specified, defaults to using local blockchain.
-  networkIds: (
+  networkIds: parseInt((
     args['--network_ids'] ||
     process.env.NETWORK_IDS ||
     DEFAULT_NETWORK_ID
-  ).split(','),
+  ).split(',')),
 }
 
 try {
