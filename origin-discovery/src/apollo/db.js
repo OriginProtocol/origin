@@ -109,7 +109,6 @@ function _makeOffer (row) {
  * @param {string} listingId - optional listing id
  * @param {string} buyerAddress - optional buyer address
  * @param {string} sellerAddress - optional seller address
- *
  * @return {Promise<Array<Offer>>}
  */
 async function searchOffers (listingId, buyerAddress, sellerAddress) {
@@ -119,10 +118,10 @@ async function searchOffers (listingId, buyerAddress, sellerAddress) {
     whereClause.listingId = listingId
   }
   if (buyerAddress) {
-    whereClause.buyerAddress = buyerAddress
+    whereClause.buyerAddress = buyerAddress.toLowerCase()
   }
   if (sellerAddress) {
-    whereClause.sellerAddress = sellerAddress
+    whereClause.sellerAddress = sellerAddress.toLowerCase()
   }
   if (Object.keys(whereClause).length === 0) {
     throw new Error('A filter must be specified: listingId, buyerAddress or sellerAddress')

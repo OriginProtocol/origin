@@ -55,8 +55,8 @@ const resolvers = {
     async offers (root, args) {
       const offers = await searchOffers(
         args.listingId,
-        args.buyerAddress.toLowerCase(),
-        args.sellerAddress.toLowerCase()
+        args.buyerAddress,
+        args.sellerAddress
       )
 
       return { nodes: offers }
@@ -97,10 +97,6 @@ const resolvers = {
       return offer.totalPrice
     },
 
-    affiliate (offer) {
-      return offer.affiliate
-    },
-
     async listing (offer) {
       return getListing(offer.listingId)
     }
@@ -109,7 +105,7 @@ const resolvers = {
   User: {
     // Return offers made by a user.
     async offers (user) {
-      const offers = await searchOffers(null, user.walletAddress.toLowerCase())
+      const offers = await searchOffers(null, user.walletAddress)
       return { nodes: offers }
     },
 

@@ -204,20 +204,20 @@ class DiscoveryService {
    * Options:
    *  - idsOnly(boolean): returns only ids rather than the full Offer object.
    * @param listingId {string}: listing id of a listing to which offer has been made to 
-   * @param opts: { idsOnly }
+   * @param opts: { idsOnly, for }
    * @return {Promise<*>}
    */
   async getOffers(listingId, opts) {
-    
     const resp = await this._query(`{
-      listing (id: "${listingId}") {
-      offers {
+      offers(
+        ${opts.for ? `buyerAddress: "${opts.for}"`: ''}
+        listingId: "${listingId}"
+      ) {
         nodes {
           id
           data
         }
       }
-     }
     }`)
     
     offers = resp.data.listing.offers.nodes.data
