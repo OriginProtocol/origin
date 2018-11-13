@@ -114,10 +114,16 @@ class IpfsService {
   }
 
   async loadFile(ipfsHash) {
+    let timeout = new Promise((resolve, reject) => {
+      const ms = 7000
+      setTimeout(() => {
+        reject(new Error("Timed out after " + ms + " ms"))
+      }, ms)
+    })
     try {
-      return await fetch(this.gatewayUrlForHash(ipfsHash))
+      await Promise.race([timeout, fetch(this.gatewayUrlForHash(ipfsHash))])
     } catch (error) {
-      throw new Error('Failure to get IPFS file', error)
+      throw new Error('Failure to get IPFS file: ' + error.message)
     }
   }
 
