@@ -1,3 +1,5 @@
+import { Listing } from '../models/listing'
+import { Offer } from '../models/offer'
 // Max number of results to request from back-end.
 const MAX_NUM_RESULTS = 100
 
@@ -7,10 +9,10 @@ class DiscoveryService {
     this.fetch = fetch
   }
 
-  _flattenListingData(listingNode) {
+  _toListingModel(listingNode) {
     const data = listingNode.data
     data.display = listingNode.display
-    return data
+    return new Listing(data.listingId, data, {})
   }
 
   /**
@@ -140,7 +142,7 @@ class DiscoveryService {
         } 
       }`
       const resp = await this._query(query)
-      listings = resp.data.user.listings.nodes.map(listing => this._flattenListingData(listing))
+      listings = resp.data.user.listings.nodes.map(listing => this._toListingModel(listing))
     } else if (opts.purchasesFor) {
       // Query for all listings the specified buyer address made an offer on.
       query = `{
@@ -156,7 +158,7 @@ class DiscoveryService {
         }
       }`
       const resp = await this._query(query)
-      listings = resp.data.user.offers.nodes.map(offer => this._flattenListingData(offer.listing))
+      listings = resp.data.user.offers.nodes.map(offer => this._toListingModel(offer.listing))
     } else {
       // General query against all listings. Used for example on Browse and search pages.
       query = `{
@@ -171,7 +173,7 @@ class DiscoveryService {
         }
       }`
       const resp = await this._query(query)
-      listings = resp.data.listings.nodes.map(listing => this._flattenListingData(listing))
+      listings = resp.data.listings.nodes.map(listing => this._toListingModel(listing))
     }
 
     return opts.idsOnly ? listings.map(listing => listing.id) : listings
@@ -196,7 +198,7 @@ class DiscoveryService {
       throw new Error(`No listing found with id ${listingId}`)
     }
 
-    return this._flattenListingData(resp.data.listing)
+    return this._toListingModel(resp.data.listing)
   }
 
   /**
@@ -220,7 +222,9 @@ class DiscoveryService {
       }
     }`)
     
-    const offers = resp.data.offers.nodes.map(offer => offer.data)
+    const offers = resp.data.offers.nodes
+      .map(offer => offer.data)
+      .map(offer => new Offer(offer.id, listingId, offer))
 
     return opts.idsOnly ? offers.map(offer => offer.id) : offers
   }

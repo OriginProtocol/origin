@@ -98,7 +98,7 @@ const resolvers = {
     },
 
     async listing (offer) {
-      return getListing(offer.listingId)
+      return getListing(offer.data.listingId)
     }
   },
 
