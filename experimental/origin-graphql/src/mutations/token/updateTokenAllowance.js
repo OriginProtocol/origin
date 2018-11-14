@@ -1,5 +1,5 @@
-import txHelper, { checkMetaMask } from './_txHelper'
-import contracts from '../contracts'
+import txHelper, { checkMetaMask } from '../_txHelper'
+import contracts from '../../contracts'
 
 async function updateTokenAllowance(_, { token, from, to, value }) {
   if (!contracts[token]) {

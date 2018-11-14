@@ -30,9 +30,6 @@ export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
       })
     })
       .once('receipt', receipt => {
-        // if (contracts.marketplace) {
-        //   contracts.marketplace.eventCache.updateBlock(receipt.blockNumber)
-        // }
         if (onReceipt) {
           onReceipt(receipt)
         }
@@ -50,9 +47,6 @@ export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
         }
       })
       .on('confirmation', function(confNumber, receipt) {
-        // if (contracts.marketplace) {
-        //   contracts.marketplace.eventCache.updateBlock(receipt.blockNumber)
-        // }
         if (confNumber === 1 && onConfirmation) {
           onConfirmation(receipt)
         }
@@ -68,14 +62,16 @@ export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
         }
       })
       .on('error', function(err) {
-        pubsub.publish('TRANSACTION_UPDATED', {
-          transactionUpdated: {
-            id: txHash,
-            status: 'error',
-            error: err,
-            mutation
-          }
-        })
+        if (txHash) {
+          pubsub.publish('TRANSACTION_UPDATED', {
+            transactionUpdated: {
+              id: txHash,
+              status: 'error',
+              error: err,
+              mutation
+            }
+          })
+        }
       })
       .catch(reject)
   })

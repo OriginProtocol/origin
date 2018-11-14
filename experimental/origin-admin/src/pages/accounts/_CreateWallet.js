@@ -6,6 +6,7 @@ import query from './_query'
 
 import { CreateWalletMutation } from '../../mutations'
 import ImportWallet from './mutations/ImportWallet'
+import ImportPhrase from './mutations/ImportPhrase'
 
 class CreateWalletBtn extends Component {
   state = {
@@ -35,7 +36,7 @@ class CreateWalletBtn extends Component {
         }}
       >
         {createWallet => (
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex' }} className="mb-3">
             <ControlGroup>
               <InputGroup {...input('name')} placeholder="Name" />
               <HTMLSelect
@@ -63,9 +64,18 @@ class CreateWalletBtn extends Component {
               style={{ marginLeft: '0.5rem' }}
               onClick={() => this.setState({ import: true })}
             />
+            <Button
+              icon="multi-select"
+              style={{ marginLeft: '0.5rem' }}
+              onClick={() => this.setState({ importPhrase: true })}
+            />
             <ImportWallet
               isOpen={this.state.import}
               onCompleted={() => this.setState({ import: false })}
+            />
+            <ImportPhrase
+              isOpen={this.state.importPhrase}
+              onCompleted={() => this.setState({ importPhrase: false })}
             />
           </div>
         )}

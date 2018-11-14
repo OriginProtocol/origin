@@ -101,13 +101,20 @@ class TimedProgressBar extends Component {
   }
 
   render() {
-    return (
-      <ProgressBar
-        stripes={!this.props.complete}
-        intent={this.props.complete ? 'success' : 'primary'}
-        value={this.props.complete ? 1 : this.state.pct}
-      />
-    )
+    let stripes = true,
+      intent = 'primary',
+      value = this.state.pct
+
+    if (this.props.status === 'confirmed') {
+      stripes = false
+      intent = 'success'
+      value = 1
+    } else if (this.props.status === 'error') {
+      stripes = false
+      intent = 'danger'
+      value = 1
+    }
+    return <ProgressBar stripes={stripes} intent={intent} value={value} />
   }
 }
 
@@ -140,15 +147,20 @@ class TransactionToasts extends Component {
           }
 
           if (this.hide[t.id] === true) return
-          const confirmed = t.status === 'confirmed'
+          const config = {
+            icon: 'time',
+            message: this.renderProgress(t),
+            timeout: 0,
+            onDismiss: () => (this.hide[t.id] = true)
+          }
+          if (t.status === 'confirmed') {
+            config.timeout = 3000
+            config.icon = 'tick'
+          } else if (t.status === 'error') {
+            config.icon = 'cross'
+          }
           this.transactions[t.id] = Toaster.show(
-            {
-              icon: confirmed ? 'tick' : 'time',
-              // intent: confirmed ? 'small-tick' : 'time',
-              message: this.renderProgress(t),
-              timeout: confirmed ? 3000 : 0,
-              onDismiss: () => (this.hide[t.id] = true)
-            },
+            config,
             this.transactions[t.id]
           )
         } catch (e) {
@@ -168,7 +180,7 @@ class TransactionToasts extends Component {
     return (
       <div>
         <div className="mb-2">{`${name}: ${status}`}</div>
-        <TimedProgressBar complete={transaction.status === 'confirmed'} />
+        <TimedProgressBar status={transaction.status} />
       </div>
     )
   }
