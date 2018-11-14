@@ -52,6 +52,7 @@ services:
       # Addresses for deployment of contracts to local blockchain will get
       # written to the build files
       - ./origin-contracts/build:/app/origin-contracts/build
+      - ./origin-js/scripts:/app/origin-js/scripts
 
   origin-discovery:
     container_name: origin-discovery
@@ -80,6 +81,7 @@ services:
       context: .
       dockerfile: development/dockerfiles/event-listener
     volumes:
+      - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
       - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
