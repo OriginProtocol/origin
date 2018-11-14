@@ -8,6 +8,7 @@
     "origin-js",
     "origin-messaging",
     "origin-linking",
+    "origin-mobile",
     "origin-notifications",
     "experimental/*"
   ],
