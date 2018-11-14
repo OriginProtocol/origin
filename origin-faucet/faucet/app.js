@@ -98,11 +98,11 @@ const config = {
   port: parseInt(args['--port'] || process.env.PORT || DEFAULT_SERVER_PORT),
   // Network ids, comma separated.
   // If no network ids specified, defaults to using local blockchain.
-  networkIds: parseInt((
+  networkIds: (
     args['--network_ids'] ||
     process.env.NETWORK_IDS ||
     DEFAULT_NETWORK_ID
-  ).split(',')),
+  ).split(',').map(parseInt),
 }
 
 try {
