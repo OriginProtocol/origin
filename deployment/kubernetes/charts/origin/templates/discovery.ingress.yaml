@@ -13,6 +13,7 @@ metadata:
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /graphql
+    nginx.ingress.kubernetes.io/limit-rps: "5"
 spec:
   tls:
     - secretName: {{ template "discovery.host" . }}
