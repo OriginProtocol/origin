@@ -23,7 +23,7 @@ ipfsProxyImageTag: 'b4c0b52'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: 'f80c0bd'
+faucetImageTag: '87c7cbe'
 
 # event-listener
 eventlistenerImage: event-listener
@@ -35,8 +35,8 @@ discoveryImageTag: 'c58301a'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'b4c0b52'
+messagingImageTag: '87c7cbe'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '9a3ee56'
+notificationsImageTag: '871b7b3'
