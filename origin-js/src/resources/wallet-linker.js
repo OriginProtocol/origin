@@ -146,7 +146,7 @@ export default class WalletLinker {
   }
 
   createCall(method, params) {
-    return {method, net_id:this.netId, params}
+    return { method, net_id: this.netId, params }
   }
 
   customSignMessage(params, call_id) {
@@ -158,7 +158,7 @@ export default class WalletLinker {
       }
       this.startLink()
     } else {
-      const result = this.post('call-wallet/' + this.session_token, {
+      this.post('call-wallet/' + this.session_token, {
         call_id: call_id,
         accounts: this.accounts,
         call,
@@ -168,7 +168,7 @@ export default class WalletLinker {
   }
 
   processTransaction(txn_object, callback) {
-    console.log("processTransaction:", txn_object, callback)
+    console.log('processTransaction:', txn_object, callback)
     const call_id = uuidv1()
     //translate gas to gasLimit
     txn_object['gasLimit'] = txn_object['gas']
@@ -345,7 +345,7 @@ export default class WalletLinker {
     }
 
     ws.onclose = e => {
-      console.log("Websocket closed event:", e)
+      console.log('Websocket closed event:', e)
       if (e.code != 1000)
       {
         //this is an abnormal closure let's try reopen this in a bit

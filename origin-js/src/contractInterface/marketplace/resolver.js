@@ -307,7 +307,7 @@ export default class MarketplaceResolver {
     for (const version of this.versions) {
       if (this.adapters[version].contractName == contractName)
       {
-        return generateListingId({version, netId, listingIndex })
+        return generateListingId({ version, netId, listingIndex })
       }
     }
   }

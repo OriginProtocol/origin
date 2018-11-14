@@ -9,7 +9,9 @@ import detectMobile from 'utils/detectMobile'
 const mobilize = (str) => {
   if (detectMobile() && process.env.MOBILE_LOCALHOST_IP)
   {
-    return str.replace("localhost", process.env.MOBILE_LOCALHOST_IP).replace("127.0.0.1", process.env.MOBILE_LOCALHOST_IP)
+    return str
+      .replace('localhost', process.env.MOBILE_LOCALHOST_IP)
+      .replace('127.0.0.1', process.env.MOBILE_LOCALHOST_IP)
   }
   else
   {

@@ -420,18 +420,18 @@ class ContractService {
       }
       const wrappedResolved = (this.walletLinker && (ret => {
         this.walletLinker.endPlaceholder()
-        resolve(ret) 
-      })) || resolved
-    
+        resolve(ret)
+      })) || resolve
+
       const wrappedReject = (this.walletLinker && (err => {
-        this.walletLinker.endPlaceholder() 
+        this.walletLinker.endPlaceholder()
         reject(err)
       })) || reject
 
       this.handleTransactionCallbacks(
         contract,
         sendCallback,
-        wrappedResolve,
+        wrappedResolved,
         wrappedReject,
         confirmationCallback,
         transactionHashCallback
