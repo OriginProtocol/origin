@@ -1,8 +1,8 @@
 FROM python:3.6
 
-COPY ./origin-bridge /app
 WORKDIR /app
 
+COPY ./origin-bridge /app
 RUN pip install -r requirements.txt
 RUN pip install gunicorn
 

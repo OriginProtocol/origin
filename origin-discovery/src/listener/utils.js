@@ -25,7 +25,7 @@ async function getLastBlock (config) {
     }
   } else {
     // Read state from DB.
-    const row = await db.Listener.findById(config.listenerId)
+    const row = await db.Listener.findByPk(config.listenerId)
     if (!row) {
       // No state in DB. This happens if a listener is started for the first time.
       lastBlock = config.defaultContinueBlock
@@ -45,7 +45,7 @@ async function setLastBlock (config, blockNumber) {
     const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
     fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
   } else {
-    await db.Listener.insertOrUpdate({ id: config.listenerId, blockNumber })
+    await db.Listener.upsert({ id: config.listenerId, blockNumber })
   }
 }
 
@@ -55,7 +55,7 @@ async function setLastBlock (config, blockNumber) {
  */
 async function withRetrys (fn, exitOnError = true) {
   let tryCount = 0
-  while (true) {
+  while (true) {  // eslint-disable-line no-constant-condition
     try {
       return await fn() // Do our action.
     } catch (e) {

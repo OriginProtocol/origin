@@ -1,5 +1,3 @@
-origin-messaging/node_modules
-origin-dapp/node_modules
+**/node_modules
 origin-dapp/build
-origin-js/node_modules
 origin-js/dist

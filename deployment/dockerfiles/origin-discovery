@@ -1,28 +1,26 @@
 # NOTE/TODO: origin-discovery doesn't need Origin.js but it shares a
 # package.json with the event listener which does
-#
-# --- Origin.js
 
-FROM node:8 as origin-js-build
+FROM node:10 as build
 
-COPY ./origin-js /app
 WORKDIR /app
 
 ENV NODE_ENV=production
-RUN npm install --quiet --no-progress
-RUN npm run build
 
-# --- GraphQL server
+# Install lerna
+RUN npm i lerna -g --loglevel notice
 
-FROM node:8
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./origin-js ./origin-js
+# Copy release contracts into build directory
+# TODO: Find a better way to handle this
+COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
+COPY ./origin-discovery ./origin-discovery
+COPY ./scripts ./scripts
 
-COPY ./origin-discovery /app
-WORKDIR /app
+# Bootstrap dependencies, --ignore-scripts is necessary to avoid overwriting
+# contracts
+RUN lerna bootstrap --ci --ignore-scripts -- --loglevel notice --unsafe-perm
 
-ENV NODE_ENV production
-# Link previously built Origin.js
-COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
-RUN npm link origin
-RUN npm install --quiet --no-progress
-
-CMD ["node", "src/apollo/app.js"]
+CMD lerna run start:discovery --scope origin-discovery

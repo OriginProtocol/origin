@@ -18,7 +18,7 @@ import {
 } from '../ipfsInterface/store'
 import MarketplaceResolver from '../contractInterface/marketplace/resolver'
 
-class Marketplace {
+export default class Marketplace {
   constructor({
     contractService,
     ipfsService,
@@ -52,10 +52,10 @@ class Marketplace {
   }
 
   /**
-   * Returns all listings from the marketplace.
+   * Returns listings.
    * TODO: This won't scale. Add support for pagination.
-   * @param opts: { idsOnly, listingsFor, purchasesFor }
-   * @return {Promise<List(Listing)>>}
+   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress}
+   * @return {Promise<List(Listing)>}
    * @throws {Error}
    */
   async getListings(opts = {}) {
@@ -101,7 +101,18 @@ class Marketplace {
     return new Listing(listingId, chainListing, ipfsListing)
   }
 
+  /**
+   * Returns all the offers for a listing.
+   * @param listingId
+   * @param opts: {idsOnly:boolean, for:address}
+   * @return {Promise<List(Offer)>}
+   */
   async getOffers(listingId, opts = {}) {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch offers from the discovery back-end to reduce latency.
+      return await this.discoveryService.getOffers(listingId, opts)
+    }
+
     const offerIds = await this.resolver.getOfferIds(listingId, opts)
     if (opts.idsOnly) {
       return offerIds
@@ -135,6 +146,10 @@ class Marketplace {
    * @return {Promise<Offer>} - models/Offer object
    */
   async getOffer(offerId) {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch offer from the discovery back-end to reduce latency.
+      return await this.discoveryService.getOffer(offerId)
+    }
     // Load chain data.
     const { chainOffer, listingId } = await this.resolver.getOffer(offerId)
 
@@ -446,5 +461,3 @@ class Marketplace {
     return await this.resolver.getTokenAddress()
   }
 }
-
-module.exports = Marketplace
