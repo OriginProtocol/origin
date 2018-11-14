@@ -1,0 +1,46 @@
+{
+  "name": "OriginCatcher",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "jest": "^22.4.3",
+    "jest-react-native": "^18.0.0",
+    "react-native-dotenv": "^0.2.0",
+    "react-test-renderer": "16.3.1"
+  },
+  "scripts": {
+    "start": "react-native start",
+    "install:dev": "npm install && install-local ../origin/origin-js",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "dependencies": {
+    "cross-fetch": "^2.2.1",
+    "identicon.js": "^2.3.2",
+    "moment": "^2.22.2",
+    "node-libs-browser": "^2.1.0",
+    "origin": "0.6.1",
+    "prop-types": "^15.6.2",
+    "react": "^16.6.0-alpha.8af6728",
+    "react-moment": "^0.7.5",
+    "react-native": "^0.57.4",
+    "react-native-camera": "^1.1.2",
+    "react-native-push-notification": "^3.0.2",
+    "react-native-qrcode-scanner": "^1.0.1",
+    "react-navigation": "^2.2.5",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
+    "web3": "1.0.0-beta.34"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
+  }
+}
