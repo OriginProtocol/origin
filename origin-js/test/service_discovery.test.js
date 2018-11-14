@@ -314,9 +314,9 @@ describe('Discovery service', function() {
         body: {
           'data': {
             'offer': {
-              'id': offerId
+              'id': offerId,
               'data': {
-              }
+              },
               'listing': {
                 'id': '1-000-57'
               }
