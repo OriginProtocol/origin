@@ -205,6 +205,7 @@ class DiscoveryService {
    * Queries discovery server for offers
    * Options:
    *  - idsOnly(boolean): returns only ids rather than the full Offer object.
+   *  - for(string): returns offers of a specific defined by address
    * @param listingId {string}: listing id of a listing to which offer has been made to 
    * @param opts: { idsOnly, for }
    * @return {Array<Offer>}

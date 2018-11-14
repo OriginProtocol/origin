@@ -316,6 +316,7 @@ describe('Discovery service', function() {
             'offer': {
               'id': offerId,
               'data': {
+                'id': '1-000-57-1'
               },
               'listing': {
                 'id': '1-000-57'
@@ -350,5 +351,148 @@ describe('Discovery service', function() {
 
       return expect(discoveryService.getOffer('1-000-57')).to.eventually.be.rejectedWith(Error)
     })
+  })
+
+  describe('getOffers', () => {
+    it('Should return offers', async () => {
+      const foundOffersResponse = {
+        status: 200,
+        body: {
+          'data': {
+            'offers': {
+              'nodes': [
+                {
+                  'data': {
+                    'id': '1-000-57-1'
+                  },
+                  'listing': {
+                    'id': '1-000-57'
+                  }
+                },
+                {
+                  'data': {
+                    'id': '1-000-57-2'
+                  },
+                  'listing': {
+                    'id': '1-000-57'
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+      const fetch = fetchMock.sandbox().mock(discoveryServerUrl, foundOffersResponse)
+      const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
+
+      let offers = await discoveryService.getOffers('1-000-57', {})
+      expect(offers.length).to.equal(2)
+      expect(offers[0].data.id).to.equal('1-000-57-1')
+      expect(offers[1].data.id).to.equal('1-000-57-2')
+      expect(offers[0].listing.id).to.equal('1-000-57')
+      expect(offers[1].listing.id).to.equal('1-000-57')
+
+      offers = await discoveryService.getOffers('1-000-57', { idsOnly: true })
+      expect(offers.length).to.equal(2)
+      expect(offers[0]).to.equal('1-000-57-1')
+      expect(offers[1]).to.equal('1-000-57-2')
+    })
+
+    it('Should handle offersFor option', async () => {
+      const foundOffersResponse = {
+        status: 200,
+        body: {
+          'data': {
+            'offers': {
+              'nodes': [
+                {
+                  'data': {
+                    'id': '1-000-57-1'
+                  },
+                  'listing': {
+                    'id': '1-000-57'
+                  }
+                },
+                {
+                  'data': {
+                    'id': '1-000-57-2'
+                  },
+                  'listing': {
+                    'id': '1-000-57'
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+      const fetch = fetchMock.sandbox().mock(discoveryServerUrl, foundOffersResponse)
+      const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
+
+      let offers = await discoveryService.getOffers('1-000-57', { for: '0xABCD' })
+      expect(offers.length).to.equal(2)
+      expect(offers[0].data.id).to.equal('1-000-57-1')
+      expect(offers[1].data.id).to.equal('1-000-57-2')
+      expect(offers[0].listing.id).to.equal('1-000-57')
+      expect(offers[1].listing.id).to.equal('1-000-57')
+
+      offers = await discoveryService.getOffers('1-000-57', { for: '0xABCD' })
+      expect(offers.length).to.equal(2)
+      expect(offers[0]).to.equal('1-000-57-1')
+      expect(offers[1]).to.equal('1-000-57-2')
+    })
+
+    describe('Responses with no offers', () => {
+      it('fetch offers for a specific listing', async () => {
+        const noOfferResponse = {
+          status: 200,
+          body: {
+            'data': {
+              'offers': {
+                'nodes': []
+              }
+            }
+          }
+        }
+        const fetch = fetchMock.sandbox().mock(discoveryServerUrl, noOfferResponse)
+        const discoveryService = new DiscoveryService({discoveryServerUrl, fetch})
+
+        let offers = await discoveryService.getOffers('1-000-57', {})
+        expect(offers.length).to.equal(0)
+
+        offers = await discoveryService.getOffers('1-000-57', { idsOnly: true })
+        expect(offers.length).to.equal(0)
+      })
+
+      it('fetch offers for a specific listing with for option', async () => {
+        const noOfferResponse = {
+          status: 200,
+          body: {
+            'data': {
+              'offers': {
+                'nodes': []
+              }
+            }
+          }
+        }
+        const fetch = fetchMock.sandbox().mock(discoveryServerUrl, noOfferResponse)
+        const discoveryService = new DiscoveryService({discoveryServerUrl, fetch})
+
+        let offers = await discoveryService.getOffers('1-000-57', { for: '0xABCD' })
+        expect(offers.length).to.equal(0)
+
+        offers = await discoveryService.getOffers('1-000-57', { for: '0xABCD', idsOnly: true })
+        expect(offers.length).to.equal(0)
+      })
+
+    })
+
+    it('Should throw an exception if the server returns an error', async () => {
+      const fetch = fetchMock.sandbox().mock(discoveryServerUrl, 500)
+      const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
+
+      return expect(discoveryService.getOffers('1-000-57', {})).to.eventually.be.rejectedWith(Error)
+    })
+
   })
 })
