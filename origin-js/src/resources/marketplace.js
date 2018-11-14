@@ -146,6 +146,10 @@ export default class Marketplace {
    * @return {Promise<Offer>} - models/Offer object
    */
   async getOffer(offerId) {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch offer from the discovery back-end to reduce latency.
+      return await this.discoveryService.getOffer(offerId)
+    }
     // Load chain data.
     const { chainOffer, listingId } = await this.resolver.getOffer(offerId)
 
