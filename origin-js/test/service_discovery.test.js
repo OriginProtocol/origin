@@ -387,8 +387,8 @@ describe('Discovery service', function() {
 
       let offers = await discoveryService.getOffers('1-000-57', {})
       expect(offers.length).to.equal(2)
-      expect(offers[0].data.id).to.equal('1-000-57-1')
-      expect(offers[1].data.id).to.equal('1-000-57-2')
+      expect(offers[0].id).to.equal('1-000-57-1')
+      expect(offers[1].id).to.equal('1-000-57-2')
       expect(offers[0].listing.id).to.equal('1-000-57')
       expect(offers[1].listing.id).to.equal('1-000-57')
 
@@ -431,8 +431,8 @@ describe('Discovery service', function() {
 
       let offers = await discoveryService.getOffers('1-000-57', { for: '0xABCD' })
       expect(offers.length).to.equal(2)
-      expect(offers[0].data.id).to.equal('1-000-57-1')
-      expect(offers[1].data.id).to.equal('1-000-57-2')
+      expect(offers[0].id).to.equal('1-000-57-1')
+      expect(offers[1].id).to.equal('1-000-57-2')
       expect(offers[0].listing.id).to.equal('1-000-57')
       expect(offers[1].listing.id).to.equal('1-000-57')
 
