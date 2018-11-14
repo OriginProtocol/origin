@@ -1,4 +1,4 @@
-import { get } from './ipfsHash'
+import { get } from 'origin-ipfs'
 import startCase from 'lodash/startCase'
 import pick from 'lodash/pick'
 

@@ -5,9 +5,10 @@ import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
 import TokenContract from 'origin-contracts/build/contracts/StandardToken'
 
 import Web3 from 'web3'
+import EventSource from 'origin-eventsource'
+
 import eventCache from './utils/eventCache'
 import pubsub from './utils/pubsub'
-import EventSource from './utils/OriginEventSource'
 
 import msg from './utils/messagingInstance'
 

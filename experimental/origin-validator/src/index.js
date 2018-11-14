@@ -1,14 +1,14 @@
 import Ajv from 'ajv'
 
-import listingSchema from '../schemas/listing.json'
-import listingWithdrawnSchema from '../schemas/listing-withdraw.json'
-import offerSchema from '../schemas/offer.json'
-import offerWithdrawnSchema from '../schemas/offer-withdraw.json'
-import offerAcceptedSchema from '../schemas/offer-accept.json'
-import disputeSchema from '../schemas/dispute.json'
-import resolutionSchema from '../schemas/resolution.json'
-import profileSchema from '../schemas/profile.json'
-import reviewSchema from '../schemas/review.json'
+import listingSchema from './schemas/listing.json'
+import listingWithdrawnSchema from './schemas/listing-withdraw.json'
+import offerSchema from './schemas/offer.json'
+import offerWithdrawnSchema from './schemas/offer-withdraw.json'
+import offerAcceptedSchema from './schemas/offer-accept.json'
+import disputeSchema from './schemas/dispute.json'
+import resolutionSchema from './schemas/resolution.json'
+import profileSchema from './schemas/profile.json'
+import reviewSchema from './schemas/review.json'
 
 const ajv = new Ajv({ allErrors: true })
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))

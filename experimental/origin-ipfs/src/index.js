@@ -30,44 +30,44 @@ export async function postFile(gateway, file) {
   const body = new FormData()
   body.append('file', file)
 
-  var rawRes = await fetch(`${gateway}/api/v0/add`, { method: 'POST', body })
-  var res = await rawRes.json()
+  const rawRes = await fetch(`${gateway}/api/v0/add`, { method: 'POST', body })
+  const res = await rawRes.json()
   return res.Hash
 }
 
 export async function post(gateway, json) {
-  var formData = new FormData()
+  const formData = new FormData()
   formData.append('file', new Blob([JSON.stringify(json)]))
 
-  var rawRes = await fetch(`${gateway}/api/v0/add`, {
+  const rawRes = await fetch(`${gateway}/api/v0/add`, {
     method: 'POST',
     body: formData
   })
-  var res = await rawRes.json()
+  const res = await rawRes.json()
 
   return getBytes32FromIpfsHash(res.Hash)
 }
 
 export async function postEnc(gateway, json, pubKeys) {
-  var formData = new FormData()
+  const formData = new FormData()
 
-  var publicKeys = pubKeys.reduce(
+  const publicKeys = pubKeys.reduce(
     (acc, val) => acc.concat(openpgp.key.readArmored(val).keys),
     []
   )
 
-  var encrypted = await openpgp.encrypt({
+  const encrypted = await openpgp.encrypt({
     data: JSON.stringify(json),
     publicKeys
   })
 
   formData.append('file', new Blob([encrypted.data]))
 
-  var rawRes = await fetch(`${gateway}/api/v0/add`, {
+  const rawRes = await fetch(`${gateway}/api/v0/add`, {
     method: 'POST',
     body: formData
   })
-  var res = await rawRes.json()
+  const res = await rawRes.json()
 
   return getBytes32FromIpfsHash(res.Hash)
 }
@@ -84,7 +84,7 @@ export async function decode(text, key, pass) {
 }
 
 export async function getText(gateway, hashAsBytes) {
-  var hash = getIpfsHashFromBytes32(hashAsBytes)
+  const hash = getIpfsHashFromBytes32(hashAsBytes)
   const response = await new Promise(resolve => {
     let didTimeOut = false
     const timeout = setTimeout(() => {
