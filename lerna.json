@@ -7,7 +7,7 @@
     "origin-faucet",
     "origin-js",
     "origin-messaging",
-    "origin-mobile",
+    "origin-linking",
     "origin-notifications",
     "experimental/*"
   ],
