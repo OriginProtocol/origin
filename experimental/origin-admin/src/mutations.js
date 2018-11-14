@@ -35,6 +35,12 @@ export const ImportWalletMutation = gql`
   ${fragments.Account.balance}
 `
 
+export const ImportWalletsMutation = gql`
+  mutation ImportWallets($accounts: [WalletInput]!) {
+    importWallets(accounts: $accounts)
+  }
+`
+
 export const DeployTokenMutation = gql`
   mutation DeployToken(
     $name: String
@@ -101,11 +107,13 @@ export const UpdateTokenAllowanceMutation = gql`
 
 export const DeployMarketplaceMutation = gql`
   mutation DeployMarketplace(
+    $from: String
     $token: String
     $version: String
     $autoWhitelist: Boolean
   ) {
     deployMarketplace(
+      from: $from
       token: $token
       version: $version
       autoWhitelist: $autoWhitelist

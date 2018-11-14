@@ -57,8 +57,8 @@ const Configs = {
     providerWS: 'wss://kovan.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
-    OriginToken: '0x0EF2f63397657DD71384C8c26F81deE23bA9c6dC',
-    V00_Marketplace: '0x72184988E5b102D32439c475E714b482D7E270df'
+    OriginToken: '0xf2D5AeA9057269a1d97A952BAf5E1887462c67b6',
+    V00_Marketplace: '0xCCC4fDB0BfD0BC9E6cede6297534c0e96E3E76DE'
   },
   localhost: {
     provider: `http://${HOST}:8545`,
@@ -169,24 +169,7 @@ export function setNetwork(net) {
     UserRegistryContract.abi,
     config.V00_UserRegistry
   )
-  context.marketplace = new web3.eth.Contract(
-    MarketplaceContract.abi,
-    config.V00_Marketplace
-  )
-  context.marketplace.eventCache = eventCache(
-    context.marketplace,
-    config.V00_Marketplace_Epoch
-  )
-  if (config.V00_Marketplace) {
-    context.marketplaces = [context.marketplace]
-  } else {
-    context.marketplaces = []
-  }
-
-  context.eventSource = new EventSource({
-    marketplaceContract: context.marketplace,
-    ipfsGateway: context.ipfsGateway
-  })
+  setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
 
   wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
     context.marketplace.eventCache.updateBlock(blockHeaders.number)
@@ -243,10 +226,6 @@ export function setNetwork(net) {
 
   if (metaMask) {
     context.metaMask = metaMask
-    context.marketplaceMM = new metaMask.eth.Contract(
-      MarketplaceContract.abi,
-      config.V00_Marketplace
-    )
     context.ognMM = new metaMask.eth.Contract(
       OriginTokenContract.abi,
       config.OriginToken
@@ -285,6 +264,31 @@ export function toggleMetaMask(enabled) {
     delete window.localStorage.metaMaskEnabled
   }
   setMetaMask()
+}
+
+export function setMarketplace(address, epoch) {
+  context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
+  context.marketplace.eventCache = eventCache(context.marketplace, epoch)
+  if (address) {
+    context.marketplaces = [context.marketplace]
+  } else {
+    context.marketplaces = []
+  }
+  context.eventSource = new EventSource({
+    marketplaceContract: context.marketplace,
+    ipfsGateway: context.ipfsGateway
+  })
+  context.marketplaceExec = context.marketplace
+
+  if (metaMask) {
+    context.marketplaceMM = new metaMask.eth.Contract(
+      MarketplaceContract.abi,
+      address
+    )
+    if (metaMaskEnabled) {
+      context.marketplaceExec = context.marketplaceMM
+    }
+  }
 }
 
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'CSS') {

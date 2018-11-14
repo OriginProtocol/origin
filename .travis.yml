@@ -3,22 +3,6 @@ git:
   depth: 3
 matrix:
   include:
-    - name: "ipfs-proxy tests"
-      language: node_js
-      node_js: 10
-      cache:
-        npm: true
-        directories:
-          - ipfs-proxy/node_modules
-      before_cache:
-        - rm -rf ipfs-proxy/node_modules/.cache
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope ipfs-proxy
-      script:
-        - lerna run lint --scope ipfs-proxy
-        - lerna run test --scope ipfs-proxy --stream
-
     - name: "origin-bridge tests"
       language: python
       python: 3.6
