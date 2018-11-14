@@ -39,6 +39,7 @@ const typeDefs = gql`
   type Offer {
     id: ID!
     ipfsHash: ID!
+    data: JSON!
     buyer: User!
     seller: User!
     status: String!
