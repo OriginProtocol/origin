@@ -35,8 +35,8 @@ class Listing extends Component {
       <div className="p-3">
         {this.renderBreadcrumbs()}
         <Query query={query} variables={{ listingId }}>
-          {({ loading, error, data }) => {
-            if (loading)
+          {({ networkStatus, error, data }) => {
+            if (networkStatus === 1)
               return (
                 <div style={{ maxWidth: 300, marginTop: 100 }}>
                   <Spinner />
@@ -75,7 +75,7 @@ class Listing extends Component {
               selectedTabId = 'events'
             }
 
-            const media = get(data, 'marketplace.listing.media', [])
+            const media = get(data, 'marketplace.listing.media') || []
 
             return (
               <>
@@ -192,12 +192,12 @@ class Listing extends Component {
           </span>
         </span>
         {this.renderActions(sellerPresent, listing)}
-        {listing.status === 'active' ? (
+        {listing.status === 'withdrawn' ? (
+          <Tag style={{ marginLeft: 15 }}>Withdrawn</Tag>
+        ) : (
           <Tag style={{ marginLeft: 15 }} intent="success">
             Active
           </Tag>
-        ) : (
-          <Tag style={{ marginLeft: 15 }}>Withdrawn</Tag>
         )}
       </div>
     )
@@ -206,7 +206,7 @@ class Listing extends Component {
   renderActions(sellerPresent = false, listing) {
     return (
       <>
-        {listing.status !== 'active' ? null : (
+        {listing.status === 'withdrawn' ? null : (
           <>
             <Tooltip content="Update">
               <AnchorButton

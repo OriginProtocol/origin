@@ -1,8 +1,7 @@
 import OriginToken from 'origin-contracts/build/contracts/OriginToken'
 import StandardToken from 'origin-contracts/build/contracts/StandardToken'
-import contracts from '../contracts'
-
-import txHelper, { checkMetaMask } from './_txHelper'
+import contracts from '../../contracts'
+import txHelper, { checkMetaMask } from '../_txHelper'
 
 async function deployToken(_, args) {
   const web3 = contracts.web3Exec

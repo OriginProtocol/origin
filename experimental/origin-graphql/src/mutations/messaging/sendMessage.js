@@ -1,4 +1,4 @@
-import contracts from '../contracts'
+import contracts from '../../contracts'
 
 async function sendMessage(_, { to, content }) {
   await new Promise(async (resolve) => {
