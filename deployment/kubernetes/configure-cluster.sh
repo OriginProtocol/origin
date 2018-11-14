@@ -39,39 +39,17 @@ helm install stable/cert-manager --name cert-manager \
 # Install nginx ingress for development
 helm install stable/nginx-ingress --name dev-ingress \
 	--namespace dev \
-	--set rbac.create=true \
-	--set controller.service.loadBalancerIP="35.233.140.121" \
-	--set controller.ingressClass=dev-ingress \
-	--set controller.stats.enabled=true \
-	--set controller.metrics.enabled=true \
-	--set-string controller.extraArgs.enable-ssl-chain-completion=false \
-	--set-string controller.extraArgs.enable-dynamic-configuration=true \
-	--set-string controller.extraArgs.watch-namespace=dev \
-	--set-string controller.extraArgs.force-namespace-isolation=true
+	-f values/nginx-ingress/values-dev.yaml
 
 # Install nginx ingress for staging
 helm install stable/nginx-ingress --name staging-ingress \
 	--namespace staging \
-	--set rbac.create=true \
-	--set controller.service.loadBalancerIP="35.197.88.39" \
-	--set controller.ingressClass=staging-ingress \
-	--set controller.stats.enabled=true \
-	--set controller.metrics.enabled=true \
-	--set-string controller.extraArgs.enable-ssl-chain-completion=false
-	--set-string controller.extraArgs.watch-namespace=staging \
-	--set-string controller.extraArgs.force-namespace-isolation=true
+	-f values/nginx-ingress/values-staging.yaml
 
 # Install nginx ingress for production
 helm install stable/nginx-ingress --name prod-ingress \
 	--namespace prod \
-	--set rbac.create=true \
-	--set controller.service.loadBalancerIP="35.203.166.86" \
-	--set controller.ingressClass=prod-ingress \
-	--set controller.stats.enabled=true \
-	--set controller.metrics.enabled=true \
-	--set-string controller.extraArgs.enable-ssl-chain-completion=false
-	--set-string controller.extraArgs.watch-namespace=prod \
-	--set-string controller.extraArgs.force-namespace-isolation=true
+	-f values/nginx-ingress/values-prod.yaml
 
 kubectl create -f misc/letsencrypt-staging.yaml
 kubectl create -f misc/letsencrypt-prod.yaml

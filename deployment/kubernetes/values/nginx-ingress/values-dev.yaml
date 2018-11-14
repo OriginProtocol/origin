@@ -1,0 +1,13 @@
+controller:
+  service:
+    loadBalancerIP: 35.233.140.121
+  ingressClass: dev-ingress
+  stats:
+    enabled: true
+  metrics:
+    enabled: true
+  extraArgs:
+    enable-ssl-chain-completion: false
+    enable-dynamic-configuration: true
+    watch-namespace: dev
+    force-namespace-isolation: true
