@@ -1,7 +1,7 @@
 const GraphQLJSON = require('graphql-type-json')
 
 const search = require('../lib/search')
-const { getListing, getListingsById, getListingsBySeller, getOffer, searchOffers } = require('./db')
+const { getListing, getListingsById, getListingsBySeller, getOffer, getOffers } = require('./db')
 
 /**
  * Gets information on a related user.
@@ -53,11 +53,11 @@ const resolvers = {
     },
 
     async offers (root, args) {
-      const offers = await searchOffers(
-        args.listingId,
-        args.buyerAddress,
-        args.sellerAddress
-      )
+      const offers = await getOffers({
+        listingId: args.listingId,
+        buyerAddress: args.buyerAddress,
+        sellerAddress: args.sellerAddress
+      })
 
       return { nodes: offers }
     },

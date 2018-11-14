@@ -111,7 +111,7 @@ function _makeOffer (row) {
  * @param {string} sellerAddress - optional seller address
  * @return {Promise<Array<Offer>>}
  */
-async function searchOffers (listingId, buyerAddress, sellerAddress) {
+async function getOffers ({ listingId, buyerAddress, sellerAddress }) {
   const whereClause = {}
 
   if (listingId) {
@@ -149,5 +149,5 @@ module.exports = {
   getListingsById,
   getListingsBySeller,
   getOffer,
-  searchOffers
+  getOffers
 }
