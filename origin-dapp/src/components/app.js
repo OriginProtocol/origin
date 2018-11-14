@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { HashRouter as Router, Link, Route, Switch } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 

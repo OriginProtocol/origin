@@ -13,7 +13,7 @@ import Modal from 'components/modal'
 
 import detectMobile from 'utils/detectMobile'
 import getCurrentProvider from 'utils/getCurrentProvider'
-import getCurrentNetwork, { supportedNetworkId, supportedNetwork } from 'utils/currentNetwork'
+import getCurrentNetwork, { supportedNetworkId } from 'utils/currentNetwork'
 
 import origin from '../services/origin'
 
@@ -89,19 +89,19 @@ const LinkerPopUp = props => (
     </a>
     <div>
       To {props.web3Intent}, you can link with your Origin Mobile Wallet with this code: {props.linkerCode} <br />
-      {detectMobile() && <button className="btn btn-primary" style={{width:"200px"}} onClick={() => 
-        clipboard.writeText("orgw:"+ props.linkerCode).then( function(){
-          let url = "https://www.originprotocol.com/mobile"
+      { detectMobile() && <button className="btn btn-primary" style={{ width: '200px' }} onClick={() =>
+        clipboard.writeText('orgw:'+ props.linkerCode).then( function(){
+          const url = 'https://www.originprotocol.com/mobile'
           window.open(url)
-        }, function(err){
-          console.log("Error opening url")
-        })                   
+        }, function(){
+          console.log('Error opening url')
+        })
       }>
-        Copy & Open App 
+        Copy & Open App
         </button>
       }
-      <div style={{padding:'50px', backgroundColor:'white'}}>
-      <QRCode value={"https://www.originprotocol.com/mobile/" + props.linkerCode}/>
+      <div style={{ padding: '50px', backgroundColor: 'white' }}>
+      <QRCode value={'https://www.originprotocol.com/mobile/' + props.linkerCode}/>
       </div>
     </div>
   </Modal>
@@ -354,8 +354,8 @@ class Web3Provider extends Component {
       networkError: null,
       currentProvider: getCurrentProvider(web3),
       provider: null,
-      linkerCode:"",
-      linkerPopUp:false
+      linkerCode: '',
+      linkerPopUp: false
     }
   }
 
@@ -375,29 +375,29 @@ class Web3Provider extends Component {
     this.initNetworkPoll()
     if (origin.contractService.walletLinker)
     {
-        origin.contractService.walletLinker.showPopUp = this.showLinkerPopUp.bind(this);
-        origin.contractService.walletLinker.setLinkCode = this.setLinkerCode.bind(this);
-        origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this);
+        origin.contractService.walletLinker.showPopUp = this.showLinkerPopUp.bind(this)
+        origin.contractService.walletLinker.setLinkCode = this.setLinkerCode.bind(this)
+        origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
     }
   }
 
   showLinkerPopUp(linkerPopUp){
-    this.setState({linkerPopUp})
+    this.setState({ linkerPopUp })
   }
 
   setLinkerCode(linkerCode) {
-    this.setState({linkerCode})
+    this.setState({ linkerCode })
   }
 
   showNextPage() {
-    let now = this.props.location.pathname
-    if (now.startsWith("/listing/"))
+    const now = this.props.location.pathname
+    if (now.startsWith('/listing/'))
     {
-      this.props.history.push("/my-purchases")
+      this.props.history.push('/my-purchases')
     }
-    else if (now.startsWith("/create"))
+    else if (now.startsWith('/create'))
     {
-      this.props.history.push("/my-listings")
+      this.props.history.push('/my-listings')
     }
   }
 
@@ -444,7 +444,7 @@ class Web3Provider extends Component {
       return
     }
 
-    let code = origin.contractService.getMobileWalletLink()
+    const code = origin.contractService.getMobileWalletLink()
     if (this.state.linkerCode != code) {
       // let's set the linker code
       this.setState({ linkerCode: code })
@@ -510,7 +510,7 @@ class Web3Provider extends Component {
     // on account detection
     if (curr !== prev) {
       // TODO: fix this with some route magic!
-      if(["/my-listings", "/my-purchases","/my-sales"].includes(this.props.location.pathname) || !curr) {
+      if(['/my-listings', '/my-purchases','/my-sales'].includes(this.props.location.pathname) || !curr) {
         // reload if changed from a prior account
         prev !== null && window.location.reload()
       } else {
@@ -533,14 +533,13 @@ class Web3Provider extends Component {
 
   render() {
     const { onMobile, web3Account, web3Intent, storeWeb3Intent } = this.props
-    const { networkConnected, networkId, currentProvider, linkerCode, linkerPopUp} = this.state
+    const { networkConnected, networkId, currentProvider, linkerCode, linkerPopUp } = this.state
     const currentNetwork = getCurrentNetwork(networkId)
     const currentNetworkName = currentNetwork
       ? currentNetwork.name
       : networkId
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
-    const supportedNetworkName = supportedNetwork && supportedNetwork.name
     const walletLinkerEnabled = origin.contractService.walletLinker
 
     return (
@@ -589,7 +588,7 @@ class Web3Provider extends Component {
           linkerPopUp &&
           <LinkerPopUp web3Intent={web3Intent} cancel={() => { storeWeb3Intent(null); origin.contractService.walletLinker.cancelLink() }} linkerCode={linkerCode} />
         }
-        
+
 
         { /* attempting to use web3 without being signed in */
           web3Intent &&

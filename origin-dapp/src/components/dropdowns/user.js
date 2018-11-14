@@ -58,7 +58,7 @@ class UserDropdown extends Component {
               origin.contractService.walletLinker.linked &&
                 <Link to="#"
                   className="btn edit-profile placehold"
-                  onClick={()=>{origin.contractService.walletLinker.unlink(); return false;}}>
+                  onClick={()=>{origin.contractService.walletLinker.unlink(); return false}}>
                   <FormattedMessage
                     id={'user-dropdown.UnlinkMobile'}
                     defaultMessage ={'Unlink Mobile'}
