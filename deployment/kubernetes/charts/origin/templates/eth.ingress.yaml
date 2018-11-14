@@ -13,7 +13,7 @@ metadata:
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/limit-rps: "2"
+    nginx.ingress.kubernetes.io/limit-rps: "12"
 spec:
   tls:
     - secretName: {{ template "ethereum.host" . }}
