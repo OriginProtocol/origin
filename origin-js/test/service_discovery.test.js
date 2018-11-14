@@ -436,7 +436,7 @@ describe('Discovery service', function() {
       expect(offers[0].listingId).to.equal('1-000-57')
       expect(offers[1].listingId).to.equal('1-000-57')
 
-      offers = await discoveryService.getOffers('1-000-57', { for: '0xABCD' })
+      offers = await discoveryService.getOffers('1-000-57', { for: '0xABCD', idsOnly: true })
       expect(offers.length).to.equal(2)
       expect(offers[0]).to.equal('1-000-57-1')
       expect(offers[1]).to.equal('1-000-57-2')
