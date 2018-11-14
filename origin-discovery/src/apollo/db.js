@@ -99,18 +99,27 @@ async function getListingsBySeller (sellerAddress) {
 async function getListing (listingId, blockInfo = null) {
   let row
   if (blockInfo) {
+    // Build a query that looks like:
+    // SELECT * FROM listing WHERE id=listingId AND
+    //      (block_number < blockInfo.blockNumber OR
+    //      (block_number = blockInfo.blockNumber AND log_index <= blockInfo.logIndex))
+    // ORDER BY block_number DESC, log_index DESC
+    // LIMIT 1
     row = await db.Listing.findOne({
-      where: { id: listingId, blockNumber: { [Sequelize.Op.lte]: blockInfo.blockNumber } },
+      where: {
+        id: listingId,
+        [Sequelize.Op.or]: [
+          {
+            blockNumber: { [Sequelize.Op.lt]: blockInfo.blockNumber }
+          },
+          {
+            blockNumber: blockInfo.blockNumber,
+            logIndex: { [Sequelize.Op.lte]: blockInfo.logIndex }
+          }
+        ]
+      },
       order: [['blockNumber', 'DESC'], ['logIndex', 'DESC']]
     })
-    // Handle the rare case where a row satisfies the blockNumber condition
-    // but not the logIndex one.
-    if (row &&
-      (blockInfo.logIndex !== undefined) &&
-      (row.blockNumber === blockInfo.blockNumber) &&
-      (row.logIndex > blockInfo.logIndex)) {
-      row = null
-    }
   } else {
     // Return most recent row for the listing.
     row = await db.Listing.findOne({
