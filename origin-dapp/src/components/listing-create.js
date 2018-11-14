@@ -19,7 +19,7 @@ import Modal from 'components/modal'
 import Calendar from './calendar'
 
 import { getListing, camelCaseToDash } from 'utils/listing'
-import { generateCalendarSlots, prepareSlotsToSave } from 'utils/calendarHelpers'
+import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
