@@ -33,6 +33,7 @@ export default `
     setActiveWallet(address: String!): Account
     createWallet(role: String, name: String): Account
     importWallet(role: String, name: String, privateKey: String!): Account
+    importWallets(accounts: [WalletInput]): Boolean
     removeWallet(address: String!): String
   }
 
@@ -172,6 +173,12 @@ export default `
     timestamp: Int
     transactions: [String]
     uncles: [String]
+  }
+
+  input WalletInput {
+    privateKey: String
+    name: String
+    role: String
   }
 
 `

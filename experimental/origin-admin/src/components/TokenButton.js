@@ -9,7 +9,7 @@ import {
   Menu
 } from '@blueprintjs/core'
 
-import numberFormat from 'utils/numberFormat'
+import withAccounts from 'hoc/withAccounts'
 
 import Toaster from '../pages/Toaster'
 
@@ -86,7 +86,7 @@ class TokenButton extends Component {
             position={Position.BOTTOM}
           >
             <Button loading={loading}>
-              {numberFormat(Number(web3.utils.fromWei(balance, 'ether')))}
+              {balance}
             </Button>
           </Popover>
         )}
@@ -95,4 +95,4 @@ class TokenButton extends Component {
   }
 }
 
-export default TokenButton
+export default withAccounts(TokenButton)
