@@ -31,29 +31,8 @@ spec:
               secretKeyRef:
                 name: {{ template "notifications.fullname" . }}
                 key: ENVKEY
-          - name: DATABASE_HOST
-            value: "localhost"
-          - name: DATABASE_PORT
-            value: "5432"
-          - name: DATABASE_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "database.fullname" . }}
-                key: DATABASE_USERNAME
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "database.fullname" . }}
-                key: DATABASE_PASSWORD
-          - name: DATABASE_NAME
-            value: "origin"
           - name: NAMESPACE
             value: {{ .Release.Namespace | quote }}
-        command: ["/bin/sh"]
-        args:
-        - "-c"
-        - |-
-{{ .Files.Get "scripts/start-notification-server.sh" | indent 10 }}
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",

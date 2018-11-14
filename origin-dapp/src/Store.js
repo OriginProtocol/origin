@@ -19,7 +19,7 @@ import listingCreate from 'reducers/ListingsCreate'
 const middlewares = [thunkMiddleware]
 
 if (process.env.REDUX_LOGGER) {
-  const { logger } = require(`redux-logger`)
+  const { logger } = require('redux-logger')
   middlewares.push(logger)
 }
 

@@ -28,7 +28,7 @@ function handleFileUpload (req, res) {
     }
   })
 
-  busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+  busboy.on('file', function(fieldname, file) {
     file.fileRead = []
 
     file.on('data', function(chunk) {
@@ -37,13 +37,13 @@ function handleFileUpload (req, res) {
 
     file.on('limit', function() {
       logger.warn(`File upload too large`)
-      res.writeHead(413, { 'Connection': 'close' });
+      res.writeHead(413, { 'Connection': 'close' })
       res.end()
       req.unpipe(req.busboy)
     })
 
     file.on('end', function() {
-      let buffer = Buffer.concat(file.fileRead);
+      const buffer = Buffer.concat(file.fileRead)
 
       if (!isValidFile(buffer)) {
         logger.warn(`Upload of invalid file type attempted`)

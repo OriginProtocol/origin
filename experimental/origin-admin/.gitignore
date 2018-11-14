@@ -1,0 +1,15 @@
+node_modules
+.DS_Store
+public/app.*
+public/css/app.css
+public/index.html
+public/fonts
+data/db
+data/ipfs
+data/geth
+data/tmp
+NOTES
+src/contracts/deployed.js
+issuer-services/package-lock.json
+issuer-services/up.json
+issuer-services/config.json

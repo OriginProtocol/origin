@@ -12,6 +12,7 @@ metadata:
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /graphql
 spec:
   tls:
     - secretName: {{ template "discovery.host" . }}

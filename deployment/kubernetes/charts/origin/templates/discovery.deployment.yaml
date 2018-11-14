@@ -18,6 +18,9 @@ spec:
         app: {{ template "discovery.fullname" . }}
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '4000'
     spec:
       containers:
       - name: origin-discovery
@@ -26,24 +29,11 @@ spec:
         ports:
           - containerPort: 4000
         env:
-          - name: DATABASE_HOST
-            value: "localhost"
-          - name: DATABASE_PORT
-            value: "5432"
-          - name: DATABASE_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "database.fullname" . }}
-                key: DATABASE_USERNAME
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "database.fullname" . }}
-                key: DATABASE_PASSWORD
-          - name: DATABASE_NAME
-            value: "origin"
-          - name: ELASTICSEARCH_HOST
-            value: "elasticsearch-elasticsearch-svc:9200"
+        - name: ENVKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "discovery.fullname" . }}
+              key: ENVKEY
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",

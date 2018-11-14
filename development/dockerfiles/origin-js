@@ -1,3 +1,20 @@
-FROM node:9
+FROM node:10
 
 WORKDIR /app
+
+# Copy wait-for.sh to wait for messaging server to start
+COPY ./development/scripts/wait-for.sh /usr/local/bin
+# Script for setting dynamic IPFS_SWARM variable based on origin-messaging
+# container
+COPY ./development/scripts/set-ipfs-swarm.sh /usr/local/bin
+
+COPY ./package*.json ./
+COPY lerna.json .
+COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
+COPY ./scripts ./scripts
+RUN npm install --loglevel notice --unsafe-perm
+
+WORKDIR /app/origin-js
+
+CMD node scripts/serve.js serve
