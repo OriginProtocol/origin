@@ -51,6 +51,12 @@ export default class Marketplace {
     return await this.resolver.getListingsCount()
   }
 
+  /**
+   * getPurchases
+   * @description - Gets an array of purchases for a given buyer in the form { offer, listing }
+   * @param account - The account of the buyer for whom the purchases are needed
+   * @return {Promise<List(Listing)>}
+   */
   async getPurchases(account) {
     const listings = await this.getListings({
       purchasesFor: account,
@@ -77,6 +83,12 @@ export default class Marketplace {
     })
   }
 
+  /**
+   * getSales
+   * @description - Gets an array of sales for a given seller in the form { offer, listing }
+   * @param account - The account of the seller for whom the sales are needed
+   * @return {Promise<List(Listing)>}
+   */
   async getSales(account) {
     const listings = await this.getListings({
       listingsFor: account
