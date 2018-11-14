@@ -305,4 +305,50 @@ describe('Discovery service', function() {
       return expect(discoveryService.getListings({})).to.eventually.be.rejectedWith(Error)
     })
   })
+
+  describe('getOffer', () => {
+    it('Should return an offer for an Id that exists', async () => {
+      const offerId = '1-000-57-1'
+      const foundOfferResponse = {
+        status: 200,
+        body: {
+          'data': {
+            'offer': {
+              'id': offerId
+              'data': {
+              }
+              'listing': {
+                'id': '1-000-57'
+              }
+            }
+          }
+        }
+      }
+      const fetch = fetchMock.sandbox().mock(discoveryServerUrl, foundOfferResponse)
+      const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
+
+      const offer = await discoveryService.getOffer(offerId)
+      expect(offer.id).to.equal(offerId)
+    })
+
+    it('Should throw an exception for an Id that does not exist', async () => {
+      const notFoundOfferResponse = {
+        status: 200,
+        body: {
+          'data': null
+        }
+      }
+      const fetch = fetchMock.sandbox().mock(discoveryServerUrl, notFoundOfferResponse)
+      const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
+
+      return expect(discoveryService.getOffer('1-000-123')).to.eventually.be.rejectedWith(Error)
+    })
+
+    it('Should throw an exception if the server returns an error', async () => {
+      const fetch = fetchMock.sandbox().mock(discoveryServerUrl, 500)
+      const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
+
+      return expect(discoveryService.getOffer('1-000-57')).to.eventually.be.rejectedWith(Error)
+    })
+  })
 })

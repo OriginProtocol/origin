@@ -110,7 +110,7 @@ class DiscoveryService {
    *  - listingsFor(address): returns listing created by a specific seller.
    *  - purchasesFor(address): returns listing a specific seller made an offer on.
    * @param opts: { idsOnly, listingsFor, purchasesFor, offset, numberOfItems }
-   * @return {Promise<*>}
+   * @return {Array<Listing>}
    */
   async getListings(opts) {
     // Check for incompatible options.
@@ -182,7 +182,7 @@ class DiscoveryService {
   /**
    * Queries discovery server for a listing based on its id.
    * @param listingId
-   * @return {Promise<*>}
+   * @return {Listing}
    */
   async getListing(listingId) {
     const query = `{
@@ -207,7 +207,7 @@ class DiscoveryService {
    *  - idsOnly(boolean): returns only ids rather than the full Offer object.
    * @param listingId {string}: listing id of a listing to which offer has been made to 
    * @param opts: { idsOnly, for }
-   * @return {Promise<*>}
+   * @return {Array<Offer>}
    */
   async getOffers(listingId, opts) {
     const resp = await this._query(`{
@@ -227,6 +227,35 @@ class DiscoveryService {
       .map(offer => new Offer(offer.id, listingId, offer))
 
     return opts.idsOnly ? offers.map(offer => offer.id) : offers
+  }
+
+  /**
+   * Queries discovery server for an offer
+   * @param offerId {string}: offer id to fetch
+   * @return {Offer}
+   */
+  async getOffer(offerId) {
+    const resp = await this._query(`{
+      offer(
+        id: "${offerId}"
+      ) {
+        id
+        data
+        listing: {
+          id
+        }
+      }
+    }`)
+
+    const resp = await this._query(query)
+
+    // Throw an error if no offer found with this id.
+    if (!resp.data) {
+      throw new Error(`No offer found with id ${offerId}`)
+    }
+
+    const offer = resp.data.offer
+    return new Offer(offer.id, offer.listing.id, offer.data)
   }
 }
 
