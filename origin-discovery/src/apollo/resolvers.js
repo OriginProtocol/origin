@@ -79,7 +79,7 @@ const resolvers = {
     },
 
     async offers (listing) {
-      const offers = await searchOffers(listing.id)
+      const offers = await getOffers({ listingId: listing.id })
       return { nodes: offers }
     }
   },
@@ -105,7 +105,7 @@ const resolvers = {
   User: {
     // Return offers made by a user.
     async offers (user) {
-      const offers = await searchOffers(null, user.walletAddress)
+      const offers = await getOffers({ buyerAddress: user.walletAddress })
       return { nodes: offers }
     },
 

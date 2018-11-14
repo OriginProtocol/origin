@@ -220,7 +220,7 @@ class DiscoveryService {
       }
     }`)
     
-    offers = resp.data.listing.offers.nodes.data
+    const offers = resp.data.offers.nodes.map(offer => offer.data)
 
     return opts.idsOnly ? offers.map(offer => offer.id) : offers
   }
