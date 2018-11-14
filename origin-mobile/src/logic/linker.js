@@ -27,15 +27,6 @@ class Linker {
     return db.LinkedToken.findOne({where:{clientToken}})
   }
 
-  async findSession(sessionToken, linkedObj) {
-    if (linkedObj)
-    {
-      return db.LinkedSession.findOne({where:{sessionToken, linkedId:linkedObj.id}})
-    } else {
-      return db.LinkedSession.findOne({where:{sessionToken}})
-    }
-  }
-
   getLinkId(rawId, key) {
     return sha3_224(`${rawId}:${key}`).slice(0, 16)
   }
