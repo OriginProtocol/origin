@@ -1,4 +1,4 @@
-import { toggleMetaMask } from '../contracts'
+import { toggleMetaMask } from '../../contracts'
 
 export default function(_, { enabled }) {
   toggleMetaMask(enabled)

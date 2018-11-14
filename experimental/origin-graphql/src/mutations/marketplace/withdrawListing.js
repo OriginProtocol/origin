@@ -1,6 +1,6 @@
-import { post } from '../utils/ipfsHash'
-import txHelper, { checkMetaMask } from './_txHelper'
-import contracts from '../contracts'
+import { post } from '../../utils/ipfsHash'
+import txHelper, { checkMetaMask } from '../_txHelper'
+import contracts from '../../contracts'
 
 async function withdrawListing(_, data) {
   await checkMetaMask(data.from)

@@ -27,7 +27,7 @@ function tokenBalance(amount, decimals) {
   return supplyBN.div(decimalsBN).toString()
 }
 
-class Price extends Component {
+class TokenBalance extends Component {
   render() {
     const { account, token } = this.props
     return (
@@ -43,4 +43,4 @@ class Price extends Component {
   }
 }
 
-export default Price
+export default TokenBalance
