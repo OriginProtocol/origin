@@ -109,7 +109,7 @@ function _makeOffer (row) {
  * @param {string} listingId - optional listing id
  * @param {string} buyerAddress - optional buyer address
  * @param {string} sellerAddress - optional seller address
- * @return {Promise<Array<Offer>>}
+ * @return {Promise<Array<Object>>}
  */
 async function getOffers ({ listingId = null, buyerAddress = null, sellerAddress = null }) {
   const whereClause = {}

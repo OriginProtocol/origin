@@ -202,7 +202,7 @@ class DiscoveryService {
   }
 
   /**
-   * Queries discovery server for all offers
+   * Queries discovery server for offers
    * Options:
    *  - idsOnly(boolean): returns only ids rather than the full Offer object.
    * @param listingId {string}: listing id of a listing to which offer has been made to 
@@ -216,7 +216,6 @@ class DiscoveryService {
         listingId: "${listingId}"
       ) {
         nodes {
-          id
           data
         }
       }
@@ -239,7 +238,6 @@ class DiscoveryService {
       offer(
         id: "${offerId}"
       ) {
-        id
         data
         listing: {
           id
