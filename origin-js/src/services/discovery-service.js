@@ -247,8 +247,6 @@ class DiscoveryService {
       }
     }`)
 
-    const resp = await this._query(query)
-
     // Throw an error if no offer found with this id.
     if (!resp.data) {
       throw new Error(`No offer found with id ${offerId}`)
