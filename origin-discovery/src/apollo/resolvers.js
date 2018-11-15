@@ -103,7 +103,7 @@ const resolvers = {
       return relatedUserResolver(offer.buyer, info)
     },
 
-    price (offer) {
+    totalPrice (offer) {
       return offer.totalPrice
     },
 
