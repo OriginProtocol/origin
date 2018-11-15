@@ -125,6 +125,8 @@ services:
       - postgres
     environment:
       - FLASK_APP=/app/main.py
+      - FLASK_DEBUG=True
+      - PYTHONUNBUFFERED=1
     ports:
       - "5000:5000"
     command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
