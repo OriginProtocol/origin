@@ -1,5 +1,5 @@
 const GraphQLJSON = require('graphql-type-json')
-
+const listingMetadata = require('./listing-metadata')
 const search = require('../lib/search')
 const { getListing, getListingsById, getListingsBySeller, getOffer, getOffers } = require('./db')
 
@@ -32,7 +32,9 @@ const resolvers = {
         args.filters,
         args.page.numberOfItems,
         args.page.offset,
-        true // idsOnly
+        true,// idsOnly
+        listingMetadata.hiddenIds,
+        listingMetadata.featuredIds
       )
       // Get listing objects from DB based on Ids.
       const listings = await getListingsById(listingIds)
