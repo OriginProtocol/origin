@@ -70,6 +70,16 @@ const resolvers = {
       // FIXME(franck): some users did not get indexed in prod due to a bug in attestations.
       // For now only return the address until data gets re-indexed.
       return { walletAddress: args.walletAddress }
+    },
+
+    info () {
+      Info: {
+        return {
+          'networkId': process.env.NETWORK_ID ? process.env.NETWORK_ID : 'undefined',
+          'elasticsearchHost': process.env.ELASTICSEARCH_HOST ? process.env.ELASTICSEARCH_HOST : 'undefined',
+          'nodeEnv': process.env.NODE_ENV ? process.env.NODE_ENV : 'undefined'
+        }
+      }
     }
   },
 
