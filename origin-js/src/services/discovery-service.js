@@ -16,7 +16,7 @@ class DiscoveryService {
   }
 
   _toOfferModel(offerNode) {
-    return new Offer({
+    return new Offer({}, {
       offerId: offerNode.id,
       listingId: offerNode.listing.id,
       status: offerNode.status,
