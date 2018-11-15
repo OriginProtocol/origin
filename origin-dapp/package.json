@@ -73,7 +73,7 @@
     "webpack-dev-server": "3.1.10"
   },
   "scripts": {
-    "build": "NODE_ENV=production node --max_old_space_size=4096 node_modules/.bin/webpack --progress",
+    "build": "NODE_ENV=production node webpack --loglevel notice",
     "start": "webpack-dev-server --open",
     "format": "npx prettier-eslint --write 'src/**/*.js''",
     "lint": "eslint 'src/**/*.js' --rulesdir ../",
