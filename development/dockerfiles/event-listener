@@ -13,7 +13,7 @@ COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-discovery ./origin-discovery
 COPY ./scripts ./scripts
-RUN lerna bootstrap --loglevel notice -- --unsafe-perm
+RUN lerna bootstrap --ci -- --loglevel notice --unsafe-perm
 # Build origin-js
 RUN lerna run build --scope origin -- --progress
 
