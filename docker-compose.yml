@@ -156,8 +156,9 @@ services:
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/src:/app/origin-js/src
       # Mount origin-dapp inside the container
-      - ./origin-dapp/src:/app/src
-      - ./origin-dapp/public:/app/public
+      - ./origin-dapp/src:/app/origin-dapp/src
+      - ./origin-dapp/public:/app/origin-dapp/public
+      - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
       # Set the envfile from the local envfile
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
       - ./development/.ipfs:/ipfs
