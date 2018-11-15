@@ -13,6 +13,11 @@ export class Offer {
    * - {Object} chainOffer - Offer data from the blockchain.
    * - {Object} ipfsOffer - Offer data from IPFS.
    * @param {Object} discoveryData - Constructor argument used by discovery-service
+   * - {string} offerId - Unique offer ID.
+   * - {string} listingId - Unique listing ID.
+   * - {string} status - offer status
+   * - {string} buyerAddress - Buyer's address
+   * - {Object} discoveryData - Offer data from discovery server.
    */
   constructor(
     originJsData,

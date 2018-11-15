@@ -235,7 +235,7 @@ class DiscoveryService {
           seller {
             walletAddress
           }
-          listing: {
+          listing {
             id
           }
           status
@@ -267,7 +267,7 @@ class DiscoveryService {
         seller {
           walletAddress
         }
-        listing: {
+        listing {
           id
         }
         status
