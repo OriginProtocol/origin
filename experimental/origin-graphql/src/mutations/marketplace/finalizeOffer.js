@@ -1,6 +1,6 @@
-import { post } from '../utils/ipfsHash'
-import txHelper, { checkMetaMask } from './_txHelper'
-import contracts from '../contracts'
+import { post } from '../../utils/ipfsHash'
+import txHelper, { checkMetaMask } from '../_txHelper'
+import contracts from '../../contracts'
 
 async function finalizeOffer(_, data) {
   await checkMetaMask(data.from)
@@ -9,7 +9,7 @@ async function finalizeOffer(_, data) {
   }
   if (data.rating !== undefined) { ipfsData.rating = data.rating }
   if (data.review !== undefined) { ipfsData.review = data.review }
-  
+
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
   const tx = contracts.marketplaceExec.methods
     .finalize(data.listingID, data.offerID, ipfsHash)

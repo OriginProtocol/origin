@@ -13,7 +13,7 @@ import {
 import { ImportWalletMutation } from '../../../mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
-class SendFromWallet extends Component {
+class ImportWallet extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -85,4 +85,4 @@ class SendFromWallet extends Component {
   }
 }
 
-export default withAccounts(SendFromWallet)
+export default withAccounts(ImportWallet)

@@ -6,6 +6,6 @@ WORKDIR /app
 COPY ./origin-messaging/package*.json /app/
 
 # Install dependencies
-RUN npm install --loglevel notice
+RUN npm ci --loglevel notice
 
 CMD npm run dev

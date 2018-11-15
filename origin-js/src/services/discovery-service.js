@@ -1,3 +1,5 @@
+import { Listing } from '../models/listing'
+import { Offer } from '../models/offer'
 // Max number of results to request from back-end.
 const MAX_NUM_RESULTS = 100
 
@@ -7,10 +9,10 @@ class DiscoveryService {
     this.fetch = fetch
   }
 
-  _flattenListingData(listingNode) {
+  _toListingModel(listingNode) {
     const data = listingNode.data
     data.display = listingNode.display
-    return data
+    return new Listing(data.listingId, data, {})
   }
 
   /**
@@ -108,7 +110,7 @@ class DiscoveryService {
    *  - listingsFor(address): returns listing created by a specific seller.
    *  - purchasesFor(address): returns listing a specific seller made an offer on.
    * @param opts: { idsOnly, listingsFor, purchasesFor, offset, numberOfItems }
-   * @return {Promise<*>}
+   * @return {Array<Listing>}
    */
   async getListings(opts) {
     // Check for incompatible options.
@@ -140,7 +142,7 @@ class DiscoveryService {
         } 
       }`
       const resp = await this._query(query)
-      listings = resp.data.user.listings.nodes.map(listing => this._flattenListingData(listing))
+      listings = resp.data.user.listings.nodes.map(listing => this._toListingModel(listing))
     } else if (opts.purchasesFor) {
       // Query for all listings the specified buyer address made an offer on.
       query = `{
@@ -156,7 +158,7 @@ class DiscoveryService {
         }
       }`
       const resp = await this._query(query)
-      listings = resp.data.user.offers.nodes.map(offer => this._flattenListingData(offer.listing))
+      listings = resp.data.user.offers.nodes.map(offer => this._toListingModel(offer.listing))
     } else {
       // General query against all listings. Used for example on Browse and search pages.
       query = `{
@@ -171,7 +173,7 @@ class DiscoveryService {
         }
       }`
       const resp = await this._query(query)
-      listings = resp.data.listings.nodes.map(listing => this._flattenListingData(listing))
+      listings = resp.data.listings.nodes.map(listing => this._toListingModel(listing))
     }
 
     return opts.idsOnly ? listings.map(listing => listing.id) : listings
@@ -180,7 +182,7 @@ class DiscoveryService {
   /**
    * Queries discovery server for a listing based on its id.
    * @param listingId
-   * @return {Promise<*>}
+   * @return {Listing}
    */
   async getListing(listingId) {
     const query = `{
@@ -196,7 +198,61 @@ class DiscoveryService {
       throw new Error(`No listing found with id ${listingId}`)
     }
 
-    return this._flattenListingData(resp.data.listing)
+    return this._toListingModel(resp.data.listing)
+  }
+
+  /**
+   * Queries discovery server for offers
+   * Options:
+   *  - idsOnly(boolean): returns only ids rather than the full Offer object.
+   *  - for(string): returns offers of a specific defined by address
+   * @param listingId {string}: listing id of a listing to which offer has been made to 
+   * @param opts: { idsOnly, for }
+   * @return {Array<Offer>}
+   */
+  async getOffers(listingId, opts) {
+    const resp = await this._query(`{
+      offers(
+        ${opts.for ? `buyerAddress: "${opts.for}"`: ''}
+        listingId: "${listingId}"
+      ) {
+        nodes {
+          data
+        }
+      }
+    }`)
+    
+    const offers = resp.data.offers.nodes
+      .map(offer => offer.data)
+      .map(offer => new Offer(offer.id, listingId, offer))
+
+    return opts.idsOnly ? offers.map(offer => offer.id) : offers
+  }
+
+  /**
+   * Queries discovery server for an offer
+   * @param offerId {string}: offer id to fetch
+   * @return {Offer}
+   */
+  async getOffer(offerId) {
+    const resp = await this._query(`{
+      offer(
+        id: "${offerId}"
+      ) {
+        data
+        listing: {
+          id
+        }
+      }
+    }`)
+
+    // Throw an error if no offer found with this id.
+    if (!resp.data) {
+      throw new Error(`No offer found with id ${offerId}`)
+    }
+
+    const offer = resp.data.offer
+    return new Offer(offer.id, offer.listing.id, offer.data)
   }
 }
 

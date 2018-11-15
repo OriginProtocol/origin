@@ -1,10 +1,19 @@
 export default function eventCache(contract, fromBlock = 0) {
+
   let events = [],
     toBlock = 0,
     lastLookup = 0,
     processing = false,
-    queue = [],
-    cacheStr = `eventCache${contract.options.address.slice(2, 8)}`
+    queue = []
+
+  function updateBlock(block) {
+    console.log("Update block", block)
+    toBlock = block
+  }
+
+  if (!contract.options.address) { return { updateBlock } }
+
+  let cacheStr = `eventCache${contract.options.address.slice(2, 8)}`
 
   try {
     ({ events, lastLookup } = JSON.parse(
@@ -13,11 +22,6 @@ export default function eventCache(contract, fromBlock = 0) {
     fromBlock = lastLookup
   } catch (e) {
     /* Ignore */
-  }
-
-  function updateBlock(block) {
-    console.log("Update block", block)
-    toBlock = block
   }
 
   const isDone = () => new Promise(resolve => queue.push(resolve))
@@ -31,6 +35,9 @@ export default function eventCache(contract, fromBlock = 0) {
     }
     if (lastLookup && lastLookup === toBlock) {
       return
+    }
+    if (lastLookup === fromBlock) {
+      fromBlock += 1
     }
     processing = true
     console.log(`Fetching events from ${fromBlock} to ${toBlock}, last lookup ${lastLookup}`)
@@ -55,7 +62,7 @@ export default function eventCache(contract, fromBlock = 0) {
       })
     }
 
-    fromBlock = toBlock
+    fromBlock = toBlock + 1
     processing = false
     while(queue.length) {
       queue.pop()()
