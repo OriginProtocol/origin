@@ -73,12 +73,10 @@ const resolvers = {
     },
 
     info () {
-      Info: {
-        return {
-          'networkId': process.env.NETWORK_ID ? process.env.NETWORK_ID : 'undefined',
-          'elasticsearchHost': process.env.ELASTICSEARCH_HOST ? process.env.ELASTICSEARCH_HOST : 'undefined',
-          'nodeEnv': process.env.NODE_ENV ? process.env.NODE_ENV : 'undefined'
-        }
+      return {
+        'networkId': process.env.NETWORK_ID ? process.env.NETWORK_ID : 'undefined',
+        'elasticsearchHost': process.env.ELASTICSEARCH_HOST ? process.env.ELASTICSEARCH_HOST : 'undefined',
+        'nodeEnv': process.env.NODE_ENV ? process.env.NODE_ENV : 'undefined'
       }
     }
   },
