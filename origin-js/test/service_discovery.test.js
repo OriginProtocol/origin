@@ -318,9 +318,16 @@ describe('Discovery service', function() {
               'data': {
                 'id': '1-000-57-1'
               },
+              'buyer': {
+                'walletAddress': '0xABCD'
+              },
+              'seller': {
+                'walletAddress': '0xABCD'
+              },
               'listing': {
                 'id': '1-000-57'
-              }
+              },
+              'status': 'active'
             }
           }
         }
@@ -362,20 +369,36 @@ describe('Discovery service', function() {
             'offers': {
               'nodes': [
                 {
+                  'id': '1-000-57-1',
                   'data': {
                     'id': '1-000-57-1'
                   },
-                  'listing': {
-                    'id': '1-000-57'
-                  }
-                },
-                {
-                  'data': {
-                    'id': '1-000-57-2'
+                  'buyer': {
+                    'walletAddress': '0xABCD'
+                  },
+                  'seller': {
+                    'walletAddress': '0xABCD'
                   },
                   'listing': {
                     'id': '1-000-57'
-                  }
+                  },
+                  'status': 'active'
+                },
+                {
+                  'id': '1-000-57-2',
+                  'data': {
+                    'id': '1-000-57-2'
+                  },
+                  'buyer': {
+                    'walletAddress': '0xABCD'
+                  },
+                  'seller': {
+                    'walletAddress': '0xABCD'
+                  },
+                  'listing': {
+                    'id': '1-000-57'
+                  },
+                  'status': 'active'
                 }
               ]
             }
@@ -406,20 +429,36 @@ describe('Discovery service', function() {
             'offers': {
               'nodes': [
                 {
+                  'id': '1-000-57-1',
                   'data': {
                     'id': '1-000-57-1'
                   },
-                  'listing': {
-                    'id': '1-000-57'
-                  }
-                },
-                {
-                  'data': {
-                    'id': '1-000-57-2'
+                  'buyer': {
+                    'walletAddress': '0xABCD'
+                  },
+                  'seller': {
+                    'walletAddress': '0xABCD'
                   },
                   'listing': {
                     'id': '1-000-57'
-                  }
+                  },
+                  'status': 'active'
+                },
+                {
+                  'id': '1-000-57-2',
+                  'data': {
+                    'id': '1-000-57-2'
+                  },
+                  'buyer': {
+                    'walletAddress': '0xABCD'
+                  },
+                  'seller': {
+                    'walletAddress': '0xABCD'
+                  },
+                  'listing': {
+                    'id': '1-000-57'
+                  },
+                  'status': 'active'
                 }
               ]
             }
