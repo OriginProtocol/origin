@@ -1,14 +1,31 @@
 #!/usr/bin/env node
 
-const querystring = require('querystring')
+/**
+ * CLI for managing Elastic Search indices.
+ *
+ */
+
+require('dotenv').config()
+
+try {
+  require('envkey')
+} catch (error) {
+  console.log('EnvKey not configured')
+}
+
 const http = require('http')
 const https = require('https')
 const readline = require('readline')
-const arrayFunctions = require('./../../../origin-js/src/utils/arrayFunctions')
+const { groupBy, mapValues } = require('./../../origin-js/src/utils/arrayFunctions.js')
 
 // Configuration
-const host = 'localhost'
-const port = '9200'
+var host = 'localhost'
+var port = '9200'
+if (process.env.ELASTICSEARCH_HOST) {
+  const splits = process.env.ELASTICSEARCH_HOST.split(':')
+  host=splits[0]
+  port=splits[1]
+}
 const isHttps = false
 
 // Freely alter index below
@@ -115,8 +132,8 @@ async function showIndexInfo() {
    * { listingsIndex: [ 'listings', 'listingsNew' ] }
    * where listings & listingsNew are aliases. 
    */
-  const aliases = arrayFunctions.mapValues(
-    arrayFunctions.groupBy(
+  const aliases = mapValues(
+    groupBy(
       (await executeGetRequest('_cat/aliases'))
         .split('\n')
         .filter(listingRow => listingRow.length > 1) // filter out empty rows
@@ -142,16 +159,16 @@ async function showIndexInfo() {
   console.log(
     '\x1b[45m%s\x1b[0m',
     'Index name'.padEnd(paddingSize) +
-      'Document Count'.padEnd(paddingSize) +
-      'Aliases'.padEnd(paddingSize)
+    'Document Count'.padEnd(paddingSize) +
+    'Aliases'.padEnd(paddingSize)
   )
   indexes.forEach((indexName, position) => {
     const alias =
       aliases[indexName] === undefined ? '' : aliases[indexName].join(',')
     console.log(
       indexName.padEnd(paddingSize) +
-        docCounts[position].toString().padEnd(paddingSize) +
-        alias
+      docCounts[position].toString().padEnd(paddingSize) +
+      alias
     )
   })
 }
