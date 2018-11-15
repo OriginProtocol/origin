@@ -66,6 +66,16 @@ export const initServiceWorker = () => {
       .then(registration => {
         analytics.event('Notifications', 'ServiceWorkerRegistered', 'sw.js')
         console.log('Notifications service worker registered')
+        registration.addEventListener('push', (event)=>{
+          let title = "Other"
+          if (event.data && event.data.title) {
+            title = event.data.title
+          }
+          analytics.event('Notifications', 'OnPush', title)
+        })
+
+
+
         resolve(registration)
       })
       .catch(err => {
