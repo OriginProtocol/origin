@@ -24,4 +24,4 @@ COPY ./scripts ./scripts
 # contracts
 RUN lerna bootstrap --ci --ignore-scripts -- --loglevel notice --unsafe-perm
 
-CMD lerna run start:discovery --scope origin-discovery
+CMD npm run start:discovery --prefix origin-discovery
