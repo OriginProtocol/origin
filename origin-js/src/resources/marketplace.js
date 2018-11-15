@@ -213,28 +213,51 @@ export default class Marketplace {
     const offerIds = await this.resolver.getOfferIds(listingId, opts)
     if (opts.idsOnly) {
       return offerIds
-    } else {
-      const allOffers = await Promise.all(
-        offerIds.map(async offerId => {
-          try {
-            return await this.getOffer(offerId)
-          } catch(e) {
-            // TODO(John) - handle this error better. It's tricky b/c it happens in a map
-            // and we want to throw the error, but we don't want the whole getOffers() call to fail.
-            // We want it to return the offers that it was able to get but still let us know something failed.
-            console.error(
-              `Error getting offer data for offer ${
-                offerId
-              }: ${e}`
-            )
-            return null
-          }
-        })
-      )
-
-      // filter out invalid offers
-      return allOffers.filter(offer => Boolean(offer))
     }
+
+    const allOffers = await Promise.all(
+      offerIds.map(async offerId => {
+        try {
+          return await this.getOffer(offerId)
+        } catch(e) {
+          // TODO(John) - handle this error better. It's tricky b/c it happens in a map
+          // and we want to throw the error, but we don't want the whole getOffers() call to fail.
+          // We want it to return the offers that it was able to get but still let us know something failed.
+          console.error(
+            `Error getting offer data for offer ${
+              offerId
+            }: ${e}`
+          )
+          return null
+        }
+      })
+    )
+
+    // Filter out invalid offers
+    const filteredOffers = allOffers.filter(offer => Boolean(offer))
+    const listing = opts.listing || await this.getListing(listingId)
+    if (listing.type !== 'unit') {
+      return filteredOffers
+    }
+
+    // Filter out offers for which the units purchased exceeds the units
+    // available at the time of the offer.
+    //
+    // TODO: Handle edits of unitsAvailable.
+    // TODO: Determine whether it always makes sense to filter out listings
+    // based on available quantity.
+    let unitsAvailable = listing.unitsTotal
+    return Object.keys(filteredOffers).reduce((offers, offerId) => {
+      const offer = filteredOffers[offerId]
+      if (offer.unitsPurchased > unitsAvailable) {
+        return offers
+      }
+      if (offer.status !== 'created' && offer.status !== 'withdrawn') {
+        // TODO: handle instant purchases
+        unitsAvailable -= offer.unitsPurchased
+      }
+      return [...offers, offer]
+    }, [])
   }
 
   /**
@@ -279,7 +302,8 @@ export default class Marketplace {
           throw new Error('Invalid offer: currency does not match listing')
         }
 
-        if (BigNumber(listingPrice).isGreaterThan(BigNumber(chainOffer.value))) {
+        const expectedValue = BigNumber(listingPrice).multipliedBy(ipfsOffer.unitsPurchased)
+        if (expectedValue.isGreaterThan(BigNumber(chainOffer.value))) {
           throw new Error('Invalid offer: insufficient offer amount for listing')
         }
       }
@@ -328,6 +352,13 @@ export default class Marketplace {
    * @return {Promise<{listingId, ...transactionReceipt}>}
    */
   async updateListing(listingId, ipfsData, additionalDeposit = 0, confirmationCallback) {
+    const oldListing = await this.getListing(listingId)
+    if (ipfsData.unitsTotal !== undefined && ipfsData.unitsTotal < oldListing.unitsTotal) {
+      // TODO: come to a decision regarding how we handle decreasing of
+      // unitsTotal and implement it here
+      throw new Error('decreasing of units is unimplemented')
+    }
+
     // Validate and save the data to IPFS.
     const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
@@ -366,6 +397,16 @@ export default class Marketplace {
    * @return {Promise<{listingId, offerId, ...transactionReceipt}>}
    */
   async makeOffer(listingId, offerData = {}, confirmationCallback) {
+    if (offerData.listingType && offerData.listingType === 'unit') {
+      const listing = await this.getListing(listingId)
+      const offers = await this.getOffers(listingId, { listing })
+      const unitsPurchased = Number.parseInt(offerData.unitsPurchased)
+      const unitsAvailable = this.unitsAvailable(listing, offers)
+      if (unitsPurchased > unitsAvailable) {
+        throw new Error('units purchased exceeds units available')
+      }
+    }
+
     // TODO: nest offerData.affiliate, offerData.arbitrator, offerData.finalizes under an "_untrustworthy" key
     // Validate and save the data to IPFS.
     const ipfsHash = await this.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
@@ -407,6 +448,18 @@ export default class Marketplace {
   async acceptOffer(id, ipfsData = {}, confirmationCallback) {
     const ipfsHash = await this.ipfsDataStore.save(OFFER_ACCEPT_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
+    // Throw an error if the offer is invalid. We detect this through
+    // getOffers(), which filters out invalid offers.
+    const { listingId } = await this.resolver.getOffer(id)
+    const listing = await this.getListing(listingId)
+    if (listing.type === 'unit') {
+      const offers = await this.getOffers(listingId, { listing })
+      const validOffer = offers.filter(o => o.id === id).length > 0
+      if (!validOffer) {
+        throw new Error(`cannot accept invalid offer ${id}`)
+      }
+    }
 
     return await this.resolver.acceptOffer(id, ipfsBytes, confirmationCallback)
   }
@@ -571,6 +624,37 @@ export default class Marketplace {
     const notifications = this.store.get(storeKeys.notificationStatuses)
     notifications[id] = status
     this.store.set(storeKeys.notificationStatuses, notifications)
+  }
+
+  /**
+   * Returns units available for a unit listing, taking into account pending
+   * offers.
+   * @param {Listing} listing - listing JSON object
+   * @param {List(Offer)} offers - list of Offer JSON objects for the listing
+   * @throws {Error}
+   * @return {number} - Units available
+   */
+  unitsAvailable(listing, offers) {
+    if (listing.type !== 'unit') {
+      throw new Error('unitsAvailable only works for unit listings')
+    }
+
+    const unitsSold = Object.keys(offers).reduce((sold, offerId) => {
+      // TODO: handle instant purchases
+      const available = listing.unitsTotal - unitsSold
+      if (
+        // Before offers are submitted to the blockchain, they have no status.
+        //
+        // TODO: We might need some explicit handling of arbitration rulings.
+        offers[offerId].status &&
+        offers[offerId].status !== 'withdrawn' &&
+        offers[offerId].status !== 'created'
+      ) {
+        return sold + offers[offerId].unitsPurchased
+      }
+      return sold
+    }, 0)
+    return listing.unitsTotal - unitsSold
   }
 
   async getTokenAddress() {
