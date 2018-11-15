@@ -7,7 +7,7 @@ bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'b3ba95e'
+dappImageTag: '603ccc5'
 dappReplicas: 2
 
 # Rinkeby network configuration
@@ -32,7 +32,7 @@ eventlistenerImageTag: 'd5627ae'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: 'b3ba95e'
+discoveryImageTag: 'e37588d'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -40,4 +40,4 @@ messagingImageTag: 'd5627ae'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'd5627ae'
+notificationsImageTag: 'e37588d'
