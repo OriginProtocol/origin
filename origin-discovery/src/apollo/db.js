@@ -100,7 +100,9 @@ function _makeOffer (row) {
     ipfsHash: row.data.ipfs.hash,
     data: row.data,
     status: row.status,
-    price: row.data.price
+    buyerAddress: row.buyerAddress,
+    sellerAddress: row.sellerAddress,
+    price: row.data.totalPrice
   }
 }
 

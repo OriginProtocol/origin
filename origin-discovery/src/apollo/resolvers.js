@@ -86,15 +86,16 @@ const resolvers = {
 
   Offer: {
     seller (offer, args, context, info) {
-      return relatedUserResolver(offer.seller, info)
+      return relatedUserResolver(offer.sellerAddress, info)
     },
 
     buyer (offer, args, context, info) {
-      return relatedUserResolver(offer.buyer, info)
+      return relatedUserResolver(offer.buyerAddress, info)
     },
 
-    price (offer) {
-      return offer.totalPrice
+    affiliate ()  {
+      //TODO: implement
+      return ''
     },
 
     async listing (offer) {
