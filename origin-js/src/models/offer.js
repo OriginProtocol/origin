@@ -17,6 +17,7 @@ export class Offer {
     this.buyer = chainOffer.buyer
     this.events = chainOffer.events
     this.refund = chainOffer.refund
+    this.totalPrice = chainOffer.totalPrice
 
     // See src/schemas/offer.json for fields stored in IPFS offer data.
     Object.assign(this, ipfsOffer)
