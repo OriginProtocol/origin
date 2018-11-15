@@ -51,7 +51,7 @@ function handleFileUpload (req, res) {
         res.end()
         req.unpipe(req.busboy)
       } else {
-        const url = config.IPFS_API_URL + req.url + '?stream-channels=false'
+        const url = config.IPFS_API_URL + req.url
         request.post(url)
           .set(req.headers)
           .attach('file', buffer)
