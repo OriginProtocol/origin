@@ -13,7 +13,7 @@ COPY lerna.json .
 COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
 COPY ./scripts ./scripts
-RUN npm install --loglevel notice --unsafe-perm
+RUN npm ci --loglevel notice --unsafe-perm
 
 WORKDIR /app/origin-js
 
