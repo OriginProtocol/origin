@@ -13,6 +13,7 @@ RUN npm i lerna -g --loglevel notice
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
 # Copy release contracts into build directory
 # TODO: Find a better way to handle this
 COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
