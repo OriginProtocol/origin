@@ -52,10 +52,12 @@ export const createSubscription = (registration, account) => {
 export const initServiceWorker = () => {
   return new Promise((resolve, reject) => {
     if (!('serviceWorker' in navigator)) {
+      analytics.event('Notifications', 'NoServiceWorker')
       reject('Browser does not support server workers')
     }
 
     if (!('PushManager' in window)) {
+      analytics.event('Notifications', 'NoPushManager')
       reject('Browser does not support push functionality')
     }
 
