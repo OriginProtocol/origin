@@ -44,7 +44,7 @@ const typeDefs = gql`
     seller: User!
     status: String!
     affiliate: ID,
-    price: Price! 
+    totalPrice: Price!
     listing: Listing!
   }
   enum DisplayType {
