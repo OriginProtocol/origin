@@ -194,7 +194,8 @@ const typeDefs = gql`
     offers(buyerAddress: ID, sellerAddress: ID, listingId: ID): OfferConnection,
     offer(id: ID!): Offer,
 
-    user(walletAddress: ID!): User
+    user(walletAddress: ID!): User,
+    info: JSON!
   }
 `
 
