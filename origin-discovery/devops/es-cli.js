@@ -28,6 +28,8 @@ if (process.env.ELASTICSEARCH_HOST) {
 }
 const isHttps = false
 
+console.log(`Elasticsearch host config: ${host}:${port}`)
+
 // Freely alter index below
 const index = {
   mappings: {
@@ -112,7 +114,7 @@ async function executeGetRequest(uri) {
 }
 
 function printUsage() {
-  console.log('\x1b[44m%s\x1b[0m', 'Elasticsearh migration tool.')
+  console.log('\x1b[44m%s\x1b[0m', 'Elasticsearch devops tool.')
   console.log(
     `1 show index info
 2 create index (with mappings defined in configuration)
