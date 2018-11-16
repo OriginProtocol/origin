@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "eslint '**/*.js' --rulesdir ../",
     "start": "node src/index.js",
+    "start:dev": "nodemon node src/index.js",
     "test": "mocha --timeout=10000",
     "test:load": "node load.js"
   },
@@ -37,7 +38,6 @@
     "chai": "^4.2.0",
     "form-data": "^2.3.3",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.4",
     "supertest": "^3.3.0",
     "webrtcsupport": "^2.2.0"
   }

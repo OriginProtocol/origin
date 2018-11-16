@@ -25,7 +25,7 @@ matrix:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts
       script:
-        - lerna run test --scope origin-contracts
+        - lerna run test --scope origin-contracts --stream
 
     - name: "origin-dapp tests"
       language: node_js
@@ -33,7 +33,7 @@ matrix:
       install:
         - npm install --ignore-scripts
       script:
-        - lerna run lint --scope origin-dapp
+        - lerna run lint --scope origin-dapp --stream
 
     - name: "origin-discovery tests"
       language: node_js
@@ -63,8 +63,8 @@ matrix:
         - npm run bootstrap -- --scope origin
         - npm run bootstrap -- --scope origin-discovery
       script:
-        - lerna run lint --scope origin-discovery
-        - lerna run test --scope origin-discovery
+        - lerna run lint --scope origin-discovery --stream
+        - lerna run test --scope origin-discovery --stream
 
     - name: "origin-js tests"
       language: node_js
@@ -82,8 +82,8 @@ matrix:
         - npm run bootstrap -- --scope origin-contracts
         - npm run bootstrap -- --scope origin
       script:
-        - lerna run lint --scope origin
-        - lerna run test --scope origin
+        - lerna run lint --scope origin --stream
+        - lerna run test --scope origin --stream
 
     - name: "origin-messaging tests"
       language: node_js
@@ -91,7 +91,7 @@ matrix:
       install:
         - npm install --ignore-scripts
       script:
-        - lerna run lint --scope origin-messaging
+        - lerna run lint --scope origin-messaging --stream
 
     - name: "origin-notifications tests"
       language: node_js
@@ -99,4 +99,4 @@ matrix:
       install:
         - npm install --ignore-scripts
       script:
-        - lerna run lint --scope origin-notifications
+        - lerna run lint --scope origin-notifications --stream

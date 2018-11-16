@@ -106,7 +106,9 @@ var config = {
       errors: true
     }
   },
+  watch: true,
   watchOptions: {
+    poll: 500,
     ignored: [
       // Ignore node_modules in watch except for the origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,
