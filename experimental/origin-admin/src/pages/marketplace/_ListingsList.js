@@ -2,10 +2,11 @@ import React from 'react'
 import { withRouter } from 'react-router'
 import currency from 'utils/currency'
 import formatDate from 'utils/formatDate'
-import { Tag } from '@blueprintjs/core'
+import { Tag, Icon } from '@blueprintjs/core'
 
 import Price from 'components/Price'
 import Identity from 'components/Identity'
+import TokenPrice from 'components/TokenPrice'
 
 function status(listing) {
   if (listing.status === 'active') {
@@ -52,17 +53,27 @@ const Listings = ({ listings, history }) => {
             <td>{status(a)}</td>
             <td>{a.categoryStr}</td>
             <td>
-              <div className="ellip">{a.title}</div>
+              <div className="ellip">
+                {a.featured ? <Icon icon="clean" className="mr-1 bp3-text-muted" /> : null}
+                {a.hidden ? <Icon icon="eye-off" className="mr-1 bp3-text-muted" /> : null}
+                {a.title}
+              </div>
             </td>
-            <td>{currency(a.price)}</td>
             <td>
-              <Price
-                amount={a.price ? a.price.amount : 0}
-              />
+              <TokenPrice {...a.price} />
             </td>
-            <td>{a.deposit !== '0' ? currency({ amount: a.deposit, currency: 'OGN' }) : null}</td>
+            <td>
+              <Price amount={a.price ? a.price.amount : 0} />
+            </td>
+            <td>
+              {a.deposit !== '0'
+                ? currency({ amount: a.deposit, currency: 'OGN' })
+                : null}
+            </td>
             <td>{a.seller ? <Identity account={a.seller.id} /> : null}</td>
-            <td>{a.createdEvent ? formatDate(a.createdEvent.timestamp) : null}</td>
+            <td>
+              {a.createdEvent ? formatDate(a.createdEvent.timestamp) : null}
+            </td>
             <td>{a.totalEvents > 1 ? a.totalEvents : null}</td>
             <td>{a.unitsTotal}</td>
           </tr>

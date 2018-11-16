@@ -14,14 +14,12 @@ const GetTokensQuery = gql`
 function withTokens(WrappedComponent) {
   const WithTokens = props => (
     <Query query={GetTokensQuery}>
-      {({ data }) => {
-        return (
-          <WrappedComponent
-            {...props}
-            tokens={data && data.tokens ? data.tokens : []}
-          />
-        )
-      }}
+      {({ data }) => (
+        <WrappedComponent
+          {...props}
+          tokens={data && data.tokens ? data.tokens : []}
+        />
+      )}
     </Query>
   )
   return WithTokens

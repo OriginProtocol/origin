@@ -53,7 +53,13 @@ class AccountBalances extends Component {
                 </td>
               ))}
               <td>
-                <SendFromNodeBtn from={maxNodeAccount} to={a.id} value="0.5" />
+                {!maxNodeAccount ? null : (
+                  <SendFromNodeBtn
+                    from={maxNodeAccount}
+                    to={a.id}
+                    value="0.5"
+                  />
+                )}
                 <RemoveWalletBtn address={a.id} />
               </td>
             </tr>
