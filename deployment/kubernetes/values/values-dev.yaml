@@ -2,11 +2,11 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'd6fe5ca'
+bridgeImageTag: 'aeb0e29'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '461880a'
+dappImageTag: '562488a'
 
 # Origin network configuration
 gethTxReplicas: 1
@@ -19,24 +19,24 @@ ipfsImageTag: master
 
 # ipfs-proxy
 ipfsProxyImage: ipfs-proxy
-ipfsProxyImageTag: '9d9ced5'
+ipfsProxyImageTag: '665e67a'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '1732882'
+faucetImageTag: '87c7cbe'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'c58301a'
+eventlistenerImageTag: '551527e'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: 'c58301a'
+discoveryImageTag: '9e45ddf'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'beba6fd'
+messagingImageTag: '87c7cbe'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'beba6fd'
+notificationsImageTag: '867cf34'

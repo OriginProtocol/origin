@@ -167,7 +167,7 @@ class PhotoPicker extends Component {
               {(provided) => (
                 <div ref={provided.innerRef}>
                   {pictures.map((dataUri, idx) => (
-                    <Draggable key={idx} draggableId={idx} index={idx}>
+                    <Draggable key={idx} draggableId={idx + 1} index={idx}>
                       {(provided) => (
                         <div
                           className="image-container"

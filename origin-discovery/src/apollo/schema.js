@@ -18,24 +18,33 @@ const typeDefs = gql`
     currency: String!
     amount: String!
   }
+
+  #
+  # USER
+  #
   type User {
     walletAddress: ID!   # Ethereum wallet address
     identityAddress: ID  # ERC 725 identity address.
     firstName: String
     lastName: String
     description: String
-    # listings(page: Page, order: ListingOrder, filter: ListingFilter): ListingPage
-    offers: OfferConnection
+    listings: ListingConnection # Listings created by the user.
+    offers: OfferConnection     # Offers made by the user.
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
+
+  #
+  # OFFER
+  #
   type Offer {
     id: ID!
     ipfsHash: ID!
+    data: JSON!
     buyer: User!
     seller: User!
     status: String!
     affiliate: ID,
-    price: Price! 
+    totalPrice: Price!
     listing: Listing!
   }
   enum DisplayType {
@@ -46,6 +55,7 @@ const typeDefs = gql`
    type OfferConnection {
     nodes: [Offer]!
   }
+
   # type Review {
   #   ipfsHash: ID!
   #   reviewer: User!
@@ -56,8 +66,12 @@ const typeDefs = gql`
   #  offset: Int!
   #  numberOfItems: Int!
   #  totalNumberOfItems: Int!
-  # reviews: [Review]
+  #  nodes: [Review]
   #}
+
+  #
+  # LISTING
+  #
   # TODO: Add a status indicating if Listing is sold out.
   type Listing {
     id: ID!
@@ -69,7 +83,7 @@ const typeDefs = gql`
     category: String!
     subCategory: String!
     price: Price!
-    offers: OfferConnection
+    offers(page: Page): OfferConnection
     display: DisplayType!
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
@@ -77,33 +91,38 @@ const typeDefs = gql`
     maxPrice: Float
     minPrice: Float
   }
-   type ListingPage implements OutputPage {
+  type ListingConnection {
+    nodes: [Listing]!
+  }
+  type ListingPage implements OutputPage {
     offset: Int!
     numberOfItems: Int!
     totalNumberOfItems: Int!
     nodes: [Listing]
     stats: Stats
   }
+
   ######################
   #
   # Query input schema.
   #
   # Note: Some input types have a "in" prefix because GraphQL does not allow to
-  # use thw same name for both an input and output type.
+  # use the same name for both an input and output type.
   #
   ######################
   enum OrderDirection {
     ASC   # Default if no direction specified.
     DESC
   }
-   input Page {
-    offset: Int!  # Page number.
-    numberOfItems: Int! # Number of items per page.
+  input Page {
+    offset: Int!
+    numberOfItems: Int!
   }
-   input inPrice {
+  input inPrice {
     currency: String!
     amount: String!
   }
+
   #
   # ORDER
   #
@@ -111,28 +130,29 @@ const typeDefs = gql`
     CREATION_DATE
     STATUS
   }
-   enum ReviewOrderField {
+  enum ReviewOrderField {
     CREATION_DATE
     RATING
   }
-   enum ListingOrderField {
+  enum ListingOrderField {
     RELEVANCE  # Default if no order field specified in the query.
     PRICE
     CREATION_DATE
     SELLER_RATING
   }
-   input OfferOrder {
+  input OfferOrder {
     field: OfferOrderField!
     order: OrderDirection
   }
-   input ReviewOrder {
+  input ReviewOrder {
     field: ReviewOrderField!
     order: OrderDirection
   }
-   input ListingOrder {
+  input ListingOrder {
     field: ListingOrderField!
     order: OrderDirection
   }
+
   #
   # FILTERS
   #
@@ -163,14 +183,19 @@ const typeDefs = gql`
     valueType: ValueType!
     operator: FilterOperator!
   }
+
+  #
   # The "Query" type is the root of all GraphQL queries.
+  #
   type Query {
     listings(searchQuery: String, filters: [ListingFilter!], page: Page!): ListingPage,
     listing(id: ID!): Listing,
-    offers(buyerAddress: ID, listingId: ID): OfferConnection,
+
+    offers(buyerAddress: ID, sellerAddress: ID, listingId: ID): OfferConnection,
     offer(id: ID!): Offer,
-    
-    user(walletAddress: ID!): User
+
+    user(walletAddress: ID!): User,
+    info: JSON!
   }
 `
 

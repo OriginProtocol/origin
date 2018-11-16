@@ -76,10 +76,6 @@ node_modules/
 # Flask Session files
 /origin-bridge/*flask_session/
 
-# origin-discovery #
-####################
-origin-discovery/continueTest
-
 # origin-docs #
 ###############
 /origin-docs/*.gem
@@ -108,10 +104,16 @@ origin-discovery/continueTest
 /origin-js/libpeerconnection.log
 /origin-js/testem.log
 /origin-js/typings
-#
-# origin-js #
+
+# origin-messaging #
+####################
+/origin-messaging/ipfs
+/origin-messaging/odb
+
+# origin-messaging #
 #############
-/origin-website
+/origin-messaging/ipfs/
+/origin-messaging/odb/
 
 # Recommended rules per https://gist.github.com/octocat/9257657 #
 # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv #

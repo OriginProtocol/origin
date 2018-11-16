@@ -1,0 +1,4 @@
+**/node_modules/*
+origin-contracts/*
+**/build/*
+**/dist/*
