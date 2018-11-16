@@ -41,14 +41,20 @@ async function _getListings (whereClause, orderByIds = []) {
     return []
   }
 
-  let listings
+  let listings = []
   if (orderByIds.length === 0) {
     listings = rows.map(row => _makeListing(row))
   } else {
     // Return results in oder specified by orderIds.
     const rowDict = {}
     rows.forEach(row => { rowDict[row.id] = row })
-    listings = orderByIds.map(id => _makeListing(rowDict[id]))
+    orderByIds.forEach(id => {
+      if (!rowDict[id]) {
+        console.log(`ERROR: Data inconsistency - Listing id ${id} in ES but not in DB.`)
+        return
+      }
+      listings.push(_makeListing(rowDict[id]))
+    })
   }
 
   return listings

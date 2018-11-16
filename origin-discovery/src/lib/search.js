@@ -57,7 +57,6 @@ class Listing {
       type: LISTINGS_TYPE,
       body: listing
     })
-    console.log(`Indexed listing ${listingId} in search index.`)
     return listingId
   }
 
