@@ -69,6 +69,14 @@ describe('upload', () => {
       .expect(200, done)
   })
 
+  it('should allow file uploads with query string', (done) => {
+    const image = './fixtures/sample.gif'
+    request(server)
+      .post('/api/v0/add?stream-channels=true')
+      .attach('image', image)
+      .expect(200, done)
+  })
+
   it('should allow png uploads', (done) => {
     const image = './fixtures/sample.png'
     request(server)

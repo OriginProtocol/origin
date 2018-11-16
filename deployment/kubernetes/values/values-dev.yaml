@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'b4c0b52'
+bridgeImageTag: 'aeb0e29'
 
 # origin-dapp
 dappImage: origin-dapp
@@ -19,7 +19,7 @@ ipfsImageTag: master
 
 # ipfs-proxy
 ipfsProxyImage: ipfs-proxy
-ipfsProxyImageTag: 'b4c0b52'
+ipfsProxyImageTag: '665e67a'
 
 # origin-faucet
 faucetImage: origin-faucet
