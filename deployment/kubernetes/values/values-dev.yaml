@@ -6,7 +6,7 @@ bridgeImageTag: 'b4c0b52'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '461880a'
+dappImageTag: '562488a'
 
 # Origin network configuration
 gethTxReplicas: 1
@@ -31,7 +31,7 @@ eventlistenerImageTag: '551527e'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '41ff7e0'
+discoveryImageTag: '9e45ddf'
 
 # origin-messaging
 messagingImage: origin-messaging

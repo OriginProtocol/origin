@@ -1,5 +1,5 @@
 const GraphQLJSON = require('graphql-type-json')
-
+const listingMetadata = require('./listing-metadata')
 const search = require('../lib/search')
 const { getListing, getListingsById, getListingsBySeller, getOffer, getOffers } = require('./db')
 
@@ -32,7 +32,9 @@ const resolvers = {
         args.filters,
         args.page.numberOfItems,
         args.page.offset,
-        true // idsOnly
+        true,// idsOnly
+        listingMetadata.hiddenIds,
+        listingMetadata.featuredIds
       )
       // Get listing objects from DB based on Ids.
       const listings = await getListingsById(listingIds)
@@ -70,6 +72,14 @@ const resolvers = {
       // FIXME(franck): some users did not get indexed in prod due to a bug in attestations.
       // For now only return the address until data gets re-indexed.
       return { walletAddress: args.walletAddress }
+    },
+
+    info () {
+      return {
+        'networkId': process.env.NETWORK_ID ? process.env.NETWORK_ID : 'undefined',
+        'elasticsearchHost': process.env.ELASTICSEARCH_HOST ? process.env.ELASTICSEARCH_HOST : 'undefined',
+        'nodeEnv': process.env.NODE_ENV ? process.env.NODE_ENV : 'undefined'
+      }
     }
   },
 
@@ -93,7 +103,7 @@ const resolvers = {
       return relatedUserResolver(offer.buyer, info)
     },
 
-    price (offer) {
+    totalPrice (offer) {
       return offer.totalPrice
     },
 

@@ -1,6 +1,7 @@
 const fs = require('fs')
 const glob = require('glob')
 const supportedLocales = require('../supported-locales.json')
+const defaultMessages = require('../all-messages.json')
 const translatedMessages = {}
 const unsupportedLocales = []
 
@@ -25,6 +26,8 @@ glob.sync('./translations/languages/**/*.json')
     }
     
   })
+
+translatedMessages['en-US'] = defaultMessages
 
 if (unsupportedLocales.length) {
   console.info(`\nNOTE: translations not processed for these unsupported locales:`)
