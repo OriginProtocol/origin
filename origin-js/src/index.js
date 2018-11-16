@@ -19,7 +19,7 @@ const defaultIpfsGatewayProtocol = 'https'
 const defaultAttestationServerUrl = `${defaultBridgeServer}/api/attestations`
 const VERSION = require('.././package.json').version
 
-class Origin {
+export default class Origin {
   constructor({
     ipfsDomain = defaultIpfsDomain,
     ipfsApiPort = defaultIpfsApiPort,
@@ -101,5 +101,3 @@ class Origin {
     })
   }
 }
-
-module.exports = Origin

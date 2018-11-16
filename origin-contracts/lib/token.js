@@ -218,13 +218,4 @@ class Token extends ContractHelper {
   }
 }
 
-/**
- * Returns a promise that resolves after the specified duration.
- * @param {int} ms - Milliseconds to sleep for.
- * @returns {Promise} - Promise that resolves after ms milliseconds.
- */
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 module.exports = Token

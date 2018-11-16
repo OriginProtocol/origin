@@ -1,7 +1,7 @@
 const Web3 = require('web3')
 
-const IMultiSigWallet = require('../../origin-js/contracts/build/contracts/IMultiSigWallet.json')
-const { withRetries } = require('../../origin-js/src/utils/retries.js')
+const IMultiSigWallet = require('origin-contracts/build/contracts/IMultiSigWallet.json')
+const { withRetries } = require('../faucet/util.js')
 
 const { isValidOwner, validOwners } = require('./owner_whitelist.js')
 

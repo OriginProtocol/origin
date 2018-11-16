@@ -1,3 +1,10 @@
+require('dotenv').config()
+try {
+  require('envkey')
+} catch (error) {
+  console.log('EnvKey not configured')
+}
+
 const express = require('express')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 const Web3 = require('web3')
@@ -31,7 +38,7 @@ function runApp(config) {
           // Allow request and consume 1 point.
           next()
         })
-        .catch((err) => {
+        .catch(() => {
           // Not enough points. Block the request.
           console.log(`Rejecting request due to rate limiting.`)
           res.status(429).send('<h2>Too Many Requests</h2>')
@@ -88,10 +95,14 @@ function runApp(config) {
 const args = Config.parseArgv()
 const config = {
   // Port server listens on.
-  port: args['--port'] || DEFAULT_SERVER_PORT,
+  port: parseInt(args['--port'] || process.env.PORT || DEFAULT_SERVER_PORT),
   // Network ids, comma separated.
   // If no network ids specified, defaults to using local blockchain.
-  networkIds: (args['--network_ids'] || DEFAULT_NETWORK_ID).split(','),
+  networkIds: (
+    args['--network_ids'] ||
+    process.env.NETWORK_IDS ||
+    DEFAULT_NETWORK_ID
+  ).split(',').map(parseInt),
 }
 
 try {

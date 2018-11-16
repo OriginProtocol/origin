@@ -106,7 +106,9 @@ var config = {
       errors: true
     }
   },
+  watch: true,
   watchOptions: {
+    poll: 500,
     ignored: [
       // Ignore node_modules in watch except for the origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,
@@ -140,14 +142,14 @@ if (isProduction) {
 } else {
   config.module.rules.push({
     test: /\.js$/,
-    use: "source-map-loader",
+    use: 'source-map-loader',
     exclude: [
       // Don't load source maps from anything in node_modules except for the
       // origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,
       /\origin([\\]+|\/)node_modules/
     ],
-    enforce: "pre"
+    enforce: 'pre'
   })
 }
 
