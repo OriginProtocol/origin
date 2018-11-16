@@ -19,7 +19,7 @@ ipfsImageTag: master
 
 # ipfs-proxy
 ipfsProxyImage: ipfs-proxy
-ipfsProxyImageTag: 'b4c0b52'
+ipfsProxyImageTag: '665e67a'
 
 # origin-faucet
 faucetImage: origin-faucet
@@ -27,11 +27,11 @@ faucetImageTag: '87c7cbe'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '551527e'
+eventlistenerImageTag: 'ce50467'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '9e45ddf'
+discoveryImageTag: 'ce50467'
 
 # origin-messaging
 messagingImage: origin-messaging
