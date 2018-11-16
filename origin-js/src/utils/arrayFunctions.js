@@ -6,7 +6,7 @@
  * @param  {Function} iteratee The iteratee to transform keys.
  * @return {Object} Returns the composed aggregate object.
  */
-export function groupBy(collection, iteratee){
+function groupBy(collection, iteratee){
   return collection.reduce(function (accumulator, element) {
     const key = iteratee(element)
     accumulator[key] = accumulator[key] || []
@@ -22,7 +22,7 @@ export function groupBy(collection, iteratee){
 * @param  {Function} mapFunction The functino that transforms the value
 * @return {Object} Returns the transformed object
 */
-export function mapValues(object, mapFunction){
+function mapValues(object, mapFunction){
   if (object === null || object === undefined || Object.keys(object).length === 0)
     return {}
 
@@ -31,3 +31,5 @@ export function mapValues(object, mapFunction){
       .map(k => ({ [k]: mapFunction(object[k]) }))
   )
 }
+
+module.exports = { groupBy, mapValues }

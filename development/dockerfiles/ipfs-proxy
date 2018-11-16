@@ -5,4 +5,4 @@ WORKDIR /app
 COPY ./ipfs-proxy/package*.json /app/
 RUN npm ci --loglevel notice
 
-CMD node src/index.js
+CMD npm run start:dev
