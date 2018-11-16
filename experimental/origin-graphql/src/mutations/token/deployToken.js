@@ -1,9 +1,5 @@
 import OriginToken from 'origin-contracts/build/contracts/OriginToken'
-<<<<<<< HEAD:experimental/origin-graphql/src/mutations/token/deployToken.js
 import StandardToken from 'origin-contracts/build/contracts/TestToken'
-=======
-import StandardToken from 'origin-contracts/build/contracts/StandardToken'
->>>>>>> master:experimental/origin-graphql/src/mutations/token/deployToken.js
 import contracts from '../../contracts'
 import txHelper, { checkMetaMask } from '../_txHelper'
 
