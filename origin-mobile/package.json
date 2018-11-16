@@ -3,11 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "install-local": "^0.6.0",
     "jest": "^22.4.3",
     "jest-react-native": "^18.0.0",
     "react-native-dotenv": "^0.2.0",
-    "react-native-yunolink": "^2.0.3",
     "react-test-renderer": "16.3.1"
   },
   "scripts": {
@@ -15,7 +14,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",
-    "watch-modules": "npx rn-link ../origin-js"
+    "install-local": "npx install-local ../origin-contracts ../origin-js"
   },
   "jest": {
     "preset": "react-native"
@@ -27,7 +26,7 @@
     "node-libs-browser": "^2.1.0",
     "origin": "^0.8.6",
     "prop-types": "^15.6.2",
-    "react": "^16.6.0-alpha.8af6728",
+    "react": "^16.6.1",
     "react-moment": "^0.7.5",
     "react-native": "^0.57.4",
     "react-native-camera": "^1.1.2",
