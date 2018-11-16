@@ -8,6 +8,10 @@
     "defaultMessage": "First image will be featured - drag and drop images to reorder."
   },
   {
+    "id": "photo-picker.featuredImageAspectRatio",
+    "defaultMessage": "Recommended aspect ratio is 4:3"
+  },
+  {
     "id": "photo-picker.maxImgCountMsg",
     "defaultMessage": "You have reached the upload limit of {maxImageCount} images per listing."
   }

@@ -43,10 +43,10 @@ class ImageCropper extends Component {
   }
 
   async onCropComplete() {
-    const { imageSrc, imageFileObj, pixelCrop } = this.state
-    const croppedImageFile = await generateCroppedImage(imageSrc, imageFileObj, pixelCrop)
+    const { imageFileObj, pixelCrop } = this.state
+    const croppedImageFile = await generateCroppedImage(imageFileObj, pixelCrop)
     const croppedImageUri = await getDataUri(croppedImageFile)
-    this.props.onCropComplete(croppedImageUri)
+    this.props.onCropComplete(croppedImageUri, imageFileObj)
   }
 
   render() {

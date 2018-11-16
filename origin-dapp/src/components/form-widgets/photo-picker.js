@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import ImageCropper from '../modals/image-cropper'
+import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 
 const MAX_IMAGE_COUNT = 10
 
@@ -16,6 +17,7 @@ class PhotoPicker extends Component {
     }
 
     this.onFileSelected = this.onFileSelected.bind(this)
+    this.reCropImage = this.reCropImage.bind(this)
     this.onCropComplete = this.onCropComplete.bind(this)
     this.onCropCancel = this.onCropCancel.bind(this)
     this.onDragEnd = this.onDragEnd.bind(this)
@@ -23,18 +25,47 @@ class PhotoPicker extends Component {
 
   async onFileSelected(e) {
     if (e.target.files && e.target.files.length > 0) {
-      const imageFileObj = e.target.files[0]
+      const imageFiles = e.target.files
+      const pictures = [...this.state.pictures]
 
-      this.setState({
-        imageFileObj: imageFileObj,
-        showCropModal: true
-      })
+      for (const key in imageFiles) {
+        if (imageFiles.hasOwnProperty(key)) {
+          const file = imageFiles[key]
+          const croppedImageFile = await generateCroppedImage(file)
+          const croppedImageUri = await getDataUri(croppedImageFile)
+
+          pictures.push({
+            originalImageFile: file,
+            croppedImageUri
+          })
+        }
+      }
+
+      this.setState(
+        { pictures },
+        () => this.props.onChange(this.picURIsOnly(pictures))
+      )
     }
   }
 
-  onCropComplete(croppedImageUrl) {
+  reCropImage(picObj, idx) {
+    this.removePhoto(idx)
+
+    this.setState({
+      imageFileObj: picObj.originalImageFile,
+      showCropModal: true
+    })
+  }
+
+  onCropComplete(croppedImageUri, imageFileObj) {
     const imgInput = document.getElementById('photo-picker-input')
-    const pictures = [...this.state.pictures, croppedImageUrl]
+    const pictures = [
+      ...this.state.pictures,
+      {
+        originalImageFile: imageFileObj,
+        croppedImageUri
+      }
+    ]
     let showMaxImageCountMsg = false
 
     if (pictures.length >= MAX_IMAGE_COUNT) {
@@ -47,10 +78,14 @@ class PhotoPicker extends Component {
         showMaxImageCountMsg,
         showCropModal: false,
       },
-      () => this.props.onChange(pictures)
+      () => this.props.onChange(this.picURIsOnly(pictures))
     )
 
     imgInput.value = null
+  }
+
+  picURIsOnly(pictures) {
+    return pictures.map(pic => typeof pic === 'object' ? pic.croppedImageUri : pic)
   }
 
   onCropCancel() {
@@ -123,6 +158,7 @@ class PhotoPicker extends Component {
             visibility="hidden"
             onChange={this.onFileSelected}
             required={required}
+            multiple
           />
           <p className="help-block">
             <FormattedMessage
@@ -139,6 +175,16 @@ class PhotoPicker extends Component {
               id={'photo-picker.featuredImageExplainer'}
               defaultMessage={
                 'First image will be featured - drag and drop images to reorder.'
+              }
+              values={{
+                maxImageCount: MAX_IMAGE_COUNT
+              }}
+            />
+            <br/>
+            <FormattedMessage
+              id={'photo-picker.featuredImageAspectRatio'}
+              defaultMessage={
+                'Recommended aspect ratio is 4:3'
               }
               values={{
                 maxImageCount: MAX_IMAGE_COUNT
@@ -166,7 +212,7 @@ class PhotoPicker extends Component {
             <Droppable droppableId="droppable">
               {(provided) => (
                 <div ref={provided.innerRef}>
-                  {pictures.map((dataUri, idx) => (
+                  {pictures.map((pic, idx) => (
                     <Draggable key={idx} draggableId={idx + 1} index={idx}>
                       {(provided) => (
                         <div
@@ -175,10 +221,24 @@ class PhotoPicker extends Component {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          <img src={dataUri} />
+                          <img src={
+                              typeof pic == 'object' ?
+                              pic.croppedImageUri :
+                              pic
+                            }
+                          />
                           <a
-                            className="cancel-image"
-                            aria-label="Close"
+                            className="re-crop-image image-overlay-btn"
+                            aria-label="Re-Crop Image"
+                            title="Re-Crop Image"
+                            onClick={() => this.reCropImage(pic, idx)}
+                          >
+                            <span aria-hidden="true">&#9635;</span>
+                          </a>
+                          <a
+                            className="cancel-image image-overlay-btn"
+                            aria-label="Delete Image"
+                            title="Delete Image"
                             onClick={() => this.removePhoto(idx)}
                           >
                             <span aria-hidden="true">&times;</span>

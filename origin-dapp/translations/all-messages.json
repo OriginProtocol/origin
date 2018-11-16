@@ -75,6 +75,7 @@
   "footer.githubLink": "Visit our Github",
   "photo-picker.listingSize": "Maximum {maxImageCount} images per listing.",
   "photo-picker.featuredImageExplainer": "First image will be featured - drag and drop images to reorder.",
+  "photo-picker.featuredImageAspectRatio": "Recommended aspect ratio is 4:3",
   "photo-picker.maxImgCountMsg": "You have reached the upload limit of {maxImageCount} images per listing.",
   "price-field.price-help": "The price is always in {currency}.",
   "price-field.price-usd-disclaimer": "USD is an estimate.",

@@ -16,19 +16,38 @@ export const getDataUri = async file => {
   })
 }
 
-const MAX_IMAGE_WIDTH = 1000
-const MAX_IMAGE_HEIGHT = 1000
-
-export const generateCroppedImage = async (imageSrc, imageFileObj, pixelCrop) => { 
+/*
+ * generateCroppedImage
+ * @description Creates a cropped image file when given crop dimensions
+ * @param {string} imageSrc - The source URL of the image
+ * @param {file} imageFileObj - The image file object from the file input element
+ * @param {object} pixelCrop - The object containing the dimensions of the crop area
+ * @param {number} pixelCrop.height - The height of the crop area
+ * @param {number} pixelCrop.width - The width of the crop area
+ * @param {number} pixelCrop.x - The x coordinate of the top-left corner of the crop area
+ * @param {number} pixelCrop.y - The y coordinate of the top-left corner of the crop area
+ */
+export const generateCroppedImage = async (imageFileObj, pixelCrop) => {
+  const MAX_IMAGE_WIDTH = 1000
+  const MAX_IMAGE_HEIGHT = 1000
+  const imageSrc = await getDataUri(imageFileObj)
   let image
   let canvas
   
   function drawImageOnCanvas(imgEl) {
+    let cropWidth = imgEl.width
+    let cropHeight = imgEl.width / 1.33333 // 4:3 aspect ratio
+
+    if (cropHeight > imgEl.height) {
+      cropHeight = imgEl.height
+      cropWidth = cropHeight * 1.33333
+    }
+
     const defaultConfig = {
-      x: 0,
-      y: 0,
-      width: imgEl.width,
-      height: imgEl.height
+      x: (imgEl.width - cropWidth) / 2, // center crop horizontally
+      y: (imgEl.height - cropHeight) / 2, // center crop area vertically
+      width: cropWidth,
+      height: cropHeight
     }
 
     const { x, y, width, height } = pixelCrop || defaultConfig
