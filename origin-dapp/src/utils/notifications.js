@@ -29,8 +29,7 @@ export const createSubscription = (registration, account) => {
         ...JSON.parse(JSON.stringify(subscription)),
         account
       })
-
-      fetch(process.env.NOTIFICATIONS_URL, {
+      await fetch(process.env.NOTIFICATIONS_URL, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -41,6 +40,7 @@ export const createSubscription = (registration, account) => {
       analytics.event('Notifications', 'CreateSubscription')
       resolve(subscription)
     } catch (error) {
+      // TODO, when fetch fails, we never reach here
       console.error('Failure subscribing to push notifications')
       analytics.event('Notifications', 'ErrorCreateSubscription')
       reject(error)

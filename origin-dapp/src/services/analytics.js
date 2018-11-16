@@ -8,7 +8,15 @@ const gtag = window.gtag || function() {}
  * @param {string} [label=undefined]
  * @param {number} [value=undefined]
  */
-export function event(category, action, label, value) {
+function event(category, action, label, value) {
   const gtag = window.gtag || function() {}
+  if (process.env.NODE_ENV == 'development') {
+    console.log(`🕵 ${category} ${action} ${label}`)
+  }
+  
   gtag('send', { category, action, label, value })
+}
+
+export default {
+  event: event 
 }
