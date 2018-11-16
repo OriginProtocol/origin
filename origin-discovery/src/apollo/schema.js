@@ -44,7 +44,7 @@ const typeDefs = gql`
     seller: User!
     status: String!
     affiliate: ID,
-    price: Price! 
+    totalPrice: Price!
     listing: Listing!
   }
   enum DisplayType {
@@ -195,6 +195,7 @@ const typeDefs = gql`
     offer(id: ID!): Offer,
 
     user(walletAddress: ID!): User,
+
     info: JSON!
   }
 `

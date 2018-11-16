@@ -19,6 +19,7 @@ export class Offer {
    * - {string} buyerAddress - Buyer's address
    * - {Object} discoveryData - Offer data from discovery server.
    */
+
   constructor(
     originJsData,
     discoveryData

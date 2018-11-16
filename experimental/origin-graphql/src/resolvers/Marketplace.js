@@ -1,16 +1,5 @@
 import contracts from '../contracts'
-
-function bota(input) {
-  return new Buffer(input.toString(), 'binary').toString('base64')
-}
-
-function convertCursorToOffset(cursor) {
-  return parseInt(atob(cursor))
-}
-
-function atob(input) {
-  return new Buffer(input, 'base64').toString('binary')
-}
+import listings from './marketplace/listings'
 
 export default {
   address: contract => {
@@ -27,33 +16,7 @@ export default {
   },
   listing: (contract, args) => contracts.eventSource.getListing(args.id),
 
-  listings: async (contract, { first = 10, after }) => {
-    if (!contract) {
-      return null
-    }
-    const totalCount = Number(await contract.methods.totalListings().call())
-    after = after ? convertCursorToOffset(after) : totalCount
-    const ids = Array.from({ length: Number(totalCount) }, (v, i) => i)
-      .reverse()
-      .filter(id => id < after)
-      .slice(0, first)
-    const nodes = await Promise.all(
-      ids.map(id => contracts.eventSource.getListing(id))
-    )
-    const firstNodeId = ids[0] || 0
-    const lastNodeId = ids[ids.length - 1] || 0
-    return {
-      totalCount,
-      nodes,
-      pageInfo: {
-        endCursor: bota(lastNodeId),
-        hasNextPage: lastNodeId > 0,
-        hasPreviousPage: firstNodeId > totalCount,
-        startCursor: bota(firstNodeId)
-      },
-      edges: nodes.map(node => ({ cursor: bota(node.id), node }))
-    }
-  },
+  listings,
 
   account: contract => {
     if (!contract) {

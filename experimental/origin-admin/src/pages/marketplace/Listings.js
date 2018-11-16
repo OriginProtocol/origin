@@ -8,7 +8,10 @@ import {
   Spinner,
   Tabs,
   Tab,
-  Tooltip
+  Tooltip,
+  Switch,
+  InputGroup,
+  ControlGroup
 } from '@blueprintjs/core'
 
 import BottomScrollListener from 'components/BottomScrollListener'
@@ -21,9 +24,9 @@ import CreateListing from './mutations/CreateListing'
 
 import query from './queries/_listings'
 
-function nextPage(fetchMore, after) {
+function nextPage(fetchMore, vars) {
   fetchMore({
-    variables: { first: 15, after },
+    variables: { ...vars },
     updateQuery: (prev, { fetchMoreResult }) => {
       if (!fetchMoreResult) return prev
       return {
@@ -44,19 +47,27 @@ function nextPage(fetchMore, after) {
 }
 
 class Listings extends Component {
-  state = { mode: get('listingsPage.mode', 'gallery') }
+  state = {
+    mode: get('listingsPage.mode', 'gallery'),
+    hidden: false,
+    search: '',
+    activeSearch: ''
+  }
+
   render() {
     let selectedTabId = 'listings'
     if (this.props.location.pathname.match(/activity/)) {
       selectedTabId = 'activity'
     }
+    const vars = {
+      first: 15,
+      sort: this.state.sort,
+      hidden: this.state.hidden,
+      search: this.state.activeSearch
+    }
 
     return (
-      <Query
-        query={query}
-        variables={{ first: 15 }}
-        notifyOnNetworkStatusChange={true}
-      >
+      <Query query={query} variables={vars} notifyOnNetworkStatusChange={true}>
         {({ error, data, fetchMore, networkStatus, refetch }) => {
           if (networkStatus === 1) {
             return (
@@ -89,7 +100,7 @@ class Listings extends Component {
               hasNextPage &&
               networkStatus === 7
             ) {
-              nextPage(fetchMore, after)
+              nextPage(fetchMore, { ...vars, after })
             }
           })
 
@@ -100,7 +111,7 @@ class Listings extends Component {
               offset={this.state.mode === 'list' ? 50 : 200}
               onBottom={() => {
                 if (!noMore) {
-                  nextPage(fetchMore, after)
+                  nextPage(fetchMore, { ...vars, after })
                 }
               }}
             >
@@ -125,7 +136,7 @@ class Listings extends Component {
                     text="Load more..."
                     loading={networkStatus === 3}
                     className="mt-3"
-                    onClick={() => nextPage(fetchMore, after)}
+                    onClick={() => nextPage(fetchMore, { ...vars, after })}
                   />
                 )}
                 <CreateListing
@@ -162,7 +173,7 @@ class Listings extends Component {
           <Tab id="listings" title={`Listings (${totalListings})`} />
           <Tab id="activity" title="Activity" />
         </Tabs>
-        <div style={{ display: 'flex', marginLeft: 30 }}>
+        <div style={{ display: 'flex', marginLeft: 30, alignItems: 'center' }}>
           <Button
             onClick={() => this.setState({ createListing: true })}
             intent="primary"
@@ -200,6 +211,51 @@ class Listings extends Component {
               onClick={() => refetch()}
             />
           </Tooltip>
+          <Switch
+            checked={this.state.hidden ? true : false}
+            onChange={e =>
+              this.setState({ hidden: e.target.checked ? true : false })
+            }
+            inline={true}
+            className="ml-3 mb-0"
+            label="Hide Hidden"
+          />
+          <Switch
+            inline={true}
+            className="mb-0"
+            label="Sort Featured"
+            checked={this.state.sort === 'featured' ? true : false}
+            onChange={e =>
+              this.setState({ sort: e.target.checked ? 'featured' : '' })
+            }
+          />
+          <ControlGroup>
+            <InputGroup
+              placeholder="Search..."
+              value={this.state.search}
+              onChange={e => this.setState({ search: e.target.value })}
+              onKeyUp={e => {
+                if (e.keyCode === 13) {
+                  this.setState({ activeSearch: this.state.search })
+                }
+              }}
+              rightElement={
+                this.state.search ? (
+                  <Button
+                    minimal={true}
+                    icon="cross"
+                    onClick={() =>
+                      this.setState({ activeSearch: '', search: '' })
+                    }
+                  />
+                ) : null
+              }
+            />
+            <Button
+              icon="search"
+              onClick={() => this.setState({ activeSearch: this.state.search })}
+            />
+          </ControlGroup>
         </div>
       </div>
     )

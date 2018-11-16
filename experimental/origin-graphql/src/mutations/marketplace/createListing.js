@@ -1,7 +1,8 @@
-import { post } from '../../utils/ipfsHash'
+import { post } from 'origin-ipfs'
+import validator from 'origin-validator'
+
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
-import validator from '../../utils/validator'
 
 async function createListing(_, input) {
   const { depositManager, data, from, autoApprove } = input

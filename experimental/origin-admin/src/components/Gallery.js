@@ -6,6 +6,7 @@ class Gallery extends Component {
   render() {
     const { pics } = this.props
     const active = pics[this.state.active]
+    if (!active) return null
     return (
       <div className="gallery">
         <div
