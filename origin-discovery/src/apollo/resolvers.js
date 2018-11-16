@@ -75,6 +75,8 @@ const resolvers = {
     },
 
     info () {
+      // Caution: Any config added here gets exposed publicly.
+      // Make sure to not expose any credentials/secrets !
       return {
         'networkId': process.env.NETWORK_ID ? process.env.NETWORK_ID : 'undefined',
         'elasticsearchHost': process.env.ELASTICSEARCH_HOST ? process.env.ELASTICSEARCH_HOST : 'undefined',
