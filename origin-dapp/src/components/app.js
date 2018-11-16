@@ -41,7 +41,7 @@ import 'bootstrap/dist/js/bootstrap'
 
 import { setClickEventHandler } from 'utils/analytics'
 import { initServiceWorker } from 'utils/notifications'
-import isMobile, { mobileDevice } from 'utils/mobile'
+import { mobileDevice } from 'utils/mobile'
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
@@ -121,7 +121,7 @@ class App extends Component {
    * @return {void}
    */
   detectMobile() {
-    this.props.setMobile(isMobile(), mobileDevice())
+    this.props.setMobile(mobileDevice())
   }
 
   render() {
