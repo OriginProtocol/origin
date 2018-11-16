@@ -66,6 +66,7 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
+      - NETWORK_ID=999
     depends_on:
       - origin-js
       - postgres

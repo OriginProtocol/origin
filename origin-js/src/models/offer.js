@@ -3,53 +3,25 @@
 //
 export class Offer {
   /**
-   * The same offer object constructed by origin-js and discovery server. Ideally we would have
-   * separate constructors but JavaScript does not support that. For that reason this 2 mode 
-   * constructor paradigm is used
+   * Offer object model.
    *
-   * @param {Object} originJsData - Constructor argument used by marketplace resource
-   * - {string} offerId - Unique offer ID.
-   * - {string} listingId - Unique listing ID.
-   * - {Object} chainOffer - Offer data from the blockchain.
-   * - {Object} ipfsOffer - Offer data from IPFS.
-   * @param {Object} discoveryData - Constructor argument used by discovery-service
-   * - {string} offerId - Unique offer ID.
-   * - {string} listingId - Unique listing ID.
-   * - {string} status - offer status
-   * - {string} buyerAddress - Buyer's address
-   * - {Object} discoveryData - Offer data from discovery server.
+   * @param {string} id - Offer ID.
+   * @param {string} listingId - Unique listing ID.
+   * @param {string} status - Satus of the offer: 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed'
+   * @param {int} createdAt - Time in seconds since epoch
+   * @param {string} buyer - address of the buyer
+   * @param {Array{Object}} events - list of events ( like OfferCreated event)
+   * @param {string} refund - Amount to refund buyer upon finalization
    */
-
-  constructor(
-    originJsData,
-    discoveryData
-  ) {
-    if (originJsData && discoveryData)
-      throw 'Only one of constructor parameters should be present'
-
-    if (originJsData) {
-      const { offerId, listingId, chainOffer, ipfsOffer } = originJsData
-
-      this.id = offerId
+  constructor(id, listingId, status, createdAt, buyer, events, refund, totalPrice) {
+      this.id = id
       this.listingId = listingId
-      this.status = chainOffer.status // 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed'
-      this.createdAt = chainOffer.createdAt // Time in seconds since epoch.
-      this.buyer = chainOffer.buyer
-      this.events = chainOffer.events
-      this.refund = chainOffer.refund
-
-      // See src/schemas/offer.json for fields stored in IPFS offer data.
-      Object.assign(this, ipfsOffer)
-    } else {
-      const { offerId, listingId, status, buyerAddress, discoveryData } = originJsData
-      this.id = offerId
-      this.listingId = listingId
-      this.status = status // 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed'
-      this.createdAt = discoveryData.createdAt // Time in seconds since epoch.
-      this.buyer = buyerAddress
-      this.events = discoveryData.events
-      this.refund = discoveryData.refund
-    }
+      this.status = status
+      this.createdAt = createdAt
+      this.buyer = buyer
+      this.events = events
+      this.refund = refund
+      this.totalPrice = totalPrice
   }
 
   /**

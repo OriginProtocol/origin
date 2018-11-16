@@ -201,7 +201,16 @@ export default class Marketplace {
     }
 
     // Create an Offer from on-chain and off-chain data.
-    return new Offer({ offerId, listingId, chainOffer, ipfsOffer })
+    return new Offer(
+      offerId,
+      listingId,
+      chainOffer.status,
+      chainOffer.createdAt,
+      chainOffer.buyer,
+      chainOffer.events,
+      chainOffer.refund,
+      chainOffer.totalPrice
+    )
   }
 
   /**

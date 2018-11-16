@@ -16,13 +16,16 @@ class DiscoveryService {
   }
 
   _toOfferModel(offerNode) {
-    return new Offer({}, {
-      offerId: offerNode.id,
-      listingId: offerNode.listing.id,
-      status: offerNode.status,
-      buyerAddress: offerNode.buyer.walletAddress,
-      discoveryData: offerNode.data
-    })
+    return new Offer(
+      offerNode.id,
+      offerNode.listing.id,
+      offerNode.status,
+      offerNode.data.createdAt,
+      offerNode.buyer.walletAddress,
+      offerNode.data.events,
+      offerNode.data.refund,
+      offerNode.data.totalPrice
+    )
   }
 
   /**
