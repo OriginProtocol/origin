@@ -130,8 +130,7 @@ class OnboardingModal extends Component {
       mobileDevice,
       updateSteps,
       selectStep,
-      onboarding: { blocked, currentStep, learnMore, splitPanel },
-      isMobile
+      onboarding: { blocked, currentStep, learnMore, splitPanel }
     } = this.props
 
     const learnMoreContent = (

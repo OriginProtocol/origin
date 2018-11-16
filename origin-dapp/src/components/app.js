@@ -199,7 +199,7 @@ const mapDispatchToProps = dispatch => ({
   getOgnBalance: () => dispatch(getOgnBalance()),
   initWallet: () => dispatch(initWallet()),
   saveServiceWorkerRegistration: reg => dispatch(saveServiceWorkerRegistration(reg)),
-  setMobile: (isMobile, device) => dispatch(setMobile(isMobile, device)),
+  setMobile: device => dispatch(setMobile(device)),
   localizeApp: () => dispatch(localizeApp())
 })
 
