@@ -1,24 +1,17 @@
 const userAgent = navigator.userAgent || navigator.vendor || window.opera
 
-export default function isMobile() {
-  if (userAgent.match(/Mobi/)) {
-    return true
-  }
-
-  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection
-  if (connection && connection.type === 'cellular') {
-    return true
-  }
-
-  return false
-}
-
 export function mobileDevice() {
-  if (/android/i.test(userAgent)) {
+  const unrecognized = 'Unknown Mobile'
+
+  if (userAgent.match(/android/i)) {
     return 'Android'
-  } else if (/iPad|iPhone|iPod/.test(userAgent)) {
+  } else if (userAgent.match(/iPad|iPhone|iPod/)) {
     return 'iOS'
+  } else if (userAgent.match(/Mobi/)) {
+    return unrecognized
   } else {
-    return null
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {}
+
+    return connection.type === 'cellular' ? unrecognized : null
   }
 }

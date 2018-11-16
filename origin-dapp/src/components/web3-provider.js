@@ -233,12 +233,12 @@ const UnsupportedNetwork = props => {
   )
 }
 
-const Web3Unavailable = props => (
+const Web3Unavailable = ({ mobileDevice }) => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    {(!props.isMobile || props.mobileDevice === 'Android') && (
+    {(!mobileDevice || mobileDevice === 'Android') && (
       <div>
         <FormattedMessage
           id={'web3-provider.pleaseInstallMetaMask'}
@@ -270,8 +270,7 @@ const Web3Unavailable = props => (
         </a>
       </div>
     )}
-    {props.isMobile &&
-      props.mobileDevice !== 'Android' && (
+    {mobileDevice && mobileDevice !== 'Android' && (
       <div>
         <FormattedMessage
           id={'web3-provider.useWalletEnabledBrowser'}
@@ -449,7 +448,7 @@ class Web3Provider extends Component {
   }
 
   render() {
-    const { isMobile, mobileDevice, web3Account, web3Intent, storeWeb3Intent } = this.props
+    const { mobileDevice, web3Account, web3Intent, storeWeb3Intent } = this.props
     const { networkConnected, networkId, currentProvider } = this.state
     const currentNetwork = getCurrentNetwork(networkId)
     const currentNetworkName = currentNetwork
@@ -462,7 +461,7 @@ class Web3Provider extends Component {
     return (
       <Fragment>
         {/* currentProvider should always be present */
-          !currentProvider && <Web3Unavailable isMobile={isMobile} mobileDevice={mobileDevice} />}
+          !currentProvider && <Web3Unavailable mobileDevice={mobileDevice} />}
 
         {/* networkConnected initial state is null */
           currentProvider && networkConnected === false && <UnconnectedNetwork />}
@@ -483,7 +482,7 @@ class Web3Provider extends Component {
         {/* attempting to use web3 in unsupported mobile browser */
           web3Intent &&
           !web3.givenProvider &&
-          isMobile && (
+          mobileDevice && (
             <NotWeb3EnabledMobile
               web3Intent={web3Intent}
               storeWeb3Intent={storeWeb3Intent}
@@ -493,7 +492,7 @@ class Web3Provider extends Component {
         {/* attempting to use web3 in unsupported desktop browser */
           web3Intent &&
           !web3.givenProvider &&
-          !isMobile && (
+          !mobileDevice && (
             <NotWeb3EnabledDesktop
               web3Intent={web3Intent}
               storeWeb3Intent={storeWeb3Intent}
@@ -519,10 +518,9 @@ class Web3Provider extends Component {
 
 const mapStateToProps = state => {
   return {
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent,
     mobileDevice: state.app.mobileDevice,
-    isMobile: state.app.isMobile
+    web3Account: state.app.web3.account,
+    web3Intent: state.app.web3.intent
   }
 }
 

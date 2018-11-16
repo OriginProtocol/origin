@@ -17,7 +17,6 @@ const initialState = {
   // which soft permission request prompt to display: buyer, seller, warning
   notificationsSubscriptionPrompt: null,
   mobileDevice: null,
-  isMobile: false,
   pushNotificationsSupported: !!(process.env.NOTIFICATIONS_KEY && process.env.NOTIFICATIONS_URL),
   serviceWorkerRegistration: null,
   translations: {
@@ -60,7 +59,7 @@ export default function App(state = initialState, action = {}) {
     return { ...state, notificationsSubscriptionPrompt: action.role }
 
   case AppConstants.ON_MOBILE:
-    return { ...state, mobileDevice: action.device, isMobile: action.isMobile }
+    return { ...state, mobileDevice: action.device }
 
   case AppConstants.SAVE_SERVICE_WORKER_REGISTRATION:
     return { ...state, serviceWorkerRegistration: action.registration }
