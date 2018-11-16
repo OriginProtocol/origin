@@ -1,8 +1,7 @@
 const BigNumber = require('bignumber.js')
 
-// TODO find a better way to handle these dependencies
-const TokenContract = require('../../origin-js/contracts/build/contracts/OriginToken.json')
-const { withRetries } = require('../../origin-js/src/utils/retries.js')
+const TokenContract = require('origin-contracts/build/contracts/OriginToken.json')
+const { withRetries } = require('../faucet/util.js')
 
 const ContractHelper = require('./_contractHelper.js')
 
@@ -216,15 +215,6 @@ class Token extends ContractHelper {
     console.log(`transfers paused:        ${paused ? 'YES' : 'no'}`)
     console.log(`transactor whitelist:    ${whitelistStatus}`)
   }
-}
-
-/**
- * Returns a promise that resolves after the specified duration.
- * @param {int} ms - Milliseconds to sleep for.
- * @returns {Promise} - Promise that resolves after ms milliseconds.
- */
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 module.exports = Token

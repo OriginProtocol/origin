@@ -2,17 +2,21 @@
   "name": "origin-discovery",
   "description": "Origin event-listener and discovery server",
   "version": "0.1.0",
+  "engines": {
+    "node": "10.x"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OriginProtocol/origin.git"
+    "url": "https://github.com/OriginProtocol/origin/origin-discovery"
   },
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "bugs": {
-    "url": "git+https://github.com/OriginProtocol/origin.git"
+    "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
     "apollo-server-express": "^2.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^6.1.0",
     "elasticsearch": "^15.1.1",
     "envkey": "^1.2.2",
@@ -30,67 +34,15 @@
     "web3": "^1.0.0-beta.35"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
+    "chai-things": "^0.2.0",
     "chalk": "^2.4.1",
-    "eslint": "^5.8.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "mocha": "^5.2.0"
+    "rewire": "^4.0.1"
   },
   "scripts": {
-    "install:dev": "npm install && npm link origin",
-    "test:jsformat": "./node_modules/.bin/eslint 'src/*/*.js' 'test/**/*test.js'",
-    "test:js": "./node_modules/.bin/mocha --timeout 10000 --exit",
-    "test": "npm run test:jsformat && npm run test:js",
-    "migrate": "./node_modules/.bin/sequelize db:migrate"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "standard"
-    ],
-    "env": {
-      "browser": false,
-      "es6": true,
-      "mocha": true,
-      "node": true
-    },
-    "globals": {
-      "artifacts": true,
-      "assert": true,
-      "contract": true,
-      "expect": true,
-      "web3": true
-    },
-    "rules": {
-      "indent": [
-        "error",
-        2
-      ],
-      "no-console": [
-        "off"
-      ],
-      "no-var": [
-        "error"
-      ],
-      "prefer-const": [
-        "error"
-      ],
-      "semi": [
-        "error",
-        "never"
-      ],
-      "quotes": [
-        "error",
-        "single",
-        {
-          "avoidEscape": true,
-          "allowTemplateLiterals": true
-        }
-      ]
-    }
+    "lint": "eslint 'src/**/*.js' --rulesdir ../",
+    "test": "mocha --timeout 10000 --exit",
+    "migrate": "sequelize db:migrate",
+    "start:listener": "node src/listener/listener.js",
+    "start:discovery": "node src/apollo/app.js"
   }
 }

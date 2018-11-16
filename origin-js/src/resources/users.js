@@ -1,6 +1,6 @@
 import UsersResolver from '../contractInterface/users/resolver'
 
-class Users {
+export default class Users {
   constructor({ contractService, ipfsService, blockEpoch, blockAttestattionV1 }) {
     this.resolver = new UsersResolver({ contractService, ipfsService, blockEpoch, blockAttestattionV1 })
   }
@@ -9,7 +9,7 @@ class Users {
    * - confirmationCallback(confirmationCount, transactionReceipt) -> called repeatedly after a transaction is mined
    * - transactionHashCallback(hash) -> called immediately when the transaction hash is received
    */
-  async set({ profile, attestations = [], options = {}}) {
+  async set({ profile, attestations = [], options = {} }) {
     return this.resolver.set({ profile, attestations, options })
   }
 
@@ -17,5 +17,3 @@ class Users {
     return this.resolver.get(address)
   }
 }
-
-module.exports = Users

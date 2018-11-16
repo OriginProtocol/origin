@@ -6,3 +6,5 @@ RUN apt-get install libsecp256k1-dev -y
 WORKDIR /app
 COPY ./origin-bridge/requirements.txt /app
 RUN pip install -r requirements.txt
+
+CMD flask db upgrade && flask run --host=0.0.0.0
