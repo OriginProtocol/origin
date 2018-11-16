@@ -191,7 +191,7 @@ class Arbitration extends Component {
                           <SellerBadge />
                         </div>
                         <div className="name">{sellerName}</div>
-                        <div className="address text-muted text-truncate">
+                        <div className="address text-muted text-truncate" title={seller.address}>
                           {seller.address}
                         </div>
                       </div>
@@ -206,7 +206,7 @@ class Arbitration extends Component {
                           <BuyerBadge />
                         </div>
                         <div className="name">{buyerName}</div>
-                        <div className="address text-muted text-truncate">
+                        <div className="address text-muted text-truncate" title={buyer.address}>
                           {buyer.address}
                         </div>
                       </div>

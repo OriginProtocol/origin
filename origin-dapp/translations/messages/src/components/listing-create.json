@@ -80,6 +80,10 @@
     "defaultMessage": "Listing Price"
   },
   {
+    "id": "listing-create.fractional-price-varies",
+    "defaultMessage": "Price varies by date"
+  },
+  {
     "id": "listing-create.appropriate-value",
     "defaultMessage": "Approximate Value"
   },
@@ -109,7 +113,7 @@
   },
   {
     "id": "listing-create.form-help-details",
-    "defaultMessage": "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if they want to buy your listing."
+    "defaultMessage": "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing."
   },
   {
     "id": "listing-create.about-visibility",

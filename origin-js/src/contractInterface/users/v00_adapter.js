@@ -13,7 +13,7 @@ const ClaimDataIsIpfsHash = [4, 5] // twitter & airbnb
 const selfAttestationTopic = 13 // TODO: use the correct number here
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
-class V00_UsersAdapter {
+export default class V00_UsersAdapter {
   constructor({ contractService, ipfsService, blockEpoch, blockAttestattionV1 }) {
     this.contractService = contractService
     this.ipfsDataStore = new IpfsDataStore(ipfsService)
@@ -23,7 +23,7 @@ class V00_UsersAdapter {
     this.blockAttestattionV1 = blockAttestattionV1 || 0
   }
 
-  async set({ profile, attestations = [], options = {}}) {
+  async set({ profile, attestations = [], options = {} }) {
     if (profile) {
       const selfAttestation = await this.profileAttestation(profile)
       attestations.push(selfAttestation)
@@ -256,5 +256,3 @@ class V00_UsersAdapter {
     return filtered.map(({ attestation }) => attestation)
   }
 }
-
-module.exports = V00_UsersAdapter

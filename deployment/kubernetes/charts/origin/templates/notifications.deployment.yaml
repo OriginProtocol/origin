@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "notifications.fullname" . }}
+  labels:
+    app: {{ template "notifications.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ default 1 .Values.notificationsReplicas }}
+  selector:
+    matchLabels:
+      app: {{ template "notifications.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "notifications.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: origin-notifications
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.notificationsImage }}:{{ .Values.notificationsImageTag }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 3456
+        env:
+          - name: ENVKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "notifications.fullname" . }}
+                key: ENVKEY
+          - name: NAMESPACE
+            value: {{ .Release.Namespace | quote }}
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances={{ .Values.databaseInstance }}=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+

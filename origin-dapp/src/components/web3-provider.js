@@ -14,12 +14,9 @@ import origin from '../services/origin'
 
 const web3 = origin.contractService.web3
 
-const mainnetDappBaseUrl =
-  process.env.MAINNET_DAPP_BASEURL || 'https://dapp.originprotocol.com'
-const rinkebyDappBaseUrl =
-  process.env.RINKEBY_DAPP_BASEURL || 'https://demo.staging.originprotocol.com'
-const instructionsUrl =
-  process.env.INSTRUCTIONS_URL || 'https://www.originprotocol.com/'
+const mainnetDappBaseUrl = process.env.MAINNET_DAPP_BASEURL
+const rinkebyDappBaseUrl = process.env.RINKEBY_DAPP_BASEURL
+const instructionsUrl = process.env.INSTRUCTIONS_URL
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
 

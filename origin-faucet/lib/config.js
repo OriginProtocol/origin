@@ -1,11 +1,11 @@
 const HDWalletProvider = require('truffle-hdwallet-provider')
 const PrivateKeyProvider = require('truffle-privatekey-provider')
 
-const MAINNET_NETWORK_ID = '1'
-const ROPSTEN_NETWORK_ID = '3'
-const RINKEBY_NETWORK_ID = '4'
-const LOCAL_NETWORK_ID = '999'
-const ORIGIN_NETWORK_ID = '2222'
+const MAINNET_NETWORK_ID = 1
+const ROPSTEN_NETWORK_ID = 3
+const RINKEBY_NETWORK_ID = 4
+const LOCAL_NETWORK_ID = 999
+const ORIGIN_NETWORK_ID = 2222
 
 const DEFAULT_MNEMONIC = 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
 

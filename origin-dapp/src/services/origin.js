@@ -10,12 +10,9 @@ import OrbitDB from 'orbit-db'
  * But Micah couldn't get it to connect ¯\_(ツ)_/¯
  */
 const defaultProviderUrl = process.env.PROVIDER_URL
-const defaultBridgeUrl = 'https://bridge.originprotocol.com'
 const bridgeProtocol = process.env.BRIDGE_SERVER_PROTOCOL
 const bridgeDomain = process.env.BRIDGE_SERVER_DOMAIN
-const customBridgeUrl = `${bridgeProtocol}://${bridgeDomain}`
-const hasCustomBridge = bridgeProtocol && bridgeDomain
-const bridgeUrl = hasCustomBridge ? customBridgeUrl : defaultBridgeUrl
+const bridgeUrl = `${bridgeProtocol}://${bridgeDomain}`
 const attestationServerUrl = `${bridgeUrl}/api/attestations`
 const ipfsSwarm = process.env.IPFS_SWARM
 
@@ -85,7 +82,8 @@ const config = {
   OrbitDB,
   ecies,
   web3,
-  ethereum
+  ethereum,
+  perfModeEnabled: (process.env.ENABLE_PERFORMANCE_MODE === 'true')
 }
 
 try {

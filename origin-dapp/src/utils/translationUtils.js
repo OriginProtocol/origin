@@ -251,6 +251,10 @@ export function GlobalIntlProvider() {
 }
 
 export function translateSchema(schemaJson, schemaType) {
+  if (!schemaType || !schemaJson) {
+    return
+  }
+  
   // Copy the schema so we don't modify the original
   const schema = JSON.parse(JSON.stringify(schemaJson))
   const properties = schema.properties

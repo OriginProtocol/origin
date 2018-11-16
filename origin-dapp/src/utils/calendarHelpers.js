@@ -350,7 +350,7 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
       const event = events[i]
       if (  
         moment(date).isBetween(moment(event.start).subtract(1, 'second'), moment(event.end).add(1, 'second')) &&
-        !moment(date).isBefore(moment())
+        !moment(date).isBefore(moment().startOf('day'))
       ) {
 
         event.isAvailable = event.isAvailable ? !isDateBooked(date) : false

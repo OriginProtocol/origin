@@ -1,34 +1,14 @@
 [
   {
-    "id": "photo-picker.macHelpText",
-    "defaultMessage": "Hold down \"command\" (⌘) to select multiple images"
-  },
-  {
-    "id": "photo-picker.iosHelpText",
-    "defaultMessage": "Select multiple images to upload them all at once"
-  },
-  {
-    "id": "photo-picker.windowsHelpText",
-    "defaultMessage": "Hold down \"Ctrl\" to select multiple images"
-  },
-  {
-    "id": "photo-picker.androidHelpText",
-    "defaultMessage": "Select multiple images to upload them all at once"
-  },
-  {
-    "id": "photo-picker.linuxHelpText",
-    "defaultMessage": "Hold down \"Ctrl\" to select multiple images"
-  },
-  {
     "id": "photo-picker.listingSize",
-    "defaultMessage": "Images may not exceed {maxImageMB}MB each. Maximum {maxImageCount} images."
+    "defaultMessage": "Maximum {maxImageCount} images per listing."
+  },
+  {
+    "id": "photo-picker.featuredImageExplainer",
+    "defaultMessage": "First image will be featured - drag and drop images to reorder."
   },
   {
     "id": "photo-picker.maxImgCountMsg",
-    "defaultMessage": "No more than {maxImageCount} images may be uploaded. The extra images have been removed."
-  },
-  {
-    "id": "photo-picker.oversizeImages",
-    "defaultMessage": "Your selected image, {imageName}, is too large. Max allowed size is {maxImageMB}MB"
+    "defaultMessage": "You have reached the upload limit of {maxImageCount} images per listing."
   }
 ]

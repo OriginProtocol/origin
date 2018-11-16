@@ -27,3 +27,7 @@ ipfsProxyImageTag: latest
 # origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: latest
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: latest
