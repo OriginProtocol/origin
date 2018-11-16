@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import ImageCropper from '../modals/image-cropper'
 import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
@@ -15,6 +15,17 @@ class PhotoPicker extends Component {
       pictures: props.value,
       showMaxImageCountMsg: false
     }
+
+    this.intlMessages = defineMessages({
+      reCropImage: {
+        id: 'photo-picker.reCropImage',
+        defaultMessage: 'Re-Crop Image'
+      },
+      deleteImage: {
+        id: 'photo-picker.deleteImage',
+        defaultMessage: 'Delete Image'
+      }
+    })
 
     this.onFileSelected = this.onFileSelected.bind(this)
     this.reCropImage = this.reCropImage.bind(this)
@@ -230,7 +241,7 @@ class PhotoPicker extends Component {
                           <a
                             className="re-crop-image image-overlay-btn"
                             aria-label="Re-Crop Image"
-                            title="Re-Crop Image"
+                            title={this.props.intl.formatMessage(this.intlMessages.reCropImage)}
                             onClick={() => this.reCropImage(pic, idx)}
                           >
                             <span aria-hidden="true">&#9635;</span>
@@ -238,7 +249,7 @@ class PhotoPicker extends Component {
                           <a
                             className="cancel-image image-overlay-btn"
                             aria-label="Delete Image"
-                            title="Delete Image"
+                            title={this.props.intl.formatMessage(this.intlMessages.deleteImage)}
                             onClick={() => this.removePhoto(idx)}
                           >
                             <span aria-hidden="true">&times;</span>
@@ -257,4 +268,4 @@ class PhotoPicker extends Component {
   }
 }
 
-export default PhotoPicker
+export default injectIntl(PhotoPicker)

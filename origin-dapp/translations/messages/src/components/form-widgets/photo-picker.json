@@ -1,5 +1,13 @@
 [
   {
+    "id": "photo-picker.reCropImage",
+    "defaultMessage": "Re-Crop Image"
+  },
+  {
+    "id": "photo-picker.deleteImage",
+    "defaultMessage": "Delete Image"
+  },
+  {
     "id": "photo-picker.listingSize",
     "defaultMessage": "Maximum {maxImageCount} images per listing."
   },

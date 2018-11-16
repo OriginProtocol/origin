@@ -73,6 +73,8 @@
   "footer.description": "The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS.",
   "footer.websiteLink": "Visit our Website",
   "footer.githubLink": "Visit our Github",
+  "photo-picker.reCropImage": "Re-Crop Image",
+  "photo-picker.deleteImage": "Delete Image",
   "photo-picker.listingSize": "Maximum {maxImageCount} images per listing.",
   "photo-picker.featuredImageExplainer": "First image will be featured - drag and drop images to reorder.",
   "photo-picker.featuredImageAspectRatio": "Recommended aspect ratio is 4:3",
