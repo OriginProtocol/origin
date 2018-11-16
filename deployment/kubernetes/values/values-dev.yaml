@@ -31,7 +31,7 @@ eventlistenerImageTag: '551527e'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '8413119'
+discoveryImageTag: 'ce50467'
 
 # origin-messaging
 messagingImage: origin-messaging
