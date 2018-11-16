@@ -195,6 +195,7 @@ const typeDefs = gql`
     offer(id: ID!): Offer,
 
     user(walletAddress: ID!): User,
+
     info: JSON!
   }
 `
