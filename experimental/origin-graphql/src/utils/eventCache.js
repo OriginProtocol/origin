@@ -1,3 +1,5 @@
+import uniqBy from 'lodash/uniqBy'
+
 export default function eventCache(contract, fromBlock = 0) {
 
   let events = [],
@@ -48,24 +50,24 @@ export default function eventCache(contract, fromBlock = 0) {
       toBlock
     })
 
-    events = [
+    events = uniqBy([
       ...events,
       ...newEvents.map(e => ({ ...e, block: { id: e.blockNumber } }))
-    ]
+    ], (e) => e.id)
 
     console.log(`Found ${events.length} events, ${newEvents.length} new`)
+
+    fromBlock = toBlock + 1
+    processing = false
+    while(queue.length) {
+      queue.pop()()
+    }
 
     if (typeof window !== 'undefined') {
       window.localStorage[cacheStr] = JSON.stringify({
         lastLookup,
         events
       })
-    }
-
-    fromBlock = toBlock + 1
-    processing = false
-    while(queue.length) {
-      queue.pop()()
     }
   }
 

@@ -1,4 +1,5 @@
 import contracts from '../contracts'
+import { getFeatured, getHidden } from './marketplace/_featuredAndHidden'
 
 export default {
   events: async listing =>
@@ -19,9 +20,7 @@ export default {
 
     const offers = []
     for (const id of Array.from({ length: Number(totalOffers) }, (v, i) => i)) {
-      offers.push(
-        await contracts.eventSource.getOffer(listing.id, id)
-      )
+      offers.push(await contracts.eventSource.getOffer(listing.id, id))
     }
     return offers
   },
@@ -31,5 +30,13 @@ export default {
       'ListingCreated'
     )
     return events[0]
+  },
+  featured: async listing => {
+    const featuredIds = await getFeatured(contracts.net)
+    return featuredIds.indexOf(listing.id) >= 0
+  },
+  hidden: async listing => {
+    const hiddenIds = await getHidden(contracts.net)
+    return hiddenIds.indexOf(listing.id) >= 0
   }
 }

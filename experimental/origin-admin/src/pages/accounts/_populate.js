@@ -96,7 +96,7 @@ export default async function populate(NodeAccount, gqlClient) {
 
   hash = (await gqlClient.mutate({
     mutation: TransferTokenMutation,
-    variables: { token: 'ogn', to: Seller, from: Admin, value: '500' }
+    variables: { token: OGN, to: Seller, from: Admin, value: '500' }
   })).data.transferToken.id
   await transactionConfirmed(hash, gqlClient)
   console.log('Sent ogn to seller')

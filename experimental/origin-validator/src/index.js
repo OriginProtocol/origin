@@ -1,14 +1,14 @@
-import Ajv from 'ajv'
+const Ajv = require('ajv')
 
-import listingSchema from './schemas/listing.json'
-import listingWithdrawnSchema from './schemas/listing-withdraw.json'
-import offerSchema from './schemas/offer.json'
-import offerWithdrawnSchema from './schemas/offer-withdraw.json'
-import offerAcceptedSchema from './schemas/offer-accept.json'
-import disputeSchema from './schemas/dispute.json'
-import resolutionSchema from './schemas/resolution.json'
-import profileSchema from './schemas/profile.json'
-import reviewSchema from './schemas/review.json'
+const listingSchema = require('./schemas/listing.json')
+const listingWithdrawnSchema = require('./schemas/listing-withdraw.json')
+const offerSchema = require('./schemas/offer.json')
+const offerWithdrawnSchema = require('./schemas/offer-withdraw.json')
+const offerAcceptedSchema = require('./schemas/offer-accept.json')
+const disputeSchema = require('./schemas/dispute.json')
+const resolutionSchema = require('./schemas/resolution.json')
+const profileSchema = require('./schemas/profile.json')
+const reviewSchema = require('./schemas/review.json')
 
 const ajv = new Ajv({ allErrors: true })
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
@@ -24,7 +24,7 @@ ajv.addSchema([
   reviewSchema
 ])
 
-export default function validate(schemaId, data) {
+function validate(schemaId, data) {
   const validator = ajv.getSchema(schemaId)
   if (!validator) {
     throw new Error(`Failed loading schema validator for ${schemaId}`)
@@ -33,3 +33,5 @@ export default function validate(schemaId, data) {
     throw new Error(ajv.errorsText(validator.errors))
   }
 }
+
+module.exports = validate

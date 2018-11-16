@@ -119,6 +119,10 @@ require('react-styl')(`
     margin-bottom: 1rem
   .ml-2
     margin-left: 0.5rem
+  .ml-3
+    margin-left: 1rem
+  .mr-1
+    margin-right: 0.25rem
   .mr-2
     margin-right: 0.5rem
   .mr-3
