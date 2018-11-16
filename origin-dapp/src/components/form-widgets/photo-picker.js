@@ -197,9 +197,6 @@ class PhotoPicker extends Component {
               defaultMessage={
                 'Recommended aspect ratio is 4:3'
               }
-              values={{
-                maxImageCount: MAX_IMAGE_COUNT
-              }}
             />
           </p>
           <div className="d-flex pictures">
