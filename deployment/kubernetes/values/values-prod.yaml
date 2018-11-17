@@ -1,5 +1,4 @@
-
-databaseInstance: origin-214503:us-west1:staging
+databaseInstance: origin-214503:us-west1:prod
 
 # origin-bridge
 bridgeImage: origin-bridge
