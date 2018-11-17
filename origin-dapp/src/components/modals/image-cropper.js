@@ -13,9 +13,9 @@ class ImageCropper extends Component {
       imageFileObj: null,
       imageSrc: null,
       crop: {
-        x: 5,
-        y: 5,
-        width: 90,
+        x: 0,
+        y: 0,
+        width: 100,
         aspect: 4/3
       },
       pixelCrop: null,

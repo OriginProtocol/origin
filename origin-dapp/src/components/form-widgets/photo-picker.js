@@ -13,7 +13,8 @@ class PhotoPicker extends Component {
       imageFileObj: null,
       showCropModal: false,
       pictures: props.value,
-      showMaxImageCountMsg: false
+      showMaxImageCountMsg: false,
+      reCropImgIndex: null
     }
 
     this.intlMessages = defineMessages({
@@ -24,6 +25,26 @@ class PhotoPicker extends Component {
       deleteImage: {
         id: 'photo-picker.deleteImage',
         defaultMessage: 'Delete Image'
+      },
+      macHelpText: {
+        id: 'photo-picker.macHelpText',
+        defaultMessage: 'Hold down "command" (⌘) to select multiple images.'
+      },
+      iosHelpText: {
+        id: 'photo-picker.iosHelpText',
+        defaultMessage: 'Select multiple images to upload them all at once.'
+      },
+      windowsHelpText: {
+        id: 'photo-picker.windowsHelpText',
+        defaultMessage: 'Hold down "Ctrl" to select multiple images.'
+      },
+      androidHelpText: {
+        id: 'photo-picker.androidHelpText',
+        defaultMessage: 'Select multiple images to upload them all at once.'
+      },
+      linuxHelpText: {
+        id: 'photo-picker.linuxHelpText',
+        defaultMessage: 'Hold down "Ctrl" to select multiple images.'
       }
     })
 
@@ -32,6 +53,11 @@ class PhotoPicker extends Component {
     this.onCropComplete = this.onCropComplete.bind(this)
     this.onCropCancel = this.onCropCancel.bind(this)
     this.onDragEnd = this.onDragEnd.bind(this)
+    this.setHelpText = this.setHelpText.bind(this)
+  }
+
+  componentDidMount() {
+    this.setHelpText()
   }
 
   async onFileSelected(e) {
@@ -60,24 +86,21 @@ class PhotoPicker extends Component {
   }
 
   reCropImage(picObj, idx) {
-    this.removePhoto(idx)
-
     this.setState({
       imageFileObj: picObj.originalImageFile,
-      showCropModal: true
+      showCropModal: true,
+      reCropImgIndex: idx
     })
   }
 
   onCropComplete(croppedImageUri, imageFileObj) {
-    const imgInput = document.getElementById('photo-picker-input')
-    const pictures = [
-      ...this.state.pictures,
-      {
-        originalImageFile: imageFileObj,
-        croppedImageUri
-      }
-    ]
     let showMaxImageCountMsg = false
+    const imgInput = document.getElementById('photo-picker-input')
+    const pictures = this.state.pictures
+    pictures[this.state.reCropImgIndex] = {
+      originalImageFile: imageFileObj,
+      croppedImageUri
+    }
 
     if (pictures.length >= MAX_IMAGE_COUNT) {
       showMaxImageCountMsg = true
@@ -112,6 +135,30 @@ class PhotoPicker extends Component {
     })
   }
 
+  setHelpText() {
+    const { intl } = this.props
+    const userAgent = window.navigator.userAgent
+    const platform = window.navigator.platform
+    const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K']
+    const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE']
+    const iosPlatforms = ['iPhone', 'iPad', 'iPod']
+    let helpText = ''
+
+    if (macosPlatforms.indexOf(platform) !== -1) {
+      helpText = intl.formatMessage(this.intlMessages.macHelpText)
+    } else if (iosPlatforms.indexOf(platform) !== -1) {
+      helpText = intl.formatMessage(this.intlMessages.iosHelpText)
+    } else if (windowsPlatforms.indexOf(platform) !== -1) {
+      helpText = intl.formatMessage(this.intlMessages.windowsHelpText)
+    } else if (/Android/.test(userAgent)) {
+      helpText = intl.formatMessage(this.intlMessages.androidHelpText)
+    } else if (!helpText && /Linux/.test(platform)) {
+      helpText = intl.formatMessage(this.intlMessages.linuxHelpText)
+    }
+
+    this.setState({ helpText })
+  }
+
   onDragEnd(result) {
     if (!result.destination) {
       return
@@ -138,7 +185,8 @@ class PhotoPicker extends Component {
       pictures,
       showMaxImageCountMsg,
       showCropModal,
-      imageFileObj
+      imageFileObj,
+      helpText
     } = this.state
 
     return (
@@ -172,6 +220,12 @@ class PhotoPicker extends Component {
             multiple
           />
           <p className="help-block">
+            {helpText &&
+              <Fragment>
+                <span>{helpText}</span>
+                <br/>
+              </Fragment>
+            }
             <FormattedMessage
               id={'photo-picker.listingSize'}
               defaultMessage={
