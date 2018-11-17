@@ -7,8 +7,6 @@ import {
   Button,
   ButtonGroup,
   Spinner,
-  Tabs,
-  Tab,
   Tooltip,
   Switch,
   InputGroup,
@@ -20,7 +18,6 @@ import { get, set } from 'utils/store'
 
 import ListingsList from './_ListingsList'
 import ListingsGallery from './_ListingsGallery'
-import Events from './_Events'
 import CreateListing from './mutations/CreateListing'
 
 import query from './queries/_listings'
@@ -56,10 +53,6 @@ class Listings extends Component {
   }
 
   render() {
-    let selectedTabId = 'listings'
-    if (this.props.location.pathname.match(/activity/)) {
-      selectedTabId = 'activity'
-    }
     const vars = {
       first: 15,
       sort: this.state.sort,
@@ -105,7 +98,7 @@ class Listings extends Component {
             }
           })
 
-          const noMore = selectedTabId !== 'listings' || !hasNextPage
+          const noMore = !hasNextPage
 
           return (
             <BottomScrollListener
@@ -120,13 +113,10 @@ class Listings extends Component {
                 {this.renderBreadcrumbs({
                   refetch,
                   networkStatus,
-                  totalListings,
-                  selectedTabId
+                  totalListings
                 })}
 
-                {selectedTabId === 'activity' ? (
-                  <Events />
-                ) : this.state.mode === 'list' ? (
+                {this.state.mode === 'list' ? (
                   <ListingsList listings={listings} />
                 ) : (
                   <ListingsGallery listings={listings} noMore={noMore} />
@@ -154,58 +144,71 @@ class Listings extends Component {
     )
   }
 
-  renderBreadcrumbs({ refetch, networkStatus, totalListings, selectedTabId }) {
+  renderBreadcrumbs({ refetch, networkStatus, totalListings }) {
     const discovery = getDiscovery()
 
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Tabs
-          selectedTabId={selectedTabId}
-          renderActiveTabPanelOnly={true}
-          onChange={(newTab, prevTab) => {
-            if (prevTab === newTab) {
-              return
-            }
-            if (newTab === 'listings') {
-              this.props.history.push(`/marketplace/listings`)
-            } else if (newTab === 'activity') {
-              this.props.history.push(`/marketplace/activity`)
-            }
-          }}
-        >
-          <Tab id="listings" title={`Listings (${totalListings})`} />
-          <Tab id="activity" title="Activity" />
-        </Tabs>
-        <div style={{ display: 'flex', marginLeft: 30, alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <h5 className="bp3-heading mb-0 mr-3">{`${totalListings} Listings`}</h5>
+          {!discovery ? null : (
+            <ControlGroup className="mr-2">
+              <InputGroup
+                placeholder="Search..."
+                value={this.state.search}
+                onChange={e => this.setState({ search: e.target.value })}
+                onKeyUp={e => {
+                  if (e.keyCode === 13) {
+                    this.setState({ activeSearch: this.state.search })
+                  }
+                }}
+                rightElement={
+                  this.state.search ? (
+                    <Button
+                      minimal={true}
+                      icon="cross"
+                      onClick={() =>
+                        this.setState({ activeSearch: '', search: '' })
+                      }
+                    />
+                  ) : null
+                }
+              />
+              <Button
+                icon="search"
+                onClick={() =>
+                  this.setState({ activeSearch: this.state.search })
+                }
+              />
+            </ControlGroup>
+          )}
           <Button
             onClick={() => this.setState({ createListing: true })}
             intent="primary"
             text="Create Listing"
           />
-          {selectedTabId !== 'listings' ? null : (
-            <ButtonGroup className="ml-2">
-              <Tooltip content="Gallery Mode">
-                <Button
-                  icon="media"
-                  active={this.state.mode === 'gallery'}
-                  onClick={() => {
-                    set('listingsPage.mode', 'gallery')
-                    this.setState({ mode: 'gallery' })
-                  }}
-                />
-              </Tooltip>
-              <Tooltip content="List Mode">
-                <Button
-                  icon="list"
-                  active={this.state.mode === 'list'}
-                  onClick={() => {
-                    set('listingsPage.mode', 'list')
-                    this.setState({ mode: 'list' })
-                  }}
-                />
-              </Tooltip>
-            </ButtonGroup>
-          )}
+          <ButtonGroup className="ml-2">
+            <Tooltip content="Gallery Mode">
+              <Button
+                icon="media"
+                active={this.state.mode === 'gallery'}
+                onClick={() => {
+                  set('listingsPage.mode', 'gallery')
+                  this.setState({ mode: 'gallery' })
+                }}
+              />
+            </Tooltip>
+            <Tooltip content="List Mode">
+              <Button
+                icon="list"
+                active={this.state.mode === 'list'}
+                onClick={() => {
+                  set('listingsPage.mode', 'list')
+                  this.setState({ mode: 'list' })
+                }}
+              />
+            </Tooltip>
+          </ButtonGroup>
           <Tooltip content="Refresh">
             <Button
               icon="refresh"
@@ -234,35 +237,6 @@ class Listings extends Component {
                   this.setState({ sort: e.target.checked ? 'featured' : '' })
                 }
               />
-              <ControlGroup>
-                <InputGroup
-                  placeholder="Search..."
-                  value={this.state.search}
-                  onChange={e => this.setState({ search: e.target.value })}
-                  onKeyUp={e => {
-                    if (e.keyCode === 13) {
-                      this.setState({ activeSearch: this.state.search })
-                    }
-                  }}
-                  rightElement={
-                    this.state.search ? (
-                      <Button
-                        minimal={true}
-                        icon="cross"
-                        onClick={() =>
-                          this.setState({ activeSearch: '', search: '' })
-                        }
-                      />
-                    ) : null
-                  }
-                />
-                <Button
-                  icon="search"
-                  onClick={() =>
-                    this.setState({ activeSearch: this.state.search })
-                  }
-                />
-              </ControlGroup>
             </>
           )}
         </div>

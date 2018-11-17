@@ -65,7 +65,7 @@ const Events = () => (
 
         return (
           <BottomScrollListener onBottom={() => nextPage(fetchMore, numEvents)}>
-            <>
+            <div className="ml-3">
               <EventsTable events={data.marketplace.events} />
               {numEvents >= data.marketplace.totalEvents ? null : (
                 <Button
@@ -75,7 +75,7 @@ const Events = () => (
                   onClick={() => nextPage(fetchMore, numEvents)}
                 />
               )}
-            </>
+            </div>
           </BottomScrollListener>
         )
       }}
