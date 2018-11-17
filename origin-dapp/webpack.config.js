@@ -106,7 +106,6 @@ var config = {
       errors: true
     }
   },
-  watch: true,
   watchOptions: {
     poll: 500,
     ignored: [

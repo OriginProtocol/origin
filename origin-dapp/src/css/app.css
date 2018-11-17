@@ -1324,9 +1324,6 @@ textarea:-moz-ui-invalid {
   margin: -15px 0;
   padding: 15px 0;
   text-align: center;
-}
-
-.navigation-bar .static.navbar-nav .nav-item {
   width: 60px;
 }
 
@@ -5129,11 +5126,17 @@ a:not([href]):not([tabindex]).span-link {
 }
 
 /* Media queries */
+
 /* xs */
 @media (max-width: 576px) {
+  @media (max-width: 340px) {
+    .navigation-bar .static.navbar-nav {
+      margin-left: 0;
+    }
+  }
 
   .warning .badge {
-    display:none;
+    display: none;
   }
 
   .warning p {

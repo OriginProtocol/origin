@@ -2,16 +2,16 @@ import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplac
 import UserRegistryContract from 'origin-contracts/build/contracts/V00_UserRegistry'
 import ClaimHolderRegisteredContract from 'origin-contracts/build/contracts/ClaimHolderRegistered'
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
-import TokenContract from 'origin-contracts/build/contracts/StandardToken'
+import TokenContract from 'origin-contracts/build/contracts/TestToken'
 
 import Web3 from 'web3'
+import EventSource from 'origin-eventsource'
+
 import eventCache from './utils/eventCache'
 import pubsub from './utils/pubsub'
-import EventSource from './utils/OriginEventSource'
-
 import msg from './utils/messagingInstance'
 
-let metaMask, metaMaskEnabled, web3WS, wsSub
+let metaMask, metaMaskEnabled, web3WS, wsSub, web3
 const HOST = process.env.HOST || 'localhost'
 
 const Configs = {
@@ -32,6 +32,13 @@ const Configs = {
         name: 'DAI Stablecoin',
         symbol: 'DAI',
         decimals: '18'
+      },
+      {
+        id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        type: 'Standard',
+        name: 'USDC Stablecoin',
+        symbol: 'USDC',
+        decimals: '6'
       }
     ]
   },
@@ -130,8 +137,6 @@ export function setNetwork(net) {
   context.ipfsGateway = config.ipfsGateway
   context.ipfsRPC = config.ipfsRPC
 
-  window.localStorage.ognNetwork = net
-
   delete context.marketplace
   delete context.marketplaceExec
   delete context.ogn
@@ -144,7 +149,11 @@ export function setNetwork(net) {
     wsSub.unsubscribe()
   }
 
-  window.web3 = applyWeb3Hack(new Web3(config.provider))
+  web3 = applyWeb3Hack(new Web3(config.provider))
+  if (typeof window !== 'undefined') {
+    window.localStorage.ognNetwork = net
+    window.web3 = web3
+  }
   context.web3Exec = web3
 
   context.messaging = msg
@@ -152,7 +161,7 @@ export function setNetwork(net) {
 
   context.metaMaskEnabled = metaMaskEnabled
   web3WS = applyWeb3Hack(new Web3(config.providerWS))
-  if (window.localStorage.privateKeys) {
+  if (typeof window !== 'undefined' && window.localStorage.privateKeys) {
     JSON.parse(window.localStorage.privateKeys).forEach(key =>
       web3.eth.accounts.wallet.add(key)
     )
@@ -171,22 +180,24 @@ export function setNetwork(net) {
   )
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
 
-  wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
-    context.marketplace.eventCache.updateBlock(blockHeaders.number)
-    pubsub.publish('NEW_BLOCK', {
-      newBlock: { ...blockHeaders, id: blockHeaders.hash }
+  if (typeof window !== 'undefined') {
+    wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
+      context.marketplace.eventCache.updateBlock(blockHeaders.number)
+      pubsub.publish('NEW_BLOCK', {
+        newBlock: { ...blockHeaders, id: blockHeaders.hash }
+      })
     })
-  })
-  web3.eth.getBlockNumber().then(block => {
-    web3.eth.getBlock(block).then(blockHeaders => {
-      if (blockHeaders) {
-        context.marketplace.eventCache.updateBlock(blockHeaders.number)
-        pubsub.publish('NEW_BLOCK', {
-          newBlock: { ...blockHeaders, id: blockHeaders.hash }
-        })
-      }
+    web3.eth.getBlockNumber().then(block => {
+      web3.eth.getBlock(block).then(blockHeaders => {
+        if (blockHeaders) {
+          context.marketplace.eventCache.updateBlock(blockHeaders.number)
+          pubsub.publish('NEW_BLOCK', {
+            newBlock: { ...blockHeaders, id: blockHeaders.hash }
+          })
+        }
+      })
     })
-  })
+  }
 
   context.tokens = config.tokens || []
   if (config.OriginToken) {

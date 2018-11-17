@@ -1,5 +1,5 @@
 import OriginToken from 'origin-contracts/build/contracts/OriginToken'
-import StandardToken from 'origin-contracts/build/contracts/StandardToken'
+import StandardToken from 'origin-contracts/build/contracts/TestToken'
 import contracts from '../../contracts'
 import txHelper, { checkMetaMask } from '../_txHelper'
 
@@ -46,17 +46,18 @@ async function deployToken(_, args) {
       tokens.push(tokenDef)
       localStorage[`${context.net}Tokens`] = JSON.stringify(tokens)
 
+      Contract.options.address = receipt.contractAddress
+      contracts.tokens.push({
+        ...tokenDef,
+        contract: Contract,
+        contractExec: Contract
+      })
+
       if (args.type === 'OriginToken') {
-        Contract.options.address = receipt.contractAddress
         window.localStorage[`${args.symbol}Contract`] = receipt.contractAddress
         contracts.ogn = Contract
         contracts.ognExec = Contract
         contracts[receipt.contractAddress] = contracts.ogn
-        contracts.tokens.push({
-          ...tokenDef,
-          contract: Contract,
-          contractExec: Contract
-        })
       }
     }
   })

@@ -1,4 +1,4 @@
-import { post } from '../../utils/ipfsHash'
+import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 

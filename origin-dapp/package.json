@@ -75,6 +75,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --loglevel notice",
     "start": "webpack-dev-server --open",
+    "start:watch": "webpack-dev-server --open --watch",
     "format": "npx prettier-eslint --write 'src/**/*.js''",
     "lint": "eslint 'src/**/*.js' --rulesdir ../",
     "serve": "serve build",
