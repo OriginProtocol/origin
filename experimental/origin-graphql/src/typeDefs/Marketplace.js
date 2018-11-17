@@ -73,7 +73,15 @@ export default `
     totalListings: Int
 
     listing(id: ID!): Listing
-    listings(first: Int, last: Int, before: String, after: String): ListingConnection!
+    listings(
+      first: Int
+      last: Int
+      before: String
+      after: String
+      search: String
+      sort: String
+      hidden: Boolean
+    ): ListingConnection!
 
     totalEvents: Int
     events(offset: Int, limit: Int): [Event]
@@ -116,6 +124,8 @@ export default `
 
     # Computed
     status: String
+    hidden: Boolean
+    featured: Boolean
 
     # IPFS
     title: String

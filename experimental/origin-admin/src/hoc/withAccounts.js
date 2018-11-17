@@ -23,7 +23,9 @@ function withAccounts(WrappedComponent) {
       {({ data }) => (
         <WrappedComponent
           {...props}
-          accounts={data && data.web3 && data.web3.accounts ? data.web3.accounts : []}
+          accounts={
+            data && data.web3 && data.web3.accounts ? data.web3.accounts : []
+          }
         />
       )}
     </Query>

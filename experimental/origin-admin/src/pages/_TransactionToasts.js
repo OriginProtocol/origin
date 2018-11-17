@@ -40,7 +40,7 @@ const refetchQueries = {
   createWallet: ['AllAccounts'],
   sendFromNode: ['AllAccounts'],
   deployMarketplace: ['AllAccounts'],
-  transferToken: ['AllAccounts']
+  transferToken: ['AllAccounts', 'AccountTokenBalance']
 }
 
 const mutationNames = {
