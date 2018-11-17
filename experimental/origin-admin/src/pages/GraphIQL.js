@@ -6,28 +6,28 @@ import gqlClient from 'origin-graphql'
 
 const DefaultQuery = `{
   marketplace {
-    allListings(limit: 5) {
-      id
-      ipfs {
+    listings {
+      nodes {
         id
         title
         price {
           currency
           amount
         }
-      }
-      seller {
-        id
-        identity {
-          profile {
-            firstName
-            lastName
+        seller {
+          id
+          identity {
+            profile {
+              firstName
+              lastName
+            }
           }
         }
       }
     }
   }
-}`
+}
+`
 
 class GraphExplorer extends Component {
   constructor() {

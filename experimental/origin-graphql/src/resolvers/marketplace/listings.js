@@ -26,6 +26,81 @@ query Search($search: String) {
   }
 }`
 
+async function searchIds(search) {
+  const searchResult = await new Promise(resolve => {
+    fetch(contracts.discovery, {
+      headers: { 'content-type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify({
+        query: discoveryQuery,
+        variables: { search }
+      })
+    })
+      .then(response => response.json())
+      .then(response => resolve(response.data.listings))
+  })
+  const ids = searchResult.nodes.map(n => Number(n.id.split('-')[2]))
+  return { totalCount: searchResult.numberOfItems, ids }
+}
+
+async function allIds({ contract, sort, hidden }) {
+  const featuredIds =
+    sort === 'featured' ? await getFeatured(contracts.net) : []
+  const hiddenIds = hidden ? await getHidden(contracts.net) : []
+
+  const totalCount = Number(await contract.methods.totalListings().call())
+
+  let ids = Array.from({ length: Number(totalCount) }, (v, i) => i)
+    .filter(id => hiddenIds.indexOf(id) < 0)
+    .reverse()
+
+  if (featuredIds.length) {
+    ids = [...featuredIds, ...ids.filter(i => featuredIds.indexOf(i) < 0)]
+  }
+
+  return { totalCount, ids }
+}
+
+async function resultsFromIds({ after, ids, first, totalCount }) {
+
+    let start = 0
+    if (after) {
+      start = ids.indexOf(convertCursorToOffset(after)) + 1
+    }
+    const end = start + first
+    ids = ids.slice(start, end)
+
+    const nodes = await Promise.all(
+      ids.map(id => contracts.eventSource.getListing(id))
+    )
+    const firstNodeId = ids[0] || 0
+    const lastNodeId = ids[ids.length - 1] || 0
+
+    return {
+      totalCount,
+      nodes,
+      pageInfo: {
+        endCursor: bota(lastNodeId),
+        hasNextPage: end < totalCount,
+        hasPreviousPage: firstNodeId > totalCount,
+        startCursor: bota(firstNodeId)
+      },
+      edges: nodes.map(node => ({ cursor: bota(node.id), node }))
+    }
+}
+
+export async function listingsBySeller(listingSeller, { first = 10, after }) {
+  const events = await contracts.marketplace.eventCache.allEvents(
+    'ListingCreated',
+    listingSeller.id
+  )
+
+  const ids = events.map(e => Number(e.returnValues.listingID))
+  const totalCount = ids.length
+
+  return await resultsFromIds({ after, ids, first, totalCount })
+}
+
 export default async function listings(
   contract,
   { first = 10, after, sort, hidden = true, search }
@@ -37,58 +112,12 @@ export default async function listings(
   let ids = [],
     totalCount = 0
 
-  if (search) {
-    const searchResult = await new Promise(resolve => {
-      fetch('https://discovery.originprotocol.com', {
-        headers: { 'content-type': 'application/json' },
-        method: 'POST',
-        body: JSON.stringify({
-          query: discoveryQuery,
-          variables: { search }
-        })
-      })
-        .then(response => response.json())
-        .then(response => resolve(response.data.listings))
-    })
-    totalCount = searchResult.numberOfItems
-    ids = searchResult.nodes.map(n => Number(n.id.split('-')[2]))
+  if (search && contracts.discovery) {
+    ({ totalCount, ids } = await searchIds(search))
   } else {
-    const featuredIds =
-      sort === 'featured' ? await getFeatured(contracts.net) : []
-    const hiddenIds = hidden ? await getHidden(contracts.net) : []
-
-    totalCount = Number(await contract.methods.totalListings().call())
-
-    ids = Array.from({ length: Number(totalCount) }, (v, i) => i)
-      .filter(id => hiddenIds.indexOf(id) < 0)
-      .reverse()
-
-    if (featuredIds.length) {
-      ids = [...featuredIds, ...ids.filter(i => featuredIds.indexOf(i) < 0)]
-    }
+    ({ totalCount, ids } = await allIds({ contract, sort, hidden }))
   }
 
-  after = after ? convertCursorToOffset(after) : ids[0]
+  return await resultsFromIds({ after, ids, first, totalCount })
 
-  let idx = ids.indexOf(after)
-  if (idx > 0) idx += 1
-  ids = ids.slice(idx, idx + first)
-
-  const nodes = await Promise.all(
-    ids.map(id => contracts.eventSource.getListing(id))
-  )
-  const firstNodeId = ids[0] || 0
-  const lastNodeId = ids[ids.length - 1] || 0
-
-  return {
-    totalCount,
-    nodes,
-    pageInfo: {
-      endCursor: bota(lastNodeId),
-      hasNextPage: lastNodeId > 0,
-      hasPreviousPage: firstNodeId > totalCount,
-      startCursor: bota(firstNodeId)
-    },
-    edges: nodes.map(node => ({ cursor: bota(node.id), node }))
-  }
 }

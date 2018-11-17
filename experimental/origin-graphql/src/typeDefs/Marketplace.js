@@ -85,6 +85,16 @@ export default `
 
     totalEvents: Int
     events(offset: Int, limit: Int): [Event]
+
+    sellers: [ListingSeller]
+    seller(id: ID!): ListingSeller
+  }
+
+  type ListingSeller {
+    id: ID!
+    account: Account!
+    totalCount: Int!
+    listings(first: Int, after: String): ListingConnection!
   }
 
   type ListingConnection {
@@ -146,6 +156,7 @@ export default `
   type Offer {
     id: ID!
     listingId: String!
+    createdBlock: Int
 
     # Connections
     listing: Listing
