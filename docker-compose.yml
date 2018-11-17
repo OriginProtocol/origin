@@ -142,6 +142,8 @@ services:
       - ./development/envfiles/origin-notifications.env:/app/.env
     depends_on:
       - postgres
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
     ports:
       - "3456:3456"
     command: /bin/bash -c "npm run migrate && npm run start"
