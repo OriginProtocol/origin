@@ -30,7 +30,7 @@ class OriginEventSource {
       return null
     }
 
-    const events = await this.contract.eventCache.listings(listingId)
+    const events = await this.contract.eventCache.listings(listingId, undefined, blockNumber)
     let soldUnits = 0
 
     events.forEach(e => {
@@ -119,6 +119,7 @@ class OriginEventSource {
     return {
       id: offerId,
       listingId: String(listingId),
+      createdBlock: blockNumber,
       status,
       contract: this.contract,
       withdrawnBy,

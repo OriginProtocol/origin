@@ -3,6 +3,7 @@ import contracts from '../contracts'
 let ethPrice
 
 export default {
+  config: () => contracts.net,
   web3: () => ({}),
   marketplace: () => contracts.marketplace,
   contracts: () => {

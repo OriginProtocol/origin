@@ -19,7 +19,8 @@ const Configs = {
     provider: 'https://mainnet.infura.io',
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
-    ipfsRPC: `https://ipfs.originprotocol.com`,
+    ipfsRPC: 'https://ipfs.originprotocol.com',
+    discovery: 'https://discovery.originprotocol.com',
     V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
     OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
@@ -47,6 +48,7 @@ const Configs = {
     providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
+    discovery: 'https://discovery.staging.originprotocol.com',
     V00_UserRegistry: '0x56727c8a51b276aec911afa8d6d80d485c89d5cc',
     OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
@@ -136,6 +138,7 @@ export function setNetwork(net) {
 
   context.ipfsGateway = config.ipfsGateway
   context.ipfsRPC = config.ipfsRPC
+  context.discovery = config.discovery
 
   delete context.marketplace
   delete context.marketplaceExec

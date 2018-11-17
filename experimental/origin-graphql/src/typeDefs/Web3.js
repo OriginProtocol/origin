@@ -13,6 +13,7 @@ export default `
 
   type Query {
     web3: Web3
+    config: String
     contracts: [Contract]
     contract(id: String!): Contract
     tokens: [Token]
