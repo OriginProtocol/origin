@@ -100,19 +100,10 @@ class Users extends Component {
             )
             const after = get(data, 'marketplace.users.pageInfo.endCursor')
 
-            window.requestAnimationFrame(() => {
-              if (
-                document.body.clientHeight < window.innerHeight &&
-                hasNextPage &&
-                networkStatus === 7
-              ) {
-                nextPage(fetchMore, { ...vars, after })
-              }
-            })
-
             return (
               <BottomScrollListener
                 offset={50}
+                initial={hasNextPage && networkStatus === 7}
                 onBottom={() => {
                   if (hasNextPage) {
                     nextPage(fetchMore, { ...vars, after })

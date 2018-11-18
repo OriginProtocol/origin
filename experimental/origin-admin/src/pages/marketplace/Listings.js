@@ -88,21 +88,12 @@ class Listings extends Component {
           const after = lGet(data, 'marketplace.listings.pageInfo.endCursor')
           const totalListings = data.marketplace.listings.totalCount
 
-          window.requestAnimationFrame(() => {
-            if (
-              document.body.clientHeight < window.innerHeight &&
-              hasNextPage &&
-              networkStatus === 7
-            ) {
-              nextPage(fetchMore, { ...vars, after })
-            }
-          })
-
           const noMore = !hasNextPage
 
           return (
             <BottomScrollListener
               offset={this.state.mode === 'list' ? 50 : 200}
+              initial={hasNextPage && networkStatus === 7}
               onBottom={() => {
                 if (!noMore) {
                   nextPage(fetchMore, { ...vars, after })

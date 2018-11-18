@@ -38,6 +38,15 @@ class BottomScrollListener extends Component {
   }
 
   render() {
+    window.requestAnimationFrame(() => {
+      if (
+        document.body.clientHeight < window.innerHeight &&
+        this.props.initial
+      ) {
+        this.props.onBottom()
+      }
+    })
+
     return !this.props.children ? null : <div>{this.props.children}</div>
   }
 }
