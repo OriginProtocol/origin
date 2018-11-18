@@ -22,17 +22,11 @@
       "type": "string",
       "title": "schema.housing.category",
       "enum": [
-        "schema.housing.aptsWanted",
         "schema.housing.aptsHousingForRent",
-        "schema.housing.housingSwap",
         "schema.housing.officeCommercial",
         "schema.housing.other",
         "schema.housing.parkingStorage",
         "schema.housing.realEstate",
-        "schema.housing.realEstateWanted",
-        "schema.housing.roomShareWanted",
-        "schema.housing.roomsShares",
-        "schema.housing.subletTempWanted",
         "schema.housing.subletsTemporary",
         "schema.housing.vacationRentals"
       ],
