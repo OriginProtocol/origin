@@ -4,6 +4,7 @@ import { Query } from 'react-apollo'
 import { Button, ContextMenuTarget, Menu, MenuItem } from '@blueprintjs/core'
 
 import SendFromWallet from './mutations/SendFromWallet'
+import SendToken from './mutations/SendToken'
 import SetWalletMutation from './_SetWalletMutation'
 import Identity from 'components/Identity'
 
@@ -57,6 +58,12 @@ class AccountButton extends Component {
           from={accountId}
           onCompleted={() => this.setState({ sendEth: false })}
         />
+        <SendToken
+          isOpen={this.state.sendToken}
+          lazy={true}
+          from={accountId}
+          onCompleted={() => this.setState({ sendToken: false })}
+        />
       </span>
     )
   }
@@ -108,6 +115,10 @@ class AccountButton extends Component {
         <MenuItem
           text="Send Eth"
           onClick={() => this.setState({ sendEth: true })}
+        />
+        <MenuItem
+          text="Send Token"
+          onClick={() => this.setState({ sendToken: true })}
         />
       </Menu>
     )

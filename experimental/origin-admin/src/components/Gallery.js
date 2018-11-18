@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { ipfsGateway } from 'utils/config'
+import { getIpfsGateway } from 'utils/config'
 
 class Gallery extends Component {
   state = { active: 0 }
   render() {
     const { pics } = this.props
     const active = pics[this.state.active]
+    const ipfsGateway = getIpfsGateway()
+    if (!active) return null
     return (
       <div className="gallery">
         <div

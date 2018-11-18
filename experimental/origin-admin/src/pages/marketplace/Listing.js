@@ -17,7 +17,7 @@ import {
 
 import currency from 'utils/currency'
 import withAccounts from 'hoc/withAccounts'
-import { MakeOffer, WithdrawListing, AddData, UpdateListing } from './mutations'
+import { MakeOffer, WithdrawListing, AddData, CreateListing } from './mutations'
 import Offers from './_Offers'
 import EventsTable from './_EventsTable'
 import Identity from 'components/Identity'
@@ -146,7 +146,7 @@ class Listing extends Component {
                   listing={listing}
                   onCompleted={() => this.setState({ makeOffer: false })}
                 />
-                <UpdateListing
+                <CreateListing
                   isOpen={this.state.updateListing}
                   listing={listing}
                   onCompleted={() => this.setState({ updateListing: false })}
@@ -257,7 +257,7 @@ class Listing extends Component {
             <Button
               icon="arrow-left"
               style={{ marginLeft: 10 }}
-              disabled={listingId === 1}
+              disabled={listingId === 0}
               onClick={() => {
                 this.props.history.push(
                   `/marketplace/listings/${Number(listingId - 1)}`

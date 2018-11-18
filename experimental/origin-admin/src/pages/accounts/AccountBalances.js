@@ -3,7 +3,6 @@ import { HTMLTable } from '@blueprintjs/core'
 
 import AccountButton from '../accounts/AccountButton'
 import TokenBalance from 'components/TokenBalance'
-import TokenButton from 'components/TokenButton'
 import Price from 'components/Price'
 
 import SendFromNodeBtn from './_SendFromNodeBtn'
@@ -47,13 +46,17 @@ class AccountBalances extends Component {
               </td>
               {tokens.map(token => (
                 <td key={token.id}>
-                  <TokenButton
-                    balance={<TokenBalance account={a.id} token={token.id} />}
-                  />
+                  <TokenBalance account={a.id} token={token.id} />
                 </td>
               ))}
               <td>
-                <SendFromNodeBtn from={maxNodeAccount} to={a.id} value="0.5" />
+                {!maxNodeAccount ? null : (
+                  <SendFromNodeBtn
+                    from={maxNodeAccount}
+                    to={a.id}
+                    value="0.5"
+                  />
+                )}
                 <RemoveWalletBtn address={a.id} />
               </td>
             </tr>

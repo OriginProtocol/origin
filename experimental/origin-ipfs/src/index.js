@@ -4,9 +4,9 @@
 // export function getIpfsHashFromBytes32(bytes32Hex) {
 //   return bytes32Hex;
 // }
-import bs58 from 'bs58'
+const bs58 = require('bs58')
 
-export function getBytes32FromIpfsHash(hash) {
+function getBytes32FromIpfsHash(hash) {
   return `0x${bs58
     .decode(hash)
     .slice(2)
@@ -16,7 +16,7 @@ export function getBytes32FromIpfsHash(hash) {
 // Return base58 encoded ipfs hash from bytes32 hex string,
 // E.g. "0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231"
 // --> "QmNSUYVKDSvPUnRLKmuxk9diJ6yS96r1TrAXzjTiBcCLAL"
-export function getIpfsHashFromBytes32(bytes32Hex) {
+function getIpfsHashFromBytes32(bytes32Hex) {
   // Add our default ipfs values for first 2 bytes:
   // function:0x12=sha2, size:0x20=256 bits
   // and cut off leading "0x"
@@ -26,53 +26,53 @@ export function getIpfsHashFromBytes32(bytes32Hex) {
   return hashStr
 }
 
-export async function postFile(gateway, file) {
+async function postFile(gateway, file) {
   const body = new FormData()
   body.append('file', file)
 
-  var rawRes = await fetch(`${gateway}/api/v0/add`, { method: 'POST', body })
-  var res = await rawRes.json()
+  const rawRes = await fetch(`${gateway}/api/v0/add`, { method: 'POST', body })
+  const res = await rawRes.json()
   return res.Hash
 }
 
-export async function post(gateway, json) {
-  var formData = new FormData()
+async function post(gateway, json) {
+  const formData = new FormData()
   formData.append('file', new Blob([JSON.stringify(json)]))
 
-  var rawRes = await fetch(`${gateway}/api/v0/add`, {
+  const rawRes = await fetch(`${gateway}/api/v0/add`, {
     method: 'POST',
     body: formData
   })
-  var res = await rawRes.json()
+  const res = await rawRes.json()
 
   return getBytes32FromIpfsHash(res.Hash)
 }
 
-export async function postEnc(gateway, json, pubKeys) {
-  var formData = new FormData()
+async function postEnc(gateway, json, pubKeys) {
+  const formData = new FormData()
 
-  var publicKeys = pubKeys.reduce(
+  const publicKeys = pubKeys.reduce(
     (acc, val) => acc.concat(openpgp.key.readArmored(val).keys),
     []
   )
 
-  var encrypted = await openpgp.encrypt({
+  const encrypted = await openpgp.encrypt({
     data: JSON.stringify(json),
     publicKeys
   })
 
   formData.append('file', new Blob([encrypted.data]))
 
-  var rawRes = await fetch(`${gateway}/api/v0/add`, {
+  const rawRes = await fetch(`${gateway}/api/v0/add`, {
     method: 'POST',
     body: formData
   })
-  var res = await rawRes.json()
+  const res = await rawRes.json()
 
   return getBytes32FromIpfsHash(res.Hash)
 }
 
-export async function decode(text, key, pass) {
+async function decode(text, key, pass) {
   const privKeyObj = openpgp.key.readArmored(key).keys[0]
   await privKeyObj.decrypt(pass)
 
@@ -83,8 +83,8 @@ export async function decode(text, key, pass) {
   return decrypted.data
 }
 
-export async function getText(gateway, hashAsBytes) {
-  var hash = getIpfsHashFromBytes32(hashAsBytes)
+async function getText(gateway, hashAsBytes) {
+  const hash = getIpfsHashFromBytes32(hashAsBytes)
   const response = await new Promise(resolve => {
     let didTimeOut = false
     const timeout = setTimeout(() => {
@@ -111,7 +111,7 @@ export async function getText(gateway, hashAsBytes) {
   return await response.text()
 }
 
-export async function get(gateway, hashAsBytes, party) {
+async function get(gateway, hashAsBytes, party) {
   let text = await getText(gateway, hashAsBytes)
   if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
     try {
@@ -121,4 +121,8 @@ export async function get(gateway, hashAsBytes, party) {
     }
   }
   return JSON.parse(text)
+}
+
+module.exports = {
+  get, getText, post, getBytes32FromIpfsHash, getIpfsHashFromBytes32
 }

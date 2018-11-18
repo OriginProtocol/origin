@@ -38,6 +38,16 @@ class MetaMaskSwitcher extends Component {
               const web3 = data && data.web3 ? data.web3 : {}
               const loggedIn = web3.metaMaskAccount ? true : false
               const checked = web3.metaMaskEnabled && loggedIn
+              let warning
+              if (checked && web3.networkId !== web3.metaMaskNetworkId) {
+                warning = (
+                  <Icon
+                    icon="warning-sign"
+                    intent="warning"
+                    style={{ marginLeft: 8 }}
+                  />
+                )
+              }
               const SwitchCmp = (
                 <Switch
                   inline={true}
@@ -56,13 +66,7 @@ class MetaMaskSwitcher extends Component {
                         src="images/metamask.png"
                         style={{ width: 16, verticalAlign: -3 }}
                       />
-                      {web3.networkId === web3.metaMaskNetworkId ? null : (
-                        <Icon
-                          icon="warning-sign"
-                          intent="warning"
-                          style={{ marginLeft: 8 }}
-                        />
-                      )}
+                      {warning}
                     </>
                   }
                 />

@@ -3,7 +3,7 @@ import contracts from '../../contracts'
 
 async function transferToken(_, { token, from, to, value }) {
   const contract = contracts.tokens.find(
-    t => t.symbol.toLowerCase() === token.toLowerCase()
+    t => t.id.toLowerCase() === token.toLowerCase()
   ).contractExec
   await checkMetaMask(from)
   if (!contract || !contract.options.address) {

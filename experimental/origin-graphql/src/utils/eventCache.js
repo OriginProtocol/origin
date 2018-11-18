@@ -1,5 +1,6 @@
-export default function eventCache(contract, fromBlock = 0) {
+import uniqBy from 'lodash/uniqBy'
 
+export default function eventCache(contract, fromBlock = 0) {
   let events = [],
     toBlock = 0,
     lastLookup = 0,
@@ -7,18 +8,18 @@ export default function eventCache(contract, fromBlock = 0) {
     queue = []
 
   function updateBlock(block) {
-    console.log("Update block", block)
+    console.log('Update block', block)
     toBlock = block
   }
 
-  if (!contract.options.address) { return { updateBlock } }
+  if (!contract.options.address) {
+    return { updateBlock }
+  }
 
   let cacheStr = `eventCache${contract.options.address.slice(2, 8)}`
 
   try {
-    ({ events, lastLookup } = JSON.parse(
-      window.localStorage[cacheStr]
-    ))
+    ({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr]))
     fromBlock = lastLookup
   } catch (e) {
     /* Ignore */
@@ -40,7 +41,9 @@ export default function eventCache(contract, fromBlock = 0) {
       fromBlock += 1
     }
     processing = true
-    console.log(`Fetching events from ${fromBlock} to ${toBlock}, last lookup ${lastLookup}`)
+    console.log(
+      `Fetching events from ${fromBlock} to ${toBlock}, last lookup ${lastLookup}`
+    )
     lastLookup = toBlock
 
     const newEvents = await contract.getPastEvents('allEvents', {
@@ -48,12 +51,21 @@ export default function eventCache(contract, fromBlock = 0) {
       toBlock
     })
 
-    events = [
-      ...events,
-      ...newEvents.map(e => ({ ...e, block: { id: e.blockNumber } }))
-    ]
+    events = uniqBy(
+      [
+        ...events,
+        ...newEvents.map(e => ({ ...e, block: { id: e.blockNumber } }))
+      ],
+      e => e.id
+    )
 
     console.log(`Found ${events.length} events, ${newEvents.length} new`)
+
+    fromBlock = toBlock + 1
+    processing = false
+    while (queue.length) {
+      queue.pop()()
+    }
 
     if (typeof window !== 'undefined') {
       window.localStorage[cacheStr] = JSON.stringify({
@@ -61,29 +73,34 @@ export default function eventCache(contract, fromBlock = 0) {
         events
       })
     }
-
-    fromBlock = toBlock + 1
-    processing = false
-    while(queue.length) {
-      queue.pop()()
-    }
   }
 
-  async function allEvents(eventName) {
+  async function allEvents(eventName, party) {
     await getPastEvents()
     return events.filter(e => {
-      return eventName ? e.event === eventName : true
+      const topics = e.raw.topics
+      let matches = true
+      if (eventName && e.event !== eventName) matches = false
+      if (party) {
+        if (
+          topics[1].toLowerCase() !==
+          web3.utils.padLeft(party, 64).toLowerCase()
+        )
+          matches = false
+      }
+      return matches
     })
   }
 
-  async function listings(listingId, eventName) {
+  async function listings(listingId, eventName, blockNumber) {
     await getPastEvents()
     var listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
     return events.filter(e => {
       const topics = e.raw.topics
-      return (
-        topics[2] === listingTopic && (eventName ? e.event === eventName : true)
-      )
+      let matches = topics[2] === listingTopic
+      if (eventName && e.event !== eventName) matches = false
+      if (blockNumber && e.blockNumber > blockNumber) matches = false
+      return matches
     })
   }
 

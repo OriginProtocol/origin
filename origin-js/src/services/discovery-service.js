@@ -240,7 +240,7 @@ class DiscoveryService {
         id: "${offerId}"
       ) {
         data
-        listing: {
+        listing {
           id
         }
       }
