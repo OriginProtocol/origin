@@ -13,6 +13,7 @@ export default `
 
   type Query {
     web3: Web3
+    config: String
     contracts: [Contract]
     contract(id: String!): Contract
     tokens: [Token]
@@ -33,6 +34,7 @@ export default `
     setActiveWallet(address: String!): Account
     createWallet(role: String, name: String): Account
     importWallet(role: String, name: String, privateKey: String!): Account
+    importWallets(accounts: [WalletInput]): Boolean
     removeWallet(address: String!): String
   }
 
@@ -85,6 +87,7 @@ export default `
     symbol: String
     decimals: Int
     totalSupply: String
+    exchangeRate(currency: String!): Int
   }
 
   type Contract {
@@ -172,6 +175,12 @@ export default `
     timestamp: Int
     transactions: [String]
     uncles: [String]
+  }
+
+  input WalletInput {
+    privateKey: String
+    name: String
+    role: String
   }
 
 `

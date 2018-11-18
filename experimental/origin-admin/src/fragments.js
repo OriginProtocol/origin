@@ -41,6 +41,8 @@ export default {
         description
         currencyId
         unitsTotal
+        featured
+        hidden
         price {
           amount
           currency

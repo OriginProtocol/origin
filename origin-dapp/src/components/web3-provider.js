@@ -267,12 +267,12 @@ const UnsupportedNetwork = props => {
   )
 }
 
-const Web3Unavailable = props => (
+const Web3Unavailable = ({ mobileDevice }) => (
   <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    {(!props.onMobile || props.onMobile === 'Android') && (
+    {(!mobileDevice || mobileDevice === 'Android') && (
       <div>
         <FormattedMessage
           id={'web3-provider.pleaseInstallMetaMask'}
@@ -304,8 +304,7 @@ const Web3Unavailable = props => (
         </a>
       </div>
     )}
-    {props.onMobile &&
-      props.onMobile !== 'Android' && (
+    {mobileDevice && mobileDevice !== 'Android' && (
       <div>
         <FormattedMessage
           id={'web3-provider.useWalletEnabledBrowser'}
@@ -532,7 +531,7 @@ class Web3Provider extends Component {
   }
 
   render() {
-    const { onMobile, web3Account, web3Intent, storeWeb3Intent } = this.props
+    const { mobileDevice, web3Account, web3Intent, storeWeb3Intent } = this.props
     const { networkConnected, networkId, currentProvider, linkerCode, linkerPopUp } = this.state
     const currentNetwork = getCurrentNetwork(networkId)
     const currentNetworkName = currentNetwork
@@ -545,7 +544,7 @@ class Web3Provider extends Component {
     return (
       <Fragment>
         {/* currentProvider should always be present */
-          !currentProvider && <Web3Unavailable onMobile={onMobile} />}
+          !currentProvider && <Web3Unavailable mobileDevice={mobileDevice} />}
 
         {/* networkConnected initial state is null */
           currentProvider && networkConnected === false && <UnconnectedNetwork />}
@@ -562,7 +561,7 @@ class Web3Provider extends Component {
           web3Intent &&
           !walletLinkerEnabled &&
           !web3.givenProvider &&
-          onMobile && (
+          mobileDevice && (
             <NotWeb3EnabledMobile
               web3Intent={web3Intent}
               storeWeb3Intent={storeWeb3Intent}
@@ -573,7 +572,7 @@ class Web3Provider extends Component {
           web3Intent &&
           !walletLinkerEnabled &&
           !web3.givenProvider &&
-          !onMobile && (
+          !mobileDevice && (
             <NotWeb3EnabledDesktop
               web3Intent={web3Intent}
               storeWeb3Intent={storeWeb3Intent}
@@ -609,9 +608,9 @@ class Web3Provider extends Component {
 
 const mapStateToProps = state => {
   return {
+    mobileDevice: state.app.mobileDevice,
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent,
-    onMobile: state.app.onMobile
+    web3Intent: state.app.web3.intent
   }
 }
 

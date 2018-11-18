@@ -14,8 +14,11 @@ import withAccounts from 'hoc/withAccounts'
 class AccountBalances extends Component {
   render() {
     const { tokens, accounts, maxNodeAccount } = this.props
+    if (!accounts.length) {
+      return null
+    }
     return (
-      <HTMLTable small={true} bordered={true} className="mt-3 mb-3">
+      <HTMLTable small={true} bordered={true} className="mb-3">
         <thead>
           <tr>
             <th>Wallet</th>
@@ -47,7 +50,13 @@ class AccountBalances extends Component {
                 </td>
               ))}
               <td>
-                <SendFromNodeBtn from={maxNodeAccount} to={a.id} value="0.5" />
+                {!maxNodeAccount ? null : (
+                  <SendFromNodeBtn
+                    from={maxNodeAccount}
+                    to={a.id}
+                    value="0.5"
+                  />
+                )}
                 <RemoveWalletBtn address={a.id} />
               </td>
             </tr>

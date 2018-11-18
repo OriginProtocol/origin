@@ -73,10 +73,28 @@ export default `
     totalListings: Int
 
     listing(id: ID!): Listing
-    listings(first: Int, last: Int, before: String, after: String): ListingConnection!
+    listings(
+      first: Int
+      last: Int
+      before: String
+      after: String
+      search: String
+      sort: String
+      hidden: Boolean
+    ): ListingConnection!
 
     totalEvents: Int
     events(offset: Int, limit: Int): [Event]
+
+    sellers: [ListingSeller]
+    seller(id: ID!): ListingSeller
+  }
+
+  type ListingSeller {
+    id: ID!
+    account: Account!
+    totalCount: Int!
+    listings(first: Int, after: String): ListingConnection!
   }
 
   type ListingConnection {
@@ -116,6 +134,8 @@ export default `
 
     # Computed
     status: String
+    hidden: Boolean
+    featured: Boolean
 
     # IPFS
     title: String
@@ -136,6 +156,7 @@ export default `
   type Offer {
     id: ID!
     listingId: String!
+    createdBlock: Int
 
     # Connections
     listing: Listing

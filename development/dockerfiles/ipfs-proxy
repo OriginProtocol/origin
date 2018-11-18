@@ -3,6 +3,6 @@ FROM node:10
 WORKDIR /app
 
 COPY ./ipfs-proxy/package*.json /app/
-RUN npm install --loglevel notice
+RUN npm ci --loglevel notice
 
-CMD node src/index.js
+CMD npm run start:dev

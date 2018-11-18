@@ -26,6 +26,15 @@ export default {
     }
   },
   totalSupply: async token => {
+    if (!token.contract) return null
     return await token.contract.methods.totalSupply().call()
+  },
+  exchangeRate: async (token, args) => {
+    const currency = args.currency || 'USD'
+    if (currency === 'USD') {
+      return 200
+    } else {
+      return 200
+    }
   }
 }
