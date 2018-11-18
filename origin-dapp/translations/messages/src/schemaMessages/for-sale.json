@@ -200,10 +200,6 @@
     "defaultMessage": "Video Gaming"
   },
   {
-    "id": "schema.forSale.wanted",
-    "defaultMessage": "Wanted"
-  },
-  {
     "id": "schema.forSale.deliverProduct",
     "defaultMessage": "Arrange for delivery or pickup"
   },

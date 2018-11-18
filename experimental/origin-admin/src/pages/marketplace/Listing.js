@@ -17,7 +17,7 @@ import {
 
 import currency from 'utils/currency'
 import withAccounts from 'hoc/withAccounts'
-import { MakeOffer, WithdrawListing, AddData, UpdateListing } from './mutations'
+import { MakeOffer, WithdrawListing, AddData, CreateListing } from './mutations'
 import Offers from './_Offers'
 import EventsTable from './_EventsTable'
 import Identity from 'components/Identity'
@@ -35,8 +35,8 @@ class Listing extends Component {
       <div className="p-3">
         {this.renderBreadcrumbs()}
         <Query query={query} variables={{ listingId }}>
-          {({ loading, error, data }) => {
-            if (loading)
+          {({ networkStatus, error, data }) => {
+            if (networkStatus === 1)
               return (
                 <div style={{ maxWidth: 300, marginTop: 100 }}>
                   <Spinner />
@@ -75,7 +75,7 @@ class Listing extends Component {
               selectedTabId = 'events'
             }
 
-            const media = get(data, 'marketplace.listing.media', [])
+            const media = get(data, 'marketplace.listing.media') || []
 
             return (
               <>
@@ -146,7 +146,7 @@ class Listing extends Component {
                   listing={listing}
                   onCompleted={() => this.setState({ makeOffer: false })}
                 />
-                <UpdateListing
+                <CreateListing
                   isOpen={this.state.updateListing}
                   listing={listing}
                   onCompleted={() => this.setState({ updateListing: false })}
@@ -192,12 +192,12 @@ class Listing extends Component {
           </span>
         </span>
         {this.renderActions(sellerPresent, listing)}
-        {listing.status === 'active' ? (
+        {listing.status === 'withdrawn' ? (
+          <Tag style={{ marginLeft: 15 }}>Withdrawn</Tag>
+        ) : (
           <Tag style={{ marginLeft: 15 }} intent="success">
             Active
           </Tag>
-        ) : (
-          <Tag style={{ marginLeft: 15 }}>Withdrawn</Tag>
         )}
       </div>
     )
@@ -206,7 +206,7 @@ class Listing extends Component {
   renderActions(sellerPresent = false, listing) {
     return (
       <>
-        {listing.status !== 'active' ? null : (
+        {listing.status === 'withdrawn' ? null : (
           <>
             <Tooltip content="Update">
               <AnchorButton
@@ -257,7 +257,7 @@ class Listing extends Component {
             <Button
               icon="arrow-left"
               style={{ marginLeft: 10 }}
-              disabled={listingId === 1}
+              disabled={listingId === 0}
               onClick={() => {
                 this.props.history.push(
                   `/marketplace/listings/${Number(listingId - 1)}`

@@ -1,4 +1,4 @@
-import { get } from '../utils/ipfsHash'
+import { get } from 'origin-ipfs'
 import contracts from '../contracts'
 
 export default {

@@ -52,6 +52,7 @@ services:
       # Addresses for deployment of contracts to local blockchain will get
       # written to the build files
       - ./origin-contracts/build:/app/origin-contracts/build
+      - ./origin-js/scripts:/app/origin-js/scripts
 
   origin-discovery:
     container_name: origin-discovery
@@ -80,6 +81,7 @@ services:
       context: .
       dockerfile: development/dockerfiles/event-listener
     volumes:
+      - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
       - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
@@ -123,6 +125,8 @@ services:
       - postgres
     environment:
       - FLASK_APP=/app/main.py
+      - FLASK_DEBUG=True
+      - PYTHONUNBUFFERED=1
     ports:
       - "5000:5000"
     command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
@@ -138,6 +142,8 @@ services:
       - ./development/envfiles/origin-notifications.env:/app/.env
     depends_on:
       - postgres
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
     ports:
       - "3456:3456"
     command: /bin/bash -c "npm run migrate && npm run start"
@@ -154,8 +160,9 @@ services:
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/src:/app/origin-js/src
       # Mount origin-dapp inside the container
-      - ./origin-dapp/src:/app/src
-      - ./origin-dapp/public:/app/public
+      - ./origin-dapp/src:/app/origin-dapp/src
+      - ./origin-dapp/public:/app/origin-dapp/public
+      - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
       # Set the envfile from the local envfile
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
       - ./development/.ipfs:/ipfs

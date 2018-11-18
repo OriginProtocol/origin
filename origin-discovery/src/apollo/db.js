@@ -41,14 +41,20 @@ async function _getListings (whereClause, orderByIds = []) {
     return []
   }
 
-  let listings
+  let listings = []
   if (orderByIds.length === 0) {
     listings = rows.map(row => _makeListing(row))
   } else {
     // Return results in oder specified by orderIds.
     const rowDict = {}
     rows.forEach(row => { rowDict[row.id] = row })
-    listings = orderByIds.map(id => _makeListing(rowDict[id]))
+    orderByIds.forEach(id => {
+      if (!rowDict[id]) {
+        console.log(`ERROR: Data inconsistency - Listing id ${id} in ES but not in DB.`)
+        return
+      }
+      listings.push(_makeListing(rowDict[id]))
+    })
   }
 
   return listings
@@ -88,4 +94,66 @@ async function getListing (listingId) {
   return listing
 }
 
-module.exports = { getListing, getListingsById, getListingsBySeller }
+/**
+ * Helper function. Returns an offer object compatible with the GraphQL Offer schema.
+ * @param {Object} row - Row read from DB offer table.
+ * @return {Object}
+ * @private
+ */
+function _makeOffer (row) {
+  return {
+    id: row.id,
+    ipfsHash: row.data.ipfs.hash,
+    data: row.data,
+    status: row.status,
+    totalPrice: row.data.totalPrice
+  }
+}
+
+/**
+ * Queries DB to get offers.
+ * @param {string} listingId - optional listing id
+ * @param {string} buyerAddress - optional buyer address
+ * @param {string} sellerAddress - optional seller address
+ * @return {Promise<Array<Object>>}
+ */
+async function getOffers ({ listingId = null, buyerAddress = null, sellerAddress = null }) {
+  const whereClause = {}
+
+  if (listingId) {
+    whereClause.listingId = listingId
+  }
+  if (buyerAddress) {
+    whereClause.buyerAddress = buyerAddress.toLowerCase()
+  }
+  if (sellerAddress) {
+    whereClause.sellerAddress = sellerAddress.toLowerCase()
+  }
+  if (Object.keys(whereClause).length === 0) {
+    throw new Error('A filter must be specified: listingId, buyerAddress or sellerAddress')
+  }
+  const rows = await db.Offer.findAll({ where: whereClause })
+
+  return rows.map(row => _makeOffer(row))
+}
+
+/**
+ * Queries DB for an Offer.
+ * @param offerId
+ * @return {Promise<Object|null>}
+ */
+async function getOffer (offerId) {
+  const row = await db.Offer.findByPk(offerId)
+  if (!row) {
+    return null
+  }
+  return _makeOffer(row)
+}
+
+module.exports = {
+  getListing,
+  getListingsById,
+  getListingsBySeller,
+  getOffer,
+  getOffers
+}

@@ -2,16 +2,16 @@ import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplac
 import UserRegistryContract from 'origin-contracts/build/contracts/V00_UserRegistry'
 import ClaimHolderRegisteredContract from 'origin-contracts/build/contracts/ClaimHolderRegistered'
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
-import TokenContract from 'origin-contracts/build/contracts/StandardToken'
+import TokenContract from 'origin-contracts/build/contracts/TestToken'
 
 import Web3 from 'web3'
+import EventSource from 'origin-eventsource'
+
 import eventCache from './utils/eventCache'
 import pubsub from './utils/pubsub'
-import EventSource from './utils/OriginEventSource'
-
 import msg from './utils/messagingInstance'
 
-let metaMask, metaMaskEnabled, web3WS, wsSub
+let metaMask, metaMaskEnabled, web3WS, wsSub, web3
 const HOST = process.env.HOST || 'localhost'
 
 const Configs = {
@@ -19,7 +19,8 @@ const Configs = {
     provider: 'https://mainnet.infura.io',
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
-    ipfsRPC: `https://ipfs.originprotocol.com`,
+    ipfsRPC: 'https://ipfs.originprotocol.com',
+    discovery: 'https://discovery.originprotocol.com',
     V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
     OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
@@ -32,6 +33,13 @@ const Configs = {
         name: 'DAI Stablecoin',
         symbol: 'DAI',
         decimals: '18'
+      },
+      {
+        id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        type: 'Standard',
+        name: 'USDC Stablecoin',
+        symbol: 'USDC',
+        decimals: '6'
       }
     ]
   },
@@ -40,6 +48,7 @@ const Configs = {
     providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
+    discovery: 'https://discovery.staging.originprotocol.com',
     V00_UserRegistry: '0x56727c8a51b276aec911afa8d6d80d485c89d5cc',
     OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
@@ -57,8 +66,8 @@ const Configs = {
     providerWS: 'wss://kovan.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
-    OriginToken: '0x0EF2f63397657DD71384C8c26F81deE23bA9c6dC',
-    V00_Marketplace: '0x72184988E5b102D32439c475E714b482D7E270df'
+    OriginToken: '0xf2D5AeA9057269a1d97A952BAf5E1887462c67b6',
+    V00_Marketplace: '0xCCC4fDB0BfD0BC9E6cede6297534c0e96E3E76DE'
   },
   localhost: {
     provider: `http://${HOST}:8545`,
@@ -129,8 +138,7 @@ export function setNetwork(net) {
 
   context.ipfsGateway = config.ipfsGateway
   context.ipfsRPC = config.ipfsRPC
-
-  window.localStorage.ognNetwork = net
+  context.discovery = config.discovery
 
   delete context.marketplace
   delete context.marketplaceExec
@@ -144,7 +152,11 @@ export function setNetwork(net) {
     wsSub.unsubscribe()
   }
 
-  window.web3 = applyWeb3Hack(new Web3(config.provider))
+  web3 = applyWeb3Hack(new Web3(config.provider))
+  if (typeof window !== 'undefined') {
+    window.localStorage.ognNetwork = net
+    window.web3 = web3
+  }
   context.web3Exec = web3
 
   context.messaging = msg
@@ -152,7 +164,7 @@ export function setNetwork(net) {
 
   context.metaMaskEnabled = metaMaskEnabled
   web3WS = applyWeb3Hack(new Web3(config.providerWS))
-  if (window.localStorage.privateKeys) {
+  if (typeof window !== 'undefined' && window.localStorage.privateKeys) {
     JSON.parse(window.localStorage.privateKeys).forEach(key =>
       web3.eth.accounts.wallet.add(key)
     )
@@ -169,41 +181,26 @@ export function setNetwork(net) {
     UserRegistryContract.abi,
     config.V00_UserRegistry
   )
-  context.marketplace = new web3.eth.Contract(
-    MarketplaceContract.abi,
-    config.V00_Marketplace
-  )
-  context.marketplace.eventCache = eventCache(
-    context.marketplace,
-    config.V00_Marketplace_Epoch
-  )
-  if (config.V00_Marketplace) {
-    context.marketplaces = [context.marketplace]
-  } else {
-    context.marketplaces = []
+  setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
+
+  if (typeof window !== 'undefined') {
+    wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
+      context.marketplace.eventCache.updateBlock(blockHeaders.number)
+      pubsub.publish('NEW_BLOCK', {
+        newBlock: { ...blockHeaders, id: blockHeaders.hash }
+      })
+    })
+    web3.eth.getBlockNumber().then(block => {
+      web3.eth.getBlock(block).then(blockHeaders => {
+        if (blockHeaders) {
+          context.marketplace.eventCache.updateBlock(blockHeaders.number)
+          pubsub.publish('NEW_BLOCK', {
+            newBlock: { ...blockHeaders, id: blockHeaders.hash }
+          })
+        }
+      })
+    })
   }
-
-  context.eventSource = new EventSource({
-    marketplaceContract: context.marketplace,
-    ipfsGateway: context.ipfsGateway
-  })
-
-  wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
-    context.marketplace.eventCache.updateBlock(blockHeaders.number)
-    pubsub.publish('NEW_BLOCK', {
-      newBlock: { ...blockHeaders, id: blockHeaders.hash }
-    })
-  })
-  web3.eth.getBlockNumber().then(block => {
-    web3.eth.getBlock(block).then(blockHeaders => {
-      if (blockHeaders) {
-        context.marketplace.eventCache.updateBlock(blockHeaders.number)
-        pubsub.publish('NEW_BLOCK', {
-          newBlock: { ...blockHeaders, id: blockHeaders.hash }
-        })
-      }
-    })
-  })
 
   context.tokens = config.tokens || []
   if (config.OriginToken) {
@@ -243,10 +240,6 @@ export function setNetwork(net) {
 
   if (metaMask) {
     context.metaMask = metaMask
-    context.marketplaceMM = new metaMask.eth.Contract(
-      MarketplaceContract.abi,
-      config.V00_Marketplace
-    )
     context.ognMM = new metaMask.eth.Contract(
       OriginTokenContract.abi,
       config.OriginToken
@@ -285,6 +278,31 @@ export function toggleMetaMask(enabled) {
     delete window.localStorage.metaMaskEnabled
   }
   setMetaMask()
+}
+
+export function setMarketplace(address, epoch) {
+  context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
+  context.marketplace.eventCache = eventCache(context.marketplace, epoch)
+  if (address) {
+    context.marketplaces = [context.marketplace]
+  } else {
+    context.marketplaces = []
+  }
+  context.eventSource = new EventSource({
+    marketplaceContract: context.marketplace,
+    ipfsGateway: context.ipfsGateway
+  })
+  context.marketplaceExec = context.marketplace
+
+  if (metaMask) {
+    context.marketplaceMM = new metaMask.eth.Contract(
+      MarketplaceContract.abi,
+      address
+    )
+    if (metaMaskEnabled) {
+      context.marketplaceExec = context.marketplaceMM
+    }
+  }
 }
 
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'CSS') {

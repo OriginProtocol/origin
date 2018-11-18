@@ -40,7 +40,10 @@ const server = new ApolloServer({
     // Update listing Metadata in a non blocking way
     listingMetadata.updateHiddenFeaturedListings()
     return {}
-  } })
+  },
+  // Always enable schema introspection, regardless of NODE_ENV value.
+  introspection: true
+})
 
 server.applyMiddleware({ app })
 
