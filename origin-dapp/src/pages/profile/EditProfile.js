@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import AvatarEditor from 'react-avatar-editor'
-import readAndCompressImage from 'browser-image-resizer'
 
 import Modal from 'components/modal'
 
@@ -10,7 +8,7 @@ class EditProfile extends Component {
     super(props)
     this.nameRef = React.createRef()
 
-    const { pic, firstName, lastName, description } = this.props.data
+    const { pic, firstName, lastName, description, } = this.props.data
     this.state = {
       pic,
       firstName,
@@ -35,6 +33,14 @@ class EditProfile extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { data } = this.props
+    const { pic } = data
+    if (pic && pic !== prevProps.data.pic) {
+      this.setState({
+        pic
+      })
+    }
+
     if (!prevProps.open && this.props.open) {
       setTimeout(() => {
         this.nameRef.current.focus()
@@ -96,7 +102,7 @@ class EditProfile extends Component {
                 <div className="image-container">
                   <div className="image-pair">
                     <div className="avatar-container">
-                      <AvatarEditor
+                      {/*<AvatarEditor
                         ref={r => (this.imageEditor = r)}
                         image={this.state.pic || 'images/avatar-unnamed.svg'}
                         width={140}
@@ -104,7 +110,8 @@ class EditProfile extends Component {
                         border={20}
                         borderRadius={20}
                         position={{ x: 0, y: 0 }}
-                      />
+                      />*/}
+                      <img src={this.state.pic || 'images/avatar-unnamed.svg'}/>
                     </div>
                     <label className="edit-profile">
                       <img
@@ -116,9 +123,9 @@ class EditProfile extends Component {
                         ref={r => (this.editPic = r)}
                         style={{ opacity: 0, position: 'absolute', zIndex: -1 }}
                         onChange={e => {
+                          this.props.handleCropImage(e.currentTarget.files[0])
                           this.setState({
-                            picChanged: true,
-                            pic: e.currentTarget.files[0]
+                            picChanged: true
                           })
                         }}
                       />
