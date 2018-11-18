@@ -114,10 +114,10 @@ class IpfsService {
   }
 
   async loadFile(ipfsHash) {
-    let timeout = new Promise((resolve, reject) => {
+    const timeout = new Promise((resolve, reject) => {
       const ms = 7000
       setTimeout(() => {
-        reject(new Error("Timed out after " + ms + " ms"))
+        reject(new Error('Timed out after ' + ms + ' ms'))
       }, ms)
     })
     try {
