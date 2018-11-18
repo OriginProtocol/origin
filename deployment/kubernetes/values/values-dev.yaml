@@ -6,7 +6,7 @@ bridgeImageTag: 'aeb0e29'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '9a30a53'
+dappImageTag: '3836cc7'
 
 # Origin network configuration
 gethTxReplicas: 1
