@@ -39,7 +39,7 @@
     "rewire": "^4.0.1"
   },
   "scripts": {
-    "lint": "eslint 'src/**/*.js' --rulesdir ../",
+    "lint": "eslint 'src/**/*.js' devops/**/*.js --rulesdir ../",
     "test": "mocha --timeout 10000 --exit",
     "migrate": "sequelize db:migrate",
     "start:listener": "node src/listener/listener.js",
