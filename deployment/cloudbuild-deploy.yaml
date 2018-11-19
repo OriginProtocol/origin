@@ -25,7 +25,7 @@ steps:
     args:
       - '-c'
       - |
-        _VALUES_PATH=./deployment/kubernetes/values
+        _VALUES_PATH=./deployment/kubernetes/values/origin
         gcloud kms decrypt \
           --ciphertext-file=$${_VALUES_PATH}/secrets-$(cat .namespace).enc \
           --plaintext-file=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml \
@@ -70,7 +70,7 @@ steps:
     args:
       - '-c'
       - |
-        _VALUES_PATH=./deployment/kubernetes/values
+        _VALUES_PATH=./deployment/kubernetes/values/origin
         _SECRETS_FILE=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml
 
         # Set the EnvKey for the Docker container if substitution set
@@ -123,9 +123,9 @@ steps:
 
         sed -i \
           "s|^${_IMAGE_TAG_FIELD}: .*|${_IMAGE_TAG_FIELD}: '${SHORT_SHA}'|g" \
-          deployment/kubernetes/values/values-$(cat .namespace).yaml
+          deployment/kubernetes/values/origin/values-$(cat .namespace).yaml
 
-        git add deployment/kubernetes/values/values-$(cat .namespace).yaml
+        git add deployment/kubernetes/values/origin/values-$(cat .namespace).yaml
         git commit -m 'Update deployed image tags'
         git push upstream ${BRANCH_NAME}
     volumes:
@@ -151,8 +151,8 @@ steps:
 
         helm upgrade $(cat .namespace) deployment/kubernetes/charts/origin \
           -f deployment/kubernetes/charts/origin/values.yaml \
-          -f deployment/kubernetes/values/values-$(cat .namespace).yaml \
-          -f deployment/kubernetes/values/secrets-$(cat .namespace).yaml
+          -f deployment/kubernetes/values/origin/values-$(cat .namespace).yaml \
+          -f deployment/kubernetes/values/origin/secrets-$(cat .namespace).yaml
 
 timeout: "3600s"
 options:

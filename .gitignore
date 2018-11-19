@@ -27,9 +27,9 @@ node_modules/
 
 # Deployment #
 ##############
-/deployment/kubernetes/values/secrets-dev.yaml
-/deployment/kubernetes/values/secrets-staging.yaml
-/deployment/kubernetes/values/secrets-prod.yaml
+secrets-dev.yaml
+secrets-staging.yaml
+secrets-prod.yaml
 
 # Development #
 ###############
