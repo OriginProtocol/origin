@@ -1,0 +1,4 @@
+# Origin network configuration
+gethTxReplicas: 1
+gethMinerReplicas: 2
+gethMinerCpuLimit: 0.5
