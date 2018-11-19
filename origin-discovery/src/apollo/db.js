@@ -30,6 +30,16 @@ function _makeListing (row) {
 
 /**
  * Helper method. Queries DB to get listings.
+ *
+ * The query generated is equivalent to:
+ *  SELECT DISTINCT ON (id) * FROM listing WHERE <where_clause>
+ *  ORDER BY id DESC, block_number DESC, log_index DESC;
+ *
+ * Note: sequelize does not support DISTINCT ON. We work around it
+ * by using a literal clause "DISTINCT ON(id) 1". The static column name 1 is there as
+ * a workaround for sequelize adding a comma right after the literal expression which
+ * otherwise causes the query to fail.
+ *
  * @param {Object} whereClause - Where clause to use for the DB query.
  * @param {Array<string>>} orderByIds - Defines the exact order of listings returned.
  *  Useful for preserving ranking of search results.
@@ -38,13 +48,6 @@ function _makeListing (row) {
  * @private
  */
 async function _getListings (whereClause, orderByIds = []) {
-  // Load rows from the Listing table in the DB.
-  // Note: sequelize does not support DISTINCT ON. We work around it
-  // by using a literal clause "DISTINCT ON(id) 1". The static column name 1 is there as
-  // a workaround for sequelize adding a comma right after the literal expression which
-  // otherwise causes the query to fail.
-  // The query generated is equivalent to:
-  //  SELECT DISTINCT ON (id) * FROM listing WHERE <where_clause> ORDER BY id DESC, block_number DESC, log_index DESC;
   const rows = await db.Listing.findAll({
     where: whereClause,
     attributes: [
@@ -97,9 +100,17 @@ async function getListingsBySeller (sellerAddress) {
 
 /**
  * Queries DB for a listing.
+ *
  * @param listingId
  * @param {Object} blockInfo - Optional max blockNumber and logIndex values (inclusive).
  *   This can be used to get the state of a listing at a given point in history.
+ *   Here is an example:
+ *     blockNum=1, logIndex=34 -> Listing Created by seller
+ *     blockNum=2, logIndex=12 -> Offer Created by buyer
+ *     blockNum=2, logIndex=56 -> Listing Updated by seller
+ *   When we load the listing to show to the buyer who made the offer, we make a call to
+ *   marketplace.getListing(blockNum=2, logIndex=12) and it should load the listing
+ *   version (blockNum=1, logIndex=34).
  * @return {Promise<Object|null>}
  */
 async function getListing (listingId, blockInfo = null) {
