@@ -42,7 +42,6 @@
   "boost-slider.learn-more": "Μάθετε περισσότερα",
   "conversation-list-item.unnamedUser": "Ανώνυμος χρήστης",
   "conversation.newMessagePlaceholder": "Πληκτρολογήστε κάτι...",
-  "conversation.invalidFileSelected": "Τα μεγέθη των αρχείων πρέπει να είναι μικρότερα από 1,5 MB. Επιλέξτε μια μικρότερη εικόνα.",
   "conversation.invalidTextInput": "Παρακαλούμε προσθέστε ένα μήνυμα για αποστολή.",
   "connectivity.mainEthereumNetwork": "Κύριο Δίκτυο Ethereum",
   "connectivity.mordenTestNetwork": "Μοντέρνο Δίκτυο Ελέγχου",
