@@ -12,9 +12,10 @@ const listingMetadata = require('./listing-metadata')
 function _makeListing (row) {
   return {
     id: row.id,
-    // TODO: expose blockNumber and logIndex in GraphQL schema
-    blockNumber: row.blockNumber,
-    logIndex: row.logIndex,
+    blockInfo: {
+      blockNumber: row.blockNumber,
+      logIndex: row.logIndex
+    },
     ipfsHash: row.data.ipfs.hash,
     data: row.data,
     title: row.data.title,
@@ -161,6 +162,10 @@ async function getListing (listingId, blockInfo = null) {
 function _makeOffer (row) {
   return {
     id: row.id,
+    blockInfo: {
+      blockNumber: row.data.events[0].blockNumber,
+      logIndex: row.data.events[0].logIndex
+    },
     ipfsHash: row.data.ipfs.hash,
     data: row.data,
     status: row.status,

@@ -106,14 +106,14 @@ class DiscoveryService {
   /**
    * Queries discovery server for all listings, with support for pagination.
    * Options:
-   *  - idsOnly(boolean): returns only ids rather than the full Listing object.
-   *  - listingsFor(address): returns listing created by a specific seller.
-   *  - purchasesFor(address): returns listing a specific seller made an offer on.
+   *  - idsOnly(boolean): Returns only ids rather than the full Listing object.
+   *  - listingsFor(address): Returns latest version of listings created by a specific seller.
+   *  - purchasesFor(address): Returns listings a specific buyer made an offer on.
+   *      Selects the version of the listing at the time the offer was created.
    * @param opts: { idsOnly, listingsFor, purchasesFor, offset, numberOfItems }
    * @return {Array<Listing>}
    */
   async getListings(opts) {
-    // Check for incompatible options.
     if (opts.listingsFor && opts.purchasesFor) {
       throw new Error('listingsFor and purchasesFor options are incompatible')
     }
@@ -182,11 +182,17 @@ class DiscoveryService {
   /**
    * Queries discovery server for a listing based on its id.
    * @param listingId
-   * @return {Listing}
+   * @param {Object} blockInfo - Optional blockNumber and logIndex that can be passe to fetch
+   *   a version of the listing that has blockNumber and logIndex <= specified values.
+   * @return {Listing||null}
    */
-  async getListing(listingId) {
+  async getListing(listingId, blockInfo) {
+    let listingArgs = 'id: "${listingId}"'
+    if (blockInfo) {
+      listingArgs += `, blockInfo: ${blockInfo}`
+    }
     const query = `{
-      listing(id: "${listingId}") {
+      listing(${listingArgs}) {
         data
         display
       }
@@ -195,7 +201,7 @@ class DiscoveryService {
 
     // Throw an error if no listing found with this id.
     if (!resp.data) {
-      throw new Error(`No listing found with id ${listingId}`)
+      throw new Error(`No listing found with id: ${listingId} blockInfo: ${blockInfo}`)
     }
 
     return this._toListingModel(resp.data.listing)

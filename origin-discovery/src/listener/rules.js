@@ -129,7 +129,7 @@ async function handleLog (log, rule, contractVersion, context) {
 
   if (context.config.db) {
     await withRetrys(async () => {
-      db.Event.upsert({
+      return db.Event.upsert({
         blockNumber: log.blockNumber,
         logIndex: log.logIndex,
         contractAddress: log.address,
@@ -205,6 +205,8 @@ async function handleLog (log, rule, contractVersion, context) {
         id=${listingId} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
       const listingData = {
         id: listingId,
+        blockNumber: log.blockNumber,
+        logIndex: log.logIndex,
         status: listing.status,
         sellerAddress: listing.seller.toLowerCase(),
         data: listing
@@ -215,14 +217,15 @@ async function handleLog (log, rule, contractVersion, context) {
         listingData.updatedAt = log.date
       }
       await withRetrys(async () => {
-        db.Listing.upsert(listingData)
+        return db.Listing.upsert(listingData)
       })
+
     }
 
     if (context.config.elasticsearch) {
       console.log(`Indexing listing in Elastic: id=${listingId}`)
       await withRetrys(async () => {
-        search.Listing.index(listingId, userAddress, ipfsHash, listing)
+        return search.Listing.index(listingId, userAddress, ipfsHash, listing)
       })
     }
   }
@@ -246,7 +249,7 @@ async function handleLog (log, rule, contractVersion, context) {
         offerData.updatedAt = log.date
       }
       await withRetrys(async () => {
-        db.Offer.upsert(offerData)
+        return db.Offer.upsert(offerData)
       })
     }
   }
@@ -266,14 +269,14 @@ async function handleLog (log, rule, contractVersion, context) {
       const seller = output.related.seller
       console.log(`Indexing seller in Elastic: addr=${seller.address}`)
       await withRetrys(async () => {
-        search.User.index(seller)
+        return search.User.index(seller)
       })
     }
     if (output.related.buyer !== undefined) {
       const buyer = output.related.buyer
       console.log(`Indexing buyer in Elastic: addr=${buyer.address}`)
       await withRetrys(async () => {
-        search.User.index(output.related.buyer)
+        return search.User.index(output.related.buyer)
       })
     }
   }
@@ -282,7 +285,7 @@ async function handleLog (log, rule, contractVersion, context) {
     console.log('\n-- WEBHOOK to ' + context.config.webhook + ' --\n')
     try {
       await withRetrys(async () => {
-        postToWebhook(context.config.webhook, json)
+        return postToWebhook(context.config.webhook, json)
       }, false)
     } catch (e) {
       console.log(`Skipping webhook for ${logDetails}`)
@@ -295,7 +298,7 @@ async function handleLog (log, rule, contractVersion, context) {
     )
     try {
       await withRetrys(async () => {
-        postToDiscordWebhook(context.config.discordWebhook, output)
+        return postToDiscordWebhook(context.config.discordWebhook, output)
       }, false)
     } catch (e) {
       console.log(`Skipping discord webhook for ${logDetails}`)

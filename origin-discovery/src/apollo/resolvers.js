@@ -51,7 +51,7 @@ const resolvers = {
     },
 
     async listing (root, args) {
-      return getListing(args.id)
+      return getListing(args.id, args.blockInfo)
     },
 
     async offers (root, args) {
@@ -110,7 +110,8 @@ const resolvers = {
     },
 
     async listing (offer) {
-      return getListing(offer.data.listingId)
+      // Note: fetch listing version relative to the offer blockInfo.
+      return getListing(offer.data.listingId, offer.blockInfo)
     }
   },
 
