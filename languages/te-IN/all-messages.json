@@ -125,6 +125,7 @@
   "listing-create.whatHappensNextHeading": "తర్వాత ఏమి జరుగును?",
   "listing-create.whatHappensNextContent1": "మీరు ఈ జాబితాను సమర్పించినప్పుడు, మీరు మీ లావాదేవీని MetaMask లో నిర్ధారించమని అడగబడతారు. కొనుగోలుదారులు మీ జాబితాను చూడగలుగుతారు మరియు దానిపై ఆఫర్లను చేయగలరు.",
   "listing-create.whatHappensNextContent2": "{selectedBoostAmount} OGN పెంచడం కోసం బదిలీ చేయబడుతుంది. మీరు ఆఫర్ను అంగీకరించే ముందు మీ జాబితాను మూసివేస్తే, మీకు OGN తిరిగి చెల్లించబడుతుంది.",
+  "listing-create.updateSuccessMessage": "Your listing has been updated!",
   "listing-create.successMessage": "మీ జాబితా సృష్టించబడింది!",
   "listing-create.successDisclaimer": "మీ జాబితా కొద్ది సెకన్లలో కనిపిస్తుంది. ఇక్కడ ఏమి జరుగుతుంది:",
   "listing-create.success-1": "కొనుగోలుదారులు ఇప్పుడు మార్కెట్లో మీ జాబితాను చూస్తారు.",
