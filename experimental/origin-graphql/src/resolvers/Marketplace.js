@@ -1,7 +1,6 @@
 import contracts from '../contracts'
 import listings from './marketplace/listings'
-import groupBy from 'lodash/groupBy'
-import sortBy from 'lodash/sortBy'
+import users from './marketplace/users'
 
 export default {
   address: contract => {
@@ -46,27 +45,6 @@ export default {
     const events = await contracts.marketplace.eventCache.allEvents()
     return events.length
   },
-  sellers: async () => {
-    const events = await contracts.marketplace.eventCache.allEvents(
-      'ListingCreated'
-    )
-    const sellers = groupBy(events, e => e.returnValues.party)
-    const list = Object.keys(sellers).map(seller => ({
-      id: seller,
-      account: { id: seller },
-      totalCount: sellers[seller].length
-    }))
-    return sortBy(list, i => -i.totalCount)
-  },
-  seller: async (contract, args) => {
-    const events = await contracts.marketplace.eventCache.allEvents(
-      'ListingCreated',
-      args.id
-    )
-    return {
-      id: args.id,
-      account: { id: args.id },
-      totalCount: events.length
-    }
-  }
+  users,
+  user: (_, args) => ({ id: args.id, account: { id: args.id } })
 }

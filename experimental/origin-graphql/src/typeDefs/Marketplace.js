@@ -86,15 +86,35 @@ export default `
     totalEvents: Int
     events(offset: Int, limit: Int): [Event]
 
-    sellers: [ListingSeller]
-    seller(id: ID!): ListingSeller
+    users(
+      first: Int
+      last: Int
+      before: String
+      after: String
+      sort: String
+    ): UserConnection!
+    user(id: ID!): User
   }
 
-  type ListingSeller {
+  type UserConnection {
+    nodes: [User]
+    pageInfo: PageInfo!
+    totalCount: Int!
+  }
+
+  type User {
     id: ID!
     account: Account!
-    totalCount: Int!
+    firstEvent: Event
+    lastEvent: Event
     listings(first: Int, after: String): ListingConnection!
+    offers(first: Int, after: String): OfferConnection!
+  }
+
+  type OfferConnection {
+    nodes: [Offer]
+    pageInfo: PageInfo!
+    totalCount: Int!
   }
 
   type ListingConnection {
@@ -156,6 +176,7 @@ export default `
   type Offer {
     id: ID!
     listingId: String!
+    offerId: String!
     createdBlock: Int
 
     # Connections
