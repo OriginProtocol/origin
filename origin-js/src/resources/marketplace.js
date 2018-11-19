@@ -168,7 +168,9 @@ export default class Marketplace {
 
   /**
    * Returns a Listing object based on its id.
-   * @param listingId
+   * @param {string} listingId
+   * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional argument
+   *   to indicate a specific version of the listing should be loaded.
    * @returns {Promise<Listing>}
    * @throws {Error}
    */

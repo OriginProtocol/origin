@@ -103,9 +103,9 @@ async function getListingsBySeller (sellerAddress) {
  * Queries DB for a listing.
  *
  * @param listingId
- * @param {Object} blockInfo - Optional max blockNumber and logIndex values (inclusive).
- *   This can be used to get the state of a listing at a given point in history.
- *   Here is an example:
+ * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional max
+ *   blockNumber and logIndex values (inclusive). This can be used to get the
+ *   state of a listing at a given point in history. Here is an example:
  *     blockNum=1, logIndex=34 -> Listing Created by seller
  *     blockNum=2, logIndex=12 -> Offer Created by buyer
  *     blockNum=2, logIndex=56 -> Listing Updated by seller

@@ -182,11 +182,11 @@ class DiscoveryService {
   /**
    * Queries discovery server for a listing based on its id.
    * @param listingId
-   * @param {Object} blockInfo - Optional blockNumber and logIndex that can be passe to fetch
-   *   a version of the listing that has blockNumber and logIndex <= specified values.
+   * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional arg to use for
+   *   fetching a version of the listing with blockNumber and logIndex <= specified values.
    * @return {Listing||null}
    */
-  async getListing(listingId, blockInfo) {
+  async getListing(listingId, blockInfo = null) {
     let listingArgs = 'id: "${listingId}"'
     if (blockInfo) {
       listingArgs += `, blockInfo: ${blockInfo}`

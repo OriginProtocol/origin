@@ -28,7 +28,16 @@ describe('Discovery service', function() {
       const fetch = fetchMock.sandbox().mock(discoveryServerUrl, foundListingResponse)
       const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
 
-      const listing = await discoveryService.getListing(listingId)
+      // Without blockInfo.
+      let listing = await discoveryService.getListing(listingId)
+      expect(listing.id).to.equal(listingId)
+
+      // With blockinfo.
+      const blockInfo = {
+        blockNumber: 123,
+        logIndex: 456
+      }
+      listing = await discoveryService.getListing(listingId, blockInfo)
       expect(listing.id).to.equal(listingId)
     })
 
