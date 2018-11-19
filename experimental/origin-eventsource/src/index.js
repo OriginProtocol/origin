@@ -1,6 +1,8 @@
-import { get } from './ipfsHash'
-import startCase from 'lodash/startCase'
-import pick from 'lodash/pick'
+const ipfs = require ('origin-ipfs')
+const get = ipfs.get
+// import { get } from 'origin-ipfs'
+const startCase = require('lodash/startCase')
+const pick = require('lodash/pick')
 
 class OriginEventSource {
   constructor({ ipfsGateway, marketplaceContract }) {
@@ -28,7 +30,7 @@ class OriginEventSource {
       return null
     }
 
-    const events = await this.contract.eventCache.listings(listingId)
+    const events = await this.contract.eventCache.listings(listingId, undefined, blockNumber)
     let soldUnits = 0
 
     events.forEach(e => {
@@ -117,6 +119,7 @@ class OriginEventSource {
     return {
       id: offerId,
       listingId: String(listingId),
+      createdBlock: blockNumber,
       status,
       contract: this.contract,
       withdrawnBy,
@@ -133,4 +136,5 @@ class OriginEventSource {
   }
 }
 
-export default OriginEventSource
+module.exports = OriginEventSource
+// export default OriginEventSource

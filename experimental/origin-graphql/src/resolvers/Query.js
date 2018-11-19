@@ -3,6 +3,7 @@ import contracts from '../contracts'
 let ethPrice
 
 export default {
+  config: () => contracts.net,
   web3: () => ({}),
   marketplace: () => contracts.marketplace,
   contracts: () => {
@@ -16,7 +17,18 @@ export default {
   },
   marketplaces: () => contracts.marketplaces,
   tokens: () => contracts.tokens,
-  token: (_, args) => contracts.tokens.find(t => t.id === args.id),
+  token: (_, args) => {
+    if (args.id === "0x0000000000000000000000000000000000000000") {
+      return {
+        id: "0x0000000000000000000000000000000000000000",
+        address: "0x0000000000000000000000000000000000000000",
+        name: "Ether",
+        symbol: 'ETH',
+        decimals: 18
+      }
+    }
+    return contracts.tokens.find(t => t.id === args.id)
+  },
   ethUsd: () =>
     new Promise((resolve, reject) => {
       if (ethPrice) {

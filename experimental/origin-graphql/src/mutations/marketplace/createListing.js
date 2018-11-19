@@ -1,12 +1,10 @@
-import { post } from '../../utils/ipfsHash'
+import { post } from 'origin-ipfs'
+import validator from 'origin-validator'
+
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
-import validator from '../../utils/validator'
 
-async function createListing(_, input) {
-  const { depositManager, data, from, autoApprove } = input
-  await checkMetaMask(from)
-
+export function listingInputToIPFS(data) {
   const ipfsData = {
     "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
     "listingType": "unit",
@@ -24,9 +22,15 @@ async function createListing(_, input) {
       "amount": "0"
     }
   }
-
   validator('http://schema.originprotocol.com/listing_v1.0.0', ipfsData)
+  return ipfsData
+}
 
+async function createListing(_, input) {
+  const { depositManager, data, from, autoApprove } = input
+  await checkMetaMask(from)
+
+  const ipfsData = listingInputToIPFS(data)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   let createListingCall

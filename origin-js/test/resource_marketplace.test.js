@@ -499,6 +499,8 @@ describe('Marketplace Resource - Performance mode', function() {
   const mockDiscoveryService = new Object()
   mockDiscoveryService.getListings = sinon.stub()
   mockDiscoveryService.getListing = sinon.stub()
+  mockDiscoveryService.getOffer = sinon.stub()
+  mockDiscoveryService.getOffers = sinon.stub()
 
   const marketplace = new Marketplace({
     contractService: { web3: null },
@@ -515,9 +517,23 @@ describe('Marketplace Resource - Performance mode', function() {
   })
 
   describe('getListing', () => {
-    it('Should call discovery service to fetch listing', async () => {
+    it('Should call discovery service to fetch a listing', async () => {
       await marketplace.getListing()
       expect(mockDiscoveryService.getListing.callCount).to.equal(1)
+    })
+  })
+
+  describe('getOffers', () => {
+    it('Should call discovery service to fetch offers', async () => {
+      await marketplace.getOffers()
+      expect(mockDiscoveryService.getOffers.callCount).to.equal(1)
+    })
+  })
+
+  describe('getOffer', () => {
+    it('Should call discovery service to fetch an offer', async () => {
+      await marketplace.getOffer()
+      expect(mockDiscoveryService.getOffer.callCount).to.equal(1)
     })
   })
 
