@@ -428,6 +428,9 @@ class ContractService {
         reject(err)
       })) || reject
 
+      const sendCallback = method
+        .send(opts)
+
       this.handleTransactionCallbacks(
         contract,
         sendCallback,
