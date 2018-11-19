@@ -18,6 +18,11 @@ export class Offer {
     this.events = chainOffer.events
     this.refund = chainOffer.refund
     this.totalPrice = chainOffer.totalPrice
+    this.blockInfo = {
+      blockNumber: chainOffer.blockNumber,
+      logIndex: chainOffer.logIndex
+    }
+    
 
     // See src/schemas/offer.json for fields stored in IPFS offer data.
     Object.assign(this, ipfsOffer)

@@ -117,8 +117,9 @@ class OriginEventSource {
     if (status === undefined) { status = offer.status }
 
     return {
-      id: offerId,
+      id: `${listingId}-${offerId}`,
       listingId: String(listingId),
+      offerId: String(offerId),
       createdBlock: blockNumber,
       status,
       contract: this.contract,

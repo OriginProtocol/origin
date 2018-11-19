@@ -157,7 +157,7 @@ class OfferRow extends Component {
     }
     return (
       <tr className="vm">
-        <td>{offer.id}</td>
+        <td>{offer.offerId}</td>
         <td>{status(offer)}</td>
         <td>{price(offer)}</td>
         <td>{price(offer, 'refund')}</td>

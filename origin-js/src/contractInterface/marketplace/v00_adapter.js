@@ -102,6 +102,16 @@ class V00_MarkeplaceAdapter {
     }
   }
 
+  async updateListing(listingId, ipfsBytes, additionalDeposit, confirmationCallback) {
+    const from = await this.contractService.currentAccount()
+    const { transactionReceipt, timestamp } = await this.call(
+      'updateListing',
+      [listingId, ipfsBytes, additionalDeposit],
+      { from, confirmationCallback }
+    )
+    return Object.assign({ timestamp }, transactionReceipt)
+  }
+
   async withdrawListing(listingId, ipfsBytes, confirmationCallback) {
     const from = await this.contractService.currentAccount()
     const { transactionReceipt, timestamp } = await this.call(
@@ -226,7 +236,7 @@ class V00_MarkeplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async getListing(listingId) {
+  async getListing(listingId, blockInfo) {
     await this.getContract()
 
     // Get the raw listing data from the contract.
@@ -250,7 +260,12 @@ class V00_MarkeplaceAdapter {
       if (event.event === 'ListingCreated') {
         ipfsHash = event.returnValues.ipfsHash
       } else if (event.event === 'ListingUpdated') {
-        ipfsHash = event.returnValues.ipfsHash
+        // If a blockInfo is passed in, ignore udpated IPFS data that occurred after that blockInfo.blockNumber.
+        // This is used when we want to see what a listing looked like at the time an offer was made.
+        // Specificatlly, on myPurchases and mySales requests as well as for arbitration.
+        if (!blockInfo || event.blockNumber < blockInfo.blockNumber) {
+          ipfsHash = event.returnValues.ipfsHash
+        }
       } else if (event.event === 'ListingWithdrawn') {
         status = 'inactive'
       } else if (event.event === 'OfferCreated') {
@@ -374,8 +389,24 @@ class V00_MarkeplaceAdapter {
       const listingIds = []
       events.forEach(e => {
         const listingId = Number(e.returnValues.listingID)
-        if (listingIds.indexOf(listingId) < 0) {
-          listingIds.push(listingId)
+
+        if (opts.withBlockInfo) {
+          const existingId = listingIds.find(obj => obj.id === listingId)
+
+          if (!existingId) {
+            const { blockNumber, logIndex } = e
+            listingIds.push({
+              listingIndex: listingId,
+              blockInfo: {
+                blockNumber,
+                logIndex
+              }
+            })
+          }
+        } else {
+          if (listingIds.indexOf(listingId) < 0) {
+            listingIds.push(listingId)
+          }
         }
       })
       return listingIds
@@ -432,7 +463,7 @@ class V00_MarkeplaceAdapter {
     })
 
     // Scan through the events to retrieve information of interest.
-    let buyer, ipfsHash, createdAt
+    let buyer, ipfsHash, createdAt, blockNumber, logIndex
     for (const e of events) {
       const timestamp = await this.contractService.getTimestamp(e)
       e.timestamp = timestamp
@@ -442,6 +473,8 @@ class V00_MarkeplaceAdapter {
         buyer = e.returnValues.party
         ipfsHash = e.returnValues.ipfsHash
         createdAt = timestamp
+        blockNumber = e.blockNumber
+        logIndex = e.logIndex
         break
         // In all cases below, the offer was deleted from the blochain
         // rawOffer fields are set to zero => populate rawOffer.status based on event history.
@@ -467,7 +500,7 @@ class V00_MarkeplaceAdapter {
     rawOffer.status = OFFER_STATUS[rawOffer.status]
 
     // Return the raw listing along with events and IPFS hash
-    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt })
+    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt, blockNumber, logIndex })
   }
 
   async addData(ipfsBytes, listingIndex, offerIndex, confirmationCallback) {
