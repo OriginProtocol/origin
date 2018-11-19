@@ -271,8 +271,6 @@ class Profile extends Component {
       wallet,
       intl
     } = this.props
-console.log('============================= porfile: ', profile)
-console.log('============================= provisional: ', provisional)
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = !!changes.length
     const description =
@@ -433,6 +431,7 @@ console.log('============================= provisional: ', provisional)
         <ImageCropper
           isOpen={modalsOpen.cropModal}
           imageFileObj={imageToCrop}
+          aspect={1} // force square aspect ratio
           onCropComplete={(croppedImageUri) => {
             this.props.updateProfile({
               data: {
@@ -447,6 +446,7 @@ console.log('============================= provisional: ', provisional)
                 cropModal: false
               }
             })
+            document.getElementById('edit-profile-image').value = null
           }}
           onCropCancel={() => {
             this.setState({

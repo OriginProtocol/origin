@@ -34,6 +34,15 @@ class ImageCropper extends Component {
         ...this.props
       })
     }
+
+    if (this.props.aspect && this.props.aspect !== this.state.crop.aspect) {
+      this.setState({
+        crop: {
+          ...this.state.crop,
+          aspect: this.props.aspect
+        }
+      })
+    }
   }
 
   onCropChange(crop, pixelCrop) {
