@@ -58,6 +58,41 @@ class PhotoPicker extends Component {
 
   componentDidMount() {
     this.setHelpText()
+
+    // If a pictures array is passed in, we must call the onChange callback
+    // to set the pictures array in the parent form
+    // Unfortunately, the setTimeout is needed to allow the parent
+    // form to render and be ready to handle the onChange event
+    const { pictures } = this.state
+    if (pictures) {
+      setTimeout(async () => {
+        const picDataURIs = await this.getDataURIsFromImgURLs(pictures)
+        this.props.onChange(picDataURIs)
+      })
+    }
+  }
+
+  async getDataURIsFromImgURLs(picUrls) {
+    const imagePromises = picUrls.map(url => {
+      return new Promise(async resolve => {
+        const image = new Image()
+        image.crossOrigin = 'anonymous' 
+
+        image.onload = function() {
+          const canvas = document.createElement('canvas')
+          canvas.width = this.naturalWidth
+          canvas.height = this.naturalHeight
+          canvas.getContext('2d').drawImage(this, 0, 0)
+          canvas.toBlob(file => {
+            resolve(getDataUri(file))
+          }, 'image/jpeg')
+        }
+
+        image.src = url
+      })
+    })
+
+    return Promise.all(imagePromises)
   }
 
   async onFileSelected(e) {

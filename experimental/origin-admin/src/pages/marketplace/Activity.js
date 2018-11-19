@@ -53,19 +53,15 @@ const Events = () => (
           return <p>Error :(</p>
         }
         const numEvents = data.marketplace.events.length
-        window.requestAnimationFrame(() => {
-          if (
-            document.body.clientHeight < window.innerHeight &&
-            numEvents < data.marketplace.totalEvents &&
-            networkStatus !== 3
-          ) {
-            nextPage(fetchMore, numEvents)
-          }
-        })
 
         return (
-          <BottomScrollListener onBottom={() => nextPage(fetchMore, numEvents)}>
-            <>
+          <BottomScrollListener
+            initial={
+              numEvents < data.marketplace.totalEvents && networkStatus !== 3
+            }
+            onBottom={() => nextPage(fetchMore, numEvents)}
+          >
+            <div className="ml-3">
               <EventsTable events={data.marketplace.events} />
               {numEvents >= data.marketplace.totalEvents ? null : (
                 <Button
@@ -75,7 +71,7 @@ const Events = () => (
                   onClick={() => nextPage(fetchMore, numEvents)}
                 />
               )}
-            </>
+            </div>
           </BottomScrollListener>
         )
       }}

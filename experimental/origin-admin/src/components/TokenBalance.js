@@ -30,11 +30,13 @@ function tokenBalance(amount, decimals) {
 class TokenBalance extends Component {
   render() {
     const { account, token } = this.props
+    if (!account || !token) return null
     return (
       <Query query={AccountTokenBalance} variables={{ account, token }}>
         {({ loading, error, data }) => {
           if (loading || error) return null
           const tokenHolder = data.web3.account.token
+          if (!tokenHolder || !tokenHolder.balance) return null
           const decimals = tokenHolder.token.decimals
           return tokenBalance(tokenHolder.balance, decimals)
         }}

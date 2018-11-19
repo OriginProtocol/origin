@@ -6,7 +6,7 @@ import { storeWeb3Intent } from 'actions/App'
 
 import MySaleCard from 'components/my-sale-card'
 
-import { getListing } from 'utils/listing'
+import { transformPurchasesOrSales } from 'utils/listing'
 
 import origin from '../services/origin'
 
@@ -35,30 +35,11 @@ class MySales extends Component {
   }
 
   async loadPurchases() {
-    const listingIds = await origin.marketplace.getListings({
-      idsOnly: true,
-      listingsFor: this.props.web3Account
-    })
-    const listingPromises = listingIds.map(listingId => {
-      return new Promise(async resolve => {
-        const listing = await getListing(listingId)
-        resolve({ listingId, listing })
-      })
-    })
-    const withListings = await Promise.all(listingPromises)
-    const offerPromises = await withListings.map(obj => {
-      return new Promise(async resolve => {
-        const offers = await origin.marketplace.getOffers(obj.listingId)
-        resolve(Object.assign(obj, { offers }))
-      })
-    })
-    const withOffers = await Promise.all(offerPromises)
-    const offersByListing = withOffers.map(obj => {
-      return obj.offers.map(offer => Object.assign({}, obj, { offer }))
-    })
-    const offersFlattened = [].concat(...offersByListing)
+    const { web3Account } = this.props
+    const sales = await origin.marketplace.getSales(web3Account)
+    const transformedSales = transformPurchasesOrSales(sales)
 
-    this.setState({ loading: false, purchases: offersFlattened })
+    this.setState({ loading: false, purchases: transformedSales })
   }
 
   render() {
