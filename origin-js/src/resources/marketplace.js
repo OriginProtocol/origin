@@ -201,7 +201,7 @@ export default class Marketplace {
     }
 
     // Create an Offer from on-chain and off-chain data.
-    return Offer.init(offerId, listingId, chainOffer)
+    return Offer.init(offerId, listingId, chainOffer, ipfsOffer)
   }
 
   /**
