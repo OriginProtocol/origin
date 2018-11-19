@@ -32,6 +32,8 @@ class NavBar extends Component {
   }
 
   render() {
+    const { mobileDevice } = this.props
+
     return (
       <nav className="navbar navigation-bar navbar-expand-lg navbar-dark">
         <div className="container">
@@ -167,8 +169,8 @@ class NavBar extends Component {
               </Link>
             </div>
           </div>
-          <div className="static navbar-nav order-1 order-lg-2">
-            <ConnectivityDropdown />
+          <div className="static navbar-nav order-1 order-lg-2 d-flex flex-row justify-content-end">
+            { !mobileDevice && <ConnectivityDropdown /> }
             <TransactionsDropdown />
             <MessagesDropdown />
             <NotificationsDropdown />
@@ -180,11 +182,11 @@ class NavBar extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app }) => {
   return {
-    onMobile: state.app.onMobile,
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    mobileDevice: app.mobileDevice,
+    web3Account: app.web3.account,
+    web3Intent: app.web3.intent
   }
 }
 

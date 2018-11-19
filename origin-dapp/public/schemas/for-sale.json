@@ -66,8 +66,7 @@
         "schema.forSale.tools",
         "schema.forSale.toysGames",
         "schema.forSale.trailers",
-        "schema.forSale.videoGaming",
-        "schema.forSale.wanted"
+        "schema.forSale.videoGaming"
       ],
       "default": "schema.forSale.carsTrucks"
     },

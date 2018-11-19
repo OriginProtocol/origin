@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { Button, ControlGroup, HTMLSelect, InputGroup } from '@blueprintjs/core'
 
-import query from './_query'
+import query from '../_query'
 
-import { CreateWalletMutation } from '../../mutations'
-import ImportWallet from './mutations/ImportWallet'
-import ImportPhrase from './mutations/ImportPhrase'
+import { CreateWalletMutation } from '../../../mutations'
+import ImportWallet from './ImportWallet'
+import ImportPhrase from './ImportPhrase'
 
 class CreateWalletBtn extends Component {
   state = {

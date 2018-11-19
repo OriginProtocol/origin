@@ -51,7 +51,10 @@ async function setLastBlock (config, blockNumber) {
 
 /**
  * Retries up to N times, with exponential backoff.
- * If still failing after N times, exits the process.
+ * @param {async function} fn - Async function to call
+ * @param {boolean} exitOnError - Whether or not to exit the process when
+ *   max number of attempts reached.
+ * @return {Promise<*>}
  */
 async function withRetrys (fn, exitOnError = true) {
   let tryCount = 0

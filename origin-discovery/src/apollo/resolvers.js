@@ -1,8 +1,7 @@
 const GraphQLJSON = require('graphql-type-json')
-
-const db = require('../models')
+const listingMetadata = require('./listing-metadata')
 const search = require('../lib/search')
-const { getListing, getListingsById, getListingsBySeller } = require('./db')
+const { getListing, getListingsById, getListingsBySeller, getOffer, getOffers } = require('./db')
 
 /**
  * Gets information on a related user.
@@ -33,7 +32,9 @@ const resolvers = {
         args.filters,
         args.page.numberOfItems,
         args.page.offset,
-        true // idsOnly
+        true,// idsOnly
+        listingMetadata.hiddenIds,
+        listingMetadata.featuredIds
       )
       // Get listing objects from DB based on Ids.
       const listings = await getListingsById(listingIds)
@@ -54,33 +55,33 @@ const resolvers = {
     },
 
     async offers (root, args) {
-      const clause = {}
-      if (args.listingId) {
-        clause.listingId = args.listingId
-      }
-      if (args.buyerAddress) {
-        clause.buyerAddress = args.buyerAddress.toLowerCase()
-      }
-      if (args.sellerAddress) {
-        clause.sellerAddress = args.sellerAddress.toLowerCase()
-      }
-      if (Object.keys(clause).length === 0) {
-        throw new Error('A filter must be specified: listingId, buyerAddress or sellerAddress')
-      }
-      const rows = await db.Offer.findAll({ where: clause })
-      const offers = rows.map(offer => offer.data)
+      const offers = await getOffers({
+        listingId: args.listingId,
+        buyerAddress: args.buyerAddress,
+        sellerAddress: args.sellerAddress
+      })
+
       return { nodes: offers }
     },
 
     async offer (root, args) {
-      const row = await db.Offer.findByPk(args.id)
-      return row !== null ? row.data : null
+      return getOffer(args.id)
     },
 
     user (root, args) {
       // FIXME(franck): some users did not get indexed in prod due to a bug in attestations.
       // For now only return the address until data gets re-indexed.
       return { walletAddress: args.walletAddress }
+    },
+
+    info () {
+      // Caution: Any config added here gets exposed publicly.
+      // Make sure to not expose any credentials/secrets !
+      return {
+        'networkId': process.env.NETWORK_ID ? process.env.NETWORK_ID : 'undefined',
+        'elasticsearchHost': process.env.ELASTICSEARCH_HOST ? process.env.ELASTICSEARCH_HOST : 'undefined',
+        'nodeEnv': process.env.NODE_ENV ? process.env.NODE_ENV : 'undefined'
+      }
     }
   },
 
@@ -90,10 +91,7 @@ const resolvers = {
     },
 
     async offers (listing) {
-      const rows = await db.Offer.findAll({
-        where: { listingId: listing.id }
-      })
-      const offers = rows.map(offer => offer.data)
+      const offers = await getOffers({ listingId: listing.id })
       return { nodes: offers }
     }
   },
@@ -107,22 +105,19 @@ const resolvers = {
       return relatedUserResolver(offer.buyer, info)
     },
 
-    price (offer) {
+    totalPrice (offer) {
       return offer.totalPrice
     },
 
     async listing (offer) {
-      return getListing(offer.listingId)
+      return getListing(offer.data.listingId)
     }
   },
 
   User: {
     // Return offers made by a user.
     async offers (user) {
-      const rows = await db.Offer.findAll({
-        where: { buyerAddress: user.walletAddress.toLowerCase() }
-      })
-      const offers = rows.map(row => row.data)
+      const offers = await getOffers({ buyerAddress: user.walletAddress })
       return { nodes: offers }
     },
 

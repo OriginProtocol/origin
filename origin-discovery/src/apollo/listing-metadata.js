@@ -29,6 +29,7 @@ class ListingMetadata {
         this.listingsUpdateTime = new Date()
         this.hiddenIds = await this.readListingsFromUrl(this.hiddenListingsUrl)
         this.featuredIds = await this.readListingsFromUrl(this.featuredListingsUrl)
+        console.log(`Hidden/Featured lists updated with number of items hidden:${this.hiddenIds.length} featured:${this.featuredIds.length}`)
       } catch (e) {
         console.error('Could not update hidden/featured listings ', e)
       }
