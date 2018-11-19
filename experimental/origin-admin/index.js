@@ -76,7 +76,7 @@ const populateIpfs = () =>
   new Promise((resolve, reject) => {
     var ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
     console.log('Populate IPFS:')
-    ipfs.util.addFromFs('data/fixtures', { recursive: true }, (err, result) => {
+    ipfs.util.addFromFs('../../origin-js/test/fixtures', { recursive: true }, (err, result) => {
       if (err) {
         return reject(err)
       }

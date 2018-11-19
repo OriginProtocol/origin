@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import lGet from 'lodash/get'
+import { getDiscovery } from '../../utils/config'
 
 import {
   Button,
@@ -154,6 +155,8 @@ class Listings extends Component {
   }
 
   renderBreadcrumbs({ refetch, networkStatus, totalListings, selectedTabId }) {
+    const discovery = getDiscovery()
+
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Tabs
@@ -211,51 +214,57 @@ class Listings extends Component {
               onClick={() => refetch()}
             />
           </Tooltip>
-          <Switch
-            checked={this.state.hidden ? true : false}
-            onChange={e =>
-              this.setState({ hidden: e.target.checked ? true : false })
-            }
-            inline={true}
-            className="ml-3 mb-0"
-            label="Hide Hidden"
-          />
-          <Switch
-            inline={true}
-            className="mb-0"
-            label="Sort Featured"
-            checked={this.state.sort === 'featured' ? true : false}
-            onChange={e =>
-              this.setState({ sort: e.target.checked ? 'featured' : '' })
-            }
-          />
-          <ControlGroup>
-            <InputGroup
-              placeholder="Search..."
-              value={this.state.search}
-              onChange={e => this.setState({ search: e.target.value })}
-              onKeyUp={e => {
-                if (e.keyCode === 13) {
-                  this.setState({ activeSearch: this.state.search })
+          {!discovery ? null : (
+            <>
+              <Switch
+                checked={this.state.hidden ? true : false}
+                onChange={e =>
+                  this.setState({ hidden: e.target.checked ? true : false })
                 }
-              }}
-              rightElement={
-                this.state.search ? (
-                  <Button
-                    minimal={true}
-                    icon="cross"
-                    onClick={() =>
-                      this.setState({ activeSearch: '', search: '' })
+                inline={true}
+                className="ml-3 mb-0"
+                label="Hide Hidden"
+              />
+              <Switch
+                inline={true}
+                className="mb-0"
+                label="Sort Featured"
+                checked={this.state.sort === 'featured' ? true : false}
+                onChange={e =>
+                  this.setState({ sort: e.target.checked ? 'featured' : '' })
+                }
+              />
+              <ControlGroup>
+                <InputGroup
+                  placeholder="Search..."
+                  value={this.state.search}
+                  onChange={e => this.setState({ search: e.target.value })}
+                  onKeyUp={e => {
+                    if (e.keyCode === 13) {
+                      this.setState({ activeSearch: this.state.search })
                     }
-                  />
-                ) : null
-              }
-            />
-            <Button
-              icon="search"
-              onClick={() => this.setState({ activeSearch: this.state.search })}
-            />
-          </ControlGroup>
+                  }}
+                  rightElement={
+                    this.state.search ? (
+                      <Button
+                        minimal={true}
+                        icon="cross"
+                        onClick={() =>
+                          this.setState({ activeSearch: '', search: '' })
+                        }
+                      />
+                    ) : null
+                  }
+                />
+                <Button
+                  icon="search"
+                  onClick={() =>
+                    this.setState({ activeSearch: this.state.search })
+                  }
+                />
+              </ControlGroup>
+            </>
+          )}
         </div>
       </div>
     )

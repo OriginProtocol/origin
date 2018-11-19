@@ -11,8 +11,6 @@ import Messaging from './messaging/Messaging'
 import Contracts from './contracts/Contracts'
 import Explorer from './GraphIQL'
 
-// import AccountChooser from './accounts/_Chooser'
-
 import TransactionToasts from './_TransactionToasts'
 import NodeInfo from './_NodeInfo'
 

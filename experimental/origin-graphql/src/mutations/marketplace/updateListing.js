@@ -1,17 +1,17 @@
 import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import { listingInputToIPFS } from './createListing'
 
 async function updateListing(_, args) {
   const { listingID, data, from, autoApprove } = args
   await checkMetaMask(from)
-  const ipfsHash = await post(contracts.ipfsRPC, data)
+
+  const ipfsData = listingInputToIPFS(data)
+  const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   let updateListingCall
-  const additionalDeposit = web3.utils.toWei(
-    String(args.additionalDeposit),
-    'ether'
-  )
+  const additionalDeposit = web3.utils.toWei(args.additionalDeposit, 'ether')
 
   if (autoApprove && additionalDeposit > 0) {
     const fnSig = web3.eth.abi.encodeFunctionSignature(
@@ -35,10 +35,7 @@ async function updateListing(_, args) {
     )
   }
 
-  const tx = updateListingCall.send({
-    gas: 4612388,
-    from: from || web3.eth.defaultAccount
-  })
+  const tx = updateListingCall.send({ gas: 4612388, from })
   return txHelper({ tx, mutation: 'updateListing' })
 }
 
