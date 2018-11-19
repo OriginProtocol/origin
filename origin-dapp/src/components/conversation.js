@@ -100,12 +100,14 @@ class Conversation extends Component {
 
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
-        const resized = await generateCroppedImage(filesObj[key], {}, true)
+        const resized = await generateCroppedImage(filesObj[key], null, true)
         filesArr.push(resized)
       }
     }
 
-    const filesAsDataUriArray = filesArr.map(async fileObj =>
+    const resizedFiles = await Promise.all(filesArr)
+
+    const filesAsDataUriArray = resizedFiles.map(async fileObj =>
       getDataUri(fileObj)
     )
 
@@ -346,7 +348,7 @@ class Conversation extends Component {
                   <div key={i} className="image-container">
                     <img src={dataUri} className="preview-thumbnail" />
                     <a
-                      className="close-btn cancel-image"
+                      className="image-overlay-btn cancel-image"
                       aria-label="Close"
                       onClick={() => this.setState({ files: [] })}
                     >
