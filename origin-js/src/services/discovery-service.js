@@ -12,6 +12,7 @@ class DiscoveryService {
   _toListingModel(listingNode) {
     const data = listingNode.data
     data.display = listingNode.display
+    console.log("LISTING OBJECT: ", Listing.initFromDiscovery(data))
     return Listing.initFromDiscovery(data)
   }
 

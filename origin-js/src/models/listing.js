@@ -26,9 +26,14 @@ export class Listing {
    *  - {Array<Object>} media
    *  - {Object} comission - consists of 'amount' and 'currency' properties
    *  - {Array} slots - to be implemented
+   *  - {string} schemaId
+   *  - {string} expiry
+   *  - {string} deposit
+   *  - {string} depositManager - address of depositManager
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
-    unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots }) {
+    unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
+    schemaId, deposit, depositManager }) {
 
     this.id = id
     this.title = title
@@ -49,6 +54,9 @@ export class Listing {
     this.media = media
     this.commission = commission
     this.slots = slots
+    this.schemaId = schemaId
+    this.deposit = deposit
+    this.depositManager = depositManager
   }
 
   // creates a Listing using on-chain and off-chain data
@@ -73,7 +81,11 @@ export class Listing {
       display: 'normal',
       media: ipfsListing.media,
       commission: ipfsListing.commission,
-      slots: [] // To be implemented
+      slots: [], // To be implemented
+      schemaId: ipfsListing.schemaId,
+      expiry: ipfsListing.expiry,
+      deposit: chainListing.deposit,
+      depositManager: chainListing.depositManager,
     })
   }
 
@@ -98,7 +110,11 @@ export class Listing {
       display: discoveryNodeData.display,
       media: discoveryNodeData.media,
       commission: discoveryNodeData.commission,
-      slots: [] // To be implemented
+      slots: [], // To be implemented
+      schemaId: discoveryNodeData.schemaId,
+      expiry: discoveryNodeData.ipfs.expiry,
+      deposit: discoveryNodeData.deposit,
+      depositManager: discoveryNodeData.depositManager,
     })
   }
 
