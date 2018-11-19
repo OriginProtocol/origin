@@ -15,8 +15,9 @@ export class Offer {
    *  - {string} refund - Amount to refund buyer upon finalization
    *  - {Object} totalPrice - Amount to refund buyer upon finalization, consists of 'amount' and 'currency' properties
    *  - {int} unitsPurchased - number of units purchased
+   *  - {Object} blockInfo - information of where(when?) offer happened on the blockchain
    */
-  constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice, unitsPurchased }) {
+  constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice, unitsPurchased, blockInfo }) {
       this.id = id
       this.listingId = listingId
       this.status = status
@@ -26,6 +27,7 @@ export class Offer {
       this.refund = refund
       this.totalPrice = totalPrice
       this.unitsPurchased = unitsPurchased
+      this.blockInfo = blockInfo
   }
 
   // creates an Offer using on-chain and off-chain data
@@ -39,7 +41,11 @@ export class Offer {
       events: chainData.events,
       refund: chainData.refund,
       totalPrice: chainData.totalPrice,
-      unitsPurchased: ipfsData.unitsPurchased
+      unitsPurchased: ipfsData.unitsPurchased,
+      blockInfo: {
+        blockNumber: chainOffer.blockNumber,
+        logIndex: chainOffer.logIndex
+      }
     })
   }
 
@@ -55,6 +61,10 @@ export class Offer {
       refund: discoveryNode.data.refund,
       totalPrice: discoveryNode.data.totalPrice,
       unitsPurchased: discoveryNode.data.unitsPurchased // TODO what happens when this is undefined?
+      // blockInfo: { -- expose 
+      //   blockNumber: chainOffer.blockNumber,
+      //   logIndex: chainOffer.logIndex
+      // }
     })
   }
 

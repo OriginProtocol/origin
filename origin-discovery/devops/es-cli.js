@@ -19,8 +19,8 @@ const readline = require('readline')
 const { groupBy, mapValues } = require('./../../origin-js/src/utils/arrayFunctions.js')
 
 // Configuration
-var host = 'localhost'
-var port = '9200'
+let host = 'localhost'
+let port = '9200'
 if (process.env.ELASTICSEARCH_HOST) {
   const splits = process.env.ELASTICSEARCH_HOST.split(':')
   host=splits[0]
@@ -74,7 +74,7 @@ async function executePayloadRequest(uri, json, method = 'POST') {
       }
     }
 
-    postReq = http.request(options, function(res) {
+    const postReq = http.request(options, function(res) {
       res.setEncoding('utf8')
       res
         .on('data', function(data) {
@@ -155,7 +155,6 @@ async function showIndexInfo() {
     indexes.map(async index => executeGetRequest(`${index}/_stats/docs`))
   )).map(docCountResponse => JSON.parse(docCountResponse)._all.total.docs.count)
 
-  let count = 0
   const paddingSize = 25
   console.log()
   console.log(
@@ -243,16 +242,16 @@ async function deleteAlias() {
 
 let inputResolveCallback = null
 async function waitForInput() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     inputResolveCallback = resolve
   })
 }
 
-;(async () => {
+(async () => {
   printUsage()
   process.stdout.write('Select option: ')
 
-  const response = rl.on('line', async input => {
+  rl.on('line', async input => {
     input = input.trim()
 
     // Some other function was waiting for input. Send the value to it
