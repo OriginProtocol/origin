@@ -125,6 +125,7 @@
   "listing-create.whatHappensNextHeading": "Kaj se zgodi potem?",
   "listing-create.whatHappensNextContent1": "When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it.",
   "listing-create.whatHappensNextContent2": "{selectedBoostAmount} OGN will be transferred for boosting. If you close your listing before accepting an offer, the OGN will be refunded to you.",
+  "listing-create.updateSuccessMessage": "Your listing has been updated!",
   "listing-create.successMessage": "Your listing has been created!",
   "listing-create.successDisclaimer": "Your listing will be visible within a few seconds. Here's what happens next:",
   "listing-create.success-1": "Buyers will now see your listing on the marketplace.",
