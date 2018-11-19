@@ -125,6 +125,7 @@
   "listing-create.whatHappensNextHeading": "Cosa succede dopo?",
   "listing-create.whatHappensNextContent1": "Quando invii questo annuncio, ti verrà chiesto di confermare la transazione in MetaMask. Gli acquirenti saranno quindi in grado di vedere l'inserzione e fare offerte.",
   "listing-create.whatHappensNextContent2": "{selectedBoostAmount} OGN sarà trasferito per boosting. Se chiudi il tuo annuncio prima di accettare un'offerta, l'OGN ti sarà rimborsato.",
+  "listing-create.updateSuccessMessage": "Your listing has been updated!",
   "listing-create.successMessage": "La tua inserzione è stata creata!",
   "listing-create.successDisclaimer": "La tua inserzione sarà visibile entro pochi secondi. Ecco cosa succede dopo:",
   "listing-create.success-1": "Gli acquirenti ora vedranno il tuo annuncio sul mercato.",
