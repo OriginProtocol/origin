@@ -42,7 +42,6 @@
   "boost-slider.learn-more": "詳細について",
   "conversation-list-item.unnamedUser": "名前の無いユーザー",
   "conversation.newMessagePlaceholder": "何か入力してください。",
-  "conversation.invalidFileSelected": "ファイルサイズは1.5 MB未満でなければなりません。小さい画像を選択してください。",
   "conversation.invalidTextInput": "送信するメッセージを追加してください。",
   "connectivity.mainEthereumNetwork": "メインイーサリアムネットワーク",
   "connectivity.mordenTestNetwork": "Mordenテストネットワーク",
