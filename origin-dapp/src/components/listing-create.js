@@ -18,7 +18,8 @@ import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
 
-import { generateCalendarSlots, prepareSlotsToSave } from 'utils/calendarHelpers'
+import { getListing, camelCaseToDash } from 'utils/listing'
+import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
@@ -109,26 +110,42 @@ class ListingCreate extends Component {
     this.resetForm = this.resetForm.bind(this)
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
+    this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
   }
 
   async componentDidMount() {
-    // If listingAddress prop is passed in, we're in edit mode, so fetch listing data
-    if (this.props.listingAddress) {
+    // If listingId prop is passed in, we're in edit mode, so fetch listing data
+    if (this.props.listingId) {
       try {
-        const listing = await origin.listings.get(this.props.listingAddress)
-        this.setState({ selectedSchemaType: listing.schemaType })
-        await this.handleSchemaSelection(listing.schemaType)
-        listing.slots = generateCalendarSlots(listing.slots)
-
+        // Pass false as second param so category doesn't get translated
+        // because the form only understands the category ID, not the translated phrase
+        const listing = await getListing(this.props.listingId, false)
+        this.ensureUserIsSeller(listing.seller)
         this.setState({
-          formData: listing,
-          step: this.STEP.DETAILS,
+          formListing: {
+            formData: listing
+          },
+          selectedSchemaType: listing.schemaType,
+          selectedBoostAmount: listing.boostValue,
           isEditMode: true
         })
+        await this.handleSchemaSelection(camelCaseToDash(listing.schemaType))
+        this.setState({
+          step: this.STEP.DETAILS,
+        })
       } catch (error) {
-        console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
+        console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
+    }
+  }
+
+  ensureUserIsSeller(sellerAccount) {
+    const { web3Account } = this.props
+
+    if ( web3Account && web3Account.toUpperCase() !== sellerAccount.toUpperCase()) {
+      alert('⚠️ Only the seller can update a listing')
+      window.location.href = '/'
     }
   }
 
@@ -172,7 +189,7 @@ class ListingCreate extends Component {
   handleSchemaSelection(selectedSchemaType) {
     const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
 
-    fetch(`schemas/${selectedSchemaType}.json`)
+    return fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
         PriceField.defaultProps = {
@@ -224,9 +241,9 @@ class ListingCreate extends Component {
             translatedSchema.properties.examples &&
             translatedSchema.properties.examples.enumNames
         })
-      })
 
-    window.scrollTo(0, 0)
+        window.scrollTo(0, 0)
+      })
   }
 
   goToDetailsStep() {
@@ -363,12 +380,24 @@ class ListingCreate extends Component {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
       const methodName = this.state.isEditMode ? 'updateListing' : 'createListing'
-      const transactionReceipt = await origin.marketplace[methodName](
-        listing,
-        (confirmationCount, transactionReceipt) => {
-          this.props.updateTransaction(confirmationCount, transactionReceipt)
-        }
-      )
+      let transactionReceipt
+      if (this.state.isEditMode) {
+        transactionReceipt = await origin.marketplace[methodName](
+          this.props.listingId,
+          listing,
+          0, // TODO(John) - figure out how a seller would add "additional deposit"
+          (confirmationCount, transactionReceipt) => {
+            this.props.updateTransaction(confirmationCount, transactionReceipt)
+          }
+        )
+      } else {
+        transactionReceipt = await origin.marketplace[methodName](
+          listing,
+          (confirmationCount, transactionReceipt) => {
+            this.props.updateTransaction(confirmationCount, transactionReceipt)
+          }
+        )
+      }
 
       this.props.upsertTransaction({
         ...transactionReceipt,
@@ -405,7 +434,8 @@ class ListingCreate extends Component {
       translatedSchema,
       showDetailsFormErrorMsg,
       showBoostTutorial,
-      isFractionalListing
+      isFractionalListing,
+      isEditMode
     } = this.state
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
@@ -646,7 +676,7 @@ class ListingCreate extends Component {
                   <BoostSlider
                     onChange={this.setBoost}
                     ognBalance={wallet.ognBalance}
-                    selectedBoostAmount={selectedBoostAmount}
+                    selectedBoostAmount={formData.boostValue || selectedBoostAmount}
                   />
                 )}
                 <div className="btn-container">
@@ -1002,10 +1032,18 @@ class ListingCreate extends Component {
                   />
                 </div>
                 <h3>
-                  <FormattedMessage
-                    id={'listing-create.successMessage'}
-                    defaultMessage={'Your listing has been created!'}
-                  />
+                  {isEditMode &&
+                    <FormattedMessage
+                      id={'listing-create.updateSuccessMessage'}
+                      defaultMessage={'Your listing has been updated!'}
+                    />
+                  }
+                  {!isEditMode &&
+                    <FormattedMessage
+                      id={'listing-create.successMessage'}
+                      defaultMessage={'Your listing has been created!'}
+                    />
+                  }
                 </h3>
                 <div className="disclaimer">
                   <p>
