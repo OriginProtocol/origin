@@ -8,11 +8,12 @@ export class Offer {
    * @param {Object} args - single object arguments used to construct an Offer
    *  - {string} id - Offer ID.
    *  - {string} listingId - Unique listing ID.
-   *  - {string} status - Status of the offer: 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed'
+   *  - {string} status - Status of the offer: 'error', 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed', 'withdrawn', 'ruling'
    *  - {int} createdAt - Time in seconds since epoch
    *  - {string} buyer - address of the buyer
    *  - {Array{Object}} events - list of events ( like OfferCreated event)
    *  - {string} refund - Amount to refund buyer upon finalization
+   *  - {Object} totalPrice - Amount to refund buyer upon finalization, consists of 'amount' and 'currency' properties
    */
   constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice }) {
       this.id = id

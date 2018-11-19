@@ -10,22 +10,22 @@ export class Listing {
    *  - {string} title
    *  - {string} description
    *  - {string} category
-   *  - {Object} commission ????
+   *  - {Object} commission - consists of 'amount' and 'currency' properties
    *  - {string} subCategory
-   *  - {string} status
-   *  - {string} type
-   *  - {string} unitsTotal
+   *  - {string} status - 'active', 'inactive'
+   *  - {string} type - 'unit', 'fractional'
+   *  - {int} unitsTotal
    *  - {Object} offers
    *  - {Array<Object>} events
    *  - {string} ipfsHash
    *  - {Object} ipfs
    *  - {string} language
-   *  - {Object} price
-   *  - {string} seller
-   *  - {string} display
-   *  - {Array} media
-   *  - {Object} comission
-   *  - {Array?} slots
+   *  - {Object} price - consists of 'amount' and 'currency' properties
+   *  - {string} seller - address of the seller
+   *  - {string} display - 'normal', 'featured', 'hidden'
+   *  - {Array<Object>} media
+   *  - {Object} comission - consists of 'amount' and 'currency' properties
+   *  - {Array} slots - to be implemented
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots }) {
