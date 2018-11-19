@@ -33,7 +33,7 @@ export class Listing {
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    schemaId, deposit, depositManager }) {
+    schemaId, deposit, depositManager, expiry }) {
 
     this.id = id
     this.title = title
@@ -57,6 +57,7 @@ export class Listing {
     this.schemaId = schemaId
     this.deposit = deposit
     this.depositManager = depositManager
+    this.expiry = expiry
   }
 
   // creates a Listing using on-chain and off-chain data
