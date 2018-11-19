@@ -53,6 +53,8 @@ services:
       # written to the build files
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/scripts:/app/origin-js/scripts
+      - ./origin-js/tests:/app/origin-js/tests
+      - ./origin-js/src:/app/origin-js/src
 
   origin-discovery:
     container_name: origin-discovery
