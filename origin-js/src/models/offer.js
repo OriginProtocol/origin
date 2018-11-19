@@ -39,7 +39,7 @@ export class Offer {
       events: chainData.events,
       refund: chainData.refund,
       totalPrice: chainData.totalPrice,
-      unitsPurchased: ipfsData
+      unitsPurchased: ipfsData.unitsPurchased
     })
   }
 
