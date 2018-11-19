@@ -42,7 +42,6 @@
   "boost-slider.learn-more": "Ulteriori informazioni",
   "conversation-list-item.unnamedUser": "Utente senza nome",
   "conversation.newMessagePlaceholder": "Scrivi qui...",
-  "conversation.invalidFileSelected": "Le dimensioni dei file devono essere inferiori a 1,5 MB. Si prega di selezionare un'immagine più piccola.",
   "conversation.invalidTextInput": "Si prega di aggiungere un messaggio da inviare.",
   "connectivity.mainEthereumNetwork": "Rete Ethereum Principale",
   "connectivity.mordenTestNetwork": "Rete Morden di Test",
