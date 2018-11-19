@@ -4,10 +4,6 @@
     "defaultMessage": "Type something..."
   },
   {
-    "id": "conversation.invalidFileSelected",
-    "defaultMessage": "File sizes must be less than 1.5 MB. Please select a smaller image."
-  },
-  {
     "id": "conversation.invalidTextInput",
     "defaultMessage": "Please add a message to send."
   }
