@@ -125,6 +125,7 @@
   "listing-create.whatHappensNextHeading": "Дальнейшие шаги",
   "listing-create.whatHappensNextContent1": "Когда вы отправите это объявление, вас попросят подтвердить транзакцию в MetaMask. После этого покупатели смогут увидеть ваше объявление и выступить со встречными предложениями.",
   "listing-create.whatHappensNextContent2": "{selectedBoostAmount} OGN будет потрачено на рекламу. Если вы удалите свое объявление до того, как примите предложение покупателя, вы получите OGN обратно.",
+  "listing-create.updateSuccessMessage": "Your listing has been updated!",
   "listing-create.successMessage": "Ваше объявление создано!",
   "listing-create.successDisclaimer": "Ваше объявление появится через несколько секунд. Вот что произойдет дальше:",
   "listing-create.success-1": "Теперь покупатели увидят ваше объявление на торговой площадке.",
