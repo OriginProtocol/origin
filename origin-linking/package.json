@@ -9,7 +9,7 @@
   "scripts": {
     "install:dev": "npm install && npm link origin",
     "test": "NODE_ENV=test mocha -r @babel/register --timeout 10000 --exit",
-    "start": "npx nodemon -r @babel/register -r source-map-support src/index.js"
+    "start": "npx sequelize db:migrate; npx nodemon -r @babel/register -r source-map-support src/index.js"
   },
   "author": "",
   "license": "MIT",
