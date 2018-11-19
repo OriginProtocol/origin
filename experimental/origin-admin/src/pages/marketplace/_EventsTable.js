@@ -3,10 +3,11 @@ import { getIpfsHashFromBytes32 } from 'utils/ipfsHash'
 import formatDate from 'utils/formatDate'
 
 import Identity from 'components/Identity'
-import { ipfsGateway } from 'utils/config'
+import { getIpfsGateway } from 'utils/config'
 
 function ipfs(rawHash) {
   var hash = getIpfsHashFromBytes32(rawHash)
+  const ipfsGateway = getIpfsGateway()
   return (
     <a
       href={`${ipfsGateway}/ipfs/${hash}`}

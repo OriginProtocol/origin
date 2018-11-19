@@ -41,6 +41,8 @@ export default {
         description
         currencyId
         unitsTotal
+        featured
+        hidden
         price {
           amount
           currency
@@ -57,6 +59,7 @@ export default {
       fragment basicOfferFields on Offer {
         id
         listingId
+        offerId
         value
         currency
         refund

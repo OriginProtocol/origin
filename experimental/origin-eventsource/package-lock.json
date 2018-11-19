@@ -1,0 +1,14 @@
+{
+	"name": "origin-eventsource",
+	"version": "0.1.0",
+	"lockfileVersion": 1,
+	"requires": true,
+	"dependencies": {
+		"lodash-es": {
+			"version": "4.17.11",
+			"resolved": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.11.tgz",
+			"integrity": "sha512-DHb1ub+rMjjrxqlB3H56/6MXtm1lSksDp2rA2cNWjG8mlDUYFhUj3Di2Zn5IwSU87xLv8tNIQ7sSwE/YOX/D/Q==",
+			"dev": true
+		}
+	}
+}

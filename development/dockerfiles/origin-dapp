@@ -18,4 +18,4 @@ RUN npm ci --loglevel notice --unsafe-perm
 
 WORKDIR /app/origin-dapp
 
-CMD npm run start
+CMD npm run start:watch

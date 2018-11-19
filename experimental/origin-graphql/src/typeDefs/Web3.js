@@ -13,6 +13,7 @@ export default `
 
   type Query {
     web3: Web3
+    config: String
     contracts: [Contract]
     contract(id: String!): Contract
     tokens: [Token]
@@ -86,6 +87,7 @@ export default `
     symbol: String
     decimals: Int
     totalSupply: String
+    exchangeRate(currency: String!): Int
   }
 
   type Contract {

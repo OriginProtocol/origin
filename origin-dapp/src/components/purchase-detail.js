@@ -316,7 +316,9 @@ class PurchaseDetail extends Component {
 
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
-      const listing = await getListing(purchase.listingId, true)
+      const { blockInfo } = purchase
+      const listing = await getListing(purchase.listingId, true, blockInfo)
+
       this.setState({
         listing,
         purchase

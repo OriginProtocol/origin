@@ -9,7 +9,7 @@ import CompactMessages from 'components/compact-messages'
 import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 
-import { getDataUri } from 'utils/fileUtils'
+import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
@@ -43,7 +43,6 @@ class Conversation extends Component {
       files: [],
       listing: {},
       purchase: {},
-      invalidFileSelected: false,
       invalidTextInput: false
     }
   }
@@ -101,18 +100,14 @@ class Conversation extends Component {
 
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
-        // Base64 encoding will inflate size to roughly 4/3 of original
-        if ((filesObj[key].size / 3) * 4 > imageMaxSize) {
-          this.setState({ invalidFileSelected: true })
-        } else {
-          this.setState({ invalidFileSelected: false })
-
-          filesArr.push(filesObj[key])
-        }
+        const resized = await generateCroppedImage(filesObj[key], null, true)
+        filesArr.push(resized)
       }
     }
 
-    const filesAsDataUriArray = filesArr.map(async fileObj =>
+    const resizedFiles = await Promise.all(filesArr)
+
+    const filesAsDataUriArray = resizedFiles.map(async fileObj =>
       getDataUri(fileObj)
     )
 
@@ -240,7 +235,6 @@ class Conversation extends Component {
     const {
       counterparty,
       files,
-      invalidFileSelected,
       invalidTextInput,
       listing,
       purchase
@@ -318,7 +312,6 @@ class Conversation extends Component {
             onSubmit={this.handleSubmit}
           >
             {!files.length &&
-              !invalidFileSelected &&
               !invalidTextInput && (
               <textarea
                 ref={this.textarea}
@@ -330,25 +323,16 @@ class Conversation extends Component {
                 autoFocus
               />
             )}
-            {(invalidFileSelected || invalidTextInput) && (
+            {invalidTextInput && (
               <div className="files-container">
                 <p
                   className="text-danger"
                   onClick={() =>
                     this.setState({
-                      invalidFileSelected: false,
                       invalidTextInput: false
                     })
                   }
                 >
-                  {invalidFileSelected && (
-                    <FormattedMessage
-                      id={'conversation.invalidFileSelected'}
-                      defaultMessage={
-                        'File sizes must be less than 1.5 MB. Please select a smaller image.'
-                      }
-                    />
-                  )}
                   {invalidTextInput && (
                     <FormattedMessage
                       id={'conversation.invalidTextInput'}
@@ -364,7 +348,7 @@ class Conversation extends Component {
                   <div key={i} className="image-container">
                     <img src={dataUri} className="preview-thumbnail" />
                     <a
-                      className="close-btn cancel-image"
+                      className="image-overlay-btn cancel-image"
                       aria-label="Close"
                       onClick={() => this.setState({ files: [] })}
                     >

@@ -7,7 +7,7 @@ class PriceField extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      price: props.formData || '',
+      price: props.formData && parseFloat(props.formData) || '',
       currencyCode: props.currencyCode || 'USD'
     }
 
@@ -19,6 +19,19 @@ class PriceField extends Component {
       enumeratedPrice &&
       enumeratedPrice.length === 1 &&
       enumeratedPrice[0] === 0
+  }
+
+  componentDidMount() {
+    // If a price is passed in, we must call the onChange callback
+    // to set the price in the parent form
+    // Unfortunately, the setTimeout is needed to allow the parent
+    // form to render and be ready to handle the onChange event
+    const { price } = this.state
+    if (price) {
+      setTimeout(() => {
+        this.props.onChange(price)
+      })
+    }
   }
 
   onChange() {

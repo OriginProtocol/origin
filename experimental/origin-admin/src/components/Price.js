@@ -14,6 +14,7 @@ const CurrentPrice = gql`
 class Price extends Component {
   render() {
     const { label, amount, className, showEth } = this.props
+    if (!amount) return null
     return (
       <Query query={CurrentPrice}>
         {({ loading, error, data }) => {

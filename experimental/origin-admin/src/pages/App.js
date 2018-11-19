@@ -1,17 +1,18 @@
 import React from 'react'
 import { Switch, Route, Redirect, NavLink } from 'react-router-dom'
-import { Navbar, Alignment, Icon } from '@blueprintjs/core'
+import { Navbar, Alignment, Icon, Tooltip } from '@blueprintjs/core'
 
 import Price from 'components/Price'
 import MetaMaskSwitcher from 'components/MetaMaskSwitcher'
 import Accounts from './accounts/Accounts'
 import Listings from './marketplace/Listings'
 import Listing from './marketplace/Listing'
+import Activity from './marketplace/Activity'
+import Users from './marketplace/Users'
+import User from './marketplace/User'
 import Messaging from './messaging/Messaging'
 import Contracts from './contracts/Contracts'
 import Explorer from './GraphIQL'
-
-// import AccountChooser from './accounts/_Chooser'
 
 import TransactionToasts from './_TransactionToasts'
 import NodeInfo from './_NodeInfo'
@@ -22,9 +23,22 @@ require('@blueprintjs/table/lib/css/table.css')
 require('@blueprintjs/icons/lib/css/blueprint-icons.css')
 require('@blueprintjs/datetime/lib/css/blueprint-datetime.css')
 require('graphiql/graphiql.css')
+
 if (process.env.NODE_ENV === 'production') {
   require('../../public/css/app.css')
 }
+
+const Link = props => (
+  <Tooltip content={props.tooltip} lazy={true}>
+    <NavLink
+      className="bp3-button bp3-minimal"
+      activeClassName="bp3-active"
+      to={props.to}
+    >
+      <Icon icon={props.icon} />
+    </NavLink>
+  </Tooltip>
+)
 
 const App = () => (
   <>
@@ -34,54 +48,26 @@ const App = () => (
         <Navbar.Heading className="logo">
           <img src="images/origin-logo-dark.png" /> ADMIN
         </Navbar.Heading>
-        <NavLink
-          className="bp3-button bp3-minimal"
-          activeClassName="bp3-active"
-          to="/marketplace"
-        >
-          <Icon icon="shop" />
-        </NavLink>
-        {/* <NavLink
-          className="bp3-button bp3-minimal"
-          activeClassName="bp3-active"
-          to="/contracts"
-        >
-          Contracts
-        </NavLink> */}
-        <NavLink
-          className="bp3-button bp3-minimal"
-          activeClassName="bp3-active"
-          to="/messaging"
-        >
-          <Icon icon="chat" />
-        </NavLink>
-        <NavLink
-          className="bp3-button bp3-minimal"
-          activeClassName="bp3-active"
-          to="/accounts"
-        >
-          <Icon icon="settings" />
-        </NavLink>
-        <NavLink
-          className="bp3-button bp3-minimal"
-          activeClassName="bp3-active"
-          to="/explorer"
-        >
-          <Icon icon="console" />
-        </NavLink>
+        <Link to="/marketplace" icon="shop" tooltip="Listings" />
+        <Link to="/activity" icon="pulse" tooltip="Activity" />
+        <Link to="/users" icon="person" tooltip="Users" />
+        <Link to="/messaging" icon="chat" tooltip="Messaging" />
+        <Link to="/explorer" icon="console" tooltip="GraphQL Console" />
+        <Link to="/accounts" icon="settings" tooltip="Settings" />
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <MetaMaskSwitcher />
         <Price amount="1" label="1 ETH =" className="mr-3" />
         <NodeInfo />
-        {/* <AccountChooser /> */}
       </Navbar.Group>
     </Navbar>
-
     <Switch>
       <Route path="/accounts" component={Accounts} />
       <Route path="/marketplace/listings/:listingID" component={Listing} />
       <Route path="/marketplace" component={Listings} />
+      <Route path="/users/:userId" component={User} />
+      <Route path="/users" component={Users} />
+      <Route path="/activity" component={Activity} />
       <Route path="/contracts" component={Contracts} />
       <Route path="/explorer" component={Explorer} />
       <Route path="/messaging" component={Messaging} />
@@ -119,6 +105,10 @@ require('react-styl')(`
     margin-bottom: 1rem
   .ml-2
     margin-left: 0.5rem
+  .ml-3
+    margin-left: 1rem
+  .mr-1
+    margin-right: 0.25rem
   .mr-2
     margin-right: 0.5rem
   .mr-3
