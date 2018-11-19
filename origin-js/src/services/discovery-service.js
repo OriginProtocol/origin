@@ -105,12 +105,14 @@ class DiscoveryService {
 
   /**
    * Queries discovery server for all listings, with support for pagination.
-   * Options:
+   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean}
    *  - idsOnly(boolean): Returns only ids rather than the full Listing object.
-   *  - listingsFor(address): Returns latest version of listings created by a specific seller.
-   *  - purchasesFor(address): Returns listings a specific buyer made an offer on.
+   *  - listingsFor(address): Returns latest version of all listings created by a seller.
+   *  - purchasesFor(address): Returns all listings a buyer made an offer on.
    *      Selects the version of the listing at the time the offer was created.
-   * @param opts: { idsOnly, listingsFor, purchasesFor, offset, numberOfItems }
+   *  - numberOfItems: Number of listings to return. Any value between 1 and MAX_NUM_RESULTS
+   *      is valid. Temporarily, while switching DApp to fetch data from back-end, we use -1 as
+   *      a special value for requesting all listings. This will get deprecated in the future.
    * @return {Array<Listing>}
    */
   async getListings(opts) {
@@ -121,9 +123,7 @@ class DiscoveryService {
     // Offset should be bigger than 0.
     const offset = Math.max(opts.offset || 0, 0)
 
-    // For numberOfItems, any value between 1 and MAX_NUM_RESULTS is valid.
-    // Temporarily, while switching DApp to fetch data from back-end, we use -1 as
-    // a special value for requesting all listings. This will get deprecated in the future.
+    // Keep numberOfItems between 1 and MAX_NUM_RESULTS, with -1 as a special value also allowed.
     const numberOfItems = opts.numberOfItems
       ? Math.min(Math.max(opts.numberOfItems, 1), MAX_NUM_RESULTS)
       : -1

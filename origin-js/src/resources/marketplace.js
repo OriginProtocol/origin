@@ -136,6 +136,11 @@ export default class Marketplace {
    * Returns listings.
    * TODO: This won't scale. Add support for pagination.
    * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean}
+   *  - idsOnly: Returns only ids rather than the full Listing object.
+   *  - listingsFor: Returns latest version of all listings created by a seller.
+   *  - purchasesFor: Returns all listings a buyer made an offer on.
+   *  - withBlockinfo: Only used in conjunction with purchasesFor option. Loads version
+   *    of the listing at the time offer was made by the buyer.
    * @return {Promise<List(Listing)>}
    * @throws {Error}
    */
