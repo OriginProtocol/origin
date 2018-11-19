@@ -42,7 +42,6 @@
   "boost-slider.learn-more": "Learn More",
   "conversation-list-item.unnamedUser": "Unnamed User",
   "conversation.newMessagePlaceholder": "Type something...",
-  "conversation.invalidFileSelected": "File sizes must be less than 1.5 MB. Please select a smaller image.",
   "conversation.invalidTextInput": "Please add a message to send.",
   "connectivity.mainEthereumNetwork": "Main Ethereum Network",
   "connectivity.mordenTestNetwork": "Morden Test Network",
