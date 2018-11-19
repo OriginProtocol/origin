@@ -3,8 +3,12 @@ import contracts from '../contracts'
 
 export default {
   balance: async account => {
-    const wei = await web3.eth.getBalance(account.id)
-    return balancesFromWei(wei)
+    try {
+      const wei = await web3.eth.getBalance(account.id)
+      return balancesFromWei(wei)
+    } catch(e) {
+      return null
+    }
   },
   role: account => {
     let roles = {}

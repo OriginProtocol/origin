@@ -59,6 +59,7 @@ export default {
       fragment basicOfferFields on Offer {
         id
         listingId
+        offerId
         value
         currency
         refund
