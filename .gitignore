@@ -27,6 +27,7 @@ node_modules/
 
 # Deployment #
 ##############
+secrets.yaml
 secrets-dev.yaml
 secrets-staging.yaml
 secrets-prod.yaml
