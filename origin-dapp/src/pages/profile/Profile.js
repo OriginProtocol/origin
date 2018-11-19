@@ -17,6 +17,7 @@ import Avatar from 'components/avatar'
 import Modal from 'components/modal'
 import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
+import ImageCropper from 'components/modals/image-cropper'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
 
 import Guidance from './_Guidance'
@@ -77,7 +78,8 @@ class Profile extends Component {
         airbnb: false,
         publish: false,
         twitter: false,
-        unload: false
+        unload: false,
+        imageCropper: false
       },
       // percentage widths for two progress bars
       progress: {
@@ -86,7 +88,8 @@ class Profile extends Component {
       },
       provisional: props.provisional,
       successMessage: '',
-      wallet: null
+      wallet: null,
+      imageToCrop: null
     }
 
     this.intlMessages = defineMessages({
@@ -257,7 +260,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { modalsOpen, progress, successMessage } = this.state
+    const { modalsOpen, progress, successMessage, imageToCrop } = this.state
 
     const {
       changes,
@@ -268,7 +271,6 @@ class Profile extends Component {
       wallet,
       intl
     } = this.props
-
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = !!changes.length
     const description =
@@ -413,7 +415,48 @@ class Profile extends Component {
               }
             })
           }}
+          handleCropImage={(imageToCrop) => {
+            this.setState({
+              imageToCrop,
+              modalsOpen: {
+                ...modalsOpen,
+                profile: false,
+                cropModal: true
+              }
+            })
+          }}
           data={profile.provisional}
+        />
+
+        <ImageCropper
+          isOpen={modalsOpen.cropModal}
+          imageFileObj={imageToCrop}
+          aspect={1} // force square aspect ratio
+          onCropComplete={(croppedImageUri) => {
+            this.props.updateProfile({
+              data: {
+                pic: croppedImageUri
+              }
+            })
+            this.setState({
+              imageToCrop: null,
+              modalsOpen: {
+                ...modalsOpen,
+                profile: true,
+                cropModal: false
+              }
+            })
+            document.getElementById('edit-profile-image').value = null
+          }}
+          onCropCancel={() => {
+            this.setState({
+              modalsOpen: {
+                ...modalsOpen,
+                profile: true,
+                cropModal: false
+              }
+            })
+          }}
         />
 
         <VerifyPhone
@@ -670,7 +713,6 @@ const mapStateToProps = state => {
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,
     identityAddress: state.profile.user.identityAddress,
-    onMobile: state.app.onMobile,
     wallet: state.wallet,
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,

@@ -1,9 +1,9 @@
 import React from 'react'
 import { withRouter } from 'react-router'
 import formatDate from 'utils/formatDate'
-import { ipfsGateway } from 'utils/config'
+import { getIpfsGateway } from 'utils/config'
 
-import { Card, Spinner } from '@blueprintjs/core'
+import { Icon, Card, Spinner } from '@blueprintjs/core'
 
 import Price from 'components/Price'
 import Identity from 'components/Identity'
@@ -18,6 +18,7 @@ function status(listing) {
 
 const Listings = ({ listings, history, noMore }) => {
   if (!listings) return null
+  const ipfsGateway = getIpfsGateway()
   return (
     <div className="mt-3 listings-grid">
       {listings.map(a => (
@@ -28,6 +29,8 @@ const Listings = ({ listings, history, noMore }) => {
           className="listing-card"
         >
           <h5 className="bp3-heading ellip" style={{ maxWidth: 'none' }}>
+            {a.hidden ? <Icon icon="eye-off" className="mr-2" /> : null}
+            {a.featured ? <Icon icon="clean" className="mr-2" /> : null}
             {a.title}
           </h5>
           {status(a)}

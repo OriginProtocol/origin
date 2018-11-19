@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import { Button } from '@blueprintjs/core'
+import pick from 'lodash/pick'
 
 import {
+  Button,
   Dialog,
   FormGroup,
   InputGroup,
@@ -17,7 +18,12 @@ import rnd from 'utils/rnd'
 import withAccounts from 'hoc/withAccountsAndAllowance'
 import withTokens from 'hoc/withTokens'
 
-import { CreateListingMutation } from '../../../mutations'
+import demoListings from './_demoListings'
+import {
+  CreateListingMutation,
+  UpdateListingMutation
+} from '../../../mutations'
+
 import ErrorCallout from 'components/ErrorCallout'
 import SelectAccount from 'components/SelectAccount'
 import ImagePicker from 'components/ImagePicker'
@@ -41,18 +47,37 @@ class CreateListing extends Component {
     }
     const arbitrator = rnd(props.accounts.filter(a => a.role === 'Arbitrator'))
 
-    this.state = {
-      title: 'Cool Bike',
-      currency: '0x0000000000000000000000000000000000000000',
-      price: '0.1',
-      depositManager: arbitrator ? arbitrator.id : '',
-      from: seller ? seller.id : '',
-      deposit: 5,
-      category: 'For Sale',
-      description: 'A very nice bike',
-      autoApprove: true,
-      media: [],
-      unitsTotal: '1'
+    if (props.listing && props.listing.id) {
+      let media = props.listing.media || []
+
+      this.state = {
+        title: props.listing.title || '',
+        currency: props.listing.price ? props.listing.price.currency : 'ETH',
+        price: props.listing.price ? props.listing.price.amount : '0.1',
+        from: seller ? seller.id : '',
+        deposit: 0,
+        category: props.listing.category || 'For Sale',
+        description: props.listing.description || '',
+        autoApprove: true,
+        media,
+        initialMedia: media,
+        unitsTotal: props.listing.unitsTotal
+      }
+    } else {
+      this.state = {
+        title: '',
+        currency: '0x0000000000000000000000000000000000000000',
+        price: '0.1',
+        depositManager: arbitrator ? arbitrator.id : '',
+        from: seller ? seller.id : '',
+        deposit: 5,
+        category: '',
+        description: '',
+        autoApprove: true,
+        media: [],
+        initialMedia: [],
+        unitsTotal: 1
+      }
     }
   }
 
@@ -73,20 +98,55 @@ class CreateListing extends Component {
       }))
     ]
 
+    const isCreate = this.props.listing && this.props.listing.id ? false : true
+
     return (
       <Mutation
-        mutation={CreateListingMutation}
+        mutation={isCreate ? CreateListingMutation : UpdateListingMutation}
         onCompleted={this.props.onCompleted}
       >
-        {(createListing, { loading, error }) => (
+        {(upsertListing, { loading, error }) => (
           <Dialog
-            title="Create Listing"
+            title={`${isCreate ? 'Create' : 'Update'} Listing`}
             isOpen={this.props.isOpen}
             onClose={this.props.onCompleted}
             lazy={true}
           >
             <div className="bp3-dialog-body">
               <ErrorCallout error={error} />
+              <div className="mb-3">
+                <Button small="true" text="Empty" onClick={() => this.setDemoListing(-1)} />
+                <Button
+                  small="true"
+                  text="House 1"
+                  className="ml-2"
+                  onClick={() => this.setDemoListing(0)}
+                />
+                <Button
+                  small="true"
+                  text="House 2"
+                  className="ml-2"
+                  onClick={() => this.setDemoListing(1)}
+                />
+                <Button
+                  small="true"
+                  text="House 3"
+                  className="ml-2"
+                  onClick={() => this.setDemoListing(2)}
+                />
+                <Button
+                  small="true"
+                  text="Car"
+                  className="ml-2"
+                  onClick={() => this.setDemoListing(3)}
+                />
+                <Button
+                  small="true"
+                  text="Tickets"
+                  className="ml-2"
+                  onClick={() => this.setDemoListing(4)}
+                />
+              </div>
               <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1, marginRight: 20 }}>
                   <FormGroup label="Category">
@@ -121,7 +181,10 @@ class CreateListing extends Component {
                 />
               </FormGroup>
               <FormGroup>
-                <ImagePicker onChange={media => this.setState({ media })} />
+                <ImagePicker
+                  media={this.state.initialMedia}
+                  onChange={media => this.setState({ media })}
+                />
               </FormGroup>
               <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1.5, marginRight: 20 }}>
@@ -161,34 +224,41 @@ class CreateListing extends Component {
                   </FormGroup>
                 </div>
               </div>
-              <div style={{ display: 'flex' }}>
-                <div style={{ flex: 2, marginRight: 20 }}>
-                  <FormGroup label="Seller">
-                    <SelectAccount {...input('from')} />
-                  </FormGroup>
+              {!isCreate ? null : (
+                <div style={{ display: 'flex' }}>
+                  <div style={{ flex: 2, marginRight: 20 }}>
+                    <FormGroup label="Seller">
+                      <SelectAccount {...input('from')} />
+                    </FormGroup>
+                  </div>
+
+                  <div style={{ flex: 1 }}>
+                    <FormGroup label="Deposit Manager">
+                      <HTMLSelect
+                        fill={true}
+                        {...input('depositManager')}
+                        options={[
+                          { label: 'Origin', value: web3.eth.defaultAccount }
+                        ]}
+                      />
+                    </FormGroup>
+                  </div>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <FormGroup label="Deposit Manager">
-                    <HTMLSelect
-                      fill={true}
-                      {...input('depositManager')}
-                      options={[
-                        { label: 'Origin', value: web3.eth.defaultAccount }
-                      ]}
-                    />
-                  </FormGroup>
-                </div>
-              </div>
+              )}
             </div>
             <div
               className="bp3-dialog-footer"
               style={{ display: 'flex', justifyContent: 'flex-end' }}
             >
               <Button
-                text="Create Listing"
+                text={`${isCreate ? 'Create' : 'Update'} Listing`}
                 intent="primary"
                 loading={loading}
-                onClick={() => createListing(this.getVars())}
+                onClick={() =>
+                  upsertListing(
+                    isCreate ? this.getCreateVars() : this.getUpdateVars()
+                  )
+                }
               />
             </div>
           </Dialog>
@@ -197,7 +267,32 @@ class CreateListing extends Component {
     )
   }
 
-  getVars() {
+  setDemoListing(idx) {
+    if (idx === -1) {
+      this.setState({
+        title: '',
+        price: '',
+        category: '',
+        description: '',
+        media: [],
+        initialMedia: [],
+        unitsTotal: 1
+      })
+      return
+    }
+    const egListing = demoListings[idx]
+    this.setState({
+      title: egListing.title,
+      price: egListing.price.amount,
+      category: egListing.category,
+      description: egListing.description,
+      media: egListing.media,
+      initialMedia: egListing.media,
+      unitsTotal: egListing.unitsTotal
+    })
+  }
+
+  getCreateVars() {
     return {
       variables: {
         deposit: String(this.state.deposit),
@@ -210,6 +305,25 @@ class CreateListing extends Component {
           price: { currency: this.state.currency, amount: this.state.price },
           category: this.state.category,
           media: this.state.media,
+          unitsTotal: Number(this.state.unitsTotal)
+        }
+      }
+    }
+  }
+
+  getUpdateVars() {
+    return {
+      variables: {
+        listingID: String(this.props.listing.id),
+        additionalDeposit: String(this.state.deposit),
+        from: this.state.from,
+        autoApprove: this.state.autoApprove,
+        data: {
+          title: this.state.title,
+          description: this.state.description,
+          price: { currency: this.state.currency, amount: this.state.price },
+          category: this.state.category,
+          media: this.state.media.map(m => pick(m, 'contentType', 'url')),
           unitsTotal: Number(this.state.unitsTotal)
         }
       }
