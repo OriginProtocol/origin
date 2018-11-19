@@ -26,7 +26,7 @@ import Calendar from './calendar'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { getListing } from 'utils/listing'
+import { getListing, transformPurchasesOrSales } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 
@@ -188,32 +188,9 @@ class ListingsDetail extends Component {
   async loadBuyerPurchases() {
     try {
       const { web3Account } = this.props
-      const listingIds = await origin.marketplace.getListings({
-        idsOnly: true,
-        purchasesFor: web3Account
-      })
-      const listingPromises = listingIds.map(listingId => {
-        return new Promise(async resolve => {
-          const listing = await getListing(listingId, true)
-          resolve({ listingId, listing })
-        })
-      })
-      const withListings = await Promise.all(listingPromises)
-      const offerPromises = await withListings.map(obj => {
-        return new Promise(async resolve => {
-          const offers = await origin.marketplace.getOffers(obj.listingId, {
-            for: web3Account
-          })
-          resolve(Object.assign(obj, { offers }))
-        })
-      })
-      const withOffers = await Promise.all(offerPromises)
-      const offersByListing = withOffers.map(obj => {
-        return obj.offers.map(offer => Object.assign({}, obj, { offer }))
-      })
-      const offersFlattened = [].concat(...offersByListing)
-
-      this.setState({ purchases: offersFlattened })
+      const purchases = await origin.marketplace.getPurchases(web3Account)
+      const transformedPurchases = transformPurchasesOrSales(purchases)
+      this.setState({ purchases: transformedPurchases })
     } catch (error) {
       console.error(error)
     }
