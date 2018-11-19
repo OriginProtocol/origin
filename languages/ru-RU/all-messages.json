@@ -42,7 +42,6 @@
   "boost-slider.learn-more": "Узнать больше",
   "conversation-list-item.unnamedUser": "Безымянный пользователь",
   "conversation.newMessagePlaceholder": "Начните печатать...",
-  "conversation.invalidFileSelected": "Размер файла не должен превышать 1,5 МБ. Выберите изображение меньшего размера.",
   "conversation.invalidTextInput": "Напишите сообщение.",
   "connectivity.mainEthereumNetwork": "Основная сеть Ethereum",
   "connectivity.mordenTestNetwork": "Тестовая сеть Morden",
