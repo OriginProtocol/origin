@@ -125,6 +125,7 @@
   "listing-create.whatHappensNextHeading": "Τι θα συμβεί στη συνέχεια;",
   "listing-create.whatHappensNextContent1": "Όταν υποβάλλετε αυτήν την καταχώρηση, θα σας ζητηθεί να επιβεβαιώσετε τη συναλλαγή σας στο MetaMask. Οι αγοραστές θα μπορούν στη συνέχεια να δουν την καταχώρισή σας και να κάνουν προσφορές σε αυτή.",
   "listing-create.whatHappensNextContent2": "{selectedBoostAmount} OGN θα μεταφερθεί για ενίσχυση. Εάν κλείσετε την καταχώρισή σας πριν αποδεχθείτε μια προσφορά, το OGN θα σας επιστραφεί.",
+  "listing-create.updateSuccessMessage": "Your listing has been updated!",
   "listing-create.successMessage": "Η καταχώρισή σας έχει δημιουργηθεί!",
   "listing-create.successDisclaimer": "Η καταχώρισή σας θα είναι ορατή μέσα σε λίγα δευτερόλεπτα. Ακολουθεί το εξής:",
   "listing-create.success-1": "Οι αγοραστές θα δουν τώρα την καταχώρισή σας στην αγορά.",
