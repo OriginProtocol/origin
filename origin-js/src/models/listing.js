@@ -3,17 +3,103 @@
 //
 export class Listing {
   /**
-   * A Listing is constructed based on its on-chain and off-chain data.
-   * @param {string} listingId - Unique listing ID.
-   * @param {Object} chainListing - Listing data from the blockchain.
-   * @param {Object} ipfsListing - Listing data from IPFS.
+   * Listing object model.
+   *
+   * @param {Object} args - single object arguments used to construct a Listing
+   *  - {string} id
+   *  - {string} title
+   *  - {string} description
+   *  - {string} category
+   *  - {Object} commission ????
+   *  - {string} subCategory
+   *  - {string} status
+   *  - {string} type
+   *  - {string} unitsTotal
+   *  - {Object} offers
+   *  - {Array<Object>} events
+   *  - {string} ipfsHash
+   *  - {Object} ipfs
+   *  - {string} language
+   *  - {Object} price
+   *  - {string} seller
+   *  - {string} display
+   *  - {Array} media
+   *  - {Object} comission
+   *  - {Array?} slots
    */
-  constructor(listingId, chainListing, ipfsListing) {
-    this.id = listingId
-    // FIXME(franck): Exposing directly the chain data will make it difficult
-    // to support backward compatibility of the Listing interface in the future. We should
-    // select and possibly abstract what data from the chain gets exposed.
-    Object.assign(this, ipfsListing, chainListing)
+  constructor({ id, title, display, description, category, subCategory, status, type, media,
+    unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots }) {
+
+    this.id = id
+    this.title = title
+    this.description = description
+    this.category = category
+    this.subCategory = subCategory
+    this.status = status
+    this.type = type
+    this.unitsTotal = unitsTotal
+    this.offers = offers
+    this.events = events
+    this.ipfs = ipfs
+    this.ipfsHash = ipfsHash
+    this.language = language
+    this.price = price
+    this.seller = seller
+    this.display = display
+    this.media = media
+    this.commission = commission
+    this.slots = slots
+  }
+
+  // creates a Listing using on-chain and off-chain data
+  static init(id, chainListing, ipfsListing) {
+    return new Listing({
+      id: id,
+      title: ipfsListing.title,
+      description: ipfsListing.description,
+      category: ipfsListing.category,
+      subCategory: ipfsListing.subCategory,
+      status: chainListing.status,
+      type: ipfsListing.type,
+      unitsTotal: ipfsListing.unitsTotal,
+      offers: chainListing.offers,
+      events: chainListing.events,
+      ipfs: ipfsListing.ipfs,
+      ipfsHash: chainListing.ipfsHash,
+      language: ipfsListing.language,
+      price: ipfsListing.price,
+      seller: chainListing.seller,
+      // hidden/featured listings information is supplied only by discovery server
+      display: 'normal',
+      media: ipfsListing.media,
+      commission: ipfsListing.commission,
+      slots: [] // To be implemented
+    })
+  }
+
+  // creates a Listing from Discovery's Apollo schema
+  static initFromDiscovery(discoveryNodeData) {
+    return new Listing({
+      id: discoveryNodeData.id,
+      title: discoveryNodeData.title,
+      description: discoveryNodeData.description,
+      category: discoveryNodeData.category,
+      subCategory: discoveryNodeData.subCategory,
+      status: discoveryNodeData.status,
+      type: discoveryNodeData.type,
+      unitsTotal: discoveryNodeData.unitsTotal,
+      offers: discoveryNodeData.offers,
+      events: discoveryNodeData.events,
+      ipfs: discoveryNodeData.ipfs,
+      ipfsHash: discoveryNodeData.ipfsHash,
+      language: discoveryNodeData.language,
+      price: discoveryNodeData.price,
+      seller: discoveryNodeData.seller,
+      display: discoveryNodeData.display,
+      media: discoveryNodeData.media,
+      commission: discoveryNodeData.commission,
+      slots: [] // To be implemented
+    })
   }
 
   get unitsSold() {

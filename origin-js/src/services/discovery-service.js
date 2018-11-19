@@ -12,20 +12,11 @@ class DiscoveryService {
   _toListingModel(listingNode) {
     const data = listingNode.data
     data.display = listingNode.display
-    return new Listing(data.listingId, data, {})
+    return Listing.initFromDiscovery(data)
   }
 
   _toOfferModel(offerNode) {
-    return new Offer(
-      offerNode.id,
-      offerNode.listing.id,
-      offerNode.status,
-      offerNode.data.createdAt,
-      offerNode.buyer.walletAddress,
-      offerNode.data.events,
-      offerNode.data.refund,
-      offerNode.data.totalPrice
-    )
+    return Offer.initFromDiscovery(offerNode)
   }
 
   /**

@@ -5,15 +5,16 @@ export class Offer {
   /**
    * Offer object model.
    *
-   * @param {string} id - Offer ID.
-   * @param {string} listingId - Unique listing ID.
-   * @param {string} status - Satus of the offer: 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed'
-   * @param {int} createdAt - Time in seconds since epoch
-   * @param {string} buyer - address of the buyer
-   * @param {Array{Object}} events - list of events ( like OfferCreated event)
-   * @param {string} refund - Amount to refund buyer upon finalization
+   * @param {Object} args - single object arguments used to construct an Offer
+   *  - {string} id - Offer ID.
+   *  - {string} listingId - Unique listing ID.
+   *  - {string} status - Status of the offer: 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed'
+   *  - {int} createdAt - Time in seconds since epoch
+   *  - {string} buyer - address of the buyer
+   *  - {Array{Object}} events - list of events ( like OfferCreated event)
+   *  - {string} refund - Amount to refund buyer upon finalization
    */
-  constructor(id, listingId, status, createdAt, buyer, events, refund, totalPrice) {
+  constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice }) {
       this.id = id
       this.listingId = listingId
       this.status = status
@@ -22,6 +23,34 @@ export class Offer {
       this.events = events
       this.refund = refund
       this.totalPrice = totalPrice
+  }
+
+  // creates an Offer using on-chain and off-chain data
+  static init(offerId, listingId, chainData) {
+    return new Offer({
+      id: offerId,
+      listingId: listingId,
+      status: chainData.status,
+      createdAt: chainData.createdAt,
+      buyer: chainData.buyer,
+      events: chainData.events,
+      refund: chainData.refund,
+      totalPrice: chainData.totalPrice
+    })
+  }
+
+  // creates an Offer from Discovery's Apollo schema
+  static initFromDiscovery(discoveryNode) {
+    return new Offer({
+      id: discoveryNode.id,
+      listingId: discoveryNode.listing.id,
+      status: discoveryNode.status,
+      createdAt: discoveryNode.data.createdAt,
+      buyer: discoveryNode.buyer.walletAddress,
+      events: discoveryNode.data.events,
+      refund: discoveryNode.data.refund,
+      totalPrice: discoveryNode.data.totalPrice
+    })
   }
 
   /**
