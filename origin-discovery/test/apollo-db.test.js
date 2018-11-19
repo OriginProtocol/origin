@@ -41,14 +41,26 @@ describe('Listing DB methods', () => {
   before(async () => {
     await db.Listing.destroy({ where: { id: listingId1 } })
     await db.Listing.destroy({ where: { id: listingId2 } })
-    await db.Listing.create({
+    await db.Listing.upsert({
       id: listingId1,
+      blockNumber: 100,
+      logIndex: 1,
       sellerAddress,
       status: 'active',
       data: data1
     })
-    await db.Listing.create({
+    await db.Listing.upsert({
       id: listingId2,
+      blockNumber: 200,
+      logIndex: 2,
+      sellerAddress,
+      status: 'active',
+      data: data2
+    })
+    await db.Listing.upsert({
+      id: listingId2,
+      blockNumber: 300,
+      logIndex: 10,
       sellerAddress,
       status: 'active',
       data: data2
@@ -60,8 +72,8 @@ describe('Listing DB methods', () => {
     await db.Listing.destroy({ where: { id: listingId2 } })
   })
 
-  describe('getListings', () => {
-    it(`Should return listing for the id`, async () => {
+  describe('getListing', () => {
+    it(`Should return listing given an id`, async () => {
       const listing = await getListing(listingId1)
       expect(listing.id).to.equal(listingId1)
       expect(listing.ipfsHash).to.equal(data1.ipfs.hash)
@@ -71,6 +83,47 @@ describe('Listing DB methods', () => {
       expect(listing.price).to.deep.equal(data1.price)
       expect(listing.data).to.deep.equal(data1)
       expect(listing.display).to.equal('normal')
+      expect(listing.blockNumber).to.equal(100)
+      expect(listing.logIndex).to.equal(1)
+    })
+
+    it(`Should return most recent listing if blockInfo is higher or equal to listing's`, async () => {
+      // BlockInfo block number higher than listing's.
+      let blockInfo = { blockNumber: 500, logIndex: 1 }
+      let listing = await getListing(listingId2, blockInfo)
+      expect(listing.id).to.equal(listingId2)
+      expect(listing.blockNumber).to.equal(300)
+
+      // BlockInfo equal to listing's.
+      blockInfo = { blockNumber: 300, logIndex: 10 }
+      listing = await getListing(listingId2, blockInfo)
+      expect(listing.id).to.equal(listingId2)
+      expect(listing.blockNumber).to.equal(300)
+    })
+
+    it(`Should return older version if blockInfo lower than the listing's`, async () => {
+      // BlockInfo block number is lower than listing's.
+      let blockInfo = { blockNumber: 250, logIndex: 1 }
+      let listing = await getListing(listingId2, blockInfo)
+      expect(listing.id).to.equal(listingId2)
+      expect(listing.blockNumber).to.equal(200)
+
+      // Blockinfo block number is equal to listing's but logIndex is lower.
+      blockInfo = { blockNumber: 300, logIndex: 9 }
+      expect(listing.id).to.equal(listingId2)
+      expect(listing.blockNumber).to.equal(200)
+    })
+
+    it(`Should not return listing if blockInfo lower than oldest listing version`, async () => {
+      // BlockInfo block number is lower than listing's.
+      let blockInfo = { blockNumber: 100, logIndex: 1 }
+      let listing = await getListing(listingId2, blockInfo)
+      expect(listing).to.equal(null)
+
+      // Blockinfo block number is equal to listing's but logIndex is lower.
+      blockInfo = { blockNumber: 200, logIndex: 1 }
+      listing = await getListing(listingId2, blockInfo)
+      expect(listing).to.equal(null)
     })
   })
 
@@ -87,6 +140,8 @@ describe('Listing DB methods', () => {
       expect(listings[0].price).to.deep.equal(data2.price)
       expect(listings[0].data).to.deep.equal(data2)
       expect(listings[0].display).to.equal('normal')
+      expect(listings[0].blockNumber).to.equal(300)
+      expect(listings[0].logIndex).to.equal(10)
     })
 
     it(`Should return no listings from DB`, async () => {
@@ -99,6 +154,36 @@ describe('Listing DB methods', () => {
     it(`Should return listings for the seller`, async () => {
       const listings = await getListingsBySeller(sellerAddress)
       expect(listings.length).to.equal(2)
+    })
+  })
+
+  describe('upsertListing', () => {
+    it('Should handle inserting a more recent version of a listing', async () => {
+      await db.Listing.upsert({
+        id: listingId1,
+        blockNumber: 300,
+        logIndex: 3,
+        sellerAddress,
+        status: 'active',
+        data: data1
+      })
+      const listing = await getListing(listingId1)
+      expect(listing.blockNumber).to.equal(300)
+      expect(listing.logIndex).to.equal(3)
+    })
+
+    it('Should handle updating a less recent version of a listing', async () => {
+      await db.Listing.upsert({
+        id: listingId2,
+        blockNumber: 150,
+        logIndex: 15,
+        sellerAddress,
+        status: 'active',
+        data: data1
+      })
+      const listing = await getListing(listingId2)
+      expect(listing.blockNumber).to.equal(300)
+      expect(listing.logIndex).to.equal(10)
     })
   })
 })
