@@ -81,7 +81,7 @@ export class Listing {
       display: 'normal',
       media: ipfsListing.media,
       commission: ipfsListing.commission,
-      slots: [], // To be implemented
+      slots: [], // To be implemented - fractional usage
       schemaId: ipfsListing.schemaId,
       expiry: ipfsListing.expiry,
       deposit: chainListing.deposit,
@@ -110,7 +110,7 @@ export class Listing {
       display: discoveryNodeData.display,
       media: discoveryNodeData.media,
       commission: discoveryNodeData.commission,
-      slots: [], // To be implemented
+      slots: [], // To be implemented - fractional usage
       schemaId: discoveryNodeData.schemaId,
       expiry: discoveryNodeData.ipfs.expiry,
       deposit: discoveryNodeData.deposit,

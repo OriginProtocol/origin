@@ -14,8 +14,9 @@ export class Offer {
    *  - {Array{Object}} events - list of events ( like OfferCreated event)
    *  - {string} refund - Amount to refund buyer upon finalization
    *  - {Object} totalPrice - Amount to refund buyer upon finalization, consists of 'amount' and 'currency' properties
+   *  - {int} unitsPurchased - number of units purchased
    */
-  constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice }) {
+  constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice, unitsPurchased }) {
       this.id = id
       this.listingId = listingId
       this.status = status
@@ -24,10 +25,11 @@ export class Offer {
       this.events = events
       this.refund = refund
       this.totalPrice = totalPrice
+      this.unitsPurchased = unitsPurchased
   }
 
   // creates an Offer using on-chain and off-chain data
-  static init(offerId, listingId, chainData) {
+  static init(offerId, listingId, chainData, ipfsData) {
     return new Offer({
       id: offerId,
       listingId: listingId,
@@ -36,7 +38,8 @@ export class Offer {
       buyer: chainData.buyer,
       events: chainData.events,
       refund: chainData.refund,
-      totalPrice: chainData.totalPrice
+      totalPrice: chainData.totalPrice,
+      unitsPurchased: ipfsData.unitsPurchased
     })
   }
 
@@ -50,7 +53,8 @@ export class Offer {
       buyer: discoveryNode.buyer.walletAddress,
       events: discoveryNode.data.events,
       refund: discoveryNode.data.refund,
-      totalPrice: discoveryNode.data.totalPrice
+      totalPrice: discoveryNode.data.totalPrice,
+      unitsPurchased: discoveryNode.data.unitsPurchased // TODO what happens when this is undefined?
     })
   }
 
