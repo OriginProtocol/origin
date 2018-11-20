@@ -1,1 +1,4 @@
+host: eth.originprotocol.com
+letsEncryptEmail: support@originprotocol.com
+
 replicas: 3

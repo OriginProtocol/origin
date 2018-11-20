@@ -1,6 +1,6 @@
 controller:
   service:
-    loadBalancerIP: 35.233.220.235
+    loadBalancerIP: 35.203.158.97
   ingressClass: nginx-ingress
   stats:
     enabled: true
