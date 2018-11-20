@@ -164,6 +164,8 @@ function _makeOffer (row) {
     ipfsHash: row.data.ipfs.hash,
     data: row.data,
     status: row.status,
+    buyerAddress: row.buyerAddress,
+    sellerAddress: row.sellerAddress,
     totalPrice: row.data.totalPrice
   }
 }

@@ -98,11 +98,17 @@ const resolvers = {
 
   Offer: {
     seller (offer, args, context, info) {
-      return relatedUserResolver(offer.seller, info)
+      return relatedUserResolver(offer.sellerAddress, info)
     },
 
     buyer (offer, args, context, info) {
-      return relatedUserResolver(offer.buyer, info)
+      return relatedUserResolver(offer.buyerAddress, info)
+    },
+
+
+    affiliate ()  {
+      //TODO: implement
+      return ''
     },
 
     totalPrice (offer) {

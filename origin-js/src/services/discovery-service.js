@@ -12,7 +12,11 @@ class DiscoveryService {
   _toListingModel(listingNode) {
     const data = listingNode.data
     data.display = listingNode.display
-    return new Listing(data.listingId, data, {})
+    return Listing.initFromDiscovery(data)
+  }
+
+  _toOfferModel(offerNode) {
+    return Offer.initFromDiscovery(offerNode)
   }
 
   /**
@@ -217,14 +221,24 @@ class DiscoveryService {
         listingId: "${listingId}"
       ) {
         nodes {
+          id
           data
+          buyer {
+            walletAddress
+          }
+          seller {
+            walletAddress
+          }
+          listing {
+            id
+          }
+          status
         }
       }
     }`)
     
     const offers = resp.data.offers.nodes
-      .map(offer => offer.data)
-      .map(offer => new Offer(offer.id, listingId, offer))
+      .map(offerNode => this._toOfferModel(offerNode))
 
     return opts.idsOnly ? offers.map(offer => offer.id) : offers
   }
@@ -239,10 +253,18 @@ class DiscoveryService {
       offer(
         id: "${offerId}"
       ) {
+        id
         data
+        buyer {
+          walletAddress
+        }
+        seller {
+          walletAddress
+        }
         listing {
           id
         }
+        status
       }
     }`)
 
@@ -251,8 +273,7 @@ class DiscoveryService {
       throw new Error(`No offer found with id ${offerId}`)
     }
 
-    const offer = resp.data.offer
-    return new Offer(offer.id, offer.listing.id, offer.data)
+    return this._toOfferModel(resp.data.offer)
   }
 }
 
