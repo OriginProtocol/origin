@@ -15,6 +15,3 @@ spec:
     - name: discovery-udp
       port: 30303
       protocol: UDP
-    - name: discovery-tcp
-      port: 30303
-      protocol: TCP
