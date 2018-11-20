@@ -153,7 +153,7 @@ app.post('/events', async (req, res) => {
   })
 
   // filter out redundant endpoints before iterating
-  subs.filter((s, i, self) => {
+  await subs.filter((s, i, self) => {
     return self.map(ms => ms.endpoint).indexOf(s.endpoint) === i
   }).forEach(async s => {
     try {
@@ -173,6 +173,7 @@ app.post('/events', async (req, res) => {
       }
     }
   })
+  res.json({ status: "ok" });
 })
 
 app.listen(port, () => console.log(`Notifications server listening on port ${port}!`))
