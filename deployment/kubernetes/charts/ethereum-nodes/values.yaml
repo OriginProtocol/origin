@@ -10,6 +10,6 @@ gethImageTag: v1.8.13
 gethTxReplicas: 1
 
 storageClass: ssd
-storagRequest: 1TB
+storageRequest: 1024Gi
 
 memoryRequest: 15Gi
