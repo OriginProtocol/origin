@@ -95,7 +95,7 @@ class ConversationListItem extends Component {
               <span>{counterparty.fullName || counterpartyAddress}</span>
             </div>
             <div className="listing-title text-truncate">{listing.name}</div>
-            <div className="message text-truncate">{content}</div>
+            <div className={`message text-truncate ${!listing.name ? 'no-listing' : ''}`}>{content}</div>
           </div>
           <div className="meta-container">
             <div className="timestamp ml-auto">

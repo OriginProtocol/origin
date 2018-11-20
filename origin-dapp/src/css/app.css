@@ -3868,7 +3868,8 @@ form .stars img {
   padding: 10px;
 }
 
-.mobile-conversations .text-truncate {
+.mobile-conversations .text-truncate,
+.mobile-messaging .text-truncate {
   width: 60%;
 }
 
@@ -3883,6 +3884,10 @@ form .stars img {
 .mobile-conversation-list-item .listing-title {
   font-size: 0.75rem;
   font-weight: normal;
+}
+
+.mobile-conversation-list-item .no-listing {
+  margin-top: 20px;
 }
 
 .conversations-list-col {
@@ -4068,7 +4073,7 @@ form .stars img {
 .mobile-messaging.messages-wrapper .message-content,
 .mobile-messaging .compact-message {
   font-family: Lato;
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: normal;
   line-height: normal;
   color: #000;
@@ -4105,17 +4110,21 @@ form .stars img {
   margin-bottom: 20px;
 }
 
-.mobile-messaging .conversation .message {
-  margin-bottom: unset;
-}
-
 .conversation .compact-message {
   margin: -20px 0 20px 75px;
+}
+
+.mobile-messaging .conversation .message {
+  margin-bottom: unset;
 }
 
 .mobile-messaging .conversation .compact-message {
   margin: unset;
   margin-left: 65px;
+}
+
+.mobile-messaging .conversation .message-section + .compact-message {
+  margin-top: -8px;
 }
 
 .conversation .message:first-of-type {
@@ -4135,6 +4144,10 @@ form .stars img {
 .mobile-messaging .conversation .avatar-container {
   height: 50px;
   width: 50px;
+}
+
+.mobile-messaging .conversation .content-container {
+  width: 100%;
 }
 
 .conversation .content-container {
@@ -4165,6 +4178,7 @@ form .stars img {
   font-size: 16px;
   text-transform: capitalize;
   line-height: 14px;
+  height: 16px;
 }
 
 .mobile-conversations .message.text-truncate {
@@ -4193,7 +4207,7 @@ form .stars img {
 }
 
 .conversation .name {
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: bold;
   margin-right: 0.5rem;
   line-height: 10px;

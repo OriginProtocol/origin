@@ -34,7 +34,7 @@ class Message extends Component {
     return contentOnly ? (
       <div className="d-flex compact-message">{this.renderContent()}</div>
     ) : mobileDevice ? (
-      <div>
+      <div className="message-section">
         <div className="timestamp text-center ml-auto">
           {moment(created).format('MMM Do h:mm a')}
         </div>
@@ -43,7 +43,7 @@ class Message extends Component {
           <div className="content-container">
             <div className="meta-container d-flex">
               <div className="sender text-truncate">
-                {fullName && <span className="name">{fullName || address}</span>}
+                <span className="name">{fullName || address}</span>
               </div>
             </div>
             <div className="message-content">{this.renderContent()}</div>
