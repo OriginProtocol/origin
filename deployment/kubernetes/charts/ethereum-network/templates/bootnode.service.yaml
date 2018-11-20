@@ -13,8 +13,8 @@ spec:
     app: {{ template "ethereum.fullname" . }}-bootnode
     release: {{ .Release.Name }}
   ports:
-  - name: http
-    port: 80
-  - name: discovery
-    port: 30301
-    protocol: UDP
+    - name: http
+      port: 80
+    - name: discovery
+      port: 30301
+      protocol: UDP
