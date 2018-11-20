@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{  template "ethereum-fullname" . }}-tx-node
+  name: {{  template "ethereum.fullname" . }}-tx-node
   labels:
-    app: {{  template "ethereum-fullname" . }}-tx-node
+    app: {{  template "ethereum.fullname" . }}-tx-node
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.replicas }}
-  serviceName: {{  template "ethereum-fullname" . }}-tx-node
+  serviceName: {{  template "ethereum.fullname" . }}-tx-node
   selector:
     matchLabels:
-      app: {{  template "ethereum-fullname" . }}-tx-node
+      app: {{  template "ethereum.fullname" . }}-tx-node
   template:
     metadata:
       labels:
-        app: {{  template "ethereum-fullname" . }}-tx-node
+        app: {{  template "ethereum.fullname" . }}-tx-node
         release: {{ .Release.Name }}
     spec:
       containers:
@@ -48,16 +48,16 @@ spec:
             {{- if eq .Values.network "rinkeby" }}
             --rinekby
             {{- end }}
-            {{ if ne .Values.bootnodes "" }}
+            {{ if .Values.bootnodes }}
             --bootnodes {{ .Values.bootnodes }}
             {{- end }}"
         env:
         - name: ETHSTATS_SERVICE
-          value: {{  template "ethereum-fullname" . }}-ethstats.{{ .Release.Namespace }}
+          value: {{  template "ethereum.fullname" . }}-ethstats.{{ .Release.Namespace }}
         - name: ETHSTATS_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{  template "ethereum-fullname" . }}-ethstats
+              name: {{  template "ethereum.fullname" . }}-ethstats
               key: WS_SECRET
         resources:
           requests:
@@ -65,10 +65,10 @@ spec:
             cpu: {{ default "500m" .Values.cpuRequest }}
         volumeMounts:
           - mountPath: /root/.ethereum
-            name: {{  template "ethereum-fullname" . }}-data
+            name: {{  template "ethereum.fullname" . }}-data
   volumeClaimTemplates:
     - metadata:
-        name: {{  template "ethereum-fullname" . }}-data
+        name: {{  template "ethereum.fullname" . }}-data
       spec:
         storageClassName: {{ .Values.storageClass }}
         accessModes:

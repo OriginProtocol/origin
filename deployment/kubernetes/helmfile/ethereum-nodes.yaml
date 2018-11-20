@@ -1,0 +1,6 @@
+releases:
+  - name: release
+    chart: ../charts/ethereum-nodes
+    values:
+      - ../values/ethereum-nodes/values.yaml
+      - ../values/ethereum-nodes/secrets.yaml
