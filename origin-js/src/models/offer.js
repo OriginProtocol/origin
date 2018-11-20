@@ -61,6 +61,11 @@ export class Offer {
 
   // creates an Offer from Discovery's Apollo schema
   static initFromDiscovery(discoveryNode) {
+    const offerCreatedEvents = discoveryNode.data.events.filter(event => event.event === 'OfferCreated')
+
+    if (offerCreatedEvents.length === 0)
+      throw new Error('Can not find OfferCreated event required to create an Offer object')
+
     return new Offer({
       id: discoveryNode.id,
       listingId: discoveryNode.listing.id,
@@ -70,14 +75,14 @@ export class Offer {
       events: discoveryNode.data.events,
       refund: discoveryNode.data.refund,
       totalPrice: discoveryNode.data.totalPrice,
-      unitsPurchased: discoveryNode.data.unitsPurchased // TODO what happens when this is undefined?
-      // blockInfo: { -- expose 
-      //   blockNumber: chainOffer.blockNumber,
-      //   logIndex: chainOffer.logIndex
-      // },
-      // schemaId: ipfsData.schemaId,
-      // listingType: ipfsData.listingType,
-      // ipfs: ipfsData.ipfs
+      unitsPurchased: discoveryNode.data.unitsPurchased,
+      blockInfo: {
+        blockNumber: offerCreatedEvents[0].blockNumber,
+        logIndex: offerCreatedEvents[0].logIndex
+      },
+      schemaId: discoveryNode.data.schemaId,
+      listingType: discoveryNode.data.listingType,
+      ipfs: discoveryNode.data.ipfs
     })
   }
 
