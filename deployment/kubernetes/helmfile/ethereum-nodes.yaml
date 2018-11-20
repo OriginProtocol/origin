@@ -1,5 +1,5 @@
 releases:
-  - name: release
+  - name: origin
     chart: ../charts/ethereum-nodes
     values:
       - ../values/ethereum-nodes/values.yaml
