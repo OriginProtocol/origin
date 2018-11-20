@@ -16,8 +16,12 @@ export class Offer {
    *  - {Object} totalPrice - Amount to refund buyer upon finalization, consists of 'amount' and 'currency' properties
    *  - {int} unitsPurchased - number of units purchased
    *  - {Object} blockInfo - information of where(when?) offer happened on the blockchain
+   *  - {string} schemaId - schema used to validate the offer
+   *  - {string} listingType - 'unit', 'fractional'
+   *  - {Object} ipfs - ipfs offer data
    */
-  constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice, unitsPurchased, blockInfo }) {
+  constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice, unitsPurchased, blockInfo,
+    schemaId, listingType, ipfs }) {
       this.id = id
       this.listingId = listingId
       this.status = status
@@ -28,10 +32,14 @@ export class Offer {
       this.totalPrice = totalPrice
       this.unitsPurchased = unitsPurchased
       this.blockInfo = blockInfo
+      this.schemaId = schemaId
+      this.listingType = listingType
+      this.ipfs = ipfs
   }
 
   // creates an Offer using on-chain and off-chain data
   static init(offerId, listingId, chainData, ipfsData) {
+    console.log("CREATING OFFER: ", chainData, ipfsData)
     return new Offer({
       id: offerId,
       listingId: listingId,
@@ -40,12 +48,15 @@ export class Offer {
       buyer: chainData.buyer,
       events: chainData.events,
       refund: chainData.refund,
-      totalPrice: chainData.totalPrice,
+      totalPrice: ipfsData.totalPrice,
       unitsPurchased: ipfsData.unitsPurchased,
       blockInfo: {
         blockNumber: chainData.blockNumber,
         logIndex: chainData.logIndex
-      }
+      },
+      schemaId: ipfsData.schemaId,
+      listingType: ipfsData.listingType,
+      ipfs: ipfsData.ipfs
     })
   }
 
@@ -64,7 +75,10 @@ export class Offer {
       // blockInfo: { -- expose 
       //   blockNumber: chainOffer.blockNumber,
       //   logIndex: chainOffer.logIndex
-      // }
+      // },
+      // schemaId: ipfsData.schemaId,
+      // listingType: ipfsData.listingType,
+      // ipfs: ipfsData.ipfs
     })
   }
 
