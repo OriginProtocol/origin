@@ -187,8 +187,8 @@ export default class Marketplace {
     )
     const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
 
-    // Create and return a Listing from on-chain and off-chain data .
-    return new Listing(listingId, chainListing, ipfsListing)
+    // Create and return a Listing from on-chain and off-chain data.
+    return Listing.init(listingId, chainListing, ipfsListing)
   }
 
   /**
@@ -291,7 +291,7 @@ export default class Marketplace {
     }
 
     // Create an Offer from on-chain and off-chain data.
-    return new Offer(offerId, listingId, chainOffer, ipfsOffer)
+    return Offer.init(offerId, listingId, chainOffer, ipfsOffer)
   }
 
   /**
