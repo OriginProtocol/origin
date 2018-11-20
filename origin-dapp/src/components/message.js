@@ -26,14 +26,14 @@ class Message extends Component {
       messagingEnabled,
       user,
       contentOnly,
-      isMobile
+      mobileDevice
     } = this.props
     const { created, hash } = message
     const { address, fullName, profile } = user
 
     return contentOnly ? (
       <div className="d-flex compact-message">{this.renderContent()}</div>
-    ) : isMobile ? (
+    ) : mobileDevice ? (
       <div>
         <div className="timestamp text-center ml-auto">
           {moment(created).format('MMM Do h:mm a')}
@@ -142,7 +142,7 @@ class Message extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     messagingEnabled: state.app.messagingEnabled,
-    isMobile: state.app.isMobile,
+    mobileDevice: state.app.mobileDevice,
     user:
       state.users.find(u => u.address === ownProps.message.senderAddress) || {}
   }

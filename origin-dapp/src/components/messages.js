@@ -25,11 +25,11 @@ class Messages extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { conversations, match, isMobile } = this.props
+    const { conversations, match, mobileDevice } = this.props
     const { selectedConversationId } = this.state
     const { conversationId } = match.params
 
-    if (!isMobile) {
+    if (!mobileDevice) {
       // on route change
       if (
         conversationId &&
@@ -46,26 +46,26 @@ class Messages extends Component {
   }
 
   detectSelectedConversation() {
-    const { match, conversations, isMobile, showMainNav } = this.props
+    const { match, conversations, mobileDevice, showMainNav } = this.props
     const selectedConversationId =
       match.params.conversationId ||
       (conversations[0] || {}).key
 
-    if (isMobile && selectedConversationId) showMainNav(false)
+    if (mobileDevice && selectedConversationId) showMainNav(false)
     selectedConversationId && this.setState({ selectedConversationId })
   }
 
   handleConversationSelect(selectedConversationId) {
-    const { isMobile } = this.props
+    const { mobileDevice } = this.props
 
-    const showMainNav = (isMobile && selectedConversationId.length) ? false : true
+    const showMainNav = (mobileDevice && selectedConversationId.length) ? false : true
 
     this.props.showMainNav(showMainNav)
     this.setState({ selectedConversationId })
   }
 
   render() {
-    const { conversations, messages, isMobile, users, web3Account } = this.props
+    const { conversations, messages, mobileDevice, users, web3Account } = this.props
     const { selectedConversationId } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
@@ -85,7 +85,7 @@ class Messages extends Component {
     const counterparty = users.find(u => u.address === counterpartyAddress) || {}
     const counterpartyName = counterparty.fullName || counterpartyAddress
 
-    if (isMobile) {
+    if (mobileDevice) {
       if (selectedConversationId && selectedConversationId.length) {
         return (
           <div className="mobile-messaging messages-wrapper">
@@ -98,7 +98,7 @@ class Messages extends Component {
                 id={selectedConversationId}
                 messages={filteredAndSorted}
                 withListingSummary={true}
-                isMobile={isMobile}
+                mobileDevice={mobileDevice}
               />
             </div>
           </div>
@@ -154,7 +154,7 @@ class Messages extends Component {
 }
 
 const mapStateToProps = ({ app, messages, users }) => {
-  const { messagingEnabled, web3, isMobile, showNav } = app
+  const { messagingEnabled, web3, mobileDevice, showNav } = app
   const web3Account = web3.account
   const filteredMessages = messages.filter(({ content, conversationId }) => {
     return (
@@ -179,7 +179,7 @@ const mapStateToProps = ({ app, messages, users }) => {
     messages: filteredMessages,
     messagingEnabled,
     web3Account,
-    isMobile,
+    mobileDevice,
     showNav,
     users
   }

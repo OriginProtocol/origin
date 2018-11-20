@@ -142,8 +142,8 @@ export function setMessagingInitialized(messagingInitialized) {
   }
 }
 
-export function setMobile(isMobile, device) {
-  return { type: AppConstants.ON_MOBILE, isMobile, device }
+export function setMobile(device) {
+  return { type: AppConstants.ON_MOBILE, device }
 }
 
 export function showMainNav(showNav) {

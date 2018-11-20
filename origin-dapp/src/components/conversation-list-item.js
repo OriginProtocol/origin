@@ -11,7 +11,7 @@ class ConversationListItem extends Component {
       handleConversationSelect,
       users,
       web3Account,
-      isMobile,
+      mobileDevice,
       listing = {}
     } = this.props
     const lastMessage = conversation.values.sort(
@@ -30,7 +30,7 @@ class ConversationListItem extends Component {
     }).length
     const { profile } = counterparty
 
-    if (isMobile) {
+    if (mobileDevice) {
       return (
         <div
           onClick={handleConversationSelect}
@@ -86,7 +86,7 @@ const mapStateToProps = state => {
   return {
     users: state.users,
     web3Account: state.app.web3.account,
-    isMobile: state.app.isMobile
+    mobileDevice: state.app.mobileDevice
   }
 }
 

@@ -51,7 +51,7 @@ class Conversation extends Component {
     // try to detect the user before rendering
     this.identifyCounterparty()
 
-    if (this.props.isMobile) {
+    if (this.props.mobileDevice) {
       this.loadListing()
     }
 
@@ -235,7 +235,7 @@ class Conversation extends Component {
   }
 
   render() {
-    const { id, intl, messages, web3Account, withListingSummary, isMobile } = this.props
+    const { id, intl, messages, web3Account, withListingSummary, mobileDevice } = this.props
     const {
       counterparty,
       files,
@@ -259,7 +259,7 @@ class Conversation extends Component {
       canDeliverMessage &&
       id
 
-    const classNames = isMobile ? 'justify-content-start' : 'justify-content-center'
+    const classNames = mobileDevice ? 'justify-content-start' : 'justify-content-center'
 
     return (
       <Fragment>
