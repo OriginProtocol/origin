@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'push_subscription'
   })
 
-  PushSubscription.associate = function(models) {
+  PushSubscription.associate = function () {
     // associations can be defined here
   }
 

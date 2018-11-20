@@ -1,7 +1,7 @@
 /**
  * Creates an object composed of keys generated from the results of running
- * each element of `collection` thru `iteratee`. 
- * 
+ * each element of `collection` thru `iteratee`.
+ *
  * @param  {Array} collection The collection to iterate over.
  * @param  {Function} iteratee The iteratee to transform keys.
  * @return {Object} Returns the composed aggregate object.
@@ -16,8 +16,8 @@ function groupBy(collection, iteratee){
 }
 
 /**
-* Applies transformation function to values of an object while preserving keys 
-* 
+* Applies transformation function to values of an object while preserving keys
+*
 * @param  {Object} object to iterate over
 * @param  {Function} mapFunction The functino that transforms the value
 * @return {Object} Returns the transformed object
@@ -28,7 +28,7 @@ function mapValues(object, mapFunction){
 
   return Object.assign(
     ...Object.keys(object)
-      .map(k => ({[k]: mapFunction(object[k])}))
+      .map(k => ({ [k]: mapFunction(object[k]) }))
   )
 }
 

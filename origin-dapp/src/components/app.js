@@ -10,7 +10,6 @@ import {
   getOgnBalance,
   init as initWallet
 } from 'actions/Wallet'
-import { fetchFeaturedHiddenListings } from 'actions/Listing'
 
 // Components
 import AboutTokens from 'components/about-tokens'
@@ -42,7 +41,7 @@ import 'bootstrap/dist/js/bootstrap'
 
 import { setClickEventHandler } from 'utils/analytics'
 import { initServiceWorker } from 'utils/notifications'
-import isMobile, { mobileDevice } from 'utils/mobile'
+import { mobileDevice } from 'utils/mobile'
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.css'
@@ -67,7 +66,7 @@ const ListingDetailPage = props => (
 
 const CreateListingPage = props => (
   <div className="container">
-    <ListingCreate listingAddress={props.match.params.listingAddress} />
+    <ListingCreate listingId={props.match.params.listingId} />
   </div>
 )
 
@@ -89,8 +88,6 @@ class App extends Component {
     this.state = {
       redirect: httpsRequired && !window.location.protocol.match('https')
     }
-
-    this.featuredhiddenListingsFetched = false
   }
 
   componentWillMount() {
@@ -119,19 +116,12 @@ class App extends Component {
     }
   }
 
-  componentDidUpdate() {
-    if (this.props.networkId !== null && !this.featuredhiddenListingsFetched) {
-      this.featuredhiddenListingsFetched = true
-      this.props.fetchFeaturedHiddenListings(this.props.networkId)
-    }
-  }
-
   /**
    * Detect if accessing from a mobile browser
    * @return {void}
    */
   detectMobile() {
-    this.props.setMobile(isMobile(), mobileDevice())
+    this.props.setMobile(mobileDevice())
   }
 
   render() {
@@ -161,7 +151,7 @@ class App extends Component {
                         component={ListingDetailPage}
                       />
                       <Route path="/create" component={CreateListingPage} />
-                      <Route path="/update/:listingAddress" component={CreateListingPage} />
+                      <Route path="/update/:listingId" component={CreateListingPage} />
                       <Route path="/my-listings" component={MyListings} />
                       <Route
                         path="/purchases/:offerId"
@@ -209,9 +199,8 @@ const mapDispatchToProps = dispatch => ({
   getOgnBalance: () => dispatch(getOgnBalance()),
   initWallet: () => dispatch(initWallet()),
   saveServiceWorkerRegistration: reg => dispatch(saveServiceWorkerRegistration(reg)),
-  setMobile: (isMobile, device) => dispatch(setMobile(isMobile, device)),
-  localizeApp: () => dispatch(localizeApp()),
-  fetchFeaturedHiddenListings: (networkId) => dispatch(fetchFeaturedHiddenListings(networkId))
+  setMobile: device => dispatch(setMobile(device)),
+  localizeApp: () => dispatch(localizeApp())
 })
 
 export default connect(

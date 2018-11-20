@@ -26,7 +26,7 @@ import Calendar from './calendar'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { getListing } from 'utils/listing'
+import { getListing, transformPurchasesOrSales } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 
@@ -55,6 +55,7 @@ class ListingsDetail extends Component {
 
     this.state = {
       etherscanDomain: null,
+      display: 'normal',
       loading: true,
       offers: [],
       pictures: [],
@@ -187,32 +188,9 @@ class ListingsDetail extends Component {
   async loadBuyerPurchases() {
     try {
       const { web3Account } = this.props
-      const listingIds = await origin.marketplace.getListings({
-        idsOnly: true,
-        purchasesFor: web3Account
-      })
-      const listingPromises = listingIds.map(listingId => {
-        return new Promise(async resolve => {
-          const listing = await getListing(listingId, true)
-          resolve({ listingId, listing })
-        })
-      })
-      const withListings = await Promise.all(listingPromises)
-      const offerPromises = await withListings.map(obj => {
-        return new Promise(async resolve => {
-          const offers = await origin.marketplace.getOffers(obj.listingId, {
-            for: web3Account
-          })
-          resolve(Object.assign(obj, { offers }))
-        })
-      })
-      const withOffers = await Promise.all(offerPromises)
-      const offersByListing = withOffers.map(obj => {
-        return obj.offers.map(offer => Object.assign({}, obj, { offer }))
-      })
-      const offersFlattened = [].concat(...offersByListing)
-
-      this.setState({ purchases: offersFlattened })
+      const purchases = await origin.marketplace.getPurchases(web3Account)
+      const transformedPurchases = transformPurchasesOrSales(purchases)
+      this.setState({ purchases: transformedPurchases })
     } catch (error) {
       console.error(error)
     }
@@ -261,12 +239,13 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { featuredListingIds, listingId, web3Account } = this.props
+    const { web3Account } = this.props
     const {
       // boostLevel,
       // boostValue,
       category,
       description,
+      display,
       loading,
       name,
       offers,
@@ -292,7 +271,15 @@ class ListingsDetail extends Component {
     const isAvailable = !isPending && !isSold && !isWithdrawn
     const showPendingBadge = isPending && !isWithdrawn
     const showSoldBadge = isSold || isWithdrawn
-    const showFeaturedBadge = featuredListingIds.includes(listingId) && isAvailable
+    /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
+     * show listings with the Featured badge, because listings are loaded from web3. We could
+     * pass along featured information from elasticsearch, but that would increase the code
+     * complexity.
+     *
+     * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to 
+     * true, and show "featured" badge.
+     */
+    const showFeaturedBadge = display === 'featured' && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
 
@@ -811,9 +798,8 @@ class ListingsDetail extends Component {
   }
 }
 
-const mapStateToProps = ({ app, profile, listings }) => {
+const mapStateToProps = ({ app, profile }) => {
   return {
-    featuredListingIds: listings.featured,
     notificationsHardPermission: app.notificationsHardPermission,
     notificationsSoftPermission: app.notificationsSoftPermission,
     profile,

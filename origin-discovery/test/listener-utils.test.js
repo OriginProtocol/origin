@@ -1,14 +1,22 @@
 const chai = require('chai')
 
+const fs = require('fs')
 const db = require('../src/models')
 const { getLastBlock, setLastBlock } = require('../src/listener/utils')
 
 const expect = chai.expect
 
+const continueFile = 'continueTest'
 describe('get/setLastBlock with continue file', () => {
+  afterEach(function () {
+    if (fs.existsSync(continueFile)) {
+      fs.unlink(continueFile, error => { if (error) console.error(`Error occurred deleting continue file: ${error}`) })
+    }
+  })
+
   it(`Should return value set by setLastBlock`, async () => {
     const config = {
-      continueFile: 'continueTest'
+      continueFile: continueFile
     }
     await setLastBlock(config, 123)
     const block = await getLastBlock(config)
@@ -35,7 +43,7 @@ describe('get/setLastBlock with DB', () => {
   })
   it(`Should return default continue value when no state found`, async () => {
     // Delete listener state in the DB.
-    db.Listener.destroy({
+    await db.Listener.destroy({
       where: {
         id: 'test'
       }

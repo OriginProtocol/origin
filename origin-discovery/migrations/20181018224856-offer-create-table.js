@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const TableName = 'offer'
 
@@ -43,7 +43,7 @@ module.exports = {
       .then(() => queryInterface.addIndex(TableName, ['buyer_address']))
 
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable(TableName)
   }
 }

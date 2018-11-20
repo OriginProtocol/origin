@@ -18,7 +18,7 @@ import {
 } from '../ipfsInterface/store'
 import MarketplaceResolver from '../contractInterface/marketplace/resolver'
 
-class Marketplace {
+export default class Marketplace {
   constructor({
     contractService,
     ipfsService,
@@ -52,10 +52,91 @@ class Marketplace {
   }
 
   /**
-   * Returns all listings from the marketplace.
+   * getPurchases
+   * @description - Gets an array of purchases for a given buyer in the form { offer, listing }
+   * @param account - The account of the buyer for whom the purchases are needed
+   * @return {Promise<List(Listing)>}
+   */
+  async getPurchases(account) {
+    const listings = await this.getListings({
+      purchasesFor: account,
+      withBlockInfo: true
+    })
+
+    const offerArrays = await Promise.all(
+      listings.map(async purchase => {
+        return await this.getOffers(purchase.id)
+      })
+    )
+
+    const offers =
+      offerArrays &&
+      offerArrays.length &&
+      offerArrays.reduce((offers = [], offerArr) => offers = [...offers, ...offerArr]) ||
+      []
+
+    return offers.map(offer => {
+      return {
+        offer,
+        listing: listings.find(listing => listing.id === offer.listingId)
+      }
+    })
+  }
+
+  /**
+   * getSales
+   * @description - Gets an array of sales for a given seller in the form { offer, listing }
+   * @param account - The account of the seller for whom the sales are needed
+   * @return {Promise<List(Listing)>}
+   */
+  async getSales(account) {
+    const listings = await this.getListings({
+      listingsFor: account
+    })
+
+    const offerArrays = await Promise.all(
+      listings.map(async listing => {
+        return await this.getOffers(listing.id)
+      })
+    )
+
+    const offers =
+      offerArrays &&
+      offerArrays.length &&
+      offerArrays.reduce((offers = [], offerArr) => offers = [...offers, ...offerArr]) ||
+      []
+
+    // Since we didn't have the block numbers from the OfferCreated events when we first
+    // fetched the listing data, we now have to re-fetch it, passing in the block number
+    // of the offer to make sure we have the listing data as it was when the offer was made
+    const listingsToFetch = offers.map(offer => {
+      const { listingId, blockInfo } = offer
+      return {
+        listingId,
+        blockInfo
+      }
+    })
+
+    const listingsAtTimeOfPurchase = await Promise.all(
+      listingsToFetch.map(async listingData => {
+        const { listingId, blockInfo } = listingData
+        return await this.getListing(listingId, blockInfo)
+      })
+    )
+
+    return offers.map(offer => {
+      return {
+        offer,
+        listing: listingsAtTimeOfPurchase.find(listing => listing.id === offer.listingId)
+      }
+    })
+  }
+
+  /**
+   * Returns listings.
    * TODO: This won't scale. Add support for pagination.
-   * @param opts: { idsOnly, listingsFor, purchasesFor }
-   * @return {Promise<List(Listing)>>}
+   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean}
+   * @return {Promise<List(Listing)>}
    * @throws {Error}
    */
   async getListings(opts = {}) {
@@ -69,11 +150,20 @@ class Marketplace {
       return listingIds
     }
 
-    return Promise.all(
-      listingIds.map(async listingId => {
-        return await this.getListing(listingId)
-      })
-    )
+    if (opts.withBlockInfo) {
+      return Promise.all(
+        listingIds.map(async listingData => {
+          const { listingId, blockInfo } = listingData
+          return await this.getListing(listingId, blockInfo)
+        })
+      )
+    } else {
+      return Promise.all(
+        listingIds.map(async listingId => {
+          return await this.getListing(listingId)
+        })
+      )
+    }
   }
 
   /**
@@ -82,14 +172,14 @@ class Marketplace {
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
-  async getListing(listingId) {
+  async getListing(listingId, blockInfo) {
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
-      return await this.discoveryService.getListing(listingId)
+      return await this.discoveryService.getListing(listingId, blockInfo)
     }
 
     // Get the on-chain listing data.
-    const chainListing = await this.resolver.getListing(listingId)
+    const chainListing = await this.resolver.getListing(listingId, blockInfo)
 
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
@@ -101,7 +191,18 @@ class Marketplace {
     return new Listing(listingId, chainListing, ipfsListing)
   }
 
+  /**
+   * Returns all the offers for a listing.
+   * @param listingId
+   * @param opts: {idsOnly:boolean, for:address}
+   * @return {Promise<List(Offer)>}
+   */
   async getOffers(listingId, opts = {}) {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch offers from the discovery back-end to reduce latency.
+      return await this.discoveryService.getOffers(listingId, opts)
+    }
+
     const offerIds = await this.resolver.getOfferIds(listingId, opts)
     if (opts.idsOnly) {
       return offerIds
@@ -135,6 +236,10 @@ class Marketplace {
    * @return {Promise<Offer>} - models/Offer object
    */
   async getOffer(offerId) {
+    if (this.perfModeEnabled) {
+      // In performance mode, fetch offer from the discovery back-end to reduce latency.
+      return await this.discoveryService.getOffer(offerId)
+    }
     // Load chain data.
     const { chainOffer, listingId } = await this.resolver.getOffer(offerId)
 
@@ -207,7 +312,26 @@ class Marketplace {
     )
   }
 
-  // updateListing(listingId, data) {}
+  /**
+   * Update a listing.
+   * @param {string} listingId - The ID of the listing to update
+   * @param {object} ipfsData - The new data to store
+   * @param {number} [additionalDeposit] - Amount of additional deposit to send
+   * @param {func(confirmationCount, transactionReceipt)} confirmationCallback
+   * @return {Promise<{listingId, ...transactionReceipt}>}
+   */
+  async updateListing(listingId, ipfsData, additionalDeposit = 0, confirmationCallback) {
+    // Validate and save the data to IPFS.
+    const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
+    return await this.resolver.updateListing(
+      listingId,
+      ipfsBytes,
+      additionalDeposit,
+      confirmationCallback
+    )
+  }
 
   /**
    * Closes a listing.
@@ -446,5 +570,3 @@ class Marketplace {
     return await this.resolver.getTokenAddress()
   }
 }
-
-module.exports = Marketplace

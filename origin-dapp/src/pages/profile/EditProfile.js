@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import AvatarEditor from 'react-avatar-editor'
-import readAndCompressImage from 'browser-image-resizer'
 
 import Modal from 'components/modal'
+import Avatar from 'components/avatar'
 
 class EditProfile extends Component {
   constructor(props) {
     super(props)
     this.nameRef = React.createRef()
 
-    const { pic, firstName, lastName, description } = this.props.data
+    const { pic, firstName, lastName, description, } = this.props.data
     this.state = {
       pic,
       firstName,
@@ -35,6 +34,14 @@ class EditProfile extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { data } = this.props
+    const { pic } = data
+    if (pic && pic !== prevProps.data.pic) {
+      this.setState({
+        pic
+      })
+    }
+
     if (!prevProps.open && this.props.open) {
       setTimeout(() => {
         this.nameRef.current.focus()
@@ -76,17 +83,6 @@ class EditProfile extends Component {
               lastName: this.state.lastName,
               description: this.state.description
             }
-            if (this.state.picChanged) {
-              const canvas = this.imageEditor.getImage().toDataURL()
-              const res = await fetch(canvas)
-              const blob = await res.blob()
-              const resized = await readAndCompressImage(blob, {
-                quality: 1,
-                maxWidth: 500,
-                maxHeight: 500
-              })
-              data.pic = await this.blobToDataURL(resized)
-            }
             this.props.handleSubmit({ data })
           }}
         >
@@ -95,31 +91,23 @@ class EditProfile extends Component {
               <div className="col-12 col-sm-6">
                 <div className="image-container">
                   <div className="image-pair">
-                    <div className="avatar-container">
-                      <AvatarEditor
-                        ref={r => (this.imageEditor = r)}
-                        image={this.state.pic || 'images/avatar-unnamed.svg'}
-                        width={140}
-                        height={140}
-                        border={20}
-                        borderRadius={20}
-                        position={{ x: 0, y: 0 }}
-                      />
-                    </div>
+                    <Avatar
+                      image={this.state.pic}
+                      className="primary"
+                      placeholderStyle="unnamed"
+                    />
                     <label className="edit-profile">
                       <img
                         src="images/camera-icon-circle.svg"
                         alt="camera icon"
                       />
                       <input
+                        id="edit-profile-image"
                         type="file"
                         ref={r => (this.editPic = r)}
                         style={{ opacity: 0, position: 'absolute', zIndex: -1 }}
                         onChange={e => {
-                          this.setState({
-                            picChanged: true,
-                            pic: e.currentTarget.files[0]
-                          })
+                          this.props.handleCropImage(e.currentTarget.files[0])
                         }}
                       />
                     </label>

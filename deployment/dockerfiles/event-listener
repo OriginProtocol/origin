@@ -1,33 +1,36 @@
-# --- Origin.js
+FROM node:10
 
-FROM node:8 as origin-js-build
-
-COPY ./origin-js /app
 WORKDIR /app
 
+# Set NODE_ENV to production to avoid installing any dependencies that aren't
+# necessary for the build
 ENV NODE_ENV=production
-RUN npm install --quiet --no-progress
-RUN npm run build
 
-# --- Event listener
-
-FROM node:8
-
-# Install envkey-source
-RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.2/envkey-source_1.2.2_linux_amd64.tar.gz
+# Install envkey-source to make environment available for sequelize migration
+RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.5/envkey-source_1.2.5_linux_amd64.tar.gz
 RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-COPY ./origin-discovery /app
-WORKDIR /app
+RUN npm i lerna -g --loglevel notice
 
-COPY ./deployment/dockerfiles/scripts/start-event-listener.sh \
-	/usr/local/bin/start
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
+# Copy release contracts into build directory
+# TODO: Find a better way to handle this
+COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
+COPY ./origin-discovery ./origin-discovery
+COPY ./scripts ./scripts
 
-ENV NODE_ENV production
-# Link previously built Origin.js
-COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
-RUN npm link origin
-RUN npm install --quiet --no-progress
+# Bootstrap dependencies, --ignore-scripts is necessary to avoid overwriting
+# contracts
+RUN lerna bootstrap --ci --ignore-scripts -- --unsafe-perm
 
-CMD ["start"]
+# Build origin-js so it is available for the event-listener to import
+RUN lerna run build --scope origin --stream
+
+CMD eval $(envkey-source) && \
+	npm run migrate --prefix origin-discovery && \
+	npm run start:listener --prefix origin-discovery

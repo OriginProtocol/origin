@@ -8,6 +8,8 @@ const initialState = {
   messagingEnabled: false,
   // whether or not the global keys have loaded
   messagingInitialized: false,
+  mobileDevice: null,
+  showNav: true,
   // a list of ids that were present last time the notifications dropdown was closed
   notificationsDismissed: [],
   // get existing permission state if feature detected
@@ -16,9 +18,6 @@ const initialState = {
   notificationsSoftPermission: localStorage.getItem('notificationsPermissionResponse'),
   // which soft permission request prompt to display: buyer, seller, warning
   notificationsSubscriptionPrompt: null,
-  mobileDevice: null,
-  isMobile: false,
-  showNav: true,
   pushNotificationsSupported: !!(process.env.NOTIFICATIONS_KEY && process.env.NOTIFICATIONS_URL),
   serviceWorkerRegistration: null,
   translations: {
@@ -61,10 +60,14 @@ export default function App(state = initialState, action = {}) {
     return { ...state, notificationsSubscriptionPrompt: action.role }
 
   case AppConstants.ON_MOBILE:
+<<<<<<< HEAD
     return { ...state, mobileDevice: action.device, isMobile: action.isMobile }
 
   case AppConstants.SHOW_MAIN_NAV:
     return { ...state, showNav: action.showNav }
+=======
+    return { ...state, mobileDevice: action.device }
+>>>>>>> master
 
   case AppConstants.SAVE_SERVICE_WORKER_REGISTRATION:
     return { ...state, serviceWorkerRegistration: action.registration }

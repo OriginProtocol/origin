@@ -10,7 +10,7 @@ const imageHash = 'QmcJwbSPxVgpLsnN3ESAeZ7FRSapYKa27pWFhY9orsZat7'
 const ipfsFactory = ipfsdCtl.create({
   type: 'js',
 })
-const server = require('./src/index')
+require('./src/index')
 
 async function spawnIpfs() {
   return new Promise((resolve, reject) => {
@@ -26,7 +26,7 @@ async function spawnIpfs() {
 }
 
 async function loadTest(url, requests = []) {
-  let ipfsNode = await spawnIpfs()
+  const ipfsNode = await spawnIpfs()
   let autocannonInstance
 
   return new Promise((resolve, reject) => {
@@ -66,12 +66,12 @@ async function main() {
     headers: {}
   }
 
-  const uploadRequest = {
-    method: 'POST',
-    path: '/api/v0/add',
-    body: formData.toString(),
-    headers: formData.getHeaders()
-  }
+  // const uploadRequest = {
+  //  method: 'POST',
+  //  path: '/api/v0/add',
+  //  body: formData.toString(),
+  //  headers: formData.getHeaders()
+  // }
 
   logger.debug('Starting load test of IPFS node')
   await loadTest(`http://localhost:9090/ipfs/${imageHash}`, [downloadRequest])

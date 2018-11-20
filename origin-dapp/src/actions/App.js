@@ -182,7 +182,7 @@ export function localizeApp() {
       (navigator.languages && navigator.languages[0]) ||
       navigator.language ||
       navigator.userLanguage
-    if (browserDefaultLang && browserDefaultLang !== 'en-US') {
+    if (browserDefaultLang) {
       bestAvailableLanguage = getBestAvailableLanguage(browserDefaultLang)
     }
   }

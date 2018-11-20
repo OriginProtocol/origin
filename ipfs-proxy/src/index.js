@@ -28,7 +28,7 @@ function handleFileUpload (req, res) {
     }
   })
 
-  busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+  busboy.on('file', function(fieldname, file) {
     file.fileRead = []
 
     file.on('data', function(chunk) {
@@ -37,13 +37,13 @@ function handleFileUpload (req, res) {
 
     file.on('limit', function() {
       logger.warn(`File upload too large`)
-      res.writeHead(413, { 'Connection': 'close' });
+      res.writeHead(413, { 'Connection': 'close' })
       res.end()
       req.unpipe(req.busboy)
     })
 
     file.on('end', function() {
-      let buffer = Buffer.concat(file.fileRead);
+      const buffer = Buffer.concat(file.fileRead)
 
       if (!isValidFile(buffer)) {
         logger.warn(`Upload of invalid file type attempted`)
@@ -51,7 +51,7 @@ function handleFileUpload (req, res) {
         res.end()
         req.unpipe(req.busboy)
       } else {
-        const url = config.IPFS_API_URL + req.url + '?stream-channels=false'
+        const url = config.IPFS_API_URL + req.url
         request.post(url)
           .set(req.headers)
           .attach('file', buffer)
@@ -116,7 +116,7 @@ proxy.on('error', (err) => {
 })
 
 const server = http.createServer((req, res) => {
-  if (req.url == '/api/v0/add') {
+  if (req.url.startsWith('/api/v0/add')) {
     handleFileUpload(req, res)
   } else if (req.url.startsWith('/ipfs')) {
     handleFileDownload(req, res)

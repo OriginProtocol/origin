@@ -1,48 +1,102 @@
+---
+git:
+  depth: 3
 matrix:
   include:
-  - name: "DApp unit tests"
-    language: node_js
-    node_js: 8
-    before_script:
-    - cd origin-dapp
-    - npm install
-    script:
-    - npm test
+    - name: "origin-bridge tests"
+      language: python
+      python: 3.6
+      before_script:
+        - cd origin-bridge
+        - pip install -r requirements.txt
+      script:
+        - pytest --flakes --codestyle
 
-  # FIXME: remove dependency between origin-faucet and origin-js/contracts/test-alt
-  - name: "Origin-js unit tests"
-    language: node_js
-    node_js: 8
-    before_script:
-    - cd origin-faucet
-    - npm install
-    - cd ../origin-js
-    - npm install
-    script:
-    - npm test
+    - name: "origin-contracts tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-contracts/node_modules
+      before_cache:
+        - rm -rf origin-contracts/node_modules/.cache
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts
+      script:
+        - lerna run test --scope origin-contracts --stream
 
-  - name: "Origin-discovery unit tests"
-    language: node_js
-    node_js: 8
-    addons:
-      postgresql: 9.6
-    services:
-    - postgresql
-    env:
-    - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
-    before_script:
-    - psql -c 'create database travis_ci_test;' -U postgres
-    - cd origin-discovery
-    - npm install
-    - npm run migrate
-    script:
-    - npm test
+    - name: "origin-dapp tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+      script:
+        - lerna run lint --scope origin-dapp --stream
 
-  - name: "Bridge server unit tests"
-    language: python
-    python: 3.6
-    before_script:
-    - cd origin-bridge
-    - pip install -r requirements.txt
-    script:
-    - pytest --flakes --codestyle
+    - name: "origin-discovery tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-contracts/node_modules
+          - origin-js/node_modules
+          - origin-discovery/node_modules
+      before_cache:
+        - rm -rf origin-contracts/node_modules/.cache
+        - rm -rf origin-js/node_modules/.cache
+        - rm -rf origin-discovery/node_modules/.cache
+      addons:
+        postgresql: 9.6
+      services:
+        - postgresql
+      env:
+        - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+      before_script:
+        - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope origin-discovery
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts
+        - npm run bootstrap -- --scope origin
+        - npm run bootstrap -- --scope origin-discovery
+      script:
+        - lerna run lint --scope origin-discovery --stream
+        - lerna run test --scope origin-discovery --stream
+
+    - name: "origin-js tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-contracts/node_modules
+          - origin-js/node_modules
+      before_cache:
+        - rm -rf origin-contracts/node_modules/.cache
+        - rm -rf origin-js/node_modules/.cache
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts
+        - npm run bootstrap -- --scope origin
+      script:
+        - lerna run lint --scope origin --stream
+        - lerna run test --scope origin --stream
+
+    - name: "origin-messaging tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+      script:
+        - lerna run lint --scope origin-messaging --stream
+
+    - name: "origin-notifications tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+      script:
+        - lerna run lint --scope origin-notifications --stream

@@ -81,6 +81,7 @@ export function originToDAppListing(originListing) {
     status: originListing.status,
     schemaType: originListing.category.replace('schema.', ''),
     category: originListing.subCategory,
+    display: originListing.display,
     name: originListing.title,
     description: originListing.description,
     pictures: originListing.media
@@ -92,8 +93,29 @@ export function originToDAppListing(originListing) {
     unitsRemaining: originListing.unitsRemaining,
     ipfsHash: originListing.ipfs.hash,
     listingType: originListing.type,
-    slots: originListing.slots
+    slots: originListing.slots,
+    events: originListing.events
   }
+}
+
+/**
+ * Transforms an array of purchases or sales from a origin-js format to dapp format
+ * and translates the category
+ * @param {array} purchasesOrSales - Array of purchases or sales from origin-js's getPurchases() or getSales()
+ * @param {object} purchasesOrSales.listing - listing object
+ * @param {object} purchasesOrSales.offer - offer object
+ * @return {array} Transformed array of purchases or sales objects
+ */
+export const transformPurchasesOrSales = purchasesOrSales => {
+  return purchasesOrSales.map(purchase => {
+    const { offer, listing } = purchase
+    const transformedListing = originToDAppListing(listing)
+    transformedListing.category = translateListingCategory(transformedListing.category)
+    return {
+      offer,
+      listing: transformedListing
+    }
+  })
 }
 
 /**
@@ -103,8 +125,8 @@ export function originToDAppListing(originListing) {
  * @param {boolean} translate - Whether to translate the listing category or not.
  * @return {Promise<object>} DApp compatible listing object.
  */
-export async function getListing(id, translate = false) {
-  const originListing = await origin.marketplace.getListing(id)
+export async function getListing(id, translate = false, blockInfo) {
+  const originListing = await origin.marketplace.getListing(id, blockInfo)
   const dappListing = originToDAppListing(originListing)
   if (translate) {
     dappListing.category = translateListingCategory(dappListing.category)

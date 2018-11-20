@@ -2531,19 +2531,26 @@ select.form-control:not([size]):not([multiple]) {
   margin-bottom: 10px;
 }
 
-.cancel-image {
+.image-overlay-btn {
   position: absolute;
   top: 0;
-  right: 0;
   cursor: pointer;
   padding: 0.75rem;
   line-height: 0.5;
   background-color: white;
   font-weight: bold;
   border-bottom: 1px solid var(--light);
-  border-left: 1px solid var(--light);
-  border-radius: 0 0.25rem;
   opacity: 0.5;
+}
+
+.re-crop-image {
+  right: 36px;
+  border-radius: 0 0 0 0.25rem;
+  border-left: 1px solid var(--light);
+}
+
+.cancel-image {
+  right: 0;
 }
 
 .schema-details .pictures .photo {
@@ -4877,7 +4884,7 @@ sup {
   width: 100%;
 }
 
-.profile.modal .container .image-container .image-pair .avatar-container  {
+.profile.modal .container .image-container .image-pair .avatar-container {
   position: relative;
   background-color: var(--dark-two);
   border-radius: 20px;
@@ -4887,6 +4894,12 @@ sup {
   max-width: unset;
   top: unset;
   width: 180px;
+}
+
+.profile.modal .container .image-container .image-pair .avatar-container img {
+  width: 60%;
+  height: unset;
+  margin-bottom: unset;
 }
 
 .profile.modal .container .image-container .image-pair .avatar-container canvas {

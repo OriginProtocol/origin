@@ -70,13 +70,12 @@ steps:
     args:
       - '-c'
       - |
-        # Set the ENVKEY build arg for origin-dapp so that it can be used in
-        # the Docker container to build origin-dapp using webpack with the
-        # config for the deployment namespace
-        if [[ "${_CONTAINER}" == "origin-dapp" ]]; then
-          _VALUES_PATH=./deployment/kubernetes/values
-          _SECRETS_FILE=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml
-          _ENVKEY=$(cat $${_SECRETS_FILE} | grep dappEnvKey | cut -d " " -f 2)
+        _VALUES_PATH=./deployment/kubernetes/values
+        _SECRETS_FILE=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml
+
+        # Set the EnvKey for the Docker container if substitution set
+        if [[ "${_ENVKEY_FIELD}" != "" ]]; then
+          _ENVKEY=$(cat $${_SECRETS_FILE} | grep ${_ENVKEY_FIELD} | cut -d " " -f 2)
         else
           _ENVKEY=false
         fi
@@ -118,16 +117,17 @@ steps:
         git config --global user.name "OriginCI"
         git config --global user.email "support@originprotocol.com"
 
-        git remote set-url origin git@github.com:OriginProtocol/origin.git
-        git pull origin master
+        git remote add upstream git@github.com:OriginProtocol/origin.git
+        git pull upstream ${BRANCH_NAME}
+        git checkout ${BRANCH_NAME}
 
         sed -i \
           "s|^${_IMAGE_TAG_FIELD}: .*|${_IMAGE_TAG_FIELD}: '${SHORT_SHA}'|g" \
           deployment/kubernetes/values/values-$(cat .namespace).yaml
 
         git add deployment/kubernetes/values/values-$(cat .namespace).yaml
-        git commit -m 'Update deployed image tags'
-        git push --set-upstream origin ${BRANCH_NAME}
+        git commit -m 'Update deployed image tag for ${_CONTAINER}'
+        git push upstream ${BRANCH_NAME}
     volumes:
       - name: 'ssh'
         path: /root/.ssh
@@ -155,3 +155,5 @@ steps:
           -f deployment/kubernetes/values/secrets-$(cat .namespace).yaml
 
 timeout: "3600s"
+options:
+  machineType: 'N1_HIGHCPU_8'

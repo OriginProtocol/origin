@@ -1,7 +1,7 @@
 const GraphQLJSON = require('graphql-type-json')
-
-const search = require('../lib/search.js')
-const { getListings } = require('./db.js')
+const listingMetadata = require('./listing-metadata')
+const search = require('../lib/search')
+const { getListing, getListingsById, getListingsBySeller, getOffer, getOffers } = require('./db')
 
 /**
  * Gets information on a related user.
@@ -12,8 +12,8 @@ const { getListings } = require('./db.js')
  */
 function relatedUserResolver (walletAddress, info) {
   const requestedFields = info.fieldNodes[0].selectionSet.selections
-  const isIdOnly = requestedFields.filter(x => x.name.value !== 'walletAddress')
-    .length === 0
+  const isIdOnly =
+    requestedFields.filter(x => x.name.value !== 'walletAddress').length === 0
   if (isIdOnly) {
     return { walletAddress: walletAddress }
   } else {
@@ -25,20 +25,19 @@ function relatedUserResolver (walletAddress, info) {
 const resolvers = {
   JSON: GraphQLJSON,
   Query: {
-    async listings (root, args, context, info) {
-      // TODO: handle pagination (including enforcing MaxResultsPerPage), filters, order.
+    async listings (root, args) {
       // Get listing Ids from Elastic.
-      const { listingIds, stats } = await search.Listing
-        .search(
-          args.searchQuery,
-          args.filters,
-          args.page.numberOfItems,
-          args.page.offset,
-          true // idsOnly
-        )
-      // Get listing objects based on Ids from DB.
-      const listings = await getListings(listingIds)
-
+      const { listingIds, stats } = await search.Listing.search(
+        args.searchQuery,
+        args.filters,
+        args.page.numberOfItems,
+        args.page.offset,
+        true,// idsOnly
+        listingMetadata.hiddenIds,
+        listingMetadata.featuredIds
+      )
+      // Get listing objects from DB based on Ids.
+      const listings = await getListingsById(listingIds)
       return {
         nodes: listings,
         offset: args.page.offset,
@@ -51,25 +50,38 @@ const resolvers = {
       }
     },
 
-    async listing (root, args, context, info) {
-      const listings = await getListings([args.id])
-      return (listings.length === 1) ? listings[0] : null
+    async listing (root, args) {
+      return getListing(args.id)
     },
 
-    async offers (root, args, context, info) {
-      const opts = {}
-      opts.buyerAddress = args.buyerAddress
-      opts.listingId = args.listingId
-      const offers = search.Offer.search(opts)
+    async offers (root, args) {
+      const offers = await getOffers({
+        listingId: args.listingId,
+        buyerAddress: args.buyerAddress,
+        sellerAddress: args.sellerAddress
+      })
+
       return { nodes: offers }
     },
 
-    async offer (root, args, context, info) {
-      return search.Offer.get(args.id)
+    async offer (root, args) {
+      return getOffer(args.id)
     },
 
-    user (root, args, context, info) {
-      return search.User.get(args.walletAddress)
+    user (root, args) {
+      // FIXME(franck): some users did not get indexed in prod due to a bug in attestations.
+      // For now only return the address until data gets re-indexed.
+      return { walletAddress: args.walletAddress }
+    },
+
+    info () {
+      // Caution: Any config added here gets exposed publicly.
+      // Make sure to not expose any credentials/secrets !
+      return {
+        'networkId': process.env.NETWORK_ID ? process.env.NETWORK_ID : 'undefined',
+        'elasticsearchHost': process.env.ELASTICSEARCH_HOST ? process.env.ELASTICSEARCH_HOST : 'undefined',
+        'nodeEnv': process.env.NODE_ENV ? process.env.NODE_ENV : 'undefined'
+      }
     }
   },
 
@@ -77,8 +89,9 @@ const resolvers = {
     seller (listing, args, context, info) {
       return relatedUserResolver(listing.seller, info)
     },
-    offers (listing, args) {
-      const offers = search.Offer.search({ listingId: listing.id })
+
+    async offers (listing) {
+      const offers = await getOffers({ listingId: listing.id })
       return { nodes: offers }
     }
   },
@@ -87,27 +100,31 @@ const resolvers = {
     seller (offer, args, context, info) {
       return relatedUserResolver(offer.seller, info)
     },
+
     buyer (offer, args, context, info) {
       return relatedUserResolver(offer.buyer, info)
     },
-    price (offer) {
-      return { currency: 'ETH', amount: offer.priceEth }
+
+    totalPrice (offer) {
+      return offer.totalPrice
     },
-    listing (offer, args, context, info) {
-      const requestedSubFields = info.fieldNodes[0].selectionSet.selections
-      const isIdOnly = requestedSubFields.filter(x => x.name.value !== 'id').length === 0
-      if (isIdOnly) {
-        return { id: offer.listingId }
-      } else {
-        return search.Listing.get(offer.listingId)
-      }
+
+    async listing (offer) {
+      return getListing(offer.data.listingId)
     }
   },
 
   User: {
-    offers (user, args) {
-      const offers = search.Offer.search({ buyer: user.walletAddress })
+    // Return offers made by a user.
+    async offers (user) {
+      const offers = await getOffers({ buyerAddress: user.walletAddress })
       return { nodes: offers }
+    },
+
+    // Return listings created by a user.
+    async listings (user) {
+      const listings = await getListingsBySeller(user.walletAddress)
+      return { nodes: listings }
     }
   }
 }
