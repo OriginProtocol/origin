@@ -43,8 +43,8 @@ export class Offer {
       totalPrice: chainData.totalPrice,
       unitsPurchased: ipfsData.unitsPurchased,
       blockInfo: {
-        blockNumber: chainOffer.blockNumber,
-        logIndex: chainOffer.logIndex
+        blockNumber: chainData.blockNumber,
+        logIndex: chainData.logIndex
       }
     })
   }
