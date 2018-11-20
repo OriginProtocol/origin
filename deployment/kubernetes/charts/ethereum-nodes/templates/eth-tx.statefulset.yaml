@@ -1,26 +1,22 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.network }}-tx-node
+  name: {{  template "ethereum-fullname" . }}-tx-node
   labels:
-    app: {{ .Values.network }}-tx-node
+    app: {{  template "ethereum-fullname" . }}-tx-node
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  {{ if eq .Values.network "mainnet" }}
-  replicas: {{ .Values.mainnet.replicas }}
-  {{ else }}
-  replicas: {{ .Values.testnet.replicas }}
-  {{ end }}
-  serviceName: {{ .Values.network }}-tx-node
+  replicas: {{ .Values.replicas }}
+  serviceName: {{  template "ethereum-fullname" . }}-tx-node
   selector:
     matchLabels:
-      app: {{ .Values.network }}-tx-node
+      app: {{  template "ethereum-fullname" . }}-tx-node
   template:
     metadata:
       labels:
-        app: {{ .Values.network }}-tx-node
+        app: {{  template "ethereum-fullname" . }}-tx-node
         release: {{ .Release.Name }}
     spec:
       containers:
@@ -48,41 +44,35 @@ spec:
             --rpcport 8545
             --rpcvhosts=\"*\"
             --ethstats=${HOSTNAME}:${ETHSTATS_SECRET}@${ETHSTATS_SERVICE}
-            --cache 2048"
+            --cache 2048
+            {{- if eq .Values.network "rinkeby" }}
+            --rinekby
+            {{- end }}
+            {{ if ne .Values.bootnodes "" }}
+            --bootnodes {{ .Values.bootnodes }}
+            {{- end }}"
         env:
         - name: ETHSTATS_SERVICE
-          value: {{ .Values.network }}-ethstats.{{ .Release.Namespace }}
+          value: {{  template "ethereum-fullname" . }}-ethstats.{{ .Release.Namespace }}
         - name: ETHSTATS_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.network }}-ethstats
+              name: {{  template "ethereum-fullname" . }}-ethstats
               key: WS_SECRET
         resources:
           requests:
-            {{ if eq .Values.network "mainnet" }}
-            memory: {{ default "15Gi" .Values.mainnet.memoryRequest }}
-            {{ else }}
-            memory: {{ default "2Gi" .Values.testnet.memoryRequest }}
-            {{ end }}
-            cpu: 500m
+            memory: {{ .Values.memoryRequest }}
+            cpu: {{ default "500m" .Values.cpuRequest }}
         volumeMounts:
           - mountPath: /root/.ethereum
-            name: {{ .Values.network }}-data
+            name: {{  template "ethereum-fullname" . }}-data
   volumeClaimTemplates:
     - metadata:
-        name: {{ .Values.network }}-data
+        name: {{  template "ethereum-fullname" . }}-data
       spec:
-        {{ if eq .Values.network "mainnet" }}
-        storageClassName: {{ .Values.mainnet.storage.class }}
-        {{ else }}
-        storageClassName: {{ .Values.testnet.storage.class }}
-        {{ end }}
+        storageClassName: {{ .Values.storageClass }}
         accessModes:
           - ReadWriteOnce  # Read-write for a single node only
         resources:
           requests:
-              {{ if eq .Values.network "mainnet" }}
-              storage: {{ .Values.mainnet.storage.request }}
-              {{ else }}
-              storage: {{ .Values.testnet.storage.request }}
-              {{ end }}
+            storage: {{ .Values.storageRequest }}

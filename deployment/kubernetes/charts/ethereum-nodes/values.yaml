@@ -1,0 +1,15 @@
+network: mainnet
+
+replicas: 1
+
+ethstatsImage: ethereumex/eth-stats-dashboard
+ethstatsImageTag: latest
+
+gethImage: ethereum/client-go
+gethImageTag: v1.8.13
+gethTxReplicas: 1
+
+storageClass: ssd
+storagRequest: 1TB
+
+memoryRequest: 15Gi
