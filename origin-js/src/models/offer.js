@@ -39,7 +39,6 @@ export class Offer {
 
   // creates an Offer using on-chain and off-chain data
   static init(offerId, listingId, chainData, ipfsData) {
-    console.log("CREATING OFFER: ", chainData, ipfsData)
     return new Offer({
       id: offerId,
       listingId: listingId,
