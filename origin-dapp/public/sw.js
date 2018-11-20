@@ -61,9 +61,12 @@ self.addEventListener('notificationerror', event => {
   analytics.event('Notifications', 'NotificationError', event.notification.title)
 })
 
-self.addEventListener('message', function(event){
+self.addEventListener('message', event => {
+  // console.log("🎡", event.data)
   if (event.data && event.data.type == "GA") {
     const trackingID = event.data.value
     analytics.setTrackingId(trackingID)
+    // console.log("🎡 Tracking Id set to", trackingID)
+    return
   }
-});
+})
