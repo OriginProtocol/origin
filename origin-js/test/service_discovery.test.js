@@ -20,6 +20,8 @@ describe('Discovery service', function() {
             'listing': {
               'data': {
                 'id': listingId,
+                'ipfs': {
+                }
               }
             }
           }
@@ -65,12 +67,16 @@ describe('Discovery service', function() {
                   'data': {
                     'id': '1-000-20',
                     'title': 'Test Listing A',
+                    'ipfs': {
+                    }
                   }
                 },
                 {
                   'data': {
                     'id': '1-000-21',
                     'title': 'Test Listing B',
+                    'ipfs': {
+                    }
                   }
                 }
               ]
@@ -105,14 +111,18 @@ describe('Discovery service', function() {
                   {
                     'data': {
                       'id': '1-000-20',
-                      'title': 'Test Listing A'
+                      'title': 'Test Listing A',
+                      'ipfs': {
+                      }
                     },
                     'display': 'featured'
                   },
                   {
                     'data': {
                       'id': '1-000-21',
-                      'title': 'Test Listing B'
+                      'title': 'Test Listing B',
+                      'ipfs': {
+                      }
                     },
                     'display': 'hidden'
                   }
@@ -152,7 +162,9 @@ describe('Discovery service', function() {
                     'listing': {
                       'data': {
                         'id': '1-000-20',
-                        'title': 'Test Listing A'
+                        'title': 'Test Listing A',
+                        'ipfs': {
+                        }
                       },
                       'display': 'featured'
                     },
@@ -161,7 +173,9 @@ describe('Discovery service', function() {
                     'listing': {
                       'data': {
                         'id': '1-000-21',
-                        'title': 'Test Listing B'
+                        'title': 'Test Listing B',
+                        'ipfs': {
+                        }
                       },
                       'display': 'hidden'
                     }
@@ -278,10 +292,14 @@ describe('Discovery service', function() {
             'listings': {
               'nodes': [
                 {
-                  'id': '1-000-20'
+                  'id': '1-000-20',
+                  'ipfs': {
+                  }
                 },
                 {
-                  'id': '1-000-21'
+                  'id': '1-000-21',
+                  'ipfs': {
+                  }
                 }
               ]
             }
