@@ -18,7 +18,9 @@ function urlBase64ToUint8Array(base64String) {
 
 export const createSubscription = (registration, account) => {
   return new Promise(async (resolve, reject) => {
+    let stage
     try {
+      stage = "browserSubscription"
       const subscription = await registration.pushManager.subscribe({
         // currently required to avoid silent push
         userVisibleOnly: true,
@@ -29,6 +31,7 @@ export const createSubscription = (registration, account) => {
         ...JSON.parse(JSON.stringify(subscription)),
         account
       })
+      stage = "notificationServerSubscription"
       await fetch(process.env.NOTIFICATIONS_URL, {
         method: 'POST',
         mode: 'cors',
@@ -42,7 +45,8 @@ export const createSubscription = (registration, account) => {
     } catch (error) {
       // TODO, when fetch fails, we never reach here
       console.error('Failure subscribing to push notifications')
-      analytics.event('Notifications', 'ErrorCreateSubscription')
+      console.log(error)
+      analytics.event('Notifications', 'ErrorCreateSubscription', stage)
       reject(error)
     }
   })
