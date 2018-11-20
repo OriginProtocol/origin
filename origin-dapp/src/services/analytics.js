@@ -11,12 +11,13 @@ const gtag = window.gtag || function() {}
 function event(category, action, label, value) {
   const gtag = window.gtag || function() {}
   if (process.env.NODE_ENV == 'development') {
-    console.log(`🕵 ${category} ${action} ${label}`)
+    console.log(`🕵 ${category} ${action} ${label==undefined?label:''}`)
   }
   
   gtag('send', { category, action, label, value })
 }
 
 export default {
-  event: event 
+  event: event,
+  gaTrackingId: gaTrackingId 
 }

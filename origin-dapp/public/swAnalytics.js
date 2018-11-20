@@ -8,14 +8,13 @@ class Analytics {
     setTrackingId(trackingId){
         this.trackingId = trackingId
     }
-    event(eventAction, eventCategory, eventLabel) {
+    event(eventCategory, eventAction, eventLabel) {
         'use strict';
         
-        console.log('Sending analytics event: ' + eventCategory + '/' + eventAction);
+        // console.log('Sending analytics event: ' + eventCategory + '/' + eventAction);
         const trackingId = this.trackingId
         if (!trackingId) {
-            console.error('You need your tracking ID in analytics-helper.js');
-            console.error('Add this code:\nvar trackingId = \'UA-XXXXXXXX-X\';');
+            console.error('GA Tracking Id not set in serviceworker analytics-helper.js');
             // We want this to be a safe method, so avoid throwing unless absolutely necessary.
             return Promise.resolve();
         }
@@ -76,8 +75,7 @@ class Analytics {
                 );
             });
             } else {
-            console.log(eventCategory + '/' + eventAction +
-                'hit sent, check the Analytics dashboard');
+            console.log('🕵 SW: ' + eventCategory + ' ' + eventAction);
             }
         })
         .catch(function(err) {
