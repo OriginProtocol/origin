@@ -124,7 +124,7 @@
   "listing-create.whatHappensNextHeading": "次は何をすれば良いですか？",
   "listing-create.whatHappensNextContent1": "この掲載情報を決済するとメタマスクで取引を認証するように求められます。この操作の後に、買い手にあなたの掲載情報が表示されるようになります。",
   "listing-create.whatHappensNextContent2": "{selectedBoostAmount} OGNがブーストのために使用されます。オファーを受け入れる前に掲載情報を閉じると、OGNはあなたに払い戻されます。",
-  "listing-create.updateSuccessMessage": "Your listing has been updated!",
+  "listing-create.updateSuccessMessage": "掲載情報が更新されました！",
   "listing-create.successMessage": "掲載情報が作成されました！",
   "listing-create.successDisclaimer": "掲載情報は数秒程度経ってから表示されます。次の手順は以下の通りです：",
   "listing-create.success-1": "買い手はマーケットプレースであなたの掲載情報を見ることができます。",
