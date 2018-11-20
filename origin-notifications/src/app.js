@@ -108,11 +108,11 @@ app.get('/', async (req, res) => {
 app.post('/', async(req, res) => {
   const { account, endpoint } = req.body
   // cannot upsert because neither is unique
-  const existing = await PushSubscription.find({
+  const existing = await PushSubscription.findAll({
     where: { account, endpoint }
   })
 
-  if (existing) {
+  if (existing.length > 0) {
     return res.sendStatus(200)
   }
 
