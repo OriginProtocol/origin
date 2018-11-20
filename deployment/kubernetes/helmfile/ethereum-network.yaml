@@ -1,0 +1,17 @@
+releases:
+  - name: cert-manager
+    namespace: kube-system
+    chart: stable/cert-manager
+    values:
+      - ../values/origin/cert-manager/values.yaml
+
+  - name: nginx-ingress
+    chart: stable/nginx-ingress
+    values:
+      - ../values/ethereum-network/nginx-ingress/values.yaml
+
+  - name: telling-raccoon
+    chart: ../charts/ethereum-network
+    values:
+      - ../values/ethereum-network/values.yaml
+      - ../values/ethereum-network/secrets.yaml
