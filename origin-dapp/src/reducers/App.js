@@ -60,14 +60,10 @@ export default function App(state = initialState, action = {}) {
     return { ...state, notificationsSubscriptionPrompt: action.role }
 
   case AppConstants.ON_MOBILE:
-<<<<<<< HEAD
-    return { ...state, mobileDevice: action.device, isMobile: action.isMobile }
+    return { ...state, mobileDevice: action.device }
 
   case AppConstants.SHOW_MAIN_NAV:
     return { ...state, showNav: action.showNav }
-=======
-    return { ...state, mobileDevice: action.device }
->>>>>>> master
 
   case AppConstants.SAVE_SERVICE_WORKER_REGISTRATION:
     return { ...state, serviceWorkerRegistration: action.registration }
