@@ -1,9 +1,11 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+import chaiString from 'chai-string'
 import fetchMock from 'fetch-mock'
 import { validateOffer, validateListing } from './helpers/schema-validation-helper'
 
 chai.use(chaiAsPromised)
+chai.use(chaiString)
 const expect = chai.expect
 
 import DiscoveryService from '../src/services/discovery-service'
@@ -376,10 +378,31 @@ describe('Discovery service', function() {
               'data': {
                 'id': '1-000-57-1',
                 'events': [{
-                      'event': 'OfferCreated',
-                      'blockNumber': 0,
-                      'logIndex': 0,
-                    }]
+                  'id': 'log_123',
+                  'event': 'OfferCreated',
+                  'blockNumber': 0,
+                  'logIndex': 0,
+                  'transactionIndex': 0,
+                  'transactionHash': '0x1234',
+                  'blockHash': '0x123',
+                  'address': '0x123',
+                  'signature': '0x123',
+                  'type': 'mined',
+                  'returnValues': {}
+                }],
+                'createdAt': 12345678,
+                'schemaId': 'http://schema.originprotocol.com/offer_v1.0.0',
+                'refund': '0',
+                'listingType': 'unit',
+                'unitsPurchased': 1,
+                'totalPrice': {
+                  'amount': '1.5',
+                  'currency': 'ETH'
+                },
+                'ipfs': {
+                  'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
+                  'data': {}
+                }
               },
               'buyer': {
                 'walletAddress': '0xABCD'
@@ -399,6 +422,7 @@ describe('Discovery service', function() {
       const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
 
       const offer = await discoveryService.getOffer(offerId)
+      validateOffer(offer)
       expect(offer.id).to.equal(offerId)
     })
 
