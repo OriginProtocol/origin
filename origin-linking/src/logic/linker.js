@@ -17,14 +17,17 @@ class Linker {
   constructor({}={}) {
     this.messages = new MessageQueue()
 
-    this.apnProvider = new apn.Provider({
-      token:{
-        key:process.env.APNS_KEY_FILE,
-        keyId:process.env.APNS_KEY_ID,
-        teamId:process.env.APNS_TEAM_ID
-      }
-    })
-    this.apnBundle = process.env.APNS_BUNDLE_ID
+    if (process.env.APNS_KEY_FILE)
+    {
+      this.apnProvider = new apn.Provider({
+        token:{
+          key:process.env.APNS_KEY_FILE,
+          keyId:process.env.APNS_KEY_ID,
+          teamId:process.env.APNS_TEAM_ID
+        }
+      })
+      this.apnBundle = process.env.APNS_BUNDLE_ID
+    }
   }
 
   _generateNewCode(size) {
@@ -153,7 +156,7 @@ class Linker {
   }
 
   sendNotificationMessage(linkedObj, msg, data ={}) {
-    if (linkedObj.deviceType == EthNotificationTypes.APN)
+    if (linkedObj.deviceType == EthNotificationTypes.APN && this.apnProvider)
     {
       const note = new apn.Notification({
         alert:msg,
