@@ -115,7 +115,7 @@ export class Listing {
       schemaId: discoveryNodeData.schemaId,
       expiry: discoveryNodeData.ipfs.expiry,
       deposit: discoveryNodeData.deposit,
-      depositManager: discoveryNodeData.depositManager,
+      depositManager: discoveryNodeData.depositManager
     })
   }
 

@@ -1,6 +1,7 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import fetchMock from 'fetch-mock'
+import { validateOffer, validateListing } from './helpers/schema-validation-helper'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -21,7 +22,45 @@ describe('Discovery service', function() {
               'data': {
                 'id': listingId,
                 'ipfs': {
-                }
+                  'expiry': '1996-12-19T16:39:57-08:00',
+                },
+                'title': 'title',
+                'description': 'some description',
+                'category': 'schema.housing',
+                'subCategory': 'schema.housing.vacationRentals',
+                'status': 'active',
+                'type': 'unit',
+                'unitsTotal': 1,
+                'offers': {},
+                'language': 'us-EN',
+                'events': [{
+                  'id': 'log_123',
+                  'event': 'ListingCreated',
+                  'blockNumber': 0,
+                  'logIndex': 0,
+                  'transactionIndex': 0,
+                  'transactionHash': '0x1234',
+                  'blockHash': '0x123',
+                  'address': '0x123',
+                  'signature': '0x123',
+                  'type': 'mined',
+                  'returnValues': {}
+                }],
+                'ipfsHash': '0x123',
+                'price': {
+                  'amount': '1.5',
+                  'currency': 'ETH'
+                },
+                'seller': '0x12345',
+                'display': 'normal',
+                'media': [],
+                'commission': {
+                  'amount': '0',
+                  'currency': 'OGN'
+                },
+                'schemaId': 'http://schema.originprotocol.com/listing_v1.0.0',
+                'deposit': '0',
+                'depositManager': '0x123',
               }
             }
           }
@@ -31,6 +70,7 @@ describe('Discovery service', function() {
       const discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
 
       const listing = await discoveryService.getListing(listingId)
+      validateListing(listing)
       expect(listing.id).to.equal(listingId)
     })
 
@@ -334,7 +374,12 @@ describe('Discovery service', function() {
             'offer': {
               'id': offerId,
               'data': {
-                'id': '1-000-57-1'
+                'id': '1-000-57-1',
+                'events': [{
+                      'event': 'OfferCreated',
+                      'blockNumber': 0,
+                      'logIndex': 0,
+                    }]
               },
               'buyer': {
                 'walletAddress': '0xABCD'
@@ -389,7 +434,12 @@ describe('Discovery service', function() {
                 {
                   'id': '1-000-57-1',
                   'data': {
-                    'id': '1-000-57-1'
+                    'id': '1-000-57-1',
+                    'events': [{
+                      'event': 'OfferCreated',
+                      'blockNumber': 0,
+                      'logIndex': 0,
+                    }]
                   },
                   'buyer': {
                     'walletAddress': '0xABCD'
@@ -405,7 +455,12 @@ describe('Discovery service', function() {
                 {
                   'id': '1-000-57-2',
                   'data': {
-                    'id': '1-000-57-2'
+                    'id': '1-000-57-2',
+                    'events': [{
+                      'event': 'OfferCreated',
+                      'blockNumber': 0,
+                      'logIndex': 0,
+                    }]
                   },
                   'buyer': {
                     'walletAddress': '0xABCD'
@@ -449,7 +504,12 @@ describe('Discovery service', function() {
                 {
                   'id': '1-000-57-1',
                   'data': {
-                    'id': '1-000-57-1'
+                    'id': '1-000-57-1',
+                    'events': [{
+                      'event': 'OfferCreated',
+                      'blockNumber': 0,
+                      'logIndex': 0,
+                    }]
                   },
                   'buyer': {
                     'walletAddress': '0xABCD'
@@ -465,7 +525,12 @@ describe('Discovery service', function() {
                 {
                   'id': '1-000-57-2',
                   'data': {
-                    'id': '1-000-57-2'
+                    'id': '1-000-57-2',
+                    'events': [{
+                      'event': 'OfferCreated',
+                      'blockNumber': 0,
+                      'logIndex': 0,
+                    }]
                   },
                   'buyer': {
                     'walletAddress': '0xABCD'
