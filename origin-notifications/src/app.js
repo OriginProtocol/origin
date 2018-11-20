@@ -173,7 +173,7 @@ app.post('/events', async (req, res) => {
       }
     }
   })
-  res.json({ status: "ok" });
+  res.json({ status: 'ok' })
 })
 
 app.listen(port, () => console.log(`Notifications server listening on port ${port}!`))

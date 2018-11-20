@@ -20,7 +20,7 @@ export const createSubscription = (registration, account) => {
   return new Promise(async (resolve, reject) => {
     let stage
     try {
-      stage = "browserSubscription"
+      stage = 'browserSubscription'
       const subscription = await registration.pushManager.subscribe({
         // currently required to avoid silent push
         userVisibleOnly: true,
@@ -31,7 +31,7 @@ export const createSubscription = (registration, account) => {
         ...JSON.parse(JSON.stringify(subscription)),
         account
       })
-      stage = "notificationServerSubscription"
+      stage = 'notificationServerSubscription'
       await fetch(process.env.NOTIFICATIONS_URL, {
         method: 'POST',
         mode: 'cors',
@@ -70,7 +70,9 @@ export const initServiceWorker = () => {
       .then(registration => {
         analytics.event('Notifications', 'ServiceWorkerRegistered', 'sw.js')
         console.log('Notifications service worker registered')
-        navigator.serviceWorker.controller.postMessage({type:"GA", value:analytics.gaTrackingId})
+        navigator.serviceWorker.controller.postMessage(
+          { type: 'GA', value: analytics.gaTrackingId }
+        )
         resolve(registration)
       })
       .catch(err => {

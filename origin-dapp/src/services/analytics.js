@@ -1,5 +1,4 @@
 const gaTrackingId = process.env.GA_TRACKING_ID || 'UA-106384880-2'
-const gtag = window.gtag || function() {}
 
 /**
  * Records an analytics event
