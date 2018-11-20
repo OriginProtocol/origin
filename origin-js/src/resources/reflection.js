@@ -18,9 +18,12 @@ export default class Reflection {
         const listingId = this.marketplace.resolver.makeListingId(networkId, meta.contract, params.listingID)
         meta.listing = await this.marketplace.getListing(listingId)
       }
-      else if (meta.method.startsWith('createListing') && params._ipfsHash)
+      else if (params._ipfsHash)
       {
-        meta.listing = await this.marketplace.ipfsService.getFile(params._ipfsHash)
+        const realIpfsHash = this.contractService.getIpfsHashFromBytes32(
+          params._ipfsHash
+        )
+        meta.listing = await this.marketplace.ipfsService.loadObjFromFile(realIpfsHash)
       }
     }
     else if (meta.contract == 'OriginToken')

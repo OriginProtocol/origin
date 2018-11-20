@@ -4,16 +4,21 @@ import uuidv1 from 'uuid/v1'
 const appendSlash = url => {
   return url.substr(-1) === '/' ? url : url + '/'
 }
+const PLACEHOLDER_ADDRESS = '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
 
 export default class WalletLinker {
+  //define class variable for PLACEHOLDER ADDRESS
+  static get PLACEHOLDER_ADDRESS() {
+    return PLACEHOLDER_ADDRESS
+  }
+
   constructor({ linkerServerUrl, fetch, networkChangeCb, web3 }) {
     this.serverUrl = linkerServerUrl
     this.fetch = fetch
     this.accounts = []
     this.networkChangeCb = networkChangeCb
     this.callbacks = {}
-    this.placeholder_on = false
-    this.PLACEHOLDER_ADDRESS = '0xAF298D050e4395d69670B12B7F41000000000000'
     this.session_token = ''
     this.web3 = web3
     this.loadSessionStorage()
@@ -32,15 +37,6 @@ export default class WalletLinker {
     this.loadSessionStorage()
     this.closeLinkMessages()
     //clearInterval(self.interval)
-  }
-
-  startPlaceholder() {
-    this.placeholder_on = true
-    return this.PLACEHOLDER_ADDRESS
-  }
-
-  endPlaceholder() {
-    this.placeholder_on = false
   }
 
   async startLink() {
@@ -104,8 +100,9 @@ export default class WalletLinker {
         cb()
       }
     }
-    //take out the block cache which is being stupid..
+    //take out the caching which is being stupid..
     provider._providers.splice(3, 1)
+    provider._providers.splice(4, 1)
     return provider
   }
 
@@ -172,16 +169,14 @@ export default class WalletLinker {
     const call_id = uuidv1()
     //translate gas to gasLimit
     txn_object['gasLimit'] = txn_object['gas']
-    if (this.placeholder_on) {
-      if (
-        txn_object['from'].toLowerCase() ==
-        this.PLACEHOLDER_ADDRESS.toLowerCase()
-      ) {
-        txn_object['from'] = undefined
-      }
+    if (
+      txn_object['from'].toLowerCase() ==
+      PLACEHOLDER_ADDRESS.toLowerCase()
+    ) {
+      txn_object['from'] = undefined
     }
 
-    this.callbacks[call_id] = data => {
+    this.callbacks[call_id] = async data => {
       callback(undefined, data.hash)
     }
 

@@ -159,7 +159,7 @@ class OriginWallet {
       if(!event.event_id)
       {
         //make it a true event by filling it
-        event = await this.extractEventInfo(event)
+        event = await this.extractEvent(event)
         event.event_id = getEventId(event)
         event.timestamp = ts
       }
@@ -246,7 +246,8 @@ class OriginWallet {
     })
   }
 
-  doUnlink(wallet_token, link_id) {
+  doUnlink(link_id) {
+    console.log("Unlink from:", link_id)
     return this.doFetch(API_WALLET_LINKER_UNLINK + getWalletToken(this.getNotifyType(), this.state.deviceToken), 'POST', {
       link_id
     }).then((responseJson) => {
@@ -262,7 +263,7 @@ class OriginWallet {
   }
 
 
-  doGetLinkedDevices(wallet_token) {
+  doGetLinkedDevices() {
     return this.doFetch(API_WALLET_GET_LINKS + getWalletToken(this.getNotifyType(), this.state.deviceToken), "GET").then((responseJson) => {
       let devices = []
       for(const l of responseJson){
@@ -292,7 +293,6 @@ class OriginWallet {
     let state = this.state
     if (state.linkCode && state.deviceToken && state.ethAddress)
     {
-      console.log("linking...")
       let rpc_server = this.copied_code == state.linkCode ? localfy(providerUrl) : providerUrl
       return this.doLink(state.linkCode, rpc_server, [state.ethAddress])
     }
@@ -302,7 +302,6 @@ class OriginWallet {
   checkDoUnlink(link_id) {
     if (this.state.deviceToken)
     {
-      console.log("Unlinking...")
       return this.doUnlink(link_id)
     }
   }
@@ -330,12 +329,13 @@ class OriginWallet {
     })
   }
 
-  async extractEventInfo(event_data) {
+  async extractEvent(event_data) {
     const transaction = event_data.transaction
     const link = event_data.link
     if (transaction)
     {
       const meta = await this.extractMetaFromCall(transaction.call) || {}
+      console.log("meta:", meta)
       const cost = this.extractTransactionCost(transaction.call)
       const gas_cost = this.extractTransactionGasCost(transaction.call)
       const listing = this.extractListing(meta)
@@ -399,9 +399,9 @@ class OriginWallet {
     return listing || (subMeta && subMeta.listing)
   }
 
-  extractTransactionCost({params}){
+  extractTransactionCost({params:{txn_object}}){
     // might want to format this some how
-    return params && params.txn_object && web3.utils.toBN(params.txn_object.value)
+    return (txn_object && txn_object.value && web3.utils.toBN(txn_object.value)) || 0
   }
 
   extractTransactionGasCost({params}){
@@ -426,7 +426,7 @@ class OriginWallet {
   }
 
   handleUnlink(event){
-    let {link_id} = event.link
+    const {link_id} = event.link
     this.checkDoUnlink(link_id)
   }
 
@@ -542,10 +542,23 @@ class OriginWallet {
   async processCall(call, call_id, return_url, session_token, link_id, force_from = false) {
     const method = call.method
     const params = call.params
+
     if (force_from && params.txn_object)
     {
       params.txn_object.from = this.state.ethAddress
+
+      // replace any placeholders in the parameter list
+      const placeholder_address = web3.eth.abi.encodeParameter("address", origin.contractService.walletPlaceholderAccount())
+        .slice(2)
+      
+      if (params.txn_object.data.includes(placeholder_address))
+      {
+        const this_address = web3.eth.abi.encodeParameter("address", this.state.ethAddress)
+          .slice(2)
+        params.txn_object.data = params.txn_object.data.replace(new RegExp(placeholder_address, "g"), this_address)
+      }
     }
+
     if (method == "signTransaction")
     {
       if (params.txn_object.from.toLowerCase() == this.state.ethAddress.toLowerCase())

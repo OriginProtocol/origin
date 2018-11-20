@@ -63,7 +63,6 @@ router.post("/link-wallet/:walletToken", async (req, res) => {
 router.get("/wallet-links/:walletToken", async (req, res) => {
   const {walletToken} = req.params
   const links = await linker.getWalletLinks(walletToken)
-    .map(({linked, appInfo, linkId, linkedAt}) => ({linked, app_info:appInfo, link_id:link_id, linked_at:linkedAt}))
   res.send(links)
 })
 
@@ -116,6 +115,7 @@ router.ws("/wallet-messages/:walletToken/:readId", (ws, req) => {
 
   const closeHandler = linker.handleMessages(walletToken, readId, (msg, msgId) =>
     {
+      console.log("sending messages:", {msg, msgId})
       ws.send(JSON.stringify({msg, msgId}))
     })
   ws.on("close", () => {

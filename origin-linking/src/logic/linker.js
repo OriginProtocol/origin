@@ -127,9 +127,11 @@ class Linker {
   }
 
   sendWalletMessage(linkedObj, type, data) {
+    console.log("pre adding message to:", {type, data})
     const walletToken = this.getWalletToken(linkedObj)
     if (walletToken)
     {
+      console.log("adding message to:", walletToken, {type, data})
       return this.messages.addMessage(walletToken, {type, data})
     }
   }
@@ -210,7 +212,7 @@ class Linker {
     const meta = await this.getMetaFromCall(call)
     console.log("extracted meta is:", meta)
 
-    this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
+    await this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
     // send push notification via APN or fcm
   }
@@ -279,7 +281,7 @@ class Linker {
     const {deviceType, deviceToken} = this.parseWalletToken(walletToken)
 
     const links = await db.LinkedToken.findAll({where:{deviceType, deviceToken, linked:true}})
-    return links.map(link => ({linked:link.linked, app_info:link.appInfo,  link_id:this.getLinkId(link.id, link.clientToken)}))
+    return links.map(link => ({linked:link.linked, app_info:link.appInfo,  link_id:this.getLinkId(link.id, link.clientToken), linked_at:link.linkedAt}))
   }
 
   async unlink(clientToken) {

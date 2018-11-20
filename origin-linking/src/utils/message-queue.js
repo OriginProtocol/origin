@@ -30,8 +30,7 @@ class MessageQueue {
   }
 
   getLatestId() {
-    const hrtime = process.hrtime()
-    return hrtime[0] * 1000000 + Math.round(hrtime[1] / 1000)
+    return Date.now()
   }
 
   async addMessage(queueKey, message) {

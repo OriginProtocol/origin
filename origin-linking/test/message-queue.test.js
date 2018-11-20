@@ -14,6 +14,10 @@ const numMessages = 10
 const testKey = "test_key"
 const messagePrefix = "Message number: "
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 describe('Message Queue', () => {
   let mqueue
   let sub_read_count = 0
@@ -45,8 +49,10 @@ describe('Message Queue', () => {
     for(const i of Array(numMessages).keys())
     {
       const msg = messagePrefix + i
+      await sleep(1)
       await mqueue.addMessage(testKey, msg)
     }
+    await sleep(1)
     await mqueue.addMessage(testKey, "last")
   })
 

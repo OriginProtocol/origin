@@ -9,15 +9,17 @@ import OriginButton from './origin-button'
 export default class DeviceItem extends Component {
   render() {
     const { item, handleLink, handleReject, handleUnlink, style } = this.props
-    const { browser, platform, language } = item.link && item.link.app_info
+    const app_info = item.link && item.link.app_info
+    const { browser, platform } = app_info && app_info.user_agent
+
 
     return (
       <View style={[ styles.listItem, style ]}>
         <View style={styles.iconsContainer}>
-          {browser == 'chrome' &&
+          {browser == 'Chrome' &&
             <Image source={require('../../assets/images/chrome-icon.png')} />
           }
-          {browser !== 'chrome' &&
+          {browser !== 'Chrome' &&
             <Image source={require('../../assets/images/app-icon.png')} />
           }
         {item.linked && <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />}

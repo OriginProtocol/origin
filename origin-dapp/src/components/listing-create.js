@@ -172,7 +172,7 @@ class ListingCreate extends Component {
 
   detectNeedForBoostTutorial() {
     // show if 0 OGN and...
-    !this.props.wallet.ognBalance &&
+    !Number(this.props.wallet.ognBalance) &&
       // ...tutorial has not been expanded or skipped via "Review"
       // !JSON.parse(localStorage.getItem('boostTutorialViewed')) &&
       this.setState({

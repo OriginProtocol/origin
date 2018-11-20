@@ -210,6 +210,14 @@ class ContractService {
     }
   }
 
+  walletPlaceholderAccount() {
+    return WalletLinker.PLACEHOLDER_ADDRESS
+  }
+
+  placeholderAccount() {
+    return this.walletLinker && this.walletPlaceholderAccount()
+  }
+
   // async convenience method for getting block details
   getBlock(blockHash) {
     return new Promise((resolve, reject) => {
@@ -416,26 +424,16 @@ class ContractService {
     opts.gas = (opts.gas || (await method.estimateGas(opts))) + additionalGas
     const transactionReceipt = await new Promise((resolve, reject) => {
       if (!opts.from && this.walletLinker && !this.walletLinker.linked) {
-        opts.from = this.walletLinker.startPlaceholder()
+        opts.from = this.walletPlaceholderAccount()
       }
-      const wrappedResolved = (this.walletLinker && (ret => {
-        this.walletLinker.endPlaceholder()
-        resolve(ret)
-      })) || resolve
-
-      const wrappedReject = (this.walletLinker && (err => {
-        this.walletLinker.endPlaceholder()
-        reject(err)
-      })) || reject
-
       const sendCallback = method
         .send(opts)
 
       this.handleTransactionCallbacks(
         contract,
         sendCallback,
-        wrappedResolved,
-        wrappedReject,
+        resolve,
+        reject,
         confirmationCallback,
         transactionHashCallback
       )
