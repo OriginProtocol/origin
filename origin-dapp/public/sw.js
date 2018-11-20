@@ -40,10 +40,10 @@ self.addEventListener('notificationclick', event => {
     }
 
     if (matchingClient) {
-      analytics.event('Notifications', 'NotificationClickFocus', event.notification.title)
+      analytics.event('Notifications', 'NotificationClickToFocus', event.notification.title)
       return matchingClient.focus()
     } else {
-      analytics.event('Notifications', 'NotificationClickOpen', event.notification.title)
+      analytics.event('Notifications', 'NotificationClickToOpen', event.notification.title)
       return clients.openWindow(urlToOpen)
     }
   })
