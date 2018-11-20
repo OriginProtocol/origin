@@ -2,8 +2,63 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import Avatar from 'components/avatar'
+import { getListing } from 'utils/listing'
+
+const getLastMessage = (conversation) => conversation.values.sort(
+  (a, b) => (a.created < b.created ? -1 : 1)
+)[conversation.values.length - 1]
 
 class ConversationListItem extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { listing: {}, lastMessage: {} }
+  }
+
+  async componentDidMount() {
+    const { conversation } = this.props
+
+    moment.updateLocale('en', {
+      relativeTime: {
+        past: '%s',
+        s: "Now",
+        ss: "%ds",
+        m: "1min",
+        mm: "%dmin",
+        h: "1h",
+        hh: "%dh",
+        d: "1d",
+        dd: "%dd",
+        M: "1mo",
+        MM: "%dmo",
+        y: "1y",
+        yy: "%dy"
+      }
+    })
+    const lastMessage = this.getLastMessage(conversation)
+
+    const listing = lastMessage.listingId ? await getListing(lastMessage.listingId, true) : {}
+    this.setState({ listing, lastMessage })
+  }
+
+  componentDidUpdate(prevProps) {
+    const { conversation } = this.props
+
+    if (prevProps.conversation !== conversation) {
+      this.setState({ lastMessage: this.getLastMessage(conversation) })
+    }
+  }
+
+  componentWillUnmount() {
+    moment.updateLocale('en', null);
+  }
+
+  getLastMessage(conversation) {
+    const lastMessageIndex = conversation.values.length - 1
+    const sortedMessages = (a, b) => (a.created < b.created ? -1 : 1)
+    return conversation.values.sort(sortedMessages)[lastMessageIndex]
+  }
+
   render() {
     const {
       active,
@@ -11,12 +66,10 @@ class ConversationListItem extends Component {
       handleConversationSelect,
       users,
       web3Account,
-      mobileDevice,
-      listing = {}
+      mobileDevice
     } = this.props
-    const lastMessage = conversation.values.sort(
-      (a, b) => (a.created < b.created ? -1 : 1)
-    )[conversation.values.length - 1]
+    const { listing, lastMessage } = this.state
+
     const { content, recipients, senderAddress, created } = lastMessage
     const role = senderAddress === web3Account ? 'sender' : 'recipient'
     const counterpartyAddress =
@@ -41,12 +94,12 @@ class ConversationListItem extends Component {
             <div className="sender text-truncate">
               <span>{counterparty.fullName || counterpartyAddress}</span>
             </div>
-            <div className="message text-truncate">{listing.name}</div>
+            <div className="listing-title text-truncate">{listing.name}</div>
             <div className="message text-truncate">{content}</div>
           </div>
           <div className="meta-container">
             <div className="timestamp ml-auto">
-              {moment(created).format('h:mm a')}
+              {moment(created).fromNow()}
             </div>
             {!!unreadCount && (
               <div className="unread count text-center">
