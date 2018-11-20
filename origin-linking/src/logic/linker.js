@@ -2,10 +2,13 @@
 import db from './../models/'
 import uuidv4 from 'uuid/v4'
 import { Op } from 'sequelize'
-import { MessageTypes } from 'origin/common/enums'
+import { MessageTypes,EthNotificationTypes } from 'origin/common/enums'
 import MessageQueue from './../utils/message-queue'
 import origin from './../services/origin'
 import {sha3_224} from 'js-sha3'
+import apn from 'apn'
+
+
 
 const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
@@ -13,6 +16,15 @@ const CODE_SIZE = 16
 class Linker {
   constructor({}={}) {
     this.messages = new MessageQueue()
+
+    this.apnProvider = new apn.Provider({
+      token:{
+        key:process.env.APNS_KEY_FILE,
+        keyId:process.env.APNS_KEY_ID,
+        teamId:process.env.APNS_TEAM_ID
+      }
+    })
+    this.apnBundle = process.env.APNS_BUNDLE_ID
   }
 
   _generateNewCode(size) {
@@ -140,6 +152,19 @@ class Linker {
     return this.messages.addMessage(linkedObj.clientToken, {type, session_token:sessionToken, data})
   }
 
+  sendNotificationMessage(linkedObj, msg, data ={}) {
+    if (linkedObj.deviceType == EthNotificationTypes.APN)
+    {
+      const note = new apn.Notification({
+        alert:msg,
+        sound:'default',
+        payload:data,
+        topic:this.apnBundle
+      })
+      this.apnProvider.send(note, linkedObj.deviceToken)
+    }
+  }
+
   generateInitSession(linkedObj) {
     const sessionToken = uuidv4()
     return sessionToken
@@ -199,6 +224,22 @@ class Linker {
     }
   }
 
+  getMessageFromMeta(meta) {
+    if (meta.subMeta)
+    {
+      meta = subMeta
+    }
+
+    if (meta.listing)
+    {
+        return `${meta.method} pending for ${meta.listing.title}`
+    }
+    else
+    {
+      return `Pending call to ${meta.contract}.${meta.method}`
+    }
+  }
+
   async callWallet(clientToken, sessionToken, account, call_id, call, return_url) {
     if (!clientToken || !sessionToken){
       return false
@@ -215,6 +256,7 @@ class Linker {
     await this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
     // send push notification via APN or fcm
+    this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta), {call_id})
   }
 
   async walletCalled(walletToken, callId, linkId, sessionToken, result) {
