@@ -142,11 +142,9 @@ class Linker {
   }
 
   sendWalletMessage(linkedObj, type, data) {
-    console.log("pre adding message to:", {type, data})
     const walletToken = this.getWalletToken(linkedObj)
     if (walletToken)
     {
-      console.log("adding message to:", walletToken, {type, data})
       return this.messages.addMessage(walletToken, {type, data})
     }
   }
@@ -254,7 +252,6 @@ class Linker {
     const call_data = {call_id, call, link_id:this.getLinkId(linkedObj.id, linkedObj.clientToken), session_token:sessionToken, return_url, account}
 
     const meta = await this.getMetaFromCall(call)
-    console.log("extracted meta is:", meta)
 
     await this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
@@ -268,7 +265,6 @@ class Linker {
 
     let linkedObj = null
     for (const link of links) {
-      console.log("linkId: ", linkId, " gen linkId: ", this.getLinkId(link.id, link.clientToken))
       if (linkId == this.getLinkId(link.id, link.clientToken))
       {
         linkedObj = link
