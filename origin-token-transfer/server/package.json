@@ -12,7 +12,7 @@
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "start": "if [$NODE_ENV == 'production']; then node src/app.js; else nodemon src/app.js; fi",
-    "test": "mocha -r @babel/register -r @babel/polyfill -t 10000",
+    "test": "mocha -r @babel/register -r @babel/polyfill -t 10000 --exit",
     "vest": "node src/scripts/vest_grants.js"
   },
   "author": "",
