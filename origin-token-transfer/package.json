@@ -1,5 +1,5 @@
 {
-  "name": "origin-token-distribution",
+  "name": "origin-token-transfer",
   "version": "1.0.0",
   "description": "Tools for distributing Origin tokens",
   "engines": {
