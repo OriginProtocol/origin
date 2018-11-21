@@ -12,7 +12,11 @@ class DiscoveryService {
   _toListingModel(listingNode) {
     const data = listingNode.data
     data.display = listingNode.display
-    return new Listing(data.listingId, data, {})
+    return Listing.initFromDiscovery(data)
+  }
+
+  _toOfferModel(offerNode) {
+    return Offer.initFromDiscovery(offerNode)
   }
 
   /**
@@ -35,7 +39,7 @@ class DiscoveryService {
       },
       function(error) {
         if (error !== undefined)
-          throw Error(
+          throw new Error(
             `An error occurred when reaching discovery server: ${error}`
           )
       }
@@ -43,13 +47,20 @@ class DiscoveryService {
 
     if (resp.status !== 200) {
       //TODO: also report error message here
-      throw Error(
+      throw new Error(
         `Discovery server returned unexpected status code ${
           resp.status
         } with error `
       )
     }
-    return resp.json()
+
+    const jsonResp = await resp.json()
+    // Throw an exception if the GraphQL response includes any error.
+    if (jsonResp.errors && jsonResp.errors.length > 0) {
+      throw new Error(
+        `Discovery server internal error: ${jsonResp.errors[0].message}`)
+    }
+    return jsonResp
   }
 
   /**
@@ -105,15 +116,17 @@ class DiscoveryService {
 
   /**
    * Queries discovery server for all listings, with support for pagination.
-   * Options:
-   *  - idsOnly(boolean): returns only ids rather than the full Listing object.
-   *  - listingsFor(address): returns listing created by a specific seller.
-   *  - purchasesFor(address): returns listing a specific seller made an offer on.
-   * @param opts: { idsOnly, listingsFor, purchasesFor, offset, numberOfItems }
+   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean}
+   *  - idsOnly(boolean): Returns only ids rather than the full Listing object.
+   *  - listingsFor(address): Returns latest version of all listings created by a seller.
+   *  - purchasesFor(address): Returns all listings a buyer made an offer on.
+   *      Selects the version of the listing at the time the offer was created.
+   *  - numberOfItems: Number of listings to return. Any value between 1 and MAX_NUM_RESULTS
+   *      is valid. Temporarily, while switching DApp to fetch data from back-end, we use -1 as
+   *      a special value for requesting all listings. This will get deprecated in the future.
    * @return {Array<Listing>}
    */
   async getListings(opts) {
-    // Check for incompatible options.
     if (opts.listingsFor && opts.purchasesFor) {
       throw new Error('listingsFor and purchasesFor options are incompatible')
     }
@@ -121,9 +134,7 @@ class DiscoveryService {
     // Offset should be bigger than 0.
     const offset = Math.max(opts.offset || 0, 0)
 
-    // For numberOfItems, any value between 1 and MAX_NUM_RESULTS is valid.
-    // Temporarily, while switching DApp to fetch data from back-end, we use -1 as
-    // a special value for requesting all listings. This will get deprecated in the future.
+    // Keep numberOfItems between 1 and MAX_NUM_RESULTS, with -1 as a special value also allowed.
     const numberOfItems = opts.numberOfItems
       ? Math.min(Math.max(opts.numberOfItems, 1), MAX_NUM_RESULTS)
       : -1
@@ -182,11 +193,19 @@ class DiscoveryService {
   /**
    * Queries discovery server for a listing based on its id.
    * @param listingId
-   * @return {Listing}
+   * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional arg to use for
+   *   fetching a version of the listing with blockNumber and logIndex <= specified values.
+   * @return {Listing||null}
    */
-  async getListing(listingId) {
+  async getListing(listingId, blockInfo = null) {
+    let listingArgs = `id: "${listingId}"`
+    if (blockInfo) {
+      listingArgs += `, blockInfo: { ` +
+        `blockNumber: ${blockInfo.blockNumber}, ` +
+        `logIndex: ${blockInfo.logIndex} }`
+    }
     const query = `{
-      listing(id: "${listingId}") {
+      listing(${listingArgs}) {
         data
         display
       }
@@ -195,7 +214,7 @@ class DiscoveryService {
 
     // Throw an error if no listing found with this id.
     if (!resp.data) {
-      throw new Error(`No listing found with id ${listingId}`)
+      throw new Error(`No listing found with id: ${listingId} blockInfo: ${blockInfo}`)
     }
 
     return this._toListingModel(resp.data.listing)
@@ -217,14 +236,24 @@ class DiscoveryService {
         listingId: "${listingId}"
       ) {
         nodes {
+          id
           data
+          buyer {
+            walletAddress
+          }
+          seller {
+            walletAddress
+          }
+          listing {
+            id
+          }
+          status
         }
       }
     }`)
-    
+
     const offers = resp.data.offers.nodes
-      .map(offer => offer.data)
-      .map(offer => new Offer(offer.id, listingId, offer))
+      .map(offerNode => this._toOfferModel(offerNode))
 
     return opts.idsOnly ? offers.map(offer => offer.id) : offers
   }
@@ -239,10 +268,18 @@ class DiscoveryService {
       offer(
         id: "${offerId}"
       ) {
+        id
         data
+        buyer {
+          walletAddress
+        }
+        seller {
+          walletAddress
+        }
         listing {
           id
         }
+        status
       }
     }`)
 
@@ -251,8 +288,7 @@ class DiscoveryService {
       throw new Error(`No offer found with id ${offerId}`)
     }
 
-    const offer = resp.data.offer
-    return new Offer(offer.id, offer.listing.id, offer.data)
+    return this._toOfferModel(resp.data.offer)
   }
 }
 
