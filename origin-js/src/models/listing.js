@@ -119,32 +119,7 @@ export class Listing {
     })
   }
 
-  get unitsSold() {
-    // Lazy caching.
-    if (this._unitsSold !== undefined) {
-      return this._unitsSold
-    }
-    this._unitsSold = Object.keys(this.offers).reduce((acc, offerId) => {
-      if (this.offers[offerId].status === 'created') {
-        return acc + 1
-      }
-      // TODO: we need to subtract 1 for every offer that is canceled
-      return acc
-    }, 0)
-    return this._unitsSold
-  }
-
-  get unitsRemaining() {
-    if (this.type === 'fractional') {
-      return 1
-    } else {
-      // Should never be negative.
-      return Math.max(this.unitsTotal - this.unitsSold, 0)
-    }
-  }
-
   get active() {
     return this.status === 'active'
   }
-
 }
