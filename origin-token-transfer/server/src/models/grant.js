@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const BigNumber = require('bignumber.js')
 const moment = require('moment')

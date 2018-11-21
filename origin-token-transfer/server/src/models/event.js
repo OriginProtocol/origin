@@ -1,4 +1,5 @@
-'use strict';
+'use strict'
+
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define('Event', {
     email: DataTypes.STRING,
@@ -7,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     action: DataTypes.STRING,
     data: DataTypes.STRING
   }, {})
-  Event.associate = function(models) {
+  Event.associate = function() {
     // TODO: add a hasOne association for Grant when hasOne supports sourceKey
     // (due in Sequelize 5)
   }

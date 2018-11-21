@@ -165,7 +165,7 @@ app.post('/api/transfer', [
 // TODO: review this for security
 app.post(
   '/api/auth_google',
-  passport.authenticate('google-token', {session: false}),
+  passport.authenticate('google-token', { session: false }),
   (req, res) => {
     if (!req.user) {
       res.status(401)

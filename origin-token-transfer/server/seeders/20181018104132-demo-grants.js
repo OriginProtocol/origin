@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
 // TODO: create seeder that reads in a CSV file
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return queryInterface.bulkInsert('Grants', [
       {
         email: 'cuong@originprotocol.com',
@@ -51,7 +51,7 @@ module.exports = {
     ], {})
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.bulkDelete('Grants', null, {})
   }
 }
