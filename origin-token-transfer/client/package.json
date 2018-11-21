@@ -14,10 +14,11 @@
     "redux": "^4.0.1"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "build": "react-scripts build",
-    "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint '**/*.js' --rulesdir ../../",
+    "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
+    "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -8,6 +8,7 @@
   "main": "app/app.js",
   "scripts": {
     "initdb": "npm run migrate && npm run seed && npm run vest",
+    "lint": "eslint '**/*.js' --rulesdir ../../",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "start": "if [$NODE_ENV == 'production']; then node src/app.js; else nodemon src/app.js; fi",
