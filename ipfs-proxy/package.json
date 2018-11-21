@@ -38,6 +38,7 @@
     "chai": "^4.2.0",
     "form-data": "^2.3.3",
     "mocha": "^5.2.0",
+    "nodemon": "^1.18.6",
     "supertest": "^3.3.0",
     "webrtcsupport": "^2.2.0"
   }
