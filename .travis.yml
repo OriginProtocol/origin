@@ -100,3 +100,21 @@ matrix:
         - npm install --ignore-scripts
       script:
         - lerna run lint --scope origin-notifications --stream
+
+    - name: "origin-token-transfer tests"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - origin-token-transfer/client/node_modules
+          - origin-token-transfer/server/node_modules
+      before_cache:
+        - rm -rf origin-token-transfer/client/node_modules/.cache
+        - rm -rf origin-token-transfer/server/node_modules/.cache
+       install:
+        - npm install --ignore-scripts
+        - npm run bootstrap --scope origin-token-transfer-*
+      script:
+        - lerna run lint --scope origin-token-transfer-* --stream
+        - lerna run test --scope origin-token-transfer-* --stream
