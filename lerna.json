@@ -9,6 +9,7 @@
     "origin-messaging",
     "origin-notifications",
     "origin-token-transfer",
+    "origin-token-transfer/src/client",
     "experimental/*"
   ],
   "version": "independent"
