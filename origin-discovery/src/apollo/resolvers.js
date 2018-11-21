@@ -78,7 +78,7 @@ const resolvers = {
   },
 
   Listing: {
-    seller (listing, args, context, info) {
+    seller (listing) {
       return userResolver(listing.seller)
     },
 
@@ -89,11 +89,11 @@ const resolvers = {
   },
 
   Offer: {
-    seller (offer, args, context, info) {
+    seller (offer) {
       return userResolver(offer.sellerAddress)
     },
 
-    buyer (offer, args, context, info) {
+    buyer (offer) {
       return userResolver(offer.buyerAddress)
     },
 
