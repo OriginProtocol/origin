@@ -6,9 +6,8 @@ const { getListing, getListingsById, getListingsBySeller, getOffer, getOffers } 
 /**
  * Gets information on a user based on her wallet address.
  * @param {string} walletAddress
- * @param {object} info
  */
-function userResolver (walletAddress, info) {
+function userResolver (walletAddress) {
   // TODO: re-enable returning full user info once user indexing
   // is fully functional (see notes in rules.js).
   return { walletAddress: walletAddress }
@@ -80,7 +79,7 @@ const resolvers = {
 
   Listing: {
     seller (listing, args, context, info) {
-      return userResolver(listing.seller, info)
+      return userResolver(listing.seller)
     },
 
     async offers (listing) {
@@ -91,11 +90,11 @@ const resolvers = {
 
   Offer: {
     seller (offer, args, context, info) {
-      return userResolver(offer.sellerAddress, info)
+      return userResolver(offer.sellerAddress)
     },
 
     buyer (offer, args, context, info) {
-      return userResolver(offer.buyerAddress, info)
+      return userResolver(offer.buyerAddress)
     },
 
 
