@@ -260,10 +260,12 @@ class V00_MarkeplaceAdapter {
       if (event.event === 'ListingCreated') {
         ipfsHash = event.returnValues.ipfsHash
       } else if (event.event === 'ListingUpdated') {
-        // If a blockInfo is passed in, ignore udpated IPFS data that occurred after that blockInfo.blockNumber.
+        // If a blockInfo is passed in, ignore udpated IPFS data that occurred after.
         // This is used when we want to see what a listing looked like at the time an offer was made.
         // Specificatlly, on myPurchases and mySales requests as well as for arbitration.
-        if (!blockInfo || event.blockNumber < blockInfo.blockNumber) {
+        if (!blockInfo ||
+          (event.blockNumber < blockInfo.blockNumber) ||
+          (event.blockNumber === blockInfo.blockNumber && event.logIndex <= blockInfo.logIndex)) {
           ipfsHash = event.returnValues.ipfsHash
         }
       } else if (event.event === 'ListingWithdrawn') {

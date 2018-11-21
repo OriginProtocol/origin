@@ -160,6 +160,9 @@ async function getListing (listingId, blockInfo = null) {
  * @private
  */
 function _makeOffer (row) {
+  if (row.data.events.length === 0 || row.data.events[0].event !== 'OfferCreated') {
+    throw new Error('Can not find OfferCreated event')
+  }
   return {
     id: row.id,
     blockInfo: {

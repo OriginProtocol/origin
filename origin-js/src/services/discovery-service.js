@@ -39,7 +39,7 @@ class DiscoveryService {
       },
       function(error) {
         if (error !== undefined)
-          throw Error(
+          throw new Error(
             `An error occurred when reaching discovery server: ${error}`
           )
       }
@@ -47,13 +47,20 @@ class DiscoveryService {
 
     if (resp.status !== 200) {
       //TODO: also report error message here
-      throw Error(
+      throw new Error(
         `Discovery server returned unexpected status code ${
           resp.status
         } with error `
       )
     }
-    return resp.json()
+
+    const jsonResp = await resp.json()
+    // Throw an exception if the GraphQL response includes any error.
+    if (jsonResp.errors && jsonResp.errors.length > 0) {
+      throw new Error(
+        `Discovery server internal error: ${jsonResp.errors[0].message}`)
+    }
+    return jsonResp
   }
 
   /**
@@ -191,9 +198,11 @@ class DiscoveryService {
    * @return {Listing||null}
    */
   async getListing(listingId, blockInfo = null) {
-    let listingArgs = 'id: "${listingId}"'
+    let listingArgs = `id: "${listingId}"`
     if (blockInfo) {
-      listingArgs += `, blockInfo: ${blockInfo}`
+      listingArgs += `, blockInfo: { ` +
+        `blockNumber: ${blockInfo.blockNumber}, ` +
+        `logIndex: ${blockInfo.logIndex} }`
     }
     const query = `{
       listing(${listingArgs}) {
@@ -242,7 +251,7 @@ class DiscoveryService {
         }
       }
     }`)
-    
+
     const offers = resp.data.offers.nodes
       .map(offerNode => this._toOfferModel(offerNode))
 
