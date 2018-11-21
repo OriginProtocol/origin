@@ -50,7 +50,7 @@ class ConversationListItem extends Component {
   }
 
   async componentDidMount() {
-    const { conversation, selectedLanguageCode, intl } = this.props
+    const { conversation, intl } = this.props
     const { modifiedLanguageCode } = this.state
 
     const localeConfig = {
@@ -93,8 +93,8 @@ class ConversationListItem extends Component {
   }
 
   componentWillUnmount() {
-    const { createdAt, modifiedLanguageCode } = this.state
-    moment.updateLocale(modifiedLanguageCode, null);
+    const { modifiedLanguageCode } = this.state
+    moment.updateLocale(modifiedLanguageCode, null)
   }
 
   getLastMessage(conversation) {
@@ -114,7 +114,7 @@ class ConversationListItem extends Component {
     } = this.props
     const { listing, lastMessage, createdAt } = this.state
 
-    const { content, recipients, senderAddress, created } = lastMessage
+    const { content, recipients, senderAddress } = lastMessage
     const role = senderAddress === web3Account ? 'sender' : 'recipient'
     const counterpartyAddress =
       role === 'sender'
