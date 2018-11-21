@@ -15,7 +15,7 @@ metadata:
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
     # Disable SSL redirect to prevent double redirect
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/permanent-redirect: "https://www.originprotocol.com"
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://www.originprotocol.com$request_uri"
 spec:
   tls:
     - secretName: originprotocol.com

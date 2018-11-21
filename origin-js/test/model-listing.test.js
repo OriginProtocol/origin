@@ -8,7 +8,7 @@ describe('Listing', () => {
   it(`unitsRemaining should equal to unitsTotal when no offer`, () => {
     const chainListing = { offers: [] }
     const ipfsListing = { unitsTotal: 10 }
-    const listing = new Listing('FakeID', chainListing, ipfsListing)
+    const listing = Listing.init('FakeID', chainListing, ipfsListing)
     expect(listing.unitsRemaining).to.equal(10)
     expect(listing.unitsSold).to.equal(0)
   })
@@ -21,7 +21,7 @@ describe('Listing', () => {
       }
     }
     const ipfsListing = { unitsTotal: 10 }
-    const listing = new Listing('FakeID', chainListing, ipfsListing)
+    const listing = Listing.init('FakeID', chainListing, ipfsListing)
     expect(listing.unitsRemaining).to.equal(9)
     expect(listing.unitsSold).to.equal(1)
   })

@@ -126,7 +126,7 @@ steps:
           deployment/kubernetes/values/values-$(cat .namespace).yaml
 
         git add deployment/kubernetes/values/values-$(cat .namespace).yaml
-        git commit -m 'Update deployed image tags'
+        git commit -m 'Update deployed image tag for ${_CONTAINER}'
         git push upstream ${BRANCH_NAME}
     volumes:
       - name: 'ssh'
