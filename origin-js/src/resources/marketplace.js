@@ -641,7 +641,6 @@ export default class Marketplace {
 
     const unitsSold = Object.keys(offers).reduce((sold, offerId) => {
       // TODO: handle instant purchases
-      const available = listing.unitsTotal - unitsSold
       if (
         // Before offers are submitted to the blockchain, they have no status.
         //
