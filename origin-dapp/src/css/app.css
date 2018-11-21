@@ -3850,6 +3850,7 @@ form .stars img {
 
 .mobile-messaging .back .counterparty {
   display: inline-block;
+  position: absolute;
   font-size: 22px;
   font-weight: bold;
   color: var(--white);
