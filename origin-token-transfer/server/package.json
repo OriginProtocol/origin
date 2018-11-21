@@ -7,8 +7,12 @@
   },
   "main": "app/app.js",
   "scripts": {
-    "start:dev": "nodemon src/app.js",
-    "test": "mocha -r @babel/register -r @babel/polyfill -t 10000"
+    "initdb": "npm run migrate && npm run seed && npm run vest",
+    "migrate": "sequelize db:migrate",
+    "seed": "sequelize db:seed:all",
+    "start": "if [$NODE_ENV == 'production']; then node src/app.js; else nodemon src/app.js; fi",
+    "test": "mocha -r @babel/register -r @babel/polyfill -t 10000",
+    "vest": "node src/scripts/vest_grants.js"
   },
   "author": "",
   "license": "ISC",

@@ -6,6 +6,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const port = process.env.PORT || 5000
 const passport = require('passport')
+const path = require('path')
 const session = require('express-session')
 require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
@@ -26,6 +27,8 @@ if (!sessionSecret) {
   process.exit(1)
 }
 
+console.log(path.resolve(__dirname) + '../data')
+
 // Setup sessions.
 app.use(session({
   cookie: { maxAge: 60 * 60 * 1000 },
@@ -34,7 +37,7 @@ app.use(session({
   saveUninitialized: true,
   secret: sessionSecret,
   store: new SQLiteStore({
-    dir: '../data',
+    dir: path.resolve(__dirname + '/../data'),
     db: 'sessions.sqlite3'
   })
 }))

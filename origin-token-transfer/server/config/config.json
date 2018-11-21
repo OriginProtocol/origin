@@ -1,13 +1,13 @@
 {
   "development": {
     "dialect": "sqlite",
-    "storage": "../data/token-grants.sqlite3",
+    "storage": "./data/token-grants.sqlite3",
     "logging": false,
     "operatorsAliases": false
   },
   "test": {
     "dialect": "sqlite",
-    "storage": "../data/test-token-grants.sqlite3",
+    "storage": "./data/test-token-grants.sqlite3",
     "logging": false,
     "operatorsAliases": false
   }
