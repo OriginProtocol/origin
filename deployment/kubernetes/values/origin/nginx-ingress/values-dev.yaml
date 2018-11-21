@@ -1,6 +1,7 @@
 controller:
   service:
     loadBalancerIP: 35.233.140.121
+    externalTrafficPolicy: "Local"
   ingressClass: dev-ingress
   stats:
     enabled: true
