@@ -226,14 +226,12 @@ class PhotoPicker extends Component {
 
     return (
       <Fragment>
-        {showCropModal &&
-          <ImageCropper
-            isOpen={showCropModal}
-            imageFileObj={imageFileObj}
-            onCropComplete={this.onCropComplete}
-            onCropCancel={this.onCropCancel}
-          />
-        }
+        <ImageCropper
+          isOpen={showCropModal}
+          imageFileObj={imageFileObj}
+          onCropComplete={this.onCropComplete}
+          onCropCancel={this.onCropCancel}
+        />
         <div className="photo-picker">
           <label className="photo-picker-container" htmlFor="photo-picker-input">
             <img
