@@ -20,8 +20,11 @@ class Messages extends Component {
   }
 
   componentDidMount() {
+    const { mobileDevice, match } = this.props
     // try to detect the conversation before rendering
-    this.detectSelectedConversation()
+    if (match.params.conversationId || !mobileDevice) {
+      this.detectSelectedConversation()
+    }
   }
 
   componentDidUpdate(prevProps) {

@@ -4122,10 +4122,6 @@ form .stars img {
   margin-left: 65px;
 }
 
-.mobile-messaging .conversation .message-section + .compact-message {
-  margin-top: -8px;
-}
-
 .conversation .message:first-of-type {
   margin-top: 20px;
 }

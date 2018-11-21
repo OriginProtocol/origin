@@ -3,40 +3,85 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import Avatar from 'components/avatar'
 import { getListing } from 'utils/listing'
-
-const mobileLocale = {
-  relativeTime: {
-    past: '%s',
-    s: "Now",
-    ss: "%ds",
-    m: "1min",
-    mm: "%dmin",
-    h: "1h",
-    hh: "%dh",
-    d: "1d",
-    dd: "%dd",
-    M: "1mo",
-    MM: "%dmo",
-    y: "1y",
-    yy: "%dy"
-  }
-}
+import { defineMessages, injectIntl } from 'react-intl'
 
 class ConversationListItem extends Component {
   constructor(props) {
     super(props)
+    const { selectedLanguageCode } = this.props
 
-    this.state = { listing: {}, lastMessage: {} }
+    this.intlMessages = defineMessages({
+      s: {
+        id: 'messages.moment.sec',
+        defaultMessage: 'Now'
+      },
+      ss: {
+        id: 'messages.moment.seconds',
+        defaultMessage: 's'
+      },
+      min: {
+        id: 'messages.moment.minutes',
+        defaultMessage: 'min'
+      },
+      hour: {
+        id: 'messages.moment.hours',
+        defaultMessage: 'h'
+      },
+      day: {
+        id: 'messages.moment.days',
+        defaultMessage: 'd'
+      },
+      week: {
+        id: 'messages.moment.week',
+        defaultMessage: 'wk'
+      },
+      month: {
+        id: 'messages.moment.Months',
+        defaultMessage: 'mo'
+      },
+      year: {
+        id: 'messages.moment.years',
+        defaultMessage: 'y'
+      }
+    })
+    const modifiedLanguageCode = selectedLanguageCode === 'en-US' ? 'en' : selectedLanguageCode
+
+    this.state = { listing: {}, lastMessage: {}, createdAt: '', modifiedLanguageCode }
   }
 
   async componentDidMount() {
-    const { conversation } = this.props
+    const { conversation, selectedLanguageCode, intl } = this.props
+    const { modifiedLanguageCode } = this.state
 
-    moment.updateLocale('en', mobileLocale)
+    const localeConfig = {
+      relativeTime: {
+        past: '%s',
+        s: intl.formatMessage(this.intlMessages.s),
+        ss: `%d${intl.formatMessage(this.intlMessages.ss)}`,
+        m: `1${intl.formatMessage(this.intlMessages.min)}`,
+        mm: `%d${intl.formatMessage(this.intlMessages.min)}`,
+        h: `1${intl.formatMessage(this.intlMessages.hour)}`,
+        hh: `%d${intl.formatMessage(this.intlMessages.hour)}`,
+        d: `1${intl.formatMessage(this.intlMessages.day)}`,
+        dd: (days) => {
+          if (days < 7) {
+            return `${days + intl.formatMessage(this.intlMessages.day)}`
+          } else {
+            return `${Math.round(days / 7) + intl.formatMessage(this.intlMessages.week)}`
+          }
+        },
+        M: `1${intl.formatMessage(this.intlMessages.month)}`,
+        MM: `%d${intl.formatMessage(this.intlMessages.month)}`,
+        y: `1${intl.formatMessage(this.intlMessages.year)}`,
+        yy: `%d${intl.formatMessage(this.intlMessages.year)}`
+      }
+    }
     const lastMessage = this.getLastMessage(conversation)
 
     const listing = lastMessage.listingId ? await getListing(lastMessage.listingId, true) : {}
-    this.setState({ listing, lastMessage })
+    moment.updateLocale(modifiedLanguageCode, localeConfig)
+    const createdAt = moment(lastMessage.created).fromNow()
+    this.setState({ listing, lastMessage, createdAt })
   }
 
   componentDidUpdate(prevProps) {
@@ -48,7 +93,8 @@ class ConversationListItem extends Component {
   }
 
   componentWillUnmount() {
-    moment.updateLocale('en', null);
+    const { createdAt, modifiedLanguageCode } = this.state
+    moment.updateLocale(modifiedLanguageCode, null);
   }
 
   getLastMessage(conversation) {
@@ -66,7 +112,7 @@ class ConversationListItem extends Component {
       web3Account,
       mobileDevice
     } = this.props
-    const { listing, lastMessage } = this.state
+    const { listing, lastMessage, createdAt } = this.state
 
     const { content, recipients, senderAddress, created } = lastMessage
     const role = senderAddress === web3Account ? 'sender' : 'recipient'
@@ -98,7 +144,7 @@ class ConversationListItem extends Component {
         <div className={`meta-container ${mobileDevice ? 'justify-content-start ml-auto' : 'text-right'}`}>
           { mobileDevice && (
             <div className="timestamp align-self-end">
-              {moment(created).fromNow()}
+              {createdAt}
             </div>
           )}
           {!!unreadCount && (
@@ -116,8 +162,9 @@ const mapStateToProps = state => {
   return {
     users: state.users,
     web3Account: state.app.web3.account,
-    mobileDevice: state.app.mobileDevice
+    mobileDevice: state.app.mobileDevice,
+    selectedLanguageCode: state.app.translations.selectedLanguageCode
   }
 }
 
-export default connect(mapStateToProps)(ConversationListItem)
+export default connect(mapStateToProps)(injectIntl(ConversationListItem))
