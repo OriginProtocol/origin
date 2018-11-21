@@ -2,8 +2,8 @@ require('dotenv').config()
 
 module.exports = {
   development: {
-    dialect: "sqlite",
-    storage: "./data/token-grants.sqlite3",
+    dialect: 'sqlite',
+    storage: './data/token-grants.sqlite3',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
       timestamps: true,
@@ -16,8 +16,8 @@ module.exports = {
     logging: false
   },
   'test': {
-    dialect: "sqlite",
-    storage: "./data/test-token-grants.sqlite3",
+    dialect: 'sqlite',
+    storage: './data/test-token-grants.sqlite3',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
       timestamps: true,
