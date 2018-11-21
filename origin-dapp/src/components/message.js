@@ -1,5 +1,5 @@
 import moment from 'moment'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
@@ -31,6 +31,27 @@ class Message extends Component {
     const { created, hash } = message
     const { address, fullName, profile } = user
 
+    const EnableMessaging = (
+      <Fragment>
+        {!messagingEnabled &&
+          hash === 'origin-welcome-message' && (
+          <div className="button-container">
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={enableMessaging}
+              ga-category="messaging"
+              ga-label="message_component_enable"
+            >
+              <FormattedMessage
+                id={'message.enable'}
+                defaultMessage={'Enable Messaging'}
+              />
+            </button>
+          </div>
+        )}
+      </Fragment>
+    )
+
     return contentOnly ? (
       <div className="d-flex compact-message">{this.renderContent()}</div>
     ) : mobileDevice ? (
@@ -47,22 +68,7 @@ class Message extends Component {
               </div>
             </div>
             <div className="message-content">{this.renderContent()}</div>
-            {!messagingEnabled &&
-              hash === 'origin-welcome-message' && (
-              <div className="button-container">
-                <button
-                  className="btn btn-sm btn-primary"
-                  onClick={enableMessaging}
-                  ga-category="messaging"
-                  ga-label="message_component_enable"
-                >
-                  <FormattedMessage
-                    id={'message.enable'}
-                    defaultMessage={'Enable Messaging'}
-                  />
-                </button>
-              </div>
-            )}
+            <EnableMessaging />
           </div>
         </div>
       </div>
@@ -80,22 +86,7 @@ class Message extends Component {
             </div>
           </div>
           <div className="message-content">{this.renderContent()}</div>
-          {!messagingEnabled &&
-            hash === 'origin-welcome-message' && (
-            <div className="button-container">
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={enableMessaging}
-                ga-category="messaging"
-                ga-label="message_component_enable"
-              >
-                <FormattedMessage
-                  id={'message.enable'}
-                  defaultMessage={'Enable Messaging'}
-                />
-              </button>
-            </div>
-          )}
+          <EnableMessaging />
         </div>
       </div>
     )
