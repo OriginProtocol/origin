@@ -44,7 +44,8 @@ spec:
             --rpcport 8545
             --rpcvhosts=\"*\"
             --ethstats=${HOSTNAME}:${ETHSTATS_SECRET}@${ETHSTATS_SERVICE}
-            --cache 2048
+            --cache 4096
+            --syncmode full
             {{- if eq .Values.network "rinkeby" }}
             --rinekby
             {{- end }}
