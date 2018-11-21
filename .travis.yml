@@ -32,6 +32,7 @@ matrix:
       node_js: 10
       install:
         - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-dapp
       script:
         - npm run lint --prefix origin-dapp
 
@@ -90,6 +91,7 @@ matrix:
       node_js: 10
       install:
         - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-messaging
       script:
         - npm run lint --prefix origin-messaging
 
@@ -98,6 +100,7 @@ matrix:
       node_js: 10
       install:
         - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-notifications
       script:
         - npm run lint --prefix origin-notifications
 
