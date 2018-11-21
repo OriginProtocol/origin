@@ -112,7 +112,7 @@ matrix:
       before_cache:
         - rm -rf origin-token-transfer/client/node_modules/.cache
         - rm -rf origin-token-transfer/server/node_modules/.cache
-       install:
+      install:
         - npm install --ignore-scripts
         - npm run bootstrap --scope origin-token-transfer-*
       script:
