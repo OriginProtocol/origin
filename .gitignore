@@ -105,6 +105,11 @@ node_modules/
 /origin-js/testem.log
 /origin-js/typings
 
+# origin-linking #
+####################
+/origin-linking/*.rdb
+/origin-linking/*.p8
+
 # origin-messaging #
 ####################
 /origin-messaging/ipfs
