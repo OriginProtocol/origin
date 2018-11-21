@@ -53,8 +53,8 @@ class ConversationListItem extends Component {
 
   getLastMessage(conversation) {
     const lastMessageIndex = conversation.values.length - 1
-    const sortedMessages = (a, b) => (a.created < b.created ? -1 : 1)
-    return conversation.values.sort(sortedMessages)[lastMessageIndex]
+    const sortOrder = (a, b) => (a.created < b.created ? -1 : 1)
+    return conversation.values.sort(sortOrder)[lastMessageIndex]
   }
 
   render() {
@@ -80,51 +80,30 @@ class ConversationListItem extends Component {
       return msg.status === 'unread' && msg.senderAddress !== web3Account
     }).length
     const { profile } = counterparty
-
-    if (mobileDevice) {
-      return (
-        <div
-          onClick={handleConversationSelect}
-          className={`d-flex message mobile-conversation-list-item`}
-        >
-          <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
-          <div className="content-container text-truncate">
-            <div className="sender text-truncate">
-              <span>{counterparty.fullName || counterpartyAddress}</span>
-            </div>
-            <div className="listing-title text-truncate">{listing.name}</div>
-            <div className={`message text-truncate ${!listing.name ? 'no-listing' : ''}`}>{content}</div>
-          </div>
-          <div className="meta-container justify-content-start ml-auto">
-            <div className="timestamp align-self-end">
-              {moment(created).fromNow()}
-            </div>
-            {!!unreadCount && (
-              <div className="unread count text-center mx-auto">
-                <div>{unreadCount}</div>
-              </div>
-            )}
-          </div>
-        </div>
-      )
-    }
+    const conversationItem = mobileDevice ? 'mobile-conversation-list-item' : `conversation-list-item${active ? ' active' : ''}`
 
     return (
       <div
         onClick={handleConversationSelect}
-        className={`d-flex conversation-list-item${active ? ' active' : ''}`}
+        className={`d-flex message ${conversationItem}`}
       >
         <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container text-truncate">
           <div className="sender text-truncate">
-            {counterparty.fullName || counterpartyAddress}
+            <span>{counterparty.fullName || counterpartyAddress}</span>
           </div>
-          <div className="message text-truncate">{content}</div>
+          { mobileDevice && <div className="listing-title text-truncate">{listing.name}</div> }
+          <div className={`message text-truncate ${!listing.name ? 'no-listing' : ''}`}>{content}</div>
         </div>
-        <div className="meta-container text-right">
+        <div className={`meta-container ${mobileDevice ? 'justify-content-start ml-auto' : 'text-right'}`}>
+          { mobileDevice && (
+            <div className="timestamp align-self-end">
+              {moment(created).fromNow()}
+            </div>
+          )}
           {!!unreadCount && (
-            <div className="unread count text-right">
-              <div className="d-inline-block">{unreadCount}</div>
+            <div className={`unread count ${mobileDevice ? 'text-center mx-auto' : 'text-right'}`}>
+              <div>{unreadCount}</div>
             </div>
           )}
         </div>
