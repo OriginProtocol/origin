@@ -4,9 +4,23 @@ import moment from 'moment'
 import Avatar from 'components/avatar'
 import { getListing } from 'utils/listing'
 
-const getLastMessage = (conversation) => conversation.values.sort(
-  (a, b) => (a.created < b.created ? -1 : 1)
-)[conversation.values.length - 1]
+const mobileLocale = {
+  relativeTime: {
+    past: '%s',
+    s: "Now",
+    ss: "%ds",
+    m: "1min",
+    mm: "%dmin",
+    h: "1h",
+    hh: "%dh",
+    d: "1d",
+    dd: "%dd",
+    M: "1mo",
+    MM: "%dmo",
+    y: "1y",
+    yy: "%dy"
+  }
+}
 
 class ConversationListItem extends Component {
   constructor(props) {
@@ -18,23 +32,7 @@ class ConversationListItem extends Component {
   async componentDidMount() {
     const { conversation } = this.props
 
-    moment.updateLocale('en', {
-      relativeTime: {
-        past: '%s',
-        s: "Now",
-        ss: "%ds",
-        m: "1min",
-        mm: "%dmin",
-        h: "1h",
-        hh: "%dh",
-        d: "1d",
-        dd: "%dd",
-        M: "1mo",
-        MM: "%dmo",
-        y: "1y",
-        yy: "%dy"
-      }
-    })
+    moment.updateLocale('en', mobileLocale)
     const lastMessage = this.getLastMessage(conversation)
 
     const listing = lastMessage.listingId ? await getListing(lastMessage.listingId, true) : {}
@@ -97,12 +95,12 @@ class ConversationListItem extends Component {
             <div className="listing-title text-truncate">{listing.name}</div>
             <div className={`message text-truncate ${!listing.name ? 'no-listing' : ''}`}>{content}</div>
           </div>
-          <div className="meta-container">
-            <div className="timestamp ml-auto">
+          <div className="meta-container justify-content-start ml-auto">
+            <div className="timestamp align-self-end">
               {moment(created).fromNow()}
             </div>
             {!!unreadCount && (
-              <div className="unread count text-center">
+              <div className="unread count text-center mx-auto">
                 <div>{unreadCount}</div>
               </div>
             )}

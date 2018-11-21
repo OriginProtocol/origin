@@ -3856,7 +3856,6 @@ form .stars img {
   margin-bottom: 5px;
   width: 60%;
   text-align: center;
-  padding-left: 80px;
 }
 
 .mobile-conversations .avatar-container {
@@ -5368,6 +5367,12 @@ a:not([href]):not([tabindex]).span-link {
   .modal.getting-started {
     left: -17px;
     right: -14px;
+  }
+
+  @media (min-width: 550px) {
+    .conversation-col {
+      width: 100%;
+    }
   }
 }
 

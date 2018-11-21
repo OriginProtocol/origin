@@ -55,7 +55,7 @@ class Messages extends Component {
     selectedConversationId && this.setState({ selectedConversationId })
   }
 
-  handleConversationSelect(selectedConversationId) {
+  handleConversationSelect(selectedConversationId = '') {
     const { mobileDevice } = this.props
 
     const showMainNav = (mobileDevice && selectedConversationId.length) ? false : true
@@ -89,11 +89,11 @@ class Messages extends Component {
       if (selectedConversationId && selectedConversationId.length) {
         return (
           <div className="mobile-messaging messages-wrapper">
-            <div className="back row align-items-center" onClick={() => this.handleConversationSelect('')}>
-              <i className="icon-arrow-left align-self-start"></i>
-              <span className="counterparty text-truncate align-self-center">{counterpartyName}</span>
+            <div className="back d-flex flex-row justify-content-center align-items-center" onClick={() => this.handleConversationSelect()}>
+              <i className="icon-arrow-left align-self-start mr-auto"></i>
+              <span className="counterparty text-truncate mr-auto">{counterpartyName}</span>
             </div>
-            <div className="conversation-col col-12 col-sm-8 col-lg-9 d-flex flex-column">
+            <div className="conversation-col d-flex flex-column">
               <Conversation
                 id={selectedConversationId}
                 messages={filteredAndSorted}
