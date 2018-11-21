@@ -108,11 +108,11 @@ app.get('/', async (req, res) => {
 app.post('/', async(req, res) => {
   const { account, endpoint } = req.body
   // cannot upsert because neither is unique
-  const existing = await PushSubscription.find({
+  const existing = await PushSubscription.findAll({
     where: { account, endpoint }
   })
 
-  if (existing) {
+  if (existing.length > 0) {
     return res.sendStatus(200)
   }
 
@@ -153,7 +153,7 @@ app.post('/events', async (req, res) => {
   })
 
   // filter out redundant endpoints before iterating
-  subs.filter((s, i, self) => {
+  await subs.filter((s, i, self) => {
     return self.map(ms => ms.endpoint).indexOf(s.endpoint) === i
   }).forEach(async s => {
     try {
@@ -173,6 +173,7 @@ app.post('/events', async (req, res) => {
       }
     }
   })
+  res.json({ status: 'ok' })
 })
 
 app.listen(port, () => console.log(`Notifications server listening on port ${port}!`))

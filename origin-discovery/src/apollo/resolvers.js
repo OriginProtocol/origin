@@ -4,21 +4,13 @@ const search = require('../lib/search')
 const { getListing, getListingsById, getListingsBySeller, getOffer, getOffers } = require('./db')
 
 /**
- * Gets information on a related user.
- * Includes short-circuit code to skip the user look up
- * if the walletAddress is the only field required.
+ * Gets information on a user based on her wallet address.
  * @param {string} walletAddress
- * @param {object} info
  */
-function relatedUserResolver (walletAddress, info) {
-  const requestedFields = info.fieldNodes[0].selectionSet.selections
-  const isIdOnly =
-    requestedFields.filter(x => x.name.value !== 'walletAddress').length === 0
-  if (isIdOnly) {
-    return { walletAddress: walletAddress }
-  } else {
-    return search.User.get(walletAddress)
-  }
+function userResolver (walletAddress) {
+  // TODO: re-enable returning full user info once user indexing
+  // is fully functional (see notes in rules.js).
+  return { walletAddress: walletAddress }
 }
 
 // Resolvers define the technique for fetching the types in the schema.
@@ -51,7 +43,7 @@ const resolvers = {
     },
 
     async listing (root, args) {
-      return getListing(args.id)
+      return getListing(args.id, args.blockInfo)
     },
 
     async offers (root, args) {
@@ -86,8 +78,8 @@ const resolvers = {
   },
 
   Listing: {
-    seller (listing, args, context, info) {
-      return relatedUserResolver(listing.seller, info)
+    seller (listing) {
+      return userResolver(listing.seller)
     },
 
     async offers (listing) {
@@ -97,12 +89,18 @@ const resolvers = {
   },
 
   Offer: {
-    seller (offer, args, context, info) {
-      return relatedUserResolver(offer.seller, info)
+    seller (offer) {
+      return userResolver(offer.sellerAddress)
     },
 
-    buyer (offer, args, context, info) {
-      return relatedUserResolver(offer.buyer, info)
+    buyer (offer) {
+      return userResolver(offer.buyerAddress)
+    },
+
+
+    affiliate ()  {
+      //TODO: implement
+      return ''
     },
 
     totalPrice (offer) {
@@ -110,7 +108,8 @@ const resolvers = {
     },
 
     async listing (offer) {
-      return getListing(offer.data.listingId)
+      // Note: fetch listing version relative to the offer's blockInfo.
+      return getListing(offer.data.listingId, offer.blockInfo)
     }
   },
 
