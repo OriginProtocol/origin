@@ -10,7 +10,7 @@ releases:
     values:
       - ../values/ethereum-network/nginx-ingress/values.yaml
 
-  - name: origin
+  - name: testnet
     chart: ../charts/ethereum-network
     values:
       - ../values/ethereum-network/values.yaml
