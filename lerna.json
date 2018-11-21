@@ -8,8 +8,7 @@
     "origin-js",
     "origin-messaging",
     "origin-notifications",
-    "origin-token-transfer",
-    "origin-token-transfer/src/client",
+    "origin-token-transfer/*",
     "experimental/*"
   ],
   "version": "independent"

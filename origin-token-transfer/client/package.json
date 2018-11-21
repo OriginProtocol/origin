@@ -1,18 +1,23 @@
 {
-  "name": "client",
+  "name": "origin-token-transfer-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.7.0",
+    "moment": "^2.22.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-google-login": "^3.2.1",
-    "react-scripts": "2.0.5"
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.0.5",
+    "redux": "^4.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm run build",
+    "start:dev": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

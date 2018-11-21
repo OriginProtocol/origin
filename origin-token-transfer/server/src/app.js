@@ -10,9 +10,9 @@ const session = require('express-session')
 require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
 
-const { Event, Grant, sequelize  } = require('../models')
+const { Event, Grant, sequelize  } = require('./models')
 const { Op } = require('sequelize')
-const { GRANT_TRANSFER, LOGIN } = require('../constants/events')
+const { GRANT_TRANSFER, LOGIN } = require('./constants/events')
 
 const Token = require('origin-faucet/lib/token')
 const { createProviders } = require('origin-faucet/lib/config')
@@ -34,7 +34,7 @@ app.use(session({
   saveUninitialized: true,
   secret: sessionSecret,
   store: new SQLiteStore({
-    dir: '../../data',
+    dir: '../data',
     db: 'sessions.sqlite3'
   })
 }))
