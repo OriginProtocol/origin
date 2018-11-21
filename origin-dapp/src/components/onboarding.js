@@ -96,7 +96,10 @@ class Onboarding extends Component {
 
     // To Do: handle incoming messages when no Origin Messaging Private Key is available
     origin.messaging.events.on('emsg', obj => {
-      analytics.event('Notifications', 'ErrorNoDecryption')
+      // Commenting this out for now [micah]
+      // This event may be legitimate if a user is missing the key in this browser but is listed in the global registry.
+      // Otherwise, this event may be the result of a race condition that can be resolved with a browser reload.
+      // analytics.event('Notifications', 'ErrorNoDecryption')
       console.error('A message has arrived that could not be decrypted:', obj)
     })
   }
