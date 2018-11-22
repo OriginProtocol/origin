@@ -45,6 +45,10 @@ export default defineMessages({
     id: 'schema.housing.realEstate',
     defaultMessage: 'Real Estate'
   },
+  'schema.housing.roomShares': {
+    id: 'schema.housing.roomShares',
+    defaultMessage: 'Room Shares'
+  },
   'schema.housing.subletsTemporary': {
     id: 'schema.housing.subletsTemporary',
     defaultMessage: 'Sublets & Temporary'
