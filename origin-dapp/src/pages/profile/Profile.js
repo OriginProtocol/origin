@@ -265,6 +265,7 @@ class Profile extends Component {
     const {
       changes,
       lastPublish,
+      mobileDevice,
       profile,
       provisional,
       published,
@@ -300,6 +301,9 @@ class Profile extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12 col-lg-8">
+              <div className="row attributes">
+                {mobileDevice && (<Guidance />)}
+              </div>
               <div className="row attributes">
                 <div className="col-4 col-md-3">
                   <Avatar
@@ -394,7 +398,7 @@ class Profile extends Component {
                 withMenus={true}
                 withProfile={false}
               />
-              <Guidance />
+              {!mobileDevice && (<Guidance />)}
             </div>
           </div>
         </div>
@@ -703,20 +707,21 @@ Profile.getDerivedStateFromProps = (nextProps, prevState) => {
 const mapStateToProps = state => {
   return {
     deployResponse: state.profile.deployResponse,
+    identityAddress: state.profile.user.identityAddress,
     issuer: state.profile.issuer,
     published: state.profile.published,
     provisional: state.profile.provisional,
     strength: state.profile.strength,
     changes: state.profile.changes,
     lastPublish: state.profile.lastPublish,
+    mobileDevice: state.app.mobileDevice,
+    networkId: state.app.web3.networkId,
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,
-    identityAddress: state.profile.user.identityAddress,
     wallet: state.wallet,
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent,
-    networkId: state.app.web3.networkId
+    web3Intent: state.app.web3.intent
   }
 }
 

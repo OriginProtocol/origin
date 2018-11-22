@@ -5427,6 +5427,25 @@ a:not([href]):not([tabindex]).span-link {
   }
 }
 
+/* lg - */
+@media (max-width: 991px) {
+  /* Profile */
+  .profile-wrapper {
+    padding: 0;
+  }
+
+  .profile-wrapper .guidance {
+    background-color: white;
+    padding: 10px;
+    margin: 20px;
+  }
+  
+  .profile-wrapper .guidance p {
+    font-size: 0.875rem;
+    margin: 0;
+  }
+}
+
 /* lg + */
 @media (min-width: 992px) {
   .navigation-bar {

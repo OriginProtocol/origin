@@ -1,14 +1,28 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { connect } from 'react-redux'
 
 class Guidance extends Component {
   render() {
+    const { mobileDevice } = this.props
+    let wrapperClass, imageWrapperClass, textClass
+    
+    if (mobileDevice){
+      wrapperClass = 'guidance row'
+      imageWrapperClass = 'pl-0 col-4'
+      textClass = 'col-8'
+    } else {
+      wrapperClass = 'guidance'
+      imageWrapperClass = 'image-container text-center'
+      textClass = ''
+    }
+
     return (
-      <div className="guidance">
-        <div className="image-container text-center">
+      <div className={wrapperClass}>
+        <div className={imageWrapperClass}>
           <img src="images/identity.svg" alt="identity icon" />
         </div>
-        <p>
+        <p className={textClass}>
           <FormattedMessage
             id={'_Guidance.content'}
             defaultMessage={
@@ -31,4 +45,15 @@ class Guidance extends Component {
   }
 }
 
-export default Guidance
+const mapStateToProps = state => {
+  return {
+    mobileDevice: state.app.mobileDevice
+  }
+}
+
+const mapDispatchToProps = dispatch => ({})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(Guidance))
