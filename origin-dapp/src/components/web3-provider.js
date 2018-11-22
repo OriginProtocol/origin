@@ -12,7 +12,7 @@ import getCurrentNetwork, { supportedNetworkId, supportedNetwork } from 'utils/c
 
 import origin from '../services/origin'
 
-const web3 = origin.contractService.web3
+const { web3 } = origin.contractService
 
 const mainnetDappBaseUrl = process.env.MAINNET_DAPP_BASEURL
 const rinkebyDappBaseUrl = process.env.RINKEBY_DAPP_BASEURL

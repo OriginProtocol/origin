@@ -39,6 +39,7 @@ import {
 
 import origin from '../services/origin'
 
+const { web3 } = origin.contractService
 const enableFractional = process.env.ENABLE_FRACTIONAL === 'true'
 
 class ListingCreate extends Component {

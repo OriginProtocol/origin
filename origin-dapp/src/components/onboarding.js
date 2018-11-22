@@ -26,9 +26,10 @@ import getCurrentNetwork from 'utils/currentNetwork'
 import { createSubscription, requestPermission } from 'utils/notifications'
 import scopedDebounce from 'utils/scopedDebounce'
 
-import origin from '../services/origin'
 import analytics from '../services/analytics'
+import origin from '../services/origin'
 
+const { web3 } = origin.contractService
 const ETH_ADDRESS = process.env.MESSAGING_ACCOUNT
 const ONE_SECOND = 1000
 const storeKeys = {
@@ -250,7 +251,7 @@ class Onboarding extends Component {
   }
 
   render() {
-    const { children, enableMessaging, location, messagingEnabled, networkId, notificationsSubscriptionPrompt, storeWeb3Intent, web3Intent } = this.props
+    const { children, enableMessaging, location, messagingEnabled, networkId, notificationsSubscriptionPrompt, web3Intent } = this.props
     const query = queryString.parse(location.search)
     const currentNetwork = getCurrentNetwork(networkId)
     const networkType = currentNetwork && currentNetwork.type

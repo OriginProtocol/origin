@@ -32,6 +32,8 @@ import { prepareSlotsToSave } from 'utils/calendarHelpers'
 
 import origin from '../services/origin'
 
+const { web3 } = origin.contractService
+
 /* linking to contract Etherscan requires knowledge of which network we're on */
 const etherscanDomains = {
   1: 'etherscan.io',
