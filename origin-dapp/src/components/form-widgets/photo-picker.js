@@ -162,12 +162,17 @@ class PhotoPicker extends Component {
   }
 
   removePhoto(indexToRemove) {
-    this.setState({
-      pictures: this.state.pictures.filter(
-        (picture, idx) => idx !== indexToRemove
-      ),
-      showMaxImageCountMsg: false
-    })
+    const pictures = this.state.pictures.filter(
+      (picture, idx) => idx !== indexToRemove
+    )
+
+    this.setState(
+      {
+        pictures,
+        showMaxImageCountMsg: false
+      },
+      () => this.props.onChange(this.picURIsOnly(pictures))
+    )
   }
 
   setHelpText() {
