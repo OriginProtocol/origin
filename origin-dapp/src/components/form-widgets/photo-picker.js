@@ -322,19 +322,21 @@ class PhotoPicker extends Component {
                           {...provided.dragHandleProps}
                         >
                           <img src={
-                              typeof pic == 'object' ?
+                              typeof pic === 'object' ?
                               pic.croppedImageUri :
                               pic
                             }
                           />
-                          <a
-                            className="re-crop-image image-overlay-btn"
-                            aria-label="Re-Crop Image"
-                            title={this.props.intl.formatMessage(this.intlMessages.reCropImage)}
-                            onClick={() => this.reCropImage(pic, idx)}
-                          >
-                            <span aria-hidden="true">&#9635;</span>
-                          </a>
+                          {typeof pic === 'object' &&
+                            <a
+                              className="re-crop-image image-overlay-btn"
+                              aria-label="Re-Crop Image"
+                              title={this.props.intl.formatMessage(this.intlMessages.reCropImage)}
+                              onClick={() => this.reCropImage(pic, idx)}
+                            >
+                              <span aria-hidden="true">&#9635;</span>
+                            </a>
+                          }
                           <a
                             className="cancel-image image-overlay-btn"
                             aria-label="Delete Image"
