@@ -12,9 +12,10 @@ const listingMetadata = require('./listing-metadata')
 function _makeListing (row) {
   return {
     id: row.id,
-    // TODO: expose blockNumber and logIndex in GraphQL schema
-    blockNumber: row.blockNumber,
-    logIndex: row.logIndex,
+    blockInfo: {
+      blockNumber: row.blockNumber,
+      logIndex: row.logIndex
+    },
     ipfsHash: row.data.ipfs.hash,
     data: row.data,
     title: row.data.title,
@@ -102,9 +103,9 @@ async function getListingsBySeller (sellerAddress) {
  * Queries DB for a listing.
  *
  * @param listingId
- * @param {Object} blockInfo - Optional max blockNumber and logIndex values (inclusive).
- *   This can be used to get the state of a listing at a given point in history.
- *   Here is an example:
+ * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional max
+ *   blockNumber and logIndex values (inclusive). This can be used to get the
+ *   state of a listing at a given point in history. Here is an example:
  *     blockNum=1, logIndex=34 -> Listing Created by seller
  *     blockNum=2, logIndex=12 -> Offer Created by buyer
  *     blockNum=2, logIndex=56 -> Listing Updated by seller
@@ -159,11 +160,20 @@ async function getListing (listingId, blockInfo = null) {
  * @private
  */
 function _makeOffer (row) {
+  if (row.data.events.length === 0 || row.data.events[0].event !== 'OfferCreated') {
+    throw new Error('Can not find OfferCreated event')
+  }
   return {
     id: row.id,
+    blockInfo: {
+      blockNumber: row.data.events[0].blockNumber,
+      logIndex: row.data.events[0].logIndex
+    },
     ipfsHash: row.data.ipfs.hash,
     data: row.data,
     status: row.status,
+    buyerAddress: row.buyerAddress,
+    sellerAddress: row.sellerAddress,
     totalPrice: row.data.totalPrice
   }
 }

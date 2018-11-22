@@ -83,8 +83,8 @@ describe('Listing DB methods', () => {
       expect(listing.price).to.deep.equal(data1.price)
       expect(listing.data).to.deep.equal(data1)
       expect(listing.display).to.equal('normal')
-      expect(listing.blockNumber).to.equal(100)
-      expect(listing.logIndex).to.equal(1)
+      expect(listing.blockInfo.blockNumber).to.equal(100)
+      expect(listing.blockInfo.logIndex).to.equal(1)
     })
 
     it(`Should return most recent listing if blockInfo is higher or equal to listing's`, async () => {
@@ -92,13 +92,13 @@ describe('Listing DB methods', () => {
       let blockInfo = { blockNumber: 500, logIndex: 1 }
       let listing = await getListing(listingId2, blockInfo)
       expect(listing.id).to.equal(listingId2)
-      expect(listing.blockNumber).to.equal(300)
+      expect(listing.blockInfo.blockNumber).to.equal(300)
 
       // BlockInfo equal to listing's.
       blockInfo = { blockNumber: 300, logIndex: 10 }
       listing = await getListing(listingId2, blockInfo)
       expect(listing.id).to.equal(listingId2)
-      expect(listing.blockNumber).to.equal(300)
+      expect(listing.blockInfo.blockNumber).to.equal(300)
     })
 
     it(`Should return older version if blockInfo lower than the listing's`, async () => {
@@ -106,12 +106,12 @@ describe('Listing DB methods', () => {
       let blockInfo = { blockNumber: 250, logIndex: 1 }
       let listing = await getListing(listingId2, blockInfo)
       expect(listing.id).to.equal(listingId2)
-      expect(listing.blockNumber).to.equal(200)
+      expect(listing.blockInfo.blockNumber).to.equal(200)
 
       // Blockinfo block number is equal to listing's but logIndex is lower.
       blockInfo = { blockNumber: 300, logIndex: 9 }
       expect(listing.id).to.equal(listingId2)
-      expect(listing.blockNumber).to.equal(200)
+      expect(listing.blockInfo.blockNumber).to.equal(200)
     })
 
     it(`Should not return listing if blockInfo lower than oldest listing version`, async () => {
@@ -140,8 +140,8 @@ describe('Listing DB methods', () => {
       expect(listings[0].price).to.deep.equal(data2.price)
       expect(listings[0].data).to.deep.equal(data2)
       expect(listings[0].display).to.equal('normal')
-      expect(listings[0].blockNumber).to.equal(300)
-      expect(listings[0].logIndex).to.equal(10)
+      expect(listings[0].blockInfo.blockNumber).to.equal(300)
+      expect(listings[0].blockInfo.logIndex).to.equal(10)
     })
 
     it(`Should return no listings from DB`, async () => {
@@ -168,8 +168,8 @@ describe('Listing DB methods', () => {
         data: data1
       })
       const listing = await getListing(listingId1)
-      expect(listing.blockNumber).to.equal(300)
-      expect(listing.logIndex).to.equal(3)
+      expect(listing.blockInfo.blockNumber).to.equal(300)
+      expect(listing.blockInfo.logIndex).to.equal(3)
     })
 
     it('Should handle updating a less recent version of a listing', async () => {
@@ -182,8 +182,8 @@ describe('Listing DB methods', () => {
         data: data1
       })
       const listing = await getListing(listingId2)
-      expect(listing.blockNumber).to.equal(300)
-      expect(listing.logIndex).to.equal(10)
+      expect(listing.blockInfo.blockNumber).to.equal(300)
+      expect(listing.blockInfo.logIndex).to.equal(10)
     })
   })
 })
