@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint '**/*.js' --rulesdir ../",
-    "start": "node src/index.js",
-    "start:dev": "nodemon node src/index.js",
+    "start": "if [$NODE_ENV == 'production']; then node src/index.js; else nodemon src/index.js; fi",
     "test": "mocha --timeout=10000",
     "test:load": "node load.js"
   },
