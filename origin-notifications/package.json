@@ -16,7 +16,7 @@
   "scripts": {
     "lint": "eslint '**/*.js' --rulesdir ../",
     "migrate": "sequelize db:migrate",
-    "start": "node src/app.js",
+    "start": "if [$NODE_ENV == 'production']; then node src/app.js; else nodemon src/app.js; fi",
     "test": "echo \"Warning: no tests specified\""
   },
   "author": "Origin Protocol Inc",
@@ -31,5 +31,8 @@
     "sequelize": "^5.0.0-beta.5",
     "sequelize-cli": "^5.2.0",
     "web-push": "^3.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
   }
 }

@@ -44,6 +44,10 @@
     "defaultMessage": "Real Estate"
   },
   {
+    "id": "schema.housing.roomShares",
+    "defaultMessage": "Room Shares"
+  },
+  {
     "id": "schema.housing.subletsTemporary",
     "defaultMessage": "Sublets & Temporary"
   },
