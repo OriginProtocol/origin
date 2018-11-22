@@ -1,11 +1,16 @@
 import React, { Component, Fragment } from 'react'
+import { withRouter } from 'react-router'
 import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
 
 import { showAlert } from 'actions/Alert'
-import { handleNotificationsSubscription } from 'actions/App'
+
+import {
+  handleNotificationsSubscription,
+  storeWeb3Intent
+} from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
@@ -116,6 +121,8 @@ class ListingCreate extends Component {
   async componentDidMount() {
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
     if (this.props.listingId) {
+      this.props.storeWeb3Intent('edit a listing')
+
       try {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
@@ -137,6 +144,9 @@ class ListingCreate extends Component {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
+    } else {
+      this.props.history.push('/')
+      this.props.storeWeb3Intent('create a listing')
     }
   }
 
@@ -441,7 +451,7 @@ class ListingCreate extends Component {
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
 
-    return (
+    return web3.givenProvider ? (
       <div className="listing-form">
         <div className="step-container">
           <div className="row">
@@ -1151,7 +1161,7 @@ class ListingCreate extends Component {
           message={intl.formatMessage(this.intlMessages.navigationWarning)}
         />
       </div>
-    )
+    ) : null
   }
 }
 
@@ -1163,7 +1173,8 @@ const mapStateToProps = ({ app, exchangeRates, wallet }) => {
     pushNotificationsSupported: app.pushNotificationsSupported,
     serviceWorkerRegistration: app.serviceWorkerRegistration,
     wallet,
-    web3Account: app.web3.account
+    web3Account: app.web3.account,
+    web3Intent: app.web3.intent
   }
 }
 
@@ -1173,10 +1184,15 @@ const mapDispatchToProps = dispatch => ({
   updateTransaction: (hash, confirmationCount) =>
     dispatch(updateTransaction(hash, confirmationCount)),
   upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
-  getOgnBalance: () => dispatch(getOgnBalance())
+  getOgnBalance: () => dispatch(getOgnBalance()),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(injectIntl(ListingCreate))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(
+    injectIntl(ListingCreate)
+  )
+)

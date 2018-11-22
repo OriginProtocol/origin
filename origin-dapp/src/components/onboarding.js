@@ -279,7 +279,7 @@ class Onboarding extends Component {
             onSubmit={this.handleEnableNotifications}
           />
         }
-        {web3Intent && !messagingEnabled &&
+        {web3.givenProvider && web3Intent && !messagingEnabled &&
           <Modal backdrop="static" className="not-messaging-enabled" isOpen={true}>
             <FormattedMessage
               id={'onboarding.intentRequiresMessaging'}
