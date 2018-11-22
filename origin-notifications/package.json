@@ -31,5 +31,8 @@
     "sequelize": "^5.0.0-beta.5",
     "sequelize-cli": "^5.2.0",
     "web-push": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^5.9.0"
   }
 }
