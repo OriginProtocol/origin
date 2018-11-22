@@ -111,7 +111,7 @@ class ListingsDetail extends Component {
       !this.state.purchases.length &&
       !this.state.onboardingCompleted
 
-    this.props.storeWeb3Intent('offer to buy this listing')
+    this.props.storeWeb3Intent('purchase this listing')
 
     if (web3.givenProvider && this.props.web3Account) {
       if (!skip && shouldOnboard) {
