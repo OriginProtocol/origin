@@ -858,6 +858,7 @@
   "schema.housing.other": "crwdns5962:0crwdne5962:0",
   "schema.housing.parkingStorage": "crwdns5964:0crwdne5964:0",
   "schema.housing.realEstate": "crwdns5966:0crwdne5966:0",
+  "schema.housing.roomShares": "crwdns6202:0crwdne6202:0",
   "schema.housing.subletsTemporary": "crwdns5976:0crwdne5976:0",
   "schema.housing.vacationRentals": "crwdns5978:0crwdne5978:0",
   "schema.housing.messageBuyer": "crwdns5980:0crwdne5980:0",
