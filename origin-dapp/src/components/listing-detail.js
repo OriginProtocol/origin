@@ -75,15 +75,10 @@ class ListingsDetail extends Component {
       }
     })
 
-    this.handleBuyClicked = this.handleBuyClicked.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
     this.setFeaturedImage = this.setFeaturedImage.bind(this)
-  }
-
-  async handleBuyClicked() {
-    this.props.storeWeb3Intent('buy this listing')
   }
 
   async componentWillMount() {
