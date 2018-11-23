@@ -17,8 +17,8 @@
     "lint": "eslint '**/*.js' --rulesdir ../",
     "migrate": "sequelize db:migrate",
     "start": "per-env",
-    "start:development": "node src/app.js",
-    "start:production": "nodemon src/app.js",
+    "start:development": "nodemon src/app.js",
+    "start:production": "node src/app.js",
     "test": "echo \"Warning: no tests specified\""
   },
   "author": "Origin Protocol Inc",
