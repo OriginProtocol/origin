@@ -1,7 +1,3 @@
-# Bootnode is used for private Ethereum blockchain
-# It only gets installed in the dev namespace
-
-{{- if eq .Release.Namespace "dev" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -75,4 +71,3 @@ spec:
         resources:
           requests:
             storage: 5Gi
-{{- end }}
