@@ -6,7 +6,9 @@
     "node": "10.x"
   },
   "scripts": {
-    "build": "truffle compile contracts && node lib/minify-contracts",
+    "build": "per-env",
+    "build:development": "truffle compile contracts",
+    "build:production": "npm run build:development && node lib/minify-contracts",
     "prepare": "npm run build",
     "test": "node scripts/test.js",
     "test:contracts": "mocha -r @babel/register -t 10000 --exit test-alt",
@@ -29,6 +31,7 @@
     "@babel/register": "^7.0.0",
     "ethereumjs-abi": "^0.6.5",
     "openzeppelin-solidity": "^1.10.0",
+    "per-env": "^1.0.2",
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
