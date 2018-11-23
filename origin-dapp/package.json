@@ -37,6 +37,7 @@
     "moment": "^2.22.1",
     "orbit-db": "^0.19.8",
     "origin": "^0.8.6",
+    "per-env": "^1.0.2",
     "popper.js": "^1.14.3",
     "query-string": "6.2.0",
     "rc-slider": "8.6.3",
@@ -71,12 +72,14 @@
     "webpack-dev-server": "3.1.10"
   },
   "scripts": {
-    "build": "NODE_ENV=production webpack --loglevel notice",
-    "start": "webpack-dev-server --open",
-    "start:watch": "webpack-dev-server --open --watch",
+    "build": "per-env",
+    "build:development": "webpack-dev-server --open --watch",
+    "build:production": "webpack --loglevel notice",
+    "start": "per-env",
+    "start:development": "webpack-dev-server --open --watch",
+    "start:production": "serve build",
     "format": "npx prettier-eslint --write 'src/**/*.js''",
     "lint": "eslint 'src/**/*.js' --rulesdir ../",
-    "serve": "serve build",
     "translations": "node translations/scripts/processTranslatedMessages.js",
     "test": "echo \"No tests defined \""
   },
