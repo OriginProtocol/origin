@@ -545,14 +545,30 @@ class ListingsDetail extends Component {
                         </button>
                       )}
                       {userIsSeller && (
-                        <Link
-                          to="/my-listings"
-                          className="btn"
-                          ga-category="listing"
-                          ga-label="sellers_own_listing_my_listings_cta"
-                        >
-                            My Listings
-                        </Link>
+                        <Fragment>
+                          <Link
+                            to="/my-listings"
+                            className="btn"
+                            ga-category="listing"
+                            ga-label="sellers_own_listing_my_listings_cta"
+                          >
+                              <FormattedMessage
+                                id={'listing-detail.myListings'}
+                                defaultMessage={'My Listings'}
+                              />
+                          </Link>
+                          <Link
+                            to={`/update/${this.props.listingId}`}
+                            className="btn margin-top"
+                            ga-category="listing"
+                            ga-label="sellers_own_listing_edit_listing_cta"
+                          >
+                              <FormattedMessage
+                                id={'listing-detail.editListings'}
+                                defaultMessage={'Edit Listing'}
+                              />
+                          </Link>
+                        </Fragment>
                       )}
                     </div>
                   )}

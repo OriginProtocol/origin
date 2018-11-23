@@ -60,6 +60,14 @@
     "defaultMessage": "Purchase"
   },
   {
+    "id": "listing-detail.myListings",
+    "defaultMessage": "My Listings"
+  },
+  {
+    "id": "listing-detail.editListings",
+    "defaultMessage": "Edit Listing"
+  },
+  {
     "id": "listing-detail.reasonPending",
     "defaultMessage": "This listing is {pending}"
   },
