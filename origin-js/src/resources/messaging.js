@@ -17,6 +17,8 @@ const PRE_CONV = ':conv'
 const UNREAD_STATUS = 'unread'
 const READ_STATUS = 'read'
 
+const SIGN_MESSAGE_CALL_ID = 'sign_message_call_id'
+
 const storeKeys = {
   messageSubscriptionStart: 'message_subscription_start',
   messageStatuses: 'message_statuses'
@@ -144,11 +146,59 @@ class Messaging {
     this.CONV = messagingNamespace + PRE_CONV
     this.CONV_INIT_PREFIX = messagingNamespace + PRE_CONV_INIT_PREFIX
     this.cookieStorage = new cookieStorage({ path: (typeof location === 'object' && location.pathname) ? location.pathname : '/' })
+
+    this.registerWalletLinker()
   }
+
+  registerWalletLinker() {
+    const walletLinker = this.contractService.walletLinker
+    if(walletLinker) 
+    {
+      walletLinker.registerCallback("messaging", this.onPreGenKeys.bind(this))
+    }
+  }
+
 
   onAccount(account_key) {
     if ((account_key && !this.account_key) || account_key != this.account_key) {
       this.init(account_key)
+    }
+  }
+
+
+  //helper function for use by outside services
+  async preGenKeys(web3Account) {
+    const sig_phrase = PROMPT_MESSAGE
+    const signature = web3Account.sign(sig_phrase).signature
+    console.log("We got a signature of:", signature)
+
+    const sig_key = signature.substring(0, 66)
+    const msg_account = this.web3.eth.accounts.privateKeyToAccount(sig_key)
+
+    const pub_msg = PROMPT_PUB_KEY + msg_account.address
+    const pub_sig = web3Account.sign(pub_msg).signature
+    return {account:web3Account.address, sig_phrase, sig_key, pub_msg, pub_sig}
+  }
+
+  async onPreGenKeys(data) {
+    const account_id = data.account
+    const sig_key = data.sig_key
+    const sig_phrase = data.sig_phrase
+    const pub_msg = data.pub_msg
+    const pub_sig = data.pub_sig
+    if (account_id == await this.contractService.currentAccount())
+    {
+      console.log("data:", data)
+      this.setKeyItem(`${MESSAGING_KEY}:${account_id}`, sig_key)
+      this.setKeyItem(`${MESSAGING_PHRASE}:${account_id}`, sig_phrase)
+      this.setKeyItem(`${PUB_MESSAGING}:${account_id}`, pub_msg)
+      this.setKeyItem(`${PUB_MESSAGING_SIG}:${account_id}`, pub_sig)
+      this.pub_sig = pub_sig
+      this.pub_msg = pub_msg
+      if (account_id == this.account_key)
+      {
+        this.startConversing()
+      }
     }
   }
 
@@ -464,6 +514,9 @@ class Messaging {
     this.setKeyItem(scopedMessagingPhraseName, phrase_str)
     this.initMessaging()
   }
+
+
+
 
   async promptInit() {
     const sig_phrase = PROMPT_MESSAGE

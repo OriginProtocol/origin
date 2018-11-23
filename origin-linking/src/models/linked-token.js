@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     codeExpires: DataTypes.DATE,
     currentDeviceContext: DataTypes.JSON,
     pendingCallContext: DataTypes.JSON,
+    clientPubKey:DataTypes.STRING(128),
     linked: DataTypes.BOOLEAN,
     appInfo: DataTypes.JSON,
     linkedAt: DataTypes.DATE

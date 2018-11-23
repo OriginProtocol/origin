@@ -1,11 +1,13 @@
+import secp256k1 from 'secp256k1'
 import ZeroClientProvider from 'web3-provider-engine/zero'
 import uuidv1 from 'uuid/v1'
+import cryptoRandomString from 'crypto-random-string'
 
 const appendSlash = url => {
   return url.substr(-1) === '/' ? url : url + '/'
 }
 const PLACEHOLDER_ADDRESS = '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
-
+const LOCAL_KEY_STORE = "wallet-linker:lks"
 
 export default class WalletLinker {
   //define class variable for PLACEHOLDER ADDRESS
@@ -13,7 +15,7 @@ export default class WalletLinker {
     return PLACEHOLDER_ADDRESS
   }
 
-  constructor({ linkerServerUrl, fetch, networkChangeCb, web3 }) {
+  constructor({ linkerServerUrl, fetch, networkChangeCb, web3, ecies }) {
     this.serverUrl = linkerServerUrl
     this.fetch = fetch
     this.accounts = []
@@ -21,6 +23,7 @@ export default class WalletLinker {
     this.callbacks = {}
     this.session_token = ''
     this.web3 = web3
+    this.ecies = ecies
     this.loadSessionStorage()
     this.showPopUp = null // define callback here to display popUp
     this.setLinkCode = null // define callback here to setLinkCode
@@ -230,19 +233,32 @@ export default class WalletLinker {
           }
         }
         const device = message.device
-
-        if (device && device.accounts)
+        if(device)
         {
-          this.accounts = device.accounts
+          if (device.accounts)
+          {
+            this.accounts = device.accounts
+          }
+          if (device.network_rpc)
+          {
+            this.changeNetwork(device.network_rpc)
+          }
+
+          if(device.priv_data)
+          {
+            const data = JSON.parse(this.ecDecrypt(device.priv_data))
+
+            if (data.messaging && this.callbacks["messaging"])
+            {
+              this.callbacks["messaging"](data.messaging)
+            }
+          }
         }
         else
         {
           this.accounts = []
         }
-        if (device && device.network_rpc)
-        {
-          this.changeNetwork(device.network_rpc)
-        }
+
         break
       case 'CALL_RESPONSE':
         if (this.callbacks[message.call_id]) {
@@ -300,11 +316,40 @@ export default class WalletLinker {
     this.syncLinkMessages()
   }
 
+  getLinkPrivKey() {
+    const localKey = localStorage.getItem(LOCAL_KEY_STORE)
+    const privKey = localKey || cryptoRandomString(64).toString('hex')
+    if (privKey != localKey)
+    {
+      localStorage.setItem(LOCAL_KEY_STORE, privKey)
+    }
+    return privKey
+  }
+
+  getLinkPubKey() {
+    return secp256k1
+      .publicKeyCreate(new Buffer(this.getLinkPrivKey(), 'hex'), false)
+      .slice(1)
+      .toString('hex')
+  }
+
+  ecDecrypt(buffer) {
+    const priv_key = this.getLinkPrivKey()
+    return this.ecies
+      .decrypt(
+        new Buffer(priv_key, 'hex'),
+        new Buffer(buffer, 'hex')
+      )
+      .toString('utf8')
+  }
+
+
   async generateLinkCode() {
     const ret = await this.post('generate-code', {
       session_token: this.session_token,
       return_url: this.getReturnUrl(),
-      pending_call: this.pending_call
+      pending_call: this.pending_call,
+      pub_key:this.getLinkPubKey()
     })
     if (ret) {
       this.link_code = ret.link_code

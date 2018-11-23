@@ -23,7 +23,7 @@ const SUPPORTED_ERC20 = [
 ]
 
 class ContractService {
-  constructor({ web3, contractAddresses, ethereum, walletLinkerUrl, fetch } = {}) {
+  constructor({ web3, contractAddresses, ethereum, walletLinkerUrl, fetch, ecies } = {}) {
     const externalWeb3 = web3 || ((typeof window !== 'undefined') && window.web3)
     if (!externalWeb3) {
       throw new Error(
@@ -34,7 +34,7 @@ class ContractService {
     this.ethereum = ethereum
 
     if (walletLinkerUrl && fetch){
-      this.initWalletLinker(walletLinkerUrl, fetch)
+      this.initWalletLinker(walletLinkerUrl, fetch, ecies)
     }
 
     this.marketplaceContracts = { V00_Marketplace }
@@ -72,7 +72,7 @@ class ContractService {
     this.web3.setProvider(this.walletLinker.getProvider())
   }
 
-  initWalletLinker(walletLinkerUrl, fetch) {
+  initWalletLinker(walletLinkerUrl, fetch, ecies) {
     // if there's no given provider
     // we do it the funny wallet way
     if (!Web3.givenProvider && walletLinkerUrl) {
@@ -81,7 +81,8 @@ class ContractService {
           linkerServerUrl: walletLinkerUrl,
           fetch: fetch,
           networkChangeCb: this.newWalletNetwork.bind(this),
-          web3: this.web3
+          web3: this.web3,
+          ecies
         })
         this.walletLinker.initSession()
       }

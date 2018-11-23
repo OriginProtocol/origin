@@ -5,7 +5,7 @@ const LOCALHOST_SERVER_IP = __DEV__ ? NativeModules.SourceCode.scriptURL.split('
 function localfy(str) {
   if (LOCALHOST_SERVER_IP)
   {
-    return str.replace("localhost", LOCALHOST_SERVER_IP)
+    return str.replace("localhost", LOCALHOST_SERVER_IP).replace(/127\.0\.0\.1(?=[^0-9]|$)/, LOCALHOST_SERVER_IP)
   }
   else
   {

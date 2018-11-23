@@ -22,8 +22,8 @@ const linker = new Linker()
 
 router.post("/generate-code", async (req, res) => {
   const _clientToken = getClientToken(req)
-  const {return_url, session_token, pending_call} = req.body
-  const {clientToken, sessionToken, code, linked} = await linker.generateCode(_clientToken, session_token, req.useragent, return_url, pending_call)
+  const {return_url, session_token, pub_key, pending_call} = req.body
+  const {clientToken, sessionToken, code, linked} = await linker.generateCode(_clientToken, session_token, pub_key, req.useragent, return_url, pending_call)
   clientTokenHandler(res, clientToken)
   res.send({session_token:sessionToken, link_code:code, linked})
 })
@@ -31,8 +31,9 @@ router.post("/generate-code", async (req, res) => {
 router.get("/link-info/:code", async (req, res) => {
   const {code} = req.params
   // this is the context
-  const {appInfo, linkId} = await linker.getLinkInfo(code)
-  res.send({app_info:appInfo, link_id:linkId})
+  const {appInfo, linkId, pubKey} = await linker.getLinkInfo(code)
+  console.log("got info:", {app_info:appInfo, link_id:linkId, pub_key:pubKey})
+  res.send({app_info:appInfo, link_id:linkId, pub_key:pubKey})
 })
 
 router.post("/call-wallet/:sessionToken", async (req, res) => {
@@ -52,9 +53,9 @@ router.post("/wallet-called/:walletToken", async (req, res) => {
 
 router.post("/link-wallet/:walletToken", async (req, res) => {
   const {walletToken} = req.params
-  const {code, current_rpc, current_accounts} = req.body
+  const {code, current_rpc, current_accounts, priv_data} = req.body
   const {linked, pendingCallContext, appInfo, linkId, linkedAt} 
-    = await linker.linkWallet(walletToken, code, current_rpc, current_accounts)
+    = await linker.linkWallet(walletToken, code, current_rpc, current_accounts, priv_data)
 
   res.send({linked, pending_call_context:pendingCallContext, 
     app_info:appInfo, link_id:linkId, linked_at:linkedAt})
@@ -93,15 +94,20 @@ router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
   }
 
   //this prequeues some messages before establishing the connection
-  const closeHandler = await linker.handleSessionMessages(clientToken, realSessionToken, readId, (msg, msgId) =>
-    {
-      ws.send(JSON.stringify({msg, msgId}))
-    })
+  try {
+    const closeHandler = await linker.handleSessionMessages(clientToken, realSessionToken, readId, (msg, msgId) =>
+      {
+        ws.send(JSON.stringify({msg, msgId}))
+      })
+      ws.on("close", () => {
+        closeHandler()
+      })
+  } catch(error) {
+    console.log("we encountered an error:", error)
+    ws.close(1000, error)
+  }
 
-  ws.on("close", () => {
-    closeHandler()
-  })
-
+  
 })
 
 router.ws("/wallet-messages/:walletToken/:readId", (ws, req) => {

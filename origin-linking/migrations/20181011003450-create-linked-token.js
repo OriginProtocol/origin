@@ -27,6 +27,9 @@ module.exports = {
       code_expires: {
         type: Sequelize.DATE
       },
+      client_pub_key: {
+        type: Sequelize.STRING(128)
+      },
       current_device_context: {
         type: Sequelize.JSON
       },

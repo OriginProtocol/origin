@@ -14,7 +14,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",
-    "install-local": "npx install-local ../origin-contracts ../origin-js"
+    "install-local": "rm node_modules/origin;npx install-local ../origin-contracts ../origin-js"
   },
   "jest": {
     "preset": "react-native"
@@ -24,6 +24,7 @@
     "identicon.js": "^2.3.2",
     "moment": "^2.22.2",
     "node-libs-browser": "^2.1.0",
+    "eth-ecies": "^1.0.3",
     "origin": "^0.8.6",
     "prop-types": "^15.6.2",
     "react": "^16.6.1",

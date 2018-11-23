@@ -6,6 +6,7 @@ import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
 import EventEmitter from 'events'
 import {EthNotificationTypes} from 'origin/common/enums'
+import ecies from 'eth-ecies'
 
 import origin, {apiUrl, defaultProviderUrl, messageOpenUrl} from './services/origin'
 
@@ -18,7 +19,7 @@ const API_WALLET_LINKER = `${apiUrl}/api/wallet-linker`
 const API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet/"
 const API_WALLET_LINKER_UNLINK = API_WALLET_LINKER + "/unlink-wallet/"
 const WS_API_WALLET_LINKER_MESSAGES = `${wsApiUrl}/api/wallet-linker/wallet-messages/`
-const API_WALLET_LINK_INFO = API_WALLET_LINKER + "/link-info"
+const API_WALLET_LINK_INFO = API_WALLET_LINKER + "/link-info/"
 const API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called/"
 const API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
 const ETHEREUM_QR_PREFIX = "ethereum:"
@@ -210,11 +211,28 @@ class OriginWallet {
     })
   }
 
-  doLink(code, current_rpc, current_accounts) {
+  async getMessagingKeys( ) {
+    return origin.messaging.preGenKeys(this.getCurrentWeb3Account())
+  }
+
+  async doLink(code, current_rpc, current_accounts) {
+    const linkInfo = await this.getLinkInfo(code)
+    if(!linkInfo || linkInfo.linked)
+    {
+      console.log(code, " already linked.")
+      return
+    }
+    let priv_data 
+    if (linkInfo.pub_key)
+    {
+      data = {messaging: await this.getMessagingKeys()}
+      priv_data = this.ecEncrypt(JSON.stringify(data), linkInfo.pub_key)
+    }
     return this.doFetch(API_WALLET_LINKER_LINK + getWalletToken(this.getNotifyType(), this.state.deviceToken), 'POST', {
       code,
       current_rpc,
-      current_accounts
+      current_accounts,
+      priv_data
     }).then((responseJson) => {
       const app_info = responseJson.app_info
       console.log("We are now linked to a remote wallet:", responseJson, " browser is:", app_info)
@@ -497,6 +515,10 @@ class OriginWallet {
     })
   }
 
+  getCurrentWeb3Account() {
+    return web3.eth.accounts.wallet[0]
+  }
+
   _handleSign(event_id, {call, call_id, return_url, session_token, link_id}){
     const method = call.method
     const params = call.params
@@ -506,7 +528,7 @@ class OriginWallet {
         const msg = params.msg
         const post_phrase_prefix = params.post_phrase_prefix
         console.log("signing message:", msg)
-        const signature = web3.eth.accounts.wallet[0].sign(msg).signature
+        const signature = this.getCurrentWeb3Account().sign(msg).signature
         const ret = {msg, signature, account:this.state.ethAddress}
 
         if (post_phrase_prefix)
@@ -515,7 +537,7 @@ class OriginWallet {
           const temp_account = web3.eth.accounts.privateKeyToAccount(sig_key)
 
           const post_phrase = post_phrase_prefix + temp_account.address
-          const post_signature = web3.eth.accounts.wallet[0].sign(post_phrase).signature
+          const post_signature = this.getCurrentWeb3Account().sign(post_phrase).signature
           ret.post_phrase = post_phrase
           ret.post_signature = post_signature
         }
@@ -700,18 +722,28 @@ class OriginWallet {
     }
   }
 
+  getLinkInfo(linkCode){
+    return this.doFetch(API_WALLET_LINK_INFO + linkCode, 'GET')
+  }
+
   promptForLink(linkCode) {
     console.log("link code is:" + linkCode)
     if (this.linking_code != linkCode)
     {
       this.linking_code = linkCode
 
-      this.doFetch(API_WALLET_LINK_INFO, 'POST',
-        {code:linkCode}).then(responseJson => {
+      this.getLinkInfo(linkCode)
+        .then(responseJson => {
           //get info about the link
           this.fireEvent(Events.PROMPT_LINK, {linked:false, link:{linkCode, link_id:responseJson.link_id, return_url:responseJson.return_url, app_info:responseJson.app_info, expires_at:new Date(responseJson.expires_at)}})
         })
     }
+  }
+
+  ecEncrypt(text, pub_key) {
+    return ecies
+      .encrypt(new Buffer(pub_key, 'hex'), new Buffer(text))
+      .toString('hex')
   }
 
   async checkClipboardLink() {
@@ -804,6 +836,8 @@ class OriginWallet {
         this.saveWallet()
       }
     })
+
+
 
     Linking.getInitialURL().then((url) => {
       if (url) {

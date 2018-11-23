@@ -47,7 +47,7 @@ export default class Origin {
     //
     // Services (Internal, should not be used directly by the Origin client).
     //
-    this.contractService = new ContractService({ contractAddresses, web3, ethereum, walletLinkerUrl, fetch })
+    this.contractService = new ContractService({ contractAddresses, web3, ethereum, walletLinkerUrl, fetch, ecies })
     this.ipfsService = new IpfsService({
       ipfsDomain,
       ipfsApiPort,

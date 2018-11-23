@@ -73,7 +73,7 @@ class Linker {
     const linkObj = await this.findLink(clientToken)
     let init = false
     if (!linkObj) {
-      throw("Cannot find link for client token", clientToken)
+      throw("Cannot find link for client token: " + clientToken)
     }
     // if this is a brand new session ignore all current messages
     if (!sessionToken) {
@@ -171,7 +171,7 @@ class Linker {
     return sessionToken
   }
 
-  async generateCode(clientToken, sessionToken, userAgent, returnUrl, pendingCall) {
+  async generateCode(clientToken, sessionToken, pubKey, userAgent, returnUrl, pendingCall) {
     let linkedObj
     if (clientToken)
     {
@@ -181,6 +181,13 @@ class Linker {
     if (!linkedObj){
       clientToken = uuidv4()
       linkedObj = await db.LinkedToken.build({clientToken, linked:false})
+    }
+
+    // keys have to match
+    if (linkedObj.clientPubKey != pubKey)
+    {
+      linkedObj.clientPubKey = pubKey
+      linkedObj.linked = false
     }
 
     if (!linkedObj.linked) {
@@ -211,10 +218,11 @@ class Linker {
   }
   
   async getLinkInfo(code) {
-    const linkedObj = await this.findUnexpiredCode(code)
-    if (linkedObj)
+    const linkedObjs = await this.findUnexpiredCode(code)
+    if (linkedObjs.length > 0)
     {
-      return {appInfo:linkedObj.appInfo, linkId:this.getLinkId(linkedObj.id, linkedObj.clientToken)}
+      const linkedObj = linkedObjs[0]
+      return {appInfo:linkedObj.appInfo, linkId:this.getLinkId(linkedObj.id, linkedObj.clientToken), pubKey:linkedObj.clientPubKey}
     }
     return {}
   }
@@ -290,7 +298,7 @@ class Linker {
     return this.sendSessionMessage(linkedObj, sessionToken, type, data)
   }
 
-  async linkWallet(walletToken, code, current_rpc, current_accounts) {
+  async linkWallet(walletToken, code, current_rpc, current_accounts, priv_data) {
     const linkedCodeObjs = await this.findUnexpiredCode(code)
     if (!linkedCodeObjs || linkedCodeObjs.length != 1)
     {
@@ -307,7 +315,7 @@ class Linker {
     linkedObj.deviceType = deviceType
     linkedObj.linked = true
     linkedObj.code = null
-    linkedObj.currentDeviceContext = {accounts:current_accounts, network_rpc:current_rpc}
+    linkedObj.currentDeviceContext = {accounts:current_accounts, network_rpc:current_rpc, priv_data}
     linkedObj.linkedAt = new Date()
     linkedObj.pendingCallContext = null
 
@@ -322,7 +330,7 @@ class Linker {
     const {deviceType, deviceToken} = this.parseWalletToken(walletToken)
 
     const links = await db.LinkedToken.findAll({where:{deviceType, deviceToken, linked:true}})
-    return links.map(link => ({linked:link.linked, app_info:link.appInfo,  link_id:this.getLinkId(link.id, link.clientToken), linked_at:link.linkedAt}))
+    return links.map(link => ({linked:link.linked, app_info:link.appInfo,  link_id:this.getLinkId(link.id, link.clientToken), linked_at:link.linkedAt, pub_key:link.clientPubKey}))
   }
 
   async unlink(clientToken) {
