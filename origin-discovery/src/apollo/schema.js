@@ -18,6 +18,10 @@ const typeDefs = gql`
     currency: String!
     amount: String!
   }
+  type BlockInfo {
+    blockNumber: Int!
+    logIndex: Int!
+  }
 
   #
   # USER
@@ -38,6 +42,7 @@ const typeDefs = gql`
   #
   type Offer {
     id: ID!
+    blockInfo: BlockInfo!
     ipfsHash: ID!
     data: JSON!
     buyer: User!
@@ -47,12 +52,7 @@ const typeDefs = gql`
     totalPrice: Price!
     listing: Listing!
   }
-  enum DisplayType {
-    normal
-    featured
-    hidden
-  }
-   type OfferConnection {
+  type OfferConnection {
     nodes: [Offer]!
   }
 
@@ -73,8 +73,14 @@ const typeDefs = gql`
   # LISTING
   #
   # TODO: Add a status indicating if Listing is sold out.
+  enum DisplayType {
+    normal
+    featured
+    hidden
+  }
   type Listing {
     id: ID!
+    blockInfo: BlockInfo!
     ipfsHash: ID!
     data: JSON!
     seller: User!
@@ -121,6 +127,10 @@ const typeDefs = gql`
   input inPrice {
     currency: String!
     amount: String!
+  }
+  input inBlockInfo {
+    blockNumber: Int!
+    logIndex: Int!
   }
 
   #
@@ -189,7 +199,7 @@ const typeDefs = gql`
   #
   type Query {
     listings(searchQuery: String, filters: [ListingFilter!], page: Page!): ListingPage,
-    listing(id: ID!): Listing,
+    listing(id: ID!, blockInfo: inBlockInfo): Listing,
 
     offers(buyerAddress: ID, sellerAddress: ID, listingId: ID): OfferConnection,
     offer(id: ID!): Offer,

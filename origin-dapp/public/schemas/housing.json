@@ -14,7 +14,7 @@
       "title": "schema.housing.examples",
       "enum": [
         "schema.housing.aptsHousingForRent",
-        "schema.housing.roomsShares",
+        "schema.housing.roomShares",
         "schema.housing.vacationRentals"
       ]
     },
@@ -27,6 +27,7 @@
         "schema.housing.other",
         "schema.housing.parkingStorage",
         "schema.housing.realEstate",
+        "schema.housing.roomShares",
         "schema.housing.subletsTemporary",
         "schema.housing.vacationRentals"
       ],

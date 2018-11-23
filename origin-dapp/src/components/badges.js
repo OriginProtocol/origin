@@ -2,7 +2,7 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
 export const BetaBadge = () => (
-  <span className="badge badge-primary">
+  <span className="badge badge-primary mt-1">
     <FormattedMessage
       id={'badges.beta'}
       defaultMessage={'Beta'}
