@@ -10,7 +10,7 @@ export default function getCurrentProvider(web3) {
 
   if (web3.currentProvider.isTrust) return 'Trust'
 
-  if (typeof window.SOFA !== 'undefined') return 'Toshi'
+  if (typeof window.SOFA !== 'undefined') return 'Coinbase Wallet'
 
   if (typeof window.__CIPHER__ !== 'undefined') return 'Cipher'
 
