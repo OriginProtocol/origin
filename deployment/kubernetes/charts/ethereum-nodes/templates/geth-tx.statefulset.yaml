@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{  template "ethereum.fullname" . }}-tx-node
+  labels:
+    app: {{  template "ethereum.fullname" . }}-tx-node
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ .Values.replicas }}
+  serviceName: {{  template "ethereum.fullname" . }}-tx-node
+  selector:
+    matchLabels:
+      app: {{  template "ethereum.fullname" . }}-tx-node
+  template:
+    metadata:
+      labels:
+        app: {{  template "ethereum.fullname" . }}-tx-node
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: geth-tx
+        image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}
+        ports:
+        - containerPort: 8545
+          name: rpc
+        - containerPort: 8546
+          name: ws
+        - name: discovery-tcp
+          containerPort: 30303
+        - name: discovery-udp
+          containerPort: 30303
+          protocol: UDP
+        command: ["/bin/sh"]
+        args:
+          - "-c"
+          - "geth
+            --ws
+            --wsaddr 0.0.0.0
+            --wsport 8546
+            --rpc
+            --rpcaddr 0.0.0.0
+            --rpcport 8545
+            --rpcvhosts=\"*\"
+            --ethstats=${HOSTNAME}:${ETHSTATS_SECRET}@${ETHSTATS_SERVICE}
+            --cache 4096
+            --syncmode full
+            {{- if eq .Values.network "rinkeby" }}
+            --rinekby
+            {{- end }}
+            {{ if .Values.bootnodes }}
+            --bootnodes {{ .Values.bootnodes }}
+            {{- end }}"
+        env:
+        - name: ETHSTATS_SERVICE
+          value: {{  template "ethereum.fullname" . }}-ethstats.{{ .Release.Namespace }}
+        - name: ETHSTATS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{  template "ethereum.fullname" . }}-ethstats
+              key: WS_SECRET
+        resources:
+          requests:
+            memory: {{ .Values.memoryRequest }}
+            cpu: {{ default "500m" .Values.cpuRequest }}
+        volumeMounts:
+          - mountPath: /root/.ethereum
+            name: {{  template "ethereum.fullname" . }}-data
+  volumeClaimTemplates:
+    - metadata:
+        name: {{  template "ethereum.fullname" . }}-data
+      spec:
+        storageClassName: {{ .Values.storageClass }}
+        accessModes:
+          - ReadWriteOnce  # Read-write for a single node only
+        resources:
+          requests:
+            storage: {{ .Values.storageRequest }}

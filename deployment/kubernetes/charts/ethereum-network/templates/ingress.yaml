@@ -1,3 +1,4 @@
+{{- if .Values.host }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -8,18 +9,18 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
   annotations:
-    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/ingress.class: nginx-ingress
     kubernetes.io/tls-acme: "true"
-    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   tls:
-    - secretName: {{ template "ethereum.host" . }}
+    - secretName: {{ .Values.host }}
       hosts:
-        - {{ template "ethereum.host" . }}
+        - {{ .Values.host }}
   rules:
-  - host: {{ template "ethereum.host" . }}
+  - host: {{ .Values.host }}
     http:
       paths:
       - path: /
@@ -35,3 +36,4 @@ spec:
         backend:
           serviceName: {{ template "ethereum.fullname" . }}
           servicePort: 8546
+{{- end }}

@@ -19,14 +19,14 @@ spec:
         release: "{{ .Release.Name }}"
     spec:
       containers:
-      - name: ethstats
-        image: {{ .Values.ethstatsImage }}:{{ .Values.ethstatsImageTag }}
-        ports:
-        - name: http
-          containerPort: 3000
-        env:
-        - name: WS_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "ethereum.fullname" . }}-ethstats
-              key: WS_SECRET
+        - name: ethstats
+          image: {{ .Values.ethstatsImage }}:{{ .Values.ethstatsImageTag }}
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: WS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ethereum.fullname" . }}-ethstats
+                  key: WS_SECRET

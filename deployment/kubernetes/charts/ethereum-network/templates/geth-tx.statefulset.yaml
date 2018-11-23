@@ -1,48 +1,54 @@
-# This deployment is for a geth miner for the Ethereum private network
-
-{{- if eq .Release.Namespace "dev" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "ethereum.fullname" . }}-miner-node
+  name: {{ template "ethereum.fullname" . }}-tx-node
   labels:
-    app: {{ template "ethereum.fullname" . }}-miner-node
+    app: {{ template "ethereum.fullname" . }}-tx-node
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  replicas: {{ .Values.gethMinerReplicas }}
-  serviceName: {{ template "ethereum.fullname" . }}-miner-node
+  replicas: {{ .Values.gethTxReplicas }}
+  serviceName: {{ template "ethereum.fullname" . }}-tx-node
   selector:
     matchLabels:
-      app: {{ template "ethereum.fullname" . }}-miner-node
+      app: {{ template "ethereum.fullname" . }}-tx-node
   template:
     metadata:
       labels:
-        app: {{ template "ethereum.fullname" . }}-miner-node
+        app: {{ template "ethereum.fullname" . }}-tx-node
         release: {{ .Release.Name }}
     spec:
       containers:
-      - name: geth-miner
+      - name: geth-tx
         image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}
         ports:
+        - containerPort: 8545
+          name: rpc
+        - containerPort: 8546
+          name: ws
+        - name: discovery-tcp
+          containerPort: 30303
         - name: discovery-udp
           containerPort: 30303
           protocol: UDP
-        - name: discovery-tcp
-          containerPort: 30303
         command: ["/bin/sh"]
         args:
-        - "-c"
-        - "geth
-          --bootnodes=`cat /root/.ethereum/bootnodes`
-          --mine
-          --etherbase=0
-          --networkid=${NETWORK_ID}
-          --ethstats=${HOSTNAME}:${ETHSTATS_SECRET}@${ETHSTATS_SERVICE}"
+          - "-c"
+          - "geth
+            --ws
+            --wsaddr 0.0.0.0
+            --wsport 8546
+            --rpc
+            --rpcaddr 0.0.0.0
+            --rpcport 8545
+            --rpcvhosts=\"*\"
+            --ethstats=${HOSTNAME}:${ETHSTATS_SECRET}@${ETHSTATS_SERVICE}
+            --networkid=${NETWORK_ID}
+            --bootnodes=`cat /root/.ethereum/bootnodes`"
         env:
         - name: ETHSTATS_SERVICE
-          value: {{ template "ethereum.fullname" . }}-ethstats.{{ .Release.Namespace }}.svc.cluster.local
+          value: {{ template "ethereum.fullname" . }}-ethstats.{{ .Release.Namespace }}
         - name: ETHSTATS_SECRET
           valueFrom:
             secretKeyRef:
@@ -55,12 +61,11 @@ spec:
               key: networkid
         resources:
           requests:
-            memory: 2Gi
-          limits:
-            cpu: {{ .Values.gethMinerCpuLimit | quote }}
+            memory: {{ default "2Gi" .Values.gethTxMemoryRequest }}
+            cpu: 500m
         volumeMounts:
-          - name: {{ template "ethereum.fullname" . }}-data
-            mountPath: /root/.ethereum
+          - mountPath: /root/.ethereum
+            name: {{ template "ethereum.fullname" . }}-data
       initContainers:
       - name: init-genesis
         image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}
@@ -81,11 +86,11 @@ spec:
         - |-
 {{ .Files.Get "scripts/import-account.sh" | indent 10 }}
         volumeMounts:
-        - name: {{ template "ethereum.fullname" . }}-data
-          mountPath: /root/.ethereum
-        - name: account
-          readOnly: true
-          mountPath: /root/.ethereum/account
+          - name: {{ template "ethereum.fullname" . }}-data
+            mountPath: /root/.ethereum
+          - name: account
+            readOnly: true
+            mountPath: /root/.ethereum/account
       {{- end }}
       - name: get-bootnodes
         image: {{ .Values.gethImage }}:{{ .Values.gethImageTag }}
@@ -96,7 +101,7 @@ spec:
 {{ .Files.Get "scripts/get-bootnode.sh" | indent 10 }}
         env:
         - name: BOOTNODE_SERVICE
-          value: {{ template "ethereum.fullname" . }}-bootnode.{{ .Release.Namespace }}
+          value: {{ template "ethereum.fullname" . }}-bootnode.{{ .Release.Namespace }}.svc.cluster.local
         volumeMounts:
         - name: {{ template "ethereum.fullname" . }}-data
           mountPath: /geth
@@ -113,8 +118,7 @@ spec:
       spec:
         storageClassName: "standard"
         accessModes:
-          - ReadWriteOnce
+          - ReadWriteOnce  # Read-write for a single node only
         resources:
           requests:
               storage: 5Gi
-{{- end }}
