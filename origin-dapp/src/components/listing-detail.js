@@ -32,6 +32,8 @@ import { prepareSlotsToSave } from 'utils/calendarHelpers'
 
 import origin from '../services/origin'
 
+const { web3 } = origin.contractService
+
 /* linking to contract Etherscan requires knowledge of which network we're on */
 const etherscanDomains = {
   1: 'etherscan.io',
@@ -75,15 +77,10 @@ class ListingsDetail extends Component {
       }
     })
 
-    this.handleBuyClicked = this.handleBuyClicked.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
     this.setFeaturedImage = this.setFeaturedImage.bind(this)
-  }
-
-  async handleBuyClicked() {
-    this.props.storeWeb3Intent('buy this listing')
   }
 
   async componentWillMount() {
@@ -116,66 +113,73 @@ class ListingsDetail extends Component {
       !this.state.purchases.length &&
       !this.state.onboardingCompleted
 
-    this.props.storeWeb3Intent('offer to buy this listing')
+    this.props.storeWeb3Intent('purchase this listing')
 
-    if (web3.givenProvider && this.props.web3Account) {
-      if (!skip && shouldOnboard) {
-        return this.setState({
-          onboardingCompleted: true,
-          step: this.STEP.ONBOARDING,
-          slotsToReserve
-        })
+    // defer to parent modal if user activation is insufficient
+    if (
+      !web3.givenProvider ||
+      !this.props.web3Account ||
+      !this.props.messagingEnabled
+    ) {
+      return
+    }
+
+    if (!skip && shouldOnboard) {
+      return this.setState({
+        onboardingCompleted: true,
+        step: this.STEP.ONBOARDING,
+        slotsToReserve
+      })
+    }
+
+    this.setState({ step: this.STEP.METAMASK })
+
+    const isFractional = this.state.listingType === 'fractional'
+    const slots = slotsToReserve || this.state.slotsToReserve
+    const price =
+      isFractional ?
+        slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
+        this.state.price
+
+    try {
+      const offerData = {
+        listingId: this.props.listingId,
+        listingType: this.state.listingType,
+        totalPrice: {
+          amount: price,
+          currency: 'ETH'
+        },
+        commission: {
+          amount: this.state.boostValue.toString(),
+          currency: 'OGN'
+        },
+        // Set the finalization time to ~1 year after the offer is accepted.
+        // This is the window during which the buyer may file a dispute.
+        finalizes: 365 * 24 * 60 * 60
       }
 
-      this.setState({ step: this.STEP.METAMASK })
-
-      const isFractional = this.state.listingType === 'fractional'
-      const slots = slotsToReserve || this.state.slotsToReserve
-      const price =
-        isFractional ?
-          slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
-          this.state.price
-
-      try {
-        const offerData = {
-          listingId: this.props.listingId,
-          listingType: this.state.listingType,
-          totalPrice: {
-            amount: price,
-            currency: 'ETH'
-          },
-          commission: {
-            amount: this.state.boostValue.toString(),
-            currency: 'OGN'
-          },
-          // Set the finalization time to ~1 year after the offer is accepted.
-          // This is the window during which the buyer may file a dispute.
-          finalizes: 365 * 24 * 60 * 60
-        }
-
-        if (isFractional) {
-          offerData.slots = prepareSlotsToSave(slots)
-        } else {
-          offerData.unitsPurchased = 1
-        }
-
-        const transactionReceipt = await origin.marketplace.makeOffer(
-          this.props.listingId,
-          offerData,
-          (confirmationCount, transactionReceipt) => {
-            this.props.updateTransaction(confirmationCount, transactionReceipt)
-          }
-        )
-        this.props.upsertTransaction({
-          ...transactionReceipt,
-          transactionTypeKey: 'makeOffer'
-        })
-        this.setState({ step: this.STEP.PURCHASED })
-        this.props.handleNotificationsSubscription('buyer', this.props)
-      } catch (error) {
-        console.error(error)
-        this.setState({ step: this.STEP.ERROR })
+      if (isFractional) {
+        offerData.slots = prepareSlotsToSave(slots)
+      } else {
+        offerData.unitsPurchased = 1
       }
+
+      const transactionReceipt = await origin.marketplace.makeOffer(
+        this.props.listingId,
+        offerData,
+        (confirmationCount, transactionReceipt) => {
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        transactionTypeKey: 'makeOffer'
+      })
+      this.setState({ step: this.STEP.PURCHASED })
+      this.props.handleNotificationsSubscription('buyer', this.props)
+    } catch (error) {
+      console.error(error)
+      this.setState({ step: this.STEP.ERROR })
     }
   }
 
@@ -800,6 +804,7 @@ class ListingsDetail extends Component {
 
 const mapStateToProps = ({ app, profile }) => {
   return {
+    messagingEnabled: app.messagingEnabled,
     notificationsHardPermission: app.notificationsHardPermission,
     notificationsSoftPermission: app.notificationsSoftPermission,
     profile,
