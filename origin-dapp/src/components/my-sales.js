@@ -10,6 +10,8 @@ import { transformPurchasesOrSales } from 'utils/listing'
 
 import origin from '../services/origin'
 
+const { web3 } = origin.contractService
+
 class MySales extends Component {
   constructor(props) {
     super(props)

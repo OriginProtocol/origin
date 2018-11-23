@@ -1,21 +1,24 @@
 import React, { Component, Fragment } from 'react'
-import { defineMessages, injectIntl } from 'react-intl'
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
 import {
+  enableMessaging,
   handleNotificationsSubscription,
   setMessagingEnabled,
   setMessagingInitialized,
   setNotificationsHardPermission,
-  setNotificationsSoftPermission
+  setNotificationsSoftPermission,
+  storeWeb3Intent
 } from 'actions/App'
 import { addMessage } from 'actions/Message'
 import { fetchNotifications } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
 
 import BetaModal from 'components/modals/beta-modal'
+import Modal from 'components/modal'
 import { RecommendationModal, WarningModal } from 'components/modals/notifications-modals'
 import SellingModal from 'components/onboarding-modal'
 
@@ -23,9 +26,10 @@ import getCurrentNetwork from 'utils/currentNetwork'
 import { createSubscription, requestPermission } from 'utils/notifications'
 import scopedDebounce from 'utils/scopedDebounce'
 
-import origin from '../services/origin'
 import analytics from '../services/analytics'
+import origin from '../services/origin'
 
+const { web3 } = origin.contractService
 const ETH_ADDRESS = process.env.MESSAGING_ACCOUNT
 const ONE_SECOND = 1000
 const storeKeys = {
@@ -40,6 +44,7 @@ class Onboarding extends Component {
     this.handleDismissNotificationsPrompt = this.handleDismissNotificationsPrompt.bind(this)
     this.handleDismissNotificationsWarning = this.handleDismissNotificationsWarning.bind(this)
     this.handleEnableNotifications = this.handleEnableNotifications.bind(this)
+    this.handleToggle = this.handleToggle.bind(this)
     this.intlMessages = defineMessages({
       congratsMessage: {
         id: 'onboarding.congrats',
@@ -239,8 +244,14 @@ class Onboarding extends Component {
     this.props.setNotificationsHardPermission(Notification.permission)
   }
 
+  handleToggle(e) {
+    e.preventDefault()
+
+    this.props.storeWeb3Intent(null)
+  }
+
   render() {
-    const { children, location, networkId, notificationsSubscriptionPrompt } = this.props
+    const { children, enableMessaging, location, messagingEnabled, networkId, notificationsSubscriptionPrompt, web3Intent } = this.props
     const query = queryString.parse(location.search)
     const currentNetwork = getCurrentNetwork(networkId)
     const networkType = currentNetwork && currentNetwork.type
@@ -269,6 +280,52 @@ class Onboarding extends Component {
             onSubmit={this.handleEnableNotifications}
           />
         }
+        {web3.givenProvider && web3Intent && !messagingEnabled &&
+          <Modal backdrop="static" className="not-messaging-enabled" isOpen={true}>
+            <FormattedMessage
+              id={'onboarding.intentRequiresMessaging'}
+              defaultMessage={'Before you can {web3Intent}, you need to enable Origin Messaging.'}
+              values={{ web3Intent }}
+            />
+            <a
+              className="close"
+              aria-label="Close"
+              onClick={this.handleToggle}
+            >
+              <span aria-hidden="true">&times;</span>
+            </a>
+            <br />
+            <div className="roadblock">
+              <div className="button-container">
+                <button
+                  className="btn btn-sm btn-clear"
+                  onClick={enableMessaging}
+                  ga-category="messaging"
+                  ga-label="required_enable"
+                >
+                  <FormattedMessage
+                    id={'onboarding.enable'}
+                    defaultMessage={'Enable Messaging'}
+                  />
+                </button>
+              </div>
+              <div className="link-container text-center">
+                <a
+                  href="#"
+                  data-modal="profile"
+                  onClick={this.handleToggle}
+                  ga-category="messaging"
+                  ga-label="required_cancel"
+                >
+                  <FormattedMessage
+                    id={'onboarding.cancel'}
+                    defaultMessage={'Cancel'}
+                  />
+                </a>
+              </div>
+            </div>
+          </Modal>
+        }
       </Fragment>
     )
   }
@@ -284,18 +341,21 @@ const mapStateToProps = ({ app, messages }) => ({
   notificationsSubscriptionPrompt: app.notificationsSubscriptionPrompt,
   pushNotificationsSupported: app.pushNotificationsSupported,
   serviceWorkerRegistration: app.serviceWorkerRegistration,
-  web3Account: app.web3.account
+  web3Account: app.web3.account,
+  web3Intent: app.web3.intent
 })
 
 const mapDispatchToProps = dispatch => ({
   addMessage: obj => dispatch(addMessage(obj)),
+  enableMessaging: () => dispatch(enableMessaging()),
   fetchNotifications: () => dispatch(fetchNotifications()),
   fetchUser: addr => dispatch(fetchUser(addr)),
   handleNotificationsSubscription: (role, props) => dispatch(handleNotificationsSubscription(role, props)),
   setMessagingEnabled: bool => dispatch(setMessagingEnabled(bool)),
   setMessagingInitialized: bool => dispatch(setMessagingInitialized(bool)),
   setNotificationsHardPermission: result => dispatch(setNotificationsHardPermission(result)),
-  setNotificationsSoftPermission: result => dispatch(setNotificationsSoftPermission(result))
+  setNotificationsSoftPermission: result => dispatch(setNotificationsSoftPermission(result)),
+  storeWeb3Intent: () => dispatch(storeWeb3Intent())
 })
 
 export default withRouter(
