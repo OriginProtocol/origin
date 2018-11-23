@@ -5438,11 +5438,16 @@ a:not([href]):not([tabindex]).span-link {
     background-color: white;
     padding: 10px;
     margin: 20px;
+    width: 100%;
   }
-  
+
   .profile-wrapper .guidance p {
     font-size: 0.875rem;
     margin: 0;
+  }
+
+  .profile-wrapper .guidance img {
+    width: 3.5rem;
   }
 }
 
