@@ -145,7 +145,7 @@ class ListingCreate extends Component {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
-    } else {
+    } else if (!web3.givenProvider || !this.props.messagingEnabled) {
       this.props.history.push('/')
       this.props.storeWeb3Intent('create a listing')
     }
@@ -1166,16 +1166,26 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = ({ app, exchangeRates, wallet }) => {
+const mapStateToProps = ({
+  app: {
+    messagingEnabled,
+    notificationsHardPermission,
+    notificationsSoftPermission,
+    pushNotificationsSupported,
+    serviceWorkerRegistration,
+    web3
+  }, exchangeRates, wallet
+}) => {
   return {
     exchangeRates,
-    notificationsHardPermission: app.notificationsHardPermission,
-    notificationsSoftPermission: app.notificationsSoftPermission,
-    pushNotificationsSupported: app.pushNotificationsSupported,
-    serviceWorkerRegistration: app.serviceWorkerRegistration,
+    messagingEnabled,
+    notificationsHardPermission,
+    notificationsSoftPermission,
+    pushNotificationsSupported,
+    serviceWorkerRegistration,
     wallet,
-    web3Account: app.web3.account,
-    web3Intent: app.web3.intent
+    web3Account: web3.account,
+    web3Intent: web3.intent
   }
 }
 
