@@ -11,7 +11,9 @@
     "lint": "eslint '**/*.js' --rulesdir ../../",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
-    "start": "if [$NODE_ENV == 'production']; then node src/app.js; else nodemon src/app.js; fi",
+    "start": "per-env",
+    "start:development": "nodemon src/app.js",
+    "start:production": "node src/app.js",
     "test": "mocha -r @babel/register -r @babel/polyfill -t 10000 --exit",
     "vest": "node src/scripts/vest_grants.js"
   },
@@ -31,11 +33,11 @@
     "ip": "^1.1.5",
     "moment": "^2.22.2",
     "momentjs": "^2.0.0",
-    "nodemon": "^1.18.4",
     "origin-contracts": "^0.8.6",
     "origin-faucet": "^0.1.0",
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",
+    "per-env": "^1.0.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-thunk": "^1.0.0",
@@ -56,6 +58,7 @@
     "chai-bignumber": "^3.0.0",
     "chai-moment": "^0.1.0",
     "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
     "react-scripts": "^2.1.1"
   }
 }
