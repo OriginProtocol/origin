@@ -33,6 +33,7 @@
     "web-push": "^3.3.3"
   },
   "devDependencies": {
+    "eslint": "^5.9.0",
     "nodemon": "^1.18.6"
   }
 }

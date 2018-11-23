@@ -1,0 +1,23 @@
+FROM node:10 as build
+
+WORKDIR /app
+
+RUN npm i lerna -g --loglevel notice
+
+# Copy the necessary files for building origin-dapp
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./origin-token-transfer/client ./origin-token-transfer/client
+COPY ./scripts ./scripts
+
+# Bootstrap dependencies, --ignore-scripts is necessary to avoid overwriting
+# contracts
+RUN lerna bootstrap --ci --ignore-scripts -- --loglevel notice --unsafe-perm
+
+RUN lerna run build --scope origin-token-transfer-client
+
+# Copy built static files to nginx for serving
+FROM nginx:1.15.2-alpine
+COPY --from=build /app/origin-token-transfer/client/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

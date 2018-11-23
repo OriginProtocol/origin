@@ -12,6 +12,10 @@ import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
 import UnnamedUser from 'components/unnamed-user'
 
+import origin from '../services/origin'
+
+const { web3 } = origin.contractService
+
 class UserCard extends Component {
   constructor(props) {
     super(props)
