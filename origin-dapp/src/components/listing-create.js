@@ -259,9 +259,22 @@ class ListingCreate extends Component {
     }
   }
 
-  onAvailabilityEntered(slots, step) {
+  onAvailabilityEntered(slots, direction) {
     if (!slots || !slots.length) {
       return
+    }
+
+    let nextStep
+    switch(direction) {
+      case 'forward':
+        this.state.isEditMode ?
+          nextStep = 'PREVIEW' :
+          nextStep = 'BOOST'
+        break
+
+      case 'back':
+        nextStep = 'DETAILS'
+        break
     }
 
     slots = prepareSlotsToSave(slots)
@@ -278,7 +291,7 @@ class ListingCreate extends Component {
     })
 
     this.setState({
-      step: this.STEP[step]
+      step: this.STEP[nextStep]
     })
   }
 
@@ -299,7 +312,9 @@ class ListingCreate extends Component {
   onDetailsEntered(formListing) {
     const [nextStep, listingType] = this.state.isFractionalListing ?
       [this.STEP.AVAILABILITY, 'fractional'] :
-      [this.STEP.BOOST, 'unit']
+      this.state.isEditMode ?
+        [this.STEP.PREVIEW, 'unit'] :
+        [this.STEP.BOOST, 'unit']
 
     formListing.formData.listingType = listingType
 
@@ -601,8 +616,8 @@ class ListingCreate extends Component {
                   userType="seller"
                   viewType={ this.state.fractionalTimeIncrement }
                   step={ 60 }
-                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'BOOST') }
-                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'DETAILS') }
+                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
+                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
                 />
               </div>
             }
@@ -881,7 +896,14 @@ class ListingCreate extends Component {
                 <div className="btn-container">
                   <button
                     className="btn btn-other float-left btn-listing-create"
-                    onClick={() => this.setState({ step: this.STEP.BOOST })}
+                    onClick={() => {
+                      const step = isEditMode ?
+                        isFractionalListing ?
+                          this.STEP.AVAILABILITY :
+                          this.STEP.DETAILS
+                        : this.STEP.BOOST
+                      this.setState({ step })
+                    }}
                     ga-category="create_listing"
                     ga-label="review_step_back"
                   >
