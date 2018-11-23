@@ -136,6 +136,11 @@ export default class Marketplace {
    * Returns listings.
    * TODO: This won't scale. Add support for pagination.
    * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean}
+   *  - idsOnly: Returns only ids rather than the full Listing object.
+   *  - listingsFor: Returns latest version of all listings created by a seller.
+   *  - purchasesFor: Returns all listings a buyer made an offer on.
+   *  - withBlockinfo: Only used in conjunction with purchasesFor option. Loads version
+   *    of the listing at the time offer was made by the buyer.
    * @return {Promise<List(Listing)>}
    * @throws {Error}
    */
@@ -168,7 +173,9 @@ export default class Marketplace {
 
   /**
    * Returns a Listing object based on its id.
-   * @param listingId
+   * @param {string} listingId
+   * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional argument
+   *   to indicate a specific version of the listing should be loaded.
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
@@ -187,8 +194,8 @@ export default class Marketplace {
     )
     const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
 
-    // Create and return a Listing from on-chain and off-chain data .
-    return new Listing(listingId, chainListing, ipfsListing)
+    // Create and return a Listing from on-chain and off-chain data.
+    return Listing.init(listingId, chainListing, ipfsListing)
   }
 
   /**
@@ -291,7 +298,7 @@ export default class Marketplace {
     }
 
     // Create an Offer from on-chain and off-chain data.
-    return new Offer(offerId, listingId, chainOffer, ipfsOffer)
+    return Offer.init(offerId, listingId, chainOffer, ipfsOffer)
   }
 
   /**
