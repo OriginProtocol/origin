@@ -111,6 +111,7 @@ class ListingsDetail extends Component {
 
   async handleMakeOffer(skip, slotsToReserve) {
     // onboard if no identity, purchases, and not already completed
+    const { isFractional } = this.state
     const shouldOnboard =
       !this.props.profile.strength &&
       !this.state.purchases.length &&
@@ -128,8 +129,7 @@ class ListingsDetail extends Component {
       }
 
       this.setState({ step: this.STEP.METAMASK })
-
-      const isFractional = this.state.listingType === 'fractional'
+      
       const slots = slotsToReserve || this.state.slotsToReserve
       const price =
         isFractional ?
@@ -201,7 +201,8 @@ class ListingsDetail extends Component {
       const listing = await getListing(this.props.listingId, true)
       this.setState({
         ...listing,
-        loading: false
+        loading: false,
+        isFractional: listing.listingType === 'fractional'
       })
     } catch (error) {
       this.props.showAlert(
@@ -246,6 +247,7 @@ class ListingsDetail extends Component {
       category,
       description,
       display,
+      isFractional,
       loading,
       name,
       offers,
@@ -501,18 +503,18 @@ class ListingsDetail extends Component {
               */}
             </div>
             <div className="col-12 col-md-4">
-              {isAvailable &&
-                !!price &&
-                !!parseFloat(price) && (
+              {isAvailable && ((!!price && !!parseFloat(price)) || isFractional) && (
                 <div className="buy-box placehold">
-                  <div className="price text-nowrap">
-                    <img src="images/eth-icon.svg" role="presentation" />
-                    {Number(price).toLocaleString(undefined, {
-                      maximumFractionDigits: 5,
-                      minimumFractionDigits: 5
-                    })}
-                      &nbsp;ETH
-                  </div>
+                  {!isFractional &&
+                    <div className="price text-nowrap">
+                      <img src="images/eth-icon.svg" role="presentation" />
+                      {Number(price).toLocaleString(undefined, {
+                        maximumFractionDigits: 5,
+                        minimumFractionDigits: 5
+                      })}
+                        &nbsp;ETH
+                    </div>
+                  }
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
                   {/*
                     <div className="quantity d-flex justify-content-between">
@@ -530,7 +532,7 @@ class ListingsDetail extends Component {
                   */}
                   {!loading && (
                     <div className="btn-container">
-                      {!userIsSeller && (
+                      {!userIsSeller && !isFractional && (
                         <button
                           className="btn btn-primary"
                           onClick={() => this.handleMakeOffer()}
@@ -785,7 +787,7 @@ class ListingsDetail extends Component {
                 />
               )}
             </div>
-            { !this.state.loading && this.state.listingType === 'fractional' &&
+            {!this.state.loading && this.state.listingType === 'fractional' &&
               <div className="col-12">
                 <Calendar
                   slots={ this.state.slots }
