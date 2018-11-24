@@ -391,12 +391,14 @@ class ListingCreate extends Component {
   }
 
   async onSubmitListing(formListing) {
+    const { isEditMode } = this.state
+
     try {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
-      const methodName = this.state.isEditMode ? 'updateListing' : 'createListing'
+      const methodName = isEditMode ? 'updateListing' : 'createListing'
       let transactionReceipt
-      if (this.state.isEditMode) {
+      if (isEditMode) {
         transactionReceipt = await origin.marketplace[methodName](
           this.props.listingId,
           listing,
@@ -414,9 +416,11 @@ class ListingCreate extends Component {
         )
       }
 
+      const transactionTypeKey = isEditMode ? 'updateListing' : 'createListing'
+
       this.props.upsertTransaction({
         ...transactionReceipt,
-        transactionTypeKey: 'createListing'
+        transactionTypeKey
       })
       this.props.getOgnBalance()
       this.setState({ step: this.STEP.SUCCESS })
