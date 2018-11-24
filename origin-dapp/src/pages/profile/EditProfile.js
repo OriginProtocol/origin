@@ -35,10 +35,11 @@ class EditProfile extends Component {
 
   componentDidUpdate(prevProps) {
     const { data } = this.props
-    const { pic } = data
+    const { pic, orientation } = data
     if (pic && pic !== prevProps.data.pic) {
       this.setState({
-        pic
+        pic,
+        orientation
       })
     }
 
@@ -95,6 +96,7 @@ class EditProfile extends Component {
                       image={this.state.pic}
                       className="primary"
                       placeholderStyle="unnamed"
+                      orientation={this.state.orientation}
                     />
                     <label className="edit-profile">
                       <img
