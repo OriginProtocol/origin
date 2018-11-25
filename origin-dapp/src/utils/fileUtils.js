@@ -114,7 +114,7 @@ export const getImageOrientation = async (file) => {
   const reader = new FileReader()
 
   return new Promise(resolve => {
-    reader.onload = ({ target: { result }}) => {
+    reader.onload = ({ target: { result } }) => {
       const view = new DataView(result)
       const defaultOrientation = 1
 
@@ -139,11 +139,14 @@ export const getImageOrientation = async (file) => {
           const tags = view.getUint16(offset, littleEndian)
           offset += 2
 
-          for (var i = 0; i < tags; i++) {
-            if (view.getUint16(offset + (i * 12), littleEndian) == 0x0112) {
-              return resolve(view.getUint16(offset + (i * 12) + 8, littleEndian))
+          let iterator = 0
+
+          do {
+            if (view.getUint16(offset + (iterator * 12), littleEndian) == 0x0112) {
+              return resolve(view.getUint16(offset + (iterator * 12) + 8, littleEndian))
             }
-          }
+            iterator += 1
+          } while (iterator < tags)
         }
         else if ((marker & 0xFF00) != 0xFF00) break
         else offset += view.getUint16(offset, false)

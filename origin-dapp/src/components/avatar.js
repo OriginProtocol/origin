@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 class Avatar extends Component {
   render() {
-    const { className, image, placeholderStyle, rotation = 'rotate(0deg)'} = this.props
+    const { className, image, placeholderStyle, rotation = 'rotate(0deg)' } = this.props
 
     return image ? (
       <div
