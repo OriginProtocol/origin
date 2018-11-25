@@ -120,6 +120,11 @@ class ListingCreate extends Component {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, false)
+
+        if (isNaN(listing.unitsRemaining)) {
+          listing.unitsRemaining = 1
+        }
+
         this.ensureUserIsSeller(listing.seller)
         this.setState({
           formListing: {
@@ -445,6 +450,7 @@ class ListingCreate extends Component {
     const { wallet, intl } = this.props
     const {
       formListing,
+      fractionalTimeIncrement,
       selectedBoostAmount,
       selectedSchemaType,
       schemaExamples,
@@ -618,7 +624,7 @@ class ListingCreate extends Component {
                 <Calendar
                   slots={ formData && formData.slots }
                   userType="seller"
-                  viewType={ this.state.fractionalTimeIncrement }
+                  viewType={ fractionalTimeIncrement }
                   step={ 60 }
                   onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
                   onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
