@@ -34,7 +34,7 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, skipCropping
   const imageSrc = await getDataUri(imageFileObj)
   let image
   let canvas
-  
+
   function drawImageOnCanvas(imgEl) {
     let defaultConfig
 
@@ -96,7 +96,7 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, skipCropping
       resizedHeight
     )
   }
- 
+
   return new Promise(resolve => {
     image = new Image()
     image.onload = () => {
@@ -108,4 +108,61 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, skipCropping
     }
     image.src = imageSrc
   })
+}
+
+export const getImageOrientation = async (file) => {
+  const reader = new FileReader()
+
+  return new Promise(resolve => {
+    reader.onload = ({ target: { result }}) => {
+      const view = new DataView(result)
+      const defaultOrientation = 1
+
+      if (result.length < 2 || view.getUint16(0, false) != 0xFFD8) {
+        return resolve(defaultOrientation)
+      }
+
+      const length = view.byteLength
+      let offset = 2
+
+      while (offset < length) {
+        const marker = view.getUint16(offset, false)
+        const startOfExif = marker == 0xFFE1
+        offset += 2
+
+        if (startOfExif) {
+          if (view.getUint32(offset += 2, false) != 0x45786966) {
+            return resolve(defaultOrientation)
+          }
+          const littleEndian = view.getUint16(offset += 6, false) == 0x4949
+          offset += view.getUint32(offset + 4, littleEndian)
+          const tags = view.getUint16(offset, littleEndian)
+          offset += 2
+
+          for (var i = 0; i < tags; i++) {
+            if (view.getUint16(offset + (i * 12), littleEndian) == 0x0112) {
+              return resolve(view.getUint16(offset + (i * 12) + 8, littleEndian))
+            }
+          }
+        }
+        else if ((marker & 0xFF00) != 0xFF00) break
+        else offset += view.getUint16(offset, false)
+      }
+      return resolve(defaultOrientation)
+    }
+
+    reader.readAsArrayBuffer(file.slice(0, 64 * 1024))
+  })
+}
+
+const rotation = {
+  1: 'rotate(0deg)',
+  3: 'rotate(180deg)',
+  6: 'rotate(90deg)',
+  8: 'rotate(270deg)'
+}
+
+export const getImageRotation = async (file) => {
+  const orientation =  await getImageOrientation(file)
+  return rotation[orientation]
 }

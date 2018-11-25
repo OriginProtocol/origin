@@ -306,7 +306,7 @@ class Profile extends Component {
                     image={provisional.pic}
                     className="primary"
                     placeholderStyle="unnamed"
-                    orientation={provisional.orientation}
+                    rotation={provisional.rotation}
                   />
                 </div>
                 <div className="col-8 col-md-9">
@@ -433,11 +433,11 @@ class Profile extends Component {
           isOpen={modalsOpen.cropModal}
           imageFileObj={imageToCrop}
           aspect={1} // force square aspect ratio
-          onCropComplete={(croppedImageUri, orientation) => {
+          onCropComplete={(croppedImageUri, rotation) => {
             this.props.updateProfile({
               data: {
                 pic: croppedImageUri,
-                orientation
+                rotation
               }
             })
             this.setState({
