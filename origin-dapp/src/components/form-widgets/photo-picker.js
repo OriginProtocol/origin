@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import ImageCropper from '../modals/image-cropper'
-import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
+import { getDataUri, generateCroppedImage, getImageRotation } from 'utils/fileUtils'
 
 const MAX_IMAGE_COUNT = 10
 
@@ -76,7 +76,7 @@ class PhotoPicker extends Component {
     const imagePromises = picUrls.map(url => {
       return new Promise(async resolve => {
         const image = new Image()
-        image.crossOrigin = 'anonymous' 
+        image.crossOrigin = 'anonymous'
 
         image.onload = function() {
           const canvas = document.createElement('canvas')
@@ -103,12 +103,14 @@ class PhotoPicker extends Component {
       for (const key in imageFiles) {
         if (imageFiles.hasOwnProperty(key)) {
           const file = imageFiles[key]
+          const imageRotation = await getImageRotation(file)
           const croppedImageFile = await generateCroppedImage(file)
           const croppedImageUri = await getDataUri(croppedImageFile)
 
           pictures.push({
             originalImageFile: file,
-            croppedImageUri
+            croppedImageUri,
+            imageRotation
           })
         }
       }
@@ -128,13 +130,15 @@ class PhotoPicker extends Component {
     })
   }
 
-  onCropComplete(croppedImageUri, imageFileObj) {
+  async onCropComplete(croppedImageUri, imageFileObj) {
     let showMaxImageCountMsg = false
     const imgInput = document.getElementById('photo-picker-input')
     const pictures = this.state.pictures
+    const imageRotation = await getImageRotation(imageFileObj)
     pictures[this.state.reCropImgIndex] = {
       originalImageFile: imageFileObj,
-      croppedImageUri
+      croppedImageUri,
+      imageRotation
     }
 
     if (pictures.length >= MAX_IMAGE_COUNT) {
@@ -326,6 +330,7 @@ class PhotoPicker extends Component {
                               pic.croppedImageUri :
                               pic
                             }
+                            style={{transform: pic.imageRotation}}
                           />
                           {typeof pic === 'object' &&
                             <a
