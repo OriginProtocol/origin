@@ -166,6 +166,6 @@ const rotation = {
 }
 
 export const getImageRotation = async (file) => {
-  const orientation =  await getImageOrientation(file)
+  const orientation = await getImageOrientation(file)
   return rotation[orientation]
 }
