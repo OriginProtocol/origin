@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { getStorageItem } from 'utils/localStorage'
 
 class Avatar extends Component {
   render() {
-    const { className, image, placeholderStyle, rotation = 'rotate(0deg)' } = this.props
+    const { className, image, placeholderStyle } = this.props
+    const rotation = getStorageItem('profilePicRotation', 'rotate(0deg)')
 
     return image ? (
       <div

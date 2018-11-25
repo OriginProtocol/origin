@@ -96,7 +96,6 @@ class EditProfile extends Component {
                       image={this.state.pic}
                       className="primary"
                       placeholderStyle="unnamed"
-                      rotation={this.state.rotation}
                     />
                     <label className="edit-profile">
                       <img

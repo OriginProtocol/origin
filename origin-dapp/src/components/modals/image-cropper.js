@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import ReactCrop from 'react-image-crop'
 import { getDataUri, generateCroppedImage, getImageRotation } from 'utils/fileUtils'
+import { saveStorageItem } from 'utils/localStorage'
 import Modal from 'components/modal'
 
 class ImageCropper extends Component {
@@ -29,8 +30,13 @@ class ImageCropper extends Component {
   async componentDidUpdate(prevProps) {
     if (this.props.imageFileObj && this.props.imageFileObj !== prevProps.imageFileObj) {
       const imageSrc = await getDataUri(this.props.imageFileObj)
+      const imageRotation = await getImageRotation(this.props.imageFileObj)
+
+      this.props.isProfilePhoto && saveStorageItem('profilePicRotation', imageRotation)
+
       this.setState({
         imageSrc,
+        imageRotation,
         ...this.props
       })
     }
@@ -55,15 +61,16 @@ class ImageCropper extends Component {
   async onCropComplete() {
     const { imageFileObj, pixelCrop } = this.state
 
-    const imageRotation = await getImageRotation(imageFileObj)
     const croppedImageFile = await generateCroppedImage(imageFileObj, pixelCrop)
     const croppedImageUri = await getDataUri(croppedImageFile)
 
-    this.props.onCropComplete(croppedImageUri, imageRotation, imageFileObj)
+    this.props.onCropComplete(croppedImageUri, imageFileObj)
   }
 
   render() {
-    const { imageSrc, crop } = this.state
+    const { imageSrc, crop, imageRotation } = this.state
+    const { mobileDevice } = this.props
+    const imageStyle = !mobileDevice && { imageStyle: { transform: imageRotation } }
 
     return (
       <Modal
@@ -77,6 +84,7 @@ class ImageCropper extends Component {
             src={imageSrc}
             crop={crop}
             onChange={this.onCropChange}
+            {...imageStyle}
           />
         }
         <div className="button-container d-flex justify-content-center">

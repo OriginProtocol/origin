@@ -269,7 +269,8 @@ class Profile extends Component {
       provisional,
       published,
       wallet,
-      intl
+      intl,
+      mobileDevice
     } = this.props
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = !!changes.length
@@ -306,7 +307,6 @@ class Profile extends Component {
                     image={provisional.pic}
                     className="primary"
                     placeholderStyle="unnamed"
-                    rotation={provisional.rotation}
                   />
                 </div>
                 <div className="col-8 col-md-9">
@@ -432,12 +432,13 @@ class Profile extends Component {
         <ImageCropper
           isOpen={modalsOpen.cropModal}
           imageFileObj={imageToCrop}
+          isProfilePhoto={true}
+          mobileDevice={mobileDevice}
           aspect={1} // force square aspect ratio
-          onCropComplete={(croppedImageUri, rotation) => {
+          onCropComplete={(croppedImageUri) => {
             this.props.updateProfile({
               data: {
-                pic: croppedImageUri,
-                rotation
+                pic: croppedImageUri
               }
             })
             this.setState({
@@ -718,7 +719,8 @@ const mapStateToProps = state => {
     wallet: state.wallet,
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,
-    networkId: state.app.web3.networkId
+    networkId: state.app.web3.networkId,
+    mobileDevice: state.app.mobileDevice
   }
 }
 
