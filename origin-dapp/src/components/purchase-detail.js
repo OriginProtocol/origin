@@ -174,6 +174,10 @@ class PurchaseDetail extends Component {
       withdrawOffer: {
         id: 'purchase-detail.withdrawOffer',
         defaultMessage: 'Withdraw Offer'
+      },
+      enableMessaging: {
+        id: 'purchase-detail.enableMessaging',
+        defaultMessage: 'enable messaging'
       }
     })
 
@@ -1247,6 +1251,12 @@ class PurchaseDetail extends Component {
             this.initiateDispute()
           }}
         />
+        {
+          /*
+            [micah] Messaging is now required before creating a listing or offer, but
+            I'm leaving this here to catch older users who may have predated this change.
+          */
+        }
         <PrerequisiteModal
           isOpen={modalsOpen.prerequisite}
           perspective={perspective}

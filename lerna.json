@@ -10,6 +10,7 @@
     "origin-linking",
     "origin-mobile",
     "origin-notifications",
+    "origin-token-transfer/*",
     "experimental/*"
   ],
   "version": "independent"

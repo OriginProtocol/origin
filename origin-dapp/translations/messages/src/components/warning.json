@@ -1,7 +1,11 @@
 [
   {
-    "id": "warning.message",
+    "id": "warning.desktopMessage",
     "defaultMessage": "You're currently using the Origin {networkType}."
+  },
+  {
+    "id": "warning.mobileMessage",
+    "defaultMessage": "Welcome to the Origin Beta!"
   },
   {
     "id": "warning.invitation",
