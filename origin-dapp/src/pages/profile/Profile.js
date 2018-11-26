@@ -288,7 +288,7 @@ class Profile extends Component {
     const {
       changes,
       lastPublish,
-      mobileDevice,
+      mobileLayout,
       profile,
       provisional,
       published,
@@ -325,7 +325,7 @@ class Profile extends Component {
     )
 
     let descriptionClasses = 'ws-aware description'
-    if (mobileDevice)
+    if (mobileLayout)
       descriptionClasses += ' mb-0'
     if (descriptionExpanded)
       descriptionClasses += ' expanded'
@@ -335,20 +335,20 @@ class Profile extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12 col-lg-8">
-              {mobileDevice && (
+              {mobileLayout && (
                 <div className={`row attributes mb-0`}>
                   <Guidance />
                 </div>
               )}
-              <div className={`row attributes ${mobileDevice ? 'mt-3' : '' }`}>
-                <div className={mobileDevice ? 'col-3 pr-0' : 'col-4'}>
+              <div className={`row attributes ${mobileLayout ? 'mt-3' : '' }`}>
+                <div className={mobileLayout ? 'col-3 pr-0' : 'col-4'}>
                   <Avatar
                     image={provisional.pic}
                     className="primary"
                     placeholderStyle="unnamed"
                   />
                 </div>
-                <div className={mobileDevice ? 'col-9' : 'col-8'}>
+                <div className={mobileLayout ? 'col-9' : 'col-8'}>
                   <div className="name d-flex">
                     <h1>{fullName || <UnnamedUser />}</h1>
                     <div className="icon-container">
@@ -362,7 +362,7 @@ class Profile extends Component {
                     </div>
                   </div>
                   <p className={descriptionClasses}>{description}</p>
-                  {mobileDevice && (
+                  {mobileLayout && (
                     <div className='mb-2 description-options'>
                     {/*
                       * TODO: do not display the link when there is no text overflow. 
@@ -393,6 +393,7 @@ class Profile extends Component {
                 published={published}
                 provisional={provisional}
                 handleToggle={this.handleToggle}
+                mobileLayout={mobileLayout}
               />
 
               <div className="col-12">
@@ -452,7 +453,7 @@ class Profile extends Component {
                 withMenus={true}
                 withProfile={false}
               />
-              {!mobileDevice && (<Guidance />)}
+              {!mobileLayout && (<Guidance />)}
             </div>
           </div>
         </div>
@@ -768,7 +769,7 @@ const mapStateToProps = state => {
     strength: state.profile.strength,
     changes: state.profile.changes,
     lastPublish: state.profile.lastPublish,
-    mobileDevice: state.app.mobileDevice,
+    mobileLayout: state.app.mobileDevice,
     networkId: state.app.web3.networkId,
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,

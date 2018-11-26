@@ -1,28 +1,30 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 
 class VerifierServices extends Component {
   render() {
-    const { published, provisional, handleToggle } = this.props
+    const { published, provisional, handleToggle, mobileLayout } = this.props
     return (
       <div className="services-container">
-        <p className="credit">
-          <FormattedMessage
-            id={'_Services.poweredBy'}
-            defaultMessage={'Powered by'}
-          />{' '}
-          <span className="logo">
-            Origin<sup>ID</sup>
-          </span>
-        </p>
-        <p className="directive">
-          <FormattedMessage
-            id={'_Services.pleaseConnectAccounts'}
-            defaultMessage={
-              'Please connect your accounts below to strengthen your identity on Origin.'
-            }
-          />
-        </p>
+        { !mobileLayout && <Fragment>
+          <p className="credit">
+            <FormattedMessage
+              id={'_Services.poweredBy'}
+              defaultMessage={'Powered by'}
+            />{' '}
+            <span className="logo">
+              Origin<sup>ID</sup>
+            </span>
+          </p>
+          <p className="directive">
+            <FormattedMessage
+              id={'_Services.pleaseConnectAccounts'}
+              defaultMessage={
+                'Please connect your accounts below to strengthen your identity on Origin.'
+              }
+            />
+          </p>
+        </Fragment>}
         <div className="row no-gutters">
           <div className="col-12 col-sm-6 col-md-4">
             <button
