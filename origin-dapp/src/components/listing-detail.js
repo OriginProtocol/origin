@@ -199,6 +199,7 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await getListing(this.props.listingId, true)
+console.log('================================== listing: ', listing)
       this.setState({
         ...listing,
         loading: false,
