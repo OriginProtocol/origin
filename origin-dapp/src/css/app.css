@@ -5273,8 +5273,9 @@ a:not([href]):not([tabindex]).span-link {
   }
 }
 
-/* anything smaller than md */
+/* md - */
 @media (max-width: 767px) {
+  /* Profile */
   .warning.alert {
     padding: 0.25rem 0.25rem;
   }
@@ -5301,6 +5302,41 @@ a:not([href]):not([tabindex]).span-link {
 
   .warning.alert .caret {
     margin-top: -0.15rem;
+  }
+
+  .profile-wrapper .container .name h1 {
+    font-size: 1.4rem;
+    line-height: 1.2;
+    font-weight: 300;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .profile-wrapper .edit-profile img {
+    width: 21px;
+    height: 21px;
+  }
+
+  .profile-wrapper .container .description {
+    font-size: 0.93rem;
+    height: 2.7rem;
+    overflow: hidden;
+  }
+
+  .profile-wrapper .container .description.expanded {
+    height: auto;
+    overflow: auto
+  }
+
+  .profile-wrapper .container .description-options a {
+    font-size: 0.875rem;
+    font-weight: normal;
+  }
+
+  .profile-wrapper #description-caret {
+    padding-left: 0.2rem;
+    padding-bottom: 0.1rem;
   }
 }
 

@@ -54,6 +54,7 @@ class Profile extends Component {
       this
     )
     this.profileDeploymentComplete = this.profileDeploymentComplete.bind(this)
+    this.handleDescriptionReadMore = this.handleDescriptionReadMore.bind(this)
     /*
       Three-ish Profile States
 
@@ -89,7 +90,8 @@ class Profile extends Component {
       provisional: props.provisional,
       successMessage: '',
       wallet: null,
-      imageToCrop: null
+      imageToCrop: null,
+      descriptionExpanded: false
     }
 
     this.intlMessages = defineMessages({
@@ -129,6 +131,14 @@ class Profile extends Component {
       airbnbVerified: {
         id: 'Profile.airbnbVerified',
         defaultMessage: 'Airbnb account verified!'
+      },
+      descriptionReadMore: {
+        id: 'Profile.descriptionReadMore',
+        defaultMessage: 'Read more'
+      },
+      descriptionReadLess: {
+        id: 'Profile.descriptionReadLess',
+        defaultMessage: 'Read less'
       }
     })
   }
@@ -163,6 +173,12 @@ class Profile extends Component {
         published: this.props.publishedProgress
       })
     }
+  }
+
+  // when user clicks on "Read More" link under the description
+  handleDescriptionReadMore(e) {
+    e.preventDefault()
+    this.setState({ descriptionExpanded: !this.state.descriptionExpanded })
   }
 
   // conditionally close modal identified by data attribute
@@ -260,7 +276,14 @@ class Profile extends Component {
   }
 
   render() {
-    const { modalsOpen, progress, successMessage, imageToCrop } = this.state
+    const {
+      modalsOpen,
+      progress,
+      successMessage,
+      imageToCrop,
+      descriptionExpanded,
+      lastPublishTime
+   } = this.state
 
     const {
       changes,
@@ -295,6 +318,17 @@ class Profile extends Component {
     }
     const statusClass = statusClassMap[publishStatus]
     const statusText = statusTextMap[publishStatus]
+    const descriptionLinkText = this.props.intl.formatMessage(
+      descriptionExpanded ?
+      this.intlMessages.descriptionReadLess :
+      this.intlMessages.descriptionReadMore
+    )
+
+    let descriptionClasses = 'ws-aware description'
+    if (mobileDevice)
+      descriptionClasses += ' mb-0'
+    if (descriptionExpanded)
+      descriptionClasses += ' expanded'
 
     return (
       <div className="current-user profile-wrapper">
@@ -307,14 +341,14 @@ class Profile extends Component {
                 </div>
               )}
               <div className={`row attributes ${mobileDevice ? 'mt-3' : '' }`}>
-                <div className="col-4 col-md-3 col-sm-3">
+                <div className={mobileDevice ? 'col-3 pr-0' : 'col-4'}>
                   <Avatar
                     image={provisional.pic}
                     className="primary"
                     placeholderStyle="unnamed"
                   />
                 </div>
-                <div className="col-8 col-md-9 col-sm-9">
+                <div className={mobileDevice ? 'col-9' : 'col-8'}>
                   <div className="name d-flex">
                     <h1>{fullName || <UnnamedUser />}</h1>
                     <div className="icon-container">
@@ -323,11 +357,25 @@ class Profile extends Component {
                         data-modal="profile"
                         onClick={this.handleToggle}
                       >
-                        <img src="images/edit-icon.svg" alt="edit name" />
+                        <img className='edit-profile' src="images/edit-icon.svg" alt="edit name" />
                       </button>
                     </div>
                   </div>
-                  <p className="ws-aware description">{description}</p>
+                  <p className={descriptionClasses}>{description}</p>
+                  {mobileDevice && (
+                    <div className='mb-2 description-options'>
+                      <a
+                        href="javascript:void(0);"
+                        onClick={this.handleDescriptionReadMore}
+                      >
+                        {descriptionLinkText}
+                        <img
+                          id='description-caret'
+                          src={descriptionExpanded ? 'images/caret-up-blue.svg' : 'images/caret-down-blue.svg'}
+                        />
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -386,7 +434,7 @@ class Profile extends Component {
                           id={'Profile.lastPublished'}
                           defaultMessage={'Last published'}
                         />{' '}
-                        {this.state.lastPublishTime}
+                        {lastPublishTime}
                       </span>
                     )}
                   </div>
