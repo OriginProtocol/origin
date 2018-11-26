@@ -145,7 +145,11 @@ class Messaging {
     this.GLOBAL_KEYS = messagingNamespace + PRE_GLOBAL_KEYS
     this.CONV = messagingNamespace + PRE_CONV
     this.CONV_INIT_PREFIX = messagingNamespace + PRE_CONV_INIT_PREFIX
+
     this.cookieStorage = new cookieStorage({ path: (typeof location === 'object' && location.pathname) ? location.pathname : '/' })
+
+    //default to cookieStorage
+    this.currentStorage = this.cookieStorage
 
     this.registerWalletLinker()
   }
@@ -161,7 +165,19 @@ class Messaging {
 
   onAccount(account_key) {
     if ((account_key && !this.account_key) || account_key != this.account_key) {
+      this.checkSetCurrentStorage(account_key)
       this.init(account_key)
+    }
+  }
+
+  checkSetCurrentStorage(account_key) {
+    if (sessionStorage.getItem(`${MESSAGING_KEY}:${account_key}`))
+    {
+      this.currentStorage = sessionStorage
+    }
+    else
+    {
+      this.currentStorage = this.cookieStorage
     }
   }
 
@@ -188,7 +204,7 @@ class Messaging {
     const pub_sig = data.pub_sig
     if (account_id == await this.contractService.currentAccount())
     {
-      console.log("data:", data)
+      this.currentStorage = sessionStorage
       this.setKeyItem(`${MESSAGING_KEY}:${account_id}`, sig_key)
       this.setKeyItem(`${MESSAGING_PHRASE}:${account_id}`, sig_phrase)
       this.setKeyItem(`${PUB_MESSAGING}:${account_id}`, pub_msg)
@@ -203,11 +219,11 @@ class Messaging {
   }
 
   setKeyItem(key, value) {
-    this.cookieStorage.setItem(key, value)
+    this.currentStorage.setItem(key, value)
   }
 
   getKeyItem(key) {
-    return this.cookieStorage.getItem(key)
+    return this.currentStorage.getItem(key)
   }
 
   getMessagingKey() {

@@ -39,6 +39,7 @@ export default class WalletLinker {
     )
     this.loadSessionStorage()
     this.closeLinkMessages()
+    localStorage.removeItem(LOCAL_KEY_STORE)
     //clearInterval(self.interval)
   }
 
