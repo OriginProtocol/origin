@@ -17,7 +17,9 @@ class ListingsGrid extends Component {
   }
 
   componentWillMount() {
-    if (this.props.renderMode === 'home-page') this.props.getListingIds()
+    if (this.props.renderMode === 'home-page') {
+      this.props.getListingIds()
+    }
   }
 
   handleOnChange(page) {
@@ -110,7 +112,7 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   contractFound: state.listings.contractFound,
-  listingIds: state.marketplace.ids
+  listingIds: state.listings.ids
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -4914,6 +4914,7 @@ sup {
 }
 
 .publish.modal img,
+.mobile-publish.modal img,
 .unload.modal img {
   height: auto;
   width: auto;

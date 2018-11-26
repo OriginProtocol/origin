@@ -1,0 +1,19 @@
+releases:
+  - name: cert-manager
+    namespace: kube-system
+    chart: stable/cert-manager
+    values:
+      - ../values/origin/cert-manager/values.yaml
+
+  - name: {{ .Namespace }}-ingress
+    namespace: {{ .Namespace }}
+    chart: stable/nginx-ingress
+    values:
+      - ../values/origin/nginx-ingress/values-{{ .Namespace }}.yaml
+
+  - name: {{ .Namespace }}
+    namespace: {{ .Namespace }}
+    chart: ../charts/origin
+    values:
+      - ../values/origin/values-{{ .Namespace }}.yaml
+      - ../values/origin/secrets-{{ .Namespace }}.yaml
