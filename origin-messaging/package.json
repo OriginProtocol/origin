@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@babel/node": "^7.0.0",
+    "eslint": "^5.9.0",
     "nodemon": "^1.18.6"
   }
 }

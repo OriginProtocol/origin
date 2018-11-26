@@ -8,9 +8,9 @@ export default function getCurrentProvider(web3) {
 
   if (web3.currentProvider.isMetaMask) return 'MetaMask'
 
-  if (web3.currentProvider.isTrust) return 'Trust'
+  if (web3.currentProvider.isTrust) return 'Trust Wallet'
 
-  if (typeof window.SOFA !== 'undefined') return 'Toshi'
+  if (web3.currentProvider.isToshi) return 'Coinbase Wallet'
 
   if (typeof window.__CIPHER__ !== 'undefined') return 'Cipher'
 

@@ -27,9 +27,10 @@ node_modules/
 
 # Deployment #
 ##############
-/deployment/kubernetes/values/secrets-dev.yaml
-/deployment/kubernetes/values/secrets-staging.yaml
-/deployment/kubernetes/values/secrets-prod.yaml
+secrets.yaml
+secrets-dev.yaml
+secrets-staging.yaml
+secrets-prod.yaml
 
 # Development #
 ###############
@@ -145,6 +146,7 @@ node_modules/
 *.log
 *.sql
 *.sqlite
+*.sqlite3
 
 # OS generated files #
 ######################
