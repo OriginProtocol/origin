@@ -121,10 +121,6 @@ class ListingCreate extends Component {
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, false)
 
-        if (isNaN(listing.unitsRemaining)) {
-          listing.unitsRemaining = 1
-        }
-
         this.ensureUserIsSeller(listing.seller)
         this.setState({
           formListing: {

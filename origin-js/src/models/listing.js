@@ -136,7 +136,11 @@ export class Listing {
 
   get unitsRemaining() {
     // Should never be negative.
-    return Math.max(this.unitsTotal - this.unitsSold, 0)
+    if (this.type === 'unit') {
+      return Math.max(this.unitsTotal - this.unitsSold, 0)
+    } else {
+      return 1
+    }
   }
 
   get active() {
