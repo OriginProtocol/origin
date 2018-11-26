@@ -135,11 +135,11 @@ export class Listing {
   }
 
   get unitsRemaining() {
-    // Should never be negative.
-    if (this.type === 'unit') {
-      return Math.max(this.unitsTotal - this.unitsSold, 0)
-    } else {
+    if (this.type === 'fractional') {
       return 1
+    } else {
+      // Should never be negative.
+      return Math.max(this.unitsTotal - this.unitsSold, 0)
     }
   }
 
