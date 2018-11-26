@@ -364,6 +364,10 @@ class Profile extends Component {
                   <p className={descriptionClasses}>{description}</p>
                   {mobileDevice && (
                     <div className='mb-2 description-options'>
+                    {/*
+                      * TODO: do not display the link when there is no text overflow. 
+                      * Downside: probably requires a hacky javascript solution.
+                    */}
                       <a
                         href="javascript:void(0);"
                         onClick={this.handleDescriptionReadMore}
