@@ -5434,11 +5434,19 @@ a:not([href]):not([tabindex]).span-link {
     padding: 0;
   }
 
+  .primary.avatar-container {
+    border-radius: 5px;
+  }
+
   .profile-wrapper .guidance {
     background-color: white;
     padding: 10px;
-    margin: 20px;
+    margin: 15px;
     width: 100%;
+  }
+
+  .profile-wrapper .attributes {
+    margin-bottom: 10px
   }
 
   .profile-wrapper .guidance p {
@@ -5448,6 +5456,19 @@ a:not([href]):not([tabindex]).span-link {
 
   .profile-wrapper .guidance img {
     width: 3.5rem;
+  }
+
+  .profile-wrapper .name h1 {
+    font-size: 2rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .profile-wrapper .description p {
+    line-height: 1.2rem;
+    height: 3.6rem;
+    overflow: hidden;
   }
 }
 

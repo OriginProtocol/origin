@@ -57,7 +57,7 @@ class Guidance extends Component {
     let wrapperClass, imageWrapperClass, textClass, guidanceText
     let showGuidance = true
     if (mobileDevice){
-      wrapperClass = 'guidance row'
+      wrapperClass = 'guidance row mb-0'
       imageWrapperClass = 'pl-0 pr-0 col-2'
       textClass = 'col-10'
       guidanceText = this.state.expanded ? guidanceMessage : shortGuidanceMessage

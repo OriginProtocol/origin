@@ -301,18 +301,20 @@ class Profile extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12 col-lg-8">
-              <div className="row attributes">
-                {mobileDevice && (<Guidance />)}
-              </div>
-              <div className="row attributes">
-                <div className="col-4 col-md-3">
+              {mobileDevice && (
+                <div className={`row attributes mb-0`}>
+                  <Guidance />
+                </div>
+              )}
+              <div className={`row attributes ${mobileDevice ? 'mt-3' : '' }`}>
+                <div className="col-4 col-md-3 col-sm-3">
                   <Avatar
                     image={provisional.pic}
                     className="primary"
                     placeholderStyle="unnamed"
                   />
                 </div>
-                <div className="col-8 col-md-9">
+                <div className="col-8 col-md-9 col-sm-9">
                   <div className="name d-flex">
                     <h1>{fullName || <UnnamedUser />}</h1>
                     <div className="icon-container">
@@ -325,7 +327,7 @@ class Profile extends Component {
                       </button>
                     </div>
                   </div>
-                  <p className="ws-aware">{description}</p>
+                  <p className="ws-aware description">{description}</p>
                 </div>
               </div>
 
