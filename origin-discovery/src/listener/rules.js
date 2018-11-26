@@ -20,6 +20,27 @@ function generateOfferId(log) {
   ].join('-')
 }
 
+/**
+ * Ensures data fetched from the blockchain meets the freshness criteria
+ * specified in blockInfo. This is to catch the case where data is fetched from
+ * an out of sync node that returns stale data.
+ * @param {List(Event)} Web3 events
+ * @param {blockNumber: number, logIndex: number} blockInfo
+ * @throws {Error} If freshness check fails
+ */
+function checkFreshness(events, blockInfo) {
+  // Loop thru events to ensure at least one of them is as fresh as blockInfo.
+  events.forEach(event => {
+    console.log("CHECKING EVENT ", JSON.stringify(event), JSON.stringify(blockInfo))
+    if ((event.blockNumber > blockInfo.blockNumber) ||
+      (event.blockNumber === blockInfo.blockNumber && event.logIndex >= blockInfo.logIndex)) {
+      return
+    }
+  })
+  console.log("FAILURE !!!!")
+  throw new Error('Freshness check failed')
+}
+
 async function getListingDetails(log, origin) {
   const listingId = generateListingId(log)
   const blockInfo = {
@@ -30,6 +51,8 @@ async function getListingDetails(log, origin) {
   // listings version history if the listener is re-indexing data.
   // Otherwise all the listing version rows in the DB would end up with the same data.
   const listing = await origin.marketplace.getListing(listingId, blockInfo)
+  checkFreshness(listing.events, blockInfo)
+
   let seller
   try {
     seller = await origin.users.get(listing.seller)
@@ -57,7 +80,11 @@ async function getOfferDetails(log, origin) {
   //  - BlockInfo is not needed for the call to getOffer since offer data stored in the DB
   // is not versioned.
   const listing = await origin.marketplace.getListing(listingId, blockInfo)
+  checkFreshness(listing.events, blockInfo)
+
   const offer = await origin.marketplace.getOffer(offerId)
+  checkFreshness(offer.events, blockInfo)
+
   let seller
   let buyer
   try {
@@ -325,4 +352,4 @@ async function handleLog (log, rule, contractVersion, context) {
   }
 }
 
-module.exports = { handleLog, LISTEN_RULES }
+module.exports = { checkFreshness, handleLog, LISTEN_RULES }
