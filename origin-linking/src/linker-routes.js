@@ -32,7 +32,6 @@ router.get("/link-info/:code", async (req, res) => {
   const {code} = req.params
   // this is the context
   const {appInfo, linkId, pubKey} = await linker.getLinkInfo(code)
-  console.log("got info:", {app_info:appInfo, link_id:linkId, pub_key:pubKey})
   res.send({app_info:appInfo, link_id:linkId, pub_key:pubKey})
 })
 
@@ -121,7 +120,6 @@ router.ws("/wallet-messages/:walletToken/:readId", (ws, req) => {
 
   const closeHandler = linker.handleMessages(walletToken, readId, (msg, msgId) =>
     {
-      console.log("sending messages:", {msg, msgId})
       ws.send(JSON.stringify({msg, msgId}))
     })
   ws.on("close", () => {
