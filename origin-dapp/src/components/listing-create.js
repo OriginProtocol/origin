@@ -857,37 +857,39 @@ class ListingCreate extends Component {
                       </p>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-3">
-                      <p className="label">
-                        <FormattedMessage
-                          id={'listing-create.boost-level'}
-                          defaultMessage={'Boost Level'}
-                        />
-                      </p>
+                  {!isEditMode &&
+                    <div className="row">
+                      <div className="col-md-3">
+                        <p className="label">
+                          <FormattedMessage
+                            id={'listing-create.boost-level'}
+                            defaultMessage={'Boost Level'}
+                          />
+                        </p>
+                      </div>
+                      <div className="col-md-9">
+                        <p>
+                          <img
+                            className="ogn-icon"
+                            src="images/ogn-icon.svg"
+                            role="presentation"
+                          />
+                          <span className="text-bold">{formData.boostValue}</span>&nbsp;
+                          <Link
+                            className="ogn-abbrev"
+                            to="/about-tokens"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            OGN
+                          </Link>
+                          <span className="help-block">
+                            &nbsp;| {formData.boostLevel.toUpperCase()}
+                          </span>
+                        </p>
+                      </div>
                     </div>
-                    <div className="col-md-9">
-                      <p>
-                        <img
-                          className="ogn-icon"
-                          src="images/ogn-icon.svg"
-                          role="presentation"
-                        />
-                        <span className="text-bold">{formData.boostValue}</span>&nbsp;
-                        <Link
-                          className="ogn-abbrev"
-                          to="/about-tokens"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          OGN
-                        </Link>
-                        <span className="help-block">
-                          &nbsp;| {formData.boostLevel.toUpperCase()}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
+                  }
                 </div>
                 {/* Revisit this later
                   <Link
