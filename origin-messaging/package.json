@@ -7,10 +7,13 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "babel src/* -d dist --presets @babel/env",
-    "dev": "nodemon --exec 'babel-node' src/index.js --presets @babel/env",
+    "build": "per-env",
+    "build:production": "babel src/* -d dist --presets @babel/env",
+    "start": "per-env",
+    "start:development": "nodemon --exec 'babel-node' src/index.js --presets @babel/env",
+    "prestart:production": "npm run build",
+    "start:production": "node dist/index.js",
     "lint": "eslint '**/*.js' --rulesdir ../",
-    "start": "node dist/index.js",
     "test": "echo \"Warning: no tests specified\""
   },
   "repository": {
@@ -34,6 +37,7 @@
     "ipfs-pubsub-1on1": "0.0.4",
     "logplease": "^1.2.14",
     "orbit-db": "^0.19.8",
+    "per-env": "^1.0.2",
     "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
