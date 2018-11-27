@@ -29,7 +29,7 @@ class Warning extends Component {
         <div className="container">
           <div className="row">
             <div className="col">
-              <div className="d-flex align-items-start">
+              <div className="d-flex align-items-start align-items-md-center">
                 <BetaBadge />
                 <div className="text-container mr-auto pt-1">
                   <p>
