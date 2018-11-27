@@ -84,6 +84,7 @@ class PhotoPicker extends Component {
           canvas.height = this.naturalHeight
           canvas.getContext('2d').drawImage(this, 0, 0)
           canvas.toBlob(file => {
+            console.log("CANVASE TO BLOB")
             resolve(getDataUri(file))
           }, 'image/jpeg')
         }
@@ -110,6 +111,7 @@ class PhotoPicker extends Component {
       a.readAsDataURL(blob)
     })
   }
+
   async onFileSelected(e) {
     if (e.target.files && e.target.files.length > 0) {
       const imageFiles = e.target.files
@@ -125,19 +127,16 @@ class PhotoPicker extends Component {
           const loadingImage = loadImage(
               file,
               (canvas, meta) => {
-                canvas.toBlob(async (blob) => {
-                  blob.name = file.name
-                  const newDataUrl = await this.blobToDataURL(blob)
-                  pictures.push({
-                    originalImageFile: file,
-                    croppedImageUri: newDataUrl
-                  })
-
-                  this.setState(
-                    { pictures },
-                    () => this.props.onChange(this.picURIsOnly(pictures))
-                  )
+                const dataUrl = canvas.toDataURL()
+                pictures.push({
+                  originalImageFile: file,
+                  croppedImageUri: dataUrl
                 })
+
+                this.setState(
+                  { pictures },
+                  () => this.props.onChange(this.picURIsOnly(pictures))
+                )
               },
               {orientation: imageRotation, meta: true}
           )
@@ -158,11 +157,10 @@ class PhotoPicker extends Component {
     let showMaxImageCountMsg = false
     const imgInput = document.getElementById('photo-picker-input')
     const pictures = this.state.pictures
-    const imageRotation = await getImageRotation(imageFileObj)
+
     pictures[this.state.reCropImgIndex] = {
       originalImageFile: imageFileObj,
-      croppedImageUri,
-      imageRotation
+      croppedImageUri
     }
 
     if (pictures.length >= MAX_IMAGE_COUNT) {
@@ -354,7 +352,6 @@ class PhotoPicker extends Component {
                               pic.croppedImageUri :
                               pic
                             }
-                            style={{transform: pic.imageRotation}}
                           />
                           {typeof pic === 'object' &&
                             <a

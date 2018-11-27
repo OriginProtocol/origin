@@ -35,11 +35,10 @@ class EditProfile extends Component {
 
   componentDidUpdate(prevProps) {
     const { data } = this.props
-    const { pic, rotation } = data
+    const { pic } = data
     if (pic && pic !== prevProps.data.pic) {
       this.setState({
-        pic,
-        rotation
+        pic
       })
     }
 

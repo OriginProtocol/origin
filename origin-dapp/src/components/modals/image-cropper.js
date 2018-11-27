@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import ReactCrop from 'react-image-crop'
-import { getDataUri, generateCroppedImage, getImageRotation } from 'utils/fileUtils'
+import { getDataUri, generateCroppedImage, getImageOrientation } from 'utils/fileUtils'
 import { saveStorageItem } from 'utils/localStorage'
 import Modal from 'components/modal'
 
@@ -29,14 +29,16 @@ class ImageCropper extends Component {
 
   async componentDidUpdate(prevProps) {
     if (this.props.imageFileObj && this.props.imageFileObj !== prevProps.imageFileObj) {
-      const imageSrc = await getDataUri(this.props.imageFileObj)
-      const imageRotation = await getImageRotation(this.props.imageFileObj)
+      const imageOrientation = await getImageOrientation(this.props.imageFileObj)
 
-      this.props.isProfilePhoto && saveStorageItem('profilePicRotation', imageRotation)
+      const loadingImage = loadImage(
+        this.props.imageFileObj,
+        () => {},
+        {orientation: imageOrientation}
+      )
 
       this.setState({
-        imageSrc,
-        imageRotation,
+        imageSrc: loadingImage.src,
         ...this.props
       })
     }
@@ -84,7 +86,6 @@ class ImageCropper extends Component {
             src={imageSrc}
             crop={crop}
             onChange={this.onCropChange}
-            {...imageStyle}
           />
         }
         <div className="button-container d-flex justify-content-center">
