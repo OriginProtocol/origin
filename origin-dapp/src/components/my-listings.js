@@ -10,6 +10,8 @@ import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
+const { web3 } = origin.contractService
+
 class MyListings extends Component {
   constructor(props) {
     super(props)

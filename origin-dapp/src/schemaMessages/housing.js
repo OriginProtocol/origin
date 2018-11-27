@@ -25,17 +25,9 @@ export default defineMessages({
     id: 'schema.housing.selectPhotos',
     defaultMessage: 'Select photos'
   },
-  'schema.housing.aptsWanted': {
-    id: 'schema.housing.aptsWanted',
-    defaultMessage: 'Apts Wanted'
-  },
   'schema.housing.aptsHousingForRent': {
     id: 'schema.housing.aptsHousingForRent',
     defaultMessage: 'Apts/Housing for Rent'
-  },
-  'schema.housing.housingSwap': {
-    id: 'schema.housing.housingSwap',
-    defaultMessage: 'Housing Swap'
   },
   'schema.housing.officeCommercial': {
     id: 'schema.housing.officeCommercial',
@@ -53,21 +45,9 @@ export default defineMessages({
     id: 'schema.housing.realEstate',
     defaultMessage: 'Real Estate'
   },
-  'schema.housing.realEstateWanted': {
-    id: 'schema.housing.realEstateWanted',
-    defaultMessage: 'Real Estate Wanted'
-  },
-  'schema.housing.roomShareWanted': {
-    id: 'schema.housing.roomShareWanted',
-    defaultMessage: 'Room/Share Wanted'
-  },
-  'schema.housing.roomsShares': {
-    id: 'schema.housing.roomsShares',
-    defaultMessage: 'Rooms & Shares'
-  },
-  'schema.housing.subletTempWanted': {
-    id: 'schema.housing.subletTempWanted',
-    defaultMessage: 'Sublet/Temp Wanted'
+  'schema.housing.roomShares': {
+    id: 'schema.housing.roomShares',
+    defaultMessage: 'Room Shares'
   },
   'schema.housing.subletsTemporary': {
     id: 'schema.housing.subletsTemporary',

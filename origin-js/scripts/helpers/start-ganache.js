@@ -9,7 +9,7 @@ const startGanache = () => {
       default_balance_ether: 100,
       network_id: 999,
       seed: 123,
-      blocktime: 0,
+      blockTime: 1,
       mnemonic:
         'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
     })

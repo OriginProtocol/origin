@@ -26,11 +26,13 @@ import Calendar from './calendar'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { getListing } from 'utils/listing'
+import { getListing, transformPurchasesOrSales } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 
 import origin from '../services/origin'
+
+const { web3 } = origin.contractService
 
 /* linking to contract Etherscan requires knowledge of which network we're on */
 const etherscanDomains = {
@@ -75,15 +77,10 @@ class ListingsDetail extends Component {
       }
     })
 
-    this.handleBuyClicked = this.handleBuyClicked.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
     this.setFeaturedImage = this.setFeaturedImage.bind(this)
-  }
-
-  async handleBuyClicked() {
-    this.props.storeWeb3Intent('buy this listing')
   }
 
   async componentWillMount() {
@@ -111,71 +108,78 @@ class ListingsDetail extends Component {
 
   async handleMakeOffer(skip, slotsToReserve) {
     // onboard if no identity, purchases, and not already completed
+    const { isFractional } = this.state
     const shouldOnboard =
       !this.props.profile.strength &&
       !this.state.purchases.length &&
       !this.state.onboardingCompleted
 
-    this.props.storeWeb3Intent('offer to buy this listing')
+    this.props.storeWeb3Intent('purchase this listing')
 
-    if (web3.givenProvider && this.props.web3Account) {
-      if (!skip && shouldOnboard) {
-        return this.setState({
-          onboardingCompleted: true,
-          step: this.STEP.ONBOARDING,
-          slotsToReserve
-        })
+    // defer to parent modal if user activation is insufficient
+    if (
+      !web3.givenProvider ||
+      !this.props.web3Account ||
+      !this.props.messagingEnabled
+    ) {
+      return
+    }
+
+    if (!skip && shouldOnboard) {
+      return this.setState({
+        onboardingCompleted: true,
+        step: this.STEP.ONBOARDING,
+        slotsToReserve
+      })
+    }
+
+    this.setState({ step: this.STEP.METAMASK })
+
+    const slots = slotsToReserve || this.state.slotsToReserve
+    const price =
+      isFractional ?
+        slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
+        this.state.price
+
+    try {
+      const offerData = {
+        listingId: this.props.listingId,
+        listingType: this.state.listingType,
+        totalPrice: {
+          amount: price,
+          currency: 'ETH'
+        },
+        commission: {
+          amount: this.state.boostValue.toString(),
+          currency: 'OGN'
+        },
+        // Set the finalization time to ~1 year after the offer is accepted.
+        // This is the window during which the buyer may file a dispute.
+        finalizes: 365 * 24 * 60 * 60
       }
 
-      this.setState({ step: this.STEP.METAMASK })
-
-      const isFractional = this.state.listingType === 'fractional'
-      const slots = slotsToReserve || this.state.slotsToReserve
-      const price =
-        isFractional ?
-          slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
-          this.state.price
-
-      try {
-        const offerData = {
-          listingId: this.props.listingId,
-          listingType: this.state.listingType,
-          totalPrice: {
-            amount: price,
-            currency: 'ETH'
-          },
-          commission: {
-            amount: this.state.boostValue.toString(),
-            currency: 'OGN'
-          },
-          // Set the finalization time to ~1 year after the offer is accepted.
-          // This is the window during which the buyer may file a dispute.
-          finalizes: 365 * 24 * 60 * 60
-        }
-
-        if (isFractional) {
-          offerData.slots = prepareSlotsToSave(slots)
-        } else {
-          offerData.unitsPurchased = 1
-        }
-
-        const transactionReceipt = await origin.marketplace.makeOffer(
-          this.props.listingId,
-          offerData,
-          (confirmationCount, transactionReceipt) => {
-            this.props.updateTransaction(confirmationCount, transactionReceipt)
-          }
-        )
-        this.props.upsertTransaction({
-          ...transactionReceipt,
-          transactionTypeKey: 'makeOffer'
-        })
-        this.setState({ step: this.STEP.PURCHASED })
-        this.props.handleNotificationsSubscription('buyer', this.props)
-      } catch (error) {
-        console.error(error)
-        this.setState({ step: this.STEP.ERROR })
+      if (isFractional) {
+        offerData.slots = prepareSlotsToSave(slots)
+      } else {
+        offerData.unitsPurchased = 1
       }
+
+      const transactionReceipt = await origin.marketplace.makeOffer(
+        this.props.listingId,
+        offerData,
+        (confirmationCount, transactionReceipt) => {
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        transactionTypeKey: 'makeOffer'
+      })
+      this.setState({ step: this.STEP.PURCHASED })
+      this.props.handleNotificationsSubscription('buyer', this.props)
+    } catch (error) {
+      console.error(error)
+      this.setState({ step: this.STEP.ERROR })
     }
   }
 
@@ -188,32 +192,9 @@ class ListingsDetail extends Component {
   async loadBuyerPurchases() {
     try {
       const { web3Account } = this.props
-      const listingIds = await origin.marketplace.getListings({
-        idsOnly: true,
-        purchasesFor: web3Account
-      })
-      const listingPromises = listingIds.map(listingId => {
-        return new Promise(async resolve => {
-          const listing = await getListing(listingId, true)
-          resolve({ listingId, listing })
-        })
-      })
-      const withListings = await Promise.all(listingPromises)
-      const offerPromises = await withListings.map(obj => {
-        return new Promise(async resolve => {
-          const offers = await origin.marketplace.getOffers(obj.listingId, {
-            for: web3Account
-          })
-          resolve(Object.assign(obj, { offers }))
-        })
-      })
-      const withOffers = await Promise.all(offerPromises)
-      const offersByListing = withOffers.map(obj => {
-        return obj.offers.map(offer => Object.assign({}, obj, { offer }))
-      })
-      const offersFlattened = [].concat(...offersByListing)
-
-      this.setState({ purchases: offersFlattened })
+      const purchases = await origin.marketplace.getPurchases(web3Account)
+      const transformedPurchases = transformPurchasesOrSales(purchases)
+      this.setState({ purchases: transformedPurchases })
     } catch (error) {
       console.error(error)
     }
@@ -224,7 +205,8 @@ class ListingsDetail extends Component {
       const listing = await getListing(this.props.listingId, true)
       this.setState({
         ...listing,
-        loading: false
+        loading: false,
+        isFractional: listing.listingType === 'fractional'
       })
     } catch (error) {
       this.props.showAlert(
@@ -269,6 +251,7 @@ class ListingsDetail extends Component {
       category,
       description,
       display,
+      isFractional,
       loading,
       name,
       offers,
@@ -524,18 +507,18 @@ class ListingsDetail extends Component {
               */}
             </div>
             <div className="col-12 col-md-4">
-              {isAvailable &&
-                !!price &&
-                !!parseFloat(price) && (
+              {isAvailable && ((!!price && !!parseFloat(price)) || isFractional) && (
                 <div className="buy-box placehold">
-                  <div className="price text-nowrap">
-                    <img src="images/eth-icon.svg" role="presentation" />
-                    {Number(price).toLocaleString(undefined, {
-                      maximumFractionDigits: 5,
-                      minimumFractionDigits: 5
-                    })}
-                      &nbsp;ETH
-                  </div>
+                  {!isFractional &&
+                    <div className="price text-nowrap">
+                      <img src="images/eth-icon.svg" role="presentation" />
+                      {Number(price).toLocaleString(undefined, {
+                        maximumFractionDigits: 5,
+                        minimumFractionDigits: 5
+                      })}
+                        &nbsp;ETH
+                    </div>
+                  }
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
                   {/*
                     <div className="quantity d-flex justify-content-between">
@@ -553,7 +536,7 @@ class ListingsDetail extends Component {
                   */}
                   {!loading && (
                     <div className="btn-container">
-                      {!userIsSeller && (
+                      {!userIsSeller && !isFractional && (
                         <button
                           className="btn btn-primary"
                           onClick={() => this.handleMakeOffer()}
@@ -568,14 +551,30 @@ class ListingsDetail extends Component {
                         </button>
                       )}
                       {userIsSeller && (
-                        <Link
-                          to="/my-listings"
-                          className="btn"
-                          ga-category="listing"
-                          ga-label="sellers_own_listing_my_listings_cta"
-                        >
-                            My Listings
-                        </Link>
+                        <Fragment>
+                          <Link
+                            to="/my-listings"
+                            className="btn"
+                            ga-category="listing"
+                            ga-label="sellers_own_listing_my_listings_cta"
+                          >
+                              <FormattedMessage
+                                id={'listing-detail.myListings'}
+                                defaultMessage={'My Listings'}
+                              />
+                          </Link>
+                          <Link
+                            to={`/update/${this.props.listingId}`}
+                            className="btn margin-top"
+                            ga-category="listing"
+                            ga-label="sellers_own_listing_edit_listing_cta"
+                          >
+                              <FormattedMessage
+                                id={'listing-detail.editListings'}
+                                defaultMessage={'Edit Listing'}
+                              />
+                          </Link>
+                        </Fragment>
                       )}
                     </div>
                   )}
@@ -792,7 +791,7 @@ class ListingsDetail extends Component {
                 />
               )}
             </div>
-            { !this.state.loading && this.state.listingType === 'fractional' &&
+            {!this.state.loading && this.state.listingType === 'fractional' &&
               <div className="col-12">
                 <Calendar
                   slots={ this.state.slots }
@@ -823,6 +822,7 @@ class ListingsDetail extends Component {
 
 const mapStateToProps = ({ app, profile }) => {
   return {
+    messagingEnabled: app.messagingEnabled,
     notificationsHardPermission: app.notificationsHardPermission,
     notificationsSoftPermission: app.notificationsSoftPermission,
     profile,

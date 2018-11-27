@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter } from 'react-router'
 import formatDate from 'utils/formatDate'
-import { ipfsGateway } from 'utils/config'
+import { getIpfsGateway } from 'utils/config'
 
 import { Icon, Card, Spinner } from '@blueprintjs/core'
 
@@ -18,6 +18,7 @@ function status(listing) {
 
 const Listings = ({ listings, history, noMore }) => {
   if (!listings) return null
+  const ipfsGateway = getIpfsGateway()
   return (
     <div className="mt-3 listings-grid">
       {listings.map(a => (

@@ -201,10 +201,6 @@ export default defineMessages({
     id: 'schema.forSale.videoGaming',
     defaultMessage: 'Video Gaming'
   },
-  'schema.forSale.wanted': {
-    id: 'schema.forSale.wanted',
-    defaultMessage: 'Wanted'
-  },
   'schema.forSale.deliverProduct': {
     id: 'schema.forSale.deliverProduct',
     defaultMessage: 'Arrange for delivery or pickup'

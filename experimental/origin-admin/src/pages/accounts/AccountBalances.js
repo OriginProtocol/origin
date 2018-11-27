@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { HTMLTable } from '@blueprintjs/core'
+import get from 'lodash/get'
 
 import AccountButton from '../accounts/AccountButton'
 import TokenBalance from 'components/TokenBalance'
-import TokenButton from 'components/TokenButton'
 import Price from 'components/Price'
 
 import SendFromNodeBtn from './_SendFromNodeBtn'
@@ -41,15 +41,13 @@ class AccountBalances extends Component {
               </td>
               <td>{a.role}</td>
               <td>{a.name}</td>
-              <td>{a.balance.eth}</td>
+              <td>{get(a, 'balance.eth')}</td>
               <td>
-                <Price amount={a.balance.eth} />
+                <Price amount={get(a, 'balance.eth')} />
               </td>
               {tokens.map(token => (
                 <td key={token.id}>
-                  <TokenButton
-                    balance={<TokenBalance account={a.id} token={token.id} />}
-                  />
+                  <TokenBalance account={a.id} token={token.id} />
                 </td>
               ))}
               <td>

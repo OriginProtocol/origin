@@ -80,6 +80,10 @@
     "defaultMessage": "Withdraw Offer"
   },
   {
+    "id": "purchase-detail.enableMessaging",
+    "defaultMessage": "enable messaging"
+  },
+  {
     "id": "purchase-detail.purchasedFrom",
     "defaultMessage": "Purchased from {sellerLink}"
   },

@@ -5,8 +5,7 @@ import gql from 'graphql-tag'
 import { Button, Spinner } from '@blueprintjs/core'
 
 import NodeAccounts from './_NodeAccounts'
-// import WalletAccounts from './_WalletAccounts'
-import CreateWallet from './_CreateWallet'
+import CreateWallet from './mutations/CreateWallet'
 
 import Contracts from '../contracts/Contracts'
 
