@@ -68,6 +68,7 @@
   "transactions.blockchainTransactionsHeading": "Блокчейн-транзакции",
   "transactions.transactionsHeading": "Транзакции",
   "transactions.clear": "Убрать",
+  "user-dropdown.UnlinkMobile": "Unlink Mobile",
   "user-dropdown.EditProfile": "Редактировать профиль",
   "footer.description": "Децентрализованное приложение Origin позволяет покупателям и продавцам совершать сделки без посредников, используя блокчейн Ethereum и технологию распределенной файловой системы IPFS.",
   "footer.websiteLink": "Посетите наш сайт",
