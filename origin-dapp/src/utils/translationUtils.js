@@ -257,33 +257,39 @@ export function translateSchema(schemaJson, schemaType) {
   
   // Copy the schema so we don't modify the original
   const schema = JSON.parse(JSON.stringify(schemaJson))
+  const nonTranslatedProperties = [
+    'listingType',
+    'slotIncrementMinutes'
+  ]
   const properties = schema.properties
   schemaType = dashToCamelCase(schemaType)
 
   for (const property in properties) {
-    const propertyObj = properties[property]
+    if (!nonTranslatedProperties.includes(property)) {
+      const propertyObj = properties[property]
 
-    if (propertyObj.title) {
-      propertyObj.title = globalIntlProvider.formatMessage(
-        schemaMessages[schemaType][propertyObj.title]
-      )
-    }
+      if (propertyObj.title) {
+        propertyObj.title = globalIntlProvider.formatMessage(
+          schemaMessages[schemaType][propertyObj.title]
+        )
+      }
 
-    if (propertyObj.default && typeof propertyObj.default === 'number') {
-      propertyObj.default = globalIntlProvider.formatMessage(
-        schemaMessages[schemaType][propertyObj.default]
-      )
-    }
+      if (propertyObj.default && typeof propertyObj.default === 'number') {
+        propertyObj.default = globalIntlProvider.formatMessage(
+          schemaMessages[schemaType][propertyObj.default]
+        )
+      }
 
-    if (propertyObj.enum && propertyObj.enum.length) {
-      propertyObj.enumNames = propertyObj.enum.map(
-        enumStr =>
-          typeof enumStr === 'string'
-            ? globalIntlProvider.formatMessage(
-              schemaMessages[schemaType][enumStr]
-            )
-            : enumStr
-      )
+      if (propertyObj.enum && propertyObj.enum.length) {
+        propertyObj.enumNames = propertyObj.enum.map(
+          enumStr =>
+            typeof enumStr === 'string'
+              ? globalIntlProvider.formatMessage(
+                schemaMessages[schemaType][enumStr]
+              )
+              : enumStr
+        )
+      }
     }
   }
 

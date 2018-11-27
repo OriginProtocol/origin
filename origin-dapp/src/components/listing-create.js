@@ -58,16 +58,6 @@ class ListingCreate extends Component {
       ERROR: 9
     }
 
-    // TODO(John) - remove once fractional usage is enabled by default
-    this.fractionalSchemaTypes = []
-
-    if (enableFractional) {
-      this.fractionalSchemaTypes = [
-        'housing',
-        'services'
-      ]
-    }
-
     this.schemaList = listingSchemaMetadata.listingTypes.map(listingType => {
       listingType.name = props.intl.formatMessage(listingType.translationName)
       return listingType
@@ -82,7 +72,8 @@ class ListingCreate extends Component {
       schemaFetched: false,
       isFractionalListing: false,
       isEditMode: false,
-      fractionalTimeIncrement: null,
+      slotIncrementMinutes: null,
+      calendarViewType: null,
       showNoSchemaSelectedError: false,
       formListing: {
         formData: {
@@ -199,8 +190,6 @@ class ListingCreate extends Component {
   }
 
   handleSchemaSelection(selectedSchemaType) {
-    const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
-
     return fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
@@ -210,6 +199,12 @@ class ListingCreate extends Component {
           }
         }
         this.uiSchema = {
+          listingType: {
+            'ui:widget': 'hidden'
+          },
+          slotIncrementMinutes: {
+            'ui:widget': 'hidden'
+          },
           examples: {
             'ui:widget': 'hidden'
           },
@@ -230,6 +225,10 @@ class ListingCreate extends Component {
           }
         }
 
+        const schemaProps = schemaJson.properties
+        const { listingType, slotIncrementMinutes } = schemaProps
+        const isFractionalListing = listingType && listingType.default === 'fractional'
+
         if (isFractionalListing) {
           this.uiSchema.price = {
             'ui:widget': 'hidden'
@@ -242,8 +241,12 @@ class ListingCreate extends Component {
           selectedSchemaType,
           schemaFetched: true,
           step: this.STEP.DETAILS,
-          fractionalTimeIncrement: !isFractionalListing ? null : 
-            selectedSchemaType === 'housing' ? 'daily' : 'hourly',
+          slotIncrementMinutes: isFractionalListing &&
+            slotIncrementMinutes &&
+            slotIncrementMinutes.default,
+          calendarViewType: isFractionalListing ?
+            (slotIncrementMinutes && slotIncrementMinutes.default >= 1440 ? 'daily' : 'hourly') : // 1440 minutes === 24 hrs
+            null,
           showNoSchemaSelectedError: false,
           translatedSchema,
           isFractionalListing,
@@ -289,14 +292,15 @@ class ListingCreate extends Component {
         break
     }
 
+    const { formListing, slotIncrementMinutes } = this.state
     slots = prepareSlotsToSave(slots)
 
     this.setState({
       formListing: {
-        ...this.state.formListing,
+        ...formListing,
         formData: {
-          ...this.state.formListing.formData,
-          timeIncrement: this.state.fractionalTimeIncrement,
+          ...formListing.formData,
+          slotIncrementMinutes,
           slots
         }
       }
@@ -456,8 +460,9 @@ class ListingCreate extends Component {
   render() {
     const { wallet, intl } = this.props
     const {
+      calendarViewType,
       formListing,
-      fractionalTimeIncrement,
+      slotIncrementMinutes,
       selectedBoostAmount,
       selectedSchemaType,
       schemaExamples,
@@ -631,8 +636,8 @@ class ListingCreate extends Component {
                 <Calendar
                   slots={ formData && formData.slots }
                   userType="seller"
-                  viewType={ fractionalTimeIncrement }
-                  step={ 60 }
+                  viewType={ calendarViewType }
+                  step={ slotIncrementMinutes }
                   onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
                   onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
                 />

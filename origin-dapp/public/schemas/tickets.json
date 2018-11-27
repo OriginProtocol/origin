@@ -3,6 +3,14 @@
   "type": "object",
   "required": ["name","category","description","price"],
   "properties": {
+    "listingType": {
+      "type": "string",
+      "enum": [
+        "unit",
+        "fractional"
+      ],
+      "default": "unit"
+    },
     "name": {
       "type": "string",
       "title": "schema.tickets.title",

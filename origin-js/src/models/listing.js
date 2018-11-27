@@ -25,7 +25,7 @@ export class Listing {
    *  - {string} display - 'normal', 'featured', 'hidden'
    *  - {Array<Object>} media
    *  - {Object} comission - consists of 'amount' and 'currency' properties
-   *  - {Array} slots - to be implemented
+   *  - {Array} slots - used for fractional listings - contains slot objects
    *  - {string} schemaId
    *  - {string} expiry
    *  - {string} deposit

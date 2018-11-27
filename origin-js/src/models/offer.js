@@ -16,12 +16,13 @@ export class Offer {
    *  - {Object} totalPrice - Amount to refund buyer upon finalization, consists of 'amount' and 'currency' properties
    *  - {int} unitsPurchased - number of units purchased
    *  - {Object} blockInfo - information of where(when?) offer happened on the blockchain
+   *  - {Array} slots - used for fractional listings - contains slot objects
    *  - {string} schemaId - schema used to validate the offer
    *  - {string} listingType - 'unit', 'fractional'
    *  - {Object} ipfs - ipfs offer data
    */
   constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice, unitsPurchased, blockInfo,
-    schemaId, listingType, ipfs }) {
+    schemaId, listingType, ipfs, slots }) {
       this.id = id
       this.listingId = listingId
       this.status = status
@@ -35,6 +36,7 @@ export class Offer {
       this.schemaId = schemaId
       this.listingType = listingType
       this.ipfs = ipfs
+      this.slots = slots
   }
 
   // creates an Offer using on-chain and off-chain data
@@ -55,7 +57,8 @@ export class Offer {
       },
       schemaId: ipfsData.schemaId,
       listingType: ipfsData.listingType,
-      ipfs: ipfsData.ipfs
+      ipfs: ipfsData.ipfs,
+      slots: ipfsData.slots
     })
   }
 
@@ -82,7 +85,8 @@ export class Offer {
       },
       schemaId: discoveryNode.data.schemaId,
       listingType: discoveryNode.data.listingType,
-      ipfs: discoveryNode.data.ipfs
+      ipfs: discoveryNode.data.ipfs,
+      slots: discoveryNode.data.slots
     })
   }
 

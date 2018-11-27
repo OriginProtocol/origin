@@ -3,6 +3,18 @@
   "type": "object",
   "required": ["name","category","description"],
   "properties": {
+    "listingType": {
+      "type": "string",
+      "enum": [
+        "unit",
+        "fractional"
+      ],
+      "default": "fractional"
+    },
+    "slotIncrementMinutes": {
+      "type": "number",
+      "default": 1440
+    },
     "name": {
       "type": "string",
       "title": "schema.housing.title",
