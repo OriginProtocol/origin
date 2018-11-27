@@ -335,11 +335,9 @@ class Profile extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12 col-lg-8">
-              {mobileLayout && (
-                <div className={`row attributes mb-0`}>
-                  <Guidance />
-                </div>
-              )}
+              <div className={`row attributes mb-0 d-lg-none`}>
+                <Guidance mobileLayout={true}/>
+              </div>
               <div className={`row attributes ${mobileLayout ? 'mt-3' : '' }`}>
                 <div className={mobileLayout ? 'col-3 pr-0' : 'col-4 col-md-3'}>
                   <Avatar
@@ -453,7 +451,8 @@ class Profile extends Component {
                 withMenus={true}
                 withProfile={false}
               />
-              {!mobileLayout && (<Guidance />)}
+              <Guidance mobileLayout={false} />
+              
             </div>
           </div>
         </div>

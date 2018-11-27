@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { connect } from 'react-redux'
 
 class Guidance extends Component {
   constructor() {
@@ -25,7 +24,7 @@ class Guidance extends Component {
   }
 
   render() {
-    const { mobileDevice } = this.props
+    const { mobileLayout } = this.props
 
     const strongVerifyProfile = (
       <strong>
@@ -54,32 +53,20 @@ class Guidance extends Component {
       }}
     />)
 
-    let wrapperClass, imageWrapperClass, textClass, guidanceText
-    let showGuidance = true
-    if (mobileDevice){
-      wrapperClass = 'guidance row mb-0'
-      imageWrapperClass = 'pl-0 pr-0 col-2'
-      textClass = 'col-10'
-      guidanceText = this.state.expanded ? guidanceMessage : shortGuidanceMessage
-      showGuidance = !this.state.dismissed
-
-    } else {
-      wrapperClass = 'guidance'
-      imageWrapperClass = 'image-container text-center'
-      textClass = ''
-      guidanceText = guidanceMessage
-    }
+    const mobileGuidanceText = this.state.expanded ? guidanceMessage : shortGuidanceMessage
+    const guidanceText = guidanceMessage
+    let showGuidance = (mobileLayout && !this.state.dismissed) || !mobileLayout
 
     return showGuidance && (
-      <div className={wrapperClass}>
-        <div className={imageWrapperClass}>
+      <div className="guidance row mb-0 mr-lg-0 ml-lg-0">
+        <div className="pl-0 pr-0 col-2 col-lg-12 mb-lg-3 text-center">
           <img src="images/identity.svg" alt="identity icon" />
         </div>
-        <div className={textClass}>
+        <div className="col-10 col-lg-12 pr-lg-0 pl-lg-0">
           <p>
-            {guidanceText}
+            {mobileLayout ? mobileGuidanceText : guidanceText}
           </p>
-          {mobileDevice && (<div>
+            {mobileLayout && <div className="d-lg-none">
               <a
                 className="pr-3"
                 onClick={this.onLearnMoreClick}
@@ -106,23 +93,11 @@ class Guidance extends Component {
                   defaultMessage={'Dismiss'}
                 />
               </a>
-            </div>
-          )}
+            </div>}
         </div>
       </div>
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    mobileDevice: state.app.mobileDevice
-  }
-}
-
-const mapDispatchToProps = () => ({})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(injectIntl(Guidance))
+export default injectIntl(Guidance)
