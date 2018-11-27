@@ -47,7 +47,7 @@
     "sequelize-cli": "^5.1.0",
     "sql-template-strings": "^2.2.2",
     "sqlite": "^3.0.0",
-    "web3": "^1.0.0-beta.34"
+    "web3": "^1.0.0-beta.36"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
