@@ -32,7 +32,7 @@ eventlistenerImageTag: '0bd8c35'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '0bd8c35'
+discoveryImageTag: '3dc402d'
 
 # origin-messaging
 messagingImage: origin-messaging
