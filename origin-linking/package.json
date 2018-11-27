@@ -1,0 +1,60 @@
+{
+  "name": "origin-mobile",
+  "version": "1.0.0",
+  "description": "Mobile server for connecting with the mobile wallet",
+  "main": "index.js",
+  "engines": {
+    "node": "9.11.1"
+  },
+  "scripts": {
+    "install:dev": "npm install && npm link origin",
+    "test": "NODE_ENV=test mocha -r @babel/register --timeout 10000 --exit",
+    "start": "npx sequelize db:migrate; npx nodemon -r @babel/register -r source-map-support src/index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.1.2",
+    "apn": "^2.2.0",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.4",
+    "express-async-errors": "^3.1.1",
+    "express-useragent": "^1.0.12",
+    "express-ws": "^4.0.0",
+    "js-sha3": "^0.8.0",
+    "lodash": "^4.17.11",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.6",
+    "origin": "^0.8.5",
+    "pg": "^7.5.0",
+    "pg-hstore": "^2.3.2",
+    "redis": "^2.8.0",
+    "sequelize": "^5.0.0-beta.5",
+    "uuid": "^3.3.2",
+    "web3": "^1.0.0-beta.34"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "redis-mock": "^0.34.1",
+    "sequelize-cli": "^4.1.1",
+    "supertest": "^3.3.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "sourceMaps": "both",
+    "retainLines": true,
+    "plugins": [
+      "@babel/plugin-transform-runtime"
+    ]
+  }
+}
