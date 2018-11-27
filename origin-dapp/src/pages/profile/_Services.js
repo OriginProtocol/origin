@@ -6,27 +6,25 @@ class VerifierServices extends Component {
     const { published, provisional, handleToggle, mobileLayout } = this.props
     return (
       <div className="services-container">
-        { !mobileLayout && <Fragment>
-          <p className="credit">
-            <FormattedMessage
-              id={'_Services.poweredBy'}
-              defaultMessage={'Powered by'}
-            />{' '}
-            <span className="logo">
-              Origin<sup>ID</sup>
-            </span>
-          </p>
-          <p className="directive">
-            <FormattedMessage
-              id={'_Services.pleaseConnectAccounts'}
-              defaultMessage={
-                'Please connect your accounts below to strengthen your identity on Origin.'
-              }
-            />
-          </p>
-        </Fragment>}
+        <p className="credit d-none d-md-flex">
+          <FormattedMessage
+            id={'_Services.poweredBy'}
+            defaultMessage={'Powered by'}
+          />{' '}
+          <span className="logo d-none d-md-flex">
+            Origin<sup>ID</sup>
+          </span>
+        </p>
+        <p className="directive d-none d-md-flex">
+          <FormattedMessage
+            id={'_Services.pleaseConnectAccounts'}
+            defaultMessage={
+              'Please connect your accounts below to strengthen your identity on Origin.'
+            }
+          />
+        </p>
         <div className="row no-gutters">
-          <div className="col-12 col-sm-6 col-md-4">
+          <div className="col-6 col-md-4 attestation-button">
             <button
               data-modal="phone"
               className={`service d-flex${
@@ -49,7 +47,7 @@ class VerifierServices extends Component {
               </span>
             </button>
           </div>
-          <div className="col-12 col-sm-6 col-md-4">
+          <div className="col-6 col-md-4 attestation-button">
             <button
               data-modal="email"
               className={`service d-flex${
@@ -72,7 +70,7 @@ class VerifierServices extends Component {
               </span>
             </button>
           </div>
-          <div className="col-12 col-sm-6 col-md-4">
+          <div className="col-6 col-md-4 attestation-button">
             <button
               data-modal="airbnb"
               className={`service d-flex${
@@ -95,7 +93,7 @@ class VerifierServices extends Component {
               </span>
             </button>
           </div>
-          <div className="col-12 col-sm-6 col-md-4">
+          <div className="col-6 col-md-4 attestation-button">
             <button
               data-modal="facebook"
               className={`service d-flex${
@@ -118,7 +116,7 @@ class VerifierServices extends Component {
               </span>
             </button>
           </div>
-          <div className="col-12 col-sm-6 col-md-4">
+          <div className="col-6 col-md-4 attestation-button">
             <button
               data-modal="twitter"
               className={`service d-flex${
@@ -141,7 +139,7 @@ class VerifierServices extends Component {
               </span>
             </button>
           </div>
-          <div className="col-12 col-sm-6 col-md-4">
+          <div className="col-6 col-md-4 attestation-button">
             <button className="service d-flex disabled" disabled>
               <span className="image-container d-flex align-items-center justify-content-center">
                 <img src="images/google-icon.svg" alt="Google icon" />

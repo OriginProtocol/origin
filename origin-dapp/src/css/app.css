@@ -4355,7 +4355,7 @@ form .stars img {
   margin: 0 140px 20px 0;
 }
 
-.services-container .col-12 {
+.services-container .attestation-button {
   padding-right: 10px;
 }
 
@@ -5339,6 +5339,15 @@ a:not([href]):not([tabindex]).span-link {
   .profile-wrapper h2 {
     font-size: 1rem;
     margin-bottom: 0.25rem;
+  }
+
+  .services-container {
+    padding: 10px 5px 5px 5px;
+  }
+
+  .services-container .attestation-button {
+    padding-left: 5px;
+    padding-right: 5px;
   }
 }
 
