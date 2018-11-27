@@ -30,15 +30,16 @@ function generateOfferId(log) {
  */
 function checkFreshness(events, blockInfo) {
   // Loop thru events to ensure at least one of them is as fresh as blockInfo.
+  let fresh = false
   events.forEach(event => {
-    console.log("CHECKING EVENT ", JSON.stringify(event), JSON.stringify(blockInfo))
     if ((event.blockNumber > blockInfo.blockNumber) ||
       (event.blockNumber === blockInfo.blockNumber && event.logIndex >= blockInfo.logIndex)) {
-      return
+      fresh = true
     }
   })
-  console.log("FAILURE !!!!")
-  throw new Error('Freshness check failed')
+  if (!fresh) {
+    throw new Error('Freshness check failed')
+  }
 }
 
 async function getListingDetails(log, origin) {
