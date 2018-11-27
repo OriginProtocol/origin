@@ -505,11 +505,16 @@ class Web3Provider extends Component {
   handleAccounts(accounts) {
     const curr = accounts[0]
     const prev = this.props.web3Account
+    const walletLinkerEnabled = origin.contractService.walletLinker
 
     // on account detection
     if (curr !== prev) {
       // TODO: fix this with some route magic!
-      if(['/my-listings', '/my-purchases','/my-sales'].includes(this.props.location.pathname) || !curr) {
+      if(
+        !walletLinkerEnabled ||
+        ['/my-listings', '/my-purchases','/my-sales'].includes(this.props.location.pathname) ||
+        !curr
+      ) {
         // reload if changed from a prior account
         prev !== null && window.location.reload()
       } else {
