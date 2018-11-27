@@ -68,6 +68,7 @@
   "transactions.blockchainTransactionsHeading": "ブロックチェーントランザクション",
   "transactions.transactionsHeading": "トランザクション",
   "transactions.clear": "削除",
+  "user-dropdown.UnlinkMobile": "Unlink Mobile",
   "user-dropdown.EditProfile": "プロフィールの編集",
   "footer.description": "Originの分散アプリケーションを使うと、買い手と売り手は、EthereumブロックチェーンとIPFSのおかげで、仲介者を必要としない取引ができるようになりました。",
   "footer.websiteLink": "当社のウェブサイトを見る",
