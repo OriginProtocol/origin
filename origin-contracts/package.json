@@ -29,13 +29,14 @@
     "@babel/core": "^7.1.2",
     "@babel/polyfill": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "ajv": "^6.5.5",
     "ethereumjs-abi": "^0.6.5",
     "openzeppelin-solidity": "^1.10.0",
     "per-env": "^1.0.2",
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
-    "web3": "1.0.0-beta.34"
+    "web3": "^1.0.0-beta.36"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
