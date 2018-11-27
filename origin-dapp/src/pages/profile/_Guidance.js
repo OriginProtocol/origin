@@ -54,19 +54,18 @@ class Guidance extends Component {
     />)
 
     const mobileGuidanceText = this.state.expanded ? guidanceMessage : shortGuidanceMessage
-    const guidanceText = guidanceMessage
     let showGuidance = (mobileLayout && !this.state.dismissed) || !mobileLayout
 
     return showGuidance && (
-      <div className="guidance row mb-0 mr-lg-0 ml-lg-0">
-        <div className="pl-0 pr-0 col-2 col-lg-12 mb-lg-3 text-center">
+      <div className={mobileLayout ? 'guidance row mb-0' : 'guidance'}>
+        <div className={mobileLayout ? 'pl-0 pr-0 col-2' : 'image-container text-center'}>
           <img src="images/identity.svg" alt="identity icon" />
         </div>
-        <div className="col-10 col-lg-12 pr-lg-0 pl-lg-0">
+        <div className={mobileLayout ? 'col-10 ' : ''}>
           <p>
-            {mobileLayout ? mobileGuidanceText : guidanceText}
+            {mobileLayout ? mobileGuidanceText : guidanceMessage}
           </p>
-            {mobileLayout && <div className="d-lg-none">
+            {mobileLayout && <div>
               <a
                 className="pr-3"
                 onClick={this.onLearnMoreClick}
