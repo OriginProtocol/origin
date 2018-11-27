@@ -17,8 +17,6 @@ const PRE_CONV = ':conv'
 const UNREAD_STATUS = 'unread'
 const READ_STATUS = 'read'
 
-const SIGN_MESSAGE_CALL_ID = 'sign_message_call_id'
-
 const storeKeys = {
   messageSubscriptionStart: 'message_subscription_start',
   messageStatuses: 'message_statuses'
@@ -158,7 +156,7 @@ class Messaging {
     const walletLinker = this.contractService.walletLinker
     if(walletLinker) 
     {
-      walletLinker.registerCallback("messaging", this.onPreGenKeys.bind(this))
+      walletLinker.registerCallback('messaging', this.onPreGenKeys.bind(this))
     }
   }
 
@@ -186,14 +184,14 @@ class Messaging {
   async preGenKeys(web3Account) {
     const sig_phrase = PROMPT_MESSAGE
     const signature = web3Account.sign(sig_phrase).signature
-    console.log("We got a signature of:", signature)
+    console.log('We got a signature of: ', signature)
 
     const sig_key = signature.substring(0, 66)
     const msg_account = this.web3.eth.accounts.privateKeyToAccount(sig_key)
 
     const pub_msg = PROMPT_PUB_KEY + msg_account.address
     const pub_sig = web3Account.sign(pub_msg).signature
-    return {account:web3Account.address, sig_phrase, sig_key, pub_msg, pub_sig}
+    return { account: web3Account.address, sig_phrase, sig_key, pub_msg, pub_sig }
   }
 
   async onPreGenKeys(data) {

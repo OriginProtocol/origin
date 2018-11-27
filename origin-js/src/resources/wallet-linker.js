@@ -7,7 +7,7 @@ const appendSlash = url => {
   return url.substr(-1) === '/' ? url : url + '/'
 }
 const PLACEHOLDER_ADDRESS = '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
-const LOCAL_KEY_STORE = "wallet-linker:lks"
+const LOCAL_KEY_STORE = 'wallet-linker:lks'
 
 export default class WalletLinker {
   //define class variable for PLACEHOLDER ADDRESS
@@ -249,9 +249,9 @@ export default class WalletLinker {
           {
             const data = JSON.parse(this.ecDecrypt(device.priv_data))
 
-            if (data.messaging && this.callbacks["messaging"])
+            if (data.messaging && this.callbacks['messaging'])
             {
-              this.callbacks["messaging"](data.messaging)
+              this.callbacks['messaging'](data.messaging)
             }
           }
         }

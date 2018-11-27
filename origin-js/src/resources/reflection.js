@@ -1,14 +1,7 @@
 import { extractCallParams } from './../utils/contract-decoder'
 import { Listing } from '../models/listing'
 import {
-  LISTING_DATA_TYPE,
-  LISTING_WITHDRAW_DATA_TYPE,
-  OFFER_DATA_TYPE,
-  OFFER_WITHDRAW_DATA_TYPE,
-  OFFER_ACCEPT_DATA_TYPE,
-  DISPUTE_DATA_TYPE,
-  RESOLUTION_DATA_TYPE,
-  REVIEW_DATA_TYPE,
+  LISTING_DATA_TYPE
 } from '../ipfsInterface/store'
 
 
@@ -36,7 +29,7 @@ export default class Reflection {
           params._ipfsHash
         )
         const ipfsListing = await this.marketplace.ipfsDataStore.load(LISTING_DATA_TYPE, realIpfsHash)
-        meta.listing = Listing.init(undefined, {ipfsHash:params._ipfsHash}, ipfsListing)
+        meta.listing = Listing.init(undefined, { ipfsHash: params._ipfsHash }, ipfsListing)
       }
     }
     else if (meta.contract == 'OriginToken')
