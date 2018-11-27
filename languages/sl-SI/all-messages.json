@@ -136,7 +136,7 @@
   "listing-create.error1": "There was a problem creating this listing.",
   "listing-create.error2": "Za več podrobnosti si oglejte konzolo.",
   "listing-create.OK": "V redu",
-  "listing-detail.loadingError": "There was an error loading this listing.",
+  "listing-detail.loadingError": "Napaka pri nalaganju te ponudbe.",
   "listing-detail.firstPurchaseHeading": "Pripravili boste svoj prvi nakup na Origin-u.",
   "listing-detail.identityDisclaimer": "We recommend verifying your identity first. Sellers are more likely to accept your purchase offer if they know a little bit about you.",
   "listing-detail.verifyIdentity": "Preveri identiteto",
