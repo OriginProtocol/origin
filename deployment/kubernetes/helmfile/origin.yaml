@@ -1,3 +1,7 @@
+repositories:
+  - name: coreos
+    url: https://s3-eu-west-1.amazonaws.com/coreos-charts/stable
+
 releases:
   - name: cert-manager
     namespace: kube-system
@@ -5,15 +9,30 @@ releases:
     values:
       - ../values/origin/cert-manager/values.yaml
 
-  - name: {{ .Namespace }}-ingress
-    namespace: {{ .Namespace }}
+  - name: {{ requiredEnv "NAMESPACE" }}-ingress
+    namespace: {{ requiredEnv "NAMESPACE" }}
     chart: stable/nginx-ingress
     values:
-      - ../values/origin/nginx-ingress/values-{{ .Namespace }}.yaml
+      - ../values/origin/nginx-ingress/values-{{ requiredEnv "NAMESPACE" }}.yaml
 
-  - name: {{ .Namespace }}
-    namespace: {{ .Namespace }}
+  - name: {{ requiredEnv "NAMESPACE" }}
+    namespace: {{ requiredEnv "NAMESPACE" }}
     chart: ../charts/origin
     values:
-      - ../values/origin/values-{{ .Namespace }}.yaml
-      - ../values/origin/secrets-{{ .Namespace }}.yaml
+      - ../values/origin/values-{{ requiredEnv "NAMESPACE" }}.yaml
+      - ../values/origin/secrets-{{ requiredEnv "NAMESPACE" }}.yaml
+
+  - name: origin-monitoring
+    namespace: monitoring
+    chart: ../charts/origin-monitoring
+
+  - name: prometheus-operator
+    namespace: monitoring
+    chart: coreos/prometheus-operator
+
+  - name: kube-prometheus
+    namespace: monitoring
+    chart: coreos/kube-prometheus
+    set:
+      - name: global.rbacEnable
+        value: true

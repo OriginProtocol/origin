@@ -4,9 +4,13 @@ metadata:
   name: {{ template "discovery.fullname" . }}
   labels:
     app: {{ template "discovery.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: origin-discovery
   annotations:
     kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
     kubernetes.io/tls-acme: "true"
