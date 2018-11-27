@@ -71,7 +71,7 @@ export default class ListingAdapterV1 extends AdapterBase {
       title: ipfsData.title,
       description: ipfsData.description,
       media: ipfsData.media,
-      expiry: ipfsData.expiry
+      expiry: ipfsData.expiry,
     }
 
     // Unit data.
@@ -81,6 +81,9 @@ export default class ListingAdapterV1 extends AdapterBase {
       listing.commission = ipfsData.commission
         ? new Money(ipfsData.commission)
         : null
+      listing.perUnitCommission = ipfsData.perUnitCommission
+      ? new Money(ipfsData.perUnitCommission)
+      : null
     } else if (listing.type === 'fractional') {
       listing.slots = ipfsData.slots
       listing.timeIncrement = ipfsData.timeIncrement

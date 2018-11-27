@@ -18,6 +18,14 @@ import { OFFER_DATA_TYPE } from '../src/ipfsInterface/store'
 const listingData = Object.assign({}, listingValid)
 const udpatedListingData = Object.assign({}, updatedListing)
 const multiUnitListingData = Object.assign({}, listingValid, { unitsTotal: 2 })
+const multiUnitListingWithCommissionData = Object.assign(
+  {},
+  multiUnitListingData,
+  {
+    commission: { currency: 'OGN', amount: '2' },
+    perUnitCommission: { currency: 'OGN', amount: '1' }
+  }
+)
 const offerData = Object.assign({}, offerValid)
 const reviewData = Object.assign({}, reviewValid)
 
@@ -40,6 +48,12 @@ const commissionOffer = Object.assign({}, offerData, {
 })
 const invalidCommissionOffer = Object.assign({}, offerData, {
   commission: { currency: 'OGN', amount: '1' }
+})
+const multiUnitCommissionOffer = Object.assign({}, offerData, {
+  commission: { currency: 'OGN', amount: '1' }
+})
+const invalidMultiUnitCommissionOffer = Object.assign({}, offerData, {
+  commission: { currency: 'OGN', amount: '0.9' }
 })
 
 class StoreMock {
@@ -824,6 +838,57 @@ describe('Marketplace Resource', function() {
         )
         await expect(marketplace.updateListing('999-000-1', newListingData))
           .to.be.rejectedWith('decreasing of units is unimplemented')
+      })
+    })
+  })
+
+  describe('multi-unit (quantity=2) with commission', () => {
+    beforeEach(async () => {
+      await marketplace.createListing(multiUnitListingWithCommissionData)
+      const listings = await marketplace.getListings({ idsOnly: true })
+      expect(listings).to.have.lengthOf(2)
+    })
+
+    describe('makeOffer', () => {
+      it('should allow 2 offers to be accepted', async () => {
+        // Create first offer.
+        await marketplace.makeOffer('999-000-1', multiUnitCommissionOffer)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+        validateOffer(offer1)
+
+        // Create second offer.
+        await marketplace.makeOffer('999-000-1', multiUnitCommissionOffer)
+        let offer2 = await marketplace.getOffer('999-000-1-1')
+        expect(offer2.status).to.equal('created')
+        validateOffer(offer2)
+
+        await marketplace.acceptOffer('999-000-1-1')
+        offer2 = await marketplace.getOffer('999-000-1-1')
+        expect(offer2.status).to.equal('accepted')
+        validateOffer(offer2)
+      })
+    })
+
+    describe('getOffers', () => {
+      it('should filter offers with insufficient per-unit commission', async () => {
+        await marketplace.makeOffer('999-000-1', multiUnitCommissionOffer)
+        const offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+
+        await marketplace.makeOffer('999-000-1', invalidMultiUnitCommissionOffer)
+        await expect(marketplace.getOffer('999-000-1-1'))
+          .to.be.rejectedWith('Invalid offer: insufficient commission amount for listing')
+
+        const offers = await marketplace.getOffers('999-000-1')
+        expect(offers.length).to.equal(1)
+        expect(offers).not.to.include(invalidMultiUnitCommissionOffer)
+        expect(offers[0].status).to.equal('created')
+        expect(offers[0].id).to.equal('999-000-1-0')
       })
     })
   })

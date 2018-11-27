@@ -283,15 +283,28 @@ export default class Marketplace {
     // validate offers awaiting approval
     if (chainOffer.status === 'created') {
       const listing = await this.getListing(listingId)
-      const listingCommision =
+
+      // Originally, listings had a single "commission" field. For multi-unit
+      // listings, we've added "perUnitCommission." The code here handles both
+      // variants of the schema.
+      let listingCommission =
           listing.commission && typeof listing.commission === 'object' ?
             await this.contractService.moneyToUnits(listing.commission) :
             '0'
 
       if (listing.type === 'unit') {
+        const perUnitCommission =
+        listing.perUnitCommission && typeof listing.perUnitCommission === 'object' ?
+          await this.contractService.moneyToUnits(listing.perUnitCommission) :
+          null
+        listingCommission = perUnitCommission || listingCommission
+
         // TODO(John) - there is currently no way to know the currency of a fractional listing.
         // We probably need to add a required "currency" field to the listing schema and write a check here
         // to make sure the chainOffer and the listing have the same currency
+        //
+        // TODO: also, there is no way to detect whether the currency of the
+        // listing commission matches the currency for the offer commission
         const listingCurrency = listing.price && listing.price.currency
         const listingPrice = await this.contractService.moneyToUnits(listing.price)
         const currencies = await this.contractService.currencies()
@@ -308,7 +321,7 @@ export default class Marketplace {
         }
       }
 
-      if (BigNumber(listingCommision).isGreaterThan(BigNumber(chainOffer.commission))) {
+      if (BigNumber(listingCommission).isGreaterThan(BigNumber(chainOffer.commission))) {
         throw new Error('Invalid offer: insufficient commission amount for listing')
       }
 
