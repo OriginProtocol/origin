@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint '**/*.js' --rulesdir ../",
-    "start": "if [ $NODE_ENV == 'production' ]; then node src/index.js; else nodemon src/index.js; fi",
+    "start": "per-env",
+    "start:development": "nodemon src/app.js",
+    "start:production": "node src/app.js",
     "test": "mocha --timeout=10000",
     "test:load": "node load.js"
   },
@@ -27,6 +29,7 @@
     "ipfsd-ctl": "^0.40.0",
     "is-json": "^2.0.1",
     "logplease": "^1.2.15",
+    "per-env": "^1.0.2",
     "zlib": "^1.0.5"
   },
   "devDependencies": {

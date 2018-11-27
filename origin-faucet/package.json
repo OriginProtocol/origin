@@ -15,7 +15,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint '**/*.js' --rulesdir ../",
-    "start": "node faucet/app.js"
+    "start": "per-env",
+    "start:development": "nodemon faucet/app.js",
+    "start:production": "node faucet/app.js"
   },
   "author": "Origin Protocol Inc",
   "license": "MIT",
@@ -25,10 +27,13 @@
     "envkey": "^1.2.4",
     "express": "^4.16.3",
     "origin-contracts": "^0.8.6",
+    "per-env": "^1.0.2",
     "rate-limiter-flexible": "^0.18.5",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
-    "web3": "^1.0.0-beta.36"
+    "web3": "1.0.0-beta.34"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
 }
