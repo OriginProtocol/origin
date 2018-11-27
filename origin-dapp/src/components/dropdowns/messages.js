@@ -134,10 +134,14 @@ class MessagesDropdown extends Component {
                   />
                 )}
               </h3>
-              {!messagingEnabled && (
-                <button
-                  className="btn btn-sm btn-primary d-none d-md-block ml-auto"
-                  onClick={this.handleEnable}
+              {!messagingEnabled &&
+                <button className="btn btn-sm btn-primary d-none d-md-block ml-auto" onClick={() => {
+                  this.handleEnable()
+                  if(!this.props.web3Account) {
+                    this.props.storeWeb3Intent('Enable messaging.')
+                    origin.contractService.showLinkPopUp()
+                  }
+                }}
                   ga-category="messaging"
                   ga-label="messaging_dropdown_enable"
                 >
@@ -146,7 +150,7 @@ class MessagesDropdown extends Component {
                     defaultMessage={'Enable Messaging'}
                   />
                 </button>
-              )}
+              }
             </header>
             <div className="messages-list">
               {conversations.map(c => (
@@ -212,7 +216,8 @@ const mapStateToProps = ({ app, messages }) => {
     messages: filteredMessages,
     messagingDismissed,
     messagingEnabled,
-    web3Account
+    web3Account,
+    web3Intent: web3.intent
   }
 }
 

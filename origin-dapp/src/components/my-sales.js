@@ -19,10 +19,11 @@ class MySales extends Component {
   }
 
   componentDidMount() {
-    if (this.props.web3Account) {
+    if (this.props.web3Account && (web3.givenProvider || origin.contractService.walletLinker)) {
       this.loadPurchases()
     } else if (!web3.givenProvider) {
       this.props.storeWeb3Intent('view your sales')
+      origin.contractService.showLinkPopUp()
     }
   }
 

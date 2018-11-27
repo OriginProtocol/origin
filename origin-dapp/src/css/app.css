@@ -1528,6 +1528,10 @@ textarea:-moz-ui-invalid {
   top: 15px;
 }
 
+.modal.linker-popup {
+  z-index:1070;
+}
+
 .modal-content .disclaimer {
   font-size: 0.875rem;
   padding-top: 15px;
@@ -3849,6 +3853,12 @@ form .stars img {
   background-color: white;
   height: calc(100vh - 60px);
   padding: 0 10px 0;
+}
+
+@media (max-width: 800px) {
+  .conversations-list-col .conversation-list-item {
+    width: 200px;
+  }
 }
 
 .conversation-list-item {

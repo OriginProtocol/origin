@@ -10,6 +10,7 @@ const serverConfig = {
     libraryTarget: 'commonjs2'
   },
   mode: 'development',
+  devtool: 'inline-cheap-module-source-map',
   target: 'node',
   externals: [nodeExternals()],
   resolve: {
