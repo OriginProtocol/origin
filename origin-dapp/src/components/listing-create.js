@@ -1,11 +1,16 @@
 import React, { Component, Fragment } from 'react'
+import { withRouter } from 'react-router'
 import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
 
 import { showAlert } from 'actions/Alert'
-import { handleNotificationsSubscription } from 'actions/App'
+
+import {
+  handleNotificationsSubscription,
+  storeWeb3Intent
+} from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
@@ -18,7 +23,8 @@ import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
 
-import { generateCalendarSlots, prepareSlotsToSave } from 'utils/calendarHelpers'
+import { getListing, camelCaseToDash } from 'utils/listing'
+import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
@@ -33,6 +39,7 @@ import {
 
 import origin from '../services/origin'
 
+const { web3 } = origin.contractService
 const enableFractional = process.env.ENABLE_FRACTIONAL === 'true'
 
 class ListingCreate extends Component {
@@ -109,26 +116,48 @@ class ListingCreate extends Component {
     this.resetForm = this.resetForm.bind(this)
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
+    this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
   }
 
   async componentDidMount() {
-    // If listingAddress prop is passed in, we're in edit mode, so fetch listing data
-    if (this.props.listingAddress) {
-      try {
-        const listing = await origin.listings.get(this.props.listingAddress)
-        this.setState({ selectedSchemaType: listing.schemaType })
-        await this.handleSchemaSelection(listing.schemaType)
-        listing.slots = generateCalendarSlots(listing.slots)
+    // If listingId prop is passed in, we're in edit mode, so fetch listing data
+    if (this.props.listingId) {
+      this.props.storeWeb3Intent('edit a listing')
 
+      try {
+        // Pass false as second param so category doesn't get translated
+        // because the form only understands the category ID, not the translated phrase
+        const listing = await getListing(this.props.listingId, false)
+
+        this.ensureUserIsSeller(listing.seller)
         this.setState({
-          formData: listing,
-          step: this.STEP.DETAILS,
+          formListing: {
+            formData: listing
+          },
+          selectedSchemaType: listing.schemaType,
+          selectedBoostAmount: listing.boostValue,
           isEditMode: true
         })
+        await this.handleSchemaSelection(camelCaseToDash(listing.schemaType))
+        this.setState({
+          step: this.STEP.DETAILS,
+        })
       } catch (error) {
-        console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingAddress}`)
+        console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
+    } else if (!web3.givenProvider || !this.props.messagingEnabled) {
+      this.props.history.push('/')
+      this.props.storeWeb3Intent('create a listing')
+    }
+  }
+
+  ensureUserIsSeller(sellerAccount) {
+    const { web3Account } = this.props
+
+    if ( web3Account && web3Account.toUpperCase() !== sellerAccount.toUpperCase()) {
+      alert('⚠️ Only the seller can update a listing')
+      window.location.href = '/'
     }
   }
 
@@ -172,7 +201,7 @@ class ListingCreate extends Component {
   handleSchemaSelection(selectedSchemaType) {
     const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
 
-    fetch(`schemas/${selectedSchemaType}.json`)
+    return fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
         PriceField.defaultProps = {
@@ -224,9 +253,9 @@ class ListingCreate extends Component {
             translatedSchema.properties.examples &&
             translatedSchema.properties.examples.enumNames
         })
-      })
 
-    window.scrollTo(0, 0)
+        window.scrollTo(0, 0)
+      })
   }
 
   goToDetailsStep() {
@@ -242,9 +271,22 @@ class ListingCreate extends Component {
     }
   }
 
-  onAvailabilityEntered(slots, step) {
+  onAvailabilityEntered(slots, direction) {
     if (!slots || !slots.length) {
       return
+    }
+
+    let nextStep
+    switch(direction) {
+      case 'forward':
+        this.state.isEditMode ?
+          nextStep = 'PREVIEW' :
+          nextStep = 'BOOST'
+        break
+
+      case 'back':
+        nextStep = 'DETAILS'
+        break
     }
 
     slots = prepareSlotsToSave(slots)
@@ -261,7 +303,7 @@ class ListingCreate extends Component {
     })
 
     this.setState({
-      step: this.STEP[step]
+      step: this.STEP[nextStep]
     })
   }
 
@@ -282,7 +324,9 @@ class ListingCreate extends Component {
   onDetailsEntered(formListing) {
     const [nextStep, listingType] = this.state.isFractionalListing ?
       [this.STEP.AVAILABILITY, 'fractional'] :
-      [this.STEP.BOOST, 'unit']
+      this.state.isEditMode ?
+        [this.STEP.PREVIEW, 'unit'] :
+        [this.STEP.BOOST, 'unit']
 
     formListing.formData.listingType = listingType
 
@@ -359,20 +403,36 @@ class ListingCreate extends Component {
   }
 
   async onSubmitListing(formListing) {
+    const { isEditMode } = this.state
+
     try {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
-      const methodName = this.state.isEditMode ? 'updateListing' : 'createListing'
-      const transactionReceipt = await origin.marketplace[methodName](
-        listing,
-        (confirmationCount, transactionReceipt) => {
-          this.props.updateTransaction(confirmationCount, transactionReceipt)
-        }
-      )
+      const methodName = isEditMode ? 'updateListing' : 'createListing'
+      let transactionReceipt
+      if (isEditMode) {
+        transactionReceipt = await origin.marketplace[methodName](
+          this.props.listingId,
+          listing,
+          0, // TODO(John) - figure out how a seller would add "additional deposit"
+          (confirmationCount, transactionReceipt) => {
+            this.props.updateTransaction(confirmationCount, transactionReceipt)
+          }
+        )
+      } else {
+        transactionReceipt = await origin.marketplace[methodName](
+          listing,
+          (confirmationCount, transactionReceipt) => {
+            this.props.updateTransaction(confirmationCount, transactionReceipt)
+          }
+        )
+      }
+
+      const transactionTypeKey = isEditMode ? 'updateListing' : 'createListing'
 
       this.props.upsertTransaction({
         ...transactionReceipt,
-        transactionTypeKey: 'createListing'
+        transactionTypeKey
       })
       this.props.getOgnBalance()
       this.setState({ step: this.STEP.SUCCESS })
@@ -397,6 +457,7 @@ class ListingCreate extends Component {
     const { wallet, intl } = this.props
     const {
       formListing,
+      fractionalTimeIncrement,
       selectedBoostAmount,
       selectedSchemaType,
       schemaExamples,
@@ -405,13 +466,14 @@ class ListingCreate extends Component {
       translatedSchema,
       showDetailsFormErrorMsg,
       showBoostTutorial,
-      isFractionalListing
+      isFractionalListing,
+      isEditMode
     } = this.state
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
 
-    return (
+    return web3.givenProvider ? (
       <div className="listing-form">
         <div className="step-container">
           <div className="row">
@@ -569,10 +631,10 @@ class ListingCreate extends Component {
                 <Calendar
                   slots={ formData && formData.slots }
                   userType="seller"
-                  viewType={ this.state.fractionalTimeIncrement }
+                  viewType={ fractionalTimeIncrement }
                   step={ 60 }
-                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'BOOST') }
-                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'DETAILS') }
+                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
+                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
                 />
               </div>
             }
@@ -646,7 +708,7 @@ class ListingCreate extends Component {
                   <BoostSlider
                     onChange={this.setBoost}
                     ognBalance={wallet.ognBalance}
-                    selectedBoostAmount={selectedBoostAmount}
+                    selectedBoostAmount={formData.boostValue || selectedBoostAmount}
                   />
                 )}
                 <div className="btn-container">
@@ -806,37 +868,39 @@ class ListingCreate extends Component {
                       </p>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-3">
-                      <p className="label">
-                        <FormattedMessage
-                          id={'listing-create.boost-level'}
-                          defaultMessage={'Boost Level'}
-                        />
-                      </p>
+                  {!isEditMode &&
+                    <div className="row">
+                      <div className="col-md-3">
+                        <p className="label">
+                          <FormattedMessage
+                            id={'listing-create.boost-level'}
+                            defaultMessage={'Boost Level'}
+                          />
+                        </p>
+                      </div>
+                      <div className="col-md-9">
+                        <p>
+                          <img
+                            className="ogn-icon"
+                            src="images/ogn-icon.svg"
+                            role="presentation"
+                          />
+                          <span className="text-bold">{formData.boostValue}</span>&nbsp;
+                          <Link
+                            className="ogn-abbrev"
+                            to="/about-tokens"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            OGN
+                          </Link>
+                          <span className="help-block">
+                            &nbsp;| {formData.boostLevel.toUpperCase()}
+                          </span>
+                        </p>
+                      </div>
                     </div>
-                    <div className="col-md-9">
-                      <p>
-                        <img
-                          className="ogn-icon"
-                          src="images/ogn-icon.svg"
-                          role="presentation"
-                        />
-                        <span className="text-bold">{formData.boostValue}</span>&nbsp;
-                        <Link
-                          className="ogn-abbrev"
-                          to="/about-tokens"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          OGN
-                        </Link>
-                        <span className="help-block">
-                          &nbsp;| {formData.boostLevel.toUpperCase()}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
+                  }
                 </div>
                 {/* Revisit this later
                   <Link
@@ -851,7 +915,14 @@ class ListingCreate extends Component {
                 <div className="btn-container">
                   <button
                     className="btn btn-other float-left btn-listing-create"
-                    onClick={() => this.setState({ step: this.STEP.BOOST })}
+                    onClick={() => {
+                      const step = isEditMode ?
+                        isFractionalListing ?
+                          this.STEP.AVAILABILITY :
+                          this.STEP.DETAILS
+                        : this.STEP.BOOST
+                      this.setState({ step })
+                    }}
                     ga-category="create_listing"
                     ga-label="review_step_back"
                   >
@@ -1002,10 +1073,18 @@ class ListingCreate extends Component {
                   />
                 </div>
                 <h3>
-                  <FormattedMessage
-                    id={'listing-create.successMessage'}
-                    defaultMessage={'Your listing has been created!'}
-                  />
+                  {isEditMode &&
+                    <FormattedMessage
+                      id={'listing-create.updateSuccessMessage'}
+                      defaultMessage={'Your listing has been updated!'}
+                    />
+                  }
+                  {!isEditMode &&
+                    <FormattedMessage
+                      id={'listing-create.successMessage'}
+                      defaultMessage={'Your listing has been created!'}
+                    />
+                  }
                 </h3>
                 <div className="disclaimer">
                   <p>
@@ -1113,19 +1192,30 @@ class ListingCreate extends Component {
           message={intl.formatMessage(this.intlMessages.navigationWarning)}
         />
       </div>
-    )
+    ) : null
   }
 }
 
-const mapStateToProps = ({ app, exchangeRates, wallet }) => {
+const mapStateToProps = ({
+  app: {
+    messagingEnabled,
+    notificationsHardPermission,
+    notificationsSoftPermission,
+    pushNotificationsSupported,
+    serviceWorkerRegistration,
+    web3
+  }, exchangeRates, wallet
+}) => {
   return {
     exchangeRates,
-    notificationsHardPermission: app.notificationsHardPermission,
-    notificationsSoftPermission: app.notificationsSoftPermission,
-    pushNotificationsSupported: app.pushNotificationsSupported,
-    serviceWorkerRegistration: app.serviceWorkerRegistration,
+    messagingEnabled,
+    notificationsHardPermission,
+    notificationsSoftPermission,
+    pushNotificationsSupported,
+    serviceWorkerRegistration,
     wallet,
-    web3Account: app.web3.account
+    web3Account: web3.account,
+    web3Intent: web3.intent
   }
 }
 
@@ -1135,10 +1225,15 @@ const mapDispatchToProps = dispatch => ({
   updateTransaction: (hash, confirmationCount) =>
     dispatch(updateTransaction(hash, confirmationCount)),
   upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
-  getOgnBalance: () => dispatch(getOgnBalance())
+  getOgnBalance: () => dispatch(getOgnBalance()),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(injectIntl(ListingCreate))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(
+    injectIntl(ListingCreate)
+  )
+)

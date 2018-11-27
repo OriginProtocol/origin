@@ -22,7 +22,14 @@ function generateOfferId(log) {
 
 async function getListingDetails(log, origin) {
   const listingId = generateListingId(log)
-  const listing = await origin.marketplace.getListing(listingId)
+  const blockInfo = {
+    blockNumber: log.blockNumber,
+    logIndex: log.logIndex
+  }
+  // Note: Passing blockInfo as an arg to the getListing call ensures that we preserve
+  // listings version history if the listener is re-indexing data.
+  // Otherwise all the listing version rows in the DB would end up with the same data.
+  const listing = await origin.marketplace.getListing(listingId, blockInfo)
   let seller
   try {
     seller = await origin.users.get(listing.seller)
@@ -37,8 +44,20 @@ async function getListingDetails(log, origin) {
 }
 
 async function getOfferDetails(log, origin) {
-  const listing = await origin.marketplace.getListing(generateListingId(log))
-  const offer = await origin.marketplace.getOffer(generateOfferId(log))
+  const listingId = generateListingId(log)
+  const offerId = generateOfferId(log)
+  const blockInfo = {
+    blockNumber: log.blockNumber,
+    logIndex: log.logIndex
+  }
+  // Notes:
+  //  - Passing blockInfo as an arg to the getListing call ensures that we preserve
+  // listings version history if the listener is re-indexing data.
+  // Otherwise all the listing versions in the DB would end up with the same data.
+  //  - BlockInfo is not needed for the call to getOffer since offer data stored in the DB
+  // is not versioned.
+  const listing = await origin.marketplace.getListing(listingId, blockInfo)
+  const offer = await origin.marketplace.getOffer(offerId)
   let seller
   let buyer
   try {
@@ -129,7 +148,7 @@ async function handleLog (log, rule, contractVersion, context) {
 
   if (context.config.db) {
     await withRetrys(async () => {
-      await db.Event.upsert({
+      return db.Event.upsert({
         blockNumber: log.blockNumber,
         logIndex: log.logIndex,
         contractAddress: log.address,
@@ -201,9 +220,12 @@ async function handleLog (log, rule, contractVersion, context) {
   // ES is used for full-text search use cases.
   if (LISTING_EVENTS.includes(rule.eventName) || OFFER_EVENTS.includes(rule.eventName)) {
     if (context.config.db) {
-      console.log(`Indexing listing in DB: id=${listingId}`)
+      console.log(`Indexing listing in DB:
+        id=${listingId} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
       const listingData = {
         id: listingId,
+        blockNumber: log.blockNumber,
+        logIndex: log.logIndex,
         status: listing.status,
         sellerAddress: listing.seller.toLowerCase(),
         data: listing
@@ -214,14 +236,15 @@ async function handleLog (log, rule, contractVersion, context) {
         listingData.updatedAt = log.date
       }
       await withRetrys(async () => {
-        await db.Listing.upsert(listingData)
+        return db.Listing.upsert(listingData)
       })
+
     }
 
     if (context.config.elasticsearch) {
       console.log(`Indexing listing in Elastic: id=${listingId}`)
       await withRetrys(async () => {
-        await search.Listing.index(listingId, userAddress, ipfsHash, listing)
+        return search.Listing.index(listingId, userAddress, ipfsHash, listing)
       })
     }
   }
@@ -245,7 +268,7 @@ async function handleLog (log, rule, contractVersion, context) {
         offerData.updatedAt = log.date
       }
       await withRetrys(async () => {
-        await db.Offer.upsert(offerData)
+        return db.Offer.upsert(offerData)
       })
     }
   }
@@ -265,14 +288,14 @@ async function handleLog (log, rule, contractVersion, context) {
       const seller = output.related.seller
       console.log(`Indexing seller in Elastic: addr=${seller.address}`)
       await withRetrys(async () => {
-        await search.User.index(seller)
+        return search.User.index(seller)
       })
     }
     if (output.related.buyer !== undefined) {
       const buyer = output.related.buyer
       console.log(`Indexing buyer in Elastic: addr=${buyer.address}`)
       await withRetrys(async () => {
-        await search.User.index(output.related.buyer)
+        return search.User.index(output.related.buyer)
       })
     }
   }
@@ -281,7 +304,7 @@ async function handleLog (log, rule, contractVersion, context) {
     console.log('\n-- WEBHOOK to ' + context.config.webhook + ' --\n')
     try {
       await withRetrys(async () => {
-        await postToWebhook(context.config.webhook, json)
+        return postToWebhook(context.config.webhook, json)
       }, false)
     } catch (e) {
       console.log(`Skipping webhook for ${logDetails}`)
@@ -294,7 +317,7 @@ async function handleLog (log, rule, contractVersion, context) {
     )
     try {
       await withRetrys(async () => {
-        postToDiscordWebhook(context.config.discordWebhook, output)
+        return postToDiscordWebhook(context.config.discordWebhook, output)
       }, false)
     } catch (e) {
       console.log(`Skipping discord webhook for ${logDetails}`)

@@ -62,7 +62,7 @@ class MessageNew extends Component {
     )
     const canDeliverMessage = origin.messaging.canConverseWith(recipientAddress)
 
-    return (
+    return messagingEnabled ? (
       <Modal
         isOpen={open}
         data-modal="message"
@@ -86,43 +86,6 @@ class MessageNew extends Component {
             />
             <div className="link-container text-center">
               <a href="#" data-modal="profile" onClick={handleToggle}>
-                <FormattedMessage
-                  id={'MessageNew.cancel'}
-                  defaultMessage={'Cancel'}
-                />
-              </a>
-            </div>
-          </div>
-        )}
-        {/* Current user needs to enable messaging. */}
-        {canReceiveMessages &&
-          !messagingEnabled && (
-          <div className="roadblock">
-            <FormattedMessage
-              id={'MessageNew.cannotSendMessages'}
-              defaultMessage={'Before you can contact this user, you need to enable messaging.'}
-            />
-            <div className="button-container">
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={this.props.enableMessaging}
-                ga-category="messaging"
-                ga-label="message_new_component_enable"
-              >
-                <FormattedMessage
-                  id={'MessageNew.enable'}
-                  defaultMessage={'Start Messaging'}
-                />
-              </button>
-            </div>
-            <div className="link-container text-center">
-              <a
-                href="#"
-                data-modal="profile"
-                onClick={handleToggle}
-                ga-category="messaging"
-                ga-label="message_new_component_cancel"
-              >
                 <FormattedMessage
                   id={'MessageNew.cancel'}
                   defaultMessage={'Cancel'}
@@ -183,7 +146,7 @@ class MessageNew extends Component {
           </form>
         )}
       </Modal>
-    )
+    ) : null
   }
 }
 

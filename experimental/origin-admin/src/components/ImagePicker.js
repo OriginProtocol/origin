@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FileInput, Button } from '@blueprintjs/core'
-import { ipfsRPC } from 'utils/config'
+import { getIpfsApi, getIpfsGateway } from 'utils/config'
 import { postFile } from 'utils/ipfsHash'
 
 var acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
@@ -19,11 +19,13 @@ function fileSize(number) {
 
 async function getImages(files) {
   const newImages = []
+  const ipfsRPC = getIpfsApi()
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
-    const hash = await postFile(ipfsRPC, file, file.contentType)
+    const hash = await postFile(ipfsRPC, file, file.type)
     if (acceptedFileTypes.indexOf(file.type) >= 0) {
       newImages.push({
+        contentType: file.type,
         size: fileSize(file.size),
         name: file.name,
         src: window.URL.createObjectURL(file),
@@ -35,7 +37,29 @@ async function getImages(files) {
 }
 
 class ImagePicker extends Component {
-  state = { images: [] }
+  constructor(props) {
+    super(props)
+    this.state = { images: this.imagesFromProps(props) }
+  }
+
+  imagesFromProps(props) {
+    const ipfsGateway = getIpfsGateway()
+    return (props.media || []).map(image => {
+      const hash = image.url.replace(/ipfs:\/\//, '')
+      return {
+        ...image,
+        hash,
+        src: `${ipfsGateway}/ipfs/${hash}`
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.media !== this.props.media) {
+      this.setState({ images: this.imagesFromProps(this.props) })
+    }
+  }
+
   render() {
     return (
       <div className="image-picker">
@@ -46,19 +70,23 @@ class ImagePicker extends Component {
           onInputChange={async e => {
             const newImages = await getImages(e.currentTarget.files)
             const images = [...this.state.images, ...newImages]
-            this.setState({ images })
-            if (this.props.onChange) {
-              this.props.onChange(
-                images.map(i => ({
-                  url: `ipfs://${i.hash}`,
-                  contentType: i.contentType
-                }))
-              )
-            }
+            this.onChange(images)
           }}
         />
       </div>
     )
+  }
+
+  onChange(images) {
+    this.setState({ images })
+    if (this.props.onChange) {
+      this.props.onChange(
+        images.map(i => ({
+          url: `ipfs://${i.hash}`,
+          contentType: i.contentType
+        }))
+      )
+    }
   }
 
   renderPreview() {
@@ -77,11 +105,9 @@ class ImagePicker extends Component {
                 href="#"
                 onClick={e => {
                   e.preventDefault()
-                  this.setState({
-                    images: this.state.images.filter(
-                      (i, offset) => idx !== offset
-                    )
-                  })
+                  this.onChange(
+                    this.state.images.filter((i, offset) => idx !== offset)
+                  )
                 }}
               >
                 <Button
@@ -128,45 +154,3 @@ require('react-styl')(`
         background-repeat: no-repeat
 
 `)
-/*
-var input = document.querySelector('input');
-var preview = document.querySelector('.preview');
-
-input.style.opacity = 0;
-input.addEventListener('change', updateImageDisplay);
-
-function updateImageDisplay() {
-  while(preview.firstChild) {
-    preview.removeChild(preview.firstChild);
-  }
-
-  var curFiles = input.files;
-  if(curFiles.length === 0) {
-    var para = document.createElement('p');
-    para.textContent = 'No files currently selected for upload';
-    preview.appendChild(para);
-  } else {
-    var list = document.createElement('ol');
-    preview.appendChild(list);
-    for(var i = 0; i < curFiles.length; i++) {
-      var listItem = document.createElement('li');
-      var para = document.createElement('p');
-      if(validFileType(curFiles[i])) {
-        para.textContent = 'File name ' + curFiles[i].name + ', file size ' + returnFileSize(curFiles[i].size) + '.';
-        var image = document.createElement('img');
-        image.src = window.URL.createObjectURL(curFiles[i]);
-
-        listItem.appendChild(image);
-        listItem.appendChild(para);
-
-      } else {
-        para.textContent = 'File name ' + curFiles[i].name + ': Not a valid file type. Update your selection.';
-        listItem.appendChild(para);
-      }
-
-      list.appendChild(listItem);
-    }
-  }
-}
-
-*/

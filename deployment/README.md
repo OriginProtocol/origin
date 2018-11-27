@@ -23,7 +23,14 @@ You will then need to grab the credentials for the Origin Kubernetes cluster, yo
 `gcloud container clusters get-credentials origin`
   
 Running this will configure `kubectl` so that every subsequent command runs against the Origin cluster.
-  
+
+Because the Origin deployments run in separate namespaces you might find it handy to add the following alias to your `.zshrc` or `.bashrc` file:
+
+`alias kcd='kubectl config set-context $(kubectl config current-context) --namespace '`
+
+You can then use `kcd dev`, `kcd staging`, or `kcd prod` to quicky change namespaces.
+
+
 ### Installing Helm
 
 Helm is a tool used to manage a deployment that consists of many Kubernetes resources rather than interacting with each resource one by one. It consists of a client side tool called `helm` and a server side tool called `tiller`. The cluster already has `tiller` configured and installed.

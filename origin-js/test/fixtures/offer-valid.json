@@ -1,7 +1,9 @@
 {
   "schemaId": "http://schema.originprotocol.com/offer_v1.0.0",
+  "listingId": "999-000-1",
   "listingType": "unit",
   "unitsPurchased": 1,
+  "schemaId": "http://schema.originprotocol.com/offer_v1.0.0",
   "totalPrice": {
     "currency": "ETH",
     "amount": "0.033"

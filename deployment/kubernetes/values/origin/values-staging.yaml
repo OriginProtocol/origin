@@ -1,0 +1,43 @@
+databaseInstance: origin-214503:us-west1:staging
+
+# origin-bridge
+bridgeImage: origin-bridge
+bridgeImageTag: '3dc402d'
+bridgeReplicas: 2
+
+# origin-dapp
+dappImage: origin-dapp
+dappImageTag: '3dc402d'
+dappReplicas: 2
+
+# Rinkeby network configuration
+gethTxReplicas: 1
+gethTxMemoryRequest: 6Gi
+
+# ipfs
+ipfsImage: ipfs/go-ipfs
+ipfsImageTag: master
+
+# ipfs-proxy
+ipfsProxyImage: ipfs-proxy
+ipfsProxyImageTag: '44b3247'
+
+# origin-faucet
+faucetImage: origin-faucet
+faucetImageTag: '88a8c2e'
+
+# event-listener
+eventlistenerImage: event-listener
+eventlistenerImageTag: '3dc402d'
+
+# origin-discovery
+discoveryImage: origin-discovery
+discoveryImageTag: '3dc402d'
+
+# origin-messaging
+messagingImage: origin-messaging
+messagingImageTag: '88a8c2e'
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: '44b3247'

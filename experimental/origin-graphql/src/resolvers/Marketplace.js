@@ -1,5 +1,6 @@
 import contracts from '../contracts'
 import listings from './marketplace/listings'
+import users from './marketplace/users'
 
 export default {
   address: contract => {
@@ -14,8 +15,8 @@ export default {
     }
     return contract.methods.totalListings().call()
   },
-  listing: (contract, args) => contracts.eventSource.getListing(args.id),
 
+  listing: (contract, args) => contracts.eventSource.getListing(args.id),
   listings,
 
   account: contract => {
@@ -43,5 +44,7 @@ export default {
   totalEvents: async () => {
     const events = await contracts.marketplace.eventCache.allEvents()
     return events.length
-  }
+  },
+  users,
+  user: (_, args) => ({ id: args.id, account: { id: args.id } })
 }

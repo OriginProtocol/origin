@@ -146,7 +146,11 @@ services:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
     ports:
       - "3456:3456"
-    command: /bin/bash -c "npm run migrate && npm run start"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
+      npm run migrate &&
+      npm run start"
 
   origin-dapp:
     container_name: origin-dapp

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ethereum.fullname" . }}-discovery
+  labels:
+    app: {{ template "ethereum.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ template "ethereum.fullname" . }}-tx-node
+  ports:
+    - name: discovery-udp
+      port: 30303
+      protocol: UDP

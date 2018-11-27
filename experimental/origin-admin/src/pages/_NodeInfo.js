@@ -3,7 +3,6 @@ import gql from 'graphql-tag'
 import { Subscription, Mutation } from 'react-apollo'
 import { Button, Popover, Position, Menu } from '@blueprintjs/core'
 import numberFormat from 'utils/numberFormat'
-import get from 'lodash/get'
 
 const NEW_BLOCKS_SUBSCRIPTION = gql`
   subscription onNewBlock {
@@ -24,10 +23,7 @@ const Subs = () => (
   <Mutation mutation={SetNetworkMutation}>
     {(setNetwork, { client }) => (
       <Subscription subscription={NEW_BLOCKS_SUBSCRIPTION}>
-        {({ data, loading }) => {
-          if (!get(data, 'newBlock.number')) {
-            return null
-          }
+        {({ data, loading, error }) => {
           let networkName = 'Custom network'
           if (localStorage.ognNetwork === 'mainnet') {
             networkName = 'Ethereum Mainnet'
@@ -79,8 +75,12 @@ const Subs = () => (
             >
               <Button
                 minimal={true}
-                text={`${networkName} (block ${
-                  loading ? 'Loading...' : numberFormat(data.newBlock.number)
+                text={`${networkName} (${
+                  error
+                    ? 'Error...'
+                    : loading
+                    ? 'Loading...'
+                    : `block ${numberFormat(data.newBlock.number)}`
                 })`}
               />
             </Popover>
