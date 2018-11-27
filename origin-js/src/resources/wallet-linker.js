@@ -350,7 +350,7 @@ export default class WalletLinker {
       session_token: this.session_token,
       return_url: this.getReturnUrl(),
       pending_call: this.pending_call,
-      pub_key:this.getLinkPubKey()
+      pub_key: this.getLinkPubKey()
     })
     if (ret) {
       this.link_code = ret.link_code
