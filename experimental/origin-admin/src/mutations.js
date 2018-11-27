@@ -212,24 +212,14 @@ export const MakeOfferMutation = gql`
 `
 
 export const AcceptOfferMutation = gql`
-  mutation AcceptOffer($listingID: String!, $offerID: String!, $from: String) {
-    acceptOffer(listingID: $listingID, offerID: $offerID, from: $from)
+  mutation AcceptOffer($offerID: String!, $from: String) {
+    acceptOffer(offerID: $offerID, from: $from)
   }
 `
 
 export const AddFundsMutation = gql`
-  mutation AddFunds(
-    $listingID: String!
-    $offerID: String!
-    $amount: String!
-    $from: String
-  ) {
-    addFunds(
-      listingID: $listingID
-      offerID: $offerID
-      amount: $amount
-      from: $from
-    ) {
+  mutation AddFunds($offerID: String!, $amount: String!, $from: String) {
+    addFunds(offerID: $offerID, amount: $amount, from: $from) {
       id
     }
   }
@@ -237,17 +227,11 @@ export const AddFundsMutation = gql`
 
 export const UpdateRefundMutation = gql`
   mutation UpdateRefundMutation(
-    $listingID: String!
     $offerID: String!
     $amount: String!
     $from: String
   ) {
-    updateRefund(
-      listingID: $listingID
-      offerID: $offerID
-      amount: $amount
-      from: $from
-    ) {
+    updateRefund(offerID: $offerID, amount: $amount, from: $from) {
       id
     }
   }
@@ -255,7 +239,6 @@ export const UpdateRefundMutation = gql`
 
 export const ExecuteRulingMutation = gql`
   mutation ExecuteRulingMutation(
-    $listingID: String!
     $offerID: String!
     $ruling: String!
     $commission: String!
@@ -264,7 +247,6 @@ export const ExecuteRulingMutation = gql`
     $from: String
   ) {
     executeRuling(
-      listingID: $listingID
       offerID: $offerID
       amount: $amount
       ruling: $ruling
@@ -279,24 +261,24 @@ export const ExecuteRulingMutation = gql`
 `
 
 export const FinalizeOfferMutation = gql`
-  mutation FinalizeOffer($listingID: String, $offerID: String, $from: String) {
-    finalizeOffer(listingID: $listingID, offerID: $offerID, from: $from) {
+  mutation FinalizeOffer($offerID: String!, $from: String) {
+    finalizeOffer(offerID: $offerID, from: $from) {
       id
     }
   }
 `
 
 export const DisputeOfferMutation = gql`
-  mutation DisputeOffer($listingID: String, $offerID: String, $from: String) {
-    disputeOffer(listingID: $listingID, offerID: $offerID, from: $from) {
+  mutation DisputeOffer($offerID: String, $from: String) {
+    disputeOffer(offerID: $offerID, from: $from) {
       id
     }
   }
 `
 
 export const WithdrawOfferMutation = gql`
-  mutation WithdrawOffer($listingID: String, $offerID: String, $from: String) {
-    withdrawOffer(listingID: $listingID, offerID: $offerID, from: $from) {
+  mutation WithdrawOffer($offerID: String, $from: String) {
+    withdrawOffer(offerID: $offerID, from: $from) {
       id
     }
   }
@@ -305,10 +287,16 @@ export const WithdrawOfferMutation = gql`
 export const AddDataMutation = gql`
   mutation WithdrawListing(
     $data: String!
+    $from: String!
     $listingID: String
     $offerID: String
   ) {
-    addData(data: $data, listingID: $listingID, offerID: $offerID) {
+    addData(
+      data: $data
+      listingID: $listingID
+      offerID: $offerID
+      from: $from
+    ) {
       id
     }
   }
