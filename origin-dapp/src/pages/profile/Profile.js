@@ -452,7 +452,6 @@ class Profile extends Component {
                 withProfile={false}
               />
               <Guidance mobileLayout={false} />
-              
             </div>
           </div>
         </div>
