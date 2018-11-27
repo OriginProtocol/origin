@@ -9,7 +9,7 @@ const testContracts = () => {
       '-r',
       '@babel/register',
       '-t',
-      '10000',
+      '20000',
       '--exit',
       'test-alt'
     ]
