@@ -57,7 +57,7 @@ class Guidance extends Component {
     let showGuidance = (mobileLayout && !this.state.dismissed) || !mobileLayout
 
     return showGuidance && (
-      <div className={mobileLayout ? 'guidance row mb-0' : 'guidance d-none d-lg-flex'}>
+      <div className={mobileLayout ? 'guidance row mb-0' : 'guidance d-none d-lg-block'}>
         <div className={mobileLayout ? 'pl-0 pr-0 col-2' : 'image-container text-center'}>
           <img src="images/identity.svg" alt="identity icon" />
         </div>
