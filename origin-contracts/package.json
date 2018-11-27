@@ -11,8 +11,8 @@
     "build:production": "npm run build:development && node lib/minify-contracts",
     "prepare": "npm run build",
     "test": "node scripts/test.js",
-    "test:contracts": "mocha -r @babel/register -t 10000 --exit test-alt",
-    "test:watch": "mocha -r @babel/register -r @babel/polyfill -t 10000 -w --watch-extensions sol test-alt",
+    "test:contracts": "mocha -r @babel/register -t 20000 --exit test-alt",
+    "test:watch": "mocha -r @babel/register -r @babel/polyfill -t 20000 -w --watch-extensions sol test-alt",
     "test:contracts-coverage": "SOLIDITY_COVERAGE=1 solidity-coverage",
     "format:solidity": "solium -d contracts/contracts/ --fix",
     "format": "prettier-eslint --write 'test/**/*.js' 'test-alt/**/*.js' 'lib/**/*.js'"
@@ -29,13 +29,14 @@
     "@babel/core": "^7.1.2",
     "@babel/polyfill": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "ajv": "^6.5.5",
     "ethereumjs-abi": "^0.6.5",
     "openzeppelin-solidity": "^1.10.0",
     "per-env": "^1.0.2",
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
-    "web3": "1.0.0-beta.34"
+    "web3": "^1.0.0-beta.36"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
@@ -47,9 +48,9 @@
     "chai-bignumber": "^2.0.2",
     "chalk": "^2.4.1",
     "cli-table": "^0.3.1",
-    "ganache-core": "^2.2.1",
-    "prettier-eslint-cli": "^4.7.1",
+    "ganache-core": "2.2.0",
     "mocha": "^5.2.0",
+    "prettier-eslint-cli": "^4.7.1",
     "solc": "^0.4.25",
     "solidity-coverage": "^0.5.11",
     "solium": "^1.1.8",

@@ -117,8 +117,8 @@ matrix:
         - rm -rf origin-token-transfer/server/node_modules/.cache
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap --scope origin-token-transfer-client
-        - npm run bootstrap --scope origin-token-transfer-server
+        - npm run bootstrap -- --scope origin-token-transfer-client
+        - npm run bootstrap -- --scope origin-token-transfer-server
       script:
         - npm run lint --prefix origin-token-transfer/server
         - npm run test --prefix origin-token-transfer/server
