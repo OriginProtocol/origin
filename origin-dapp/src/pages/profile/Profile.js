@@ -341,14 +341,14 @@ class Profile extends Component {
                 </div>
               )}
               <div className={`row attributes ${mobileLayout ? 'mt-3' : '' }`}>
-                <div className={mobileLayout ? 'col-3 pr-0' : 'col-4'}>
+                <div className={mobileLayout ? 'col-3 pr-0' : 'col-4 col-md-3'}>
                   <Avatar
                     image={provisional.pic}
                     className="primary"
                     placeholderStyle="unnamed"
                   />
                 </div>
-                <div className={mobileLayout ? 'col-9' : 'col-8'}>
+                <div className={mobileLayout ? 'col-9' : 'col-8 col-md-9'}>
                   <div className="name d-flex">
                     <h1>{fullName || <UnnamedUser />}</h1>
                     <div className="icon-container">

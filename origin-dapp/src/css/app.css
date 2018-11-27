@@ -5308,9 +5308,6 @@ a:not([href]):not([tabindex]).span-link {
     font-size: 1.4rem;
     line-height: 1.2;
     font-weight: 300;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
   }
 
   .profile-wrapper .edit-profile img {
@@ -5501,9 +5498,6 @@ a:not([href]):not([tabindex]).span-link {
 
   .profile-wrapper .name h1 {
     font-size: 2rem;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
   }
 
   .profile-wrapper .description p {
