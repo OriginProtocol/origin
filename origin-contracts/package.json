@@ -49,6 +49,7 @@
     "cli-table": "^0.3.1",
     "ganache-core": "^2.2.1",
     "prettier-eslint-cli": "^4.7.1",
+    "mocha": "^5.2.0",
     "solc": "^0.4.25",
     "solidity-coverage": "^0.5.11",
     "solium": "^1.1.8",
