@@ -29,13 +29,10 @@ function generateOfferId(log) {
  * @throws {Error} If freshness check fails
  */
 function checkFreshness(events, blockInfo) {
-  // Loop thru events to ensure at least one of them is as fresh as blockInfo.
-  let fresh = false
-  events.forEach(event => {
-    if ((event.blockNumber > blockInfo.blockNumber) ||
-      (event.blockNumber === blockInfo.blockNumber && event.logIndex >= blockInfo.logIndex)) {
-      fresh = true
-    }
+  // Find at least 1 event that is as fresh as blockInfo.
+  const fresh = events.some(event => {
+    return (event.blockNumber > blockInfo.blockNumber) ||
+      (event.blockNumber === blockInfo.blockNumber && event.logIndex >= blockInfo.logIndex)
   })
   if (!fresh) {
     throw new Error('Freshness check failed')
