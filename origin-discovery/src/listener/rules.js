@@ -24,7 +24,7 @@ function generateOfferId(log) {
  * Ensures data fetched from the blockchain meets the freshness criteria
  * specified in blockInfo. This is to catch the case where data is fetched from
  * an out of sync node that returns stale data.
- * @param {List(Event)} Web3 events
+ * @param {List(Event)} events
  * @param {blockNumber: number, logIndex: number} blockInfo
  * @throws {Error} If freshness check fails
  */
