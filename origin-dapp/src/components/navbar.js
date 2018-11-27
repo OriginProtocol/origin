@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
-import origin from '../services/origin'
 
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
 import MessagesDropdown from 'components/dropdowns/messages'
