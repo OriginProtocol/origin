@@ -17,6 +17,7 @@ metadata:
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/session-cookie-name: "ingress"
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+    nginx.ingress.kubernetes.io/limit-rps: "20"
 spec:
   tls:
     - secretName: {{ .Values.host }}
