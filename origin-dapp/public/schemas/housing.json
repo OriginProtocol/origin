@@ -4,12 +4,7 @@
   "required": ["name","category","description"],
   "properties": {
     "listingType": {
-      "type": "string",
-      "enum": [
-        "unit",
-        "fractional"
-      ],
-      "default": "fractional"
+      "const": "fractional"
     },
     "slotIncrementMinutes": {
       "type": "number",

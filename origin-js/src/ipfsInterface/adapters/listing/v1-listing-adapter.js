@@ -83,8 +83,7 @@ export default class ListingAdapterV1 extends AdapterBase {
         : null
     } else if (listing.type === 'fractional') {
       listing.slots = ipfsData.slots
-      listing.timeIncrement = ipfsData.timeIncrement
-      listing.calendarStep = ipfsData.calendarStep
+      listing.slotIncrementMinutes = ipfsData.slotIncrementMinutes
     } else {
       throw new Error(`Unexpected listing type: ${listing.type}`)
     }

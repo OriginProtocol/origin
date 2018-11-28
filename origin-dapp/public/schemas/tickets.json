@@ -4,12 +4,7 @@
   "required": ["name","category","description","price"],
   "properties": {
     "listingType": {
-      "type": "string",
-      "enum": [
-        "unit",
-        "fractional"
-      ],
-      "default": "unit"
+      "const": "unit"
     },
     "name": {
       "type": "string",
