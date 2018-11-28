@@ -56,13 +56,21 @@ class ImageCropper extends Component {
   }
 
   async onCropComplete() {
-    const { imageFileObj, pixelCrop } = this.state
+    const { imageFileObj, pixelCrop, crop } = this.state
+
+    let cropWidth = pixelCrop.width
+    let cropHeight = pixelCrop.width / 1.33333 // 4:3 aspect ratio
+
+    if (cropHeight > pixelCrop.height) {
+      cropHeight = pixelCrop.height
+      cropWidth = cropHeight * 1.33333
+    }
 
     const options = {
       maxHeight: 1000,
       maxWidth: 1000,
-      minWidth: pixelCrop.width,
-      minHeight: pixelCrop.height,
+      minWidth: cropWidth,
+      minHeight: cropHeight,
       left: pixelCrop.x,
       top: pixelCrop.y,
       orientation: true,
