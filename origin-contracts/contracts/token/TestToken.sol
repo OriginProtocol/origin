@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 
 /**
  * This is intended to be used for testing integration between the Marketplace

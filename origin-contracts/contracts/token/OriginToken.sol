@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
-import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
-import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
-import "../../node_modules/openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol";
 
 import "./WhitelistedPausableToken.sol";
 
