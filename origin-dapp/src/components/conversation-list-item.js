@@ -147,7 +147,7 @@ class ConversationListItem extends Component {
               {createdAt}
             </div>
           )}
-          {!!unreadCount && (
+          {(!!unreadCount && active) && (
             <div className={`unread count ${mobileDevice ? 'text-center mx-auto' : 'text-right'}`}>
               <div>{unreadCount}</div>
             </div>
