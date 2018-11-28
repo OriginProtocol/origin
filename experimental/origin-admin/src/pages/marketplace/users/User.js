@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import gql from 'graphql-tag'
 import get from 'lodash/get'
-import { Spinner, Tabs, Tab } from '@blueprintjs/core'
+import { Tabs, Tab } from '@blueprintjs/core'
 import { Query } from 'react-apollo'
-import fragments from '../../fragments'
 
 import Identity from 'components/Identity'
+import LoadingSpinner from 'components/LoadingSpinner'
 
-import Listings from './_ListingsList'
+import UserListings from './UserListings'
+import UserOffers from './UserOffers'
+import UserProfile from './UserProfile'
 
 const UserQuery = gql`
   query User($id: ID!) {
@@ -25,31 +27,24 @@ const UserQuery = gql`
               lastName
               description
               avatar
+
+              facebookVerified
+              twitterVerified
+              airbnbVerified
+              phoneVerified
+              emailVerified
             }
           }
         }
-        offers(first: 10) {
+        listings {
           totalCount
-          nodes {
-            id
-            listingId
-            offerId
-            listing {
-              id
-              title
-            }
-          }
         }
-        listings(first: 10) {
+        offers {
           totalCount
-          nodes {
-            ...basicListingFields
-          }
         }
       }
     }
   }
-  ${fragments.Listing.basic}
 `
 
 class User extends Component {
@@ -71,18 +66,11 @@ class User extends Component {
         >
           {({ data, error, networkStatus }) => {
             if (networkStatus === 1) {
-              return (
-                <div style={{ maxWidth: 300, marginTop: 100 }}>
-                  <Spinner />
-                </div>
-              )
-            }
-            if (!data || !data.marketplace) {
+              return <LoadingSpinner />
+            } else if (!data || !data.marketplace) {
               return <p className="p-3">No marketplace contract?</p>
-            }
-            if (error) {
-              console.log(error)
-              return <p>Error :(</p>
+            } else if (error) {
+              return <p className="p-3">Error :(</p>
             }
 
             const listings = get(data, 'marketplace.user.listings', [])
@@ -107,6 +95,7 @@ class User extends Component {
 
                 <Tabs
                   selectedTabId={selectedTabId}
+                  renderActiveTabPanelOnly={true}
                   onChange={(newTab, prevTab) => {
                     if (prevTab === newTab) {
                       return
@@ -123,62 +112,17 @@ class User extends Component {
                   <Tab
                     id="identity"
                     title={`Identity`}
-                    panel={
-                      !profile ? (
-                        'No profile set up'
-                      ) : (
-                        <div style={{ display: 'flex', alignItems: 'end' }}>
-                          {!profile.avatar ? null : (
-                            <img src={profile.avatar} style={{ width: 100 }} />
-                          )}
-                          <div style={{ margin: '10px 0 0 15px' }}>
-                            <div style={{ fontWeight: 'bold', marginBottom: 10 }}>{`${
-                              profile.firstName
-                            } ${profile.lastName} `}</div>
-                            {!profile.description ? null : (
-                              <div>{profile.description}</div>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    }
+                    panel={<UserProfile profile={profile} />}
                   />
                   <Tab
                     id="listings"
                     title={`Listings (${listings.totalCount})`}
-                    panel={
-                      <>
-                        <h5 className="bp3-heading mb-0 mt-2">Listings</h5>
-                        <Listings listings={listings.nodes} />
-                      </>
-                    }
+                    panel={<UserListings userId={userId} />}
                   />
                   <Tab
                     id="offers"
                     title={`Offers (${offers.totalCount})`}
-                    panel={
-                      <>
-                        <h5 className="bp3-heading mb-0 mt-3">Offers</h5>
-                        <table className="bp3-html-table bp3-small bp3-html-table-bordered">
-                          <thead>
-                            <tr>
-                              <th>Listing</th>
-                              <th>Offer</th>
-                              <th>Title</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {offers.nodes.map(offer => (
-                              <tr key={`${offer.listing.id}-${offer.id}`}>
-                                <td>{offer.listingId}</td>
-                                <td>{offer.offerId}</td>
-                                <td>{offer.listing.title}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </>
-                    }
+                    panel={<UserOffers userId={userId} />}
                   />
                 </Tabs>
               </div>

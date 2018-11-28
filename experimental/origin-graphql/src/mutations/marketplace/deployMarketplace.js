@@ -41,7 +41,7 @@ async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
           .addCallSpenderWhitelist(receipt.contractAddress)
           .send({
             gas: 4000000,
-            from: from || web3.eth.defaultAccount
+            from: from
           })
           .then(() => {})
           .catch()

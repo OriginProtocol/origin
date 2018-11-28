@@ -11,20 +11,21 @@ import {
   Tooltip,
   Tag,
   Tabs,
-  Tab,
-  Spinner
+  Tab
 } from '@blueprintjs/core'
 
 import currency from 'utils/currency'
 import withAccounts from 'hoc/withAccounts'
-import { MakeOffer, WithdrawListing, AddData, CreateListing } from './mutations'
-import Offers from './_Offers'
-import EventsTable from './_EventsTable'
+import { MakeOffer, WithdrawListing, AddData, CreateListing } from '../marketplace/mutations'
+import Offers from '../marketplace/_Offers'
+import EventsTable from '../marketplace/_EventsTable'
 import Identity from 'components/Identity'
 import Price from 'components/Price'
 import Gallery from 'components/Gallery'
+import LoadingSpinner from 'components/LoadingSpinner'
+import QueryError from 'components/QueryError'
 
-import query from './queries/_offers'
+import query from '../marketplace/queries/_offers'
 
 class Listing extends Component {
   state = {}
@@ -36,20 +37,13 @@ class Listing extends Component {
         {this.renderBreadcrumbs()}
         <Query query={query} variables={{ listingId }}>
           {({ networkStatus, error, data }) => {
-            if (networkStatus === 1)
-              return (
-                <div style={{ maxWidth: 300, marginTop: 100 }}>
-                  <Spinner />
-                </div>
-              )
 
-            if (error) {
-              console.log(error)
-              console.log(query.loc.source.body)
-              return <p className="mt-3">Error :(</p>
-            }
-            if (!data.marketplace) {
-              return null
+            if (networkStatus === 1) {
+              return <LoadingSpinner />
+            } else if (error) {
+              return <QueryError error={error} query={query} />
+            } else if (!data || !data.marketplace) {
+              return "No marketplace contract?"
             }
 
             const listing = data.marketplace.listing
