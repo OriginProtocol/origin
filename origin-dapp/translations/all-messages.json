@@ -46,7 +46,7 @@
   "messages.moment.hours": "h",
   "messages.moment.days": "d",
   "messages.moment.week": "wk",
-  "messages.moment.Months": "mo",
+  "messages.moment.months": "mo",
   "messages.moment.years": "y",
   "conversation.newMessagePlaceholder": "Type something...",
   "conversation.invalidTextInput": "Please add a message to send.",

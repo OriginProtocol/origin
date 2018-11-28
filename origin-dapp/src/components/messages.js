@@ -32,19 +32,19 @@ class Messages extends Component {
     const { selectedConversationId } = this.state
     const { conversationId } = match.params
 
-    if (!mobileDevice) {
-      // on route change
-      if (
-        conversationId &&
-        conversationId !== prevProps.match.params.conversationId
-      ) {
-        this.detectSelectedConversation()
-      }
+    if (mobileDevice) return
 
-      // autoselect a conversation if none exists
-      if (!selectedConversationId && conversations.length) {
-        this.detectSelectedConversation()
-      }
+    // on route change
+    if (
+      conversationId &&
+      conversationId !== prevProps.match.params.conversationId
+    ) {
+      this.detectSelectedConversation()
+    }
+
+    // autoselect a conversation if none exists
+    if (!selectedConversationId && conversations.length) {
+      this.detectSelectedConversation()
     }
   }
 

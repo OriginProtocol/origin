@@ -36,7 +36,7 @@ class ConversationListItem extends Component {
         defaultMessage: 'wk'
       },
       month: {
-        id: 'messages.moment.Months',
+        id: 'messages.moment.months',
         defaultMessage: 'mo'
       },
       year: {
