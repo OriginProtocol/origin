@@ -1,11 +1,11 @@
 @import 'alertify.css';
 @import 'variables.css';
 @import 'bootstrap.css';
-@import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
+@import '~react-big-calendar/lib/css/react-big-calendar.css';
 @import 'calendar.css';
-@import '../../node_modules/rc-slider/assets/index.css';
-@import '../../node_modules/react-dates/lib/css/_datepicker.css';
-@import '../../node_modules/react-image-crop/dist/ReactCrop.css';
+@import '~rc-slider/assets/index.css';
+@import '~react-dates/lib/css/_datepicker.css';
+@import '~react-image-crop/dist/ReactCrop.css';
 
 html {
   font-size: 16px;
