@@ -582,9 +582,9 @@ class ListingCreate extends Component {
                   schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
-                  onError={() => {
+                  onError={() =>
                     this.setState({ showDetailsFormErrorMsg: true })
-                  }}
+                  }
                   onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
                 >

@@ -128,7 +128,7 @@ class PhotoPicker extends Component {
     })
   }
 
-  async onCropComplete(croppedImageUri, imageFileObj) {
+  onCropComplete(croppedImageUri, imageFileObj) {
     let showMaxImageCountMsg = false
     const imgInput = document.getElementById('photo-picker-input')
     const pictures = this.state.pictures
