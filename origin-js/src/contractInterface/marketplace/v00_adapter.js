@@ -47,7 +47,7 @@ class V00_MarkeplaceAdapter {
     { deposit = '0', arbitrator, commission = {} },
     confirmationCallback
   ) {
-    const from = await this.contractService.currentAccount()
+    const from = (await this.contractService.currentAccount()) || this.contractService.placeholderAccount()
     const { amount, currency } = commission
 
     if (currency && !SUPPORTED_DEPOSIT_CURRENCIES.includes(currency)) {
@@ -63,7 +63,7 @@ class V00_MarkeplaceAdapter {
         'createListingWithSender',
         ipfsBytes,
         deposit,
-        arbitrator || from
+        arbitrator || from 
       )
 
       // In order to estimate gas correctly, we need to add the call to a create listing since that's called by the token

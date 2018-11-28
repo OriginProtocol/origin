@@ -3,17 +3,13 @@
   "private": true,
   "devDependencies": {
     "babel-eslint": "^10.0.1",
-    "chai": "^4.2.0",
-    "eslint": "^5.9.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.7.0",
     "eslint-plugin-standard": "^4.0.0",
-    "lerna": "^3.4.3",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.6"
+    "lerna": "^3.4.3"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",

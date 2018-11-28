@@ -140,7 +140,7 @@ async function showIndexInfo() {
         .split('\n')
         .filter(listingRow => listingRow.length > 1) // filter out empty rows
         .map(listingRow => {
-          const aliasData = listingRow.split(' ')
+          const aliasData = listingRow.split(/\s+/)
           return {
             index: aliasData[1],
             alias: aliasData[0]

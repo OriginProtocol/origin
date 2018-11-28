@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint '**/*.js' --rulesdir ../",
-    "start": "node src/index.js",
-    "start:dev": "nodemon node src/index.js",
+    "start": "per-env",
+    "start:development": "nodemon src/app.js",
+    "start:production": "node src/app.js",
     "test": "mocha --timeout=10000",
     "test:load": "node load.js"
   },
@@ -28,6 +29,7 @@
     "ipfsd-ctl": "^0.40.0",
     "is-json": "^2.0.1",
     "logplease": "^1.2.15",
+    "per-env": "^1.0.2",
     "zlib": "^1.0.5"
   },
   "devDependencies": {
@@ -38,6 +40,7 @@
     "chai": "^4.2.0",
     "form-data": "^2.3.3",
     "mocha": "^5.2.0",
+    "nodemon": "^1.18.6",
     "supertest": "^3.3.0",
     "webrtcsupport": "^2.2.0"
   }

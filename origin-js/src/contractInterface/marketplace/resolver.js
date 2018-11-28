@@ -323,4 +323,13 @@ export default class MarketplaceResolver {
     }
     return { adapter, listingIndex, offerIndex, version, network }
   }
+
+  makeListingId(netId, contractName, listingIndex) {
+    for (const version of this.versions) {
+      if (this.adapters[version].contractName == contractName)
+      {
+        return generateListingId({ version, netId, listingIndex })
+      }
+    }
+  }
 }

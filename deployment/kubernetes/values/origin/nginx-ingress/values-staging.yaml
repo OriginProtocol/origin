@@ -1,0 +1,14 @@
+controller:
+  service:
+    loadBalancerIP: 35.197.88.39
+    externalTrafficPolicy: "Local"
+  ingressClass: staging-ingress
+  stats:
+    enabled: true
+  metrics:
+    enabled: true
+  extraArgs:
+    enable-ssl-chain-completion: false
+    enable-dynamic-configuration: true
+    watch-namespace: staging
+    force-namespace-isolation: true

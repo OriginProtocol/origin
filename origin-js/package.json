@@ -9,6 +9,7 @@
   "module": "./src/index.js",
   "scripts": {
     "build": "webpack --display errors-only",
+    "build:watch": "webpack --watch",
     "lint": "eslint 'src/**/*.js' --rulesdir ../",
     "start": "node scripts/serve.js serve",
     "start:no-ganache": "node scripts/serve.js no-ganache",
@@ -17,7 +18,8 @@
     "test:jsw": "node scripts/test-js.js --watch"
   },
   "files": [
-    "dist"
+    "dist",
+    "common"
   ],
   "repository": {
     "type": "git",
@@ -41,7 +43,6 @@
     "babel-loader": "^8.0.4",
     "bignumber.js": "^8.0.1",
     "bs58": "^4.0.1",
-    "chalk": "^2.4.1",
     "cross-fetch": "^2.1.1",
     "crypto-js": "^3.1.9-1",
     "crypto-random-string": "^1.0.0",
@@ -54,7 +55,8 @@
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "0.0.6",
     "url-parse": "^1.4.0",
-    "web3": "^1.0.0-beta.34",
+    "uuid": "^3.3.2",
+    "web3": "^1.0.0-beta.36",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
     "webpack-node-externals": "^1.7.2",
@@ -62,18 +64,20 @@
     "websocket": "^1.0.28"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^2.0.2",
     "chai-string": "1.5.0",
-    "chalk": "^2.4.1",
+    "eslint": "^5.9.0",
     "eth-gas-reporter": "^0.1.2",
     "fetch-mock": "^7.2.5",
-    "ganache-core": "^2.1.0",
+    "ganache-core": "2.2.0",
     "html-webpack-plugin": "^3.2.0",
     "ipfs": "^0.33.1",
     "ipfs-api": "^26.1.2",
     "mocha-loader": "^2.0.0",
-    "sinon": "^7.1.1"
+    "sinon": "^7.1.1",
+    "web3-provider-engine": "^14.1.0"
   },
   "babel": {
     "sourceType": "unambiguous",
