@@ -338,15 +338,15 @@ class Profile extends Component {
               <div className={`row attributes mb-0 d-lg-none`}>
                 <Guidance mobileLayout={true}/>
               </div>
-              <div className={`row attributes ${mobileLayout ? 'mt-3' : '' }`}>
-                <div className={mobileLayout ? 'col-3 pr-0' : 'col-4 col-md-3'}>
+              <div className="row attributes mt-3 mt-lg-0">
+                <div className="col-3 pr-0 pr-lg-3">
                   <Avatar
                     image={provisional.pic}
                     className="primary"
                     placeholderStyle="unnamed"
                   />
                 </div>
-                <div className={mobileLayout ? 'col-9' : 'col-8 col-md-9'}>
+                <div className="col-9">
                   <div className="name d-flex">
                     <h1>{fullName || <UnnamedUser />}</h1>
                     <div className="icon-container">
@@ -394,7 +394,7 @@ class Profile extends Component {
                 mobileLayout={mobileLayout}
               />
 
-              <div className="col-12">
+              <div className="col-12 pl-0 pr-0 pr-md-3 pl-md-3">
                 <Strength strength={profile.strength} progress={progress} />
                 {!hasChanges && (
                   <button

@@ -10,7 +10,7 @@ const ProfileStrength = ({ progress, strength }) => (
           defaultMessage={'Profile Strength'}
         />
       </h2>
-      <h2>{strength}%</h2>
+      <h2 className="d-none d-md-block">{strength}%</h2>
     </div>
     <div className="progress">
       <div

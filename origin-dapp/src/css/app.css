@@ -5276,6 +5276,10 @@ a:not([href]):not([tabindex]).span-link {
 /* md - */
 @media (max-width: 767px) {
   /* Profile */
+  .primary.avatar-container {
+    border-radius: 5px;
+  }
+
   .warning.alert {
     padding: 0.25rem 0.25rem;
   }
@@ -5479,10 +5483,6 @@ a:not([href]):not([tabindex]).span-link {
   /* Profile */
   .profile-wrapper {
     padding: 0;
-  }
-
-  .primary.avatar-container {
-    border-radius: 5px;
   }
 
   .profile-wrapper .guidance {

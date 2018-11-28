@@ -11,11 +11,11 @@ class VerifierServices extends Component {
             id={'_Services.poweredBy'}
             defaultMessage={'Powered by'}
           />{' '}
-          <span className="logo d-none d-md-flex">
+          <span className="logo d-none d-md-block">
             Origin<sup>ID</sup>
           </span>
         </p>
-        <p className="directive d-none d-md-flex">
+        <p className="directive d-none d-md-block">
           <FormattedMessage
             id={'_Services.pleaseConnectAccounts'}
             defaultMessage={
