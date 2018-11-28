@@ -30,8 +30,6 @@ export const getDataUri = async file => {
 export const modifyImage = (imageFileObj, options, callback) => {
   const updatedOptions = {
     ...options,
-    maxHeight: MAX_IMAGE_HEIGHT,
-    maxWidth: MAX_IMAGE_WIDTH,
     crossOrigin: 'anonymous'
   }
 
@@ -73,6 +71,8 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) =>
   const { x, y, width, height } = pixelCrop
 
   const options = {
+    maxHeight: MAX_IMAGE_HEIGHT,
+    maxWidth: MAX_IMAGE_WIDTH,
     minWidth: cropWidth,
     minHeight: cropHeight,
     sourceWidth: width,
