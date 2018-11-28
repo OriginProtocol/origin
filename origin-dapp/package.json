@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@babel/cli": "^7.0.0-beta.46",
-    "@babel/core": "^7.0.0-beta.46",
+    "@babel/core": "^7.1.5",
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.0.0-beta.46",
     "@babel/preset-react": "^7.0.0-beta.46",
@@ -20,8 +20,8 @@
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-react-intl": "^3.0.1",
     "bootstrap": "^4.1.1",
-    "clipboard-polyfill": "^2.7.0",
     "clean-webpack-plugin": "^1.0.0",
+    "clipboard-polyfill": "^2.7.0",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "1.0.1",
     "deep-equal": "^1.0.1",

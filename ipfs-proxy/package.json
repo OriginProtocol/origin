@@ -33,7 +33,7 @@
     "zlib": "^1.0.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
+    "@babel/core": "^7.1.5",
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
     "autocannon": "^3.0.1",
