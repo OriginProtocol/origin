@@ -10,7 +10,7 @@ const imageHash = 'QmcJwbSPxVgpLsnN3ESAeZ7FRSapYKa27pWFhY9orsZat7'
 const ipfsFactory = ipfsdCtl.create({
   type: 'js',
 })
-require('./src/index')
+require('./src/app')
 
 async function spawnIpfs() {
   return new Promise((resolve, reject) => {
