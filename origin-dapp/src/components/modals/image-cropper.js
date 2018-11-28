@@ -27,10 +27,10 @@ class ImageCropper extends Component {
     this.onCropComplete = this.onCropComplete.bind(this)
   }
 
-  async componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.imageFileObj && this.props.imageFileObj !== prevProps.imageFileObj) {
 
-      modifyImage(this.props.imageFileObj, {orientation: true, meta: true}, (dataUri) => {
+      modifyImage(this.props.imageFileObj, { orientation: true }, (dataUri) => {
         this.setState({
           imageSrc: dataUri,
           ...this.props
@@ -58,18 +58,18 @@ class ImageCropper extends Component {
   async onCropComplete() {
     const { imageFileObj, pixelCrop } = this.state
 
-    const loadImageOptions = {
-      maxWidth: pixelCrop.width,
-      maxHeight: pixelCrop.height,
-      aspectRatio: 4/3,
+    const options = {
+      maxHeight: 1000,
+      maxWidth: 1000,
+      minWidth: pixelCrop.width,
+      minHeight: pixelCrop.height,
       left: pixelCrop.x,
       top: pixelCrop.y,
       orientation: true,
-      crop: true,
-      contain: true,
+      crop: true
     }
 
-    modifyImage(imageFileObj, loadImageOptions, (dataUri) => {
+    modifyImage(imageFileObj, options, (dataUri) => {
       this.props.onCropComplete(dataUri, imageFileObj)
     })
   }

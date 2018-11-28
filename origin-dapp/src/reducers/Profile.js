@@ -153,7 +153,6 @@ export default function Profile(state = initialState, action = {}) {
     })
 
   case ProfileConstants.UPDATE:
-    console.log("WHAT IS THE TIMING OF THIS CALL")
     return changes({
       ...state,
       provisional: {

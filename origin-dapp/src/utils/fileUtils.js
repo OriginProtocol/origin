@@ -111,6 +111,8 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, skipCropping
 }
 
 export const modifyImage = (file, options, callback) => {
+  const updatedOptions = { ...options, crossOrigin: 'anonymous' }
+
   loadImage(
     file,
     (canvas, meta) => {
@@ -121,6 +123,6 @@ export const modifyImage = (file, options, callback) => {
         callback(dataUri)
       }, 'image/jpeg')
     },
-    options
+    updatedOptions
   )
 }

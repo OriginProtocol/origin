@@ -104,10 +104,10 @@ class PhotoPicker extends Component {
         if (imageFiles.hasOwnProperty(key)) {
           const file = imageFiles[key]
 
-          modifyImage(file, {orientation: true}, (dataUri) => {
+          modifyImage(file, { orientation: true }, (dataUri) => {
             pictures.push({
               originalImageFile: file,
-              croppedImageUri: newUri
+              croppedImageUri: dataUri
             })
 
             this.setState(
