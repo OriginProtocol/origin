@@ -16,15 +16,22 @@ export const getDataUri = async file => {
   })
 }
 
+/*
+ * modifyImage
+ * @description Creates a modified imageDataUri when given options
+ * @param {file} imageFileObj - The image file object from the file input element
+ * @param {object} options - https://github.com/blueimp/JavaScript-Load-Image#options
+ * @param {function} callback- called with a imageDataUri
+ */
 
-export const modifyImage = (file, options, callback) => {
+export const modifyImage = (imageFileObj, options, callback) => {
   const updatedOptions = { ...options, crossOrigin: 'anonymous' }
 
   loadImage(
-    file,
+    imageFileObj,
     (canvas, meta) => {
       canvas.toBlob(async (blob) => {
-        blob.name = file.name
+        blob.name = imageFileObj.name
         const dataUri = await getDataUri(blob)
 
         callback(dataUri)
