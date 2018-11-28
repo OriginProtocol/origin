@@ -6,7 +6,7 @@ bridgeImageTag: '4f7ab3f'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '222710e'
+dappImageTag: 'ee9fa8b'
 
 # Origin network configuration
 gethTxReplicas: 1
@@ -27,7 +27,7 @@ faucetImageTag: 'ee9fa8b'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '157b2f5'
+eventlistenerImageTag: '72cbacd'
 
 # origin-discovery
 discoveryImage: origin-discovery
