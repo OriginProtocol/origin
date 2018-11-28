@@ -35,7 +35,7 @@
     "ipfs-api": "^26.1.2",
     "ipfs-log": "^4.2.0",
     "ipfs-pubsub-1on1": "0.0.4",
-    "logplease": "^1.2.14",
+    "logplease": "^1.2.15",
     "orbit-db": "^0.19.8",
     "per-env": "^1.0.2",
     "web3": "^1.0.0-beta.36"
