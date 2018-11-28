@@ -1,9 +1,11 @@
 import React from 'react'
 
-import { Button, Spinner } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 import { Query } from 'react-apollo'
 import EventsTable from './_EventsTable'
 import BottomScrollListener from 'components/BottomScrollListener'
+import LoadingSpinner from 'components/LoadingSpinner'
+import QueryError from 'components/QueryError'
 
 import query from './queries/events'
 
@@ -40,25 +42,19 @@ const Events = () => (
     >
       {({ data, error, fetchMore, networkStatus }) => {
         if (networkStatus === 1) {
-          return (
-            <div style={{ maxWidth: 300, marginTop: 100 }}>
-              <Spinner />
-            </div>
-          )
+          return <LoadingSpinner />
+        } else if (error) {
+          return <QueryError error={error} query={query} />
+        } else if (!data || !data.marketplace) {
+          return 'No marketplace contract?'
         }
-        if (!data || !data.marketplace)
-          return <p className="p-3">No marketplace contract?</p>
-        if (error) {
-          console.log(error)
-          return <p>Error :(</p>
-        }
+
         const numEvents = data.marketplace.events.length
 
         return (
           <BottomScrollListener
-            initial={
-              numEvents < data.marketplace.totalEvents && networkStatus !== 3
-            }
+            ready={networkStatus !== 3}
+            hasMore={numEvents < data.marketplace.totalEvents}
             onBottom={() => nextPage(fetchMore, numEvents)}
           >
             <div className="ml-3">

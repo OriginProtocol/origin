@@ -2,7 +2,7 @@
   "name": "ipfs-proxy",
   "version": "1.0.0",
   "description": "A proxy that validates Origin content being uploaded and downloaded from Origin's IPFS servers",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "lint": "eslint '**/*.js' --rulesdir ../",
     "start": "per-env",

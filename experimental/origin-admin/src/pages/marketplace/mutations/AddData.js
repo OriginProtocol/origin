@@ -1,14 +1,23 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import rnd from 'utils/rnd'
 
 import { Button, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
+import withAccounts from 'hoc/withAccounts'
 
 import { AddDataMutation } from '../../../mutations'
 import ErrorCallout from 'components/ErrorCallout'
+import SelectAccount from 'components/SelectAccount'
 
 class AddData extends Component {
-  state = {
-    data: ''
+  constructor(props) {
+    super()
+
+    const account = rnd(props.accounts)
+    this.state = {
+      data: '',
+      from: account ? account.id : ''
+    }
   }
 
   render() {
@@ -37,6 +46,10 @@ class AddData extends Component {
               <FormGroup label="Data">
                 <InputGroup {...input('data')} />
               </FormGroup>
+
+              <FormGroup label="From">
+                <SelectAccount {...input('from')} />
+              </FormGroup>
             </div>
             <div className="bp3-dialog-footer">
               <div className="bp3-dialog-footer-actions">
@@ -56,7 +69,8 @@ class AddData extends Component {
 
   getVars() {
     const variables = {
-      data: this.state.data
+      data: this.state.data,
+      from: this.state.from
     }
     if (this.props.listing) {
       variables.listingID = String(this.props.listing.id)
@@ -68,4 +82,4 @@ class AddData extends Component {
   }
 }
 
-export default AddData
+export default withAccounts(AddData, 'marketplace')

@@ -40,6 +40,13 @@ const Configs = {
         name: 'USDC Stablecoin',
         symbol: 'USDC',
         decimals: '6'
+      },
+      {
+        id: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd',
+        type: 'Standard',
+        name: 'Gemini Dollar',
+        symbol: 'GUSD',
+        decimals: '2'
       }
     ]
   },

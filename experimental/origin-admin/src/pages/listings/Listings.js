@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
-import lGet from 'lodash/get'
-import { getDiscovery } from '../../utils/config'
+import pick from 'lodash/pick'
 
 import {
   Button,
   ButtonGroup,
-  Spinner,
   Tooltip,
   Switch,
   InputGroup,
@@ -14,106 +12,64 @@ import {
 } from '@blueprintjs/core'
 
 import BottomScrollListener from 'components/BottomScrollListener'
-import { get, set } from 'utils/store'
+import LoadingSpinner from 'components/LoadingSpinner'
+import { getDiscovery } from 'utils/config'
+import store from 'utils/store'
+import nextPageFactory from 'utils/nextPageFactory'
 
 import ListingsList from './_ListingsList'
 import ListingsGallery from './_ListingsGallery'
-import CreateListing from './mutations/CreateListing'
+import CreateListing from '../marketplace/mutations/CreateListing'
 
-import query from './queries/_listings'
+import query from '../marketplace/queries/_listings'
 
-function nextPage(fetchMore, vars) {
-  fetchMore({
-    variables: { ...vars },
-    updateQuery: (prev, { fetchMoreResult }) => {
-      if (!fetchMoreResult) return prev
-      return {
-        marketplace: {
-          ...prev.marketplace,
-          listings: {
-            ...prev.marketplace.listings,
-            pageInfo: fetchMoreResult.marketplace.listings.pageInfo,
-            nodes: [
-              ...prev.marketplace.listings.nodes,
-              ...fetchMoreResult.marketplace.listings.nodes
-            ]
-          }
-        }
-      }
-    }
-  })
-}
+const memStore = store('memory')
+const localStore = store('localStorage')
+const nextPage = nextPageFactory('marketplace.listings')
 
 class Listings extends Component {
   state = {
-    mode: get('listingsPage.mode', 'gallery'),
-    hidden: false,
-    search: '',
-    activeSearch: ''
+    first: 15,
+    mode: localStore.get('listingsPage.mode', 'gallery'),
+    searchInput: memStore.get('listingsPage.search', ''),
+    search: memStore.get('listingsPage.search'),
+    hidden: false
   }
 
   render() {
-    const vars = {
-      first: 15,
-      sort: this.state.sort,
-      hidden: this.state.hidden,
-      search: this.state.activeSearch
-    }
+    const vars = pick(this.state, 'first', 'sort', 'hidden', 'search')
 
     return (
       <Query query={query} variables={vars} notifyOnNetworkStatusChange={true}>
         {({ error, data, fetchMore, networkStatus, refetch }) => {
           if (networkStatus === 1) {
-            return (
-              <div style={{ maxWidth: 300, marginTop: 100 }}>
-                <Spinner />
-              </div>
-            )
-          }
-
-          if (!data || !data.marketplace) {
+            return <LoadingSpinner />
+          } else if (error) {
+            return <p className="p-3">Error :(</p>
+          } else if (!data || !data.marketplace) {
             return <p className="p-3">No marketplace contract?</p>
           }
 
-          if (error) {
-            console.log(error)
-            return <p>Error :(</p>
-          }
-
-          const listings = lGet(data, 'marketplace.listings.nodes', [])
-          const hasNextPage = lGet(
-            data,
-            'marketplace.listings.pageInfo.hasNextPage'
-          )
-          const after = lGet(data, 'marketplace.listings.pageInfo.endCursor')
-          const totalListings = data.marketplace.listings.totalCount
-
-          const noMore = !hasNextPage
+          const { nodes, pageInfo, totalCount } = data.marketplace.listings
+          const { hasNextPage, endCursor: after } = pageInfo
 
           return (
             <BottomScrollListener
               offset={this.state.mode === 'list' ? 50 : 200}
-              initial={hasNextPage && networkStatus === 7}
-              onBottom={() => {
-                if (!noMore) {
-                  nextPage(fetchMore, { ...vars, after })
-                }
-              }}
+              ready={networkStatus === 7}
+              hasMore={hasNextPage}
+              onBottom={() => nextPage(fetchMore, { ...vars, after })}
             >
               <div className="p-3">
-                {this.renderBreadcrumbs({
-                  refetch,
-                  networkStatus,
-                  totalListings
-                })}
+                {this.renderHeader({ refetch, networkStatus, totalCount })}
 
                 {this.state.mode === 'list' ? (
-                  <ListingsList listings={listings} />
+                  <ListingsList listings={nodes} />
                 ) : (
-                  <ListingsGallery listings={listings} noMore={noMore} />
+                  <ListingsGallery listings={nodes} hasNextPage={hasNextPage} />
                 )}
 
-                {noMore || this.state.mode === 'gallery' ? null : (
+                {!hasNextPage || this.state.mode === 'gallery' ? null : (
                   <Button
                     text="Load more..."
                     loading={networkStatus === 3}
@@ -123,9 +79,7 @@ class Listings extends Component {
                 )}
                 <CreateListing
                   isOpen={this.state.createListing}
-                  onCompleted={() => {
-                    this.setState({ createListing: false })
-                  }}
+                  onCompleted={() => this.setState({ createListing: false })}
                 />
               </div>
             </BottomScrollListener>
@@ -135,41 +89,41 @@ class Listings extends Component {
     )
   }
 
-  renderBreadcrumbs({ refetch, networkStatus, totalListings }) {
+  doSearch(search) {
+    this.setState({ activeSearch: search, search })
+    memStore.set('listingsPage.search', search)
+  }
+
+  renderHeader({ refetch, networkStatus, totalCount }) {
     const discovery = getDiscovery()
 
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h5 className="bp3-heading mb-0 mr-3">{`${totalListings} Listings`}</h5>
+          <h5 className="bp3-heading mb-0 mr-3">{`${totalCount} Listings`}</h5>
           {!discovery ? null : (
             <ControlGroup className="mr-2">
               <InputGroup
                 placeholder="Search..."
-                value={this.state.search}
-                onChange={e => this.setState({ search: e.target.value })}
+                value={this.state.searchInput}
+                onChange={e => this.setState({ searchInput: e.target.value })}
                 onKeyUp={e => {
-                  if (e.keyCode === 13) {
-                    this.setState({ activeSearch: this.state.search })
-                  }
+                  if (e.keyCode === 13) this.doSearch(this.state.searchInput)
                 }}
                 rightElement={
-                  this.state.search ? (
+                  this.state.searchInput ? (
                     <Button
                       minimal={true}
                       icon="cross"
-                      onClick={() =>
-                        this.setState({ activeSearch: '', search: '' })
-                      }
+                      onClick={() => this.doSearch('')}
                     />
                   ) : null
                 }
               />
               <Button
                 icon="search"
-                onClick={() =>
-                  this.setState({ activeSearch: this.state.search })
-                }
+                loading={networkStatus === 2}
+                onClick={() => this.doSearch(this.state.searchInput)}
               />
             </ControlGroup>
           )}
@@ -184,7 +138,7 @@ class Listings extends Component {
                 icon="media"
                 active={this.state.mode === 'gallery'}
                 onClick={() => {
-                  set('listingsPage.mode', 'gallery')
+                  localStore.set('listingsPage.mode', 'gallery')
                   this.setState({ mode: 'gallery' })
                 }}
               />
@@ -194,7 +148,7 @@ class Listings extends Component {
                 icon="list"
                 active={this.state.mode === 'list'}
                 onClick={() => {
-                  set('listingsPage.mode', 'list')
+                  localStore.set('listingsPage.mode', 'list')
                   this.setState({ mode: 'list' })
                 }}
               />
