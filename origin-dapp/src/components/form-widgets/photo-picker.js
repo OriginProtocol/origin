@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import ImageCropper from '../modals/image-cropper'
-import { getDataUri, generateCroppedImage, getImageOrientation } from 'utils/fileUtils'
+import { getDataUri, modifyImage } from 'utils/fileUtils'
 
 const MAX_IMAGE_COUNT = 10
 
@@ -84,7 +84,6 @@ class PhotoPicker extends Component {
           canvas.height = this.naturalHeight
           canvas.getContext('2d').drawImage(this, 0, 0)
           canvas.toBlob(file => {
-            console.log("CANVASE TO BLOB")
             resolve(getDataUri(file))
           }, 'image/jpeg')
         }
@@ -96,22 +95,6 @@ class PhotoPicker extends Component {
     return Promise.all(imagePromises)
   }
 
-  async objectUrlToBlob(url, file) {
-    const blob = await fetch(url).then(r => r.blob());
-    blob.name = file.name
-    return blob
-  }
-
-  blobToDataURL(blob) {
-    return new Promise(resolve => {
-      const a = new FileReader()
-      a.onload = function(e) {
-        resolve(e.target.result)
-      }
-      a.readAsDataURL(blob)
-    })
-  }
-
   async onFileSelected(e) {
     if (e.target.files && e.target.files.length > 0) {
       const imageFiles = e.target.files
@@ -121,25 +104,17 @@ class PhotoPicker extends Component {
         if (imageFiles.hasOwnProperty(key)) {
           const file = imageFiles[key]
 
-          const imageRotation = await getImageOrientation(file)
-          const croppedImageFile = await generateCroppedImage(file)
-          const croppedImageUri = await getDataUri(file)
-          const loadingImage = loadImage(
-              file,
-              (canvas, meta) => {
-                const dataUrl = canvas.toDataURL()
-                pictures.push({
-                  originalImageFile: file,
-                  croppedImageUri: dataUrl
-                })
+          modifyImage(file, {orientation: true}, (dataUri) => {
+            pictures.push({
+              originalImageFile: file,
+              croppedImageUri: newUri
+            })
 
-                this.setState(
-                  { pictures },
-                  () => this.props.onChange(this.picURIsOnly(pictures))
-                )
-              },
-              {orientation: imageRotation, meta: true}
-          )
+            this.setState(
+              { pictures },
+              () => this.props.onChange(this.picURIsOnly(pictures))
+            )
+          })
         }
       }
     }

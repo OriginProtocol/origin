@@ -110,62 +110,17 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, skipCropping
   })
 }
 
-export const getImageOrientation = async (file) => {
-  const reader = new FileReader()
+export const modifyImage = (file, options, callback) => {
+  loadImage(
+    file,
+    (canvas, meta) => {
+      canvas.toBlob(async (blob) => {
+        blob.name = file.name
+        const dataUri = await getDataUri(blob)
 
-  return new Promise(resolve => {
-    reader.onload = ({ target: { result } }) => {
-      const view = new DataView(result)
-      const defaultOrientation = 1
-
-      if (result.length < 2 || view.getUint16(0, false) != 0xFFD8) {
-        return resolve(defaultOrientation)
-      }
-
-      const length = view.byteLength
-      let offset = 2
-
-      while (offset < length) {
-        const marker = view.getUint16(offset, false)
-        const startOfExif = marker == 0xFFE1
-        offset += 2
-
-        if (startOfExif) {
-          if (view.getUint32(offset += 2, false) != 0x45786966) {
-            return resolve(defaultOrientation)
-          }
-          const littleEndian = view.getUint16(offset += 6, false) == 0x4949
-          offset += view.getUint32(offset + 4, littleEndian)
-          const tags = view.getUint16(offset, littleEndian)
-          offset += 2
-
-          let iterator = 0
-
-          do {
-            if (view.getUint16(offset + (iterator * 12), littleEndian) == 0x0112) {
-              return resolve(view.getUint16(offset + (iterator * 12) + 8, littleEndian))
-            }
-            iterator += 1
-          } while (iterator < tags)
-        }
-        else if ((marker & 0xFF00) != 0xFF00) break
-        else offset += view.getUint16(offset, false)
-      }
-      return resolve(defaultOrientation)
-    }
-
-    reader.readAsArrayBuffer(file.slice(0, 64 * 1024))
-  })
-}
-
-const rotation = {
-  1: 'rotate(0deg)',
-  3: 'rotate(180deg)',
-  6: 'rotate(90deg)',
-  8: 'rotate(270deg)'
-}
-
-export const getImageRotation = async (file) => {
-  const orientation = await getImageOrientation(file)
-  return rotation[orientation]
+        callback(dataUri)
+      }, 'image/jpeg')
+    },
+    options
+  )
 }

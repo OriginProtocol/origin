@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import ReactCrop from 'react-image-crop'
-import { getDataUri, generateCroppedImage, getImageOrientation } from 'utils/fileUtils'
+import { modifyImage } from 'utils/fileUtils'
 import { saveStorageItem } from 'utils/localStorage'
 import Modal from 'components/modal'
 
@@ -29,17 +29,12 @@ class ImageCropper extends Component {
 
   async componentDidUpdate(prevProps) {
     if (this.props.imageFileObj && this.props.imageFileObj !== prevProps.imageFileObj) {
-      const imageOrientation = await getImageOrientation(this.props.imageFileObj)
 
-      const loadingImage = loadImage(
-        this.props.imageFileObj,
-        () => {},
-        {orientation: imageOrientation}
-      )
-
-      this.setState({
-        imageSrc: loadingImage.src,
-        ...this.props
+      modifyImage(this.props.imageFileObj, {orientation: true, meta: true}, (dataUri) => {
+        this.setState({
+          imageSrc: dataUri,
+          ...this.props
+        })
       })
     }
 
@@ -63,16 +58,24 @@ class ImageCropper extends Component {
   async onCropComplete() {
     const { imageFileObj, pixelCrop } = this.state
 
-    const croppedImageFile = await generateCroppedImage(imageFileObj, pixelCrop)
-    const croppedImageUri = await getDataUri(croppedImageFile)
+    const loadImageOptions = {
+      maxWidth: pixelCrop.width,
+      maxHeight: pixelCrop.height,
+      aspectRatio: 4/3,
+      left: pixelCrop.x,
+      top: pixelCrop.y,
+      orientation: true,
+      crop: true,
+      contain: true,
+    }
 
-    this.props.onCropComplete(croppedImageUri, imageFileObj)
+    modifyImage(imageFileObj, loadImageOptions, (dataUri) => {
+      this.props.onCropComplete(dataUri, imageFileObj)
+    })
   }
 
   render() {
-    const { imageSrc, crop, imageRotation } = this.state
-    const { mobileDevice } = this.props
-    const imageStyle = !mobileDevice && { imageStyle: { transform: imageRotation } }
+    const { imageSrc, crop } = this.state
 
     return (
       <Modal

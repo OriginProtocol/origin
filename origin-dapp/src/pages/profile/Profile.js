@@ -269,8 +269,7 @@ class Profile extends Component {
       provisional,
       published,
       wallet,
-      intl,
-      mobileDevice
+      intl
     } = this.props
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = !!changes.length
@@ -432,8 +431,6 @@ class Profile extends Component {
         <ImageCropper
           isOpen={modalsOpen.cropModal}
           imageFileObj={imageToCrop}
-          isProfilePhoto={true}
-          mobileDevice={mobileDevice}
           aspect={1} // force square aspect ratio
           onCropComplete={(croppedImageUri) => {
             this.props.updateProfile({
@@ -719,8 +716,7 @@ const mapStateToProps = state => {
     wallet: state.wallet,
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,
-    networkId: state.app.web3.networkId,
-    mobileDevice: state.app.mobileDevice
+    networkId: state.app.web3.networkId
   }
 }
 

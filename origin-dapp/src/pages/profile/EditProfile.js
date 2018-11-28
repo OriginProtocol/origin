@@ -3,13 +3,15 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import Modal from 'components/modal'
 import Avatar from 'components/avatar'
+import { modifyImage } from 'utils/fileUtils'
 
 class EditProfile extends Component {
   constructor(props) {
     super(props)
     this.nameRef = React.createRef()
 
-    const { pic, firstName, lastName, description, } = this.props.data
+    const { pic, firstName, lastName, description } = props.data
+
     this.state = {
       pic,
       firstName,
@@ -37,8 +39,8 @@ class EditProfile extends Component {
     const { data } = this.props
     const { pic } = data
     if (pic && pic !== prevProps.data.pic) {
-      this.setState({
-        pic
+      modifyImage(pic, {orientation: true}, (dataUri) => {
+        this.setState({ pic: dataUri })
       })
     }
 
@@ -47,16 +49,6 @@ class EditProfile extends Component {
         this.nameRef.current.focus()
       }, 500)
     }
-  }
-
-  blobToDataURL(blob) {
-    return new Promise(resolve => {
-      const a = new FileReader()
-      a.onload = function(e) {
-        resolve(e.target.result)
-      }
-      a.readAsDataURL(blob)
-    })
   }
 
   render() {

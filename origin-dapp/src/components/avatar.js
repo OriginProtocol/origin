@@ -4,12 +4,11 @@ import { getStorageItem } from 'utils/localStorage'
 class Avatar extends Component {
   render() {
     const { className, image, placeholderStyle } = this.props
-    const rotation = getStorageItem('profilePicRotation', 'rotate(0deg)')
 
     return image ? (
       <div
         className={`${className ? `${className} ` : ''}avatar-container`}
-        style={{ backgroundImage: `url(${image})`, transform: rotation }}
+        style={{ backgroundImage: `url(${image})` }}
       />
     ) : (
       <div
