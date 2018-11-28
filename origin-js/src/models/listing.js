@@ -84,7 +84,6 @@ export class Listing {
       commission: ipfsListing.commission,
       slots: ipfsListing.slots,
       schemaId: ipfsListing.schemaId,
-      expiry: ipfsListing.expiry,
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
     })
@@ -113,7 +112,6 @@ export class Listing {
       commission: discoveryNodeData.commission,
       slots: discoveryNodeData.slots,
       schemaId: discoveryNodeData.schemaId,
-      expiry: discoveryNodeData.ipfs.expiry,
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager
     })
