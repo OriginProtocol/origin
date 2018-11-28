@@ -28,7 +28,7 @@
     "dotenv-webpack": "^1.5.5",
     "eth-ecies": "^1.0.3",
     "fetch": "^1.1.0",
-    "html-webpack-plugin": "3.2.0",
+    "html-webpack-plugin": "^3.2.0",
     "identicon.js": "^2.3.2",
     "intl": "^1.2.5",
     "ipfs": "^0.33.1",
