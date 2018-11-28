@@ -360,24 +360,22 @@ class Profile extends Component {
                     </div>
                   </div>
                   <p className={descriptionClasses}>{description}</p>
-                  {mobileLayout && (
-                    <div className='mb-2 description-options'>
-                    {/*
-                      * TODO: do not display the link when there is no text overflow. 
-                      * Downside: probably requires a hacky javascript solution.
-                    */}
-                      <a
-                        href="javascript:void(0);"
-                        onClick={this.handleDescriptionReadMore}
-                      >
-                        {descriptionLinkText}
-                        <img
-                          id='description-caret'
-                          src={descriptionExpanded ? 'images/caret-up-blue.svg' : 'images/caret-down-blue.svg'}
-                        />
-                      </a>
-                    </div>
-                  )}
+                  <div className='mb-2 description-options d-md-none'>
+                  {/*
+                    * TODO: do not display the link when there is no text overflow.
+                    * Downside: probably requires a hacky javascript solution.
+                  */}
+                    <a
+                      href="javascript:void(0);"
+                      onClick={this.handleDescriptionReadMore}
+                    >
+                      {descriptionLinkText}
+                      <img
+                        id='description-caret'
+                        src={descriptionExpanded ? 'images/caret-up-blue.svg' : 'images/caret-down-blue.svg'}
+                      />
+                    </a>
+                  </div>
                 </div>
               </div>
 
