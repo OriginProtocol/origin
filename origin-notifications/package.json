@@ -25,7 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^6.1.0",
-    "envkey": "^1.2.2",
+    "envkey": "^1.2.4",
     "express": "^4.16.4",
     "per-env": "^1.0.2",
     "pg": "^7.5.0",

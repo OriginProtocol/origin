@@ -19,7 +19,7 @@
     "cors": "^2.8.5",
     "dotenv": "^6.1.0",
     "elasticsearch": "^15.1.1",
-    "envkey": "^1.2.2",
+    "envkey": "^1.2.4",
     "express": "^4.16.4",
     "express-prom-bundle": "^4.2.1",
     "graphql": "^0.13.2",
