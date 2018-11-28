@@ -24,7 +24,7 @@ export const getDataUri = async file => {
  * @description Creates a modified imageDataUri when given options
  * @param {file} imageFileObj - The image file object from the file input element
  * @param {object} options - https://github.com/blueimp/JavaScript-Load-Image#options
- * @param {function} callback- called with a imageDataUri
+ * @param {function} callback- called with an imageDataUri
  */
 
 export const modifyImage = (imageFileObj, options, callback) => {
