@@ -252,7 +252,7 @@ export default class Marketplace {
     // either offer would cause the other to be filtered out and thus be stuck
     // until the buyer disputes.
     let unitsAvailable = listing.unitsTotal
-    let offers = []
+    const offers = []
     filteredOffers.forEach(offer => {
       if (offer.unitsPurchased > unitsAvailable) {
         return
