@@ -4,7 +4,7 @@ const TableName = 'push_subscription'
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    queryInterface.sequelize
+    return queryInterface.sequelize
       .query('CREATE EXTENSION IF NOT EXISTS hstore;')
       .then(() => {
         return queryInterface
