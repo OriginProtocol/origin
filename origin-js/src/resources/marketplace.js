@@ -201,7 +201,7 @@ export default class Marketplace {
   /**
    * Returns all the offers for a listing.
    * @param listingId
-   * @param opts: {idsOnly:boolean, for:address}
+   * @param opts: {idsOnly:boolean, for:address, listing:Listing}
    * @return {Promise<List(Offer)>}
    */
   async getOffers(listingId, opts = {}) {
@@ -245,19 +245,26 @@ export default class Marketplace {
     //
     // TODO: Handle edits of unitsAvailable.
     // TODO: Determine whether it always makes sense to filter out listings
-    // based on available quantity.
+    // based on available quantity. Filtering can cause some weirdness. For
+    // example, suppose that a listing has 2 units available. Also suppose
+    // that two offers are made on that listing: (1) for 1 unit; and (2) for 2
+    // units. Independently, these offers are both valid. However, accepting
+    // either offer would cause the other to be filtered out and thus be stuck
+    // until the buyer disputes.
     let unitsAvailable = listing.unitsTotal
-    return Object.keys(filteredOffers).reduce((offers, offerId) => {
-      const offer = filteredOffers[offerId]
+    let offers = []
+    filteredOffers.forEach(offer => {
       if (offer.unitsPurchased > unitsAvailable) {
-        return offers
+        return
       }
+      // TODO: handle refund and dispute cases
       if (offer.status !== 'created' && offer.status !== 'withdrawn') {
         // TODO: handle instant purchases
         unitsAvailable -= offer.unitsPurchased
       }
-      return [...offers, offer]
-    }, [])
+      offers.push(offer)
+    })
+    return offers
   }
 
   /**
