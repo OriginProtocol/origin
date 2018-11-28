@@ -1,10 +1,12 @@
 import ContractService from './services/contract-service'
+import DiscoveryService from './services/discovery-service'
 import IpfsService from './services/ipfs-service'
 import { Attestations } from './resources/attestations'
 import Marketplace from './resources/marketplace'
 import Discovery from './resources/discovery'
 import Users from './resources/users'
 import Messaging from './resources/messaging'
+import Reflection from './resources/reflection'
 import Token from './resources/token'
 import fetch from 'cross-fetch'
 import store from 'store'
@@ -18,7 +20,7 @@ const defaultIpfsGatewayProtocol = 'https'
 const defaultAttestationServerUrl = `${defaultBridgeServer}/api/attestations`
 const VERSION = require('.././package.json').version
 
-class Origin {
+export default class Origin {
   constructor({
     ipfsDomain = defaultIpfsDomain,
     ipfsApiPort = defaultIpfsApiPort,
@@ -26,6 +28,7 @@ class Origin {
     ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
     attestationServerUrl = defaultAttestationServerUrl,
     discoveryServerUrl = defaultDiscoveryServerUrl,
+    walletLinkerUrl = null,
     affiliate,
     arbitrator,
     contractAddresses,
@@ -36,18 +39,26 @@ class Origin {
     messagingNamespace,
     blockEpoch,
     blockAttestattionV1,
-    ethereum
+    ethereum,
+    perfModeEnabled
   } = {}) {
     this.version = VERSION
 
-    this.contractService = new ContractService({ contractAddresses, web3, ethereum })
+    //
+    // Services (Internal, should not be used directly by the Origin client).
+    //
+    this.contractService = new ContractService({ contractAddresses, web3, ethereum, walletLinkerUrl, fetch, ecies })
     this.ipfsService = new IpfsService({
       ipfsDomain,
       ipfsApiPort,
       ipfsGatewayPort,
       ipfsGatewayProtocol
     })
+    this.discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
 
+    //
+    // Resources (External, exposed to the Origin client).
+    //
     this.attestations = new Attestations({
       serverUrl: attestationServerUrl,
       contractService: this.contractService,
@@ -57,16 +68,17 @@ class Origin {
 
     this.marketplace = new Marketplace({
       contractService: this.contractService,
+      discoveryService: this.discoveryService,
       ipfsService: this.ipfsService,
       affiliate,
       arbitrator,
       store,
-      blockEpoch
+      blockEpoch,
+      perfModeEnabled
     })
 
     this.discovery = new Discovery({
-      discoveryServerUrl,
-      fetch
+      discoveryService: this.discoveryService
     })
 
     this.users = new Users({
@@ -89,7 +101,11 @@ class Origin {
       ipfsService: this.ipfsService,
       marketplace: this.marketplace
     })
+
+    this.reflection = new Reflection({
+      contractService: this.contractService,
+      marketplace: this.marketplace,
+      token: this.token
+    })
   }
 }
-
-module.exports = Origin

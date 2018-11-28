@@ -1,3 +1,5 @@
+import sinon from 'sinon'
+
 import Marketplace from '../src/resources/marketplace.js'
 import contractServiceHelper from './helpers/contract-service-helper'
 import asAccount from './helpers/as-account'
@@ -7,12 +9,14 @@ import { expect } from 'chai'
 import Web3 from 'web3'
 
 import listingValid from './fixtures/listing-valid.json'
+import updatedListing from './fixtures/updated-listing.json'
 import offerValid from './fixtures/offer-valid.json'
 import reviewValid from './fixtures/review-valid.json'
 import { OFFER_DATA_TYPE } from '../src/ipfsInterface/store'
 
 // oddly changing an imported object here can affect other or subsequent tests that import the same file
 const listingData = Object.assign({}, listingValid)
+const udpatedListingData = Object.assign({}, updatedListing)
 const offerData = Object.assign({}, offerValid)
 const reviewData = Object.assign({}, reviewValid)
 
@@ -54,7 +58,7 @@ class StoreMock {
 describe('Marketplace Resource', function() {
   // TODO speed up the notifications test so that this timeout can be reduced
   this.timeout(15000) // default is 2000
-  let marketplace, web3, contractService, validArbitrator, validAffiliate,
+  let marketplace, web3, contractService, validBuyer, validArbitrator, validAffiliate,
     evilAddress, makeMaliciousOffer
 
   beforeEach(async () => {
@@ -63,6 +67,7 @@ describe('Marketplace Resource', function() {
     const accounts = await web3.eth.getAccounts()
 
     this.userAddress = accounts[0]
+    validBuyer = accounts[1]
     validAffiliate = accounts[3]
     validArbitrator = accounts[4]
     evilAddress = accounts[5]
@@ -136,6 +141,40 @@ describe('Marketplace Resource', function() {
       expect(listings.length).to.equal(2)
       expect(listings).to.deep.equal(['999-000-1', '999-000-0'])
     })
+
+    it('should return listing data as it was when an offer was made with purchasesFor option', async () => {
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.makeOffer('999-000-0', offerData)
+      })
+
+      await asAccount(contractService.web3, this.userAddress, async () => {
+        await marketplace.updateListing('999-000-0', udpatedListingData)
+      })
+        
+      const listings = await marketplace.getListings({
+        purchasesFor: validBuyer,
+        withBlockInfo: true
+      })
+
+      expect(listings).to.be.an('array')
+      expect(listings.length).to.equal(1)
+      expect(listings[0].id).to.equal('999-000-0')
+      expect(listings[0].title).to.equal('my listing') // not 'my listing EDITED!'
+    })
+
+    it('should return a seller\'s listings using listingsFor option', async () => { 
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.createListing(listingData)
+      })
+
+      const listings = await marketplace.getListings({
+        listingsFor: validBuyer
+      })
+
+      expect(listings).to.be.an('array')
+      expect(listings.length).to.equal(1)
+      expect(listings[0].id).to.equal('999-000-1')
+    })
   })
 
   describe('getListing', () => {
@@ -163,6 +202,14 @@ describe('Marketplace Resource', function() {
       expect(listings[1].title).to.equal(listingData.title)
       expect(listings[1].seller).to.equal(this.userAddress)
       expect(listings[1].price).to.deep.equal(listingData.price)
+    })
+  })
+
+  describe('updateListing', () => {
+    it('should update a listing', async () => {
+      await marketplace.updateListing('999-000-0', udpatedListingData)
+      const listing = await marketplace.getListing('999-000-0')
+      expect(listing.title).to.equal('my listing EDITED!')
     })
   })
 
@@ -371,6 +418,44 @@ describe('Marketplace Resource', function() {
     })
   })
 
+  describe('myPurchases', () => {
+    it('should return a user\'s purchases with listing data as it was at the time of the offer', async () => {
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.makeOffer('999-000-0', offerData)
+      })
+
+      await asAccount(contractService.web3, this.userAddress, async () => {
+        await marketplace.updateListing('999-000-0', udpatedListingData)
+      })
+        
+      const purchases = await marketplace.getPurchases(validBuyer)
+
+      expect(purchases).to.be.an('array')
+      expect(purchases.length).to.equal(2)
+      expect(purchases[1].offer.listingId).to.equal('999-000-0')
+      expect(purchases[1].listing.title).to.equal('my listing') // not 'my listing EDITED!'
+    })
+  })
+
+  describe('mySales', () => {
+    it('should return a seller\'s sales with listing data as it was at the time of the offer', async () => {
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.makeOffer('999-000-0', offerData)
+      })
+
+      await asAccount(contractService.web3, this.userAddress, async () => {
+        await marketplace.updateListing('999-000-0', udpatedListingData)
+      })
+        
+      const sales = await marketplace.getSales(this.userAddress)
+
+      expect(sales).to.be.an('array')
+      expect(sales.length).to.equal(2)
+      expect(sales[1].offer.listingId).to.equal('999-000-0')
+      expect(sales[1].listing.title).to.equal('my listing') // not 'my listing EDITED!'
+    })
+  })
+
   describe('sellerReview', () => {
     it('should changed the status to sellerReviewed', async () => {
       let offer = await marketplace.getOffer('999-000-0-0')
@@ -492,3 +577,48 @@ describe('Marketplace Resource', function() {
     })
   })
 })
+
+describe('Marketplace Resource - Performance mode', function() {
+  const mockDiscoveryService = new Object()
+  mockDiscoveryService.getListings = sinon.stub()
+  mockDiscoveryService.getListing = sinon.stub()
+  mockDiscoveryService.getOffer = sinon.stub()
+  mockDiscoveryService.getOffers = sinon.stub()
+
+  const marketplace = new Marketplace({
+    contractService: { web3: null },
+    store: new StoreMock(),
+    discoveryService: mockDiscoveryService,
+    perfModeEnabled: true
+  })
+
+  describe('getListings', () => {
+    it('Should call discovery service to fetch listings', async () => {
+      await marketplace.getListings()
+      expect(mockDiscoveryService.getListings.callCount).to.equal(1)
+    })
+  })
+
+  describe('getListing', () => {
+    it('Should call discovery service to fetch a listing', async () => {
+      await marketplace.getListing()
+      expect(mockDiscoveryService.getListing.callCount).to.equal(1)
+    })
+  })
+
+  describe('getOffers', () => {
+    it('Should call discovery service to fetch offers', async () => {
+      await marketplace.getOffers()
+      expect(mockDiscoveryService.getOffers.callCount).to.equal(1)
+    })
+  })
+
+  describe('getOffer', () => {
+    it('Should call discovery service to fetch an offer', async () => {
+      await marketplace.getOffer()
+      expect(mockDiscoveryService.getOffer.callCount).to.equal(1)
+    })
+  })
+
+})
+

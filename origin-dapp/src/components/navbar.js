@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
-import { storeWeb3Intent } from 'actions/App'
-
 import ConnectivityDropdown from 'components/dropdowns/connectivity'
 import MessagesDropdown from 'components/dropdowns/messages'
 import NotificationsDropdown from 'components/dropdowns/notifications'
@@ -12,26 +10,9 @@ import TransactionsDropdown from 'components/dropdowns/transactions'
 import UserDropdown from 'components/dropdowns/user'
 
 class NavBar extends Component {
-  constructor(props) {
-    super(props)
-
-    this.handleLink = this.handleLink.bind(this)
-    this.state = {
-      noWeb3Account: false,
-      notWeb3EnabledDesktop: false,
-      notWeb3EnabledMobile: false
-    }
-  }
-
-  handleLink(e) {
-    this.props.storeWeb3Intent('create a listing')
-
-    if (!web3.givenProvider || !this.props.web3Account) {
-      e.preventDefault()
-    }
-  }
-
   render() {
+    const { mobileDevice } = this.props
+
     return (
       <nav className="navbar navigation-bar navbar-expand-lg navbar-dark">
         <div className="container">
@@ -136,7 +117,6 @@ class NavBar extends Component {
                     <Link
                       to="/create"
                       className="dropdown-item d-none d-lg-block"
-                      onClick={this.handleLink}
                       ga-category="top_nav"
                       ga-label="sell_dropdown_add_listing"
                     >
@@ -151,7 +131,6 @@ class NavBar extends Component {
               <Link
                 to="/create"
                 className="nav-item nav-link"
-                onClick={this.handleLink}
                 ga-category="top_nav"
                 ga-label="add_listing"
               >
@@ -167,8 +146,8 @@ class NavBar extends Component {
               </Link>
             </div>
           </div>
-          <div className="static navbar-nav order-1 order-lg-2">
-            <ConnectivityDropdown />
+          <div className="static navbar-nav order-1 order-lg-2 d-flex flex-row justify-content-end">
+            { !mobileDevice && <ConnectivityDropdown /> }
             <TransactionsDropdown />
             <MessagesDropdown />
             <NotificationsDropdown />
@@ -180,19 +159,12 @@ class NavBar extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app }) => {
   return {
-    onMobile: state.app.onMobile,
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    mobileDevice: app.mobileDevice
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
-})
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(NavBar)

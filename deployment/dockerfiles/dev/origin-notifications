@@ -1,9 +1,0 @@
-FROM node:9
-
-COPY ./origin-notifications /app
-WORKDIR /app
-
-ENV NODE_ENV production
-RUN npm install --quiet --progress
-
-CMD ["node", "app.js"]

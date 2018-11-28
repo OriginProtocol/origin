@@ -1,49 +1,178 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import { getDataUri } from 'utils/fileUtils'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import ImageCropper from '../modals/image-cropper'
+import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 
-const MAX_IMAGE_BYTES = 2000000 // 2MB
-const MAX_IMAGE_MB = MAX_IMAGE_BYTES / 1000000
 const MAX_IMAGE_COUNT = 10
 
 class PhotoPicker extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      pictures: [],
-      oversizeImages: [],
-      showMaxImageCountMsg: false
+      imageFileObj: null,
+      showCropModal: false,
+      pictures: props.value,
+      showMaxImageCountMsg: false,
+      reCropImgIndex: null
     }
 
     this.intlMessages = defineMessages({
+      reCropImage: {
+        id: 'photo-picker.reCropImage',
+        defaultMessage: 'Re-Crop Image'
+      },
+      deleteImage: {
+        id: 'photo-picker.deleteImage',
+        defaultMessage: 'Delete Image'
+      },
       macHelpText: {
         id: 'photo-picker.macHelpText',
-        defaultMessage: 'Hold down "command" (⌘) to select multiple images'
+        defaultMessage: 'Hold down "command" (⌘) to select multiple images.'
       },
       iosHelpText: {
         id: 'photo-picker.iosHelpText',
-        defaultMessage: 'Select multiple images to upload them all at once'
+        defaultMessage: 'Select multiple images to upload them all at once.'
       },
       windowsHelpText: {
         id: 'photo-picker.windowsHelpText',
-        defaultMessage: 'Hold down "Ctrl" to select multiple images'
+        defaultMessage: 'Hold down "Ctrl" to select multiple images.'
       },
       androidHelpText: {
         id: 'photo-picker.androidHelpText',
-        defaultMessage: 'Select multiple images to upload them all at once'
+        defaultMessage: 'Select multiple images to upload them all at once.'
       },
       linuxHelpText: {
         id: 'photo-picker.linuxHelpText',
-        defaultMessage: 'Hold down "Ctrl" to select multiple images'
+        defaultMessage: 'Hold down "Ctrl" to select multiple images.'
       }
     })
 
-    this.onChange = this.onChange.bind(this)
+    this.onFileSelected = this.onFileSelected.bind(this)
+    this.reCropImage = this.reCropImage.bind(this)
+    this.onCropComplete = this.onCropComplete.bind(this)
+    this.onCropCancel = this.onCropCancel.bind(this)
+    this.onDragEnd = this.onDragEnd.bind(this)
     this.setHelpText = this.setHelpText.bind(this)
   }
 
   componentDidMount() {
     this.setHelpText()
+
+    // If a pictures array is passed in, we must call the onChange callback
+    // to set the pictures array in the parent form
+    // Unfortunately, the setTimeout is needed to allow the parent
+    // form to render and be ready to handle the onChange event
+    const { pictures } = this.state
+    if (pictures) {
+      setTimeout(async () => {
+        const picDataURIs = await this.getDataURIsFromImgURLs(pictures)
+        this.props.onChange(picDataURIs)
+      })
+    }
+  }
+
+  async getDataURIsFromImgURLs(picUrls) {
+    const imagePromises = picUrls.map(url => {
+      return new Promise(async resolve => {
+        const image = new Image()
+        image.crossOrigin = 'anonymous' 
+
+        image.onload = function() {
+          const canvas = document.createElement('canvas')
+          canvas.width = this.naturalWidth
+          canvas.height = this.naturalHeight
+          canvas.getContext('2d').drawImage(this, 0, 0)
+          canvas.toBlob(file => {
+            resolve(getDataUri(file))
+          }, 'image/jpeg')
+        }
+
+        image.src = url
+      })
+    })
+
+    return Promise.all(imagePromises)
+  }
+
+  async onFileSelected(e) {
+    if (e.target.files && e.target.files.length > 0) {
+      const imageFiles = e.target.files
+      const pictures = [...this.state.pictures]
+
+      for (const key in imageFiles) {
+        if (imageFiles.hasOwnProperty(key)) {
+          const file = imageFiles[key]
+          const croppedImageFile = await generateCroppedImage(file)
+          const croppedImageUri = await getDataUri(croppedImageFile)
+
+          pictures.push({
+            originalImageFile: file,
+            croppedImageUri
+          })
+        }
+      }
+
+      this.setState(
+        { pictures },
+        () => this.props.onChange(this.picURIsOnly(pictures))
+      )
+    }
+  }
+
+  reCropImage(picObj, idx) {
+    this.setState({
+      imageFileObj: picObj.originalImageFile,
+      showCropModal: true,
+      reCropImgIndex: idx
+    })
+  }
+
+  onCropComplete(croppedImageUri, imageFileObj) {
+    let showMaxImageCountMsg = false
+    const imgInput = document.getElementById('photo-picker-input')
+    const pictures = this.state.pictures
+    pictures[this.state.reCropImgIndex] = {
+      originalImageFile: imageFileObj,
+      croppedImageUri
+    }
+
+    if (pictures.length >= MAX_IMAGE_COUNT) {
+      showMaxImageCountMsg = true
+    }
+
+    this.setState(
+      {
+        pictures,
+        showMaxImageCountMsg,
+        showCropModal: false,
+      },
+      () => this.props.onChange(this.picURIsOnly(pictures))
+    )
+
+    imgInput.value = null
+  }
+
+  picURIsOnly(pictures) {
+    return pictures.map(pic => typeof pic === 'object' ? pic.croppedImageUri : pic)
+  }
+
+  onCropCancel() {
+    this.setState({ showCropModal: false })
+  }
+
+  removePhoto(indexToRemove) {
+    const pictures = this.state.pictures.filter(
+      (picture, idx) => idx !== indexToRemove
+    )
+
+    this.setState(
+      {
+        pictures,
+        showMaxImageCountMsg: false
+      },
+      () => this.props.onChange(this.picURIsOnly(pictures))
+    )
   }
 
   setHelpText() {
@@ -70,188 +199,162 @@ class PhotoPicker extends Component {
     this.setState({ helpText })
   }
 
-  onChange() {
-    return async event => {
-      const filesObj = event.target.files
-      let filesArr = []
-      for (const key in filesObj) {
-        if (filesObj.hasOwnProperty(key)) {
-          filesArr.push(filesObj[key])
-        }
-      }
-
-      const oversizeImages = []
-      for (let i = filesArr.length - 1; i >= 0; --i) {
-        const thisImage = filesArr[i]
-        if (thisImage.size > MAX_IMAGE_BYTES) {
-          oversizeImages.push(thisImage)
-          filesArr.splice(i, 1)
-        }
-      }
-
-      if (oversizeImages.length) {
-        this.setState({
-          oversizeImages
-        })
-      }
-
-      let showMaxImageCountMsg = false
-      if (filesArr.length > MAX_IMAGE_COUNT) {
-        filesArr = filesArr.slice(0, MAX_IMAGE_COUNT)
-        showMaxImageCountMsg = true
-      }
-
-      this.setState({
-        showMaxImageCountMsg
-      })
-
-      const filesAsDataUriArray = filesArr.map(async fileObj =>
-        getDataUri(fileObj)
-      )
-
-      Promise.all(filesAsDataUriArray).then(dataUriArray => {
-        this.setState(
-          {
-            pictures: dataUriArray
-          },
-          () => this.props.onChange(dataUriArray)
-        )
-      })
+  onDragEnd(result) {
+    if (!result.destination) {
+      return
     }
-  }
 
-  removePhoto(indexToRemove) {
-    this.setState({
-      pictures: this.state.pictures.filter(
-        (picture, idx) => idx !== indexToRemove
-      )
-    })
-  }
+    const { pictures } = this.state
+    const draggedItemIdx = result.source.index
+    const destinationIdx = result.destination.index
+    const reordered = Array.from(pictures)
+    const [removed] = reordered.splice(draggedItemIdx, 1)
+    reordered.splice(destinationIdx, 0, removed)
 
-  removeImgSizeWarning(indexToRemove) {
-    this.setState({
-      oversizeImages: this.state.oversizeImages.filter(
-        (warning, idx) => idx !== indexToRemove
-      )
-    })
-  }
-
-  removeMaxImgCountWarning() {
-    this.setState({
-      showMaxImageCountMsg: false
-    })
+    this.setState(
+      {
+        pictures: reordered
+      },
+      () => this.props.onChange(reordered)
+    )
   }
 
   render() {
     const { schema, required } = this.props
     const {
-      helpText,
-      oversizeImages,
       pictures,
-      showMaxImageCountMsg
+      showMaxImageCountMsg,
+      showCropModal,
+      imageFileObj,
+      helpText
     } = this.state
 
     return (
-      <div className="photo-picker">
-        <label className="photo-picker-container" htmlFor="photo-picker-input">
-          <img
-            className="camera-icon"
-            src="images/camera-icon.svg"
-            role="presentation"
-          />
-          <br />
-          <span>{schema.title}</span>
-          <br />
-        </label>
-        <input
-          id="photo-picker-input"
-          type="file"
-          accept="image/jpeg,image/gif,image/png"
-          visibility="hidden"
-          onChange={this.onChange()}
-          required={required}
-          multiple
+      <Fragment>
+        <ImageCropper
+          isOpen={showCropModal}
+          imageFileObj={imageFileObj}
+          onCropComplete={this.onCropComplete}
+          onCropCancel={this.onCropCancel}
         />
-        {helpText && <p className="help-block">{helpText}</p>}
-        <p className="help-block">
-          <FormattedMessage
-            id={'photo-picker.listingSize'}
-            defaultMessage={
-              'Images may not exceed {maxImageMB}MB each. Maximum {maxImageCount} images.'
-            }
-            values={{
-              maxImageMB: MAX_IMAGE_MB,
-              maxImageCount: MAX_IMAGE_COUNT
-            }}
+        <div className="photo-picker">
+          <label className="photo-picker-container" htmlFor="photo-picker-input">
+            <img
+              className="camera-icon"
+              src="images/camera-icon.svg"
+              role="presentation"
+            />
+            <br />
+            <span>{schema.title}</span>
+            <br />
+          </label>
+          <input
+            id="photo-picker-input"
+            type="file"
+            accept="image/jpeg,image/gif,image/png"
+            visibility="hidden"
+            onChange={this.onFileSelected}
+            required={required}
+            multiple
           />
-        </p>
-        <div className="d-flex pictures">
-          {showMaxImageCountMsg && (
-            <div className="info-box warn">
-              <a
-                className="close-btn"
-                aria-label="Close"
-                onClick={this.removeMaxImgCountWarning}
-              >
-                <span aria-hidden="true">&times;</span>
-              </a>
-              <p>
-                <FormattedMessage
-                  id={'photo-picker.maxImgCountMsg'}
-                  defaultMessage={
-                    'No more than {maxImageCount} images may be uploaded. The extra images have been removed.'
-                  }
-                  values={{
-                    maxImageCount: MAX_IMAGE_COUNT
-                  }}
-                />
-              </p>
-            </div>
-          )}
+          <p className="help-block">
+            {helpText &&
+              <Fragment>
+                <span>{helpText}</span>
+                <br/>
+              </Fragment>
+            }
+            <FormattedMessage
+              id={'photo-picker.listingSize'}
+              defaultMessage={
+                'Maximum {maxImageCount} images per listing.'
+              }
+              values={{
+                maxImageCount: MAX_IMAGE_COUNT
+              }}
+            />
+            <br/>
+            <FormattedMessage
+              id={'photo-picker.featuredImageExplainer'}
+              defaultMessage={
+                'First image will be featured - drag and drop images to reorder.'
+              }
+              values={{
+                maxImageCount: MAX_IMAGE_COUNT
+              }}
+            />
+            <br/>
+            <FormattedMessage
+              id={'photo-picker.featuredImageAspectRatio'}
+              defaultMessage={
+                'Recommended aspect ratio is 4:3'
+              }
+            />
+          </p>
+          <div className="d-flex pictures">
+            {showMaxImageCountMsg && (
+              <div className="info-box warn">
+                <p>
+                  <FormattedMessage
+                    id={'photo-picker.maxImgCountMsg'}
+                    defaultMessage={
+                      'You have reached the upload limit of {maxImageCount} images per listing.'
+                    }
+                    values={{
+                      maxImageCount: MAX_IMAGE_COUNT
+                    }}
+                  />
+                </p>
+              </div>
+            )}
+          </div>
+          <DragDropContext onDragEnd={this.onDragEnd} className="d-flex pictures">
+            <Droppable droppableId="droppable">
+              {(provided) => (
+                <div ref={provided.innerRef}>
+                  {pictures.map((pic, idx) => (
+                    <Draggable key={idx} draggableId={idx + 1} index={idx}>
+                      {(provided) => (
+                        <div
+                          className="image-container"
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <img src={
+                              typeof pic === 'object' ?
+                              pic.croppedImageUri :
+                              pic
+                            }
+                          />
+                          {typeof pic === 'object' &&
+                            <a
+                              className="re-crop-image image-overlay-btn"
+                              aria-label="Re-Crop Image"
+                              title={this.props.intl.formatMessage(this.intlMessages.reCropImage)}
+                              onClick={() => this.reCropImage(pic, idx)}
+                            >
+                              <span aria-hidden="true">&#9635;</span>
+                            </a>
+                          }
+                          <a
+                            className="cancel-image image-overlay-btn"
+                            aria-label="Delete Image"
+                            title={this.props.intl.formatMessage(this.intlMessages.deleteImage)}
+                            onClick={() => this.removePhoto(idx)}
+                          >
+                            <span aria-hidden="true">&times;</span>
+                          </a>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
-        <div className="d-flex pictures">
-          {oversizeImages.map((imgObj, idx) => (
-            <div className="info-box warn" key={imgObj.name}>
-              <a
-                className="close-btn"
-                aria-label="Close"
-                onClick={() => this.removeImgSizeWarning(idx)}
-              >
-                <span aria-hidden="true">&times;</span>
-              </a>
-              <p>
-                <FormattedMessage
-                  id={'photo-picker.oversizeImages'}
-                  defaultMessage={
-                    'Your selected image, {imageName}, is too large. Max allowed size is {maxImageMB}MB'
-                  }
-                  values={{
-                    imageName: <strong>{imgObj.name}</strong>,
-                    maxImageMB: MAX_IMAGE_MB
-                  }}
-                />
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className="d-flex pictures">
-          {pictures.map((dataUri, idx) => (
-            <div key={idx} className="image-container">
-              <div
-                className="photo"
-                style={{ backgroundImage: `url("${dataUri}")` }}
-              />
-              <a
-                className="cancel-image"
-                aria-label="Close"
-                onClick={() => this.removePhoto(idx)}
-              >
-                <span aria-hidden="true">&times;</span>
-              </a>
-            </div>
-          ))}
-        </div>
-      </div>
+      </Fragment>
     )
   }
 }

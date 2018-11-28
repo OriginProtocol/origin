@@ -3,10 +3,10 @@ const ipfsdCtl = require('ipfsd-ctl')
 const request = require('supertest')
 const fs = require('fs')
 
-const logger = require('./src/logger')
+const Logger = require('logplease')
+Logger.setLogLevel('NONE')
 
 const expect = chai.expect
-const ipfsPort = 9998
 
 // Known hashes for sample files
 const ipfsHashes = {
@@ -69,6 +69,14 @@ describe('upload', () => {
       .expect(200, done)
   })
 
+  it('should allow file uploads with query string', (done) => {
+    const image = './fixtures/sample.gif'
+    request(server)
+      .post('/api/v0/add?stream-channels=true')
+      .attach('image', image)
+      .expect(200, done)
+  })
+
   it('should allow png uploads', (done) => {
     const image = './fixtures/sample.png'
     request(server)
@@ -87,7 +95,7 @@ describe('upload', () => {
 
   it('should allow json uploads', (done) => {
     const json = './fixtures/sample.json'
-    const res = request(server)
+    request(server)
       .post('/api/v0/add')
       .attach('json', json)
       .expect(200, done)

@@ -12,7 +12,7 @@ import {
   storeKeys
 } from '../../models/notification'
 
-class MarketplaceResolver {
+export default class MarketplaceResolver {
   constructor({ contractService, store, blockEpoch }) {
     this.adapters = {
       '000': new V00_MarkeplaceAdapter({ contractService, store, blockEpoch })
@@ -38,19 +38,29 @@ class MarketplaceResolver {
 
     for (const version of this.versions) {
       const listingIndexes = await this.adapters[version].getListings(opts)
-      listingIndexes.forEach(listingIndex => {
-        listingIds.unshift(
-          generateListingId({ version, network, listingIndex })
-        )
-      })
+      if (opts.withBlockInfo) {
+        listingIndexes.forEach(listingData => {
+          const { listingIndex } = listingData
+          listingIds.unshift({
+            listingId: generateListingId({ version, network, listingIndex }),
+            ...listingData
+          })
+        })
+      } else {
+        listingIndexes.forEach(listingIndex => {
+          listingIds.unshift(
+            generateListingId({ version, network, listingIndex })
+          )
+        })
+      }
     }
 
     return listingIds
   }
 
-  async getListing(listingId) {
+  async getListing(listingId, blockInfo) {
     const { adapter, listingIndex } = this.parseListingId(listingId)
-    return await adapter.getListing(listingIndex)
+    return await adapter.getListing(listingIndex, blockInfo)
   }
 
   async getOfferIds(listingId, opts = {}) {
@@ -90,6 +100,17 @@ class MarketplaceResolver {
     const listingId = generateListingId({ network, version, listingIndex })
 
     return Object.assign({ listingId }, transactionReceipt)
+  }
+
+  async updateListing(listingId, ipfsBytes, additionalDeposit, confirmationCallback) {
+    const { adapter, listingIndex } = this.parseListingId(listingId)
+
+    return await adapter.updateListing(
+      listingIndex,
+      ipfsBytes,
+      additionalDeposit,
+      confirmationCallback
+    )
   }
 
   async withdrawListing(listingId, ipfsBytes, confirmationCallback) {
@@ -302,6 +323,13 @@ class MarketplaceResolver {
     }
     return { adapter, listingIndex, offerIndex, version, network }
   }
-}
 
-module.exports = MarketplaceResolver
+  makeListingId(netId, contractName, listingIndex) {
+    for (const version of this.versions) {
+      if (this.adapters[version].contractName == contractName)
+      {
+        return generateListingId({ version, netId, listingIndex })
+      }
+    }
+  }
+}

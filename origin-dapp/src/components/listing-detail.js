@@ -27,11 +27,13 @@ import { Pictures } from 'components/pictures'
 import { PurchasedModal, ErrorModal, OnboardingModal } from 'components/modals/listing-detail-modals'
 
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { getListing } from 'utils/listing'
+import { getListing, transformPurchasesOrSales } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 
 import origin from '../services/origin'
+
+const { web3 } = origin.contractService
 
 /* linking to contract Etherscan requires knowledge of which network we're on */
 const etherscanDomains = {
@@ -56,6 +58,7 @@ class ListingsDetail extends Component {
 
     this.state = {
       etherscanDomain: null,
+      display: 'normal',
       loading: true,
       offers: [],
       pictures: [],
@@ -64,7 +67,8 @@ class ListingsDetail extends Component {
       boostLevel: null,
       boostValue: 0,
       onboardingCompleted: false,
-      slotsToReserve: []
+      slotsToReserve: [],
+      featuredImageIdx: 0
     }
 
     this.intlMessages = defineMessages({
@@ -74,14 +78,10 @@ class ListingsDetail extends Component {
       }
     })
 
-    this.handleBuyClicked = this.handleBuyClicked.bind(this)
     this.loadListing = this.loadListing.bind(this)
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
-  }
-
-  async handleBuyClicked() {
-    this.props.storeWeb3Intent('buy this listing')
+    this.setFeaturedImage = this.setFeaturedImage.bind(this)
   }
 
   async componentWillMount() {
@@ -109,14 +109,15 @@ class ListingsDetail extends Component {
 
   async handleMakeOffer(skip, slotsToReserve) {
     // onboard if no identity, purchases, and not already completed
+    const { isFractional } = this.state
     const shouldOnboard =
       !this.props.profile.strength &&
       !this.state.purchases.length &&
       !this.state.onboardingCompleted
 
-    this.props.storeWeb3Intent('offer to buy this listing')
+    this.props.storeWeb3Intent('purchase this listing')
 
-    if (web3.givenProvider && this.props.web3Account) {
+    if ((web3.givenProvider && this.props.web3Account) || origin.contractService.walletLinker) {
       if (!skip && shouldOnboard) {
         return this.setState({
           onboardingCompleted: true,
@@ -124,94 +125,73 @@ class ListingsDetail extends Component {
           slotsToReserve
         })
       }
+    }
+    // defer to parent modal if user activation is insufficient
+    if ( !this.props.messagingEnabled ) {
+      return
+    }
 
-      this.setState({ step: this.STEP.METAMASK })
+    this.setState({ step: this.STEP.METAMASK })
 
-      const isFractional = this.state.listingType === 'fractional'
-      const slots = slotsToReserve || this.state.slotsToReserve
-      const price =
-        isFractional ?
-          slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
-          this.state.price
+    const slots = slotsToReserve || this.state.slotsToReserve
+    const price =
+      isFractional ?
+        slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
+        this.state.price
 
-      try {
-        const offerData = {
-          listingId: this.props.listingId,
-          listingType: this.state.listingType,
-          totalPrice: {
-            amount: price,
-            currency: 'ETH'
-          },
-          commission: {
-            amount: this.state.boostValue.toString(),
-            currency: 'OGN'
-          },
-          // Set the finalization time to ~1 year after the offer is accepted.
-          // This is the window during which the buyer may file a dispute.
-          finalizes: 365 * 24 * 60 * 60
-        }
-
-        if (isFractional) {
-          offerData.slots = prepareSlotsToSave(slots)
-        } else {
-          offerData.unitsPurchased = 1
-        }
-
-        const transactionReceipt = await origin.marketplace.makeOffer(
-          this.props.listingId,
-          offerData,
-          (confirmationCount, transactionReceipt) => {
-            this.props.updateTransaction(confirmationCount, transactionReceipt)
-          }
-        )
-        this.props.upsertTransaction({
-          ...transactionReceipt,
-          transactionTypeKey: 'makeOffer'
-        })
-        this.setState({ step: this.STEP.PURCHASED })
-        this.props.handleNotificationsSubscription('buyer', this.props)
-      } catch (error) {
-        console.error(error)
-        this.setState({ step: this.STEP.ERROR })
+    try {
+      const offerData = {
+        listingId: this.props.listingId,
+        listingType: this.state.listingType,
+        totalPrice: {
+          amount: price,
+          currency: 'ETH'
+        },
+        commission: {
+          amount: this.state.boostValue.toString(),
+          currency: 'OGN'
+        },
+        // Set the finalization time to ~1 year after the offer is accepted.
+        // This is the window during which the buyer may file a dispute.
+        finalizes: 365 * 24 * 60 * 60
       }
+
+      if (isFractional) {
+        offerData.slots = prepareSlotsToSave(slots)
+      } else {
+        offerData.unitsPurchased = 1
+      }
+
+      const transactionReceipt = await origin.marketplace.makeOffer(
+        this.props.listingId,
+        offerData,
+        (confirmationCount, transactionReceipt) => {
+          this.props.updateTransaction(confirmationCount, transactionReceipt)
+        }
+      )
+      this.props.upsertTransaction({
+        ...transactionReceipt,
+        transactionTypeKey: 'makeOffer'
+      })
+      this.setState({ step: this.STEP.PURCHASED })
+      this.props.handleNotificationsSubscription('buyer', this.props)
+    } catch (error) {
+      console.error(error)
+      this.setState({ step: this.STEP.ERROR })
     }
   }
 
   handleSkipOnboarding(e) {
     e.preventDefault()
-
     this.handleMakeOffer(true)
   }
 
   async loadBuyerPurchases() {
     try {
       const { web3Account } = this.props
-      const listingIds = await origin.marketplace.getListings({
-        idsOnly: true,
-        purchasesFor: web3Account
-      })
-      const listingPromises = listingIds.map(listingId => {
-        return new Promise(async resolve => {
-          const listing = await getListing(listingId, true)
-          resolve({ listingId, listing })
-        })
-      })
-      const withListings = await Promise.all(listingPromises)
-      const offerPromises = await withListings.map(obj => {
-        return new Promise(async resolve => {
-          const offers = await origin.marketplace.getOffers(obj.listingId, {
-            for: web3Account
-          })
-          resolve(Object.assign(obj, { offers }))
-        })
-      })
-      const withOffers = await Promise.all(offerPromises)
-      const offersByListing = withOffers.map(obj => {
-        return obj.offers.map(offer => Object.assign({}, obj, { offer }))
-      })
-      const offersFlattened = [].concat(...offersByListing)
-
-      this.setState({ purchases: offersFlattened })
+      const purchases = await origin.marketplace.getPurchases(web3Account)
+      const transformedPurchases = transformPurchasesOrSales(purchases)
+      this.setState({ purchases: transformedPurchases })
     } catch (error) {
       console.error(error)
     }
@@ -222,7 +202,8 @@ class ListingsDetail extends Component {
       const listing = await getListing(this.props.listingId, true)
       this.setState({
         ...listing,
-        loading: false
+        loading: false,
+        isFractional: listing.listingType === 'fractional'
       })
     } catch (error) {
       this.props.showAlert(
@@ -253,11 +234,19 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.VIEW })
   }
 
+  setFeaturedImage(idx) {
+    this.setState({
+      featuredImageIdx: idx
+    })
+  }
+
   render() {
-    const { featuredListingIds, listingId, web3Account } = this.props
+    const { web3Account } = this.props
     const {
       category,
       description,
+      display,
+      isFractional,
       loading,
       name,
       offers,
@@ -266,7 +255,8 @@ class ListingsDetail extends Component {
       seller,
       status,
       step,
-      schemaType
+      schemaType,
+      featuredImageIdx
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -282,13 +272,21 @@ class ListingsDetail extends Component {
     const isAvailable = !isPending && !isSold && !isWithdrawn
     const showPendingBadge = isPending && !isWithdrawn
     const showSoldBadge = isSold || isWithdrawn
-    const showFeaturedBadge = featuredListingIds.includes(listingId) && isAvailable
+    /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
+     * show listings with the Featured badge, because listings are loaded from web3. We could
+     * pass along featured information from elasticsearch, but that would increase the code
+     * complexity.
+     *
+     * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to
+     * true, and show "featured" badge.
+     */
+    const showFeaturedBadge = display === 'featured' && isAvailable
     const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
     const userIsSeller = web3Account === seller
 
     return (
       <div className="listing-detail">
-        <OnboardingModal 
+        <OnboardingModal
           isOpen={step === this.STEP.ONBOARDING}
           onVerify={() => this.setState({ step: this.STEP.VIEW })}
           handleSkipOnboarding={this.handleSkipOnboarding}
@@ -311,13 +309,13 @@ class ListingsDetail extends Component {
             />
           }
         />
-        <ProcessingModal 
+        <ProcessingModal
           isOpen={step === this.STEP.PROCESSING}
         />
-        <PurchasedModal 
+        <PurchasedModal
           isOpen={step === this.STEP.PURCHASED}
         />
-        <ErrorModal 
+        <ErrorModal
           isOpen={step === this.STEP.ERROR}
           onClick={e => {
             e.preventDefault()
@@ -325,7 +323,7 @@ class ListingsDetail extends Component {
           }}
         />
         {(loading || (pictures && !!pictures.length)) && (
-          <Pictures 
+          <Pictures
             pictures={pictures}
             className="carousel"
           />
@@ -344,7 +342,7 @@ class ListingsDetail extends Component {
               name={name}
               description={description}
             />
-            <OperatingArea 
+            <OperatingArea
               isWithdrawn={isWithdrawn}
               isPending={isPending}
               isSold={isSold}
@@ -360,7 +358,7 @@ class ListingsDetail extends Component {
             />
             { !this.state.loading && this.state.listingType === 'fractional' &&
               <div className="col-12">
-                <Calendar 
+                <Calendar
                   slots={ this.state.slots }
                   offers={ this.state.offers }
                   userType="buyer"
@@ -387,17 +385,17 @@ class ListingsDetail extends Component {
   }
 }
 
-const ListingDetailContainer = ({ 
-  category, 
-  loading, 
-  showPendingBadge, 
-  showSoldBadge, 
+const ListingDetailContainer = ({
+  category,
+  loading,
+  showPendingBadge,
+  showSoldBadge,
   showFeaturedBadge,
   name,
   description }) => {
   return(
     <div className="col-12 col-md-8 detail-info-box">
-      <Category 
+      <Category
         category={category}
         loading={loading}
         showPendingBadge={showPendingBadge}
@@ -426,7 +424,7 @@ const OperatingArea = ({
 }) =>{
   return(
     <div className="col-12 col-md-4">
-      <BuyBox 
+      <BuyBox
         isWithdrawn={isWithdrawn}
         isPending={isPending}
         isSold={isSold}
@@ -449,11 +447,11 @@ const OperatingArea = ({
   )
 }
 
-const Category = ({ 
-  category, 
-  loading, 
-  showPendingBadge, 
-  showSoldBadge, 
+const Category = ({
+  category,
+  loading,
+  showPendingBadge,
+  showSoldBadge,
   showFeaturedBadge }) => {
   return(
     <div className="category placehold d-flex">
@@ -469,23 +467,23 @@ const Category = ({
   )
 }
 
-const BuyBox = ({ 
-  isAvailable, 
-  price, 
-  loading, 
-  userIsSeller, 
-  userIsBuyer, 
-  isWithdrawn, 
-  isPending, 
-  isSold, 
-  currentOffer, 
+const BuyBox = ({
+  isAvailable,
+  price,
+  loading,
+  userIsSeller,
+  userIsBuyer,
+  isWithdrawn,
+  isPending,
+  isSold,
+  currentOffer,
   onClick }) => {
   if(isAvailable &&
     !!price &&
     !!parseFloat(price)){
     return(
       <div className="buy-box placehold">
-        <ETHPrice 
+        <ETHPrice
           price={price}
         />
         {!loading && (
@@ -732,12 +730,11 @@ const BuyBoxButton = ({ userIsSeller, onClick }) => {
 
 const mapStateToProps = ({ app, profile, listings }) => {
   return {
-    featuredListingIds: listings.featured,
+    messagingEnabled: app.messagingEnabled,
     notificationsHardPermission: app.notificationsHardPermission,
     notificationsSoftPermission: app.notificationsSoftPermission,
     profile,
     pushNotificationsSupported: app.pushNotificationsSupported,
-    onMobile: app.onMobile,
     serviceWorkerRegistration: app.serviceWorkerRegistration,
     web3Account: app.web3.account,
     web3Intent: app.web3.intent

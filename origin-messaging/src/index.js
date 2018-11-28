@@ -1,8 +1,7 @@
 'use strict'
 
+import '@babel/polyfill'
 import OrbitDB from 'orbit-db'
-import Keystore from 'orbit-db-keystore'
-import url from 'url'
 
 const Log = require('ipfs-log')
 const IPFSApi = require('ipfs-api')
@@ -13,7 +12,6 @@ import exchangeHeads from './exchange-heads'
 import logger from './logger'
 import {
   verifyConversationSignature,
-  verifyConversers,
   verifyMessageSignature,
   verifyRegistrySignature
 } from './verify'
@@ -31,7 +29,7 @@ async function startRoom(roomDb, roomId, storeType, writers, shareFunc) {
 
   if(!messagingRoomsMap[key]) {
     messagingRoomsMap[key] = 'pending'
-    const room = await roomDb[storeType](roomId, { write:writers })
+    const room = await roomDb[storeType](roomId, { write: writers })
 
     logger.debug(`Room started: ${room.id}`)
 
@@ -44,10 +42,6 @@ async function startRoom(roomDb, roomId, storeType, writers, shareFunc) {
     //room.load()
     startSnapshotDB(room)
   }
-}
-
-function joinConversationKey(converser1, converser2) {
-  return [converser1, converser2].sort().join('-')
 }
 
 function onConverse(roomDb, conversee, payload) {
@@ -66,26 +60,11 @@ function handleGlobalRegistryWrite(convInitDb, payload) {
 }
 
 function rebroadcastOnReplicate(DB, db){
-  db.events.on('replicated', (dbname) => {
+  db.events.on('replicated', () => {
     // rebroadcast
     DB._pubsub.publish(db.id,  db._oplog.heads)
     snapshotDB(db)
   })
-}
-
-async function pinIPFS(ipfs, entry, signature, key) {
-  if (ipfs.pin && ipfs.pin.add) {
-    const hash = await saveToIpfs(ipfs, entry, signature, key)
-    if (hash) {
-      logger.debug(`Pinning hash ${hash}`)
-
-      try {
-        return await ipfs.pin.add(hash)
-      } catch (err) {
-        logger.error(`Cannot pin verified entry hash: ${hash}`)
-      }
-    }
-  }
 }
 
 async function saveToIpfs(ipfs, entry, signature, key) {
@@ -167,7 +146,7 @@ async function _onPeerConnected(address, peer) {
   const onChannelCreated = channel => this._directConnections[channel._receiverID] = channel
   const onMessage = (address, heads) => this._onMessage(address, heads)
 
-  const channel = await exchangeHeads(
+  await exchangeHeads(
     this._ipfs,
     address,
     peer,
@@ -222,7 +201,7 @@ const startOrbitDbServer = async (ipfs) => {
   )
   logger.debug(`Orbit registry started...: ${globalRegistry.id}`)
 
-  globalRegistry.events.on('ready', (address) => {
+  globalRegistry.events.on('ready', () => {
     logger.info(`Ready...`)
   })
 
@@ -242,6 +221,7 @@ const main = async () => {
       startOrbitDbServer(ipfs)
     }).catch((error) => {
       logger.error(`Connection error ${config.IPFS_ADDRESS}:${config.IPFS_PORT}`)
+      logger.error(error)
       setTimeout(main, 5000)
     })
   } else {

@@ -6,6 +6,17 @@ const initialState = {
     attestations: []
   },
   name: '',
+  provisional: {
+    firstName: '',
+    lastName: '',
+    description: '',
+    pic: '',
+    email: false,
+    facebook: false,
+    phone: false,
+    twitter: false,
+    airbnb: false
+  },
   published: {
     firstName: '',
     lastName: '',

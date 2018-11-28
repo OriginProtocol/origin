@@ -4,21 +4,21 @@ metadata:
   name: {{ template "ipfs.fullname" . }}
   labels:
     app: {{ template "ipfs.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: ipfs
 spec:
   type: NodePort
   selector:
     app: {{ template "ipfs.fullname" . }}
-{{- if eq .Release.Namespace "prod" }}
   ports:
   - name: api
     port: 5001
   - name: gateway
     port: 8080
-{{- else }}
-  ports:
   - name: proxy
     port: 9999
-{{- end }}

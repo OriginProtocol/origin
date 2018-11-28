@@ -175,6 +175,10 @@ class PurchaseDetail extends Component {
       withdrawOffer: {
         id: 'purchase-detail.withdrawOffer',
         defaultMessage: 'Withdraw Offer'
+      },
+      enableMessaging: {
+        id: 'purchase-detail.enableMessaging',
+        defaultMessage: 'enable messaging'
       }
     })
 
@@ -317,7 +321,9 @@ class PurchaseDetail extends Component {
 
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
-      const listing = await getListing(purchase.listingId, true)
+      const { blockInfo } = purchase
+      const listing = await getListing(purchase.listingId, true, blockInfo)
+
       this.setState({
         listing,
         purchase
@@ -808,8 +814,8 @@ class PurchaseDetail extends Component {
                         <div>
                           <SellerBadge />
                         </div>
-                        <div className="name">{sellerName}</div>
-                        <div className="address text-muted text-truncate">
+                        <div className="name" title={sellerName}>{sellerName}</div>
+                        <div className="address text-muted text-truncate" title="{seller.address}">
                           {seller.address}
                         </div>
                       </div>
@@ -827,8 +833,8 @@ class PurchaseDetail extends Component {
                         <div>
                           <BuyerBadge />
                         </div>
-                        <div className="name">{buyerName}</div>
-                        <div className="address text-muted text-truncate">
+                        <div className="name" title={buyerName}>{buyerName}</div>
+                        <div className="address text-muted text-truncate" title={buyer.address}>
                           {buyer.address}
                         </div>
                       </div>
@@ -1174,6 +1180,12 @@ class PurchaseDetail extends Component {
             this.initiateDispute()
           }}
         />
+        {
+          /*
+            [micah] Messaging is now required before creating a listing or offer, but
+            I'm leaving this here to catch older users who may have predated this change.
+          */
+        }
         <PrerequisiteModal
           isOpen={modalsOpen.prerequisite}
           perspective={perspective}

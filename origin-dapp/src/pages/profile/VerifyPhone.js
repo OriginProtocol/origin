@@ -241,7 +241,7 @@ class VerifyPhone extends Component {
           </div>
           <div className={`form-control-wrap ${phoneErrors ? 'error' : ''}`}>
             <input
-              type="phone"
+              type="tel"
               className="form-control"
               id="phoneNumber"
               name="phone-number"
@@ -290,6 +290,7 @@ class VerifyPhone extends Component {
           }`}
         >
           <input
+            type="tel"
             className="form-control"
             id="phoneVerificationCode"
             name="phone-verification-code"

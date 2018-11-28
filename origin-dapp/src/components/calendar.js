@@ -56,11 +56,11 @@ class Calendar extends Component {
       showSellerActionBtns: false,
       hideRecurringEventCheckbox: false
     }
+
+    this.localizer = BigCalendar.momentLocalizer(moment)
   }
 
   componentWillMount() {
-    BigCalendar.momentLocalizer(moment)
-    
     if (this.props.slots) {
       const events = generateCalendarSlots(this.props.slots).map((slot) =>  {
         return { 
@@ -476,6 +476,7 @@ class Calendar extends Component {
               onNavigate={ this.renderRecurringEvents }
               slotPropGetter={ this.slotPropGetter }
               scrollToTime={ moment(this.state.defaultDate).hour(8).toDate() }
+              localizer={this.localizer}
             />
             {
               userType === 'seller' &&

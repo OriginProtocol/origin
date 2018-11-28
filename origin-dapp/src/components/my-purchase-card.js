@@ -86,7 +86,7 @@ class MyPurchaseCard extends Component {
           {!this.state.loading && (
             <div className="content-container d-flex flex-column">
               <p className="category">{category}</p>
-              <h2 className="title text-truncate">
+              <h2 className="title text-truncate" title={name}>
                 <Link to={`/purchases/${offerId}`}>{name}</Link>
               </h2>
               <p className="timestamp">

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
@@ -108,7 +108,7 @@ class MyListingCard extends Component {
           <div className="content-container d-flex flex-column">
             <span className={`status ${status}`}>{status}</span>
             <p className="category">{category}</p>
-            <h2 className="title text-truncate">
+            <h2 className="title text-truncate" title={name}>
               <Link to={`/listing/${listing.id}`}>{name}</Link>
             </h2>
             {/*<p className="timestamp">{timestamp}</p>*/}
@@ -143,12 +143,20 @@ class MyListingCard extends Component {
                 {/*!active && <a onClick={() => alert('To Do')}>Enable</a>*/}
                 {/*active && <a onClick={() => alert('To Do')}>Disable</a>*/}
                 {status === 'inactive' ? null : (
-                  <a className="warning" onClick={this.closeListing}>
-                    <FormattedMessage
-                      id={'my-listing-card.closeListing'}
-                      defaultMessage={'Close Listing'}
-                    />
-                  </a>
+                  <Fragment>
+                    <Link to={`/update/${listing.id}`}>
+                        <FormattedMessage
+                          id={'my-listing-card.editListing'}
+                          defaultMessage={'Edit Listing'}
+                        />
+                    </Link>
+                    <a className="warning" onClick={this.closeListing}>
+                      <FormattedMessage
+                        id={'my-listing-card.closeListing'}
+                        defaultMessage={'Close Listing'}
+                      />
+                    </a>
+                  </Fragment>
                 )}
               </div>
             </div>

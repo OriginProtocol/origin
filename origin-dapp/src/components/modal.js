@@ -22,7 +22,7 @@ class Modal extends Component {
   }
 
   render() {
-    const { children, className, tabIndex } = this.props
+    const { children, className, tabIndex, alignItems } = this.props
     const setTabIndex = tabIndex && { tabIndex }
 
     return (
@@ -36,7 +36,7 @@ class Modal extends Component {
         {...setTabIndex}
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content d-flex">{children}</div>
+          <div className="modal-content d-flex" style={{ 'alignItems': alignItems ? alignItems : 'stretch' }}>{children}</div>
         </div>
       </div>
     )

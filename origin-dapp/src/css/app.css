@@ -5,6 +5,7 @@
 @import 'calendar.css';
 @import '../../node_modules/rc-slider/assets/index.css';
 @import '../../node_modules/react-dates/lib/css/_datepicker.css';
+@import '../../node_modules/react-image-crop/dist/ReactCrop.css';
 
 html {
   font-size: 16px;
@@ -1323,9 +1324,6 @@ textarea:-moz-ui-invalid {
   margin: -15px 0;
   padding: 15px 0;
   text-align: center;
-}
-
-.navigation-bar .static.navbar-nav .nav-item {
   width: 60px;
 }
 
@@ -1406,6 +1404,10 @@ textarea:-moz-ui-invalid {
   padding-right: 30px;
   padding-left: 30px;
   width: 196px;
+}
+
+.btn.margin-top {
+  margin-top: 18px;
 }
 
 .btn-primary:hover {
@@ -1524,6 +1526,10 @@ textarea:-moz-ui-invalid {
   position: absolute;
   right: 20px;
   top: 15px;
+}
+
+.modal.linker-popup {
+  z-index:1070;
 }
 
 .modal-content .disclaimer {
@@ -1667,6 +1673,10 @@ textarea:-moz-ui-invalid {
 .modal-content .link-container {
   font-size: 0.875rem;
   padding-top: 20px;
+}
+
+.modal-content .link-container a {
+  cursor: pointer;
 }
 
 .onboarding .modal-backdrop {
@@ -2088,12 +2098,11 @@ textarea:-moz-ui-invalid {
   width: 50%;
 }
 
-.listing-card .photo,
-.listing-form .photo {
+.listing-card .photo {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 240px;
+  height: 260px;
   margin-bottom: 1rem;
   overflow: hidden;
   width: 100%;
@@ -2101,7 +2110,7 @@ textarea:-moz-ui-invalid {
 
 .listing-card .image-container {
   background-color: var(--light);
-  height: 240px;
+  height: 260px;
   margin-bottom: 1rem;
 }
 
@@ -2167,6 +2176,36 @@ textarea:-moz-ui-invalid {
 .listing-detail .skip-identity {
   font-size: 0.875rem;
   padding-top: 1.125rem;
+}
+
+.listing-detail .image-wrapper {
+  margin-bottom: 40px;
+}
+
+.listing-detail .image-wrapper .featured-image {
+  width: 100%;
+  margin-bottom: 7px;
+}
+
+.listing-detail .image-wrapper .photo-row {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  padding: 5px;
+}
+
+.listing-detail .image-wrapper .photo-row img {
+  width: 150px;
+  margin-right: 12px;
+  cursor: pointer;
+  border: 5px solid transparent;
+}
+
+.listing-detail .image-wrapper .photo-row img.featured-thumb {
+  border: 5px solid white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 }
 
 .buy-box {
@@ -2245,8 +2284,6 @@ textarea:-moz-ui-invalid {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  border-top: 1px solid var(--dark-grey);
-  background-color: var(--dark-grey);
   text-align: center;
 }
 
@@ -2261,7 +2298,7 @@ textarea:-moz-ui-invalid {
   width: 600px;
   height: 400px;
   background-color: var(--light);
-  margin-right: 1px;
+  margin-right: 12px;
 }
 
 .carousel.small .photo {
@@ -2489,29 +2526,38 @@ select.form-control:not([size]):not([multiple]) {
   flex-wrap: wrap;
 }
 
+.schema-details .pictures .image-container img {
+  max-width: 100%;
+}
+
 .schema-details .pictures .image-container {
   border: 1px solid var(--light);
   border-radius: 0.25rem;
   position: relative;
   padding: 0;
-  height: 240px;
   margin-bottom: 10px;
-  width: 100%;
 }
 
-.cancel-image {
+.image-overlay-btn {
   position: absolute;
   top: 0;
-  right: 0;
   cursor: pointer;
   padding: 0.75rem;
   line-height: 0.5;
   background-color: white;
   font-weight: bold;
   border-bottom: 1px solid var(--light);
-  border-left: 1px solid var(--light);
-  border-radius: 0 0.25rem;
   opacity: 0.5;
+}
+
+.re-crop-image {
+  right: 36px;
+  border-radius: 0 0 0 0.25rem;
+  border-left: 1px solid var(--light);
+}
+
+.cancel-image {
+  right: 0;
 }
 
 .schema-details .pictures .photo {
@@ -2547,6 +2593,15 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: bold;
   padding: 0.75rem;
   line-height: 0.5;
+}
+
+.photo-picker .image-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.photo-picker .image-container img {
+  width: 100%;
 }
 
 .file-info {
@@ -2630,6 +2685,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .listing-form .photo-row .photo {
   border: 1px solid var(--light);
+  width: 300px;
 }
 
 .listing-form .preview img {
@@ -3799,6 +3855,12 @@ form .stars img {
   padding: 0 10px 0;
 }
 
+@media (max-width: 800px) {
+  .conversations-list-col .conversation-list-item {
+    width: 200px;
+  }
+}
+
 .conversation-list-item {
   height: 60px;
   padding: 10px;
@@ -4662,7 +4724,7 @@ sup {
   width: 100%;
 }
 
-.profile.modal .container .image-container .image-pair .avatar-container  {
+.profile.modal .container .image-container .image-pair .avatar-container {
   position: relative;
   background-color: var(--dark-two);
   border-radius: 20px;
@@ -4672,6 +4734,12 @@ sup {
   max-width: unset;
   top: unset;
   width: 180px;
+}
+
+.profile.modal .container .image-container .image-pair .avatar-container img {
+  width: 60%;
+  height: unset;
+  margin-bottom: unset;
 }
 
 .profile.modal .container .image-container .image-pair .avatar-container canvas {
@@ -4856,6 +4924,7 @@ sup {
 }
 
 .publish.modal img,
+.mobile-publish.modal img,
 .unload.modal img {
   height: auto;
   width: auto;
@@ -5089,11 +5158,13 @@ a:not([href]):not([tabindex]).span-link {
 }
 
 /* Media queries */
+
 /* xs */
 @media (max-width: 576px) {
-
-  .warning .badge {
-    display:none;
+  @media (max-width: 340px) {
+    .navigation-bar .static.navbar-nav {
+      margin-left: 0;
+    }
   }
 
   .warning p {
@@ -5221,10 +5292,50 @@ a:not([href]):not([tabindex]).span-link {
   }
 }
 
+/* anything smaller than md */
+@media (max-width: 767px) {
+  .warning.alert {
+    padding: 0.25rem 0.25rem;
+  }
+
+  .warning.alert #desktop-message {
+    display: none;
+  }
+
+  .warning.alert .col {
+    padding-left: 5px;
+  }
+
+  .warning.alert:not(.expanded) #invitation-message {
+    display: none;
+  }
+
+  .warning.alert.expanded #caret-down {
+    display: none;
+  }
+
+  .warning.alert:not(.expanded) #caret-up {
+    display: none;
+  }
+
+  .warning.alert .caret {
+    margin-top: -0.15rem;
+  }
+}
+
 /* md + */
 @media (min-width: 768px) {
   .video-placeholder {
     padding-top: 100px;
+  }
+
+  .warning.alert #caret-up,
+  .warning.alert #caret-down {
+    display: none;
+  }
+
+  .warning.alert #mobile-message {
+    display: none;
   }
 
   .modal-content {
