@@ -43,8 +43,7 @@ export default `
     ): Transaction
 
     executeRuling(
-      listingID: ID!
-      offerID: String!
+      offerID: ID!
       ruling: String!
       commission: String!
       message: String
@@ -52,15 +51,15 @@ export default `
       from: String
     ): Transaction
 
-    addData(data: String!, listingID: ID, offerID: ID): Transaction
+    addData(data: String!, listingID: ID, offerID: ID, from: String!): Transaction
     addAffiliate(affiliate: String!, from: String): Transaction
 
-    acceptOffer(listingID: ID!, offerID: ID!, from: String): Transaction
-    withdrawOffer(listingID: ID!, offerID: ID!, from: String): Transaction
-    finalizeOffer(listingID: ID!, offerID: ID!, from: String, rating: Int, review: String): Transaction
-    disputeOffer(listingID: ID!, offerID: ID!, from: String): Transaction
-    addFunds(listingID: ID!, offerID: ID!, amount: String!, from: String): Transaction
-    updateRefund(listingID: ID!, offerID: ID!, amount: String!, from: String): Transaction
+    acceptOffer(offerID: ID!, from: String): Transaction
+    withdrawOffer(offerID: ID!, from: String): Transaction
+    finalizeOffer(offerID: ID!, from: String, rating: Int, review: String): Transaction
+    disputeOffer(offerID: ID!, from: String): Transaction
+    addFunds(offerID: ID!, amount: String!, from: String): Transaction
+    updateRefund(offerID: ID!, amount: String!, from: String): Transaction
   }
 
   type Marketplace {
