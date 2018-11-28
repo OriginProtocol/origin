@@ -292,7 +292,7 @@ export default class Marketplace {
       const listing = await this.getListing(listingId)
 
       // Originally, listings had a single "commission" field. For multi-unit
-      // listings, we've added "perUnitCommission." The code here handles both
+      // listings, we've added "commissionPerUnit." The code here handles both
       // variants of the schema.
       let listingCommission =
           listing.commission && typeof listing.commission === 'object' ?
@@ -300,11 +300,11 @@ export default class Marketplace {
             '0'
 
       if (listing.type === 'unit') {
-        const perUnitCommission =
-        listing.perUnitCommission && typeof listing.perUnitCommission === 'object' ?
-          await this.contractService.moneyToUnits(listing.perUnitCommission) :
+        const commissionPerUnit =
+        listing.commissionPerUnit && typeof listing.commissionPerUnit === 'object' ?
+          await this.contractService.moneyToUnits(listing.commissionPerUnit) :
           null
-        listingCommission = perUnitCommission || listingCommission
+        listingCommission = commissionPerUnit || listingCommission
 
         // TODO(John) - there is currently no way to know the currency of a fractional listing.
         // We probably need to add a required "currency" field to the listing schema and write a check here

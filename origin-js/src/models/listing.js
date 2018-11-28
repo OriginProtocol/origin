@@ -33,7 +33,7 @@ export class Listing {
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    schemaId, deposit, depositManager, expiry, perUnitCommission }) {
+    schemaId, deposit, depositManager, expiry, commissionPerUnit }) {
 
     this.id = id
     this.title = title
@@ -58,7 +58,7 @@ export class Listing {
     this.deposit = deposit
     this.depositManager = depositManager
     this.expiry = expiry
-    this.perUnitCommission = perUnitCommission
+    this.commissionPerUnit = commissionPerUnit
   }
 
   // creates a Listing using on-chain and off-chain data
@@ -88,7 +88,7 @@ export class Listing {
       expiry: ipfsListing.expiry,
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
-      perUnitCommission: ipfsListing.perUnitCommission,
+      commissionPerUnit: ipfsListing.commissionPerUnit,
     })
   }
 
@@ -118,7 +118,7 @@ export class Listing {
       expiry: discoveryNodeData.ipfs.expiry,
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
-      perUnitCommission: discoveryNodeData.perUnitCommission,
+      commissionPerUnit: discoveryNodeData.commissionPerUnit,
     })
   }
 

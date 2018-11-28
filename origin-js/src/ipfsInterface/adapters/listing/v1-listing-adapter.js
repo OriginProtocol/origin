@@ -81,8 +81,8 @@ export default class ListingAdapterV1 extends AdapterBase {
       listing.commission = ipfsData.commission
         ? new Money(ipfsData.commission)
         : null
-      listing.perUnitCommission = ipfsData.perUnitCommission
-      ? new Money(ipfsData.perUnitCommission)
+      listing.commissionPerUnit = ipfsData.commissionPerUnit
+      ? new Money(ipfsData.commissionPerUnit)
       : null
     } else if (listing.type === 'fractional') {
       listing.slots = ipfsData.slots

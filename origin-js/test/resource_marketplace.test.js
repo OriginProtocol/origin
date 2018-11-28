@@ -23,7 +23,7 @@ const multiUnitListingWithCommissionData = Object.assign(
   multiUnitListingData,
   {
     commission: { currency: 'OGN', amount: '2' },
-    perUnitCommission: { currency: 'OGN', amount: '1' }
+    commissionPerUnit: { currency: 'OGN', amount: '1' }
   }
 )
 const offerData = Object.assign({}, offerValid)
