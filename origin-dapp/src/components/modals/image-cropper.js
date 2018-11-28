@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import ReactCrop from 'react-image-crop'
 import { modifyImage, generateCroppedImage } from 'utils/fileUtils'
-import { saveStorageItem } from 'utils/localStorage'
 import Modal from 'components/modal'
 
 class ImageCropper extends Component {
@@ -55,10 +54,10 @@ class ImageCropper extends Component {
     })
   }
 
-  async onCropComplete() {
+  onCropComplete() {
     const { imageFileObj, pixelCrop } = this.state
 
-    await generateCroppedImage(imageFileObj, pixelCrop, (croppedImageUri) => {
+    generateCroppedImage(imageFileObj, pixelCrop, (croppedImageUri) => {
       this.props.onCropComplete(croppedImageUri, imageFileObj)
     })
   }

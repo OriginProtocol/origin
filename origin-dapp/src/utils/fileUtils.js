@@ -33,9 +33,9 @@ export const modifyImage = (imageFileObj, options, callback) => {
     crossOrigin: 'anonymous'
   }
 
-  loadImage(
+  window.loadImage(
     imageFileObj,
-    (canvas, meta) => {
+    (canvas) => {
       canvas.toBlob(async (blob) => {
         blob.name = imageFileObj.name
         const dataUri = await getDataUri(blob)
@@ -59,7 +59,7 @@ export const modifyImage = (imageFileObj, options, callback) => {
  * @param {function} callback- called with the result of modifyImage (an imageDataUri)
  */
 
-export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) => {
+export const generateCroppedImage = (imageFileObj, pixelCrop, callback) => {
   let cropWidth = pixelCrop.width
   let cropHeight = pixelCrop.width / 1.33333 // 4:3 aspect ratio
 

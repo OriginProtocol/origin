@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { getStorageItem } from 'utils/localStorage'
 
 class Avatar extends Component {
   render() {

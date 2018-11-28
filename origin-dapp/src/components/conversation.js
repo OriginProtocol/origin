@@ -9,7 +9,7 @@ import CompactMessages from 'components/compact-messages'
 import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 
-import { getDataUri, modifyImage } from 'utils/fileUtils'
+import { modifyImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'

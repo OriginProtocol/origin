@@ -39,7 +39,7 @@ class EditProfile extends Component {
     const { data } = this.props
     const { pic } = data
     if (pic && pic !== prevProps.data.pic) {
-      modifyImage(pic, {orientation: true}, (dataUri) => {
+      modifyImage(pic, { orientation: true }, (dataUri) => {
         this.setState({ pic: dataUri })
       })
     }

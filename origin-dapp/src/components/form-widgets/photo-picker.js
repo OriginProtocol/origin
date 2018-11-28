@@ -95,7 +95,7 @@ class PhotoPicker extends Component {
     return Promise.all(imagePromises)
   }
 
-  async onFileSelected(e) {
+  onFileSelected(e) {
     if (e.target.files && e.target.files.length > 0) {
       const imageFiles = e.target.files
       const pictures = [...this.state.pictures]
