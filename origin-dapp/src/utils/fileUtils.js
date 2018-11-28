@@ -1,3 +1,6 @@
+const MAX_IMAGE_WIDTH = 1000
+const MAX_IMAGE_HEIGHT = 1000
+
 export const getDataUri = async file => {
   const reader = new FileReader()
 
@@ -25,7 +28,12 @@ export const getDataUri = async file => {
  */
 
 export const modifyImage = (imageFileObj, options, callback) => {
-  const updatedOptions = { ...options, crossOrigin: 'anonymous' }
+  const updatedOptions = {
+    ...options,
+    maxHeight: MAX_IMAGE_HEIGHT,
+    maxWidth: MAX_IMAGE_WIDTH,
+    crossOrigin: 'anonymous'
+  }
 
   loadImage(
     imageFileObj,
@@ -54,9 +62,6 @@ export const modifyImage = (imageFileObj, options, callback) => {
  */
 
 export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) => {
-  const MAX_IMAGE_WIDTH = 1000
-  const MAX_IMAGE_HEIGHT = 1000
-
   let cropWidth = pixelCrop.width
   let cropHeight = pixelCrop.width / 1.33333 // 4:3 aspect ratio
 
@@ -68,8 +73,6 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) =>
   const { x, y, width, height } = pixelCrop
 
   const options = {
-    maxHeight: MAX_IMAGE_HEIGHT,
-    maxWidth: MAX_IMAGE_WIDTH,
     minWidth: cropWidth,
     minHeight: cropHeight,
     sourceWidth: width,
