@@ -147,7 +147,10 @@ class ListingCreate extends Component {
         console.error(error)
       }
     } else if (!web3.givenProvider || !this.props.messagingEnabled) {
-      this.props.history.push('/')
+      if (!origin.contractService.walletLinker)
+      {
+        this.props.history.push('/')
+      }
       this.props.storeWeb3Intent('create a listing')
     }
   }
@@ -184,7 +187,7 @@ class ListingCreate extends Component {
 
   detectNeedForBoostTutorial() {
     // show if 0 OGN and...
-    !this.props.wallet.ognBalance &&
+    !Number(this.props.wallet.ognBalance) &&
       // ...tutorial has not been expanded or skipped via "Review"
       // !JSON.parse(localStorage.getItem('boostTutorialViewed')) &&
       this.setState({
@@ -473,7 +476,7 @@ class ListingCreate extends Component {
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
 
-    return web3.givenProvider ? (
+    return (web3.givenProvider || origin.contractService.walletLinker) ? (
       <div className="listing-form">
         <div className="step-container">
           <div className="row">

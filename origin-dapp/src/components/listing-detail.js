@@ -116,21 +116,18 @@ class ListingsDetail extends Component {
 
     this.props.storeWeb3Intent('purchase this listing')
 
-    // defer to parent modal if user activation is insufficient
-    if (
-      !web3.givenProvider ||
-      !this.props.web3Account ||
-      !this.props.messagingEnabled
-    ) {
-      return
+    if ((web3.givenProvider && this.props.web3Account) || origin.contractService.walletLinker) {
+      if (!skip && shouldOnboard) {
+        return this.setState({
+          onboardingCompleted: true,
+          step: this.STEP.ONBOARDING,
+          slotsToReserve
+        })
+      }
     }
-
-    if (!skip && shouldOnboard) {
-      return this.setState({
-        onboardingCompleted: true,
-        step: this.STEP.ONBOARDING,
-        slotsToReserve
-      })
+    // defer to parent modal if user activation is insufficient
+    if ( !this.props.messagingEnabled ) {
+      return
     }
 
     this.setState({ step: this.STEP.METAMASK })
@@ -185,7 +182,6 @@ class ListingsDetail extends Component {
 
   handleSkipOnboarding(e) {
     e.preventDefault()
-
     this.handleMakeOffer(true)
   }
 

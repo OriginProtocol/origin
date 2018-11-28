@@ -28,10 +28,11 @@ class MyListings extends Component {
   }
 
   componentDidMount() {
-    if (this.props.web3Account) {
+    if (this.props.web3Account && (web3.givenProvider || origin.contractService.walletLinker)) {
       this.loadListings()
     } else if (!web3.givenProvider) {
       this.props.storeWeb3Intent('view your listings')
+      origin.contractService.showLinkPopUp()
     }
   }
 
