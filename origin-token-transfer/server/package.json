@@ -38,6 +38,7 @@
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",
     "per-env": "^1.0.2",
+    "react": "^16.6.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-thunk": "^1.0.0",
