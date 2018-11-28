@@ -72,7 +72,7 @@ class StoreMock {
 
 describe('Marketplace Resource', function() {
   // TODO speed up the notifications test so that this timeout can be reduced
-  this.timeout(15000) // default is 2000
+  this.timeout(20000) // default is 2000
   let marketplace, web3, contractService, validBuyer, validArbitrator, validAffiliate,
     evilAddress, makeMaliciousOffer
 
