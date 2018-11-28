@@ -12,13 +12,13 @@
     "lerna": "^3.4.3"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap --ci",
     "build": "lerna run build --stream",
     "clean": "git clean -fdX .",
     "start": "lerna run start --stream --parallel --scope origin --scope origin-dapp",
     "lint": "lerna run lint --stream",
     "format": "eslint **/**/*.js --quiet --fix",
-    "postinstall": "node ./scripts/postinstall.js",
+    "postinstall": "npm run bootstrap",
     "test": "node ./scripts/test.js"
   }
 }
