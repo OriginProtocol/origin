@@ -9,7 +9,7 @@ async function addAffiliate(_, data) {
     .addAffiliate(data.affiliate, ipfsHash)
     .send({
       gas: 4612388,
-      from: data.from || web3.eth.defaultAccount
+      from: data.from
     })
   return txHelper({ tx, mutation: 'addAffiliate' })
 }

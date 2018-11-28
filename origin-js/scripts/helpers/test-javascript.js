@@ -10,7 +10,7 @@ const testJavascript = () => {
         '-r',
         '@babel/polyfill',
         '--timeout',
-        '10000',
+        '20000',
         '--exit'
       ],
       {

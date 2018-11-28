@@ -189,7 +189,7 @@ class Profile extends Component {
       this.props.intl.formatMessage(this.intlMessages.manageYourProfile)
     )
 
-    if (web3.givenProvider && this.props.web3Account) {
+    if ((web3.givenProvider && this.props.web3Account) || origin.contractService.walletLinker) {
       const { modal } = e.currentTarget.dataset
 
       /*
@@ -293,7 +293,8 @@ class Profile extends Component {
       provisional,
       published,
       wallet,
-      intl
+      intl,
+      mobileDevice
     } = this.props
     const fullName = `${provisional.firstName} ${provisional.lastName}`.trim()
     const hasChanges = !!changes.length
@@ -622,6 +623,7 @@ class Profile extends Component {
               user: this.state.userForm
             })
           }}
+          mobileDevice={mobileDevice}
         />
 
         <ConfirmUnload
@@ -772,7 +774,9 @@ const mapStateToProps = state => {
     profile: state.profile,
     wallet: state.wallet,
     web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    web3Intent: state.app.web3.intent,
+    networkId: state.app.web3.networkId,
+    mobileDevice: state.app.mobileDevice
   }
 }
 

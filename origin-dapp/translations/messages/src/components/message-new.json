@@ -8,14 +8,6 @@
     "defaultMessage": "Cancel"
   },
   {
-    "id": "MessageNew.cannotSendMessages",
-    "defaultMessage": "Before you can contact this user, you need to enable messaging."
-  },
-  {
-    "id": "MessageNew.enable",
-    "defaultMessage": "Start Messaging"
-  },
-  {
     "id": "MessageNew.send",
     "defaultMessage": "Send"
   },

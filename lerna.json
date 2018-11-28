@@ -7,7 +7,10 @@
     "origin-faucet",
     "origin-js",
     "origin-messaging",
+    "origin-linking",
+    "origin-mobile",
     "origin-notifications",
+    "origin-token-transfer/*",
     "experimental/*"
   ],
   "version": "independent"

@@ -2,17 +2,22 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import clipboard from 'clipboard-polyfill'
+import QRCode from 'qrcode.react'
 
 import { storeWeb3Account, storeWeb3Intent, storeNetwork } from 'actions/App'
+import { fetchProfile } from 'actions/Profile'
+import { getEthBalance } from 'actions/Wallet'
 
 import Modal from 'components/modal'
 
+import detectMobile from 'utils/detectMobile'
 import getCurrentProvider from 'utils/getCurrentProvider'
-import getCurrentNetwork, { supportedNetworkId, supportedNetwork } from 'utils/currentNetwork'
+import getCurrentNetwork, { supportedNetworkId } from 'utils/currentNetwork'
 
 import origin from '../services/origin'
 
-const web3 = origin.contractService.web3
+const { web3 } = origin.contractService
 
 const mainnetDappBaseUrl = process.env.MAINNET_DAPP_BASEURL
 const rinkebyDappBaseUrl = process.env.RINKEBY_DAPP_BASEURL
@@ -69,6 +74,35 @@ const NotWeb3EnabledDesktop = props => (
           defaultMessage={'Full Instructions'}
         />
       </a>
+    </div>
+  </Modal>
+)
+
+const LinkerPopUp = props => (
+  <Modal backdrop="static" className="not-web3-enabled linker-popup" isOpen={true}>
+   <a
+      className="close"
+      aria-label="Close"
+      onClick={() => props.cancel()}
+    >
+      <span aria-hidden="true">&times;</span>
+    </a>
+    <div>
+      To {props.web3Intent}, you can link with your Origin Mobile Wallet with this code: {props.linkerCode} <br />
+      { detectMobile() && <button className="btn btn-primary" style={{ width: '200px' }} onClick={() =>
+        clipboard.writeText('orgw:'+ props.linkerCode).then( function(){
+          const url = 'https://www.originprotocol.com/mobile'
+          window.open(url)
+        }, function(){
+          console.log('Error opening url')
+        })
+      }>
+        Copy & Open App
+        </button>
+      }
+      <div style={{ padding: '50px', backgroundColor: 'white' }}>
+      <QRCode value={'https://www.originprotocol.com/mobile/' + props.linkerCode}/>
+      </div>
     </div>
   </Modal>
 )
@@ -317,12 +351,16 @@ class Web3Provider extends Component {
       networkConnected: null,
       networkId: null,
       networkError: null,
-      currentProvider: getCurrentProvider(web3)
+      currentProvider: getCurrentProvider(web3),
+      provider: null,
+      linkerCode: '',
+      linkerPopUp: false
     }
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     this.setState({ provider: web3.currentProvider })
+
   }
 
   /**
@@ -334,6 +372,32 @@ class Web3Provider extends Component {
     this.fetchNetwork()
     this.initAccountsPoll()
     this.initNetworkPoll()
+    if (origin.contractService.walletLinker)
+    {
+        origin.contractService.walletLinker.showPopUp = this.showLinkerPopUp.bind(this)
+        origin.contractService.walletLinker.setLinkCode = this.setLinkerCode.bind(this)
+        origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
+    }
+  }
+
+  showLinkerPopUp(linkerPopUp){
+    this.setState({ linkerPopUp })
+  }
+
+  setLinkerCode(linkerCode) {
+    this.setState({ linkerCode })
+  }
+
+  showNextPage() {
+    const now = this.props.location.pathname
+    if (now.startsWith('/listing/'))
+    {
+      this.props.history.push('/my-purchases')
+    }
+    else if (now.startsWith('/create'))
+    {
+      this.props.history.push('/my-listings')
+    }
   }
 
   /**
@@ -341,7 +405,7 @@ class Web3Provider extends Component {
    * @return {void}
    */
   initAccountsPoll() {
-    if (!this.accountsInterval && web3.givenProvider) {
+    if (!this.accountsInterval && (web3.givenProvider || origin.contractService.walletLinker)) {
       this.accountsInterval = setInterval(this.fetchAccounts, ONE_SECOND)
     }
   }
@@ -361,20 +425,29 @@ class Web3Provider extends Component {
    * @return {void}
    */
   fetchAccounts() {
-    this.state.networkConnected &&
-      web3.eth.getAccounts((err, accounts) => {
-        if (err) {
-          console.log(err)
+    web3.eth.getAccounts((err, accounts) => {
+      if (err) {
+        console.error(err)
+      } else {
+        this.handleAccounts(accounts)
+      }
+    })
 
-          this.setState({ accountsError: err })
-        } else {
-          this.handleAccounts(accounts)
-        }
+    if (web3.currentProvider !== this.state.provider) {
+      // got a real provider now
+      this.setState({ provider: web3.currentProvider })
+    }
 
-        if (!this.state.accountsLoaded) {
-          this.setState({ accountsLoaded: true })
-        }
-      })
+    // skip walletLink if browser is web3-enabled
+    if (web3.givenProvider) {
+      return
+    }
+
+    const code = origin.contractService.getMobileWalletLink()
+    if (this.state.linkerCode != code) {
+      // let's set the linker code
+      this.setState({ linkerCode: code })
+    }
   }
 
   /**
@@ -396,11 +469,13 @@ class Web3Provider extends Component {
         this.networkInterval = setInterval(this.fetchNetwork, ONE_MINUTE)
       }
 
-      this.setState({ networkConnected })
+      if (web3.currentProvider.connected !== undefined && web3.currentProvider.isConnected !== undefined)
+      {
+        this.setState({ networkConnected })
+      }
     }
 
     providerExists &&
-      networkConnected &&
       web3.version &&
       web3.eth.net.getId((err, netId) => {
         const networkId = parseInt(netId, 10)
@@ -430,11 +505,23 @@ class Web3Provider extends Component {
   handleAccounts(accounts) {
     const curr = accounts[0]
     const prev = this.props.web3Account
+    const walletLinkerEnabled = origin.contractService.walletLinker
 
     // on account detection
     if (curr !== prev) {
-      // start over if changed
-      prev !== null && window.location.reload()
+      // TODO: fix this with some route magic!
+      if(
+        !walletLinkerEnabled ||
+        ['/my-listings', '/my-purchases','/my-sales'].includes(this.props.location.pathname) ||
+        !curr
+      ) {
+        // reload if changed from a prior account
+        prev !== null && window.location.reload()
+      } else {
+        // load data on account change
+        this.props.fetchProfile()
+        this.props.getEthBalance()
+      }
 
       // set user_id to wallet address in Google Analytics
       const gtag = window.gtag || function(){}
@@ -442,6 +529,7 @@ class Web3Provider extends Component {
 
       // update global state
       this.props.storeWeb3Account(curr)
+
       // trigger messaging service
       origin.messaging.onAccount(curr)
     }
@@ -449,14 +537,14 @@ class Web3Provider extends Component {
 
   render() {
     const { mobileDevice, web3Account, web3Intent, storeWeb3Intent } = this.props
-    const { networkConnected, networkId, currentProvider } = this.state
+    const { networkConnected, networkId, currentProvider, linkerCode, linkerPopUp } = this.state
     const currentNetwork = getCurrentNetwork(networkId)
     const currentNetworkName = currentNetwork
       ? currentNetwork.name
       : networkId
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
-    const supportedNetworkName = supportedNetwork && supportedNetwork.name
+    const walletLinkerEnabled = origin.contractService.walletLinker
 
     return (
       <Fragment>
@@ -470,17 +558,13 @@ class Web3Provider extends Component {
           currentProvider &&
           networkId &&
           isProduction &&
-          networkNotSupported && (
-            <UnsupportedNetwork
-              currentNetworkName={currentNetworkName}
-              currentProvider={currentProvider}
-              networkId={networkId}
-              supportedNetworkName={supportedNetworkName}
-            />
-          )}
+          networkNotSupported &&
+          <UnsupportedNetwork currentNetworkName={currentNetworkName} currentProvider={currentProvider} />
+        }
 
         {/* attempting to use web3 in unsupported mobile browser */
           web3Intent &&
+          !walletLinkerEnabled &&
           !web3.givenProvider &&
           mobileDevice && (
             <NotWeb3EnabledMobile
@@ -491,6 +575,7 @@ class Web3Provider extends Component {
 
         {/* attempting to use web3 in unsupported desktop browser */
           web3Intent &&
+          !walletLinkerEnabled &&
           !web3.givenProvider &&
           !mobileDevice && (
             <NotWeb3EnabledDesktop
@@ -499,7 +584,17 @@ class Web3Provider extends Component {
             />
           )}
 
-        {/* attempting to use web3 without being signed in */
+        { /* attempting to use web3 in unsupported desktop browser */
+          web3Intent &&
+          walletLinkerEnabled &&
+          !web3.givenProvider &&
+          linkerCode &&
+          linkerPopUp &&
+          <LinkerPopUp web3Intent={web3Intent} cancel={() => { storeWeb3Intent(null); origin.contractService.walletLinker.cancelLink() }} linkerCode={linkerCode} />
+        }
+
+
+        { /* attempting to use web3 without being signed in */
           web3Intent &&
           web3.givenProvider &&
           web3Account === undefined && (
@@ -525,6 +620,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  fetchProfile: () => dispatch(fetchProfile()),
+  getEthBalance: () => dispatch(getEthBalance()),
   storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
   storeNetwork: networkId => dispatch(storeNetwork(networkId))

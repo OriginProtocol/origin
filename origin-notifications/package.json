@@ -16,7 +16,9 @@
   "scripts": {
     "lint": "eslint '**/*.js' --rulesdir ../",
     "migrate": "sequelize db:migrate",
-    "start": "node src/app.js",
+    "start": "per-env",
+    "start:development": "nodemon src/app.js",
+    "start:production": "node src/app.js",
     "test": "echo \"Warning: no tests specified\""
   },
   "author": "Origin Protocol Inc",
@@ -25,11 +27,16 @@
     "dotenv": "^6.1.0",
     "envkey": "^1.2.2",
     "express": "^4.16.4",
+    "per-env": "^1.0.2",
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
     "rate-limiter-flexible": "^0.18.5",
     "sequelize": "^5.0.0-beta.5",
     "sequelize-cli": "^5.2.0",
     "web-push": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "nodemon": "^1.18.6"
   }
 }

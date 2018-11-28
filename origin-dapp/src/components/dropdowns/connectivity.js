@@ -11,7 +11,7 @@ const r = new RegExp(/\/\w+\/[\w.]+\/\w+\/\d+\/\w+\/\w+\//)
 const peer = messagingAddress.match(r)
   ? messagingAddress.split(r)
   : messagingAddress
-const web3 = origin.contractService.web3
+const { web3 } = origin.contractService
 const ONE_SECOND = 1000
 
 class ConnectivityDropdown extends Component {

@@ -1406,6 +1406,10 @@ textarea:-moz-ui-invalid {
   width: 196px;
 }
 
+.btn.margin-top {
+  margin-top: 18px;
+}
+
 .btn-primary:hover {
   background-color: var(--dark-clear-blue);
   color: white;
@@ -1522,6 +1526,10 @@ textarea:-moz-ui-invalid {
   position: absolute;
   right: 20px;
   top: 15px;
+}
+
+.modal.linker-popup {
+  z-index:1070;
 }
 
 .modal-content .disclaimer {
@@ -1665,6 +1673,10 @@ textarea:-moz-ui-invalid {
 .modal-content .link-container {
   font-size: 0.875rem;
   padding-top: 20px;
+}
+
+.modal-content .link-container a {
+  cursor: pointer;
 }
 
 .onboarding .modal-backdrop {
@@ -3843,6 +3855,12 @@ form .stars img {
   padding: 0 10px 0;
 }
 
+@media (max-width: 800px) {
+  .conversations-list-col .conversation-list-item {
+    width: 200px;
+  }
+}
+
 .conversation-list-item {
   height: 60px;
   padding: 10px;
@@ -4906,6 +4924,7 @@ sup {
 }
 
 .publish.modal img,
+.mobile-publish.modal img,
 .unload.modal img {
   height: auto;
   width: auto;

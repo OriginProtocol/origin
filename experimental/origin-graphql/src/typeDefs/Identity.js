@@ -12,6 +12,12 @@ export default `
     lastName: String
     description: String
     avatar: String
+
+    facebookVerified: Boolean
+    twitterVerified: Boolean
+    airbnbVerified: Boolean
+    phoneVerified: Boolean
+    emailVerified: Boolean
   }
 
   type Claim {

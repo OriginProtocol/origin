@@ -61,7 +61,7 @@ async function createListing(_, input) {
   return txHelper({
     tx: createListingCall.send({
       gas: 4612388,
-      from: from || web3.eth.defaultAccount
+      from: from
     }),
     mutation: 'createListing'
   })

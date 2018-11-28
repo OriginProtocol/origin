@@ -168,6 +168,7 @@ class VerifyEmail extends Component {
         </label>
         <div className={`form-control-wrap ${codeErrors ? 'error' : ''}`}>
           <input
+            type="tel"
             className="form-control"
             id="emailVerificationCode"
             name="email-verification-code"

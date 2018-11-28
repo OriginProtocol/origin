@@ -36,7 +36,7 @@ services:
       - IPFS_API_URL=http://origin-js:5002
       - IPFS_GATEWAY_URL=http://origin-js:8080
     volumes:
-      - ./ipfs-proxy:/app
+      - ./ipfs-proxy/src:/app/src
 
   # NOTE/TODO: This container is only responsible for running ganache and IPFS,
   # this functionality should be moved to dedicated containers
@@ -146,7 +146,11 @@ services:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
     ports:
       - "3456:3456"
-    command: /bin/bash -c "npm run migrate && npm run start"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
+      npm run migrate &&
+      npm run start"
 
   origin-dapp:
     container_name: origin-dapp
