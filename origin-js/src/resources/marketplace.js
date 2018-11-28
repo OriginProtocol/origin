@@ -373,10 +373,15 @@ export default class Marketplace {
    */
   async updateListing(listingId, ipfsData, additionalDeposit = 0, confirmationCallback) {
     const oldListing = await this.getListing(listingId)
-    if (ipfsData.unitsTotal !== undefined && ipfsData.unitsTotal < oldListing.unitsTotal) {
-      // TODO: come to a decision regarding how we handle decreasing of
-      // unitsTotal and implement it here
-      throw new Error('decreasing of units is unimplemented')
+    if (
+      oldListing.type == 'unit' &&
+      ipfsData.unitsTotal !== oldListing.unitsTotal
+    ) {
+      const offers = await this.getOffers(listingId)
+      const unitsSold = this.unitsSold(oldListing, offers)
+      if (ipfsData.unitsTotal < unitsSold) {
+        throw new Error('new unitsTotal insufficient to cover accepted offers')
+      }
     }
 
     // Validate and save the data to IPFS.
@@ -659,7 +664,20 @@ export default class Marketplace {
       throw new Error('unitsAvailable only works for unit listings')
     }
 
-    const unitsSold = Object.keys(offers).reduce((sold, offerId) => {
+    return listing.unitsTotal - this.unitsSold(listing, offers)
+  }
+
+  /**
+   * Returns units sold for a unit listing, taking into account pending offers.
+   * @param {Listing} listing - listing JSON object
+   * @param {List(Offer)} offers - list of Offer JSON objects for the listing
+   * @return {number} - Units sold
+   */
+  unitsSold(listing, offers) {
+    if (listing.type !== 'unit') {
+      throw new Error('unitsAvailable only works for unit listings')
+    }
+    return Object.keys(offers).reduce((sold, offerId) => {
       // TODO: handle instant purchases
       if (
         // Before offers are submitted to the blockchain, they have no status.
@@ -673,7 +691,6 @@ export default class Marketplace {
       }
       return sold
     }, 0)
-    return listing.unitsTotal - unitsSold
   }
 
   async getTokenAddress() {

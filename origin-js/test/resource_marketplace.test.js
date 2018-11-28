@@ -828,16 +828,48 @@ describe('Marketplace Resource', function() {
         expect(offer1.status).to.equal('accepted')
       })
 
-      it('should not allow inventory to be decreased', async () => {
-        // TODO: update this test once we figure out what to do when a seller
-        // decreases inventory for a listing with already accepted offers
+      it('should allow inventory to be decreased', async () => {
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+
         const newListingData = Object.assign(
           {},
           multiUnitListingData,
-          { unitsTotal: multiUnitListingData.unitsTotal - 1 }
+          { unitsTotal: 1 }
+        )
+        await marketplace.updateListing('999-000-1', newListingData)
+
+        const listing = await marketplace.getListing('999-000-1')
+        const offers = await marketplace.getOffers('999-000-1')
+        const unitsAvailable = await marketplace.unitsAvailable(listing, offers)
+        expect(unitsAvailable).to.equal(0)
+      })
+
+      it('should throw an error if decreasing inventory invalidates accepted offers', async () => {
+        const newOfferData = Object.assign({}, offerData, {
+          unitsPurchased: 2,
+          totalPrice: { currency: 'ETH', amount: '0.066' }
+        })
+        await marketplace.makeOffer('999-000-1', newOfferData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+
+        // This decrease in units is invalid, because all units were purchased
+        // above.
+        const newListingData = Object.assign(
+          {},
+          multiUnitListingData,
+          { unitsTotal: 1 }
         )
         await expect(marketplace.updateListing('999-000-1', newListingData))
-          .to.be.rejectedWith('decreasing of units is unimplemented')
+          .to.be.rejectedWith('new unitsTotal insufficient to cover accepted offers')
       })
     })
   })
