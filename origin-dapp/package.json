@@ -35,7 +35,7 @@
     "jquery": "^3.3.1",
     "locale-code": "^2.0.1",
     "mini-css-extract-plugin": "^0.4.3",
-    "moment": "^2.22.1",
+    "moment": "^2.22.2",
     "orbit-db": "^0.19.8",
     "origin": "^0.8.6",
     "per-env": "^1.0.2",
