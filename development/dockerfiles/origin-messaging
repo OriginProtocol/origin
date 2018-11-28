@@ -8,4 +8,4 @@ COPY ./origin-messaging/package*.json /app/
 # Install dependencies
 RUN npm ci --loglevel notice
 
-CMD npm run dev
+CMD npm run start

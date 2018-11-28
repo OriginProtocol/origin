@@ -173,7 +173,7 @@ class Profile extends Component {
       this.props.intl.formatMessage(this.intlMessages.manageYourProfile)
     )
 
-    if (web3.givenProvider && this.props.web3Account) {
+    if ((web3.givenProvider && this.props.web3Account) || origin.contractService.walletLinker) {
       const { modal } = e.currentTarget.dataset
 
       /*
