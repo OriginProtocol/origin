@@ -246,7 +246,7 @@ class ListingsDetail extends Component {
       category,
       description,
       display,
-      isFractional,
+      //isFractional,
       loading,
       name,
       offers,
@@ -256,7 +256,7 @@ class ListingsDetail extends Component {
       status,
       step,
       schemaType,
-      featuredImageIdx
+      //featuredImageIdx
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -728,7 +728,7 @@ const BuyBoxButton = ({ userIsSeller, onClick }) => {
   )
 }
 
-const mapStateToProps = ({ app, profile, listings }) => {
+const mapStateToProps = ({ app, profile }) => {
   return {
     messagingEnabled: app.messagingEnabled,
     notificationsHardPermission: app.notificationsHardPermission,
