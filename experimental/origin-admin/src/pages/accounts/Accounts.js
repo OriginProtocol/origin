@@ -4,6 +4,8 @@ import gql from 'graphql-tag'
 
 import { Button, Spinner } from '@blueprintjs/core'
 
+import LoadingSpinner from 'components/LoadingSpinner'
+
 import NodeAccounts from './_NodeAccounts'
 import CreateWallet from './mutations/CreateWallet'
 
@@ -20,15 +22,11 @@ const SetNetworkMutation = gql`
   }
 `
 
-const Accounts = (props) => (
+const Accounts = props => (
   <Query query={query} notifyOnNetworkStatusChange={true}>
     {({ networkStatus, error, data, refetch, client }) => {
       if (networkStatus === 1) {
-        return (
-          <div style={{ maxWidth: 300, marginTop: 100 }}>
-            <Spinner />
-          </div>
-        )
+        return <LoadingSpinner />
       }
       if (error) {
         console.log(error)

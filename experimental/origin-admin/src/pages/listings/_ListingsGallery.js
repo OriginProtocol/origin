@@ -16,7 +16,7 @@ function status(listing) {
   }
 }
 
-const Listings = ({ listings, history, noMore }) => {
+const Listings = ({ listings, history, hasNextPage }) => {
   if (!listings) return null
   const ipfsGateway = getIpfsGateway()
   return (
@@ -57,7 +57,7 @@ const Listings = ({ listings, history, noMore }) => {
           </div>
         </Card>
       ))}
-      {noMore ? null : (
+      {!hasNextPage ? null : (
         <Card className="listing-card">
           <h5 className="bp3-heading bp3-skeleton">New Listing</h5>
           <div

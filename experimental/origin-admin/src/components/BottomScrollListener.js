@@ -31,7 +31,8 @@ class BottomScrollListener extends Component {
 
     if (
       scrollNode.scrollHeight - this.props.offset <=
-      scrollNode.scrollTop + window.innerHeight
+        scrollNode.scrollTop + window.innerHeight &&
+      this.props.hasMore
     ) {
       this.props.onBottom()
     }
@@ -41,7 +42,8 @@ class BottomScrollListener extends Component {
     window.requestAnimationFrame(() => {
       if (
         document.body.clientHeight < window.innerHeight &&
-        this.props.initial
+        this.props.ready &&
+        this.props.hasMore
       ) {
         this.props.onBottom()
       }
@@ -53,7 +55,7 @@ class BottomScrollListener extends Component {
 
 BottomScrollListener.defaultProps = {
   debounce: 200,
-  offset: 400,
+  offset: 50,
   children: null
 }
 
