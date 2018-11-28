@@ -6,7 +6,7 @@
     "@blueprintjs/core": "^3.7.0",
     "moment": "^2.22.2",
     "react": "^16.6.1",
-    "react-dom": "^16.5.2",
+    "react-dom": "^16.6.1",
     "react-google-login": "^3.2.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
