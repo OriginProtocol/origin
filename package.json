@@ -12,7 +12,7 @@
     "lerna": "^3.4.3"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap --ci",
+    "bootstrap": "lerna bootstrap --ci --progress",
     "build": "lerna run build --stream",
     "clean": "git clean -fdX .",
     "start": "lerna run start --stream --parallel --scope origin --scope origin-dapp",
