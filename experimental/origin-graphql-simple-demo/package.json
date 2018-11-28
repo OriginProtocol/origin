@@ -22,7 +22,7 @@
     "origin-graphql": "^0.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.2",
+    "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.5",
     "@babel/plugin-external-helpers": "^7.0.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
