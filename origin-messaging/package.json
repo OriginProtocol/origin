@@ -29,7 +29,7 @@
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.5",
     "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.1.5",
+    "@babel/preset-env": "^7.1.6",
     "dotenv": "^6.0.0",
     "ipfs": "^0.33.1",
     "ipfs-api": "^26.1.2",
