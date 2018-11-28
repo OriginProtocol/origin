@@ -128,6 +128,7 @@ class ListingCreate extends Component {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, false)
+
         this.ensureUserIsSeller(listing.seller)
         this.setState({
           formListing: {
@@ -146,7 +147,10 @@ class ListingCreate extends Component {
         console.error(error)
       }
     } else if (!web3.givenProvider || !this.props.messagingEnabled) {
-      this.props.history.push('/')
+      if (!origin.contractService.walletLinker)
+      {
+        this.props.history.push('/')
+      }
       this.props.storeWeb3Intent('create a listing')
     }
   }
@@ -183,7 +187,7 @@ class ListingCreate extends Component {
 
   detectNeedForBoostTutorial() {
     // show if 0 OGN and...
-    !this.props.wallet.ognBalance &&
+    !Number(this.props.wallet.ognBalance) &&
       // ...tutorial has not been expanded or skipped via "Review"
       // !JSON.parse(localStorage.getItem('boostTutorialViewed')) &&
       this.setState({
@@ -270,9 +274,22 @@ class ListingCreate extends Component {
     }
   }
 
-  onAvailabilityEntered(slots, step) {
+  onAvailabilityEntered(slots, direction) {
     if (!slots || !slots.length) {
       return
+    }
+
+    let nextStep
+    switch(direction) {
+      case 'forward':
+        this.state.isEditMode ?
+          nextStep = 'PREVIEW' :
+          nextStep = 'BOOST'
+        break
+
+      case 'back':
+        nextStep = 'DETAILS'
+        break
     }
 
     slots = prepareSlotsToSave(slots)
@@ -289,7 +306,7 @@ class ListingCreate extends Component {
     })
 
     this.setState({
-      step: this.STEP[step]
+      step: this.STEP[nextStep]
     })
   }
 
@@ -310,7 +327,9 @@ class ListingCreate extends Component {
   onDetailsEntered(formListing) {
     const [nextStep, listingType] = this.state.isFractionalListing ?
       [this.STEP.AVAILABILITY, 'fractional'] :
-      [this.STEP.BOOST, 'unit']
+      this.state.isEditMode ?
+        [this.STEP.PREVIEW, 'unit'] :
+        [this.STEP.BOOST, 'unit']
 
     formListing.formData.listingType = listingType
 
@@ -387,12 +406,14 @@ class ListingCreate extends Component {
   }
 
   async onSubmitListing(formListing) {
+    const { isEditMode } = this.state
+
     try {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
-      const methodName = this.state.isEditMode ? 'updateListing' : 'createListing'
+      const methodName = isEditMode ? 'updateListing' : 'createListing'
       let transactionReceipt
-      if (this.state.isEditMode) {
+      if (isEditMode) {
         transactionReceipt = await origin.marketplace[methodName](
           this.props.listingId,
           listing,
@@ -410,9 +431,11 @@ class ListingCreate extends Component {
         )
       }
 
+      const transactionTypeKey = isEditMode ? 'updateListing' : 'createListing'
+
       this.props.upsertTransaction({
         ...transactionReceipt,
-        transactionTypeKey: 'createListing'
+        transactionTypeKey
       })
       this.props.getOgnBalance()
       this.setState({ step: this.STEP.SUCCESS })
@@ -437,6 +460,7 @@ class ListingCreate extends Component {
     const { wallet, intl } = this.props
     const {
       formListing,
+      fractionalTimeIncrement,
       selectedBoostAmount,
       selectedSchemaType,
       schemaExamples,
@@ -452,7 +476,7 @@ class ListingCreate extends Component {
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
 
-    return web3.givenProvider ? (
+    return (web3.givenProvider || origin.contractService.walletLinker) ? (
       <div className="listing-form">
         <div className="step-container">
           <div className="row">
@@ -610,10 +634,10 @@ class ListingCreate extends Component {
                 <Calendar
                   slots={ formData && formData.slots }
                   userType="seller"
-                  viewType={ this.state.fractionalTimeIncrement }
+                  viewType={ fractionalTimeIncrement }
                   step={ 60 }
-                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'BOOST') }
-                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'DETAILS') }
+                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
+                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
                 />
               </div>
             }
@@ -847,37 +871,39 @@ class ListingCreate extends Component {
                       </p>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-3">
-                      <p className="label">
-                        <FormattedMessage
-                          id={'listing-create.boost-level'}
-                          defaultMessage={'Boost Level'}
-                        />
-                      </p>
+                  {!isEditMode &&
+                    <div className="row">
+                      <div className="col-md-3">
+                        <p className="label">
+                          <FormattedMessage
+                            id={'listing-create.boost-level'}
+                            defaultMessage={'Boost Level'}
+                          />
+                        </p>
+                      </div>
+                      <div className="col-md-9">
+                        <p>
+                          <img
+                            className="ogn-icon"
+                            src="images/ogn-icon.svg"
+                            role="presentation"
+                          />
+                          <span className="text-bold">{formData.boostValue}</span>&nbsp;
+                          <Link
+                            className="ogn-abbrev"
+                            to="/about-tokens"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            OGN
+                          </Link>
+                          <span className="help-block">
+                            &nbsp;| {formData.boostLevel.toUpperCase()}
+                          </span>
+                        </p>
+                      </div>
                     </div>
-                    <div className="col-md-9">
-                      <p>
-                        <img
-                          className="ogn-icon"
-                          src="images/ogn-icon.svg"
-                          role="presentation"
-                        />
-                        <span className="text-bold">{formData.boostValue}</span>&nbsp;
-                        <Link
-                          className="ogn-abbrev"
-                          to="/about-tokens"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          OGN
-                        </Link>
-                        <span className="help-block">
-                          &nbsp;| {formData.boostLevel.toUpperCase()}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
+                  }
                 </div>
                 {/* Revisit this later
                   <Link
@@ -892,7 +918,14 @@ class ListingCreate extends Component {
                 <div className="btn-container">
                   <button
                     className="btn btn-other float-left btn-listing-create"
-                    onClick={() => this.setState({ step: this.STEP.BOOST })}
+                    onClick={() => {
+                      const step = isEditMode ?
+                        isFractionalListing ?
+                          this.STEP.AVAILABILITY :
+                          this.STEP.DETAILS
+                        : this.STEP.BOOST
+                      this.setState({ step })
+                    }}
                     ga-category="create_listing"
                     ga-label="review_step_back"
                   >

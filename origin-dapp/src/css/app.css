@@ -1406,6 +1406,10 @@ textarea:-moz-ui-invalid {
   width: 196px;
 }
 
+.btn.margin-top {
+  margin-top: 18px;
+}
+
 .btn-primary:hover {
   background-color: var(--dark-clear-blue);
   color: white;
@@ -1522,6 +1526,10 @@ textarea:-moz-ui-invalid {
   position: absolute;
   right: 20px;
   top: 15px;
+}
+
+.modal.linker-popup {
+  z-index:1070;
 }
 
 .modal-content .disclaimer {
@@ -3845,6 +3853,12 @@ form .stars img {
   background-color: white;
   height: calc(100vh - 60px);
   padding: 0 10px 0;
+}
+
+@media (max-width: 800px) {
+  .conversations-list-col .conversation-list-item {
+    width: 200px;
+  }
 }
 
 .conversation-list-item {
