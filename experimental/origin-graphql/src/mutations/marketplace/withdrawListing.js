@@ -12,7 +12,7 @@ async function withdrawListing(_, data) {
     .withdrawListing(data.listingID, data.target, ipfsHash)
     .send({
       gas: 4612388,
-      from: data.from || web3.eth.defaultAccount
+      from: data.from
     })
   return txHelper({ tx, mutation: 'withdrawListing' })
 }

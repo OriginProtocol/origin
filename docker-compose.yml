@@ -36,7 +36,7 @@ services:
       - IPFS_API_URL=http://origin-js:5002
       - IPFS_GATEWAY_URL=http://origin-js:8080
     volumes:
-      - ./ipfs-proxy:/app
+      - ./ipfs-proxy/src:/app/src
 
   # NOTE/TODO: This container is only responsible for running ganache and IPFS,
   # this functionality should be moved to dedicated containers

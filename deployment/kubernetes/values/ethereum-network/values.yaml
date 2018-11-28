@@ -1,0 +1,5 @@
+host: testnet.originprotocol.com
+letsEncryptEmail: support@originprotocol.com
+
+gethAccountAddress: 0x1e3844b4752172b6e85f390e2df4ffc4d63425f9
+gethAccountPublicKey: 0336900809be5d923bf5ff34bc7e7c297472065de538e05a5dd422e4174656ff22

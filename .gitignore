@@ -27,9 +27,10 @@ node_modules/
 
 # Deployment #
 ##############
-/deployment/kubernetes/values/secrets-dev.yaml
-/deployment/kubernetes/values/secrets-staging.yaml
-/deployment/kubernetes/values/secrets-prod.yaml
+secrets.yaml
+secrets-dev.yaml
+secrets-staging.yaml
+secrets-prod.yaml
 
 # Development #
 ###############
@@ -104,6 +105,11 @@ node_modules/
 /origin-js/libpeerconnection.log
 /origin-js/testem.log
 /origin-js/typings
+
+# origin-linking #
+####################
+/origin-linking/*.rdb
+/origin-linking/*.p8
 
 # origin-messaging #
 ####################

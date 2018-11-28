@@ -1,4 +1,3 @@
-// https://cdn.jsdelivr.net/gh/originprotocol/origin@hidefeature_list/featurelist_1.txt
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
 import { getFeatured, getHidden } from './_featuredAndHidden'
@@ -49,9 +48,9 @@ async function allIds({ contract, sort, hidden }) {
     sort === 'featured' ? await getFeatured(contracts.net) : []
   const hiddenIds = hidden ? await getHidden(contracts.net) : []
 
-  const totalCount = Number(await contract.methods.totalListings().call())
+  const totalListings = Number(await contract.methods.totalListings().call())
 
-  let ids = Array.from({ length: Number(totalCount) }, (v, i) => i)
+  let ids = Array.from({ length: Number(totalListings) }, (v, i) => i)
     .filter(id => hiddenIds.indexOf(id) < 0)
     .reverse()
 
@@ -59,7 +58,7 @@ async function allIds({ contract, sort, hidden }) {
     ids = [...featuredIds, ...ids.filter(i => featuredIds.indexOf(i) < 0)]
   }
 
-  return { totalCount, ids }
+  return { totalCount: ids.length, ids }
 }
 
 async function resultsFromIds({ after, ids, first, totalCount, fields }) {

@@ -2,6 +2,7 @@ import { post } from 'origin-ipfs'
 import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import parseId from '../../utils/parseId'
 
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
@@ -57,7 +58,8 @@ async function makeOffer(_, data) {
     data.arbitrator
   ]
   if (data.withdraw) {
-    args.push(data.withdraw)
+    const { offerId } = parseId(data.withdraw)
+    args.push(offerId)
   }
 
   const tx = marketplace.methods.makeOffer(...args).send({

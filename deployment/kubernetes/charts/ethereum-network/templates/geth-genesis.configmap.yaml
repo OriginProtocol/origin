@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ethereum.fullname" . }}-genesis-config
+  labels:
+    app: {{ template "ethereum.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  networkid: "{{ .Values.gethGenesisNetworkId }}"
+  genesis.json: |-
+    {
+        "config": {
+            "chainId": {{ .Values.gethGenesisNetworkId }},
+            "homesteadBlock": 0,
+            "eip150Block": 0,
+            "eip155Block": 0,
+            "eip158Block": 0
+        },
+        "difficulty":  {{ .Values.gethGenesisDifficulty | quote }},
+        "gasLimit": {{ .Values.gethGenesisGasLimit | quote }},
+        "alloc": {
+            {{- if .Values.gethAccountAddress }}
+            {{ .Values.gethAccountAddress | quote }}: {
+                "balance": "1000000000000000000000000"
+            }
+            {{- end }}
+        }
+    }
