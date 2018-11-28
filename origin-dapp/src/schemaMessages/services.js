@@ -25,57 +25,17 @@ export default defineMessages({
     id: 'schema.services.selectPhotos',
     defaultMessage: 'Select photos'
   },
-  'schema.services.businessServices': {
-    id: 'schema.services.businessServices',
-    defaultMessage: 'Business Services'
-  },
   'schema.services.counseling': {
     id: 'schema.services.counseling',
     defaultMessage: 'Counseling'
   },
-  'schema.services.deliveryService': {
-    id: 'schema.services.deliveryService',
-    defaultMessage: 'Delivery Service'
+  'schema.services.design': {
+    id: 'schema.services.design',
+    defaultMessage: 'Design'
   },
   'schema.services.dogWalking': {
     id: 'schema.services.dogWalking',
     defaultMessage: 'Dog Walking'
-  },
-  'schema.services.educationServices': {
-    id: 'schema.services.educationServices',
-    defaultMessage: 'Education Services'
-  },
-  'schema.services.electrical': {
-    id: 'schema.services.electrical',
-    defaultMessage: 'Electrical'
-  },
-  'schema.services.generalContractors': {
-    id: 'schema.services.generalContractors',
-    defaultMessage: 'General Contractors'
-  },
-  'schema.services.graphicDesign': {
-    id: 'schema.services.graphicDesign',
-    defaultMessage: 'Graphic Design'
-  },
-  'schema.services.handyman': {
-    id: 'schema.services.handyman',
-    defaultMessage: 'Handyman'
-  },
-  'schema.services.homeCleaning': {
-    id: 'schema.services.homeCleaning',
-    defaultMessage: 'Home Cleaning'
-  },
-  'schema.services.homeServices': {
-    id: 'schema.services.homeServices',
-    defaultMessage: 'Home Services'
-  },
-  'schema.services.legal': {
-    id: 'schema.services.legal',
-    defaultMessage: 'Legal'
-  },
-  'schema.services.movingHelp': {
-    id: 'schema.services.movingHelp',
-    defaultMessage: 'Moving Help'
   },
   'schema.services.musicLessons': {
     id: 'schema.services.musicLessons',
@@ -85,41 +45,21 @@ export default defineMessages({
     id: 'schema.services.other',
     defaultMessage: 'Other'
   },
-  'schema.services.painting': {
-    id: 'schema.services.painting',
-    defaultMessage: 'Painting'
-  },
   'schema.services.photography': {
     id: 'schema.services.photography',
     defaultMessage: 'Photography'
   },
-  'schema.services.plumbing': {
-    id: 'schema.services.plumbing',
-    defaultMessage: 'Plumbing'
+  'schema.services.salon': {
+    id: 'schema.services.salon',
+    defaultMessage: 'Salon'
   },
-  'schema.services.repairTechnicalSupport': {
-    id: 'schema.services.repairTechnicalSupport',
-    defaultMessage: 'Repair & Technical Support'
+  'schema.services.spa': {
+    id: 'schema.services.spa',
+    defaultMessage: 'Spa'
   },
-  'schema.services.softwareDevelopement': {
-    id: 'schema.services.softwareDevelopement',
-    defaultMessage: 'Software Developement'
-  },
-  'schema.services.salonServices': {
-    id: 'schema.services.salonServices',
-    defaultMessage: 'Salon Services'
-  },
-  'schema.services.spaServices': {
-    id: 'schema.services.spaServices',
-    defaultMessage: 'Spa Services'
-  },
-  'schema.services.webDesign': {
-    id: 'schema.services.webDesign',
-    defaultMessage: 'Web Design'
-  },
-  'schema.services.writingTranslationTranscription': {
-    id: 'schema.services.writingTranslationTranscription',
-    defaultMessage: 'Writing, Translation & Transcription'
+  'schema.services.transportation': {
+    id: 'schema.services.transportation',
+    defaultMessage: 'Transportation'
   },
   'schema.services.messageBuyer': {
     id: 'schema.services.messageBuyer',

@@ -8,6 +8,22 @@ const listingSchemaMetadata = {
   },
   listingTypes: [
     {
+      type: 'announcements',
+      translationName: {
+        id: 'schema.announcements',
+        defaultMessage: 'Announcements'
+      },
+      img: 'announcements.jpg'
+    },
+    {
+      type: 'for-rent',
+      translationName: {
+        id: 'schema.forRent',
+        defaultMessage: 'For Rent'
+      },
+      img: 'for-rent.jpg'
+    },
+    {
       type: 'for-sale',
       translationName: {
         id: 'schema.forSale',
@@ -16,44 +32,12 @@ const listingSchemaMetadata = {
       img: 'for-sale.jpg'
     },
     {
-      type: 'housing',
-      translationName: {
-        id: 'schema.housing',
-        defaultMessage: 'Housing'
-      },
-      img: 'housing.jpg'
-    },
-    {
-      type: 'transportation',
-      translationName: {
-        id: 'schema.transportation',
-        defaultMessage: 'Transportation'
-      },
-      img: 'transportation.jpg'
-    },
-    {
-      type: 'tickets',
-      translationName: {
-        id: 'schema.tickets',
-        defaultMessage: 'Tickets'
-      },
-      img: 'tickets.jpg'
-    },
-    {
       type: 'services',
       translationName: {
         id: 'schema.services',
         defaultMessage: 'Services'
       },
       img: 'services.jpg'
-    },
-    {
-      type: 'announcements',
-      translationName: {
-        id: 'schema.announcements',
-        defaultMessage: 'Announcements'
-      },
-      img: 'announcements.jpg'
     }
   ]
 }

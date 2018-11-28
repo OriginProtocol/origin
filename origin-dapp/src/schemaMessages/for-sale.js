@@ -53,10 +53,6 @@ export default defineMessages({
     id: 'schema.forSale.babyKidStuff',
     defaultMessage: 'Baby & Kid Stuff'
   },
-  'schema.forSale.barter': {
-    id: 'schema.forSale.barter',
-    defaultMessage: 'Barter'
-  },
   'schema.forSale.bicycleParts': {
     id: 'schema.forSale.bicycleParts',
     defaultMessage: 'Bicycle Parts'
@@ -77,9 +73,9 @@ export default defineMessages({
     id: 'schema.forSale.booksMagazines',
     defaultMessage: 'Books & Magazines'
   },
-  'schema.forSale.business': {
-    id: 'schema.forSale.business',
-    defaultMessage: 'Business'
+  'schema.forSale.businesses': {
+    id: 'schema.forSale.businesses',
+    defaultMessage: 'Businesses'
   },
   'schema.forSale.carsTrucks': {
     id: 'schema.forSale.carsTrucks',
@@ -117,21 +113,9 @@ export default defineMessages({
     id: 'schema.forSale.farmGarden',
     defaultMessage: 'Farm & Garden'
   },
-  'schema.forSale.freeStuff': {
-    id: 'schema.forSale.freeStuff',
-    defaultMessage: 'Free Stuff'
-  },
   'schema.forSale.furniture': {
     id: 'schema.forSale.furniture',
     defaultMessage: 'Furniture'
-  },
-  'schema.forSale.garageMovingSales': {
-    id: 'schema.forSale.garageMovingSales',
-    defaultMessage: 'Garage & Moving Sales'
-  },
-  'schema.forSale.generalForSale': {
-    id: 'schema.forSale.generalForSale',
-    defaultMessage: 'General For Sale'
   },
   'schema.forSale.healthBeauty': {
     id: 'schema.forSale.healthBeauty',
@@ -172,6 +156,10 @@ export default defineMessages({
   'schema.forSale.photoVideo': {
     id: 'schema.forSale.photoVideo',
     defaultMessage: 'Photo & Video'
+  },
+  'schema.forSale.realEstate': {
+    id: 'schema.forSale.realEstate',
+    defaultMessage: 'Real Estate'
   },
   'schema.forSale.recreationalVehicles': {
     id: 'schema.forSale.recreationalVehicles',

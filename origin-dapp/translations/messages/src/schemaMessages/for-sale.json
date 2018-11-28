@@ -52,10 +52,6 @@
     "defaultMessage": "Baby & Kid Stuff"
   },
   {
-    "id": "schema.forSale.barter",
-    "defaultMessage": "Barter"
-  },
-  {
     "id": "schema.forSale.bicycleParts",
     "defaultMessage": "Bicycle Parts"
   },
@@ -76,8 +72,8 @@
     "defaultMessage": "Books & Magazines"
   },
   {
-    "id": "schema.forSale.business",
-    "defaultMessage": "Business"
+    "id": "schema.forSale.businesses",
+    "defaultMessage": "Businesses"
   },
   {
     "id": "schema.forSale.carsTrucks",
@@ -116,20 +112,8 @@
     "defaultMessage": "Farm & Garden"
   },
   {
-    "id": "schema.forSale.freeStuff",
-    "defaultMessage": "Free Stuff"
-  },
-  {
     "id": "schema.forSale.furniture",
     "defaultMessage": "Furniture"
-  },
-  {
-    "id": "schema.forSale.garageMovingSales",
-    "defaultMessage": "Garage & Moving Sales"
-  },
-  {
-    "id": "schema.forSale.generalForSale",
-    "defaultMessage": "General For Sale"
   },
   {
     "id": "schema.forSale.healthBeauty",
@@ -170,6 +154,10 @@
   {
     "id": "schema.forSale.photoVideo",
     "defaultMessage": "Photo & Video"
+  },
+  {
+    "id": "schema.forSale.realEstate",
+    "defaultMessage": "Real Estate"
   },
   {
     "id": "schema.forSale.recreationalVehicles",

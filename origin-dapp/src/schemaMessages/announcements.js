@@ -33,6 +33,10 @@ export default defineMessages({
     id: 'schema.announcements.artists',
     defaultMessage: 'Artists'
   },
+  'schema.announcements.barter': {
+    id: 'schema.announcements.barter',
+    defaultMessage: 'Barter'
+  },
   'schema.announcements.childcare': {
     id: 'schema.announcements.childcare',
     defaultMessage: 'Childcare'
@@ -40,6 +44,14 @@ export default defineMessages({
   'schema.announcements.classes': {
     id: 'schema.announcements.classes',
     defaultMessage: 'Classes'
+  },
+  'schema.announcements.freeStuff': {
+    id: 'schema.announcements.freeStuff',
+    defaultMessage: 'Free Stuff'
+  },
+  'schema.announcements.garageMovingSales': {
+    id: 'schema.announcements.garageMovingSales',
+    defaultMessage: 'Garage & Moving Sales'
   },
   'schema.announcements.general': {
     id: 'schema.announcements.general',
@@ -56,6 +68,10 @@ export default defineMessages({
   'schema.announcements.lostFound': {
     id: 'schema.announcements.lostFound',
     defaultMessage: 'Lost & Found'
+  },
+  'schema.announcements.marketing': {
+    id: 'schema.announcements.marketing',
+    defaultMessage: 'Marketing'
   },
   'schema.announcements.musicians': {
     id: 'schema.announcements.musicians',

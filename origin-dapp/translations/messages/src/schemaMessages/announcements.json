@@ -32,12 +32,24 @@
     "defaultMessage": "Artists"
   },
   {
+    "id": "schema.announcements.barter",
+    "defaultMessage": "Barter"
+  },
+  {
     "id": "schema.announcements.childcare",
     "defaultMessage": "Childcare"
   },
   {
     "id": "schema.announcements.classes",
     "defaultMessage": "Classes"
+  },
+  {
+    "id": "schema.announcements.freeStuff",
+    "defaultMessage": "Free Stuff"
+  },
+  {
+    "id": "schema.announcements.garageMovingSales",
+    "defaultMessage": "Garage & Moving Sales"
   },
   {
     "id": "schema.announcements.general",
@@ -54,6 +66,10 @@
   {
     "id": "schema.announcements.lostFound",
     "defaultMessage": "Lost & Found"
+  },
+  {
+    "id": "schema.announcements.marketing",
+    "defaultMessage": "Marketing"
   },
   {
     "id": "schema.announcements.musicians",

@@ -24,56 +24,16 @@
     "defaultMessage": "Select photos"
   },
   {
-    "id": "schema.services.businessServices",
-    "defaultMessage": "Business Services"
-  },
-  {
     "id": "schema.services.counseling",
     "defaultMessage": "Counseling"
   },
   {
-    "id": "schema.services.deliveryService",
-    "defaultMessage": "Delivery Service"
+    "id": "schema.services.design",
+    "defaultMessage": "Design"
   },
   {
     "id": "schema.services.dogWalking",
     "defaultMessage": "Dog Walking"
-  },
-  {
-    "id": "schema.services.educationServices",
-    "defaultMessage": "Education Services"
-  },
-  {
-    "id": "schema.services.electrical",
-    "defaultMessage": "Electrical"
-  },
-  {
-    "id": "schema.services.generalContractors",
-    "defaultMessage": "General Contractors"
-  },
-  {
-    "id": "schema.services.graphicDesign",
-    "defaultMessage": "Graphic Design"
-  },
-  {
-    "id": "schema.services.handyman",
-    "defaultMessage": "Handyman"
-  },
-  {
-    "id": "schema.services.homeCleaning",
-    "defaultMessage": "Home Cleaning"
-  },
-  {
-    "id": "schema.services.homeServices",
-    "defaultMessage": "Home Services"
-  },
-  {
-    "id": "schema.services.legal",
-    "defaultMessage": "Legal"
-  },
-  {
-    "id": "schema.services.movingHelp",
-    "defaultMessage": "Moving Help"
   },
   {
     "id": "schema.services.musicLessons",
@@ -84,40 +44,20 @@
     "defaultMessage": "Other"
   },
   {
-    "id": "schema.services.painting",
-    "defaultMessage": "Painting"
-  },
-  {
     "id": "schema.services.photography",
     "defaultMessage": "Photography"
   },
   {
-    "id": "schema.services.plumbing",
-    "defaultMessage": "Plumbing"
+    "id": "schema.services.salon",
+    "defaultMessage": "Salon"
   },
   {
-    "id": "schema.services.repairTechnicalSupport",
-    "defaultMessage": "Repair & Technical Support"
+    "id": "schema.services.spa",
+    "defaultMessage": "Spa"
   },
   {
-    "id": "schema.services.softwareDevelopement",
-    "defaultMessage": "Software Developement"
-  },
-  {
-    "id": "schema.services.salonServices",
-    "defaultMessage": "Salon Services"
-  },
-  {
-    "id": "schema.services.spaServices",
-    "defaultMessage": "Spa Services"
-  },
-  {
-    "id": "schema.services.webDesign",
-    "defaultMessage": "Web Design"
-  },
-  {
-    "id": "schema.services.writingTranslationTranscription",
-    "defaultMessage": "Writing, Translation & Transcription"
+    "id": "schema.services.transportation",
+    "defaultMessage": "Transportation"
   },
   {
     "id": "schema.services.messageBuyer",
