@@ -147,11 +147,11 @@ class ListingCreate extends Component {
         console.error(error)
       }
     } else if (!web3.givenProvider || !this.props.messagingEnabled) {
-      if (!origin.contractService.walletLinker)
-      {
-        this.props.history.push('/')
-      }
-      this.props.storeWeb3Intent('create a listing')
+      // if (!origin.contractService.walletLinker)
+      // {
+      //   this.props.history.push('/')
+      // }
+      // this.props.storeWeb3Intent('create a listing')
     }
   }
 
@@ -245,7 +245,7 @@ class ListingCreate extends Component {
           selectedSchemaType,
           schemaFetched: true,
           step: this.STEP.DETAILS,
-          fractionalTimeIncrement: !isFractionalListing ? null : 
+          fractionalTimeIncrement: !isFractionalListing ? null :
             selectedSchemaType === 'housing' ? 'daily' : 'hourly',
           showNoSchemaSelectedError: false,
           translatedSchema,
@@ -350,6 +350,7 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
+
     this.setState({
       formListing: {
         ...this.state.formListing,
@@ -358,6 +359,9 @@ class ListingCreate extends Component {
           ...formData
         }
       }
+    }, () => {
+      console.log("WHAT IS FORM DATA HERE", formData)
+
     })
   }
 
@@ -581,9 +585,10 @@ class ListingCreate extends Component {
                   schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
-                  onError={() =>
+                  onError={(err) => {
+                    console.log("ERROR", formListing.formData.pictures)
                     this.setState({ showDetailsFormErrorMsg: true })
-                  }
+                  }}
                   onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
                 >

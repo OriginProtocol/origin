@@ -173,7 +173,7 @@ class Profile extends Component {
       this.props.intl.formatMessage(this.intlMessages.manageYourProfile)
     )
 
-    if ((web3.givenProvider && this.props.web3Account) || origin.contractService.walletLinker) {
+    // if (web3.givenProvider && this.props.web3Account) {
       const { modal } = e.currentTarget.dataset
 
       /*
@@ -194,7 +194,7 @@ class Profile extends Component {
       }
 
       this.setState({ modalsOpen })
-    }
+    // }
   }
 
   // warning message will be ignored by the native dialog in Chrome and Firefox
