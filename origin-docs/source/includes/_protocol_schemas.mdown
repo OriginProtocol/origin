@@ -14,7 +14,6 @@ This describes a listing for purchase on the Origin marketplace.
     language: "en-us",
     title: "1997 Lotus Esprit",
     description: "Red. 100K miles. Always garaged.",
-    expiry: "2018-09-20T19:59:36.875Z",
     media: [
         {url: "ipfs://Ac92fa25B89D37077C7e52BDae22094f7b864e91"},
         {url: "ipfs://C9a2fa25B89D37045C7e52BDae22094f7b864b82"},
@@ -22,6 +21,7 @@ This describes a listing for purchase on the Origin marketplace.
     price: {amount: "48.7", currency: "ETH"},
     unitsTotal: 1,
     commission: {amount: "500", currency: "OGN"},
+    commissionPerUnit: {amount: "500", currency: "OGN"}
 }
 ```
 
@@ -37,15 +37,15 @@ This describes a listing for purchase on the Origin marketplace.
 |**title** | The short title of the listing |
 |**description** | A full textual description of the listing. Linebreaks are currently ignored, though this will change. |
 |**price** | For currencies, we support `ETH`, with future plans to support any ERC20 token |
-|**unitsTotal** | The number of units available for sale. Currently limited to `1` |
+|**unitsTotal** | The number of units available for sale. |
 
 ### Optional Fields
 
 | | |
 |----|-----|
-|expiry | A date that this listing should no longer show in search results. This is suggestion and search engines may ignore it.|
 |media | A list of media elements to be shown with the listing. We currently only support **images** on the **ipfs://** protocol.|
-|commission | This is the amount the seller is willing to pay the DApp that sells the listing user after the sale is complete. The currency must be `OGN`. This money comes out of the deposit amount the seller puts into the listing. Note that the deposit amount may very well be too low to actualy pay the commission - this must be checked for before trusting the commission.|
+|commission | This is the total amount, spread across all `unitsTotal` units, the seller is willing to pay the DApp that sells the listing user after the sale is complete. The currency must be `OGN`. This money comes out of the deposit amount the seller puts into the listing. Note that the deposit amount may very well be too low to actually pay the commission - this must be checked for before trusting the commission. This total commission amount should be enough to pay `commissionPerUnit` for each unit available. |
+|commissionPerUnit | This is the amount the seller is willing to pay for each unit sold by the DApp that sells the listing user after the sale is complete. The currency must be `OGN`. This money comes out of the deposit amount the seller puts into the listing. Note that the deposit amount may very well be too low to actually pay the commission - this must be checked for before trusting the commission. |
 
 
 ## Offer Schema
@@ -70,7 +70,7 @@ An Offer is sent by a buyer to make a purchase from a listing.
 |**listingType** | Must be set to `unit` |
 |**unitsPurchased** | The number of units to purchase. Currently must be `1`. |
 |**totalPrice** | The price the buyer is willing to pay. For currencies, we support `ETH`, with future plans to support any ERC20 token. |
-|**commission**| **UNSAFE FIELD - this data duplicates, and may not match, the actual blockchain contract amount.** The amount the buyer's DApp will receive for the sale. Must be equal to, or less than, the listing's commission amount. The currency must be `OGN`. The amount may be zero if there is no listing commission set.|
+|**commission**| **UNSAFE FIELD - this data duplicates, and may not match, the actual blockchain contract amount.** The amount the buyer's DApp will receive for the sale. Must be equal to, or less than, the listing's per-unit commission amount. The currency must be `OGN`. The amount may be zero if there is no listing commission set.|
 
 
 ## Dispute Schema
@@ -109,7 +109,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 ## Offer-Accept Schema
 
-In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion. 
+In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion.
 
 ```javascript
 {
