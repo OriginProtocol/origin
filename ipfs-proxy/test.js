@@ -24,7 +24,7 @@ describe('upload', () => {
   let ipfsd
 
   before((done) => {
-    server = require('./src/index')
+    server = require('./src/app')
     ipfsFactory = ipfsdCtl.create({
       type: 'js',
     })
@@ -152,7 +152,7 @@ describe('download', () => {
   let ipfsd
 
   before((done) => {
-    server = require('./src/index')
+    server = require('./src/app')
 
     ipfsFactory = ipfsdCtl.create({
       type: 'js',
