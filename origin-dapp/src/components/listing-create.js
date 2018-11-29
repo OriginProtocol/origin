@@ -147,8 +147,7 @@ class ListingCreate extends Component {
         console.error(error)
       }
     } else if (!web3.givenProvider || !this.props.messagingEnabled) {
-      if (!origin.contractService.walletLinker)
-      {
+      if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
       }
       this.props.storeWeb3Intent('create a listing')

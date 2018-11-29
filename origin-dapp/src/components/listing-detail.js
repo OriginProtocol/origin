@@ -125,9 +125,14 @@ class ListingsDetail extends Component {
         })
       }
     }
+
     // defer to parent modal if user activation is insufficient
-    if ( !this.props.messagingEnabled ) {
-      return
+    if (
+      web3.givenProvider &&
+      !origin.contractService.walletLinker &&
+      !this.props.messagingEnabled
+    ) {
+       return
     }
 
     this.setState({ step: this.STEP.METAMASK })
