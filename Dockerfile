@@ -7,13 +7,10 @@ COPY ./development/scripts/* /usr/local/bin/
 
 COPY ./scripts/ ./
 
-RUN npm i -g lerna
-
 # Copy all package files for dependency installs, this is done here to allow
 # Docker to cache the npm install steps if none of the dependencies have changed
-COPY ./lerna.json ./
 COPY ./package*.json ./
-
+COPY ./lerna.json ./
 COPY ./ipfs-proxy/package*.json ./ipfs-proxy/
 COPY ./origin-contracts/package*.json ./origin-contracts/
 COPY ./origin-dapp/package*.json ./origin-dapp/
@@ -22,8 +19,8 @@ COPY ./origin-faucet/package*.json ./origin-faucet/
 COPY ./origin-js/package*.json ./origin-js/
 COPY ./origin-messaging/package*.json ./origin-messaging/
 
-# Install all dependencies
-RUN lerna bootstrap --hoist --ignore-scripts -- --loglevel notice --unsafe-perm
+RUN npm install --ignore-scripts
+RUN npm run bootstrap -- --ignore-scripts
 
 # Copy all the source files for the packages
 COPY ./ipfs-proxy ./ipfs-proxy
@@ -36,6 +33,9 @@ COPY ./origin-messaging ./origin-messaging
 
 # Compile contracts
 RUN npm run build --prefix origin-contracts
+
+RUN ln -s node_modules/scrypt origin-js/node_modules/scrypt
+RUN ln -s node_modules/got origin-js/node_modules/got
 
 # Build origin-js for event-listener
 RUN npm run build --prefix origin-js

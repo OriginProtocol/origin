@@ -13,10 +13,13 @@
     "origin-token-transfer/*",
     "experimental/*"
   ],
-  "bootstrap": {
-    "nohoist": [
-      "openzeppelin-solidity"
-    ]
+  "command": {
+    "bootstrap": {
+      "hoist": ["**"],
+      "nohoist": [
+	"openzeppelin-solidity"
+      ]
+    }
   },
   "version": "independent"
 }
