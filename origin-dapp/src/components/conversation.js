@@ -51,6 +51,10 @@ class Conversation extends Component {
     // try to detect the user before rendering
     this.identifyCounterparty()
 
+    if (this.props.mobileDevice) {
+      this.loadListing()
+    }
+
     // why does the page jump ?????
     // regardless, need to scroll past the banner for now anyway
     setTimeout(() => {
@@ -224,7 +228,7 @@ class Conversation extends Component {
   }
 
   render() {
-    const { id, intl, messages, web3Account, withListingSummary } = this.props
+    const { id, intl, messages, web3Account, withListingSummary, mobileDevice } = this.props
     const {
       counterparty,
       files,
@@ -248,6 +252,8 @@ class Conversation extends Component {
       canDeliverMessage &&
       id
 
+    const classNames = mobileDevice ? 'justify-content-start' : 'justify-content-center'
+
     return (
       <Fragment>
         {withListingSummary &&
@@ -258,7 +264,7 @@ class Conversation extends Component {
                 <div
                   className={`${
                     photo ? '' : 'placeholder '
-                  }image-container d-flex justify-content-center`}
+                  }image-container d-flex ${classNames}`}
                 >
                   <img
                     src={photo || 'images/default-image.svg'}
@@ -267,7 +273,8 @@ class Conversation extends Component {
                 </div>
               </div>
               <div className="content-container d-flex flex-column">
-                <h1 className="text-truncate">{name}</h1>
+                <h1 className="seller">{listing.seller}</h1>
+                <h1 className="listing-title text-truncate">{name}</h1>
                 {purchase.id && (
                   <div className="state">
                     <OfferStatusEvent offer={purchase} />

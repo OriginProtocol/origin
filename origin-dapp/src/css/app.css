@@ -317,6 +317,11 @@ textarea:-moz-ui-invalid {
   margin: 20px 0 0;
 }
 
+.mobile-messaging .progress-container {
+  margin: 7px 0 0;
+  width: 62%;
+}
+
 .progress {
   background-color: var(--light);
   border-radius: 3px;
@@ -3833,6 +3838,70 @@ form .stars img {
 
 /* Messages */
 
+.mobile-messaging .back {
+  background-color: var(--dusk);
+  height: 60px;
+}
+
+.mobile-messaging .back i{
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: solid var(--white);
+  border-width: 0 4px 4px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.mobile-messaging .back i.icon-arrow-left {
+  margin-left: 30px;
+  margin-top: 19px;
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.mobile-messaging .back .counterparty {
+  display: inline-block;
+  position: absolute;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--white);
+  margin-bottom: 5px;
+  width: 60%;
+  text-align: center;
+}
+
+.mobile-conversations .avatar-container {
+  height: 60px;
+  width: 60px;
+}
+
+.mobile-conversations {
+  padding: 10px;
+}
+
+.mobile-conversations .text-truncate,
+.mobile-messaging .text-truncate {
+  width: 60%;
+}
+
+.mobile-conversations .text-truncate span {
+  font-weight: bold;
+}
+
+.mobile-conversation-list-item {
+  padding-bottom: 10px;
+}
+
+.mobile-conversation-list-item .listing-title {
+  font-size: 0.75rem;
+  font-weight: normal;
+}
+
+.mobile-conversation-list-item .no-listing {
+  margin-top: 20px;
+}
+
 .conversations-list-col {
   background-color: var(--pale-grey);
   height: 60px;
@@ -3846,6 +3915,10 @@ form .stars img {
 .conversation-col .content-container {
   flex-grow: 1;
   overflow: hidden;
+}
+
+.mobile-messaging .conversation-col .content-container {
+  flex-grow: 0;
 }
 
 .conversation-col,
@@ -3901,11 +3974,24 @@ form .stars img {
   font-weight: bold;
 }
 
-.conversation-list-item .count div {
-  border-radius: 8px;
-  font-size: 12px;
+.mobile-conversation-list-item .unread.count {
+  font-weight: bold;
+  color: var(--white);
+  width: 30px;
   height: 18px;
-  padding: 0 6px;
+  border-radius: 9.5px;
+  background-color: var(--clear-blue);
+  margin-top: 5px;
+  margin-left: 20px;
+}
+
+.mobile-conversation-list-item .unread.count div {
+  padding-right: 10px;
+  font-size: 12px;
+}
+
+.mobile-conversation-list-item .meta-container {
+  width: 21%;
 }
 
 .messages-wrapper .container {
@@ -3929,15 +4015,47 @@ form .stars img {
   padding: 20px 0;
 }
 
+.mobile-messaging.messages-wrapper .listing-summary {
+  border-bottom: 1px solid #c2cbd3;
+  min-height: unset;
+  padding-top: 12px;
+  padding-bottom: unset;
+}
+
 .messages-wrapper .listing-summary h1 {
   color: var(--dark);
   font-size: 1.5rem;
   margin-bottom: 0;
 }
 
+.mobile-messaging.messages-wrapper .listing-summary h1.seller {
+  width: 66px;
+  height: 10px;
+  font-family: Lato;
+  font-size: 10px;
+  font-weight: normal;
+  line-height: normal;
+  color: #455d75;
+}
+
+.mobile-messaging.messages-wrapper .listing-summary h1.listing-title {
+  width: 254px;
+  height: 27px;
+  font-family: Poppins;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 2.13;
+  color: var(--dark);
+  text-transform: capitalize;
+}
+
 .messages-wrapper .state {
   color: var(--dusk);
   font-size: 0.875rem;
+}
+
+.mobile-messaging.messages-wrapper .state {
+  font-size: 0.75rem;
 }
 
 .messages-wrapper .aspect-ratio {
@@ -3948,8 +4066,17 @@ form .stars img {
   overflow: hidden;
 }
 
+.mobile-messaging.messages-wrapper .aspect-ratio {
+  margin-right: 0;
+  flex-basis: 104px;
+}
+
 .messages-wrapper .aspect-ratio img {
   height: 114px;
+}
+
+.mobile-messaging.messages-wrapper .aspect-ratio img {
+  height: 66.5px;
 }
 
 .messages-wrapper .progress-container {
@@ -3959,6 +4086,19 @@ form .stars img {
 .messages-wrapper .message-content {
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+.mobile-messaging.messages-wrapper .message-content,
+.mobile-messaging .compact-message {
+  font-family: Lato;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: normal;
+  color: #000;
+}
+
+.mobile-messaging .compact-message {
+  width: 75%;
 }
 
 .compact-message .image-container,
@@ -3992,6 +4132,15 @@ form .stars img {
   margin: -20px 0 20px 75px;
 }
 
+.mobile-messaging .conversation .message {
+  margin-bottom: unset;
+}
+
+.mobile-messaging .conversation .compact-message {
+  margin: unset;
+  margin-left: 65px;
+}
+
 .conversation .message:first-of-type {
   margin-top: 20px;
 }
@@ -4004,6 +4153,15 @@ form .stars img {
 .conversation .avatar-container {
   height: 60px;
   width: 60px;
+}
+
+.mobile-messaging .conversation .avatar-container {
+  height: 50px;
+  width: 50px;
+}
+
+.mobile-messaging .conversation .content-container {
+  width: 100%;
 }
 
 .conversation .content-container {
@@ -4024,20 +4182,50 @@ form .stars img {
 .conversation .sender {
   font-weight: 300;
   font-size: 0.75rem;
-  padding-top: 8px;
+}
+
+.mobile-messaging .conversation .sender {
+  padding-bottom: 5px;
+}
+
+.mobile-conversations .sender {
+  font-size: 16px;
+  text-transform: capitalize;
+  line-height: 14px;
+  height: 16px;
+}
+
+.mobile-conversations .message.text-truncate {
+  font-style: italic;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.mobile-conversations .timestamp {
+  font-size: 0.75rem;
+  font-weight: normal;
+  line-height: normal;
+  text-align: center;
+  color: var(--bluey-grey);
 }
 
 .conversation .timestamp {
   color: var(--bluey-grey);
   flex-shrink: 0;
   font-size: 0.75rem;
-  padding-top: 8px;
+  padding: 12px;
+}
+
+.mobile-messaging .conversation .timestamp {
+  font-weight: bold;
 }
 
 .conversation .name {
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: bold;
   margin-right: 0.5rem;
+  line-height: 10px;
+  text-transform: capitalize;
 }
 
 .conversation .avatar-container {
@@ -5190,6 +5378,12 @@ a:not([href]):not([tabindex]).span-link {
   .modal.getting-started {
     left: -17px;
     right: -14px;
+  }
+
+  @media (min-width: 550px) {
+    .conversation-col {
+      width: 100%;
+    }
   }
 }
 
