@@ -1,50 +1,43 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["name","category","description","price"],
+  "required": ["name","category","description"],
   "properties": {
     "listingType": {
-      "const": "unit"
+      "const": "fractional"
+    },
+    "slotIncrementMinutes": {
+      "type": "number",
+      "default": 1440
     },
     "name": {
       "type": "string",
-      "title": "schema.forSale.title",
+      "title": "schema.forRent.title",
       "minLength": 3,
       "maxLength": 100
     },
     "examples": {
       "type": "string",
-      "title": "schema.forSale.examples",
+      "title": "schema.forRent.examples",
       "enum": [
-        "schema.forSale.bicycles",
-        "schema.forSale.carsTrucks",
-        "schema.forSale.electronics",
-        "schema.forSale.tickets"
+        "schema.forRent.bicycles",
+        "schema.forRent.carsTrucks",
+        "schema.forRent.electronics",
+        "schema.forRent.housing"
       ]
     },
     "category": {
       "type": "string",
-      "title": "schema.forSale.category",
+      "title": "schema.forRent.category",
       "enum": [
-        "schema.forSale.antiques",
         "schema.forSale.appliances",
-        "schema.forSale.artsCrafts",
         "schema.forSale.atvsUtvsSnowmobiles",
-        "schema.forSale.autoParts",
-        "schema.forSale.autoWheelsTires",
         "schema.forSale.babyKidStuff",
-        "schema.forSale.bicycleParts",
         "schema.forSale.bicycles",
-        "schema.forSale.boatPartsAccessories",
         "schema.forSale.boats",
-        "schema.forSale.booksMagazines",
-        "schema.forSale.businesses",
         "schema.forSale.carsTrucks",
-        "schema.forSale.cdsDvdsVhs",
         "schema.forSale.cellPhones",
         "schema.forSale.clothingAccessories",
-        "schema.forSale.collectibles",
-        "schema.forSale.computerParts",
         "schema.forSale.computers",
         "schema.forSale.electronics",
         "schema.forSale.farmGarden",
@@ -52,37 +45,35 @@
         "schema.forSale.healthBeauty",
         "schema.forSale.heavyEquipment",
         "schema.forSale.householdItems",
+        "schema.forSale.housing",
         "schema.forSale.jewelry",
-        "schema.forSale.materials",
-        "schema.forSale.motorcyclePartsAccessories",
         "schema.forSale.motorcyclesScooters",
         "schema.forSale.musicalInstruments",
         "schema.forSale.other",
-        "schema.forSale.photoVideo",
-        "schema.forSale.realEstate",
+        "schema.forSale.parking",
         "schema.forSale.recreationalVehicles",
         "schema.forSale.sportingGoods",
-        "schema.forSale.tickets",
+        "schema.forSale.storage",
         "schema.forSale.tools",
         "schema.forSale.toysGames",
         "schema.forSale.trailers",
         "schema.forSale.videoGaming"
       ],
-      "default": "schema.forSale.carsTrucks"
+      "default":"schema.forRent.housing"
     },
     "description": {
       "type": "string",
-      "title": "schema.forSale.description",
+      "title": "schema.forRent.description",
       "minLength": 10,
       "maxLength": 1024
     },
     "price": {
       "type": "number",
-      "title": "schema.forSale.priceInETH"
+      "title": "schema.forRent.priceInETH"
     },
     "pictures": {
       "type": "array",
-      "title": "schema.forSale.selectPhotos",
+      "title": "schema.forRent.selectPhotos",
       "items": {
         "type": "string",
         "format": "data-url"
@@ -90,11 +81,11 @@
     },
     "sellerSteps": {
       "type": "string",
-      "title": "schema.forSale.sellerSteps",
+      "title": "schema.forRent.sellerSteps",
       "enum": [
-        "schema.forSale.deliverProduct",
-        "schema.forSale.messageBuyer",
-        "schema.forSale.rateBuyer"
+        "schema.forRent.messageBuyer",
+        "schema.forRent.prepareProperty",
+        "schema.forRent.rateBuyer"
       ]
     }
   }

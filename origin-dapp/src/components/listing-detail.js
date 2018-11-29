@@ -793,6 +793,7 @@ class ListingsDetail extends Component {
                 />
               )}
             </div>
+            {/* to-do: condition viewType based on category within for-rent schemaType rather than schemaType itself */}
             {!this.state.loading && this.state.listingType === 'fractional' &&
               <div className="col-12">
                 <Calendar

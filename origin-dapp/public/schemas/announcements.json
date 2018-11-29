@@ -16,8 +16,9 @@
       "type": "string",
       "title": "schema.announcements.examples",
       "enum": [
-        "schema.announcements.groups",
+        "schema.announcements.freeStuff",
         "schema.announcements.localNews",
+        "schema.announcements.marketing",
         "schema.announcements.personals"
       ]
     },
@@ -27,12 +28,16 @@
       "enum": [
         "schema.announcements.activities",
         "schema.announcements.artists",
+        "schema.announcements.barter",
         "schema.announcements.childcare",
         "schema.announcements.classes",
+        "schema.announcements.freeStuff",
+        "schema.announcements.garageMovingSales",
         "schema.announcements.general",
         "schema.announcements.groups",
         "schema.announcements.localNews",
         "schema.announcements.lostFound",
+        "schema.announcements.marketing",
         "schema.announcements.musicians",
         "schema.announcements.other",
         "schema.announcements.personals",
@@ -41,7 +46,7 @@
         "schema.announcements.resumes",
         "schema.announcements.volunteers"
       ],
-      "default": "schema.announcements.localNews"
+      "default": "schema.announcements.marketing"
     },
     "description": {
       "type": "string",

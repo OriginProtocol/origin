@@ -1,0 +1,154 @@
+[
+  {
+    "id": "schema.forRent.title",
+    "defaultMessage": "Title"
+  },
+  {
+    "id": "schema.forRent.examples",
+    "defaultMessage": "Examples"
+  },
+  {
+    "id": "schema.forRent.category",
+    "defaultMessage": "Category"
+  },
+  {
+    "id": "schema.forRent.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "schema.forRent.priceInETH",
+    "defaultMessage": "Price in ETH"
+  },
+  {
+    "id": "schema.forRent.selectPhotos",
+    "defaultMessage": "Select photos"
+  },
+  {
+    "id": "schema.forRent.appliances",
+    "defaultMessage": "Appliances"
+  },
+  {
+    "id": "schema.forRent.atvsUtvsSnowmobiles",
+    "defaultMessage": "Atvs, UTVs, Snowmobiles"
+  },
+  {
+    "id": "schema.forRent.babyKidStuff",
+    "defaultMessage": "Baby & Kid Stuff"
+  },
+  {
+    "id": "schema.forRent.bicycles",
+    "defaultMessage": "Bicycles"
+  },
+  {
+    "id": "schema.forRent.boats",
+    "defaultMessage": "Boats"
+  },
+  {
+    "id": "schema.forRent.carsTrucks",
+    "defaultMessage": "Cars & Trucks"
+  },
+  {
+    "id": "schema.forRent.cellPhones",
+    "defaultMessage": "Cell Phones"
+  },
+  {
+    "id": "schema.forRent.clothingAccessories",
+    "defaultMessage": "Clothing & Accessories"
+  },
+  {
+    "id": "schema.forRent.computers",
+    "defaultMessage": "Computers"
+  },
+  {
+    "id": "schema.forRent.electronics",
+    "defaultMessage": "Electronics"
+  },
+  {
+    "id": "schema.forRent.farmGarden",
+    "defaultMessage": "Farm & Garden"
+  },
+  {
+    "id": "schema.forRent.furniture",
+    "defaultMessage": "Furniture"
+  },
+  {
+    "id": "schema.forRent.healthBeauty",
+    "defaultMessage": "Health & Beauty"
+  },
+  {
+    "id": "schema.forRent.heavyEquipment",
+    "defaultMessage": "Heavy Equipment"
+  },
+  {
+    "id": "schema.forRent.householdItems",
+    "defaultMessage": "Household Items"
+  },
+  {
+    "id": "schema.forRent.housing",
+    "defaultMessage": "Housing"
+  },
+  {
+    "id": "schema.forRent.jewelry",
+    "defaultMessage": "Jewelry"
+  },
+  {
+    "id": "schema.forRent.motorcyclesScooters",
+    "defaultMessage": "Motorcycles & Scooters"
+  },
+  {
+    "id": "schema.forRent.musicalInstruments",
+    "defaultMessage": "Musical Instruments"
+  },
+  {
+    "id": "schema.forRent.other",
+    "defaultMessage": "Other"
+  },
+  {
+    "id": "schema.forRent.parking",
+    "defaultMessage": "Parking"
+  },
+  {
+    "id": "schema.forRent.recreationalVehicles",
+    "defaultMessage": "Recreational Vehicles"
+  },
+  {
+    "id": "schema.forRent.sportingGoods",
+    "defaultMessage": "Sporting Goods"
+  },
+  {
+    "id": "schema.forRent.storage",
+    "defaultMessage": "Storage"
+  },
+  {
+    "id": "schema.forRent.tools",
+    "defaultMessage": "Tools"
+  },
+  {
+    "id": "schema.forRent.toysGames",
+    "defaultMessage": "Toys & Games"
+  },
+  {
+    "id": "schema.forRent.trailers",
+    "defaultMessage": "Trailers"
+  },
+  {
+    "id": "schema.forRent.videoGaming",
+    "defaultMessage": "Video Gaming"
+  },
+  {
+    "id": "schema.forRent.messageBuyer",
+    "defaultMessage": "Message the buyer with any relevant details"
+  },
+  {
+    "id": "schema.forRent.prepareProperty",
+    "defaultMessage": "Prepare the property for the buyer's use"
+  },
+  {
+    "id": "schema.forRent.rateBuyer",
+    "defaultMessage": "Leave a review of the buyer"
+  },
+  {
+    "id": "schema.forRent.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
+  }
+]

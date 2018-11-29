@@ -1,6 +1,6 @@
 {
   "type": "filterCreationSchema",
-  "listingType": "housing",
+  "listingType": "for-rent",
   "items": [
     {
       "title": {

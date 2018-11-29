@@ -47,6 +47,7 @@ class MyPurchaseCard extends Component {
 
   getBookingDates(whichDate) {
     const { purchasedSlots, listing } = this.state
+    // to-do: condition this based on category within for-rent schemaType rather than schemaType itself
     const timeFormat = listing.schemaType === 'housing' ? 'LL' : 'l LT'
     const index = whichDate === 'startDate' ? 0 : purchasedSlots.length - 1
 

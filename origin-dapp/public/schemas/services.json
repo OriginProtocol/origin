@@ -1,14 +1,10 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["name","category","description"],
+  "required": ["name","category","description","price"],
   "properties": {
     "listingType": {
-      "const": "fractional"
-    },
-    "slotIncrementMinutes": {
-      "type": "number",
-      "default": 60
+      "const": "unit"
     },
     "name": {
       "type": "string",
@@ -20,41 +16,27 @@
       "type": "string",
       "title": "schema.services.examples",
       "enum": [
-        "schema.services.deliveryService",
         "schema.services.dogWalking",
-        "schema.services.homeCleaning"
+        "schema.services.musicLessons",
+        "schema.services.salon",
+        "schema.services.transportation"
       ]
     },
     "category": {
       "type": "string",
       "title": "schema.services.category",
       "enum": [
-        "schema.services.businessServices",
         "schema.services.counseling",
-        "schema.services.deliveryService",
-        "schema.services.educationServices",
+        "schema.services.design",
         "schema.services.dogWalking",
-        "schema.services.electrical",
-        "schema.services.generalContractors",
-        "schema.services.graphicDesign",
-        "schema.services.handyman",
-        "schema.services.homeCleaning",
-        "schema.services.homeServices",
-        "schema.services.legal",
-        "schema.services.movingHelp",
         "schema.services.musicLessons",
         "schema.services.other",
-        "schema.services.painting",
         "schema.services.photography",
-        "schema.services.plumbing",
-        "schema.services.repairTechnicalSupport",
-        "schema.services.softwareDevelopement",
-        "schema.services.salonServices",
-        "schema.services.spaServices",
-        "schema.services.webDesign",
-        "schema.services.writingTranslationTranscription"
+        "schema.services.salon",
+        "schema.services.spa",
+        "schema.services.transportation"
       ],
-      "default":"schema.services.homeCleaning"
+      "default":"schema.services.transportation"
     },
     "description": {
       "type": "string",
