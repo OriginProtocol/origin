@@ -1,7 +1,7 @@
 ---
 git:
-  depth: 3
-job:
+  depth: 1
+matrix:
   include:
     - name: "origin-bridge tests"
       language: python
