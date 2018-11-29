@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 
 class VerifierServices extends Component {
   render() {
-    const { published, provisional, handleToggle, mobileLayout } = this.props
+    const { published, provisional, handleToggle } = this.props
     return (
       <div className="services-container">
         <p className="credit d-none d-md-flex">

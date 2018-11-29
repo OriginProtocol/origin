@@ -356,12 +356,12 @@ class Profile extends Component {
                         data-modal="profile"
                         onClick={this.handleToggle}
                       >
-                        <img className='edit-profile' src="images/edit-icon.svg" alt="edit name" />
+                        <img className="edit-profile" src="images/edit-icon.svg" alt="edit name" />
                       </button>
                     </div>
                   </div>
                   <p className={descriptionClasses}>{description}</p>
-                  <div className='mb-2 description-options d-md-none'>
+                  <div className="mb-2 description-options d-md-none">
                   {/*
                     * TODO: do not display the link when there is no text overflow.
                     * Downside: probably requires a hacky javascript solution.
@@ -372,7 +372,7 @@ class Profile extends Component {
                     >
                       {descriptionLinkText}
                       <img
-                        id='description-caret'
+                        id="description-caret"
                         src={descriptionExpanded ? 'images/caret-up-blue.svg' : 'images/caret-down-blue.svg'}
                       />
                     </a>
@@ -775,7 +775,6 @@ const mapStateToProps = state => {
     wallet: state.wallet,
     web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,
-    networkId: state.app.web3.networkId,
     mobileDevice: state.app.mobileDevice
   }
 }

@@ -54,7 +54,7 @@ class Guidance extends Component {
     />)
 
     const mobileGuidanceText = this.state.expanded ? guidanceMessage : shortGuidanceMessage
-    let showGuidance = (mobileLayout && !this.state.dismissed) || !mobileLayout
+    const showGuidance = (mobileLayout && !this.state.dismissed) || !mobileLayout
 
     return showGuidance && (
       <div className={mobileLayout ? 'guidance row mb-0' : 'guidance d-none d-lg-block'}>
