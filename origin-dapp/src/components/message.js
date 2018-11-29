@@ -25,14 +25,54 @@ class Message extends Component {
       message,
       messagingEnabled,
       user,
-      contentOnly
+      contentOnly,
+      mobileDevice
     } = this.props
     const { created, hash } = message
     const { address, fullName, profile } = user
 
-    return contentOnly ? (
-      <div className="d-flex compact-message">{this.renderContent()}</div>
-    ) : (
+    if (contentOnly) {
+      return <div className="d-flex compact-message">{this.renderContent()}</div>
+    }
+
+    if (mobileDevice) {
+      return (
+        <div className="message-section">
+          <div className="timestamp text-center ml-auto">
+            {moment(created).format('MMM Do h:mm a')}
+          </div>
+          <div className="d-flex message">
+            <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
+            <div className="content-container">
+              <div className="meta-container d-flex">
+                <div className="sender text-truncate">
+                  <span className="name">{fullName || address}</span>
+                </div>
+              </div>
+              <div className="message-content">{this.renderContent()}</div>
+              {!messagingEnabled &&
+                hash === 'origin-welcome-message' && (
+                <div className="button-container">
+                  <button
+                    className="btn btn-sm btn-primary"
+                    onClick={enableMessaging}
+                    ga-category="messaging"
+                    ga-label="message_component_enable"
+                  >
+                    <FormattedMessage
+                      id={'message.enable'}
+                      defaultMessage={'Enable Messaging'}
+                    />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return (
       <div className="d-flex message">
         <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container">
@@ -108,6 +148,7 @@ class Message extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     messagingEnabled: state.app.messagingEnabled,
+    mobileDevice: state.app.mobileDevice,
     user:
       state.users.find(u => u.address === ownProps.message.senderAddress) || {}
   }
