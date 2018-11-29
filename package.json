@@ -9,7 +9,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^4.0.0",
-    "lerna": "^3.4.3"
+    "lerna": "^3.5.0"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --no-ci --progress --hoist",

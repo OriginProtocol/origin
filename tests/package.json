@@ -1,0 +1,25 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "Integration tests for Origin Protocol",
+  "author": "Tom Linton <tom@originprotocol.com>",
+  "homepage": "https://github.com/OriginProtocol/origin",
+  "license": "ISC",
+  "main": "src/app.js",
+  "directories": {
+    "src": "src",
+  },
+  "files": [
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OriginProtocol/origin.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  }
+}

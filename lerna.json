@@ -1,5 +1,6 @@
 {
   "packages": [
+    "experimental/*",
     "ipfs-proxy",
     "origin-contracts",
     "origin-dapp",
@@ -11,13 +12,15 @@
     "origin-mobile",
     "origin-notifications",
     "origin-token-transfer/*",
-    "experimental/*"
+    "tests"
   ],
   "command": {
     "bootstrap": {
-      "hoist": ["**"],
+      "hoist": [
+        "**"
+      ],
       "nohoist": [
-	"openzeppelin-solidity"
+        "openzeppelin-solidity"
       ]
     }
   },
