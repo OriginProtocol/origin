@@ -1047,7 +1047,7 @@ class ListingCreate extends Component {
                           'When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it.'
                         }
                       />
-                      {selectedBoostAmount && (
+                      {!!selectedBoostAmount && (
                         <div className="boost-reminder">
                           <FormattedMessage
                             id={'listing-create.whatHappensNextContent2'}
