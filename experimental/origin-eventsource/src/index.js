@@ -97,10 +97,12 @@ class OriginEventSource {
       } else if (e.event === 'OfferFinalized') {
         status = 4
       }
-      if (!e.event.match(/(OfferFinalized|OfferWithdrawn|OfferRuling)/)) {
+      if (!e.event.match(/(OfferFinalized|OfferWithdrawn|OfferRuling|OfferData)/)) {
         blockNumber = e.blockNumber
       }
-      lastEvent = e
+      if (e.event !== 'OfferData') {
+        lastEvent = e
+      }
     })
 
     if (lastEvent.event === 'OfferWithdrawn') {
@@ -117,7 +119,7 @@ class OriginEventSource {
     if (status === undefined) { status = offer.status }
 
     return {
-      id: `${listingId}-${offerId}`,
+      id: `999-1-${listingId}-${offerId}`,
       listingId: String(listingId),
       offerId: String(offerId),
       createdBlock: blockNumber,
