@@ -70,8 +70,7 @@ export default class ListingAdapterV1 extends AdapterBase {
       language: ipfsData.language,
       title: ipfsData.title,
       description: ipfsData.description,
-      media: ipfsData.media,
-      expiry: ipfsData.expiry,
+      media: ipfsData.media
     }
 
     // Unit data.

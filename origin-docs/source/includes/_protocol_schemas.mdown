@@ -14,7 +14,6 @@ This describes a listing for purchase on the Origin marketplace.
     language: "en-us",
     title: "1997 Lotus Esprit",
     description: "Red. 100K miles. Always garaged.",
-    expiry: "2018-09-20T19:59:36.875Z",
     media: [
         {url: "ipfs://Ac92fa25B89D37077C7e52BDae22094f7b864e91"},
         {url: "ipfs://C9a2fa25B89D37045C7e52BDae22094f7b864b82"},
@@ -44,7 +43,6 @@ This describes a listing for purchase on the Origin marketplace.
 
 | | |
 |----|-----|
-|expiry | A date that this listing should no longer show in search results. This is suggestion and search engines may ignore it.|
 |media | A list of media elements to be shown with the listing. We currently only support **images** on the **ipfs://** protocol.|
 |commission | This is the total amount, spread across all `unitsTotal` units, the seller is willing to pay the DApp that sells the listing user after the sale is complete. The currency must be `OGN`. This money comes out of the deposit amount the seller puts into the listing. Note that the deposit amount may very well be too low to actually pay the commission - this must be checked for before trusting the commission. This total commission amount should be enough to pay `commissionPerUnit` for each unit available. |
 |commissionPerUnit | This is the amount the seller is willing to pay for each unit sold by the DApp that sells the listing user after the sale is complete. The currency must be `OGN`. This money comes out of the deposit amount the seller puts into the listing. Note that the deposit amount may very well be too low to actually pay the commission - this must be checked for before trusting the commission. |

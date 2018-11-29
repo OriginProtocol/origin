@@ -33,8 +33,6 @@ export const validateListing = (listing) => {
   expect(listing).to.have.property('title').that.is.a('string')
   expect(listing).to.have.property('description').that.is.a('string')
 
-  expect(listing).to.have.property('expiry').that.is.a('string')
-  expect(new Date(listing.expiry).getMonth).to.be.a('function')
   expect(listing).to.have.property('price').that.is.an('object')
   expect(listing.price).to.have.property('currency').that.is.a('string')
   expect(listing.price).to.have.property('amount').that.is.a('string')
