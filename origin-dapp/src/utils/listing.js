@@ -61,6 +61,27 @@ export function dappFormDataToOriginListing(formData) {
   return listingData
 }
 
+function getCategory(category) {
+  switch(category) {
+    case 'schema.housing':
+    case 'schema.tickets':
+      return 'forSale'
+    default:
+      return category
+  }
+}
+
+function getSubCategory(subCat) {
+  switch(subCat) {
+    case 'schema.housing.vacationRentals':
+      return 'schema.forSale.realEstate'
+    case 'schema.tickets.music':
+      return 'schema.forSale.tickets'
+    default:
+      return subCat
+  }
+}
+
 /**
  * Transforms listing data returned by origin-js into a DApp compatible listing object.
  *
@@ -71,6 +92,7 @@ export function dappFormDataToOriginListing(formData) {
  * @return {object} DApp compatible listing object.
  */
 export function originToDAppListing(originListing) {
+console.log('================================== originListing: ', originListing)
   const commission = originListing.commission
     ? parseFloat(originListing.commission.amount)
     : 0
@@ -78,8 +100,8 @@ export function originToDAppListing(originListing) {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
-    schemaType: originListing.category.replace('schema.', ''),
-    category: originListing.subCategory,
+    schemaType: getCategory(originListing.category),
+    category: getSubCategory(originListing.subCategory),
     display: originListing.display,
     name: originListing.title,
     description: originListing.description,
