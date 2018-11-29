@@ -33,7 +33,7 @@ export class Listing {
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    schemaId, deposit, depositManager, expiry }) {
+    schemaId, deposit, depositManager, expiry, commissionPerUnit }) {
 
     this.id = id
     this.title = title
@@ -58,6 +58,7 @@ export class Listing {
     this.deposit = deposit
     this.depositManager = depositManager
     this.expiry = expiry
+    this.commissionPerUnit = commissionPerUnit
   }
 
   // creates a Listing using on-chain and off-chain data
@@ -86,6 +87,7 @@ export class Listing {
       schemaId: ipfsListing.schemaId,
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
+      commissionPerUnit: ipfsListing.commissionPerUnit,
     })
   }
 
@@ -113,36 +115,12 @@ export class Listing {
       slots: discoveryNodeData.slots,
       schemaId: discoveryNodeData.schemaId,
       deposit: discoveryNodeData.deposit,
-      depositManager: discoveryNodeData.depositManager
+      depositManager: discoveryNodeData.depositManager,
+      commissionPerUnit: discoveryNodeData.commissionPerUnit,
     })
-  }
-
-  get unitsSold() {
-    // Lazy caching.
-    if (this._unitsSold !== undefined) {
-      return this._unitsSold
-    }
-    this._unitsSold = Object.keys(this.offers).reduce((acc, offerId) => {
-      if (this.offers[offerId].status === 'created') {
-        return acc + 1
-      }
-      // TODO: we need to subtract 1 for every offer that is canceled
-      return acc
-    }, 0)
-    return this._unitsSold
-  }
-
-  get unitsRemaining() {
-    if (this.type === 'fractional') {
-      return 1
-    } else {
-      // Should never be negative.
-      return Math.max(this.unitsTotal - this.unitsSold, 0)
-    }
   }
 
   get active() {
     return this.status === 'active'
   }
-
 }

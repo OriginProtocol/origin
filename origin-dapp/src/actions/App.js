@@ -29,6 +29,7 @@ export const AppConstants = keyMirror(
     NOTIFICATIONS_SOFT_PERMISSION: null,
     NOTIFICATIONS_SUBSCRIPTION_PROMPT: null,
     ON_MOBILE: null,
+    SHOW_MAIN_NAV: null,
     SAVE_SERVICE_WORKER_REGISTRATION: null,
     TRANSLATIONS: null,
     WEB3_ACCOUNT: null,
@@ -143,6 +144,10 @@ export function setMessagingInitialized(messagingInitialized) {
 
 export function setMobile(device) {
   return { type: AppConstants.ON_MOBILE, device }
+}
+
+export function showMainNav(showNav) {
+  return { type: AppConstants.SHOW_MAIN_NAV, showNav }
 }
 
 export function storeNetwork(networkId) {
