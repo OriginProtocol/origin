@@ -331,7 +331,7 @@ describe('Marketplace Resource', function() {
         errorMessage = String(e)
       }
       expect(errorThrown).to.be.true
-      expect(errorMessage).to.equal('Error: Invalid offer: insufficient commission amount for listing')
+      expect(errorMessage).to.equal('Error: Invalid offer: incorrect commission amount for listing')
     })
 
     it('should throw an error if arbitrator is invalid', async () => {
@@ -914,7 +914,7 @@ describe('Marketplace Resource', function() {
 
         await marketplace.makeOffer('999-000-1', invalidMultiUnitCommissionOffer)
         await expect(marketplace.getOffer('999-000-1-1'))
-          .to.be.rejectedWith('Invalid offer: insufficient commission amount for listing')
+          .to.be.rejectedWith('Invalid offer: incorrect commission amount for listing')
 
         const offers = await marketplace.getOffers('999-000-1')
         expect(offers.length).to.equal(1)

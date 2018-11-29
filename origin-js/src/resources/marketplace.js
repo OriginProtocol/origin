@@ -328,8 +328,18 @@ export default class Marketplace {
         }
       }
 
-      if (BigNumber(listingCommission).isGreaterThan(BigNumber(chainOffer.commission))) {
-        throw new Error('Invalid offer: insufficient commission amount for listing')
+      // TODO: Figure out how to exhaustively handle the various cases. For
+      // example, if the seller edits the listing to increase "unitsTotal,"
+      // the following condition will no longer be true:
+      //
+      //   commission === commissionPerUnit * unitsTotal
+      //
+      // Initially, we're not going to support topping off commission OGN, so
+      // there will be no UI to fix this. We should find a way to handle this
+      // situation gracefully, such as allowing offers to be made with
+      // less commission when the commission tokens have been depleted.
+      if (!BigNumber(listingCommission).isEqualTo(BigNumber(chainOffer.commission))) {
+        throw new Error('Invalid offer: incorrect commission amount for listing')
       }
 
       if (chainOffer.arbitrator.toLowerCase() !== this.arbitrator.toLowerCase()) {
@@ -374,7 +384,7 @@ export default class Marketplace {
   async updateListing(listingId, ipfsData, additionalDeposit = 0, confirmationCallback) {
     const oldListing = await this.getListing(listingId)
     if (
-      oldListing.type == 'unit' &&
+      oldListing.type === 'unit' &&
       ipfsData.unitsTotal !== oldListing.unitsTotal
     ) {
       const offers = await this.getOffers(listingId)
