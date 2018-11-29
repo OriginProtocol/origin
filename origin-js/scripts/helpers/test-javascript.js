@@ -11,7 +11,8 @@ const testJavascript = () => {
         '@babel/polyfill',
         '--timeout',
         '20000',
-        '--exit'
+        '--exit',
+        '-b'
       ],
       {
         stdio: 'inherit',

@@ -301,12 +301,14 @@ class ContractService {
       if (!promiseStatus.receiptReceived && promiseStatus.txnFoundCounter > 1){
         // unfortunately transaction logs in transactionReceipt do not contain all needed event information
         const getEventsEmittedByTransaction = async () => {
+          console.log(contract)
           let events = await contract.getPastEvents(
             'allEvents',
             {
               fromBlock: transactionReceipt.blockNumber
             }
           )
+
 
           // only keep event emitted by this transaction
           events = events

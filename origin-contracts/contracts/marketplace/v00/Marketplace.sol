@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /**
  * @title A Marketplace contract for managing listings, offers, payments, escrow and arbitration

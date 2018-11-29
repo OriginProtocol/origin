@@ -12,7 +12,7 @@
     "lerna": "^3.4.3"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap --ci --progress --hoist",
+    "bootstrap": "lerna bootstrap --progress --hoist --nohoist openzeppelin-solidity",
     "build": "lerna run build --stream",
     "clean": "git clean -fdX .",
     "start": "lerna run start --stream --parallel --scope origin --scope origin-dapp",

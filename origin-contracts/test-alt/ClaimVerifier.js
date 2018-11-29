@@ -30,7 +30,10 @@ describe('ClaimVerifier.sol', async function() {
     const key = web3.utils.sha3(pubSigner)
     const result = await ClaimIssuer.methods
       .addKey(key, 3, 1)
-      .send({ from: accounts[1] })
+
+    console.log(result.send)
+
+    console.log(result)
 
     assert(result)
   })
