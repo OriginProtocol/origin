@@ -22,8 +22,9 @@ matrix:
       before_cache:
         - rm -rf node_modules/.cache
       install:
-        - npm install
+        - npm install --loglevel notice
       script:
+        - unset CI
         - npm run test
 
     - name: "integration tests"
