@@ -380,7 +380,7 @@ class Profile extends Component {
                 </div>
               </div>
 
-              <h2>
+              <h2 id="verify-yourself">
                 <FormattedMessage
                   id={'Profile.verifyYourselfHeading'}
                   defaultMessage={'Verify yourself on Origin'}

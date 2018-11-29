@@ -53,15 +53,28 @@ class VerifyEmail extends Component {
           {this.state.mode === 'email'
             ? this.renderEmailForm()
             : this.renderCodeForm()}
-          <div className="button-container">
-            <button type="submit" className="btn btn-clear">
+          <div className="button-container d-md-flex flex-md-row justify-content-md-center pt-4">
+            <button
+              className="btn btn-clear d-md-none col-5 col-sm-4"
+              data-modal="email"
+              onClick={this.handleCancel}
+            >
+              <FormattedMessage
+                id={'VerifyEmail.cancel'}
+                defaultMessage={'Cancel'}
+              />
+            </button>
+            <button
+              type="submit"
+              className="btn btn-clear col-5 col-sm-4"
+            >
               <FormattedMessage
                 id={'VerifyEmail.continue'}
                 defaultMessage={'Continue'}
               />
             </button>
           </div>
-          <div className="link-container">
+          <div className="link-container d-none d-md-block">
             <a href="#" data-modal="email" onClick={this.handleCancel}>
               <FormattedMessage
                 id={'VerifyEmail.cancel'}

@@ -4827,6 +4827,7 @@ sup {
   line-height: 1;
   margin-bottom: 10px;
   padding: 14px;
+  min-width: 74px;
 }
 
 .phone.modal .dropdown .dropdown-toggle:after {
@@ -5359,7 +5360,7 @@ a:not([href]):not([tabindex]).span-link {
     padding-bottom: 0.1rem;
   }
 
-  .profile-wrapper h2 {
+  .profile-wrapper #verify-yourself {
     font-size: 1rem;
     margin-bottom: 0.25rem;
   }
