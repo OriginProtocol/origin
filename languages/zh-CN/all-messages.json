@@ -1,9 +1,9 @@
 {
   "about-tokens.about": "关于Origin代币",
   "about-tokens.overview": "概观",
-  "about-tokens.overview-text": "Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.",
-  "about-tokens.uses": "What are Origin Tokens used for?",
-  "about-tokens.boosting": "Boosting",
+  "about-tokens.overview-text": "Origin代币是在Origin分布式应用 (DApp) 以及平台上使用的ERC-20代币。 Origin代币可用于奖励市场运营商，DApp创建者，用户，开发者，Origin代币买卖者以及贡献者。",
+  "about-tokens.uses": "Origin代币是用来做什么的？",
+  "about-tokens.boosting": "助推",
   "about-tokens.boosting-text": "Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.",
   "about-tokens.rewards": "Referral Rewards",
   "about-tokens.coming-soon-1": "Coming soon",
