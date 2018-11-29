@@ -33,4 +33,4 @@ matrix:
         - sudo sysctl -w vm.max_map_count=262144
       script:
         - docker build . -t origin
-        - docker-compose up -d
+        - docker-compose up --abort-on-container-exit
