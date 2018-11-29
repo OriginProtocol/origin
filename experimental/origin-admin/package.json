@@ -1,111 +1,111 @@
 {
-	"author": "Nick Poulden <nick@originprotocol.com>",
-	"name": "origin-admin",
-	"version": "0.1.0",
-	"license": "MIT",
-	"description": "Origin Admin page",
-	"main": "src/index.js",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/OriginProtocol/origin/origin-playground"
-	},
-	"dependencies": {
-		"@babel/core": "^7.1.5",
-		"@blueprintjs/core": "^3.9.0",
-		"ganache-core": "^2.3.1",
-		"react": "^16.6.1",
-		"react-apollo": "^2.2.4",
-		"react-dom": "^16.6.1",
-		"web3": "^1.0.0-beta.34"
-	},
-	"prettier": {
-		"semi": false,
-		"singleQuote": true,
-		"bracketSpacing": true
-	},
-	"babel": {
-		"presets": [
-			"@babel/preset-env",
-			"@babel/preset-react"
-		],
-		"plugins": [
-			[
-				"module-resolver",
-				{
-					"alias": {
-						"actions": "./src/actions",
-						"components": "./src/components",
-						"constants": "./src/constants",
-						"contracts": "./src/contracts",
-						"pages": "./src/pages",
-						"reducers": "./src/reducers",
-						"utils": "./src/utils",
-						"hoc": "./src/hoc"
-					}
-				}
-			],
-			[
-				"@babel/plugin-proposal-decorators",
-				{
-					"legacy": true
-				}
-			],
-			"@babel/plugin-proposal-export-default-from",
-			"@babel/plugin-transform-runtime",
-			"@babel/plugin-transform-destructuring",
-			"@babel/plugin-transform-object-assign",
-			"@babel/plugin-proposal-object-rest-spread",
-			"@babel/plugin-proposal-class-properties"
-		]
-	},
-	"devDependencies": {
-		"@babel/runtime": "^7.1.2",
-		"css-loader": "^1.0.1",
-		"eslint-plugin-react": "^7.11.1",
-		"file-loader": "^2.0.0",
-		"mini-css-extract-plugin": "^0.4.5",
-		"react-router": "^4.3.1",
-		"style-loader": "^0.23.1",
-		"webpack": "^4.25.1",
-		"webpack-dev-server": "^3.1.10"
-	},
-	"eslintConfig": {
-		"parser": "babel-eslint",
-		"parserOptions": {
-			"ecmaVersion": 6,
-			"sourceType": "module",
-			"ecmaFeatures": {
-				"jsx": true,
-				"impliedStrict": true,
-				"legacyDecorators": true
-			}
-		},
-		"globals": {
-			"Web3": true,
-			"web3": true,
-			"openpgp": true
-		},
-		"env": {
-			"browser": true,
-			"node": true,
-			"es6": true,
-			"mocha": true
-		},
-		"plugins": [
-			"react"
-		],
-		"extends": [
-			"eslint:recommended",
-			"plugin:react/recommended"
-		],
-		"rules": {
-			"react/prop-types": "off",
-			"react/no-children-prop": "off",
-			"no-console": "off"
-		}
-	},
-	"eslintIgnore": [
-		"node_modules",
-		"public"
-	]
+  "author": "Nick Poulden <nick@originprotocol.com>",
+  "name": "origin-admin",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Origin Admin page",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/origin-playground"
+  },
+  "dependencies": {
+    "@babel/core": "^7.1.5",
+    "@blueprintjs/core": "^3.9.0",
+    "ganache-core": "^2.2.0",
+    "react": "^16.6.1",
+    "react-apollo": "^2.2.4",
+    "react-dom": "^16.6.1",
+    "web3": "^1.0.0-beta.34"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "bracketSpacing": true
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      [
+        "module-resolver",
+        {
+          "alias": {
+            "actions": "./src/actions",
+            "components": "./src/components",
+            "constants": "./src/constants",
+            "contracts": "./src/contracts",
+            "pages": "./src/pages",
+            "reducers": "./src/reducers",
+            "utils": "./src/utils",
+            "hoc": "./src/hoc"
+          }
+        }
+      ],
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      "@babel/plugin-proposal-export-default-from",
+      "@babel/plugin-transform-runtime",
+      "@babel/plugin-transform-destructuring",
+      "@babel/plugin-transform-object-assign",
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-class-properties"
+    ]
+  },
+  "devDependencies": {
+    "@babel/runtime": "^7.1.2",
+    "css-loader": "^1.0.1",
+    "eslint-plugin-react": "^7.11.1",
+    "file-loader": "^2.0.0",
+    "mini-css-extract-plugin": "^0.4.5",
+    "react-router": "^4.3.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.25.1",
+    "webpack-dev-server": "^3.1.10"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true,
+        "impliedStrict": true,
+        "legacyDecorators": true
+      }
+    },
+    "globals": {
+      "Web3": true,
+      "web3": true,
+      "openpgp": true
+    },
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true,
+      "mocha": true
+    },
+    "plugins": [
+      "react"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "rules": {
+      "react/prop-types": "off",
+      "react/no-children-prop": "off",
+      "no-console": "off"
+    }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "public"
+  ]
 }

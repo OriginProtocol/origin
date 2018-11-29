@@ -12,7 +12,7 @@
     "lerna": "^3.4.3"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap --no-ci --progress --hoist --nohoist openzeppelin-solidity",
+    "bootstrap": "lerna bootstrap --no-ci --progress --hoist",
     "build": "lerna run build --stream",
     "clean": "git clean -fdX .",
     "start": "lerna run start --stream --parallel --scope origin --scope origin-dapp",
@@ -20,9 +20,5 @@
     "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "npm run bootstrap",
     "test": "node ./scripts/test.js"
-  },
-  "dependencies": {
-    "ganache-core": "^2.3.1",
-    "webpack-dev-server": "^3.1.10"
   }
 }
