@@ -4865,8 +4865,13 @@ sup {
   padding-right: 14px;
 }
 
+.phone.modal .dropdown .dropdown-item > :nth-child(2) {
+  max-width: 55vw;
+  overflow:hidden;
+}
+
 .phone.modal .dropdown .dropdown-item > :last-child {
-  color: var(--dusk);;
+  color: var(--dusk);
   margin-left: auto;
   padding-left: 14px;
 }
@@ -5372,6 +5377,10 @@ a:not([href]):not([tabindex]).span-link {
   .services-container .attestation-button {
     padding-left: 5px;
     padding-right: 5px;
+  }
+
+  .phone.modal .dropdown .dropdown-item > :last-child {
+    padding-left: 5px;
   }
 }
 
