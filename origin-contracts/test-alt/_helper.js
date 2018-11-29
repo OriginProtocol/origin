@@ -39,7 +39,6 @@ function findImportsPath(prefix) {
       if (path.indexOf('node_modules') < 0) {
         path = prefix + path
       }
-      console.log(path)
       const contents = fs.readFileSync(path).toString()
       return {
         contents
