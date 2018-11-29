@@ -18,6 +18,7 @@ COPY ./origin-discovery/package*.json ./origin-discovery/
 COPY ./origin-faucet/package*.json ./origin-faucet/
 COPY ./origin-js/package*.json ./origin-js/
 COPY ./origin-messaging/package*.json ./origin-messaging/
+COPY ./origin-notifications/package*.json ./origin-notifications/
 
 RUN npm install --ignore-scripts
 RUN npm run bootstrap -- --ignore-scripts
@@ -30,10 +31,12 @@ COPY ./origin-discovery ./origin-discovery
 COPY ./origin-faucet ./origin-faucet
 COPY ./origin-js ./origin-js
 COPY ./origin-messaging ./origin-messaging
+COPY ./origin-notifications ./origin-notifications
 
 # Compile contracts
 RUN npm run build --prefix origin-contracts
 
+# Work arounds for hoist failures
 RUN ln -s node_modules/scrypt origin-js/node_modules/scrypt
 RUN ln -s node_modules/got origin-js/node_modules/got
 

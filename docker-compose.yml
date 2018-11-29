@@ -1,5 +1,8 @@
 version: "3"
 
+volumes:
+  ipfs:
+
 services:
   postgres:
     container_name: postgres
@@ -21,8 +24,8 @@ services:
     environment:
       network.bind_host: 0
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-      - default
+    logging:
+      driver: none
 
   # NOTE/TODO: This container is only responsible for running ganache and IPFS,
   # this functionality should be moved to dedicated containers
@@ -38,6 +41,7 @@ services:
       # written to the build files
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin/scripts:/app/origin/scripts
+    command: npm run start --prefix origin-js
 
   ipfs-proxy:
     container_name: ipfs-proxy
@@ -49,6 +53,7 @@ services:
       - IPFS_GATEWAY_URL=http://origin:8080
     volumes:
       - ./ipfs-proxy/src:/app/src
+    command: npm run start --prefix ipfs-proxy
 
   origin-discovery:
     container_name: origin-discovery
@@ -65,7 +70,7 @@ services:
       - elasticsearch
     ports:
       - "4000:4000"
-    command: /bin/bash -c "npm run start:discovery"
+    command: npm run start:discovery --prefix origin-discovery
 
   event-listener:
     container_name: event-listener
@@ -84,8 +89,8 @@ services:
       >
       /bin/bash -c "wait-for.sh -t 0 -q origin:8080 --
       wait-for.sh -t 0 -q elasticsearch:9200 --
-      npm run migrate &&
-      npm run start:listener"
+      npm run migrate --prefix origin-discovery &&
+      npm run start:listener --prefix origin-discovery"
 
   origin-messaging:
     container_name: origin-messaging
@@ -94,9 +99,10 @@ services:
       - "9012:9012"
     volumes:
       - ./origin-messaging/src:/app/src
-      - ./development/.ipfs:/app/ipfs
+      - ipfs:/app/ipfs
     environment:
       - MESSAGING_NAMESPACE=dev
+    command: npm run start --prefix origin-messaging
 
   origin-bridge:
     container_name: origin-bridge
@@ -133,8 +139,8 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      npm run migrate &&
-      npm run start"
+      npm run migrate --prefix origin-notifications &&
+      npm run start --prefix origin-notifications"
 
   origin-dapp:
     container_name: origin-dapp
@@ -150,7 +156,7 @@ services:
       - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
       # Set the envfile from the local envfile
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
-      - ./development/.ipfs:/ipfs
+      - ipfs:/ipfs
     depends_on:
       - ipfs-proxy
       - event-listener
@@ -169,4 +175,4 @@ services:
       /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 &&
       . set-ipfs-swarm.sh /ipfs/config &&
       wait-for.sh -t 0 -q origin:8080 --
-      node node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0"
+      npm run start --prefix origin-dapp"
