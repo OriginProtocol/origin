@@ -147,8 +147,7 @@ class ListingCreate extends Component {
         console.error(error)
       }
     } else if (!web3.givenProvider || !this.props.messagingEnabled) {
-      if (!origin.contractService.walletLinker)
-      {
+      if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
       }
       this.props.storeWeb3Intent('create a listing')
@@ -1047,7 +1046,7 @@ class ListingCreate extends Component {
                           'When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it.'
                         }
                       />
-                      {selectedBoostAmount && (
+                      {!!selectedBoostAmount && (
                         <div className="boost-reminder">
                           <FormattedMessage
                             id={'listing-create.whatHappensNextContent2'}

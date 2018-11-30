@@ -14,6 +14,7 @@ metadata:
     certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/limit-rps: "20"
 spec:
   tls:
     - secretName: {{ .Values.host }}

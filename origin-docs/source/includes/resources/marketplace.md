@@ -41,7 +41,6 @@ It is active until there are no more units available or its expiration date is r
   depositManager: '0x02394099fu9dfse0920394u329u4024',
   status: 'active',
   offers: [], //is this supposed to be an array or an object?
-  expiry: '1529674159',
   events:[{ id: '20949-345', event: 'ListingCreated' }]
 }]
 ```

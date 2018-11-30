@@ -164,3 +164,6 @@ ehthumbs.db
 Thumbs.db
 
 !origin-contracts/releases/**/*
+
+# Redis? #
+*dump.rdb
