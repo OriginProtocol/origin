@@ -19,7 +19,7 @@ export class Notification {
     this.status = status
     // Resources includes the following fields:
     // - listing: Listing model object
-    // - purchase: Offer model object
+    // - offer: Offer model object
     this.resources = resources
   }
 }
