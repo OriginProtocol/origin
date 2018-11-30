@@ -1,5 +1,6 @@
 import { translateListingCategory } from 'utils/translationUtils'
 import { getBoostLevel } from 'utils/boostUtils'
+import getSchemaType from 'utils/schemaAdapter'
 import origin from '../services/origin'
 
 /**
@@ -75,12 +76,19 @@ export function originToDAppListing(originListing) {
   const commission = originListing.commission
     ? parseFloat(originListing.commission.amount)
     : 0
+
+  // detect and adapt listings that were created by deprecated schemas
+  const { category, schema, isDeprecatedSchema } = getSchemaType(originListing)
+
   return {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
-    schemaType: originListing.category.replace('schema.', ''),
-    category: originListing.subCategory,
+    // schemaType: originListing.category.replace('schema.', ''),
+    // category: originListing.subCategory,
+    category,
+    schema,
+    isDeprecatedSchema,
     display: originListing.display,
     name: originListing.title,
     description: originListing.description,
