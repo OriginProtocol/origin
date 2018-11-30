@@ -297,7 +297,7 @@ class Profile extends Component {
     // only update this state every so often to not trigger too many renders
     if (new Date() - this.lastProfileLayoutUpdate > this.profileUpdateInterval) {
       this.lastProfileLayoutUpdate = new Date()
-      this.setState({ profileMobileLayout: window.innerWidth < 768 })
+      this.setState({ profileMobileLayout: window.innerWidth < 576 })
     }
   }
 
