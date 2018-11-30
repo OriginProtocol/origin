@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import $ from 'jquery'
 
-import { storeWeb3Intent, showMainNav } from 'actions/App'
+import { storeWeb3Intent, showMainNav, showWelcomeWarning } from 'actions/App'
 import {
   deployProfile,
   deployProfileReset,
@@ -309,6 +309,7 @@ class Profile extends Component {
       profile,
       provisional,
       published,
+      showWelcomeWarning,
       showMainNav,
       wallet,
       intl,
@@ -343,13 +344,16 @@ class Profile extends Component {
       this.intlMessages.descriptionReadMore
     )
 
+    //TODO: make this cleaner and more responsive
     let descriptionClasses = 'ws-aware description'
     if (mobileLayout)
       descriptionClasses += ' mb-0'
     if (descriptionExpanded)
       descriptionClasses += ' expanded'
 
-    showMainNav(!profileMobileLayout || !modalsOpen.profile)
+    const isFullScreenProfileEdit = profileMobileLayout && modalsOpen.profile
+    showMainNav(!isFullScreenProfileEdit)
+    showWelcomeWarning(!isFullScreenProfileEdit)
 
     return (
       <div className="current-user profile-wrapper">
@@ -806,6 +810,7 @@ const mapDispatchToProps = dispatch => ({
   deployProfileReset: () => dispatch(deployProfileReset()),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
   showMainNav: (showNav) => dispatch(showMainNav(showNav)),
+  showWelcomeWarning: (showWarning) => dispatch(showWelcomeWarning(showWarning)),
   updateProfile: data => dispatch(updateProfile(data))
 })
 

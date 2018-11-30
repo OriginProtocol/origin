@@ -9,7 +9,6 @@ const initialState = {
   // whether or not the global keys have loaded
   messagingInitialized: false,
   mobileDevice: null,
-  showNav: true,
   // a list of ids that were present last time the notifications dropdown was closed
   notificationsDismissed: [],
   // get existing permission state if feature detected
@@ -20,6 +19,8 @@ const initialState = {
   notificationsSubscriptionPrompt: null,
   pushNotificationsSupported: !!(process.env.NOTIFICATIONS_KEY && process.env.NOTIFICATIONS_URL),
   serviceWorkerRegistration: null,
+  showNav: true,
+  showWelcome: true,
   translations: {
     selectedLanguageCode: null,
     selectedLanguageFull: null,
@@ -64,6 +65,9 @@ export default function App(state = initialState, action = {}) {
 
   case AppConstants.SHOW_MAIN_NAV:
     return { ...state, showNav: action.showNav }
+
+  case AppConstants.SHOW_WELCOME:
+    return { ...state, showWelcome: action.showWelcome }
 
   case AppConstants.SAVE_SERVICE_WORKER_REGISTRATION:
     return { ...state, serviceWorkerRegistration: action.registration }
