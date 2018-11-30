@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import $ from 'jquery'
 
-import { storeWeb3Intent } from 'actions/App'
+import { storeWeb3Intent, showMainNav } from 'actions/App'
 import {
   deployProfile,
   deployProfileReset,
@@ -55,6 +55,7 @@ class Profile extends Component {
     )
     this.profileDeploymentComplete = this.profileDeploymentComplete.bind(this)
     this.handleDescriptionReadMore = this.handleDescriptionReadMore.bind(this)
+    this.updateProfileMobileLayout = this.updateProfileMobileLayout.bind(this)
     /*
       Three-ish Profile States
 
@@ -65,6 +66,7 @@ class Profile extends Component {
     */
 
     const { firstName, lastName, description } = this.props.provisional
+    this.profileUpdateInterval = 500 // 0.5 seconds 
 
     this.state = {
       lastPublish: null,
@@ -91,7 +93,8 @@ class Profile extends Component {
       successMessage: '',
       wallet: null,
       imageToCrop: null,
-      descriptionExpanded: false
+      descriptionExpanded: false,
+      profileMobileLayout: false
     }
 
     this.intlMessages = defineMessages({
@@ -141,17 +144,6 @@ class Profile extends Component {
         defaultMessage: 'Read less'
       }
     })
-  }
-
-  componentDidMount() {
-    this.setProgress({
-      provisional: this.props.provisionalProgress,
-      published: this.props.publishedProgress
-    })
-
-    if ($('.identity.dropdown').hasClass('show')) {
-      $('#identityDropdown').dropdown('toggle')
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -273,6 +265,30 @@ class Profile extends Component {
     window.removeEventListener('beforeunload', this.handleUnload)
 
     clearInterval(this.createdAtInterval)
+    window.removeEventListener("resize", this.updateProfileMobileLayout);
+    this.props.showMainNav(true)
+  }
+
+  componentDidMount() {
+    this.setProgress({
+      provisional: this.props.provisionalProgress,
+      published: this.props.publishedProgress
+    })
+
+    if ($('.identity.dropdown').hasClass('show')) {
+      $('#identityDropdown').dropdown('toggle')
+    }
+    window.addEventListener("resize", this.updateProfileMobileLayout);
+    this.updateProfileMobileLayout()
+  }
+
+  updateProfileMobileLayout() {
+    this.lastProfileLayoutUpdate = this.lastProfileLayoutUpdate || 0
+    // only update this state every so often to not trigger too many renders
+    if (new Date() - this.lastProfileLayoutUpdate > this.profileUpdateInterval) {
+      this.lastProfileLayoutUpdate = new Date()
+      this.setState({ profileMobileLayout: window.innerWidth < 768 })
+    }
   }
 
   render() {
@@ -281,6 +297,7 @@ class Profile extends Component {
       progress,
       successMessage,
       imageToCrop,
+      profileMobileLayout,
       descriptionExpanded,
       lastPublishTime
    } = this.state
@@ -292,6 +309,7 @@ class Profile extends Component {
       profile,
       provisional,
       published,
+      showMainNav,
       wallet,
       intl,
       mobileDevice
@@ -331,9 +349,11 @@ class Profile extends Component {
     if (descriptionExpanded)
       descriptionClasses += ' expanded'
 
+    showMainNav(!profileMobileLayout || !modalsOpen.profile)
+
     return (
       <div className="current-user profile-wrapper">
-        <div className="container">
+        <div className={modalsOpen.profile && this.state.profileMobileLayout ? "d-none" : "container"}>
           <div className="row">
             <div className="col-12 col-lg-8">
               <div className={`row attributes mb-0 d-lg-none`}>
@@ -458,6 +478,7 @@ class Profile extends Component {
         <EditProfile
           open={modalsOpen.profile}
           handleToggle={this.handleToggle}
+          mobileLayout={profileMobileLayout}
           handleSubmit={data => {
             this.props.updateProfile(data)
             this.setState({
@@ -784,6 +805,7 @@ const mapDispatchToProps = dispatch => ({
   deployProfile: opts => dispatch(deployProfile(opts)),
   deployProfileReset: () => dispatch(deployProfileReset()),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  showMainNav: (showNav) => dispatch(showMainNav(showNav)),
   updateProfile: data => dispatch(updateProfile(data))
 })
 

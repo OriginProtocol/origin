@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import Modal from 'components/modal'
@@ -60,15 +60,30 @@ class EditProfile extends Component {
   }
 
   render() {
-    const { intl, open, handleToggle } = this.props
+    const { handleToggle, open, mobileLayout } = this.props
 
     return (
-      <Modal
-        isOpen={open}
-        data-modal="profile"
-        handleToggle={handleToggle}
-        tabIndex="-1"
-      >
+      <Fragment>
+        <Modal
+          isOpen={open && !mobileLayout}
+          data-modal="profile"
+          handleToggle={handleToggle}
+          tabIndex="-1"
+        >
+          {this.renderFormBody()}
+        </Modal>
+        <div className={open && mobileLayout ? "d-md-none" : "d-none"}>
+          {this.renderFormBody()}
+        </div>
+      </Fragment>
+    )
+  }
+
+  renderFormBody() {
+    const { intl, handleToggle } = this.props
+
+    return (
+      <Fragment>
         <h2>
           <FormattedMessage
             id={'EditProfile.editProfileHeading'}
@@ -210,7 +225,7 @@ class EditProfile extends Component {
             </div>
           </div>
         </form>
-      </Modal>
+      </Fragment>
     )
   }
 }
