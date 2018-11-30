@@ -1,13 +1,16 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["listingType", "category", "slotLength", "slotLengthUnit", "name", "description"],
+  "required": ["dappSchemaId", "listingType", "category", "slotLength", "slotLengthUnit", "name", "description",],
   "properties": {
+    "dappSchemaId": {
+      "const": "services-counseling-v00"
+    },
     "listingType": {
       "const": "fractional"
     },
     "category": {
-      "const": "for-rent"
+      "const": "schema.services"
     },
     "slotLength": {
       "type": "number",
@@ -51,7 +54,7 @@
       "title": "schema.sellerSteps",
       "enum": [
         "schema.messageBuyer",
-        "schema.prepareProperty",
+        "schema.provideService",
         "schema.rateBuyer"
       ]
     }

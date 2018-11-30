@@ -1,13 +1,33 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["listingType", "category", "name", "description", "price"],
+  "required": ["dappSchemaId", "listingType", "category", "slotLength", "slotLengthUnit", "name", "description",],
   "properties": {
+    "dappSchemaId": {
+      "const": "services-design-v00"
+    },
     "listingType": {
-      "const": "unit"
+      "const": "fractional"
     },
     "category": {
-      "const": "for-sale"
+      "const": "schema.services"
+    },
+    "slotLength": {
+      "type": "number",
+      "title": "schema.slotLength",
+      "default": 1
+    },
+    "slotLengthUnit": {
+      "type": "string",
+      "enum": [
+        "minutes",
+        "hours",
+        "days",
+        "weeks",
+        "months",
+        "years"
+      ],
+      "default": "hours"
     },
     "name": {
       "type": "string",
@@ -20,10 +40,6 @@
       "title": "schema.description",
       "minLength": 10,
       "maxLength": 1024
-    },
-    "price": {
-      "type": "number",
-      "title": "schema.priceInETH"
     },
     "pictures": {
       "type": "array",
@@ -38,7 +54,7 @@
       "title": "schema.sellerSteps",
       "enum": [
         "schema.messageBuyer",
-        "schema.prepareProperty",
+        "schema.provideService",
         "schema.rateBuyer"
       ]
     }

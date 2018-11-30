@@ -1,13 +1,16 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["listingType", "category", "slotLength", "slotLengthUnit", "name", "description"],
+  "required": ["dappSchemaId", "listingType", "category", "slotLength", "slotLengthUnit", "name", "description"],
   "properties": {
+    "dappSchemaId": {
+      "const": "for-rent-appliances-v00"
+    },
     "listingType": {
       "const": "fractional"
     },
     "category": {
-      "const": "for-rent"
+      "const": "schema.for-rent"
     },
     "slotLength": {
       "type": "number",

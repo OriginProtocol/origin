@@ -1,8 +1,11 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["listingType", "category", "name", "description"],
+  "required": ["dappSchemaId", "listingType", "category", "name", "description"],
   "properties": {
+    "dappSchemaId": {
+      "const": "announcements-activity-v00"
+    },
     "listingType": {
       "const": "unit"
     },
