@@ -9,6 +9,18 @@ import { updateMessage } from 'actions/Message'
 import Avatar from 'components/avatar'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
+const MAX_ADDRESS_LENGTH = 9
+
+function truncateWithCenterEllipsis(fullStr = '', strLen) {
+  if (fullStr.length <= MAX_ADDRESS_LENGTH) return fullStr;
+  const separator = '...'
+  const frontChars = 4
+  const backChars = 4
+
+  return fullStr.substr(0, frontChars)
+    + separator
+    + fullStr.substr(fullStr.length - backChars)
+}
 
 class Message extends Component {
   componentDidMount() {
@@ -32,31 +44,32 @@ class Message extends Component {
     const { created, hash } = message
     const { address, fullName, profile } = user
 
-    const Bubble = ({ text, color }) => (
-      <div className="bubble">
-        <svg viewBox="0 0 220 50" xmlns="http://www.w3.org/2000/svg">
-          <rect x="20" y="0" width="125" height="50" rx="10" ry="10" style={{ fill: color }} />
-          <polygon points="15,50 30,30 30,45" style={{ fill: color }} />
-        </svg>
-        <div className="chat-text">{text}</div>
-      </div>
-    )
+    const ChatBubble = (props) => {
+      const { id, text, color, fullName, address } = props
+      const myText = document.getElementById(id)
+      const height = (myText && myText.clientHeight) || 50
+      const width = myText && myText.clientWidth
 
-    if (contentOnly) {
-      return <div className="d-flex compact-message">{this.renderContent()}</div>
+      return (
+        <div className="bubble">
+          <svg viewBox={`0 0 220 ${height}`} xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="0" width="125" height={height} rx="10" ry="10" style={{ fill: color }} />
+            <polygon points="15,50 30,30 30,45" style={{ fill: color }} />
+          </svg>
+          <div id={id} className="chat-text">
+            <div className="sender">
+              {fullName && <div className="name text-truncate">{fullName}</div>}
+              <span className="address text-muted">{truncateWithCenterEllipsis(address)}</span>
+            </div>
+            {text}
+          </div>
+        </div>
+      )
     }
 
-    // <div style={{ position: 'absolute', top: '200px', width: '163px', left: '50px', fontSize: '14px' }}>{this.renderContent()}</div>
+    let chatColor = '#ebf0f3'
     if (seller === user.address) {
-      //need the blue svg with the tail on the right
-      return <div>
-        <Bubble text={this.renderContent()} color={'#1a82ff'} />
-      </div>
-    } else {
-      //need the gray svg with the tail on the left
-      return <div>
-        <Bubble text={this.renderContent()} color={'#ebf0f3'} />
-      </div>
+      chatColor = '#1a82ff'
     }
 
     if (mobileDevice) {
@@ -66,14 +79,14 @@ class Message extends Component {
             {moment(created).format('MMM Do h:mm a')}
           </div>
           <div className="d-flex message">
-            <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
             <div className="content-container">
-              <div className="meta-container d-flex">
-                <div className="sender text-truncate">
-                  <span className="name">{fullName || address}</span>
-                </div>
-              </div>
-              <div className="message-content">{this.renderContent()}</div>
+              <ChatBubble
+                text={this.renderContent()}
+                id={hash}
+                color={chatColor}
+                fullName={fullName}
+                address={address}
+              />
               {!messagingEnabled &&
                 hash === 'origin-welcome-message' && (
                 <div className="button-container">

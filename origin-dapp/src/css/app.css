@@ -3875,6 +3875,10 @@ form .stars img {
   position: relative;
 }
 
+.conversation .bubble .chat-text .name {
+  display: inline;
+}
+
 .conversation .bubble .chat-text {
   font-size: 14px;
   position: absolute;
