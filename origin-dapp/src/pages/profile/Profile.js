@@ -146,7 +146,7 @@ class Profile extends Component {
     })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     // prompt user if tab/window is closing before changes have been published
     if (this.props.changes.length) {
       $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
@@ -164,6 +164,16 @@ class Profile extends Component {
         provisional: this.props.provisionalProgress,
         published: this.props.publishedProgress
       })
+    }
+
+    if (
+      prevState.profileMobileLayout !== this.state.profileMobileLayout ||
+      prevState.modalsOpen.profile !== this.state.modalsOpen.profile
+    ) {
+      const isFullScreenProfileEdit = this.state.profileMobileLayout && this.state.modalsOpen.profile
+
+      this.props.showMainNav(!isFullScreenProfileEdit)
+      this.props.showWelcomeWarning(!isFullScreenProfileEdit)
     }
   }
 
@@ -297,9 +307,9 @@ class Profile extends Component {
       progress,
       successMessage,
       imageToCrop,
-      profileMobileLayout,
       descriptionExpanded,
-      lastPublishTime
+      lastPublishTime,
+      profileMobileLayout
    } = this.state
 
     const {
@@ -350,10 +360,6 @@ class Profile extends Component {
       descriptionClasses += ' mb-0'
     if (descriptionExpanded)
       descriptionClasses += ' expanded'
-
-    const isFullScreenProfileEdit = profileMobileLayout && modalsOpen.profile
-    showMainNav(!isFullScreenProfileEdit)
-    showWelcomeWarning(!isFullScreenProfileEdit)
 
     return (
       <div className="current-user profile-wrapper">

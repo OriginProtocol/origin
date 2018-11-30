@@ -70,16 +70,16 @@ class EditProfile extends Component {
           handleToggle={handleToggle}
           tabIndex="-1"
         >
-          {this.renderFormBody()}
+          {this.renderFormBody(false)}
         </Modal>
-        <div className={open && mobileLayout ? "d-md-none" : "d-none"}>
-          {this.renderFormBody()}
+        <div className={`mobileProfile ${open && mobileLayout ? "d-md-none" : "d-none"}`}>
+          {this.renderFormBody(true)}
         </div>
       </Fragment>
     )
   }
 
-  renderFormBody() {
+  renderFormBody(mobileLayout) {
     const { intl, handleToggle } = this.props
 
     return (
