@@ -10,7 +10,7 @@ function getElapsedTime(recentTime, previousTime) {
   return isNaN(elapsedTime) ? 0 : elapsedTime
 }
 
-const CompactMessages = ({ messages = [] }) =>
+const CompactMessages = ({ messages = [], seller }) =>
   messages.map((message, i) => {
     const { senderAddress, created, hash } = message
     const previousMessage = i === 0 ? {} : messages[i - 1]
@@ -18,7 +18,7 @@ const CompactMessages = ({ messages = [] }) =>
     const timeElapsed = getElapsedTime(created, previousMessage.created)
     const contentOnly = sameSender && timeElapsed < MAX_MINUTES
 
-    return <Message key={hash} contentOnly={contentOnly} message={message} />
+    return <Message seller={seller} key={hash} contentOnly={contentOnly} message={message} />
   })
 
 export default CompactMessages

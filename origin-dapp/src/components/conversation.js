@@ -302,7 +302,7 @@ class Conversation extends Component {
           </Link>
         )}
         <div ref={this.conversationDiv} className="conversation">
-          <CompactMessages messages={messages} />
+          <CompactMessages seller={listing.seller} messages={messages} />
         </div>
         {!shouldEnableForm && (
           <form className="add-message d-flex">

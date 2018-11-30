@@ -26,13 +26,37 @@ class Message extends Component {
       messagingEnabled,
       user,
       contentOnly,
-      mobileDevice
+      mobileDevice,
+      seller
     } = this.props
     const { created, hash } = message
     const { address, fullName, profile } = user
 
+    const Bubble = ({ text, color }) => (
+      <div className="bubble">
+        <svg viewBox="0 0 220 50" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="0" width="125" height="50" rx="10" ry="10" style={{ fill: color }} />
+          <polygon points="15,50 30,30 30,45" style={{ fill: color }} />
+        </svg>
+        <div className="chat-text">{text}</div>
+      </div>
+    )
+
     if (contentOnly) {
       return <div className="d-flex compact-message">{this.renderContent()}</div>
+    }
+
+    // <div style={{ position: 'absolute', top: '200px', width: '163px', left: '50px', fontSize: '14px' }}>{this.renderContent()}</div>
+    if (seller === user.address) {
+      //need the blue svg with the tail on the right
+      return <div>
+        <Bubble text={this.renderContent()} color={'#1a82ff'} />
+      </div>
+    } else {
+      //need the gray svg with the tail on the left
+      return <div>
+        <Bubble text={this.renderContent()} color={'#ebf0f3'} />
+      </div>
     }
 
     if (mobileDevice) {

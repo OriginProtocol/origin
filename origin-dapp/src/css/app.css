@@ -3871,6 +3871,18 @@ form .stars img {
   text-align: center;
 }
 
+.conversation .bubble {
+  position: relative;
+}
+
+.conversation .bubble .chat-text {
+  font-size: 14px;
+  position: absolute;
+  top: 9px;
+  width: 50%;
+  left: 45px;
+}
+
 .mobile-conversations .avatar-container {
   height: 60px;
   width: 60px;
