@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import $ from 'jquery'
 
 import { enableMessaging, storeWeb3Intent } from 'actions/App'
 import {
@@ -305,14 +304,6 @@ class PurchaseDetail extends Component {
 
   componentWillMount() {
     this.loadPurchase()
-  }
-
-  componentDidMount() {
-    $('[data-toggle="tooltip"]').tooltip()
-  }
-
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
   async loadPurchase() {

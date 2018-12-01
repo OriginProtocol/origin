@@ -105,8 +105,7 @@ class VerifyPhone extends Component {
     return (
       <Modal
         isOpen={open}
-        data-modal="phone"
-        className="attestation"
+        className="attestation phone"
         handleToggle={handleToggle}
         tabIndex="-1"
       >

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
 import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import ListingCardPrices from 'components/listing-card-prices'
@@ -24,20 +23,6 @@ class ListingCard extends Component {
   async componentWillMount() {
     await this.loadListing()
     await this.loadOffers()
-  }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   // init tooltip only when necessary
-  //   if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
-  //     $('[data-toggle="tooltip"]').tooltip({
-  //       delay: { hide: 1000 },
-  //       html: true
-  //     })
-  //   }
-  // }
-
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
   async loadListing() {
@@ -125,7 +110,6 @@ class ListingCard extends Component {
               boostLevelIsPastSomeThreshold && (
               <span
                 className="boosted badge"
-                data-toggle="tooltip"
                 title="Tell me <a href='https://originprotocol.com' target='_blank'>More</a> about what this means."
               >
                 <img src="images/boost-icon-arrow.svg" role="presentation" />

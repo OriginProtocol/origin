@@ -161,7 +161,7 @@ const NotWeb3EnabledMobile = props => (
 )
 
 const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
-  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+  <Modal backdrop="static" className="account-unavailable" isOpen={true}>
     <div className="image-container">
       <img
         src={`images/${
@@ -195,7 +195,7 @@ const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
 )
 
 const UnconnectedNetwork = () => (
-  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+  <Modal backdrop="static" className="web3-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
@@ -223,10 +223,8 @@ const UnsupportedNetwork = props => {
   return (
     <Modal
       backdrop="static"
-      className="unsupported-provider"
-      data-modal="web3-unavailable"
+      className="unsupported-provider web3-unavailable"
       isOpen={true}>
-
       <div className="image-container">
         <img src="images/flat_cross_icon.svg" role="presentation" />
       </div>

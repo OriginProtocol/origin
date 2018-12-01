@@ -23,8 +23,7 @@ class VerifyAirbnb extends Component {
     return (
       <Modal
         isOpen={this.props.open}
-        data-modal="airbnb"
-        className="attestation"
+        className="airbnb attestation"
         handleToggle={this.props.handleToggle}
         tabIndex="-1"
       >

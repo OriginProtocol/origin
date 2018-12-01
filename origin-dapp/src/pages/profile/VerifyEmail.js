@@ -35,8 +35,7 @@ class VerifyEmail extends Component {
     return (
       <Modal
         isOpen={this.props.open}
-        data-modal="email"
-        className="attestation"
+        className="email attestation"
         handleToggle={this.props.handleToggle}
         tabIndex="-1"
       >

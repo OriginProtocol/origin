@@ -37,8 +37,6 @@ import Profile from 'pages/profile/Profile'
 import User from 'pages/user/User'
 import SearchBar from 'components/search/searchbar'
 
-import 'bootstrap/dist/js/bootstrap'
-
 import { setClickEventHandler } from 'utils/analytics'
 import { initServiceWorker } from 'utils/notifications'
 import { mobileDevice } from 'utils/mobile'

@@ -3,37 +3,25 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
 import { dismissNotifications } from 'actions/App'
 
 import Notification from 'components/notification'
+import Dropdown from 'components/dropdown'
 
 class NotificationsDropdown extends Component {
   constructor(props) {
     super(props)
-
-    this.handleClick = this.handleClick.bind(this)
+    this.state = { open: false }
   }
 
-  componentDidMount() {
-    // control hiding of dropdown menu
-    $('.notifications.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
-      // if triggered by data-toggle
-      if (!clickEvent) {
-        return true
-      }
-      // otherwise only if triggered by self or another dropdown
-      const el = $(clickEvent.target)
-
-      return el.hasClass('dropdown') && el.hasClass('nav-item')
-    })
-
-    $('.notifications.dropdown').on('hide.bs.dropdown', () => {
+  toggle(state) {
+    const open = state === 'close' ? false : !this.state.open
+    if (!open) {
       const notificationsIds = this.props.notifications.map(n => n.id)
-
       this.props.dismissNotifications(notificationsIds)
-    })
+    }
+    this.setState({ open })
   }
 
   componentDidUpdate() {
@@ -41,22 +29,17 @@ class NotificationsDropdown extends Component {
     const isOnNotificationsRoute = !!history.location.pathname.match(
       /^\/notifications/
     )
-    const hasNewUnreadNotification = notifications.find(
+    const hasNewUnread = notifications.find(
       n => !notificationsDismissed.includes(n.id)
     )
-    const dropdownHidden = !$('.notifications.dropdown').hasClass('show')
-
-    if (!isOnNotificationsRoute && hasNewUnreadNotification && dropdownHidden) {
-      $('#notificationsDropdown').dropdown('toggle')
+    if (!isOnNotificationsRoute && hasNewUnread && !this.state.forceOpen) {
+      this.setState({ open: true, forceOpen: true })
     }
-  }
-
-  handleClick() {
-    $('#notificationsDropdown').dropdown('toggle')
   }
 
   render() {
     const { notifications } = this.props
+    const { open } = this.state
     // avoid integers greater than two digits
     const notificationCount =
       notifications.length < 100
@@ -64,16 +47,20 @@ class NotificationsDropdown extends Component {
         : `${Number(99).toLocaleString()}+`
 
     return (
-      <div className="nav-item notifications dropdown">
+      <Dropdown
+        className="nav-item notifications"
+        open={open}
+        onClose={() => this.setState({ open: false })}
+      >
         <a
           className="nav-link active dropdown-toggle"
           id="notificationsDropdown"
           role="button"
-          data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
           ga-category="top_nav"
           ga-label="notifications"
+          onClick={() => this.toggle()}
         >
           {!!notifications.length && <div className="unread-indicator" />}
           <img
@@ -88,7 +75,7 @@ class NotificationsDropdown extends Component {
           />
         </a>
         <div
-          className="dropdown-menu dropdown-menu-right"
+          className={`dropdown-menu dropdown-menu-right${open ? ' show' : ''}`}
           aria-labelledby="notificationsDropdown"
         >
           <div className="triangle-container d-flex justify-content-end">
@@ -124,7 +111,7 @@ class NotificationsDropdown extends Component {
                 ))}
               </ul>
             </div>
-            <Link to="/notifications" onClick={this.handleClick}>
+            <Link to="/notifications" onClick={() => this.toggle('close')}>
               <footer>
                 <FormattedMessage
                   id={'notificationsDropdown.viewAll'}
@@ -134,7 +121,7 @@ class NotificationsDropdown extends Component {
             </Link>
           </div>
         </div>
-      </div>
+      </Dropdown>
     )
   }
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import $ from 'jquery'
 
 import MultipleSelectionFilter from 'components/search/multiple-selection-filter'
 import PriceFilter from 'components/search/price-filter'
@@ -50,7 +49,7 @@ class FilterGroup extends Component {
       this.props.updateFilters(this.title, filters)
 
       // close the dropdown menu. Handles the css clases and aria-expanded attribute
-      $('body').trigger('click')
+      // TODO - reimplement now that we no longer use jQuery
     })
   }
 

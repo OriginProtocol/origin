@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
+import Tooltip from './tooltip'
+
+const formatDate = timestamp => moment(timestamp * 1000).format('MMM D, YYYY')
 
 class PurchaseProgress extends Component {
   constructor(props) {
@@ -68,103 +71,110 @@ class PurchaseProgress extends Component {
         <div className="circles d-flex justify-content-between">
           {!offerCreated && <span className="progress-circle" />}
           {offerCreated && (
-            <span
-              className="progress-circle checked"
-              data-toggle="tooltip"
-              data-placement="top"
-              data-html="true"
-              title={`Offer made on<br /><strong>${moment(
-                offerCreated.timestamp * 1000
-              ).format('MMM D, YYYY')}</strong>`}
+            <Tooltip
+              placement="top"
+              content={
+                <Fragment>
+                  <div>Offer made on</div>
+                  <strong>{formatDate(offerCreated.timestamp)}</strong>
+                </Fragment>
+              }
+              children={<span className="progress-circle checked" />}
             />
           )}
-          {!offerAccepted && !offerWithdrawn && <span className="progress-circle" />}
+          {!offerAccepted && !offerWithdrawn && (
+            <span className="progress-circle" />
+          )}
           {offerAccepted && (
-            <span
-              className="progress-circle checked"
-              data-toggle="tooltip"
-              data-placement="top"
-              data-html="true"
-              title={`Offer accepted on<br /><strong>${moment(
-                offerAccepted.timestamp * 1000
-              ).format('MMM D, YYYY')}</strong>`}
+            <Tooltip
+              placement="top"
+              content={
+                <Fragment>
+                  <div>Offer accepted on</div>
+                  <strong>{formatDate(offerAccepted.timestamp)}</strong>
+                </Fragment>
+              }
+              children={<span className="progress-circle checked" />}
             />
           )}
           {offerWithdrawn && (
-            <span
-              className="progress-circle checked"
-              data-toggle="tooltip"
-              data-placement="top"
-              data-html="true"
-              title={`Offer accepted on<br /><strong>${moment(
-                offerWithdrawn.timestamp * 1000
-              ).format('MMM D, YYYY')}</strong>`}
+            <Tooltip
+              placement="top"
+              content={
+                <Fragment>
+                  <div>Offer withdrawn on</div>
+                  <strong>{formatDate(offerWithdrawn.timestamp)}</strong>
+                </Fragment>
+              }
+              children={<span className="progress-circle checked" />}
             />
           )}
-          {!offerFinalized &&
-            !offerDisputed && <span className="progress-circle" />}
+          {!offerFinalized && !offerDisputed && (
+            <span className="progress-circle" />
+          )}
           {offerFinalized && (
-            <span
-              className="progress-circle checked"
-              data-toggle="tooltip"
-              data-placement="top"
-              data-html="true"
-              title={`Sale completed on<br /><strong>${moment(
-                offerFinalized.timestamp * 1000
-              ).format('MMM D, YYYY')}</strong>`}
+            <Tooltip
+              placement="top"
+              content={
+                <Fragment>
+                  <div>Sale completed on</div>
+                  <strong>{formatDate(offerFinalized.timestamp)}</strong>
+                </Fragment>
+              }
+              children={<span className="progress-circle checked" />}
             />
           )}
-          {perspective === 'seller' &&
-            !offerDisputed &&
-            !offerData && <span className="progress-circle" />}
-          {perspective === 'seller' &&
-            offerData && (
-            <span
-              className="progress-circle checked"
-              data-toggle="tooltip"
-              data-placement="top"
-              data-html="true"
-              title={`Sale reviewed on<br /><strong>${moment(
-                offerData.timestamp * 1000
-              ).format('MMM D, YYYY')}</strong>`}
+          {perspective === 'seller' && !offerDisputed && !offerData && (
+            <span className="progress-circle" />
+          )}
+          {perspective === 'seller' && offerData && (
+            <Tooltip
+              placement="top"
+              content={
+                <Fragment>
+                  <div>Sale reviewed on</div>
+                  <strong>{formatDate(offerData.timestamp)}</strong>
+                </Fragment>
+              }
+              children={<span className="progress-circle checked" />}
             />
           )}
-          {offerDisputed &&
-            !offerRuling && (
+          {offerDisputed && !offerRuling && (
             <Fragment>
-              <span
-                className="progress-circle exclaimed"
-                data-toggle="tooltip"
-                data-placement="top"
-                data-html="true"
-                title={`Dispute started on<br /><strong>${moment(
-                  offerDisputed.timestamp * 1000
-                ).format('MMM D, YYYY')}</strong>`}
-              >
-                {!subdued && '!'}
-              </span>
+              <Tooltip
+                placement="top"
+                content={
+                  <Fragment>
+                    <div>Dispute started on</div>
+                    <strong>{formatDate(offerDisputed.timestamp)}</strong>
+                  </Fragment>
+                }
+                children={!subdued && '!'}
+              />
               <span className="progress-circle" />
             </Fragment>
           )}
           {offerRuling && (
             <Fragment>
-              <span
-                className="progress-circle checked"
-                data-toggle="tooltip"
-                data-placement="top"
-                data-html="true"
-                title={`Dispute started on<br /><strong>${moment(
-                  offerDisputed.timestamp * 1000
-                ).format('MMM D, YYYY')}</strong>`}
+              <Tooltip
+                placement="top"
+                content={
+                  <Fragment>
+                    <div>Dispute started on</div>
+                    <strong>{formatDate(offerDisputed.timestamp)}</strong>
+                  </Fragment>
+                }
+                children={<span className="progress-circle checked" />}
               />
-              <span
-                className="progress-circle checked"
-                data-toggle="tooltip"
-                data-placement="top"
-                data-html="true"
-                title={`Ruling made on<br /><strong>${moment(
-                  offerRuling.timestamp * 1000
-                ).format('MMM D, YYYY')}</strong>`}
+              <Tooltip
+                placement="top"
+                content={
+                  <Fragment>
+                    <div>Ruling made on</div>
+                    <strong>{formatDate(offerRuling.timestamp)}</strong>
+                  </Fragment>
+                }
+                children={<span className="progress-circle checked" />}
               />
             </Fragment>
           )}
@@ -205,8 +215,7 @@ class PurchaseProgress extends Component {
                 </div>
               </div>
             )}
-            {!offerDisputed &&
-              perspective === 'seller' && (
+            {!offerDisputed && perspective === 'seller' && (
               <div className="stage-container">
                 <div className="stage">
                   <FormattedMessage
