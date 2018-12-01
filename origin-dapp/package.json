@@ -59,7 +59,7 @@
     "serve": "^10.0.2",
     "store": "^2.0.12",
     "style-loader": "0.23.1",
-    "web3": "^1.0.0-beta.36",
+    "web3": "1.0.0-beta.34",
     "webpack": "4.25.1",
     "webpack-cli": "^3.1.2"
   },
