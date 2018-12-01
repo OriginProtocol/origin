@@ -7,6 +7,7 @@ import Conversation from 'components/conversation'
 import { showMainNav } from 'actions/App'
 
 import groupByArray from 'utils/groupByArray'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -15,7 +16,7 @@ class Messages extends Component {
     super(props)
 
     this.state = {
-      selectedConversationId: ''
+      selectedConversationId: null
     }
   }
 
@@ -68,7 +69,7 @@ class Messages extends Component {
   }
 
   render() {
-    const { conversations, messages, mobileDevice, users, web3Account } = this.props
+    const { conversations, messages, mobileDevice, users, wallet } = this.props
     const { selectedConversationId } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
@@ -80,13 +81,13 @@ class Messages extends Component {
     )[conversation.values.length - 1]
 
     const { recipients, senderAddress } = lastMessage || {}
-    const role = senderAddress === web3Account ? 'sender' : 'recipient'
+    const role = formattedAddress(senderAddress) === formattedAddress(wallet.address) ? 'sender' : 'recipient'
     const counterpartyAddress =
       role === 'sender'
-        ? recipients.find(addr => addr !== senderAddress)
+        ? recipients.find(addr => formattedAddress(addr) !== formattedAddress(senderAddress))
         : senderAddress
-    const counterparty = users.find(u => u.address === counterpartyAddress) || {}
-    const counterpartyName = counterparty.fullName || counterpartyAddress
+    const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
+    const counterpartyName = counterparty.fullName || formattedAddress(counterpartyAddress)
 
     if (mobileDevice) {
       if (selectedConversationId && selectedConversationId.length) {
@@ -158,13 +159,12 @@ class Messages extends Component {
   }
 }
 
-const mapStateToProps = ({ app, messages, users }) => {
-  const { messagingEnabled, web3, mobileDevice, showNav } = app
-  const web3Account = web3.account
+const mapStateToProps = ({ activation, app, messages, users, wallet }) => {
+  const { mobileDevice, showNav } = app
   const filteredMessages = messages.filter(({ content, conversationId }) => {
     return (
       content &&
-      origin.messaging.getRecipients(conversationId).includes(web3Account)
+      origin.messaging.getRecipients(conversationId).includes(wallet.address)
     )
   })
   const conversations = groupByArray(filteredMessages, 'conversationId')
@@ -182,8 +182,7 @@ const mapStateToProps = ({ app, messages, users }) => {
   return {
     conversations: sortedConversations,
     messages: filteredMessages,
-    messagingEnabled,
-    web3Account,
+    messagingEnabled: activation.messaging.enabled,
     mobileDevice,
     showNav,
     users

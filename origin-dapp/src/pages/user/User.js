@@ -9,6 +9,8 @@ import Reviews from 'components/reviews'
 import UnnamedUser from 'components/unnamed-user'
 import WalletCard from 'components/wallet-card'
 
+import { formattedAddress } from 'utils/user'
+
 class User extends Component {
   async componentDidMount() {
     fetchUser(this.props.userAddress)
@@ -139,7 +141,9 @@ class User extends Component {
 
 const mapStateToProps = (state, { userAddress }) => {
   return {
-    user: state.users.find(u => u.address === userAddress) || {}
+    user: state.users.find(u => {
+      return formattedAddress(u.address) === formattedAddress(userAddress)
+    }) || {}
   }
 }
 

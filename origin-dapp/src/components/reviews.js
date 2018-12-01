@@ -3,6 +3,8 @@ import { FormattedMessage, FormattedNumber } from 'react-intl'
 
 import Review from 'components/review'
 
+import { formattedAddress } from 'utils/user'
+
 import origin from '../services/origin'
 
 class Reviews extends Component {
@@ -36,7 +38,7 @@ class Reviews extends Component {
   render() {
     const { userAddress } = this.props
     const userReviews = this.state.reviews.filter(
-      r => r.reviewer !== userAddress
+      r => formattedAddress(r.reviewer) !== formattedAddress(userAddress)
     )
 
     return (

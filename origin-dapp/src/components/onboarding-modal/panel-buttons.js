@@ -85,7 +85,7 @@ export default class PanelButtons extends Component {
       'Origin Tokens': (
         <div className="col-auto">
           <Link
-            to="/about-tokens"
+            to="/about-tokens?skip-onboarding=true"
             target="_blank"
             ga-category="seller_onboarding"
             ga-label="learn_more_cta"
