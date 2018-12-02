@@ -17,6 +17,7 @@ const offerStatusToSellerNotificationType = {
 }
 const offerStatusToBuyerNotificationType = {
   'accepted': 'buyer_offer_accepted',
+  'disputed': 'buyer_offer_disputed',
   'ruling': 'buyer_offer_ruling',
   'sellerReviewed': 'buyer_offer_review',
   'withdrawn': 'buyer_offer_withdrawn',
@@ -557,6 +558,11 @@ class V00_MarkeplaceAdapter {
         ])
       }
     }
+    console.log(`getNotification party=${party}`)
+    console.log("partyListingIds=", partyListingIds)
+    console.log("partyOfferIds=", partyOfferIds)
+
+    console.log("Looking for seller side notifications...")
 
     // Find events of interest on offers for listings created by the user as a seller.
     for (const listingId of partyListingIds) {
@@ -564,8 +570,10 @@ class V00_MarkeplaceAdapter {
         const listing = await this.getListing(listingId)
         for (const offerId in listing.offers) {
           const offer = listing.offers[offerId]
+          console.log(`offerId=${offerId} offer.event=${offer.event.event} offer.event.party=${offer.event.returnValues.party}`)
           // Skip the event if the action was initiated by the user.
-          if (party === offer.event.decoded.party) {
+          if (party === offer.event.returnValues.party) {
+            console.log("User as seller - Skipping offer ", offerId)
             continue
           }
           const type =  offerStatusToSellerNotificationType[offer.status]
@@ -581,17 +589,22 @@ class V00_MarkeplaceAdapter {
         // Guard against invalid listing/offer that might be created for example
         // by exploiting a validation loophole in origin-js listing/offer code
         // or by writing directly to the blockchain.
-        console.log(`Notification: skipping invalid listing ${this.contractName} ${listingId}`)
+        console.log('getNotifications: skipping invalid listing')
+        console.log(`  contract=${this.contractName} listingId=${listingId} error=${e}`)
       }
     }
+
+    console.log("Looking for buyer side notifications...")
 
     // Find events of interest on offers made by the user as a buyer.
     for (const [listingId, offerId] of partyOfferIds) {
       try {
         const listing = await this.getListing(listingId)
         const offer = listing.offers[offerId]
+        console.log(`offerId=${offerId} offer.event=${offer.event.event} offer.event.party=${offer.event.returnValues.party}`)
         // Skip the event if the action was initiated by the user.
-        if (party.toLowerCase() === offer.event.decoded.party.toLowerCase()) {
+        if (party.toLowerCase() === offer.event.returnValues.party.toLowerCase()) {
+          console.log("User as buyer - Skipping offer ", offerId)
           continue
         }
         const type = offerStatusToBuyerNotificationType[offer.status]
@@ -606,10 +619,11 @@ class V00_MarkeplaceAdapter {
         // Guard against invalid listing/offer that might be created for example
         // by exploiting a validation loophole in origin-js listing/offer code
         // or by writing directly to the blockchain.
-        console.log(`Notification: skipping invalid offer ${this.contractName} ${offerId}`)
+        console.log('getNotifications: skipping invalid offer')
+        console.log(`  contract=${this.contractName} offerId=${listingId} error=${e}`)
       }
     }
-
+    console.log("NUM NOTIFICATIONS RETURNED=", notifications.length)
     return notifications
   }
 

@@ -40,6 +40,10 @@ class NotificationMessage extends Component {
         id: 'notification.buyerOfferAccepted',
         defaultMessage: 'An offer you made has been accepted.'
       },
+      buyerOfferDisputed: {
+        id: 'notification.buyerOfferDisputed',
+        defaultMessage: 'A problem has been reported with your transaction.'
+      },
       buyerOfferRuling: {
         id: 'notification.buyerOfferRuling',
         defaultMessage: 'A ruling has been issued on your disputed transaction.'
@@ -62,6 +66,7 @@ class NotificationMessage extends Component {
       'seller_offer_ruling': intlMessages.sellerOfferRuling,
       'seller_offer_withdrawn': intlMessages.sellerOfferWithdrawn,
       'buyer_offer_accepted': intlMessages.buyerOfferAccepted,
+      'buyer_offer_disputed': intlMessages.sellerOfferDisputed,
       'buyer_offer_ruling': intlMessages.buyerOfferRuling,
       'buyer_offer_review': intlMessages.buyerOfferReview,
       'buyer_offer_withdrawn': intlMessages.buyerOfferWithdrawn,
