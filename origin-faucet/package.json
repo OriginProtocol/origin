@@ -31,7 +31,7 @@
     "rate-limiter-flexible": "^0.18.5",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
-    "web3": "^1.0.0-beta.34"
+    "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "nodemon": "^1.18.6"
