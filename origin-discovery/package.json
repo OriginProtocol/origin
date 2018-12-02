@@ -29,7 +29,7 @@
     "per-env": "^1.0.2",
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.41.2",
+    "sequelize": "^5.0.0-beta.14",
     "sequelize-cli": "^5.1.0",
     "url": "^0.11.0",
     "web3": "1.0.0-beta.34"
