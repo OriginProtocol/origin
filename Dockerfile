@@ -5,7 +5,7 @@ WORKDIR /app
 # Copy utility scripts
 COPY ./development/scripts/* /usr/local/bin/
 
-COPY ./scripts/ ./
+COPY ./scripts/ ./scripts/
 
 # Copy all package files for dependency installs, this is done here to allow
 # Docker to cache the npm install steps if none of the dependencies have changed
