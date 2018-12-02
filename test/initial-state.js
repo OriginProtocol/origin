@@ -10,8 +10,7 @@ describe('initial state', () => {
 
   it('should have 5 listings in postgresql', async () => {
     const count = await db.Listing.findAll()
-
-    assert(count.length == 5)
+    assert.equal(count.length, 5)
   })
 
   it('should return 5 listings from discovery', () => {
