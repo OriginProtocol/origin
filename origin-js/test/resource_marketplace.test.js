@@ -17,6 +17,15 @@ import { OFFER_DATA_TYPE } from '../src/ipfsInterface/store'
 // oddly changing an imported object here can affect other or subsequent tests that import the same file
 const listingData = Object.assign({}, listingValid)
 const udpatedListingData = Object.assign({}, updatedListing)
+const multiUnitListingData = Object.assign({}, listingValid, { unitsTotal: 2 })
+const multiUnitListingWithCommissionData = Object.assign(
+  {},
+  multiUnitListingData,
+  {
+    commission: { currency: 'OGN', amount: '2' },
+    commissionPerUnit: { currency: 'OGN', amount: '1' }
+  }
+)
 const offerData = Object.assign({}, offerValid)
 const reviewData = Object.assign({}, reviewValid)
 
@@ -40,6 +49,12 @@ const commissionOffer = Object.assign({}, offerData, {
 const invalidCommissionOffer = Object.assign({}, offerData, {
   commission: { currency: 'OGN', amount: '1' }
 })
+const multiUnitCommissionOffer = Object.assign({}, offerData, {
+  commission: { currency: 'OGN', amount: '1' }
+})
+const invalidMultiUnitCommissionOffer = Object.assign({}, offerData, {
+  commission: { currency: 'OGN', amount: '0.9' }
+})
 
 class StoreMock {
   constructor() {
@@ -57,7 +72,7 @@ class StoreMock {
 
 describe('Marketplace Resource', function() {
   // TODO speed up the notifications test so that this timeout can be reduced
-  this.timeout(15000) // default is 2000
+  this.timeout(20000) // default is 2000
   let marketplace, web3, contractService, validBuyer, validArbitrator, validAffiliate,
     evilAddress, makeMaliciousOffer
 
@@ -93,7 +108,6 @@ describe('Marketplace Resource', function() {
 
     await marketplace.createListing(listingData)
     await marketplace.makeOffer('999-000-0', offerData)
-
     makeMaliciousOffer = async ({ affiliate = validAffiliate, arbitrator = validArbitrator }) => {
       const ipfsHash = await marketplace.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
       const ipfsBytes = contractService.getBytes32FromIpfsHash(ipfsHash)
@@ -150,7 +164,7 @@ describe('Marketplace Resource', function() {
       await asAccount(contractService.web3, this.userAddress, async () => {
         await marketplace.updateListing('999-000-0', udpatedListingData)
       })
-        
+
       const listings = await marketplace.getListings({
         purchasesFor: validBuyer,
         withBlockInfo: true
@@ -162,7 +176,7 @@ describe('Marketplace Resource', function() {
       expect(listings[0].title).to.equal('my listing') // not 'my listing EDITED!'
     })
 
-    it('should return a seller\'s listings using listingsFor option', async () => { 
+    it('should return a seller\'s listings using listingsFor option', async () => {
       await asAccount(contractService.web3, validBuyer, async () => {
         await marketplace.createListing(listingData)
       })
@@ -317,7 +331,7 @@ describe('Marketplace Resource', function() {
         errorMessage = String(e)
       }
       expect(errorThrown).to.be.true
-      expect(errorMessage).to.equal('Error: Invalid offer: insufficient commission amount for listing')
+      expect(errorMessage).to.equal('Error: Invalid offer: incorrect commission amount for listing')
     })
 
     it('should throw an error if arbitrator is invalid', async () => {
@@ -427,7 +441,7 @@ describe('Marketplace Resource', function() {
       await asAccount(contractService.web3, this.userAddress, async () => {
         await marketplace.updateListing('999-000-0', udpatedListingData)
       })
-        
+
       const purchases = await marketplace.getPurchases(validBuyer)
 
       expect(purchases).to.be.an('array')
@@ -446,7 +460,7 @@ describe('Marketplace Resource', function() {
       await asAccount(contractService.web3, this.userAddress, async () => {
         await marketplace.updateListing('999-000-0', udpatedListingData)
       })
-        
+
       const sales = await marketplace.getSales(this.userAddress)
 
       expect(sales).to.be.an('array')
@@ -576,6 +590,340 @@ describe('Marketplace Resource', function() {
       expect(offer.status).to.be.equal('ruling')
     })
   })
+
+  describe('multi-unit (quantity=2)', () => {
+    beforeEach(async () => {
+      await marketplace.createListing(multiUnitListingData)
+      const listings = await marketplace.getListings({ idsOnly: true })
+      expect(listings).to.have.lengthOf(2)
+    })
+
+    describe('makeOffer', () => {
+      it('should allow 2 offers to be accepted', async () => {
+        // Create first offer.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+        validateOffer(offer1)
+
+        // Create second offer.
+        await marketplace.makeOffer('999-000-1', offerData)
+        const offer2 = await marketplace.getOffer('999-000-1-1')
+        expect(offer2.status).to.equal('created')
+        validateOffer(offer2)
+      })
+
+      it('should not allow a 3rd offer to be accepted', async () => {
+        // Create and accept first offer.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+        validateOffer(offer1)
+
+        // Create and accept second offer.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer2 = await marketplace.getOffer('999-000-1-1')
+        expect(offer2.status).to.equal('created')
+
+        await marketplace.acceptOffer('999-000-1-1')
+        offer2 = await marketplace.getOffer('999-000-1-1')
+        expect(offer2.status).to.equal('accepted')
+        validateOffer(offer2)
+
+        // Try to create third offer and expect failure.
+        await expect(marketplace.makeOffer('999-000-1', offerData))
+          .to.be.rejectedWith('units purchased exceeds units available')
+      })
+
+      it('should reject an offer for too many units', async() => {
+        await marketplace.makeOffer('999-000-1', offerData)
+        const invalidOfferData = Object.assign({}, offerData, { unitsPurchased: 3 })
+        await expect(marketplace.makeOffer('999-000-1', invalidOfferData))
+          .to.be.rejectedWith('units purchased exceeds units available')
+      })
+    })
+
+    describe('getOffers', () => {
+      it('should filter offers with insufficient value', async () => {
+        // Create first, valid offer.
+        await marketplace.makeOffer('999-000-1', offerData)
+        const offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+        validateOffer(offer1)
+
+        // Create offer for 2 units but a value that only covers 1 unit.
+        // This succeeds, because marketplace.makeOffer() doesn't validate
+        // price.
+        expect(offerData.unitsPurchased).to.equal(1)
+        const undervaluedOfferData = Object.assign({}, offerData, { unitsPurchased: 2 })
+        await marketplace.makeOffer('999-000-1', undervaluedOfferData)
+
+        // getOffers filters out invalid offers.
+        const offers = await marketplace.getOffers('999-000-1')
+        expect(offers).be.an('array')
+        expect(offers).to.have.lengthOf(1)
+        expect(offers[0].unitsPurchased).to.equal(1)
+      })
+
+      it('should filter offers for units that exceed available units', async () => {
+        // Create first, valid offer for 1 unit.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+        validateOffer(offer1)
+
+        // Create offer for 2 units.
+        expect(offerData.unitsPurchased).to.equal(1)
+        const twoUnitOfferData = Object.assign({}, offerData, {
+          totalPrice: { currency: 'ETH', amount: '0.066' },
+          unitsPurchased: 2
+        })
+        await marketplace.makeOffer('999-000-1', twoUnitOfferData)
+
+        const twoUnitOffer = await marketplace.getOffer('999-000-1-1')
+        expect(twoUnitOffer.status).to.equal('created')
+        validateOffer(twoUnitOffer)
+
+        // Accept first offer.
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+        validateOffer(offer1)
+
+        // Create a second offer for 1 unit.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer2 = await marketplace.getOffer('999-000-1-2')
+        expect(offer2.status).to.equal('created')
+        validateOffer(offer2)
+
+        // getOffers filters out invalid offers.
+        const offers = await marketplace.getOffers('999-000-1')
+        expect(offers).be.an('array')
+        expect(offers).to.have.lengthOf(2)
+        expect(offers[0].unitsPurchased).to.equal(1)
+        expect(offers[1].unitsPurchased).to.equal(1)
+      })
+    })
+
+    describe('getOffer', () => {
+      it('should throw an error for an offer with insufficient value', async () => {
+        // Create offer for 2 units but a value that only covers 1 unit.
+        // This succeeds, because marketplace.makeOffer() doesn't validate
+        // price.
+        expect(offerData.unitsPurchased).to.equal(1)
+        const undervaluedOfferData = Object.assign({}, offerData, { unitsPurchased: 2 })
+        await marketplace.makeOffer('999-000-1', undervaluedOfferData)
+
+        // getOffer fails, because this is where we do validation.
+        await expect(marketplace.getOffer('999-000-1-0'))
+          .to.be.rejectedWith('Invalid offer: insufficient offer amount for listing')
+      })
+    })
+
+    describe('acceptOffer', () => {
+      it('should throw an error for offers for excessive quantity', async () => {
+        // Create first, valid offer for 1 unit.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+        validateOffer(offer1)
+
+        // Create offer for 2 units.
+        expect(offerData.unitsPurchased).to.equal(1)
+        const twoUnitOfferData = Object.assign({}, offerData, {
+          totalPrice: { currency: 'ETH', amount: '0.066' },
+          unitsPurchased: 2
+        })
+        await marketplace.makeOffer('999-000-1', twoUnitOfferData)
+
+        const twoUnitOffer = await marketplace.getOffer('999-000-1-1')
+        expect(twoUnitOffer.status).to.equal('created')
+        validateOffer(twoUnitOffer)
+
+        // Accept first offer.
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+        validateOffer(offer1)
+
+        // Try and fail to accept offer for 2 units.
+        await expect(marketplace.acceptOffer('999-000-1-1'))
+          .to.be.rejectedWith('cannot accept invalid offer 999-000-1-1')
+      })
+
+      it('should throw an error for an offer with insufficient value', async () => {
+        // Create offer for 2 units but a value that only covers 1 unit.
+        // This succeeds, because marketplace.makeOffer() doesn't validate
+        // price.
+        expect(offerData.unitsPurchased).to.equal(1)
+        const undervaluedOfferData = Object.assign({}, offerData, { unitsPurchased: 2 })
+        await marketplace.makeOffer('999-000-1', undervaluedOfferData)
+        await expect(marketplace.acceptOffer('999-000-1-0'))
+          .to.be.rejectedWith('cannot accept invalid offer 999-000-1-0')
+      })
+
+      it('should not deduct units available for withdrawn offers', async () => {
+        // Create and accept offer for 1 unit.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+        await marketplace.acceptOffer('999-000-1-0')
+        await marketplace.finalizeOffer('999-000-1-0', reviewData)
+        validateOffer(offer1)
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('finalized')
+
+        // Create and withdraw an offer for 1 unit.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer2 = await marketplace.getOffer('999-000-1-1')
+        expect(offer2.status).to.equal('created')
+        await marketplace.withdrawOffer('999-000-1-1')
+
+        // Create and accept another offer for 1 unit.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer3 = await marketplace.getOffer('999-000-1-2')
+        expect(offer3.status).to.equal('created')
+        await marketplace.acceptOffer('999-000-1-2')
+        offer3 = await marketplace.getOffer('999-000-1-2')
+        expect(offer3.status).to.equal('accepted')
+        validateOffer(offer3)
+      })
+    })
+
+    describe('updateListing', () => {
+      it('should allow inventory to be increased', async () => {
+        const newUnitsTotal = multiUnitListingData.unitsTotal + 1
+        const newOfferData = Object.assign(
+          {},
+          offerData,
+          { unitsPurchased: newUnitsTotal}
+        )
+
+        // Make an offer for too many units, which should fail.
+        await expect(marketplace.makeOffer('999-000-1', newOfferData))
+          .to.be.rejectedWith('units purchased exceeds units available')
+
+        // Increase units for listing.
+        const newListingData = Object.assign(
+          {},
+          multiUnitListingData,
+          { unitsTotal: newUnitsTotal }
+        )
+        await marketplace.updateListing('999-000-1', newListingData)
+
+        // Create and accept offer for new number of units.
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+      })
+
+      it('should allow inventory to be decreased', async () => {
+        await marketplace.makeOffer('999-000-1', offerData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+
+        const newListingData = Object.assign(
+          {},
+          multiUnitListingData,
+          { unitsTotal: 1 }
+        )
+        await marketplace.updateListing('999-000-1', newListingData)
+
+        const listing = await marketplace.getListing('999-000-1')
+        const offers = await marketplace.getOffers('999-000-1')
+        const unitsAvailable = await marketplace.unitsAvailable(listing, offers)
+        expect(unitsAvailable).to.equal(0)
+      })
+
+      it('should throw an error if decreasing inventory invalidates accepted offers', async () => {
+        const newOfferData = Object.assign({}, offerData, {
+          unitsPurchased: 2,
+          totalPrice: { currency: 'ETH', amount: '0.066' }
+        })
+        await marketplace.makeOffer('999-000-1', newOfferData)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+
+        // This decrease in units is invalid, because all units were purchased
+        // above.
+        const newListingData = Object.assign(
+          {},
+          multiUnitListingData,
+          { unitsTotal: 1 }
+        )
+        await expect(marketplace.updateListing('999-000-1', newListingData))
+          .to.be.rejectedWith('new unitsTotal insufficient to cover accepted offers')
+      })
+    })
+  })
+
+  describe('multi-unit (quantity=2) with commission', () => {
+    beforeEach(async () => {
+      await marketplace.createListing(multiUnitListingWithCommissionData)
+      const listings = await marketplace.getListings({ idsOnly: true })
+      expect(listings).to.have.lengthOf(2)
+    })
+
+    describe('makeOffer', () => {
+      it('should allow 2 offers to be accepted', async () => {
+        // Create first offer.
+        await marketplace.makeOffer('999-000-1', multiUnitCommissionOffer)
+        let offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+
+        await marketplace.acceptOffer('999-000-1-0')
+        offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('accepted')
+        validateOffer(offer1)
+
+        // Create second offer.
+        await marketplace.makeOffer('999-000-1', multiUnitCommissionOffer)
+        let offer2 = await marketplace.getOffer('999-000-1-1')
+        expect(offer2.status).to.equal('created')
+        validateOffer(offer2)
+
+        await marketplace.acceptOffer('999-000-1-1')
+        offer2 = await marketplace.getOffer('999-000-1-1')
+        expect(offer2.status).to.equal('accepted')
+        validateOffer(offer2)
+      })
+    })
+
+    describe('getOffers', () => {
+      it('should filter offers with insufficient per-unit commission', async () => {
+        await marketplace.makeOffer('999-000-1', multiUnitCommissionOffer)
+        const offer1 = await marketplace.getOffer('999-000-1-0')
+        expect(offer1.status).to.equal('created')
+
+        await marketplace.makeOffer('999-000-1', invalidMultiUnitCommissionOffer)
+        await expect(marketplace.getOffer('999-000-1-1'))
+          .to.be.rejectedWith('Invalid offer: incorrect commission amount for listing')
+
+        const offers = await marketplace.getOffers('999-000-1')
+        expect(offers.length).to.equal(1)
+        expect(offers).not.to.include(invalidMultiUnitCommissionOffer)
+        expect(offers[0].status).to.equal('created')
+        expect(offers[0].id).to.equal('999-000-1-0')
+      })
+    })
+  })
 })
 
 describe('Marketplace Resource - Performance mode', function() {
@@ -621,4 +969,3 @@ describe('Marketplace Resource - Performance mode', function() {
   })
 
 })
-

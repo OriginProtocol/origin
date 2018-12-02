@@ -33,7 +33,7 @@
 	},
 	"devDependencies": {
 		"orbit-db": "^0.19.8",
-		"web3": "^1.0.0-beta.34",
+		"web3": "1.0.0-beta.34",
 		"webpack": "^4.25.1"
 	},
 	"eslintConfig": {

@@ -23,9 +23,7 @@ describe('Discovery service', function() {
             'listing': {
               'data': {
                 'id': listingId,
-                'ipfs': {
-                  'expiry': '1996-12-19T16:39:57-08:00',
-                },
+                'ipfs': {},
                 'title': 'title',
                 'description': 'some description',
                 'category': 'schema.housing',

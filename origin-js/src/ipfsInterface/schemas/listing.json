@@ -84,6 +84,9 @@
         },
         "price": {
           "$ref": "#/definitions/money"
+        },
+        "commissionPerUnit": {
+          "$ref": "#/definitions/money"
         }
       },
       "required": [
@@ -132,10 +135,6 @@
     },
     "description": {
       "type": "string"
-    },
-    "expiry": {
-      "type": "string",
-      "format": "date-time"
     },
     "media": {
       "type": "array",
