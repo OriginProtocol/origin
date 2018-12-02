@@ -74,13 +74,11 @@ class Messages extends Component {
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
       .sort((a, b) => (a.created < b.created ? -1 : 1))
-
     const conversation = conversations.find((conv) => conv.key === selectedConversationId)
     const lastMessage = conversation && conversation.values.sort(
       (a, b) => (a.created < b.created ? -1 : 1)
     )[conversation.values.length - 1]
-
-    const { recipients, senderAddress } = lastMessage || {}
+    const { recipients, senderAddress } = lastMessage || { recipients: [] }
     const role = formattedAddress(senderAddress) === formattedAddress(wallet.address) ? 'sender' : 'recipient'
     const counterpartyAddress =
       role === 'sender'
@@ -185,7 +183,8 @@ const mapStateToProps = ({ activation, app, messages, users, wallet }) => {
     messagingEnabled: activation.messaging.enabled,
     mobileDevice,
     showNav,
-    users
+    users,
+    wallet
   }
 }
 

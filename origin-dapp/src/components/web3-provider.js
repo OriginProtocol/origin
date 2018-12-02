@@ -506,11 +506,11 @@ class Web3Provider extends Component {
   handleAccounts(accounts) {
     const { messagingInitialized, storeAccountAddress, wallet } = this.props
     const current = accounts[0]
-    const previous = formattedAddress(wallet.address)
+    const previous = wallet.address ? formattedAddress(wallet.address) : null
     const walletLinkerEnabled = origin.contractService.walletLinker
 
     // on account detection
-    if (formattedAddress(current) !== formattedAddress(previous)) {
+    if (formattedAddress(current) !== previous) {
       // TODO: fix this with some route magic!
       if (
         !walletLinkerEnabled ||
@@ -532,6 +532,9 @@ class Web3Provider extends Component {
 
       // update global state
       storeAccountAddress(current)
+    }
+
+    if (current && !messagingInitialized) {
       // trigger messaging service
       origin.messaging.onAccount(current)
     }

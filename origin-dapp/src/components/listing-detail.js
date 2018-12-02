@@ -108,7 +108,6 @@ class ListingsDetail extends Component {
 
   async handleMakeOffer(skip, slotsToReserve) {
     // onboard if no identity, purchases, and not already completed
-    const {  } = this.state
     const shouldOnboard =
       !this.props.profile.strength &&
       !this.state.purchases.length &&
@@ -159,7 +158,7 @@ class ListingsDetail extends Component {
         finalizes: 365 * 24 * 60 * 60
       }
 
-      if (isFractional) {
+      if (this.state.isFractional) {
         offerData.slots = prepareSlotsToSave(slots)
       } else {
         offerData.unitsPurchased = 1
