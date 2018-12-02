@@ -52,14 +52,14 @@ services:
       - IPFS_API_URL=http://origin:5002
       - IPFS_GATEWAY_URL=http://origin:8080
     volumes:
-      - ./ipfs-proxy/src:/app/src
+      - ./ipfs-proxy/src:/app/ipfs-proxy/src
     command: npm run start --prefix ipfs-proxy
 
   origin-discovery:
     container_name: origin-discovery
     image: origin
     volumes:
-      - ./origin/src:/app/origin/src
+      - ./origin/-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
@@ -77,7 +77,7 @@ services:
     image: origin
     volumes:
       - ./origin-contracts/build:/app/origin-contracts/build
-      - ./origin/src:/app/origin/src
+      - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
       - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
     depends_on:
@@ -98,10 +98,11 @@ services:
     ports:
       - "9012:9012"
     volumes:
-      - ./origin-messaging/src:/app/src
+      - ./origin-messaging/src:/app/origin-messaging/src
       - ipfs:/app/ipfs
     environment:
       - MESSAGING_NAMESPACE=dev
+      - IPFS_REPO_PATH=/app/ipfs
     command: npm run start --prefix origin-messaging
 
   origin-bridge:
@@ -128,8 +129,8 @@ services:
     container_name: origin-notifications
     image: origin
     volumes:
-      - ./origin-notifications/src:/app/src
-      - ./development/envfiles/origin-notifications.env:/app/.env
+      - ./origin-notifications/src:/app/origin-notifications/src
+      - ./development/envfiles/origin-notifications.env:/app/origin-notifications/.env
     depends_on:
       - postgres
     environment:
@@ -156,7 +157,7 @@ services:
       - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
       # Set the envfile from the local envfile
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
-      - ipfs:/ipfs
+      - ipfs:/app/ipfs
     depends_on:
       - ipfs-proxy
       - event-listener
@@ -173,6 +174,6 @@ services:
       # the .env file.
       >
       /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 &&
-      . set-ipfs-swarm.sh /ipfs/config &&
+      . set-ipfs-swarm.sh /app/ipfs/config &&
       wait-for.sh -t 0 -q origin:8080 --
       npm run start --prefix origin-dapp"
