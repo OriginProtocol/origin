@@ -1,0 +1,62 @@
+{
+  "$schema":"http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "required": ["dappSchemaId", "listingType", "category", "slotLength", "slotLengthUnit", "name", "description"],
+  "properties": {
+    "dappSchemaId": {
+      "const": "forRent-bicycles-1-0-0"
+    },
+    "listingType": {
+      "const": "fractional"
+    },
+    "category": {
+      "const": "schema.for-rent"
+    },
+    "slotLength": {
+      "type": "number",
+      "title": "schema.slotLength",
+      "default": 1
+    },
+    "slotLengthUnit": {
+      "type": "string",
+      "enum": [
+        "minutes",
+        "hours",
+        "days",
+        "weeks",
+        "months",
+        "years"
+      ],
+      "default": "hours"
+    },
+    "name": {
+      "type": "string",
+      "title": "schema.title",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "title": "schema.description",
+      "minLength": 10,
+      "maxLength": 1024
+    },
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.sellerSteps",
+      "enum": [
+        "schema.messageBuyer",
+        "schema.prepareProperty",
+        "schema.rateBuyer"
+      ]
+    }
+  }
+}

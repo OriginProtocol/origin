@@ -1,0 +1,49 @@
+{
+  "$schema":"http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "required": ["dappSchemaId", "listingType", "category", "name", "description", "price"],
+  "properties": {
+    "dappSchemaId": {
+      "const": "forSale-householdItems-1-0-0"
+    },
+    "listingType": {
+      "const": "unit"
+    },
+    "category": {
+      "const": "for-sale"
+    },
+    "name": {
+      "type": "string",
+      "title": "schema.title",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "title": "schema.description",
+      "minLength": 10,
+      "maxLength": 1024
+    },
+    "price": {
+      "type": "number",
+      "title": "schema.priceInETH"
+    },
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.sellerSteps",
+      "enum": [
+        "schema.messageBuyer",
+        "schema.prepareProperty",
+        "schema.rateBuyer"
+      ]
+    }
+  }
+}

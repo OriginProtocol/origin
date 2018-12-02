@@ -1,16 +1,16 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["dappSchemaId", "listingType", "category", "name", "description", "price"],
+  "required": ["dappSchemaId", "listingType", "category", "name", "description"],
   "properties": {
     "dappSchemaId": {
-      "const": "for-sale-atvsUtvsSnowmobiles-v00"
+      "const": "announcements-freeStuff-1-0-0"
     },
     "listingType": {
       "const": "unit"
     },
     "category": {
-      "const": "for-sale"
+      "const": "announcements"
     },
     "name": {
       "type": "string",
@@ -24,10 +24,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "price": {
-      "type": "number",
-      "title": "schema.priceInETH"
-    },
     "pictures": {
       "type": "array",
       "title": "schema.selectPhotos",
@@ -35,15 +31,6 @@
         "type": "string",
         "format": "data-url"
       }
-    },
-    "sellerSteps": {
-      "type": "string",
-      "title": "schema.sellerSteps",
-      "enum": [
-        "schema.messageBuyer",
-        "schema.prepareProperty",
-        "schema.rateBuyer"
-      ]
     }
   }
 }

@@ -4,7 +4,7 @@
   "required": ["dappSchemaId", "listingType", "category", "slotLength", "slotLengthUnit", "name", "description"],
   "properties": {
     "dappSchemaId": {
-      "const": "for-rent-atvsUtvsSnowmobiles-v00"
+      "const": "forRent-appliances-1-0-0"
     },
     "listingType": {
       "const": "fractional"

@@ -1,33 +1,16 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["dappSchemaId", "listingType", "category", "slotLength", "slotLengthUnit", "name", "description",],
+  "required": ["dappSchemaId", "listingType", "category", "name", "description", "price"],
   "properties": {
     "dappSchemaId": {
-      "const": "services-design-v00"
+      "const": "forSale-cellPhones-1-0-0"
     },
     "listingType": {
-      "const": "fractional"
+      "const": "unit"
     },
     "category": {
-      "const": "schema.services"
-    },
-    "slotLength": {
-      "type": "number",
-      "title": "schema.slotLength",
-      "default": 1
-    },
-    "slotLengthUnit": {
-      "type": "string",
-      "enum": [
-        "minutes",
-        "hours",
-        "days",
-        "weeks",
-        "months",
-        "years"
-      ],
-      "default": "hours"
+      "const": "for-sale"
     },
     "name": {
       "type": "string",
@@ -40,6 +23,10 @@
       "title": "schema.description",
       "minLength": 10,
       "maxLength": 1024
+    },
+    "price": {
+      "type": "number",
+      "title": "schema.priceInETH"
     },
     "pictures": {
       "type": "array",
@@ -54,7 +41,7 @@
       "title": "schema.sellerSteps",
       "enum": [
         "schema.messageBuyer",
-        "schema.provideService",
+        "schema.prepareProperty",
         "schema.rateBuyer"
       ]
     }
