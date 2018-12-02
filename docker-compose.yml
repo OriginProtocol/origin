@@ -59,8 +59,9 @@ services:
     container_name: origin-discovery
     image: origin
     volumes:
-      - ./origin/-js/src:/app/origin-js/src
+      - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
+      - ./origin-discovery/config:/app/origin-discovery/config
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
@@ -79,6 +80,8 @@ services:
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
+      - ./origin-discovery/migrations:/app/origin-discovery/migrations
+      - ./origin-discovery/config:/app/origin-discovery/config
       - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
     depends_on:
       - origin
@@ -130,6 +133,7 @@ services:
     image: origin
     volumes:
       - ./origin-notifications/src:/app/origin-notifications/src
+      - ./origin-notifications/migrations:/app/origin-notifications/migrations
       - ./development/envfiles/origin-notifications.env:/app/origin-notifications/.env
     depends_on:
       - postgres
@@ -154,6 +158,7 @@ services:
       # Mount origin-dapp inside the container
       - ./origin-dapp/src:/app/origin-dapp/src
       - ./origin-dapp/public:/app/origin-dapp/public
+      - ./origin-dapp/translations:/app/origin-dapp/translations
       - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
       # Set the envfile from the local envfile
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
