@@ -601,7 +601,7 @@ class V00_MarkeplaceAdapter {
           notifications.push({
             type,
             event: offer.event,
-            resources: {listingId, offerId}
+            resources: { listingId, offerId }
           })
         }
       } catch (e) {

@@ -756,7 +756,7 @@ describe('Marketplace Resource', function() {
 
         // Create a second offer for 1 unit.
         await marketplace.makeOffer('999-000-1', offerData)
-        let offer2 = await marketplace.getOffer('999-000-1-2')
+        const offer2 = await marketplace.getOffer('999-000-1-2')
         expect(offer2.status).to.equal('created')
         validateOffer(offer2)
 
@@ -839,7 +839,7 @@ describe('Marketplace Resource', function() {
 
         // Create and withdraw an offer for 1 unit.
         await marketplace.makeOffer('999-000-1', offerData)
-        let offer2 = await marketplace.getOffer('999-000-1-1')
+        const offer2 = await marketplace.getOffer('999-000-1-1')
         expect(offer2.status).to.equal('created')
         await marketplace.withdrawOffer('999-000-1-1')
 
@@ -860,7 +860,7 @@ describe('Marketplace Resource', function() {
         const newOfferData = Object.assign(
           {},
           offerData,
-          { unitsPurchased: newUnitsTotal}
+          { unitsPurchased: newUnitsTotal }
         )
 
         // Make an offer for too many units, which should fail.
