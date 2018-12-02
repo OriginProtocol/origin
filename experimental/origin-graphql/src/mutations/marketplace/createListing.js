@@ -13,7 +13,6 @@ export function listingInputToIPFS(data) {
     "language": "en-US",
     "title": data.title,
     "description": data.description,
-    "expiry": "1996-12-19T16:39:57-08:00",
     "media": data.media,
     "unitsTotal": data.unitsTotal,
     "price": data.price,

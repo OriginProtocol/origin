@@ -129,14 +129,7 @@ class V00_MarkeplaceAdapter {
       commission,
       finalizes,
       totalPrice = {},
-      unitsPurchased
     } = data
-    // For V1, we only support quantity of 1.
-    if (unitsPurchased && unitsPurchased != 1)
-      throw new Error(
-        `Attempted to purchase ${unitsPurchased} - only 1 allowed.`
-      )
-
     const price = await this.contractService.moneyToUnits(totalPrice)
     const commissionUnits = await this.contractService.moneyToUnits(commission)
     const currencies = await this.contractService.currencies()
