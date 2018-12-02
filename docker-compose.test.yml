@@ -12,5 +12,5 @@ services:
       - ./test:/app/test/
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp:3000 --
-      npm run test:integration"
+      /bin/bash -c "wait-for.sh -t 0 -q event-listener:9499 --
+      sleep 10 && npm run test:integration"
