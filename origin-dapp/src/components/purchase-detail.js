@@ -346,7 +346,7 @@ class PurchaseDetail extends Component {
     fetch(`schemas/${schemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
-        const translatedSchema = translateSchema(schemaJson, schemaType)
+        const translatedSchema = translateSchema(schemaJson)
         this.setState({
           translatedSchema
         })

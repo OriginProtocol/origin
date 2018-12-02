@@ -8,7 +8,7 @@ const listingSchemaMetadata = {
   },
   listingTypes: [
     {
-      type: 'for-sale',
+      type: 'forSale',
       translationName: {
         id: 'schema.forSale',
         defaultMessage: 'For Sale'
@@ -16,28 +16,12 @@ const listingSchemaMetadata = {
       img: 'for-sale.jpg'
     },
     {
-      type: 'housing',
+      type: 'forRent',
       translationName: {
-        id: 'schema.housing',
-        defaultMessage: 'Housing'
+        id: 'schema.forRent',
+        defaultMessage: 'For Rent'
       },
-      img: 'housing.jpg'
-    },
-    {
-      type: 'transportation',
-      translationName: {
-        id: 'schema.transportation',
-        defaultMessage: 'Transportation'
-      },
-      img: 'transportation.jpg'
-    },
-    {
-      type: 'tickets',
-      translationName: {
-        id: 'schema.tickets',
-        defaultMessage: 'Tickets'
-      },
-      img: 'tickets.jpg'
+      img: 'for-rent.jpg'
     },
     {
       type: 'services',

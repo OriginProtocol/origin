@@ -250,28 +250,27 @@ export function GlobalIntlProvider() {
   return globalIntlProvider
 }
 
-export function translateSchema(schemaJson, schemaType) {
-  if (!schemaType || !schemaJson) {
+export function translateSchema(schemaJson) {
+  if (!schemaJson) {
     return
   }
   
   // Copy the schema so we don't modify the original
   const schema = JSON.parse(JSON.stringify(schemaJson))
   const properties = schema.properties
-  schemaType = dashToCamelCase(schemaType)
 
   for (const property in properties) {
     const propertyObj = properties[property]
 
     if (propertyObj.title) {
       propertyObj.title = globalIntlProvider.formatMessage(
-        schemaMessages[schemaType][propertyObj.title]
+        schemaMessages[propertyObj.title]
       )
     }
 
     if (propertyObj.default && typeof propertyObj.default === 'number') {
       propertyObj.default = globalIntlProvider.formatMessage(
-        schemaMessages[schemaType][propertyObj.default]
+        schemaMessages[propertyObj.default]
       )
     }
 
@@ -280,7 +279,7 @@ export function translateSchema(schemaJson, schemaType) {
         enumStr =>
           typeof enumStr === 'string'
             ? globalIntlProvider.formatMessage(
-              schemaMessages[schemaType][enumStr]
+              schemaMessages[enumStr]
             )
             : enumStr
       )

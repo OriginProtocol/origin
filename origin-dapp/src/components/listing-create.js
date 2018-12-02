@@ -238,7 +238,7 @@ class ListingCreate extends Component {
           }
         }
 
-        const translatedSchema = translateSchema(schemaJson, selectedSchemaType)
+        const translatedSchema = translateSchema(schemaJson)
 
         this.setState({
           selectedSchemaType,
