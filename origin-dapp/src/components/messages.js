@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
+import Avatar from 'components/avatar'
 
 import { showMainNav } from 'actions/App'
 
@@ -87,6 +88,7 @@ class Messages extends Component {
         : senderAddress
     const counterparty = users.find(u => u.address === counterpartyAddress) || {}
     const counterpartyName = counterparty.fullName || counterpartyAddress
+    const counterpartyProfile = counterparty && counterparty.profile
 
     if (mobileDevice) {
       if (selectedConversationId && selectedConversationId.length) {
@@ -96,6 +98,7 @@ class Messages extends Component {
               onClick={() => this.handleConversationSelect()}
             >
               <i className="icon-arrow-left align-self-start mr-auto"></i>
+              <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
               <span className="counterparty text-truncate mr-auto">{counterpartyName}</span>
             </div>
             <div className="conversation-col d-flex flex-column">
