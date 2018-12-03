@@ -21,6 +21,7 @@ const multiUnitListingData = Object.assign({}, listingValid, { unitsTotal: 2 })
 const multiUnitListingWithCommissionData = Object.assign(
   {},
   multiUnitListingData,
+
   {
     commission: { currency: 'OGN', amount: '2' },
     commissionPerUnit: { currency: 'OGN', amount: '1' }
@@ -106,8 +107,18 @@ describe('Marketplace Resource', function() {
       store
     })
 
+    // Set default account for contract calls.
+    // Use helper method asAccount to make calls on behalf of a different user.
+    contractService.web3.eth.defaultAccount = accounts[0]
+
+    // Create a listing using default account.
     await marketplace.createListing(listingData)
-    await marketplace.makeOffer('999-000-0', offerData)
+
+    // Make an offer on that listing using the buyer account.
+    await asAccount(contractService.web3, validBuyer, async () => {
+      await marketplace.makeOffer('999-000-0', offerData)
+    })
+
     makeMaliciousOffer = async ({ affiliate = validAffiliate, arbitrator = validArbitrator }) => {
       const ipfsHash = await marketplace.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
       const ipfsBytes = contractService.getBytes32FromIpfsHash(ipfsHash)
@@ -157,13 +168,7 @@ describe('Marketplace Resource', function() {
     })
 
     it('should return listing data as it was when an offer was made with purchasesFor option', async () => {
-      await asAccount(contractService.web3, validBuyer, async () => {
-        await marketplace.makeOffer('999-000-0', offerData)
-      })
-
-      await asAccount(contractService.web3, this.userAddress, async () => {
-        await marketplace.updateListing('999-000-0', udpatedListingData)
-      })
+      await marketplace.updateListing('999-000-0', udpatedListingData)
 
       const listings = await marketplace.getListings({
         purchasesFor: validBuyer,
@@ -424,7 +429,9 @@ describe('Marketplace Resource', function() {
       let offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('created')
       await marketplace.acceptOffer('999-000-0-0')
-      await marketplace.finalizeOffer('999-000-0-0', reviewData)
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.finalizeOffer('999-000-0-0', reviewData)
+      })
       offer = await marketplace.getOffer('999-000-0-0')
 
       validateOffer(offer)
@@ -434,39 +441,25 @@ describe('Marketplace Resource', function() {
 
   describe('myPurchases', () => {
     it('should return a user\'s purchases with listing data as it was at the time of the offer', async () => {
-      await asAccount(contractService.web3, validBuyer, async () => {
-        await marketplace.makeOffer('999-000-0', offerData)
-      })
-
-      await asAccount(contractService.web3, this.userAddress, async () => {
-        await marketplace.updateListing('999-000-0', udpatedListingData)
-      })
-
+      await marketplace.updateListing('999-000-0', udpatedListingData)
       const purchases = await marketplace.getPurchases(validBuyer)
 
       expect(purchases).to.be.an('array')
-      expect(purchases.length).to.equal(2)
-      expect(purchases[1].offer.listingId).to.equal('999-000-0')
-      expect(purchases[1].listing.title).to.equal('my listing') // not 'my listing EDITED!'
+      expect(purchases.length).to.equal(1)
+      expect(purchases[0].offer.listingId).to.equal('999-000-0')
+      expect(purchases[0].listing.title).to.equal('my listing') // not 'my listing EDITED!'
     })
   })
 
   describe('mySales', () => {
     it('should return a seller\'s sales with listing data as it was at the time of the offer', async () => {
-      await asAccount(contractService.web3, validBuyer, async () => {
-        await marketplace.makeOffer('999-000-0', offerData)
-      })
-
-      await asAccount(contractService.web3, this.userAddress, async () => {
-        await marketplace.updateListing('999-000-0', udpatedListingData)
-      })
-
+      await marketplace.updateListing('999-000-0', udpatedListingData)
       const sales = await marketplace.getSales(this.userAddress)
 
       expect(sales).to.be.an('array')
-      expect(sales.length).to.equal(2)
-      expect(sales[1].offer.listingId).to.equal('999-000-0')
-      expect(sales[1].listing.title).to.equal('my listing') // not 'my listing EDITED!'
+      expect(sales.length).to.equal(1)
+      expect(sales[0].offer.listingId).to.equal('999-000-0')
+      expect(sales[0].listing.title).to.equal('my listing') // not 'my listing EDITED!'
     })
   })
 
@@ -475,7 +468,9 @@ describe('Marketplace Resource', function() {
       let offer = await marketplace.getOffer('999-000-0-0')
       expect(offer.status).to.equal('created')
       await marketplace.acceptOffer('999-000-0-0')
-      await marketplace.finalizeOffer('999-000-0-0', reviewData)
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.finalizeOffer('999-000-0-0', reviewData)
+      })
       await marketplace.addData(0, offer.id, reviewData)
       offer = await marketplace.getOffer('999-000-0-0')
 
@@ -487,7 +482,9 @@ describe('Marketplace Resource', function() {
   describe('getListingReviews', () => {
     it('should get reviews', async () => {
       await marketplace.acceptOffer('999-000-0-0')
-      await marketplace.finalizeOffer('999-000-0-0', reviewData)
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.finalizeOffer('999-000-0-0', reviewData)
+      })
       const reviews = await marketplace.getListingReviews('999-000-0')
       expect(reviews.length).to.equal(1)
       expect(reviews[0].rating).to.equal(3)
@@ -498,41 +495,100 @@ describe('Marketplace Resource', function() {
   describe('getNotifications', () => {
     let notifications
 
-    beforeEach(async function() {
-      notifications = await marketplace.getNotifications()
+    function expectNotification(type, eventName) {
       expect(notifications.length).to.equal(1)
       validateNotification(notifications[0])
-      expect(notifications[0].type).to.equal('seller_listing_purchased')
+      expect(notifications[0].type).to.equal(type)
       expect(notifications[0].status).to.equal('unread')
+      expect(notifications[0].event.event).to.equal(eventName)
+    }
+
+    beforeEach(async function() {
+      // Before each test a listing is created with an offer from a buyer.
+      // Therefore seller should receive a notification for it.
+      notifications = await marketplace.getNotifications()
+      expectNotification('seller_offer_created', 'OfferCreated')
     })
 
     it('should return notifications', async () => {
+      // Seller accepts the offer. Buyer should receive a notification.
       await marketplace.acceptOffer('999-000-0-0')
+      await asAccount(contractService.web3, validBuyer, async () => {
+        notifications = await marketplace.getNotifications()
+      })
+      expectNotification('buyer_offer_accepted', 'OfferAccepted')
+
+      // Buyer finalizes, seller should receive a notification.
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.finalizeOffer('999-000-0-0', reviewData)
+      })
       notifications = await marketplace.getNotifications()
-      expect(notifications.length).to.equal(1)
-      validateNotification(notifications[0])
+      expectNotification('seller_offer_finalized', 'OfferFinalized')
 
-      expect(notifications[0].type).to.equal('buyer_listing_shipped')
-      expect(notifications[0].status).to.equal('unread')
-      expect(notifications[0].event.event).to.equal('OfferAccepted')
+      // Seller writes a review, buyer should receive a notification.
+      await marketplace.addData(0, '999-000-0-0', reviewData)
+      await asAccount(contractService.web3, validBuyer, async () => {
+        notifications = await marketplace.getNotifications()
+      })
+      expectNotification('buyer_offer_review', 'OfferData')
+    })
 
-      await marketplace.finalizeOffer('999-000-0-0', reviewData)
+    it('buyer should get a notifications when offer rejected by seller', async () => {
+      // Seller rejects offer, buyer should receive a notification.
+      await marketplace.withdrawOffer('999-000-0-0')
+      await asAccount(contractService.web3, validBuyer, async () => {
+        notifications = await marketplace.getNotifications()
+      })
+      expectNotification('buyer_offer_withdrawn', 'OfferWithdrawn')
+    })
+
+    it('seller should get a notifications when offer withdrawn by buyer', async () => {
+      // Seller rejects offer, buyer should receive a notification.
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.withdrawOffer('999-000-0-0')
+      })
       notifications = await marketplace.getNotifications()
-      expect(notifications.length).to.equal(1)
-      validateNotification(notifications[0])
+      expectNotification('seller_offer_withdrawn', 'OfferWithdrawn')
+    })
 
-      expect(notifications[0].type).to.equal('seller_review_received')
-      expect(notifications[0].status).to.equal('unread')
-      expect(notifications[0].event.event).to.equal('OfferFinalized')
+    it('Should get a notifications when offer disputed and ruled', async () => {
+      await marketplace.acceptOffer('999-000-0-0')
+      // Buyer initiates dispute, seller should get a notification.
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.initiateDispute('999-000-0-0')
+      })
+      notifications = await marketplace.getNotifications()
+      expectNotification('seller_offer_disputed', 'OfferDisputed')
+
+      // Dispute ruled, both buyer and seller should get a notification.
+      await asAccount(contractService.web3, validArbitrator, async () => {
+        await marketplace.resolveDispute('999-000-0-0', {}, 1, 0)
+      })
+      notifications = await marketplace.getNotifications()
+      expectNotification('seller_offer_ruling', 'OfferRuling')
+
+      await asAccount(contractService.web3, validBuyer, async () => {
+        notifications = await marketplace.getNotifications()
+      })
+      expectNotification('buyer_offer_ruling', 'OfferRuling')
+    })
+
+    it('Buyer should get a notifications when offer disputed by seller', async () => {
+      await marketplace.acceptOffer('999-000-0-0')
+      await marketplace.initiateDispute('999-000-0-0')
+      await asAccount(contractService.web3, validBuyer, async () => {
+        notifications = await marketplace.getNotifications()
+      })
+      expectNotification('buyer_offer_disputed', 'OfferDisputed')
     })
 
     it('should exclude notifications for invalid offers', async () => {
-      await marketplace.makeOffer('999-000-0', invalidPriceOffer)
-
-      const notifications = await marketplace.getNotifications()
+      await asAccount(contractService.web3, validBuyer, async () => {
+        await marketplace.makeOffer('999-000-0', invalidPriceOffer)
+      })
+      notifications = await marketplace.getNotifications()
 
       expect(notifications.length).to.equal(1)
-      validateNotification(notifications[0])
       expect(notifications).to.not.include(invalidPriceOffer)
     })
   })
@@ -700,7 +756,7 @@ describe('Marketplace Resource', function() {
 
         // Create a second offer for 1 unit.
         await marketplace.makeOffer('999-000-1', offerData)
-        let offer2 = await marketplace.getOffer('999-000-1-2')
+        const offer2 = await marketplace.getOffer('999-000-1-2')
         expect(offer2.status).to.equal('created')
         validateOffer(offer2)
 
@@ -783,7 +839,7 @@ describe('Marketplace Resource', function() {
 
         // Create and withdraw an offer for 1 unit.
         await marketplace.makeOffer('999-000-1', offerData)
-        let offer2 = await marketplace.getOffer('999-000-1-1')
+        const offer2 = await marketplace.getOffer('999-000-1-1')
         expect(offer2.status).to.equal('created')
         await marketplace.withdrawOffer('999-000-1-1')
 
@@ -804,7 +860,7 @@ describe('Marketplace Resource', function() {
         const newOfferData = Object.assign(
           {},
           offerData,
-          { unitsPurchased: newUnitsTotal}
+          { unitsPurchased: newUnitsTotal }
         )
 
         // Make an offer for too many units, which should fail.
