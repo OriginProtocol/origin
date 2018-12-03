@@ -12,7 +12,6 @@ COPY ./scripts/ ./scripts/
 COPY ./lerna.json ./
 COPY ./package*.json ./
 COPY ./ipfs-proxy/package*.json ./ipfs-proxy/
-COPY ./origin-contracts/package*.json ./origin-contracts/
 COPY ./origin-dapp/package*.json ./origin-dapp/
 COPY ./origin-discovery/package*.json ./origin-discovery/
 COPY ./origin-js/package*.json ./origin-js/
@@ -20,12 +19,15 @@ COPY ./origin-messaging/package*.json ./origin-messaging/
 COPY ./origin-notifications/package*.json ./origin-notifications/
 COPY ./origin-tests/package*.json ./origin-tests/
 
-RUN npm install
-RUN npm run bootstrap
+# Complete contracts source needs to be available so that `truffle compile contracts`
+# which is calleed by the prepare script can succeed
+COPY ./origin-contracts ./origin-contracts
+
+# Running of postinstall script requires --unsafe-perm
+RUN npm install --unsafe-perm
 
 # Copy all the source files for the packages
 COPY ./ipfs-proxy ./ipfs-proxy
-COPY ./origin-contracts ./origin-contracts
 COPY ./origin-dapp ./origin-dapp
 COPY ./origin-discovery ./origin-discovery
 COPY ./origin-js ./origin-js
