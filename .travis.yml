@@ -22,7 +22,7 @@ matrix:
       before_cache:
         - rm -rf node_modules/.cache
       install:
-        - npm install --loglevel notice
+        - npm install --loglevel notice --dev-only --ignore-scripts
       script:
         - npm run lint
 
