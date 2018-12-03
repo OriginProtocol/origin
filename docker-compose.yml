@@ -40,7 +40,7 @@ services:
       # Addresses for deployment of contracts to local blockchain will get
       # written to the build files
       - ./origin-contracts/build:/app/origin-contracts/build
-      - ./origin/scripts:/app/origin/scripts
+      - ./origin-js/scripts:/app/origin-js/scripts
     command: npm run start --prefix origin-js
 
   ipfs-proxy:
