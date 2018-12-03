@@ -5,11 +5,13 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 
-import { dismissMessaging, enableMessaging, storeWeb3Intent } from 'actions/App'
+import { enableMessaging } from 'actions/Activation'
+import { dismissMessaging, storeWeb3Intent } from 'actions/App'
 
 import ConversationListItem from 'components/conversation-list-item'
 
 import groupByArray from 'utils/groupByArray'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../../services/origin'
 
@@ -62,9 +64,9 @@ class MessagesDropdown extends Component {
   }
 
   handleClick() {
-    const { intl, storeWeb3Intent, web3Account } = this.props
+    const { intl, storeWeb3Intent, wallet } = this.props
 
-    if (!web3Account) {
+    if (!wallet.address) {
       storeWeb3Intent(intl.formatMessage(this.intlMessages.viewMessages))
     }
 
@@ -72,9 +74,9 @@ class MessagesDropdown extends Component {
   }
 
   handleEnable() {
-    const { enableMessaging, intl, storeWeb3Intent, web3Account } = this.props
+    const { enableMessaging, intl, storeWeb3Intent, wallet } = this.props
 
-    if (web3Account) {
+    if (wallet.address) {
       enableMessaging()
     } else {
       storeWeb3Intent(intl.formatMessage(this.intlMessages.enableMessaging))
@@ -82,7 +84,7 @@ class MessagesDropdown extends Component {
   }
 
   render() {
-    const { conversations, history, messages, messagingEnabled } = this.props
+    const { conversations, history, messages, messagingEnabled, wallet } = this.props
 
     return (
       <div className="nav-item messages dropdown">
@@ -137,7 +139,8 @@ class MessagesDropdown extends Component {
               {!messagingEnabled &&
                 <button className="btn btn-sm btn-primary d-none d-md-block ml-auto" onClick={() => {
                   this.handleEnable()
-                  if(!this.props.web3Account) {
+
+                  if (!wallet.address) {
                     this.props.storeWeb3Intent('Enable messaging.')
                     origin.contractService.showLinkPopUp()
                   }
@@ -186,16 +189,14 @@ class MessagesDropdown extends Component {
   }
 }
 
-const mapStateToProps = ({ app, messages }) => {
-  const { messagingDismissed, messagingEnabled, web3 } = app
-  const web3Account = web3.account
+const mapStateToProps = ({ activation, app, messages, wallet }) => {
   const filteredMessages = messages.filter(
     ({ content, conversationId, senderAddress, status }) => {
       return (
         content &&
         status === 'unread' &&
-        senderAddress !== web3Account &&
-        origin.messaging.getRecipients(conversationId).includes(web3Account)
+        formattedAddress(senderAddress) !== formattedAddress(wallet.address) &&
+        origin.messaging.getRecipients(conversationId).includes(wallet.address)
       )
     }
   )
@@ -214,9 +215,9 @@ const mapStateToProps = ({ app, messages }) => {
   return {
     conversations: sortedConversations,
     messages: filteredMessages,
-    messagingDismissed,
-    messagingEnabled,
-    web3Account,
+    messagingDismissed: app.messagingDismissed,
+    messagingEnabled: activation.messaging.enabled,
+    wallet,
     web3Intent: web3.intent
   }
 }

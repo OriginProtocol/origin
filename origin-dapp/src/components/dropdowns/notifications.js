@@ -9,6 +9,8 @@ import { dismissNotifications } from 'actions/App'
 
 import Notification from 'components/notification'
 
+import { formattedAddress } from 'utils/user'
+
 class NotificationsDropdown extends Component {
   constructor(props) {
     super(props)
@@ -139,7 +141,7 @@ class NotificationsDropdown extends Component {
   }
 }
 
-const mapStateToProps = ({ app, notifications }) => {
+const mapStateToProps = ({ app, notifications, wallet }) => {
   return {
     // add perspective and filter
     notifications: notifications
@@ -148,7 +150,7 @@ const mapStateToProps = ({ app, notifications }) => {
 
         return {
           ...n,
-          perspective: app.web3.account === seller ? 'seller' : 'buyer'
+          perspective: formattedAddress(wallet.address) === formattedAddress(seller) ? 'seller' : 'buyer'
         }
       })
       .filter(n => n.status === 'unread'),

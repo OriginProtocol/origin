@@ -161,10 +161,8 @@ class NavBar extends Component {
 
 const mapStateToProps = ({ app }) => {
   return {
-    web3Account: app.web3.account,
-    web3Intent: app.web3.intent,
-    showNav: app.showNav,
-    mobileDevice: app.mobileDevice
+    mobileDevice: app.mobileDevice,
+    showNav: app.showNav
   }
 }
 

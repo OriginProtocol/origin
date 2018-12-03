@@ -3,10 +3,12 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
-import { enableMessaging } from 'actions/App'
+import { enableMessaging } from 'actions/Activation'
 import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
+
+import { formattedAddress } from 'utils/user'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
 
@@ -79,7 +81,7 @@ class Message extends Component {
           <div className="meta-container d-flex">
             <div className="sender text-truncate">
               {fullName && <span className="name">{fullName}</span>}
-              <span className="address text-muted">{address}</span>
+              <span className="address text-muted">{formattedAddress(address)}</span>
             </div>
             <div className="timestamp text-right ml-auto">
               {moment(created).format('MMM Do h:mm a')}
@@ -145,12 +147,13 @@ class Message extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = ({ activation, app, users }, ownProps) => {
   return {
-    messagingEnabled: state.app.messagingEnabled,
-    mobileDevice: state.app.mobileDevice,
-    user:
-      state.users.find(u => u.address === ownProps.message.senderAddress) || {}
+    messagingEnabled: activation.messaging.enabled,
+    mobileDevice: app.mobileDevice,
+    user: users.find(u => {
+      return formattedAddress(u.address) === formattedAddress(ownProps.message.senderAddress)
+    }) || {}
   }
 }
 

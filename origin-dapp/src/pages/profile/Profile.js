@@ -191,7 +191,7 @@ class Profile extends Component {
       this.props.intl.formatMessage(this.intlMessages.manageYourProfile)
     )
 
-    if ((web3.givenProvider && this.props.web3Account) || origin.contractService.walletLinker) {
+    if ((web3.givenProvider && this.props.wallet.address) || origin.contractService.walletLinker) {
       const { modal } = e.currentTarget.dataset
 
       /*
@@ -576,7 +576,6 @@ class Profile extends Component {
         <VerifyFacebook
           open={modalsOpen.facebook}
           handleToggle={this.handleToggle}
-          account={wallet.address}
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
@@ -614,7 +613,6 @@ class Profile extends Component {
           open={modalsOpen.airbnb}
           handleToggle={this.handleToggle}
           intl={this.props.intl}
-          web3Account={this.props.web3Account}
           onSuccess={data => {
             this.props.addAttestation(data)
             this.setState({
@@ -794,7 +792,6 @@ const mapStateToProps = state => {
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,
     wallet: state.wallet,
-    web3Account: state.app.web3.account,
     web3Intent: state.app.web3.intent,
     mobileDevice: state.app.mobileDevice
   }
