@@ -31,6 +31,10 @@ COPY ./origin-js ./origin-js
 COPY ./origin-messaging ./origin-messaging
 COPY ./origin-notifications ./origin-notifications
 
+RUN ln -s ../../node_modules/scrypt origin-contracts/node_modules/scrypt
+RUN ln -s ../../node_modules/scrypt origin-js/node_modules/scrypt
+RUN ln -s ../../node_modules/got origin-js/node_modules/got
+
 # Compile contracts
 RUN npm run build --prefix origin-contracts
 
