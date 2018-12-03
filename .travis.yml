@@ -52,7 +52,7 @@ matrix:
       before_cache:
         # Save tagged docker images
         - >
-          mkdir -p $HOME/docker && docker images -a --filter='reference=origin' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
+          mkdir -p $HOME/docker && docker images "origin-*" --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
           | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
       before_install:
         # Load cached docker images
