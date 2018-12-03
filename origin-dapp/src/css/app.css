@@ -5073,17 +5073,20 @@ sup {
 }
 
 .publish.modal .button-container,
+.mobile-publish.modal .button-container,
 .unload.modal .button-container {
   margin: 0 0 20px;
   padding: 0;
 }
 
 .publish.modal .btn-clear,
+.mobile-publish.modal .btn-clear,
 .unload.modal .btn-clear {
   margin: 0;
 }
 
 .publish.modal a,
+.mobile-publish.modal a,
 .unload.modal a {
   color: var(--clear-blue);
   cursor: pointer;
@@ -5091,6 +5094,7 @@ sup {
 }
 
 .publish.modal p,
+.mobile-publish.modal p,
 .unload.modal p {
   font-size: 1rem;
 }
@@ -5117,6 +5121,7 @@ sup {
 }
 
 .publish.modal a:hover,
+.mobile-publish.modal a:hover,
 .unload.modal a:hover {
   color: var(--dark-clear-blue);
 }
