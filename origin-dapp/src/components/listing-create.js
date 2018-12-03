@@ -47,15 +47,16 @@ class ListingCreate extends Component {
     super(props)
 
     this.STEP = {
-      PICK_SCHEMA: 1,
-      DETAILS: 2,
-      AVAILABILITY: 3,
-      BOOST: 4,
-      PREVIEW: 5,
-      METAMASK: 6,
-      PROCESSING: 7,
-      SUCCESS: 8,
-      ERROR: 9
+      PICK_CATEGORY: 1,
+      PICK_SCHEMA: 2,
+      DETAILS: 3,
+      AVAILABILITY: 4,
+      BOOST: 5,
+      PREVIEW: 6,
+      METAMASK: 7,
+      PROCESSING: 8,
+      SUCCESS: 9,
+      ERROR: 10
     }
 
     // TODO(John) - remove once fractional usage is enabled by default
@@ -74,15 +75,17 @@ class ListingCreate extends Component {
     })
 
     this.defaultState = {
-      step: this.STEP.PICK_SCHEMA,
+      step: this.STEP.PICK_CATEGORY,
       selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
+      selectedCategory: null,
+      selectedCategorySchemas: null,
       selectedSchemaType: null,
       translatedSchema: null,
-      schemaExamples: null,
       schemaFetched: false,
       isFractionalListing: false,
       isEditMode: false,
       fractionalTimeIncrement: null,
+      showNoCategorySelectedError: false,
       showNoSchemaSelectedError: false,
       formListing: {
         formData: {
@@ -105,6 +108,8 @@ class ListingCreate extends Component {
     })
 
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
+    this.handleCategorySelection = this.handleCategorySelection.bind(this)
+    this.goToPickSchemaStep = this.goToPickSchemaStep.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
@@ -200,6 +205,28 @@ class ListingCreate extends Component {
     }, 10000)
   }
 
+  handleCategorySelection(selectedCategory) {
+    const trimmedCategory = selectedCategory.replace('schema.', '')
+    this.setState({
+      selectedCategory: trimmedCategory,
+      selectedCategorySchemas:
+        listingSchemaMetadata &&
+        listingSchemaMetadata.listingSchemasByCategory &&
+        listingSchemaMetadata.listingSchemasByCategory[trimmedCategory]
+    })
+  }
+
+  goToPickSchemaStep() {
+    if (this.state.selectedCategory) {
+      this.setState({
+        step: this.STEP.PICK_SCHEMA,
+        showNoCategorySelectedError: false
+      })
+    } else {
+      this.setState({ showNoCategorySelectedError: true })
+    }
+  }
+
   handleSchemaSelection(selectedSchemaType) {
     const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
 
@@ -248,12 +275,7 @@ class ListingCreate extends Component {
             selectedSchemaType === 'housing' ? 'daily' : 'hourly',
           showNoSchemaSelectedError: false,
           translatedSchema,
-          isFractionalListing,
-          schemaExamples:
-            translatedSchema &&
-            translatedSchema.properties &&
-            translatedSchema.properties.examples &&
-            translatedSchema.properties.examples.enumNames
+          isFractionalListing
         })
 
         window.scrollTo(0, 0)
@@ -461,8 +483,10 @@ class ListingCreate extends Component {
       formListing,
       fractionalTimeIncrement,
       selectedBoostAmount,
+      selectedCategory,
+      selectedCategorySchemas,
+      showNoCategorySelectedError,
       selectedSchemaType,
-      schemaExamples,
       showNoSchemaSelectedError,
       step,
       translatedSchema,
@@ -479,6 +503,65 @@ class ListingCreate extends Component {
       <div className="listing-form">
         <div className="step-container">
           <div className="row">
+            {step === this.STEP.PICK_CATEGORY && (
+              <div className="col-md-6 col-lg-5 pick-schema">
+                <label>
+                  <FormattedMessage
+                    id={'listing-create.stepNumberLabel'}
+                    defaultMessage={'STEP {stepNumber}'}
+                    values={{ stepNumber: Number(step) }}
+                  />
+                </label>
+                <h2>
+                  <FormattedMessage
+                    id={'listing-create.whatTypeOfListing'}
+                    defaultMessage={
+                      'What type of listing do you want to create?'
+                    }
+                  />
+                </h2>
+                <div className="schema-options">
+                  {this.schemaList.map(category => (
+                    <div
+                      className={`schema-selection${
+                        selectedCategory === category.type ? ' selected' : ''
+                      }`}
+                      key={category.type}
+                      onClick={() => this.handleCategorySelection(category.type)}
+                      ga-category="create_listing"
+                      ga-label={ `select_category_${category.type}`}
+                    >
+                      {category.name}
+                    </div>
+                  ))}
+                  {showNoCategorySelectedError && (
+                    <div className="info-box warn">
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.noSchemaSelectedError'}
+                          defaultMessage={
+                            'You must first select a listing type'
+                          }
+                        />
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="btn-container">
+                  <button
+                    className="float-right btn btn-primary btn-listing-create"
+                    onClick={() => this.goToPickSchemaStep()}
+                    ga-category="create_listing"
+                    ga-label="select_category_step_continue"
+                  >
+                    <FormattedMessage
+                      id={'listing-create.next'}
+                      defaultMessage={'Next'}
+                    />
+                  </button>
+                </div>
+              </div>
+            )}
             {step === this.STEP.PICK_SCHEMA && (
               <div className="col-md-6 col-lg-5 pick-schema">
                 <label>
@@ -497,7 +580,7 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <div className="schema-options">
-                  {this.schemaList.map(schema => (
+                  {selectedCategorySchemas.map(schema => (
                     <div
                       className={`schema-selection${
                         selectedSchemaType === schema.type ? ' selected' : ''
@@ -508,29 +591,6 @@ class ListingCreate extends Component {
                       ga-label={ `select_schema_${schema.type}`}
                     >
                       {schema.name}
-                      <div
-                        className={`schema-examples${
-                          selectedSchemaType === schema.type ? ' selected' : ''
-                        }`}
-                      >
-                        <p>
-                          <FormattedMessage
-                            id={'listing-create.listingsMayInclude'}
-                            defaultMessage={
-                              '{schemaName} listings may include:'
-                            }
-                            values={{ schemaName: schema.name }}
-                          />
-                        </p>
-                        <ul>
-                          {schemaExamples &&
-                            schemaExamples.map(example => (
-                              <li key={`${schema.name}-${example}`}>
-                                {example}
-                              </li>
-                            ))}
-                        </ul>
-                      </div>
                     </div>
                   ))}
                   {showNoSchemaSelectedError && (
@@ -549,9 +609,9 @@ class ListingCreate extends Component {
                 <div className="btn-container">
                   <button
                     className="float-right btn btn-primary btn-listing-create"
-                    onClick={() => this.goToDetailsStep()}
+                    onClick={() => this.setState({ step: this.STEP.PICK_SCHEMA })}
                     ga-category="create_listing"
-                    ga-label="select_schema_step_continue"
+                    ga-label="select_category_step_continue"
                   >
                     <FormattedMessage
                       id={'listing-create.next'}
