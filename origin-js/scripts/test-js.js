@@ -7,8 +7,7 @@ const startGanache = require('./helpers/start-ganache')
 
 const runTests = async watch => {
   return new Promise(() => {
-    const args = ['-r', '@babel/register', '-r', '@babel/polyfill', '-t', '10000', '-g', 'getNotifications']
-    //const args = ['-r', '@babel/register', '-r', '@babel/polyfill', '-t', '10000']
+    const args = ['-r', '@babel/register', '-r', '@babel/polyfill', '-t', '10000']
     if (watch) {
       args.push('--watch')
     } else {

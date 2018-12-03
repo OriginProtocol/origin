@@ -566,7 +566,7 @@ class V00_MarkeplaceAdapter {
         for (const offerId in listing.offers) {
           const offer = listing.offers[offerId]
           // Skip the event if the action was initiated by the user.
-          if (party === offer.event.returnValues.party) {
+          if (party.toLowerCase() === offer.event.returnValues.party.toLowerCase()) {
             continue
           }
           const type =  offerStatusToSellerNotificationType[offer.status]
@@ -609,7 +609,7 @@ class V00_MarkeplaceAdapter {
         // by exploiting a validation loophole in origin-js listing/offer code
         // or by writing directly to the blockchain.
         console.log('getNotifications: skipping invalid offer')
-        console.log(`  contract=${this.contractName} offerId=${listingId} error=${e}`)
+        console.log(`  contract=${this.contractName} offerId=${offerId} error=${e}`)
       }
     }
     return notifications
