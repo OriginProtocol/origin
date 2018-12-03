@@ -5,6 +5,8 @@ import Avatar from 'components/avatar'
 import { getListing } from 'utils/listing'
 import { defineMessages, injectIntl } from 'react-intl'
 
+import { formattedAddress } from 'utils/user'
+
 class ConversationListItem extends Component {
   constructor(props) {
     super(props)
@@ -108,22 +110,22 @@ class ConversationListItem extends Component {
       active,
       conversation,
       handleConversationSelect,
+      mobileDevice,
       users,
-      web3Account,
-      mobileDevice
+      wallet
     } = this.props
     const { listing, lastMessage, createdAt } = this.state
 
     const { content, recipients, senderAddress } = lastMessage
-    const role = senderAddress === web3Account ? 'sender' : 'recipient'
+    const role = formattedAddress(senderAddress) === formattedAddress(wallet.address) ? 'sender' : 'recipient'
     const counterpartyAddress =
       role === 'sender'
-        ? recipients.find(addr => addr !== senderAddress)
+        ? recipients.find(addr => formattedAddress(addr) !== formattedAddress(senderAddress))
         : senderAddress
     const counterparty =
-      users.find(u => u.address === counterpartyAddress) || {}
+      users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
     const unreadCount = conversation.values.filter(msg => {
-      return msg.status === 'unread' && msg.senderAddress !== web3Account
+      return msg.status === 'unread' && formattedAddress(msg.senderAddress) !== formattedAddress(wallet.address)
     }).length
     const { profile } = counterparty
     const conversationItem = mobileDevice ? 'mobile-conversation-list-item' : `conversation-list-item${active ? ' active' : ''}`
@@ -136,7 +138,7 @@ class ConversationListItem extends Component {
         <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container text-truncate">
           <div className="sender text-truncate">
-            <span>{counterparty.fullName || counterpartyAddress}</span>
+            <span>{counterparty.fullName || formattedAddress(counterpartyAddress)}</span>
           </div>
           { mobileDevice && <div className="listing-title text-truncate">{listing.name}</div> }
           <div className={`message text-truncate ${!listing.name ? 'no-listing' : ''}`}>{content}</div>
@@ -158,12 +160,12 @@ class ConversationListItem extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, users, wallet }) => {
   return {
-    users: state.users,
-    web3Account: state.app.web3.account,
-    mobileDevice: state.app.mobileDevice,
-    selectedLanguageCode: state.app.translations.selectedLanguageCode
+    mobileDevice: app.mobileDevice,
+    selectedLanguageCode: app.translations.selectedLanguageCode,
+    users,
+    wallet
   }
 }
 
