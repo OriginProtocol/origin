@@ -294,10 +294,14 @@ class Profile extends Component {
 
   updateProfileMobileLayout() {
     this.lastProfileLayoutUpdate = this.lastProfileLayoutUpdate || 0
-    // only update this state every so often to not trigger too many renders
-    if (new Date() - this.lastProfileLayoutUpdate > this.profileUpdateInterval) {
+    const currentProfileMobileLayout = window.innerWidth < 576
+
+    // only update this state every so often to not trigger too many renders, or 
+    // mobile layout state changes
+    if ((new Date() - this.lastProfileLayoutUpdate > this.profileUpdateInterval) ||
+      this.state.profileMobileLayout !== currentProfileMobileLayout) {
       this.lastProfileLayoutUpdate = new Date()
-      this.setState({ profileMobileLayout: window.innerWidth < 576 })
+      this.setState({ profileMobileLayout: currentProfileMobileLayout })
     }
   }
 
@@ -354,13 +358,6 @@ class Profile extends Component {
       this.intlMessages.descriptionReadMore
     )
 
-    //TODO: make this cleaner and more responsive
-    let descriptionClasses = 'ws-aware description'
-    if (mobileLayout)
-      descriptionClasses += ' mb-0'
-    if (descriptionExpanded)
-      descriptionClasses += ' expanded'
-
     return (
       <div className="current-user profile-wrapper">
         <div className={modalsOpen.profile && this.state.profileMobileLayout ? "d-none" : "container"}>
@@ -390,7 +387,7 @@ class Profile extends Component {
                       </button>
                     </div>
                   </div>
-                  <p className={descriptionClasses}>{description}</p>
+                  <p className={'ws-aware description mb-0 mb-sm-3' + (descriptionExpanded ? ' expanded' : '')}>{description}</p>
                   <div className="mb-2 description-options d-md-none">
                   {/*
                     * TODO: do not display the link when there is no text overflow.
@@ -420,7 +417,6 @@ class Profile extends Component {
                 published={published}
                 provisional={provisional}
                 handleToggle={this.handleToggle}
-                mobileLayout={mobileLayout}
               />
 
               <div className="col-12 pl-0 pr-0 pr-md-3 pl-md-3">
@@ -473,7 +469,7 @@ class Profile extends Component {
                 )}
               </div>
             </div>
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-4 d-none d-lg-block">
               <WalletCard
                 wallet={wallet}
                 identityAddress={this.props.identityAddress}
@@ -489,6 +485,7 @@ class Profile extends Component {
           open={modalsOpen.profile}
           handleToggle={this.handleToggle}
           mobileLayout={profileMobileLayout}
+          mobileDescriptionMaxLength={50}
           handleSubmit={data => {
             this.props.updateProfile(data)
             this.setState({

@@ -4524,6 +4524,10 @@ form .stars img {
   background-position: center;
 }
 
+.profile-wrapper .mobileProfile .title {
+  background: var(--dusk);
+}
+
 .edit-profile {
   background-color: transparent;
   border: none;
@@ -5394,6 +5398,47 @@ a:not([href]):not([tabindex]).span-link {
   }
 }
 
+/* sm - */
+@media (max-width: 575px) {
+  /* Profile */
+  .primary.avatar-container.placeholder {
+    border-radius: 12px;
+  }
+
+  .profile-wrapper .image-container .image-pair .edit-profile {
+    width: 27px;
+    height: 27px;
+    bottom: 0px;
+    right: 23px;
+    position: absolute;
+  }
+
+  .profile-wrapper .image-container .image-pair .edit-profile img {
+    width: 100%;
+  }
+
+  .profile-wrapper .edit-profile-label {
+    color: inherit;
+  }
+
+  .profile-wrapper .btn-edit {
+    width: 100%;
+  }
+
+  .profile-wrapper .character-counter {
+    width: 100%;
+    text-align: right;
+    color: var(--steel);
+    font-size: 10px;
+    padding-right: 0.4rem;
+    margin-bottom: 0px;
+  }
+
+  .profile-wrapper #description {
+    height: 78px;
+  }
+}
+
 /* sm + */
 @media (min-width: 576px) {
   .modal-content {
@@ -5533,7 +5578,7 @@ a:not([href]):not([tabindex]).span-link {
     font-weight: 300;
   }
 
-  .profile-wrapper .edit-profile img {
+  .profile-wrapper .edit-profile {
     width: 21px;
     height: 21px;
   }
@@ -5575,6 +5620,26 @@ a:not([href]):not([tabindex]).span-link {
 
   .phone.modal .dropdown .dropdown-item > :last-child {
     padding-left: 5px;
+  }
+
+  .profile-wrapper .title h2 {
+    margin-bottom: 13px;
+    margin-top: 13px;
+    text-align: center;
+    color: var(--white);
+    font-family: 'Lato';
+    font-weight: bold;
+    font-size: 1.38rem;
+  }
+
+  .profile-wrapper .title img {
+    width: 13px;
+    transform: rotate(180deg);
+  }
+
+  .profile-wrapper .image-pair .edit-profile {
+    width: 40px;
+    height: 40px;
   }
 }
 
