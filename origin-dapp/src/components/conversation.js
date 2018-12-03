@@ -263,43 +263,9 @@ class Conversation extends Component {
 
     return (
       <Fragment>
-        {withListingSummary &&
+        {(!mobileDevice && withListingSummary) &&
           listing.id && (
-          <Link to={`/listing/${listing.id}`}>
-            <div className="listing-summary d-flex">
-              <div className="aspect-ratio">
-                <div
-                  className={`${
-                    photo ? '' : 'placeholder '
-                  }image-container d-flex ${classNames}`}
-                >
-                  <img
-                    src={photo || 'images/default-image.svg'}
-                    role="presentation"
-                  />
-                </div>
-              </div>
-              <div className="content-container d-flex flex-column">
-                <h1 className="seller">{listing.seller}</h1>
-                <h1 className="listing-title text-truncate">{name}</h1>
-                {purchase.id && (
-                  <div className="state">
-                    <OfferStatusEvent offer={purchase} />
-                  </div>
-                )}
-                {buyer &&
-                    purchase.id && (
-                  <PurchaseProgress
-                    purchase={purchase}
-                    perspective={perspective}
-                    subdued={true}
-                    currentStep={parseInt(status)}
-                    maxStep={perspective === 'buyer' ? 3 : 4}
-                  />
-                )}
-              </div>
-            </div>
-          </Link>
+            <span>Natasha purchased SUPER COOL T-shirts on November 7, 2018</span>
         )}
         <div ref={this.conversationDiv} className="conversation">
           <CompactMessages seller={listing.seller} messages={messages} />

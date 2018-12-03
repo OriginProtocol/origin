@@ -14,7 +14,7 @@ const MAX_ADDRESS_LENGTH = 9
 function truncateWithCenterEllipsis(fullStr = '', strLen) {
   if (fullStr.length <= MAX_ADDRESS_LENGTH) return fullStr;
   const separator = '...'
-  const frontChars = 4
+  const frontChars = 5
   const backChars = 4
 
   return fullStr.substr(0, frontChars)
@@ -39,13 +39,17 @@ class Message extends Component {
       user,
       contentOnly,
       mobileDevice,
-      seller
+      seller,
+      web3Account
     } = this.props
     const { created, hash } = message
     const { address, fullName, profile } = user
+    const currentUser = web3Account === user.address
+    const chatColor = currentUser ? '#1a82ff' : '#ebf0f3'
+    const textColor = currentUser ? 'white' : 'black'
 
     const ChatBubble = (props) => {
-      const { id, text, color, fullName, address } = props
+      const { id, text, textColor, color, fullName, address } = props
       const myText = document.getElementById(id)
       const height = (myText && myText.clientHeight) || 50
       const width = myText && myText.clientWidth
@@ -61,15 +65,10 @@ class Message extends Component {
               {fullName && <div className="name text-truncate">{fullName}</div>}
               <span className="address text-muted">{truncateWithCenterEllipsis(address)}</span>
             </div>
-            {text}
+            <span style={{ color: textColor }}>{text}</span>
           </div>
         </div>
       )
-    }
-
-    let chatColor = '#ebf0f3'
-    if (seller === user.address) {
-      chatColor = '#1a82ff'
     }
 
     if (mobileDevice) {
@@ -84,6 +83,7 @@ class Message extends Component {
                 text={this.renderContent()}
                 id={hash}
                 color={chatColor}
+                textColor={textColor}
                 fullName={fullName}
                 address={address}
               />
@@ -187,7 +187,8 @@ const mapStateToProps = (state, ownProps) => {
     messagingEnabled: state.app.messagingEnabled,
     mobileDevice: state.app.mobileDevice,
     user:
-      state.users.find(u => u.address === ownProps.message.senderAddress) || {}
+      state.users.find(u => u.address === ownProps.message.senderAddress) || {},
+    web3Account: state.wallet.address
   }
 }
 
