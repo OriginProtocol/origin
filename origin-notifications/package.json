@@ -14,7 +14,7 @@
   },
   "main": "app.js",
   "scripts": {
-    "lint": "eslint '**/*.js' --rulesdir ../",
+    "lint": "eslint '**/*.js'",
     "migrate": "sequelize db:migrate",
     "start": "per-env",
     "start:development": "nodemon src/app.js",

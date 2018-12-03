@@ -8,7 +8,7 @@
   "main": "app/app.js",
   "scripts": {
     "initdb": "npm run migrate && npm run seed && npm run vest",
-    "lint": "eslint '**/*.js' --rulesdir ../../",
+    "lint": "eslint '**/*.js'",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "start": "per-env",

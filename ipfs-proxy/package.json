@@ -4,7 +4,7 @@
   "description": "A proxy that validates Origin content being uploaded and downloaded from Origin's IPFS servers",
   "main": "app.js",
   "scripts": {
-    "lint": "eslint '**/*.js' --rulesdir ../",
+    "lint": "eslint '**/*.js'",
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",

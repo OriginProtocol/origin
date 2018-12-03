@@ -16,12 +16,9 @@
   "scripts": {
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "lint": "eslint '**/*.js' --rulesdir ../../",
+    "lint": "eslint '**/*.js'",
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": [
     ">0.2%",

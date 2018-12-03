@@ -43,7 +43,7 @@
     "rewire": "^4.0.1"
   },
   "scripts": {
-    "lint": "eslint 'src/**/*.js' devops/**/*.js --rulesdir ../",
+    "lint": "eslint 'src/**/*.js' 'devops/**/*.js'",
     "migrate": "sequelize db:migrate",
     "start": "npm run start:discovery",
     "start:listener": "per-env",

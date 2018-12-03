@@ -13,7 +13,7 @@
     "start:development": "nodemon --exec 'babel-node' src/index.js --presets @babel/env",
     "prestart:production": "npm run build",
     "start:production": "node dist/index.js",
-    "lint": "eslint '**/*.js' --rulesdir ../",
+    "lint": "eslint '**/*.js'",
     "test": "echo \"Warning: no tests specified\""
   },
   "repository": {

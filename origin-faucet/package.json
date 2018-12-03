@@ -14,7 +14,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "lint": "eslint '**/*.js' --rulesdir ../",
+    "lint": "eslint '**/*.js'",
     "start": "per-env",
     "start:development": "nodemon faucet/app.js",
     "start:production": "node faucet/app.js"
