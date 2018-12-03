@@ -22,7 +22,7 @@
     "lint": "lerna run lint --stream",
     "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "npm run bootstrap",
-    "test": "node ./scripts/test.js",
+    "test": "lerna run test --scope origin --scope origin-dapp --scope origin-contracts --parallel",
     "test:integration": "mocha --timeout 10000 --exit"
   }
 }
