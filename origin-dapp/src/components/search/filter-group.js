@@ -20,6 +20,8 @@ class FilterGroup extends Component {
     this.handleApplyClick = this.handleApplyClick.bind(this)
     this.handleClearClick = this.handleClearClick.bind(this)
     this.handleOpenDropdown = this.handleOpenDropdown.bind(this)
+
+    this.state = {}
   }
 
   resolveFromListingSchema(path) {
@@ -41,6 +43,7 @@ class FilterGroup extends Component {
 
   async handleApplyClick(event) {
     event.preventDefault()
+    this.setState({ open: false })
 
     Promise.all(
       this.childFilters.map(childFilter => childFilter.getFilters())
@@ -55,6 +58,7 @@ class FilterGroup extends Component {
 
   async handleClearClick(event) {
     event.preventDefault()
+    this.setState({ open: false })
 
     this.childFilters
       // Also trigger the filter state chenge as you would with clicking apply
@@ -66,6 +70,12 @@ class FilterGroup extends Component {
   }
 
   handleOpenDropdown() {
+    if (this.state.open) {
+      this.setState({ open: false })
+      return
+    } else {
+      this.setState({ open: true })
+    }
     const containsDateFilter = this.props.filterGroup.items.some(
       filter => filter.type === 'date'
     )
@@ -136,12 +146,14 @@ class FilterGroup extends Component {
         <a
           onClick={this.handleOpenDropdown}
           className="nav-link"
-          data-toggle="dropdown"
           data-parent="#search-filters-bar"
         >
           {this.props.intl.formatMessage(this.props.filterGroup.title)}
         </a>
-        <form className="dropdown-menu" id={formId}>
+        <form
+          className={`dropdown-menu${this.state.open ? ' show' : ''}`}
+          id={formId}
+        >
           <div className="d-flex flex-column">
             <div className="dropdown-form">
               {this.props.filterGroup.items.map((filter, index) =>
