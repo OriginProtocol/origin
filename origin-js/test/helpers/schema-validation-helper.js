@@ -21,6 +21,7 @@ export const validateListing = (listing) => {
   expect(listing).to.have.property('id').that.is.a('string')
   expect(listing).to.have.property('media').that.is.an('array')
   expect(listing).to.have.property('schemaId').that.is.a('string')
+  expect(listing).to.have.property('dappSchemaId').that.is.a('string')
   expect(listing).to.have.property('unitsTotal').that.is.a('number')
 
   expect(listing).to.have.property('type').that.is.a('string')
