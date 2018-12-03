@@ -63,7 +63,7 @@ class EditProfile extends Component {
 
   handleDescriptionChange(e) {
     const { mobileDescriptionMaxLength, mobileLayout } = this.props
-    let description = e.currentTarget.value
+    const description = e.currentTarget.value
     this.setState({ description: mobileLayout
       ? description.substring(0, Math.min(description.length, mobileDescriptionMaxLength))
       : description
@@ -83,7 +83,7 @@ class EditProfile extends Component {
         >
           {this.renderFormBody(false)}
         </Modal>
-        <div className={`mobileProfile ${open && mobileLayout ? "d-md-none" : "d-none"}`}>
+        <div className={`mobileProfile ${open && mobileLayout ? 'd-md-none' : 'd-none'}`}>
           {this.renderFormBody(true)}
         </div>
       </Fragment>

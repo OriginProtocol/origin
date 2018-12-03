@@ -275,7 +275,7 @@ class Profile extends Component {
     window.removeEventListener('beforeunload', this.handleUnload)
 
     clearInterval(this.createdAtInterval)
-    window.removeEventListener("resize", this.updateProfileMobileLayout);
+    window.removeEventListener('resize', this.updateProfileMobileLayout)
     this.props.showMainNav(true)
   }
 
@@ -288,7 +288,7 @@ class Profile extends Component {
     if ($('.identity.dropdown').hasClass('show')) {
       $('#identityDropdown').dropdown('toggle')
     }
-    window.addEventListener("resize", this.updateProfileMobileLayout);
+    window.addEventListener('resize', this.updateProfileMobileLayout)
     this.updateProfileMobileLayout()
   }
 
@@ -319,12 +319,9 @@ class Profile extends Component {
     const {
       changes,
       lastPublish,
-      mobileLayout,
       profile,
       provisional,
       published,
-      showWelcomeWarning,
-      showMainNav,
       wallet,
       intl,
       mobileDevice
@@ -360,7 +357,7 @@ class Profile extends Component {
 
     return (
       <div className="current-user profile-wrapper">
-        <div className={modalsOpen.profile && this.state.profileMobileLayout ? "d-none" : "container"}>
+        <div className={modalsOpen.profile && this.state.profileMobileLayout ? 'd-none' : 'container'}>
           <div className="row">
             <div className="col-12 col-lg-8">
               <div className={`row attributes mb-0 d-lg-none`}>
