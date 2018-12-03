@@ -17,7 +17,7 @@ matrix:
       script:
         - npm run lint
 
-    - name: "origin-bridge tests"
+    - name: "origin-bridge unit tests"
       language: python
       python: 3.6
       before_script:
@@ -62,7 +62,7 @@ matrix:
       script:
         - npm run test --prefix origin-js
 
-    - name: "origin-token-transfer tests"
+    - name: "origin-token-transfer unit tests"
       language: node_js
       node_js: 10
       install:
@@ -80,5 +80,4 @@ matrix:
         # Setting required for Elasticsearch to run
         - sudo sysctl -w vm.max_map_count=262144
       script:
-        - docker build . -t origin --cache-from origin:latest
         - docker-compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from integration-tests
