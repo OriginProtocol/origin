@@ -461,6 +461,8 @@ export default class Marketplace {
 
   /**
    * Withdraws an offer.
+   * This may be called by either the buyer (to cancel an offer)
+   * or the seller (to reject an offer).
    * @param {string} id - Offer unique ID.
    * @param ipfsData - Data to store in IPFS. For future use, currently empty.
    * @param {func(confirmationCount, transactionReceipt)} confirmationCallback
@@ -617,24 +619,43 @@ export default class Marketplace {
     return reviews
   }
 
+  /**
+   * Fetch all notifications for the current user.
+   *
+   * Notes:
+   *  a) Only the latest notification for a given offer is returned (vs the whole history).
+   *  Imagine the following scenario:
+   *    - Buyer creates offer.
+   *    - getNotification called for seller -> offer created notification returned
+   *    - Seller accepts offer then buyer finalizes it
+   *    - getNotification called for seller -> only the finalized notification is returned.
+   *  b) The current implementation is very inefficient, especially for sellers with large
+   * number of listings/offers. When this becomes an issue, the logic could be optimized.
+   * For example a possibility would be to add a "fromBlockNumber" argument to allow to fetch
+   * incrementally new notifications. Alternatively, support for a "performance mode" that
+   * fetches data from the back-end could be added.
+   *
+   * @return {Promise<Array[Notification]>}
+   */
   async getNotifications() {
+    // Fetch all notifications.
     const party = await this.contractService.currentAccount()
     const notifications = await this.resolver.getNotifications(party)
-    let isValid = true
+
+    // Decorate each notification with listing and offer data.
     const withResources = await Promise.all(notifications.map(async (notification) => {
-      if (notification.resources.listingId) {
-        notification.resources.listing = await this.getListing(
-          generateListingId({
-            version: notification.version,
-            network: notification.network,
-            listingIndex: notification.resources.listingId
-          })
-        )
-      }
-      if (notification.resources.offerId) {
-        let offer
-        try {
-          offer = await this.getOffer(
+      try {
+        if (notification.resources.listingId) {
+          notification.resources.listing = await this.getListing(
+            generateListingId({
+              version: notification.version,
+              network: notification.network,
+              listingIndex: notification.resources.listingId
+            })
+          )
+        }
+        if (notification.resources.offerId) {
+          notification.resources.offer = await this.getOffer(
             generateOfferId({
               version: notification.version,
               network: notification.network,
@@ -642,16 +663,24 @@ export default class Marketplace {
               offerIndex: notification.resources.offerId
             })
           )
-        } catch(e) {
-          isValid = false
         }
-        notification.resources.purchase = offer
-      }
-      return isValid ? new Notification(notification) : null
+        return new Notification(notification)
+      } catch(e) {
+        // Guard against invalid listing/offer that might be created for example
+        // by exploiting a validation loophole in origin-js listing/offer code
+        // or by writing directly to the blockchain.
+          return null
+        }
     }))
     return withResources.filter(notification => notification !== null)
   }
 
+  /**
+   * Update the status of a notification in the local store.
+   * @param {string} id - Unique notification ID
+   * @param {string} status - 'read' or 'unread'
+   * @return {Promise<void>}
+   */
   async setNotification({ id, status }) {
     if (!notificationStatuses.includes(status)) {
       throw new Error(`invalid notification status: ${status}`)
