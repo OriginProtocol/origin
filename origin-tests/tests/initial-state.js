@@ -2,7 +2,7 @@ const chai = require('chai')
 const assert = chai.assert
 
 const db = require('../origin-discovery/src/models')
-const Origin = require('origin/src')
+const Origin = require('origin')
 const Web3 = require('web3')
 const web3Provider = new Web3.providers.HttpProvider('http://origin:8545')
 const web3 = new Web3(web3Provider)
