@@ -18,9 +18,10 @@ COPY ./origin-discovery/package*.json ./origin-discovery/
 COPY ./origin-js/package*.json ./origin-js/
 COPY ./origin-messaging/package*.json ./origin-messaging/
 COPY ./origin-notifications/package*.json ./origin-notifications/
+COPY ./origin-tests/package*.json ./origin-tests/
 
-RUN npm install --ignore-scripts
-RUN npm run bootstrap -- --ignore-scripts
+RUN npm install
+RUN npm run bootstrap
 
 # Copy all the source files for the packages
 COPY ./ipfs-proxy ./ipfs-proxy
@@ -30,8 +31,8 @@ COPY ./origin-discovery ./origin-discovery
 COPY ./origin-js ./origin-js
 COPY ./origin-messaging ./origin-messaging
 COPY ./origin-notifications ./origin-notifications
+COPY ./origin-tests ./origin-tests
 
-RUN ln -s ../../node_modules/scrypt origin-contracts/node_modules/scrypt
 RUN ln -s ../../node_modules/scrypt origin-js/node_modules/scrypt
 RUN ln -s ../../node_modules/got origin-js/node_modules/got
 

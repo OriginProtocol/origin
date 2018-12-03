@@ -1,0 +1,21 @@
+{
+  "name": "origin-tests",
+  "version": "1.0.0",
+  "description": "Integration tests for Origin Protocol",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha --timeout 10000 --exit"
+  },
+  "author": "Tom Linton <tom@originprotocol.com>",
+  "license": "ISC",
+  "dependencies": {
+    "origin": "^0.8.6"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
+}

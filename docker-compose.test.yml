@@ -13,4 +13,5 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q event-listener:9499 --
-      sleep 10 && npm run test:integration"
+      sleep 10 &&
+      npm run test --prefix origin-tests"

@@ -7,10 +7,11 @@
     "origin-discovery",
     "origin-faucet",
     "origin-js",
-    "origin-messaging",
     "origin-linking",
+    "origin-messaging",
     "origin-mobile",
     "origin-notifications",
+    "origin-tests",
     "origin-token-transfer/*"
   ],
   "command": {
