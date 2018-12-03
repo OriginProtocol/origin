@@ -28,13 +28,11 @@ export const ProfileConstants = keyMirror(
 
 export function fetchProfile() {
   return async function(dispatch) {
-    const user = await origin.users.get(),
-      wallet = await origin.contractService.currentAccount()
+    const user = await origin.users.get()
 
     dispatch({
       type: ProfileConstants.FETCH_SUCCESS,
-      user,
-      wallet
+      user
     })
   }
 }

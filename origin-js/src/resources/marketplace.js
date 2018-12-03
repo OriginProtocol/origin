@@ -201,7 +201,7 @@ export default class Marketplace {
   /**
    * Returns all the offers for a listing.
    * @param listingId
-   * @param opts: {idsOnly:boolean, for:address}
+   * @param opts: {idsOnly:boolean, for:address, listing:Listing}
    * @return {Promise<List(Offer)>}
    */
   async getOffers(listingId, opts = {}) {
@@ -213,28 +213,58 @@ export default class Marketplace {
     const offerIds = await this.resolver.getOfferIds(listingId, opts)
     if (opts.idsOnly) {
       return offerIds
-    } else {
-      const allOffers = await Promise.all(
-        offerIds.map(async offerId => {
-          try {
-            return await this.getOffer(offerId)
-          } catch(e) {
-            // TODO(John) - handle this error better. It's tricky b/c it happens in a map
-            // and we want to throw the error, but we don't want the whole getOffers() call to fail.
-            // We want it to return the offers that it was able to get but still let us know something failed.
-            console.error(
-              `Error getting offer data for offer ${
-                offerId
-              }: ${e}`
-            )
-            return null
-          }
-        })
-      )
-
-      // filter out invalid offers
-      return allOffers.filter(offer => Boolean(offer))
     }
+
+    const allOffers = await Promise.all(
+      offerIds.map(async offerId => {
+        try {
+          return await this.getOffer(offerId)
+        } catch(e) {
+          // TODO(John) - handle this error better. It's tricky b/c it happens in a map
+          // and we want to throw the error, but we don't want the whole getOffers() call to fail.
+          // We want it to return the offers that it was able to get but still let us know something failed.
+          console.error(
+            `Error getting offer data for offer ${
+              offerId
+            }: ${e}`
+          )
+          return null
+        }
+      })
+    )
+
+    // Filter out invalid offers
+    const filteredOffers = allOffers.filter(offer => Boolean(offer))
+    const listing = opts.listing || await this.getListing(listingId)
+    if (listing.type !== 'unit') {
+      return filteredOffers
+    }
+
+    // Filter out offers for which the units purchased exceeds the units
+    // available at the time of the offer.
+    //
+    // TODO: Handle edits of unitsAvailable.
+    // TODO: Determine whether it always makes sense to filter out listings
+    // based on available quantity. Filtering can cause some weirdness. For
+    // example, suppose that a listing has 2 units available. Also suppose
+    // that two offers are made on that listing: (1) for 1 unit; and (2) for 2
+    // units. Independently, these offers are both valid. However, accepting
+    // either offer would cause the other to be filtered out and thus be stuck
+    // until the buyer disputes.
+    let unitsAvailable = listing.unitsTotal
+    const offers = []
+    filteredOffers.forEach(offer => {
+      if (offer.unitsPurchased > unitsAvailable) {
+        return
+      }
+      // TODO: handle refund and dispute cases
+      if (offer.status !== 'created' && offer.status !== 'withdrawn') {
+        // TODO: handle instant purchases
+        unitsAvailable -= offer.unitsPurchased
+      }
+      offers.push(offer)
+    })
+    return offers
   }
 
   /**
@@ -260,15 +290,28 @@ export default class Marketplace {
     // validate offers awaiting approval
     if (chainOffer.status === 'created') {
       const listing = await this.getListing(listingId)
-      const listingCommision =
+
+      // Originally, listings had a single "commission" field. For multi-unit
+      // listings, we've added "commissionPerUnit." The code here handles both
+      // variants of the schema.
+      let listingCommission =
           listing.commission && typeof listing.commission === 'object' ?
             await this.contractService.moneyToUnits(listing.commission) :
             '0'
 
       if (listing.type === 'unit') {
+        const commissionPerUnit =
+        listing.commissionPerUnit && typeof listing.commissionPerUnit === 'object' ?
+          await this.contractService.moneyToUnits(listing.commissionPerUnit) :
+          null
+        listingCommission = commissionPerUnit || listingCommission
+
         // TODO(John) - there is currently no way to know the currency of a fractional listing.
         // We probably need to add a required "currency" field to the listing schema and write a check here
         // to make sure the chainOffer and the listing have the same currency
+        //
+        // TODO: also, there is no way to detect whether the currency of the
+        // listing commission matches the currency for the offer commission
         const listingCurrency = listing.price && listing.price.currency
         const listingPrice = await this.contractService.moneyToUnits(listing.price)
         const currencies = await this.contractService.currencies()
@@ -279,13 +322,24 @@ export default class Marketplace {
           throw new Error('Invalid offer: currency does not match listing')
         }
 
-        if (BigNumber(listingPrice).isGreaterThan(BigNumber(chainOffer.value))) {
+        const expectedValue = BigNumber(listingPrice).multipliedBy(ipfsOffer.unitsPurchased)
+        if (expectedValue.isGreaterThan(BigNumber(chainOffer.value))) {
           throw new Error('Invalid offer: insufficient offer amount for listing')
         }
       }
 
-      if (BigNumber(listingCommision).isGreaterThan(BigNumber(chainOffer.commission))) {
-        throw new Error('Invalid offer: insufficient commission amount for listing')
+      // TODO: Figure out how to exhaustively handle the various cases. For
+      // example, if the seller edits the listing to increase "unitsTotal,"
+      // the following condition will no longer be true:
+      //
+      //   commission === commissionPerUnit * unitsTotal
+      //
+      // Initially, we're not going to support topping off commission OGN, so
+      // there will be no UI to fix this. We should find a way to handle this
+      // situation gracefully, such as allowing offers to be made with
+      // less commission when the commission tokens have been depleted.
+      if (!BigNumber(listingCommission).isEqualTo(BigNumber(chainOffer.commission))) {
+        throw new Error('Invalid offer: incorrect commission amount for listing')
       }
 
       if (chainOffer.arbitrator.toLowerCase() !== this.arbitrator.toLowerCase()) {
@@ -328,6 +382,18 @@ export default class Marketplace {
    * @return {Promise<{listingId, ...transactionReceipt}>}
    */
   async updateListing(listingId, ipfsData, additionalDeposit = 0, confirmationCallback) {
+    const oldListing = await this.getListing(listingId)
+    if (
+      oldListing.type === 'unit' &&
+      ipfsData.unitsTotal !== oldListing.unitsTotal
+    ) {
+      const offers = await this.getOffers(listingId)
+      const unitsSold = this.unitsSold(oldListing, offers)
+      if (ipfsData.unitsTotal < unitsSold) {
+        throw new Error('new unitsTotal insufficient to cover accepted offers')
+      }
+    }
+
     // Validate and save the data to IPFS.
     const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
@@ -366,6 +432,16 @@ export default class Marketplace {
    * @return {Promise<{listingId, offerId, ...transactionReceipt}>}
    */
   async makeOffer(listingId, offerData = {}, confirmationCallback) {
+    if (offerData.listingType && offerData.listingType === 'unit') {
+      const listing = await this.getListing(listingId)
+      const offers = await this.getOffers(listingId, { listing })
+      const unitsPurchased = Number.parseInt(offerData.unitsPurchased)
+      const unitsAvailable = this.unitsAvailable(listing, offers)
+      if (unitsPurchased > unitsAvailable) {
+        throw new Error('units purchased exceeds units available')
+      }
+    }
+
     // TODO: nest offerData.affiliate, offerData.arbitrator, offerData.finalizes under an "_untrustworthy" key
     // Validate and save the data to IPFS.
     const ipfsHash = await this.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
@@ -385,6 +461,8 @@ export default class Marketplace {
 
   /**
    * Withdraws an offer.
+   * This may be called by either the buyer (to cancel an offer)
+   * or the seller (to reject an offer).
    * @param {string} id - Offer unique ID.
    * @param ipfsData - Data to store in IPFS. For future use, currently empty.
    * @param {func(confirmationCount, transactionReceipt)} confirmationCallback
@@ -407,6 +485,18 @@ export default class Marketplace {
   async acceptOffer(id, ipfsData = {}, confirmationCallback) {
     const ipfsHash = await this.ipfsDataStore.save(OFFER_ACCEPT_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+
+    // Throw an error if the offer is invalid. We detect this through
+    // getOffers(), which filters out invalid offers.
+    const { listingId } = await this.resolver.getOffer(id)
+    const listing = await this.getListing(listingId)
+    if (listing.type === 'unit') {
+      const offers = await this.getOffers(listingId, { listing })
+      const validOffer = offers.filter(o => o.id === id).length > 0
+      if (!validOffer) {
+        throw new Error(`cannot accept invalid offer ${id}`)
+      }
+    }
 
     return await this.resolver.acceptOffer(id, ipfsBytes, confirmationCallback)
   }
@@ -529,24 +619,43 @@ export default class Marketplace {
     return reviews
   }
 
+  /**
+   * Fetch all notifications for the current user.
+   *
+   * Notes:
+   *  a) Only the latest notification for a given offer is returned (vs the whole history).
+   *  Imagine the following scenario:
+   *    - Buyer creates offer.
+   *    - getNotification called for seller -> offer created notification returned
+   *    - Seller accepts offer then buyer finalizes it
+   *    - getNotification called for seller -> only the finalized notification is returned.
+   *  b) The current implementation is very inefficient, especially for sellers with large
+   * number of listings/offers. When this becomes an issue, the logic could be optimized.
+   * For example a possibility would be to add a "fromBlockNumber" argument to allow to fetch
+   * incrementally new notifications. Alternatively, support for a "performance mode" that
+   * fetches data from the back-end could be added.
+   *
+   * @return {Promise<Array[Notification]>}
+   */
   async getNotifications() {
+    // Fetch all notifications.
     const party = await this.contractService.currentAccount()
     const notifications = await this.resolver.getNotifications(party)
-    let isValid = true
+
+    // Decorate each notification with listing and offer data.
     const withResources = await Promise.all(notifications.map(async (notification) => {
-      if (notification.resources.listingId) {
-        notification.resources.listing = await this.getListing(
-          generateListingId({
-            version: notification.version,
-            network: notification.network,
-            listingIndex: notification.resources.listingId
-          })
-        )
-      }
-      if (notification.resources.offerId) {
-        let offer
-        try {
-          offer = await this.getOffer(
+      try {
+        if (notification.resources.listingId) {
+          notification.resources.listing = await this.getListing(
+            generateListingId({
+              version: notification.version,
+              network: notification.network,
+              listingIndex: notification.resources.listingId
+            })
+          )
+        }
+        if (notification.resources.offerId) {
+          notification.resources.offer = await this.getOffer(
             generateOfferId({
               version: notification.version,
               network: notification.network,
@@ -554,16 +663,24 @@ export default class Marketplace {
               offerIndex: notification.resources.offerId
             })
           )
-        } catch(e) {
-          isValid = false
         }
-        notification.resources.purchase = offer
-      }
-      return isValid ? new Notification(notification) : null
+        return new Notification(notification)
+      } catch(e) {
+        // Guard against invalid listing/offer that might be created for example
+        // by exploiting a validation loophole in origin-js listing/offer code
+        // or by writing directly to the blockchain.
+          return null
+        }
     }))
     return withResources.filter(notification => notification !== null)
   }
 
+  /**
+   * Update the status of a notification in the local store.
+   * @param {string} id - Unique notification ID
+   * @param {string} status - 'read' or 'unread'
+   * @return {Promise<void>}
+   */
   async setNotification({ id, status }) {
     if (!notificationStatuses.includes(status)) {
       throw new Error(`invalid notification status: ${status}`)
@@ -571,6 +688,48 @@ export default class Marketplace {
     const notifications = this.store.get(storeKeys.notificationStatuses)
     notifications[id] = status
     this.store.set(storeKeys.notificationStatuses, notifications)
+  }
+
+  /**
+   * Returns units available for a unit listing, taking into account pending
+   * offers.
+   * @param {Listing} listing - listing JSON object
+   * @param {List(Offer)} offers - list of Offer JSON objects for the listing
+   * @throws {Error}
+   * @return {number} - Units available
+   */
+  unitsAvailable(listing, offers) {
+    if (listing.type !== 'unit') {
+      throw new Error('unitsAvailable only works for unit listings')
+    }
+
+    return listing.unitsTotal - this.unitsSold(listing, offers)
+  }
+
+  /**
+   * Returns units sold for a unit listing, taking into account pending offers.
+   * @param {Listing} listing - listing JSON object
+   * @param {List(Offer)} offers - list of Offer JSON objects for the listing
+   * @return {number} - Units sold
+   */
+  unitsSold(listing, offers) {
+    if (listing.type !== 'unit') {
+      throw new Error('unitsAvailable only works for unit listings')
+    }
+    return Object.keys(offers).reduce((sold, offerId) => {
+      // TODO: handle instant purchases
+      if (
+        // Before offers are submitted to the blockchain, they have no status.
+        //
+        // TODO: We might need some explicit handling of arbitration rulings.
+        offers[offerId].status &&
+        offers[offerId].status !== 'withdrawn' &&
+        offers[offerId].status !== 'created'
+      ) {
+        return sold + offers[offerId].unitsPurchased
+      }
+      return sold
+    }, 0)
   }
 
   async getTokenAddress() {

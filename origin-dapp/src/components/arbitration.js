@@ -18,6 +18,7 @@ import TransactionHistory from 'components/transaction-history'
 import UserCard from 'components/user-card'
 
 import { getListing } from 'utils/listing'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -93,16 +94,18 @@ class Arbitration extends Component {
   }
 
   validateUser() {
-    const { history, offerId, web3Account } = this.props
+    const { history, offerId, wallet } = this.props
 
     if (
-      web3Account &&
-      this.props.web3Account.toUpperCase() !== ARBITRATOR_ACCOUNT.toUpperCase()
+      wallet.address &&
+      formattedAddress(wallet.address) !== formattedAddress(ARBITRATOR_ACCOUNT)
     ) {
       alert(
         `⚠️ Warning:\nCurrent account (${
-          this.props.web3Account
-        }) is not equal to the ARBITRATOR_ACCOUNT environment variable (${ARBITRATOR_ACCOUNT})`
+          formattedAddress(wallet.address)
+        }) is not equal to the ARBITRATOR_ACCOUNT environment variable (${
+          ARBITRATOR_ACCOUNT
+        })`
       )
 
       history.push(`/purchases/${offerId}`)
@@ -110,9 +113,9 @@ class Arbitration extends Component {
   }
 
   render() {
-    const { messages, web3Account } = this.props
+    const { messages, wallet } = this.props
 
-    if (!web3Account) {
+    if (!wallet.address) {
       return null
     }
 
@@ -136,10 +139,10 @@ class Arbitration extends Component {
 
     const buyerConversationId =
       buyer.address &&
-      origin.messaging.generateRoomId(web3Account, buyer.address)
+      origin.messaging.generateRoomId(wallet.address, buyer.address)
     const sellerConversationId =
       seller.address &&
-      origin.messaging.generateRoomId(web3Account, seller.address)
+      origin.messaging.generateRoomId(wallet.address, seller.address)
     const participantsConversationId =
       buyer.address &&
       seller.address &&
@@ -191,8 +194,8 @@ class Arbitration extends Component {
                           <SellerBadge />
                         </div>
                         <div className="name">{sellerName}</div>
-                        <div className="address text-muted text-truncate" title={seller.address}>
-                          {seller.address}
+                        <div className="address text-muted text-truncate" title={formattedAddress(seller.address)}>
+                          {formattedAddress(seller.address)}
                         </div>
                       </div>
                     </div>
@@ -206,8 +209,8 @@ class Arbitration extends Component {
                           <BuyerBadge />
                         </div>
                         <div className="name">{buyerName}</div>
-                        <div className="address text-muted text-truncate" title={buyer.address}>
-                          {buyer.address}
+                        <div className="address text-muted text-truncate" title={formattedAddress(buyer.address)}>
+                          {formattedAddress(buyer.address)}
                         </div>
                       </div>
                       <Avatar
@@ -315,7 +318,7 @@ class Arbitration extends Component {
                   <div className="conversation-container">
                     <Conversation
                       id={origin.messaging.generateRoomId(
-                        web3Account,
+                        wallet.address,
                         buyer.address
                       )}
                       messages={messages
@@ -355,10 +358,10 @@ class Arbitration extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ messages, wallet }) => {
   return {
-    messages: state.messages,
-    web3Account: state.app.web3.account
+    messages,
+    wallet
   }
 }
 

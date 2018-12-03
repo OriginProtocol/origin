@@ -13,7 +13,6 @@ export function listingInputToIPFS(data) {
     "language": "en-US",
     "title": data.title,
     "description": data.description,
-    "expiry": "1996-12-19T16:39:57-08:00",
     "media": data.media,
     "unitsTotal": data.unitsTotal,
     "price": data.price,
@@ -61,7 +60,7 @@ async function createListing(_, input) {
   return txHelper({
     tx: createListingCall.send({
       gas: 4612388,
-      from: from || web3.eth.defaultAccount
+      from: from
     }),
     mutation: 'createListing'
   })

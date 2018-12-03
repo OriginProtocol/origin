@@ -1,11 +1,21 @@
 import contracts from '../contracts'
 
-let ethPrice
+let ethPrice, marketplaceExists = {}
 
 export default {
   config: () => contracts.net,
   web3: () => ({}),
-  marketplace: () => contracts.marketplace,
+  marketplace: async () => {
+    const address = contracts.marketplace.options.address
+    if (marketplaceExists[address]) {
+      return contracts.marketplace
+    }
+    const exists = await web3.eth.getCode(address)
+    if (exists && exists.length > 2) {
+      marketplaceExists[address] = true
+      return contracts.marketplace
+    }
+  },
   contracts: () => {
     let contracts = []
     try {
@@ -18,11 +28,11 @@ export default {
   marketplaces: () => contracts.marketplaces,
   tokens: () => contracts.tokens,
   token: (_, args) => {
-    if (args.id === "0x0000000000000000000000000000000000000000") {
+    if (args.id === '0x0000000000000000000000000000000000000000') {
       return {
-        id: "0x0000000000000000000000000000000000000000",
-        address: "0x0000000000000000000000000000000000000000",
-        name: "Ether",
+        id: '0x0000000000000000000000000000000000000000',
+        address: '0x0000000000000000000000000000000000000000',
+        name: 'Ether',
         symbol: 'ETH',
         decimals: 18
       }

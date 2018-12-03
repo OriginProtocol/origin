@@ -1,6 +1,8 @@
 import React from 'react'
 import IdenticonJS from 'identicon.js'
 
+import { formattedAddress } from 'utils/user'
+
 const Identicon = ({ address, size = 30 }) => {
   let data = null
   if (!address) {
@@ -8,7 +10,7 @@ const Identicon = ({ address, size = 30 }) => {
     data =
       'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
   } else {
-    data = new IdenticonJS(address, size).toString()
+    data = new IdenticonJS(formattedAddress(address), size).toString()
   }
 
   return (

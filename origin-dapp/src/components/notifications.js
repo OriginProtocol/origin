@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 
 import Notification from 'components/notification'
 
+import { formattedAddress } from 'utils/user'
+
 class Notifications extends Component {
   constructor(props) {
     super(props)
@@ -11,13 +13,13 @@ class Notifications extends Component {
   }
 
   render() {
-    const { notifications, web3Account } = this.props
+    const { notifications, wallet } = this.props
     const { filter } = this.state
     const notificationsWithPerspective = notifications.map(n => {
       const { seller } = n.resources.listing
       return {
         ...n,
-        perspective: web3Account === seller ? 'seller' : 'buyer'
+        perspective: formattedAddress(wallet.address) === formattedAddress(seller) ? 'seller' : 'buyer'
       }
     })
     const filteredNotifications =
@@ -110,10 +112,10 @@ class Notifications extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ notifications, wallet }) => {
   return {
-    notifications: state.notifications,
-    web3Account: state.app.web3.account
+    notifications,
+    wallet
   }
 }
 

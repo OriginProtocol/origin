@@ -56,7 +56,6 @@ describe('Listing IpfsDataStore load', () => {
     expect(listing.language).to.equal('en-US')
     expect(listing.title).to.equal('my listing')
     expect(listing.description).to.equal('my description')
-    expect(listing.expiry).to.equal('1996-12-19T16:39:57-08:00')
     expect(listing.media.length).to.equal(2)
     expect(listing.media[0].url).to.equal('http://test-gateway')
     expect(listing.unitsTotal).to.equal(1)

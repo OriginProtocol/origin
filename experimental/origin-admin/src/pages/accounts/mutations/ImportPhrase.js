@@ -4,7 +4,7 @@ import withAccounts from 'hoc/withAccounts'
 import get from 'lodash/get'
 import clone from 'lodash/clone'
 import set from 'lodash/set'
-import mnemonicToAccounts, { defaultMnemonic } from '../../../utils/mnemonicToAccounts'
+import mnemonicToAccounts, { defaultMnemonic } from 'utils/mnemonicToAccounts'
 
 import {
   Button,

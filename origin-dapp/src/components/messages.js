@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
 
+import { showMainNav } from 'actions/App'
+
 import groupByArray from 'utils/groupByArray'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -14,19 +16,24 @@ class Messages extends Component {
     super(props)
 
     this.state = {
-      selectedConversationId: ''
+      selectedConversationId: null
     }
   }
 
   componentDidMount() {
+    const { mobileDevice, match } = this.props
     // try to detect the conversation before rendering
-    this.detectSelectedConversation()
+    if (match.params.conversationId || !mobileDevice) {
+      this.detectSelectedConversation()
+    }
   }
 
   componentDidUpdate(prevProps) {
-    const { conversations, match } = this.props
+    const { conversations, match, mobileDevice } = this.props
     const { selectedConversationId } = this.state
     const { conversationId } = match.params
+
+    if (mobileDevice) return
 
     // on route change
     if (
@@ -43,23 +50,80 @@ class Messages extends Component {
   }
 
   detectSelectedConversation() {
+    const { match, conversations, mobileDevice, showMainNav } = this.props
     const selectedConversationId =
-      this.props.match.params.conversationId ||
-      (this.props.conversations[0] || {}).key
+      match.params.conversationId ||
+      (conversations[0] || {}).key
 
+    if (mobileDevice && selectedConversationId) showMainNav(false)
     selectedConversationId && this.setState({ selectedConversationId })
   }
 
-  handleConversationSelect(selectedConversationId) {
+  handleConversationSelect(selectedConversationId = '') {
+    const { mobileDevice } = this.props
+
+    const showMainNav = (mobileDevice && selectedConversationId.length) ? false : true
+
+    this.props.showMainNav(showMainNav)
     this.setState({ selectedConversationId })
   }
 
   render() {
-    const { conversations, messages } = this.props
+    const { conversations, messages, mobileDevice, users, wallet } = this.props
     const { selectedConversationId } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
       .sort((a, b) => (a.created < b.created ? -1 : 1))
+    const conversation = conversations.find((conv) => conv.key === selectedConversationId)
+    const lastMessage = conversation && conversation.values.sort(
+      (a, b) => (a.created < b.created ? -1 : 1)
+    )[conversation.values.length - 1]
+    const { recipients, senderAddress } = lastMessage || { recipients: [] }
+    const role = formattedAddress(senderAddress) === formattedAddress(wallet.address) ? 'sender' : 'recipient'
+    const counterpartyAddress =
+      role === 'sender'
+        ? recipients.find(addr => formattedAddress(addr) !== formattedAddress(senderAddress))
+        : senderAddress
+    const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
+    const counterpartyName = counterparty.fullName || formattedAddress(counterpartyAddress)
+
+    if (mobileDevice) {
+      if (selectedConversationId && selectedConversationId.length) {
+        return (
+          <div className="mobile-messaging messages-wrapper">
+            <div className="back d-flex flex-row justify-content-center align-items-center"
+              onClick={() => this.handleConversationSelect()}
+            >
+              <i className="icon-arrow-left align-self-start mr-auto"></i>
+              <span className="counterparty text-truncate mr-auto">{counterpartyName}</span>
+            </div>
+            <div className="conversation-col d-flex flex-column">
+              <Conversation
+                id={selectedConversationId}
+                messages={filteredAndSorted}
+                withListingSummary={true}
+                mobileDevice={mobileDevice}
+              />
+            </div>
+          </div>
+        )
+      } else {
+        return (
+          <div className="mobile-conversations">
+            {conversations.map(c => (
+              <ConversationListItem
+                key={c.key}
+                conversation={c}
+                active={selectedConversationId === c.key}
+                handleConversationSelect={() =>
+                  this.handleConversationSelect(c.key)
+                }
+              />
+            ))}
+          </div>
+        )
+      }
+    }
 
     return (
       <div className="d-flex messages-wrapper">
@@ -93,13 +157,12 @@ class Messages extends Component {
   }
 }
 
-const mapStateToProps = ({ app, messages }) => {
-  const { messagingEnabled, web3 } = app
-  const web3Account = web3.account
+const mapStateToProps = ({ activation, app, messages, users, wallet }) => {
+  const { mobileDevice, showNav } = app
   const filteredMessages = messages.filter(({ content, conversationId }) => {
     return (
       content &&
-      origin.messaging.getRecipients(conversationId).includes(web3Account)
+      origin.messaging.getRecipients(conversationId).includes(wallet.address)
     )
   })
   const conversations = groupByArray(filteredMessages, 'conversationId')
@@ -117,9 +180,19 @@ const mapStateToProps = ({ app, messages }) => {
   return {
     conversations: sortedConversations,
     messages: filteredMessages,
-    messagingEnabled,
-    web3Account
+    messagingEnabled: activation.messaging.enabled,
+    mobileDevice,
+    showNav,
+    users,
+    wallet
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Messages))
+const mapDispatchToProps = dispatch => ({
+  showMainNav: (showNav) => dispatch(showMainNav(showNav)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Messages)
