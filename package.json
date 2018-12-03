@@ -16,13 +16,13 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --no-ci --progress --hoist",
-    "build": "lerna run build --stream",
+    "build": "lerna run build",
     "clean": "git clean -fdX .",
     "start": "lerna run start --stream --parallel --scope origin --scope origin-dapp",
-    "lint": "lerna run lint --stream",
+    "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "npm run bootstrap",
-    "test": "lerna run test --scope origin --scope origin-dapp --scope origin-contracts --parallel",
+    "test": "lerna run test",
     "test:integration": "mocha --timeout 10000 --exit"
   }
 }
