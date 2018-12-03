@@ -119,6 +119,7 @@ class Messages extends Component {
                 key={c.key}
                 conversation={c}
                 active={selectedConversationId === c.key}
+                fromMessages={true}
                 handleConversationSelect={() =>
                   this.handleConversationSelect(c.key)
                 }
@@ -140,6 +141,7 @@ class Messages extends Component {
                     key={c.key}
                     conversation={c}
                     active={selectedConversationId === c.key}
+                    fromMessages={true}
                     handleConversationSelect={() =>
                       this.handleConversationSelect(c.key)
                     }

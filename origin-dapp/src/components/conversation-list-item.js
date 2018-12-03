@@ -110,7 +110,8 @@ class ConversationListItem extends Component {
       handleConversationSelect,
       users,
       web3Account,
-      mobileDevice
+      mobileDevice,
+      fromMessages = false
     } = this.props
     const { listing, lastMessage, createdAt } = this.state
 
@@ -142,13 +143,12 @@ class ConversationListItem extends Component {
           <div className={`message text-truncate ${!listing.name ? 'no-listing' : ''}`}>{content}</div>
         </div>
         <div className={`meta-container ${mobileDevice ? 'justify-content-start ml-auto' : 'text-right'}`}>
-          { mobileDevice && (
-            <div className="timestamp align-self-end">
-              {createdAt}
-            </div>
-          )}
-          {(!!unreadCount && active) && (
-            <div className={`unread count ${mobileDevice ? 'text-center mx-auto' : 'text-right'}`}>
+          <div className="timestamp align-self-end">
+            {createdAt}
+          </div>
+
+          {(!!unreadCount && fromMessages) && (
+            <div className={`unread count text-right`}>
               <div>{unreadCount}</div>
             </div>
           )}
