@@ -37,7 +37,7 @@ class MyPurchases extends Component {
   async loadPurchases() {
     const { web3Account } = this.props
     const purchases = await origin.marketplace.getPurchases(web3Account)
-    const transformedPurchases = transformPurchasesOrSales(purchases)
+    const transformedPurchases = await transformPurchasesOrSales(purchases)
     this.setState({ loading: false, purchases: transformedPurchases })
   }
 

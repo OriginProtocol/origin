@@ -72,13 +72,14 @@ export function dappFormDataToOriginListing(formData) {
  * @param {Listing} originListing - Listing object returned by origin-js.
  * @return {object} DApp compatible listing object.
  */
-export function originToDAppListing(originListing) {
+export async function originToDAppListing(originListing) {
   const commission = originListing.commission
     ? parseFloat(originListing.commission.amount)
     : 0
 
   // detect and adapt listings that were created by deprecated schemas
-  const { category, schema, isDeprecatedSchema } = getSchemaType(originListing)
+  const schemaType = await getSchemaType(originListing)
+  const { category, schema, isDeprecatedSchema } = schemaType
 
   return {
     id: originListing.id,
@@ -114,10 +115,10 @@ export function originToDAppListing(originListing) {
  * @param {object} purchasesOrSales.offer - offer object
  * @return {array} Transformed array of purchases or sales objects
  */
-export const transformPurchasesOrSales = purchasesOrSales => {
-  return purchasesOrSales.map(purchase => {
+export const transformPurchasesOrSales = async purchasesOrSales => {
+  return purchasesOrSales.map(async purchase => {
     const { offer, listing } = purchase
-    const transformedListing = originToDAppListing(listing)
+    const transformedListing = await originToDAppListing(listing)
     transformedListing.category = translateListingCategory(transformedListing.category)
     return {
       offer,
@@ -135,7 +136,7 @@ export const transformPurchasesOrSales = purchasesOrSales => {
  */
 export async function getListing(id, translate = false, blockInfo) {
   const originListing = await origin.marketplace.getListing(id, blockInfo)
-  const dappListing = originToDAppListing(originListing)
+  const dappListing = await originToDAppListing(originListing)
   if (translate) {
     dappListing.category = translateListingCategory(dappListing.category)
   }
