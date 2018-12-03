@@ -29,12 +29,6 @@ matrix:
     - name: "origin-contracts unit tests"
       language: node_js
       node_js: 10
-      cache:
-        npm: true
-        directories:
-          - origin-contracts/node_modules
-      before_cache:
-        - rm -rf origin-contracts/node_modules/.cache
       install:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts
@@ -44,16 +38,6 @@ matrix:
     - name: "origin-discovery unit tests"
       language: node_js
       node_js: 10
-      cache:
-        npm: true
-        directories:
-          - origin-contracts/node_modules
-          - origin-js/node_modules
-          - origin-discovery/node_modules
-      before_cache:
-        - rm -rf origin-contracts/node_modules/.cache
-        - rm -rf origin-js/node_modules/.cache
-        - rm -rf origin-discovery/node_modules/.cache
       addons:
         postgresql: 9.6
       services:
@@ -72,14 +56,6 @@ matrix:
     - name: "origin-js unit tests"
       language: node_js
       node_js: 10
-      cache:
-        npm: true
-        directories:
-          - origin-contracts/node_modules
-          - origin-js/node_modules
-      before_cache:
-        - rm -rf origin-contracts/node_modules/.cache
-        - rm -rf origin-js/node_modules/.cache
       install:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts --scope origin
@@ -89,14 +65,6 @@ matrix:
     - name: "origin-token-transfer tests"
       language: node_js
       node_js: 10
-      cache:
-        npm: true
-        directories:
-          - origin-token-transfer/client/node_modules
-          - origin-token-transfer/server/node_modules
-      before_cache:
-        - rm -rf origin-token-transfer/client/node_modules/.cache
-        - rm -rf origin-token-transfer/server/node_modules/.cache
       install:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-token-transfer-client --scope origin-token-transfer-server
@@ -108,18 +76,6 @@ matrix:
     - name: "integration tests"
       language: minimal
       sudo: true
-      cache:
-        bundler: true
-        directories:
-          - $HOME/docker
-      before_cache:
-        # Save tagged docker images
-        - >
-          mkdir -p $HOME/docker && docker images "origin-*" --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
-          | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
-      before_install:
-        # Load cached docker images
-        - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
       before_script:
         # Setting required for Elasticsearch to run
         - sudo sysctl -w vm.max_map_count=262144
