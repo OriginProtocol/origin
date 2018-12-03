@@ -75,7 +75,7 @@ class NotificationMessage extends Component {
 
   render() {
     const { className, type } = this.props
-    let message = this.notificationTypeToMessage(type)
+    let message = this.notificationTypeToMessage[type]
     if (!message) {
       return <p className={className || ''}>{NON_PURCHASE_RELATED_MESSAGE}</p>
     }
