@@ -14,11 +14,10 @@ const CompactMessages = ({ messages = [], seller }) =>
   messages.map((message, i) => {
     const { senderAddress, created, hash } = message
     const previousMessage = i === 0 ? {} : messages[i - 1]
-    const sameSender = senderAddress === previousMessage.senderAddress
     const timeElapsed = getElapsedTime(created, previousMessage.created)
-    const contentOnly = sameSender && timeElapsed < MAX_MINUTES
+    const showTime = timeElapsed >= MAX_MINUTES
 
-    return <Message seller={seller} key={hash} contentOnly={contentOnly} message={message} />
+    return <Message seller={seller} key={hash} showTime={showTime} message={message} />
   })
 
 export default CompactMessages

@@ -37,7 +37,7 @@ class Message extends Component {
       message,
       messagingEnabled,
       user,
-      contentOnly,
+      showTime,
       mobileDevice,
       seller,
       web3Account
@@ -45,22 +45,26 @@ class Message extends Component {
     const { created, hash } = message
     const { address, fullName, profile } = user
     const currentUser = web3Account === user.address
+    const chatContent = this.renderContent()
     const chatTail = currentUser ? 'tail-right' : 'tail-left'
+    const bubbleAlignment = currentUser ? 'justify-content-end' : 'justify-content-start'
     const bubbleColor = currentUser && 'user'
 
     return (
       <div className="message-section">
-        <div className="timestamp text-center ml-auto">
-          {moment(created).format('MMM Do h:mm a')}
-        </div>
+        {showTime && (
+          <div className="timestamp text-center ml-auto">
+            {moment(created).format('MMM Do h:mm a')}
+          </div>
+        )}
         <div className="d-flex message">
-          <div className="content-container">
+          <div className={`content-container d-flex ${bubbleAlignment}`}>
           <div className={`chat-bubble ${chatTail} ${bubbleColor}`}>
             <div className="chat-text">
               <div className="sender">
                 {fullName && <div className="name text-truncate">{fullName}</div>}
                 <span className="address">{truncateWithCenterEllipsis(address)}</span>
-                <p className="content">{this.renderContent()}</p>
+                <p className="chat-content">{chatContent}</p>
               </div>
             </div>
           </div>

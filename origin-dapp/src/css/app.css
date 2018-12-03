@@ -4332,16 +4332,16 @@ form .stars img {
 }
 
 .chat-bubble {
-  margin: 40px;
-  /* max-width: 70%; */
+  margin: 10px;
+  max-width: 70%;
   display: inline-block;
   position: relative;
 	height: auto;
-  border-radius: 20px;
   background-color: var(--pale-grey);
   color: var(--dark);
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
 }
 
 .chat-text {
@@ -4355,14 +4355,14 @@ form .stars img {
   color: var(--bluey-grey);
 }
 
-.chat-text p {
+.chat-text .chat-content {
   -webkit-margin-before: 0em;
   -webkit-margin-after: 0em;
 }
 
 .chat-bubble.user,
 .chat-bubble.user .chat-text,
-.chat-bubble.user .chat-text .content,
+.chat-bubble.user .chat-text .chat-content,
 .chat-bubble.user .chat-text .address {
   color: white;
 }
