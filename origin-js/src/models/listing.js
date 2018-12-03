@@ -27,13 +27,14 @@ export class Listing {
    *  - {Object} comission - consists of 'amount' and 'currency' properties
    *  - {Array} slots - to be implemented
    *  - {string} schemaId
+   *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
    *  - {string} expiry
    *  - {string} deposit
    *  - {string} depositManager - address of depositManager
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    schemaId, deposit, depositManager, expiry, commissionPerUnit }) {
+    schemaId, dappSchemaId, deposit, depositManager, expiry, commissionPerUnit }) {
 
     this.id = id
     this.title = title
@@ -55,6 +56,7 @@ export class Listing {
     this.commission = commission
     this.slots = slots
     this.schemaId = schemaId
+    this.dappSchemaId = dappSchemaId
     this.deposit = deposit
     this.depositManager = depositManager
     this.expiry = expiry
@@ -85,6 +87,7 @@ export class Listing {
       commission: ipfsListing.commission,
       slots: ipfsListing.slots,
       schemaId: ipfsListing.schemaId,
+      dappSchemaId: ipfsListing.dappSchemaId,
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
       commissionPerUnit: ipfsListing.commissionPerUnit,
@@ -114,6 +117,7 @@ export class Listing {
       commission: discoveryNodeData.commission,
       slots: discoveryNodeData.slots,
       schemaId: discoveryNodeData.schemaId,
+      dappSchemaId: discoveryNodeData.dappSchemaId,
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
       commissionPerUnit: discoveryNodeData.commissionPerUnit,
