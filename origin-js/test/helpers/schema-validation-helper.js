@@ -33,8 +33,6 @@ export const validateListing = (listing) => {
   expect(listing).to.have.property('title').that.is.a('string')
   expect(listing).to.have.property('description').that.is.a('string')
 
-  expect(listing).to.have.property('expiry').that.is.a('string')
-  expect(new Date(listing.expiry).getMonth).to.be.a('function')
   expect(listing).to.have.property('price').that.is.an('object')
   expect(listing.price).to.have.property('currency').that.is.a('string')
   expect(listing.price).to.have.property('amount').that.is.a('string')
@@ -132,6 +130,7 @@ export const validateNotification = (notification) => {
   expect(notification.resources).to.have.property('listingId').that.is.a('string')
   expect(notification.resources).to.have.property('offerId').that.is.a('string')
   expect(notification.resources).to.have.property('listing').that.is.an('object')
+  expect(notification.resources).to.have.property('offer').that.is.an('object')
 }
 
 export const validateMessaging = (messaging) => {

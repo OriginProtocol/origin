@@ -1,21 +1,24 @@
 import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import parseId from '../../utils/parseId'
 
 async function finalizeOffer(_, data) {
   await checkMetaMask(data.from)
   const ipfsData = {
     schemaId: 'http://schema.originprotocol.com/review_v1.0.0',
   }
+  const { listingId, offerId } = parseId(data.offerID)
+
   if (data.rating !== undefined) { ipfsData.rating = data.rating }
   if (data.review !== undefined) { ipfsData.review = data.review }
 
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
   const tx = contracts.marketplaceExec.methods
-    .finalize(data.listingID, data.offerID, ipfsHash)
+    .finalize(listingId, offerId, ipfsHash)
     .send({
       gas: 4612388,
-      from: data.from || web3.eth.defaultAccount
+      from: data.from
     })
   return txHelper({ tx, mutation: 'finalizeOffer' })
 }

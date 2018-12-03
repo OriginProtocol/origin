@@ -11,9 +11,9 @@ import UserDropdown from 'components/dropdowns/user'
 
 class NavBar extends Component {
   render() {
-    const { mobileDevice } = this.props
+    const { showNav, mobileDevice } = this.props
 
-    return (
+    return showNav && (
       <nav className="navbar navigation-bar navbar-expand-lg navbar-dark">
         <div className="container">
           <button
@@ -161,7 +161,8 @@ class NavBar extends Component {
 
 const mapStateToProps = ({ app }) => {
   return {
-    mobileDevice: app.mobileDevice
+    mobileDevice: app.mobileDevice,
+    showNav: app.showNav
   }
 }
 

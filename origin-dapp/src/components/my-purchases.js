@@ -17,25 +17,29 @@ class MyPurchases extends Component {
   }
 
   componentDidMount() {
-    if (this.props.web3Account) {
+    if (
+      this.props.wallet.address &&
+      (web3.givenProvider || origin.contractService.walletLinker)
+    ) {
       this.loadPurchases()
-    } else if (!web3.givenProvider) {
+    } else {
       this.props.storeWeb3Intent('view your purchases')
+      origin.contractService.showLinkPopUp()
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { web3Account } = this.props
+    const { wallet } = this.props
 
     // on account change
-    if (web3Account && web3Account !== prevProps.web3Account) {
+    if (wallet.address && wallet.address !== prevProps.wallet.address) {
       this.loadPurchases()
     }
   }
 
   async loadPurchases() {
-    const { web3Account } = this.props
-    const purchases = await origin.marketplace.getPurchases(web3Account)
+    const { wallet } = this.props
+    const purchases = await origin.marketplace.getPurchases(wallet.address)
     const transformedPurchases = transformPurchasesOrSales(purchases)
     this.setState({ loading: false, purchases: transformedPurchases })
   }
@@ -176,10 +180,10 @@ class MyPurchases extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, wallet }) => {
   return {
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    wallet,
+    web3Intent: app.web3.intent
   }
 }
 

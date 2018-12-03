@@ -4,29 +4,16 @@ import origin from '../services/origin'
 
 export const WalletConstants = keyMirror(
   {
-    INIT: null,
-    INIT_SUCCESS: null,
-    INIT_ERROR: null,
-
     ETH_BALANCE_SUCCESS: null,
     ETH_BALANCE_ERROR: null,
 
     OGN_BALANCE_SUCCESS: null,
-    OGN_BALANCE_ERROR: null
+    OGN_BALANCE_ERROR: null,
+
+    ACCOUNT_ADDRESS: null
   },
   'WALLET'
 )
-
-export function init() {
-  return async function(dispatch) {
-    const address = await origin.contractService.currentAccount()
-
-    dispatch({
-      type: WalletConstants.INIT_SUCCESS,
-      address
-    })
-  }
-}
 
 export function getEthBalance() {
   return async function(dispatch) {
@@ -64,6 +51,22 @@ export function getOgnBalance() {
     dispatch({
       type: WalletConstants.OGN_BALANCE_SUCCESS,
       ognBalance: ognBalance
+    })
+  }
+}
+
+export function storeAccountAddress(address) {
+  return async function(dispatch) {
+    const initialized = true
+
+    if (!address) {
+      address = await origin.contractService.currentAccount()
+    }
+
+    dispatch({
+      type: WalletConstants.ACCOUNT_ADDRESS,
+      address,
+      initialized
     })
   }
 }

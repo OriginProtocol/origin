@@ -1,40 +1,9 @@
 # Localization
 
-## Status 2018-08-21
+## Status 2018-11-28
+Progress tracker on [Crowdin](https://crowdin.com/project/originprotocol).
 
-| Code | Language | Status |
-| ---- | -------- | ------ |
-| ar |  Arabic | 0% |
-| bn | Bengali | 3% |
-| bs | Bosnian | 0% |
-| cs | Czech | 0% |
-| de | German  | 100% |
-| el | Greek | 100% |
-| es | Spanish | 100% |
-| fr | French | 100% |
-| fil | Filipino | 100% |
-| he | Hebrew | 0% |
-| hr | Croatian | 100% |
-| it | Italian | 100% |
-| ja | Japanese | 100% |
-| ko | Korean | 100% |
-| lo | Lao | 100% |
-| ms | Malay | 7% |
-| nl | Dutch | 100% |
-| pt | Portuguese | 100% |
-| pl | Polish | 0% |
-| ro | Romanian | 100% |
-| ru | Russian | 100% |
-| sr | Serbian | 0% |
-| sk | Slovak | 0% |
-| te | Telugu | 0% |
-| th | Thai | 100% |
-| tr | Turkish | 100% |
-| uk | Ukrainian | 100% |
-| ur | Urdu | 0% |
-| vi | Vietnamese | 100% |
-| zh | Chinese | 100% |
-
+Full list of [supported locales](https://github.com/OriginProtocol/origin/blob/master/origin-dapp/translations/supported-locales.json).
 ## Implementation
 
 Localization is done with `react-intl`. [See Documentation here](https://github.com/yahoo/react-intl/wiki).

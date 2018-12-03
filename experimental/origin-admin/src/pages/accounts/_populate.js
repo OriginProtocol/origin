@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-import mnemonicToAccounts from '../../utils/mnemonicToAccounts'
+import mnemonicToAccounts from 'utils/mnemonicToAccounts'
 
 import {
   ImportWalletsMutation,

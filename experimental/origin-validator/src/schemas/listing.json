@@ -143,10 +143,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "expiry": {
-      "type": "string",
-      "format": "date-time"
-    },
     "media": {
       "type": "array",
       "items": {

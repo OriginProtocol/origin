@@ -263,6 +263,24 @@ export default class MarketplaceResolver {
     )
   }
 
+  /**
+   * Returns all notifications relevant to a user.
+   * The notification status is set to 'read' if either
+   *   - The notification was previously marked as read in local storage.
+   *   - The event occurred prior to the subscription start time (e.g. date at which
+   *   the notification component was initialized for the first time).
+   *
+   * @param {string} party - User's ETH address.
+   * @return {Promise<Array{
+   *   id: string,
+   *   status: read | unread
+   *   event: web3 event,
+   *   type: seller_listing_purchased | seller_review_received | buyer_listing_shipped,
+   *   resources: {listingId: string, offerId: string} (Note: those are index, not global ids)
+   *   network: eth network ID,
+   *   version: version of marketplace contract that emitted the event
+   *  }>}
+   **/
   async getNotifications(party) {
     const network = await this.contractService.web3.eth.net.getId()
     let notifications = []
@@ -277,6 +295,7 @@ export default class MarketplaceResolver {
           version,
           transactionHash: notification.event.transactionHash
         })
+        // Check if the event occurred prior to the subscription start time.
         const timestamp = await this.contractService.getTimestamp(
           notification.event
         )
@@ -322,5 +341,14 @@ export default class MarketplaceResolver {
       throw new Error(`Adapter not found for version ${version}`)
     }
     return { adapter, listingIndex, offerIndex, version, network }
+  }
+
+  makeListingId(netId, contractName, listingIndex) {
+    for (const version of this.versions) {
+      if (this.adapters[version].contractName == contractName)
+      {
+        return generateListingId({ version, netId, listingIndex })
+      }
+    }
   }
 }
