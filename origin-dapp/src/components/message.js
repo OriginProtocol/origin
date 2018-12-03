@@ -45,31 +45,8 @@ class Message extends Component {
     const { created, hash } = message
     const { address, fullName, profile } = user
     const currentUser = web3Account === user.address
-    const chatColor = currentUser ? '#1a82ff' : '#ebf0f3'
-    const textColor = currentUser ? 'white' : 'black'
-
-    const ChatBubble = (props) => {
-      const { id, text, textColor, color, fullName, address } = props
-      const myText = document.getElementById(id)
-      const height = (myText && myText.clientHeight) || 50
-      const width = myText && myText.clientWidth
-
-      return (
-        <div className="bubble">
-          <svg viewBox={`0 0 220 ${height}`} xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="0" width="125" height={height} rx="10" ry="10" style={{ fill: color }} />
-            <polygon points="15,50 30,30 30,45" style={{ fill: color }} />
-          </svg>
-          <div id={id} className="chat-text">
-            <div className="sender">
-              {fullName && <div className="name text-truncate">{fullName}</div>}
-              <span className="address text-muted">{truncateWithCenterEllipsis(address)}</span>
-            </div>
-            <span style={{ color: textColor }}>{text}</span>
-          </div>
-        </div>
-      )
-    }
+    const chatTail = currentUser ? 'tail-right' : 'tail-left'
+    const bubbleColor = currentUser && 'user'
 
     return (
       <div className="message-section">
@@ -78,14 +55,15 @@ class Message extends Component {
         </div>
         <div className="d-flex message">
           <div className="content-container">
-            <ChatBubble
-              text={this.renderContent()}
-              id={hash}
-              color={chatColor}
-              textColor={textColor}
-              fullName={fullName}
-              address={address}
-            />
+          <div className={`chat-bubble ${chatTail} ${bubbleColor}`}>
+            <div className="chat-text">
+              <div className="sender">
+                {fullName && <div className="name text-truncate">{fullName}</div>}
+                <span className="address">{truncateWithCenterEllipsis(address)}</span>
+                <p className="content">{this.renderContent()}</p>
+              </div>
+            </div>
+          </div>
             {!messagingEnabled &&
               hash === 'origin-welcome-message' && (
               <div className="button-container">
