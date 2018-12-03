@@ -66,7 +66,7 @@ class Profile extends Component {
     */
 
     const { firstName, lastName, description } = this.props.provisional
-    this.profileUpdateInterval = 500 // 0.5 seconds 
+    this.smWidthThreshold = 576
 
     this.state = {
       lastPublish: null,
@@ -293,14 +293,10 @@ class Profile extends Component {
   }
 
   updateProfileMobileLayout() {
-    this.lastProfileLayoutUpdate = this.lastProfileLayoutUpdate || 0
-    const currentProfileMobileLayout = window.innerWidth < 576
+    const currentProfileMobileLayout = window.innerWidth < this.smWidthThreshold
 
-    // only update this state every so often to not trigger too many renders, or 
-    // mobile layout state changes
-    if ((new Date() - this.lastProfileLayoutUpdate > this.profileUpdateInterval) ||
-      this.state.profileMobileLayout !== currentProfileMobileLayout) {
-      this.lastProfileLayoutUpdate = new Date()
+    // only update this state when it changes
+    if (this.state.profileMobileLayout !== currentProfileMobileLayout) {
       this.setState({ profileMobileLayout: currentProfileMobileLayout })
     }
   }
@@ -482,7 +478,7 @@ class Profile extends Component {
           open={modalsOpen.profile}
           handleToggle={this.handleToggle}
           mobileLayout={profileMobileLayout}
-          mobileDescriptionMaxLength={50}
+          mobileDescriptionMaxLength={500}
           handleSubmit={data => {
             this.props.updateProfile(data)
             this.setState({
