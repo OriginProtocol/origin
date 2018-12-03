@@ -119,10 +119,10 @@ class Onboarding extends Component {
     } = this.props
 
     if (wallet.address && !this.notificationsInterval) {
-      // poll for notifications
+      // Poll for notifications every 60 seconds.
       this.notificationsInterval = setInterval(() => {
         this.props.fetchNotifications()
-      }, 10 * ONE_SECOND)
+      }, 60 * ONE_SECOND)
     }
 
     const welcomeAccountEnabled = ETH_ADDRESS && formattedAddress(ETH_ADDRESS) !== formattedAddress(wallet.address)
