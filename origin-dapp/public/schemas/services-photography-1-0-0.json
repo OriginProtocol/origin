@@ -13,7 +13,7 @@
       "const": "schema.services"
     },
     "slotLength": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.slotLength",
       "default": 1
     },
