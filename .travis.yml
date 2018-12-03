@@ -36,7 +36,8 @@ matrix:
       before_cache:
         - rm -rf node_modules/.cache
       install:
-        - npm install --loglevel notice
+        - npm install --loglevel notice --ignore-scripts
+        - npm run bootstrap -- --scope origin --scope origin-dapp --scope origin-contracts
       script:
         - npm run test
 
