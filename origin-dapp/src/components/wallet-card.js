@@ -15,6 +15,7 @@ import Tooltip from 'components/tooltip'
 import Dropdown from 'components/dropdown'
 
 import { getFiatPrice } from 'utils/priceUtils'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -87,18 +88,20 @@ class WalletCard extends Component {
     const {
       users,
       wallet,
-      web3Account,
       withBalanceTooltip,
       withMenus,
       withProfile
     } = this.props
-    const user = users.find(u => u.address === wallet.address) || {}
+    const user =
+      users.find(
+        u => formattedAddress(u.address) === formattedAddress(wallet.address)
+      ) || {}
     const { attestations = [], fullName, profile = {} } = user
     const { address, ethBalance, ognBalance } = wallet
     const ethToUsdBalance = getFiatPrice(wallet.ethBalance, 'USD')
     const userCanReceiveMessages =
-      address !== web3Account && origin.messaging.canReceiveMessages(address)
-
+      formattedAddress(address) !== formattedAddress(wallet.address) &&
+      origin.messaging.canReceiveMessages(address)
     const balanceTooltip = (
       <div>
         <p
@@ -373,15 +376,15 @@ class WalletCard extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ activation, exchangeRates, users, wallet }) => {
   return {
+    exchangeRates,
     // for reactivity
-    messagingEnabled: state.app.messagingEnabled,
+    messagingEnabled: activation.messaging.enabled,
     // for reactivity
-    messagingInitialized: state.app.messagingInitialized,
-    users: state.users,
-    web3Account: state.app.web3.account,
-    exchangeRates: state.exchangeRates
+    messagingInitialized: activation.messaging.initialized,
+    users,
+    wallet
   }
 }
 

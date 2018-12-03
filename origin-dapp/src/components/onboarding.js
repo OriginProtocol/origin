@@ -10,9 +10,9 @@ import {
   setMessagingEnabled,
   setMessagingInitialized,
   setNotificationsHardPermission,
-  setNotificationsSoftPermission,
-  storeWeb3Intent
-} from 'actions/App'
+  setNotificationsSoftPermission
+} from 'actions/Activation'
+import { storeWeb3Intent } from 'actions/App'
 import { addMessage } from 'actions/Message'
 import { fetchNotifications } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
@@ -25,6 +25,7 @@ import SellingModal from 'components/onboarding-modal'
 import getCurrentNetwork from 'utils/currentNetwork'
 import { createSubscription, requestPermission } from 'utils/notifications'
 import scopedDebounce from 'utils/scopedDebounce'
+import { formattedAddress } from 'utils/user'
 
 import analytics from '../services/analytics'
 import origin from '../services/origin'
@@ -114,17 +115,17 @@ class Onboarding extends Component {
       messages,
       messagingEnabled,
       messagingInitialized,
-      web3Account
+      wallet
     } = this.props
 
-    if (web3Account && !this.notificationsInterval) {
+    if (wallet.address && !this.notificationsInterval) {
       // poll for notifications
       this.notificationsInterval = setInterval(() => {
         this.props.fetchNotifications()
       }, 10 * ONE_SECOND)
     }
 
-    const welcomeAccountEnabled = ETH_ADDRESS && ETH_ADDRESS !== web3Account
+    const welcomeAccountEnabled = ETH_ADDRESS && formattedAddress(ETH_ADDRESS) !== formattedAddress(wallet.address)
 
     if (
       // wait for initialization so that account key is available in origin.js
@@ -135,7 +136,7 @@ class Onboarding extends Component {
       return
     }
 
-    const roomId = origin.messaging.generateRoomId(ETH_ADDRESS, web3Account)
+    const roomId = origin.messaging.generateRoomId(ETH_ADDRESS, wallet.address)
     const recipients = origin.messaging.getRecipients(roomId)
 
     if (!messages.find(({ hash }) => hash === 'origin-welcome-message')) {
@@ -143,7 +144,7 @@ class Onboarding extends Component {
 
       const scopedWelcomeMessageKeyName = `${
         storeKeys.messageWelcomeTimestamp
-      }:${web3Account}`
+      }:${wallet.address}`
       const welcomeTimestampString = localStorage.getItem(
         scopedWelcomeMessageKeyName
       )
@@ -176,7 +177,7 @@ class Onboarding extends Component {
 
       const scopedCongratsMessageKeyName = `${
         storeKeys.messageCongratsTimestamp
-      }:${web3Account}`
+      }:${wallet.address}`
       const congratsTimestampString = localStorage.getItem(
         scopedCongratsMessageKeyName
       )
@@ -223,7 +224,7 @@ class Onboarding extends Component {
     this.props.setNotificationsSoftPermission('granted')
     this.props.handleNotificationsSubscription(null, this.props)
 
-    const { serviceWorkerRegistration, web3Account } = this.props
+    const { serviceWorkerRegistration, wallet } = this.props
     // need a registration object to subscribe
     if (!serviceWorkerRegistration) {
       analytics.event('Notifications', 'UnsupportedNoServiceWorker')
@@ -234,7 +235,7 @@ class Onboarding extends Component {
       // will equal 'granted' or otherwise throw
       await requestPermission()
       analytics.event('Notifications', 'PermissionGranted')
-      createSubscription(serviceWorkerRegistration, web3Account)
+      createSubscription(serviceWorkerRegistration, wallet.address)
     } catch (error) {
       // permission not granted
       analytics.event('Notifications', 'PermissionNotGranted', error)
@@ -331,17 +332,17 @@ class Onboarding extends Component {
   }
 }
 
-const mapStateToProps = ({ app, messages }) => ({
+const mapStateToProps = ({ activation, app, messages, wallet }) => ({
   messages,
-  messagingEnabled: app.messagingEnabled,
-  messagingInitialized: app.messagingInitialized,
+  messagingEnabled: activation.messaging.enabled,
+  messagingInitialized: activation.messaging.initialized,
   networkId: app.web3.networkId,
-  notificationsHardPermission: app.notificationsHardPermission,
-  notificationsSoftPermission: app.notificationsSoftPermission,
-  notificationsSubscriptionPrompt: app.notificationsSubscriptionPrompt,
-  pushNotificationsSupported: app.pushNotificationsSupported,
-  serviceWorkerRegistration: app.serviceWorkerRegistration,
-  web3Account: app.web3.account,
+  notificationsHardPermission: activation.notifications.permissions.hard,
+  notificationsSoftPermission: activation.notifications.permissions.soft,
+  notificationsSubscriptionPrompt: activation.notifications.subscriptionPrompt,
+  pushNotificationsSupported: activation.notifications.pushEnabled,
+  serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
+  wallet,
   web3Intent: app.web3.intent
 })
 

@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
-import { enableMessaging, storeWeb3Intent } from 'actions/App'
+import { enableMessaging } from 'actions/Activation'
+import { storeWeb3Intent } from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
@@ -37,6 +38,7 @@ import {
   offerStatusToStep
 } from 'utils/offer'
 import { translateSchema } from 'utils/translationUtils'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -579,7 +581,7 @@ class PurchaseDetail extends Component {
   }
 
   async initiateDispute() {
-    const { web3Account } = this.props
+    const { wallet } = this.props
     const { issue, listing, purchase } = this.state
 
     try {
@@ -607,9 +609,11 @@ class PurchaseDetail extends Component {
       })
 
       const counterpartyAddress =
-        web3Account === purchase.buyer ? listing.seller : purchase.buyer
+        formattedAddress(wallet.address === purchase.buyer) ?
+        listing.seller :
+        purchase.buyer
       const roomId = origin.messaging.generateRoomId(
-        web3Account,
+        wallet.address,
         counterpartyAddress
       )
       const keys = origin.messaging.getSharedKeys(roomId)
@@ -647,9 +651,9 @@ class PurchaseDetail extends Component {
   }
 
   handleEnableMessaging() {
-    const { enableMessaging, intl, storeWeb3Intent, web3Account } = this.props
+    const { enableMessaging, intl, storeWeb3Intent, wallet } = this.props
 
-    if (web3Account) {
+    if (wallet.address) {
       enableMessaging()
     } else {
       storeWeb3Intent(intl.formatMessage(this.intlMessages.enableMessaging))
@@ -675,7 +679,7 @@ class PurchaseDetail extends Component {
   }
 
   render() {
-    const { messagingEnabled, web3Account } = this.props
+    const { messagingEnabled, wallet } = this.props
     const {
       buyer,
       form,
@@ -700,9 +704,9 @@ class PurchaseDetail extends Component {
 
     let perspective
     // may potentially be neither buyer nor seller
-    if (web3Account === purchase.buyer) {
+    if (formattedAddress(wallet.address) === formattedAddress(purchase.buyer)) {
       perspective = 'buyer'
-    } else if (web3Account === listing.seller) {
+    } else if (formattedAddress(wallet.address) === formattedAddress(listing.seller)) {
       perspective = 'seller'
     }
 
@@ -748,7 +752,7 @@ class PurchaseDetail extends Component {
       <UnnamedUser />
     )
     const arbitrationIsAvailable =
-      ARBITRATOR_ACCOUNT && web3Account !== ARBITRATOR_ACCOUNT
+      ARBITRATOR_ACCOUNT && formattedAddress(wallet.address) !== formattedAddress(ARBITRATOR_ACCOUNT)
 
     return (
       <div className="purchase-detail">
@@ -874,8 +878,8 @@ class PurchaseDetail extends Component {
                           <SellerBadge />
                         </div>
                         <div className="name" title={sellerName}>{sellerName}</div>
-                        <div className="address text-muted text-truncate" title="{seller.address}">
-                          {seller.address}
+                        <div className="address text-muted text-truncate" title={formattedAddress(seller.address)}>
+                          {formattedAddress(seller.address)}
                         </div>
                       </div>
                     </div>
@@ -893,8 +897,8 @@ class PurchaseDetail extends Component {
                           <BuyerBadge />
                         </div>
                         <div className="name" title={buyerName}>{buyerName}</div>
-                        <div className="address text-muted text-truncate" title={buyer.address}>
-                          {buyer.address}
+                        <div className="address text-muted text-truncate" title={formattedAddress(buyer.address)}>
+                          {formattedAddress(buyer.address)}
                         </div>
                       </div>
                       <Avatar
@@ -1271,14 +1275,10 @@ class PurchaseDetail extends Component {
   }
 }
 
-const mapStateToProps = ({ app }) => {
-  const { messagingEnabled, web3 } = app
-  const web3Account = web3.account
-  return {
-    web3Account: web3Account,
-    messagingEnabled
-  }
-}
+const mapStateToProps = ({ activation, wallet }) => ({
+  messagingEnabled: activation.messaging.enabled,
+  wallet
+})
 
 const mapDispatchToProps = dispatch => ({
   updateTransaction: (confirmationCount, transactionReceipt) =>

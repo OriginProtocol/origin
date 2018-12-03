@@ -1,6 +1,8 @@
 import React from 'react'
 import Message from 'components/message'
 
+import { formattedAddress } from 'utils/user'
+
 const MAX_MINUTES = 10
 
 function getElapsedTime(recentTime, previousTime) {
@@ -14,7 +16,7 @@ const CompactMessages = ({ messages = [] }) =>
   messages.map((message, i) => {
     const { senderAddress, created, hash } = message
     const previousMessage = i === 0 ? {} : messages[i - 1]
-    const sameSender = senderAddress === previousMessage.senderAddress
+    const sameSender = formattedAddress(senderAddress) === formattedAddress(previousMessage.senderAddress)
     const timeElapsed = getElapsedTime(created, previousMessage.created)
     const contentOnly = sameSender && timeElapsed < MAX_MINUTES
 
