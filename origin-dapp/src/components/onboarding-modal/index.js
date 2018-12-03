@@ -202,7 +202,11 @@ class OnboardingModal extends Component {
   }
 }
 
-const mapStateToProps = ({ onboarding, wallet, app }) => ({ onboarding, wallet, mobileDevice: app.mobileDevice })
+const mapStateToProps = ({ onboarding, wallet, app: { mobileDevice } }) => ({
+  mobileDevice,
+  onboarding,
+  wallet
+})
 const mapDispatchToProps = dispatch => ({
   fetchSteps: () => dispatch(fetchSteps()),
   getOgnBalance: () => dispatch(getOgnBalance()),
