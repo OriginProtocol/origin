@@ -11,8 +11,7 @@
     "origin-linking",
     "origin-mobile",
     "origin-notifications",
-    "origin-token-transfer/*",
-    "tests"
+    "origin-token-transfer/*"
   ],
   "command": {
     "bootstrap": {

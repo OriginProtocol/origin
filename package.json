@@ -25,7 +25,7 @@
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "npm run bootstrap",
-    "test": "lerna run test",
+    "test": "node scripts/test.js",
     "test:integration": "mocha --timeout 10000 --exit"
   }
 }
