@@ -10,7 +10,7 @@ const listingData = Object.assign({}, listingValid)
 
 describe('create listing and retrieve using discovery', () => {
 
-  before(async () => {
+  before(async (done) => {
     this.origin = new Origin({
       ipfsDomain: 'ipfs-proxy',
       ipfsGatewayProtocol: 'http',
@@ -22,6 +22,9 @@ describe('create listing and retrieve using discovery', () => {
     })
 
     await this.origin.marketplace.createListing(listingData)
+
+    // Wait to allow event-listener to process listing
+    setTimeout(done, 5000)
   })
 
   it('should allow created listing to be retrieved from discovery', async () => {
