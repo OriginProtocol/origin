@@ -6,10 +6,8 @@ services:
     image: origin
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
-        # depends_on:
-        # - origin-dapp
     volumes:
-      - ./test:/app/test/
+      - ./origin-tests/test:/app/origin-tests/test/
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q event-listener:9499 --

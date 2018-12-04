@@ -154,7 +154,7 @@ services:
       # Include origin-contracts build files so the DApp has access to the
       # address of the contracts on the local blockchain
       - ./origin-contracts/build:/app/origin-contracts/build
-      - ./origin/src:/app/origin/src
+      - ./origin-js/src:/app/origin-js/src
       # Mount origin-dapp inside the container
       - ./origin-dapp/src:/app/origin-dapp/src
       - ./origin-dapp/public:/app/origin-dapp/public
