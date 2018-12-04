@@ -497,4 +497,8 @@ export default defineMessages({
     id: 'schema.storage',
     defaultMessage: 'Storage'
   },
+  'schema.slotLength': {
+    id: 'schema.slotLength',
+    defaultMessage: 'Slot Length'
+  },
 })

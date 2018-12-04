@@ -494,5 +494,9 @@
   {
     "id": "schema.storage",
     "defaultMessage": "Storage"
+  },
+  {
+    "id": "schema.slotLength",
+    "defaultMessage": "Slot Length"
   }
 ]

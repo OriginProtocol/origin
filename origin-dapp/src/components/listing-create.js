@@ -59,17 +59,7 @@ class ListingCreate extends Component {
       ERROR: 10
     }
 
-    // TODO(John) - remove once fractional usage is enabled by default
-    this.fractionalSchemaTypes = []
-
-    if (enableFractional) {
-      this.fractionalSchemaTypes = [
-        'housing',
-        'services'
-      ]
-    }
-
-    this.schemaList = listingSchemaMetadata.listingTypes.map(listingType => {
+    this.categoryList = listingSchemaMetadata.listingTypes.map(listingType => {
       listingType.name = props.intl.formatMessage(listingType.translationName)
       return listingType
     })
@@ -207,12 +197,17 @@ class ListingCreate extends Component {
 
   handleCategorySelection(selectedCategory) {
     const trimmedCategory = selectedCategory.replace('schema.', '')
+    const schemaArray = listingSchemaMetadata &&
+      listingSchemaMetadata.listingSchemasByCategory &&
+      listingSchemaMetadata.listingSchemasByCategory[trimmedCategory]
+    const schemaArrayWithNames = schemaArray.map(schemaObj => {
+      schemaObj.name = this.props.intl.formatMessage(schemaObj.translationName)
+      return schemaObj
+    })
+
     this.setState({
       selectedCategory: trimmedCategory,
-      selectedCategorySchemas:
-        listingSchemaMetadata &&
-        listingSchemaMetadata.listingSchemasByCategory &&
-        listingSchemaMetadata.listingSchemasByCategory[trimmedCategory]
+      selectedCategorySchemas: schemaArrayWithNames
     })
   }
 
@@ -228,8 +223,6 @@ class ListingCreate extends Component {
   }
 
   handleSchemaSelection(selectedSchemaType) {
-    const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
-
     return fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
@@ -258,6 +251,13 @@ class ListingCreate extends Component {
             'ui:widget': PhotoPicker
           }
         }
+
+        // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
+        const isFractionalListing =enableFractional &&
+          schemaJson &&
+          schemaJson.properties &&
+          schemaJson.properties.listingType &&
+          schemaJson.properties.listingType.const === 'fractional'
 
         if (isFractionalListing) {
           this.uiSchema.price = {
@@ -521,7 +521,7 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <div className="schema-options">
-                  {this.schemaList.map(category => (
+                  {this.categoryList.map(category => (
                     <div
                       className={`schema-selection${
                         selectedCategory === category.type ? ' selected' : ''
@@ -580,17 +580,17 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <div className="schema-options">
-                  {selectedCategorySchemas.map(schema => (
+                  {selectedCategorySchemas.map(schemaObj => (
                     <div
                       className={`schema-selection${
-                        selectedSchemaType === schema.type ? ' selected' : ''
+                        selectedSchemaType === schemaObj.schema ? ' selected' : ''
                       }`}
-                      key={schema.type}
-                      onClick={() => this.handleSchemaSelection(schema.type)}
+                      key={schemaObj.schema}
+                      onClick={() => this.handleSchemaSelection(schemaObj.schema)}
                       ga-category="create_listing"
-                      ga-label={ `select_schema_${schema.type}`}
+                      ga-label={ `select_schema_${schemaObj.schema}`}
                     >
-                      {schema.name}
+                      {schemaObj.name}
                     </div>
                   ))}
                   {showNoSchemaSelectedError && (

@@ -268,13 +268,7 @@ export function translateSchema(schemaJson) {
       )
     }
 
-    if (propertyObj.default && typeof propertyObj.default === 'number') {
-      propertyObj.default = globalIntlProvider.formatMessage(
-        schemaMessages[propertyObj.default]
-      )
-    }
-
-    if (propertyObj.enum && propertyObj.enum.length) {
+    if (propertyObj.enum && propertyObj.enum.length && property !== 'slotLengthUnit') {
       propertyObj.enumNames = propertyObj.enum.map(
         enumStr =>
           typeof enumStr === 'string'
