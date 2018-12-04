@@ -1,19 +1,6 @@
+**/node_modules
+
 # build folders
 origin-dapp/build
 origin-js/dist
 origin-messaging/dist
-
-# node_modules directories
-node_modules
-ipfs-proxy/node_modules
-origin-contracts/node_modules
-origin-dapp/node_modules
-origin-discovery/node_modules
-origin-faucet/node_modules
-origin-js/node_modules
-origin-linking/node_modules
-origin-messaging/node_modules
-origin-mobile/node_modules
-origin-notifications/node_modules
-origin-token-transfer/client/node_modules
-origin-token-transfer/server/node_modules
