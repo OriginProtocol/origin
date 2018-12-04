@@ -12,12 +12,12 @@
     "defaultMessage": "Verify Your Phone Number"
   },
   {
-    "id": "VerifyPhone.continue",
-    "defaultMessage": "Continue"
-  },
-  {
     "id": "VerifyPhone.cancel",
     "defaultMessage": "Cancel"
+  },
+  {
+    "id": "VerifyPhone.continue",
+    "defaultMessage": "Continue"
   },
   {
     "id": "VerifyPhone.enterPhoneNumberSms",
