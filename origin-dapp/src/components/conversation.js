@@ -269,7 +269,7 @@ class Conversation extends Component {
         </div>
         {!shouldEnableForm && (
           <form className="add-message d-flex">
-            <textarea tabIndex="0" disabled />
+            <textarea rows="4" tabIndex="0" disabled />
             <button type="submit" className="btn btn-sm btn-primary" disabled>
               Send
             </button>
@@ -290,6 +290,7 @@ class Conversation extends Component {
                 )}
                 onKeyDown={this.handleKeyDown}
                 tabIndex="0"
+                rows="4"
                 autoFocus
               />
             )}
