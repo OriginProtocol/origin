@@ -24,8 +24,8 @@ describe('create listing and retrieve using discovery', () => {
     await this.origin.marketplace.createListing(listingData)
   })
 
-  it('should allow created listing to be retrieved from discovery', () => {
-    const listings = this.origin.marketplace.getListings()
+  it('should allow created listing to be retrieved from discovery', async () => {
+    const listings = await this.origin.marketplace.getListings()
     assert.equal(listings.length, 6)
   })
 

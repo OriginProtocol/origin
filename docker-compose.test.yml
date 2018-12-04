@@ -7,6 +7,7 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
     volumes:
+      - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-tests/test:/app/origin-tests/test/
     command:
       >

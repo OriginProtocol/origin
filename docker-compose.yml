@@ -32,8 +32,7 @@ services:
   origin:
     container_name: origin
     image: origin
-    build:
-      context: .
+    build: .
     ports:
       - "8545:8545"  # Ganache
     volumes:
