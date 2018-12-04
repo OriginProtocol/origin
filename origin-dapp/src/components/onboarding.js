@@ -117,6 +117,11 @@ class Onboarding extends Component {
       // analytics.event('Notifications', 'ErrorNoDecryption')
       console.error('A message has arrived that could not be decrypted:', obj)
     })
+
+    // Delay notifications retrieval to avoid flickering dropdown menus.
+    setTimeout(() => {
+      this.props.fetchNotifications()
+    }, 10 * ONE_SECOND)
   }
 
   componentDidUpdate(prevProps) {
