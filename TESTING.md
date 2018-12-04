@@ -1,5 +1,10 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
-[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/origin/LICENSE)
+
+Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
+
+# Testing
+
+This describes Origin's automated test setup. Linting, unit testing, and integration testing is run by TravisCI on each push or pull request.
 
 ## Linting
 
@@ -26,5 +31,3 @@ Integration testing is provided by the `origin-tests` package. It uses the Docke
 - postgresql at postgres://origin:origin@postgres/origin
 - elasticsearch on http://elasticearch:9200 (also localhost)
 ```
-
-The integration tests are run in TravisCI on each push or pull request.
