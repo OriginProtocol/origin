@@ -1884,7 +1884,7 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal .image-container {
-  background-color: var(--white);
+  background-color: white;
   height: 92px;
   width: 92px;
   border-radius: 50%;
@@ -1910,7 +1910,7 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal .heading {
-  color: var(--white);
+  color: white;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 300;
@@ -3851,7 +3851,7 @@ form .stars img {
   width: 18px;
   height: 18px;
   border-radius: 3px;
-  border: solid var(--white);
+  border: solid white;
   border-width: 0 4px 4px 0;
   display: inline-block;
   padding: 3px;
@@ -3869,7 +3869,7 @@ form .stars img {
   position: absolute;
   font-size: 22px;
   font-weight: bold;
-  color: var(--white);
+  color: white;
   margin-bottom: 5px;
   width: 60%;
   text-align: center;
@@ -3980,7 +3980,7 @@ form .stars img {
 
 .mobile-conversation-list-item .unread.count {
   font-weight: bold;
-  color: var(--white);
+  color: white;
   width: 30px;
   height: 18px;
   border-radius: 9.5px;
@@ -5407,7 +5407,7 @@ a:not([href]):not([tabindex]).span-link {
   }
 }
 
-/* sm - */
+/* xs - */
 @media (max-width: 575px) {
   /* Profile */
   .primary.avatar-container.placeholder {
@@ -5546,7 +5546,7 @@ a:not([href]):not([tabindex]).span-link {
   }
 }
 
-/* md - */
+/* sm - */
 @media (max-width: 767px) {
   /* Profile */
   .primary.avatar-container {
@@ -5635,7 +5635,7 @@ a:not([href]):not([tabindex]).span-link {
     margin-bottom: 13px;
     margin-top: 13px;
     text-align: center;
-    color: var(--white);
+    color: white;
     font-family: 'Lato';
     font-weight: bold;
     font-size: 1.38rem;

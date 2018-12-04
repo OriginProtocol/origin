@@ -166,6 +166,7 @@ class Profile extends Component {
       })
     }
 
+    // happens when window resizes or edit profile form is toggled
     if (
       prevState.profileMobileLayout !== this.state.profileMobileLayout ||
       prevState.modalsOpen.profile !== this.state.modalsOpen.profile
