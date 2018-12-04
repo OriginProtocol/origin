@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import Modal from 'components/modal'
+import Dropdown from 'components/dropdown'
 
 import CountryOptions from './_countryOptions'
 
@@ -85,7 +86,8 @@ class VerifyPhone extends Component {
   setSelectedCountry(country) {
     this.setState({
       countryCode: country.code,
-      countryCallingCode: country.prefix
+      countryCallingCode: country.prefix,
+      countryDropdown: false
     })
   }
 
@@ -105,8 +107,7 @@ class VerifyPhone extends Component {
     return (
       <Modal
         isOpen={open}
-        data-modal="phone"
-        className="attestation"
+        className="attestation phone"
         handleToggle={handleToggle}
         tabIndex="-1"
       >
@@ -233,12 +234,20 @@ class VerifyPhone extends Component {
           )}
         </label>
         <div className="d-flex">
-          <div className="country-code dropdown">
+          <Dropdown
+            className="country-code"
+            onClose={() => this.setState({ countryDropdown: false })}
+            open={this.state.countryDropdown}
+          >
             <div
               className="dropdown-toggle"
               role="button"
               id="dropdownMenuLink"
-              data-toggle="dropdown"
+              onClick={() =>
+                this.setState({
+                  countryDropdown: this.state.countryDropdown ? false : true
+                })
+              }
               aria-haspopup="true"
               aria-expanded="false"
             >
@@ -248,10 +257,14 @@ class VerifyPhone extends Component {
                 alt={`${this.state.countryCode.toUpperCase()} flag`}
               />
             </div>
-            <div className="dropdown-menu">
+            <div
+              className={`dropdown-menu${
+                this.state.countryDropdown ? ' show' : ''
+              }`}
+            >
               <CountryOptions setSelectedCountry={this.setSelectedCountry} />
             </div>
-          </div>
+          </Dropdown>
           <div className={`form-control-wrap ${phoneErrors ? 'error' : ''}`}>
             <input
               type="tel"

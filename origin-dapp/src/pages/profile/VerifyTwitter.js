@@ -29,8 +29,7 @@ class VerifyTwitter extends Component {
     return (
       <Modal
         isOpen={this.props.open}
-        data-modal="twitter"
-        className="attestation"
+        className="twitter attestation"
         handleToggle={this.props.handleToggle}
         tabIndex="-1"
       >

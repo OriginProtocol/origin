@@ -8,7 +8,7 @@ class AttestationSuccess extends Component {
     const { open, message, handleToggle } = this.props
 
     return (
-      <Modal isOpen={open} data-modal="attestationSuccess" tabIndex="-1">
+      <Modal isOpen={open} className="attestationSuccess" tabIndex="-1">
         <div className="image-container">
           <img src="images/circular-check-button.svg" role="presentation" />
         </div>

@@ -1684,6 +1684,10 @@ textarea:-moz-ui-invalid {
   cursor: pointer;
 }
 
+.web3-unavailable .modal-content .btn {
+  width: auto;
+}
+
 .onboarding .modal-backdrop {
   z-index: 1000;
 }

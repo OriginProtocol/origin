@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
 import { updateNotification } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
@@ -17,8 +16,8 @@ class Notification extends Component {
     super(props)
 
     const { notification, wallet } = this.props
-    const { listing, purchase } = notification.resources
-    const counterpartyAddress = [listing.seller, purchase.buyer].find(
+    const { listing, offer } = notification.resources
+    const counterpartyAddress = [listing.seller, offer.buyer].find(
       addr => formattedAddress(addr) !== formattedAddress(wallet.address)
     )
 
@@ -27,7 +26,7 @@ class Notification extends Component {
       counterpartyAddress,
       counterpartyName: '',
       listing,
-      purchase
+      offer
     }
   }
 
@@ -48,8 +47,9 @@ class Notification extends Component {
 
   handleClick() {
     this.props.updateNotification(this.props.notification.id, 'read')
-
-    $('#notificationsDropdown').dropdown('toggle')
+    if (this.props.onClick) {
+      this.props.onClick()
+    }
   }
 
   render() {
@@ -58,7 +58,7 @@ class Notification extends Component {
       counterpartyAddress,
       counterpartyName,
       listing,
-      purchase
+      offer
     } = this.state
 
     const listingImageURL =
@@ -66,7 +66,7 @@ class Notification extends Component {
 
     return (
       <li className="list-group-item notification">
-        <Link to={`/purchases/${purchase.id}`} onClick={this.handleClick}>
+        <Link to={`/purchases/${offer.id}`} onClick={this.handleClick}>
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
               {!listing.id && (

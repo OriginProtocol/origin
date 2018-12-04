@@ -28,8 +28,7 @@ class VerifyFacebook extends Component {
     return (
       <Modal
         isOpen={this.props.open}
-        data-modal="facebook"
-        className="attestation"
+        className="facebook attestation"
         handleToggle={this.props.handleToggle}
         tabIndex="-1"
       >

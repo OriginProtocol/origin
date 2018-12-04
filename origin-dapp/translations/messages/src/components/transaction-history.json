@@ -4,6 +4,10 @@
     "defaultMessage": "Offer Made"
   },
   {
+    "id": "transaction-history.offerRejected",
+    "defaultMessage": "Offer Rejected"
+  },
+  {
     "id": "transaction-history.offerWithdrawn",
     "defaultMessage": "Offer Withdrawn"
   },
