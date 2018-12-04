@@ -19,10 +19,12 @@ describe('create listing and retrieve using discovery', () => {
       perfModeEnabled: true
     })
 
-    await origin.marketplace.createListing(listingData)
+    await this.origin.marketplace.createListing(listingData)
   })
 
   it('should allow listing to be retrieved from discovery', () => {
+    const listings = this.origin.marketplace.getListings()
+    assert.equal(listings.length, 6)
   })
 
   it('should allow listing to be searched from discovery', () => {
