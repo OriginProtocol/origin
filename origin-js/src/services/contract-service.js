@@ -308,7 +308,6 @@ class ContractService {
             }
           )
 
-
           // only keep event emitted by this transaction
           events = events
             .filter(event => event.transactionHash === transactionReceipt.transactionHash)
