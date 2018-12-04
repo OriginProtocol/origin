@@ -63,13 +63,13 @@ class Messages extends Component {
   }
 
   checkForSmallScreen() {
-    const { mobileDevice, showMainNav } = this.props
+    const { mobileDevice, showMainNav, selectedConversationId } = this.props
 
     const smallScreen = window.innerWidth <= 991
     const smallScreenOrDevice = smallScreen || mobileDevice
     const stateChanged = (this.state && this.state.smallScreenOrDevice)
 
-    if (smallScreenOrDevice && !stateChanged) {
+    if (smallScreenOrDevice && selectedConversationId && !stateChanged) {
       showMainNav(false)
     }
     this.setState({ smallScreenOrDevice })
