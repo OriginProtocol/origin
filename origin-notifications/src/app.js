@@ -81,29 +81,30 @@ app.get('/', async (req, res) => {
  * Endpoint called by the DApp to record a subscription for an account.
  */
 app.post('/', async(req, res) => {
-  let { account, endpoint, keys } = req.body
+  const { account, endpoint, keys } = req.body
 
   // Validate the input.
   // TODO: stricter validation of the account address validity using web3 util.
   if (!account || !endpoint || !keys) {
-    res.sendStatus(400)
+    return res.sendStatus(400)
   }
 
   // Normalize account.
-  account = account.toLowerCase()
+  const normAccount = account.toLowerCase()
 
-  // Nothing to do if there is already a subscription
-  // for that (account, endpoint) pair.
+  // Looking existing subscription for this (account, endpoint) pair.
   const existing = await PushSubscription.findAll({
-    where: { account, endpoint }
+    where: { account: normAccount, endpoint }
   })
+
+  // Nothing to do if there is already a subscription.
   if (existing.length > 0) {
     return res.sendStatus(200)
   }
 
-  // Note: expiration_time is not populated.
-  // This is a placeholder column for future use.
-  await PushSubscription.create({ account, endpoint, keys })
+  // Add the subscription to the DB.
+  // Note: the expiration_time column is not populated - it is for future use.
+  await PushSubscription.create({ account: normAccount, endpoint, keys })
   res.sendStatus(201)
 })
 
