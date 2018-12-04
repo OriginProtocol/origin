@@ -11,7 +11,6 @@ import Avatar from 'components/avatar'
 import truncateWithCenterEllipsis, { abbreviatedName } from 'utils/stringUtils'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
-const MAX_ADDRESS_LENGTH = 9
 
 class Message extends Component {
   componentDidMount() {
@@ -30,11 +29,10 @@ class Message extends Component {
       user,
       showTime,
       mobileDevice,
-      seller,
       web3Account
     } = this.props
     const { created, hash } = message
-    const { address, fullName, profile } = user
+    const { address, profile } = user
     const userName = abbreviatedName(user)
     const currentUser = web3Account === user.address
     const chatContent = this.renderContent()

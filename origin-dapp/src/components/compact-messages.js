@@ -12,7 +12,7 @@ function getElapsedTime(recentTime, previousTime) {
 
 const CompactMessages = ({ messages = [], seller }) =>
   messages.map((message, i) => {
-    const { senderAddress, created, hash } = message
+    const { created, hash } = message
     const previousMessage = i === 0 ? {} : messages[i - 1]
     const timeElapsed = getElapsedTime(created, previousMessage.created)
     const showTime = timeElapsed >= MAX_MINUTES

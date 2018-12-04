@@ -1,14 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import moment from 'moment'
 
 import { fetchUser } from 'actions/User'
 
 import CompactMessages from 'components/compact-messages'
-import OfferStatusEvent from 'components/offer-status-event'
-import PurchaseProgress from 'components/purchase-progress'
 
 import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
@@ -242,17 +239,9 @@ class Conversation extends Component {
       counterparty,
       files,
       invalidTextInput,
-      listing,
-      purchase
+      listing
     } = this.state
-    const { name, pictures, created } = listing
-    const { buyer, status } = purchase
-    const perspective = buyer
-      ? buyer === web3Account
-        ? 'buyer'
-        : 'seller'
-      : null
-    const photo = pictures && pictures.length > 0 && pictures[0]
+    const { name, created } = listing
     const canDeliverMessage =
       counterparty.address &&
       origin.messaging.canConverseWith(counterparty.address)
@@ -260,8 +249,6 @@ class Conversation extends Component {
       origin.messaging.getRecipients(id).includes(web3Account) &&
       canDeliverMessage &&
       id
-
-    const classNames = mobileDevice ? 'justify-content-start' : 'justify-content-center'
     const buyerName = abbreviatedName(counterparty) || truncateWithCenterEllipsis(counterparty.address)
 
     return (
