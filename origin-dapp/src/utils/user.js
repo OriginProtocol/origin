@@ -32,6 +32,7 @@ export function abbreviateName(party) {
   const { profile = {}, fullName } = party
   const { firstName = '', lastName = '' } = profile
   const lastNameLetter = lastName.length && `${lastName.charAt(0)}.`
+  const abbreviatedName = fullName && `${firstName} ${lastNameLetter}`
 
-  return fullName && `${firstName} ${lastNameLetter}`
+  return abbreviatedName || ''
 }
