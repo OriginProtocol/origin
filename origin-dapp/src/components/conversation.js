@@ -11,6 +11,7 @@ import PurchaseProgress from 'components/purchase-progress'
 
 import { modifyImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -148,10 +149,15 @@ class Conversation extends Component {
   }
 
   identifyCounterparty() {
-    const { fetchUser, id, users, web3Account } = this.props
+    const { fetchUser, id, users, wallet } = this.props
+
+    if (!id) {
+      return this.setState({ counterparty: {} })
+    }
+
     const recipients = origin.messaging.getRecipients(id)
-    const address = recipients.find(addr => addr !== web3Account)
-    const counterparty = users.find(u => u.address === address) || { address }
+    const address = recipients.find(addr => formattedAddress(addr) !== formattedAddress(wallet.address))
+    const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(address)) || { address }
 
     !counterparty.address && fetchUser(address)
 
@@ -173,7 +179,7 @@ class Conversation extends Component {
   }
 
   async loadPurchase() {
-    const { web3Account } = this.props
+    const { wallet } = this.props
     const { counterparty, listing, purchase } = this.state
 
     // listing may not be found
@@ -183,7 +189,7 @@ class Conversation extends Component {
 
     const offers = await origin.marketplace.getOffers(listing.id)
     const involvingCounterparty = offers.filter(
-      o => o.buyer === counterparty.address || o.buyer === web3Account
+      o => formattedAddress(o.buyer) === formattedAddress(counterparty.address) || formattedAddress(o.buyer) === formattedAddress(wallet.address)
     )
     const mostRecent = involvingCounterparty.sort(
       (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
@@ -228,7 +234,7 @@ class Conversation extends Component {
   }
 
   render() {
-    const { id, intl, messages, web3Account, withListingSummary, mobileDevice } = this.props
+    const { id, intl, messages, mobileDevice, wallet, withListingSummary } = this.props
     const {
       counterparty,
       files,
@@ -239,18 +245,17 @@ class Conversation extends Component {
     const { name, pictures } = listing
     const { buyer, status } = purchase
     const perspective = buyer
-      ? buyer === web3Account
+      ? formattedAddress(buyer) === formattedAddress(wallet.address)
         ? 'buyer'
         : 'seller'
       : null
     const photo = pictures && pictures.length > 0 && pictures[0]
     const canDeliverMessage =
       counterparty.address &&
-      origin.messaging.canConverseWith(counterparty.address)
-    const shouldEnableForm =
-      origin.messaging.getRecipients(id).includes(web3Account) &&
-      canDeliverMessage &&
-      id
+      origin.messaging.canConverseWith(formattedAddress(counterparty.address))
+    const shouldEnableForm = id &&
+      origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
+      canDeliverMessage
 
     const classNames = mobileDevice ? 'justify-content-start' : 'justify-content-center'
 
@@ -380,10 +385,10 @@ class Conversation extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ users, wallet }) => {
   return {
-    users: state.users,
-    web3Account: state.app.web3.account
+    users,
+    wallet
   }
 }
 

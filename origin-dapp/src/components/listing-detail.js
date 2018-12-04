@@ -8,27 +8,27 @@ import {
   injectIntl
 } from 'react-intl'
 
-import { showAlert } from 'actions/Alert'
 import {
-  handleNotificationsSubscription,
-  storeWeb3Intent
-} from 'actions/App'
+  handleNotificationsSubscription } from 'actions/Activation'
+import { showAlert } from 'actions/Alert'
+import { storeWeb3Intent } from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
 } from 'actions/Transaction'
 
 import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
+import Calendar from 'components/calendar'
 import Modal from 'components/modal'
+import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
-import Calendar from './calendar'
-import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 
+import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing, transformPurchasesOrSales } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
-import { prepareSlotsToSave } from 'utils/calendarHelpers'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -101,14 +101,13 @@ class ListingsDetail extends Component {
 
   componentDidUpdate(prevProps) {
     // on account found
-    if (this.props.web3Account && !prevProps.web3Account) {
+    if (this.props.wallet.address && !prevProps.wallet.address) {
       this.loadBuyerPurchases()
     }
   }
 
   async handleMakeOffer(skip, slotsToReserve) {
     // onboard if no identity, purchases, and not already completed
-    const { isFractional } = this.state
     const shouldOnboard =
       !this.props.profile.strength &&
       !this.state.purchases.length &&
@@ -116,7 +115,7 @@ class ListingsDetail extends Component {
 
     this.props.storeWeb3Intent('purchase this listing')
 
-    if ((web3.givenProvider && this.props.web3Account) || origin.contractService.walletLinker) {
+    if ((web3.givenProvider && this.props.wallet.address) || origin.contractService.walletLinker) {
       if (!skip && shouldOnboard) {
         return this.setState({
           onboardingCompleted: true,
@@ -125,16 +124,20 @@ class ListingsDetail extends Component {
         })
       }
     }
+
     // defer to parent modal if user activation is insufficient
-    if ( !this.props.messagingEnabled ) {
-      return
+    if (
+      web3.givenProvider &&
+      !origin.contractService.walletLinker &&
+      !this.props.messagingEnabled
+    ) {
+       return
     }
 
     this.setState({ step: this.STEP.METAMASK })
 
     const slots = slotsToReserve || this.state.slotsToReserve
-    const price =
-      isFractional ?
+    const price = this.state.isFractional ?
         slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
         this.state.price
 
@@ -155,7 +158,7 @@ class ListingsDetail extends Component {
         finalizes: 365 * 24 * 60 * 60
       }
 
-      if (isFractional) {
+      if (this.state.isFractional) {
         offerData.slots = prepareSlotsToSave(slots)
       } else {
         offerData.unitsPurchased = 1
@@ -187,8 +190,8 @@ class ListingsDetail extends Component {
 
   async loadBuyerPurchases() {
     try {
-      const { web3Account } = this.props
-      const purchases = await origin.marketplace.getPurchases(web3Account)
+      const { wallet } = this.props
+      const purchases = await origin.marketplace.getPurchases(wallet.address)
       const transformedPurchases = transformPurchasesOrSales(purchases)
       this.setState({ purchases: transformedPurchases })
     } catch (error) {
@@ -240,7 +243,7 @@ class ListingsDetail extends Component {
   }
 
   render() {
-    const { web3Account } = this.props
+    const { wallet } = this.props
     const {
       // boostLevel,
       // boostValue,
@@ -282,8 +285,8 @@ class ListingsDetail extends Component {
      * true, and show "featured" badge.
      */
     const showFeaturedBadge = display === 'featured' && isAvailable
-    const userIsBuyer = currentOffer && web3Account === currentOffer.buyer
-    const userIsSeller = web3Account === seller
+    const userIsBuyer = currentOffer && formattedAddress(wallet.address) === formattedAddress(currentOffer.buyer)
+    const userIsSeller = formattedAddress(wallet.address) === formattedAddress(seller)
 
     return (
       <div className="listing-detail">
@@ -816,15 +819,15 @@ class ListingsDetail extends Component {
   }
 }
 
-const mapStateToProps = ({ app, profile }) => {
+const mapStateToProps = ({ activation, app, profile, wallet }) => {
   return {
-    messagingEnabled: app.messagingEnabled,
-    notificationsHardPermission: app.notificationsHardPermission,
-    notificationsSoftPermission: app.notificationsSoftPermission,
+    messagingEnabled: activation.messaging.enabled,
+    notificationsHardPermission: activation.notifications.permissions.hard,
+    notificationsSoftPermission: activation.notifications.permissions.soft,
     profile,
-    pushNotificationsSupported: app.pushNotificationsSupported,
-    serviceWorkerRegistration: app.serviceWorkerRegistration,
-    web3Account: app.web3.account,
+    pushNotificationsSupported: activation.notifications.pushEnabled,
+    serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
+    wallet,
     web3Intent: app.web3.intent
   }
 }

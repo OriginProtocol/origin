@@ -12,6 +12,8 @@ import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
 import UnnamedUser from 'components/unnamed-user'
 
+import { formattedAddress } from 'utils/user'
+
 import origin from '../services/origin'
 
 const { web3 } = origin.contractService
@@ -37,11 +39,11 @@ class UserCard extends Component {
 
   handleToggle(e) {
     e.preventDefault()
-    const { storeWeb3Intent, intl, web3Account } = this.props
+    const { storeWeb3Intent, intl, wallet } = this.props
     const intent = intl.formatMessage(this.intlMessages.sendMessages)
     storeWeb3Intent(intent)
 
-    if (web3.givenProvider && web3Account) {
+    if (web3.givenProvider && wallet.address) {
       this.setState({ modalOpen: !this.state.modalOpen })
     }
   }
@@ -53,7 +55,7 @@ class UserCard extends Component {
       title,
       user,
       userAddress,
-      web3Account
+      wallet
     } = this.props
     const { fullName, profile, attestations } = user
 
@@ -150,7 +152,7 @@ class UserCard extends Component {
           </div>
         </div>
         {userAddress &&
-          userAddress !== web3Account && (
+          formattedAddress(userAddress) !== formattedAddress(wallet.address) && (
           <a
             href="#"
             onClick={this.handleToggle}
@@ -191,14 +193,16 @@ class UserCard extends Component {
   }
 }
 
-const mapStateToProps = (state, { userAddress }) => {
+const mapStateToProps = ({ activation, users, wallet }, { userAddress }) => {
   return {
     // for reactivity
-    messagingEnabled: state.app.messagingEnabled,
+    messagingEnabled: activation.messaging.enabled,
     // for reactivity
-    messagingInitialized: state.app.messagingInitialized,
-    user: state.users.find(u => u.address === userAddress) || {},
-    web3Account: state.app.web3.account
+    messagingInitialized: activation.messaging.initialized,
+    user: users.find(u => {
+      return formattedAddress(u.address) === formattedAddress(userAddress)
+    }) || {},
+    wallet
   }
 }
 

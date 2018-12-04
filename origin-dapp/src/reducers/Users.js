@@ -1,5 +1,7 @@
 import { UserConstants } from 'actions/User'
 
+import { formattedAddress } from 'utils/user'
+
 export default function Users(state = [], action = {}) {
   switch (action.type) {
   case UserConstants.FETCH_ERROR:
@@ -8,7 +10,7 @@ export default function Users(state = [], action = {}) {
   case UserConstants.FETCH_SUCCESS: {
     const { user } = action
     const users = [...state]
-    const i = users.findIndex(u => u.address === user.address)
+    const i = users.findIndex(u => formattedAddress(u.address) === formattedAddress(user.address))
     const { firstName, lastName } = user.profile || {}
     const userWithName = {
       ...user,
@@ -17,7 +19,9 @@ export default function Users(state = [], action = {}) {
 
     return i === -1
       ? [...users, userWithName]
-      : users.map(u => (u.address === user.address ? userWithName : u))
+      : users.map(u => (
+        formattedAddress(u.address) === formattedAddress(user.address) ? userWithName : u
+      ))
   }
 
   default:

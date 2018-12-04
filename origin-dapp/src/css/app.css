@@ -1684,6 +1684,10 @@ textarea:-moz-ui-invalid {
   cursor: pointer;
 }
 
+.web3-unavailable .modal-content .btn {
+  width: auto;
+}
+
 .onboarding .modal-backdrop {
   z-index: 1000;
 }
@@ -2011,15 +2015,19 @@ textarea:-moz-ui-invalid {
 }
 
 .modal.getting-started.fade .modal-dialog {
-    bottom: -320px;
-    -webkit-transition: opacity 0.3s linear, bottom 0.3s ease-out;
-    -moz-transition: opacity 0.3s linear, bottom 0.3s ease-out;
-    -o-transition: opacity 0.3s linear, bottom 0.3s ease-out;
-    transition: opacity 0.3s linear, bottom 0.3s ease-out;
+  bottom: -320px;
+  -webkit-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+  -moz-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+  -o-transition: opacity 0.3s linear, bottom 0.3s ease-out;
+  transition: opacity 0.3s linear, bottom 0.3s ease-out;
 }
 
 .modal.getting-started.fade.show .modal-dialog {
-    bottom: 0;
+  bottom: 0;
+}
+
+.modal.getting-started.fade.show .modal-content {
+  margin-top: auto;
 }
 
 .getting-started img {

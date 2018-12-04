@@ -10,14 +10,16 @@ import { fetchUser } from 'actions/User'
 import NotificationMessage from 'components/notification-message'
 import UnnamedUser from 'components/unnamed-user'
 
+import { formattedAddress } from 'utils/user'
+
 class Notification extends Component {
   constructor(props) {
     super(props)
 
-    const { notification, web3Account } = this.props
-    const { listing, purchase } = notification.resources
-    const counterpartyAddress = [listing.seller, purchase.buyer].find(
-      addr => addr !== web3Account
+    const { notification, wallet } = this.props
+    const { listing, offer } = notification.resources
+    const counterpartyAddress = [listing.seller, offer.buyer].find(
+      addr => formattedAddress(addr) !== formattedAddress(wallet.address)
     )
 
     this.handleClick = this.handleClick.bind(this)
@@ -25,7 +27,7 @@ class Notification extends Component {
       counterpartyAddress,
       counterpartyName: '',
       listing,
-      purchase
+      offer
     }
   }
 
@@ -35,7 +37,7 @@ class Notification extends Component {
 
   componentDidUpdate() {
     const user = this.props.users.find(
-      u => u.address === this.state.counterpartyAddress
+      u => formattedAddress(u.address) === formattedAddress(this.state.counterpartyAddress)
     )
     const counterpartyName = user && user.fullName
 
@@ -56,7 +58,7 @@ class Notification extends Component {
       counterpartyAddress,
       counterpartyName,
       listing,
-      purchase
+      offer
     } = this.state
 
     const listingImageURL =
@@ -64,7 +66,7 @@ class Notification extends Component {
 
     return (
       <li className="list-group-item notification">
-        <Link to={`/purchases/${purchase.id}`} onClick={this.handleClick}>
+        <Link to={`/purchases/${offer.id}`} onClick={this.handleClick}>
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
               {!listing.id && (
@@ -113,8 +115,8 @@ class Notification extends Component {
                     </strong>: &nbsp;
                     {counterpartyName || <UnnamedUser />}
                   </div>
-                  <div className="text-truncate text-muted" title={counterpartyAddress}>
-                    {counterpartyAddress}
+                  <div className="text-truncate text-muted" title={formattedAddress(counterpartyAddress)}>
+                    {formattedAddress(counterpartyAddress)}
                   </div>
                 </div>
               )}
@@ -135,10 +137,10 @@ class Notification extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ users, wallet }) => {
   return {
-    users: state.users,
-    web3Account: state.app.web3.account
+    users,
+    wallet
   }
 }
 

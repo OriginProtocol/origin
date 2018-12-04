@@ -41,7 +41,6 @@ It is active until there are no more units available or its expiration date is r
   depositManager: '0x02394099fu9dfse0920394u329u4024',
   status: 'active',
   offers: [], //is this supposed to be an array or an object?
-  expiry: '1529674159',
   events:[{ id: '20949-345', event: 'ListingCreated' }]
 }]
 ```
@@ -155,21 +154,18 @@ const listingId = "927-832"
 
 ## getNotifications
 
-Each Notification corresponds to the status of a Listing. Notifications are currently generated for each of the following Listing statuses:
+Each Notification corresponds to the status of an Offer. Notifications are currently generated for each of the following Offer statuses:
 
-- ListingCreated
-- ListingUpdated
-- ListingWithdrawn
-- ListingArbitrated
 - OfferCreated
 - OfferAccepted
 - OfferFinalized
 - OfferWithdrawn
-- OfferFundsAdded
 - OfferDisputed
 - OfferRuling
+- OfferFinalized
+- OfferData
 
-Notifications do not exist on the blockchain nor are they read from a database. They are derived from the blockchain transaction logs of the Listing statuses at the time of the API request. Because of this, there is no central record of a notification's status as "read" or "unread". When a client first interacts with the notifications API, Origin.js will record a timestamp in local storage. All notifications resulting from blockchain events that happen prior to this timestamp will be considered to be "read". This ensures that when the same user interacts with the notifications API from a different client for the first time, they will not receive a large number of "unread" notifications that they have previously read from their original client.
+Notifications do not exist on the blockchain nor are they read from a database. They are derived from the blockchain transaction logs of the Offer statuses at the time of the API request. Because of this, there is no central record of a notification's status as "read" or "unread". When a client first interacts with the notifications API, Origin.js will record a timestamp in local storage. All notifications resulting from blockchain events that happen prior to this timestamp will be considered to be "read". This ensures that when the same user interacts with the notifications API from a different client for the first time, they will not receive a large number of "unread" notifications that they have previously read from their original client.
 
 > Example: getNotifications
 
@@ -181,10 +177,10 @@ Notifications do not exist on the blockchain nor are they read from a database. 
 
 [{
   "id": "2984803-23433",
-  "type": "buyer_listing_shipped",
+  "type": "buyer_offer_accepted",
   "status": "unread",
-  "event": {},
-  "resources": { listingId: "927-832", offerId: "183", listing: { title: "Whirlpool Microwave" } }
+  "event": {...},
+  "resources": { listingId: "1-000-832", offerId: "183", listing: { title: "Whirlpool Microwave" }, offer: {...} }
 ]}
 ```
 
