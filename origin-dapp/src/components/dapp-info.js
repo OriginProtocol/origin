@@ -301,6 +301,10 @@ class DappInfo extends Component {
                   <td>{process.env.IPFS_SWARM}</td>
                 </tr>
                 <tr>
+                  <td>MAINNET_DAPP_BASEURL</td>
+                  <td>{process.env.MAINNET_DAPP_BASEURL}</td>
+                </tr>
+                <tr>
                   <td>MESSAGING_ACCOUNT</td>
                   <td>{process.env.MESSAGING_ACCOUNT}</td>
                 </tr>
@@ -327,6 +331,10 @@ class DappInfo extends Component {
                 <tr>
                   <td>REDUX_LOGGER</td>
                   <td>{process.env.REDUX_LOGGER}</td>
+                </tr>
+                <tr>
+                  <td>RINKEBY_DAPP_BASEURL</td>
+                  <td>{process.env.RINKEBY_DAPP_BASEURL}</td>
                 </tr>
 
                 <tr>
