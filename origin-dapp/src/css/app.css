@@ -4404,6 +4404,7 @@ form .stars img {
 .chat-bubble.user,
 .chat-bubble.user .chat-text,
 .chat-bubble.user .chat-text .chat-content,
+.chat-bubble.user .chat-text .name,
 .chat-bubble.user .chat-text .address {
   color: white;
 }
