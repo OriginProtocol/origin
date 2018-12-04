@@ -21,9 +21,9 @@ const multiUnitListingData = Object.assign({}, listingValid, { unitsTotal: 2 })
 const multiUnitListingWithCommissionData = Object.assign(
   {},
   multiUnitListingData,
-
   {
-    commission: { currency: 'OGN', amount: '2' },
+    unitsTotal: 3,
+    commission: { currency: 'OGN', amount: '1.6' },
     commissionPerUnit: { currency: 'OGN', amount: '1' }
   }
 )
@@ -295,21 +295,6 @@ describe('Marketplace Resource', function() {
       await marketplace.makeOffer('999-000-1', invalidPriceOffer)
       await expect(marketplace.getOffer('999-000-1-0'))
         .to.be.rejectedWith('Invalid offer: insufficient offer amount for listing')
-    })
-
-    it('should throw an error if commission is not sufficient', async () => {
-      await marketplace.createListing(commissionListing)
-      await marketplace.makeOffer('999-000-1', invalidCommissionOffer)
-      let errorThrown = false
-      let errorMessage
-      try {
-        await marketplace.getOffer('999-000-1-0')
-      } catch(e) {
-        errorThrown = true
-        errorMessage = String(e)
-      }
-      expect(errorThrown).to.be.true
-      expect(errorMessage).to.equal('Error: Invalid offer: incorrect commission amount for listing')
     })
 
     it('should throw an error if arbitrator is invalid', async () => {
@@ -923,7 +908,7 @@ describe('Marketplace Resource', function() {
     })
   })
 
-  describe('multi-unit (quantity=2) with commission', () => {
+  describe('multi-unit (quantity=3) with commission', () => {
     beforeEach(async () => {
       await marketplace.createListing(multiUnitListingWithCommissionData)
       const listings = await marketplace.getListings({ idsOnly: true })
@@ -931,9 +916,13 @@ describe('Marketplace Resource', function() {
     })
 
     describe('makeOffer', () => {
-      it('should allow 2 offers to be accepted', async () => {
-        // Create first offer.
-        await marketplace.makeOffer('999-000-1', multiUnitCommissionOffer)
+      it('should allow 3 offers to be accepted', async () => {
+        // Create first offer, for which there is sufficient listing commission
+        // for an offer with full commission.
+        const offer1Data = Object.assign({}, multiUnitCommissionOffer,
+          { commission: { currency: 'OGN', amount: '1' } }
+        )
+        await marketplace.makeOffer('999-000-1', offer1Data)
         let offer1 = await marketplace.getOffer('999-000-1-0')
         expect(offer1.status).to.equal('created')
 
@@ -942,8 +931,12 @@ describe('Marketplace Resource', function() {
         expect(offer1.status).to.equal('accepted')
         validateOffer(offer1)
 
-        // Create second offer.
-        await marketplace.makeOffer('999-000-1', multiUnitCommissionOffer)
+        // Create second offer, for which there is partial commission available
+        // in the listing.
+        const offer2Data = Object.assign({}, multiUnitCommissionOffer,
+          { commission: { currency: 'OGN', amount: '0.6' } }
+        )
+        await marketplace.makeOffer('999-000-1', offer2Data)
         let offer2 = await marketplace.getOffer('999-000-1-1')
         expect(offer2.status).to.equal('created')
         validateOffer(offer2)
@@ -952,6 +945,21 @@ describe('Marketplace Resource', function() {
         offer2 = await marketplace.getOffer('999-000-1-1')
         expect(offer2.status).to.equal('accepted')
         validateOffer(offer2)
+
+        // Create third offer, for which there is no commission remaining on
+        // the listing.
+        const offer3Data = Object.assign({}, multiUnitCommissionOffer,
+          { commission: { currency: 'OGN', amount: '0' } }
+        )
+        await marketplace.makeOffer('999-000-1', offer3Data)
+        let offer3 = await marketplace.getOffer('999-000-1-2')
+        expect(offer3.status).to.equal('created')
+        validateOffer(offer3)
+
+        await marketplace.acceptOffer('999-000-1-2')
+        offer3 = await marketplace.getOffer('999-000-1-2')
+        expect(offer3.status).to.equal('accepted')
+        validateOffer(offer3)
       })
     })
 
@@ -962,8 +970,8 @@ describe('Marketplace Resource', function() {
         expect(offer1.status).to.equal('created')
 
         await marketplace.makeOffer('999-000-1', invalidMultiUnitCommissionOffer)
-        await expect(marketplace.getOffer('999-000-1-1'))
-          .to.be.rejectedWith('Invalid offer: incorrect commission amount for listing')
+        const offer2 = await marketplace.getOffer('999-000-1-1')
+        expect(offer2.status).to.equal('created')
 
         const offers = await marketplace.getOffers('999-000-1')
         expect(offers.length).to.equal(1)

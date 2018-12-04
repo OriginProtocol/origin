@@ -242,25 +242,49 @@ export default class Marketplace {
 
     // Filter out offers for which the units purchased exceeds the units
     // available at the time of the offer.
-    //
-    // TODO: Handle edits of unitsAvailable.
-    // TODO: Determine whether it always makes sense to filter out listings
-    // based on available quantity. Filtering can cause some weirdness. For
-    // example, suppose that a listing has 2 units available. Also suppose
-    // that two offers are made on that listing: (1) for 1 unit; and (2) for 2
-    // units. Independently, these offers are both valid. However, accepting
-    // either offer would cause the other to be filtered out and thus be stuck
-    // until the buyer disputes.
     let unitsAvailable = listing.unitsTotal
+    const commission = listing.commission.amount
+      ? BigNumber(listing.commission.amount)
+      : null
+    const commissionPerUnit = listing.commissionPerUnit
+      ? BigNumber(listing.commissionPerUnit.amount)
+      : commission
     const offers = []
     filteredOffers.forEach(offer => {
+      const unitsSoldBeforeOffer = listing.unitsTotal - unitsAvailable
+
+      // Validate units purchased against units available.
+      // TODO: Validate units purchased vs. units available at offer creation
+      // time. This will handle the case where an edit of a listing invalidates
+      // a previously valid offer.
       if (offer.unitsPurchased > unitsAvailable) {
         return
       }
-      // TODO: handle refund and dispute cases
       if (offer.status !== 'withdrawn') {
         unitsAvailable -= offer.unitsPurchased
       }
+
+      // Validate that the offer commission is what we expect. If the amount
+      // of commission for the listing isn't sufficient for this offer, we
+      // require that the offer have whatever commission is available to it.
+      if (commissionPerUnit !== null && commissionPerUnit.isGreaterThan(0)) {
+        const commissionUsed = BigNumber(commissionPerUnit).times(unitsSoldBeforeOffer)
+        const remainingCommission = BigNumber.max(
+          commission.minus(commissionUsed),
+          BigNumber(0)
+        )
+        const expectedCommission = BigNumber.min(
+          remainingCommission,
+          commissionPerUnit.times(offer.unitsPurchased)
+        )
+        const offerCommission = offer.commission && BigNumber(offer.commission.amount)
+        if (!offerCommission || !offerCommission.isEqualTo(expectedCommission)) {
+          return
+        }
+      }
+
+      // There is no special handling of disputes here, because disputes should
+      // hopefully be rare for the time being.
       offers.push(offer)
     })
     return offers
@@ -290,21 +314,7 @@ export default class Marketplace {
     if (chainOffer.status === 'created') {
       const listing = await this.getListing(listingId)
 
-      // Originally, listings had a single "commission" field. For multi-unit
-      // listings, we've added "commissionPerUnit." The code here handles both
-      // variants of the schema.
-      let listingCommission =
-          listing.commission && typeof listing.commission === 'object' ?
-            await this.contractService.moneyToUnits(listing.commission) :
-            '0'
-
       if (listing.type === 'unit') {
-        const commissionPerUnit =
-        listing.commissionPerUnit && typeof listing.commissionPerUnit === 'object' ?
-          await this.contractService.moneyToUnits(listing.commissionPerUnit) :
-          null
-        listingCommission = commissionPerUnit || listingCommission
-
         // TODO(John) - there is currently no way to know the currency of a fractional listing.
         // We probably need to add a required "currency" field to the listing schema and write a check here
         // to make sure the chainOffer and the listing have the same currency
@@ -327,19 +337,8 @@ export default class Marketplace {
         }
       }
 
-      // TODO: Figure out how to exhaustively handle the various cases. For
-      // example, if the seller edits the listing to increase "unitsTotal,"
-      // the following condition will no longer be true:
-      //
-      //   commission === commissionPerUnit * unitsTotal
-      //
-      // Initially, we're not going to support topping off commission OGN, so
-      // there will be no UI to fix this. We should find a way to handle this
-      // situation gracefully, such as allowing offers to be made with
-      // less commission when the commission tokens have been depleted.
-      if (!BigNumber(listingCommission).isEqualTo(BigNumber(chainOffer.commission))) {
-        throw new Error('Invalid offer: incorrect commission amount for listing')
-      }
+      // We do not validate commission amount here, because to do so would
+      // require every other offer for the listing.
 
       if (chainOffer.arbitrator.toLowerCase() !== this.arbitrator.toLowerCase()) {
         throw new Error('Invalid offer: arbitrator is invalid')
