@@ -9,8 +9,7 @@ import CompactMessages from 'components/compact-messages'
 
 import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
-import truncateWithCenterEllipsis, { abbreviatedName } from 'utils/stringUtils'
-import { formattedAddress } from 'utils/user'
+import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -248,14 +247,15 @@ class Conversation extends Component {
       listing
     } = this.state
     const { name, created } = listing
+    const counterpartyAddress = formattedAddress(counterparty.address)
     const canDeliverMessage =
       counterparty.address &&
-      origin.messaging.canConverseWith(formattedAddress(counterparty.address))
+      origin.messaging.canConverseWith(counterpartyAddress)
     const shouldEnableForm = id &&
       origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
       canDeliverMessage
-    const buyerName = abbreviatedName(counterparty) || truncateWithCenterEllipsis(counterparty.address)
-    console.log("WHAT IS THIS", formattedAddress(wallet.address))
+    const buyerName = abbreviateName(counterparty) || truncateAddress(counterpartyAddress)
+
     return (
       <Fragment>
         {(!mobileDevice && withListingSummary) &&

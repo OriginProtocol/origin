@@ -8,8 +8,7 @@ import Avatar from 'components/avatar'
 import { showMainNav } from 'actions/App'
 
 import groupByArray from 'utils/groupByArray'
-import truncateWithCenterEllipsis, { abbreviatedName } from 'utils/stringUtils'
-import { formattedAddress } from 'utils/user'
+import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -87,9 +86,8 @@ class Messages extends Component {
         ? recipients.find(addr => formattedAddress(addr) !== formattedAddress(senderAddress))
         : senderAddress
     const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
-    const counterpartyName = abbreviatedName(counterparty) || formattedAddress(counterpartyAddress)
     const counterpartyProfile = counterparty && counterparty.profile
-    const counterpartyName = counterparty.fullName || formattedAddress(counterpartyAddress)
+    const counterpartyName = abbreviateName(counterparty) || truncateAddress(formattedAddress(counterpartyAddress))
 
     if (mobileDevice) {
       if (selectedConversationId && selectedConversationId.length) {

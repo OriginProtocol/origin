@@ -8,8 +8,7 @@ import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
 
-import truncateWithCenterEllipsis, { abbreviatedName } from 'utils/stringUtils'
-import { formattedAddress } from 'utils/user'
+import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
 
@@ -34,12 +33,13 @@ class Message extends Component {
     } = this.props
     const { created, hash } = message
     const { address, profile } = user
-    const userName = abbreviatedName(user)
+    const userName = abbreviateName(user)
     const currentUser = web3Account === user.address
     const chatContent = this.renderContent()
     const correctSide = currentUser ? 'right' : 'left'
     const bubbleAlignment = currentUser ? 'justify-content-end' : 'justify-content-start'
     const bubbleColor = currentUser && 'user'
+    const userAddress = truncateAddress(formattedAddress(address))
 
     return (
       <div className="message-section">
@@ -59,7 +59,7 @@ class Message extends Component {
               <div className="chat-text">
                 <div className="sender">
                   {userName && <div className="name text-truncate">{userName}</div>}
-                  <span className="address">{formattedAddress(address)}</span>
+                  <span className="address">{userAddress}</span>
                   <p className="chat-content">{chatContent}</p>
                 </div>
               </div>
@@ -129,14 +129,14 @@ class Message extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, app, users }, ownProps) => {
+const mapStateToProps = ({ activation, app, users, wallet }, ownProps) => {
   return {
     messagingEnabled: activation.messaging.enabled,
     mobileDevice: app.mobileDevice,
     user: users.find(u => {
       return formattedAddress(u.address) === formattedAddress(ownProps.message.senderAddress)
     }) || {},
-    web3Account: state.wallet.address
+    web3Account: wallet.address
   }
 }
 

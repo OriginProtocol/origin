@@ -5,8 +5,7 @@ import Avatar from 'components/avatar'
 import { getListing } from 'utils/listing'
 import { defineMessages, injectIntl } from 'react-intl'
 
-import { formattedAddress } from 'utils/user'
-import { abbreviatedName } from 'utils/stringUtils'
+import { formattedAddress, abbreviateName } from 'utils/user'
 
 class ConversationListItem extends Component {
   constructor(props) {
@@ -113,8 +112,7 @@ class ConversationListItem extends Component {
       handleConversationSelect,
       mobileDevice,
       users,
-      wallet
-      mobileDevice,
+      wallet,
       fromMessages = false
     } = this.props
     const { listing, lastMessage, createdAt } = this.state
@@ -141,7 +139,7 @@ class ConversationListItem extends Component {
         <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container text-truncate">
           <div className="sender text-truncate">
-            <span>{abbreviatedName(counterparty) || formattedAddress(counterpartyAddress)}</span>
+            <span>{abbreviateName(counterparty) || formattedAddress(counterpartyAddress)}</span>
           </div>
           { mobileDevice && <div className="listing-title text-truncate">{listing.name}</div> }
           <div className={`message text-truncate ${!listing.name ? 'no-listing' : ''}`}>{content}</div>
