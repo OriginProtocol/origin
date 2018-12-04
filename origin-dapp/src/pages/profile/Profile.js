@@ -498,7 +498,8 @@ class Profile extends Component {
               imageToCrop,
               modalsOpen: {
                 ...modalsOpen,
-                profile: false,
+                // close edit profile form only when it is displayed in modal
+                profile: profileMobileLayout,
                 cropModal: true
               }
             })
