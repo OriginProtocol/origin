@@ -4378,18 +4378,23 @@ form .stars img {
 }
 
 .chat-text {
-  padding: 9px 16px 0 20px;
+  padding: 9px 16px 9px 20px;
 	text-align: left;
   line-height: 1.5em;
   color: var(--dark);
 }
 
 .chat-text .address {
-  color: var(--bluey-grey);
+  color: var(--dark-blue-grey);
+}
+
+.chat-text .name {
+  color: var(--dark);
 }
 
 .chat-text .chat-content {
   font-weight: normal;
+  word-wrap: break-word;
   -webkit-margin-before: 0em;
   -webkit-margin-after: 0em;
 }

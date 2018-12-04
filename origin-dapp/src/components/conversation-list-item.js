@@ -129,7 +129,7 @@ class ConversationListItem extends Component {
       return msg.status === 'unread' && formattedAddress(msg.senderAddress) !== formattedAddress(wallet.address)
     }).length
     const { profile } = counterparty
-    const smallScreen = ('screen' in window) && (window.screen.width <= 991)
+    const smallScreen = window.innerWidth <= 991
     const smallScreenOrDevice = smallScreen || mobileDevice
     const conversationItem = smallScreenOrDevice ?
       'mobile-conversation-list-item' : `conversation-list-item${active ? ' active' : ''}`

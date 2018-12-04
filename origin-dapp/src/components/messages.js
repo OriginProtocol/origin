@@ -89,7 +89,7 @@ class Messages extends Component {
     const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
     const counterpartyProfile = counterparty && counterparty.profile
     const counterpartyName = abbreviateName(counterparty) || truncateAddress(formattedAddress(counterpartyAddress))
-    const smallScreen = ('screen' in window) && (window.screen.width <= 991)
+    const smallScreen = window.innerWidth <= 991
     const smallScreenOrDevice = smallScreen || mobileDevice
 
     if (smallScreenOrDevice) {

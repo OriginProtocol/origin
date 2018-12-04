@@ -31,8 +31,8 @@ export function truncateAddress(address = '') {
 export function abbreviateName(party) {
   const { profile = {}, fullName } = party
   const { firstName = '', lastName = '' } = profile
-  const lastNameLetter = lastName.length && `${lastName.charAt(0)}.`
+  const lastNameLetter = lastName.length ? `${lastName.charAt(0)}.` : ''
   const abbreviatedName = fullName && `${firstName} ${lastNameLetter}`
 
-  return abbreviatedName || ''
+  return abbreviatedName || 'Unnamed User'
 }

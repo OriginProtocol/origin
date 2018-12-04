@@ -39,7 +39,7 @@ class Message extends Component {
     const chatContent = this.renderContent()
     const correctSide = currentUser ? 'right' : 'left'
     const bubbleAlignment = currentUser ? 'justify-content-end' : 'justify-content-start'
-    const bubbleColor = currentUser && 'user'
+    const bubbleColor = currentUser ? 'user' : ''
     const fullAddress = formattedAddress(address)
     const userAddress = truncateAddress(fullAddress)
 
@@ -64,12 +64,12 @@ class Message extends Component {
                 <div className="sender">
                   {currentUser ? (
                     <Fragment>
-                      {userName && <div className="name text-truncate">{userName}</div>}
+                      <div className="name text-truncate">{userName}</div>
                       <span className="address">{userAddress}</span>
                     </Fragment>
                   ) : (
                     <Link to={`/users/${fullAddress}`}>
-                      {userName && <div className="name text-truncate">{userName}</div>}
+                      <div className="name text-truncate">{userName}</div>
                       <span className="address">{userAddress}</span>
                     </Link>
                   )}
