@@ -65,7 +65,7 @@ class EditProfile extends Component {
     return (
       <Modal
         isOpen={open}
-        data-modal="profile"
+        className="profile"
         handleToggle={handleToggle}
         tabIndex="-1"
       >

@@ -46,6 +46,7 @@
     "react": "^16.3.2",
     "react-beautiful-dnd": "^10.0.0",
     "react-big-calendar": "^0.20.2",
+    "react-bootstrap": "^1.0.0-beta.3",
     "react-dates": "18.2.2",
     "react-dom": "^16.3.2",
     "react-image-crop": "^6.0.0",

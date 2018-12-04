@@ -3,7 +3,6 @@ import { Prompt } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import $ from 'jquery'
 
 import { storeWeb3Intent } from 'actions/App'
 import {
@@ -138,17 +137,11 @@ class Profile extends Component {
       provisional: this.props.provisionalProgress,
       published: this.props.publishedProgress
     })
-
-    if ($('.identity.dropdown').hasClass('show')) {
-      $('#identityDropdown').dropdown('toggle')
-    }
   }
 
   componentDidUpdate(prevProps) {
     // prompt user if tab/window is closing before changes have been published
     if (this.props.changes.length) {
-      $('.profile-wrapper [data-toggle="tooltip"]').tooltip()
-
       window.addEventListener('beforeunload', this.handleUnload)
     } else {
       window.removeEventListener('beforeunload', this.handleUnload)
@@ -252,10 +245,7 @@ class Profile extends Component {
   }
 
   componentWillUnmount() {
-    $('.profile-wrapper [data-toggle="tooltip"]').tooltip('dispose')
-
     window.removeEventListener('beforeunload', this.handleUnload)
-
     clearInterval(this.createdAtInterval)
   }
 
