@@ -258,8 +258,7 @@ export default class Marketplace {
         return
       }
       // TODO: handle refund and dispute cases
-      if (offer.status !== 'created' && offer.status !== 'withdrawn') {
-        // TODO: handle instant purchases
+      if (offer.status !== 'withdrawn') {
         unitsAvailable -= offer.unitsPurchased
       }
       offers.push(offer)
@@ -709,7 +708,7 @@ export default class Marketplace {
   /**
    * Returns units sold for a unit listing, taking into account pending offers.
    * @param {Listing} listing - listing JSON object
-   * @param {List(Offer)} offers - list of Offer JSON objects for the listing
+   * @param {List(Offer)} offers - list of valid Offer JSON objects for the listing
    * @return {number} - Units sold
    */
   unitsSold(listing, offers) {
@@ -717,14 +716,12 @@ export default class Marketplace {
       throw new Error('unitsAvailable only works for unit listings')
     }
     return Object.keys(offers).reduce((sold, offerId) => {
-      // TODO: handle instant purchases
       if (
         // Before offers are submitted to the blockchain, they have no status.
         //
         // TODO: We might need some explicit handling of arbitration rulings.
         offers[offerId].status &&
-        offers[offerId].status !== 'withdrawn' &&
-        offers[offerId].status !== 'created'
+        offers[offerId].status !== 'withdrawn'
       ) {
         return sold + offers[offerId].unitsPurchased
       }
