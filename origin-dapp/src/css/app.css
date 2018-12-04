@@ -3874,13 +3874,11 @@ form .stars img {
 }
 
 .mobile-messaging .back .counterparty {
-  display: inline-block;
-  position: absolute;
   font-size: 22px;
   font-weight: bold;
   color: var(--white);
   margin-bottom: 5px;
-  width: 34%;
+  width: 200px;
   text-align: left;
   line-height: 57px;
 }
@@ -4028,7 +4026,6 @@ form .stars img {
   border-radius: 9.5px;
   background-color: var(--clear-blue);
   margin-top: 5px;
-  margin-left: 20px;
 }
 
 .mobile-conversation-list-item .unread.count div {

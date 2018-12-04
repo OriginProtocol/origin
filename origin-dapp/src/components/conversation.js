@@ -50,7 +50,7 @@ class Conversation extends Component {
     // try to detect the user before rendering
     this.identifyCounterparty()
 
-    if (this.props.mobileDevice) {
+    if (this.props.smallScreenOrDevice) {
       this.loadListing()
     }
 
@@ -239,7 +239,7 @@ class Conversation extends Component {
   }
 
   render() {
-    const { id, intl, messages, mobileDevice, wallet, withListingSummary } = this.props
+    const { id, intl, messages, smallScreenOrDevice, wallet, withListingSummary } = this.props
     const {
       counterparty,
       files,
@@ -258,7 +258,7 @@ class Conversation extends Component {
 
     return (
       <Fragment>
-        {(!mobileDevice && withListingSummary) &&
+        {((!smallScreenOrDevice) && withListingSummary) &&
           listing.id && (
             <span className="purchase-info">
               {buyerName} purchased {name} on {moment(created).format('MMM Do h:mm a')}

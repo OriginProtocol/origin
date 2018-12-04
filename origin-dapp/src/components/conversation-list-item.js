@@ -129,7 +129,10 @@ class ConversationListItem extends Component {
       return msg.status === 'unread' && formattedAddress(msg.senderAddress) !== formattedAddress(wallet.address)
     }).length
     const { profile } = counterparty
-    const conversationItem = mobileDevice ? 'mobile-conversation-list-item' : `conversation-list-item${active ? ' active' : ''}`
+    const smallScreen = ('screen' in window) && (window.screen.width <= 991)
+    const smallScreenOrDevice = smallScreen || mobileDevice
+    const conversationItem = smallScreenOrDevice ?
+      'mobile-conversation-list-item' : `conversation-list-item${active ? ' active' : ''}`
 
     return (
       <div
@@ -141,16 +144,16 @@ class ConversationListItem extends Component {
           <div className="sender text-truncate">
             <span>{abbreviateName(counterparty) || formattedAddress(counterpartyAddress)}</span>
           </div>
-          { mobileDevice && <div className="listing-title text-truncate">{listing.name}</div> }
+          {(smallScreenOrDevice) && <div className="listing-title text-truncate">{listing.name}</div>}
           <div className={`message text-truncate ${!listing.name ? 'no-listing' : ''}`}>{content}</div>
         </div>
-        <div className={`meta-container ${mobileDevice ? 'justify-content-start ml-auto' : 'text-right'}`}>
+        <div className={`meta-container ${(smallScreenOrDevice)? 'justify-content-start ml-auto' : 'text-right'}`}>
           <div className="timestamp align-self-end">
             {createdAt}
           </div>
 
           {(!!unreadCount && fromMessages) && (
-            <div className={`unread count text-right`}>
+            <div className="unread count text-right mx-auto">
               <div>{unreadCount}</div>
             </div>
           )}

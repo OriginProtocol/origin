@@ -88,8 +88,10 @@ class Messages extends Component {
     const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
     const counterpartyProfile = counterparty && counterparty.profile
     const counterpartyName = abbreviateName(counterparty) || truncateAddress(formattedAddress(counterpartyAddress))
+    const smallScreen = ('screen' in window) && (window.screen.width <= 991)
+    const smallScreenOrDevice = smallScreen || mobileDevice
 
-    if (mobileDevice) {
+    if (smallScreenOrDevice) {
       if (selectedConversationId && selectedConversationId.length) {
         return (
           <div className="mobile-messaging messages-wrapper">
@@ -99,19 +101,17 @@ class Messages extends Component {
               <div className="align-self-start">
                 <i className="icon-arrow-left align-self-start mr-auto"></i>
               </div>
-              <div className="align-self-center nav-avatar">
+              <div className="align-self-center nav-avatar ml-auto">
                 <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
               </div>
-              <div>
-                <span className="counterparty text-truncate">{counterpartyName}</span>
-              </div>
+              <div className="counterparty text-truncate mr-auto">{counterpartyName}</div>
             </div>
             <div className="conversation-col d-flex flex-column">
               <Conversation
                 id={selectedConversationId}
                 messages={filteredAndSorted}
                 withListingSummary={true}
-                mobileDevice={mobileDevice}
+                smallScreenOrDevice={smallScreenOrDevice}
               />
             </div>
           </div>
