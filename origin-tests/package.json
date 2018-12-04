@@ -7,12 +7,13 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha --timeout 10000 --exit"
+    "test": "mocha --timeout 10000 --exit test"
   },
   "author": "Tom Linton <tom@originprotocol.com>",
   "license": "ISC",
   "dependencies": {
-    "origin": "^0.8.6"
+    "origin": "^0.8.6",
+    "origin-discovery": "^0.1.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
