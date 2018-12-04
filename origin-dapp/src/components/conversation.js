@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 
 import { fetchUser } from 'actions/User'
 
@@ -11,6 +12,7 @@ import PurchaseProgress from 'components/purchase-progress'
 
 import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
+import truncateWithCenterEllipsis, { abbreviatedName } from 'utils/stringUtils'
 
 import origin from '../services/origin'
 
@@ -243,7 +245,7 @@ class Conversation extends Component {
       listing,
       purchase
     } = this.state
-    const { name, pictures } = listing
+    const { name, pictures, created } = listing
     const { buyer, status } = purchase
     const perspective = buyer
       ? buyer === web3Account
@@ -260,12 +262,15 @@ class Conversation extends Component {
       id
 
     const classNames = mobileDevice ? 'justify-content-start' : 'justify-content-center'
+    const buyerName = abbreviatedName(counterparty) || truncateWithCenterEllipsis(counterparty.address)
 
     return (
       <Fragment>
         {(!mobileDevice && withListingSummary) &&
           listing.id && (
-            <span>Natasha purchased SUPER COOL T-shirts on November 7, 2018</span>
+            <span className="purchase-info">
+              {buyerName} purchased {name} on {moment(created).format('MMM Do h:mm a')}
+            </span>
         )}
         <div ref={this.conversationDiv} className="conversation">
           <CompactMessages seller={listing.seller} messages={messages} />

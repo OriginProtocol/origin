@@ -3885,6 +3885,14 @@ form .stars img {
   display: inline;
 }
 
+.conversation .conversation-avatar {
+  padding-bottom: 10px;
+}
+
+.conversation .conversation-avatar.right {
+  padding-left: 10px;
+}
+
 .mobile-conversations .avatar-container {
   height: 60px;
   width: 60px;
@@ -3924,6 +3932,12 @@ form .stars img {
 
 .messages-wrapper .no-gutters {
   height: calc(100vh - 60px);
+}
+
+.messages-wrapper .purchase-info {
+  color: var(--bluey-grey);
+  font-style: italic;
+  text-align: center;
 }
 
 .conversation-col .content-container {
@@ -3988,8 +4002,13 @@ form .stars img {
   font-weight: bold;
 }
 
+.conversation-list-item .unread.count {
+  padding-right: 3px;
+}
+
 .conversation-list-item .unread.count div {
-  border-radius: 9.5px;
+  font-size: 0.75rem;
+  height: auto;
 }
 
 .conversation-list-item .unread.count,
@@ -4004,7 +4023,6 @@ form .stars img {
   margin-left: 20px;
 }
 
-.conversation-list-item .unread.count,
 .mobile-conversation-list-item .unread.count div {
   padding-right: 10px;
   font-size: 12px;
@@ -4366,6 +4384,7 @@ form .stars img {
 }
 
 .chat-text .chat-content {
+  font-weight: normal;
   -webkit-margin-before: 0em;
   -webkit-margin-after: 0em;
 }
