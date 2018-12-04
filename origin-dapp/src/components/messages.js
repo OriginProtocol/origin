@@ -26,7 +26,7 @@ class Messages extends Component {
   }
 
   componentDidMount() {
-    const { mobileDevice, match } = this.props
+    const { match } = this.props
     const smallSreenDetected = this.checkForSmallScreen()
 
     // try to detect the conversation before rendering
@@ -34,7 +34,7 @@ class Messages extends Component {
       this.detectSelectedConversation()
     }
 
-    window.addEventListener("resize", this.checkForSmallScreen);
+    window.addEventListener('resize', this.checkForSmallScreen)
   }
 
   componentDidUpdate(prevProps) {
@@ -59,7 +59,7 @@ class Messages extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.checkForSmallScreen);
+    window.removeEventListener('resize', this.checkForSmallScreen)
   }
 
   checkForSmallScreen() {
@@ -90,9 +90,7 @@ class Messages extends Component {
   }
 
   handleConversationSelect(selectedConversationId = '') {
-    const { mobileDevice } = this.props
     const { smallScreenOrDevice } = this.state
-
     const showMainNav = (smallScreenOrDevice && selectedConversationId.length) ? false : true
 
     this.props.showMainNav(showMainNav)
