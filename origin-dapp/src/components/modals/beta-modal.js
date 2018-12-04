@@ -9,7 +9,7 @@ import Modal from 'components/modal'
 class BetaModal extends Component {
   render() {
     return (
-      <Modal backdrop="static" isOpen={this.props.showModal} data-modal="beta">
+      <Modal backdrop="static" className="beta" isOpen={this.props.showModal} data-modal="beta">
         <div className="image-container">
           <img src="images/beta.svg" role="presentation" />
         </div>

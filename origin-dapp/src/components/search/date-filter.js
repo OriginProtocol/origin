@@ -8,7 +8,6 @@ import {
   FILTER_OPERATOR_LESSER_OR_EQUAL
 } from 'components/search/constants'
 import { DayPickerRangeController } from 'react-dates'
-import $ from 'jquery'
 
 import { START_DATE } from 'react-dates/src/constants'
 
@@ -34,21 +33,22 @@ class DateFilterGroup extends Component {
 
   componentDidMount() {
     this.props.onChildMounted(this)
-    /* Workaround for a weird bug where DayPickerRangeController is hidden when in a 
+    /* Workaround for a weird bug where DayPickerRangeController is hidden when in a
      * Bootstrap dropdown
      */
-    $('.dateFilter .DayPicker').removeClass('DayPicker__hidden')
+    // TODO - reimplement now that we no longer use jQuery
   }
 
   onOpen() {
-    /* Ugly ugly hack... Since we forcefully remove 'DayPicker__hidden' class from DayPicker 
+    /* Ugly ugly hack... Since we forcefully remove 'DayPicker__hidden' class from DayPicker
      * component the component does not trigger vertical resize. For this reason we forcefully
-     * resize the component on first show to mitigate the problem. 
+     * resize the component on first show to mitigate the problem.
      */
-    if (!this.heighCorrected) {
-      $('.DayPicker_transitionContainer').height(320)
-      this.heighCorrected = true
-    }
+    // TODO - reimplement now that we no longer use jQuery
+    // if (!this.heighCorrected) {
+    //   $('.DayPicker_transitionContainer').height(320)
+    //   this.heighCorrected = true
+    // }
   }
 
   onDatesChange({ startDate, endDate }) {
