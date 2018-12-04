@@ -3,12 +3,13 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
-import { enableMessaging } from 'actions/App'
+import { enableMessaging } from 'actions/Activation'
 import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
 
 import truncateWithCenterEllipsis, { abbreviatedName } from 'utils/stringUtils'
+import { formattedAddress } from 'utils/user'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
 
@@ -58,7 +59,7 @@ class Message extends Component {
               <div className="chat-text">
                 <div className="sender">
                   {userName && <div className="name text-truncate">{userName}</div>}
-                  <span className="address">{truncateWithCenterEllipsis(address)}</span>
+                  <span className="address">{formattedAddress(address)}</span>
                   <p className="chat-content">{chatContent}</p>
                 </div>
               </div>
@@ -128,12 +129,13 @@ class Message extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = ({ activation, app, users }, ownProps) => {
   return {
-    messagingEnabled: state.app.messagingEnabled,
-    mobileDevice: state.app.mobileDevice,
-    user:
-      state.users.find(u => u.address === ownProps.message.senderAddress) || {},
+    messagingEnabled: activation.messaging.enabled,
+    mobileDevice: app.mobileDevice,
+    user: users.find(u => {
+      return formattedAddress(u.address) === formattedAddress(ownProps.message.senderAddress)
+    }) || {},
     web3Account: state.wallet.address
   }
 }

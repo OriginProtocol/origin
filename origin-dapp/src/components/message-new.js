@@ -3,10 +3,12 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
-import { enableMessaging } from 'actions/App'
+import { enableMessaging } from 'actions/Activation'
 
 import Identicon from 'components/identicon'
 import Modal from 'components/modal'
+
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -74,7 +76,7 @@ class MessageNew extends Component {
           <h2>
             {'ETH Address:'}
             <br />
-            <span className="address">{recipientAddress}</span>
+            <span className="address">{formattedAddress(recipientAddress)}</span>
           </h2>
         </div>
         {/* Recipient needs to enable messaging. */}
@@ -150,9 +152,9 @@ class MessageNew extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ activation }) => {
   return {
-    messagingEnabled: state.app.messagingEnabled
+    messagingEnabled: activation.messaging.enabled
   }
 }
 

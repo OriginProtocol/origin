@@ -7,10 +7,8 @@ import Form from 'react-jsonschema-form'
 
 import { showAlert } from 'actions/Alert'
 
-import {
-  handleNotificationsSubscription,
-  storeWeb3Intent
-} from 'actions/App'
+import { handleNotificationsSubscription } from 'actions/Activation'
+import { storeWeb3Intent } from 'actions/App'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
@@ -29,9 +27,11 @@ import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
 
+import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
-import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
+import { formattedAddress } from 'utils/user'
+
 import {
   translateSchema,
   translateListingCategory
@@ -155,9 +155,11 @@ class ListingCreate extends Component {
   }
 
   ensureUserIsSeller(sellerAccount) {
-    const { web3Account } = this.props
+    const { wallet } = this.props
 
-    if ( web3Account && web3Account.toUpperCase() !== sellerAccount.toUpperCase()) {
+    if (
+      wallet.address &&
+      formattedAddress(wallet.address) !== formattedAddress(sellerAccount)) {
       alert('⚠️ Only the seller can update a listing')
       window.location.href = '/'
     }
@@ -243,7 +245,6 @@ class ListingCreate extends Component {
         this.setState({
           selectedSchemaType,
           schemaFetched: true,
-          step: this.STEP.DETAILS,
           fractionalTimeIncrement: !isFractionalListing ? null : 
             selectedSchemaType === 'housing' ? 'daily' : 'hourly',
           showNoSchemaSelectedError: false,
@@ -255,8 +256,6 @@ class ListingCreate extends Component {
             translatedSchema.properties.examples &&
             translatedSchema.properties.examples.enumNames
         })
-
-        window.scrollTo(0, 0)
       })
   }
 
@@ -1198,26 +1197,14 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = ({
-  app: {
-    messagingEnabled,
-    notificationsHardPermission,
-    notificationsSoftPermission,
-    pushNotificationsSupported,
-    serviceWorkerRegistration,
-    web3
-  }, exchangeRates, wallet
-}) => {
+const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
   return {
     exchangeRates,
-    messagingEnabled,
-    notificationsHardPermission,
-    notificationsSoftPermission,
-    pushNotificationsSupported,
-    serviceWorkerRegistration,
+    messagingEnabled: activation.messaging.enabled,
+    pushNotificationsSupported: activation.notifications.pushEnabled,
+    serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,
-    web3Account: web3.account,
-    web3Intent: web3.intent
+    web3Intent: app.web3.intent
   }
 }
 
