@@ -8,7 +8,7 @@
   "scripts": {
     "build": "per-env",
     "build:development": "truffle compile contracts",
-    "build:production": "npm run build:development && node lib/minify-contracts",
+    "build:production": "echo \"Warning: use release contracts for production\"",
     "prepare": "npm run build",
     "test": "node scripts/test.js",
     "test:contracts": "mocha -r @babel/register -t 20000 --exit test-alt",
