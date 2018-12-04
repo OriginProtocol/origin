@@ -109,6 +109,7 @@ class NotificationsDropdown extends Component {
                   <Notification
                     key={`dropdown-notification:${n.id}`}
                     notification={n}
+                    onClick={() => this.toggle('close')}
                   />
                 ))}
               </ul>
@@ -137,7 +138,10 @@ const mapStateToProps = ({ app, notifications, wallet }) => {
 
         return {
           ...n,
-          perspective: formattedAddress(wallet.address) === formattedAddress(seller) ? 'seller' : 'buyer'
+          perspective:
+            formattedAddress(wallet.address) === formattedAddress(seller)
+              ? 'seller'
+              : 'buyer'
         }
       })
       .filter(n => n.status === 'unread'),

@@ -90,7 +90,11 @@ class Footer extends Component {
                     className="dropdown-toggle"
                     id="languageDropdown"
                     role="button"
-                    onClick={() => this.setState({ dropdown: true })}
+                    onClick={() =>
+                      this.setState({
+                        dropdown: this.state.dropdown ? false : true
+                      })
+                    }
                     aria-haspopup="true"
                     aria-expanded="false"
                   >

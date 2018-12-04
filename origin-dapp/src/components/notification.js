@@ -47,6 +47,9 @@ class Notification extends Component {
 
   handleClick() {
     this.props.updateNotification(this.props.notification.id, 'read')
+    if (this.props.onClick) {
+      this.props.onClick()
+    }
   }
 
   render() {
