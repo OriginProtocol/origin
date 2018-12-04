@@ -10,11 +10,11 @@ const bodyParser = require('body-parser')
 const webpush = require('web-push')
 const Sequelize = require('sequelize')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
+const PushSubscription = require('./models').PushSubscription
+const { getNotificationMessage, processableEvent } = require('./notification')
 
 const app = express()
 const port = 3456
-
-const PushSubscription = require('./models').PushSubscription
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
 let privateKey = process.env.VAPID_PRIVATE_KEY
 let publicKey = process.env.VAPID_PUBLIC_KEY
@@ -24,38 +24,6 @@ if (!privateKey || !publicKey) {
   const vapidKeys = webpush.generateVAPIDKeys()
   publicKey = vapidKeys.publicKey
   privateKey = vapidKeys.privateKey
-}
-
-const eventNotificationMap = {
-  OfferCreated: {
-    title: 'New Offer',
-    body: 'A buyer has made an offer on your listing.'
-  },
-  OfferWithdrawn: {
-    title: 'Offer Withdrawn',
-    // does not make sense if offer is rejected by seller
-    body: 'An offer on your listing has been withdrawn.'
-  },
-  OfferAccepted: {
-    title: 'Offer Accepted',
-    body: 'An offer you made has been accepted.'
-  },
-  OfferDisputed: {
-    title: 'Dispute Initiated',
-    body: 'A problem has been reported with your transaction.'
-  },
-  OfferRuling: {
-    title: 'Dispute Resolved',
-    body: 'A ruling has been issued on your disputed transaction.'
-  },
-  OfferFinalized: {
-    title: 'Sale Completed',
-    body: 'Your transaction has been completed.'
-  },
-  OfferData: {
-    title: 'New Review',
-    body: 'A review has been left on your transaction.'
-  }
 }
 
 webpush.setVapidDetails(
@@ -93,6 +61,10 @@ app.all((req, res, next) => {
 // payload that may contain user profile with b64 encoded profile picture.
 app.use(bodyParser.json({ limit: '10mb' }))
 
+/**
+ * Endpoint to dump all the subscriptions stored in the DB.
+ * For development purposes only. Disabled in production.
+ */
 app.get('/', async (req, res) => {
   let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
 
@@ -105,67 +77,117 @@ app.get('/', async (req, res) => {
   res.send(markup)
 })
 
+/**
+ * Endpoint called by the DApp to record a subscription for an account.
+ */
 app.post('/', async(req, res) => {
-  const { account, endpoint } = req.body
-  // cannot upsert because neither is unique
+  let { account, endpoint, keys } = req.body
+
+  // Validate the input.
+  // TODO: stricter validation of the account address validity using web3 util.
+  if (!account || !endpoint || !keys) {
+    res.sendStatus(400)
+  }
+
+  // Normalize account.
+  account = account.toLowerCase()
+
+  // Nothing to do if there is already a subscription
+  // for that (account, endpoint) pair.
   const existing = await PushSubscription.findAll({
     where: { account, endpoint }
   })
-
   if (existing.length > 0) {
     return res.sendStatus(200)
   }
 
-  await PushSubscription.create(req.body)
-
+  // Note: expiration_time is not populated.
+  // This is a placeholder column for future use.
+  await PushSubscription.create({ account, endpoint, keys })
   res.sendStatus(201)
 })
 
+/**
+ * Endpoint called by the event-listener to notify
+ * the notification server of a new event.
+ */
 app.post('/events', async (req, res) => {
   const { log = {}, related = {} } = req.body
   const { decoded = {}, eventName } = log
   const { buyer = {}, listing, offer, seller = {} } = related
   const eventDetails = `eventName=${eventName} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`
 
+  // Return 200 to the event-listener without
+  // waiting for processing of the event.
   res.sendStatus(200)
 
-  if (!listing || (!buyer.address && !seller.address)) {
-    console.log(`Missing listing or buyer/seller address. Skipping ${eventDetails}`)
+  if (!listing || !buyer.address || !seller.address) {
+    console.log(`Error: Missing listing, buyer or seller address. Skipping ${eventDetails}`)
     return
   }
 
-  if (!eventNotificationMap[eventName]) {
-    console.log(`Not a processable event. Skipping ${eventDetails}`)
+  // ETH address of the party who initiated the action.
+  // Could be the seller, buyer or a 3rd party (ex: arbitrator, affiliate, etc...).
+  if (!decoded.party) {
+    console.log(`Error: Invalid part, skipping ${eventDetails}`)
     return
   }
-  const { body, title } = eventNotificationMap[eventName]
-  const { party } = decoded
 
-  console.log(`Processing event ${eventDetails}`)
+  const party = decoded.party.toLowerCase()
+  const buyerAddress = buyer.address.toLowerCase()
+  const sellerAddress = seller.address.toLowerCase()
 
+  if (!processableEvent(eventName)) {
+    console.log(`Info: Not a processable event. Skipping ${eventDetails}`)
+    return
+  }
+
+  console.log(`Info: Processing event ${eventDetails}`)
+
+  // Query the DB to get subscriptions from the seller and/or buyer.
+  // Note the filter ensures we do not send notification to the party
+  // who initiated the action:
+  //  - seller initiated action -> only buyer gets notified.
+  //  - buyer initiated action -> only seller gets notified.
+  //  - 3rd party initiated action -> both buyer and seller get notified.
   const subs = await PushSubscription.findAll({
     where: {
       account: {
-        // refrain from sending to the party who initiated the transaction
-        [Sequelize.Op.in]: [buyer.address, seller.address].filter(a => a && a !== party)
+        [Sequelize.Op.in]: [buyerAddress, sellerAddress].filter(a => a && a !== party)
       }
     }
   })
 
-  // filter out redundant endpoints before iterating
+  // Filter out redundant endpoints before iterating.
   await subs.filter((s, i, self) => {
     return self.map(ms => ms.endpoint).indexOf(s.endpoint) === i
   }).forEach(async s => {
     try {
-      // should safeguard against duplicates
-      await webpush.sendNotification(s, JSON.stringify({
-        title,
-        body,
-        account: s.account,
+      const recipient = s.account
+      const recipientRole = (recipient === buyerAddress) ? 'buyer' : 'seller'
+
+      const message = getNotificationMessage(eventName, party, recipient, recipientRole)
+      if (!message) {
+        return
+      }
+
+      // Send the push notification.
+      // TODO: Add safeguard against sending duplicate messages since the
+      // event-listener only provides at-least-once guarantees and may
+      // call this webhook more than once for the same event.
+      const pushSubscription = {
+        endpoint: s.endpoint,
+        keys: s.keys
+      }
+      const pushPayload = JSON.stringify({
+        title: message.title,
+        body: message.body,
+        account: recipient,
         offerId: offer.id
-      }))
+      })
+      await webpush.sendNotification(pushSubscription, pushPayload)
     } catch(e) {
-      // subscription is no longer valid
+      // Subscription is no longer valid - delete it in the DB.
       if (e.statusCode === 410) {
         s.destroy()
       } else {

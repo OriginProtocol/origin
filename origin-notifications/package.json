@@ -19,7 +19,7 @@
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
-    "test": "echo \"Warning: no tests specified\""
+    "test": "mocha --timeout 10000 --exit"
   },
   "author": "Origin Protocol Inc",
   "license": "MIT",
@@ -36,7 +36,9 @@
     "web-push": "^3.3.3"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "eslint": "^5.9.0",
+    "mocha": "^5.2.0",
     "nodemon": "^1.18.6"
   }
 }
