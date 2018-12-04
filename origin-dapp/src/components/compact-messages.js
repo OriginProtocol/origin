@@ -15,7 +15,7 @@ const CompactMessages = ({ messages = [], seller }) =>
     const { created, hash } = message
     const previousMessage = i === 0 ? {} : messages[i - 1]
     const timeElapsed = getElapsedTime(created, previousMessage.created)
-    const showTime = timeElapsed >= MAX_MINUTES
+    const showTime = timeElapsed >= MAX_MINUTES || i === 0
 
     return <Message seller={seller} key={hash} showTime={showTime} message={message} />
   })
