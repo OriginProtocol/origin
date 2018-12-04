@@ -77,7 +77,7 @@ class EditProfile extends Component {
       <Fragment>
         <Modal
           isOpen={open && !mobileLayout}
-          data-modal="profile"
+          className="profile"
           handleToggle={handleToggle}
           tabIndex="-1"
         >
