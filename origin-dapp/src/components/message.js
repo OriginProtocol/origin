@@ -1,7 +1,8 @@
 import moment from 'moment'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { enableMessaging } from 'actions/Activation'
 import { updateMessage } from 'actions/Message'
@@ -39,7 +40,8 @@ class Message extends Component {
     const correctSide = currentUser ? 'right' : 'left'
     const bubbleAlignment = currentUser ? 'justify-content-end' : 'justify-content-start'
     const bubbleColor = currentUser && 'user'
-    const userAddress = truncateAddress(formattedAddress(address))
+    const fullAddress = formattedAddress(address)
+    const userAddress = truncateAddress(fullAddress)
 
     return (
       <div className="message-section">
@@ -52,14 +54,25 @@ class Message extends Component {
           <div className={`content-container d-flex ${bubbleAlignment}`}>
             <div className="align-self-end conversation-avatar">
               {(!mobileDevice && correctSide === 'left') && (
-                <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
+                <Link to={`/users/${fullAddress}`}>
+                  <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
+                </Link>
               )}
             </div>
             <div className={`chat-bubble tail-${correctSide} ${bubbleColor}`}>
               <div className="chat-text">
                 <div className="sender">
-                  {userName && <div className="name text-truncate">{userName}</div>}
-                  <span className="address">{userAddress}</span>
+                  {currentUser ? (
+                    <Fragment>
+                      {userName && <div className="name text-truncate">{userName}</div>}
+                      <span className="address">{userAddress}</span>
+                    </Fragment>
+                  ) : (
+                    <Link to={`/users/${fullAddress}`}>
+                      {userName && <div className="name text-truncate">{userName}</div>}
+                      <span className="address">{userAddress}</span>
+                    </Link>
+                  )}
                   <p className="chat-content">{chatContent}</p>
                 </div>
               </div>

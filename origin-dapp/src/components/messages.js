@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
@@ -102,7 +103,9 @@ class Messages extends Component {
                 <i className="icon-arrow-left align-self-start mr-auto"></i>
               </div>
               <div className="align-self-center nav-avatar ml-auto">
-                <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
+                <Link to={`/users/${counterpartyAddress}`}>
+                  <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
+                </Link>
               </div>
               <div className="counterparty text-truncate mr-auto">{counterpartyName}</div>
             </div>
