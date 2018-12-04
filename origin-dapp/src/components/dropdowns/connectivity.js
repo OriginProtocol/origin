@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import $ from 'jquery'
 
+import Dropdown from 'components/dropdown'
 import origin from '../../services/origin'
 
 const ipfsGateway = process.env.IPFS_DOMAIN
@@ -25,6 +25,7 @@ class ConnectivityDropdown extends Component {
         bridgeServer: false,
         messaging: false
       },
+      open: false,
       networkName: null
     }
 
@@ -66,26 +67,6 @@ class ConnectivityDropdown extends Component {
   }
 
   async componentDidMount() {
-    // control hiding of dropdown menu
-    $('.connectivity.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
-      // if triggered by data-toggle
-      if (!clickEvent) {
-        return true
-      }
-      // otherwise only if triggered by self or another dropdown
-      const el = $(clickEvent.target)
-
-      return el.hasClass('dropdown') && el.hasClass('nav-item')
-    })
-
-    !web3.givenProvider &&
-      $('#connectivityDropdown').dropdown('toggle') &&
-      setTimeout(() => {
-        if ($('.connectivity.dropdown').hasClass('show')) {
-          $('#connectivityDropdown').dropdown('toggle')
-        }
-      }, 10 * ONE_SECOND)
-
     try {
       const networkId = await web3.eth.net.getId()
 
@@ -126,15 +107,19 @@ class ConnectivityDropdown extends Component {
   }
 
   render() {
-    const { networkName, ipfsGateway, connectedStatus } = this.state
+    const { networkName, ipfsGateway, connectedStatus, open } = this.state
 
     return (
-      <div className="nav-item connectivity dropdown">
+      <Dropdown
+        className="nav-item connectivity"
+        open={open}
+        onClose={() => this.setState({ open: false })}
+      >
         <a
           className="nav-link active dropdown-toggle"
           id="connectivityDropdown"
+          onClick={() => this.setState({ open: !this.state.open })}
           role="button"
-          data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
           ga-category="top_nav"
@@ -164,7 +149,7 @@ class ConnectivityDropdown extends Component {
           </div>
         </a>
         <div
-          className="dropdown-menu dropdown-menu-right"
+          className={`dropdown-menu dropdown-menu-right${open ? ' show' : ''}`}
           aria-labelledby="connectivityDropdown"
         >
           <div className="triangle-container d-flex justify-content-end">
@@ -277,7 +262,7 @@ class ConnectivityDropdown extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </Dropdown>
     )
   }
 }
