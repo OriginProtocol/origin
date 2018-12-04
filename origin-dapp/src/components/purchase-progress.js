@@ -1,7 +1,10 @@
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
-import Tooltip from './tooltip'
+
+import Tooltip from 'components/tooltip'
+
+import { formattedAddress } from 'utils/user'
 
 const formatDate = timestamp => moment(timestamp * 1000).format('MMM D, YYYY')
 
@@ -51,6 +54,10 @@ class PurchaseProgress extends Component {
     const offerRuling = purchase && purchase.event('OfferRuling')
     const offerFinalized = purchase && purchase.event('OfferFinalized')
     const offerData = purchase && purchase.event('OfferData')
+
+    const withdrawnOrRejected = offerWithdrawn ? (
+      formattedAddress(purchase.buyer) === offerWithdrawn.returnValues.party ? 'withdrawn' : 'rejected'
+    ) : null
 
     return (
       <div
@@ -102,7 +109,7 @@ class PurchaseProgress extends Component {
               placement="top"
               content={
                 <Fragment>
-                  <div>Offer withdrawn on</div>
+                  <div>Offer {withdrawnOrRejected} on</div>
                   <strong>{formatDate(offerWithdrawn.timestamp)}</strong>
                 </Fragment>
               }
@@ -197,7 +204,13 @@ class PurchaseProgress extends Component {
                     defaultMessage={'Offer Accepted'}
                   />
                 )}
-                {purchase.status === 'withdrawn' && (
+                {purchase.status === 'withdrawn' && withdrawnOrRejected === 'rejected' && (
+                  <FormattedMessage
+                    id={'purchase-progress.offerRejected'}
+                    defaultMessage={'Offer Rejected'}
+                  />
+                )}
+                {purchase.status === 'withdrawn' && withdrawnOrRejected === 'withdrawn' && (
                   <FormattedMessage
                     id={'purchase-progress.offerWithdrawn'}
                     defaultMessage={'Offer Withdrawn'}
