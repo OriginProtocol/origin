@@ -11,7 +11,10 @@ import { getEthBalance, storeAccountAddress } from 'actions/Wallet'
 
 import Modal from 'components/modal'
 
-import getCurrentNetwork, { supportedNetworkId } from 'utils/currentNetwork'
+import getCurrentNetwork, {
+  supportedNetwork,
+  supportedNetworkId
+} from 'utils/currentNetwork'
 import detectMobile from 'utils/detectMobile'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { formattedAddress } from 'utils/user'
@@ -208,7 +211,7 @@ const UnconnectedNetwork = () => (
 )
 
 const UnsupportedNetwork = props => {
-  const { currentProvider, networkId, currentNetworkName, supportedNetworkName } = props
+  const { currentNetworkName, currentProvider, networkId, supportedNetworkName } = props
   const url = new URL(window.location)
   const path = url.pathname + url.hash
   const goToUrl = (url) => () => window.location.href = url + path
@@ -348,7 +351,6 @@ class Web3Provider extends Component {
     this.handleAccounts = this.handleAccounts.bind(this)
     this.state = {
       networkConnected: null,
-      networkId: null,
       networkError: null,
       currentProvider: getCurrentProvider(web3),
       provider: null,
@@ -455,6 +457,7 @@ class Web3Provider extends Component {
    */
   fetchNetwork() {
     const providerExists = web3.currentProvider
+    const previousNetworkId = this.props.networkId
     const networkConnected =
       web3.currentProvider.connected ||
       (typeof web3.currentProvider.isConnected === 'function' &&
@@ -483,14 +486,11 @@ class Web3Provider extends Component {
           this.setState({
             networkError: err
           })
-        } else {
-          if (networkId !== this.state.networkId) {
-            this.props.storeNetwork(networkId)
-            this.setState({
-              networkError: null,
-              networkId
-            })
-          }
+        } else if (networkId !== previousNetworkId) {
+          this.props.storeNetwork(networkId)
+          this.setState({
+            networkError: null
+          })
         }
 
         if (!this.state.networkConnected) {
@@ -539,14 +539,13 @@ class Web3Provider extends Component {
   }
 
   render() {
-    const { mobileDevice, wallet, web3Intent, storeWeb3Intent } = this.props
-    const { currentProvider, linkerCode, linkerPopUp, networkConnected, networkId } = this.state
-    const currentNetwork = getCurrentNetwork(networkId)
-    const currentNetworkName = currentNetwork
-      ? currentNetwork.name
-      : networkId
+    const { mobileDevice, networkId, storeWeb3Intent, wallet, web3Intent } = this.props
+    const { currentProvider, linkerCode, linkerPopUp, networkConnected } = this.state
+    const currentNetwork = getCurrentNetwork(networkId) || {}
+    const currentNetworkName = currentNetwork.name || networkId
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
+    const supportedNetworkName = supportedNetwork && supportedNetwork.name
     const walletLinkerEnabled = origin.contractService.walletLinker
 
     return (
@@ -562,7 +561,12 @@ class Web3Provider extends Component {
           networkId &&
           isProduction &&
           networkNotSupported &&
-          <UnsupportedNetwork currentNetworkName={currentNetworkName} currentProvider={currentProvider} />
+          <UnsupportedNetwork
+            currentNetworkName={currentNetworkName}
+            currentProvider={currentProvider}
+            networkId={networkId}
+            supportedNetworkName={supportedNetworkName}
+          />
         }
 
         {/* attempting to use web3 in unsupported mobile browser */
@@ -618,6 +622,7 @@ const mapStateToProps = ({ activation, app, wallet }) => {
   return {
     messagingInitialized: activation.messaging.initialized,
     mobileDevice: app.mobileDevice,
+    networkId: app.web3.networkId,
     wallet,
     web3Intent: app.web3.intent
   }
