@@ -42,109 +42,691 @@ const listingSchemaMetadata = {
   ],
   listingSchemasByCategory: {
     announcements: [
-      'announcements-activities_1-0-0',
-      'announcements-artists_1-0-0',
-      'announcements-barter_1-0-0',
-      'announcements-childcare_1-0-0',
-      'announcements-classes_1-0-0',
-      'announcements-freeStuff_1-0-0',
-      'announcements-garageMovingSales_1-0-0',
-      'announcements-general_1-0-0',
-      'announcements-groups_1-0-0',
-      'announcements-localNews_1-0-0',
-      'announcements-lostFound_1-0-0',
-      'announcements-marketing_1-0-0',
-      'announcements-musicians_1-0-0',
-      'announcements-other_1-0-0',
-      'announcements-personals_1-0-0',
-      'announcements-pets_1-0-0',
-      'announcements-politics_1-0-0',
-      'announcements-resumes_1-0-0',
-      'announcements-volunteers_1-0-0'
+      {
+        schema: 'announcements-activities_1-0-0',
+        translationName: {
+          id: 'schema.activities',
+          defaultMessage: 'Activities'
+        },
+      },
+      {
+        schema: 'announcements-artists_1-0-0',
+        translationName: {
+          id: 'schema.artists',
+          defaultMessage: 'Artists'
+        },
+      },
+      {
+        schema: 'announcements-barter_1-0-0',
+        translationName: {
+          id: 'schema.barter',
+          defaultMessage: 'Barter'
+        },
+      },
+      {
+        schema: 'announcements-childcare_1-0-0',
+        translationName: {
+          id: 'schema.childcare',
+          defaultMessage: 'Childcare'
+        },
+      },
+      {
+        schema: 'announcements-classes_1-0-0',
+        translationName: {
+          id: 'schema.classes',
+          defaultMessage: 'Classes'
+        },
+      },
+      {
+        schema: 'announcements-freeStuff_1-0-0',
+        translationName: {
+          id: 'schema.freeStuff',
+          defaultMessage: 'Free Stuff'
+        },
+      },
+      {
+        schema: 'announcements-garageMovingSales_1-0-0',
+        translationName: {
+          id: 'schema.garageMovingSales',
+          defaultMessage: 'Garage and Moving Sales'
+        },
+      },
+      {
+        schema: 'announcements-general_1-0-0',
+        translationName: {
+          id: 'schema.general',
+          defaultMessage: 'General'
+        },
+      },
+      {
+        schema: 'announcements-groups_1-0-0',
+        translationName: {
+          id: 'schema.groups',
+          defaultMessage: 'Groups'
+        },
+      },
+      {
+        schema: 'announcements-localNews_1-0-0',
+        translationName: {
+          id: 'schema.localNews',
+          defaultMessage: 'Local News'
+        },
+      },
+      {
+        schema: 'announcements-lostFound_1-0-0',
+        translationName: {
+          id: 'schema.lostFound',
+          defaultMessage: 'Lost and Found'
+        },
+      },
+      {
+        schema: 'announcements-marketing_1-0-0',
+        translationName: {
+          id: 'schema.marketing',
+          defaultMessage: 'Marketing'
+        },
+      },
+      {
+        schema: 'announcements-musicians_1-0-0',
+        translationName: {
+          id: 'schema.musicians',
+          defaultMessage: 'Musicians'
+        },
+      },
+      {
+        schema: 'announcements-other_1-0-0',
+        translationName: {
+          id: 'schema.other',
+          defaultMessage: 'Other'
+        },
+      },
+      {
+        schema: 'announcements-personals_1-0-0',
+        translationName: {
+          id: 'schema.personals',
+          defaultMessage: 'Personals'
+        },
+      },
+      {
+        schema: 'announcements-pets_1-0-0',
+        translationName: {
+          id: 'schema.pets',
+          defaultMessage: 'Pets'
+        },
+      },
+      {
+        schema: 'announcements-politics_1-0-0',
+        translationName: {
+          id: 'schema.politics',
+          defaultMessage: 'Politics'
+        },
+      },
+      {
+        schema: 'announcements-resumes_1-0-0',
+        translationName: {
+          id: 'schema.resumes',
+          defaultMessage: 'Resumes'
+        },
+      },
+      {
+        schema: 'announcements-volunteers_1-0-0',
+        translationName: {
+          id: 'schema.volunteers',
+          defaultMessage: 'Volunteers'
+        },
+      },
     ],
     forRent: [
-      'forRent-appliances_1-0-0',
-      'forRent-atvsUtvsSnowmobiles_1-0-0',
-      'forRent-babyKidStuff_1-0-0',
-      'forRent-bicycles_1-0-0',
-      'forRent-boats_1-0-0',
-      'forRent-carsTrucks_1-0-0',
-      'forRent-cellPhones_1-0-0',
-      'forRent-clothingAccessories_1-0-0',
-      'forRent-computers_1-0-0',
-      'forRent-electronics_1-0-0',
-      'forRent-farmGarden_1-0-0',
-      'forRent-furniture_1-0-0',
-      'forRent-healthBeauty_1-0-0',
-      'forRent-heavyEquipment_1-0-0',
-      'forRent-householdItems_1-0-0',
-      'forRent-housing_1-0-0',
-      'forRent-jewelry_1-0-0',
-      'forRent-motorcyclesScooters_1-0-0',
-      'forRent-musicalInstruments_1-0-0',
-      'forRent-other_1-0-0',
-      'forRent-parking_1-0-0',
-      'forRent-recreationalVehicles_1-0-0',
-      'forRent-sportingGoods_1-0-0',
-      'forRent-storage_1-0-0',
-      'forRent-tools_1-0-0',
-      'forRent-toysGames_1-0-0',
-      'forRent-trailers_1-0-0',
-      'forRent-videoGaming_1-0-0'
+      {
+        schema: 'forRent-appliances_1-0-0',
+        translationName: {
+          id: 'schema.appliances',
+          defaultMessage: 'Appliances'
+        }
+      },
+      {
+        schema: 'forRent-atvsUtvsSnowmobiles_1-0-0',
+        translationName: {
+          id: 'schema.atvsUtvsSnowmobiles',
+          defaultMessage: 'Atvs, Utvs, Snowmobiles'
+        }
+      },
+      {
+        schema: 'forRent-babyKidStuff_1-0-0',
+        translationName: {
+          id: 'schema.babyKidStuff',
+          defaultMessage: 'Baby and Kid Stuff'
+        }
+      },
+      {
+        schema: 'forRent-bicycles_1-0-0',
+        translationName: {
+          id: 'schema.bicycles',
+          defaultMessage: 'Bicycles'
+        }
+      },
+      {
+        schema: 'forRent-boats_1-0-0',
+        translationName: {
+          id: 'schema.boats',
+          defaultMessage: 'Boats'
+        }
+      },
+      {
+        schema: 'forRent-carsTrucks_1-0-0',
+        translationName: {
+          id: 'schema.carsTrucks',
+          defaultMessage: 'Cars and Trucks'
+        }
+      },
+      {
+        schema: 'forRent-cellPhones_1-0-0',
+        translationName: {
+          id: 'schema.cellPhones',
+          defaultMessage: 'Cell Phones'
+        }
+      },
+      {
+        schema: 'forRent-clothingAccessories_1-0-0',
+        translationName: {
+          id: 'schema.clothingAccessories',
+          defaultMessage: 'Clothing and Accessories'
+        }
+      },
+      {
+        schema: 'forRent-computers_1-0-0',
+        translationName: {
+          id: 'schema.computers',
+          defaultMessage: 'Computers'
+        }
+      },
+      {
+        schema: 'forRent-electronics_1-0-0',
+        translationName: {
+          id: 'schema.electronics',
+          defaultMessage: 'Electronics'
+        }
+      },
+      {
+        schema: 'forRent-farmGarden_1-0-0',
+        translationName: {
+          id: 'schema.farmGarden_1',
+          defaultMessage: 'Farm and Garden_1'
+        }
+      },
+      {
+        schema: 'forRent-furniture_1-0-0',
+        translationName: {
+          id: 'schema.furniture',
+          defaultMessage: 'Furniture'
+        }
+      },
+      {
+        schema: 'forRent-healthBeauty_1-0-0',
+        translationName: {
+          id: 'schema.healthBeauty',
+          defaultMessage: 'Health and Beauty'
+        }
+      },
+      {
+        schema: 'forRent-heavyEquipment_1-0-0',
+        translationName: {
+          id: 'schema.heavyEquipment',
+          defaultMessage: 'Heavy Equipment'
+        }
+      },
+      {
+        schema: 'forRent-householdItems_1-0-0',
+        translationName: {
+          id: 'schema.householdItems',
+          defaultMessage: 'Household Items'
+        }
+      },
+      {
+        schema: 'forRent-housing_1-0-0',
+        translationName: {
+          id: 'schema.housing',
+          defaultMessage: 'Housing'
+        }
+      },
+      {
+        schema: 'forRent-jewelry_1-0-0',
+        translationName: {
+          id: 'schema.jewelry',
+          defaultMessage: 'Jewelry'
+        }
+      },
+      {
+        schema: 'forRent-motorcyclesScooters_1-0-0',
+        translationName: {
+          id: 'schema.motorcyclesScooters',
+          defaultMessage: 'Motorcycles and Scooters'
+        }
+      },
+      {
+        schema: 'forRent-musicalInstruments_1-0-0',
+        translationName: {
+          id: 'schema.musicalInstruments',
+          defaultMessage: 'Musical Instruments'
+        }
+      },
+      {
+        schema: 'forRent-other_1-0-0',
+        translationName: {
+          id: 'schema.other',
+          defaultMessage: 'Other'
+        }
+      },
+      {
+        schema: 'forRent-parking_1-0-0',
+        translationName: {
+          id: 'schema.parking',
+          defaultMessage: 'Parking'
+        }
+      },
+      {
+        schema: 'forRent-recreationalVehicles_1-0-0',
+        translationName: {
+          id: 'schema.recreationalVehicles',
+          defaultMessage: 'Recreational Vehicles'
+        }
+      },
+      {
+        schema: 'forRent-sportingGoods_1-0-0',
+        translationName: {
+          id: 'schema.sportingGoods',
+          defaultMessage: 'Sporting Goods'
+        }
+      },
+      {
+        schema: 'forRent-storage_1-0-0',
+        translationName: {
+          id: 'schema.storage',
+          defaultMessage: 'Storage'
+        }
+      },
+      {
+        schema: 'forRent-tools_1-0-0',
+        translationName: {
+          id: 'schema.tools',
+          defaultMessage: 'Tools'
+        }
+      },
+      {
+        schema: 'forRent-toysGames_1-0-0',
+        translationName: {
+          id: 'schema.toysGames',
+          defaultMessage: 'Toys and Games'
+        }
+      },
+      {
+        schema: 'forRent-trailers_1-0-0',
+        translationName: {
+          id: 'schema.trailers',
+          defaultMessage: 'Trailers'
+        }
+      },
+      {
+        schema: 'forRent-videoGaming_1-0-0',
+        translationName: {
+          id: 'schema.videoGaming',
+          defaultMessage: 'Video Gaming'
+        }
+      },
     ],
     forSale: [
-      'forSale-antiques_1-0-0',
-      'forSale-appliances_1-0-0',
-      'forSale-artsCrafts_1-0-0',
-      'forSale-atvsUtvsSnowmobiles_1-0-0',
-      'forSale-autoParts_1-0-0',
-      'forSale-autoWheelsTires_1-0-0',
-      'forSale-babyKidStuff_1-0-0',
-      'forSale-bicycleParts_1-0-0',
-      'forSale-bicycles_1-0-0',
-      'forSale-boatPartsAccessories_1-0-0',
-      'forSale-boats_1-0-0',
-      'forSale-booksMagazines_1-0-0',
-      'forSale-businesses_1-0-0',
-      'forSale-carsTrucks_1-0-0',
-      'forSale-cdsDvdsVhs_1-0-0',
-      'forSale-cellPhones_1-0-0',
-      'forSale-clothingAccessories_1-0-0',
-      'forSale-collectibles_1-0-0',
-      'forSale-computerParts_1-0-0',
-      'forSale-computers_1-0-0',
-      'forSale-electronics_1-0-0',
-      'forSale-farmGarden_1-0-0',
-      'forSale-furniture_1-0-0',
-      'forSale-healthBeauty_1-0-0',
-      'forSale-heavyEquipment_1-0-0',
-      'forSale-householdItems_1-0-0',
-      'forSale-jewelry_1-0-0',
-      'forSale-materials_1-0-0',
-      'forSale-motorcyclePartsAccessories_1-0-0',
-      'forSale-motorcyclesScooters_1-0-0',
-      'forSale-musicalInstruments_1-0-0',
-      'forSale-other_1-0-0',
-      'forSale-photoVideo_1-0-0',
-      'forSale-realEstate_1-0-0',
-      'forSale-recreationalVehicles_1-0-0',
-      'forSale-sportingGoods_1-0-0',
-      'forSale-tickets_1-0-0',
-      'forSale-tools_1-0-0',
-      'forSale-toysGames_1-0-0',
-      'forSale-trailers_1-0-0',
-      'forSale-videoGaming_1-0-0'
+      {
+        schema: 'forSale-antiques_1-0-0',
+        translationName: {
+          id: 'schema.antiques',
+          defaultMessage: 'Antiques'
+        }
+      },
+      {
+        schema: 'forSale-appliances_1-0-0',
+        translationName: {
+          id: 'schema.appliances',
+          defaultMessage: 'Appliances'
+        }
+      },
+      {
+        schema: 'forSale-artsCrafts_1-0-0',
+        translationName: {
+          id: 'schema.artsCrafts',
+          defaultMessage: 'Arts and Crafts'
+        }
+      },
+      {
+        schema: 'forSale-atvsUtvsSnowmobiles_1-0-0',
+        translationName: {
+          id: 'schema.atvsUtvsSnowmobiles',
+          defaultMessage: 'Atvs, Utvs, Snowmobiles'
+        }
+      },
+      {
+        schema: 'forSale-autoParts_1-0-0',
+        translationName: {
+          id: 'schema.autoParts',
+          defaultMessage: 'Auto Parts'
+        }
+      },
+      {
+        schema: 'forSale-autoWheelsTires_1-0-0',
+        translationName: {
+          id: 'schema.autoWheelsTires',
+          defaultMessage: 'Auto Wheels and Tires'
+        }
+      },
+      {
+        schema: 'forSale-babyKidStuff_1-0-0',
+        translationName: {
+          id: 'schema.babyKidStuff',
+          defaultMessage: 'Baby and Kid Stuff'
+        }
+      },
+      {
+        schema: 'forSale-bicycleParts_1-0-0',
+        translationName: {
+          id: 'schema.bicycleParts',
+          defaultMessage: 'Bicycle Parts'
+        }
+      },
+      {
+        schema: 'forSale-bicycles_1-0-0',
+        translationName: {
+          id: 'schema.bicycles',
+          defaultMessage: 'Bicycles'
+        }
+      },
+      {
+        schema: 'forSale-boatPartsAccessories_1-0-0',
+        translationName: {
+          id: 'schema.boatPartsAccessories',
+          defaultMessage: 'Boat Parts and Accessories'
+        }
+      },
+      {
+        schema: 'forSale-boats_1-0-0',
+        translationName: {
+          id: 'schema.boats',
+          defaultMessage: 'Boats'
+        }
+      },
+      {
+        schema: 'forSale-booksMagazines_1-0-0',
+        translationName: {
+          id: 'schema.booksMagazines',
+          defaultMessage: 'Books and Magazines'
+        }
+      },
+      {
+        schema: 'forSale-businesses_1-0-0',
+        translationName: {
+          id: 'schema.businesses',
+          defaultMessage: 'Businesses'
+        }
+      },
+      {
+        schema: 'forSale-carsTrucks_1-0-0',
+        translationName: {
+          id: 'schema.carsTrucks',
+          defaultMessage: 'Cars and Trucks'
+        }
+      },
+      {
+        schema: 'forSale-cdsDvdsVhs_1-0-0',
+        translationName: {
+          id: 'schema.cdsDvdsVhs',
+          defaultMessage: 'CDs, DVDs, VHS'
+        }
+      },
+      {
+        schema: 'forSale-cellPhones_1-0-0',
+        translationName: {
+          id: 'schema.cellPhones',
+          defaultMessage: 'Cell Phones'
+        }
+      },
+      {
+        schema: 'forSale-clothingAccessories_1-0-0',
+        translationName: {
+          id: 'schema.clothingAccessories',
+          defaultMessage: 'Clothing and Accessories'
+        }
+      },
+      {
+        schema: 'forSale-collectibles_1-0-0',
+        translationName: {
+          id: 'schema.collectibles',
+          defaultMessage: 'Collectibles'
+        }
+      },
+      {
+        schema: 'forSale-computerParts_1-0-0',
+        translationName: {
+          id: 'schema.computerParts',
+          defaultMessage: 'Computer Parts'
+        }
+      },
+      {
+        schema: 'forSale-computers_1-0-0',
+        translationName: {
+          id: 'schema.computers',
+          defaultMessage: 'Computers'
+        }
+      },
+      {
+        schema: 'forSale-electronics_1-0-0',
+        translationName: {
+          id: 'schema.electronics',
+          defaultMessage: 'Electronics'
+        }
+      },
+      {
+        schema: 'forSale-farmGarden_1-0-0',
+        translationName: {
+          id: 'schema.farmGarden',
+          defaultMessage: 'Farm and Garden'
+        }
+      },
+      {
+        schema: 'forSale-furniture_1-0-0',
+        translationName: {
+          id: 'schema.furniture',
+          defaultMessage: 'Furniture'
+        }
+      },
+      {
+        schema: 'forSale-healthBeauty_1-0-0',
+        translationName: {
+          id: 'schema.healthBeauty',
+          defaultMessage: 'Health and Beauty'
+        }
+      },
+      {
+        schema: 'forSale-heavyEquipment_1-0-0',
+        translationName: {
+          id: 'schema.heavyEquipment',
+          defaultMessage: 'Heavy Equipment'
+        }
+      },
+      {
+        schema: 'forSale-householdItems_1-0-0',
+        translationName: {
+          id: 'schema.householdItems',
+          defaultMessage: 'Household Items'
+        }
+      },
+      {
+        schema: 'forSale-jewelry_1-0-0',
+        translationName: {
+          id: 'schema.jewelry',
+          defaultMessage: 'Jewelry'
+        }
+      },
+      {
+        schema: 'forSale-materials_1-0-0',
+        translationName: {
+          id: 'schema.materials',
+          defaultMessage: 'Materials'
+        }
+      },
+      {
+        schema: 'forSale-motorcyclePartsAccessories_1-0-0',
+        translationName: {
+          id: 'schema.motorcyclePartsAccessories',
+          defaultMessage: 'Motorcycle Parts and Accessories'
+        }
+      },
+      {
+        schema: 'forSale-motorcyclesScooters_1-0-0',
+        translationName: {
+          id: 'schema.motorcyclesScooters',
+          defaultMessage: 'Motorcycles and Scooters'
+        }
+      },
+      {
+        schema: 'forSale-musicalInstruments_1-0-0',
+        translationName: {
+          id: 'schema.musicalInstruments',
+          defaultMessage: 'Musical Instruments'
+        }
+      },
+      {
+        schema: 'forSale-other_1-0-0',
+        translationName: {
+          id: 'schema.other',
+          defaultMessage: 'Other'
+        }
+      },
+      {
+        schema: 'forSale-photoVideo_1-0-0',
+        translationName: {
+          id: 'schema.photoVideo',
+          defaultMessage: 'Photo and Video'
+        }
+      },
+      {
+        schema: 'forSale-realEstate_1-0-0',
+        translationName: {
+          id: 'schema.realEstate',
+          defaultMessage: 'Real Estate'
+        }
+      },
+      {
+        schema: 'forSale-recreationalVehicles_1-0-0',
+        translationName: {
+          id: 'schema.recreationalVehicles',
+          defaultMessage: 'Recreational Vehicles'
+        }
+      },
+      {
+        schema: 'forSale-sportingGoods_1-0-0',
+        translationName: {
+          id: 'schema.sportingGoods',
+          defaultMessage: 'Sporting Goods'
+        }
+      },
+      {
+        schema: 'forSale-tickets_1-0-0',
+        translationName: {
+          id: 'schema.tickets',
+          defaultMessage: 'Tickets'
+        }
+      },
+      {
+        schema: 'forSale-tools_1-0-0',
+        translationName: {
+          id: 'schema.tools',
+          defaultMessage: 'Tools'
+        }
+      },
+      {
+        schema: 'forSale-toysGames_1-0-0',
+        translationName: {
+          id: 'schema.toysGames',
+          defaultMessage: 'Toys and Games'
+        }
+      },
+      {
+        schema: 'forSale-trailers_1-0-0',
+        translationName: {
+          id: 'schema.trailers',
+          defaultMessage: 'Trailers'
+        }
+      },
+      {
+        schema: 'forSale-videoGaming_1-0-0',
+        translationName: {
+          id: 'schema.videoGaming',
+          defaultMessage: 'Video Gaming'
+        }
+      }
     ],
     services: [
-      'services-counseling_1-0-0',
-      'services-design_1-0-0',
-      'services-dogWalking_1-0-0',
-      'services-musicLessons_1-0-0',
-      'services-other_1-0-0',
-      'services-photography_1-0-0',
-      'services-salon_1-0-0',
-      'services-spa_1-0-0',
-      'services-transportation_1-0-0'
+      {
+        schema: 'services-counseling_1-0-0',
+        translationName: {
+          id: 'schema.counseling',
+          defaultMessage: 'Counseling'
+        }
+      },
+      {
+        schema: 'services-design_1-0-0',
+        translationName: {
+          id: 'schema.design',
+          defaultMessage: 'Design'
+        }
+      },
+      {
+        schema: 'services-dogWalking_1-0-0',
+        translationName: {
+          id: 'schema.dogWalking',
+          defaultMessage: 'Dog Walking'
+        }
+      },
+      {
+        schema: 'services-musicLessons_1-0-0',
+        translationName: {
+          id: 'schema.musicLessons',
+          defaultMessage: 'Music Lessons'
+        }
+      },
+      {
+        schema: 'services-other_1-0-0',
+        translationName: {
+          id: 'schema.other',
+          defaultMessage: 'Other'
+        }
+      },
+      {
+        schema: 'services-photography_1-0-0',
+        translationName: {
+          id: 'schema.photography',
+          defaultMessage: 'Photography'
+        }
+      },
+      {
+        schema: 'services-salon_1-0-0',
+        translationName: {
+          id: 'schema.salon',
+          defaultMessage: 'Salon'
+        }
+      },
+      {
+        schema: 'services-spa_1-0-0',
+        translationName: {
+          id: 'schema.spa',
+          defaultMessage: 'Spa'
+        }
+      },
+      {
+        schema: 'services-transportation_1-0-0',
+        translationName: {
+          id: 'schema.transportation',
+          defaultMessage: 'Transportation'
+        }
+      }
     ]
   }
 }
