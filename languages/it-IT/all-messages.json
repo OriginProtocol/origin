@@ -289,7 +289,7 @@
   "not-found.content": "La pagina che stai cercando non è più qui, forse non è mai stata qui. In ogni caso, ci scusiamo se è a causa nostra e ti perdoniamo se sei tu il responsabile :)",
   "notification.sellerOfferCreated": "Hai una nuova offerta.",
   "notification.sellerOfferFinalized": "La tua transazione è stata completata.",
-  "notification.sellerOfferDisputed": "E' Stato segnalato un problema con la tua transazione.",
+  "notification.sellerOfferDisputed": "E' stato segnalato un problema con la tua transazione.",
   "notification.sellerOfferWithdrawn": "Un'offerta sul tuo annuncio è stata ritirata.",
   "notification.sellerOfferRuling": "E' stata emessa una decisione sulla tua transazione contestata.",
   "notification.buyerOfferAccepted": "Un'offerta che hai fatto è stata accettata.",
