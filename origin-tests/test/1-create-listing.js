@@ -1,8 +1,10 @@
-const Origin = require('origin').default
+const chai = require('chai')
+const assert = chai.assert
 const Web3 = require('web3')
 const web3Provider = new Web3.providers.HttpProvider('http://origin:8545')
 const web3 = new Web3(web3Provider)
 
+const Origin = require('origin').default
 const listingValid = require('origin/test/fixtures/listing-valid.json')
 const listingData = Object.assign({}, listingValid)
 
@@ -22,12 +24,12 @@ describe('create listing and retrieve using discovery', () => {
     await this.origin.marketplace.createListing(listingData)
   })
 
-  it('should allow listing to be retrieved from discovery', () => {
+  it('should allow created listing to be retrieved from discovery', () => {
     const listings = this.origin.marketplace.getListings()
     assert.equal(listings.length, 6)
   })
 
-  it('should allow listing to be searched from discovery', () => {
+  it('should allow created listing to be searched from discovery', () => {
   })
 
 })
