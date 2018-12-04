@@ -17,25 +17,32 @@ class Messages extends Component {
   constructor(props) {
     super(props)
 
+    this.checkForSmallScreen = this.checkForSmallScreen.bind(this)
+
     this.state = {
-      selectedConversationId: null
+      selectedConversationId: null,
+      smallScreenOrDevice: false
     }
   }
 
   componentDidMount() {
     const { mobileDevice, match } = this.props
+    const smallSreenDetected = this.checkForSmallScreen()
+
     // try to detect the conversation before rendering
-    if (match.params.conversationId || !mobileDevice) {
+    if (match.params.conversationId || !smallSreenDetected) {
       this.detectSelectedConversation()
     }
+
+    window.addEventListener("resize", this.checkForSmallScreen);
   }
 
   componentDidUpdate(prevProps) {
-    const { conversations, match, mobileDevice } = this.props
-    const { selectedConversationId } = this.state
+    const { conversations, match } = this.props
+    const { selectedConversationId, smallScreenOrDevice } = this.state
     const { conversationId } = match.params
 
-    if (mobileDevice) return
+    if (smallScreenOrDevice) return
 
     // on route change
     if (
@@ -51,28 +58,50 @@ class Messages extends Component {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.checkForSmallScreen);
+  }
+
+  checkForSmallScreen() {
+    const { mobileDevice, showMainNav } = this.props
+
+    const smallScreen = window.innerWidth <= 991
+    const smallScreenOrDevice = smallScreen || mobileDevice
+    const stateChanged = (this.state && this.state.smallScreenOrDevice)
+
+    if (smallScreenOrDevice && !stateChanged) {
+      showMainNav(false)
+    }
+    this.setState({ smallScreenOrDevice })
+
+    return smallScreenOrDevice
+  }
+
   detectSelectedConversation() {
-    const { match, conversations, mobileDevice, showMainNav } = this.props
+    const { match, conversations, showMainNav } = this.props
+    const { smallScreenOrDevice } = this.state
+
     const selectedConversationId =
       match.params.conversationId ||
       (conversations[0] || {}).key
 
-    if (mobileDevice && selectedConversationId) showMainNav(false)
+    if (smallScreenOrDevice && selectedConversationId) showMainNav(false)
     selectedConversationId && this.setState({ selectedConversationId })
   }
 
   handleConversationSelect(selectedConversationId = '') {
     const { mobileDevice } = this.props
+    const { smallScreenOrDevice } = this.state
 
-    const showMainNav = (mobileDevice && selectedConversationId.length) ? false : true
+    const showMainNav = (smallScreenOrDevice && selectedConversationId.length) ? false : true
 
     this.props.showMainNav(showMainNav)
     this.setState({ selectedConversationId })
   }
 
   render() {
-    const { conversations, messages, mobileDevice, users, wallet } = this.props
-    const { selectedConversationId } = this.state
+    const { conversations, messages, users, wallet } = this.props
+    const { selectedConversationId, smallScreenOrDevice } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
       .sort((a, b) => (a.created < b.created ? -1 : 1))
@@ -89,8 +118,6 @@ class Messages extends Component {
     const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
     const counterpartyProfile = counterparty && counterparty.profile
     const counterpartyName = abbreviateName(counterparty) || truncateAddress(formattedAddress(counterpartyAddress))
-    const smallScreen = window.innerWidth <= 991
-    const smallScreenOrDevice = smallScreen || mobileDevice
 
     if (smallScreenOrDevice) {
       if (selectedConversationId && selectedConversationId.length) {

@@ -36,12 +36,23 @@ class Message extends Component {
     const { address, profile } = user
     const userName = abbreviateName(user)
     const currentUser = web3Account === user.address
+    const fullAddress = formattedAddress(address)
+    const userAddress = truncateAddress(fullAddress)
+
+    const smallScreen = window.innerWidth <= 991
+    const smallScreenOrDevice = smallScreen || mobileDevice
     const chatContent = this.renderContent()
     const correctSide = currentUser ? 'right' : 'left'
     const bubbleAlignment = currentUser ? 'justify-content-end' : 'justify-content-start'
     const bubbleColor = currentUser ? 'user' : ''
-    const fullAddress = formattedAddress(address)
-    const userAddress = truncateAddress(fullAddress)
+    const mobileWidth = smallScreenOrDevice ? 'mobile-width' : ''
+
+    const UserInfo = () => (
+      <Fragment>
+        <div className={`name text-truncate align-self-center ${mobileWidth}`}>{userName}</div>
+        <span className="address">{userAddress}</span>
+      </Fragment>
+    )
 
     return (
       <div className="message-section">
@@ -53,7 +64,7 @@ class Message extends Component {
         <div className="d-flex message">
           <div className={`content-container d-flex ${bubbleAlignment}`}>
             <div className="align-self-end conversation-avatar">
-              {(!mobileDevice && correctSide === 'left') && (
+              {(!smallScreenOrDevice && correctSide === 'left') && (
                 <Link to={`/users/${fullAddress}`}>
                   <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
                 </Link>
@@ -61,24 +72,18 @@ class Message extends Component {
             </div>
             <div className={`chat-bubble tail-${correctSide} ${bubbleColor}`}>
               <div className="chat-text">
-                <div className="sender">
-                  {currentUser ? (
-                    <Fragment>
-                      <div className="name text-truncate">{userName}</div>
-                      <span className="address">{userAddress}</span>
-                    </Fragment>
-                  ) : (
-                    <Link to={`/users/${fullAddress}`}>
-                      <div className="name text-truncate">{userName}</div>
-                      <span className="address">{userAddress}</span>
+                <div className="sender d-flex flex-row justify-content-start">
+                  {currentUser ? <UserInfo /> : (
+                    <Link to={`/users/${fullAddress}`} className="d-flex flex-row justify-content-start">
+                      <UserInfo />
                     </Link>
                   )}
-                  <p className="chat-content">{chatContent}</p>
                 </div>
+                <p className="chat-content">{chatContent}</p>
               </div>
             </div>
             <div className="align-self-end conversation-avatar right">
-              {(!mobileDevice && correctSide === 'right') && (
+              {(!smallScreenOrDevice && correctSide === 'right') && (
                 <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
               )}
             </div>

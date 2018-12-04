@@ -3887,10 +3887,6 @@ form .stars img {
   padding-left: 64px;
 }
 
-.conversation .chat-bubble .chat-text .name {
-  display: inline;
-}
-
 .conversation .conversation-avatar {
   padding-bottom: 10px;
 }
@@ -4390,6 +4386,12 @@ form .stars img {
 
 .chat-text .name {
   color: var(--dark);
+  height: 100%;
+  line-height: 26px;
+}
+
+.chat-text .name.mobile-width {
+  width: 45%;
 }
 
 .chat-text .chat-content {
