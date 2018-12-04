@@ -1,6 +1,5 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
-[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/origin-dapp/LICENSE)
-[![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin-dapp/master.svg?style=flat-square&colorA=111d28)](https://travis-ci.org/OriginProtocol/origin-dapp)
+[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/origin/LICENSE)
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
@@ -9,6 +8,10 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 Origin has two development setups. One is the "light" version and consists of only our DApp and a local IPFS server and blockchain. It is intended to be easy to get started with but lacks some of the components of our stack making some of the DApp functionality unavailable.
 
 The more full featured development environment uses Docker Compose to orchestrate several containers and provides access to the full suite of Origin feaetures, include messaging, browser notifications, and attestation services.
+
+## About the Origin repository
+
+Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common depdencies to the root of the monorepo on installation.
 
 ## Using NPM & Lerna
 
