@@ -11,6 +11,7 @@ import PurchaseProgress from 'components/purchase-progress'
 import UnnamedUser from 'components/unnamed-user'
 
 import { offerStatusToStep } from 'utils/offer'
+import { formattedAddress } from 'utils/user'
 
 class MySaleCard extends Component {
   constructor(props) {
@@ -93,7 +94,7 @@ class MySaleCard extends Component {
                   />
                 )}
               </h2>
-              <p className="address text-muted">{user.address}</p>
+              <p className="address text-muted">{formattedAddress(user.address)}</p>
               <div className="d-flex">
                 <p className="price">
                   <FormattedMessage

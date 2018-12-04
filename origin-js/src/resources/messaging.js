@@ -591,7 +591,10 @@ class Messaging {
   }
 
   generateRoomId(converser1, converser2) {
-    const keys = [converser1, converser2]
+    const keys = [
+      this.web3.utils.toChecksumAddress(converser1),
+      this.web3.utils.toChecksumAddress(converser2)
+    ]
     keys.sort()
 
     return keys.join('-')
@@ -864,19 +867,21 @@ class Messaging {
 
   canConverseWith(remote_eth_address) {
     const { account_key, global_keys } = this
+    const address = this.web3.utils.toChecksumAddress(remote_eth_address)
 
     return (
       this.canSendMessages() &&
-      account_key !== remote_eth_address &&
+      account_key !== address &&
       global_keys &&
-      global_keys.get(remote_eth_address)
+      global_keys.get(address)
     )
   }
 
   canReceiveMessages(remote_eth_address) {
     const { global_keys } = this
+    const address = this.web3.utils.toChecksumAddress(remote_eth_address)
 
-    return global_keys && global_keys.get(remote_eth_address)
+    return global_keys && global_keys.get(address)
   }
 
   canSendMessages() {
