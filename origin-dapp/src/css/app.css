@@ -3843,7 +3843,12 @@ form .stars img {
   height: 60px;
 }
 
-.mobile-messaging .back i{
+.mobile-messaging .back .avatar-container {
+  height: 30px;
+  width: 30px;
+}
+
+.mobile-messaging .back i {
   width: 18px;
   height: 18px;
   border-radius: 3px;
@@ -3854,8 +3859,8 @@ form .stars img {
 }
 
 .mobile-messaging .back i.icon-arrow-left {
-  margin-left: 30px;
-  margin-top: 19px;
+  margin-left: 18px;
+  margin-top: 20px;
   transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
 }
@@ -3867,8 +3872,13 @@ form .stars img {
   font-weight: bold;
   color: var(--white);
   margin-bottom: 5px;
-  width: 60%;
-  text-align: center;
+  width: 34%;
+  text-align: left;
+  line-height: 57px;
+}
+
+.mobile-messaging .nav-avatar {
+  padding-left: 64px;
 }
 
 .conversation .chat-bubble .chat-text .name {

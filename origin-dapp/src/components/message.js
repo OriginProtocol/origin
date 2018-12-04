@@ -8,19 +8,10 @@ import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
 
+import truncateWithCenterEllipsis, { abbreviatedName } from 'utils/stringUtils'
+
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
 const MAX_ADDRESS_LENGTH = 9
-
-function truncateWithCenterEllipsis(fullStr = '', strLen) {
-  if (fullStr.length <= MAX_ADDRESS_LENGTH) return fullStr;
-  const separator = '...'
-  const frontChars = 5
-  const backChars = 4
-
-  return fullStr.substr(0, frontChars)
-    + separator
-    + fullStr.substr(fullStr.length - backChars)
-}
 
 class Message extends Component {
   componentDidMount() {
@@ -44,6 +35,7 @@ class Message extends Component {
     } = this.props
     const { created, hash } = message
     const { address, fullName, profile } = user
+    const userName = abbreviatedName(user)
     const currentUser = web3Account === user.address
     const chatContent = this.renderContent()
     const chatTail = currentUser ? 'tail-right' : 'tail-left'
@@ -62,7 +54,7 @@ class Message extends Component {
           <div className={`chat-bubble ${chatTail} ${bubbleColor}`}>
             <div className="chat-text">
               <div className="sender">
-                {fullName && <div className="name text-truncate">{fullName}</div>}
+                {userName && <div className="name text-truncate">{userName}</div>}
                 <span className="address">{truncateWithCenterEllipsis(address)}</span>
                 <p className="chat-content">{chatContent}</p>
               </div>

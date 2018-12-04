@@ -8,6 +8,7 @@ import Avatar from 'components/avatar'
 import { showMainNav } from 'actions/App'
 
 import groupByArray from 'utils/groupByArray'
+import truncateWithCenterEllipsis, { abbreviatedName } from 'utils/stringUtils'
 
 import origin from '../services/origin'
 
@@ -87,19 +88,25 @@ class Messages extends Component {
         ? recipients.find(addr => addr !== senderAddress)
         : senderAddress
     const counterparty = users.find(u => u.address === counterpartyAddress) || {}
-    const counterpartyName = counterparty.fullName || counterpartyAddress
+    const counterpartyName = abbreviatedName(counterparty) || truncateWithCenterEllipsis(counterpartyAddress)
     const counterpartyProfile = counterparty && counterparty.profile
 
     if (mobileDevice) {
       if (selectedConversationId && selectedConversationId.length) {
         return (
           <div className="mobile-messaging messages-wrapper">
-            <div className="back d-flex flex-row justify-content-center align-items-center"
+            <div className="back d-flex flex-row justify-content-start"
               onClick={() => this.handleConversationSelect()}
             >
-              <i className="icon-arrow-left align-self-start mr-auto"></i>
-              <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
-              <span className="counterparty text-truncate mr-auto">{counterpartyName}</span>
+              <div className="align-self-start">
+                <i className="icon-arrow-left align-self-start mr-auto"></i>
+              </div>
+              <div className="align-self-center nav-avatar">
+                <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
+              </div>
+              <div>
+                <span className="counterparty text-truncate">{counterpartyName}</span>
+              </div>
             </div>
             <div className="conversation-col d-flex flex-column">
               <Conversation
