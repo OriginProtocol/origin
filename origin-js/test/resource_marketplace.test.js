@@ -923,11 +923,8 @@ describe('Marketplace Resource', function() {
           { commission: { currency: 'OGN', amount: '1' } }
         )
         await marketplace.makeOffer('999-000-1', offer1Data)
-        let offer1 = await marketplace.getOffer('999-000-1-0')
-        expect(offer1.status).to.equal('created')
-
         await marketplace.acceptOffer('999-000-1-0')
-        offer1 = await marketplace.getOffer('999-000-1-0')
+        const offer1 = await marketplace.getOffer('999-000-1-0')
         expect(offer1.status).to.equal('accepted')
         validateOffer(offer1)
 
@@ -937,12 +934,8 @@ describe('Marketplace Resource', function() {
           { commission: { currency: 'OGN', amount: '0.6' } }
         )
         await marketplace.makeOffer('999-000-1', offer2Data)
-        let offer2 = await marketplace.getOffer('999-000-1-1')
-        expect(offer2.status).to.equal('created')
-        validateOffer(offer2)
-
         await marketplace.acceptOffer('999-000-1-1')
-        offer2 = await marketplace.getOffer('999-000-1-1')
+        const offer2 = await marketplace.getOffer('999-000-1-1')
         expect(offer2.status).to.equal('accepted')
         validateOffer(offer2)
 
@@ -952,16 +945,18 @@ describe('Marketplace Resource', function() {
           { commission: { currency: 'OGN', amount: '0' } }
         )
         await marketplace.makeOffer('999-000-1', offer3Data)
-        let offer3 = await marketplace.getOffer('999-000-1-2')
-        expect(offer3.status).to.equal('created')
-        validateOffer(offer3)
-
         await marketplace.acceptOffer('999-000-1-2')
-        offer3 = await marketplace.getOffer('999-000-1-2')
+        const offer3 = await marketplace.getOffer('999-000-1-2')
         expect(offer3.status).to.equal('accepted')
         validateOffer(offer3)
+
+        const offers = await marketplace.getOffers('999-000-1')
+        expect(offers.length).to.equal(3)
+        expect(offers[0].id).to.equal('999-000-1-0')
+        expect(offers[1].id).to.equal('999-000-1-1')
+        expect(offers[2].id).to.equal('999-000-1-2')
       })
-    })
+    }).timeout(30000)
 
     describe('getOffers', () => {
       it('should filter offers with insufficient per-unit commission', async () => {
