@@ -159,6 +159,7 @@ services:
       - ./origin-dapp/public:/app/origin-dapp/public
       - ./origin-dapp/translations:/app/origin-dapp/translations
       - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
+      - ./origin-dapp/translations:/app/origin-dapp/translations
       # Set the envfile from the local envfile
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
       - ipfs:/app/ipfs
