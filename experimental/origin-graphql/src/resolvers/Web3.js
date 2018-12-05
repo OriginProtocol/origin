@@ -1,4 +1,5 @@
 import contracts from '../contracts'
+import get from 'lodash/get'
 
 export default {
   networkId: () => web3.eth.net.getId(),
@@ -39,7 +40,22 @@ export default {
         .catch(() => resolve(null))
     })
   },
-  metaMaskEnabled: () => (contracts.metaMaskEnabled ? true : false),
+  useMetaMask: () => (contracts.metaMaskEnabled ? true : false),
+  metaMaskEnabled: async () => {
+    const fn = get(window, 'ethereum._metamask.isEnabled')
+    if (!fn) return false
+    return await fn()
+  },
+  metaMaskApproved: async () => {
+    const fn = get(window, 'ethereum._metamask.isApproved')
+    if (!fn) return false
+    return await fn()
+  },
+  metaMaskUnlocked: async () => {
+    const fn = get(window, 'ethereum._metamask.isUnlocked')
+    if (!fn) return false
+    return await fn()
+  },
   metaMaskAccount: async () => {
     if (!contracts.metaMask) return null
     const accounts = await contracts.metaMask.eth.getAccounts()

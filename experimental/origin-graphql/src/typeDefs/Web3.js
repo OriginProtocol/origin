@@ -46,8 +46,11 @@ export default `
     account(id: ID!): Account
     defaultAccount: Account
     transaction(id: ID!): Transaction
+    useMetaMask: Boolean
     metaMaskAvailable: Boolean
     metaMaskEnabled: Boolean
+    metaMaskApproved: Boolean
+    metaMaskUnlocked: Boolean
     metaMaskAccount: Account
     metaMaskNetworkId: Int
   }

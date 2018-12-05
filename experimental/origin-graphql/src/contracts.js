@@ -275,6 +275,7 @@ function setMetaMask() {
     context.ognExec = context.ogn
     context.tokens.forEach(token => (token.contractExec = token.contract))
   }
+  context.messaging.web3 = context.web3Exec
 }
 
 export function toggleMetaMask(enabled) {

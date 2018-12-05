@@ -1,6 +1,7 @@
 import contracts from '../contracts'
 
-let ethPrice, marketplaceExists = {}
+let ethPrice,
+  marketplaceExists = {}
 
 export default {
   config: () => contracts.net,
@@ -54,11 +55,15 @@ export default {
     }),
   messaging: (_, args) =>
     new Promise(async resolve => {
+      let id = args.id
+      if (id === 'defaultAccount') {
+        const accounts = await contracts.metaMask.eth.getAccounts()
+        if (!accounts || !accounts.length) return null
+        id = accounts[0]
+      }
       contracts.messaging.events.once('initialized', async () => {
-        setTimeout(() => {
-          resolve({ id: args.id })
-        }, 500)
+        setTimeout(() => resolve({ id }), 500)
       })
-      await contracts.messaging.init(args.id)
+      await contracts.messaging.init(id)
     })
 }
