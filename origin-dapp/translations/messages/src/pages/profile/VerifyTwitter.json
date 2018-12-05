@@ -8,11 +8,11 @@
     "defaultMessage": "Other users will know that you have a verified Twitter account and your username will be published on the blockchain. We will never tweet on your behalf."
   },
   {
-    "id": "VerifyTwitter.continue",
-    "defaultMessage": "Continue"
-  },
-  {
     "id": "VerifyTwitter.cancel",
     "defaultMessage": "Cancel"
+  },
+  {
+    "id": "VerifyTwitter.continue",
+    "defaultMessage": "Continue"
   }
 ]
