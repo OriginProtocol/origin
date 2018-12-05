@@ -1,10 +1,10 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["dappSchemaId", "listingType", "category", "slotLength", "slotLengthUnit", "name", "description",],
+  "required": ["dappSchemaId", "listingType", "category", "slotLength", "slotLengthUnit", "name", "description"],
   "properties": {
     "dappSchemaId": {
-      "const": "services-dogWalking-1-0-0"
+      "const": "services-other-1-0-0"
     },
     "listingType": {
       "const": "fractional"
