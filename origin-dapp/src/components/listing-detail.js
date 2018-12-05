@@ -19,7 +19,6 @@ import {
 
 import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Calendar from 'components/calendar'
-import Modal from 'components/modal'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
