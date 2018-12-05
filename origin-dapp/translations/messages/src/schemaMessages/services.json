@@ -20,7 +20,7 @@
     "defaultMessage": "Price in ETH"
   },
   {
-    "id": "schema.services.quantity",
+    "id": "schema.services.unitsTotal",
     "defaultMessage": "Quantity"
   },
   {

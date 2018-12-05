@@ -9,6 +9,7 @@ import { showAlert } from 'actions/Alert'
 
 import { handleNotificationsSubscription } from 'actions/Activation'
 import { storeWeb3Intent } from 'actions/App'
+import { setMultiUnitListing } from 'actions/Listing'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
@@ -214,6 +215,7 @@ class ListingCreate extends Component {
             selectedSchema: schemaJson
           }
         }
+
         this.uiSchema = {
           examples: {
             'ui:widget': 'hidden'
@@ -221,7 +223,7 @@ class ListingCreate extends Component {
           sellerSteps: {
             'ui:widget': 'hidden'
           },
-          quantity: {
+          unitsTotal: {
             'ui:field': QuantityField
           },
           price: {
@@ -361,6 +363,8 @@ class ListingCreate extends Component {
         }
       }
     })
+
+    this.props.setMultiUnitListing(formData.unitsTotal !== undefined && formData.unitsTotal > 1)
   }
 
   checkOgnBalance() {
@@ -583,9 +587,10 @@ class ListingCreate extends Component {
                   schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
-                  onError={() =>
+                  onError={(error) => {
+                    console.error('Create listing form has errors: ', error)
                     this.setState({ showDetailsFormErrorMsg: true })
-                  }
+                  }}
                   onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
                 >
@@ -1219,7 +1224,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateTransaction(hash, confirmationCount)),
   upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
   getOgnBalance: () => dispatch(getOgnBalance()),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  setMultiUnitListing: (isMultiUnitListing) => dispatch(setMultiUnitListing(isMultiUnitListing))
 })
 
 export default withRouter(

@@ -21,8 +21,8 @@ export default defineMessages({
     id: 'schema.forSale.priceInETH',
     defaultMessage: 'Price in ETH'
   },
-  'schema.forSale.quantity': {
-    id: 'schema.forSale.quantity',
+  'schema.forSale.unitsTotal': {
+    id: 'schema.forSale.unitsTotal',
     defaultMessage: 'Quantity'
   },
   'schema.forSale.selectPhotos': {

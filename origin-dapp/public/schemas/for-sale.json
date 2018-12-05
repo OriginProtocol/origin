@@ -1,7 +1,7 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["name","category","description","quantity","price"],
+  "required": ["name","category","description","unitsTotal","price"],
   "properties": {
     "name": {
       "type": "string",
@@ -76,9 +76,9 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "quantity": {
+    "unitsTotal": {
       "type": "number",
-      "title": "schema.forSale.quantity"
+      "title": "schema.forSale.unitsTotal"
     },
     "price": {
       "type": "number",

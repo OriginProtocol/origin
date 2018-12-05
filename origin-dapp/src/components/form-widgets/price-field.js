@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getFiatPrice } from 'utils/priceUtils'
-import { FormattedMessage } from 'react-intl'
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 
 class PriceField extends Component {
   constructor(props) {
@@ -19,6 +19,17 @@ class PriceField extends Component {
       enumeratedPrice &&
       enumeratedPrice.length === 1 &&
       enumeratedPrice[0] === 0
+
+    this.intlMessages = defineMessages({
+      'singularPrice': {
+        id: 'schema.priceInEth.singular',
+        defaultMessage: 'Price in ETH'
+      },
+      'multiUnitPrice': {
+        id: 'schema.priceInEth.multiUnit',
+        defaultMessage: 'Price (per unit) in ETH'
+      }
+    })
   }
 
   componentDidMount() {
@@ -59,7 +70,13 @@ class PriceField extends Component {
       !this.priceHidden && (
         <div className="price-field">
           <label className="control-label" htmlFor="root_price">
-            {this.props.schema.title}
+            {
+              this.props.intl.formatMessage(
+                this.props.isMultiUnitListing ?
+                  this.intlMessages.multiUnitPrice :
+                  this.intlMessages.singularPrice
+              )
+            }
             {this.props.required && <span className="required">*</span>}
           </label>
           <div className="row">
@@ -92,8 +109,8 @@ class PriceField extends Component {
           </div>
           <p className="help-block">
             <FormattedMessage
-              id={'price-field.price-help'}
-              defaultMessage={'The price is always in {currency}. '}
+              id={'price-field.price-help-v1'}
+              defaultMessage={'Listings are always priced in {currency}. '}
               values={{
                 currency: (
                   <a
@@ -120,8 +137,9 @@ class PriceField extends Component {
   }
 }
 
-const mapStateToProps = ({ exchangeRates }) => ({
-  exchangeRates
+const mapStateToProps = ({ exchangeRates, listings }) => ({
+  exchangeRates,
+  isMultiUnitListing: listings.isMultiUnitListing
 })
 
-export default connect(mapStateToProps)(PriceField)
+export default connect(mapStateToProps)(injectIntl(PriceField))

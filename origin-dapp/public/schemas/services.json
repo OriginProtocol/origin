@@ -1,7 +1,7 @@
 {
   "$schema":"http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["name","category","description", "quantity"],
+  "required": ["name","category","description", "unitsTotal"],
   "properties": {
     "name": {
       "type": "string",
@@ -55,9 +55,9 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "quantity": {
+    "unitsTotal": {
       "type": "number",
-      "title": "schema.services.quantity"
+      "title": "schema.services.unitsTotal"
     },
     "price": {
       "type": "number",

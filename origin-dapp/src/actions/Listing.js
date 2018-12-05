@@ -8,10 +8,18 @@ export const ListingConstants = keyMirror(
   {
     FETCH_IDS: null,
     FETCH_IDS_SUCCESS: null,
-    FETCH_IDS_ERROR: null
+    FETCH_IDS_ERROR: null,
+    IS_MULTI_UNIT_LISTING: null
   },
   'LISTING'
 )
+
+export function setMultiUnitListing(isMultiUnitListing) {
+  return {
+    type: ListingConstants.IS_MULTI_UNIT_LISTING,
+    isMultiUnitListing: isMultiUnitListing
+  }
+}
 
 export function getListingIds() {
   return async function(dispatch) {
