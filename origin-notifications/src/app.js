@@ -122,8 +122,8 @@ app.post('/events', async (req, res) => {
   // waiting for processing of the event.
   res.sendStatus(200)
 
-  if (!listing || !buyer.address || !seller.address) {
-    console.log(`Error: Missing listing, buyer or seller address. Skipping ${eventDetails}`)
+  if (!listing || (!seller.address && !buyer.address)) {
+    console.log(`Error: Missing data. Skipping ${eventDetails}`)
     return
   }
 
@@ -135,8 +135,8 @@ app.post('/events', async (req, res) => {
   }
 
   const party = decoded.party.toLowerCase()
-  const buyerAddress = buyer.address.toLowerCase()
-  const sellerAddress = seller.address.toLowerCase()
+  const buyerAddress = buyer.address ? buyer.address.toLowerCase() : null
+  const sellerAddress = seller.address ? seller.address.toLowerCase() : null
 
   if (!processableEvent(eventName)) {
     console.log(`Info: Not a processable event. Skipping ${eventDetails}`)
@@ -165,7 +165,7 @@ app.post('/events', async (req, res) => {
   }).forEach(async s => {
     try {
       const recipient = s.account
-      const recipientRole = (recipient === buyerAddress) ? 'buyer' : 'seller'
+      const recipientRole = (recipient === sellerAddress) ? 'seller' : 'buyer'
 
       const message = getNotificationMessage(eventName, party, recipient, recipientRole)
       if (!message) {
