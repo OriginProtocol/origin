@@ -26,10 +26,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.1.5",
+    "@babel/core": "^7.2.0",
     "@babel/polyfill": "^7.0.0",
     "@babel/register": "^7.0.0",
-    "ajv": "^6.5.5",
+    "ajv": "^6.6.1",
     "ethereumjs-abi": "^0.6.5",
     "openzeppelin-solidity": "^1.10.0",
     "per-env": "^1.0.2",
@@ -39,10 +39,10 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/plugin-transform-runtime": "^7.1.0",
-    "@babel/preset-env": "^7.1.6",
-    "@babel/runtime": "^7.1.2",
+    "@babel/cli": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/runtime": "^7.2.0",
     "bignumber.js": "^8.0.1",
     "chai": "^4.2.0",
     "chai-bignumber": "^3.0.0",

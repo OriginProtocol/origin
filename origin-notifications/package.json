@@ -24,19 +24,19 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^6.1.0",
+    "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
     "express": "^4.16.4",
     "per-env": "^1.0.2",
-    "pg": "^7.5.0",
+    "pg": "^7.7.1",
     "pg-hstore": "^2.3.2",
-    "rate-limiter-flexible": "^0.18.5",
+    "rate-limiter-flexible": "^0.19.4",
     "sequelize": "^5.0.0-beta.14",
-    "sequelize-cli": "^5.1.0",
+    "sequelize-cli": "^5.4.0",
     "web-push": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^5.9.0",
-    "nodemon": "^1.18.6"
+    "nodemon": "^1.18.7"
   }
 }

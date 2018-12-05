@@ -23,17 +23,17 @@
   "license": "MIT",
   "dependencies": {
     "bignumber.js": "^8.0.1",
-    "dotenv": "^6.1.0",
+    "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
     "express": "^4.16.4",
     "origin-contracts": "^0.8.6",
     "per-env": "^1.0.2",
-    "rate-limiter-flexible": "^0.18.5",
+    "rate-limiter-flexible": "^0.19.4",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "nodemon": "^1.18.6"
+    "nodemon": "^1.18.7"
   }
 }
