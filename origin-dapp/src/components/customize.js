@@ -55,7 +55,6 @@ const mapDispatchToProps = dispatch => ({
   fetchConfig: url => dispatch(fetchConfig(url))
 })
 
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
