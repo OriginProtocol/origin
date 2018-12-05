@@ -206,6 +206,7 @@ class ListingCreate extends Component {
 
   handleSchemaSelection(selectedSchemaType) {
     const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
+    this.props.setMultiUnitListing(false)
 
     return fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
@@ -319,7 +320,13 @@ class ListingCreate extends Component {
       step: this.STEP.PICK_SCHEMA,
       selectedSchema: null,
       schemaFetched: false,
-      formData: null
+      formListing: {
+        ...this.state.formListing,
+        formData: {
+          ...this.state.formListing.formData,
+          unitsTotal: 1
+        }
+      }
     })
   }
 
@@ -364,7 +371,10 @@ class ListingCreate extends Component {
       }
     })
 
-    this.props.setMultiUnitListing(formData.unitsTotal !== undefined && formData.unitsTotal > 1)
+    const becomesMultiUnitListing = formData.unitsTotal !== undefined && formData.unitsTotal > 1
+    // only fire message if isMultiUnitListing flag changes
+    if (this.props.isMultiUnitListing !== becomesMultiUnitListing)
+      this.props.setMultiUnitListing(becomesMultiUnitListing)
   }
 
   checkOgnBalance() {
@@ -1206,14 +1216,15 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
+const mapStateToProps = ({ activation, app, exchangeRates, wallet, listings }) => {
   return {
     exchangeRates,
     messagingEnabled: activation.messaging.enabled,
     pushNotificationsSupported: activation.notifications.pushEnabled,
     serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,
-    web3Intent: app.web3.intent
+    web3Intent: app.web3.intent,
+    isMultiUnitListing: listings.isMultiUnitListing
   }
 }
 
