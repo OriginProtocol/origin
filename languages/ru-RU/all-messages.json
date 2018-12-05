@@ -287,7 +287,7 @@
   "navbar.addListing": "Добавить объявление",
   "not-found.heading": "Как я тут оказался?",
   "not-found.content": "Страницы, которую вы ищете, по этому адресу больше нет, а возможно, никогда и не было! В любом случае мы приносим свои извинения, если эта ошибка возникла по нашей вине, и не имеем претензий к вам, если по вашей :-)",
-  "notification.sellerOfferCreated": "You have a new offer.",
+  "notification.sellerOfferCreated": "Поступило новое предложение.",
   "notification.sellerOfferFinalized": "Your transaction has been completed.",
   "notification.sellerOfferDisputed": "A problem has been reported with your transaction.",
   "notification.sellerOfferWithdrawn": "An offer on your listing has been withdrawn.",
