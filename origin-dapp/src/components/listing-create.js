@@ -18,6 +18,7 @@ import { getOgnBalance } from 'actions/Wallet'
 import BoostSlider from 'components/boost-slider'
 import PhotoPicker from 'components/form-widgets/photo-picker'
 import PriceField from 'components/form-widgets/price-field'
+import QuantityField from 'components/form-widgets/quantity-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
 
@@ -219,6 +220,9 @@ class ListingCreate extends Component {
           },
           sellerSteps: {
             'ui:widget': 'hidden'
+          },
+          quantity: {
+            'ui:field': QuantityField
           },
           price: {
             'ui:field': PriceField

@@ -20,6 +20,10 @@
     "defaultMessage": "Price in ETH"
   },
   {
+    "id": "schema.services.quantity",
+    "defaultMessage": "Quantity"
+  },
+  {
     "id": "schema.services.selectPhotos",
     "defaultMessage": "Select photos"
   },

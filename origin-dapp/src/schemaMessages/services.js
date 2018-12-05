@@ -21,6 +21,10 @@ export default defineMessages({
     id: 'schema.services.priceInETH',
     defaultMessage: 'Price in ETH'
   },
+  'schema.services.quantity': {
+    id: 'schema.services.quantity',
+    defaultMessage: 'Quantity'
+  },
   'schema.services.selectPhotos': {
     id: 'schema.services.selectPhotos',
     defaultMessage: 'Select photos'
