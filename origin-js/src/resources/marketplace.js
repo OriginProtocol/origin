@@ -210,6 +210,7 @@ export default class Marketplace {
       return await this.discoveryService.getOffers(listingId, opts)
     }
 
+    // TODO: Return just the IDs of validated offers by moving this below.
     const offerIds = await this.resolver.getOfferIds(listingId, opts)
     if (opts.idsOnly) {
       return offerIds
