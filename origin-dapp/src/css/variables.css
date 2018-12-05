@@ -2,6 +2,8 @@
   --default-font: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
   --heading-font: 'Poppins', 'Helvetica Neue', 'Arial', sans-serif;
 
+  --light-footer: #f4f6f7;
+  --background: #ffffff;
   --dark: #111d28;
   --dark-two: #213040;
   --light: #c2cbd3;
@@ -39,7 +41,6 @@
   --dark-red: #a2686c;
   --light-red: #fbdbdb;
   --dark-purple: #a27cff;
-
   --default-radius: 5px;
 
   /* Boost Colors */
