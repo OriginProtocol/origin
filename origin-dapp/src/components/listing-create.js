@@ -17,6 +17,7 @@ import {
 import { getOgnBalance } from 'actions/Wallet'
 
 import BoostSlider from 'components/boost-slider'
+import StepsProgress from 'components/steps-progress'
 import PhotoPicker from 'components/form-widgets/photo-picker'
 import PriceField from 'components/form-widgets/price-field'
 import QuantityField from 'components/form-widgets/quantity-field'
@@ -474,6 +475,7 @@ class ListingCreate extends Component {
 
   render() {
     const { wallet, intl } = this.props
+    const totalNumberOfSteps = 4
     const {
       formListing,
       fractionalTimeIncrement,
@@ -513,6 +515,10 @@ class ListingCreate extends Component {
                     }
                   />
                 </h2>
+                <StepsProgress
+                  stepsTotal={totalNumberOfSteps}
+                  stepCurrent={step}
+                />
                 <div className="schema-options">
                   {this.schemaList.map(schema => (
                     <div
@@ -593,6 +599,10 @@ class ListingCreate extends Component {
                     defaultMessage={'Create Your Listing'}
                   />
                 </h2>
+                <StepsProgress
+                  stepsTotal={totalNumberOfSteps}
+                  stepCurrent={step}
+                />
                 <Form
                   schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
@@ -673,6 +683,10 @@ class ListingCreate extends Component {
                     defaultMessage={'Boost Your Listing'}
                   />
                 </h2>
+                <StepsProgress
+                  stepsTotal={totalNumberOfSteps}
+                  stepCurrent={step}
+                />
                 <p className="help-block">
                   <FormattedMessage
                     id={'listing-create.form-help-boost'}
@@ -773,6 +787,10 @@ class ListingCreate extends Component {
                     defaultMessage={'Review your listing'}
                   />
                 </h2>
+                <StepsProgress
+                  stepsTotal={totalNumberOfSteps}
+                  stepCurrent={step}
+                />
                 <div className="preview">
                   <div className="row">
                     <div className="col-md-3">
