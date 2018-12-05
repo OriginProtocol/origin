@@ -128,15 +128,28 @@ class VerifyPhone extends Component {
           )}
           {this.state.mode === 'phone' && this.renderPhoneForm()}
           {this.state.mode === 'code' && this.renderCodeForm()}
-          <div className="button-container">
-            <button type="submit" className="btn btn-clear">
+          <div className="button-container d-md-flex flex-md-row justify-content-md-center pt-4">
+            <button
+              className="btn btn-clear d-md-none col-5 col-sm-4"
+              data-modal="phone"
+              onClick={this.onCancel}
+              >
+              <FormattedMessage
+                id={'VerifyPhone.cancel'}
+                defaultMessage={'Cancel'}
+              />
+            </button>
+            <button
+              type="submit"
+              className="btn btn-clear col-5 col-sm-4"
+            >
               <FormattedMessage
                 id={'VerifyPhone.continue'}
                 defaultMessage={'Continue'}
               />
             </button>
           </div>
-          <div className="link-container">
+          <div className="link-container d-none d-md-block">
             <a href="#" data-modal="phone" onClick={this.onCancel}>
               <FormattedMessage
                 id={'VerifyPhone.cancel'}
