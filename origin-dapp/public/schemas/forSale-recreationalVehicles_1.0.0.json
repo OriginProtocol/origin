@@ -8,7 +8,7 @@
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "forSale-recreationalVehicles_1.0.0"
+      "const": "https://dapp.originprotocol.com/schemas/forSale-recreationalVehicles_1.0.0.json"
     },
     "listingType": {
       "const": "unit"

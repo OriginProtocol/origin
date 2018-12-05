@@ -7,7 +7,7 @@
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "announcements-activity_1.0.0"
+      "const": "https://dapp.originprotocol.com/schemas/announcements-activity_1.0.0.json"
     },
     "listingType": {
       "const": "unit"

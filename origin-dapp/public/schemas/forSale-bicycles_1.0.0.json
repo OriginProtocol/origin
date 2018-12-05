@@ -8,7 +8,7 @@
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "forSale-bicycles_1.0.0"
+      "const": "https://dapp.originprotocol.com/schemas/forSale-bicycles_1.0.0.json"
     },
     "listingType": {
       "const": "unit"

@@ -7,7 +7,7 @@
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "announcements-localNews_1.0.0"
+      "const": "https://dapp.originprotocol.com/schemas/announcements-localNews_1.0.0.json"
     },
     "listingType": {
       "const": "unit"

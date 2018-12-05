@@ -8,7 +8,7 @@
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "forSale-cellPhones_1.0.0"
+      "const": "https://dapp.originprotocol.com/schemas/forSale-cellPhones_1.0.0.json"
     },
     "listingType": {
       "const": "unit"

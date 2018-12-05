@@ -7,7 +7,7 @@
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "forRent-babyKidStuff_1.0.0"
+      "const": "https://dapp.originprotocol.com/schemas/forRent-babyKidStuff_1.0.0.json"
     },
     "listingType": {
       "const": "fractional"
@@ -23,14 +23,14 @@
     "slotLengthUnit": {
       "type": "string",
       "enum": [
-        "minutes",
-        "hours",
-        "days",
-        "weeks",
-        "months",
-        "years"
+        "schema.minutes",
+        "schema.hours",
+        "schema.days",
+        "schema.weeks",
+        "schema.months",
+        "schema.years"
       ],
-      "default": "hours"
+      "default": "schema.hours"
     },
     "name": {
       "type": "string",
