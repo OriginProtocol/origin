@@ -17,7 +17,7 @@ class NavBar extends Component {
     this.state = {}
   }
   render() {
-    const { showNav, mobileDevice } = this.props
+    const { showNav, mobileDevice, logoUrl, iconUrl } = this.props
 
     return (
       showNav && (
@@ -28,7 +28,7 @@ class NavBar extends Component {
               aria-controls="navbarSupportedContent"
               aria-label="Toggle navigation"
             >
-              <img src="images/origin-icon-white.svg" alt="Origin menu" />
+              <img src={iconUrl} alt="Origin menu" />
             </NavbarBS.Toggle>
             <Link
               to="/"
@@ -38,7 +38,7 @@ class NavBar extends Component {
             >
               <div className="d-none d-lg-block logo-container">
                 <img
-                  src="images/origin-logo.svg"
+                  src={logoUrl}
                   className="origin-logo"
                   alt="Origin Protocol"
                 />
@@ -169,10 +169,12 @@ class NavBar extends Component {
   }
 }
 
-const mapStateToProps = ({ app }) => {
+const mapStateToProps = ({ app, config }) => {
   return {
     mobileDevice: app.mobileDevice,
-    showNav: app.showNav
+    showNav: app.showNav,
+    logoUrl: config.logoUrl,
+    iconUrl: config.iconUrl
   }
 }
 
