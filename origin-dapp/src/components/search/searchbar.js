@@ -77,7 +77,7 @@ class SearchBar extends Component {
               <button
                 className="btn btn-outline-secondary dropdown-toggle search-bar-prepend"
                 type="button"
-                data-toggle="dropdown"
+                onClick={() => this.setState({ dropdown: true })}
                 aria-haspopup="true"
                 aria-expanded="false"
                 ga-category="search"
@@ -85,16 +85,21 @@ class SearchBar extends Component {
               >
                 {this.state.selectedListingType.name}
               </button>
-              <div className="dropdown-menu">
+              <div
+                className={`dropdown-menu${this.state.dropdown ? ' show' : ''}`}
+              >
                 {this.listingTypes.map(listingType => (
                   <a
                     className="dropdown-item"
                     key={listingType.type}
                     onClick={() =>
-                      this.setState({ selectedListingType: listingType })
+                      this.setState({
+                        selectedListingType: listingType,
+                        dropdown: false
+                      })
                     }
                     ga-category="top_nav"
-                    ga-label={ `dropdown_item_${listingType}` }
+                    ga-label={`dropdown_item_${listingType}`}
                   >
                     {listingType.name}
                   </a>

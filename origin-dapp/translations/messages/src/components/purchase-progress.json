@@ -8,6 +8,10 @@
     "defaultMessage": "Offer Accepted"
   },
   {
+    "id": "purchase-progress.offerRejected",
+    "defaultMessage": "Offer Rejected"
+  },
+  {
     "id": "purchase-progress.offerWithdrawn",
     "defaultMessage": "Offer Withdrawn"
   },

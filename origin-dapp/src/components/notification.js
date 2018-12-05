@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
 import { updateNotification } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
@@ -48,8 +47,9 @@ class Notification extends Component {
 
   handleClick() {
     this.props.updateNotification(this.props.notification.id, 'read')
-
-    $('#notificationsDropdown').dropdown('toggle')
+    if (this.props.onClick) {
+      this.props.onClick()
+    }
   }
 
   render() {

@@ -36,6 +36,14 @@
     "defaultMessage": "Airbnb account verified!"
   },
   {
+    "id": "Profile.descriptionReadMore",
+    "defaultMessage": "Read more"
+  },
+  {
+    "id": "Profile.descriptionReadLess",
+    "defaultMessage": "Read less"
+  },
+  {
     "id": "Profile.verifyYourselfHeading",
     "defaultMessage": "Verify yourself on Origin"
   },
