@@ -10,7 +10,7 @@
     "test": "mocha --timeout 10000 --exit test"
   },
   "author": "Tom Linton <tom@originprotocol.com>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "origin": "^0.8.6",
     "origin-discovery": "^0.1.0"
