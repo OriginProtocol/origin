@@ -2504,7 +2504,8 @@ textarea:-moz-ui-invalid {
 }
 
 /* hide form error summary in react-jsonschema-forms */
-.rjsf .errors {
+.rjsf .errors,
+.rjsf .field-undefined {
   display: none;
 }
 

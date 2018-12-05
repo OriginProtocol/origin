@@ -50,16 +50,16 @@ export default async (listing) => {
 
     switch(category) {
       case 'schema.housing':
-        newSchemaName = 'forSale-realEstate_1-0-0'
+        newSchemaName = 'forSale-realEstate_1.0.0'
         break
       case 'schema.tickets':
-        newSchemaName = 'forSale-tickets_1-0-0'
+        newSchemaName = 'forSale-tickets_1.0.0'
         break
       case 'schema.forSale':
-        newSchemaName = 'forSale-other_1-0-0'
+        newSchemaName = 'forSale-other_1.0.0'
         break
       default:
-        newSchemaName = 'forSale-other_1-0-0'
+        newSchemaName = 'forSale-other_1.0.0'
     }
 
     return fetch(`schemas/${newSchemaName}.json`)

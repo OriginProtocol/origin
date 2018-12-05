@@ -608,7 +608,7 @@ class ListingCreate extends Component {
                 <div className="btn-container">
                   <button
                     className="float-right btn btn-primary btn-listing-create"
-                    onClick={() => this.setState({ step: this.STEP.PICK_SCHEMA })}
+                    onClick={() => this.goToDetailsStep()}
                     ga-category="create_listing"
                     ga-label="select_category_step_continue"
                   >

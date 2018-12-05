@@ -498,5 +498,29 @@
   {
     "id": "schema.slotLength",
     "defaultMessage": "Slot Length"
+  },
+  {
+    "id": "schema.minutes",
+    "defaultMessage": "Minutes"
+  },
+  {
+    "id": "schema.hours",
+    "defaultMessage": "Hours"
+  },
+  {
+    "id": "schema.days",
+    "defaultMessage": "Days"
+  },
+  {
+    "id": "schema.weeks",
+    "defaultMessage": "Weeks"
+  },
+  {
+    "id": "schema.months",
+    "defaultMessage": "Months"
+  },
+  {
+    "id": "schema.years",
+    "defaultMessage": "Years"
   }
 ]

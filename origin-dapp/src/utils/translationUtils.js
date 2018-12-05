@@ -38,7 +38,6 @@ import vi from 'react-intl/locale-data/vi'
 import zh from 'react-intl/locale-data/zh'
 import schemaMessages from '../schemaMessages/index'
 import localeCode from 'locale-code'
-import { dashToCamelCase } from 'utils/listing'
 
 let globalIntlProvider
 
@@ -268,7 +267,7 @@ export function translateSchema(schemaJson) {
       )
     }
 
-    if (propertyObj.enum && propertyObj.enum.length && property !== 'slotLengthUnit') {
+    if (propertyObj.enum && propertyObj.enum.length) {
       propertyObj.enumNames = propertyObj.enum.map(
         enumStr =>
           typeof enumStr === 'string'

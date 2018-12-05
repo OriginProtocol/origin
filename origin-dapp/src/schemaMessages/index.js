@@ -501,4 +501,28 @@ export default defineMessages({
     id: 'schema.slotLength',
     defaultMessage: 'Slot Length'
   },
+  'schema.minutes': {
+    id: 'schema.minutes',
+    defaultMessage: 'Minutes'
+  },
+  'schema.hours': {
+    id: 'schema.hours',
+    defaultMessage: 'Hours'
+  },
+  'schema.days': {
+    id: 'schema.days',
+    defaultMessage: 'Days'
+  },
+  'schema.weeks': {
+    id: 'schema.weeks',
+    defaultMessage: 'Weeks'
+  },
+  'schema.months': {
+    id: 'schema.months',
+    defaultMessage: 'Months'
+  },
+  'schema.years': {
+    id: 'schema.years',
+    defaultMessage: 'Years'
+  },
 })
