@@ -1,16 +1,19 @@
 {
-  "$schema":"http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["dappSchemaId", "listingType", "category", "slotLength", "slotLengthUnit", "name", "description"],
+  "required": [
+    "name",
+    "description"
+  ],
   "properties": {
     "dappSchemaId": {
-      "const": "services-other-1-0-0"
+      "const": "services-other_1.0.0"
     },
     "listingType": {
       "const": "fractional"
     },
     "category": {
-      "const": "schema.services"
+      "const": "services"
     },
     "slotLength": {
       "type": "integer",

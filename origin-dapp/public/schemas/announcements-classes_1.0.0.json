@@ -1,10 +1,13 @@
 {
-  "$schema":"http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["dappSchemaId", "listingType", "category", "name", "description"],
+  "required": [
+    "name",
+    "description"
+  ],
   "properties": {
     "dappSchemaId": {
-      "const": "announcements-classes-1-0-0"
+      "const": "announcements-classes_1.0.0"
     },
     "listingType": {
       "const": "unit"

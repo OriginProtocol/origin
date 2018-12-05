@@ -1,16 +1,20 @@
 {
-  "$schema":"http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "required": ["dappSchemaId", "listingType", "category", "name", "description", "price"],
+  "required": [
+    "name",
+    "description",
+    "price"
+  ],
   "properties": {
     "dappSchemaId": {
-      "const": "forSale-babyKidStuff-1-0-0"
+      "const": "forSale-babyKidStuff_1.0.0"
     },
     "listingType": {
       "const": "unit"
     },
     "category": {
-      "const": "for-sale"
+      "const": "forSale"
     },
     "name": {
       "type": "string",
