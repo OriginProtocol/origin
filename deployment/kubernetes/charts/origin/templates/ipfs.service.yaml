@@ -16,9 +16,10 @@ spec:
   selector:
     app: {{ template "ipfs.fullname" . }}
   ports:
-  - name: api
-    port: 5001
-  - name: gateway
-    port: 8080
-  - name: proxy
-    port: 9999
+    # 5001 and 8080 don't have an external ingress
+    - name: api
+      port: 5001
+    - name: gateway
+      port: 8080
+    - name: proxy
+      port: 9999

@@ -21,34 +21,6 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST"
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
     nginx.ingress.kubernetes.io/limit-rps: "50"
-{{- if eq .Release.Namespace "prod" }}
-spec:
-  tls:
-    - secretName: {{ template "ipfs.host" . }}
-      hosts:
-        - {{ template "ipfs.host" . }}
-    # Additional domain that was originally used for the IPFS gateway
-    - secretName: gateway.originprotocol.com
-      hosts:
-        - gateway.originprotocol.com
-  rules:
-    - host: {{ template "ipfs.host" . }}
-      http: &http_rules
-        paths:
-          # Only allow the add API call through to the IPFS API
-          - path: /api/v0/add
-            backend:
-              serviceName: {{ template "ipfs.fullname" . }}
-              servicePort: 5001
-          # IFPS read only gateway
-          - path: /
-            backend:
-              serviceName: {{ template "ipfs.fullname" . }}
-              servicePort: 8080
-    - host: gateway.originprotocol.com
-      http: *http_rules
-{{- else }}
-# Use ipfs-proxy on dev and staging
 spec:
   tls:
     - secretName: {{ template "ipfs.host" . }}
@@ -61,5 +33,4 @@ spec:
           - path: /
             backend:
               serviceName: {{ template "ipfs.fullname" . }}
-              servicePort: 9999
-{{- end }}
+              servicePort: 9999  # ipfs-proxy
