@@ -1,0 +1,46 @@
+[
+  {
+    "id": "listing-detail.firstPurchaseHeading",
+    "defaultMessage": "You're about to make your first purchase on Origin."
+  },
+  {
+    "id": "listing-detail.identityDisclaimer",
+    "defaultMessage": "We recommend verifying your identity first. Sellers are more likely to accept your purchase offer if they know a little bit about you."
+  },
+  {
+    "id": "listing-detail.verifyIdentity",
+    "defaultMessage": "Verify Identity"
+  },
+  {
+    "id": "listing-detail.errorPurchasingListing",
+    "defaultMessage": "There was a problem purchasing this listing."
+  },
+  {
+    "id": "listing-detail.seeConsoleForDetails",
+    "defaultMessage": "See the console for more details."
+  },
+  {
+    "id": "listing-detail.OK",
+    "defaultMessage": "OK"
+  },
+  {
+    "id": "listing-detail.successDisclaimer",
+    "defaultMessage": "You have made an offer on this listing. Your offer will be visible within a few seconds. Your {ETH} payment has been transferred to an escrow contract. Here's what happens next:"
+  },
+  {
+    "id": "listing-detail.successItem1",
+    "defaultMessage": "The seller can choose to accept or reject your offer."
+  },
+  {
+    "id": "listing-detail.successItem2",
+    "defaultMessage": "If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller."
+  },
+  {
+    "id": "listing-detail.successItem3",
+    "defaultMessage": "If the offer is rejected, the escrowed payment will be immediately returned to your wallet."
+  },
+  {
+    "id": "listing-detail.viewPurchases",
+    "defaultMessage": "View Purchases"
+  }
+]

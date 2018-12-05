@@ -24,6 +24,9 @@ import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
 
+import { Pictures } from 'components/pictures'
+import { PurchasedModal, ErrorModal, OnboardingModal } from 'components/modals/listing-detail-modals'
+
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing, transformPurchasesOrSales } from 'utils/listing'
@@ -245,12 +248,10 @@ class ListingsDetail extends Component {
   render() {
     const { wallet } = this.props
     const {
-      // boostLevel,
-      // boostValue,
       category,
       description,
       display,
-      isFractional,
+      //isFractional,
       loading,
       name,
       offers,
@@ -260,7 +261,7 @@ class ListingsDetail extends Component {
       status,
       step,
       schemaType,
-      featuredImageIdx
+      //featuredImageIdx
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -281,7 +282,7 @@ class ListingsDetail extends Component {
      * pass along featured information from elasticsearch, but that would increase the code
      * complexity.
      *
-     * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to 
+     * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to
      * true, and show "featured" badge.
      */
     const showFeaturedBadge = display === 'featured' && isAvailable
@@ -290,507 +291,77 @@ class ListingsDetail extends Component {
 
     return (
       <div className="listing-detail">
-        {step === this.STEP.ONBOARDING && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/identity.svg" role="presentation" />
-            </div>
-            <p>
-              <FormattedMessage
-                id={'listing-detail.firstPurchaseHeading'}
-                defaultMessage={`You're about to make your first purchase on Origin.`}
-              />
-            </p>
-            <div className="disclaimer">
-              <p>
-                <FormattedMessage
-                  id={'listing-detail.identityDisclaimer'}
-                  defaultMessage={
-                    'We recommend verifying your identity first. Sellers are more likely to accept your purchase offer if they know a little bit about you.'
-                  }
-                />
-              </p>
-            </div>
-            <div className="button-container">
-              <Link
-                to="/profile"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-clear"
-                onClick={() => this.setState({ step: this.STEP.VIEW })}
-                ga-category="buyer_onboarding_modal"
-                ga-label="verify_identity"
-              >
-                <FormattedMessage
-                  id={'listing-detail.verifyIdentity'}
-                  defaultMessage={'Verify Identity'}
-                />
-              </Link>
-            </div>
-            <a
-              href="#"
-              className="skip-identity"
-              onClick={this.handleSkipOnboarding}
-              ga-category="buyer_onboarding_modal"
-              ga-label="skip"
-            >
-              Skip
-            </a>
-          </Modal>
-        )}
-        {step === this.STEP.METAMASK && (
-          <ProviderModal
-            message={
-              <FormattedMessage
-                id={'listing-detail.providerInstruction'}
-                defaultMessage={
-                  'To make an offer on this listing, please confirm the transaction in {provider}.'
-                }
-                values={{
-                  provider: getCurrentProvider(
-                    origin &&
-                      origin.contractService &&
-                      origin.contractService.web3
-                  )
-                }}
-              />
-            }
+        <OnboardingModal
+          isOpen={step === this.STEP.ONBOARDING}
+          onVerify={() => this.setState({ step: this.STEP.VIEW })}
+          handleSkipOnboarding={this.handleSkipOnboarding}
+        />
+        <ProviderModal
+          isOpen={step === this.STEP.METAMASK}
+          message={
+            <FormattedMessage
+              id={'listing-detail.providerInstruction'}
+              defaultMessage={
+                'To make an offer on this listing, please confirm the transaction in {provider}.'
+              }
+              values={{
+                provider: getCurrentProvider(
+                  origin &&
+                    origin.contractService &&
+                    origin.contractService.web3
+                )
+              }}
+            />
+          }
+        />
+        <ProcessingModal
+          isOpen={step === this.STEP.PROCESSING}
+        />
+        <PurchasedModal
+          isOpen={step === this.STEP.PURCHASED}
+        />
+        <ErrorModal
+          isOpen={step === this.STEP.ERROR}
+          onClick={e => {
+            e.preventDefault()
+            this.resetToStepOne()
+          }}
+        />
+        {(loading || (pictures && !!pictures.length)) && (
+          <Pictures
+            pictures={pictures}
+            className="carousel"
           />
         )}
-        {step === this.STEP.PROCESSING && <ProcessingModal />}
-        {step === this.STEP.PURCHASED && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/circular-check-button.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'listing-detail.purchaseSuccessful'}
-              defaultMessage={'Success!'}
-            />
-            <div className="disclaimer">
-              <FormattedMessage
-                id={'listing-detail.successDisclaimer'}
-                defaultMessage={
-                  "You have made an offer on this listing. Your offer will be visible within a few seconds. Your ETH payment has been transferred to an escrow contract. Here's what happens next:"
-                }
-              />
-              <ul>
-                <li>
-                  <FormattedMessage
-                    id={'listing-detail.successItem1'}
-                    defaultMessage={
-                      'The seller can choose to accept or reject your offer.'
-                    }
-                  />
-                </li>
-                <li>
-                  <FormattedMessage
-                    id={'listing-detail.successItem2'}
-                    defaultMessage={
-                      'If the offer is accepted and fulfilled, you will be able to confirm that the sale is complete. Your escrowed payment will be sent to the seller.'
-                    }
-                  />
-                </li>
-                <li>
-                  <FormattedMessage
-                    id={'listing-detail.successItem3'}
-                    defaultMessage={
-                      'If the offer is rejected, the escrowed payment will be immediately returned to your wallet.'
-                    }
-                  />
-                </li>
-              </ul>
-            </div>
-            <div className="button-container">
-              <Link
-                to="/my-purchases"
-                className="btn btn-clear"
-                ga-category="listing"
-                ga-label="purchase_confirmation_modal_view_my_purchases"
-              >
-                <FormattedMessage
-                  id={'listing-detail.viewPurchases'}
-                  defaultMessage={'View Purchases'}
-                />
-              </Link>
-            </div>
-          </Modal>
-        )}
-        {step === this.STEP.ERROR && (
-          <Modal backdrop="static" isOpen={true}>
-            <div className="image-container">
-              <img src="images/flat_cross_icon.svg" role="presentation" />
-            </div>
-            <FormattedMessage
-              id={'listing-detail.errorPurchasingListing'}
-              defaultMessage={'There was a problem purchasing this listing.'}
-            />
-            <br />
-            <FormattedMessage
-              id={'listing-detail.seeConsoleForDetails'}
-              defaultMessage={'See the console for more details.'}
-            />
-            <div className="button-container">
-              <a
-                className="btn btn-clear"
-                onClick={e => {
-                  e.preventDefault()
-                  this.resetToStepOne()
-                }}
-              >
-                <FormattedMessage
-                  id={'listing-detail.OK'}
-                  defaultMessage={'OK'}
-                />
-              </a>
-            </div>
-          </Modal>
-        )}
+
         <div
           className={`container listing-container${loading ? ' loading' : ''}`}
         >
           <div className="row">
-            <div className="col-12">
-              <div className="category placehold d-flex">
-                <div>{category}</div>
-                {!loading && (
-                  <div className="badges">
-                    {showPendingBadge && <PendingBadge />}
-                    {showSoldBadge && <SoldBadge />}
-                    {showFeaturedBadge && <FeaturedBadge />}
-                    {/*boostValue > 0 && (
-                      <span className={`boosted badge boost-${boostLevel}`}>
-                        <img
-                          src="images/boost-icon-arrow.svg"
-                          role="presentation"
-                        />
-                      </span>
-                    )*/}
-                  </div>
-                )}
-              </div>
-              <h1 className="title placehold">{name}</h1>
-            </div>
-            <div className="col-12 col-md-8 detail-info-box">
-              {(loading || (pictures && !!pictures.length)) && (
-                <div className="image-wrapper">
-                  <img
-                    className="featured-image"
-                    src={pictures[featuredImageIdx]}
-                  />
-                  {pictures.length > 1 &&
-                    <div className="photo-row">
-                      {pictures.map((pictureUrl, idx) => (
-                        <img
-                          onClick={() => this.setFeaturedImage(idx)}
-                          src={pictureUrl}
-                          key={idx}
-                          role="presentation"
-                          className={featuredImageIdx === idx ? 'featured-thumb' : ''}
-                        />
-                      ))}
-                    </div>
-                  }
-                </div>
-              )}
-              <p className="ws-aware description placehold">{description}</p>
-              {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
-              {/*!!unitsRemaining && unitsRemaining < 5 &&
-                <div className="units-remaining text-danger">
-                  <FormattedMessage
-                    id={ 'listing-detail.unitsRemaining' }
-                    defaultMessage={ 'Just {unitsRemaining} left!' }
-                    values={{ unitsRemaining: <FormattedNumber value={ unitsRemaining } /> }}
-                  />
-                </div>
-              */}
-            </div>
-            <div className="col-12 col-md-4">
-              {isAvailable && ((!!price && !!parseFloat(price)) || isFractional) && (
-                <div className="buy-box placehold">
-                  {!isFractional &&
-                    <div className="price text-nowrap">
-                      <img src="images/eth-icon.svg" role="presentation" />
-                      {Number(price).toLocaleString(undefined, {
-                        maximumFractionDigits: 5,
-                        minimumFractionDigits: 5
-                      })}
-                        &nbsp;ETH
-                    </div>
-                  }
-                  {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
-                  {/*
-                    <div className="quantity d-flex justify-content-between">
-                      <div>Quantity</div>
-                      <div className="text-right">
-                        {Number(1).toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="total-price d-flex justify-content-between">
-                      <div>Total Price</div>
-                      <div className="price text-right">
-                        {Number(price).toLocaleString(undefined, {minimumFractionDigits: 5, maximumFractionDigits: 5})} ETH
-                      </div>
-                    </div>
-                  */}
-                  {!loading && (
-                    <div className="btn-container">
-                      {!userIsSeller && !isFractional && (
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => this.handleMakeOffer()}
-                          onMouseDown={e => e.preventDefault()}
-                          ga-category="listing"
-                          ga-label="purchase"
-                        >
-                          <FormattedMessage
-                            id={'listing-detail.purchase'}
-                            defaultMessage={'Purchase'}
-                          />
-                        </button>
-                      )}
-                      {userIsSeller && (
-                        <Fragment>
-                          <Link
-                            to="/my-listings"
-                            className="btn"
-                            ga-category="listing"
-                            ga-label="sellers_own_listing_my_listings_cta"
-                          >
-                              <FormattedMessage
-                                id={'listing-detail.myListings'}
-                                defaultMessage={'My Listings'}
-                              />
-                          </Link>
-                          <Link
-                            to={`/update/${this.props.listingId}`}
-                            className="btn margin-top"
-                            ga-category="listing"
-                            ga-label="sellers_own_listing_edit_listing_cta"
-                          >
-                              <FormattedMessage
-                                id={'listing-detail.editListings'}
-                                defaultMessage={'Edit Listing'}
-                              />
-                          </Link>
-                        </Fragment>
-                      )}
-                    </div>
-                  )}
-                  {/* Via Matt 9/4/2018: Not necessary until we have staking */}
-                  {/*
-                    <div className="boost-level">
-                      <hr/>
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <p>Boost Level</p>
-                          <Link to="/" target="_blank" rel="noopener noreferrer">What is this?</Link>
-                        </div>
-                        <div className="col-sm-6 text-right">
-                          <p>{ boostLevel }</p>
-                          <p>
-                            <img src="images/ogn-icon.svg" role="presentation" />
-                            <span className="font-bold">{ boostValue }</span>&nbsp;
-                            <span className="font-blue font-bold">OGN</span>
-                            <span className="help-block">1.00 USD</span>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  */}
-                </div>
-              )}
-              {!isAvailable && (
-                <div className="buy-box placehold unavailable text-center">
-                  {!loading && (
-                    <div className="reason">
-                      {!isWithdrawn &&
-                        isPending && (
-                        <FormattedMessage
-                          id={'listing-detail.reasonPending'}
-                          defaultMessage={'This listing is {pending}'}
-                          values={{
-                            pending: <strong>Pending</strong>
-                          }}
-                        />
-                      )}
-                      {isSold && (
-                        <FormattedMessage
-                          id={'listing-detail.reasonSold'}
-                          defaultMessage={'This listing is {sold}'}
-                          values={{
-                            sold: <strong>Sold</strong>
-                          }}
-                        />
-                      )}
-                    </div>
-                  )}
-                  {!loading &&
-                    !userIsBuyer &&
-                    !userIsSeller && (
-                    <Fragment>
-                      <div className="suggestion">
-                        {!isWithdrawn &&
-                            isPending && (
-                          <FormattedMessage
-                            id={'listing-detail.suggestionPublicPending'}
-                            defaultMessage={
-                              'Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.'
-                            }
-                          />
-                        )}
-                        {isSold && (
-                          <FormattedMessage
-                            id={'listing-detail.suggestionPublicSold'}
-                            defaultMessage={
-                              'Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar.'
-                            }
-                          />
-                        )}
-                        {/* consider the possibility of a withdrawn listing despite a valid offer */}
-                        {!isSold &&
-                            isWithdrawn && (
-                          <FormattedMessage
-                            id={'listing-detail.suggestionPublicWithdrawn'}
-                            defaultMessage={
-                              'This listing is no longer available. Try visiting the listings page and searching for something similar.'
-                            }
-                          />
-                        )}
-                      </div>
-                      <Link
-                        to="/"
-                        ga-category="listing"
-                        ga-label="view_listings"
-                      >
-                        <FormattedMessage
-                          id={'listing-detail.viewListings'}
-                          defaultMessage={'View Listings'}
-                        />
-                      </Link>
-                    </Fragment>
-                  )}
-                  {!loading &&
-                    userIsBuyer && (
-                    <div className="suggestion">
-                      {isPending &&
-                          currentOffer.status === 'created' && (
-                        <FormattedMessage
-                          id={'listing-detail.suggestionBuyerCreated'}
-                          defaultMessage={`You've made an offer on this listing. Please wait for the seller to accept or reject your offer.`}
-                        />
-                      )}
-                      {isPending &&
-                          currentOffer.status === 'accepted' && (
-                        <FormattedMessage
-                          id={'listing-detail.suggestionBuyerAccepted'}
-                          defaultMessage={`You've made an offer on this listing. View the offer to complete the sale.`}
-                        />
-                      )}
-                      {isPending &&
-                          currentOffer.status === 'disputed' && (
-                        <FormattedMessage
-                          id={'listing-detail.suggestionBuyerDisputed'}
-                          defaultMessage={`You've made an offer on this listing. View the offer to check the status.`}
-                        />
-                      )}
-                      {isSold && (
-                        <FormattedMessage
-                          id={'listing-detail.buyerPurchased'}
-                          defaultMessage={`You've purchased this listing.`}
-                        />
-                      )}
-                    </div>
-                  )}
-                  {!loading &&
-                    userIsSeller && (
-                    <div className="suggestion">
-                      {isPending &&
-                          currentOffer.status === 'created' && (
-                        <FormattedMessage
-                          id={'listing-detail.suggestionSellerCreated'}
-                          defaultMessage={`A buyer is waiting for you to accept or reject their offer.`}
-                        />
-                      )}
-                      {isPending &&
-                          currentOffer.status === 'accepted' && (
-                        <FormattedMessage
-                          id={'listing-detail.suggestionSellerAccepted'}
-                          defaultMessage={`You've accepted an offer for this listing. Please wait for the buyer to complete the sale.`}
-                        />
-                      )}
-                      {isPending &&
-                          currentOffer.status === 'disputed' && (
-                        <FormattedMessage
-                          id={'listing-detail.suggestionSellerDisputed'}
-                          defaultMessage={`You've accepted an offer on this listing. View the offer to check the status.`}
-                        />
-                      )}
-                      {isSold && (
-                        <FormattedMessage
-                          id={'listing-detail.sellerSold'}
-                          defaultMessage={`You've sold this listing.`}
-                        />
-                      )}
-                      {/* consider the possibility of a withdrawn listing despite a valid offer */}
-                      {!isPending &&
-                          !isSold &&
-                          isWithdrawn && (
-                        <FormattedMessage
-                          id={'listing-detail.sellerWithdrawn'}
-                          defaultMessage={`You've withdrawn this listing.`}
-                        />
-                      )}
-                    </div>
-                  )}
-                  {!loading &&
-                    (userIsBuyer || userIsSeller) &&
-                    currentOffer && (
-                    <Link
-                      to={`/purchases/${currentOffer.id}`}
-                      ga-category="listing"
-                      ga-label={ `view_${isPending ? 'offer' : 'sale'}` }
-                    >
-                      {isPending && (
-                        <FormattedMessage
-                          id={'listing-detail.viewOffer'}
-                          defaultMessage={'View Offer'}
-                        />
-                      )}
-                      {isSold && (
-                        <FormattedMessage
-                          id={'listing-detail.viewSale'}
-                          defaultMessage={'View Sale'}
-                        />
-                      )}
-                    </Link>
-                  )}
-                  {!loading &&
-                    userIsSeller &&
-                    !currentOffer &&
-                    isWithdrawn && (
-                    <Link
-                      to={`/listings/create`}
-                      ga-category="listing"
-                      ga-label="create_listing_from_withdrawn"
-                    >
-                      <FormattedMessage
-                        id={'listing-detail.createListing'}
-                        defaultMessage={'Create A Listing'}
-                      />
-                    </Link>
-                  )}
-                </div>
-              )}
-              {seller && (
-                <UserCard
-                  title="seller"
-                  listingId={this.props.listingId}
-                  userAddress={seller}
-                />
-              )}
-            </div>
-            {!this.state.loading && this.state.listingType === 'fractional' &&
+            <ListingDetailContainer
+              category={category}
+              loading={loading}
+              showPendingBadge={showPendingBadge}
+              showSoldBadge={showSoldBadge}
+              showFeaturedBadge={showFeaturedBadge}
+              name={name}
+              description={description}
+            />
+            <OperatingArea
+              isWithdrawn={isWithdrawn}
+              isPending={isPending}
+              isSold={isSold}
+              isAvailable={isAvailable}
+              currentOffer={currentOffer}
+              userIsBuyer={userIsBuyer}
+              userIsSeller={userIsSeller}
+              price={price}
+              loading={loading}
+              handleMakeOffer={() => this.handleMakeOffer()}
+              seller={seller}
+              listingId={this.props.listingId}
+            />
+            { !this.state.loading && this.state.listingType === 'fractional' &&
               <div className="col-12">
                 <Calendar
                   slots={ this.state.slots }
@@ -819,6 +390,351 @@ class ListingsDetail extends Component {
   }
 }
 
+
+
+const ListingDetailContainer = ({
+  category,
+  loading,
+  showPendingBadge,
+  showSoldBadge,
+  showFeaturedBadge,
+  name,
+  description }) => {
+  return(
+    <div className="col-12 col-md-8 detail-info-box">
+      <Category
+        category={category}
+        loading={loading}
+        showPendingBadge={showPendingBadge}
+        showSoldBadge={showSoldBadge}
+        showFeaturedBadge={showFeaturedBadge}
+      />
+      <h1 className="title placehold">{name}</h1>
+      <p className="ws-aware description placehold">{description}</p>
+    </div>
+  )
+}
+
+const OperatingArea = ({
+  isWithdrawn,
+  isPending,
+  isSold,
+  isAvailable,
+  currentOffer,
+  userIsBuyer,
+  userIsSeller,
+  price,
+  loading,
+  handleMakeOffer,
+  seller,
+  listingId
+}) =>{
+  return(
+    <div className="col-12 col-md-4">
+      <BuyBox
+        isWithdrawn={isWithdrawn}
+        isPending={isPending}
+        isSold={isSold}
+        isAvailable={isAvailable}
+        currentOffer={currentOffer}
+        userIsBuyer={userIsBuyer}
+        userIsSeller={userIsSeller}
+        price={price}
+        loading={loading}
+        onClick={handleMakeOffer}
+      />
+      {seller && (
+        <UserCard
+          title="seller"
+          listingId={listingId}
+          userAddress={seller}
+        />
+      )}
+    </div>
+  )
+}
+
+const Category = ({
+  category,
+  loading,
+  showPendingBadge,
+  showSoldBadge,
+  showFeaturedBadge }) => {
+  return(
+    <div className="category placehold d-flex">
+      <div>{category}</div>
+      {!loading && (
+        <div className="badges">
+          {showPendingBadge && <PendingBadge />}
+          {showSoldBadge && <SoldBadge />}
+          {showFeaturedBadge && <FeaturedBadge />}
+        </div>
+      )}
+    </div>
+  )
+}
+
+const BuyBox = ({
+  isAvailable,
+  price,
+  loading,
+  userIsSeller,
+  userIsBuyer,
+  isWithdrawn,
+  isPending,
+  isSold,
+  currentOffer,
+  onClick }) => {
+  if(isAvailable &&
+    !!price &&
+    !!parseFloat(price)){
+    return(
+      <div className="buy-box placehold">
+        <ETHPrice
+          price={price}
+        />
+        {!loading && (
+          <BuyBoxButton
+            userIsSeller={userIsSeller}
+            onClick={onClick}
+          />
+        )}
+      </div>
+    )
+  }else{
+    return(
+      <div className="buy-box placehold unavailable text-center">
+        {!loading && (
+          <div className="reason">
+            {!isWithdrawn &&
+              isPending && (
+              <FormattedMessage
+                id={'listing-detail.reasonPending'}
+                defaultMessage={'This listing is {pending}'}
+                values={{
+                  pending: <strong>Pending</strong>
+                }}
+              />
+            )}
+            {isSold && (
+              <FormattedMessage
+                id={'listing-detail.reasonSold'}
+                defaultMessage={'This listing is {sold}'}
+                values={{
+                  sold: <strong>Sold</strong>
+                }}
+              />
+            )}
+          </div>
+        )}
+        {!loading &&
+          !userIsBuyer &&
+          !userIsSeller && (
+          <Fragment>
+            <div className="suggestion">
+              {!isWithdrawn &&
+                  isPending && (
+                <FormattedMessage
+                  id={'listing-detail.suggestionPublicPending'}
+                  defaultMessage={
+                    'Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.'
+                  }
+                />
+              )}
+              {isSold && (
+                <FormattedMessage
+                  id={'listing-detail.suggestionPublicSold'}
+                  defaultMessage={
+                    'Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar.'
+                  }
+                />
+              )}
+              {/* consider the possibility of a withdrawn listing despite a valid offer */}
+              {!isSold &&
+                  isWithdrawn && (
+                <FormattedMessage
+                  id={'listing-detail.suggestionPublicWithdrawn'}
+                  defaultMessage={
+                    'This listing is no longer available. Try visiting the listings page and searching for something similar.'
+                  }
+                />
+              )}
+            </div>
+            <Link
+              to="/"
+              ga-category="listing"
+              ga-label="view_listings"
+            >
+              <FormattedMessage
+                id={'listing-detail.viewListings'}
+                defaultMessage={'View Listings'}
+              />
+            </Link>
+          </Fragment>
+        )}
+        {!loading &&
+          userIsBuyer && (
+          <div className="suggestion">
+            {isPending &&
+                currentOffer.status === 'created' && (
+              <FormattedMessage
+                id={'listing-detail.suggestionBuyerCreated'}
+                defaultMessage={`You've made an offer on this listing. Please wait for the seller to accept or reject your offer.`}
+              />
+            )}
+            {isPending &&
+                currentOffer.status === 'accepted' && (
+              <FormattedMessage
+                id={'listing-detail.suggestionBuyerAccepted'}
+                defaultMessage={`You've made an offer on this listing. View the offer to complete the sale.`}
+              />
+            )}
+            {isPending &&
+                currentOffer.status === 'disputed' && (
+              <FormattedMessage
+                id={'listing-detail.suggestionBuyerDisputed'}
+                defaultMessage={`You've made an offer on this listing. View the offer to check the status.`}
+              />
+            )}
+            {isSold && (
+              <FormattedMessage
+                id={'listing-detail.buyerPurchased'}
+                defaultMessage={`You've purchased this listing.`}
+              />
+            )}
+          </div>
+        )}
+        {!loading &&
+          userIsSeller && (
+          <div className="suggestion">
+            {isPending &&
+                currentOffer.status === 'created' && (
+              <FormattedMessage
+                id={'listing-detail.suggestionSellerCreated'}
+                defaultMessage={`A buyer is waiting for you to accept or reject their offer.`}
+              />
+            )}
+            {isPending &&
+                currentOffer.status === 'accepted' && (
+              <FormattedMessage
+                id={'listing-detail.suggestionSellerAccepted'}
+                defaultMessage={`You've accepted an offer for this listing. Please wait for the buyer to complete the sale.`}
+              />
+            )}
+            {isPending &&
+                currentOffer.status === 'disputed' && (
+              <FormattedMessage
+                id={'listing-detail.suggestionSellerDisputed'}
+                defaultMessage={`You've accepted an offer on this listing. View the offer to check the status.`}
+              />
+            )}
+            {isSold && (
+              <FormattedMessage
+                id={'listing-detail.sellerSold'}
+                defaultMessage={`You've sold this listing.`}
+              />
+            )}
+            {/* consider the possibility of a withdrawn listing despite a valid offer */}
+            {!isPending &&
+                !isSold &&
+                isWithdrawn && (
+              <FormattedMessage
+                id={'listing-detail.sellerWithdrawn'}
+                defaultMessage={`You've withdrawn this listing.`}
+              />
+            )}
+          </div>
+        )}
+        {!loading &&
+          (userIsBuyer || userIsSeller) &&
+          currentOffer && (
+          <Link
+            to={`/purchases/${currentOffer.id}`}
+            ga-category="listing"
+            ga-label={ `view_${isPending ? 'offer' : 'sale'}` }
+          >
+            {isPending && (
+              <FormattedMessage
+                id={'listing-detail.viewOffer'}
+                defaultMessage={'View Offer'}
+              />
+            )}
+            {isSold && (
+              <FormattedMessage
+                id={'listing-detail.viewSale'}
+                defaultMessage={'View Sale'}
+              />
+            )}
+          </Link>
+        )}
+        {!loading &&
+          userIsSeller &&
+          !currentOffer &&
+          isWithdrawn && (
+          <Link
+            to={`/listings/create`}
+            ga-category="listing"
+            ga-label="create_listing_from_withdrawn"
+          >
+            <FormattedMessage
+              id={'listing-detail.createListing'}
+              defaultMessage={'Create A Listing'}
+            />
+          </Link>
+        )}
+      </div>
+    )
+  }
+}
+
+const ETHPrice = ({ price }) => {
+  return(
+    <div className="price text-nowrap">
+      <img src="images/eth-icon.svg" role="presentation" />
+      {Number(price).toLocaleString(undefined, {
+        maximumFractionDigits: 5,
+        minimumFractionDigits: 5
+      })}
+        &nbsp;
+      <FormattedMessage
+        id={'listing-detail.ethereumCurrencyAbbrev'}
+        defaultMessage={'ETH'}
+      />
+    </div>
+  )
+}
+
+const BuyBoxButton = ({ userIsSeller, onClick }) => {
+  return(
+    <div className="btn-container">
+      {!userIsSeller && (
+        <button
+          className="btn btn-primary"
+          onClick={onClick}
+          onMouseDown={e => e.preventDefault()}
+          ga-category="listing"
+          ga-label="purchase"
+        >
+          <FormattedMessage
+            id={'listing-detail.purchase'}
+            defaultMessage={'Purchase'}
+          />
+        </button>
+      )}
+      {userIsSeller && (
+        <Link
+          to="/my-listings"
+          className="btn"
+          ga-category="listing"
+          ga-label="sellers_own_listing_my_listings_cta"
+        >
+            My Listings
+        </Link>
+      )}
+    </div>
+  )
+}
+
 const mapStateToProps = ({ activation, app, profile, wallet }) => {
   return {
     messagingEnabled: activation.messaging.enabled,
@@ -828,6 +744,7 @@ const mapStateToProps = ({ activation, app, profile, wallet }) => {
     pushNotificationsSupported: activation.notifications.pushEnabled,
     serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,
+    web3Account: app.web3.account,
     web3Intent: app.web3.intent
   }
 }
