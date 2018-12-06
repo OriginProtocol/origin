@@ -156,13 +156,13 @@ describe('Grant Model', () => {
 
     it('should vest immediately', () => {
       grant.now = moment(grant.grantedAt)
-      expect(grant.calculateVested()).to.equal(grant.amount)
+      expect(grant.calculateVested()).to.bignumber.equal(grant.amount)
     })
 
     it('should not vest before grant date', () => {
       // Grant date could be in the future, so we don't vest before then.
       grant.now = moment(grant.grantedAt).subtract(1, 's')
-      expect(grant.calculateVested()).to.equal(0)
+      expect(grant.calculateVested()).to.bignumber.equal(0)
     })
   })
 })

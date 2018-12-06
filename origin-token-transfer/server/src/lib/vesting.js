@@ -6,9 +6,9 @@ require('console.table')
 const { Grant, Event, sequelize } = require('../models')
 const { GRANT_VEST } = require('../constants/events')
 
-const now = moment()
-
 async function vestGrant(grant) {
+  const now = grant.now || moment()
+
   let totalVested = BigNumber(0)
   const txn = await sequelize.transaction()
   try {
@@ -39,7 +39,9 @@ async function vestGrant(grant) {
         })
       })
       newlyVested = newlyVested.plus(vestingEvent.amount)
-      console.log(`✅ Vested ${vestingEvent.amount.toNumber()} OGN for grant ${grantedAt} to ${grant.email} (effective ${vestingDateStr})`)
+      if (process.env.NODE_ENV !== 'test') {
+        console.log(`✅ Vested ${vestingEvent.amount.toNumber()} OGN for grant ${grantedAt} to ${grant.email} (effective ${vestingDateStr})`)
+      }
     }
 
     // Sanity checks.
@@ -54,17 +56,22 @@ async function vestGrant(grant) {
 
     await grant.save()
     await txn.commit()
+    return grant.id
   } catch(e) {
     await txn.rollback()
     throw(e)
   }
 }
 
-async function vestGrants() {
+async function vestGrants(now = null) {
   let grantCount = 0
   let vestedCount = 0
   const grants = await Grant.findAll()
   for (const grant of grants) {
+    if (now) {
+      grant.now = now
+    }
+
     grantCount++
     const tokensVested = grant.calculateVested()
     if (tokensVested.isGreaterThan(grant.vested)) {
@@ -72,7 +79,11 @@ async function vestGrants() {
       vestedCount++
     }
   }
-  console.log(`Vested ${vestedCount} of ${grantCount} grants.`)
+
+  if (process.env.NODE_ENV !== 'test') {
+    console.log(`Vested ${vestedCount} of ${grantCount} grants.`)
+  }
+  return vestedCount
 }
 
 module.exports = { vestGrant, vestGrants }
