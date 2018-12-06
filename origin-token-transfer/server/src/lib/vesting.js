@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const ip = require('ip')
 const moment = require('moment')
 const BigNumber = require('bignumber.js')
@@ -40,7 +41,7 @@ async function vestGrant(grant) {
       })
       newlyVested = newlyVested.plus(vestingEvent.amount)
       if (process.env.NODE_ENV !== 'test') {
-        console.log(`✅ Vested ${vestingEvent.amount.toNumber()} OGN for grant ${grantedAt} to ${grant.email} (effective ${vestingDateStr})`)
+        console.log(chalk`{bold.hex('#26d198') ⬢}  Vested ${vestingEvent.amount.toNumber()} OGN for grant ${grantedAt} to ${grant.email} (effective ${vestingDateStr})`)
       }
     }
 
@@ -81,7 +82,7 @@ async function vestGrants(now = null) {
   }
 
   if (process.env.NODE_ENV !== 'test') {
-    console.log(`Vested ${vestedCount} of ${grantCount} grants.`)
+    console.log(`\n✅ Vested ${vestedCount} of ${grantCount} grants.`)
   }
   return vestedCount
 }
