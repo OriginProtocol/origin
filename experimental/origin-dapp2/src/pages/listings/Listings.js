@@ -3,7 +3,6 @@ import { Query } from 'react-apollo'
 import pick from 'lodash/pick'
 
 import BottomScrollListener from 'components/BottomScrollListener'
-import LoadingSpinner from 'components/LoadingSpinner'
 
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
@@ -31,7 +30,7 @@ class Listings extends Component {
       <Query query={query} variables={vars} notifyOnNetworkStatusChange={true}>
         {({ error, data, fetchMore, networkStatus }) => {
           if (networkStatus === 1) {
-            return <LoadingSpinner />
+            return <h5 className="listings-count">Loading...</h5>
           } else if (error) {
             return <p className="p-3">Error :(</p>
           } else if (!data || !data.marketplace) {

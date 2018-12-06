@@ -33,9 +33,9 @@ const Step1 = ({ listing }) => (
             <div />
           </div>
           <div>
-            <h4>Metamask</h4>
+            <h4>MetaMask</h4>
             <div className="description">
-              Metamask is a browser extension for Chrome that will allow you to
+              MetaMask is a browser extension for Chrome that will allow you to
               access the decentralized web.
             </div>
             <div className="note">Available for Google Chrome</div>
@@ -43,7 +43,7 @@ const Step1 = ({ listing }) => (
               to={`/listings/${listing.id}/onboard/metamask`}
               className="btn btn-outline-primary"
             >
-              Connect Metamask
+              Connect MetaMask
             </Link>
           </div>
         </div>

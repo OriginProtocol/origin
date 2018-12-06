@@ -6,7 +6,7 @@ if ! curl --silent --output /dev/null localhost:5001
   then echo "\nPlease start a local IPFS daemon first: https://ipfs.io/docs/install/\n" ; exit ; fi
 
 # First run webpack
-# npm run build
+npm run build
 
 # Add build directory to local ipfs. Extract directory hash from last line
 HASH=$(ipfs add -r public | tail -n 1 | cut -d ' ' -f 2)
