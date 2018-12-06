@@ -55,7 +55,7 @@ class ImageCropper extends Component {
     })
   }
 
-  async onCropComplete() {
+  onCropComplete() {
     const { imageFileObj, pixelCrop, crop = {} } = this.state
     const { limitSize } = this.props
 
@@ -64,7 +64,7 @@ class ImageCropper extends Component {
       aspectRatio: crop.aspect,
       limitSize
     }
-    await generateCroppedImage(imageFileObj, options, (croppedImageUri) => {
+    generateCroppedImage(imageFileObj, options, (croppedImageUri) => {
       this.props.onCropComplete(croppedImageUri, imageFileObj)
     })
   }
