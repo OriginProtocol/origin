@@ -1,5 +1,8 @@
 version: "3"
 
+volumes:
+  ipfs:
+
 services:
   postgres:
     container_name: postgres
@@ -21,31 +24,15 @@ services:
     environment:
       network.bind_host: 0
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-      - default
-
-  ipfs-proxy:
-    container_name: ipfs-proxy
-    image: ipfs-proxy
-    build:
-      context: .
-      dockerfile: development/dockerfiles/ipfs-proxy
-    ports:
-      - "9999:9999"
-    environment:
-      - IPFS_API_URL=http://origin-js:5002
-      - IPFS_GATEWAY_URL=http://origin-js:8080
-    volumes:
-      - ./ipfs-proxy/src:/app/src
+    logging:
+      driver: none
 
   # NOTE/TODO: This container is only responsible for running ganache and IPFS,
   # this functionality should be moved to dedicated containers
-  origin-js:
-    container_name: origin-js
-    image: origin-js
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-js
+  origin:
+    container_name: origin
+    image: origin
+    build: .
     ports:
       - "8545:8545"  # Ganache
     volumes:
@@ -53,63 +40,72 @@ services:
       # written to the build files
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/scripts:/app/origin-js/scripts
+    command: npm run start --prefix origin-js
+
+  ipfs-proxy:
+    container_name: ipfs-proxy
+    image: origin
+    ports:
+      - "9999:9999"
+    environment:
+      - IPFS_API_URL=http://origin:5002
+      - IPFS_GATEWAY_URL=http://origin:8080
+    volumes:
+      - ./ipfs-proxy/src:/app/ipfs-proxy/src
+    command: npm run start --prefix ipfs-proxy
 
   origin-discovery:
     container_name: origin-discovery
-    image: origin-discovery
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-discovery
+    image: origin
     volumes:
       - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
+      - ./origin-discovery/config:/app/origin-discovery/config
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
     depends_on:
-      - origin-js
+      - origin
       - postgres
       - elasticsearch
     ports:
       - "4000:4000"
-    command: /bin/bash -c "npm run start:discovery"
+    command: npm run start:discovery --prefix origin-discovery
 
   event-listener:
     container_name: event-listener
-    image: event-listener
-    build:
-      context: .
-      dockerfile: development/dockerfiles/event-listener
+    image: origin
     volumes:
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
+      - ./origin-discovery/migrations:/app/origin-discovery/migrations
+      - ./origin-discovery/config:/app/origin-discovery/config
       - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
     depends_on:
-      - origin-js
+      - origin
       - postgres
       - elasticsearch
       - ipfs-proxy
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-js:8080 --
+      /bin/bash -c "wait-for.sh -t 0 -q origin:8080 --
       wait-for.sh -t 0 -q elasticsearch:9200 --
-      npm run migrate &&
-      npm run start:listener"
+      npm run migrate --prefix origin-discovery &&
+      npm run start:listener --prefix origin-discovery"
 
   origin-messaging:
     container_name: origin-messaging
-    image: origin-messaging
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-messaging
+    image: origin
     ports:
       - "9012:9012"
     volumes:
-      - ./origin-messaging/src:/app/src
-      - ./development/.ipfs:/app/ipfs
+      - ./origin-messaging/src:/app/origin-messaging/src
+      - ipfs:/app/ipfs
     environment:
       - MESSAGING_NAMESPACE=dev
+      - IPFS_REPO_PATH=/app/ipfs
+    command: npm run start --prefix origin-messaging
 
   origin-bridge:
     container_name: origin-bridge
@@ -133,13 +129,11 @@ services:
 
   origin-notifications:
     container_name: origin-notifications
-    image: origin-notifications
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-notifications
+    image: origin
     volumes:
-      - ./origin-notifications/src:/app/src
-      - ./development/envfiles/origin-notifications.env:/app/.env
+      - ./origin-notifications/src:/app/origin-notifications/src
+      - ./origin-notifications/migrations:/app/origin-notifications/migrations
+      - ./development/envfiles/origin-notifications.env:/app/origin-notifications/.env
     depends_on:
       - postgres
     environment:
@@ -149,15 +143,12 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      npm run migrate &&
-      npm run start"
+      npm run migrate --prefix origin-notifications &&
+      npm run start --prefix origin-notifications"
 
   origin-dapp:
     container_name: origin-dapp
-    image: origin-dapp
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-dapp
+    image: origin
     volumes:
       # Include origin-contracts build files so the DApp has access to the
       # address of the contracts on the local blockchain
@@ -166,15 +157,15 @@ services:
       # Mount origin-dapp inside the container
       - ./origin-dapp/src:/app/origin-dapp/src
       - ./origin-dapp/public:/app/origin-dapp/public
-      - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
       - ./origin-dapp/translations:/app/origin-dapp/translations
+      - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
       # Set the envfile from the local envfile
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
-      - ./development/.ipfs:/ipfs
+      - ipfs:/app/ipfs
     depends_on:
       - ipfs-proxy
       - event-listener
-      - origin-js
+      - origin
       - origin-discovery
       - origin-messaging
       - origin-bridge
@@ -187,6 +178,6 @@ services:
       # the .env file.
       >
       /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 &&
-      . set-ipfs-swarm.sh /ipfs/config &&
-      wait-for.sh -t 0 -q origin-js:8080 --
-      node node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0"
+      . set-ipfs-swarm.sh /app/ipfs/config &&
+      wait-for.sh -t 0 -q origin:8080 --
+      npm run start --prefix origin-dapp"
