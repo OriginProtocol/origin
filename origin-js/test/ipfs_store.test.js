@@ -50,7 +50,8 @@ describe('Listing IpfsDataStore load', () => {
 
     const listing = await store.load(LISTING_DATA_TYPE, 'TestHash')
 
-    expect(listing.dappSchemaId).to.equal('http://schema.originprotocol.com/forSale.mushrooms_v1.0.0')
+    expect(listing.dappSchemaId).to.equal(
+      'https://dapp.originprotocol.com/schemas/forSale-mushrooms_1.0.0.json')
     expect(listing.type).to.equal('unit')
     expect(listing.category).to.equal('schema.forSale')
     expect(listing.subCategory).to.equal('schema.forSale.mushrooms')
