@@ -123,14 +123,14 @@ describe('Marketplace Resource', function() {
       const ipfsHash = await marketplace.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
       const ipfsBytes = contractService.getBytes32FromIpfsHash(ipfsHash)
       const price = await contractService.moneyToUnits(listingData.price)
-      const expiry = Math.round(+new Date() / 1000) + 60 * 60 * 24 // 24 hrs
+      const finalizes = Math.round(+new Date() / 1000) + 60 * 60 * 24 // 24 hrs
       await contractService.call(
         'V00_Marketplace',
         'makeOffer',
         [
           0,
           ipfsBytes,
-          expiry,
+          finalizes,
           affiliate,
           0,
           price,
@@ -646,14 +646,14 @@ describe('Marketplace Resource', function() {
         const ipfsHash = await marketplace.ipfsDataStore.save(OFFER_DATA_TYPE, offerDataTooManyUnits)
         const ipfsBytes = contractService.getBytes32FromIpfsHash(ipfsHash)
         const price = await contractService.moneyToUnits(offerDataTooManyUnits.totalPrice)
-        const expiry = Math.round(+new Date() / 1000) + 60 * 60 * 24 // 24 hrs
+        const finalizes = Math.round(+new Date() / 1000) + 60 * 60 * 24 // 24 hrs
         await contractService.call(
           'V00_Marketplace',
           'makeOffer',
           [
             1, // listing index
             ipfsBytes,
-            expiry,
+            finalizes,
             validAffiliate,
             0,
             price,
