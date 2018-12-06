@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define('Event', {
     email: DataTypes.STRING,
     ip: DataTypes.STRING,
-    grantId: DataTypes.INTEGER,
+    grant_id: DataTypes.INTEGER,
     action: DataTypes.STRING,
     data: DataTypes.STRING
   }, {})
