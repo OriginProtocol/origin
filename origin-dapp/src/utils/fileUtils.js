@@ -75,6 +75,36 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
     orientation: true
   }
 
+
+  function centerCropImage() {
+    const imageWidth = this.naturalWidth
+    const imageHeight = this.naturalHeight
+
+    let cropWidth
+    let cropHeight
+
+    if (imageWidth > imageHeight) {
+      cropHeight = imageHeight
+      cropWidth = imageHeight * 1.3333
+    } else {
+      cropWidth = imageWidth
+      cropHeight = imageWidth / 1.3333
+    }
+
+    config = {
+      ...defaultConfig,
+      left: 0,
+      top: (imageHeight / 2) - (cropHeight / 2),
+      sourceWidth: cropWidth,
+      sourceHeight: cropHeight,
+      crop: true,
+      aspectRatio
+    }
+
+    modifyImage(imageFileObj, config, callback)
+    return
+  }
+
   let config = defaultConfig
 
   if (!limitSize && aspectRatio) {
@@ -96,35 +126,6 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
   if (centerCrop) {
     const dataUri = await getDataUri(imageFileObj)
     const image = new Image()
-
-    function centerCropImage() {
-      const imageWidth = this.naturalWidth
-      const imageHeight = this.naturalHeight
-
-      let cropWidth
-      let cropHeight
-
-      if (imageWidth > imageHeight) {
-        cropHeight = imageHeight
-        cropWidth = imageHeight * 1.3333
-      } else {
-        cropWidth = imageWidth
-        cropHeight = imageWidth / 1.3333
-      }
-
-      config = {
-        ...defaultConfig,
-        left: 0,
-        top: (imageHeight / 2) - (cropHeight / 2),
-        sourceWidth: imageWidth,
-        sourceHeight: imageHeight,
-        crop: true,
-        aspectRatio
-      }
-
-      modifyImage(imageFileObj, config, callback)
-      return
-    }
 
     image.onload = centerCropImage
     image.src = dataUri
