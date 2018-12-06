@@ -32,6 +32,7 @@ describe('create listing and retrieve using discovery', () => {
     assert.equal(listings.length, 6)
   })
 
+  // TODO: An exercise for the reader...
   it('should allow created listing to be searched from discovery', () => {
   })
 
