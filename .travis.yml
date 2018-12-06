@@ -72,6 +72,15 @@ matrix:
       script:
         - npm run test --prefix origin-js
 
+    - name: "origin-notifications unit tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-notifications
+      script:
+        - npm run test --prefix origin-notifications
+
     - name: "origin-token-transfer unit tests"
       language: node_js
       node_js: 10
