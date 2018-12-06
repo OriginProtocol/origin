@@ -4,6 +4,18 @@
     "defaultMessage": "Are you sure you want to leave? If you leave this page your progress will be lost."
   },
   {
+    "id": "schema.boostLimitInOgn",
+    "defaultMessage": "Boost Limit"
+  },
+  {
+    "id": "backButtonLabel",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "listing-create.review",
+    "defaultMessage": "Review"
+  },
+  {
     "id": "listing-create.stepNumberLabel",
     "defaultMessage": "STEP {stepNumber}"
   },
@@ -32,10 +44,6 @@
     "defaultMessage": "Please fix errors before continuing."
   },
   {
-    "id": "backButtonLabel",
-    "defaultMessage": "Back"
-  },
-  {
     "id": "continueButtonLabel",
     "defaultMessage": "Continue"
   },
@@ -56,8 +64,20 @@
     "defaultMessage": "Once you acquire some OGN you will be able to boost your listing."
   },
   {
-    "id": "listing-create.review",
-    "defaultMessage": "Review"
+    "id": "listing-create.totalNumberOfUnits",
+    "defaultMessage": "Total number of units: {units}"
+  },
+  {
+    "id": "listing-create.totalBoostRequired",
+    "defaultMessage": "Total boost required: {boost}"
+  },
+  {
+    "id": "listing-create.boostCapTooLow",
+    "defaultMessage": "Your boost cap is lower than the total amount needed to boost all your units. After the cap is reached, the remaining units will not be boosted."
+  },
+  {
+    "id": "listing-create.showBoostFormErrorMsg",
+    "defaultMessage": "Please fix errors before continuing."
   },
   {
     "id": "listing-create.reviewListingHeading",

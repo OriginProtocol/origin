@@ -2833,6 +2833,36 @@ select.form-control:not([size]):not([multiple]) {
   background-color: var(--boost-premium);
 }
 
+.listing-form .step-slider {
+  margin-bottom: 33px;
+}
+
+.listing-form .step-slider .rc-slider-rail {
+  border-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+  height: 2px;
+  border: 0px;
+  color: var(--pale-grey-nine);
+}
+
+.listing-form .step-slider .rc-slider-track {
+  height: 2px;
+  background-color: var(--clear-blue);
+}
+
+.listing-form .step-slider .rc-slider-handle {
+  display: none;
+}
+
+.listing-form .step-slider .rc-slider-step .rc-slider-dot {
+  border-color: white;
+  width: 2px;
+  height: 2px;
+  bottom: 1px;
+}
+
 .listing-form .select-boost .btn-container {
   position: relative;
   padding-bottom: 45px;
@@ -2844,6 +2874,16 @@ select.form-control:not([size]):not([multiple]) {
   bottom: 0;
   font-size: 16px;
   cursor: pointer;
+}
+
+.listing-form .boost-text {
+  text-align: center;
+  font-family: Lato;
+  font-weight: normal;
+}
+
+.listing-form .boost-italic {
+  font-style: italic;
 }
 
 .boost-Low {
@@ -2955,6 +2995,12 @@ select.form-control:not([size]):not([multiple]) {
   padding: 15px;
 }
 
+.listing-form .boost-info {
+  background-color: var(--gold-pale);
+  border: 1px solid var(--golden-rod);
+  border-radius: 5px;
+}
+
 .listing-form .select-boost .boost-slider .info-box,
 .listing-form .schema-options .info-box {
   padding: 10px;
@@ -3030,6 +3076,10 @@ select.form-control:not([size]):not([multiple]) {
 
 .currency-badge.text-grey {
   color: var(--steel);
+}
+
+.currency-badge.currency-ogn {
+  color: var(--clear-blue);
 }
 
 .price-field-fiat {

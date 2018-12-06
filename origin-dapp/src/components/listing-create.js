@@ -20,6 +20,7 @@ import BoostSlider from 'components/boost-slider'
 import StepsProgress from 'components/steps-progress'
 import PhotoPicker from 'components/form-widgets/photo-picker'
 import PriceField from 'components/form-widgets/price-field'
+import BoostLimitField from 'components/form-widgets/boost-limit-field'
 import QuantityField from 'components/form-widgets/quantity-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
@@ -94,6 +95,7 @@ class ListingCreate extends Component {
         }
       },
       showDetailsFormErrorMsg: false,
+      showBoostFormErrorMsg: false,
       showBoostTutorial: false
     }
 
@@ -104,8 +106,24 @@ class ListingCreate extends Component {
         id: 'listing-create.navigationWarning',
         defaultMessage:
           'Are you sure you want to leave? If you leave this page your progress will be lost.'
+      },
+      boostLimit: {
+         id: 'schema.boostLimitInOgn',
+         defaultMessage: 'Boost Limit'
       }
     })
+
+    this.boostSchema = {
+      $schema: 'http://json-schema.org/draft-06/schema#',
+      type: 'object',
+      required: ['boostLimit'],
+      properties: {
+        boostLimit: {
+          type: 'number',
+          title: this.props.intl.formatMessage(this.intlMessages.boostLimit)
+        }
+      }
+    }
 
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
@@ -231,6 +249,9 @@ class ListingCreate extends Component {
           price: {
             'ui:field': PriceField
           },
+          boostLimit: {
+            'ui:field': BoostLimitField
+          },
           description: {
             'ui:widget': 'textarea',
             'ui:options': {
@@ -355,7 +376,8 @@ class ListingCreate extends Component {
         }
       },
       step: nextStep,
-      showDetailsFormErrorMsg: false
+      showDetailsFormErrorMsg: false,
+      showBoostFormErrorMsg: false
     })
     window.scrollTo(0, 0)
     this.checkOgnBalance()
@@ -473,8 +495,42 @@ class ListingCreate extends Component {
     this.setState({ step: this.STEP.PREVIEW })
   }
 
+  renderBoostButtons() {
+    return(
+      <div className="btn-container">
+        <button
+          type="button"
+          className="btn btn-other btn-listing-create"
+          onClick={this.backFromBoostStep}
+          ga-category="create_listing"
+          ga-label="boost_listing_step_back"
+        >
+          <FormattedMessage
+            id={'backButtonLabel'}
+            defaultMessage={'Back'}
+          />
+        </button>
+        <button
+          className="float-right btn btn-primary btn-listing-create"
+          onClick={this.onReview}
+          ga-category="create_listing"
+          ga-label="boost_listing_step_continue"
+        >
+          <FormattedMessage
+            id={'listing-create.review'}
+            defaultMessage={'Review'}
+          />
+        </button>
+      </div>
+    )
+  }
+
   render() {
-    const { wallet, intl } = this.props
+    const {
+      wallet,
+      intl,
+      isMultiUnitListing
+    } = this.props
     const totalNumberOfSteps = 4
     const {
       formListing,
@@ -486,6 +542,7 @@ class ListingCreate extends Component {
       step,
       translatedSchema,
       showDetailsFormErrorMsg,
+      showBoostFormErrorMsg,
       showBoostTutorial,
       isFractionalListing,
       isEditMode
@@ -493,6 +550,7 @@ class ListingCreate extends Component {
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
+    const boostCapTooLow = true
 
     return (web3.givenProvider || origin.contractService.walletLinker) ? (
       <div className="listing-form">
@@ -739,37 +797,83 @@ class ListingCreate extends Component {
                   </div>
                 )}
                 {!showBoostTutorial && (
-                  <BoostSlider
-                    onChange={this.setBoost}
-                    ognBalance={wallet.ognBalance}
-                    selectedBoostAmount={formData.boostValue || selectedBoostAmount}
-                  />
+                  <Fragment>
+                    <BoostSlider
+                      onChange={this.setBoost}
+                      ognBalance={wallet.ognBalance}
+                      selectedBoostAmount={formData.boostValue || selectedBoostAmount}
+                      isMultiUnitListing={isMultiUnitListing}
+                    />
+                    {isMultiUnitListing && (
+                      <Fragment>
+                        <Form
+                          className='mt-2'
+                          schema={this.boostSchema}
+                          onSubmit={this.onDetailsEntered}
+                          //formData={formListing.formData}
+                          onError={(error) => {
+                            console.error('Boost limit form has errors: ', error)
+                            this.setState({ showBoostFormErrorMsg: true })
+                          }}
+                          //onChange={this.onFormDataChange}
+                          uiSchema={this.uiSchema}
+                        >
+                          <div className="boost-info p-4">
+                            <p className="boost-text boost-italic mt-4 mb-0">
+                              <FormattedMessage
+                                id={'listing-create.totalNumberOfUnits'}
+                                defaultMessage={'Total number of units: {units}'}
+                                values={{
+                                  units: 100
+                                }}
+                              />
+                            </p>
+                            <p className="boost-text boost-italic mt-1">
+                              <FormattedMessage
+                                id={'listing-create.totalBoostRequired'}
+                                defaultMessage={'Total boost required: {boost}'}
+                                values={{
+                                  boost: (
+                                  <Fragment>1000&nbsp;
+                                      <Link
+                                        className="ogn-abbrev"
+                                        to="/about-tokens"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        OGN
+                                      </Link>
+                                    </Fragment>)
+                                }}
+                              />
+                            </p>
+                            {boostCapTooLow && <p className="boost-text mt-4">
+                              <FormattedMessage
+                                id={'listing-create.boostCapTooLow'}
+                                defaultMessage={'Your boost cap is lower than the total amount needed to boost all your units. After the cap is reached, the remaining units will not be boosted.'}
+                              />
+                            </p>}
+                          </div>
+                          {this.renderBoostButtons()}
+                        </Form>
+                        {showBoostFormErrorMsg && (
+                            <div className="info-box warn">
+                              <p>
+                                <FormattedMessage
+                                  id={'listing-create.showBoostFormErrorMsg'}
+                                  defaultMessage={
+                                    'Please fix errors before continuing.'
+                                  }
+                                />
+                              </p>
+                            </div>
+                          )
+                        }
+                      </Fragment>
+                    )}
+                  </Fragment>
                 )}
-                <div className="btn-container">
-                  <button
-                    type="button"
-                    className="btn btn-other btn-listing-create"
-                    onClick={this.backFromBoostStep}
-                    ga-category="create_listing"
-                    ga-label="boost_listing_step_back"
-                  >
-                    <FormattedMessage
-                      id={'backButtonLabel'}
-                      defaultMessage={'Back'}
-                    />
-                  </button>
-                  <button
-                    className="float-right btn btn-primary btn-listing-create"
-                    onClick={this.onReview}
-                    ga-category="create_listing"
-                    ga-label="boost_listing_step_continue"
-                  >
-                    <FormattedMessage
-                      id={'listing-create.review'}
-                      defaultMessage={'Review'}
-                    />
-                  </button>
-                </div>
+                {(showBoostTutorial || !showBoostTutorial && !isMultiUnitListing) && this.renderBoostButtons()}
               </div>
             )}
             {step >= this.STEP.PREVIEW && (

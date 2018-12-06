@@ -34,16 +34,24 @@ class BoostSlider extends Component {
   }
 
   render() {
-    const { ognBalance } = this.props
+    const { ognBalance, isMultiUnitListing } = this.props
     const boostLevel = getBoostLevel(this.props.selectedBoostAmount)
 
     return (
       <div className="boost-slider">
         <p>
-          <FormattedMessage
-            id={'boost-slider.boost-level'}
-            defaultMessage={'Boost Level'}
-          />
+          {
+            isMultiUnitListing ?
+              <FormattedMessage
+                id={'boost-slider.boost-level-multi-unit'}
+                defaultMessage={'Boost Level (per unit)'}
+              />
+            :
+              <FormattedMessage
+                id={'boost-slider.boost-level'}
+                defaultMessage={'Boost Level'}
+              />
+          }
         </p>
         <Tooltip
           placement="top"
