@@ -15,7 +15,8 @@ export default class OfferAdapterV1 extends AdapterBase {
     const offer = {
       schemaId: ipfsData.schemaId,
       listingType: ipfsData.listingType,
-      totalPrice: new Money(ipfsData.totalPrice)
+      totalPrice: new Money(ipfsData.totalPrice),
+      commission: new Money(ipfsData.commission)
     }
 
     // Unit data.
