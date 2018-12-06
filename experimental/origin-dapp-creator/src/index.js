@@ -1,5 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import { Route, HashRouter } from 'react-router-dom'
 
-ReactDOM.render(<App />, document.getElementById('app'));
+import App from './pages/App';
+
+ReactDOM.render(
+  <HashRouter>
+    <Route component={App} />
+  </HashRouter>,
+  document.getElementById('app')
+)
+
+require('react-styl').addStylesheet()

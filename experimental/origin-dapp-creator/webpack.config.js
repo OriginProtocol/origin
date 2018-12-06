@@ -63,9 +63,13 @@ var config = {
   resolve: {
     extensions: ['.js', '.json']
   },
+  node: {
+     fs: "empty"
+  },
   mode: isProduction ? 'production' : 'development',
   plugins: [
-    new HtmlWebpackPlugin({ template: 'public/index.html', inject: false })
+    new HtmlWebpackPlugin({ template: 'public/index.html', inject: false }),
+    new webpack.EnvironmentPlugin({ HOST: 'localhost' })
   ]
 }
 
