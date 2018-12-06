@@ -27,8 +27,6 @@ if (!sessionSecret) {
   process.exit(1)
 }
 
-console.log(path.resolve(__dirname) + '../data')
-
 // Setup sessions.
 app.use(session({
   cookie: { maxAge: 60 * 60 * 1000 },
