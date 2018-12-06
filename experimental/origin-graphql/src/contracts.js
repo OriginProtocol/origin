@@ -122,7 +122,10 @@ msg.events.on('emsg', obj => {
   console.error('A message has arrived that could not be decrypted:', obj)
 })
 
+// web3.js version 35 + 36 need this hack...
 function applyWeb3Hack(web3Instance) {
+  if (!web3Instance.version.match(/(35|36)$/)) return web3Instance
+
   web3Instance.eth.abi.decodeParameters = function(outputs, bytes) {
     if (bytes === '0x') bytes = '0x00'
     return web3Instance.eth.abi.__proto__.decodeParameters(outputs, bytes)

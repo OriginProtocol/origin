@@ -69,44 +69,5 @@
     "subscriptions-transport-ws": "^0.9.15",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.27.0"
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "ecmaVersion": 6,
-      "sourceType": "module",
-      "ecmaFeatures": {
-        "jsx": true,
-        "impliedStrict": true,
-        "legacyDecorators": true
-      }
-    },
-    "globals": {
-      "Web3": true,
-      "web3": true,
-      "openpgp": true
-    },
-    "env": {
-      "browser": true,
-      "node": true,
-      "es6": true,
-      "mocha": true
-    },
-    "plugins": [
-      "react"
-    ],
-    "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended"
-    ],
-    "rules": {
-      "react/prop-types": "off",
-      "react/no-children-prop": "off",
-      "no-console": "off"
-    }
-  },
-  "eslintIgnore": [
-    "node_modules",
-    "public"
-  ]
+  }
 }
