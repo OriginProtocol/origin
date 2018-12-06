@@ -46,7 +46,7 @@ class PurchaseProgress extends Component {
   render() {
     const { currentStep, maxStep, perspective, purchase, subdued } = this.props
     const { progressCalculated, progressWidth } = this.state
-
+    // console.log("WELL WHAT DOES PURCHASE LOOK LIKE HERE?", purchase)
     const offerCreated = purchase && purchase.event('OfferCreated')
     const offerWithdrawn = purchase && purchase.event('OfferWithdrawn')
     const offerAccepted = purchase && purchase.event('OfferAccepted')
@@ -54,6 +54,7 @@ class PurchaseProgress extends Component {
     const offerRuling = purchase && purchase.event('OfferRuling')
     const offerFinalized = purchase && purchase.event('OfferFinalized')
     const offerData = purchase && purchase.event('OfferData')
+    // console.log("ENSERIO?", offerCreated)
 
     const withdrawnOrRejected = offerWithdrawn ? (
       formattedAddress(purchase.buyer) === offerWithdrawn.returnValues.party ? 'withdrawn' : 'rejected'

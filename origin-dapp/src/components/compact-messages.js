@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { Component, Fragment } from 'react'
+import origin from '../services/origin'
+import { formattedAddress, abbreviateName } from 'utils/user'
 import Message from 'components/message'
+import moment from 'moment'
 
 const MAX_MINUTES = 10
 
@@ -10,14 +13,35 @@ function getElapsedTime(recentTime, previousTime) {
   return isNaN(elapsedTime) ? 0 : elapsedTime
 }
 
-const CompactMessages = ({ messages = [] }) =>
-  messages.map((message, i) => {
-    const { created, hash } = message
-    const previousMessage = i === 0 ? {} : messages[i - 1]
-    const timeElapsed = getElapsedTime(created, previousMessage.created)
-    const showTime = timeElapsed >= MAX_MINUTES || i === 0
+function PurchaseMessage({ purchaseInfo, messageCreated, previousMessage }) {
+  const updatedInfo = purchaseInfo.filter((info) => ((info !== undefined) && (info !== 0)))
+  const displayInfo = (info) => {
+    const noInfo = !info || info === 0
+    if (noInfo) return
+    if ((info.timestamp < messageCreated) && info.timestamp > (previousMessage.created/1000)) {
+      return <div key={messageCreated + Math.random()}>Something should go here</div>
+    }
+    return null
+  }
+  return updatedInfo.map(displayInfo)
+}
 
-    return <Message key={hash} showTime={showTime} message={message} />
-  })
+export default class CompactMessages extends Component {
+  render() {
+    const { messages = [], purchase, purchaseInfo } = this.props
 
-export default CompactMessages
+    return messages.map((message, i) => {
+      const { created, hash } = message
+      const previousMessage = i === 0 ? {} : messages[i - 1]
+      const timeElapsed = getElapsedTime(created, previousMessage.created)
+      const showTime = timeElapsed >= MAX_MINUTES || i === 0
+
+      return (
+        <div key={hash+Math.random()}>
+          <PurchaseMessage key={new Date() + Math.random()} messageCreated={(created/1000)} purchaseInfo={purchaseInfo} previousMessage={previousMessage} />
+          <Message key={hash} showTime={showTime} message={message} />
+        </div>
+      )
+    })
+  }
+}

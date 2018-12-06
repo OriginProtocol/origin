@@ -28,11 +28,11 @@ export function truncateAddress(address = '') {
     + address.substr(address.length - backChars)
 }
 
-export function abbreviateName(party) {
+export function abbreviateName(party, defaultName = '') {
   const { profile = {}, fullName } = party
   const { firstName = '', lastName = '' } = profile
   const lastNameLetter = lastName.length ? `${lastName.charAt(0)}.` : ''
   const abbreviatedName = fullName && `${firstName} ${lastNameLetter}`
 
-  return abbreviatedName || 'Unnamed User'
+  return abbreviatedName || defaultName
 }

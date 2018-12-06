@@ -28,6 +28,7 @@ class Messages extends Component {
   componentDidMount() {
     const { match } = this.props
     const smallSreenDetected = this.checkForSmallScreen()
+    console.log("SMALL SCreEN", smallSreenDetected)
 
     // try to detect the conversation before rendering
     if (match.params.conversationId || !smallSreenDetected) {

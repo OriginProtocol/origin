@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 
 import { fetchUser } from 'actions/User'
+import { showMainNav } from 'actions/App'
 
 import CompactMessages from 'components/compact-messages'
 
@@ -31,6 +32,7 @@ class Conversation extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
+    this.loadPurchase = this.loadPurchase.bind(this)
 
     this.conversationDiv = React.createRef()
     this.fileInput = React.createRef()
@@ -47,12 +49,19 @@ class Conversation extends Component {
   }
 
   componentDidMount() {
+    const { smallScreenOrDevice, showMainNav, showNav } = this.props
+    let updateShowNav = true
     // try to detect the user before rendering
     this.identifyCounterparty()
 
-    if (this.props.smallScreenOrDevice) {
+
+    if (smallScreenOrDevice) {
       this.loadListing()
+      updateShowNav = false
+      // if (showNav) showMainNav(false)
     }
+
+    showMainNav(updateShowNav)
 
     // why does the page jump ?????
     // regardless, need to scroll past the banner for now anyway
@@ -187,30 +196,29 @@ class Conversation extends Component {
     const { wallet } = this.props
     const { counterparty, listing, purchase } = this.state
 
-    // listing may not be found
     if (!listing.id) {
       return this.setState({ purchase: {} })
     }
 
     const offers = await origin.marketplace.getOffers(listing.id)
-    const involvingCounterparty = offers.filter(
-      o => formattedAddress(o.buyer) === formattedAddress(counterparty.address) || formattedAddress(o.buyer) === formattedAddress(wallet.address)
-    )
-    const mostRecent = involvingCounterparty.sort(
-      (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
-    )[0]
+    const involvingCounterparty = offers.filter(o => {
+      const buyerIsCounterparty = formattedAddress(o.buyer) === formattedAddress(counterparty.address)
+      const buyerIsCurrentUser = formattedAddress(o.buyer) === formattedAddress(wallet.address)
 
-    // purchase may not be found
+      return buyerIsCounterparty || buyerIsCurrentUser
+    })
+
+    const sortOrder = (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
+    const mostRecent = involvingCounterparty.sort(sortOrder)[0]
+
     if (!mostRecent) {
       return this.setState({ purchase: {} })
     }
-    // compare with existing state
-    if (
-      // purchase is different
-      mostRecent.id !== purchase.id ||
-      // stage has changed
-      mostRecent.status !== purchase.status
-    ) {
+
+    const purchaseHasChanged = mostRecent.id !== purchase.id
+    const statusHasChanged = mostRecent.status !== purchase.status
+
+    if (purchaseHasChanged || statusHasChanged) {
       this.setState({ purchase: mostRecent })
       this.scrollToBottom()
     }
@@ -238,13 +246,25 @@ class Conversation extends Component {
     }
   }
 
+  getLastMessage(messages) {
+    const lastMessageIndex = messages.length - 1
+    const sortOrder = (a, b) => (a.created < b.created ? -1 : 1)
+    return messages.sort(sortOrder)[lastMessageIndex]
+  }
+
+  getFirstMessage(messages) {
+    const sortOrder = (a, b) => (a.created < b.created ? -1 : 1)
+    return messages.sort(sortOrder)[0]
+  }
+
   render() {
     const { id, intl, messages, smallScreenOrDevice, wallet, withListingSummary } = this.props
     const {
       counterparty,
       files,
       invalidTextInput,
-      listing
+      listing,
+      purchase
     } = this.state
     const { name, created } = listing
     const counterpartyAddress = formattedAddress(counterparty.address)
@@ -255,18 +275,71 @@ class Conversation extends Component {
       origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
       canDeliverMessage
     const buyerName = abbreviateName(counterparty) || truncateAddress(counterpartyAddress)
+    const latestMessage = this.getLastMessage(messages)
+    const firstMessage = this.getFirstMessage(messages)
+    const infoWithLatestTime = (lastMessage) => (result, info) => {
+      const noInfo = !info || info === 0
+      if (noInfo) return result
+
+      const { timestamp } = info
+      const { created } = lastMessage
+
+      if (timestamp > (created/1000)) return [...result, info]
+      return result
+    }
+
+    const infoWithEarliestTime = (firstMessage) => (result, info) => {
+      const noInfo = !info || info === 0
+      if (noInfo) return result
+      const { timestamp } = info
+      const { created } = firstMessage
+
+      if (timestamp < (created/1000)) return [...result, info]
+      return result
+    }
+    const purchasePresent = Object.keys(purchase).length
+    const offerCreated = purchasePresent && purchase.event('OfferCreated')
+    const offerWithdrawn = purchasePresent && purchase.event('OfferWithdrawn')
+    const offerAccepted = purchasePresent && purchase.event('OfferAccepted')
+    const offerDisputed = purchasePresent && purchase.event('OfferDisputed')
+    const offerRuling = purchasePresent && purchase.event('OfferRuling')
+    const offerFinalized = purchasePresent && purchase.event('OfferFinalized')
+    const offerData = purchasePresent && purchase.event('OfferData')
+    const purchaseInfo = [offerCreated, offerWithdrawn, offerAccepted, offerDisputed, offerRuling, offerFinalized, offerData]
+    const postMessagesPurchaseInfo = purchaseInfo.reduce(infoWithLatestTime(latestMessage), [])
+    const anteMessagesPurchaseInfo = purchaseInfo.reduce(infoWithEarliestTime(firstMessage), [])
 
     return (
       <Fragment>
         {((!smallScreenOrDevice) && withListingSummary) &&
           listing.id && (
-            <span className="purchase-info">
-              {buyerName} purchased {name} on {moment(created).format('MMM Do h:mm a')}
-            </span>
-        )}
+            anteMessagesPurchaseInfo.map(({ timestamp }) => (
+              <span key={new Date() + Math.random()} className="purchase-info">
+                {buyerName} did some action to {name} on {moment(timestamp).format('MMM Do h:mm a')}
+              </span>
+            ))
+          )
+        }
         <div ref={this.conversationDiv} className="conversation">
-          <CompactMessages messages={messages} />
+          <CompactMessages
+            messages={messages}
+            purchase={purchase}
+            listing={listing}
+            wallet={wallet}
+            counterparty={counterparty}
+            loadPurchase={this.loadPurchase}
+            purchaseInfo={purchaseInfo}
+          />
         </div>
+        {((!smallScreenOrDevice) && withListingSummary) &&
+          listing.id && (
+            postMessagesPurchaseInfo.map(({ timestamp }) => (
+              <span key={new Date() + Math.random()} className="purchase-info">
+                {buyerName} did some action to {name} on {moment(timestamp).format('MMM Do h:mm a')}
+              </span>
+            ))
+          )
+        }
         {!shouldEnableForm && (
           <form className="add-message d-flex">
             <textarea rows="4" tabIndex="0" disabled />
@@ -351,15 +424,17 @@ class Conversation extends Component {
   }
 }
 
-const mapStateToProps = ({ users, wallet }) => {
+const mapStateToProps = ({ users, wallet, app }) => {
   return {
     users,
-    wallet
+    wallet,
+    showNav: app.showNav
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: addr => dispatch(fetchUser(addr))
+  fetchUser: addr => dispatch(fetchUser(addr)),
+  showMainNav: (showNav) => dispatch(showMainNav(showNav))
 })
 
 export default connect(

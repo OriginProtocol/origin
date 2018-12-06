@@ -34,7 +34,7 @@ class Message extends Component {
     } = this.props
     const { created, hash } = message
     const { address, profile } = user
-    const userName = abbreviateName(user)
+    const userName = abbreviateName(user, 'Unnamed User')
     const currentUser = web3Account === user.address
     const fullAddress = formattedAddress(address)
     const userAddress = truncateAddress(fullAddress)
