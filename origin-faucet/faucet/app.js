@@ -1,6 +1,7 @@
 require('dotenv').config()
 try {
   require('envkey')
+  console.log("USING ENVKEY !")
 } catch (error) {
   console.log('EnvKey not configured')
 }
@@ -104,6 +105,9 @@ const config = {
     DEFAULT_NETWORK_ID
   ).split(',').map(parseInt),
 }
+
+
+console.log("process.env.NETWORK_IDS=", process.env.NETWORK_IDS)
 
 try {
   config.providers = Config.createProviders(config.networkIds)
