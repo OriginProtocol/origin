@@ -1,26 +1,5 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import {
-  BrowserRouter as Router,
-  Route
-} from 'react-router-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
 
-
-// Blueprint CSS imports
-import 'normalize.css/normalize.css'
-import '@blueprintjs/icons/lib/css/blueprint-icons.css'
-import '@blueprintjs/core/lib/css/blueprint.css'
-
-import Index from './components/Index'
-
-const App = () => {
-  return (
-    <Router>
-      <div>
-        <Route path="/" component={Index} />
-      </div>
-    </Router>
-  )
-}
-
-export default App
+ReactDOM.render(<App />, document.getElementById('app'));
