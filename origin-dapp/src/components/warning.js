@@ -24,12 +24,18 @@ class Warning extends Component {
     const currentNetwork = getCurrentNetwork(web3NetworkId)
     const networkType = currentNetwork && currentNetwork.type
 
+    let wrapperClass = 'warning alert alert-warning'
+    if (this.state.warningExpanded)
+      wrapperClass += ' expanded'
+    if (!this.props.showWelcome)
+      wrapperClass += ' d-none'
+
     return (
-      <div className={`warning alert alert-warning ${this.state.warningExpanded ? 'expanded' : ''}`} onClick={this.onWarningClick}>
+      <div className={wrapperClass} onClick={this.onWarningClick}>
         <div className="container">
           <div className="row">
             <div className="col">
-              <div className="d-flex align-items-start">
+              <div className="d-flex align-items-start align-items-md-center">
                 <BetaBadge />
                 <div className="text-container mr-auto pt-1">
                   <p>
@@ -93,9 +99,10 @@ class Warning extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app }) => {
   return {
-    web3NetworkId: state.app.web3.networkId
+    web3NetworkId: app.web3.networkId,
+    showWelcome: app.showWelcome
   }
 }
 
