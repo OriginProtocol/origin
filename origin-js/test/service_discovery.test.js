@@ -23,6 +23,7 @@ describe('Discovery service', function() {
             'listing': {
               'data': {
                 'id': listingId,
+                'dappSchemaId': 'http://schema.originprotocol.com/forSale.mushrooms_v1.0.0',
                 'ipfs': {},
                 'title': 'title',
                 'description': 'some description',
