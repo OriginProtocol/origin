@@ -8,6 +8,7 @@ const initialState = {
   // a list of ids that were present last time the notifications dropdown was closed
   notificationsDismissed: [],
   showNav: true,
+  showWelcome: true,
   translations: {
     selectedLanguageCode: null,
     selectedLanguageFull: null,
@@ -36,6 +37,9 @@ export default function App(state = initialState, action = {}) {
 
   case AppConstants.SHOW_MAIN_NAV:
     return { ...state, showNav: action.showNav }
+
+  case AppConstants.SHOW_WELCOME:
+    return { ...state, showWelcome: action.showWelcome }
 
   case AppConstants.TRANSLATIONS:
     return {

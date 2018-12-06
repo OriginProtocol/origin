@@ -14,7 +14,7 @@ class ConfirmPublish extends Component {
         isOpen={open}
         handleToggle={handleToggle}
         tabIndex="-1"
-        data-modal={dataModal}
+        className={dataModal}
       >
         <div className="image-container">
           <img src="images/public-icon.svg" role="presentation" />

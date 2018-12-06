@@ -2,7 +2,7 @@ import React from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { Button, Spinner } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 
 import LoadingSpinner from 'components/LoadingSpinner'
 
