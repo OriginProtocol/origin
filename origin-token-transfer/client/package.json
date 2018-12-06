@@ -3,25 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^3.7.0",
+    "@blueprintjs/core": "^3.9.0",
     "moment": "^2.22.2",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-google-login": "^3.2.1",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-google-login": "^4.0.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.0.5",
+    "react-scripts": "^2.1.1",
     "redux": "^4.0.1"
   },
   "scripts": {
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "lint": "eslint '**/*.js' --rulesdir ../../",
+    "lint": "eslint '**/*.js'",
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": [
     ">0.2%",

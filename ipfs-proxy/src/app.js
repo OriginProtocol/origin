@@ -130,4 +130,11 @@ logger.debug(`Listening on ${config.IPFS_PROXY_PORT}`)
 logger.debug(`Proxying to IPFS gateway ${config.IPFS_GATEWAY_URL}`)
 logger.debug(`Proxying to IPFS API ${config.IPFS_API_URL}`)
 
+process.on('SIGINT', function() {
+  logger.debug('\nGracefully shutting down from SIGINT (Ctrl+C)')
+  server.close(() => {
+    process.exit()
+  })
+})
+
 module.exports = server
