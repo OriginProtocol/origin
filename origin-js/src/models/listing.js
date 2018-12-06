@@ -28,13 +28,12 @@ export class Listing {
    *  - {Array} slots - to be implemented
    *  - {string} schemaId
    *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
-   *  - {string} expiry
    *  - {string} deposit
    *  - {string} depositManager - address of depositManager
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    schemaId, dappSchemaId, deposit, depositManager, expiry, commissionPerUnit }) {
+    schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit }) {
 
     this.id = id
     this.title = title
@@ -59,7 +58,6 @@ export class Listing {
     this.dappSchemaId = dappSchemaId
     this.deposit = deposit
     this.depositManager = depositManager
-    this.expiry = expiry
     this.commissionPerUnit = commissionPerUnit
   }
 

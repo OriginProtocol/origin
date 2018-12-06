@@ -1,6 +1,6 @@
 {
   "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
-  "dappSchemaId": "http://schema.originprotocol.com/forSale.mushrooms_v1.0.0",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-mushrooms_1.0.0.json",
   "listingType": "unit",
   "category": "schema.forSale",
   "subCategory": "schema.forSale.mushrooms",
