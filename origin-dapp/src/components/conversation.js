@@ -9,7 +9,7 @@ import CompactMessages from 'components/compact-messages'
 import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 
-import { modifyImage } from 'utils/fileUtils'
+import { generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
 import { formattedAddress } from 'utils/user'
 
@@ -104,7 +104,7 @@ class Conversation extends Component {
 
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
-        modifyImage(filesObj[key], { orientation: true }, (dataUri) => {
+        generateCroppedImage(filesObj[key], null, (dataUri) => {
           this.setState((state) => {
             return {
               ...state,

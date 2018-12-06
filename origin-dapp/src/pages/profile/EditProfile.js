@@ -3,7 +3,6 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import Modal from 'components/modal'
 import Avatar from 'components/avatar'
-import { modifyImage } from 'utils/fileUtils'
 
 class EditProfile extends Component {
   constructor(props) {
@@ -39,9 +38,7 @@ class EditProfile extends Component {
     const { data } = this.props
     const { pic } = data
     if (pic && pic !== prevProps.data.pic) {
-      modifyImage(pic, { orientation: true }, (dataUri) => {
-        this.setState({ pic: dataUri })
-      })
+      this.setState({ pic })
     }
 
     if (!prevProps.open && this.props.open) {

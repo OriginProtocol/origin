@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import ImageCropper from '../modals/image-cropper'
-import { getDataUri, modifyImage } from 'utils/fileUtils'
+import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 
 const MAX_IMAGE_COUNT = 10
 
@@ -104,7 +104,7 @@ class PhotoPicker extends Component {
         if (imageFiles.hasOwnProperty(key)) {
           const file = imageFiles[key]
 
-          modifyImage(file, { orientation: true }, (dataUri) => {
+          generateCroppedImage(file, { aspectRatio: 4/3, centerCrop: true }, (dataUri) => {
             pictures.push({
               originalImageFile: file,
               croppedImageUri: dataUri

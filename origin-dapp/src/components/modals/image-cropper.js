@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import ReactCrop from 'react-image-crop'
-import { modifyImage, generateCroppedImage } from 'utils/fileUtils'
+import { generateCroppedImage } from 'utils/fileUtils'
 import Modal from 'components/modal'
 
 class ImageCropper extends Component {
@@ -27,9 +27,10 @@ class ImageCropper extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.imageFileObj && this.props.imageFileObj !== prevProps.imageFileObj) {
+    const { imageFileObj, limitSize } = this.props
+    if (imageFileObj && imageFileObj !== prevProps.imageFileObj) {
 
-      modifyImage(this.props.imageFileObj, { orientation: true }, (dataUri) => {
+      generateCroppedImage(imageFileObj, { limitSize }, (dataUri) => {
         this.setState({
           imageSrc: dataUri,
           ...this.props
@@ -54,10 +55,16 @@ class ImageCropper extends Component {
     })
   }
 
-  onCropComplete() {
-    const { imageFileObj, pixelCrop } = this.state
+  async onCropComplete() {
+    const { imageFileObj, pixelCrop, crop = {} } = this.state
+    const { limitSize } = this.props
 
-    generateCroppedImage(imageFileObj, pixelCrop, (croppedImageUri) => {
+    const options = {
+      ...pixelCrop,
+      aspectRatio: crop.aspect,
+      limitSize
+    }
+    await generateCroppedImage(imageFileObj, options, (croppedImageUri) => {
       this.props.onCropComplete(croppedImageUri, imageFileObj)
     })
   }
