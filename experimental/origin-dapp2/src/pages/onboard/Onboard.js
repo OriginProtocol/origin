@@ -54,6 +54,13 @@ export default Onboard
 require('react-styl')(`
   .onboard
     margin-top: 3.5rem
+
+    .btn
+      border-radius: 2rem
+      padding: 0.75rem 2rem
+      margin-bottom: 1rem
+      min-width: 10rem
+      font-size: 18px
     h2
       font-family: Poppins
       font-size: 40px
@@ -132,38 +139,34 @@ require('react-styl')(`
       a.cancel
         font-size: 14px
         font-weight: normal
-      .btn
-        border-radius: 2rem
-        padding: 0.75rem 2rem
-        margin-bottom: 1rem
 
-      .qm
-        width: 2rem
-        height: 2rem
-        background: var(--golden-rod)
-        position: absolute
-        border-radius: 2rem
-        bottom: -0.75rem
-        right: -2rem
-        color: white
-        font-weight: 700
-        font-size: 1.5rem
-        line-height: 2rem
+    .qm
+      width: 2rem
+      height: 2rem
+      background: var(--golden-rod)
+      position: absolute
+      border-radius: 2rem
+      bottom: -0.75rem
+      right: -2rem
+      color: white
+      font-weight: 700
+      font-size: 1.5rem
+      line-height: 2rem
+      &::after
+        content: "?"
+      &:nth-child(2)
+        right: 0.25rem
+      &.active
+        background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center
+        background-size: 1.2rem
         &::after
-          content: "?"
-        &:nth-child(2)
-          right: 0.25rem
-        &.active
-          background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center
-          background-size: 1.2rem
-          &::after
-            content: ""
+          content: ""
 
-      .spinner
-        background: url(images/spinner-animation-dark.svg) no-repeat center
-        background-size: 100%
-        width: 5rem
-        height: 5rem
-        margin: 2rem 0
+    .spinner
+      background: url(images/spinner-animation-dark.svg) no-repeat center
+      background-size: 100%
+      width: 5rem
+      height: 5rem
+      margin: 2rem 0
 
 `)
