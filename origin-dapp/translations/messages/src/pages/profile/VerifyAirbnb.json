@@ -12,12 +12,12 @@
     "defaultMessage": "Other users will know that you have a verified Airbnb profile and your user id will be published on the blockchain."
   },
   {
-    "id": "VerifyAirbnb.continue",
-    "defaultMessage": "Continue"
-  },
-  {
     "id": "VerifyAirbnb.cancel",
     "defaultMessage": "Cancel"
+  },
+  {
+    "id": "VerifyAirbnb.continue",
+    "defaultMessage": "Continue"
   },
   {
     "id": "VerifyAirbnb.enterCodeIntoAirbnb",

@@ -4,7 +4,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment'
 
-import { storeWeb3Intent } from 'actions/App'
+import { storeWeb3Intent, showMainNav, showWelcomeWarning } from 'actions/App'
 import {
   deployProfile,
   deployProfileReset,
@@ -53,6 +53,8 @@ class Profile extends Component {
       this
     )
     this.profileDeploymentComplete = this.profileDeploymentComplete.bind(this)
+    this.handleDescriptionReadMore = this.handleDescriptionReadMore.bind(this)
+    this.updateProfileMobileLayout = this.updateProfileMobileLayout.bind(this)
     /*
       Three-ish Profile States
 
@@ -63,6 +65,7 @@ class Profile extends Component {
     */
 
     const { firstName, lastName, description } = this.props.provisional
+    this.smWidthThreshold = 576
 
     this.state = {
       lastPublish: null,
@@ -88,7 +91,9 @@ class Profile extends Component {
       provisional: props.provisional,
       successMessage: '',
       wallet: null,
-      imageToCrop: null
+      imageToCrop: null,
+      descriptionExpanded: false,
+      profileMobileLayout: false
     }
 
     this.intlMessages = defineMessages({
@@ -128,18 +133,19 @@ class Profile extends Component {
       airbnbVerified: {
         id: 'Profile.airbnbVerified',
         defaultMessage: 'Airbnb account verified!'
+      },
+      descriptionReadMore: {
+        id: 'Profile.descriptionReadMore',
+        defaultMessage: 'Read more'
+      },
+      descriptionReadLess: {
+        id: 'Profile.descriptionReadLess',
+        defaultMessage: 'Read less'
       }
     })
   }
 
-  componentDidMount() {
-    this.setProgress({
-      provisional: this.props.provisionalProgress,
-      published: this.props.publishedProgress
-    })
-  }
-
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     // prompt user if tab/window is closing before changes have been published
     if (this.props.changes.length) {
       window.addEventListener('beforeunload', this.handleUnload)
@@ -156,6 +162,23 @@ class Profile extends Component {
         published: this.props.publishedProgress
       })
     }
+
+    // happens when window resizes or edit profile form is toggled
+    if (
+      prevState.profileMobileLayout !== this.state.profileMobileLayout ||
+      prevState.modalsOpen.profile !== this.state.modalsOpen.profile
+    ) {
+      const isFullScreenProfileEdit = this.state.profileMobileLayout && this.state.modalsOpen.profile
+
+      this.props.showMainNav(!isFullScreenProfileEdit)
+      this.props.showWelcomeWarning(!isFullScreenProfileEdit)
+    }
+  }
+
+  // when user clicks on "Read More" link under the description
+  handleDescriptionReadMore(e) {
+    e.preventDefault()
+    this.setState({ descriptionExpanded: !this.state.descriptionExpanded })
   }
 
   // conditionally close modal identified by data attribute
@@ -247,10 +270,39 @@ class Profile extends Component {
   componentWillUnmount() {
     window.removeEventListener('beforeunload', this.handleUnload)
     clearInterval(this.createdAtInterval)
+    window.removeEventListener('resize', this.updateProfileMobileLayout)
+    this.props.showMainNav(true)
+  }
+
+  componentDidMount() {
+    this.setProgress({
+      provisional: this.props.provisionalProgress,
+      published: this.props.publishedProgress
+    })
+
+    window.addEventListener('resize', this.updateProfileMobileLayout)
+    this.updateProfileMobileLayout()
+  }
+
+  updateProfileMobileLayout() {
+    const currentProfileMobileLayout = window.innerWidth < this.smWidthThreshold
+
+    // only update this state when it changes
+    if (this.state.profileMobileLayout !== currentProfileMobileLayout) {
+      this.setState({ profileMobileLayout: currentProfileMobileLayout })
+    }
   }
 
   render() {
-    const { modalsOpen, progress, successMessage, imageToCrop } = this.state
+    const {
+      modalsOpen,
+      progress,
+      successMessage,
+      imageToCrop,
+      descriptionExpanded,
+      lastPublishTime,
+      profileMobileLayout
+   } = this.state
 
     const {
       changes,
@@ -285,21 +337,29 @@ class Profile extends Component {
     }
     const statusClass = statusClassMap[publishStatus]
     const statusText = statusTextMap[publishStatus]
+    const descriptionLinkText = this.props.intl.formatMessage(
+      descriptionExpanded ?
+      this.intlMessages.descriptionReadLess :
+      this.intlMessages.descriptionReadMore
+    )
 
     return (
       <div className="current-user profile-wrapper">
-        <div className="container">
+        <div className={modalsOpen.profile && this.state.profileMobileLayout ? 'd-none' : 'container'}>
           <div className="row">
             <div className="col-12 col-lg-8">
-              <div className="row attributes">
-                <div className="col-4 col-md-3">
+              <div className={`row attributes mb-0 d-lg-none`}>
+                <Guidance mobileLayout={true}/>
+              </div>
+              <div className="row attributes mt-3 mt-lg-0">
+                <div className="col-3 pr-0 pr-lg-3">
                   <Avatar
                     image={provisional.pic}
                     className="primary"
                     placeholderStyle="unnamed"
                   />
                 </div>
-                <div className="col-8 col-md-9">
+                <div className="col-9">
                   <div className="name d-flex">
                     <h1>{fullName || <UnnamedUser />}</h1>
                     <div className="icon-container">
@@ -308,15 +368,31 @@ class Profile extends Component {
                         data-modal="profile"
                         onClick={this.handleToggle}
                       >
-                        <img src="images/edit-icon.svg" alt="edit name" />
+                        <img className="edit-profile" src="images/edit-icon.svg" alt="edit name" />
                       </button>
                     </div>
                   </div>
-                  <p className="ws-aware">{description}</p>
+                  <p className={'ws-aware description mb-0 mb-sm-3' + (descriptionExpanded ? ' expanded' : '')}>{description}</p>
+                  <div className="mb-2 description-options d-md-none">
+                  {/*
+                    * TODO: do not display the link when there is no text overflow.
+                    * Downside: probably requires a hacky javascript solution.
+                  */}
+                    <a
+                      href="javascript:void(0);"
+                      onClick={this.handleDescriptionReadMore}
+                    >
+                      {descriptionLinkText}
+                      <img
+                        id="description-caret"
+                        src={descriptionExpanded ? 'images/caret-up-blue.svg' : 'images/caret-down-blue.svg'}
+                      />
+                    </a>
+                  </div>
                 </div>
               </div>
 
-              <h2>
+              <h2 id="verify-yourself">
                 <FormattedMessage
                   id={'Profile.verifyYourselfHeading'}
                   defaultMessage={'Verify yourself on Origin'}
@@ -328,7 +404,7 @@ class Profile extends Component {
                 handleToggle={this.handleToggle}
               />
 
-              <div className="col-12">
+              <div className="col-12 pl-0 pr-0 pr-md-3 pl-md-3">
                 <Strength strength={profile.strength} progress={progress} />
                 {!hasChanges && (
                   <button
@@ -371,21 +447,21 @@ class Profile extends Component {
                           id={'Profile.lastPublished'}
                           defaultMessage={'Last published'}
                         />{' '}
-                        {this.state.lastPublishTime}
+                        {lastPublishTime}
                       </span>
                     )}
                   </div>
                 )}
               </div>
             </div>
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-4 d-none d-lg-block">
               <WalletCard
                 wallet={wallet}
                 identityAddress={this.props.identityAddress}
                 withMenus={true}
                 withProfile={false}
               />
-              <Guidance />
+              <Guidance mobileLayout={false} />
             </div>
           </div>
         </div>
@@ -393,6 +469,8 @@ class Profile extends Component {
         <EditProfile
           open={modalsOpen.profile}
           handleToggle={this.handleToggle}
+          mobileLayout={profileMobileLayout}
+          mobileDescriptionMaxLength={500}
           handleSubmit={data => {
             this.props.updateProfile(data)
             this.setState({
@@ -411,7 +489,8 @@ class Profile extends Component {
               imageToCrop,
               modalsOpen: {
                 ...modalsOpen,
-                profile: false,
+                // close edit profile form only when it is displayed in modal
+                profile: profileMobileLayout,
                 cropModal: true
               }
             })
@@ -693,19 +772,20 @@ Profile.getDerivedStateFromProps = (nextProps, prevState) => {
 const mapStateToProps = state => {
   return {
     deployResponse: state.profile.deployResponse,
+    identityAddress: state.profile.user.identityAddress,
     issuer: state.profile.issuer,
     published: state.profile.published,
     provisional: state.profile.provisional,
     strength: state.profile.strength,
     changes: state.profile.changes,
     lastPublish: state.profile.lastPublish,
+    mobileLayout: state.app.mobileDevice,
+    networkId: state.app.web3.networkId,
     provisionalProgress: state.profile.provisionalProgress,
     publishedProgress: state.profile.publishedProgress,
     profile: state.profile,
-    identityAddress: state.profile.user.identityAddress,
     wallet: state.wallet,
     web3Intent: state.app.web3.intent,
-    networkId: state.app.web3.networkId,
     mobileDevice: state.app.mobileDevice
   }
 }
@@ -715,6 +795,8 @@ const mapDispatchToProps = dispatch => ({
   deployProfile: opts => dispatch(deployProfile(opts)),
   deployProfileReset: () => dispatch(deployProfileReset()),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  showMainNav: (showNav) => dispatch(showMainNav(showNav)),
+  showWelcomeWarning: (showWarning) => dispatch(showWelcomeWarning(showWarning)),
   updateProfile: data => dispatch(updateProfile(data))
 })
 
