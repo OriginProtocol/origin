@@ -14,7 +14,7 @@
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
-    "test": "mocha -r @babel/register -r @babel/polyfill -t 10000 --exit",
+    "test": "NODE_ENV=test mocha -r @babel/register -r @babel/polyfill -t 10000 --exit",
     "vest": "node src/scripts/vest_grants.js"
   },
   "author": "",
