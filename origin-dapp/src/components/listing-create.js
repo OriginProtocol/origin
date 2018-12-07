@@ -1201,6 +1201,8 @@ const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
   return {
     exchangeRates,
     messagingEnabled: activation.messaging.enabled,
+    notificationsHardPermission: activation.notifications.permissions.hard,
+    notificationsSoftPermission: activation.notifications.permissions.soft,
     pushNotificationsSupported: activation.notifications.pushEnabled,
     serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,

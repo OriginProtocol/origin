@@ -11,7 +11,8 @@ RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
 COPY ./origin-notifications /app
-RUN npm ci --loglevel notice
+
+RUN npm install --loglevel notice
 
 CMD eval $(envkey-source) && \
 	npm run migrate && \
