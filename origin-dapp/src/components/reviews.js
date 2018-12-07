@@ -16,7 +16,6 @@ class Reviews extends Component {
 
   async componentDidMount() {
     const { userAddress } = this.props
-
     const listingIdsAsSeller = await origin.marketplace.getListings({
       idsOnly: true,
       listingsFor: userAddress
