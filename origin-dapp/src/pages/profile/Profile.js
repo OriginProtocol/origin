@@ -456,7 +456,7 @@ class Profile extends Component {
             </div>
             <div className="col-12 col-lg-4 d-none d-lg-block">
               <WalletCard
-                wallet={wallet}
+                {...wallet}
                 identityAddress={this.props.identityAddress}
                 withMenus={true}
                 withProfile={false}
