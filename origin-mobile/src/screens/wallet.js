@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert, Clipboard, StyleSheet, Text, View } from 'react-native'
+import { Alert, Clipboard, StyleSheet, Text, View, TextInput } from 'react-native'
 import { connect } from 'react-redux'
 
 import originWallet from '../OriginWallet'
@@ -54,6 +54,13 @@ class WalletScreen extends Component {
               style={[styles.button, {marginTop:10}]}
               onPress={() => originWallet.giveMeEth("1.0")}
               />}
+            {originWallet.isLocalApi() && <View>
+              <Text style={[styles.text, styles.heading]}>Api host IP:</Text>
+              <TextInput style={{ height:40, borderColor:'gray', borderWidth:1 }}
+                  onSubmitEditing={(e) => originWallet.setRemoteLocal(e.nativeEvent.text)}
+                  value={originWallet.getCurrentRemoteLocal()}
+                />
+              </View>}
           </View>
         </View>
       </View>
