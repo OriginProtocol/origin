@@ -4,6 +4,7 @@ const app = express()
 const { check, validationResult } = require('express-validator/check')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const moment = require('moment')
 const port = process.env.PORT || 5000
 const passport = require('passport')
 const path = require('path')
@@ -59,6 +60,8 @@ const asyncMiddleware = fn =>
     Promise.resolve(fn(req, res, next))
       .catch(next)
   }
+
+logDate = () => moment().toString()
 
 /**
  * Middleware for requiring a session. Injects the X-Authenticated-Email header
@@ -120,6 +123,9 @@ app.post('/api/transfer', [
       amount
     })
     res.send(grant.get({ plain: true }))
+
+    const grantedAt = moment(grant.grantedAt).format('YYYY-MM-DD')
+    console.log(`${logDate()} ${grant.email} grant ${grantedAt} transferred ${amount} OGN to ${address}`)
   } catch(e) {
     if (e instanceof ReferenceError || e instanceof RangeError) {
       res.status(422).send(e.message)
@@ -158,6 +164,8 @@ app.post(
       action: LOGIN,
       data: JSON.stringify({})
     })
+
+    console.log(`${logDate()} ${req.user.email} logged in`)
 
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify(req.user))
