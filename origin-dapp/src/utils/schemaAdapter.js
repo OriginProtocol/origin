@@ -1,15 +1,26 @@
-// Pseudo-code - WIP for discussion only at this point
-// This would be used in /src/utils/listing.js originToDAppListing() method
-// to map deprecated schemas to existing ones based on category name
+/*
+ *  @function schemaAdapter
+ *  @description fetches the schema for a given listing
+ *               and maps deprecated schema versions to existing versions as needed.
+ *               Used in /utils/listing.js 
+ *  @param {object} listing - the listing object fetched from IPFS
+ *  @returns {object} object keys are "category" (string), "schema" (object), and "isDeprecated" (boolean)
+ */
 
 export default async (listing) => {
-  const { dappSchemaId } = listing
+  let { dappSchemaId } = listing
+  const hostname = window.location.hostname
+  const isLocal = hostname === 'localhost' || hostname === '0.0.0.0'
 
   // if the listing has a dappSchemaId, it was created using one of the newer generation of schemas
   if (dappSchemaId) {
+    // try fetching schema by ID.
     try {
-      // try fetching schema by ID.
-      return fetch(`schemas/${dappSchemaId}.json`)
+      if (isLocal) {
+        dappSchemaId = dappSchemaId.replace('https://dapp.originprotocol.com', 'http://localhost:3000')
+      }
+
+      return fetch(dappSchemaId)
       .then(response => response.json())
       .then(schemaJson => {
         // If it succeeds, the listing was created with a current schema and all is well.
@@ -22,47 +33,54 @@ export default async (listing) => {
     } catch(e) {
       // If the lisitng was created with a deprecated schema,
       // try to map it to a valid schema and fetch that schema
-      let newSchemaId
+      // let newSchemaId
 
-      switch(dappSchemaId) {
-        // a hypothetical version bump
-        case 'services-design-v00':
-          newSchemaId = 'services-design-v01'
-          break
-        // Other version bumps would go here...
-      }
+      // NOTE(John) - Leaving this code here as an example of how we can bump schema versions when needed
 
-      return fetch(`schemas/${newSchemaId}.json`)
-      .then(response => response.json())
-      .then(schemaJson => {
-        return {
-          category: schemaJson.category,
-          schema: schemaJson,
-          isDeprecatedSchema: true
-        }
-      })
+      // switch(dappSchemaId) {
+      //   // a hypothetical version bump example
+      //   case 'https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json':
+      //     newSchemaId = 'https://dapp.originprotocol.com/schemas/forRent-housing_1.0.1.json'
+      //     break
+      // }
+
+      // return fetch(newSchemaId)
+      // .then(response => response.json())
+      // .then(schemaJson => {
+      //   return {
+      //     category: schemaJson.category,
+      //     schema: schemaJson,
+      //     isDeprecatedSchema: true
+      //   }
+      // })
     }
   } else {
     // Since we don't have a dappSchemaId, this listing must've been created using an older generation of schema.
     // So, we need to try to map it to a newer generation schema using the category / sub-category
-    const { category, /*subCategory*/ } = listing
-    let newSchemaName
+    // NOTE - mapping all of these to "unit" schemas because they were created before fractional usage was released
+    const { category } = listing
+    let newSchemaId
 
     switch(category) {
       case 'schema.housing':
-        newSchemaName = 'forSale-realEstate_1.0.0'
+        newSchemaId = 'https://dapp.originprotocol.com/schemas/forSale-realEstate_1.0.0.json'
         break
       case 'schema.tickets':
-        newSchemaName = 'forSale-tickets_1.0.0'
+        newSchemaId = 'https://dapp.originprotocol.com/schemas/forSale-tickets_1.0.0.json'
         break
       case 'schema.forSale':
-        newSchemaName = 'forSale-other_1.0.0'
+        newSchemaId = 'https://dapp.originprotocol.com/schemas/forSale-other_1.0.0.json'
         break
       default:
-        newSchemaName = 'forSale-other_1.0.0'
+        newSchemaId = 'https://dapp.originprotocol.com/schemas/forSale-other_1.0.0.json'
+        break
     }
 
-    return fetch(`schemas/${newSchemaName}.json`)
+    if (isLocal) {
+      newSchemaId = newSchemaId.replace('https://dapp.originprotocol.com', 'http://localhost:3000')
+    }
+
+    return fetch(newSchemaId)
       .then(response => response.json())
       .then(schemaJson => {
         return {

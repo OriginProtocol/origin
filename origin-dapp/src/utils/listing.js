@@ -85,8 +85,6 @@ export async function originToDAppListing(originListing) {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
-    // schemaType: originListing.category.replace('schema.', ''),
-    // category: originListing.subCategory,
     category,
     schema,
     isDeprecatedSchema,
