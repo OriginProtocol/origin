@@ -66,7 +66,6 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
     height,
     aspectRatio,
     centerCrop = false,
-    limitSize = true
   } = options || {}
 
   const defaultConfig = {
@@ -74,6 +73,7 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
     top: y,
     orientation: true
   }
+  let config = defaultConfig
 
 
   function centerCropImage() {
@@ -84,54 +84,56 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
     let cropHeight
 
     if (imageWidth > imageHeight) {
+      // Landscape orientation
       cropHeight = imageHeight
       cropWidth = imageHeight * 1.3333
+      config = {
+        ...defaultConfig,
+        left: (imageWidth / 2) - (cropWidth / 2),
+        top: 0,
+        sourceWidth: cropWidth,
+        sourceHeight: cropHeight,
+        crop: true,
+        aspectRatio
+      }
     } else {
+      // Portrait orientation
       cropWidth = imageWidth
       cropHeight = imageWidth / 1.3333
-    }
-
-    config = {
-      ...defaultConfig,
-      left: 0,
-      top: (imageHeight / 2) - (cropHeight / 2),
-      sourceWidth: cropWidth,
-      sourceHeight: cropHeight,
-      crop: true,
-      aspectRatio
+      config = {
+        ...defaultConfig,
+        left: 0,
+        top: (imageHeight / 2) - (cropHeight / 2),
+        sourceWidth: cropWidth,
+        sourceHeight: cropHeight,
+        crop: true,
+        aspectRatio
+      }
     }
 
     modifyImage(imageFileObj, config, callback)
-    return
-  }
-
-  let config = defaultConfig
-
-  if (!limitSize && aspectRatio) {
-    config = {
-      ...defaultConfig,
-      sourceWidth: width,
-      sourceHeight: height
-    }
-  }
-
-  if (limitSize && !aspectRatio) {
-    config = {
-      ...defaultConfig,
-      maxWidth: MAX_IMAGE_WIDTH,
-      maxHeight: MAX_IMAGE_HEIGHT,
-    }
   }
 
   if (centerCrop) {
+    // This is used by listing-create component to auto-crop images
+    // Load the image, find the center, and auto-crop it
     const dataUri = await getDataUri(imageFileObj)
     const image = new Image()
 
     image.onload = centerCropImage
     image.src = dataUri
 
-    return
-  }
+  } else {
+    // This is used by Profile (avatar selection) and messaging (resizing large images)
+    //  TODO(John) - dunno if this works yet but centerCrop is working I think
+    config = {
+      ...defaultConfig,
+      sourceWidth: width,
+      sourceHeight: height,
+      maxWidth: MAX_IMAGE_WIDTH,
+      maxHeight: MAX_IMAGE_HEIGHT,
+    }
 
-  return modifyImage(imageFileObj, config, callback)
+    modifyImage(imageFileObj, config, callback)
+  }
 }

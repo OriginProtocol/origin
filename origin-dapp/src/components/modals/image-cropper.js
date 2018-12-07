@@ -8,15 +8,17 @@ class ImageCropper extends Component {
   constructor(props) {
     super(props)
 
+    this.defaultCrop = {
+      x: 0,
+      y: 0,
+      width: 100,
+      aspect: 4/3
+    }
+
     this.state = {
       imageFileObj: null,
       imageSrc: null,
-      crop: {
-        x: 0,
-        y: 0,
-        width: 100,
-        aspect: 4/3
-      },
+      crop: this.defaultCrop,
       pixelCrop: null,
       croppedImage: null,
       croppedImageUrl: null
@@ -66,6 +68,10 @@ class ImageCropper extends Component {
     }
     generateCroppedImage(imageFileObj, options, (croppedImageUri) => {
       this.props.onCropComplete(croppedImageUri, imageFileObj)
+      this.setState({
+        crop: this.defaultCrop,
+        imageSrc: null
+      })
     })
   }
 
