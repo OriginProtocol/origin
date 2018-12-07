@@ -8,12 +8,12 @@
     "defaultMessage": "Verification code"
   },
   {
-    "id": "VerifyEmail.continue",
-    "defaultMessage": "Continue"
-  },
-  {
     "id": "VerifyEmail.cancel",
     "defaultMessage": "Cancel"
+  },
+  {
+    "id": "VerifyEmail.continue",
+    "defaultMessage": "Continue"
   },
   {
     "id": "VerifyEmail.emailNotPublished",

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { GoogleLogin } from 'react-google-login'
-import { Dialog, Intent, Toaster } from "@blueprintjs/core";
+import { Dialog, Intent, Toaster } from '@blueprintjs/core'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 

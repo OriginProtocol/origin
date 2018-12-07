@@ -11,6 +11,9 @@ class VerifyTwitter extends Component {
     this.state = {
       generalErrors: []
     }
+
+    this.onCancel = this.onCancel.bind(this)
+    this.onCertify = this.onCertify.bind(this)
   }
 
   async componentDidUpdate(prevProps) {
@@ -26,8 +29,7 @@ class VerifyTwitter extends Component {
     return (
       <Modal
         isOpen={this.props.open}
-        data-modal="twitter"
-        className="attestation"
+        className="twitter attestation"
         handleToggle={this.props.handleToggle}
         tabIndex="-1"
       >
@@ -53,11 +55,21 @@ class VerifyTwitter extends Component {
             }
           />
         </div>
-        <div className="button-container">
+        <div className="button-container d-md-flex flex-md-row justify-content-md-center pt-4">
+          <button
+            data-modal="twitter"
+            className="btn btn-clear d-md-none col-5 col-sm-4"
+            onClick={this.onCancel}
+          >
+            <FormattedMessage
+              id={'VerifyTwitter.cancel'}
+              defaultMessage={'Cancel'}
+            />
+          </button>
           <button
             type="submit"
-            className="btn btn-clear"
-            onClick={() => this.onCertify()}
+            className="btn btn-clear col-5 col-sm-4"
+            onClick={this.onCertify}
           >
             <FormattedMessage
               id={'VerifyTwitter.continue'}
@@ -65,15 +77,11 @@ class VerifyTwitter extends Component {
             />
           </button>
         </div>
-        <div className="link-container">
+        <div className="link-container d-none d-md-block">
           <a
             href="#"
             data-modal="twitter"
-            onClick={event => {
-              event.preventDefault()
-              this.props.handleToggle(event)
-              this.clearErrors()
-            }}
+            onClick={this.onCancel}
           >
             <FormattedMessage
               id={'VerifyTwitter.cancel'}
@@ -100,6 +108,12 @@ class VerifyTwitter extends Component {
         // Service exceptions
         this.setState({ generalErrors: errorsJson })
     }
+  }
+
+  onCancel(e) {
+    e.preventDefault()
+    this.props.handleToggle(e)
+    this.clearErrors()
   }
 
   onCertify() {

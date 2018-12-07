@@ -12,24 +12,23 @@ RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-RUN npm i lerna -g --loglevel notice
-
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
-# Copy release contracts into build directory
-# TODO: Find a better way to handle this
-COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
 COPY ./origin-discovery ./origin-discovery
 COPY ./scripts ./scripts
 
-# Bootstrap dependencies, --ignore-scripts is necessary to avoid overwriting
-# contracts
-RUN lerna bootstrap --ci --ignore-scripts -- --unsafe-perm
+RUN npm install --unsafe-perm
+
+COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
+
+# Workaround for hoist incompatible modules
+RUN ln -s ../../node_modules/scrypt origin-js/node_modules/scrypt
+RUN ln -s ../../node_modules/got origin-js/node_modules/got
 
 # Build origin-js so it is available for the event-listener to import
-RUN lerna run build --scope origin --stream
+RUN npm run build --prefix origin-js
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix origin-discovery && \

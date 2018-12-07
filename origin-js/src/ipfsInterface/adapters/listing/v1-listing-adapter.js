@@ -64,6 +64,7 @@ export default class ListingAdapterV1 extends AdapterBase {
 
     const listing = {
       schemaId: ipfsData.schemaId,
+      dappSchemaId: ipfsData.dappSchemaId,
       type: ipfsData.listingType,
       category: ipfsData.category,
       subCategory: ipfsData.subCategory,
@@ -81,8 +82,8 @@ export default class ListingAdapterV1 extends AdapterBase {
         ? new Money(ipfsData.commission)
         : null
       listing.commissionPerUnit = ipfsData.commissionPerUnit
-      ? new Money(ipfsData.commissionPerUnit)
-      : null
+        ? new Money(ipfsData.commissionPerUnit)
+        : null
     } else if (listing.type === 'fractional') {
       listing.slots = ipfsData.slots
       listing.timeIncrement = ipfsData.timeIncrement

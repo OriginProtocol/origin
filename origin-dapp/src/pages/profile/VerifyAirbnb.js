@@ -23,8 +23,7 @@ class VerifyAirbnb extends Component {
     return (
       <Modal
         isOpen={this.props.open}
-        data-modal="airbnb"
-        className="attestation"
+        className="airbnb attestation"
         handleToggle={this.props.handleToggle}
         tabIndex="-1"
       >
@@ -121,15 +120,26 @@ class VerifyAirbnb extends Component {
             />
           </div>
         </div>
-        <div className="button-container">
-          <button type="submit" className="btn btn-clear">
+        <div className="button-container d-md-flex flex-md-row justify-content-md-center pt-4">
+          <button
+            type="submit"
+            className="btn btn-clear d-md-none col-5 col-sm-4"
+            data-modal="airbnb"
+            onClick={this.onCancel}
+          >
+            <FormattedMessage
+              id={'VerifyAirbnb.cancel'}
+              defaultMessage={'Cancel'}
+            />
+          </button>
+          <button type="submit" className="btn btn-clear col-5 col-sm-4">
             <FormattedMessage
               id={'VerifyAirbnb.continue'}
               defaultMessage={'Continue'}
             />
           </button>
         </div>
-        <div className="link-container">
+        <div className="link-container d-none d-md-block">
           <a href="#" data-modal="airbnb" onClick={this.onCancel}>
             <FormattedMessage
               id={'VerifyAirbnb.cancel'}

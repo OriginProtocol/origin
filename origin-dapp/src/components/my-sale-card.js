@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 import moment from 'moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -29,18 +28,10 @@ class MySaleCard extends Component {
     this.props.fetchUser(this.props.purchase.buyer)
   }
 
-  componentDidMount() {
-    $('[data-toggle="tooltip"]').tooltip()
-  }
-
   setSoldAtTime(soldAt) {
     this.setState({
       soldAtTime: moment(soldAt).fromNow()
     })
-  }
-
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
   render() {

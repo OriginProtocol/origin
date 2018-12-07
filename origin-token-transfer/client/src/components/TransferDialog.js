@@ -8,11 +8,11 @@ import {
 } from '@blueprintjs/core'
 
 import { refreshGrants, setTransferDialogOpen } from '../actions'
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 
 const initialState = {
   amount: 0,
-  address: "",
+  address: '',
   transferInProgress: false
 }
 
