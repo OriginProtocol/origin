@@ -2,7 +2,6 @@ const { vestGrant, vestGrants } = require('../src/lib/vesting')
 const { Event, Grant, sequelize } = require('../src/models')
 const { GRANT_VEST } = require('../src/constants/events')
 
-const BigNumber = require('bignumber.js')
 const chai = require('chai')
 chai.use(require('chai-moment'))
 const expect = chai.expect
@@ -166,7 +165,7 @@ describe('vestGrants', () => {
     expect(events[0].email).to.equal(testEmail)
     expect(events[0].ip).to.be.ok
     expect(events[0].action).to.equal(GRANT_VEST)
-    data = JSON.parse(events[0].data)
+    const data = JSON.parse(events[0].data)
     expect(data.amount).to.equal(1200)
     expect(data.vestDate).to.equal('2015-01-01')
 
