@@ -267,6 +267,16 @@ class ListingCreate extends Component {
       schemaJson.properties.listingType &&
       schemaJson.properties.listingType.const === 'fractional'
 
+    const slotLengthUnit = enableFractional &&
+      this.state.formListing.formData.slotLengthUnit ?
+      this.state.formListing.formData.slotLengthUnit :
+        schemaJson &&
+        schemaJson.properties &&
+        schemaJson.properties.slotLengthUnit &&
+        schemaJson.properties.slotLengthUnit.default
+
+    const fractionalTimeIncrement = slotLengthUnit === 'hours' ? 'hourly' : 'daily'
+
     if (isFractionalListing) {
       this.uiSchema.price = {
         'ui:widget': 'hidden'
@@ -277,9 +287,7 @@ class ListingCreate extends Component {
 
     this.setState({
       schemaFetched: true,
-      // TODO
-      // fractionalTimeIncrement: !isFractionalListing ? null : 
-      //   selectedSchemaType === 'housing' ? 'daily' : 'hourly',
+      fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
       translatedSchema,
       isFractionalListing
@@ -324,7 +332,6 @@ class ListingCreate extends Component {
         ...this.state.formListing,
         formData: {
           ...this.state.formListing.formData,
-          timeIncrement: this.state.fractionalTimeIncrement,
           slots
         }
       }
