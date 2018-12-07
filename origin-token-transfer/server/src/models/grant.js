@@ -83,7 +83,10 @@ module.exports = (sequelize, DataTypes) => {
     const now = this.now || moment()
     for (const event of schedule) {
       if (now < event.date) {
-        return { date: event.date.toString(), amount: event.amount.toNumber() }
+        return {
+          date: event.date.format('YYYY-MM-DD'),
+          amount: event.amount.toNumber()
+        }
       }
     }
     return null
