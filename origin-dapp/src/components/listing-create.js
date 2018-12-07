@@ -110,6 +110,10 @@ class ListingCreate extends Component {
       boostLimit: {
          id: 'schema.boostLimitInOgn',
          defaultMessage: 'Boost Limit'
+      },
+      positiveNumber: {
+        id: 'schema.positiveNumber',
+        defaultMessage: 'should be a positive number'
       }
     })
 
@@ -138,6 +142,7 @@ class ListingCreate extends Component {
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
     this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
+    this.transformFormErrors = this.transformFormErrors.bind(this)
   }
 
   async componentDidMount() {
@@ -525,6 +530,15 @@ class ListingCreate extends Component {
     )
   }
 
+  transformFormErrors(errors) {
+    return errors.map(error => {
+      if (error.property === '.unitsTotal') {
+        error.message = this.props.intl.formatMessage(this.intlMessages.positiveNumber)
+      }
+      return error
+    })
+  }
+
   render() {
     const {
       wallet,
@@ -671,6 +685,7 @@ class ListingCreate extends Component {
                   }}
                   onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
+                  transformErrors={this.transformFormErrors}
                 >
                   {showDetailsFormErrorMsg && (
                     <div className="info-box warn">

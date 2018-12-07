@@ -104,6 +104,7 @@
   "listing-card-prices.loadingMessage": "Loading...",
   "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
   "schema.boostLimitInOgn": "Boost Limit",
+  "schema.positiveNumber": "should be a positive number",
   "backButtonLabel": "Back",
   "listing-create.review": "Review",
   "listing-create.stepNumberLabel": "STEP {stepNumber}",

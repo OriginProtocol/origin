@@ -8,6 +8,10 @@
     "defaultMessage": "Boost Limit"
   },
   {
+    "id": "schema.positiveNumber",
+    "defaultMessage": "should be a positive number"
+  },
+  {
     "id": "backButtonLabel",
     "defaultMessage": "Back"
   },

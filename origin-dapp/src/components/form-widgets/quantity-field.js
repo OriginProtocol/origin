@@ -26,10 +26,8 @@ class QuantityField extends Component {
     return async event => {
       const value = event.target.value
       const isNan = value === '' || isNaN(value)
-      const valueNum = isNan ? value : parseInt(value)
-      if (valueNum <= 0) {
-        return
-      }
+      let valueNum = isNan ? value : parseInt(value)
+      valueNum = valueNum <= 0 ? null : valueNum
       this.setState(
         {
           quantity: valueNum
@@ -56,7 +54,7 @@ class QuantityField extends Component {
                 id="root_quantity"
                 step="1"
                 className="form-control"
-                value={quantity}
+                defaultValue={quantity}
                 onChange={this.onChange()}
                 required={this.props.required}
               />
