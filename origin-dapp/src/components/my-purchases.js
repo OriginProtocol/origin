@@ -19,7 +19,7 @@ class MyPurchases extends Component {
   componentDidMount() {
     if (
       this.props.wallet.address &&
-      (web3.givenProvider || origin.contractService.walletLinker)
+      (!web3.currentProvider.isOrigin || origin.contractService.walletLinker)
     ) {
       this.loadPurchases()
     } else {
