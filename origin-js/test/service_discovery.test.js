@@ -23,7 +23,7 @@ describe('Discovery service', function() {
             'listing': {
               'data': {
                 'id': listingId,
-                'dappSchemaId': 'http://schema.originprotocol.com/forSale.mushrooms_v1.0.0',
+                'dappSchemaId': 'https://schema.originprotocol.com/forSale.mushrooms_1.0.0.json',
                 'ipfs': {},
                 'title': 'title',
                 'description': 'some description',
@@ -59,7 +59,7 @@ describe('Discovery service', function() {
                   'amount': '0',
                   'currency': 'OGN'
                 },
-                'schemaId': 'http://schema.originprotocol.com/listing_v1.0.0',
+                'schemaId': 'https://schema.originprotocol.com/listing_1.0.0.json',
                 'deposit': '0',
                 'depositManager': '0x123',
               }
@@ -400,7 +400,7 @@ describe('Discovery service', function() {
                   'returnValues': {}
                 }],
                 'createdAt': 12345678,
-                'schemaId': 'http://schema.originprotocol.com/offer_v1.0.0',
+                'schemaId': 'https://schema.originprotocol.com/offer_1.0.0.json',
                 'refund': '0',
                 'listingType': 'unit',
                 'unitsPurchased': 1,

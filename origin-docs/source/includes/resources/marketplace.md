@@ -74,7 +74,7 @@ const listing = {
   listingType: "unit",
   media: [{…}],
   price: { amount: "0.01", currency: "ETH" },
-  schemaId: "http://schema.originprotocol.com/listing_v1.0.0",
+  schemaId: "https://schema.originprotocol.com/listing_1.0.0.json",
   subCategory: "schema.forSale.appliances",
   title: "I am a great appliance listing",
   unitsTotal: 1
@@ -139,7 +139,7 @@ const listingId = "927-832"
 //returns
 
 [{
-  "schemaId": "http://schema.originprotocol.com/review_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/review_1.0.0.json",
   "rating": 4,
   "text": "Solid Listing"
   "reviewer": "0x29884972398479234792"
@@ -233,7 +233,7 @@ const offerId = "2403-234"
   buyer: "0x627306090274fwfiou97h0c78a8BEf57",
   events: [...],
   refund: "0",
-  schemaId: "http://schema.originprotocol.com/offer_v1.0.0",
+  schemaId: "https://schema.originprotocol.com/offer_1.0.0.json",
   listingType: "unit",
   unitsPurchased: 1,
   totalPrice: { currency: "ETH", amount: "0.033" },
@@ -273,7 +273,7 @@ const options = {
   buyer: "0x627306090274fwfiou97h0c78a8BEf57",
   events: [...],
   refund: "0",
-  schemaId: "http://schema.originprotocol.com/offer_v1.0.0",
+  schemaId: "https://schema.originprotocol.com/offer_1.0.0.json",
   listingType: "unit",
   unitsPurchased: 1,
   totalPrice: { currency: "ETH", amount: "0.033" },
@@ -376,7 +376,7 @@ The `finalizeOffer` method takes a callback with two arguments:
 const offerId = "9903-75"
 const buyerReview = {
   rating: 5
-  schemaId: "http://schema.originprotocol.com/review_v1.0.0"
+  schemaId: "https://schema.originprotocol.com/review_1.0.0.json"
   text: "Great response times. Professional."
 }
 const callback = (confirmationCount, transactionReceipt) => {
@@ -448,7 +448,7 @@ const offerId = "543-0099"
 const listingId = "9900-234"
 const sellerReview = {
   rating: 4
-  schemaId: "http://schema.originprotocol.com/review_v1.0.0"
+  schemaId: "https://schema.originprotocol.com/review_1.0.0.json"
   text: ""
 }
 const callback = (confirmationCount, transactionReceipt) => {

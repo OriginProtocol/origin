@@ -1,5 +1,5 @@
 const HawaiiHouse = {
-  schemaId: 'http://schema.originprotocol.com/listing_v1.0.0',
+  schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
   listingType: 'unit',
   category: 'schema.housing',
   subCategory: 'schema.housing.vacationRentals',
@@ -41,7 +41,7 @@ const HawaiiHouse = {
 }
 
 const LakeHouse = {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
   "listingType": "unit",
   "category": "schema.housing",
   "subCategory": "schema.housing.vacationRentals",
@@ -82,7 +82,7 @@ const LakeHouse = {
 }
 
 const Car = {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
   "listingType": "unit",
   "category": "schema.forSale",
   "subCategory": "schema.forSale.carsTrucks",
@@ -119,7 +119,7 @@ const Car = {
 }
 
 const TaylorSwiftTickets = {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
   "listingType": "unit",
   "category": "schema.tickets",
   "subCategory": "schema.tickets.music",
@@ -160,7 +160,7 @@ const TaylorSwiftTickets = {
 }
 
 const ZincHouse = {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
   "listingType": "unit",
   "category": "schema.housing",
   "subCategory": "schema.housing.vacationRentals",

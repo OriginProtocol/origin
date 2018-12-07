@@ -22,7 +22,7 @@ const DATA_TYPES = [
   PROFILE_DATA_TYPE
 ]
 
-const schemaIdRegex = new RegExp('([a-zA-Z\-]*)_v?(\\d+\.\\d+\.\\d+)(?:\.json)?')
+const schemaIdRegex = new RegExp('([a-zA-Z\-]*)_v?(\d+\.\d+\.\d+)(?:\.json)?')
 
 export const BASE_SCHEMA_ID = 'https://schema.originprotocol.com/'
 
@@ -39,8 +39,9 @@ export class IpfsDataStore {
   }
 
   /**
-   * Formats of a schema ID is BASE_SCHEMA_ID/<dataType>_v<version>
-   * Ex.: http://schema.originprotocol.com/listing_v1.0.0
+   * Extracts dataType and schemaVersion from a schemaId.
+   * Format of a schema ID is BASE_SCHEMA_ID/<dataType>_<version>.json
+   * Ex.: https://schema.originprotocol.com/listing_1.0.0.json
    * @param (string} schemaId
    * @return {{dataType: string, schemaVersion: string}}
    */

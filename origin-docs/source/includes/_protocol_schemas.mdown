@@ -7,7 +7,7 @@ This describes a listing for purchase on the Origin marketplace.
 
 ```javascript
 {
-    schemaId: "http://schema.originprotocol.com/listing_v1.0.0",
+    schemaId: "https://schema.originprotocol.com/listing_1.0.0.json",
     dappSchemaId: "https://dapp.originprotocol.com/schemas/forSale-toysGames_1.0.0.json"
     listingType: "unit",
     category: "schema.forSale",
@@ -30,7 +30,7 @@ This describes a listing for purchase on the Origin marketplace.
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `http://schema.originprotocol.com/listing_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/listing_1.0.0.json` |
 |**dappSchemaId** | Optional. JSON schema used by the DApp to create the listing. |
 |**listingType** | Must be set to `unit` |
 |**category** | A category/schema key string from the DApp. See possible values [here](https://github.com/OriginProtocol/origin/tree/master/origin-dapp/src/schemaMessages)  |
@@ -56,7 +56,7 @@ An Offer is sent by a buyer to make a purchase from a listing.
 
 ```javascript
 {
-    schemaId: "http://schema.originprotocol.com/offer_v1.0.0",
+    schemaId: "https://schema.originprotocol.com/offer_1.0.0.json",
     listingType: "unit",
     unitsPurchased: 1,
     totalPrice: {amount: "48.7", currency: "ETH"},
@@ -68,7 +68,7 @@ An Offer is sent by a buyer to make a purchase from a listing.
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `http://schema.originprotocol.com/offer_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/offer_1.0.0.json` |
 |**listingType** | Must be set to `unit` |
 |**unitsPurchased** | The number of units to purchase. Currently must be `1`. |
 |**totalPrice** | The price the buyer is willing to pay. For currencies, we support `ETH`, with future plans to support any ERC20 token. |
@@ -81,7 +81,7 @@ A dispute can be started by either party. In v1.0.0, this schema contains no use
 
 ```javascript
 {
-    schemaId: "http://schema.originprotocol.com/dispute_v1.0.0",
+    schemaId: "https://schema.originprotocol.com/dispute_1.0.0.json",
 }
 ```
 
@@ -89,7 +89,7 @@ A dispute can be started by either party. In v1.0.0, this schema contains no use
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `http://schema.originprotocol.com/dispute_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/dispute_1.0.0.json` |
 
 
 ## Listing-Withdraw Schema
@@ -98,7 +98,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 ```javascript
 {
-    schemaId: "http://schema.originprotocol.com/listing-withdraw_v1.0.0",
+    schemaId: "https://schema.originprotocol.com/listing-withdraw_1.0.0.json",
 }
 ```
 
@@ -106,7 +106,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `http://schema.originprotocol.com/listing-withdraw_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/listing-withdraw_1.0.0.json` |
 
 
 ## Offer-Accept Schema
@@ -115,7 +115,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 ```javascript
 {
-    schemaId: "http://schema.originprotocol.com/offer-accept_v1.0.0",
+    schemaId: "https://schema.originprotocol.com/offer-accept_1.0.0.json",
 }
 ```
 
@@ -123,7 +123,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `http://schema.originprotocol.com/offer-accept_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/offer-accept_v1.0.0.json` |
 
 
 ## Offer-Withdraw Schema
@@ -132,7 +132,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 ```javascript
 {
-    schemaId: "http://schema.originprotocol.com/offer-withdraw_v1.0.0",
+    schemaId: "https://schema.originprotocol.com/offer-withdraw_1.0.0.json",
 }
 ```
 
@@ -140,7 +140,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `http://schema.originprotocol.com/offer-withdraw_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/offer-withdraw_1.0.0.json` |
 
 
 ## Profile Schema
@@ -149,7 +149,7 @@ A profile allows a user to let the world know a little more about them.
 
 ```javascript
 {
-    schemaId: "http://schema.originprotocol.com/profile_v1.0.0",
+    schemaId: "https://schema.originprotocol.com/profile_1.0.0.json",
     firstName: "Jake",
     lastName: "Lewis",
     avatar: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
@@ -161,7 +161,7 @@ A profile allows a user to let the world know a little more about them.
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `http://schema.originprotocol.com/profile_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/profile_1.0.0.json` |
 |**firstName** | The user's first name. |
 |**lastName** | The user's last name.|
 
@@ -179,7 +179,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 ```javascript
 {
-    schemaId: "http://schema.originprotocol.com/resolution_v1.0.0",
+    schemaId: "https://schema.originprotocol.com/resolution_1.0.0.json",
 }
 ```
 
@@ -187,7 +187,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `http://schema.originprotocol.com/resolution_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/resolution_1.0.0.json` |
 
 
 ## Review Schema
@@ -196,7 +196,7 @@ A review of a single purchase by either a seller or a buyer.
 
 ```javascript
 {
-    schemaId: "http://schema.originprotocol.com/review_v1.0.0",
+    schemaId: "https://schema.originprotocol.com/review_1.0.0.json",
     rating: 5,
     text: "Buyer handled the notary process very quickly."
 }
@@ -206,6 +206,6 @@ A review of a single purchase by either a seller or a buyer.
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `http://schema.originprotocol.com/review_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/review_v1.0.0` |
 |**rating** | A number between 1 and 5. May be either an iteger or a decimal. |
 |**text** | A textual review. May be a blank string - in which case it should not be shown by UIs. |

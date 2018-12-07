@@ -6,7 +6,7 @@ import contracts from '../../contracts'
 
 export function listingInputToIPFS(data) {
   const ipfsData = {
-    "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+    "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
     "listingType": "unit",
     "category": "schema.forSale",
     "subCategory": "schema.forSale.mushrooms",
@@ -21,7 +21,7 @@ export function listingInputToIPFS(data) {
       "amount": "0"
     }
   }
-  validator('http://schema.originprotocol.com/listing_v1.0.0', ipfsData)
+  validator('https://schema.originprotocol.com/listing_1.0.0.json', ipfsData)
   return ipfsData
 }
 
