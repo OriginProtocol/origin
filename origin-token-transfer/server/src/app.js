@@ -12,6 +12,8 @@ require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
 const { Op } = require('sequelize')
 
+const { createProviders } = require('origin-faucet/lib/config')
+
 const { LOGIN } = require('./constants/events')
 const { transferTokens } = require('./lib/transfer')
 const { Event, Grant  } = require('./models')
@@ -24,6 +26,8 @@ if (!sessionSecret) {
   console.error('SESSION_SECRET must be set through EnvKey or manually')
   process.exit(1)
 }
+
+const networkId = Number.parseInt(process.env.NETWORK_ID) || 999
 
 // Setup sessions.
 app.use(session({
@@ -106,7 +110,6 @@ app.post('/api/transfer', [
 
   // Retrieve the grant, validating email in the process.
   const { grantId, address, amount } = req.body
-  const networkId = 999 // TODO: move this to the command line
   try {
     const grant = await transferTokens({
       grantId,
@@ -202,5 +205,8 @@ app.post('/api/logout', withSession, (req, res) => {
   res.send('logged out')
 })
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+createProviders([ networkId ]) // Ensure web3 credentials are set up
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`)
+})
 
