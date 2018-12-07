@@ -61,7 +61,7 @@ const asyncMiddleware = fn =>
       .catch(next)
   }
 
-logDate = () => moment().toString()
+const logDate = () => moment().toString()
 
 /**
  * Middleware for requiring a session. Injects the X-Authenticated-Email header
