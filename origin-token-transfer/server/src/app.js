@@ -10,13 +10,11 @@ const path = require('path')
 const session = require('express-session')
 require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
-
-const { Event, Grant, sequelize  } = require('./models')
 const { Op } = require('sequelize')
-const { GRANT_TRANSFER, LOGIN } = require('./constants/events')
 
-const Token = require('origin-faucet/lib/token')
-const { createProviders } = require('origin-faucet/lib/config')
+const { LOGIN } = require('./constants/events')
+const { transferTokens } = require('./lib/transfer')
+const { Event, Grant  } = require('./models')
 
 const Web3 = require('web3')
 
@@ -101,64 +99,31 @@ app.post('/api/transfer', [
   ],
   asyncMiddleware(async (req, res) => {
 
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() })
-    }
-
-  // Setup token library
-  const networkId = 999 // TODO: replace with command-line option
-  const config = {
-    providers: createProviders([ networkId ])
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() })
   }
-  const token = new Token(config)
 
   // Retrieve the grant, validating email in the process.
   const { grantId, address, amount } = req.body
-  const grant = await Grant.findOne({ where: {
-    id: grantId,
-    email: req.session.email
-  } })
-  if (!grant) {
-    return res.status(422).send('Could not find specified grant')
-  }
-
-  // Ensure that the grant has sufficient transferrable tokens.
-  const available = grant.vested - grant.transferred
-  if (amount > available) {
-    return res
-      .status(422)
-      .send(`Amount of ${amount} OGN exceeds the ${available} OGN available for the grant`)
-  }
-
-  // Transfer the tokens.
-  const naturalAmount = token.toNaturalUnit(amount)
-  const supplier = await token.defaultAccount(networkId)
-  await token.credit(networkId, address, naturalAmount)
-
-  // Record new state in the database.
-  const txn = await sequelize.transaction()
+  const networkId = 999 // TODO: move this to the command line
   try {
-    await grant.increment(['transferred'], { by: amount })
-    await grant.save()
-    await Event.create({
+    const grant = await transferTokens({
+      grantId,
       email: req.session.email,
       ip: req.connection.remoteAddress,
-      grantId: grantId,
-      action: GRANT_TRANSFER,
-      data: JSON.stringify({
-        amount: req.body.amount,
-        from: supplier,
-        to: req.body.address
-      })
+      networkId,
+      address,
+      amount
     })
-    await txn.commit()
+    res.send(grant.get({ plain: true }))
   } catch(e) {
-    await txn.rollback()
-    throw(e)
+    if (e instanceof ReferenceError || e instanceof RangeError) {
+      res.status(422).send(e.message)
+    } else {
+      throw e
+    }
   }
-
-  res.send(grant.get({ plain: true }))
 }))
 
 // TODO: review this for security
