@@ -123,7 +123,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `https://schema.originprotocol.com/offer-accept_v1.0.0.json` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/offer-accept_1.0.0.json` |
 
 
 ## Offer-Withdraw Schema
@@ -206,6 +206,6 @@ A review of a single purchase by either a seller or a buyer.
 
 | | |
 |----|-----|
-|**schemaId** | Must be set to `https://schema.originprotocol.com/review_v1.0.0` |
+|**schemaId** | Must be set to `https://schema.originprotocol.com/review_1.0.0` |
 |**rating** | A number between 1 and 5. May be either an iteger or a decimal. |
 |**text** | A textual review. May be a blank string - in which case it should not be shown by UIs. |

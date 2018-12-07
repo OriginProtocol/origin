@@ -24,7 +24,7 @@ const expect = chai.expect
 describe('IpfsDataStore', () => {
   it(`Should parse old style schemaId`, () => {
     const { dataType, schemaVersion } = IpfsDataStore.parseSchemaId(
-      BASE_SCHEMA_ID+'my-data-type_v1.0.0')
+      BASE_SCHEMA_ID+'my-data-type_1.0.0.json')
     expect(dataType).to.equal('my-data-type')
     expect(schemaVersion).to.equal('1.0.0')
   })

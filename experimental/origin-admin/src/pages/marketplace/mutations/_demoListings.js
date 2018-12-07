@@ -1,8 +1,9 @@
 const HawaiiHouse = {
   schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+  dappSchemaId: "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
   listingType: 'unit',
-  category: 'schema.housing',
-  subCategory: 'schema.housing.vacationRentals',
+  category: 'schema.forRent',
+  subCategory: 'schema.forRent.housing',
   language: 'en-US',
   title: 'MAMALAHOA ESTATE',
   description:
@@ -42,9 +43,10 @@ const HawaiiHouse = {
 
 const LakeHouse = {
   "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
   "listingType": "unit",
-  "category": "schema.housing",
-  "subCategory": "schema.housing.vacationRentals",
+  "category": "schema.forRent",
+  "subCategory": "schema.forRent.housing",
   "language": "en-US",
   "title": "Casa Wolf",
   "description": "Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.",
@@ -83,6 +85,7 @@ const LakeHouse = {
 
 const Car = {
   "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-carsTrucks_1.0.0.json",
   "listingType": "unit",
   "category": "schema.forSale",
   "subCategory": "schema.forSale.carsTrucks",
@@ -120,9 +123,10 @@ const Car = {
 
 const TaylorSwiftTickets = {
   "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-tickets_1.0.0.json",
   "listingType": "unit",
-  "category": "schema.tickets",
-  "subCategory": "schema.tickets.music",
+  "category": "schema.forSale",
+  "subCategory": "schema.tickets.tickets",
   "language": "en-US",
   "title": "Taylor Swift's Reputation Tour",
   "description": "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",
@@ -161,9 +165,10 @@ const TaylorSwiftTickets = {
 
 const ZincHouse = {
   "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
   "listingType": "unit",
-  "category": "schema.housing",
-  "subCategory": "schema.housing.vacationRentals",
+  "category": "schema.forRent",
+  "subCategory": "schema.forRent.housing",
   "language": "en-US",
   "title": "Zinc House",
   "description": "Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.",

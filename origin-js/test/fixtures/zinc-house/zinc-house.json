@@ -1,8 +1,9 @@
 {
   "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
   "listingType": "unit",
-  "category": "schema.housing",
-  "subCategory": "schema.housing.vacationRentals",
+  "category": "schema.forRent",
+  "subCategory": "schema.forRent.housing",
   "language": "en-US",
   "title": "Zinc House",
   "description": "Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.",

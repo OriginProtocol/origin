@@ -22,7 +22,8 @@ const DATA_TYPES = [
   PROFILE_DATA_TYPE
 ]
 
-const schemaIdRegex = new RegExp('([a-zA-Z\-]*)_v?(\d+\.\d+\.\d+)(?:\.json)?')
+// eslint-disable-next-line no-useless-escape
+const schemaIdRegex = new RegExp('^/([a-zA-Z\\-]*)_v?(\\d+\\.\\d+\\.\\d+)(?:\\.json)?$')
 
 export const BASE_SCHEMA_ID = 'https://schema.originprotocol.com/'
 
