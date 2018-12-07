@@ -158,6 +158,19 @@ class OriginWallet {
     this.API_WALLET_LINK_INFO = API_WALLET_LINKER + "/link-info/"
     this.API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called/"
     this.API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
+
+    if (!this._originalIpfsGateway)
+    {
+      this._originalIpfsGateway = origin.ipfsService.gateway
+    }
+
+    if (!this.originalIpfsApi)
+    {
+      this._originalIpfsApi = origin.ipfsService.api
+    }
+
+    origin.ipfsService.gateway = localfy(this._originalIpfsGateway)
+    origin.ipfsService.api = localfy(this._originalIpfsApi)
   }
 
   async setRemoteLocal(remote_ip) {
@@ -329,9 +342,9 @@ class OriginWallet {
 
   checkDoLink() {
     let state = this.state
-    if (state.linkCode && state.deviceToken && state.ethAddress)
+    if (state.linkCode && state.deviceToken && state.ethAddress && state.netId)
     {
-      let rpc_server = this.copied_code == state.linkCode ? localfy(providerUrl) : providerUrl
+      let rpc_server = this.copied_code == state.linkCode ? localfy(this.providerUrl) : this.providerUrl
       return this.doLink(state.linkCode, rpc_server, [state.ethAddress])
     }
   }
@@ -850,6 +863,7 @@ class OriginWallet {
       {
         this.fireEvent(Events.NEW_ACCOUNT, {address:this.state.ethAddress})
       }
+      this.providerUrl = provider_url
       console.log("Set network to:", provider_url, contract_addresses)
     } catch(error)
     {
