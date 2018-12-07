@@ -522,5 +522,21 @@
   {
     "id": "schema.years",
     "defaultMessage": "Years"
+  },
+  {
+    "id": "schema.forSale",
+    "defaultMessage": "For Sale"
+  },
+  {
+    "id": "schema.forRent",
+    "defaultMessage": "For Rent"
+  },
+  {
+    "id": "schema.announcements",
+    "defaultMessage": "Announcements"
+  },
+  {
+    "id": "schema.services",
+    "defaultMessage": "Services"
   }
 ]

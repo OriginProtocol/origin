@@ -283,14 +283,15 @@ export function translateSchema(schemaJson) {
 }
 
 export function translateListingCategory(rawCategory = '') {
-  const match = rawCategory.match(/^schema\.([^.]+)\.([^.]+)$/)
-  if (match === null) {
+  let messageKey = rawCategory
+
+  if (!/schema\./.test(rawCategory)) {
+    messageKey = `schema.${rawCategory}`
+  }
+
+  if (!schemaMessages[messageKey]) {
     return rawCategory
   }
-  const schemaType = match[1]
-  const schema = schemaMessages[schemaType]
-  if (schema === null || schema[rawCategory] === undefined) {
-    return rawCategory
-  }
-  return globalIntlProvider.formatMessage(schema[rawCategory])
+
+  return globalIntlProvider.formatMessage(schemaMessages[messageKey])
 }

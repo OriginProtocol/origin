@@ -21,7 +21,7 @@ import PriceField from 'components/form-widgets/price-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
 
-import { getListing, camelCaseToDash } from 'utils/listing'
+import { getListing } from 'utils/listing'
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
@@ -101,6 +101,7 @@ class ListingCreate extends Component {
     this.handleCategorySelection = this.handleCategorySelection.bind(this)
     this.goToPickSchemaStep = this.goToPickSchemaStep.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
+    this.renderDetailsForm = this.renderDetailsForm.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
     this.backFromBoostStep = this.backFromBoostStep.bind(this)
@@ -133,7 +134,7 @@ class ListingCreate extends Component {
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
         })
-        await this.handleSchemaSelection(camelCaseToDash(listing.schemaType))
+        this.renderDetailsForm(listing.schema)
         this.setState({
           step: this.STEP.DETAILS,
         })
@@ -228,57 +229,61 @@ class ListingCreate extends Component {
     return fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
       .then(schemaJson => {
-        PriceField.defaultProps = {
-          options: {
-            selectedSchema: schemaJson
-          }
-        }
-        this.uiSchema = {
-          examples: {
-            'ui:widget': 'hidden'
-          },
-          sellerSteps: {
-            'ui:widget': 'hidden'
-          },
-          price: {
-            'ui:field': PriceField
-          },
-          description: {
-            'ui:widget': 'textarea',
-            'ui:options': {
-              rows: 4
-            }
-          },
-          pictures: {
-            'ui:widget': PhotoPicker
-          }
-        }
-
-        // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
-        const isFractionalListing =enableFractional &&
-          schemaJson &&
-          schemaJson.properties &&
-          schemaJson.properties.listingType &&
-          schemaJson.properties.listingType.const === 'fractional'
-
-        if (isFractionalListing) {
-          this.uiSchema.price = {
-            'ui:widget': 'hidden'
-          }
-        }
-
-        const translatedSchema = translateSchema(schemaJson)
-
-        this.setState({
-          selectedSchemaType,
-          schemaFetched: true,
-          fractionalTimeIncrement: !isFractionalListing ? null : 
-            selectedSchemaType === 'housing' ? 'daily' : 'hourly',
-          showNoSchemaSelectedError: false,
-          translatedSchema,
-          isFractionalListing
-        })
+        this.renderDetailsForm(schemaJson)
       })
+  }
+
+  renderDetailsForm(schemaJson) {
+    PriceField.defaultProps = {
+      options: {
+        selectedSchema: schemaJson
+      }
+    }
+    this.uiSchema = {
+      examples: {
+        'ui:widget': 'hidden'
+      },
+      sellerSteps: {
+        'ui:widget': 'hidden'
+      },
+      price: {
+        'ui:field': PriceField
+      },
+      description: {
+        'ui:widget': 'textarea',
+        'ui:options': {
+          rows: 4
+        }
+      },
+      pictures: {
+        'ui:widget': PhotoPicker
+      }
+    }
+
+    // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
+    const isFractionalListing = enableFractional &&
+      schemaJson &&
+      schemaJson.properties &&
+      schemaJson.properties.listingType &&
+      schemaJson.properties.listingType.const === 'fractional'
+
+    if (isFractionalListing) {
+      this.uiSchema.price = {
+        'ui:widget': 'hidden'
+      }
+    }
+
+    const translatedSchema = translateSchema(schemaJson)
+
+    this.setState({
+      schemaFetched: true,
+      // TODO
+      // fractionalTimeIncrement: !isFractionalListing ? null : 
+      //   selectedSchemaType === 'housing' ? 'daily' : 'hourly',
+      showNoSchemaSelectedError: false,
+      translatedSchema,
+      isFractionalListing
+    })
   }
 
   goToDetailsStep() {

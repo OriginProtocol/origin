@@ -84,7 +84,7 @@ export default async (listing) => {
       .then(response => response.json())
       .then(schemaJson => {
         return {
-          category: schemaJson.category,
+          category: schemaJson.properties.category.const,
           schema: schemaJson,
           isDeprecatedSchema: true
         }

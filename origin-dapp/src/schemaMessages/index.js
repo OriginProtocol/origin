@@ -525,4 +525,20 @@ export default defineMessages({
     id: 'schema.years',
     defaultMessage: 'Years'
   },
+  'schema.forSale': {
+    id: 'schema.forSale',
+    defaultMessage: 'For Sale'
+  },
+  'schema.forRent': {
+    id: 'schema.forRent',
+    defaultMessage: 'For Rent'
+  },
+  'schema.announcements': {
+    id: 'schema.announcements',
+    defaultMessage: 'Announcements'
+  },
+  'schema.services': {
+    id: 'schema.services',
+    defaultMessage: 'Services'
+  },
 })
