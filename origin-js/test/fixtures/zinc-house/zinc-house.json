@@ -1,5 +1,5 @@
 {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
   "listingType": "unit",
   "category": "schema.housing",
   "subCategory": "schema.housing.vacationRentals",

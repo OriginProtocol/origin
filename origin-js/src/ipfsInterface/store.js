@@ -22,7 +22,7 @@ const DATA_TYPES = [
   PROFILE_DATA_TYPE
 ]
 
-const schemaIdRegex = /([a-zA-Z\-]*)_v?(\d+\.\d+\.\d+)(?:\.json)?/
+const schemaIdRegex = new RegExp('([a-zA-Z\-]*)_v?(\\d+\.\\d+\.\\d+)(?:\.json)?')
 
 export const BASE_SCHEMA_ID = 'https://schema.originprotocol.com/'
 
