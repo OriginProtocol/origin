@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  origin-tests:
+    container_name: origin-tests
+    image: origin
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+    volumes:
+      - ./origin-contracts/build:/app/origin-contracts/build
+      - ./origin-tests/test:/app/origin-tests/test/
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q event-listener:9499 --
+      sleep 10 &&
+      npm run test --prefix origin-tests"
+

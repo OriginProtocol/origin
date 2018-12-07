@@ -4,21 +4,15 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install lerna
-RUN npm i lerna -g --loglevel notice
-
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
-# Copy release contracts into build directory
-# TODO: Find a better way to handle this
-COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
 COPY ./origin-faucet ./origin-faucet
 COPY ./scripts ./scripts
 
-# Bootstrap dependencies, --ignore-scripts is necessary to avoid overwriting
-# contracts
-RUN lerna bootstrap --ci --ignore-scripts -- --loglevel notice --unsafe-perm
+RUN npm install --unsafe-perm
+
+COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
 
 CMD npm run start --prefix origin-faucet

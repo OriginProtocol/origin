@@ -66,7 +66,7 @@ class ImageCropper extends Component {
       <Modal
         isOpen={!!this.props.isOpen}
         backdrop="static"
-        data-modal="imageCropper"
+        className="imageCropper"
         alignItems="center"
       >
         {imageSrc &&

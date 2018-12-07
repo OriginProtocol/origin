@@ -11,7 +11,7 @@ class ConfirmUnload extends Component {
     return (
       <Modal
         isOpen={open}
-        data-modal="unload"
+        className="unload"
         handleToggle={handleToggle}
         tabIndex="-1"
       >

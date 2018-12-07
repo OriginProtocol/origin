@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
 import { fetchUser } from 'actions/User'
 import { getEthBalance, getOgnBalance } from 'actions/Wallet'
@@ -12,6 +11,8 @@ import EtherscanLink from 'components/etherscan-link'
 import Identicon from 'components/identicon'
 import MessageNew from 'components/message-new'
 import UnnamedUser from 'components/unnamed-user'
+import Tooltip from 'components/tooltip'
+import Dropdown from 'components/dropdown'
 
 import { getFiatPrice } from 'utils/priceUtils'
 import { formattedAddress } from 'utils/user'
@@ -56,25 +57,22 @@ class WalletCard extends Component {
 
   componentDidMount() {
     const {
+      address,
       fetchUser,
       getEthBalance,
-      getOgnBalance,
-      wallet: { address }
+      getOgnBalance
     } = this.props
 
     getEthBalance()
     getOgnBalance()
 
     address && fetchUser(address)
-
-    this.initiateBootstrapTooltip()
   }
 
   componentDidUpdate(prevProps) {
-    const { fetchUser, wallet } = this.props
-    const { address } = wallet
+    const { address, fetchUser } = this.props
 
-    if (address !== prevProps.wallet.address) {
+    if (address !== prevProps.address) {
       fetchUser(address)
     }
   }
@@ -85,45 +83,55 @@ class WalletCard extends Component {
     this.setState({ modalOpen: !this.state.modalOpen })
   }
 
-  initiateBootstrapTooltip() {
-    $('body').tooltip({
-      selector: '[data-toggle="tooltip"]'
-    })
-  }
-
   render() {
     const {
+      address,
+      ethBalance,
+      ognBalance,
       users,
       wallet,
       withBalanceTooltip,
       withMenus,
       withProfile
     } = this.props
-    const user = users.find(u => formattedAddress(u.address) === formattedAddress(wallet.address)) || {}
+    const user =
+      users.find(
+        u => formattedAddress(u.address) === formattedAddress(address)
+      ) || {}
     const { attestations = [], fullName, profile = {} } = user
-    const { address, ethBalance, ognBalance } = wallet
-    const ethToUsdBalance = getFiatPrice(
-      wallet.ethBalance,
-      'USD'
-    )
+    const ethToUsdBalance = getFiatPrice(ethBalance, 'USD')
     const userCanReceiveMessages =
-      formattedAddress(address) !== formattedAddress(wallet.address) && 
+      formattedAddress(address) !== formattedAddress(wallet.address) &&
       origin.messaging.canReceiveMessages(address)
-    const balanceTooltip = `
+    const balanceTooltip = (
       <div>
-        <p class='tooltip-balance-heading tooltip-align-left'>
-          ${this.props.intl.formatMessage(this.intlMessages.yourBalance)}
-        </p>
-        <p class='tooltip-balance-text tooltip-align-left'>
-          ${this.props.intl.formatMessage(this.intlMessages.balanceText)}
-        </p>
-        <p class='tooltip-align-left'>
-          <a href='/#/about-tokens' target='_blank' rel="noopener noreferrer" class='learn-more'>
-            ${this.props.intl.formatMessage(this.intlMessages.learnMore)} ▸
-          </a>
+        <p
+          className="tooltip-balance-heading tooltip-align-left"
+          dangerouslySetInnerHTML={{
+            __html: this.props.intl.formatMessage(this.intlMessages.yourBalance)
+          }}
+        />
+        <p
+          className="tooltip-balance-text tooltip-align-left"
+          dangerouslySetInnerHTML={{
+            __html: this.props.intl.formatMessage(this.intlMessages.balanceText)
+          }}
+        />
+        <p className="tooltip-align-left">
+          <a
+            href="/#/about-tokens"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="learn-more"
+            dangerouslySetInnerHTML={{
+              __html: `${this.props.intl.formatMessage(
+                this.intlMessages.learnMore
+              )} ▸`
+            }}
+          />
         </p>
       </div>
-    `
+    )
 
     return (
       <div className="wallet-container">
@@ -175,18 +183,22 @@ class WalletCard extends Component {
                       {`${Number(ethBalance).toLocaleString(undefined, {
                         minimumFractionDigits: 5,
                         maximumFractionDigits: 5
-                      })}` || 0}&nbsp;
+                      })}` || 0}
+                      &nbsp;
                       <span className="symbol">ETH</span>
                     </div>
                     <div className="usd">{ethToUsdBalance} USD</div>
                   </div>
                   {withMenus && (
-                    <div className="dropdown">
+                    <Dropdown
+                      open={this.state.ethDropdown}
+                      onClose={() => this.setState({ ethDropdown: false })}
+                    >
                       <button
                         type="button"
                         id="ethMenuButton"
+                        onClick={() => this.setState({ ethDropdown: true })}
                         className="d-flex flex-column justify-content-between"
-                        data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
@@ -195,11 +207,16 @@ class WalletCard extends Component {
                         <div className="dot" />
                       </button>
                       <div
-                        className="dropdown-menu dropdown-menu-right"
+                        className={`dropdown-menu dropdown-menu-right${
+                          this.state.ethDropdown ? ' show' : ''
+                        }`}
                         aria-labelledby="ethMenuButton"
                       >
                         {address && (
-                          <EtherscanLink hash={address} className="dropdown-item">
+                          <EtherscanLink
+                            hash={address}
+                            className="dropdown-item"
+                          >
                             <FormattedMessage
                               id={'wallet-card.transactionHistory'}
                               defaultMessage={'Transaction History'}
@@ -215,7 +232,7 @@ class WalletCard extends Component {
                           </a>
                         */}
                       </div>
-                    </div>
+                    </Dropdown>
                   )}
                 </div>
                 <div className="d-flex align-items-start">
@@ -223,35 +240,36 @@ class WalletCard extends Component {
                     <img src="images/ogn-icon.svg" role="presentation" />
                   )}
                   {withBalanceTooltip && (
-                    <a
-                      className="ogn-balance"
-                      data-toggle="tooltip"
-                      data-placement="left"
-                      data-trigger="hover focus"
-                      data-title={balanceTooltip}
-                      data-animation={true}
-                      data-html={true}
-                      data-container="body"
-                      data-delay="{&quot;show&quot;:&quot;0&quot;, &quot;hide&quot;:&quot;5000&quot;}"
+                    <Tooltip
+                      placement="left"
+                      delay={{ show: 0, hide: 5000 }}
+                      trigger={['hover', 'focus']}
+                      content={balanceTooltip}
                     >
-                      <img src="images/ogn-icon.svg" role="presentation" />
-                    </a>
+                      <a className="ogn-balance">
+                        <img src="images/ogn-icon.svg" role="presentation" />
+                      </a>
+                    </Tooltip>
                   )}
                   <div className="amounts">
                     <div className="ogn">
-                      {`${Number(ognBalance).toLocaleString(undefined)}` || 0}&nbsp;
+                      {`${Number(ognBalance).toLocaleString(undefined)}` || 0}
+                      &nbsp;
                       <span className="symbol">OGN</span>
                     </div>
                     {/* Via Matt 9/4/2018: Not necessary until we have a liquid conversion rate */}
                     {/* <div className="usd">0.00 USD</div> */}
                   </div>
                   {withMenus && (
-                    <div className="dropdown">
+                    <Dropdown
+                      open={this.state.ognDropdown}
+                      onClose={() => this.setState({ ognDropdown: false })}
+                    >
                       <button
                         type="button"
                         id="ognMenuButton"
+                        onClick={() => this.setState({ ognDropdown: true })}
                         className="d-flex flex-column justify-content-between"
-                        data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
@@ -260,7 +278,9 @@ class WalletCard extends Component {
                         <div className="dot" />
                       </button>
                       <div
-                        className="dropdown-menu dropdown-menu-right"
+                        className={`dropdown-menu dropdown-menu-right${
+                          this.state.ognDropdown ? ' show' : ''
+                        }`}
                         aria-labelledby="ognMenuButton"
                       >
                         {address && (
@@ -278,7 +298,7 @@ class WalletCard extends Component {
                           </a>
                         */}
                       </div>
-                    </div>
+                    </Dropdown>
                   )}
                 </div>
               </div>
@@ -345,11 +365,7 @@ class WalletCard extends Component {
           )}
         </div>
         {userCanReceiveMessages && (
-          <a
-            href="#"
-            onClick={this.handleToggle}
-            className="btn contact-user"
-          >
+          <a href="#" onClick={this.handleToggle} className="btn contact-user">
             <FormattedMessage
               id={'wallet-card.enabledContact'}
               defaultMessage={'Contact'}
