@@ -953,7 +953,7 @@ class ListingCreate extends Component {
                 }`}
               >
                 <WalletCard
-                  wallet={wallet}
+                  {...wallet}
                   withBalanceTooltip={!this.props.wallet.ognBalance}
                   withMenus={true}
                   withProfile={false}
