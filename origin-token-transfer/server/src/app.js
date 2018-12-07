@@ -95,7 +95,7 @@ const isEthereumAddress = value => {
  */
 app.post('/api/transfer', [
     check('grantId').isInt(),
-    check('amount').isInt(),
+    check('amount').isDecimal(),
     check('address').custom(isEthereumAddress),
     withSession
   ],
@@ -106,11 +106,15 @@ app.post('/api/transfer', [
       return res.status(422).json({ errors: errors.array() })
     }
 
-  const grantId = req.body.grantId
-  const amount = Number.parseInt(req.body.amount)
-  const address = req.body.address
+  // Setup token library
+  const networkId = 999 // TODO: replace with command-line option
+  const config = {
+    providers: createProviders([ networkId ])
+  }
+  const token = new Token(config)
 
   // Retrieve the grant, validating email in the process.
+  const { grantId, address, amount } = req.body
   const grant = await Grant.findOne({ where: {
     id: grantId,
     email: req.session.email
@@ -127,13 +131,10 @@ app.post('/api/transfer', [
       .send(`Amount of ${amount} OGN exceeds the ${available} OGN available for the grant`)
   }
 
-  const networkId = 999 // TODO: replace with command-line option
-  const config = {
-    providers: createProviders([ networkId ])
-  }
-  const token = new Token(config)
+  // Transfer the tokens.
+  const naturalAmount = token.toNaturalUnit(amount)
   const supplier = await token.defaultAccount(networkId)
-  await token.credit(networkId, address, amount)
+  await token.credit(networkId, address, naturalAmount)
 
   // Record new state in the database.
   const txn = await sequelize.transaction()
