@@ -1,4 +1,5 @@
 import adapterFactory from './adapters/adapter-factory'
+import { generateSchemaId, parseSchemaId } from './schema-id'
 
 export const LISTING_DATA_TYPE = 'listing'
 export const LISTING_WITHDRAW_DATA_TYPE = 'listing-withdraw'
@@ -22,11 +23,6 @@ const DATA_TYPES = [
   PROFILE_DATA_TYPE
 ]
 
-// eslint-disable-next-line no-useless-escape
-const schemaIdRegex = new RegExp('^/([a-zA-Z\\-]*)_v?(\\d+\\.\\d+\\.\\d+)(?:\\.json)?$')
-
-export const BASE_SCHEMA_ID = 'https://schema.originprotocol.com/'
-
 //
 // JSON data store backed by IPFS.
 //
@@ -37,34 +33,6 @@ export class IpfsDataStore {
    */
   constructor(ipfsService) {
     this.ipfsService = ipfsService
-  }
-
-  /**
-   * Extracts dataType and schemaVersion from a schemaId.
-   * Format of a schema ID is BASE_SCHEMA_ID/<dataType>_<version>.json
-   * Ex.: https://schema.originprotocol.com/listing_1.0.0.json
-   * @param (string} schemaId
-   * @return {{dataType: string, schemaVersion: string}}
-   */
-  static parseSchemaId(schemaId) {
-    const url = new URL(schemaId)
-    const splits = schemaIdRegex.exec(url.pathname)
-    if (!splits) {
-      throw new Error(`Invalid schemaId: ${schemaId}`)
-    }
-    return { dataType: splits[1], schemaVersion: splits[2] }
-  }
-
-  /**
-   * Returns the most recent schemaId for a specific data type.
-   * @param {string} dataType
-   * @return {object} - Tuple schemaId, schemaVersion.
-   */
-  static generateSchemaId(dataType) {
-    // TODO: should lookup in a config to get most recent version to use.
-    const schemaVersion = '1.0.0'
-    const schemaId = `${BASE_SCHEMA_ID}${dataType}_${schemaVersion}.json`
-    return { schemaId, schemaVersion }
   }
 
   /**
@@ -86,7 +54,7 @@ export class IpfsDataStore {
     if (!ipfsData.schemaId) {
       throw new Error(`Data missing schemaId: ${JSON.stringify(ipfsData)}`)
     }
-    const { dataType, schemaVersion } = IpfsDataStore.parseSchemaId(ipfsData.schemaId)
+    const { dataType, schemaVersion } = parseSchemaId(ipfsData.schemaId)
     if (dataType !== expectedDataType) {
       throw new Error(`Expected ${expectedDataType} vs ${dataType} for IPFS Hash ${ipfsHash}`)
     }
@@ -123,7 +91,7 @@ export class IpfsDataStore {
 
     // Get latest version of the schemaID to use for the data type.
     // Set that schemaID in the data.
-    const { schemaId, schemaVersion } = IpfsDataStore.generateSchemaId(dataType)
+    const { schemaId, schemaVersion } = generateSchemaId(dataType)
     data.schemaId = schemaId
 
     // Get an adapter to handle the data.
