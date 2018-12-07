@@ -139,6 +139,9 @@ require('react-styl')(`
       a.cancel
         font-size: 14px
         font-weight: normal
+        &.big
+          font-size: 18px
+          font-weight: 900
 
     .qm
       width: 2rem
@@ -161,6 +164,12 @@ require('react-styl')(`
         background-size: 1.2rem
         &::after
           content: ""
+      &.error
+        background: var(--orange-red)
+        font-size: 2.2rem
+        line-height: 1.8rem
+        &::after
+          content: "×"
 
     .spinner
       background: url(images/spinner-animation-dark.svg) no-repeat center

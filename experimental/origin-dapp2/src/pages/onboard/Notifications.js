@@ -72,11 +72,30 @@ const Enabled = ({ next }) => (
   </div>
 )
 
+const Denied = () => (
+  <div className="onboard-box">
+    <div className="notifications-logo">
+      <div className="qm error" />
+    </div>
+    <div className="status">Uh oh, there’s a problem...</div>
+    <div className="help mb">
+      You’ve rejected our request to turn on desktop notifications which we{' '}
+      <b>highly recommend</b>.
+    </div>
+    <div className="help mb">
+      In order to fix this, please go into your browser settings and turn on
+      notifications for our DApp.
+    </div>
+    <a href="#" className="cancel big">
+      Visit Browser Settings
+    </a>
+  </div>
+)
+
 class OnboardNotifications extends Component {
-  state = { step: 1 }
+  state = { permission: Notification.permission }
   render() {
     const { listing } = this.props
-    const { step } = this.state
     return (
       <>
         <div className="step">Step 3</div>
@@ -96,22 +115,34 @@ class OnboardNotifications extends Component {
 
                 const nextLink = `/listings/${listing.id}/onboard/profile`
 
-                return (
-                  <>
-                    {step === 1 ? (
-                      <EnableNotifications
-                        next={() => this.setState({ step: 2 })}
-                      />
-                    ) : null}
-                    {step === 2 ? (
-                      <WaitEnableNotifications
-                        next={() => this.setState({ step: 3 })}
-                      />
-                    ) : null}
-                    {step === 3 ? <Enabled next={nextLink} /> : null}
-                    <pre>{JSON.stringify(data, null, 4)}</pre>
-                  </>
-                )
+                let cmp
+                if (this.state.permission === 'granted') {
+                  cmp = <Enabled next={nextLink} />
+                } else if (this.state.permission === 'denied') {
+                  cmp = <Denied next={nextLink} />
+                } else if (this.state.permissionRequested) {
+                  cmp = (
+                    <WaitEnableNotifications
+                      next={() => this.setState({ step: 3 })}
+                    />
+                  )
+                } else {
+                  cmp = (
+                    <EnableNotifications
+                      next={() => {
+                        this.setState({ permissionRequested: true })
+                        Notification.requestPermission().then(permission => {
+                          this.setState({ permission })
+                          if (permission === 'granted') {
+                            this.showNotification()
+                          }
+                        })
+                      }}
+                    />
+                  )
+                }
+
+                return cmp
               }}
             </Query>
           </div>
@@ -122,6 +153,12 @@ class OnboardNotifications extends Component {
         </div>
       </>
     )
+  }
+
+  showNotification() {
+    new Notification('Sweet! Desktop notifications are on :)', {
+      icon: 'images/app-icon.png'
+    })
   }
 }
 
