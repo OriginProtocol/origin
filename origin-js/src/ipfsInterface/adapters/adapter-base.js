@@ -1,14 +1,14 @@
 import Ajv from 'ajv'
 
-import listingSchemaV1 from '../schemas/listing.json'
-import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw.json'
-import offerSchemaV1 from '../schemas/offer.json'
-import offerWithdrawnSchemaV1 from '../schemas/offer-withdraw.json'
-import offerAcceptedSchemaV1 from '../schemas/offer-accept.json'
-import disputeSchemaV1 from '../schemas/dispute.json'
-import resolutionSchemaV1 from '../schemas/resolution.json'
-import profileSchemaV1 from '../schemas/profile.json'
-import reviewSchemaV1 from '../schemas/review.json'
+import listingSchemaV1 from '../schemas/listing_1.0.0.json'
+import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw_1.0.0.json'
+import offerSchemaV1 from '../schemas/offer_1.0.0.json'
+import offerWithdrawnSchemaV1 from '../schemas/offer-withdraw_1.0.0.json'
+import offerAcceptedSchemaV1 from '../schemas/offer-accept_1.0.0.json'
+import disputeSchemaV1 from '../schemas/dispute_1.0.0.json'
+import resolutionSchemaV1 from '../schemas/resolution_1.0.0.json'
+import profileSchemaV1 from '../schemas/profile_1.0.0.json'
+import reviewSchemaV1 from '../schemas/review_1.0.0.json'
 
 const ajv = new Ajv({ allErrors: true })
 // To use the draft-06 JSON schema, we need to explicitly add it to ajv.

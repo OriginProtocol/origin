@@ -22,16 +22,23 @@ chai.use(chaiAsPromised)
 const expect = chai.expect
 
 describe('IpfsDataStore', () => {
-  it(`Should parse a valid schemaId`, () => {
+  it(`Should parse old style schemaId`, () => {
     const { dataType, schemaVersion } = IpfsDataStore.parseSchemaId(
       BASE_SCHEMA_ID+'my-data-type_v1.0.0')
     expect(dataType).to.equal('my-data-type')
     expect(schemaVersion).to.equal('1.0.0')
   })
 
+  it(`Should parse new style schemaId`, () => {
+    const { dataType, schemaVersion } = IpfsDataStore.parseSchemaId(
+      BASE_SCHEMA_ID+'my-data-type_1.0.0.json')
+    expect(dataType).to.equal('my-data-type')
+    expect(schemaVersion).to.equal('1.0.0')
+  })
+
   it(`Should generate a valid schemaId`, () => {
     const { schemaId, schemaVersion } = IpfsDataStore.generateSchemaId('my-data-type')
-    expect(schemaId).to.equal(BASE_SCHEMA_ID+'my-data-type_v1.0.0')
+    expect(schemaId).to.equal(BASE_SCHEMA_ID+'my-data-type_1.0.0.json')
     expect(schemaVersion).to.equal('1.0.0')
   })
 })
@@ -181,7 +188,7 @@ describe('ListingWithdraw IpfsDataStore load', () => {
 
   it(`Should load a valid object`, async () => {
     // Empty besides schemaId since withdrawal does not have any data yet.
-    const validWithdrawal = { schemaId: BASE_SCHEMA_ID+'listing-withdraw_v1.0.0' }
+    const validWithdrawal = { schemaId: BASE_SCHEMA_ID+'listing-withdraw_1.0.0.json' }
     mockIpfsService.loadObjFromFile = sinon.stub().resolves(validWithdrawal)
 
     const withdraw = await store.load(LISTING_WITHDRAW_DATA_TYPE, 'WithdrawalHash')
@@ -283,7 +290,7 @@ describe('OfferAccept IpfsDataStore load', () => {
 
   it(`Should load a valid accept`, async () => {
     // Empty besides schemaId since accept does not have any data yet.
-    const validAccept = { schemaId: BASE_SCHEMA_ID+'offer-accept_v1.0.0' }
+    const validAccept = { schemaId: BASE_SCHEMA_ID+'offer-accept_1.0.0.json' }
     mockIpfsService.loadObjFromFile = sinon.stub().resolves(validAccept)
 
     const accept = await store.load(OFFER_ACCEPT_DATA_TYPE, 'AcceptHash')

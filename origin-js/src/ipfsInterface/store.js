@@ -22,7 +22,9 @@ const DATA_TYPES = [
   PROFILE_DATA_TYPE
 ]
 
-export const BASE_SCHEMA_ID = 'http://schema.originprotocol.com/'
+const schemaIdRegex = /([a-zA-Z\-]*)_v?(\d+\.\d+\.\d+)(?:\.json)?/
+
+export const BASE_SCHEMA_ID = 'https://schema.originprotocol.com/'
 
 //
 // JSON data store backed by IPFS.
@@ -43,12 +45,12 @@ export class IpfsDataStore {
    * @return {{dataType: string, schemaVersion: string}}
    */
   static parseSchemaId(schemaId) {
-    const str = schemaId.replace(BASE_SCHEMA_ID, '')
-    const splits = str.split('_v')
-    if (splits.length != 2) {
+    const url = new URL(schemaId)
+    const splits = schemaIdRegex.exec(url.pathname)
+    if (!splits) {
       throw new Error(`Invalid schemaId: ${schemaId}`)
     }
-    return { dataType: splits[0], schemaVersion: splits[1] }
+    return { dataType: splits[1], schemaVersion: splits[2] }
   }
 
   /**
@@ -59,7 +61,7 @@ export class IpfsDataStore {
   static generateSchemaId(dataType) {
     // TODO: should lookup in a config to get most recent version to use.
     const schemaVersion = '1.0.0'
-    const schemaId = `${BASE_SCHEMA_ID}${dataType}_v${schemaVersion}`
+    const schemaId = `${BASE_SCHEMA_ID}${dataType}_${schemaVersion}.json`
     return { schemaId, schemaVersion }
   }
 
