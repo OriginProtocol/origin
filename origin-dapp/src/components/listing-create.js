@@ -509,10 +509,9 @@ class ListingCreate extends Component {
     try {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
-      const methodName = isEditMode ? 'updateListing' : 'createListing'
       let transactionReceipt
       if (isEditMode) {
-        transactionReceipt = await origin.marketplace[methodName](
+        transactionReceipt = await origin.marketplace.updateListing(
           this.props.listingId,
           listing,
           0, // TODO(John) - figure out how a seller would add "additional deposit"
@@ -521,7 +520,7 @@ class ListingCreate extends Component {
           }
         )
       } else {
-        transactionReceipt = await origin.marketplace[methodName](
+        transactionReceipt = await origin.marketplace.createListing(
           listing,
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
@@ -911,7 +910,7 @@ class ListingCreate extends Component {
                         <Form
                           className="rjsf mt-2"
                           schema={this.boostSchema}
-                          onError={(error) => {
+                          onError={() => {
                             this.setState({ showBoostFormErrorMsg: true })
                           }}
                           onSubmit={this.onReview}
@@ -1038,22 +1037,6 @@ class ListingCreate extends Component {
                     </div>
                     <div className="col-md-9">
                       <p className="ws-aware">{formData.description}</p>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-3">
-                      <p className="label">Photos</p>
-                    </div>
-                    <div className="col-md-9 photo-row">
-                      {formData.pictures &&
-                        formData.pictures.map((dataUri, idx) => (
-                          <img
-                            key={idx}
-                            src={dataUri}
-                            className="photo"
-                            role="presentation"
-                          />
-                        ))}
                     </div>
                   </div>
                   {isMultiUnitListing &&
@@ -1195,6 +1178,22 @@ class ListingCreate extends Component {
                       </div>
                     </div>
                   }
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">Photos</p>
+                    </div>
+                    <div className="col-md-9 photo-row">
+                      {formData.pictures &&
+                        formData.pictures.map((dataUri, idx) => (
+                          <img
+                            key={idx}
+                            src={dataUri}
+                            className="photo"
+                            role="presentation"
+                          />
+                        ))}
+                    </div>
+                  </div>
                 </div>
                 {/* Revisit this later
                   <Link
