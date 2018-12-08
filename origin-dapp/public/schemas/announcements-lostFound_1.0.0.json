@@ -13,7 +13,7 @@
       "const": "unit"
     },
     "category": {
-      "const": "announcements"
+      "const": "schema.announcements"
     },
     "name": {
       "type": "string",
@@ -34,6 +34,9 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "subCategory": {
+      "const": "schema.lostFound"
     }
   }
 }

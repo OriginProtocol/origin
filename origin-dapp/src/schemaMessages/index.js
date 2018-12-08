@@ -541,4 +541,24 @@ export default defineMessages({
     id: 'schema.services',
     defaultMessage: 'Services'
   },
+  'schema.activity': {
+    id: 'schema.activity',
+    defaultMessage: 'Activity'
+  },
+  'schema.garageMovingSale': {
+    id: 'schema.garageMovingSale',
+    defaultMessage: 'Garage Moving Sale'
+  },
+  'schema.personal': {
+    id: 'schema.personal',
+    defaultMessage: 'Personal'
+  },
+  'schema.tickets': {
+    id: 'schema.tickets',
+    defaultMessage: 'Tickets'
+  },
+  'schema.transportation': {
+    id: 'schema.transportation',
+    defaultMessage: 'Transportation'
+  }
 })

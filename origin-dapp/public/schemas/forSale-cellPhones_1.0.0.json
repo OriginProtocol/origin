@@ -14,7 +14,7 @@
       "const": "unit"
     },
     "category": {
-      "const": "forSale"
+      "const": "schema.forSale"
     },
     "name": {
       "type": "string",
@@ -48,6 +48,9 @@
         "schema.prepareProperty",
         "schema.rateBuyer"
       ]
+    },
+    "subCategory": {
+      "const": "schema.cellPhones"
     }
   }
 }

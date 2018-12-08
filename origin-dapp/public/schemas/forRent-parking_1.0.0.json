@@ -13,7 +13,7 @@
       "const": "fractional"
     },
     "category": {
-      "const": "forRent"
+      "const": "schema.forRent"
     },
     "slotLength": {
       "type": "integer",
@@ -60,6 +60,9 @@
         "schema.prepareProperty",
         "schema.rateBuyer"
       ]
+    },
+    "subCategory": {
+      "const": "schema.parking"
     }
   }
 }

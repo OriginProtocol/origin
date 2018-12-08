@@ -538,5 +538,25 @@
   {
     "id": "schema.services",
     "defaultMessage": "Services"
+  },
+  {
+    "id": "schema.activity",
+    "defaultMessage": "Activity"
+  },
+  {
+    "id": "schema.garageMovingSale",
+    "defaultMessage": "Garage Moving Sale"
+  },
+  {
+    "id": "schema.personal",
+    "defaultMessage": "Personal"
+  },
+  {
+    "id": "schema.tickets",
+    "defaultMessage": "Tickets"
+  },
+  {
+    "id": "schema.transportation",
+    "defaultMessage": "Transportation"
   }
 ]

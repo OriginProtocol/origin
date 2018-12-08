@@ -13,7 +13,7 @@
       "const": "fractional"
     },
     "category": {
-      "const": "services"
+      "const": "schema.services"
     },
     "slotLength": {
       "type": "integer",
@@ -60,6 +60,9 @@
         "schema.provideService",
         "schema.rateBuyer"
       ]
+    },
+    "subCategory": {
+      "const": "schema.musicLessons"
     }
   }
 }
