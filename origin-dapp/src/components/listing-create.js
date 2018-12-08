@@ -472,7 +472,7 @@ class ListingCreate extends Component {
   updateBoostCap(){
     const formData = this.state.formListing.formData
     const boostAmount = formData.boostValue || this.state.selectedBoostAmount
-    let requiredBoost = formData.unitsTotal * boostAmount
+    const requiredBoost = formData.unitsTotal * boostAmount
 
     if (this.updateBoostTimeout)
       clearTimeout(this.updateBoostTimeout)
@@ -612,7 +612,6 @@ class ListingCreate extends Component {
       errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.positiveNumber))
     }
     
-    console.log("DEBUG STUFF", typeof(boostLimit), boostLimit, formData.unitsTotal, formData.boostValue)
     if (boostLimit > formData.unitsTotal * formData.boostValue) {
       errorFound = true
       errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.boostLimitTooHigh)) 
@@ -623,7 +622,7 @@ class ListingCreate extends Component {
         showBoostFormErrorMsg: false
       })
     }
-  return errors;
+  return errors
 }
 
   render() {
@@ -768,6 +767,7 @@ class ListingCreate extends Component {
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
                   onError={(error) => {
+                    console.error('Listing form errors: ', error)
                     this.setState({ showDetailsFormErrorMsg: true })
                   }}
                   onChange={this.onFormDataChange}
@@ -909,10 +909,9 @@ class ListingCreate extends Component {
                     {isMultiUnitListing && (
                       <Fragment>
                         <Form
-                          className='rjsf mt-2'
+                          className="rjsf mt-2"
                           schema={this.boostSchema}
                           onError={(error) => {
-                            console.error("FORM ERRORS", error)
                             this.setState({ showBoostFormErrorMsg: true })
                           }}
                           onSubmit={this.onReview}
@@ -979,7 +978,7 @@ class ListingCreate extends Component {
                     )}
                   </Fragment>
                 )}
-                {(showBoostTutorial || !showBoostTutorial && !isMultiUnitListing) && this.renderBoostButtons(false)}
+                {(showBoostTutorial || !showBoostTutorial && !isMultiUnitListing) && this.renderBoostButtons(false)}
               </div>
             )}
             {step >= this.STEP.PREVIEW && (

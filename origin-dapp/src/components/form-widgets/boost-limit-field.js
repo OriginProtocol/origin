@@ -57,7 +57,6 @@ class BoostLimitField extends Component {
 
   onChange(event) {
     const value = event.target.value
-    const valueNum = parseFloat(value)
 
     this.setState({
         boostLimit: value,
