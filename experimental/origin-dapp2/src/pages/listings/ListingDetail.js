@@ -8,7 +8,7 @@ import Buy from './Buy'
 class ListingDetail extends Component {
   render() {
     const { listing, quantity, from } = this.props
-    const amount = Number(listing.price.amount) * Number(quantity)
+    const amount = String(Number(listing.price.amount) * Number(quantity))
 
     return (
       <div className="listing-detail">
@@ -45,7 +45,7 @@ class ListingDetail extends Component {
                 <span>{`${amount} ETH`}</span>
               </div>
               {from ? (
-                <Buy listing={listing} from={from} />
+                <Buy listing={listing} from={from} value={amount} />
               ) : (
                 <Link
                   to={`/listings/${listing.id}/onboard`}

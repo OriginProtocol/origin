@@ -74,7 +74,7 @@ export default class Modal extends Component {
               }`}
             >
               <div
-                className={`pl-modal-content ${this.props.className}`}
+                className={`pl-modal-content ${this.props.className || ''}`}
                 style={{ ...this.props.style }}
               >
                 {!this.props.closeBtn ? null : (
@@ -161,7 +161,7 @@ require('react-styl')(`
           overflow: hidden;
           margin-left: auto;
           margin-right: auto;
-          max-width: 360px;
+          max-width: 500px;
           border-radius: 10px;
           font-size: 18px
           font-weight: normal
@@ -255,5 +255,11 @@ require('react-styl')(`
 
   .pl-modal-bg.is-active.is-leaving
       opacity: 0
+
+  .pl-modal-content
+    h5
+      font-family: Poppins
+      font-size: 22px
+      font-weight: normal
 
 `)

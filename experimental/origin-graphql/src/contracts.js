@@ -139,6 +139,7 @@ export function setNetwork(net) {
     window.localStorage.ognNetwork = net
     window.web3 = web3
   }
+  context.web3 = web3
   context.web3Exec = web3
 
   const MessagingConfig = config.messaging || DefaultMessagingConfig

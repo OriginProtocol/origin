@@ -45,8 +45,8 @@ async function makeOffer(_, data) {
   }
 
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
-  const commission = contracts.web3Exec.utils.toWei(ipfsData.commission.amount, 'ether')
-  const value = contracts.web3Exec.utils.toWei(data.value, 'ether')
+  const commission = contracts.web3.utils.toWei(ipfsData.commission.amount, 'ether')
+  const value = contracts.web3.utils.toWei(data.value, 'ether')
 
   const args = [
     data.listingID,

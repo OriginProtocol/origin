@@ -3,7 +3,7 @@ import contracts from '../contracts'
 
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
-    const net = await contracts.web3Exec.eth.net.getId()
+    const net = await contracts.web3.eth.net.getId()
     const mmNet = await contracts.metaMask.eth.net.getId()
     if (net !== mmNet) {
       throw new Error(`MetaMask is not on network ${net}`)

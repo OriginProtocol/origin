@@ -65,7 +65,8 @@
             "reducers": "./src/reducers",
             "utils": "./src/utils",
             "hoc": "./src/hoc",
-            "queries": "./src/queries"
+            "queries": "./src/queries",
+            "mutations": "./src/mutations"
           }
         }
       ],

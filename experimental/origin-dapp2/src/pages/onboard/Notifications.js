@@ -3,6 +3,7 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import Link from 'components/Link'
+import Modal from 'components/Modal'
 
 import ListingPreview from './_ListingPreview'
 import Stage from './_Stage'
@@ -41,7 +42,7 @@ const EnableNotifications = ({ next }) => (
   </div>
 )
 
-const WaitEnableNotifications = ({ next }) => (
+const WaitEnableNotifications = () => (
   <div className="onboard-box">
     <div className="notifications-logo">
       <div className="qm" />
@@ -51,7 +52,7 @@ const WaitEnableNotifications = ({ next }) => (
       The native browser permissions dialog opens at the top of the browser
       window. Please confirm the request
     </div>
-    <div className="spinner" onClick={() => next()} />
+    <div className="spinner" />
   </div>
 )
 
@@ -86,9 +87,9 @@ const Denied = () => (
       In order to fix this, please go into your browser settings and turn on
       notifications for our DApp.
     </div>
-    <a href="#" className="cancel big">
+    <button className="btn btn-link cancel big">
       Visit Browser Settings
-    </a>
+    </button>
   </div>
 )
 
@@ -103,6 +104,39 @@ class OnboardNotifications extends Component {
         <div className="row">
           <div className="col-md-8">
             <Stage stage={3} />
+            {this.state.modal && (
+              <Modal
+                shouldClose={this.state.shouldClose}
+                onClose={() =>
+                  this.setState({ modal: false, shouldClose: false })
+                }
+              >
+                <div className="notifications-modal">
+                  <div className="no-notifications-logo">!</div>
+                  <h5>Wait! Don’t you want updates?</h5>
+                  <div>
+                    Not having desktop notifications increases the chances of
+                    missing important updates about your transactions.
+                  </div>
+                  <button
+                    className="btn btn-success"
+                    onClick={() =>
+                      this.setState({ shouldClose: true, permission: 'denied' })
+                    }
+                  >
+                    Wait! I want updates
+                  </button>
+                  <button
+                    className="btn btn-link"
+                    onClick={() =>
+                      this.setState({ shouldClose: true, permission: 'denied' })
+                    }
+                  >
+                    No, I don’t want to receive updates
+                  </button>
+                </div>
+              </Modal>
+            )}
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
@@ -121,19 +155,17 @@ class OnboardNotifications extends Component {
                 } else if (this.state.permission === 'denied') {
                   cmp = <Denied next={nextLink} />
                 } else if (this.state.permissionRequested) {
-                  cmp = (
-                    <WaitEnableNotifications
-                      next={() => this.setState({ step: 3 })}
-                    />
-                  )
+                  cmp = <WaitEnableNotifications />
                 } else {
                   cmp = (
                     <EnableNotifications
                       next={() => {
                         this.setState({ permissionRequested: true })
                         Notification.requestPermission().then(permission => {
-                          this.setState({ permission })
-                          if (permission === 'granted') {
+                          if (permission === 'denied') {
+                            this.setState({ modal: true })
+                          } else if (permission === 'granted') {
+                            this.setState({ permission })
                             this.showNotification()
                           }
                         })
@@ -176,5 +208,26 @@ require('react-styl')(`
       .qm
         bottom: 1rem
         right: 2rem
+  .notifications-modal
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .no-notifications-logo
+      width: 10rem
+      height: 10rem
+      margin-bottom: 2rem
+      background: url(images/alerts-icon.svg) no-repeat center
+      background-size: contain
+      color: black
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 4rem;
+      font-family: poppins;
+    .btn-success
+      margin-top: 2rem
+    .btn-link
+      margin-top: 1rem
 
 `)

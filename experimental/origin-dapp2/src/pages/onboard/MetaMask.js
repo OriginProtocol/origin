@@ -14,11 +14,13 @@ const query = gql`
   query WalletStatus {
     web3 {
       networkId
+      networkName
       metaMaskEnabled
       metaMaskAvailable
       metaMaskApproved
       metaMaskUnlocked
       metaMaskNetworkId
+      metaMaskNetworkName
       metaMaskAccount {
         id
         balance {
@@ -95,13 +97,27 @@ const AwaitingApproval = ({ back }) => (
   </div>
 )
 
-const Connected = ({ next }) => (
+const IncorrectNetwork = ({ networkName, connectTo }) => (
+  <div className="onboard-box">
+    <div className="metamask-logo" />
+    <div className="status">MetaMask Connected</div>
+    <div className="connected">
+      <span className="oval warn" />
+      {networkName}
+    </div>
+    <div className="help mb">
+      {`Metamask is connected, please switch to ${connectTo} in order to transact on Origin.`}
+    </div>
+  </div>
+)
+
+const Connected = ({ next, networkName }) => (
   <div className="onboard-box">
     <div className="metamask-logo" />
     <div className="status">MetaMask Connected</div>
     <div className="connected">
       <span className="oval" />
-      Ethereum Main Network
+      {networkName}
     </div>
     <div className="help mb">
       MetaMask is connected and you’re ready to transact on Origin.
@@ -135,23 +151,36 @@ class OnboardMetaMask extends Component {
 
                 const backLink = `/listings/${listing.id}/onboard`
                 const nextLink = `/listings/${listing.id}/onboard/messaging`
+                const { web3 } = data
 
                 let cmp
-                if (!data.web3.metaMaskAvailable && !this.state.installing) {
+                if (!web3.metaMaskAvailable && !this.state.installing) {
                   cmp = (
                     <NotInstalled
                       back={backLink}
                       onInstall={() => this.setState({ installing: true })}
                     />
                   )
-                } else if (!data.web3.metaMaskAvailable) {
+                } else if (!web3.metaMaskAvailable) {
                   cmp = <ConfirmInstalled />
-                } else if (!data.web3.metaMaskUnlocked) {
+                } else if (!web3.metaMaskUnlocked) {
                   cmp = <AwaitingLogin back={backLink} />
-                } else if (!data.web3.metaMaskApproved) {
+                } else if (!web3.metaMaskApproved) {
                   cmp = <AwaitingApproval back={backLink} />
+                } else if (web3.networkId !== web3.metaMaskNetworkId) {
+                  cmp = (
+                    <IncorrectNetwork
+                      connectTo={web3.networkName}
+                      networkName={web3.metaMaskNetworkName}
+                    />
+                  )
                 } else {
-                  cmp = <Connected next={nextLink} />
+                  cmp = (
+                    <Connected
+                      next={nextLink}
+                      networkName={web3.metaMaskNetworkName}
+                    />
+                  )
                 }
                 return cmp
               }}
@@ -192,4 +221,6 @@ require('react-styl')(`
         display: inline-block
         border-radius: 0.5rem
         margin-right: 0.5rem
+        &.warn
+          background-color: var(--golden-rod)
 `)

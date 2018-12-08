@@ -1,31 +1,53 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 
 import Modal from 'components/Modal'
+import MakeOfferMutation from 'mutations/MakeOffer'
 
-const MakeOfferMutation = gql`
-  mutation MakeOffer($listingID: String!, $value: String!, $from: String!) {
-    makeOffer(listingID: $listingID, value: $value, from: $from) {
-      id
-    }
-  }
-`
+const ErrorModal = ({ onClose }) => (
+  <div className="make-offer-modal">
+    <div className="error-icon" />
+    <div>There was a problem purchasing this listing.</div>
+    <div>See the console for more details.</div>
+    <button
+      href="#"
+      className="btn btn-outline-light"
+      onClick={() => onClose()}
+      children="OK"
+    />
+  </div>
+)
+
+const ConfirmModal = () => (
+  <div className="make-offer-modal">
+    <div className="spinner light" />
+    <div>
+      <b>Confirm Transaction</b>
+    </div>
+    <div>Please accept or confirm this transaction in MetaMask</div>
+  </div>
+)
 
 class Buy extends Component {
   state = {}
   render() {
-    const { listing, from } = this.props
-    const variables = { listingID: listing.id, value: '0.5', from }
+    const { listing, from, value } = this.props
+    const variables = { listingID: listing.id, value, from }
 
     return (
-      <Mutation
-        mutation={MakeOfferMutation}
-        onComplete={() => console.log('complete')}
-      >
-        {(makeOffer, { error }) => {
-          return (
-            <>
+      <>
+        <Mutation
+          mutation={MakeOfferMutation}
+          onCompleted={() => {
+            this.setState({ success: true, shouldClose: true })
+          }}
+          onError={error => {
+            console.log(error)
+            this.setState({ modal: 'error' })
+          }}
+        >
+          {makeOffer => {
+            return (
               <button
                 className="btn btn-primary"
                 onClick={() => {
@@ -34,43 +56,26 @@ class Buy extends Component {
                 }}
                 children="Buy Now"
               />
-
-              {!this.state.modal ? null : (
-                <Modal
-                  shouldClose={this.state.shouldClose}
-                  onClose={() => this.setState({ modal: false })}
-                >
-                  <div className="buy-modal">
-                    {error ? (
-                      <>
-                        <div>{JSON.stringify(error)}</div>
-                        <a
-                          href="#"
-                          onClick={e => {
-                            e.preventDefault()
-                            this.setState({ shouldClose: true })
-                          }}
-                        >
-                          OK
-                        </a>
-                      </>
-                    ) : (
-                      <>
-                        <div className="spinner light" />
-                        <div>
-                          <b>Processing your request.</b>
-                        </div>
-
-                        <div>Please stand by...</div>
-                      </>
-                    )}
-                  </div>
-                </Modal>
-              )}
-            </>
-          )
-        }}
-      </Mutation>
+            )
+          }}
+        </Mutation>
+        {this.state.modal && (
+          <Modal
+            shouldClose={this.state.shouldClose}
+            submitted={this.state.success}
+            onClose={() => this.setState({ modal: false, shouldClose: false })}
+            children={
+              this.state.modal === 'error' ? (
+                <ErrorModal
+                  onClose={() => this.setState({ shouldClose: true })}
+                />
+              ) : (
+                <ConfirmModal />
+              )
+            }
+          />
+        )}
+      </>
     )
   }
 }
@@ -78,6 +83,9 @@ class Buy extends Component {
 export default Buy
 
 require('react-styl')(`
-  .buy-modal .spinner
-    margin-bottom: 2rem
+  .make-offer-modal
+    .spinner,.error-icon
+      margin-bottom: 2rem
+    .btn
+      margin-top: 2rem
 `)

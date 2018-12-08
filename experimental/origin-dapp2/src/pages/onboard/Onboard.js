@@ -180,4 +180,9 @@ require('react-styl')(`
     &.light
       background-image: url(images/spinner-animation-light.svg)
 
+  .error-icon
+    background: url(images/flat-cross-icon.svg) no-repeat center
+    background-size: contain
+    height: 3.5rem
+
 `)

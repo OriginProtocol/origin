@@ -14,6 +14,7 @@ const GetMetaMaskStateQuery = gql`
       metaMaskEnabled
       metaMaskUnlocked
       metaMaskNetworkId
+      metaMaskNetworkName
       metaMaskAccount {
         id
         balance {

@@ -1,11 +1,23 @@
 import contracts from '../contracts'
 import get from 'lodash/get'
 
+function networkName(netId) {
+  if (netId === 1) return 'Ethereum Main Network'
+  if (netId === 3) return 'Ropsten Network'
+  if (netId === 4) return 'Rinkeby Network'
+  if (netId === 42) return 'Kovan Network'
+  return `Private Network (${netId})`
+}
+
 export default {
-  networkId: () => web3.eth.net.getId(),
+  networkId: () => contracts.web3.eth.net.getId(),
+  networkName: async () => {
+    const netId = await contracts.web3.eth.net.getId()
+    return networkName(netId)
+  },
   nodeAccounts: () =>
     new Promise(resolve => {
-      web3.eth
+      contracts.web3.eth
         .getAccounts()
         .then(accts => resolve(accts.map(id => ({ id }))))
         .catch(() => resolve([]))
@@ -13,17 +25,19 @@ export default {
   nodeAccount: (_, args) => ({ id: args.id }),
   accounts: async () => {
     const accounts = []
-    for (let i = 0; i < web3.eth.accounts.wallet.length; i++) {
-      accounts.push({ id: web3.eth.accounts.wallet[i].address })
+    for (let i = 0; i < contracts.web3.eth.accounts.wallet.length; i++) {
+      accounts.push({ id: contracts.web3.eth.accounts.wallet[i].address })
     }
     return accounts
   },
   account: (_, args) => ({ id: args.id }),
   defaultAccount: () =>
-    web3.eth.defaultAccount ? { id: web3.eth.defaultAccount } : null,
+    contracts.web3.eth.defaultAccount
+      ? { id: contracts.web3.eth.defaultAccount }
+      : null,
   transaction: async (_, args) => {
-    let status = 'submitted'
-    let transaction = await web3.eth.getTransaction(args.id)
+    const status = 'submitted'
+    const transaction = await contracts.web3.eth.getTransaction(args.id)
     return {
       id: args.id,
       status,
@@ -39,6 +53,11 @@ export default {
         .then(id => resolve(id))
         .catch(() => resolve(null))
     })
+  },
+  metaMaskNetworkName: async () => {
+    if (!contracts.metaMask) return null
+    const netId = await contracts.metaMask.eth.net.getId()
+    return networkName(netId)
   },
   useMetaMask: () => (contracts.metaMaskEnabled ? true : false),
   metaMaskEnabled: async () => {

@@ -40,6 +40,7 @@ export default `
 
   type Web3 {
     networkId: Int
+    networkName: String
     nodeAccounts: [Account]
     nodeAccount(id: ID!): Account
     accounts: [Account]
@@ -53,6 +54,7 @@ export default `
     metaMaskUnlocked: Boolean
     metaMaskAccount: Account
     metaMaskNetworkId: Int
+    metaMaskNetworkName: String
   }
 
   type Price {
