@@ -108,6 +108,10 @@
     "defaultMessage": "Description"
   },
   {
+    "id": "listing-create.quantity",
+    "defaultMessage": "Quantity"
+  },
+  {
     "id": "listing-create.listing-price",
     "defaultMessage": "Listing Price"
   },
@@ -122,6 +126,10 @@
   {
     "id": "listing-create.boost-level",
     "defaultMessage": "Boost Level"
+  },
+  {
+    "id": "listing-create.boostLimit",
+    "defaultMessage": "Boost Limit"
   },
   {
     "id": "listing-create.backButtonLabel",

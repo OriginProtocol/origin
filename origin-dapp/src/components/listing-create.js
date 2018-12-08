@@ -1057,6 +1057,23 @@ class ListingCreate extends Component {
                         ))}
                     </div>
                   </div>
+                  {isMultiUnitListing &&
+                    <div className="row">
+                      <div className="col-md-3">
+                        <p className="label">
+                          <FormattedMessage
+                            id={'listing-create.quantity'}
+                            defaultMessage={'Quantity'}
+                          />
+                        </p>
+                      </div>
+                      <div className="col-md-9">
+                        <p>
+                          {formData.unitsTotal}
+                        </p>
+                      </div>
+                    </div>
+                  }
                   <div className="row">
                     <div className="col-md-3">
                       <p className="label">
@@ -1145,6 +1162,36 @@ class ListingCreate extends Component {
                           <span className="help-block">
                             &nbsp;| {formData.boostLevel.toUpperCase()}
                           </span>
+                        </p>
+                      </div>
+                    </div>
+                  }
+                  {isMultiUnitListing &&
+                    <div className="row">
+                      <div className="col-md-3">
+                        <p className="label">
+                          <FormattedMessage
+                            id={'listing-create.boostLimit'}
+                            defaultMessage={'Boost Limit'}
+                          />
+                        </p>
+                      </div>
+                      <div className="col-md-9">
+                        <p>
+                          <img
+                            className="ogn-icon"
+                            src="images/ogn-icon.svg"
+                            role="presentation"
+                          />
+                          <span className="text-bold">{formData.boostLimit}</span>&nbsp;
+                          <Link
+                            className="ogn-abbrev"
+                            to="/about-tokens"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            OGN
+                          </Link>
                         </p>
                       </div>
                     </div>
