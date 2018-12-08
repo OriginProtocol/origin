@@ -24,11 +24,7 @@ export function dappFormDataToOriginListing(formData) {
     title: formData.name,
     description: formData.description,
     listingType: formData.listingType,
-    commission: {
-      amount: formData.boostValue.toString(),
-      currency: 'OGN'
-    },
-    unitsTotal: 1 // Note: for V1 we only support single unit listings.
+    unitsTotal: formData.unitsTotal
   }
 
   if (formData.listingType === 'unit') {
@@ -37,6 +33,14 @@ export function dappFormDataToOriginListing(formData) {
       price: {
         amount: formData.price.toString(),
         currency: 'ETH'
+      },
+      commission: {
+        amount: formData.boostLimit.toString(),
+        currency: 'OGN'
+      },
+      commissionPerUnit: {
+        amount: formData.boostValue.toString(),
+        currency: 'OGN'
       }
     }
   } else {
@@ -44,6 +48,10 @@ export function dappFormDataToOriginListing(formData) {
       ...listingData,
       timeIncrement: formData.timeIncrement,
       slots: formData.slots,
+      commission: {
+        amount: formData.boostValue.toString(),
+        currency: 'OGN'
+      },
       calendarStep: '60' // Note: this is currently always 60 minutes but may change later to allow for sub-1hr slots
     }
   }
