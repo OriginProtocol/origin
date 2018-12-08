@@ -15,6 +15,12 @@ class WalletScreen extends Component {
     },
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {apiHost:originWallet.getCurrentRemoteLocal()}
+  }
+
+
   render() {
     const { address, balance } = this.props
     // placeholders
@@ -33,6 +39,14 @@ class WalletScreen extends Component {
           <Text style={[styles.text, styles.usd]}>{amountUSD} USD</Text>
           <Text style={[styles.text, styles.address]}>{address}</Text>
           <View style={styles.buttonContainer}>
+            {originWallet.isLocalApi() && <View>
+              <Text style={[styles.text, styles.heading]}>Api host IP:</Text>
+              <TextInput style={{ height:40, borderColor:'gray', borderWidth:1 }}
+                  onSubmitEditing={(e) => originWallet.setRemoteLocal(e.nativeEvent.text)}
+                  onChangeText={(apiHost) => this.setState({apiHost})}
+                  value={this.state.apiHost}
+                />
+              </View>}
             <OriginButton
               type="primary"
               title="Show Private Key"
@@ -54,13 +68,6 @@ class WalletScreen extends Component {
               style={[styles.button, {marginTop:10}]}
               onPress={() => originWallet.giveMeEth("1.0")}
               />}
-            {originWallet.isLocalApi() && <View>
-              <Text style={[styles.text, styles.heading]}>Api host IP:</Text>
-              <TextInput style={{ height:40, borderColor:'gray', borderWidth:1 }}
-                  onSubmitEditing={(e) => originWallet.setRemoteLocal(e.nativeEvent.text)}
-                  value={originWallet.getCurrentRemoteLocal()}
-                />
-              </View>}
           </View>
         </View>
       </View>
