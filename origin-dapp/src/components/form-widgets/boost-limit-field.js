@@ -4,8 +4,13 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 class BoostLimitField extends Component {
   constructor(props) {
     super(props)
+    
+    /* Set default multi-unit boost limit to the amount required to boost all listings with 
+     * selected boost value. Except if user does not have enough OGN
+     */
     this.state = {
-      boostLimit: props.formData && parseFloat(props.formData) || '',
+      boostLimit: this.calculateMaxPossibleBoost(props),
+      overridenBoostLimit: null
     }
 
     this.intlMessages = defineMessages({
@@ -14,6 +19,7 @@ class BoostLimitField extends Component {
         defaultMessage: 'Boost Limit'
       }
     })
+    this.onChange = this.onChange.bind(this)
   }
 
   componentDidMount() {
@@ -29,30 +35,44 @@ class BoostLimitField extends Component {
     }
   }
 
-  onChange() {
-    return async event => {
-      const value = event.target.value
-      const isNan = value === '' || isNaN(value)
-      const valueNum = isNan ? value : parseFloat(value)
-      if (valueNum < 0) {
-        return
-      }
-      this.setState(
-        {
-          boostLimit: valueNum
+  componentDidUpdate(prevProps) {
+    const maxPossibleBoost = this.calculateMaxPossibleBoost(this.props)
+    // user is changing boost slider
+    if (this.props.formContext.formData.boostValue != prevProps.formContext.formData.boostValue &&
+      maxPossibleBoost !== this.state.boostLimit) {
+        this.setState({
+          overridenBoostLimit: maxPossibleBoost,
+          boostLimit: maxPossibleBoost
         },
-        () => this.props.onChange(valueNum)
-      )
+        () => this.props.onChange(maxPossibleBoost))
     }
+  }
+
+  calculateMaxPossibleBoost(props) {
+    return Math.min(
+      props.formContext.formData.unitsTotal * props.formContext.formData.boostValue,
+      props.formContext.wallet.ognBalance
+    )
+  }
+
+  onChange(event) {
+    const value = event.target.value
+    const valueNum = parseFloat(value)
+
+    this.setState({
+        boostLimit: value,
+        overridenBoostLimit: null
+      },
+      () => this.props.onChange(value)
+    )
   }
 
   render() {
     const { boostLimit } = this.state
-
     return (
       (
         <div className="boost-limit-field">
-          <label className="control-label" htmlFor="root_boostLimit">
+          <label className="control-label" htmlFor="boostLimit">
             {this.props.intl.formatMessage(this.intlMessages.title)}
             {this.props.required && <span className="required">*</span>}
           </label>
@@ -61,12 +81,11 @@ class BoostLimitField extends Component {
               <div className="price-field-container">
                 <input
                   type="number"
-                  id="root_boostLimit"
+                  id="boostLimit"
                   step="0.00001"
+                  value={this.state.overridenBoostLimit ? this.state.overridenBoostLimit : boostLimit}
                   className="price-field form-control"
-                  value={boostLimit}
-                  onChange={this.onChange()}
-                  required={this.props.required}
+                  onChange={this.onChange}
                 />
                 <span className="currency-badge currency-ogn">
                   <img src="images/ogn-icon.svg" role="presentation" />

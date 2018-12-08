@@ -9,7 +9,15 @@
   },
   {
     "id": "schema.positiveNumber",
-    "defaultMessage": "should be a positive number"
+    "defaultMessage": "Should be a positive number"
+  },
+  {
+    "id": "schema.notEnoughOgnFunds",
+    "defaultMessage": "Not enough funds in wallet."
+  },
+  {
+    "id": "schema.boostLimitTooHigh",
+    "defaultMessage": "value too high. Should be equal or smaller of the Total boost required."
   },
   {
     "id": "backButtonLabel",

@@ -78,6 +78,7 @@ class ListingCreate extends Component {
     })
 
     this.defaultState = {
+      boostCapTooLow: false,
       step: this.STEP.PICK_SCHEMA,
       selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
       selectedSchemaType: null,
@@ -113,14 +114,22 @@ class ListingCreate extends Component {
       },
       positiveNumber: {
         id: 'schema.positiveNumber',
-        defaultMessage: 'should be a positive number'
+        defaultMessage: 'Should be a positive number'
+      },
+      notEnoughOgnFunds: {
+        id: 'schema.notEnoughOgnFunds',
+        defaultMessage: 'Not enough funds in wallet.'
+      },
+      boostLimitTooHigh: {
+        id: 'schema.boostLimitTooHigh',
+        defaultMessage: 'value too high. Should be equal or smaller of the Total boost required.'
       }
     })
 
     this.boostSchema = {
       $schema: 'http://json-schema.org/draft-06/schema#',
       type: 'object',
-      required: ['boostLimit'],
+      required: [],
       properties: {
         boostLimit: {
           type: 'number',
@@ -136,6 +145,7 @@ class ListingCreate extends Component {
     this.backFromBoostStep = this.backFromBoostStep.bind(this)
     this.onBackToPickSchema = this.onBackToPickSchema.bind(this)
     this.onFormDataChange = this.onFormDataChange.bind(this)
+    this.onBoostLimitChange = this.onBoostLimitChange.bind(this)
     this.onReview = this.onReview.bind(this)
     this.pollOgnBalance = this.pollOgnBalance.bind(this)
     this.resetForm = this.resetForm.bind(this)
@@ -143,6 +153,8 @@ class ListingCreate extends Component {
     this.setBoost = this.setBoost.bind(this)
     this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
     this.transformFormErrors = this.transformFormErrors.bind(this)
+    this.updateBoostCap = this.updateBoostCap.bind(this)
+    this.validateBoostForm = this.validateBoostForm.bind(this)
   }
 
   async componentDidMount() {
@@ -400,6 +412,7 @@ class ListingCreate extends Component {
     })
 
     const becomesMultiUnitListing = formData.unitsTotal !== undefined && formData.unitsTotal > 1
+
     // only fire message if isMultiUnitListing flag changes
     if (this.props.isMultiUnitListing !== becomesMultiUnitListing)
       this.props.setMultiUnitListing(becomesMultiUnitListing)
@@ -417,6 +430,23 @@ class ListingCreate extends Component {
     }
   }
 
+  onBoostLimitChange({ formData }) {
+    const boostLimit = formData.boostLimit
+    if (boostLimit && boostLimit !== this.state.formListing.formData.boostLimit
+    ) {
+      this.setState({
+        formListing: {
+          ...this.state.formListing,
+          formData: {
+            ...this.state.formListing.formData,
+            boostLimit: formData.boostLimit
+          }
+        }
+      })
+      this.updateBoostCap()
+    }
+  }
+
   setBoost(boostValue, boostLevel) {
     this.setState({
       formListing: {
@@ -428,6 +458,30 @@ class ListingCreate extends Component {
         }
       },
       selectedBoostAmount: boostValue
+    })
+
+    this.updateBoostCap()
+  }
+
+  /* This hack is required to be performed with delay, because boostLimit amount
+   * is updated via setState with 1-2 frames of delay after the boost slider value
+   * changes. When react renders the form inside those 2 frames the boostCapTooLow
+   * message can appear for a short time and then dissapear. This workaround prevents
+   * that sort of twitching.
+   */
+  updateBoostCap(){
+    const formData = this.state.formListing.formData
+    const boostAmount = formData.boostValue || this.state.selectedBoostAmount
+    let requiredBoost = formData.unitsTotal * boostAmount
+
+    if (this.updateBoostTimeout)
+      clearTimeout(this.updateBoostTimeout)
+
+    this.updateBoostTimeout = setTimeout(() => {
+
+      this.setState({
+        boostCapTooLow: requiredBoost > this.state.formListing.formData.boostLimit
+      })
     })
   }
 
@@ -500,7 +554,7 @@ class ListingCreate extends Component {
     this.setState({ step: this.STEP.PREVIEW })
   }
 
-  renderBoostButtons() {
+  renderBoostButtons(isMultiUnitListing) {
     return(
       <div className="btn-container">
         <button
@@ -516,8 +570,9 @@ class ListingCreate extends Component {
           />
         </button>
         <button
+          type={isMultiUnitListing ? 'submit' : undefined}
           className="float-right btn btn-primary btn-listing-create"
-          onClick={this.onReview}
+          onClick={isMultiUnitListing ? undefined : this.onReview}
           ga-category="create_listing"
           ga-label="boost_listing_step_continue"
         >
@@ -539,6 +594,38 @@ class ListingCreate extends Component {
     })
   }
 
+  validateBoostForm(data, errors) {
+    const formData = this.state.formListing.formData
+    // clear errors
+    errors.boostLimit.__errors = []
+    let boostLimit = formData.boostLimit
+    // if a Nan set to -1 so it triggers the 'positiveNumber' error
+    boostLimit = isNaN(boostLimit) ? -1 : parseFloat(boostLimit)
+
+    let errorFound = false
+    if (this.props.wallet.ognBalance < boostLimit) {
+      errorFound = true
+      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.notEnoughOgnFunds))
+    }
+    if (boostLimit < 0) {
+      errorFound = true
+      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.positiveNumber))
+    }
+    
+    console.log("DEBUG STUFF", typeof(boostLimit), boostLimit, formData.unitsTotal, formData.boostValue)
+    if (boostLimit > formData.unitsTotal * formData.boostValue) {
+      errorFound = true
+      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.boostLimitTooHigh)) 
+    }
+
+    if (!errorFound){
+      this.setState({
+        showBoostFormErrorMsg: false
+      })
+    }
+  return errors;
+}
+
   render() {
     const {
       wallet,
@@ -547,6 +634,7 @@ class ListingCreate extends Component {
     } = this.props
     const totalNumberOfSteps = 4
     const {
+      boostCapTooLow,
       formListing,
       fractionalTimeIncrement,
       selectedBoostAmount,
@@ -564,7 +652,7 @@ class ListingCreate extends Component {
     const { formData } = formListing
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
-    const boostCapTooLow = true
+    const boostAmount = formData.boostValue || selectedBoostAmount
 
     return (web3.givenProvider || origin.contractService.walletLinker) ? (
       <div className="listing-form">
@@ -680,7 +768,6 @@ class ListingCreate extends Component {
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
                   onError={(error) => {
-                    console.error('Create listing form has errors: ', error)
                     this.setState({ showDetailsFormErrorMsg: true })
                   }}
                   onChange={this.onFormDataChange}
@@ -816,22 +903,27 @@ class ListingCreate extends Component {
                     <BoostSlider
                       onChange={this.setBoost}
                       ognBalance={wallet.ognBalance}
-                      selectedBoostAmount={formData.boostValue || selectedBoostAmount}
+                      selectedBoostAmount={boostAmount}
                       isMultiUnitListing={isMultiUnitListing}
                     />
                     {isMultiUnitListing && (
                       <Fragment>
                         <Form
-                          className='mt-2'
+                          className='rjsf mt-2'
                           schema={this.boostSchema}
-                          onSubmit={this.onDetailsEntered}
-                          //formData={formListing.formData}
                           onError={(error) => {
-                            console.error('Boost limit form has errors: ', error)
+                            console.error("FORM ERRORS", error)
                             this.setState({ showBoostFormErrorMsg: true })
                           }}
-                          //onChange={this.onFormDataChange}
+                          onSubmit={this.onReview}
+                          onChange={this.onBoostLimitChange}
                           uiSchema={this.uiSchema}
+                          formContext={{
+                            formData: formData,
+                            wallet: this.props.wallet
+                          }}
+                          transformErrors={this.transformFormErrors}
+                          validate={this.validateBoostForm}
                         >
                           <div className="boost-info p-4">
                             <p className="boost-text boost-italic mt-4 mb-0">
@@ -839,7 +931,7 @@ class ListingCreate extends Component {
                                 id={'listing-create.totalNumberOfUnits'}
                                 defaultMessage={'Total number of units: {units}'}
                                 values={{
-                                  units: 100
+                                  units: formData.unitsTotal
                                 }}
                               />
                             </p>
@@ -849,7 +941,7 @@ class ListingCreate extends Component {
                                 defaultMessage={'Total boost required: {boost}'}
                                 values={{
                                   boost: (
-                                  <Fragment>1000&nbsp;
+                                  <Fragment>{formData.unitsTotal * boostAmount}&nbsp;
                                       <Link
                                         className="ogn-abbrev"
                                         to="/about-tokens"
@@ -869,9 +961,7 @@ class ListingCreate extends Component {
                               />
                             </p>}
                           </div>
-                          {this.renderBoostButtons()}
-                        </Form>
-                        {showBoostFormErrorMsg && (
+                          {showBoostFormErrorMsg && (
                             <div className="info-box warn">
                               <p>
                                 <FormattedMessage
@@ -882,13 +972,14 @@ class ListingCreate extends Component {
                                 />
                               </p>
                             </div>
-                          )
-                        }
+                          )}
+                          {this.renderBoostButtons(true)}
+                        </Form>
                       </Fragment>
                     )}
                   </Fragment>
                 )}
-                {(showBoostTutorial || !showBoostTutorial && !isMultiUnitListing) && this.renderBoostButtons()}
+                {(showBoostTutorial || !showBoostTutorial && !isMultiUnitListing) && this.renderBoostButtons(false)}
               </div>
             )}
             {step >= this.STEP.PREVIEW && (

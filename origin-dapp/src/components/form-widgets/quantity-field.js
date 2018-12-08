@@ -7,6 +7,8 @@ class QuantityField extends Component {
     this.state = {
       quantity: props.formData && parseInt(props.formData) || 1
     }
+
+    this.onChange = this.onChange.bind(this)
   }
 
   componentDidMount() {
@@ -22,19 +24,17 @@ class QuantityField extends Component {
     }
   }
 
-  onChange() {
-    return async event => {
-      const value = event.target.value
-      const isNan = value === '' || isNaN(value)
-      let valueNum = isNan ? value : parseInt(value)
-      valueNum = valueNum <= 0 ? null : valueNum
-      this.setState(
-        {
-          quantity: valueNum
-        },
-        () => this.props.onChange(valueNum)
-      )
-    }
+  onChange(event) {
+    const value = event.target.value
+    const isNan = value === '' || isNaN(value)
+    let valueNum = isNan ? value : parseInt(value)
+    valueNum = valueNum <= 0 ? '' : valueNum
+    this.setState(
+      {
+        quantity: valueNum
+      },
+      () => this.props.onChange(valueNum)
+    )
   }
 
   render() {
@@ -55,7 +55,7 @@ class QuantityField extends Component {
                 step="1"
                 className="form-control"
                 defaultValue={quantity}
-                onChange={this.onChange()}
+                onChange={this.onChange}
                 required={this.props.required}
               />
             </div>

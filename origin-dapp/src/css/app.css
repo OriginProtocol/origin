@@ -2999,6 +2999,7 @@ select.form-control:not([size]):not([multiple]) {
   background-color: var(--gold-pale);
   border: 1px solid var(--golden-rod);
   border-radius: 5px;
+  margin-bottom: 34px;
 }
 
 .listing-form .select-boost .boost-slider .info-box,

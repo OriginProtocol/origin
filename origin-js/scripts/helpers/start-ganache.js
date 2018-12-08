@@ -11,7 +11,7 @@ const startGanache = () => {
       seed: 123,
       blockTime: 0,
       mnemonic:
-        'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
+        'bring drip better sample dirt plug bargain company hazard faint muffin produce'
     })
     server.listen(PORT, err => {
       if (err) {
