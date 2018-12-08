@@ -1,7 +1,8 @@
 import contracts from '../contracts'
 
 let ethPrice,
-  marketplaceExists = {}
+  marketplaceExists = {},
+  messagingInitialized = {}
 
 export default {
   config: () => contracts.net,
@@ -61,7 +62,11 @@ export default {
         if (!accounts || !accounts.length) return null
         id = accounts[0]
       }
+      if (messagingInitialized[id]) {
+        return resolve({ id })
+      }
       contracts.messaging.events.once('initialized', async () => {
+        messagingInitialized[id] = true
         setTimeout(() => resolve({ id }), 500)
       })
       await contracts.messaging.init(id)

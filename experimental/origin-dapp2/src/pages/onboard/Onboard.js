@@ -172,10 +172,12 @@ require('react-styl')(`
           content: "×"
 
     .spinner
-      background: url(images/spinner-animation-dark.svg) no-repeat center
-      background-size: 100%
-      width: 5rem
-      height: 5rem
       margin: 2rem 0
+  .spinner
+    background: url(images/spinner-animation-dark.svg) no-repeat center
+    background-size: contain
+    height: 4rem
+    &.light
+      background-image: url(images/spinner-animation-light.svg)
 
 `)

@@ -11,6 +11,9 @@ export default `
   type Messaging {
     id: ID!
     enabled: Boolean
+    syncing: Boolean
+    pubKey: String
+    pubSig: String
     conversations: [Conversation]
   }
 

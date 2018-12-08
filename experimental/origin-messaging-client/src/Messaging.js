@@ -143,21 +143,88 @@ class Messaging {
     this.GLOBAL_KEYS = messagingNamespace + PRE_GLOBAL_KEYS
     this.CONV = messagingNamespace + PRE_CONV
     this.CONV_INIT_PREFIX = messagingNamespace + PRE_CONV_INIT_PREFIX
-    this.cookieStorage = new cookieStorage({ path: (typeof location === 'object' && location.pathname) ? location.pathname : '/' })
+
+    this.cookieStorage = new cookieStorage({
+      path:
+        typeof location === 'object' && location.pathname
+          ? location.pathname
+          : '/'
+    })
+
+    //default to cookieStorage
+    this.currentStorage = this.cookieStorage
+
+    this.registerWalletLinker()
+  }
+
+  registerWalletLinker() {
+    const walletLinker = this.contractService.walletLinker
+    if (walletLinker) {
+      walletLinker.registerCallback('messaging', this.onPreGenKeys.bind(this))
+    }
   }
 
   onAccount(account_key) {
     if ((account_key && !this.account_key) || account_key != this.account_key) {
+      this.checkSetCurrentStorage(account_key)
       this.init(account_key)
     }
   }
 
+  checkSetCurrentStorage(account_key) {
+    if (sessionStorage.getItem(`${MESSAGING_KEY}:${account_key}`)) {
+      this.currentStorage = sessionStorage
+    } else {
+      this.currentStorage = this.cookieStorage
+    }
+  }
+
+  //helper function for use by outside services
+  async preGenKeys(web3Account) {
+    const sig_phrase = PROMPT_MESSAGE
+    const signature = web3Account.sign(sig_phrase).signature
+    console.log('We got a signature of: ', signature)
+
+    const sig_key = signature.substring(0, 66)
+    const msg_account = this.web3.eth.accounts.privateKeyToAccount(sig_key)
+
+    const pub_msg = PROMPT_PUB_KEY + msg_account.address
+    const pub_sig = web3Account.sign(pub_msg).signature
+    return {
+      account: web3Account.address,
+      sig_phrase,
+      sig_key,
+      pub_msg,
+      pub_sig
+    }
+  }
+
+  async onPreGenKeys(data) {
+    const account_id = data.account
+    const sig_key = data.sig_key
+    const sig_phrase = data.sig_phrase
+    const pub_msg = data.pub_msg
+    const pub_sig = data.pub_sig
+    if (account_id == (await this.contractService.currentAccount())) {
+      this.currentStorage = sessionStorage
+      this.setKeyItem(`${MESSAGING_KEY}:${account_id}`, sig_key)
+      this.setKeyItem(`${MESSAGING_PHRASE}:${account_id}`, sig_phrase)
+      this.setKeyItem(`${PUB_MESSAGING}:${account_id}`, pub_msg)
+      this.setKeyItem(`${PUB_MESSAGING_SIG}:${account_id}`, pub_sig)
+      this.pub_sig = pub_sig
+      this.pub_msg = pub_msg
+      if (account_id == this.account_key) {
+        this.startConversing()
+      }
+    }
+  }
+
   setKeyItem(key, value) {
-    this.cookieStorage.setItem(key, value)
+    this.currentStorage.setItem(key, value)
   }
 
   getKeyItem(key) {
-    return this.cookieStorage.getItem(key)
+    return this.currentStorage.getItem(key)
   }
 
   getMessagingKey() {
@@ -173,7 +240,7 @@ class Messaging {
     const sig_phrase = this.getMessagingPhrase()
     // lock in the message to the hardcoded one
     if (sig_key && sig_phrase == PROMPT_MESSAGE) {
-      this.setAccount(sig_key)
+      this.setAccount(sig_key, sig_phrase)
     } else {
       this.promptInit()
     }
@@ -189,18 +256,13 @@ class Messaging {
   }
 
   async init(key) {
-    if (key === this.account_key) return
     this.account_key = key
     this.account = undefined
     this.events.emit('new', this.account_key)
     // just start it up here
     if (await this.initRemote()) {
-      this.pub_sig = this.getKeyItem(
-        `${PUB_MESSAGING_SIG}:${this.account_key}`
-      )
-      this.pub_msg = this.getKeyItem(
-        `${PUB_MESSAGING}:${this.account_key}`
-      )
+      this.pub_sig = this.getKeyItem(`${PUB_MESSAGING_SIG}:${this.account_key}`)
+      this.pub_msg = this.getKeyItem(`${PUB_MESSAGING}:${this.account_key}`)
 
       this.initConvs()
       this.events.emit('initialized', this.account_key)
@@ -317,23 +379,13 @@ class Messaging {
             this.orbitStoreOptions({ write: ['*'] })
           )
 
-          // this.global_keys.events.on('replicate', (address) => console.log('replicate', address) )
-          this.global_keys.events.on('replicate.progress', (address, hash, entry, progress, have) => {
-            console.log('replicate.progress', address, hash, entry, progress, have, this.global_keys._replicationStatus.buffered, this.global_keys._replicationStatus.queued)
-          })
-          // this.global_keys.events.on('replicated', (address, length) => console.log('replicated', address, length) )
-          // this.global_keys.events.on('load', (dbname) => console.log('load', dbname) )
-          // this.global_keys.events.on('load.progress', (address, hash, entry, progress, total) => console.log('load.progress', address, hash, entry, progress, total) )
-          this.global_keys.events.on('write', (address, entry, heads) => console.log('write', address, entry, heads) )
-          this.global_keys.events.on('ready', (dbname, heads) => console.log('ready', dbname, heads) )
-
           try {
-            console.log("Loading...")
             await this.global_keys.load()
-            console.log("Loaded")
           } catch (error) {
             console.error(error)
           }
+
+          this.events.emit('initRemote')
 
           this.ipfs_bound_account = this.account_key
           resolve(this.global_keys)
@@ -384,12 +436,15 @@ class Messaging {
   async verifyRegistrySignature(signature, key, message) {
     const value = message.payload.value
     const set_key = message.payload.key
-    const verify_address = web3.eth.accounts.recover(value.msg, signature)
+    const verify_address = this.web3.eth.accounts.recover(value.msg, signature)
     if (verify_address == set_key && value.msg.includes(value.address)) {
       const extracted_address =
-        '0x' + web3.utils.sha3(value.pub_key).substr(-40)
+        '0x' + this.web3.utils.sha3(value.pub_key).substr(-40)
       if (extracted_address == value.address.toLowerCase()) {
-        const verify_ph_address = web3.eth.accounts.recover(value.ph, value.phs)
+        const verify_ph_address = this.web3.eth.accounts.recover(
+          value.ph,
+          value.phs
+        )
         return verify_ph_address == value.address
       }
     }
@@ -397,7 +452,7 @@ class Messaging {
   }
 
   async verifyMessageSignature(signature, key, message, buffer) {
-    const verify_address = web3.eth.accounts.recover(
+    const verify_address = this.web3.eth.accounts.recover(
       buffer.toString('utf8'),
       signature
     )
@@ -410,7 +465,7 @@ class Messaging {
   }
 
   async verifyConversationSignature(signature, key, message, buffer) {
-    const verify_address = web3.eth.accounts.recover(
+    const verify_address = this.web3.eth.accounts.recover(
       buffer.toString('utf8'),
       signature
     )
@@ -461,7 +516,7 @@ class Messaging {
     })
   }
 
-  setAccount(key_str) {
+  setAccount(key_str, phrase_str) {
     this.account = this.web3.eth.accounts.privateKeyToAccount(key_str)
     this.account.publicKey =
       '0x' +
@@ -472,28 +527,30 @@ class Messaging {
     // send it to local storage
     const scopedMessagingKeyName = `${MESSAGING_KEY}:${this.account_key}`
     this.setKeyItem(scopedMessagingKeyName, key_str)
+    //set phrase in the cookie
+    const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
+    this.setKeyItem(scopedMessagingPhraseName, phrase_str)
     this.initMessaging()
   }
 
   async promptInit() {
-    // const signature = await this.web3.eth.personal.sign( // CHANGED
-    const signature = await this.web3.eth.sign(
-      PROMPT_MESSAGE,
+    const sig_phrase = PROMPT_MESSAGE
+    const signature = await this.web3.eth.personal.sign(
+      sig_phrase,
       this.account_key
     )
+    this.events.emit('signedSig')
 
     // 32 bytes in hex + 0x
     const sig_key = signature.substring(0, 66)
-    //set phrase in the cookie
-    const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
-    this.setKeyItem(scopedMessagingPhraseName, PROMPT_MESSAGE)
-    this.setAccount(sig_key)
+
+    // Need to add timeout or MetaMask does not popup a new window
+    setTimeout(() => this.setAccount(sig_key, sig_phrase), 50)
   }
 
   async promptForSignature() {
     this.pub_msg = PROMPT_PUB_KEY + this.account.address
-    // this.pub_sig = await this.web3.eth.personal.sign( // CHANGED
-    this.pub_sig = await this.web3.eth.sign(
+    this.pub_sig = await this.web3.eth.personal.sign(
       this.pub_msg,
       this.account_key
     )
@@ -537,7 +594,10 @@ class Messaging {
   }
 
   generateRoomId(converser1, converser2) {
-    const keys = [converser1, converser2]
+    const keys = [
+      this.web3.utils.toChecksumAddress(converser1),
+      this.web3.utils.toChecksumAddress(converser2)
+    ]
     keys.sort()
 
     return keys.join('-')
@@ -554,7 +614,7 @@ class Messaging {
   getSharedKeys(room_id) {
     const room = this.convs[room_id]
 
-    return room ? (room.keys || []) : []
+    return room ? room.keys || [] : []
   }
 
   getConvo(eth_address) {
@@ -746,7 +806,7 @@ class Messaging {
       writers = this.getRecipients(room_id_or_address).sort()
 
       this.convs[room_id_or_address] = { keys }
-    // called by a participant in the conversation
+      // called by a participant in the conversation
     } else {
       writers = [this.account_key, room_id_or_address].sort()
       room_id = this.generateRoomId(...writers)
@@ -810,19 +870,21 @@ class Messaging {
 
   canConverseWith(remote_eth_address) {
     const { account_key, global_keys } = this
+    const address = this.web3.utils.toChecksumAddress(remote_eth_address)
 
     return (
       this.canSendMessages() &&
-      account_key !== remote_eth_address &&
+      account_key !== address &&
       global_keys &&
-      global_keys.get(remote_eth_address)
+      global_keys.get(address)
     )
   }
 
   canReceiveMessages(remote_eth_address) {
     const { global_keys } = this
+    const address = this.web3.utils.toChecksumAddress(remote_eth_address)
 
-    return global_keys && global_keys.get(remote_eth_address)
+    return global_keys && global_keys.get(address)
   }
 
   canSendMessages() {
@@ -891,7 +953,6 @@ class Messaging {
       room = await this.startConv(remote_eth_address)
     }
     if (!room) {
-      console.log("no room")
       return
     }
     if (typeof message_obj == 'string') {

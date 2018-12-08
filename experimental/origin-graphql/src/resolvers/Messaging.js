@@ -15,5 +15,8 @@ export default {
       )
       resolve(canReceive ? true : false)
     })
-  }
+  },
+  syncing: () => false,
+  pubKey: () => contracts.messaging.account ? contracts.messaging.account.publicKey : null,
+  pubSig: () => contracts.messaging.pub_sig
 }

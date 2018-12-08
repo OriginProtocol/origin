@@ -154,15 +154,26 @@ require('react-styl')(`
         height: 100%;
         width: 100%;
         vertical-align: middle;
-        padding: 50px;
+        padding: 3rem;
         .pl-modal-content
+          text-align: center
           position: relative;
           overflow: hidden;
-          border-radius: 2px;
           margin-left: auto;
           margin-right: auto;
-          max-width: 520px;
-          background-color: #fff
+          max-width: 360px;
+          border-radius: 10px;
+          font-size: 18px
+          font-weight: normal
+          background-color: var(--dark-grey-blue);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden
+
+          align-items: center;
+          color: white;
+          padding: 3rem;
+          display: flex;
+          justify-content: center;
 
   .pl-modal-cell
       position: relative;
@@ -220,7 +231,7 @@ require('react-styl')(`
       touch-action: none
 
   .pl-modal-bg
-      background: rgba(0,0,0,.6);
+      background: rgba(235, 240, 243, .6);
       z-index: 1
 
   .pl-modal-bg.is-entering
@@ -244,12 +255,5 @@ require('react-styl')(`
 
   .pl-modal-bg.is-active.is-leaving
       opacity: 0
-
-  .pl-modal-content
-      border-radius: 6px;
-      background-color: #f5f5f7;
-      box-shadow: 0 12px 30px 0 rgba(0,0,0,.5),inset 0 1px 0 0 hsla(0,0%,100%,.65);
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden
 
 `)

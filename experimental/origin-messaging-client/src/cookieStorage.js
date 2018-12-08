@@ -1,12 +1,15 @@
 // implementation is a modification of cookied localstorage from: https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage
 
-const DEFAULT_SECONDS_TIMEOUT = 3600 * 24 * 7
+const DEFAULT_SECONDS_TIMEOUT = 3600 * 24 * 90 // expire key in three months per Josh
 
 export default class cookieStorage {
   constructor({ path, expireSeconds = DEFAULT_SECONDS_TIMEOUT }) {
     this.path = path
     this.expireSeconds = expireSeconds
-    const cookies = typeof document === 'object' && document.cookie && document.cookie.match(/=/g)
+    const cookies =
+      typeof document === 'object' &&
+      document.cookie &&
+      document.cookie.match(/=/g)
     this.length = cookies ? cookies.length : 0
   }
 

@@ -3,9 +3,11 @@ import React, { Component } from 'react'
 import Gallery from 'components/Gallery'
 import Link from 'components/Link'
 
+import Buy from './Buy'
+
 class ListingDetail extends Component {
   render() {
-    const { listing, quantity } = this.props
+    const { listing, quantity, from } = this.props
     const amount = Number(listing.price.amount) * Number(quantity)
 
     return (
@@ -42,12 +44,16 @@ class ListingDetail extends Component {
                 <span>Total Price</span>
                 <span>{`${amount} ETH`}</span>
               </div>
-              <Link
-                to={`/listings/${listing.id}/onboard`}
-                className="btn btn-primary"
-              >
-                Buy Now
-              </Link>
+              {from ? (
+                <Buy listing={listing} from={from} />
+              ) : (
+                <Link
+                  to={`/listings/${listing.id}/onboard`}
+                  className="btn btn-primary"
+                >
+                  Buy Now
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -90,7 +96,7 @@ require('react-styl')(`
       padding: 1.5rem
       border-radius: 5px;
       background-color: var(--pale-grey-eight)
-      > a
+      > .btn
         border-radius: 2rem
         padding: 0.5rem 1rem
         width: 100%

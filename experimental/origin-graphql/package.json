@@ -16,6 +16,7 @@
   "dependencies": {
     "origin-eventsource": "^0.1.0",
     "origin-ipfs": "^0.1.0",
+    "origin-messaging-client": "^0.1.0",
     "origin-validator": "^0.1.0"
   },
   "prettier": {
@@ -52,20 +53,14 @@
     "apollo-link": "^1.2.4",
     "apollo-link-schema": "^1.1.2",
     "apollo-server": "^2.2.6",
-    "crypto-js": "^3.1.9-1",
-    "crypto-random-string": "^1.0.0",
-    "eth-ecies": "^1.0.3",
     "graphql": "^14.0.2",
     "graphql-fields": "^1.3.0",
     "graphql-subscriptions": "^1.0.0",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.3",
-    "ipfs": "^0.33.1",
     "lodash-es": "^4.17.11",
     "node-fetch": "^2.3.0",
-    "orbit-db": "^0.19.9",
     "origin-contracts": "^0.8.6",
-    "secp256k1": "^3.5.2",
     "subscriptions-transport-ws": "^0.9.15",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.27.0"

@@ -9,7 +9,7 @@ import EventSource from 'origin-eventsource'
 
 import eventCache from './utils/eventCache'
 import pubsub from './utils/pubsub'
-import msg from './utils/messagingInstance'
+import OriginMessaging from 'origin-messaging-client'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3
 const HOST = process.env.HOST || 'localhost'
@@ -85,42 +85,14 @@ const Configs = {
   }
 }
 
+const DefaultMessagingConfig = {
+  ipfsSwarm:
+    '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
+  messagingNamespace: 'origin:staging'
+}
+
 const context = {}
 
-msg.events.on('initialized', accountKey => {
-  console.log('Messaging initialized', accountKey)
-})
-msg.events.on('new', accountKey => {
-  console.log('Messaging new', accountKey)
-})
-
-// detect existing messaging account
-msg.events.on('ready', accountKey => {
-  console.log('Messaging ready', accountKey)
-})
-// detect existing messaging account
-msg.events.on('pending_conv', conv => {
-  console.log('Messaging pending_conv', conv)
-})
-
-// detect new decrypted messages
-msg.events.on('msg', obj => {
-  console.log('Messaging msg', obj)
-  // if (obj.decryption) {
-  //   const { roomId, keys } = obj.decryption
-  //
-  //   origin.messaging.initRoom(roomId, keys)
-  // }
-  //
-  // this.props.addMessage(obj)
-  //
-  // this.debouncedFetchUser(obj.senderAddress)
-})
-
-// To Do: handle incoming messages when no Origin Messaging Private Key is available
-msg.events.on('emsg', obj => {
-  console.error('A message has arrived that could not be decrypted:', obj)
-})
 
 // web3.js version 35 + 36 need this hack...
 function applyWeb3Hack(web3Instance) {
@@ -169,8 +141,8 @@ export function setNetwork(net) {
   }
   context.web3Exec = web3
 
-  context.messaging = msg
-  msg.web3 = web3
+  const MessagingConfig = config.messaging || DefaultMessagingConfig
+  context.messaging = OriginMessaging({ ...MessagingConfig, web3 })
 
   context.metaMaskEnabled = metaMaskEnabled
   web3WS = applyWeb3Hack(new Web3(config.providerWS))

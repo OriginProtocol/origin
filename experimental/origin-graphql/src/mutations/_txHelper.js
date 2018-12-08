@@ -3,7 +3,7 @@ import contracts from '../contracts'
 
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
-    const net = await web3.eth.net.getId()
+    const net = await contracts.web3Exec.eth.net.getId()
     const mmNet = await contracts.metaMask.eth.net.getId()
     if (net !== mmNet) {
       throw new Error(`MetaMask is not on network ${net}`)
@@ -42,7 +42,10 @@ export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
         })
         if (contracts.automine) {
           setTimeout(() => {
-            web3.currentProvider.send({ method: 'evm_mine' }, () => {})
+            contracts.web3Exec.currentProvider.send(
+              { method: 'evm_mine' },
+              () => {}
+            )
           }, 1000)
         }
       })
