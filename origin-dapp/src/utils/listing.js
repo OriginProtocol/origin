@@ -112,7 +112,7 @@ export async function originToDAppListing(originListing) {
  * @return {array} Transformed array of purchases or sales objects
  */
 export const transformPurchasesOrSales = async purchasesOrSales => {
-  return purchasesOrSales.map(async purchase => {
+  const promises = purchasesOrSales.map(async purchase => {
     const { offer, listing } = purchase
     const transformedListing = await originToDAppListing(listing)
     transformedListing.category = translateListingCategory(transformedListing.category)
@@ -121,6 +121,8 @@ export const transformPurchasesOrSales = async purchasesOrSales => {
       listing: transformedListing
     }
   })
+
+  return Promise.all(promises)
 }
 
 /**
