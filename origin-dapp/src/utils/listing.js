@@ -28,20 +28,36 @@ export function dappFormDataToOriginListing(formData) {
   }
 
   if (formData.listingType === 'unit') {
+    let listingDataAddition
+
+    // if multi unit listing
+    if (formData.unitsTotal > 0) {
+      listingDataAddition = {
+        commission: {
+        amount: formData.boostLimit.toString(),
+        currency: 'OGN'
+        },
+        commissionPerUnit: {
+          amount: formData.boostValue.toString(),
+          currency: 'OGN'
+        }
+      }
+    } else {
+      listingDataAddition = {
+        commission: {
+        amount: formData.boostValue.toString(),
+        currency: 'OGN'
+        }
+      }
+    }
+
     listingData = {
       ...listingData,
       price: {
         amount: formData.price.toString(),
         currency: 'ETH'
       },
-      commission: {
-        amount: formData.boostLimit.toString(),
-        currency: 'OGN'
-      },
-      commissionPerUnit: {
-        amount: formData.boostValue.toString(),
-        currency: 'OGN'
-      }
+      ...listingDataAddition
     }
   } else {
     listingData = {
@@ -83,7 +99,8 @@ export function originToDAppListing(originListing) {
   const commission = originListing.commission
     ? parseFloat(originListing.commission.amount)
     : 0
-  return {
+
+  const dappListing = {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
@@ -98,12 +115,24 @@ export function originToDAppListing(originListing) {
     price: originListing.price && originListing.price.amount,
     boostValue: commission,
     boostLevel: getBoostLevel(commission),
+    unitsTotal: originListing.unitsTotal,
     unitsRemaining: originListing.unitsRemaining,
     ipfsHash: originListing.ipfs.hash,
     listingType: originListing.type,
     slots: originListing.slots,
     events: originListing.events
   }
+
+  // if multiunit listing
+  if (originListing.listingType == 'unit' && originListing.unitsTotal > 0) {
+    const commissionPerUnit = originListing.commissionPerUnit
+      ? parseFloat(originListing.commissionPerUnit.amount)
+      : 0
+
+    dappListing.commissionPerUnit = commissionPerUnit
+  }
+
+  return dappListing
 }
 
 /**
