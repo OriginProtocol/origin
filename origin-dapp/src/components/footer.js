@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import localeCode from 'locale-code'
 import store from 'store'
-import $ from 'jquery'
+
+import Dropdown from 'components/dropdown'
 
 class Footer extends Component {
   constructor(props) {
@@ -19,10 +20,6 @@ class Footer extends Component {
 
   componentDidMount() {
     this.localizeWhitepaperUrl()
-
-    $('[data-toggle="tooltip"]').tooltip({
-      html: true
-    })
   }
 
   localizeApp(langCode) {
@@ -37,21 +34,17 @@ class Footer extends Component {
     let companyWebsiteLanguageCode
 
     switch (langCode) {
-    case 'zh-CN':
-      companyWebsiteLanguageCode = 'zh_Hans'
-      break
-    case 'zh-TW':
-      companyWebsiteLanguageCode = 'zh_Hant'
-      break
-    default:
-      companyWebsiteLanguageCode = localeCode.getLanguageCode(langCode)
+      case 'zh-CN':
+        companyWebsiteLanguageCode = 'zh_Hans'
+        break
+      case 'zh-TW':
+        companyWebsiteLanguageCode = 'zh_Hant'
+        break
+      default:
+        companyWebsiteLanguageCode = localeCode.getLanguageCode(langCode)
     }
 
     this.setState({ companyWebsiteLanguageCode })
-  }
-
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
   render() {
@@ -61,16 +54,18 @@ class Footer extends Component {
           <div className="row">
             <div className="col-12 col-lg-6">
               <div className="logo-container">
-                <a href="https://www.originprotocol.com"
+                <a
+                  href="https://www.originprotocol.com"
                   target="_blank"
-                  rel="noopener noreferrer">
+                  rel="noopener noreferrer"
+                >
                   <img
                     src="images/origin-logo-footer.svg"
                     className="origin-logo"
                     alt="Origin Protocol"
                   />
                 </a>
-                <div className="vl"></div>
+                <div className="vl" />
                 <div className="description">
                   <p>
                     <FormattedMessage
@@ -82,23 +77,33 @@ class Footer extends Component {
                   </p>
                   <p>&copy; {new Date().getFullYear()} Origin Protocol, Inc.</p>
                 </div>
-              </div> 
+              </div>
             </div>
             <div className="col-12 col-lg-6">
               <div className="d-lg-flex footer-links-container justify-content-between">
-                <div className="d-flex dropdown">
+                <Dropdown
+                  className="d-flex dropup"
+                  open={this.state.dropdown}
+                  onClose={() => this.setState({ dropdown: false })}
+                >
                   <a
                     className="dropdown-toggle"
                     id="languageDropdown"
                     role="button"
-                    data-toggle="dropdown"
+                    onClick={() =>
+                      this.setState({
+                        dropdown: this.state.dropdown ? false : true
+                      })
+                    }
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
                     {this.props.selectedLanguageFull}
                   </a>
                   <div
-                    className="dropdown-menu dropdown-menu-left"
+                    className={`dropdown-menu dropdown-menu-left${
+                      this.state.dropdown ? ' show' : ''
+                    }`}
                     aria-labelledby="languageDropdown"
                   >
                     <div className="triangle-container d-flex justify-content-end">
@@ -133,7 +138,7 @@ class Footer extends Component {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Dropdown>
                 <div className="d-lg-inline-block link-container">
                   <a
                     href="https://www.originprotocol.com"

@@ -32,6 +32,10 @@
     "defaultMessage": "This information will be published on the blockchain and will be visible to everyone."
   },
   {
+    "id": "EditProfile.save",
+    "defaultMessage": "Save"
+  },
+  {
     "id": "EditProfile.continue",
     "defaultMessage": "Continue"
   },

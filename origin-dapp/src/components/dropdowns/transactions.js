@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import $ from 'jquery'
 
+import Dropdown from 'components/dropdown'
 import Transaction from '../transaction'
 
 const CONFIRMATION_COMPLETION_COUNT = 12
@@ -14,31 +14,20 @@ class TransactionsDropdown extends Component {
     this.handleClick = this.handleClick.bind(this)
 
     this.state = {
-      hideList: []
+      hideList: [],
+      open: false
     }
-  }
-
-  componentDidMount() {
-    // control hiding of dropdown menu
-    $('.transactions.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
-      // if triggered by data-toggle
-      if (!clickEvent) {
-        return true
-      }
-      // otherwise only if triggered by self or another dropdown
-      const el = $(clickEvent.target)
-
-      return el.hasClass('dropdown') && el.hasClass('nav-item')
-    })
   }
 
   componentDidUpdate(prevProps) {
     const { transactions } = this.props
-    const dropdownHidden = !$('.transactions.dropdown').hasClass('show')
 
     // intrusively open the dropdown when a new transaction is being confirmed
-    if (transactions.length > prevProps.transactions.length && dropdownHidden) {
-      $('#transactionsDropdown').dropdown('toggle')
+    if (
+      transactions.length > prevProps.transactions.length &&
+      !this.state.forceOpen
+    ) {
+      this.setState({ open: true, forceOpen: true })
     }
   }
 
@@ -54,9 +43,14 @@ class TransactionsDropdown extends Component {
     })
   }
 
+  toggle(state) {
+    const open = state === 'close' ? false : !this.state.open
+    this.setState({ open })
+  }
+
   render() {
     const { transactions } = this.props
-    const { hideList } = this.state
+    const { hideList, open } = this.state
     const transactionsNotHidden = transactions.filter(
       t => !hideList.includes(t.transactionHash)
     )
@@ -68,16 +62,20 @@ class TransactionsDropdown extends Component {
     ).length
 
     return (
-      <div className="nav-item transactions dropdown">
+      <Dropdown
+        className="nav-item transactions"
+        open={open}
+        onClose={() => this.setState({ open: false })}
+      >
         <a
           className="nav-link active dropdown-toggle"
           id="transactionsDropdown"
           role="button"
-          data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
           ga-category="top_nav"
           ga-label="transactions"
+          onClick={() => this.toggle()}
         >
           <img
             src="images/arrows-light.svg"
@@ -104,7 +102,7 @@ class TransactionsDropdown extends Component {
           )}
         </a>
         <div
-          className="dropdown-menu dropdown-menu-right"
+          className={`dropdown-menu dropdown-menu-right${open ? ' show' : ''}`}
           aria-labelledby="transactionsDropdown"
         >
           <div className="triangle-container d-flex justify-content-end">
@@ -181,7 +179,7 @@ class TransactionsDropdown extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </Dropdown>
     )
   }
 }

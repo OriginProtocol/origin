@@ -11,6 +11,9 @@ class VerifyFacebook extends Component {
     this.state = {
       generalErrors: []
     }
+
+    this.onCertify = this.onCertify.bind(this)
+    this.onCancel = this.onCancel.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -25,8 +28,7 @@ class VerifyFacebook extends Component {
     return (
       <Modal
         isOpen={this.props.open}
-        data-modal="facebook"
-        className="attestation"
+        className="facebook attestation"
         handleToggle={this.props.handleToggle}
         tabIndex="-1"
       >
@@ -52,11 +54,21 @@ class VerifyFacebook extends Component {
             }
           />
         </div>
-        <div className="button-container">
+        <div className="button-container d-md-flex flex-md-row justify-content-md-center pt-4">
+          <button
+            data-modal="facebook"
+            className="btn btn-clear d-md-none col-5 col-sm-4"
+            onClick={this.onCancel}
+          >
+            <FormattedMessage
+              id={'VerifyFacebook.cancel'}
+              defaultMessage={'Cancel'}
+            />
+          </button>
           <button
             type="submit"
-            className="btn btn-clear"
-            onClick={() => this.onCertify()}
+            className="btn btn-clear col-5 col-sm-4"
+            onClick={this.onCertify}
           >
             <FormattedMessage
               id={'VerifyFacebook.continue'}
@@ -64,15 +76,11 @@ class VerifyFacebook extends Component {
             />
           </button>
         </div>
-        <div className="link-container">
+        <div className="link-container d-none d-md-block">
           <a
             href="#"
             data-modal="facebook"
-            onClick={event => {
-              event.preventDefault()
-              this.props.handleToggle(event)
-              this.clearErrors()
-            }}
+            onClick={this.onCancel}
           >
             <FormattedMessage
               id={'VerifyFacebook.cancel'}
@@ -86,6 +94,12 @@ class VerifyFacebook extends Component {
 
   clearErrors() {
     this.setState({ generalErrors: [] })
+  }
+
+  onCancel(e) {
+    e.preventDefault()
+    this.props.handleToggle(e)
+    this.clearErrors()
   }
 
   onCertify() {

@@ -115,7 +115,7 @@ class ListingsDetail extends Component {
 
     this.props.storeWeb3Intent('purchase this listing')
 
-    if ((web3.givenProvider && this.props.wallet.address) || origin.contractService.walletLinker) {
+    if ((!web3.currentProvider.isOrigin && this.props.wallet.address) || origin.contractService.walletLinker) {
       if (!skip && shouldOnboard) {
         return this.setState({
           onboardingCompleted: true,
@@ -127,7 +127,7 @@ class ListingsDetail extends Component {
 
     // defer to parent modal if user activation is insufficient
     if (
-      web3.givenProvider &&
+      !web3.currentProvider.isOrigin &&
       !origin.contractService.walletLinker &&
       !this.props.messagingEnabled
     ) {
@@ -282,7 +282,7 @@ class ListingsDetail extends Component {
      * pass along featured information from elasticsearch, but that would increase the code
      * complexity.
      *
-     * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to 
+     * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to
      * true, and show "featured" badge.
      */
     const showFeaturedBadge = display === 'featured' && isAvailable

@@ -1,11 +1,11 @@
 @import 'alertify.css';
 @import 'variables.css';
 @import 'bootstrap.css';
-@import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
+@import '~react-big-calendar/lib/css/react-big-calendar.css';
 @import 'calendar.css';
-@import '../../node_modules/rc-slider/assets/index.css';
-@import '../../node_modules/react-dates/lib/css/_datepicker.css';
-@import '../../node_modules/react-image-crop/dist/ReactCrop.css';
+@import '~rc-slider/assets/index.css';
+@import '~react-dates/lib/css/_datepicker.css';
+@import '~react-image-crop/dist/ReactCrop.css';
 
 html {
   font-size: 16px;
@@ -1888,7 +1888,7 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal .image-container {
-  background-color: var(--white);
+  background-color: white;
   height: 92px;
   width: 92px;
   border-radius: 50%;
@@ -1914,7 +1914,7 @@ textarea:-moz-ui-invalid {
 }
 
 .arbitration-modal .heading {
-  color: var(--white);
+  color: white;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 300;
@@ -3856,7 +3856,7 @@ form .stars img {
   width: 18px;
   height: 18px;
   border-radius: 3px;
-  border: solid var(--white);
+  border: solid white;
   border-width: 0 4px 4px 0;
   display: inline-block;
   padding: 3px;
@@ -3874,7 +3874,7 @@ form .stars img {
   position: absolute;
   font-size: 22px;
   font-weight: bold;
-  color: var(--white);
+  color: white;
   margin-bottom: 5px;
   width: 60%;
   text-align: center;
@@ -3985,7 +3985,7 @@ form .stars img {
 
 .mobile-conversation-list-item .unread.count {
   font-weight: bold;
-  color: var(--white);
+  color: white;
   width: 30px;
   height: 18px;
   border-radius: 9.5px;
@@ -4533,6 +4533,10 @@ form .stars img {
   background-position: center;
 }
 
+.profile-wrapper .mobileProfile .title {
+  background: var(--dusk);
+}
+
 .edit-profile {
   background-color: transparent;
   border: none;
@@ -4570,7 +4574,7 @@ form .stars img {
   margin: 0 140px 20px 0;
 }
 
-.services-container .col-12 {
+.services-container .attestation-button {
   padding-right: 10px;
 }
 
@@ -5024,6 +5028,7 @@ sup {
   line-height: 1;
   margin-bottom: 10px;
   padding: 14px;
+  min-width: 74px;
 }
 
 .phone.modal .dropdown .dropdown-toggle:after {
@@ -5061,8 +5066,13 @@ sup {
   padding-right: 14px;
 }
 
+.phone.modal .dropdown .dropdown-item > :nth-child(2) {
+  max-width: 55vw;
+  overflow:hidden;
+}
+
 .phone.modal .dropdown .dropdown-item > :last-child {
-  color: var(--dusk);;
+  color: var(--dusk);
   margin-left: auto;
   padding-left: 14px;
 }
@@ -5072,17 +5082,20 @@ sup {
 }
 
 .publish.modal .button-container,
+.mobile-publish.modal .button-container,
 .unload.modal .button-container {
   margin: 0 0 20px;
   padding: 0;
 }
 
 .publish.modal .btn-clear,
+.mobile-publish.modal .btn-clear,
 .unload.modal .btn-clear {
   margin: 0;
 }
 
 .publish.modal a,
+.mobile-publish.modal a,
 .unload.modal a {
   color: var(--clear-blue);
   cursor: pointer;
@@ -5090,6 +5103,7 @@ sup {
 }
 
 .publish.modal p,
+.mobile-publish.modal p,
 .unload.modal p {
   font-size: 1rem;
 }
@@ -5116,6 +5130,7 @@ sup {
 }
 
 .publish.modal a:hover,
+.mobile-publish.modal a:hover,
 .unload.modal a:hover {
   color: var(--dark-clear-blue);
 }
@@ -5397,6 +5412,47 @@ a:not([href]):not([tabindex]).span-link {
   }
 }
 
+/* xs - */
+@media (max-width: 575px) {
+  /* Profile */
+  .primary.avatar-container.placeholder {
+    border-radius: 12px;
+  }
+
+  .profile-wrapper .image-container .image-pair .edit-profile {
+    width: 27px;
+    height: 27px;
+    bottom: 0px;
+    right: 23px;
+    position: absolute;
+  }
+
+  .profile-wrapper .image-container .image-pair .edit-profile img {
+    width: 100%;
+  }
+
+  .profile-wrapper .edit-profile-label {
+    color: inherit;
+  }
+
+  .profile-wrapper .btn-edit {
+    width: 100%;
+  }
+
+  .profile-wrapper .character-counter {
+    width: 100%;
+    text-align: right;
+    color: var(--steel);
+    font-size: 10px;
+    padding-right: 0.4rem;
+    margin-bottom: 0px;
+  }
+
+  .profile-wrapper #description {
+    height: 78px;
+  }
+}
+
 /* sm + */
 @media (min-width: 576px) {
   .modal-content {
@@ -5495,8 +5551,13 @@ a:not([href]):not([tabindex]).span-link {
   }
 }
 
-/* anything smaller than md */
+/* sm - */
 @media (max-width: 767px) {
+  /* Profile */
+  .primary.avatar-container {
+    border-radius: 5px;
+  }
+
   .warning.alert {
     padding: 0.25rem 0.25rem;
   }
@@ -5523,6 +5584,76 @@ a:not([href]):not([tabindex]).span-link {
 
   .warning.alert .caret {
     margin-top: -0.15rem;
+  }
+
+  .profile-wrapper .container .name h1 {
+    font-size: 1.4rem;
+    line-height: 1.2;
+    font-weight: 300;
+  }
+
+  .profile-wrapper .edit-profile {
+    width: 21px;
+    height: 21px;
+  }
+
+  .profile-wrapper .container .description {
+    font-size: 0.93rem;
+    height: 2.7rem;
+    overflow: hidden;
+  }
+
+  .profile-wrapper .container .description.expanded {
+    height: auto;
+    overflow: auto
+  }
+
+  .profile-wrapper .container .description-options a {
+    font-size: 0.875rem;
+    font-weight: normal;
+  }
+
+  .profile-wrapper #description-caret {
+    padding-left: 0.2rem;
+    padding-bottom: 0.1rem;
+  }
+
+  .profile-wrapper #verify-yourself {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .services-container {
+    padding: 10px 5px 5px 5px;
+  }
+
+  .services-container .attestation-button {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .phone.modal .dropdown .dropdown-item > :last-child {
+    padding-left: 5px;
+  }
+
+  .profile-wrapper .title h2 {
+    margin-bottom: 13px;
+    margin-top: 13px;
+    text-align: center;
+    color: white;
+    font-family: 'Lato';
+    font-weight: bold;
+    font-size: 1.38rem;
+  }
+
+  .profile-wrapper .title img {
+    width: 13px;
+    transform: rotate(180deg);
+  }
+
+  .profile-wrapper .image-pair .edit-profile {
+    width: 40px;
+    height: 40px;
   }
 }
 
@@ -5646,6 +5777,44 @@ a:not([href]):not([tabindex]).span-link {
 
   .beta .modal-dialog {
     max-width: 50%;
+  }
+}
+
+/* lg - */
+@media (max-width: 991px) {
+  /* Profile */
+  .profile-wrapper {
+    padding: 0;
+  }
+
+  .profile-wrapper .guidance {
+    background-color: white;
+    padding: 10px;
+    margin: 15px;
+    width: 100%;
+  }
+
+  .profile-wrapper .attributes {
+    margin-bottom: 10px
+  }
+
+  .profile-wrapper .guidance p {
+    font-size: 0.875rem;
+    margin: 0;
+  }
+
+  .profile-wrapper .guidance img {
+    width: 3.5rem;
+  }
+
+  .profile-wrapper .name h1 {
+    font-size: 2rem;
+  }
+
+  .profile-wrapper .description p {
+    line-height: 1.2rem;
+    height: 3.6rem;
+    overflow: hidden;
   }
 }
 

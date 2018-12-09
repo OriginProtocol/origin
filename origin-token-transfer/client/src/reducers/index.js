@@ -20,7 +20,7 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, grantsVersion: state.grantsVersion + 1 }
 
     case SET_GRANTS:
-      return { ...state, grants: action.grants}
+      return { ...state, grants: action.grants }
 
     case SET_SESSION_EMAIL:
       return { ...state, sessionEmail: action.email }

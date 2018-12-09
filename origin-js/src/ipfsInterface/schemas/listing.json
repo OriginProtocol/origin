@@ -122,6 +122,9 @@
     "schemaId": {
       "type": "string"
     },
+    "dappSchemaId": {
+      "type": "string"
+    },
     "category": {
       "type": "string"
     },
