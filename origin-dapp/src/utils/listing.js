@@ -40,9 +40,9 @@ export function dappFormDataToOriginListing(formData) {
   } else {
     listingData = {
       ...listingData,
-      timeIncrement: formData.timeIncrement,
       slots: formData.slots,
-      calendarStep: '60' // Note: this is currently always 60 minutes but may change later to allow for sub-1hr slots
+      slotLength: formData.slotLength,
+      slotLengthUnit: formData.slotLengthUnit
     }
   }
 

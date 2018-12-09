@@ -275,6 +275,13 @@ class ListingCreate extends Component {
       properties.listingType &&
       properties.listingType.const === 'fractional'
 
+    const slotLength = enableFractional &&
+      this.state.formListing.formData.slotLength ?
+      this.state.formListing.formData.slotLength :
+        properties &&
+        properties.slotLength &&
+        properties.slotLength.default
+
     const slotLengthUnit = enableFractional &&
       this.state.formListing.formData.slotLengthUnit ?
       this.state.formListing.formData.slotLengthUnit :
@@ -282,7 +289,7 @@ class ListingCreate extends Component {
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
 
-    const fractionalTimeIncrement = slotLengthUnit === 'hours' ? 'hourly' : 'daily'
+    const fractionalTimeIncrement = slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily'
 
     if (isFractionalListing) {
       this.uiSchema.price = {
@@ -302,7 +309,9 @@ class ListingCreate extends Component {
         formData: {
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
-          subCategory: properties.subCategory.const
+          subCategory: properties.subCategory.const,
+          slotLength,
+          slotLengthUnit
         }
       }
     })
