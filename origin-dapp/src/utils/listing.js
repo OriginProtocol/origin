@@ -1,6 +1,6 @@
 import { translateListingCategory } from 'utils/translationUtils'
 import { getBoostLevel } from 'utils/boostUtils'
-import getSchemaType from 'utils/schemaAdapter'
+import fetchSchema from 'utils/schemaAdapter'
 import origin from '../services/origin'
 
 /**
@@ -75,8 +75,16 @@ export async function originToDAppListing(originListing) {
     : 0
 
   // detect and adapt listings that were created by deprecated schemas
-  const schemaType = await getSchemaType(originListing)
-  const { category, subCategory, schema, isDeprecatedSchema } = schemaType
+  const schemaData = await fetchSchema(originListing)
+  const {
+    category,
+    subCategory,
+    dappSchemaId,
+    slotLength,
+    slotLengthUnit,
+    schema,
+    isDeprecatedSchema
+  } = schemaData
 
   return {
     id: originListing.id,
@@ -84,6 +92,9 @@ export async function originToDAppListing(originListing) {
     status: originListing.status,
     category,
     subCategory,
+    dappSchemaId,
+    slotLength,
+    slotLengthUnit,
     schema,
     isDeprecatedSchema,
     display: originListing.display,
@@ -151,15 +162,4 @@ export async function getListing(id, translate = false, blockInfo) {
 
 export function dashToCamelCase(string) {
   return string.replace(/-([a-z])/g, g => g[1].toUpperCase())
-}
-
-/**
- * Takes camel case string and converts it to a string with hyphen(s)
- * e.g. forSale becomes for-sale
- * @param {string} string - a camel case string
- * @return {string} the string with hyphen(s)
- */
-
-export function camelCaseToDash(string) {
-  return string.replace(/([a-z][A-Z])/g, g => g[0] + '-' + g[1].toLowerCase())
 }

@@ -202,10 +202,15 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await getListing(this.props.listingId, true)
+      const isFractional = listing.listingType === 'fractional'
+      const slotLengthUnit = isFractional && listing.slotLengthUnit
+      const fractionalTimeIncrement = slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily'
+
       this.setState({
         ...listing,
         loading: false,
-        isFractional: listing.listingType === 'fractional'
+        isFractional,
+        fractionalTimeIncrement
       })
     } catch (error) {
       this.props.showAlert(
@@ -260,7 +265,7 @@ class ListingsDetail extends Component {
       seller,
       status,
       step,
-      schemaType,
+      fractionalTimeIncrement,
       featuredImageIdx
       // unitsRemaining
     } = this.state
@@ -797,7 +802,7 @@ class ListingsDetail extends Component {
                   slots={ this.state.slots }
                   offers={ this.state.offers }
                   userType="buyer"
-                  viewType={ schemaType === 'housing' ? 'daily' : 'hourly' }
+                  viewType={ fractionalTimeIncrement }
                   onComplete={(slots) => this.handleMakeOffer(false, slots) }
                   step={ 60 }
                 />

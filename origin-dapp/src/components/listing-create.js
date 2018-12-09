@@ -69,7 +69,7 @@ class ListingCreate extends Component {
       selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
       selectedCategory: null,
       selectedCategorySchemas: null,
-      selectedSchemaType: null,
+      selectedSchemaId: null,
       translatedSchema: null,
       schemaFetched: false,
       isFractionalListing: false,
@@ -130,7 +130,7 @@ class ListingCreate extends Component {
           formListing: {
             formData: listing
           },
-          selectedSchemaType: listing.schemaType,
+          selectedSchemaId: listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
         })
@@ -225,11 +225,11 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(selectedSchemaType) {
-    return fetch(`schemas/${selectedSchemaType}.json`)
+  handleSchemaSelection(selectedSchemaId) {
+    return fetch(`schemas/${selectedSchemaId}`)
       .then(response => response.json())
       .then(schemaJson => {
-        this.setState({ selectedSchemaType })
+        this.setState({ selectedSchemaId })
         this.renderDetailsForm(schemaJson)
       })
   }
@@ -307,6 +307,7 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
+          ...this.state.formListing.formData,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
@@ -519,7 +520,7 @@ class ListingCreate extends Component {
       selectedCategory,
       selectedCategorySchemas,
       showNoCategorySelectedError,
-      selectedSchemaType,
+      selectedSchemaId,
       showNoSchemaSelectedError,
       step,
       translatedSchema,
@@ -617,7 +618,7 @@ class ListingCreate extends Component {
                   {selectedCategorySchemas.map(schemaObj => (
                     <div
                       className={`schema-selection${
-                        selectedSchemaType === schemaObj.schema ? ' selected' : ''
+                        selectedSchemaId === schemaObj.schema ? ' selected' : ''
                       }`}
                       key={schemaObj.schema}
                       onClick={() => this.handleSchemaSelection(schemaObj.schema)}

@@ -28,6 +28,9 @@ export default async (listing) => {
         return {
           category: listing.category,
           subCategory: listing.subCategory,
+          dappSchemaId,
+          slotLength: listing.slotLength,
+          slotLengthUnit: listing.slotLengthUnit,
           schema: schemaJson,
           isDeprecatedSchema: false
         }
@@ -88,6 +91,7 @@ export default async (listing) => {
         return {
           category: schemaJson.properties.category.const,
           subCategory: schemaJson.properties.subCategory.const,
+          dappSchemaId: newSchemaId,
           schema: schemaJson,
           isDeprecatedSchema: true
         }
