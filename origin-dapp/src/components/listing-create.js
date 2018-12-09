@@ -300,6 +300,7 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
+          dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const
         }

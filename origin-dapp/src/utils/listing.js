@@ -15,6 +15,7 @@ export function dappFormDataToOriginListing(formData) {
   const category = formData.category
 
   let listingData = {
+    dappSchemaId: formData.dappSchemaId,
     category: category,
     subCategory: subCategory,
     language: 'en-US', // TODO(franck) Get language from DApp.
