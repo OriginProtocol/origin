@@ -4,7 +4,8 @@
  *               and maps deprecated schema versions to existing versions as needed.
  *               Used in /utils/listing.js 
  *  @param {object} listing - the listing object fetched from IPFS
- *  @returns {object} object keys are "category" (string), "schema" (object), and "isDeprecated" (boolean)
+ *  @returns {object} object keys are "category" (string), "subCategory" (string),
+ *                    "schema" (object), and "isDeprecated" (boolean)
  */
 
 export default async (listing) => {
@@ -25,7 +26,8 @@ export default async (listing) => {
       .then(schemaJson => {
         // If it succeeds, the listing was created with a current schema and all is well.
         return {
-          category: schemaJson.category,
+          category: listing.category,
+          subCategory: listing.subCategory,
           schema: schemaJson,
           isDeprecatedSchema: false
         }
@@ -85,6 +87,7 @@ export default async (listing) => {
       .then(schemaJson => {
         return {
           category: schemaJson.properties.category.const,
+          subCategory: schemaJson.properties.subCategory.const,
           schema: schemaJson,
           isDeprecatedSchema: true
         }

@@ -11,12 +11,8 @@ import origin from '../services/origin'
  * @return {object} Data in the Origin Protocol core listing schema v1.
  */
 export function dappFormDataToOriginListing(formData) {
-  // formData.category data format is "schema.<category>.<subCategory>".
-  const subCategory = formData.category
+  const subCategory = formData.subCategory
   const category = formData.category
-    .split('.')
-    .slice(0, 2)
-    .join('.')
 
   let listingData = {
     category: category,
@@ -79,13 +75,14 @@ export async function originToDAppListing(originListing) {
 
   // detect and adapt listings that were created by deprecated schemas
   const schemaType = await getSchemaType(originListing)
-  const { category, schema, isDeprecatedSchema } = schemaType
+  const { category, subCategory, schema, isDeprecatedSchema } = schemaType
 
   return {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
     category,
+    subCategory,
     schema,
     isDeprecatedSchema,
     display: originListing.display,
@@ -137,6 +134,7 @@ export async function getListing(id, translate = false, blockInfo) {
   const dappListing = await originToDAppListing(originListing)
   if (translate) {
     dappListing.category = translateListingCategory(dappListing.category)
+    dappListing.subCategory = translateListingCategory(dappListing.subCategory)
   }
   return dappListing
 }

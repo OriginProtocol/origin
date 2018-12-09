@@ -112,6 +112,7 @@
   "listing-create.reviewListingHeading": "Review your listing",
   "listing-create.title": "Title",
   "listing-create.category": "Category",
+  "listing-create.subcategory": "Subcategory",
   "listing-create.description": "Description",
   "listing-create.listing-price": "Listing Price",
   "listing-create.fractional-price-varies": "Price varies by date",

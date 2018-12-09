@@ -68,6 +68,10 @@
     "defaultMessage": "Category"
   },
   {
+    "id": "listing-create.subcategory",
+    "defaultMessage": "Subcategory"
+  },
+  {
     "id": "listing-create.description",
     "defaultMessage": "Description"
   },

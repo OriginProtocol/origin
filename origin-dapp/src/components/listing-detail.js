@@ -248,6 +248,7 @@ class ListingsDetail extends Component {
       // boostLevel,
       // boostValue,
       category,
+      subCategory,
       description,
       display,
       isFractional,
@@ -452,7 +453,7 @@ class ListingsDetail extends Component {
           <div className="row">
             <div className="col-12">
               <div className="category placehold d-flex">
-                <div>{category}</div>
+                <div>{category}&nbsp;&nbsp;|&nbsp;&nbsp;{subCategory}</div>
                 {!loading && (
                   <div className="badges">
                     {showPendingBadge && <PendingBadge />}

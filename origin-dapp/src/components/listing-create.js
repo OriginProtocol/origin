@@ -266,20 +266,20 @@ class ListingCreate extends Component {
       }
     }
 
+    const { properties } = schemaJson
+
     // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
     const isFractionalListing = enableFractional &&
-      schemaJson &&
-      schemaJson.properties &&
-      schemaJson.properties.listingType &&
-      schemaJson.properties.listingType.const === 'fractional'
+      properties &&
+      properties.listingType &&
+      properties.listingType.const === 'fractional'
 
     const slotLengthUnit = enableFractional &&
       this.state.formListing.formData.slotLengthUnit ?
       this.state.formListing.formData.slotLengthUnit :
-        schemaJson &&
-        schemaJson.properties &&
-        schemaJson.properties.slotLengthUnit &&
-        schemaJson.properties.slotLengthUnit.default
+        properties &&
+        properties.slotLengthUnit &&
+        properties.slotLengthUnit.default
 
     const fractionalTimeIncrement = slotLengthUnit === 'hours' ? 'hourly' : 'daily'
 
@@ -296,7 +296,13 @@ class ListingCreate extends Component {
       fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
       translatedSchema,
-      isFractionalListing
+      isFractionalListing,
+      formListing: {
+        formData: {
+          category: properties.category.const,
+          subCategory: properties.subCategory.const
+        }
+      }
     })
   }
 
@@ -449,10 +455,9 @@ class ListingCreate extends Component {
     try {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
-      const methodName = isEditMode ? 'updateListing' : 'createListing'
       let transactionReceipt
       if (isEditMode) {
-        transactionReceipt = await origin.marketplace[methodName](
+        transactionReceipt = await origin.marketplace.updateListing(
           this.props.listingId,
           listing,
           0, // TODO(John) - figure out how a seller would add "additional deposit"
@@ -461,7 +466,7 @@ class ListingCreate extends Component {
           }
         )
       } else {
-        transactionReceipt = await origin.marketplace[methodName](
+        transactionReceipt = await origin.marketplace.createListing(
           listing,
           (confirmationCount, transactionReceipt) => {
             this.props.updateTransaction(confirmationCount, transactionReceipt)
@@ -513,8 +518,9 @@ class ListingCreate extends Component {
       isEditMode
     } = this.state
     const { formData } = formListing
-    const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
+    const category = translateListingCategory(formData.category)
+    const subCategory = translateListingCategory(formData.subCategory)
 
     return (web3.givenProvider || origin.contractService.walletLinker) ? (
       <div className="listing-form">
@@ -856,7 +862,20 @@ class ListingCreate extends Component {
                       </p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedCategory}</p>
+                      <p>{category}</p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">
+                        <FormattedMessage
+                          id={'listing-create.subcategory'}
+                          defaultMessage={'Subcategory'}
+                        />
+                      </p>
+                    </div>
+                    <div className="col-md-9">
+                      <p>{subCategory}</p>
                     </div>
                   </div>
                   <div className="row">
