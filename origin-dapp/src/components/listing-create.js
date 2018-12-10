@@ -48,7 +48,7 @@ class ListingCreate extends Component {
 
     this.STEP = {
       PICK_CATEGORY: 1,
-      PICK_SCHEMA: 2,
+      PICK_SCHEMA: 2, // NOTE: this is a mobile-only step
       DETAILS: 3,
       AVAILABILITY: 4,
       BOOST: 5,
@@ -68,6 +68,7 @@ class ListingCreate extends Component {
       step: this.STEP.PICK_CATEGORY,
       selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
       selectedCategory: null,
+      selectedCategoryName: null,
       selectedCategorySchemas: null,
       selectedSchemaId: null,
       translatedSchema: null,
@@ -211,14 +212,18 @@ class ListingCreate extends Component {
       schemaObj.name = this.props.intl.formatMessage(schemaObj.translationName)
       return schemaObj
     })
-
+    const selectedCategoryObj = listingSchemaMetadata.listingTypes.find(
+      listingType => listingType.type === trimmedCategory 
+    )
     const stateToSet = {
       selectedCategory: trimmedCategory,
+      selectedCategoryName: this.props.intl.formatMessage(selectedCategoryObj.translationName),
       selectedCategorySchemas: schemaArrayWithNames
     }
 
     if (this.props.mobileDevice) {
       stateToSet.step = this.STEP.PICK_SCHEMA
+      window.scrollTo(0, 0)
     }
 
     this.setState(stateToSet)
@@ -544,6 +549,7 @@ class ListingCreate extends Component {
       fractionalTimeIncrement,
       selectedBoostAmount,
       selectedCategory,
+      selectedCategoryName,
       selectedCategorySchemas,
       showNoCategorySelectedError,
       selectedSchemaId,
@@ -594,7 +600,7 @@ class ListingCreate extends Component {
                     >
                       <img src={`images/${category.img}`} role="presentation" />
                       {category.name}
-                      {selectedCategory === category.type &&
+                      {!this.props.mobileDevice && selectedCategory === category.type &&
                         <select onChange={this.handleSchemaSelection} className="form-control">
                           <option value="">{intl.formatMessage(this.intlMessages.selectOne)}</option>
                           {selectedCategorySchemas.map(schemaObj => (
@@ -605,6 +611,18 @@ class ListingCreate extends Component {
                     </div>
                   ))}
                   {showNoCategorySelectedError && (
+                    <div className="info-box warn">
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.noSchemaSelectedError'}
+                          defaultMessage={
+                            'You must first select a listing type'
+                          }
+                        />
+                      </p>
+                    </div>
+                  )}
+                  {showNoSchemaSelectedError && (
                     <div className="info-box warn">
                       <p>
                         <FormattedMessage
@@ -634,6 +652,7 @@ class ListingCreate extends Component {
                 }
               </div>
             )}
+            {/* NOTE: PICK_SCHEMA is a mobile-only step */}
             {step === this.STEP.PICK_SCHEMA && (
               <div className="col-md-6 col-lg-5 pick-schema">
                 <label>
@@ -651,10 +670,24 @@ class ListingCreate extends Component {
                     }
                   />
                 </h2>
+                <button
+                  onClick={() => this.setState({
+                    step: this.STEP.PICK_CATEGORY,
+                    selectedSchemaId: null
+                  })}
+                  className="mobile-back-btn"
+                >
+                  <span>&#10094;</span>
+                  <FormattedMessage
+                    id={'listing-create.backButtonLabel'}
+                    defaultMessage={'Back'}
+                  />
+                </button>
+                <h3>{selectedCategoryName}</h3>
                 <div className="schema-options">
                   {selectedCategorySchemas.map(schemaObj => (
                     <div
-                      className={`schema-selection${
+                      className={`schema-selection mobile${
                         selectedSchemaId === schemaObj.schema ? ' selected' : ''
                       }`}
                       key={schemaObj.schema}
@@ -665,32 +698,22 @@ class ListingCreate extends Component {
                       {schemaObj.name}
                     </div>
                   ))}
-                  {showNoSchemaSelectedError && (
-                    <div className="info-box warn">
-                      <p>
-                        <FormattedMessage
-                          id={'listing-create.noSchemaSelectedError'}
-                          defaultMessage={
-                            'You must first select a listing type'
-                          }
-                        />
-                      </p>
-                    </div>
-                  )}
                 </div>
-                <div className="btn-container">
-                  <button
-                    className="float-right btn btn-primary btn-listing-create"
-                    onClick={() => this.goToDetailsStep()}
-                    ga-category="create_listing"
-                    ga-label="select_category_step_continue"
-                  >
-                    <FormattedMessage
-                      id={'listing-create.next'}
-                      defaultMessage={'Next'}
-                    />
-                  </button>
-                </div>
+                {selectedSchemaId &&
+                  <div className="btn-container mobile">
+                    <button
+                      className="float-right btn btn-primary btn-listing-create"
+                      onClick={() => this.goToDetailsStep()}
+                      ga-category="create_listing"
+                      ga-label="select_category_step_continue"
+                    >
+                      <FormattedMessage
+                        id={'listing-create.continue'}
+                        defaultMessage={'Continue'}
+                      />
+                    </button>
+                  </div>
+                }
               </div>
             )}
             {step === this.STEP.DETAILS && (
@@ -1353,8 +1376,7 @@ const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
     serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,
     web3Intent: app.web3.intent,
-    // mobileDevice: app.mobileDevice
-    mobileDevice: true
+    mobileDevice: app.mobileDevice
   }
 }
 

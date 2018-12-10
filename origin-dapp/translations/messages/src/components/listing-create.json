@@ -24,6 +24,14 @@
     "defaultMessage": "Next"
   },
   {
+    "id": "listing-create.backButtonLabel",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "listing-create.continue",
+    "defaultMessage": "Continue"
+  },
+  {
     "id": "listing-create.createListingHeading",
     "defaultMessage": "Create Your Listing"
   },
@@ -94,10 +102,6 @@
   {
     "id": "listing-create.boost-level",
     "defaultMessage": "Boost Level"
-  },
-  {
-    "id": "listing-create.backButtonLabel",
-    "defaultMessage": "Back"
   },
   {
     "id": "listing-create.doneButtonLabel",

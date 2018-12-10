@@ -2469,10 +2469,19 @@ textarea:-moz-ui-invalid {
   font-size: 1.5rem;
 }
 
-.schema-selection.selected {
+.schema-selection.mobile {
+  font-size: 1.25rem;
+}
+
+.schema-selection.selected:not(.mobile) {
   border: solid 1px var(--clear-blue);
   padding: 10px 20px 20px;
   max-height: 500px;
+}
+
+.schema-selection.selected.mobile {
+  font-weight: bold;
+  border: 1px solid black;
 }
 
 .schema-selection img {
@@ -2830,6 +2839,31 @@ select.form-control:not([size]):not([multiple]) {
   bottom: 0;
   font-size: 16px;
   cursor: pointer;
+}
+
+.listing-form .btn-container.mobile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--pale-grey-two);
+  padding: 25px;
+}
+
+.listing-form .btn-container.mobile button {
+  margin-bottom: 0;
+  width: 100%;
+  padding: 10px 30px;
+}
+
+.listing-form .mobile-back-btn {
+  margin-bottom: 15px;
+  padding: 0;
+  font-weight: bold;
+}
+
+.listing-form .mobile-back-btn span {
+  margin-right: 7px;
 }
 
 .boost-Low {
