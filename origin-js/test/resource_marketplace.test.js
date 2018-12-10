@@ -917,6 +917,11 @@ describe('Marketplace Resource', function() {
 
     describe('makeOffer', () => {
       it('should allow 3 offers to be accepted', async () => {
+        // Without the discovery server, this test is slow. To allow CI to pass,
+        // we increase the timeout.
+        // TODO: optimize this test, if possible
+        this.timeout(35000)
+
         // Create first offer, for which there is sufficient listing commission
         // for an offer with full commission.
         const offer1Data = Object.assign({}, multiUnitCommissionOffer,
@@ -956,7 +961,7 @@ describe('Marketplace Resource', function() {
         expect(offers[1].id).to.equal('999-000-1-1')
         expect(offers[2].id).to.equal('999-000-1-2')
       })
-    }).timeout(30000)
+    })
 
     describe('getOffers', () => {
       it('should filter offers with insufficient per-unit commission', async () => {
