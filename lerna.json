@@ -9,7 +9,6 @@
     "origin-js",
     "origin-linking",
     "origin-messaging",
-    "origin-mobile",
     "origin-notifications",
     "origin-tests",
     "origin-token-transfer/*"

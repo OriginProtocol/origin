@@ -11,7 +11,7 @@ const mobilize = (str) => {
   {
     return str
       .replace('localhost', process.env.MOBILE_LOCALHOST_IP)
-      .replace('127.0.0.1', process.env.MOBILE_LOCALHOST_IP)
+      .replace(/127\.0\.0\.1(?=[^0-9]|$)/, process.env.MOBILE_LOCALHOST_IP)
   }
   else
   {
@@ -43,7 +43,9 @@ const getWeb3 = () => {
     return new Web3(window.web3.currentProvider)
   } else {
     // Non-dapp browsers...
-    return new Web3(Web3.givenProvider || new Web3.providers.HttpProvider(defaultProviderUrl, 20000))
+    const web3 = new Web3(new Web3.providers.HttpProvider(defaultProviderUrl, 20000))
+    web3.currentProvider.isOrigin = true
+    return web3
   }
 }
 
