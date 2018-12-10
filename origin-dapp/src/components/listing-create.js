@@ -1358,7 +1358,7 @@ class ListingCreate extends Component {
           </div>
         </div>
         <Prompt
-          when={step !== this.STEP.PICK_SCHEMA && step !== this.STEP.SUCCESS}
+          when={step !== this.STEP.PICK_CATEGORY && step !== this.STEP.SUCCESS}
           message={intl.formatMessage(this.intlMessages.navigationWarning)}
         />
       </div>
