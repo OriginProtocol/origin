@@ -48,7 +48,7 @@ class ListingCreate extends Component {
 
     this.STEP = {
       PICK_CATEGORY: 1,
-      PICK_SCHEMA: 2, // NOTE: this is a mobile-only step
+      PICK_SUBCATEGORY: 2, // NOTE: this is a mobile-only step
       DETAILS: 3,
       AVAILABILITY: 4,
       BOOST: 5,
@@ -222,7 +222,7 @@ class ListingCreate extends Component {
     }
 
     if (this.props.mobileDevice) {
-      stateToSet.step = this.STEP.PICK_SCHEMA
+      stateToSet.step = this.STEP.PICK_SUBCATEGORY
       window.scrollTo(0, 0)
     }
 
@@ -399,7 +399,7 @@ class ListingCreate extends Component {
 
   onBackToPickSchema() {
     this.setState({
-      step: this.STEP.PICK_SCHEMA,
+      step: this.STEP.PICK_SUBCATEGORY,
       selectedSchema: null,
       schemaFetched: false,
       formData: null
@@ -652,8 +652,8 @@ class ListingCreate extends Component {
                 }
               </div>
             )}
-            {/* NOTE: PICK_SCHEMA is a mobile-only step */}
-            {step === this.STEP.PICK_SCHEMA && (
+            {/* NOTE: PICK_SUBCATEGORY is a mobile-only step */}
+            {step === this.STEP.PICK_SUBCATEGORY && (
               <div className="col-md-6 col-lg-5 pick-schema">
                 <label>
                   <FormattedMessage
@@ -1127,7 +1127,7 @@ class ListingCreate extends Component {
                   withMenus={true}
                   withProfile={false}
                 />
-                {step === this.STEP.PICK_SCHEMA && (
+                {step === this.STEP.PICK_SUBCATEGORY && (
                   <div className="info-box">
                     <h2>
                       <FormattedMessage
