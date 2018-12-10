@@ -13,35 +13,25 @@ function getElapsedTime(recentTime, previousTime) {
   return isNaN(elapsedTime) ? 0 : elapsedTime
 }
 
-function PurchaseMessage({ purchaseEvents, messageCreated, previousMessage }) {
-  const updatedInfo = purchaseEvents.filter((info) => ((info !== undefined) && (info !== 0)))
-  const displayInfo = (info) => {
-    const noInfo = !info || info === 0
-    if (noInfo) return
-    if ((info.timestamp < messageCreated) && info.timestamp > (previousMessage.created/1000)) {
-      return <div key={messageCreated + Math.random()}>Something should go here</div>
-    }
-    return null
-  }
-  return updatedInfo.map(displayInfo)
-}
-
 export default class CompactMessages extends Component {
   render() {
-    const { messages = [], purchase, purchaseEvents } = this.props
+    const { messages = [], purchase, purchaseEvents, formatOfferMessage } = this.props
 
     return messages.map((message, i) => {
-      const { created, hash } = message
-      const previousMessage = i === 0 ? {} : messages[i - 1]
-      const timeElapsed = getElapsedTime(created, previousMessage.created)
-      const showTime = timeElapsed >= MAX_MINUTES || i === 0
+      if (!message) return
+      const { created, hash, senderAddress, event } = message
+      const offerMessage = event
 
-      return (
-        <div key={hash+Math.random()}>
-          <PurchaseMessage key={new Date() + Math.random()} messageCreated={(created/1000)} purchaseEvents={purchaseEvents} previousMessage={previousMessage} />
-          <Message key={hash} showTime={showTime} message={message} />
-        </div>
-      )
+      if (offerMessage) return formatOfferMessage(message)
+
+      const previousMessage = (i === 0 || !offerMessage) ? {} : messages[i - 1]
+      const timeElapsed = getElapsedTime(created, previousMessage.created)
+      const showTime = timeElapsed >= MAX_MINUTES || (i === 0 || !offerMessage)
+
+      const sameSender = formattedAddress(senderAddress) === formattedAddress(previousMessage.senderAddress)
+      const contentOnly = sameSender && timeElapsed < MAX_MINUTES
+
+      return <Message key={hash} showTime={showTime} message={message} />
     })
   }
 }

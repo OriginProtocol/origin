@@ -28,7 +28,7 @@ export function offerStatusToStep(status) {
   return statusMap[status] || 0
 }
 
-export function getPurchaseEvents(purchase = {}) {
+export function getOfferEvents(purchase = {}) {
   const purchasePresent = Object.keys(purchase).length
 
   if (!purchasePresent) return []

@@ -11,11 +11,12 @@ import CompactMessages from 'components/compact-messages'
 import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
 import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
-import { getPurchaseEvents } from 'utils/offer'
+import { getOfferEvents } from 'utils/offer'
 
 import origin from '../services/origin'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || 2 * 1024 * 1024 // 2 MiB
+const formatDate = timestamp => moment(timestamp * 1000).format('MMM D, YYYY')
 
 class Conversation extends Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class Conversation extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
     this.loadPurchase = this.loadPurchase.bind(this)
+    this.formatOfferMessage = this.formatOfferMessage.bind(this)
 
     this.conversationDiv = React.createRef()
     this.fileInput = React.createRef()
@@ -247,23 +249,25 @@ class Conversation extends Component {
     }
   }
 
-  getLastMessage(messages) {
-    const lastMessageIndex = messages.length - 1
-    const sortOrder = (a, b) => (a.created < b.created ? -1 : 1)
-    return messages.sort(sortOrder)[lastMessageIndex]
-  }
-
-  getFirstMessage(messages) {
-    const sortOrder = (a, b) => (a.created < b.created ? -1 : 1)
-    return messages.sort(sortOrder)[0]
-  }
-
-  formatPurchaseMessage(buyerName, info) {
+  formatOfferMessage(info) {
     const { listing = {} } = this.state
+    const { returnValues = {}, event, timestamp } = info
+    const party = truncateAddress(returnValues.party)
+
+    //have to translate these strings
+    const offerMessage = {
+      "OfferCreated": `${party} made an offer on`,
+      "OfferWithdrawn": `${party} withdrew their offer on`,
+      "OfferAccepted": `${party}accepted the offer on`,
+      "OfferDisputed": `${party} initiated a dispute on`,
+      "OfferRuling": `${party} made a ruling on the dispute for`,
+      "OfferFinalized": `${party} finalized the offer`,
+      "OfferData": `${party} updated information for`
+    }
 
     return (
       <span key={new Date() + Math.random()} className="purchase-info">
-        {buyerName} did some action to {name} on {moment(info.timestamp).format('MMM Do h:mm a')}
+      {offerMessage[event]} {listing.name} on {formatDate(timestamp)}
       </span>
     )
   }
@@ -285,30 +289,7 @@ class Conversation extends Component {
     const shouldEnableForm = id &&
       origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
       canDeliverMessage
-    const buyerName = abbreviateName(counterparty) || truncateAddress(counterpartyAddress)
-    const latestMessage = this.getLastMessage(messages)
-    const firstMessage = this.getFirstMessage(messages)
-    const infoWithLatestTime = (lastMessage) => (result, info) => {
-      const noInfo = !info || info === 0
-      if (noInfo) return result
-
-      const { timestamp } = info
-      const { created } = lastMessage
-
-      if (timestamp > (created/1000)) return [...result, info]
-      return result
-    }
-
-    const infoWithEarliestTime = (firstMessage) => (result, info) => {
-      const noInfo = !info || info === 0
-      if (noInfo) return result
-      const { timestamp } = info
-      const { created } = firstMessage
-
-      if (timestamp < (created/1000)) return [...result, info]
-      return result
-    }
-    const purchaseEvents = getPurchaseEvents(purchase)
+    const offerEvents = getOfferEvents(purchase)
 
     const [
       offerCreated,
@@ -318,39 +299,24 @@ class Conversation extends Component {
       offerRuling,
       offerFinalized,
       offerData
-    ] = purchaseEvents
-    const postMessagesPurchaseInfo = purchaseEvents.reduce(infoWithLatestTime(latestMessage), [])
-    const anteMessagesPurchaseInfo = purchaseEvents.reduce(infoWithEarliestTime(firstMessage), [])
-    console.log("DO I HAVE THE SELLER", postMessagesPurchaseInfo)
-    console.log("HOW ABOUT DO I HAVE THE SELLER HERE", anteMessagesPurchaseInfo)
+    ] = offerEvents
+
+    const sortedAndCombinedMessages = [
+      ...offerEvents,
+      ...messages
+    ].sort((a, b) => (a.created < b.created ? -1 : 1))
 
     return (
       <Fragment>
-        {((!smallScreenOrDevice) && withListingSummary) &&
-          listing.id && (
-            anteMessagesPurchaseInfo.map((offerInfo) => (
-              this.formatPurchaseMessage(buyerName, offerInfo)
-            ))
-          )
-        }
         <div ref={this.conversationDiv} className="conversation">
           <CompactMessages
-            messages={messages}
-            purchase={purchase}
-            listing={listing}
+            messages={sortedAndCombinedMessages}
             wallet={wallet}
-            counterparty={counterparty}
-            purchaseEvents={purchaseEvents}
-            formatPurchaseMessage={this.formatPurchaseMessage}
+            formatOfferMessage={this.formatOfferMessage}
+            smallScreenOrDevice={smallScreenOrDevice}
+            withListingSummary={withListingSummary}
           />
         </div>
-        {((!smallScreenOrDevice) && withListingSummary) &&
-          listing.id && (
-            postMessagesPurchaseInfo.map((offerInfo) => (
-              this.formatPurchaseMessage(buyerName, offerInfo)
-            ))
-          )
-        }
         {!shouldEnableForm && (
           <form className="add-message d-flex">
             <textarea rows="4" tabIndex="0" disabled />
