@@ -114,11 +114,11 @@ class ListingCreate extends Component {
       },
       positiveNumber: {
         id: 'schema.positiveNumber',
-        defaultMessage: 'Should be a positive number'
+        defaultMessage: 'should be a positive number'
       },
       notEnoughOgnFunds: {
         id: 'schema.notEnoughOgnFunds',
-        defaultMessage: 'Not enough funds in wallet.'
+        defaultMessage: 'not enough funds in wallet.'
       },
       boostLimitTooHigh: {
         id: 'schema.boostLimitTooHigh',
@@ -479,7 +479,6 @@ class ListingCreate extends Component {
       clearTimeout(this.updateBoostTimeout)
 
     this.updateBoostTimeout = setTimeout(() => {
-
       this.setState({
         boostCapTooLow: requiredBoost > this.state.formListing.formData.boostLimit
       })

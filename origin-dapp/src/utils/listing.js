@@ -31,10 +31,11 @@ export function dappFormDataToOriginListing(formData) {
     let listingDataAddition
 
     // if multi unit listing
-    if (formData.unitsTotal > 0) {
+    if (formData.unitsTotal > 1) {
+      const boostLimit = formData.boostLimit || 0
       listingDataAddition = {
         commission: {
-        amount: formData.boostLimit.toString(),
+        amount: boostLimit.toString(),
         currency: 'OGN'
         },
         commissionPerUnit: {
