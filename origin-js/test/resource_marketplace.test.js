@@ -804,7 +804,9 @@ describe('Marketplace Resource', function() {
           .to.be.rejectedWith('cannot accept invalid offer 999-000-1-0')
       })
 
-      it('should not deduct units available for withdrawn offers', async () => {
+      it('should not deduct units available for withdrawn offers', async function() {
+        this.timeout(35000)
+
         // Create and accept offer for 1 unit.
         await marketplace.makeOffer('999-000-1', offerData)
         let offer1 = await marketplace.getOffer('999-000-1-0')
