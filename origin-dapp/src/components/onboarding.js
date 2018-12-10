@@ -305,7 +305,7 @@ class Onboarding extends Component {
             onSubmit={this.handleEnableNotifications}
           />
         )}
-        {web3.givenProvider &&
+        {!web3.currentProvider.isOrigin &&
           web3Intent &&
           web3Intent !== 'manage your profile' &&
           !messagingEnabled && (

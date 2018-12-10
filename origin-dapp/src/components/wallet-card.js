@@ -57,10 +57,10 @@ class WalletCard extends Component {
 
   componentDidMount() {
     const {
+      address,
       fetchUser,
       getEthBalance,
-      getOgnBalance,
-      wallet: { address }
+      getOgnBalance
     } = this.props
 
     getEthBalance()
@@ -70,10 +70,9 @@ class WalletCard extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { fetchUser, wallet } = this.props
-    const { address } = wallet
+    const { address, fetchUser } = this.props
 
-    if (address !== prevProps.wallet.address) {
+    if (address !== prevProps.address) {
       fetchUser(address)
     }
   }
@@ -86,6 +85,9 @@ class WalletCard extends Component {
 
   render() {
     const {
+      address,
+      ethBalance,
+      ognBalance,
       users,
       wallet,
       withBalanceTooltip,
@@ -94,11 +96,10 @@ class WalletCard extends Component {
     } = this.props
     const user =
       users.find(
-        u => formattedAddress(u.address) === formattedAddress(wallet.address)
+        u => formattedAddress(u.address) === formattedAddress(address)
       ) || {}
     const { attestations = [], fullName, profile = {} } = user
-    const { address, ethBalance, ognBalance } = wallet
-    const ethToUsdBalance = getFiatPrice(wallet.ethBalance, 'USD')
+    const ethToUsdBalance = getFiatPrice(ethBalance, 'USD')
     const userCanReceiveMessages =
       formattedAddress(address) !== formattedAddress(wallet.address) &&
       origin.messaging.canReceiveMessages(address)
