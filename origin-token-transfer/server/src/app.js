@@ -4,19 +4,20 @@ const app = express()
 const { check, validationResult } = require('express-validator/check')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const moment = require('moment')
 const port = process.env.PORT || 5000
 const passport = require('passport')
 const path = require('path')
 const session = require('express-session')
 require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
-
-const { Event, Grant, sequelize  } = require('./models')
 const { Op } = require('sequelize')
-const { GRANT_TRANSFER, LOGIN } = require('./constants/events')
 
-const Token = require('origin-faucet/lib/token')
 const { createProviders } = require('origin-faucet/lib/config')
+
+const { LOGIN } = require('./constants/events')
+const { transferTokens } = require('./lib/transfer')
+const { Event, Grant  } = require('./models')
 
 const Web3 = require('web3')
 
@@ -27,7 +28,7 @@ if (!sessionSecret) {
   process.exit(1)
 }
 
-console.log(path.resolve(__dirname) + '../data')
+const networkId = Number.parseInt(process.env.NETWORK_ID) || 999
 
 // Setup sessions.
 app.use(session({
@@ -59,6 +60,8 @@ const asyncMiddleware = fn =>
     Promise.resolve(fn(req, res, next))
       .catch(next)
   }
+
+const logDate = () => moment().toString()
 
 /**
  * Middleware for requiring a session. Injects the X-Authenticated-Email header
@@ -97,69 +100,39 @@ const isEthereumAddress = value => {
  */
 app.post('/api/transfer', [
     check('grantId').isInt(),
-    check('amount').isInt(),
+    check('amount').isDecimal(),
     check('address').custom(isEthereumAddress),
     withSession
   ],
   asyncMiddleware(async (req, res) => {
 
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() })
-    }
-
-  const grantId = req.body.grantId
-  const amount = Number.parseInt(req.body.amount)
-  const address = req.body.address
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() })
+  }
 
   // Retrieve the grant, validating email in the process.
-  const grant = await Grant.findOne({ where: {
-    id: grantId,
-    email: req.session.email
-  } })
-  if (!grant) {
-    return res.status(422).send('Could not find specified grant')
-  }
-
-  // Ensure that the grant has sufficient transferrable tokens.
-  const available = grant.vested - grant.transferred
-  if (amount > available) {
-    return res
-      .status(422)
-      .send(`Amount of ${amount} OGN exceeds the ${available} OGN available for the grant`)
-  }
-
-  const networkId = 999 // TODO: replace with command-line option
-  const config = {
-    providers: createProviders([ networkId ])
-  }
-  const token = new Token(config)
-  const supplier = await token.defaultAccount(networkId)
-  await token.credit(networkId, address, amount)
-
-  // Record new state in the database.
-  const txn = await sequelize.transaction()
+  const { grantId, address, amount } = req.body
   try {
-    await grant.increment(['transferred'], { by: amount })
-    await grant.save()
-    await Event.create({
+    const grant = await transferTokens({
+      grantId,
       email: req.session.email,
       ip: req.connection.remoteAddress,
-      grantId: grantId,
-      action: GRANT_TRANSFER,
-      data: JSON.stringify({
-        amount: req.body.amount,
-        from: supplier,
-        to: req.body.address
-      })
+      networkId,
+      address,
+      amount
     })
-    await txn.commit()
-  } catch(e) {
-    await txn.rollback()
-    throw(e)
-  }
+    res.send(grant.get({ plain: true }))
 
-  res.send(grant.get({ plain: true }))
+    const grantedAt = moment(grant.grantedAt).format('YYYY-MM-DD')
+    console.log(`${logDate()} ${grant.email} grant ${grantedAt} transferred ${amount} OGN to ${address}`)
+  } catch(e) {
+    if (e instanceof ReferenceError || e instanceof RangeError) {
+      res.status(422).send(e.message)
+    } else {
+      throw e
+    }
+  }
 }))
 
 // TODO: review this for security
@@ -191,6 +164,8 @@ app.post(
       action: LOGIN,
       data: JSON.stringify({})
     })
+
+    console.log(`${logDate()} ${req.user.email} logged in`)
 
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify(req.user))
@@ -238,5 +213,8 @@ app.post('/api/logout', withSession, (req, res) => {
   res.send('logged out')
 })
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+createProviders([ networkId ]) // Ensure web3 credentials are set up
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`)
+})
 
