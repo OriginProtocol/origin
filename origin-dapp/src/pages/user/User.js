@@ -28,7 +28,7 @@ class User extends Component {
           <div className="row">
             <div className="col-12 col-md-4 col-lg-4 order-md-3">
               <WalletCard
-                wallet={{ address: userAddress }}
+                address={userAddress}
                 withProfile={false}
               />
             </div>

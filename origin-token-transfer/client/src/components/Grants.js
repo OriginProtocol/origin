@@ -9,7 +9,7 @@ import { setGrants, setSessionEmail } from '../actions'
 
 class Grants extends Component {
   refreshGrants = () => {
-    fetch('/api/grants', { cache: "no-store" })
+    fetch('/api/grants', { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) {
           if (response.status === 401) {

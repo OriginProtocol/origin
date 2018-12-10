@@ -13,7 +13,7 @@
     "start:development": "nodemon --exec 'babel-node' src/index.js --presets @babel/env",
     "prestart:production": "npm run build",
     "start:production": "node dist/index.js",
-    "lint": "eslint '**/*.js' --rulesdir ../",
+    "lint": "eslint '**/*.js'",
     "test": "echo \"Warning: no tests specified\""
   },
   "repository": {
@@ -26,23 +26,23 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/core": "^7.1.5",
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
     "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.1.5",
-    "dotenv": "^6.0.0",
+    "@babel/preset-env": "^7.2.0",
+    "dotenv": "^6.2.0",
     "ipfs": "^0.33.1",
     "ipfs-api": "^26.1.2",
     "ipfs-log": "^4.2.0",
     "ipfs-pubsub-1on1": "0.0.4",
-    "logplease": "^1.2.14",
-    "orbit-db": "^0.19.8",
+    "logplease": "^1.2.15",
+    "orbit-db": "^0.19.9",
     "per-env": "^1.0.2",
-    "web3": "^1.0.0-beta.36"
+    "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "@babel/node": "^7.0.0",
+    "@babel/node": "^7.2.0",
     "eslint": "^5.9.0",
-    "nodemon": "^1.18.6"
+    "nodemon": "^1.18.7"
   }
 }
