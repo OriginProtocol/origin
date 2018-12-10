@@ -1,5 +1,5 @@
 {
-  "name": "origin-dapp-creator",
+  "name": "origin-dapp-creator-client",
   "version": "1.0.0",
   "description": "Tool of creating configuration files for Origin DApps",
   "main": "src/index.js",
