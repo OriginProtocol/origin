@@ -35,8 +35,5 @@ COPY ./origin-messaging ./origin-messaging
 COPY ./origin-notifications ./origin-notifications
 COPY ./origin-tests ./origin-tests
 
-RUN ln -s ../../node_modules/scrypt origin-js/node_modules/scrypt
-RUN ln -s ../../node_modules/got origin-js/node_modules/got
-
 # Build origin-js for event-listener
 RUN npm run build --prefix origin-js
