@@ -45,7 +45,7 @@ class BoostLimitField extends Component {
       })
 
       // prevent too many subsequent state updates of the parent
-      if (!!this.boostLimitCallback)
+      if (this.boostLimitCallback)
         clearTimeout(this.boostLimitCallback)
 
       this.boostLimitCallback = setTimeout(() => {
