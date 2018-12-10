@@ -3,8 +3,13 @@ import { InputGroup, FormGroup } from '@blueprintjs/core'
 
 class AboutField extends Component {
 
-  handleChange () {
-    console.log('Got change')
+  constructor (props) {
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  handleChange (event) {
+    this.props.onChange(event)
   }
 
   render () {
@@ -15,8 +20,11 @@ class AboutField extends Component {
           labelFor="about-field"
           labelInfo="(required)">
         <InputGroup
+          name="about"
           placeholder="A place for buying and selling things"
-          className="input-width">
+          className="input-width"
+          value={this.props.value}
+          onChange={this.handleChange}>
         </InputGroup>
       </FormGroup>
     )

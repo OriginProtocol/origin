@@ -2,6 +2,15 @@ import React, { Component } from 'react'
 import { InputGroup, FormGroup } from '@blueprintjs/core'
 
 class IconUrlField extends Component {
+  constructor (props) {
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  handleChange (event) {
+    this.props.onChange(event)
+  }
+
   render () {
     return (
       <FormGroup
@@ -10,8 +19,11 @@ class IconUrlField extends Component {
           labelFor="icon-url-field"
           labelInfo="(required)">
         <InputGroup
+          name="iconUrl"
           placeholder="https://dapp.originprotocol.com/images/origin-icon-white.svg"
-          className="input-width-wide">
+          className="input-width-wide"
+          value={this.props.value}
+          onChange={this.handleChange}>
         </InputGroup>
       </FormGroup>
     )

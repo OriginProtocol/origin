@@ -9,22 +9,23 @@ class ColorPicker extends Component {
     this.handleChangeComplete = this.handleChangeComplete.bind(this)
   }
 
-  handleChangeComplete(color) {
-    this.setState({ color: color.hex })
+  handleChangeComplete(color, event) {
+    this.props.onChange(this.props.name, color)
   }
 
   render () {
     return (
       <FormGroup
+          className="label-wide"
           label={this.props.label}
           labelFor={this.props.label + "-color-picker"}
           inline={true}>
         <Popover>
           <Button>
-            <div className="color-preview" style={{background: this.props.color}}></div>
+            <div className="color-preview" style={{background: this.props.value}}></div>
           </Button>
           <SketchPicker
-            color={ this.props.color }
+            color={ this.props.value }
             onChangeComplete={ this.handleChangeComplete }/>
         </Popover>
       </FormGroup>
@@ -39,4 +40,6 @@ require('react-styl')(`
     display: block
     width: 20px
     height: 20px
+  .label-wide .bp3-label
+    width: 200px
 `)

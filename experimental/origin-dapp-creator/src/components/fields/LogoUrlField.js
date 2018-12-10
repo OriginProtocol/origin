@@ -2,6 +2,15 @@ import React, { Component } from 'react'
 import { InputGroup, FormGroup } from '@blueprintjs/core'
 
 class LogoUrlField extends Component {
+  constructor (props) {
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  handleChange (event) {
+    this.props.onChange(event)
+  }
+
   render () {
     return (
       <FormGroup
@@ -10,8 +19,11 @@ class LogoUrlField extends Component {
           labelFor="logo-url-field"
           labelInfo="(required)">
         <InputGroup
+          name="logoUrl"
           placeholder="https://www.originprotocol.com/static/img/origin-logo-dark.png"
-          className="input-width-wide">
+          className="input-width-wide"
+          value={this.props.value}
+          onChange={this.handleChange}>
         </InputGroup>
       </FormGroup>
     )
