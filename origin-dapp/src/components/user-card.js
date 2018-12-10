@@ -43,7 +43,7 @@ class UserCard extends Component {
     const intent = intl.formatMessage(this.intlMessages.sendMessages)
     storeWeb3Intent(intent)
 
-    if (web3.givenProvider && wallet.address) {
+    if (!web3.currentProvider.isOrigin && wallet.address) {
       this.setState({ modalOpen: !this.state.modalOpen })
     }
   }
