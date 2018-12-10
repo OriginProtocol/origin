@@ -11,6 +11,7 @@ import CompactMessages from 'components/compact-messages'
 import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
 import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
+import { getPurchaseEvents } from 'utils/offer'
 
 import origin from '../services/origin'
 
@@ -257,6 +258,16 @@ class Conversation extends Component {
     return messages.sort(sortOrder)[0]
   }
 
+  formatPurchaseMessage(buyerName, info) {
+    const { listing = {} } = this.state
+
+    return (
+      <span key={new Date() + Math.random()} className="purchase-info">
+        {buyerName} did some action to {name} on {moment(info.timestamp).format('MMM Do h:mm a')}
+      </span>
+    )
+  }
+
   render() {
     const { id, intl, messages, smallScreenOrDevice, wallet, withListingSummary } = this.props
     const {
@@ -297,26 +308,28 @@ class Conversation extends Component {
       if (timestamp < (created/1000)) return [...result, info]
       return result
     }
-    const purchasePresent = Object.keys(purchase).length
-    const offerCreated = purchasePresent && purchase.event('OfferCreated')
-    const offerWithdrawn = purchasePresent && purchase.event('OfferWithdrawn')
-    const offerAccepted = purchasePresent && purchase.event('OfferAccepted')
-    const offerDisputed = purchasePresent && purchase.event('OfferDisputed')
-    const offerRuling = purchasePresent && purchase.event('OfferRuling')
-    const offerFinalized = purchasePresent && purchase.event('OfferFinalized')
-    const offerData = purchasePresent && purchase.event('OfferData')
-    const purchaseInfo = [offerCreated, offerWithdrawn, offerAccepted, offerDisputed, offerRuling, offerFinalized, offerData]
-    const postMessagesPurchaseInfo = purchaseInfo.reduce(infoWithLatestTime(latestMessage), [])
-    const anteMessagesPurchaseInfo = purchaseInfo.reduce(infoWithEarliestTime(firstMessage), [])
+    const purchaseEvents = getPurchaseEvents(purchase)
+
+    const [
+      offerCreated,
+      offerWithdrawn,
+      offerAccepted,
+      offerDisputed,
+      offerRuling,
+      offerFinalized,
+      offerData
+    ] = purchaseEvents
+    const postMessagesPurchaseInfo = purchaseEvents.reduce(infoWithLatestTime(latestMessage), [])
+    const anteMessagesPurchaseInfo = purchaseEvents.reduce(infoWithEarliestTime(firstMessage), [])
+    console.log("DO I HAVE THE SELLER", postMessagesPurchaseInfo)
+    console.log("HOW ABOUT DO I HAVE THE SELLER HERE", anteMessagesPurchaseInfo)
 
     return (
       <Fragment>
         {((!smallScreenOrDevice) && withListingSummary) &&
           listing.id && (
-            anteMessagesPurchaseInfo.map(({ timestamp }) => (
-              <span key={new Date() + Math.random()} className="purchase-info">
-                {buyerName} did some action to {name} on {moment(timestamp).format('MMM Do h:mm a')}
-              </span>
+            anteMessagesPurchaseInfo.map((offerInfo) => (
+              this.formatPurchaseMessage(buyerName, offerInfo)
             ))
           )
         }
@@ -327,16 +340,14 @@ class Conversation extends Component {
             listing={listing}
             wallet={wallet}
             counterparty={counterparty}
-            loadPurchase={this.loadPurchase}
-            purchaseInfo={purchaseInfo}
+            purchaseEvents={purchaseEvents}
+            formatPurchaseMessage={this.formatPurchaseMessage}
           />
         </div>
         {((!smallScreenOrDevice) && withListingSummary) &&
           listing.id && (
-            postMessagesPurchaseInfo.map(({ timestamp }) => (
-              <span key={new Date() + Math.random()} className="purchase-info">
-                {buyerName} did some action to {name} on {moment(timestamp).format('MMM Do h:mm a')}
-              </span>
+            postMessagesPurchaseInfo.map((offerInfo) => (
+              this.formatPurchaseMessage(buyerName, offerInfo)
             ))
           )
         }

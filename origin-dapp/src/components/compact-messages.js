@@ -13,8 +13,8 @@ function getElapsedTime(recentTime, previousTime) {
   return isNaN(elapsedTime) ? 0 : elapsedTime
 }
 
-function PurchaseMessage({ purchaseInfo, messageCreated, previousMessage }) {
-  const updatedInfo = purchaseInfo.filter((info) => ((info !== undefined) && (info !== 0)))
+function PurchaseMessage({ purchaseEvents, messageCreated, previousMessage }) {
+  const updatedInfo = purchaseEvents.filter((info) => ((info !== undefined) && (info !== 0)))
   const displayInfo = (info) => {
     const noInfo = !info || info === 0
     if (noInfo) return
@@ -28,7 +28,7 @@ function PurchaseMessage({ purchaseInfo, messageCreated, previousMessage }) {
 
 export default class CompactMessages extends Component {
   render() {
-    const { messages = [], purchase, purchaseInfo } = this.props
+    const { messages = [], purchase, purchaseEvents } = this.props
 
     return messages.map((message, i) => {
       const { created, hash } = message
@@ -38,7 +38,7 @@ export default class CompactMessages extends Component {
 
       return (
         <div key={hash+Math.random()}>
-          <PurchaseMessage key={new Date() + Math.random()} messageCreated={(created/1000)} purchaseInfo={purchaseInfo} previousMessage={previousMessage} />
+          <PurchaseMessage key={new Date() + Math.random()} messageCreated={(created/1000)} purchaseEvents={purchaseEvents} previousMessage={previousMessage} />
           <Message key={hash} showTime={showTime} message={message} />
         </div>
       )
