@@ -69,7 +69,7 @@ class ContractService {
   }
 
   updateContractAddresses(contractAddresses) {
-     for (const name in this.contracts) {
+    for (const name in this.contracts) {
       try {
         this.contracts[name].networks = Object.assign(
           {},
