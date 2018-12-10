@@ -57,6 +57,7 @@ class Create extends Component {
         <h3>Create DApp Configuration</h3>
 
         <h4>Subdomain</h4>
+
         <SubdomainField value={this.state.subdomain}
           onChange={this.handleInputChange}>
         </SubdomainField>
@@ -86,14 +87,14 @@ class Create extends Component {
           value={this.state.cssVars.dusk}
           onChange={this.handleColorChange}>
         </ColorPicker>
-        <ColorPicker label="Featured Tag"
-          name="goldenRod"
-          value={this.state.cssVars.goldenRod}
-          onChange={this.handleColorChange}>
-        </ColorPicker>
         <ColorPicker label="Searchbar Background"
           name="paleGrey"
           value={this.state.cssVars.paleGrey}
+          onChange={this.handleColorChange}>
+        </ColorPicker>
+        <ColorPicker label="Featured Tag"
+          name="goldenRod"
+          value={this.state.cssVars.goldenRod}
           onChange={this.handleColorChange}>
         </ColorPicker>
 
