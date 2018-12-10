@@ -8,9 +8,9 @@ export default function Messaging({ ipfsSwarm, messagingNamespace, web3 }) {
   const ipfsCreator = repo_key => {
     const ipfsOptions = {
       repo: 'ipfs' + repo_key,
-      preload: {
-        enabled: false
-      },
+      // preload: {
+      //   enabled: false
+      // },
       EXPERIMENTAL: {
         pubsub: true,
         relay: {

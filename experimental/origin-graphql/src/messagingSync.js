@@ -25,8 +25,8 @@ export default function messagingSync(client) {
   }
 
   const msg = config.messaging
-  msg.events.on('initialized', accountKey => {
-    console.log('Messaging initialized', accountKey)
+  msg.events.on('initRemote', () => {
+    console.log('Messaging initialized')
 
     msg.global_keys.events.on(
       'replicate.progress',
@@ -35,6 +35,13 @@ export default function messagingSync(client) {
         console.log('replicate.progress', progress, have)
       }
     )
+    // msg.global_keys.events.on(
+    //   'load.progress',
+    //   (address, hash, entry, progress, have) => {
+    //     // console.log('replicate.progress', address, hash, entry, progress, have, msg.global_keys._replicationStatus.buffered, msg.global_keys._replicationStatus.queued)
+    //     console.log('load.progress', progress, have)
+    //   }
+    // )
     // msg.global_keys.events.on('replicated', (address, length) => console.log('replicated', address, length) )
     // msg.global_keys.events.on('load', (dbname) => console.log('load', dbname) )
     // msg.global_keys.events.on('load.progress', (address, hash, entry, progress, total) => console.log('load.progress', address, hash, entry, progress, total) )

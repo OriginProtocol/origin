@@ -17,5 +17,9 @@
       openpgp.initWorker({ path: 'vendor/openpgp.worker.min.js' })
     }
   </script> -->
+  <script>
+    localStorage.ognNetwork = "mainnet"
+    localStorage.metaMaskEnabled = "true"
+  </script>
   <% _.forEach(htmlWebpackPlugin.files.js, function(file) { %><script src="<%- file %>"></script><% }); %>
 </html>

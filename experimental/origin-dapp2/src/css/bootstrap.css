@@ -1,8 +1,5 @@
 /* This should probably use scss to properly override Bootstrap variables */
 
-.navbar {
-  padding: 0.6rem 1rem
-}
 .badge {
   border-radius: 3px;
   font-size: 0.6rem;

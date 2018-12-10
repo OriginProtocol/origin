@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import Gallery from 'components/Gallery'
-import Link from 'components/Link'
 
 import Buy from './Buy'
 
@@ -44,16 +43,7 @@ class ListingDetail extends Component {
                 <span>Total Price</span>
                 <span>{`${amount} ETH`}</span>
               </div>
-              {from ? (
-                <Buy listing={listing} from={from} value={amount} />
-              ) : (
-                <Link
-                  to={`/listings/${listing.id}/onboard`}
-                  className="btn btn-primary"
-                >
-                  Buy Now
-                </Link>
-              )}
+              <Buy listing={listing} from={from} value={amount} />
             </div>
           </div>
         </div>

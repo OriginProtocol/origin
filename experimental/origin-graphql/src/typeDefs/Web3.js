@@ -64,6 +64,7 @@ export default `
 
   type Account {
     id: ID!
+    checksumAddress: String
     balance: Balance
     role: String
     name: String

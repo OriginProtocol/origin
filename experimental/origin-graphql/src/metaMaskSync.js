@@ -17,6 +17,7 @@ const GetMetaMaskStateQuery = gql`
       metaMaskNetworkName
       metaMaskAccount {
         id
+        checksumAddress
         balance {
           eth
         }

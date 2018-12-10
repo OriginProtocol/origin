@@ -126,6 +126,8 @@ require('react-styl')(`
         font-size: 24px
         font-weight: 300
         margin: 2rem 0 0.5rem 0
+        &.mb
+          margin-bottom: 4rem
         i
           font-size: 20px
           display: block

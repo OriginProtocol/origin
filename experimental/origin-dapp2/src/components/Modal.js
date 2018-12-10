@@ -103,7 +103,8 @@ export default class Modal extends Component {
   onClose(e) {
     if (
       this.props.onClose &&
-      String(e.target.className).indexOf('pl-modal-cell') >= 0
+      String(e.target.className).indexOf('pl-modal-cell') >= 0 &&
+      !this.onCloseTimeout
     ) {
       this.doClose()
     }

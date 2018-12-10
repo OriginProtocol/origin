@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-// import Link from 'components/Link'
+import Link from 'components/Link'
 import Modal from 'components/Modal'
 
 import ListingPreview from './_ListingPreview'
@@ -58,7 +58,7 @@ class OnboardAttestations extends Component {
                   return <p className="p-3">No Web3</p>
                 }
 
-                // const nextLink = `/listings/${listing.id}/onboard/attestations`
+                const nextLink = `/listings/${listing.id}`
 
                 return (
                   <>
@@ -82,7 +82,9 @@ class OnboardAttestations extends Component {
                     </div>
                     <ProfileStrength width="25%" />
                     <div className="text-right">
-                      <button className="btn btn-primary">Done</button>
+                      <Link to={nextLink} className="btn btn-primary">
+                        Done
+                      </Link>
                     </div>
                   </>
                 )

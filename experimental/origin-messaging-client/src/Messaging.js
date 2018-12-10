@@ -379,13 +379,13 @@ class Messaging {
             this.orbitStoreOptions({ write: ['*'] })
           )
 
+          this.events.emit('initRemote')
+
           try {
             await this.global_keys.load()
           } catch (error) {
             console.error(error)
           }
-
-          this.events.emit('initRemote')
 
           this.ipfs_bound_account = this.account_key
           resolve(this.global_keys)
@@ -485,7 +485,7 @@ class Messaging {
     const account_match = entry && entry.address == this.account.address
 
     if (!(this.pub_sig && this.pub_msg)) {
-      if (account_match) {
+      if (account_match && entry.sig && entry.msg) {
         this.pub_sig = entry.sig
         this.pub_msg = entry.msg
       } else {

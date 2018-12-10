@@ -112,7 +112,7 @@ class OnboardMessaging extends Component {
           <div className="col-md-8">
             <Stage stage={2} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
-              {({ error, data, networkStatus }) => {
+              {({ data, error, networkStatus }) => {
                 if (networkStatus === 1) {
                   return <MessagingInitializing />
                 } else if (error) {

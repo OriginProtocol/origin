@@ -1,7 +1,7 @@
 import contracts from '../contracts'
 
-let ethPrice,
-  marketplaceExists = {},
+let ethPrice
+const marketplaceExists = {},
   messagingInitialized = {}
 
 export default {
@@ -12,7 +12,7 @@ export default {
     if (marketplaceExists[address]) {
       return contracts.marketplace
     }
-    const exists = await web3.eth.getCode(address)
+    const exists = await contracts.web3.eth.getCode(address)
     if (exists && exists.length > 2) {
       marketplaceExists[address] = true
       return contracts.marketplace
@@ -62,9 +62,9 @@ export default {
         if (!accounts || !accounts.length) return null
         id = accounts[0]
       }
-      if (messagingInitialized[id]) {
-        return resolve({ id })
-      }
+      // if (messagingInitialized[id]) {
+      //   return resolve({ id })
+      // }
       contracts.messaging.events.once('initialized', async () => {
         messagingInitialized[id] = true
         setTimeout(() => resolve({ id }), 500)

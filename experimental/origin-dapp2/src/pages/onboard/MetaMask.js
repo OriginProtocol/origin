@@ -34,7 +34,7 @@ const query = gql`
 const NotInstalled = ({ onInstall, back }) => (
   <div className="onboard-box">
     <div className="metamask-logo" />
-    <div className="status">MetaMask not installed</div>
+    <div className="status mb">MetaMask not installed</div>
     <a
       href={MetaMaskURL}
       target="blank"
@@ -53,6 +53,7 @@ const ConfirmInstalled = () => (
   <div className="onboard-box">
     <div className="metamask-logo" />
     <div className="status">Installing MetaMask...</div>
+    <div className="help mb">Please click below once MetaMask is installed</div>
     <button
       className="btn btn-outline-primary"
       onClick={() => window.location.reload()}
@@ -76,26 +77,34 @@ const AwaitingLogin = ({ back }) => (
   </div>
 )
 
-const AwaitingApproval = ({ back }) => (
-  <div className="onboard-box">
-    <div className="metamask-logo" />
-    <div className="status">Waiting for you to grant permission</div>
-    <div className="help">
-      Please grant Origin permission to access your MetaMask account so you can
-      buy and sell on our DApp.
-    </div>
-    <div className="click-metamask-extension" />
-    <button
-      className="btn btn-outline-primary"
-      onClick={() => window.ethereum.enable()}
-    >
-      Grant Permission
-    </button>
-    <Link to={back} className="cancel">
-      Cancel
-    </Link>
-  </div>
-)
+class AwaitingApproval extends Component {
+  componentDidMount() {
+    setTimeout(() => window.ethereum.enable(), 50)
+  }
+  render() {
+    const { back } = this.props
+    return (
+      <div className="onboard-box">
+        <div className="metamask-logo" />
+        <div className="status">Waiting for you to grant permission</div>
+        <div className="help">
+          Please grant Origin permission to access your MetaMask account so you can
+          buy and sell on our DApp.
+        </div>
+        <div className="click-metamask-extension" />
+        <button
+          className="btn btn-outline-primary"
+          onClick={() => window.ethereum.enable()}
+        >
+          Grant Permission
+        </button>
+        <Link to={back} className="cancel">
+          Cancel
+        </Link>
+      </div>
+    )
+  }
+}
 
 const IncorrectNetwork = ({ networkName, connectTo }) => (
   <div className="onboard-box">
