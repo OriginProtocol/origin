@@ -96,6 +96,7 @@
   "header.title": "Origin Protocol DApp",
   "listing-card-prices.loadingMessage": "Loading...",
   "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
+  "listing-create.selectOne": "Select One",
   "listing-create.stepNumberLabel": "STEP {stepNumber}",
   "listing-create.whatTypeOfListing": "What type of listing do you want to create?",
   "listing-create.noSchemaSelectedError": "You must first select a listing type",

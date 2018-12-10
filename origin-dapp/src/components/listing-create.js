@@ -94,12 +94,16 @@ class ListingCreate extends Component {
         id: 'listing-create.navigationWarning',
         defaultMessage:
           'Are you sure you want to leave? If you leave this page your progress will be lost.'
+      },
+      selectOne: {
+        id: 'listing-create.selectOne',
+        defaultMessage: 'Select One'
       }
     })
 
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleCategorySelection = this.handleCategorySelection.bind(this)
-    this.goToPickSchemaStep = this.goToPickSchemaStep.bind(this)
+    this.handleCategorySelectNextBtn = this.handleCategorySelectNextBtn.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
     this.renderDetailsForm = this.renderDetailsForm.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
@@ -208,25 +212,47 @@ class ListingCreate extends Component {
       return schemaObj
     })
 
-    this.setState({
+    const stateToSet = {
       selectedCategory: trimmedCategory,
       selectedCategorySchemas: schemaArrayWithNames
-    })
+    }
+
+    if (this.props.mobileDevice) {
+      stateToSet.step = this.STEP.PICK_SCHEMA
+    }
+
+    this.setState(stateToSet)
   }
 
-  goToPickSchemaStep() {
-    if (this.state.selectedCategory) {
+  handleCategorySelectNextBtn() {
+    // (The button that calls this method is only visibile on non-mobile devices)
+    // check for category and schema selection and send to DETAILS step or show error
+    if (!this.state.selectedCategory) {
       this.setState({
-        step: this.STEP.PICK_SCHEMA,
-        showNoCategorySelectedError: false
+        showNoCategorySelectedError: true
+      })
+    } else if (!this.state.selectedSchemaId) {
+      this.setState({
+        showNoSchemaSelectedError: true
       })
     } else {
-      this.setState({ showNoCategorySelectedError: true })
+      this.setState({
+        step: this.STEP.DETAILS,
+        showNoCategorySelectedError: false,
+        showNoSchemaSelectedError: false
+      })
     }
   }
 
   handleSchemaSelection(selectedSchemaId) {
-    return fetch(`schemas/${selectedSchemaId}`)
+    let schemaFileName = selectedSchemaId
+
+    // On desktop screen sizes, we use the onChange event of a <select> to call this method.
+    if (event.target.value) {
+      schemaFileName = event.target.value
+    }
+
+    return fetch(`schemas/${schemaFileName}`)
       .then(response => response.json())
       .then(schemaJson => {
         this.setState({ selectedSchemaId })
@@ -566,7 +592,16 @@ class ListingCreate extends Component {
                       ga-category="create_listing"
                       ga-label={ `select_category_${category.type}`}
                     >
+                      <img src={`images/${category.img}`} role="presentation" />
                       {category.name}
+                      {selectedCategory === category.type &&
+                        <select onChange={this.handleSchemaSelection} className="form-control">
+                          <option value="">{intl.formatMessage(this.intlMessages.selectOne)}</option>
+                          {selectedCategorySchemas.map(schemaObj => (
+                            <option value={schemaObj.schema} key={schemaObj.name}>{schemaObj.name}</option>
+                          ))}
+                        </select>
+                      }
                     </div>
                   ))}
                   {showNoCategorySelectedError && (
@@ -582,19 +617,21 @@ class ListingCreate extends Component {
                     </div>
                   )}
                 </div>
-                <div className="btn-container">
-                  <button
-                    className="float-right btn btn-primary btn-listing-create"
-                    onClick={() => this.goToPickSchemaStep()}
-                    ga-category="create_listing"
-                    ga-label="select_category_step_continue"
-                  >
-                    <FormattedMessage
-                      id={'listing-create.next'}
-                      defaultMessage={'Next'}
-                    />
-                  </button>
-                </div>
+                {!this.props.mobileDevice &&
+                  <div className="btn-container">
+                    <button
+                      className="float-right btn btn-primary btn-listing-create"
+                      onClick={() => this.handleCategorySelectNextBtn()}
+                      ga-category="create_listing"
+                      ga-label="select_category_step_continue"
+                    >
+                      <FormattedMessage
+                        id={'listing-create.next'}
+                        defaultMessage={'Next'}
+                      />
+                    </button>
+                  </div>
+                }
               </div>
             )}
             {step === this.STEP.PICK_SCHEMA && (
@@ -1315,7 +1352,9 @@ const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
     pushNotificationsSupported: activation.notifications.pushEnabled,
     serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,
-    web3Intent: app.web3.intent
+    web3Intent: app.web3.intent,
+    // mobileDevice: app.mobileDevice
+    mobileDevice: true
   }
 }
 

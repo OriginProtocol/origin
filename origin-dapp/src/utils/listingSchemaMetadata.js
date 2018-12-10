@@ -13,7 +13,7 @@ const listingSchemaMetadata = {
         id: 'schema.forSale',
         defaultMessage: 'For Sale'
       },
-      img: 'for-sale.jpg'
+      img: 'for-sale.png'
     },
     {
       type: 'forRent',
@@ -21,7 +21,7 @@ const listingSchemaMetadata = {
         id: 'schema.forRent',
         defaultMessage: 'For Rent'
       },
-      img: 'for-rent.jpg'
+      img: 'for-rent.png'
     },
     {
       type: 'services',
@@ -29,7 +29,7 @@ const listingSchemaMetadata = {
         id: 'schema.services',
         defaultMessage: 'Services'
       },
-      img: 'services.jpg'
+      img: 'services.png'
     },
     {
       type: 'announcements',
@@ -37,7 +37,7 @@ const listingSchemaMetadata = {
         id: 'schema.announcements',
         defaultMessage: 'Announcements'
       },
-      img: 'announcements.jpg'
+      img: 'announcements.png'
     }
   ],
   listingSchemasByCategory: {
