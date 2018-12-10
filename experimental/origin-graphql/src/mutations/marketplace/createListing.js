@@ -9,7 +9,7 @@ export function listingInputToIPFS(data) {
     "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
     "listingType": "unit",
     "category": "schema.forSale",
-    "subCategory": "schema.forSale.mushrooms",
+    "subCategory": "schema.mushrooms",
     "language": "en-US",
     "title": data.title,
     "description": data.description,

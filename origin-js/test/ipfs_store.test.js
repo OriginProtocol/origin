@@ -71,7 +71,7 @@ describe('Listing IpfsDataStore load', () => {
       'https://dapp.originprotocol.com/schemas/forSale-mushrooms_1.0.0.json')
     expect(listing.type).to.equal('unit')
     expect(listing.category).to.equal('schema.forSale')
-    expect(listing.subCategory).to.equal('schema.forSale.mushrooms')
+    expect(listing.subCategory).to.equal('schema.mushrooms')
     expect(listing.language).to.equal('en-US')
     expect(listing.title).to.equal('my listing')
     expect(listing.description).to.equal('my description')

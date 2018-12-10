@@ -28,7 +28,7 @@ describe('Discovery service', function() {
                 'title': 'title',
                 'description': 'some description',
                 'category': 'schema.housing',
-                'subCategory': 'schema.housing.vacationRentals',
+                'subCategory': 'schema.vacationRentals',
                 'status': 'active',
                 'type': 'unit',
                 'unitsTotal': 1,

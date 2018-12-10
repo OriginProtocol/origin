@@ -3,7 +3,7 @@
   "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-mushrooms_1.0.0.json",
   "listingType": "unit",
   "category": "schema.forSale",
-  "subCategory": "schema.forSale.mushrooms",
+  "subCategory": "schema.mushrooms",
   "language": "en-US",
   "title": "my listing",
   "description": "my description",

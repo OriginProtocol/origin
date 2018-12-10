@@ -3,7 +3,7 @@
   "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-tickets_1.0.0.json",
   "listingType": "unit",
   "category": "schema.forSale",
-  "subCategory": "schema.forSale.tickets",
+  "subCategory": "schema.tickets",
   "language": "en-US",
   "title": "Taylor Swift's Reputation Tour",
   "description": "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",

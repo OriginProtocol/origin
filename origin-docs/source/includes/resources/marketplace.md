@@ -30,8 +30,8 @@ It is active until there are no more units available or its expiration date is r
   schemaId: "09398482-2834",
   unitsTotal: 1,
   type: "unit",
-  category: "Health and Beauty",
-  subCategory: "daily exercise",
+  category: "healthAndBeauty",
+  subCategory: "dailyExercise",
   language: "English",
   description: "32kg gorilla kettlebell",
   price: { currency: 'ETH', amount: '0.5' },
@@ -75,7 +75,7 @@ const listing = {
   media: [{…}],
   price: { amount: "0.01", currency: "ETH" },
   schemaId: "https://schema.originprotocol.com/listing_1.0.0.json",
-  subCategory: "schema.forSale.appliances",
+  subCategory: "schema.appliances",
   title: "I am a great appliance listing",
   unitsTotal: 1
 }
