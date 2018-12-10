@@ -4,7 +4,6 @@ import sinon from 'sinon'
 
 import {
   IpfsDataStore,
-  BASE_SCHEMA_ID,
   LISTING_DATA_TYPE,
   LISTING_WITHDRAW_DATA_TYPE,
   OFFER_DATA_TYPE,
@@ -12,6 +11,11 @@ import {
   PROFILE_DATA_TYPE,
   REVIEW_DATA_TYPE
 } from '../src/ipfsInterface/store'
+import {
+  BASE_SCHEMA_ID,
+  generateSchemaId,
+  parseSchemaId
+} from '../src/ipfsInterface/schema-id'
 import validListing from './fixtures/listing-valid.json'
 import validOffer from './fixtures/offer-valid.json'
 import validProfile from './fixtures/profile-valid.json'
@@ -21,23 +25,23 @@ import validReview from './fixtures/review-valid.json'
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
-describe('IpfsDataStore', () => {
+describe('Schema Ids', () => {
   it(`Should parse old style schemaId`, () => {
-    const { dataType, schemaVersion } = IpfsDataStore.parseSchemaId(
-      BASE_SCHEMA_ID+'my-data-type_1.0.0.json')
+    const { dataType, schemaVersion } = parseSchemaId(
+      'http://schema.originprotocol.com/my-data-type_v1.0.0')
     expect(dataType).to.equal('my-data-type')
     expect(schemaVersion).to.equal('1.0.0')
   })
 
   it(`Should parse new style schemaId`, () => {
-    const { dataType, schemaVersion } = IpfsDataStore.parseSchemaId(
+    const { dataType, schemaVersion } = parseSchemaId(
       BASE_SCHEMA_ID+'my-data-type_1.0.0.json')
     expect(dataType).to.equal('my-data-type')
     expect(schemaVersion).to.equal('1.0.0')
   })
 
   it(`Should generate a valid schemaId`, () => {
-    const { schemaId, schemaVersion } = IpfsDataStore.generateSchemaId('my-data-type')
+    const { schemaId, schemaVersion } = generateSchemaId('my-data-type')
     expect(schemaId).to.equal(BASE_SCHEMA_ID+'my-data-type_1.0.0.json')
     expect(schemaVersion).to.equal('1.0.0')
   })

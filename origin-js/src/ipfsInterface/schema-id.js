@@ -5,7 +5,7 @@
   Ex.: https://schema.originprotocol.com/listing_1.0.0.json
  */
 
-export const BASE_SCHEMA_ID = 'https://schema.originprotocol.com/'
+const BASE_SCHEMA_ID = 'https://schema.originprotocol.com/'
 
 // Regex for extracting data type and version from schemaId.
 // eslint-disable-next-line no-useless-escape
@@ -39,4 +39,4 @@ function parseSchemaId(schemaId) {
 
 
 
-module.exports = { generateSchemaId, parseSchemaId }
+module.exports = { BASE_SCHEMA_ID, generateSchemaId, parseSchemaId }
