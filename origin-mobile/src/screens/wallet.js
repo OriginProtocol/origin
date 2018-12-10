@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert, Clipboard, StyleSheet, Text, View } from 'react-native'
+import { Alert, Clipboard, StyleSheet, Text, View, TextInput } from 'react-native'
 import { connect } from 'react-redux'
 
 import originWallet from '../OriginWallet'
@@ -14,6 +14,12 @@ class WalletScreen extends Component {
       fontWeight: 'normal',
     },
   }
+
+  constructor(props) {
+    super(props)
+    this.state = {apiHost:originWallet.getCurrentRemoteLocal()}
+  }
+
 
   render() {
     const { address, balance } = this.props
@@ -33,6 +39,14 @@ class WalletScreen extends Component {
           <Text style={[styles.text, styles.usd]}>{amountUSD} USD</Text>
           <Text style={[styles.text, styles.address]}>{address}</Text>
           <View style={styles.buttonContainer}>
+            {originWallet.isLocalApi() && <View>
+              <Text style={[styles.text, styles.heading]}>Api host IP:</Text>
+              <TextInput style={{ height:40, borderColor:'gray', borderWidth:1 }}
+                  onSubmitEditing={(e) => originWallet.setRemoteLocal(e.nativeEvent.text)}
+                  onChangeText={(apiHost) => this.setState({apiHost})}
+                  value={this.state.apiHost}
+                />
+              </View>}
             <OriginButton
               type="primary"
               title="Show Private Key"
