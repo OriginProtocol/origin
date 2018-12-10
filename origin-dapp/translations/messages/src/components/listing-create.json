@@ -9,11 +9,11 @@
   },
   {
     "id": "schema.positiveNumber",
-    "defaultMessage": "Should be a positive number"
+    "defaultMessage": "should be a positive number"
   },
   {
     "id": "schema.notEnoughOgnFunds",
-    "defaultMessage": "Not enough funds in wallet."
+    "defaultMessage": "not enough funds in wallet."
   },
   {
     "id": "schema.boostLimitTooHigh",
@@ -46,6 +46,10 @@
   {
     "id": "listing-create.next",
     "defaultMessage": "Next"
+  },
+  {
+    "id": "listing-create.editListingHeading",
+    "defaultMessage": "Edit Your Listing"
   },
   {
     "id": "listing-create.createListingHeading",
