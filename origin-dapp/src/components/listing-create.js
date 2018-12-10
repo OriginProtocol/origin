@@ -383,7 +383,7 @@ class ListingCreate extends Component {
 
     formListing.formData.listingType = listingType
     // multiUnit listings specify unitsTotal, others default to 1
-    formListing.formData.unitsTotal = formListing.formData.unitsTotal || 1
+    formListing.formData.unitsTotal = formListing.formData.unitsTotal || 1
     this.setState({
       formListing: {
         ...this.state.formListing,
