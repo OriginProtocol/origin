@@ -11,6 +11,6 @@
   "dependencies": {
   },
   "devDependencies": {
-    "ajv": "^6.5.5"
+    "ajv": "^6.6.1"
   }
 }

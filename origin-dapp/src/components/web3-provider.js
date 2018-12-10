@@ -165,7 +165,7 @@ const NotWeb3EnabledMobile = props => (
 )
 
 const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
-  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+  <Modal backdrop="static" className="account-unavailable" isOpen={true}>
     <div className="image-container">
       <img
         src={`images/${
@@ -199,7 +199,7 @@ const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
 )
 
 const UnconnectedNetwork = () => (
-  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+  <Modal backdrop="static" className="web3-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
@@ -227,10 +227,8 @@ const UnsupportedNetwork = props => {
   return (
     <Modal
       backdrop="static"
-      className="unsupported-provider"
-      data-modal="web3-unavailable"
+      className="unsupported-provider web3-unavailable"
       isOpen={true}>
-
       <div className="image-container">
         <img src="images/flat_cross_icon.svg" role="presentation" />
       </div>
@@ -272,7 +270,7 @@ const UnsupportedNetwork = props => {
 }
 
 const Web3Unavailable = ({ mobileDevice }) => (
-  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+  <Modal backdrop="static" className="web3-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
@@ -408,7 +406,7 @@ class Web3Provider extends Component {
    * @return {void}
    */
   initAccountsPoll() {
-    if (!this.accountsInterval && (web3.givenProvider || origin.contractService.walletLinker)) {
+    if (!this.accountsInterval && (!web3.currentProvider.isOrigin || origin.contractService.walletLinker)) {
       this.accountsInterval = setInterval(this.fetchAccounts, ONE_SECOND)
     }
   }
@@ -442,7 +440,7 @@ class Web3Provider extends Component {
     }
 
     // skip walletLink if browser is web3-enabled
-    if (web3.givenProvider) {
+    if (!web3.currentProvider.isOrigin) {
       return
     }
 
@@ -574,7 +572,7 @@ class Web3Provider extends Component {
         {/* attempting to use web3 in unsupported mobile browser */
           web3Intent &&
           !walletLinkerEnabled &&
-          !web3.givenProvider &&
+          web3.currentProvider.isOrigin &&
           mobileDevice && (
             <NotWeb3EnabledMobile
               web3Intent={web3Intent}
@@ -585,7 +583,7 @@ class Web3Provider extends Component {
         {/* attempting to use web3 in unsupported desktop browser */
           web3Intent &&
           !walletLinkerEnabled &&
-          !web3.givenProvider &&
+          web3.currentProvider.isOrigin &&
           !mobileDevice && (
             <NotWeb3EnabledDesktop
               web3Intent={web3Intent}
@@ -596,7 +594,7 @@ class Web3Provider extends Component {
         { /* attempting to use web3 in unsupported desktop browser */
           web3Intent &&
           walletLinkerEnabled &&
-          !web3.givenProvider &&
+          web3.currentProvider.isOrigin &&
           linkerCode &&
           linkerPopUp &&
           <LinkerPopUp web3Intent={web3Intent} cancel={() => { storeWeb3Intent(null); origin.contractService.walletLinker.cancelLink() }} linkerCode={linkerCode} />
@@ -605,7 +603,7 @@ class Web3Provider extends Component {
 
         { /* attempting to use web3 without being signed in */
           web3Intent &&
-          web3.givenProvider &&
+          !web3.currentProvider.isOrigin &&
           wallet.address === undefined && (
             <NoWeb3Account
               web3Intent={web3Intent}

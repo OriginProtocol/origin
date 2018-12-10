@@ -4,7 +4,6 @@ import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 import deepEqual from 'deep-equal'
-import $ from 'jquery'
 import 'rc-slider/assets/index.css'
 
 import { showAlert } from 'actions/Alert'
@@ -70,16 +69,14 @@ class SearchResult extends Component {
   }
 
   componentDidMount() {
-    /* this force update is required after component initializes. In cases where user returns to the 
+    /* this force update is required after component initializes. In cases where user returns to the
      * search-result page. Then no props change from previous to current and for that reason search and
      * schema loading do not get triggered.
      */
     this.handleComponentUpdate(undefined)
 
     // Keep dropdown opened when user clicks on any element in the dropdownw
-    $(document).on('click', '#search-filters-bar .dropdown-menu', e => {
-      e.stopPropagation()
-    })
+    // TODO - reimplement now that we no longer use jQuery
   }
 
   componentDidUpdate(previousProps, prevState) {
@@ -224,7 +221,7 @@ class SearchResult extends Component {
         'ETH',
         false
       )
-      
+
       const minPrice = getFiatPrice(searchResp.data.listings.stats.minPrice,
         'USD',
         'ETH',

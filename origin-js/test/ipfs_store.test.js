@@ -44,12 +44,14 @@ describe('Listing IpfsDataStore load', () => {
     store = new IpfsDataStore(mockIpfsService)
   })
 
-  it(`Should load a valid object`, async () => {
+  it(`Should load a valid listing`, async () => {
     mockIpfsService.loadObjFromFile = sinon.stub().resolves(validListing)
     mockIpfsService.rewriteUrl = sinon.stub().returns('http://test-gateway')
 
     const listing = await store.load(LISTING_DATA_TYPE, 'TestHash')
 
+    expect(listing.dappSchemaId).to.equal(
+      'https://dapp.originprotocol.com/schemas/forSale-mushrooms_1.0.0.json')
     expect(listing.type).to.equal('unit')
     expect(listing.category).to.equal('schema.forSale')
     expect(listing.subCategory).to.equal('schema.forSale.mushrooms')
@@ -63,6 +65,16 @@ describe('Listing IpfsDataStore load', () => {
     expect(listing.commission).to.deep.equal({ amount: '0', currency: 'OGN' })
     expect(listing.ipfs.hash).to.equal('TestHash')
     expect(listing.ipfs.data).to.deep.equal(validListing)
+  })
+
+  it(`Should load a listing with no dappSchemaId`, async () => {
+    const listingNoDappSChemaId = Object.assign({}, validListing)
+    delete listingNoDappSChemaId.dappSchemaId
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(listingNoDappSChemaId)
+    mockIpfsService.rewriteUrl = sinon.stub().returns('http://test-gateway')
+
+    const listing = await store.load(LISTING_DATA_TYPE, 'TestHash')
+    expect(listing.dappSchemaId).to.equal(undefined)
   })
 
   it(`Should throw an exception on listing using invalid schema Id`, () => {

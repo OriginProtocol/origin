@@ -67,7 +67,7 @@ class MessageNew extends Component {
     return messagingEnabled ? (
       <Modal
         isOpen={open}
-        data-modal="message"
+        className="message"
         handleToggle={handleToggle}
         tabIndex="-1"
       >
@@ -87,7 +87,7 @@ class MessageNew extends Component {
               defaultMessage={'This user has not yet enabled Origin Messaging. Unfortunately, you will not be able to contact them until they do.'}
             />
             <div className="link-container text-center">
-              <a href="#" data-modal="profile" onClick={handleToggle}>
+              <a href="#" onClick={handleToggle}>
                 <FormattedMessage
                   id={'MessageNew.cancel'}
                   defaultMessage={'Cancel'}

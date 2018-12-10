@@ -6,7 +6,7 @@ bridgeImageTag: '4f7ab3f'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'd69ca38'
+dappImageTag: 'c11e7d9'
 
 # Origin network configuration
 gethTxReplicas: 1
@@ -23,7 +23,7 @@ ipfsProxyImageTag: 'a6f8898'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: 'ee9fa8b'
+faucetImageTag: 'd001796'
 
 # event-listener
 eventlistenerImage: event-listener
@@ -31,12 +31,12 @@ eventlistenerImageTag: '72cbacd'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '157b2f5'
+discoveryImageTag: '6818130'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'ee9fa8b'
+messagingImageTag: 'd001796'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'e86e793'
+notificationsImageTag: '964b63e'
