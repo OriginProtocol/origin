@@ -14,19 +14,20 @@ const schemaIdRegex = new RegExp('^/([a-zA-Z\\-]*)_v?(\\d+\\.\\d+\\.\\d+)(?:\\.j
 /**
  * Generates a schemaId for a dataType using the most recent version.
  * @param {string} dataType
- * @return {schemaId: string, version: string}
+ * @param {string} version - if null uses latest version.
+ * @return {{schemaId: string, schemaVersion: string}}
  */
-function generateSchemaId(dataType) {
+function generateSchemaId(dataType, schemaVersion=null) {
   // TODO: should lookup in a config to get most recent version to use.
-  const schemaVersion = '1.0.0'
+  schemaVersion = schemaVersion ? schemaVersion : '1.0.0'
   const schemaId = `${BASE_SCHEMA_ID}${dataType}_${schemaVersion}.json`
   return { schemaId, schemaVersion }
 }
 
 /**
  * Extracts dataType and version from a schemaId.
- * @param (string} schemaId
- * @return {{dataType: string, version: string}}
+ * @param {string} schemaId
+ * @return {{dataType: string, schemaVersion: string}}
  */
 function parseSchemaId(schemaId) {
   const url = new URL(schemaId)

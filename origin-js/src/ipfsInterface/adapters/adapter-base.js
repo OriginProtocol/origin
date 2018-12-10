@@ -1,6 +1,6 @@
 import Ajv from 'ajv'
 
-import { parseSchemaId } from '../schema-id'
+import { generateSchemaId, parseSchemaId } from '../schema-id'
 
 import listingSchemaV1 from '../schemas/listing_1.0.0.json'
 import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw_1.0.0.json'
@@ -28,9 +28,7 @@ ajv.addSchema([
 ])
 
 export default class AdapterBase {
-  constructor(schemaId) {
-    this.schemaId = schemaId
-    const { dataType, schemaVersion } = parseSchemaId(this.schemaId)
+  constructor(dataType, schemaVersion) {
     this.dataType = dataType
     this.schemaVersion = schemaVersion
   }
@@ -43,21 +41,20 @@ export default class AdapterBase {
     const { dataType, schemaVersion } = parseSchemaId(data.schemaId)
     if (dataType !== this.dataType || schemaVersion !== this.schemaVersion) {
       throw new Error(
-        `Unexpected schemaId: ${data.schemaId} != ${
-          this.schemaId
-        }`
+        `Unexpected dataType or schemaVersion: ${data.schemaId} ${data.version}`
       )
     }
 
-    const validator = ajv.getSchema(this.schemaId)
+    const { schemaId } = generateSchemaId(dataType, schemaVersion)
+    const validator = ajv.getSchema(schemaId)
 
     if (!validator) {
-      throw new Error(`Failed loading schema validator for ${this.schemaId}`)
+      throw new Error(`Failed loading schema validator for ${schemaId}`)
     }
     if (!validator(data)) {
       throw new Error(
         `Data failed schema validation.
-        Schema id: ${this.schemaId}
+        Schema id: ${schemaId}
         Data: ${JSON.stringify(data)}.
         Errors: ${JSON.stringify(validator.errors)}`
       )
