@@ -89,11 +89,15 @@ function createProviders(networkIds) {
     }
     // Private key takes precedence
     if (privateKey) {
-      console.log(`Network=${networkId} URL=${providerUrl} Using private key`)
+      if (process.env.NODE_ENV !== 'test') {
+        console.log(`Network=${networkId} URL=${providerUrl} Using private key`)
+      }
       providers[networkId] = new PrivateKeyProvider(privateKey, providerUrl)
     } else {
-      const displayMnemonic = (networkId === LOCAL_NETWORK_ID) ? mnemonic : '[redacted]'
-      console.log(`Network=${networkId} Url=${providerUrl} Mnemonic=${displayMnemonic}`)
+      if (process.env.NODE_ENV !== 'test') {
+        const displayMnemonic = (networkId === LOCAL_NETWORK_ID) ? mnemonic : '[redacted]'
+        console.log(`Network=${networkId} Url=${providerUrl} Mnemonic=${displayMnemonic}`)
+      }
       providers[networkId] = new HDWalletProvider(mnemonic, providerUrl)
     }
   }

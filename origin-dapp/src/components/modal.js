@@ -16,7 +16,7 @@ class Modal extends Component {
     return (
       <ModalBS
         show={isOpen}
-        backdrop={backdrop || true}
+        backdrop={backdrop !== undefined ? backdrop : true}
         onHide={() => {}}
         className={className}
         dialogAs="div"

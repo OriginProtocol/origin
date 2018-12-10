@@ -52,7 +52,7 @@ class UserDropdown extends Component {
             <div className="triangle" />
           </div>
           <div className="actual-menu">
-            <WalletCard wallet={wallet} withMenus={false} withProfile={true} />
+            <WalletCard {...wallet} withMenus={false} withProfile={true} />
             {
               origin.contractService.walletLinker &&
               origin.contractService.walletLinker.linked &&

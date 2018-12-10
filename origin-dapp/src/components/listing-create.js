@@ -146,7 +146,7 @@ class ListingCreate extends Component {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
-    } else if (!web3.givenProvider || !this.props.messagingEnabled) {
+    } else if (web3.currentProvider.isOrigin || !this.props.messagingEnabled) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
       }
@@ -245,7 +245,7 @@ class ListingCreate extends Component {
         this.setState({
           selectedSchemaType,
           schemaFetched: true,
-          fractionalTimeIncrement: !isFractionalListing ? null : 
+          fractionalTimeIncrement: !isFractionalListing ? null :
             selectedSchemaType === 'housing' ? 'daily' : 'hourly',
           showNoSchemaSelectedError: false,
           translatedSchema,
@@ -474,7 +474,7 @@ class ListingCreate extends Component {
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
 
-    return (web3.givenProvider || origin.contractService.walletLinker) ? (
+    return (!web3.currentProvider.isOrigin || origin.contractService.walletLinker) ? (
       <div className="listing-form">
         <div className="step-container">
           <div className="row">
@@ -953,7 +953,7 @@ class ListingCreate extends Component {
                 }`}
               >
                 <WalletCard
-                  wallet={wallet}
+                  {...wallet}
                   withBalanceTooltip={!this.props.wallet.ognBalance}
                   withMenus={true}
                   withProfile={false}

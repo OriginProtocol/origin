@@ -314,15 +314,24 @@ class PurchaseDetail extends Component {
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
       const { blockInfo } = purchase
+
+      if (!purchase) {
+        return console.error(`Purchase ${offerId} not found`)
+      }
+      
       const listing = await getListing(purchase.listingId, true, blockInfo)
 
       this.setState({
         listing,
         purchase
       })
-      if (listing) {
-        this.getListingSchema()
+
+      if (!listing) {
+        return console.error(`Lising ${purchase.listingId} not found`)
       }
+
+      this.getListingSchema()
+
       await this.loadSeller(listing.seller)
       await this.loadBuyer(purchase.buyer)
     } catch (error) {

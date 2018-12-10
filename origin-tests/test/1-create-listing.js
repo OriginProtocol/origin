@@ -24,6 +24,9 @@ describe('create listing and retrieve using discovery', () => {
     await this.origin.marketplace.createListing(listingData)
 
     // Wait to allow event-listener to process listing
+    // TODO: As opposed to sleeping for a fixed amount of time, it would make the tests
+    // run faster if we would poll the event-listener or the discovery server until the
+    // newly created listing is returned.
     return new Promise(resolve => setTimeout(resolve, 20000))
   })
 

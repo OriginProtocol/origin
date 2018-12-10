@@ -20,14 +20,18 @@ export const ProfileConstants = keyMirror(
 
 export function fetchProfile() {
   return async function(dispatch) {
-    var user = await origin.users.get(),
-        wallet = await origin.contractService.currentAccount()
+    try {
+      const user = await origin.users.get(),
+          wallet = await origin.contractService.currentAccount()
 
-    dispatch({
-      type: ProfileConstants.FETCH_SUCCESS,
-      user,
-      wallet
-    })
+      dispatch({
+        type: ProfileConstants.FETCH_SUCCESS,
+        user,
+        wallet
+      })
+    } catch (error) {
+      console.log("Error retrieving profile:", error)
+    }
   }
 }
 

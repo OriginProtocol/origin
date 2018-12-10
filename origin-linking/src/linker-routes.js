@@ -35,6 +35,13 @@ router.get("/link-info/:code", async (req, res) => {
   res.send({app_info:appInfo, link_id:linkId, pub_key:pubKey})
 })
 
+router.get("/web3-info", (req, res) => {
+  // this is the context
+  const {providerUrl, contractAddresses} = linker.getWeb3Info()
+  res.send({provider_url:providerUrl, contract_addresses:contractAddresses})
+})
+
+
 router.post("/call-wallet/:sessionToken", async (req, res) => {
   const clientToken = getClientToken(req)
   const {sessionToken} = req.params
