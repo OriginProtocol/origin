@@ -115,6 +115,15 @@ class ListingsDetail extends Component {
 
     this.props.storeWeb3Intent('purchase this listing')
 
+    // defer to parent modal if user activation is insufficient
+    if (
+      !web3.currentProvider.isOrigin &&
+      !origin.contractService.walletLinker &&
+      !this.props.messagingEnabled
+    ) {
+       return
+    }
+
     if ((!web3.currentProvider.isOrigin && this.props.wallet.address) || origin.contractService.walletLinker) {
       if (!skip && shouldOnboard) {
         return this.setState({
@@ -123,15 +132,6 @@ class ListingsDetail extends Component {
           slotsToReserve
         })
       }
-    }
-
-    // defer to parent modal if user activation is insufficient
-    if (
-      !web3.currentProvider.isOrigin &&
-      !origin.contractService.walletLinker &&
-      !this.props.messagingEnabled
-    ) {
-       return
     }
 
     this.setState({ step: this.STEP.METAMASK })
