@@ -916,7 +916,7 @@ describe('Marketplace Resource', function() {
     })
 
     describe('makeOffer', () => {
-      it('should allow 3 offers to be accepted', async () => {
+      it('should allow 3 offers to be accepted', async function() {
         // Without the discovery server, this test is slow. To allow CI to pass,
         // we increase the timeout.
         // TODO: optimize this test, if possible
