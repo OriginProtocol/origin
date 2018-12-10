@@ -11,7 +11,7 @@ const mobilize = (str) => {
   {
     return str
       .replace('localhost', process.env.MOBILE_LOCALHOST_IP)
-      .replace('127.0.0.1', process.env.MOBILE_LOCALHOST_IP)
+      .replace(/127\.0\.0\.1(?=[^0-9]|$)/, process.env.MOBILE_LOCALHOST_IP)
   }
   else
   {
