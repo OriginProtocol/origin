@@ -9,8 +9,7 @@ class BoostLimitField extends Component {
      * selected boost value. Except if user does not have enough OGN
      */
     this.state = {
-      boostLimit: this.calculateMaxPossibleBoost(props),
-      overridenBoostLimit: null
+      boostLimit: this.calculateMaxPossibleBoost(props)
     }
 
     this.intlMessages = defineMessages({
@@ -39,12 +38,19 @@ class BoostLimitField extends Component {
     const maxPossibleBoost = this.calculateMaxPossibleBoost(this.props)
     // user is changing boost slider
     if (this.props.formContext.formData.boostValue != prevProps.formContext.formData.boostValue &&
-      maxPossibleBoost !== this.state.boostLimit) {
-        this.setState({
-          overridenBoostLimit: maxPossibleBoost,
-          boostLimit: maxPossibleBoost
-        },
-        () => this.props.onChange(maxPossibleBoost))
+      maxPossibleBoost !== this.state.boostLimit){
+
+      this.setState({
+        boostLimit: maxPossibleBoost
+      })
+
+      // prevent too many subsequent state updates of the parent
+      if (!!this.boostLimitCallback)
+        clearTimeout(this.boostLimitCallback)
+
+      this.boostLimitCallback = setTimeout(() => {
+        this.props.onChange(maxPossibleBoost)
+      }, 100)
     }
   }
 
@@ -59,8 +65,7 @@ class BoostLimitField extends Component {
     const value = event.target.value
 
     this.setState({
-        boostLimit: value,
-        overridenBoostLimit: null
+        boostLimit: value
       },
       () => this.props.onChange(value)
     )
@@ -82,7 +87,7 @@ class BoostLimitField extends Component {
                   type="number"
                   id="boostLimit"
                   step="0.00001"
-                  value={this.state.overridenBoostLimit ? this.state.overridenBoostLimit : boostLimit}
+                  value={boostLimit}
                   className="price-field form-control"
                   onChange={this.onChange}
                 />
