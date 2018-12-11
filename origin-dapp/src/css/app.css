@@ -4369,6 +4369,14 @@ form .stars img {
   -moz-border-radius: 15px;
 }
 
+.chat-bubble.content-margin-right {
+  margin-right: 83px;
+}
+
+.chat-bubble.content-margin-left {
+  margin-left: 83px;
+}
+
 .chat-text {
   padding: 9px 16px 9px 20px;
 	text-align: left;

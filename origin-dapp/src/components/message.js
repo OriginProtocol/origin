@@ -47,7 +47,7 @@ class Message extends Component {
     const bubbleAlignment = currentUser ? 'justify-content-end' : 'justify-content-start'
     const bubbleColor = currentUser ? 'user' : ''
     const mobileWidth = smallScreenOrDevice ? 'mobile-width' : ''
-
+    const contentMargin = (!smallScreenOrDevice && contentOnly) && `content-margin-${correctSide}`
     const UserInfo = () => (
       <Fragment>
         <div className={`name text-truncate align-self-center ${mobileWidth}`}>{userName}</div>
@@ -65,13 +65,13 @@ class Message extends Component {
         <div className="d-flex message">
           <div className={`content-container d-flex ${bubbleAlignment}`}>
             <div className="align-self-end conversation-avatar">
-              {(!smallScreenOrDevice && correctSide === 'left') && (
+              {(!smallScreenOrDevice && correctSide === 'left' && !contentOnly) && (
                 <Link to={`/users/${fullAddress}`}>
                   <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
                 </Link>
               )}
             </div>
-            <div className={`chat-bubble tail-${correctSide} ${bubbleColor}`}>
+            <div className={`chat-bubble tail-${contentOnly ? '' : correctSide} ${bubbleColor} ${contentMargin}`}>
               <div className="chat-text">
                 <div className="sender d-flex flex-row justify-content-start">
                   {currentUser ? <UserInfo /> : (
@@ -84,7 +84,7 @@ class Message extends Component {
               </div>
             </div>
             <div className="align-self-end conversation-avatar right">
-              {(!smallScreenOrDevice && correctSide === 'right') && (
+              {(!smallScreenOrDevice && correctSide === 'right' && !contentOnly) && (
                 <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
               )}
             </div>

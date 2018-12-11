@@ -6,9 +6,9 @@ import moment from 'moment'
 
 const MAX_MINUTES = 10
 
-function getElapsedTime(recentTime, previousTime) {
+function getElapsedTime(latestTime, earlierTime) {
   const toMinutes = 1000 * 60
-  const elapsedTime = (recentTime - previousTime) / toMinutes
+  const elapsedTime = (latestTime - earlierTime) / toMinutes
 
   return isNaN(elapsedTime) ? 0 : elapsedTime
 }
@@ -38,13 +38,17 @@ export default class CompactMessages extends Component {
       }
 
       const firstMessage = i === 0
-      const previousOfferMessage = messages[i - 1] && messages[i - 1].timestamp
-      const previousMessage = (firstMessage || previousOfferMessage) ? {} : messages[i - 1]
+      const previousOfferMessage = messages[i-1] && messages[i-1].timestamp
+      const previousMessage = (firstMessage || previousOfferMessage) ? {} : messages[i-1]
+      const nextMessage = messages.find((message, idx) => {
+        return (idx >= (i+1)) && message && message.created
+      }) || {}
       const timeElapsed = getElapsedTime(created, previousMessage.created)
       const showTime = previousOfferMessage || timeElapsed >= MAX_MINUTES || firstMessage
+      const sameSender = formattedAddress(senderAddress) === formattedAddress(nextMessage.senderAddress)
+      const timeToElapse = getElapsedTime(nextMessage.created, created)
 
-      const sameSender = formattedAddress(senderAddress) === formattedAddress(previousMessage.senderAddress)
-      const contentOnly = sameSender && timeElapsed < MAX_MINUTES
+      const contentOnly = sameSender && (timeToElapse < MAX_MINUTES)
 
       return <Message key={hash} showTime={showTime} message={message} contentOnly={contentOnly}/>
     })
