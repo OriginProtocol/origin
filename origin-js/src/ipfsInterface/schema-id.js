@@ -38,6 +38,4 @@ function parseSchemaId(schemaId) {
   return { dataType: splits[1], schemaVersion: splits[2] }
 }
 
-
-
 module.exports = { BASE_SCHEMA_ID, generateSchemaId, parseSchemaId }

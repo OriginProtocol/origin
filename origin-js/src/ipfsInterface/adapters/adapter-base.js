@@ -41,7 +41,7 @@ export default class AdapterBase {
     const { dataType, schemaVersion } = parseSchemaId(data.schemaId)
     if (dataType !== this.dataType || schemaVersion !== this.schemaVersion) {
       throw new Error(
-        `Unexpected dataType or schemaVersion: ${data.schemaId} ${data.version}`
+        `Adapter ${this.dataType} ${this.schemaVersion} can not process ${data.schemaId}`
       )
     }
 
