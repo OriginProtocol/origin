@@ -4,8 +4,7 @@
   "required": [
     "name",
     "description",
-    "price",
-    "unitsTotal"
+    "price"
   ],
   "properties": {
     "dappSchemaId": {
