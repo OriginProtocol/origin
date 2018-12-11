@@ -156,7 +156,11 @@ class PurchaseProgress extends Component {
                     <strong>{formatDate(offerDisputed.timestamp)}</strong>
                   </Fragment>
                 }
-                children={!subdued && <span className="progress-circle exclaimed">!</span>}
+                children={
+                  <span className="progress-circle exclaimed">
+                    {subdued ? null : '!'}
+                  </span>
+                }
               />
               <span className="progress-circle" />
             </Fragment>
