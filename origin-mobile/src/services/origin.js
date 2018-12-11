@@ -1,14 +1,22 @@
 import Origin from 'origin'
 import Web3 from 'web3'
 
-import {PROVIDER_URL, API_SERVER_PROTOCOL,  
-  API_SERVER_DOMAIN, API_SERVER_PORT,
-  IPFS_DOMAIN, IPFS_API_PORT, IPFS_GATEWAY_PORT, IPFS_GATEWAY_PROTOCOL, MESSAGE_OPEN_URL} from 'react-native-dotenv'
+import {
+  PROVIDER_URL,
+  API_SERVER_PROTOCOL,
+  API_SERVER_DOMAIN,
+  API_SERVER_PORT,
+  IPFS_DOMAIN,
+  IPFS_API_PORT,
+  IPFS_GATEWAY_PORT,
+  IPFS_GATEWAY_PROTOCOL,
+  MESSAGE_OPEN_URL
+} from 'react-native-dotenv'
 
 const API_SERVER = API_SERVER_PORT ? API_SERVER_DOMAIN + ":" + API_SERVER_PORT : API_SERVER_DOMAIN
 const defaultProviderUrl = PROVIDER_URL
 
-const apiUrl = API_SERVER_PROTOCOL + "://" + API_SERVER 
+const apiUrl = API_SERVER_PROTOCOL + "://" + API_SERVER
 
 // this is not quite right currently
 const attestationServerUrl = `${apiUrl}/api/attestations`
@@ -17,7 +25,7 @@ const messageOpenUrl = MESSAGE_OPEN_URL
 const localApi = API_SERVER_DOMAIN == 'localhost'
 
 // create web3 with empty provider for now
-const web3 = new Web3() 
+const web3 = new Web3()
 
 const config = {
   ipfsDomain: IPFS_DOMAIN,
