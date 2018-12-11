@@ -30,7 +30,8 @@ class Message extends Component {
       user,
       showTime,
       mobileDevice,
-      web3Account
+      web3Account,
+      contentOnly
     } = this.props
     const { created, hash } = message
     const { address, profile } = user

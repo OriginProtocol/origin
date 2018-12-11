@@ -304,8 +304,11 @@ class Conversation extends Component {
     const sortedAndCombinedMessages = [
       ...offerEvents,
       ...messages
-    ].sort((a, b) => (a.created < b.created ? -1 : 1))
-
+    ].sort((a, b) => {
+      const firstTime = (a.created && a.created) || (a.timestamp * 1000)
+      const nextTime = (b.created && b.created) || (b.timestamp * 1000)
+      return (firstTime < nextTime) ? -1 : 1
+    })
     return (
       <Fragment>
         <div ref={this.conversationDiv} className="conversation">
