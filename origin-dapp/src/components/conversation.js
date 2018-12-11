@@ -10,7 +10,7 @@ import CompactMessages from 'components/compact-messages'
 
 import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
-import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
+import { truncateAddress, formattedAddress } from 'utils/user'
 import { getOfferEvents } from 'utils/offer'
 
 import origin from '../services/origin'
@@ -52,8 +52,9 @@ class Conversation extends Component {
   }
 
   componentDidMount() {
-    const { smallScreenOrDevice, showMainNav, showNav } = this.props
+    const { smallScreenOrDevice, showMainNav } = this.props
     let updateShowNav = true
+
     // try to detect the user before rendering
     this.identifyCounterparty()
 
@@ -61,7 +62,6 @@ class Conversation extends Component {
     if (smallScreenOrDevice) {
       this.loadListing()
       updateShowNav = false
-      // if (showNav) showMainNav(false)
     }
 
     showMainNav(updateShowNav)
@@ -256,13 +256,13 @@ class Conversation extends Component {
 
     //have to translate these strings
     const offerMessage = {
-      "OfferCreated": `${party} made an offer on`,
-      "OfferWithdrawn": `${party} withdrew their offer on`,
-      "OfferAccepted": `${party}accepted the offer on`,
-      "OfferDisputed": `${party} initiated a dispute on`,
-      "OfferRuling": `${party} made a ruling on the dispute for`,
-      "OfferFinalized": `${party} finalized the offer`,
-      "OfferData": `${party} updated information for`
+      'OfferCreated': `${party} made an offer on`,
+      'OfferWithdrawn': `${party} withdrew their offer on`,
+      'OfferAccepted': `${party}accepted the offer on`,
+      'OfferDisputed': `${party} initiated a dispute on`,
+      'OfferRuling': `${party} made a ruling on the dispute for`,
+      'OfferFinalized': `${party} finalized the offer`,
+      'OfferData': `${party} updated information for`
     }
 
     return (
@@ -278,10 +278,8 @@ class Conversation extends Component {
       counterparty,
       files,
       invalidTextInput,
-      listing,
       purchase
     } = this.state
-    const { name, created } = listing
     const counterpartyAddress = formattedAddress(counterparty.address)
     const canDeliverMessage =
       counterparty.address &&
@@ -290,16 +288,6 @@ class Conversation extends Component {
       origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
       canDeliverMessage
     const offerEvents = getOfferEvents(purchase)
-
-    const [
-      offerCreated,
-      offerWithdrawn,
-      offerAccepted,
-      offerDisputed,
-      offerRuling,
-      offerFinalized,
-      offerData
-    ] = offerEvents
 
     const sortedAndCombinedMessages = [
       ...offerEvents,

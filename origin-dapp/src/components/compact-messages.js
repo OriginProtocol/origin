@@ -1,8 +1,6 @@
-import React, { Component, Fragment } from 'react'
-import origin from '../services/origin'
-import { formattedAddress, abbreviateName } from 'utils/user'
+import React, { Component } from 'react'
+import { formattedAddress } from 'utils/user'
 import Message from 'components/message'
-import moment from 'moment'
 
 const MAX_MINUTES = 10
 
@@ -17,7 +15,6 @@ export default class CompactMessages extends Component {
   render() {
     const {
       messages = [],
-      purchaseEvents,
       formatOfferMessage,
       smallScreenOrDevice,
       withListingSummary
