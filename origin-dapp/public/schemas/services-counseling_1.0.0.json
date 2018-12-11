@@ -3,8 +3,7 @@
   "type": "object",
   "required": [
     "name",
-    "description",
-    "price"
+    "description"
   ],
   "properties": {
     "dappSchemaId": {
@@ -52,10 +51,6 @@
         "type": "string",
         "format": "data-url"
       }
-    },
-    "price": {
-      "type": "number",
-      "title": "schema.priceInETH"
     },
     "sellerSteps": {
       "type": "string",
