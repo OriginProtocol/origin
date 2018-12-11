@@ -28,14 +28,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "pictures": {
-      "type": "array",
-      "title": "schema.selectPhotos",
-      "items": {
-        "type": "string",
-        "format": "data-url"
-      }
-    },
     "sellerSteps": {
       "type": "string",
       "title": "schema.sellerSteps",
@@ -51,6 +43,14 @@
     "price": {
       "type": "number",
       "title": "schema.priceInETH"
+    },
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
     }
   }
 }
