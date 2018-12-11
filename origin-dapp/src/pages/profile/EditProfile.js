@@ -95,7 +95,7 @@ class EditProfile extends Component {
                 onClick={handleToggle}
                 className="col-2 d-flex align-items-center"
               >
-                <img src="images/carat-white.svg" />
+                <img src="images/caret-white.svg" />
               </a>
               <h2 className="col-8">
                 <FormattedMessage

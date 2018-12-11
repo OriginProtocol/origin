@@ -59,6 +59,7 @@ class ListingCard extends Component {
     const {
       // boostLevelIsPastSomeThreshold,
       category,
+      subCategory,
       loading,
       name,
       offers,
@@ -102,7 +103,7 @@ class ListingCard extends Component {
             </div>
           )}
           <div className="category placehold d-flex justify-content-between">
-            <div>{category}</div>
+            <div>{category}&nbsp;&nbsp;|&nbsp;&nbsp;{subCategory}</div>
             {!loading && showPendingBadge && <PendingBadge />}
             {!loading && showSoldBadge && <SoldBadge />}
             {!loading && showFeaturedBadge && <FeaturedBadge />}
