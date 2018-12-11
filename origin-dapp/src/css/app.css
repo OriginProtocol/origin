@@ -2484,6 +2484,11 @@ textarea:-moz-ui-invalid {
   border: 1px solid black;
 }
 
+.schema-selection .category-icon-container {
+  min-width: 115px;
+  display: inline-block;
+}
+
 .schema-selection img {
   max-height: 100px;
   margin-right: 25px;

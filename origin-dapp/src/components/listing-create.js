@@ -598,7 +598,9 @@ class ListingCreate extends Component {
                       ga-category="create_listing"
                       ga-label={ `select_category_${category.type}`}
                     >
-                      <img src={`images/${category.img}`} role="presentation" />
+                      <div className="category-icon-container">
+                        <img src={`images/${category.img}`} role="presentation" />
+                      </div>
                       {category.name}
                       {!this.props.mobileDevice && selectedCategory === category.type &&
                         <select onChange={this.handleSchemaSelection} className="form-control">
