@@ -21,14 +21,14 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --no-ci --progress --hoist \"**\" --ignore origin-linking --ignore origin-mobile",
-    "bootstrap:mobile": "lerna bootstrap --progress --scope origin-linking --scope origin-mobile --scope origin --scope origin-contracts",
+    "bootstrap:mobile": "lerna bootstrap --progress --scope origin-linking --scope origin-mobile --scope origin --scope origin-contracts --scope origin-dapp",
     "build": "lerna run build",
     "clean": "git clean -fdX .",
     "start": "lerna run start --stream --parallel --scope origin --scope origin-dapp",
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "npm run bootstrap && node scripts/symlink-packages.js",
-    "install:mobile": "npm install --ignore-scripts && npm run bootstrap:mobile && node scripts/symlink-packages.js",
+    "install:mobile": "npm install --ignore-scripts && npm run bootstrap:mobile",
     "test": "node scripts/test.js"
   }
 }
