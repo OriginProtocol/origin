@@ -68,6 +68,28 @@ class ContractService {
     }
   }
 
+  updateContractAddresses(contractAddresses) {
+    for (const name in this.contracts) {
+      try {
+        this.contracts[name].networks = Object.assign(
+          {},
+          this.contracts[name].networks,
+          contractAddresses[name]
+        )
+      } catch (e) {
+        /* Ignore */
+      }
+    }
+  }
+
+  getContractAddresses() {
+    const addresses = {}
+    for (const name in this.contracts) {
+      addresses[name] = this.contracts[name].networks
+    }
+    return addresses
+  }
+
   newWalletNetwork() {
     this.web3.setProvider(this.walletLinker.getProvider())
   }

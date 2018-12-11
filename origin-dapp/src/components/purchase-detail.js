@@ -32,7 +32,7 @@ import TransactionHistory from 'components/transaction-history'
 import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
 
-import { getListing, camelCaseToDash } from 'utils/listing'
+import { getListing } from 'utils/listing'
 import {
   offerStatusToListingAvailability,
   offerStatusToStep
@@ -341,14 +341,10 @@ class PurchaseDetail extends Component {
   }
 
   getListingSchema() {
-    const schemaType = camelCaseToDash(
-      this.state.listing.schemaType.replace('schema.', '')
-    )
-
-    fetch(`schemas/${schemaType}.json`)
+    fetch(`${this.state.listing.dappSchemaId}`)
       .then(response => response.json())
       .then(schemaJson => {
-        const translatedSchema = translateSchema(schemaJson, schemaType)
+        const translatedSchema = translateSchema(schemaJson)
         this.setState({
           translatedSchema
         })

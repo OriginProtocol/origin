@@ -14,7 +14,7 @@
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
-    "test": "mocha -r @babel/register -r @babel/polyfill -t 10000 --exit",
+    "test": "NODE_ENV=test mocha -r @babel/register -r @babel/polyfill -t 10000 --exit",
     "vest": "node src/scripts/vest_grants.js"
   },
   "author": "",
@@ -55,6 +55,7 @@
     "@babel/preset-env": "^7.2.0",
     "@babel/register": "^7.0.0",
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^3.0.0",
     "chai-moment": "^0.1.0",
     "mocha": "^5.2.0",

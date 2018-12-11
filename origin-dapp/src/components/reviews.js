@@ -51,7 +51,7 @@ class Reviews extends Component {
 
         {userReviews.map(r => <Review key={r.id} review={r} />)}
         {/* To Do: pagination */}
-        {/* <a href="#" className="reviews-link">Read More<img src="/images/carat-blue.svg" className="down carat" alt="down carat" /></a> */}
+        {/* <a href="#" className="reviews-link">Read More<img src="/images/caret-blue.svg" className="down caret" alt="down caret" /></a> */}
       </div>
     )
   }
