@@ -26,7 +26,7 @@ import UserCard from 'components/user-card'
 
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { getListing, transformPurchasesOrSales } from 'utils/listing'
+import { getListing, transformPurchasesOrSales, addOffersToDappListing } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 import { formattedAddress } from 'utils/user'
 
@@ -74,6 +74,10 @@ class ListingsDetail extends Component {
       loadingError: {
         id: 'listing-detail.loadingError',
         defaultMessage: 'There was an error loading this listing.'
+      },
+      each: {
+        id: 'listing-detail.multiUnitListing.each',
+        defaultMessage: 'each'
       }
     })
 
@@ -202,10 +206,11 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await getListing(this.props.listingId, true)
+
       this.setState({
         ...listing,
-        loading: false,
-        isFractional: listing.listingType === 'fractional'
+        dappListing: listing,
+        loading: false
       })
     } catch (error) {
       this.props.showAlert(
@@ -223,7 +228,12 @@ class ListingsDetail extends Component {
   async loadOffers() {
     try {
       const offers = await origin.marketplace.getOffers(this.props.listingId)
-      this.setState({ offers })
+      console.log("READING OFFERS ", offers, this.props.listingId)
+      const listing = addOffersToDappListing(this.state.dappListing, offers)
+
+      this.setState({
+        ...listing
+      })
     } catch (error) {
       console.error(
         `Error fetching offers for listing: ${this.props.listingId}`
@@ -251,6 +261,7 @@ class ListingsDetail extends Component {
       description,
       display,
       isFractional,
+      isMultiUnit,
       loading,
       name,
       offers,
@@ -260,7 +271,9 @@ class ListingsDetail extends Component {
       status,
       step,
       schemaType,
-      featuredImageIdx
+      featuredImageIdx,
+      listingType,
+      unitsTotal
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -268,6 +281,7 @@ class ListingsDetail extends Component {
 
       return ['pending', 'sold'].includes(availability)
     })
+
     const currentOfferAvailability =
       currentOffer && offerStatusToListingAvailability(currentOffer.status)
     const isWithdrawn = status === 'inactive'
@@ -288,6 +302,7 @@ class ListingsDetail extends Component {
     const userIsBuyer = currentOffer && formattedAddress(wallet.address) === formattedAddress(currentOffer.buyer)
     const userIsSeller = formattedAddress(wallet.address) === formattedAddress(seller)
 
+    console.log("LISTING STATE: ", this.state)
     return (
       <div className="listing-detail">
         {step === this.STEP.ONBOARDING && (
@@ -516,6 +531,9 @@ class ListingsDetail extends Component {
                         minimumFractionDigits: 5
                       })}
                         &nbsp;ETH
+                        {isMultiUnit && <Fragment>
+                          &nbsp;/{this.props.intl.formatMessage(this.intlMessages.each)}&nbsp;
+                        </Fragment>}
                     </div>
                   }
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
@@ -533,6 +551,18 @@ class ListingsDetail extends Component {
                       </div>
                     </div>
                   */}
+                  {isMultiUnit && <Fragment>
+                    <hr />
+                      <div className="quantity d-flex justify-content-between">
+                        <div className="ml-3">Quantity</div>
+                        <div className="text-right mr-3">
+                          {unitsTotal}
+                        </div>
+                      </div>
+                    <hr />
+                  </Fragment>
+
+                  }
                   {!loading && (
                     <div className="btn-container">
                       {!userIsSeller && !isFractional && (
@@ -790,7 +820,7 @@ class ListingsDetail extends Component {
                 />
               )}
             </div>
-            {!this.state.loading && this.state.listingType === 'fractional' &&
+            {!this.state.loading && isFractional &&
               <div className="col-12">
                 <Calendar
                   slots={ this.state.slots }

@@ -163,6 +163,7 @@
   "listing-create.error2": "See the console for more details.",
   "listing-create.OK": "OK",
   "listing-detail.loadingError": "There was an error loading this listing.",
+  "listing-detail.multiUnitListing.each": "each",
   "listing-detail.firstPurchaseHeading": "You're about to make your first purchase on Origin.",
   "listing-detail.identityDisclaimer": "We recommend verifying your identity first. Sellers are more likely to accept your purchase offer if they know a little bit about you.",
   "listing-detail.verifyIdentity": "Verify Identity",

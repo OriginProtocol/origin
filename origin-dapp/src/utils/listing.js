@@ -96,17 +96,18 @@ export function dappFormDataToOriginListing(formData) {
  * @param {Listing} originListing - Listing object returned by origin-js.
  * @return {object} DApp compatible listing object.
  */
-export function originToDAppListing(originListing) {
+export function originToDAppListing(originListing, translate) {
   const commission = originListing.commission
     ? parseFloat(originListing.commission.amount)
     : 0
 
+  const isUnit = originListing.listingType === 'unit'
   const dappListing = {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
     schemaType: originListing.category.replace('schema.', ''),
-    category: originListing.subCategory,
+    category: translate ? translateListingCategory(originListing.subCategory) : originListing.subCategory,
     display: originListing.display,
     name: originListing.title,
     description: originListing.description,
@@ -117,15 +118,17 @@ export function originToDAppListing(originListing) {
     boostValue: commission,
     boostLevel: getBoostLevel(commission),
     unitsTotal: originListing.unitsTotal,
-    unitsRemaining: originListing.unitsRemaining,
     ipfsHash: originListing.ipfs.hash,
+    isUnit: isUnit,
+    isFractional: originListing.listingType === 'fractional',
+    isMultiUnit: isUnit && originListing.unitsTotal > 1,
     listingType: originListing.type,
     slots: originListing.slots,
     events: originListing.events
   }
 
   // if multiunit listing
-  if (originListing.listingType == 'unit' && originListing.unitsTotal > 0) {
+  if (isUnit && originListing.unitsTotal > 0) {
     const commissionPerUnit = originListing.commissionPerUnit
       ? parseFloat(originListing.commissionPerUnit.amount)
       : 0
@@ -133,6 +136,11 @@ export function originToDAppListing(originListing) {
     dappListing.commissionPerUnit = commissionPerUnit
   }
 
+  return dappListing
+}
+
+export function addOffersToDappListing(dappListing, offers){
+  console.log("ADDING OFFERS TO DAPP LISTING: ", dappListing, offers)
   return dappListing
 }
 
@@ -147,11 +155,9 @@ export function originToDAppListing(originListing) {
 export const transformPurchasesOrSales = purchasesOrSales => {
   return purchasesOrSales.map(purchase => {
     const { offer, listing } = purchase
-    const transformedListing = originToDAppListing(listing)
-    transformedListing.category = translateListingCategory(transformedListing.category)
     return {
       offer,
-      listing: transformedListing
+      listing: originToDAppListing(listing, true)
     }
   })
 }
@@ -165,10 +171,7 @@ export const transformPurchasesOrSales = purchasesOrSales => {
  */
 export async function getListing(id, translate = false, blockInfo) {
   const originListing = await origin.marketplace.getListing(id, blockInfo)
-  const dappListing = originToDAppListing(originListing)
-  if (translate) {
-    dappListing.category = translateListingCategory(dappListing.category)
-  }
+  const dappListing = originToDAppListing(originListing, translate)
   return dappListing
 }
 
