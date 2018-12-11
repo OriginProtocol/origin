@@ -989,13 +989,18 @@ describe('Marketplace Resource', function() {
 })
 
 describe('Marketplace Resource - Performance mode', function() {
-  const listing = Listing.init('1-000-123', {}, listingValid)
-  const offer1 = Offer.init('1-000-123-1', '1-000-123', {}, offerValid)
-  const offer2 = Offer.init('1-000-123-2', '1-000-123', {}, offerValid)
+  const unitListingData = Object.assign({}, listingValid, { type: 'unit' })
+  const unitListing = Listing.init('1-000-123', {}, unitListingData)
+  const unitOffer1 = Offer.init('1-000-123-1', '1-000-123', {}, offerValid)
+  const unitOffer2 = Offer.init('1-000-123-2', '1-000-123', {}, offerValid)
+
+  const fracListingData = Object.assign({}, listingValid, { type: 'fractional' })
+  const fracListing = Listing.init('1-000-456', {}, fracListingData)
+  const fracOffer1 = Offer.init('1-000-456-1', '1-000-123', {}, offerValid)
+  const fracOffer2 = Offer.init('1-000-456-2', '1-000-123', {}, offerValid)
 
   const mockDiscoveryService = new Object()
   mockDiscoveryService.getListings = sinon.stub()
-  mockDiscoveryService.getListing = sinon.stub().resolves(listing)
   mockDiscoveryService.getOffer = sinon.stub()
 
   const marketplace = new Marketplace({
@@ -1014,25 +1019,28 @@ describe('Marketplace Resource - Performance mode', function() {
 
   describe('getListing', () => {
     it('Should call discovery service to fetch a listing', async () => {
+      mockDiscoveryService.getListing = sinon.stub().resolves(unitListing)
       await marketplace.getListing()
       expect(mockDiscoveryService.getListing.callCount).to.equal(1)
     })
   })
 
   describe('getOffers', () => {
-    it('Should call discovery service to fetch offers', async () => {
-      mockDiscoveryService.getOffers = sinon.stub().resolves([offer1])
+    it('Should filter out invalid offers on multi-units listing', async () => {
+      mockDiscoveryService.getListing = sinon.stub().resolves(unitListing)
+      mockDiscoveryService.getOffers = sinon.stub().resolves([unitOffer1, unitOffer2])
       const offers = await marketplace.getOffers()
       expect(mockDiscoveryService.getOffers.callCount).to.equal(1)
+      // 2 offers and unitsTotal is 1 => 1 offer should get filtered out.
       expect(offers.length).to.equal(1)
     })
 
-    it('Should filter out invalid offers ', async () => {
-      // Return 2 offers. Since unitsTotal is 1, 1 offer should get filtered out.
-      mockDiscoveryService.getOffers = sinon.stub().resolves([offer1, offer2])
+    it('Should not filter out any offer on fractional listing', async () => {
+      mockDiscoveryService.getListing = sinon.stub().resolves(fracListing)
+      mockDiscoveryService.getOffers = sinon.stub().resolves([fracOffer1, fracOffer2])
       const offers = await marketplace.getOffers()
       expect(mockDiscoveryService.getOffers.callCount).to.equal(1)
-      expect(offers.length).to.equal(1)
+      expect(offers.length).to.equal(2)
     })
   })
 
