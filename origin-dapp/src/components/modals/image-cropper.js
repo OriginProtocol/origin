@@ -1,22 +1,24 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import ReactCrop from 'react-image-crop'
-import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
+import { generateCroppedImage } from 'utils/fileUtils'
 import Modal from 'components/modal'
 
 class ImageCropper extends Component {
   constructor(props) {
     super(props)
 
+    this.defaultCrop = {
+      x: 0,
+      y: 0,
+      width: 100,
+      aspect: 4/3
+    }
+
     this.state = {
       imageFileObj: null,
       imageSrc: null,
-      crop: {
-        x: 0,
-        y: 0,
-        width: 100,
-        aspect: 4/3
-      },
+      crop: this.defaultCrop,
       pixelCrop: null,
       croppedImage: null,
       croppedImageUrl: null
@@ -26,12 +28,15 @@ class ImageCropper extends Component {
     this.onCropComplete = this.onCropComplete.bind(this)
   }
 
-  async componentDidUpdate(prevProps) {
-    if (this.props.imageFileObj && this.props.imageFileObj !== prevProps.imageFileObj) {
-      const imageSrc = await getDataUri(this.props.imageFileObj)
-      this.setState({
-        imageSrc,
-        ...this.props
+  componentDidUpdate(prevProps) {
+    const { imageFileObj, limitSize } = this.props
+    if (imageFileObj && imageFileObj !== prevProps.imageFileObj) {
+
+      generateCroppedImage(imageFileObj, { limitSize }, (dataUri) => {
+        this.setState({
+          imageSrc: dataUri,
+          ...this.props
+        })
       })
     }
 
@@ -52,11 +57,22 @@ class ImageCropper extends Component {
     })
   }
 
-  async onCropComplete() {
-    const { imageFileObj, pixelCrop } = this.state
-    const croppedImageFile = await generateCroppedImage(imageFileObj, pixelCrop)
-    const croppedImageUri = await getDataUri(croppedImageFile)
-    this.props.onCropComplete(croppedImageUri, imageFileObj)
+  onCropComplete() {
+    const { imageFileObj, pixelCrop, crop = {} } = this.state
+    const { limitSize } = this.props
+
+    const options = {
+      ...pixelCrop,
+      aspectRatio: crop.aspect,
+      limitSize
+    }
+    generateCroppedImage(imageFileObj, options, (croppedImageUri) => {
+      this.props.onCropComplete(croppedImageUri, imageFileObj)
+      this.setState({
+        crop: this.defaultCrop,
+        imageSrc: null
+      })
+    })
   }
 
   render() {

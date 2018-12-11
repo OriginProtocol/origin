@@ -39,7 +39,6 @@ class TransferDialog extends Component {
       amount: this.state.amount,
       address: this.state.address
     }
-    console.log(transferRequest)
 
     const postBody = new Blob(
       [ JSON.stringify(transferRequest) ],

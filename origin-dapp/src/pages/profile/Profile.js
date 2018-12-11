@@ -189,7 +189,7 @@ class Profile extends Component {
       this.props.intl.formatMessage(this.intlMessages.manageYourProfile)
     )
 
-    if ((web3.givenProvider && this.props.wallet.address) || origin.contractService.walletLinker) {
+    if ((!web3.currentProvider.isOrigin && this.props.wallet.address) || origin.contractService.walletLinker) {
       const { modal } = e.currentTarget.dataset
 
       /*
@@ -456,7 +456,7 @@ class Profile extends Component {
             </div>
             <div className="col-12 col-lg-4 d-none d-lg-block">
               <WalletCard
-                wallet={wallet}
+                {...wallet}
                 identityAddress={this.props.identityAddress}
                 withMenus={true}
                 withProfile={false}
@@ -502,6 +502,7 @@ class Profile extends Component {
           isOpen={modalsOpen.cropModal}
           imageFileObj={imageToCrop}
           aspect={1} // force square aspect ratio
+          limitSize={false}
           onCropComplete={(croppedImageUri) => {
             this.props.updateProfile({
               data: {
