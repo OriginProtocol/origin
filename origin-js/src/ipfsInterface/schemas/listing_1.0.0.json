@@ -97,10 +97,10 @@
     "fractionalListing": {
       "type": "object",
       "properties": {
-        "timeIncrement": {
-          "type": "string"
+        "slotLength": {
+          "type": "integer"
         },
-        "calendarStep": {
+        "slotLengthUnit": {
           "type": "string"
         },
         "slots": {
@@ -111,7 +111,8 @@
         }
       },
       "required": [
-        "calendarStep",
+        "slotLength",
+        "slotLengthUnit",
         "slots"
       ]
     }

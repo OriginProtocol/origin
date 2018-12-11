@@ -179,15 +179,6 @@ textarea:-moz-ui-invalid {
   color: white;
 }
 
-.carat {
-  margin-left: 0.75rem;
-  vertical-align: initial;
-}
-
-.carat.down {
-  transform: rotate(90deg);
-}
-
 .address {
   font-size: 0.875rem;
 }
@@ -2460,43 +2451,42 @@ textarea:-moz-ui-invalid {
   border-radius: var(--default-radius);
   border: solid 1px var(--light);
   margin-bottom: 15px;
-  padding: 10px;
+  padding: 10px 20px;
   width: 100%;
   color: var(--dusk);
   font-weight: normal;
   overflow: hidden;
-  max-height: 50px;
+  max-height: 125px;
+  font-size: 1.5rem;
 }
 
-.schema-selection.selected {
+.schema-selection.mobile {
+  font-size: 1.25rem;
+}
+
+.schema-selection.selected:not(.mobile) {
   border: solid 1px var(--clear-blue);
-  padding: 10px 10px 0;
+  padding: 10px 20px 20px;
   max-height: 500px;
 }
 
-.schema-examples {
-  background: var(--pale-grey-eight);
-  margin: 10px -10px 0;
-  padding: 10px;
-  height: auto;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease;
+.schema-selection.selected.mobile {
+  font-weight: bold;
+  border: 1px solid black;
 }
 
-.schema-examples.selected {
-  max-height: 500px;
+.schema-selection .category-icon-container {
+  min-width: 115px;
+  display: inline-block;
 }
 
-.schema-examples ul {
-  margin-bottom: 0;
-  padding-left: 20px;
+.schema-selection img {
+  max-height: 100px;
+  margin-right: 25px;
 }
 
-.schema-examples p,
-.schema-examples li {
-  font-size: 14px;
-  margin-bottom: 4px;
+.schema-selection select {
+  margin-top: 10px;
 }
 
 .field-description {
@@ -2504,7 +2494,8 @@ textarea:-moz-ui-invalid {
 }
 
 /* hide form error summary in react-jsonschema-forms */
-.rjsf .errors {
+.rjsf .errors,
+.rjsf .field-undefined {
   display: none;
 }
 
@@ -2844,6 +2835,38 @@ select.form-control:not([size]):not([multiple]) {
   bottom: 0;
   font-size: 16px;
   cursor: pointer;
+}
+
+.listing-form .btn-container.mobile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--pale-grey-two);
+  padding: 25px;
+}
+
+.listing-form .btn-container.mobile button {
+  margin-bottom: 0;
+  width: 100%;
+  padding: 10px 30px;
+}
+
+.listing-form .mobile-back-btn {
+  margin-bottom: 20px;
+  padding: 0;
+  font-weight: bold;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.listing-form .mobile-back-btn img {
+  height: 0.625rem;
+  margin-right: 0.375rem;
+  transform: rotate(270deg);
+  vertical-align: initial;
 }
 
 .boost-Low {
@@ -3233,6 +3256,13 @@ select.form-control:not([size]):not([multiple]) {
 .sale .card-body .actions .link-container {
   flex-shrink: 0;
   padding-left: 0.75rem;
+}
+
+.sale .card-body .caret {
+  height: 12px;
+  margin-left: 0.75rem;
+  transform: rotate(90deg);
+  vertical-align: initial;
 }
 
 /* Purchases */
@@ -3720,6 +3750,13 @@ form .stars img {
 
 .reviews .form-group {
   margin-bottom: 10px;
+}
+
+.reviews .caret.down {
+  height: 12px;
+  margin-left: 0.75rem;
+  transform: rotate(180deg);
+  vertical-align: initial;
 }
 
 /* Transactions */
@@ -4393,8 +4430,9 @@ form .stars img {
   padding-left: 15px;
 }
 
-.notification .button-container .carat {
-  margin-left: 0;
+.notification .button-container .caret {
+  height: 10px;
+  transform: rotate(90deg);
 }
 
 .notification .button-container .btn {
@@ -5030,7 +5068,7 @@ sup {
 }
 
 .phone.modal .dropdown .dropdown-toggle:after {
-  background-image: url(images/carat-white.svg);
+  background-image: url(images/caret-white.svg);
   background-repeat: no-repeat;
   border: none;
   height: 12px;
@@ -5572,16 +5610,12 @@ a:not([href]):not([tabindex]).span-link {
     display: none;
   }
 
-  .warning.alert.expanded #caret-down {
-    display: none;
-  }
-
-  .warning.alert:not(.expanded) #caret-up {
-    display: none;
-  }
-
   .warning.alert .caret {
     margin-top: -0.15rem;
+  }
+
+  .warning.alert:not(.expanded) .caret img {
+    transform: rotate(180deg);
   }
 
   .profile-wrapper .container .name h1 {
@@ -5611,9 +5645,13 @@ a:not([href]):not([tabindex]).span-link {
     font-weight: normal;
   }
 
-  .profile-wrapper #description-caret {
-    padding-left: 0.2rem;
-    padding-bottom: 0.1rem;
+  .profile-wrapper .description-caret img {
+    margin-left: 0.2rem;
+    margin-bottom: 0.1rem;
+  }
+
+  .profile-wrapper .description-caret:not(.expanded) img {
+    transform: rotate(180deg);
   }
 
   .profile-wrapper #verify-yourself {
@@ -5661,8 +5699,7 @@ a:not([href]):not([tabindex]).span-link {
     padding-top: 100px;
   }
 
-  .warning.alert #caret-up,
-  .warning.alert #caret-down {
+  .warning.alert .caret {
     display: none;
   }
 
