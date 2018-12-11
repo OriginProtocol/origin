@@ -3,14 +3,15 @@
   "type": "object",
   "required": [
     "name",
-    "description"
+    "description",
+    "price"
   ],
   "properties": {
     "dappSchemaId": {
       "const": "https://dapp.originprotocol.com/schemas/services-counseling_1.0.0.json"
     },
     "listingType": {
-      "const": "fractional"
+      "const": "unit"
     },
     "category": {
       "const": "schema.services"
@@ -63,6 +64,10 @@
     },
     "subCategory": {
       "const": "schema.counseling"
+    },
+    "price": {
+      "type": "number",
+      "title": "schema.priceInETH"
     }
   }
 }
