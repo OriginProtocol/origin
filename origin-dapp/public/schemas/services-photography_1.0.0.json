@@ -71,7 +71,7 @@
       "const": "schema.photography"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

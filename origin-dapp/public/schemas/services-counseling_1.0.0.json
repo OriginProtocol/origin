@@ -71,7 +71,7 @@
       "const": "schema.counseling"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

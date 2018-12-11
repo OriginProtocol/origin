@@ -54,7 +54,7 @@
       "const": "schema.clothingAccessories"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

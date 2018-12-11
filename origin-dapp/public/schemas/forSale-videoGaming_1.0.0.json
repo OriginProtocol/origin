@@ -54,7 +54,7 @@
       "const": "schema.videoGaming"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

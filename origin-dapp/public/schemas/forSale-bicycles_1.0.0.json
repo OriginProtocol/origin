@@ -54,7 +54,7 @@
       "const": "schema.bicycles"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

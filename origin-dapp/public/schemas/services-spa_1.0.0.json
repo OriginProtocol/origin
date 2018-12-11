@@ -71,7 +71,7 @@
       "const": "schema.spa"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

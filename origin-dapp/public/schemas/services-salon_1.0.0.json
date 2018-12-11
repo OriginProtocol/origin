@@ -71,7 +71,7 @@
       "const": "schema.salon"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

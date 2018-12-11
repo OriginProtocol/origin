@@ -54,7 +54,7 @@
       "const": "schema.materials"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

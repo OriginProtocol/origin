@@ -54,7 +54,7 @@
       "const": "schema.computers"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

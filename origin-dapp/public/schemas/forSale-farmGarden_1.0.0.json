@@ -54,7 +54,7 @@
       "const": "schema.farmGarden"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }

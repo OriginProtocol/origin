@@ -71,7 +71,7 @@
       "const": "schema.dogWalking"
     },
     "unitsTotal": {
-      "type": "number",
+      "type": "integer",
       "title": "schema.unitsTotal"
     }
   }
