@@ -679,7 +679,7 @@ class ListingCreate extends Component {
                   })}
                   className="mobile-back-btn"
                 >
-                  <img src="images/left-caret-gray.png" />
+                  <img src="images/caret-grey.svg" />
                   <FormattedMessage
                     id={'listing-create.backButtonLabel'}
                     defaultMessage={'Back'}

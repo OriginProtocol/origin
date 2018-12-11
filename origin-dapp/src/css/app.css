@@ -179,15 +179,6 @@ textarea:-moz-ui-invalid {
   color: white;
 }
 
-.carat {
-  margin-left: 0.75rem;
-  vertical-align: initial;
-}
-
-.carat.down {
-  transform: rotate(90deg);
-}
-
 .address {
   font-size: 0.875rem;
 }
@@ -2872,8 +2863,10 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .listing-form .mobile-back-btn img {
-  margin: -4px 3px 0 0;
-  max-width: 23px;
+  height: 0.625rem;
+  margin-right: 0.375rem;
+  transform: rotate(270deg);
+  vertical-align: initial;
 }
 
 .boost-Low {
@@ -3263,6 +3256,13 @@ select.form-control:not([size]):not([multiple]) {
 .sale .card-body .actions .link-container {
   flex-shrink: 0;
   padding-left: 0.75rem;
+}
+
+.sale .card-body .caret {
+  height: 12px;
+  margin-left: 0.75rem;
+  transform: rotate(90deg);
+  vertical-align: initial;
 }
 
 /* Purchases */
@@ -3750,6 +3750,13 @@ form .stars img {
 
 .reviews .form-group {
   margin-bottom: 10px;
+}
+
+.reviews .caret.down {
+  height: 12px;
+  margin-left: 0.75rem;
+  transform: rotate(180deg);
+  vertical-align: initial;
 }
 
 /* Transactions */
@@ -4423,8 +4430,9 @@ form .stars img {
   padding-left: 15px;
 }
 
-.notification .button-container .carat {
-  margin-left: 0;
+.notification .button-container .caret {
+  height: 10px;
+  transform: rotate(90deg);
 }
 
 .notification .button-container .btn {
@@ -5061,7 +5069,7 @@ sup {
 }
 
 .phone.modal .dropdown .dropdown-toggle:after {
-  background-image: url(images/carat-white.svg);
+  background-image: url(images/caret-white.svg);
   background-repeat: no-repeat;
   border: none;
   height: 12px;
@@ -5603,16 +5611,12 @@ a:not([href]):not([tabindex]).span-link {
     display: none;
   }
 
-  .warning.alert.expanded #caret-down {
-    display: none;
-  }
-
-  .warning.alert:not(.expanded) #caret-up {
-    display: none;
-  }
-
   .warning.alert .caret {
     margin-top: -0.15rem;
+  }
+
+  .warning.alert:not(.expanded) .caret img {
+    transform: rotate(180deg);
   }
 
   .profile-wrapper .container .name h1 {
@@ -5642,9 +5646,13 @@ a:not([href]):not([tabindex]).span-link {
     font-weight: normal;
   }
 
-  .profile-wrapper #description-caret {
-    padding-left: 0.2rem;
-    padding-bottom: 0.1rem;
+  .profile-wrapper .description-caret img {
+    margin-left: 0.2rem;
+    margin-bottom: 0.1rem;
+  }
+
+  .profile-wrapper .description-caret:not(.expanded) img {
+    transform: rotate(180deg);
   }
 
   .profile-wrapper #verify-yourself {
@@ -5692,8 +5700,7 @@ a:not([href]):not([tabindex]).span-link {
     padding-top: 100px;
   }
 
-  .warning.alert #caret-up,
-  .warning.alert #caret-down {
+  .warning.alert .caret {
     display: none;
   }
 
