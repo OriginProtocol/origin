@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Events', {
+    return queryInterface.createTable('Event', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,9 +17,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      grantId: {
+      grant_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'Grants', key: 'id' }
+        references: { model: 'Grant', key: 'id' }
       },
       action: {
         type: Sequelize.STRING,
@@ -28,17 +28,17 @@ module.exports = {
       data: {
         type: Sequelize.STRING
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
     })
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('Events')
+    return queryInterface.dropTable('Event')
   }
 }

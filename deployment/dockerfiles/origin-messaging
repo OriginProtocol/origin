@@ -6,8 +6,7 @@ ENV NODE_ENV production
 
 COPY ./origin-messaging /app
 
-# Install dependencies
-RUN npm ci --loglevel notice
+RUN npm install --loglevel notice
 RUN npm run build
 
 CMD npm run start

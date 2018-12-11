@@ -3,12 +3,12 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
 import { enableMessaging } from 'actions/Activation'
 import { dismissMessaging, storeWeb3Intent } from 'actions/App'
 
 import ConversationListItem from 'components/conversation-list-item'
+import Dropdown from 'components/dropdown'
 
 import groupByArray from 'utils/groupByArray'
 import { formattedAddress } from 'utils/user'
@@ -32,22 +32,8 @@ class MessagesDropdown extends Component {
         defaultMessage: 'view your messages'
       }
     })
-  }
 
-  componentDidMount() {
-    // control hiding of dropdown menu
-    $('.messages.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
-      // if triggered by data-toggle
-      if (!clickEvent) {
-        return true
-      }
-      // otherwise only if triggered by self or another dropdown
-      const el = $(clickEvent.target)
-
-      return el.hasClass('dropdown') && el.hasClass('nav-item')
-    })
-
-    $('.messages.dropdown').on('hidden.bs.dropdown', this.props.dismissMessaging)
+    this.state = { open: false }
   }
 
   componentDidUpdate() {
@@ -56,10 +42,9 @@ class MessagesDropdown extends Component {
     const hasNewUnreadMessage = messages.find(
       m => m.created > messagingDismissed
     )
-    const dropdownHidden = !$('.messages.dropdown').hasClass('show')
 
-    if (!isOnMessagingRoute && hasNewUnreadMessage && dropdownHidden) {
-      $('#messagesDropdown').dropdown('toggle')
+    if (!isOnMessagingRoute && hasNewUnreadMessage && !this.state.forceOpen) {
+      this.setState({ open: true, forceOpen: true })
     }
   }
 
@@ -70,7 +55,7 @@ class MessagesDropdown extends Component {
       storeWeb3Intent(intl.formatMessage(this.intlMessages.viewMessages))
     }
 
-    $('#messagesDropdown').dropdown('toggle')
+    this.toggle('close')
   }
 
   handleEnable() {
@@ -83,16 +68,29 @@ class MessagesDropdown extends Component {
     }
   }
 
+  toggle(state) {
+    const open = state === 'close' ? false : !this.state.open
+    if (!open) {
+      this.props.dismissMessaging()
+    }
+    this.setState({ open })
+  }
+
   render() {
     const { conversations, history, messages, messagingEnabled, wallet } = this.props
+    const { open } = this.state
 
     return (
-      <div className="nav-item messages dropdown">
+      <Dropdown
+        className="nav-item messages"
+        open={open}
+        onClose={() => this.setState({ open: false })}
+      >
         <a
           className="nav-link active dropdown-toggle"
           id="messagesDropdown"
           role="button"
-          data-toggle="dropdown"
+          onClick={() => this.toggle()}
           aria-haspopup="true"
           aria-expanded="false"
           ga-category="top_nav"
@@ -111,7 +109,7 @@ class MessagesDropdown extends Component {
           />
         </a>
         <div
-          className="dropdown-menu dropdown-menu-right"
+          className={`dropdown-menu dropdown-menu-right${open ? ' show' : ''}`}
           aria-labelledby="messagesDropdown"
         >
           <div className="triangle-container d-flex justify-content-end">
@@ -163,8 +161,7 @@ class MessagesDropdown extends Component {
                   active={false}
                   handleConversationSelect={() => {
                     history.push(`/messages/${c.key}`)
-
-                    $('#messagesDropdown').dropdown('toggle')
+                    this.toggle('close')
                   }}
                 />
               ))}
@@ -184,7 +181,7 @@ class MessagesDropdown extends Component {
             </Link>
           </div>
         </div>
-      </div>
+      </Dropdown>
     )
   }
 }

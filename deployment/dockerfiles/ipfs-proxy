@@ -7,6 +7,6 @@ ENV NODE_ENV production
 COPY ./ipfs-proxy /app
 
 # Install dependencies
-RUN npm ci --loglevel notice
+RUN npm install --loglevel notice
 
 CMD npm start

@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import {
@@ -24,10 +23,6 @@ class MyListingCard extends Component {
     })
 
     this.closeListing = this.closeListing.bind(this)
-  }
-
-  componentDidMount() {
-    $('[data-toggle="tooltip"]').tooltip()
   }
 
   async closeListing() {
@@ -77,10 +72,6 @@ class MyListingCard extends Component {
       console.error(`Error closing listing ${address}`)
       console.error(error)
     }
-  }
-
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
   render() {

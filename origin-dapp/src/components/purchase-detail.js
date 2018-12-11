@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import $ from 'jquery'
 
 import { enableMessaging } from 'actions/Activation'
 import { storeWeb3Intent } from 'actions/App'
@@ -310,29 +309,30 @@ class PurchaseDetail extends Component {
     this.loadPurchase()
   }
 
-  componentDidMount() {
-    $('[data-toggle="tooltip"]').tooltip()
-  }
-
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
-  }
-
   async loadPurchase() {
     const { offerId } = this.props
 
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
       const { blockInfo } = purchase
+
+      if (!purchase) {
+        return console.error(`Purchase ${offerId} not found`)
+      }
+      
       const listing = await getListing(purchase.listingId, true, blockInfo)
 
       this.setState({
         listing,
         purchase
       })
-      if (listing) {
-        this.getListingSchema()
+
+      if (!listing) {
+        return console.error(`Lising ${purchase.listingId} not found`)
       }
+
+      this.getListingSchema()
+
       await this.loadSeller(listing.seller)
       await this.loadBuyer(purchase.buyer)
     } catch (error) {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import Modal from 'components/modal'
@@ -9,7 +9,8 @@ class EditProfile extends Component {
     super(props)
     this.nameRef = React.createRef()
 
-    const { pic, firstName, lastName, description, } = this.props.data
+    const { pic, firstName, lastName, description } = props.data
+
     this.state = {
       pic,
       firstName,
@@ -31,15 +32,15 @@ class EditProfile extends Component {
         defaultMessage: 'Your Last Name'
       }
     })
+
+    this.handleDescriptionChange = this.handleDescriptionChange.bind(this)
   }
 
   componentDidUpdate(prevProps) {
     const { data } = this.props
     const { pic } = data
     if (pic && pic !== prevProps.data.pic) {
-      this.setState({
-        pic
-      })
+      this.setState({ pic })
     }
 
     if (!prevProps.open && this.props.open) {
@@ -49,50 +50,89 @@ class EditProfile extends Component {
     }
   }
 
-  blobToDataURL(blob) {
-    return new Promise(resolve => {
-      const a = new FileReader()
-      a.onload = function(e) {
-        resolve(e.target.result)
-      }
-      a.readAsDataURL(blob)
+  handleDescriptionChange(e) {
+    const { mobileDescriptionMaxLength, mobileLayout } = this.props
+    const description = e.currentTarget.value
+    this.setState({ description: mobileLayout
+      ? description.substring(0, Math.min(description.length, mobileDescriptionMaxLength))
+      : description
     })
   }
 
   render() {
-    const { intl, open, handleToggle } = this.props
+    const { handleToggle, open, mobileLayout } = this.props
 
     return (
-      <Modal
-        isOpen={open}
-        data-modal="profile"
-        handleToggle={handleToggle}
-        tabIndex="-1"
-      >
-        <h2>
-          <FormattedMessage
-            id={'EditProfile.editProfileHeading'}
-            defaultMessage={'Edit Profile'}
-          />
-        </h2>
+      <Fragment>
+        <Modal
+          isOpen={open && !mobileLayout}
+          className="profile"
+          handleToggle={handleToggle}
+          tabIndex="-1"
+        >
+          {this.renderFormBody(false)}
+        </Modal>
+        <div className={`mobileProfile ${open && mobileLayout ? 'd-md-none' : 'd-none'}`}>
+          {this.renderFormBody(true)}
+        </div>
+      </Fragment>
+    )
+  }
+
+  renderFormBody(mobileLayout) {
+    const { intl, handleToggle, mobileDescriptionMaxLength } = this.props
+    const { firstName, lastName, description, pic } = this.state
+    const descriptionCounter = mobileDescriptionMaxLength - description.length
+
+    return (
+      <Fragment>
+        { mobileLayout ?
+          (
+            <div className="d-flex title align-items-center">
+              <a
+                href="#"
+                data-modal="profile"
+                onClick={handleToggle}
+                className="col-2 d-flex align-items-center"
+              >
+                <img src="images/carat-white.svg" />
+              </a>
+              <h2 className="col-8">
+                <FormattedMessage
+                  id={'EditProfile.editProfileHeading'}
+                  defaultMessage={'Edit Profile'}
+                />
+              </h2>
+              <div className="col-2"></div>
+            </div>
+          ) :
+          (
+            <h2>
+              <FormattedMessage
+                id={'EditProfile.editProfileHeading'}
+                defaultMessage={'Edit Profile'}
+              />
+            </h2>
+          )
+        }
         <form
           onSubmit={async e => {
             e.preventDefault()
             const data = {
-              firstName: this.state.firstName,
-              lastName: this.state.lastName,
-              description: this.state.description
+              firstName: firstName,
+              lastName: lastName,
+              description: description
             }
             this.props.handleSubmit({ data })
           }}
         >
           <div className="container">
-            <div className="row">
-              <div className="col-12 col-sm-6">
+            <div className="row justify-content-center">
+              <div className="col-5 col-sm-6">
                 <div className="image-container">
                   <div className="image-pair">
                     <Avatar
-                      image={this.state.pic}
+                      image={pic}
                       className="primary"
                       placeholderStyle="unnamed"
                     />
@@ -105,7 +145,7 @@ class EditProfile extends Component {
                         id="edit-profile-image"
                         type="file"
                         ref={r => (this.editPic = r)}
-                        style={{ opacity: 0, position: 'absolute', zIndex: -1 }}
+                        style={{ opacity: 0, position: 'absolute', zIndex: -1, width: '30px' }}
                         onChange={e => {
                           this.props.handleCropImage(e.currentTarget.files[0])
                         }}
@@ -116,7 +156,7 @@ class EditProfile extends Component {
               </div>
               <div className="col-12 col-sm-6">
                 <div className="form-group">
-                  <label htmlFor="first-name">
+                  <label className="edit-profile-label" htmlFor="first-name">
                     <FormattedMessage
                       id={'EditProfile.firstName'}
                       defaultMessage={'First Name'}
@@ -127,7 +167,7 @@ class EditProfile extends Component {
                     ref={this.nameRef}
                     name="firstName"
                     className="form-control"
-                    value={this.state.firstName}
+                    value={firstName}
                     onChange={e =>
                       this.setState({ firstName: e.currentTarget.value })
                     }
@@ -137,7 +177,7 @@ class EditProfile extends Component {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="last-name">
+                  <label className="edit-profile-label" htmlFor="last-name">
                     <FormattedMessage
                       id={'EditProfile.lastName'}
                       defaultMessage={'Last Name'}
@@ -148,7 +188,7 @@ class EditProfile extends Component {
                     id="last-name"
                     name="lastName"
                     className="form-control"
-                    value={this.state.lastName}
+                    value={lastName}
                     onChange={e =>
                       this.setState({ lastName: e.currentTarget.value })
                     }
@@ -160,7 +200,7 @@ class EditProfile extends Component {
               </div>
               <div className="col-12">
                 <div className="form-group">
-                  <label htmlFor="description">
+                  <label className="edit-profile-label" htmlFor="description">
                     <FormattedMessage
                       id={'EditProfile.description'}
                       defaultMessage={'Description'}
@@ -171,34 +211,46 @@ class EditProfile extends Component {
                     id="description"
                     name="description"
                     className="form-control"
-                    value={this.state.description}
-                    onChange={e =>
-                      this.setState({ description: e.currentTarget.value })
-                    }
+                    value={description}
+                    onChange={this.handleDescriptionChange}
                     placeholder={intl.formatMessage(
                       this.intlMessages.descriptionPlaceholder
                     )}
                   />
+                  {mobileLayout && <label className="character-counter">
+                    {descriptionCounter}
+                  </label>}
                 </div>
               </div>
               <div className="col-12">
-                <div className="explanation text-center">
+                {!mobileLayout && (<div className="explanation text-center">
                   <FormattedMessage
                     id={'EditProfile.publicDataNotice'}
                     defaultMessage={
                       'This information will be published on the blockchain and will be visible to everyone.'
                     }
                   />
-                </div>
-                <div className="button-container d-flex justify-content-center">
-                  <button type="submit" className="btn btn-clear">
-                    <FormattedMessage
-                      id={'EditProfile.continue'}
-                      defaultMessage={'Continue'}
-                    />
-                  </button>
-                </div>
-                <div className="link-container text-center">
+                </div>)}
+                {mobileLayout ?
+                  (<div className="button-container d-flex justify-content-center">
+                    <button type="submit" className="btn btn-primary btn-edit">
+                      <FormattedMessage
+                        id={'EditProfile.save'}
+                        defaultMessage={'Save'}
+                      />
+                    </button>
+                  </div>)
+                  :
+                  (<div className="button-container d-flex justify-content-center">
+                    <button type="submit" className="btn btn-clear">
+                      <FormattedMessage
+                        id={'EditProfile.continue'}
+                        defaultMessage={'Continue'}
+                      />
+                    </button>
+                  </div>)
+                }
+                { !mobileLayout && (<div className="link-container text-center">
                   <a href="#" data-modal="profile" onClick={handleToggle}>
                     <FormattedMessage
                       id={'EditProfile.cancel'}
@@ -206,11 +258,12 @@ class EditProfile extends Component {
                     />
                   </a>
                 </div>
+                )}
               </div>
             </div>
           </div>
         </form>
-      </Modal>
+      </Fragment>
     )
   }
 }

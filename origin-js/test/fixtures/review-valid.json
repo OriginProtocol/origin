@@ -1,5 +1,5 @@
 {
-  "schemaId": "http://schema.originprotocol.com/review_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/review_1.0.0.json",
   "rating": 3,
   "text": "Good stuff"
 }

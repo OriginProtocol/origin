@@ -8,11 +8,11 @@ import {
 } from '@blueprintjs/core'
 
 import { refreshGrants, setTransferDialogOpen } from '../actions'
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 
 const initialState = {
   amount: 0,
-  address: "",
+  address: '',
   transferInProgress: false
 }
 
@@ -39,7 +39,6 @@ class TransferDialog extends Component {
       amount: this.state.amount,
       address: this.state.address
     }
-    console.log(transferRequest)
 
     const postBody = new Blob(
       [ JSON.stringify(transferRequest) ],

@@ -1,11 +1,19 @@
 import {NativeModules, AsyncStorage} from 'react-native'
 
+let REMOTE_LOCAL_SERVER = null
+console.log("getting local serv ip")
 const LOCALHOST_SERVER_IP = __DEV__ ? NativeModules.SourceCode.scriptURL.split('://')[1].split('/')[0].split(':')[0] : null
+console.log("Local serv ip:", LOCALHOST_SERVER_IP)
+
+function setRemoteLocal(server_str) {
+  REMOTE_LOCAL_SERVER = server_str
+}
 
 function localfy(str) {
-  if (LOCALHOST_SERVER_IP)
+  const local_ip = REMOTE_LOCAL_SERVER || LOCALHOST_SERVER_IP
+  if (local_ip)
   {
-    return str.replace("localhost", LOCALHOST_SERVER_IP).replace(/127\.0\.0\.1(?=[^0-9]|$)/, LOCALHOST_SERVER_IP)
+    return str.replace("localhost", local_ip).replace(/127\.0\.0\.1(?=[^0-9]|$)/, local_ip)
   }
   else
   {
@@ -14,7 +22,7 @@ function localfy(str) {
 }
 
 function storeData(key, value) {
-  AsyncStorage.setItem(key, JSON.stringify(value))
+  return AsyncStorage.setItem(key, JSON.stringify(value))
 }
 
 function loadData(key) {
@@ -26,4 +34,4 @@ function loadData(key) {
   })
 }
 
-export {localfy, storeData, loadData}
+export {localfy, storeData, loadData, setRemoteLocal}
