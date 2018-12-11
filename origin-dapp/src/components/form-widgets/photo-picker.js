@@ -76,7 +76,7 @@ class PhotoPicker extends Component {
     const imagePromises = picUrls.map(url => {
       return new Promise(async resolve => {
         const image = new Image()
-        image.crossOrigin = 'anonymous' 
+        image.crossOrigin = 'anonymous'
 
         image.onload = function() {
           const canvas = document.createElement('canvas')
@@ -95,7 +95,7 @@ class PhotoPicker extends Component {
     return Promise.all(imagePromises)
   }
 
-  async onFileSelected(e) {
+  onFileSelected(e) {
     if (e.target.files && e.target.files.length > 0) {
       const imageFiles = e.target.files
       const pictures = [...this.state.pictures]
@@ -103,20 +103,20 @@ class PhotoPicker extends Component {
       for (const key in imageFiles) {
         if (imageFiles.hasOwnProperty(key)) {
           const file = imageFiles[key]
-          const croppedImageFile = await generateCroppedImage(file)
-          const croppedImageUri = await getDataUri(croppedImageFile)
 
-          pictures.push({
-            originalImageFile: file,
-            croppedImageUri
+          generateCroppedImage(file, { aspectRatio: 4/3, centerCrop: true }, (dataUri) => {
+            pictures.push({
+              originalImageFile: file,
+              croppedImageUri: dataUri
+            })
+
+            this.setState(
+              { pictures },
+              () => this.props.onChange(this.picURIsOnly(pictures))
+            )
           })
         }
       }
-
-      this.setState(
-        { pictures },
-        () => this.props.onChange(this.picURIsOnly(pictures))
-      )
     }
   }
 
@@ -132,6 +132,7 @@ class PhotoPicker extends Component {
     let showMaxImageCountMsg = false
     const imgInput = document.getElementById('photo-picker-input')
     const pictures = this.state.pictures
+
     pictures[this.state.reCropImgIndex] = {
       originalImageFile: imageFileObj,
       croppedImageUri

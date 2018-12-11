@@ -8,7 +8,7 @@ import { showMainNav } from 'actions/App'
 
 import CompactMessages from 'components/compact-messages'
 
-import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
+import { generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
 import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
 import { getPurchaseEvents } from 'utils/offer'
@@ -107,28 +107,21 @@ class Conversation extends Component {
     this.fileInput.current.click()
   }
 
-  async handleInput(event) {
+  handleInput(event) {
     const filesObj = event.target.files
-    const filesArr = []
 
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
-        const resized = await generateCroppedImage(filesObj[key], null, true)
-        filesArr.push(resized)
+        generateCroppedImage(filesObj[key], null, (dataUri) => {
+          this.setState((state) => {
+            return {
+              ...state,
+              files: [...state.files, dataUri]
+            }
+          })
+        })
       }
     }
-
-    const resizedFiles = await Promise.all(filesArr)
-
-    const filesAsDataUriArray = resizedFiles.map(async fileObj =>
-      getDataUri(fileObj)
-    )
-
-    Promise.all(filesAsDataUriArray).then(dataUriArray => {
-      this.setState({
-        files: dataUriArray
-      })
-    })
   }
 
   handleKeyDown(e) {
