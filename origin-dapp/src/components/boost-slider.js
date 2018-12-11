@@ -27,10 +27,6 @@ class BoostSlider extends Component {
   async onChange(value) {
     const disableNextBtn = value > this.props.ognBalance
     this.props.onChange(value, getBoostLevel(value), disableNextBtn)
-    // const selectedBoostAmountUsd = await getFiatPrice(value, 'USD')
-    // this.setState({
-    //   selectedBoostAmountUsd
-    // })
   }
 
   render() {

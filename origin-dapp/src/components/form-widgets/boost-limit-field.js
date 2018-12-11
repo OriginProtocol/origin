@@ -50,7 +50,7 @@ class BoostLimitField extends Component {
 
       this.boostLimitCallback = setTimeout(() => {
         this.props.onChange(maxPossibleBoost)
-      }, 100)
+      }, 50)
     }
   }
 
