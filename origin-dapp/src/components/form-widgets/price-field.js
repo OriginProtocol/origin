@@ -65,6 +65,7 @@ class PriceField extends Component {
   render() {
     const { price, currencyCode } = this.state
     const priceUsd = getFiatPrice(price, currencyCode, 'ETH')
+    const { isMultiUnitListing } = this.props.formContext
 
     return (
       !this.priceHidden && (
@@ -72,7 +73,7 @@ class PriceField extends Component {
           <label className="control-label" htmlFor="root_price">
             {
               this.props.intl.formatMessage(
-                this.props.isMultiUnitListing ?
+                isMultiUnitListing ?
                   this.intlMessages.multiUnitPrice :
                   this.intlMessages.singularPrice
               )
@@ -137,9 +138,8 @@ class PriceField extends Component {
   }
 }
 
-const mapStateToProps = ({ exchangeRates, listings }) => ({
-  exchangeRates,
-  isMultiUnitListing: listings.isMultiUnitListing
+const mapStateToProps = ({ exchangeRates }) => ({
+  exchangeRates
 })
 
 export default connect(mapStateToProps)(injectIntl(PriceField))

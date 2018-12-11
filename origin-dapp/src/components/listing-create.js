@@ -9,7 +9,6 @@ import { showAlert } from 'actions/Alert'
 
 import { handleNotificationsSubscription } from 'actions/Activation'
 import { storeWeb3Intent } from 'actions/App'
-import { setMultiUnitListing } from 'actions/Listing'
 import {
   update as updateTransaction,
   upsert as upsertTransaction
@@ -242,7 +241,6 @@ class ListingCreate extends Component {
 
   handleSchemaSelection(selectedSchemaType) {
     const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
-    this.props.setMultiUnitListing(false)
 
     return fetch(`schemas/${selectedSchemaType}.json`)
       .then(response => response.json())
@@ -411,12 +409,6 @@ class ListingCreate extends Component {
         }
       }
     })
-
-    const becomesMultiUnitListing = formData.unitsTotal !== undefined && formData.unitsTotal > 1
-
-    // only fire message if isMultiUnitListing flag changes
-    if (this.props.isMultiUnitListing !== becomesMultiUnitListing)
-      this.props.setMultiUnitListing(becomesMultiUnitListing)
   }
 
   checkOgnBalance() {
@@ -627,8 +619,7 @@ class ListingCreate extends Component {
   render() {
     const {
       wallet,
-      intl,
-      isMultiUnitListing
+      intl
     } = this.props
     const totalNumberOfSteps = 4
     const {
@@ -651,6 +642,7 @@ class ListingCreate extends Component {
     const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
     const boostAmount = formData.boostValue || selectedBoostAmount
+    const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
 
     return (!web3.currentProvider.isOrigin || origin.contractService.walletLinker) ? (
       <div className="listing-form">
@@ -779,6 +771,9 @@ class ListingCreate extends Component {
                   onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
                   transformErrors={this.transformFormErrors}
+                  formContext={{
+                    isMultiUnitListing: isMultiUnitListing
+                  }}
                 >
                   {showDetailsFormErrorMsg && (
                     <div className="info-box warn">
@@ -1496,7 +1491,7 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, app, exchangeRates, wallet, listings }) => {
+const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
   return {
     exchangeRates,
     messagingEnabled: activation.messaging.enabled,
@@ -1505,8 +1500,7 @@ const mapStateToProps = ({ activation, app, exchangeRates, wallet, listings }) =
     pushNotificationsSupported: activation.notifications.pushEnabled,
     serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,
-    web3Intent: app.web3.intent,
-    isMultiUnitListing: listings.isMultiUnitListing
+    web3Intent: app.web3.intent
   }
 }
 
@@ -1517,8 +1511,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateTransaction(hash, confirmationCount)),
   upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
   getOgnBalance: () => dispatch(getOgnBalance()),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
-  setMultiUnitListing: (isMultiUnitListing) => dispatch(setMultiUnitListing(isMultiUnitListing))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default withRouter(

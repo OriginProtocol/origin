@@ -128,7 +128,7 @@ export function originToDAppListing(originListing, translate) {
   }
 
   // if multiunit listing
-  if (isUnit && originListing.unitsTotal > 0) {
+  if (isUnit && originListing.unitsTotal > 1) {
     const commissionPerUnit = originListing.commissionPerUnit
       ? parseFloat(originListing.commissionPerUnit.amount)
       : 0

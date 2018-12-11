@@ -22,8 +22,6 @@ class BoostLimitField extends Component {
   }
 
   componentDidMount() {
-    // If a price is passed in, we must call the onChange callback
-    // to set the price in the parent form
     // Unfortunately, the setTimeout is needed to allow the parent
     // form to render and be ready to handle the onChange event
     const { boostLimit } = this.state
@@ -37,7 +35,7 @@ class BoostLimitField extends Component {
   componentDidUpdate(prevProps) {
     const maxPossibleBoost = this.calculateMaxPossibleBoost(this.props)
     // user is changing boost slider
-    if (this.props.formContext.formData.boostValue != prevProps.formContext.formData.boostValue &&
+    if (this.props.formContext.formData.boostValue !== prevProps.formContext.formData.boostValue &&
       maxPossibleBoost !== this.state.boostLimit){
 
       this.setState({
@@ -50,7 +48,7 @@ class BoostLimitField extends Component {
 
       this.boostLimitCallback = setTimeout(() => {
         this.props.onChange(maxPossibleBoost)
-      }, 100)
+      }, 50)
     }
   }
 
