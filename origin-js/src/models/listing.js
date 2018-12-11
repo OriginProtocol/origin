@@ -26,8 +26,8 @@ export class Listing {
    *  - {Array<Object>} media
    *  - {Object} comission - consists of 'amount' and 'currency' properties
    *  - {Array} slots
-   *  - {Ingeger} slotLength
-   *  - {String} slotLengthUnit
+   *  - {Integer} slotLength - defines the length of a time slot in a fractional listing
+   *  - {String} slotLengthUnit - defines the unit of measurement for a fractional usage time slot
    *  - {string} schemaId
    *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
    *  - {string} deposit

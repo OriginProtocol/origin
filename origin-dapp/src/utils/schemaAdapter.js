@@ -4,8 +4,8 @@
  *               and maps deprecated schema versions to existing versions as needed.
  *               Used in /utils/listing.js 
  *  @param {object} listing - the listing object fetched from IPFS
- *  @returns {object} object keys are "category" (string), "subCategory" (string),
- *                    "schema" (object), and "isDeprecated" (boolean)
+ *  @returns {object} - { { categroy: String, subCatgory: String, dappSchemaId: String, slotLength: String,
+ *                          slotLenghtUnit: String, schema: Object, isDeprecatedSchema: Boolean } }
  */
 
 export default async (listing) => {
