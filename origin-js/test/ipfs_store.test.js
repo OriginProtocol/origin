@@ -4,7 +4,6 @@ import sinon from 'sinon'
 
 import {
   IpfsDataStore,
-  BASE_SCHEMA_ID,
   LISTING_DATA_TYPE,
   LISTING_WITHDRAW_DATA_TYPE,
   OFFER_DATA_TYPE,
@@ -12,6 +11,11 @@ import {
   PROFILE_DATA_TYPE,
   REVIEW_DATA_TYPE
 } from '../src/ipfsInterface/store'
+import {
+  BASE_SCHEMA_ID,
+  generateSchemaId,
+  parseSchemaId
+} from '../src/ipfsInterface/schema-id'
 import validListing from './fixtures/listing-valid.json'
 import validOffer from './fixtures/offer-valid.json'
 import validProfile from './fixtures/profile-valid.json'
@@ -21,18 +25,31 @@ import validReview from './fixtures/review-valid.json'
 chai.use(chaiAsPromised)
 const expect = chai.expect
 
-describe('IpfsDataStore', () => {
-  it(`Should parse a valid schemaId`, () => {
-    const { dataType, schemaVersion } = IpfsDataStore.parseSchemaId(
-      BASE_SCHEMA_ID+'my-data-type_v1.0.0')
+describe('Schema Ids', () => {
+  it(`Should parse old style schemaId`, () => {
+    const { dataType, schemaVersion } = parseSchemaId(
+      'http://schema.originprotocol.com/my-data-type_v1.0.0')
     expect(dataType).to.equal('my-data-type')
     expect(schemaVersion).to.equal('1.0.0')
   })
 
-  it(`Should generate a valid schemaId`, () => {
-    const { schemaId, schemaVersion } = IpfsDataStore.generateSchemaId('my-data-type')
-    expect(schemaId).to.equal(BASE_SCHEMA_ID+'my-data-type_v1.0.0')
+  it(`Should parse new style schemaId`, () => {
+    const { dataType, schemaVersion } = parseSchemaId(
+      BASE_SCHEMA_ID+'my-data-type_1.0.0.json')
+    expect(dataType).to.equal('my-data-type')
     expect(schemaVersion).to.equal('1.0.0')
+  })
+
+  it(`Should generate a valid schemaId if no version passed`, () => {
+    const { schemaId, schemaVersion } = generateSchemaId('my-data-type')
+    expect(schemaId).to.equal(BASE_SCHEMA_ID+'my-data-type_1.0.0.json')
+    expect(schemaVersion).to.equal('1.0.0')
+  })
+
+  it(`Should generate a schemaId using passed version`, () => {
+    const { schemaId, schemaVersion } = generateSchemaId('my-data-type', '0.1.2')
+    expect(schemaId).to.equal(BASE_SCHEMA_ID+'my-data-type_0.1.2.json')
+    expect(schemaVersion).to.equal('0.1.2')
   })
 })
 
@@ -54,7 +71,7 @@ describe('Listing IpfsDataStore load', () => {
       'https://dapp.originprotocol.com/schemas/forSale-mushrooms_1.0.0.json')
     expect(listing.type).to.equal('unit')
     expect(listing.category).to.equal('schema.forSale')
-    expect(listing.subCategory).to.equal('schema.forSale.mushrooms')
+    expect(listing.subCategory).to.equal('schema.mushrooms')
     expect(listing.language).to.equal('en-US')
     expect(listing.title).to.equal('my listing')
     expect(listing.description).to.equal('my description')
@@ -75,6 +92,16 @@ describe('Listing IpfsDataStore load', () => {
 
     const listing = await store.load(LISTING_DATA_TYPE, 'TestHash')
     expect(listing.dappSchemaId).to.equal(undefined)
+  })
+
+  it(`Should load a listing with old format schemaId`, async () => {
+    const listingOldSchemaid = Object.assign({}, validListing)
+    listingOldSchemaid.schemaId = 'http://schema.originprotocol.com/listing_1.0.0'
+    mockIpfsService.loadObjFromFile = sinon.stub().resolves(listingOldSchemaid)
+    mockIpfsService.rewriteUrl = sinon.stub().returns('http://test-gateway')
+
+    const listing = await store.load(LISTING_DATA_TYPE, 'TestHash')
+    expect(listing.title).to.equal('my listing')
   })
 
   it(`Should throw an exception on listing using invalid schema Id`, () => {
@@ -181,7 +208,7 @@ describe('ListingWithdraw IpfsDataStore load', () => {
 
   it(`Should load a valid object`, async () => {
     // Empty besides schemaId since withdrawal does not have any data yet.
-    const validWithdrawal = { schemaId: BASE_SCHEMA_ID+'listing-withdraw_v1.0.0' }
+    const validWithdrawal = { schemaId: BASE_SCHEMA_ID+'listing-withdraw_1.0.0.json' }
     mockIpfsService.loadObjFromFile = sinon.stub().resolves(validWithdrawal)
 
     const withdraw = await store.load(LISTING_WITHDRAW_DATA_TYPE, 'WithdrawalHash')
@@ -283,7 +310,7 @@ describe('OfferAccept IpfsDataStore load', () => {
 
   it(`Should load a valid accept`, async () => {
     // Empty besides schemaId since accept does not have any data yet.
-    const validAccept = { schemaId: BASE_SCHEMA_ID+'offer-accept_v1.0.0' }
+    const validAccept = { schemaId: BASE_SCHEMA_ID+'offer-accept_1.0.0.json' }
     mockIpfsService.loadObjFromFile = sinon.stub().resolves(validAccept)
 
     const accept = await store.load(OFFER_ACCEPT_DATA_TYPE, 'AcceptHash')

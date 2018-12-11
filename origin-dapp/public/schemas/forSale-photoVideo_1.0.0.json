@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "required": [
+    "name",
+    "description",
+    "price",
+    "unitsTotal"
+  ],
+  "properties": {
+    "dappSchemaId": {
+      "const": "https://dapp.originprotocol.com/schemas/forSale-photoVideo_1.0.0.json"
+    },
+    "listingType": {
+      "const": "unit"
+    },
+    "category": {
+      "const": "schema.forSale"
+    },
+    "name": {
+      "type": "string",
+      "title": "schema.title",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "title": "schema.description",
+      "minLength": 10,
+      "maxLength": 1024
+    },
+    "price": {
+      "type": "number",
+      "title": "schema.priceInETH"
+    },
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.sellerSteps",
+      "enum": [
+        "schema.messageBuyer",
+        "schema.prepareProperty",
+        "schema.rateBuyer"
+      ]
+    },
+    "subCategory": {
+      "const": "schema.photoVideo"
+    },
+    "unitsTotal": {
+      "type": "number",
+      "title": "schema.unitsTotal"
+    }
+  }
+}

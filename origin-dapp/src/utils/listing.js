@@ -1,5 +1,6 @@
 import { translateListingCategory } from 'utils/translationUtils'
 import { getBoostLevel } from 'utils/boostUtils'
+import fetchSchema from 'utils/schemaAdapter'
 import origin from '../services/origin'
 
 /**
@@ -10,14 +11,11 @@ import origin from '../services/origin'
  * @return {object} Data in the Origin Protocol core listing schema v1.
  */
 export function dappFormDataToOriginListing(formData) {
-  // formData.category data format is "schema.<category>.<subCategory>".
-  const subCategory = formData.category
+  const subCategory = formData.subCategory
   const category = formData.category
-    .split('.')
-    .slice(0, 2)
-    .join('.')
 
   let listingData = {
+    dappSchemaId: formData.dappSchemaId,
     category: category,
     subCategory: subCategory,
     language: 'en-US', // TODO(franck) Get language from DApp.
@@ -63,13 +61,14 @@ export function dappFormDataToOriginListing(formData) {
   } else {
     listingData = {
       ...listingData,
-      timeIncrement: formData.timeIncrement,
-      slots: formData.slots,
       commission: {
         amount: formData.boostValue.toString(),
         currency: 'OGN'
       },
-      calendarStep: '60' // Note: this is currently always 60 minutes but may change later to allow for sub-1hr slots
+      calendarStep: '60', // Note: this is currently always 60 minutes but may change later to allow for sub-1hr slots
+      slots: formData.slots,
+      slotLength: formData.slotLength,
+      slotLengthUnit: formData.slotLengthUnit
     }
   }
 
@@ -96,17 +95,34 @@ export function dappFormDataToOriginListing(formData) {
  * @param {Listing} originListing - Listing object returned by origin-js.
  * @return {object} DApp compatible listing object.
  */
-export function originToDAppListing(originListing) {
+export async function originToDAppListing(originListing) {
   const commission = originListing.commission
     ? parseFloat(originListing.commission.amount)
     : 0
+
+  // detect and adapt listings that were created by deprecated schemas
+  const schemaData = await fetchSchema(originListing)
+  const {
+    category,
+    subCategory,
+    dappSchemaId,
+    slotLength,
+    slotLengthUnit,
+    schema,
+    isDeprecatedSchema
+  } = schemaData
 
   const dappListing = {
     id: originListing.id,
     seller: originListing.seller,
     status: originListing.status,
-    schemaType: originListing.category.replace('schema.', ''),
-    category: originListing.subCategory,
+    category,
+    subCategory,
+    dappSchemaId,
+    slotLength,
+    slotLengthUnit,
+    schema,
+    isDeprecatedSchema,
     display: originListing.display,
     name: originListing.title,
     description: originListing.description,
@@ -144,16 +160,18 @@ export function originToDAppListing(originListing) {
  * @param {object} purchasesOrSales.offer - offer object
  * @return {array} Transformed array of purchases or sales objects
  */
-export const transformPurchasesOrSales = purchasesOrSales => {
-  return purchasesOrSales.map(purchase => {
+export const transformPurchasesOrSales = async purchasesOrSales => {
+  const promises = purchasesOrSales.map(async purchase => {
     const { offer, listing } = purchase
-    const transformedListing = originToDAppListing(listing)
+    const transformedListing = await originToDAppListing(listing)
     transformedListing.category = translateListingCategory(transformedListing.category)
     return {
       offer,
       listing: transformedListing
     }
   })
+
+  return Promise.all(promises)
 }
 
 /**
@@ -165,9 +183,10 @@ export const transformPurchasesOrSales = purchasesOrSales => {
  */
 export async function getListing(id, translate = false, blockInfo) {
   const originListing = await origin.marketplace.getListing(id, blockInfo)
-  const dappListing = originToDAppListing(originListing)
+  const dappListing = await originToDAppListing(originListing)
   if (translate) {
     dappListing.category = translateListingCategory(dappListing.category)
+    dappListing.subCategory = translateListingCategory(dappListing.subCategory)
   }
   return dappListing
 }
@@ -181,15 +200,4 @@ export async function getListing(id, translate = false, blockInfo) {
 
 export function dashToCamelCase(string) {
   return string.replace(/-([a-z])/g, g => g[1].toUpperCase())
-}
-
-/**
- * Takes camel case string and converts it to a string with hyphen(s)
- * e.g. forSale becomes for-sale
- * @param {string} string - a camel case string
- * @return {string} the string with hyphen(s)
- */
-
-export function camelCaseToDash(string) {
-  return string.replace(/([a-z][A-Z])/g, g => g[0] + '-' + g[1].toLowerCase())
 }

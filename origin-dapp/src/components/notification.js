@@ -122,11 +122,11 @@ class Notification extends Component {
               )}
             </div>
             <div className="button-container m-auto">
-              <button className="btn">
+              <button className="btn d-flex justify-content-center">
                 <img
-                  src="images/carat-blue.svg"
-                  className="carat"
-                  alt="right carat"
+                  src="images/caret-blue.svg"
+                  className="caret"
+                  alt="right caret"
                 />
               </button>
             </div>

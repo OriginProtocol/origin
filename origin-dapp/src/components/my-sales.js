@@ -42,8 +42,7 @@ class MySales extends Component {
   async loadPurchases() {
     const { wallet } = this.props
     const sales = await origin.marketplace.getSales(wallet.address)
-    const transformedSales = transformPurchasesOrSales(sales)
-
+    const transformedSales = await transformPurchasesOrSales(sales)
     this.setState({ loading: false, purchases: transformedSales })
   }
 

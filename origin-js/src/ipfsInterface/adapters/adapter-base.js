@@ -1,14 +1,16 @@
 import Ajv from 'ajv'
 
-import listingSchemaV1 from '../schemas/listing.json'
-import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw.json'
-import offerSchemaV1 from '../schemas/offer.json'
-import offerWithdrawnSchemaV1 from '../schemas/offer-withdraw.json'
-import offerAcceptedSchemaV1 from '../schemas/offer-accept.json'
-import disputeSchemaV1 from '../schemas/dispute.json'
-import resolutionSchemaV1 from '../schemas/resolution.json'
-import profileSchemaV1 from '../schemas/profile.json'
-import reviewSchemaV1 from '../schemas/review.json'
+import { generateSchemaId, parseSchemaId } from '../schema-id'
+
+import listingSchemaV1 from '../schemas/listing_1.0.0.json'
+import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw_1.0.0.json'
+import offerSchemaV1 from '../schemas/offer_1.0.0.json'
+import offerWithdrawnSchemaV1 from '../schemas/offer-withdraw_1.0.0.json'
+import offerAcceptedSchemaV1 from '../schemas/offer-accept_1.0.0.json'
+import disputeSchemaV1 from '../schemas/dispute_1.0.0.json'
+import resolutionSchemaV1 from '../schemas/resolution_1.0.0.json'
+import profileSchemaV1 from '../schemas/profile_1.0.0.json'
+import reviewSchemaV1 from '../schemas/review_1.0.0.json'
 
 const ajv = new Ajv({ allErrors: true })
 // To use the draft-06 JSON schema, we need to explicitly add it to ajv.
@@ -26,8 +28,9 @@ ajv.addSchema([
 ])
 
 export default class AdapterBase {
-  constructor(schemaId) {
-    this.schemaId = schemaId
+  constructor(dataType, schemaVersion) {
+    this.dataType = dataType
+    this.schemaVersion = schemaVersion
   }
 
   /**
@@ -35,23 +38,23 @@ export default class AdapterBase {
    * @throws {Error} If validation fails.
    */
   validate(data) {
-    if (data.schemaId !== this.schemaId) {
+    const { dataType, schemaVersion } = parseSchemaId(data.schemaId)
+    if (dataType !== this.dataType || schemaVersion !== this.schemaVersion) {
       throw new Error(
-        `Unexpected schema version: ${data.schemaId} != ${
-          this.schemaId
-        }`
+        `Adapter ${this.dataType} ${this.schemaVersion} can not process ${data.schemaId}`
       )
     }
 
-    const validator = ajv.getSchema(this.schemaId)
+    const { schemaId } = generateSchemaId(dataType, schemaVersion)
+    const validator = ajv.getSchema(schemaId)
 
     if (!validator) {
-      throw new Error(`Failed loading schema validator for ${this.schemaId}`)
+      throw new Error(`Failed loading schema validator for ${schemaId}`)
     }
     if (!validator(data)) {
       throw new Error(
         `Data failed schema validation.
-        Schema id: ${this.schemaId}
+        Schema id: ${schemaId}
         Data: ${JSON.stringify(data)}.
         Errors: ${JSON.stringify(validator.errors)}`
       )

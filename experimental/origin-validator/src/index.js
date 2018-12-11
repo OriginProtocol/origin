@@ -24,8 +24,26 @@ ajv.addSchema([
   reviewSchema
 ])
 
+const BASE_SCHEMA_ID = 'https://schema.originprotocol.com/'
+
+// Regex for extracting data type and version from schemaId.
+// eslint-disable-next-line no-useless-escape
+const schemaIdRegex = new RegExp('^/([a-zA-Z\\-]*)_v?(\\d+\\.\\d+\\.\\d+)(?:\\.json)?$')
+
+function parseSchemaId(schemaId) {
+  const url = new URL(schemaId)
+  const splits = schemaIdRegex.exec(url.pathname)
+  if (!splits) {
+    throw new Error(`Invalid schemaId: ${schemaId}`)
+  }
+  return { dataType: splits[1], schemaVersion: splits[2] }
+}
+
+
 function validate(schemaId, data) {
-  const validator = ajv.getSchema(schemaId)
+  const { dataType, schemaVersion } = parseSchemaId(schemaId)
+  const normalizedSchemaId = `${BASE_SCHEMA_ID}${dataType}_${schemaVersion}.json`
+  const validator = ajv.getSchema(normalizedSchemaId)
   if (!validator) {
     throw new Error(`Failed loading schema validator for ${schemaId}`)
   }

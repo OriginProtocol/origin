@@ -24,7 +24,7 @@ import QuantityField from 'components/form-widgets/quantity-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
 
-import { getListing, camelCaseToDash } from 'utils/listing'
+import { getListing } from 'utils/listing'
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 import WalletCard from 'components/wallet-card'
@@ -50,43 +50,37 @@ class ListingCreate extends Component {
     super(props)
 
     this.STEP = {
-      PICK_SCHEMA: 1,
-      DETAILS: 2,
-      AVAILABILITY: 3,
-      BOOST: 4,
-      PREVIEW: 5,
-      METAMASK: 6,
-      PROCESSING: 7,
-      SUCCESS: 8,
-      ERROR: 9
+      PICK_CATEGORY: 1,
+      PICK_SUBCATEGORY: 2, // NOTE: this is a mobile-only step
+      DETAILS: 3,
+      AVAILABILITY: 4,
+      BOOST: 5,
+      PREVIEW: 6,
+      METAMASK: 7,
+      PROCESSING: 8,
+      SUCCESS: 9,
+      ERROR: 10
     }
 
-    // TODO(John) - remove once fractional usage is enabled by default
-    this.fractionalSchemaTypes = []
-
-    if (enableFractional) {
-      this.fractionalSchemaTypes = [
-        'housing',
-        'services'
-      ]
-    }
-
-    this.schemaList = listingSchemaMetadata.listingTypes.map(listingType => {
+    this.categoryList = listingSchemaMetadata.listingTypes.map(listingType => {
       listingType.name = props.intl.formatMessage(listingType.translationName)
       return listingType
     })
 
     this.defaultState = {
       boostCapTooLow: false,
-      step: this.STEP.PICK_SCHEMA,
+      step: this.STEP.PICK_CATEGORY,
       selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
-      selectedSchemaType: null,
+      selectedCategory: null,
+      selectedCategoryName: null,
+      selectedCategorySchemas: null,
+      selectedSchemaId: null,
       translatedSchema: null,
-      schemaExamples: null,
       schemaFetched: false,
       isFractionalListing: false,
       isEditMode: false,
       fractionalTimeIncrement: null,
+      showNoCategorySelectedError: false,
       showNoSchemaSelectedError: false,
       formListing: {
         formData: {
@@ -122,6 +116,10 @@ class ListingCreate extends Component {
       boostLimitTooHigh: {
         id: 'schema.boostLimitTooHigh',
         defaultMessage: 'value too high. Should be equal or smaller of the Total boost required.'
+      },
+      selectOne: {
+        id: 'listing-create.selectOne',
+        defaultMessage: 'Select One'
       }
     })
 
@@ -138,7 +136,10 @@ class ListingCreate extends Component {
     }
 
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
+    this.handleCategorySelection = this.handleCategorySelection.bind(this)
+    this.handleCategorySelectNextBtn = this.handleCategorySelectNextBtn.bind(this)
     this.handleSchemaSelection = this.handleSchemaSelection.bind(this)
+    this.renderDetailsForm = this.renderDetailsForm.bind(this)
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
     this.backFromBoostStep = this.backFromBoostStep.bind(this)
@@ -171,11 +172,11 @@ class ListingCreate extends Component {
           formListing: {
             formData: listing
           },
-          selectedSchemaType: listing.schemaType,
+          selectedSchemaId: listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
         })
-        await this.handleSchemaSelection(camelCaseToDash(listing.schemaType))
+        this.renderDetailsForm(listing.schema)
         this.setState({
           step: this.STEP.DETAILS,
         })
@@ -239,10 +240,61 @@ class ListingCreate extends Component {
     }, 10000)
   }
 
-  handleSchemaSelection(selectedSchemaType) {
-    const isFractionalListing = this.fractionalSchemaTypes.includes(selectedSchemaType)
+  handleCategorySelection(selectedCategory) {
+    const trimmedCategory = selectedCategory.replace('schema.', '')
+    const schemaArray = listingSchemaMetadata &&
+      listingSchemaMetadata.listingSchemasByCategory &&
+      listingSchemaMetadata.listingSchemasByCategory[trimmedCategory]
+    const schemaArrayWithNames = schemaArray.map(schemaObj => {
+      schemaObj.name = this.props.intl.formatMessage(schemaObj.translationName)
+      return schemaObj
+    })
+    const selectedCategoryObj = listingSchemaMetadata.listingTypes.find(
+      listingType => listingType.type === trimmedCategory 
+    )
+    const stateToSet = {
+      selectedCategory: trimmedCategory,
+      selectedCategoryName: this.props.intl.formatMessage(selectedCategoryObj.translationName),
+      selectedCategorySchemas: schemaArrayWithNames
+    }
 
-    return fetch(`schemas/${selectedSchemaType}.json`)
+    if (this.props.mobileDevice) {
+      stateToSet.step = this.STEP.PICK_SUBCATEGORY
+      window.scrollTo(0, 0)
+    }
+
+    this.setState(stateToSet)
+  }
+
+  handleCategorySelectNextBtn() {
+    // (The button that calls this method is only visibile on non-mobile devices)
+    // check for category and schema selection and send to DETAILS step or show error
+    if (!this.state.selectedCategory) {
+      this.setState({
+        showNoCategorySelectedError: true
+      })
+    } else if (!this.state.selectedSchemaId) {
+      this.setState({
+        showNoSchemaSelectedError: true
+      })
+    } else {
+      this.setState({
+        step: this.STEP.DETAILS,
+        showNoCategorySelectedError: false,
+        showNoSchemaSelectedError: false
+      })
+    }
+  }
+
+  handleSchemaSelection(selectedSchemaId) {
+    let schemaFileName = selectedSchemaId
+
+    // On desktop screen sizes, we use the onChange event of a <select> to call this method.
+    if (event.target.value) {
+      schemaFileName = event.target.value
+    }
+
+    return fetch(`schemas/${schemaFileName}`)
       .then(response => response.json())
       .then(schemaJson => {
         PriceField.defaultProps = {
@@ -278,29 +330,93 @@ class ListingCreate extends Component {
           }
         }
 
-        if (isFractionalListing) {
-          this.uiSchema.price = {
-            'ui:widget': 'hidden'
-          }
-        }
-
-        const translatedSchema = translateSchema(schemaJson, selectedSchemaType)
-
-        this.setState({
-          selectedSchemaType,
-          schemaFetched: true,
-          fractionalTimeIncrement: !isFractionalListing ? null :
-            selectedSchemaType === 'housing' ? 'daily' : 'hourly',
-          showNoSchemaSelectedError: false,
-          translatedSchema,
-          isFractionalListing,
-          schemaExamples:
-            translatedSchema &&
-            translatedSchema.properties &&
-            translatedSchema.properties.examples &&
-            translatedSchema.properties.examples.enumNames
-        })
+        this.setState({ selectedSchemaId })
+        this.renderDetailsForm(schemaJson)
       })
+  }
+
+  renderDetailsForm(schemaJson) {
+    PriceField.defaultProps = {
+      options: {
+        selectedSchema: schemaJson
+      }
+    }
+    this.uiSchema = {
+      slotLength: {
+        'ui:widget': 'hidden'
+      },
+      slotLengthUnit: {
+        'ui:widget': 'hidden'
+      },
+      examples: {
+        'ui:widget': 'hidden'
+      },
+      sellerSteps: {
+        'ui:widget': 'hidden'
+      },
+      price: {
+        'ui:field': PriceField
+      },
+      description: {
+        'ui:widget': 'textarea',
+        'ui:options': {
+          rows: 4
+        }
+      },
+      pictures: {
+        'ui:widget': PhotoPicker
+      }
+    }
+
+    const { properties } = schemaJson
+
+    // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
+    const isFractionalListing = enableFractional &&
+      properties &&
+      properties.listingType &&
+      properties.listingType.const === 'fractional'
+
+    const slotLength = enableFractional &&
+      this.state.formListing.formData.slotLength ?
+      this.state.formListing.formData.slotLength :
+        properties &&
+        properties.slotLength &&
+        properties.slotLength.default
+
+    const slotLengthUnit = enableFractional &&
+      this.state.formListing.formData.slotLengthUnit ?
+      this.state.formListing.formData.slotLengthUnit :
+        properties &&
+        properties.slotLengthUnit &&
+        properties.slotLengthUnit.default
+
+    const fractionalTimeIncrement = slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily'
+
+    if (isFractionalListing) {
+      this.uiSchema.price = {
+        'ui:widget': 'hidden'
+      }
+    }
+
+    const translatedSchema = translateSchema(schemaJson)
+
+    this.setState({
+      schemaFetched: true,
+      fractionalTimeIncrement,
+      showNoSchemaSelectedError: false,
+      translatedSchema,
+      isFractionalListing,
+      formListing: {
+        formData: {
+          ...this.state.formListing.formData,
+          dappSchemaId: properties.dappSchemaId.const,
+          category: properties.category.const,
+          subCategory: properties.subCategory.const,
+          slotLength,
+          slotLengthUnit
+        }
+      }
+    })
   }
 
   goToDetailsStep() {
@@ -341,7 +457,6 @@ class ListingCreate extends Component {
         ...this.state.formListing,
         formData: {
           ...this.state.formListing.formData,
-          timeIncrement: this.state.fractionalTimeIncrement,
           slots
         }
       }
@@ -354,7 +469,7 @@ class ListingCreate extends Component {
 
   onBackToPickSchema() {
     this.setState({
-      step: this.STEP.PICK_SCHEMA,
+      step: this.STEP.PICK_SUBCATEGORY,
       selectedSchema: null,
       schemaFetched: false,
       formListing: {
@@ -400,6 +515,7 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
+
     this.setState({
       formListing: {
         ...this.state.formListing,
@@ -627,8 +743,11 @@ class ListingCreate extends Component {
       formListing,
       fractionalTimeIncrement,
       selectedBoostAmount,
-      selectedSchemaType,
-      schemaExamples,
+      selectedCategory,
+      selectedCategoryName,
+      selectedCategorySchemas,
+      showNoCategorySelectedError,
+      selectedSchemaId,
       showNoSchemaSelectedError,
       step,
       translatedSchema,
@@ -639,16 +758,17 @@ class ListingCreate extends Component {
       isEditMode
     } = this.state
     const { formData } = formListing
-    const translatedCategory = translateListingCategory(formData.category)
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
     const boostAmount = formData.boostValue || selectedBoostAmount
     const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
+    const category = translateListingCategory(formData.category)
+    const subCategory = translateListingCategory(formData.subCategory)
 
     return (!web3.currentProvider.isOrigin || origin.contractService.walletLinker) ? (
       <div className="listing-form">
         <div className="step-container">
           <div className="row">
-            {step === this.STEP.PICK_SCHEMA && (
+            {step === this.STEP.PICK_CATEGORY && (
               <div className="col-md-6 col-lg-5 pick-schema">
                 <label>
                   <FormattedMessage
@@ -670,42 +790,42 @@ class ListingCreate extends Component {
                   stepCurrent={step}
                 />
                 <div className="schema-options">
-                  {this.schemaList.map(schema => (
+                  {this.categoryList.map(category => (
                     <div
                       className={`schema-selection${
-                        selectedSchemaType === schema.type ? ' selected' : ''
+                        selectedCategory === category.type ? ' selected' : ''
                       }`}
-                      key={schema.type}
-                      onClick={() => this.handleSchemaSelection(schema.type)}
+                      key={category.type}
+                      onClick={() => this.handleCategorySelection(category.type)}
                       ga-category="create_listing"
-                      ga-label={ `select_schema_${schema.type}`}
+                      ga-label={ `select_category_${category.type}`}
                     >
-                      {schema.name}
-                      <div
-                        className={`schema-examples${
-                          selectedSchemaType === schema.type ? ' selected' : ''
-                        }`}
-                      >
-                        <p>
-                          <FormattedMessage
-                            id={'listing-create.listingsMayInclude'}
-                            defaultMessage={
-                              '{schemaName} listings may include:'
-                            }
-                            values={{ schemaName: schema.name }}
-                          />
-                        </p>
-                        <ul>
-                          {schemaExamples &&
-                            schemaExamples.map(example => (
-                              <li key={`${schema.name}-${example}`}>
-                                {example}
-                              </li>
-                            ))}
-                        </ul>
+                      <div className="category-icon-container">
+                        <img src={`images/${category.img}`} role="presentation" />
                       </div>
+                      {category.name}
+                      {!this.props.mobileDevice && selectedCategory === category.type &&
+                        <select onChange={this.handleSchemaSelection} className="form-control">
+                          <option value="">{intl.formatMessage(this.intlMessages.selectOne)}</option>
+                          {selectedCategorySchemas.map(schemaObj => (
+                            <option value={schemaObj.schema} key={schemaObj.name}>{schemaObj.name}</option>
+                          ))}
+                        </select>
+                      }
                     </div>
                   ))}
+                  {showNoCategorySelectedError && (
+                    <div className="info-box warn">
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.noSchemaSelectedError'}
+                          defaultMessage={
+                            'You must first select a listing type'
+                          }
+                        />
+                      </p>
+                    </div>
+                  )}
                   {showNoSchemaSelectedError && (
                     <div className="info-box warn">
                       <p>
@@ -719,19 +839,85 @@ class ListingCreate extends Component {
                     </div>
                   )}
                 </div>
-                <div className="btn-container">
-                  <button
-                    className="float-right btn btn-primary btn-listing-create"
-                    onClick={() => this.goToDetailsStep()}
-                    ga-category="create_listing"
-                    ga-label="select_schema_step_continue"
-                  >
-                    <FormattedMessage
-                      id={'listing-create.next'}
-                      defaultMessage={'Next'}
-                    />
-                  </button>
+                {!this.props.mobileDevice &&
+                  <div className="btn-container">
+                    <button
+                      className="float-right btn btn-primary btn-listing-create"
+                      onClick={() => this.handleCategorySelectNextBtn()}
+                      ga-category="create_listing"
+                      ga-label="select_category_step_continue"
+                    >
+                      <FormattedMessage
+                        id={'listing-create.next'}
+                        defaultMessage={'Next'}
+                      />
+                    </button>
+                  </div>
+                }
+              </div>
+            )}
+            {/* NOTE: PICK_SUBCATEGORY is a mobile-only step */}
+            {step === this.STEP.PICK_SUBCATEGORY && (
+              <div className="col-md-6 col-lg-5 pick-schema">
+                <label>
+                  <FormattedMessage
+                    id={'listing-create.stepNumberLabel'}
+                    defaultMessage={'STEP {stepNumber}'}
+                    values={{ stepNumber: Number(step) }}
+                  />
+                </label>
+                <h2>
+                  <FormattedMessage
+                    id={'listing-create.whatTypeOfListing'}
+                    defaultMessage={
+                      'What type of listing do you want to create?'
+                    }
+                  />
+                </h2>
+                <button
+                  onClick={() => this.setState({
+                    step: this.STEP.PICK_CATEGORY,
+                    selectedSchemaId: null
+                  })}
+                  className="mobile-back-btn"
+                >
+                  <img src="images/caret-grey.svg" />
+                  <FormattedMessage
+                    id={'listing-create.backButtonLabel'}
+                    defaultMessage={'Back'}
+                  />
+                </button>
+                <h3>{selectedCategoryName}</h3>
+                <div className="schema-options">
+                  {selectedCategorySchemas.map(schemaObj => (
+                    <div
+                      className={`schema-selection mobile${
+                        selectedSchemaId === schemaObj.schema ? ' selected' : ''
+                      }`}
+                      key={schemaObj.schema}
+                      onClick={() => this.handleSchemaSelection(schemaObj.schema)}
+                      ga-category="create_listing"
+                      ga-label={ `select_schema_${schemaObj.schema}`}
+                    >
+                      {schemaObj.name}
+                    </div>
+                  ))}
                 </div>
+                {selectedSchemaId &&
+                  <div className="btn-container mobile">
+                    <button
+                      className="float-right btn btn-primary btn-listing-create"
+                      onClick={() => this.goToDetailsStep()}
+                      ga-category="create_listing"
+                      ga-label="select_category_step_continue"
+                    >
+                      <FormattedMessage
+                        id={'listing-create.continue'}
+                        defaultMessage={'Continue'}
+                      />
+                    </button>
+                  </div>
+                }
               </div>
             )}
             {step === this.STEP.DETAILS && (
@@ -1025,7 +1211,20 @@ class ListingCreate extends Component {
                       </p>
                     </div>
                     <div className="col-md-9">
-                      <p>{translatedCategory}</p>
+                      <p>{category}</p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">
+                        <FormattedMessage
+                          id={'listing-create.subcategory'}
+                          defaultMessage={'Subcategory'}
+                        />
+                      </p>
+                    </div>
+                    <div className="col-md-9">
+                      <p>{subCategory}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -1252,7 +1451,7 @@ class ListingCreate extends Component {
                   withMenus={true}
                   withProfile={false}
                 />
-                {step === this.STEP.PICK_SCHEMA && (
+                {step === this.STEP.PICK_SUBCATEGORY && (
                   <div className="info-box">
                     <h2>
                       <FormattedMessage
@@ -1279,7 +1478,7 @@ class ListingCreate extends Component {
                     <p>
                       <FormattedMessage
                         id={'listing-create.form-help-details'}
-                        defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing.`}
+                        defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if they want to buy your listing.`}
                       />
                     </p>
                   </div>
@@ -1483,7 +1682,7 @@ class ListingCreate extends Component {
           </div>
         </div>
         <Prompt
-          when={step !== this.STEP.PICK_SCHEMA && step !== this.STEP.SUCCESS}
+          when={step !== this.STEP.PICK_CATEGORY && step !== this.STEP.SUCCESS}
           message={intl.formatMessage(this.intlMessages.navigationWarning)}
         />
       </div>
@@ -1500,7 +1699,8 @@ const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
     pushNotificationsSupported: activation.notifications.pushEnabled,
     serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,
-    web3Intent: app.web3.intent
+    web3Intent: app.web3.intent,
+    mobileDevice: app.mobileDevice
   }
 }
 
