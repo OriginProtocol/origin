@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://schema.originprotocol.com/listing_v1.0.0",
+  "$id": "https://schema.originprotocol.com/listing_1.0.0.json",
   "title": "Origin Protocol core listing schema for data stored in IPFS",
   "definitions": {
     "money": {

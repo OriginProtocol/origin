@@ -6,7 +6,7 @@ import parseId from '../../utils/parseId'
 async function acceptOffer(_, data) {
   await checkMetaMask(data.from)
   const ipfsHash = await post(contracts.ipfsRPC, {
-    schemaId: 'http://schema.originprotocol.com/offer-accept_v1.0.0'
+    schemaId: 'https://schema.originprotocol.com/offer-accept_1.0.0.json'
   })
   const { listingId, offerId } = parseId(data.offerID)
 

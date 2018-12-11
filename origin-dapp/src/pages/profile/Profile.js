@@ -500,6 +500,7 @@ class Profile extends Component {
           isOpen={modalsOpen.cropModal}
           imageFileObj={imageToCrop}
           aspect={1} // force square aspect ratio
+          limitSize={false}
           onCropComplete={(croppedImageUri) => {
             this.props.updateProfile({
               data: {

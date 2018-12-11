@@ -2,11 +2,11 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '4f7ab3f'
+bridgeImageTag: 'a263250'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '8d89e66'
+dappImageTag: 'a263250'
 
 # Origin network configuration
 gethTxReplicas: 1

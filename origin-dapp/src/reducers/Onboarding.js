@@ -1,23 +1,6 @@
 import { OnboardingConstants } from 'actions/Onboarding'
 import steps from 'components/onboarding-modal/steps'
-
-function getStorageItem(name, defaultValue) {
-  try {
-    const item = localStorage.getItem(`onboarding${name}`)
-    return item ? JSON.parse(item) : defaultValue
-  } catch (e) {
-    return defaultValue
-  }
-}
-
-function saveStorageItem(name, item, defaultValue) {
-  try {
-    localStorage.setItem(`onboarding${name}`, JSON.stringify(item))
-  } catch (e) {
-    return defaultValue || item
-  }
-  return item
-}
+import { getStorageItem, saveStorageItem } from 'utils/localStorage'
 
 const updateStep = (steps, { selectedStep, incompleteStep }) => (step) => {
   const completedStep = { ...step, complete: true }
@@ -86,7 +69,7 @@ export default function Onboarding(state = initialState, action = {}) {
       currentStep: updateCurrentStep(state, action, stepsCompleted),
       progress: true,
       steps: updatedSteps,
-      stepsCompleted: saveStorageItem('.stepsCompleted', stepsCompleted)
+      stepsCompleted: saveStorageItem('onboarding.stepsCompleted', stepsCompleted)
     }
   case OnboardingConstants.SPLIT_PANEL:
     return {
@@ -98,7 +81,7 @@ export default function Onboarding(state = initialState, action = {}) {
   case OnboardingConstants.LEARN_MORE:
     return { ...state, learnMore: action.show, splitPanel: false }
   case OnboardingConstants.FETCH_STEPS:
-    return { ...state, stepsCompleted: getStorageItem('.stepsCompleted', state.stepsCompleted) }
+    return { ...state, stepsCompleted: getStorageItem('onboarding.stepsCompleted', state.stepsCompleted) }
   default:
     return state
   }

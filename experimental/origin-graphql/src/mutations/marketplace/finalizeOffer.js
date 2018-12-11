@@ -6,7 +6,7 @@ import parseId from '../../utils/parseId'
 async function finalizeOffer(_, data) {
   await checkMetaMask(data.from)
   const ipfsData = {
-    schemaId: 'http://schema.originprotocol.com/review_v1.0.0',
+    schemaId: 'https://schema.originprotocol.com/review_1.0.0.json',
   }
   const { listingId, offerId } = parseId(data.offerID)
 
