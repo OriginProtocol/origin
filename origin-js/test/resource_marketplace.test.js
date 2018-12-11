@@ -104,7 +104,8 @@ describe('Marketplace Resource', function() {
       ipfsService,
       affiliate: validAffiliate,
       arbitrator: validArbitrator,
-      store
+      store,
+      blockEpoch: await web3.eth.getBlockNumber()
     })
 
     // Set default account for contract calls.

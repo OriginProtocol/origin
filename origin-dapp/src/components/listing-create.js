@@ -348,6 +348,7 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
+
     this.setState({
       formListing: {
         ...this.state.formListing,
