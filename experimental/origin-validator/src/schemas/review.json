@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://schema.originprotocol.com/review_v1.0.0",
+  "$id": "https://schema.originprotocol.com/review_1.0.0.json",
   "title": "Origin Protocol review schema",
   "type": "object",
   "properties": {

@@ -1,5 +1,5 @@
 {
-  "schemaId": "http://schema.originprotocol.com/profile_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/profile_1.0.0.json",
   "firstName": "originus",
   "lastName": "protocolus",
   "description": "Semper Fidelis",

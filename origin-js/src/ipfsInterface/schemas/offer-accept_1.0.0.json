@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "http://schema.originprotocol.com/dispute_v1.0.0",
-  "title": "Origin Protocol offer dispute schema",
+  "$id": "https://schema.originprotocol.com/offer-accept_1.0.0.json",
+  "title": "Origin Protocol offer acceptance schema",
   "type": "object",
   "properties": {
     "schemaId": {
