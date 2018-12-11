@@ -128,6 +128,7 @@ var config = {
     new CopyWebpackPlugin([
       'public/favicon.ico',
       'public/sw.js',
+      'public/swAnalytics.js',
       { from: 'public/images', to: 'images' },
       { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }
