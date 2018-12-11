@@ -7,7 +7,7 @@ const Verified = props => (
   </Tag>
 )
 
-const UserProfile = ({profile}) => {
+const UserProfile = ({ profile }) => {
   if (!profile) {
     return 'No profile set up'
   }

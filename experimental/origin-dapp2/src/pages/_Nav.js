@@ -1,42 +1,55 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 import Profile from './nav/Profile'
 import Notifications from './nav/Notifications'
 
-const Nav = () => (
-  <nav className="navbar navbar-expand-lg">
-    <div className="container">
-      <a className="navbar-brand" href="#">
-        Origin
-      </a>
-      <button
-        className="navbar-toggler"
-        type="button"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon" />
-      </button>
+class Nav extends Component {
+  state = {}
+  render() {
+    return (
+      <nav className="navbar navbar-expand-lg">
+        <div className="container">
+          <a className="navbar-brand" href="#">
+            Origin
+          </a>
+          <button
+            className="navbar-toggler"
+            type="button"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon" />
+          </button>
 
-      <div className="collapse navbar-collapse">
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item active">
-            <a className="nav-link" href="#">
-              Get Started
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-              Sell on Origin
-            </a>
-          </li>
-          <Notifications />
-          <Profile />
-        </ul>
-      </div>
-    </div>
-  </nav>
-)
+          <div className="collapse navbar-collapse">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item active">
+                <a className="nav-link" href="#">
+                  Get Started
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  Sell on Origin
+                </a>
+              </li>
+              <Notifications
+                onOpen={() => this.setState({ open: 'notifications' })}
+                onClose={() => this.setState({ open: false })}
+                open={this.state.open === 'notifications'}
+              />
+              <Profile
+                onOpen={() => this.setState({ open: 'profile' })}
+                onClose={() => this.setState({ open: false })}
+                open={this.state.open === 'profile'}
+              />
+            </ul>
+          </div>
+        </div>
+      </nav>
+    )
+  }
+}
 
 export default Nav
 
@@ -63,6 +76,7 @@ require('react-styl')(`
         color: var(--pale-grey)
 
       .dropdown-menu
+        padding: 0
         margin-top: 1rem
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
         border-radius: 5px 0 5px 5px
@@ -87,8 +101,10 @@ require('react-styl')(`
           color: var(--white)
           background-color: var(--dark)
           border: 0
+          box-shadow: none
           &::before
             color: var(--dark)
+            text-shadow: none
 
 
   .navbar-brand

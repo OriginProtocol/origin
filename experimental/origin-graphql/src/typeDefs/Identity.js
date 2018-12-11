@@ -12,6 +12,7 @@ export default `
     lastName: String
     description: String
     avatar: String
+    strength: String
 
     facebookVerified: Boolean
     twitterVerified: Boolean

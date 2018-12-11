@@ -70,5 +70,19 @@ export default {
         setTimeout(() => resolve({ id }), 500)
       })
       await contracts.messaging.init(id)
-    })
+    }),
+
+  notifications: () => {
+    return {
+      pageInfo: {
+        endCursor: '',
+        hasNextPage: false,
+        hasPreviousPage: false,
+        startCursor: ''
+      },
+      totalCount: 0,
+      totalUnread: 0,
+      nodes: []
+    }
+  }
 }

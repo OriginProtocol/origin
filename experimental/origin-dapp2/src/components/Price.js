@@ -18,7 +18,7 @@ class Price extends Component {
     return (
       <Query query={CurrentPrice}>
         {({ loading, error, data }) => {
-          if (loading || error) return null
+          if (loading || error) return <span>&nbsp;</span>
           const usdAmount = data.ethUsd * Number(amount || 0)
           let rounded = Math.round(usdAmount * 100) / 100
           if (usdAmount > 0 && rounded === 0) rounded = 0.01

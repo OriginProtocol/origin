@@ -183,6 +183,7 @@ export function setNetwork(net) {
         }
       })
     })
+    context.pubsub = pubsub
   }
 
   context.tokens = config.tokens || []
