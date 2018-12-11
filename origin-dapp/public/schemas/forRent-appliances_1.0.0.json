@@ -3,34 +3,18 @@
   "type": "object",
   "required": [
     "name",
-    "description"
+    "description",
+    "price"
   ],
   "properties": {
     "dappSchemaId": {
       "const": "https://dapp.originprotocol.com/schemas/forRent-appliances_1.0.0.json"
     },
     "listingType": {
-      "const": "fractional"
+      "const": "unit"
     },
     "category": {
       "const": "schema.forRent"
-    },
-    "slotLength": {
-      "type": "integer",
-      "title": "schema.slotLength",
-      "default": 1
-    },
-    "slotLengthUnit": {
-      "type": "string",
-      "enum": [
-        "schema.minutes",
-        "schema.hours",
-        "schema.days",
-        "schema.weeks",
-        "schema.months",
-        "schema.years"
-      ],
-      "default": "schema.hours"
     },
     "name": {
       "type": "string",
@@ -63,6 +47,10 @@
     },
     "subCategory": {
       "const": "schema.appliances"
+    },
+    "price": {
+      "type": "number",
+      "title": "schema.priceInETH"
     }
   }
 }
