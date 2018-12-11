@@ -69,10 +69,6 @@
     },
     "subCategory": {
       "const": "schema.counseling"
-    },
-    "unitsTotal": {
-      "type": "integer",
-      "title": "schema.unitsTotal"
     }
   }
 }

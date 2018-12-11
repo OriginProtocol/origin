@@ -69,10 +69,6 @@
     },
     "subCategory": {
       "const": "schema.other"
-    },
-    "unitsTotal": {
-      "type": "integer",
-      "title": "schema.unitsTotal"
     }
   }
 }

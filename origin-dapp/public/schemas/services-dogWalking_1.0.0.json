@@ -69,10 +69,6 @@
     },
     "subCategory": {
       "const": "schema.dogWalking"
-    },
-    "unitsTotal": {
-      "type": "integer",
-      "title": "schema.unitsTotal"
     }
   }
 }

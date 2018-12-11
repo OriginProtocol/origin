@@ -69,10 +69,6 @@
     },
     "subCategory": {
       "const": "schema.photography"
-    },
-    "unitsTotal": {
-      "type": "integer",
-      "title": "schema.unitsTotal"
     }
   }
 }
