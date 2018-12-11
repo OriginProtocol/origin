@@ -303,33 +303,6 @@ class ListingCreate extends Component {
           }
         }
 
-        this.uiSchema = {
-          examples: {
-            'ui:widget': 'hidden'
-          },
-          sellerSteps: {
-            'ui:widget': 'hidden'
-          },
-          unitsTotal: {
-            'ui:field': QuantityField
-          },
-          price: {
-            'ui:field': PriceField
-          },
-          boostLimit: {
-            'ui:field': BoostLimitField
-          },
-          description: {
-            'ui:widget': 'textarea',
-            'ui:options': {
-              rows: 4
-            }
-          },
-          pictures: {
-            'ui:widget': PhotoPicker
-          }
-        }
-
         this.setState({ selectedSchemaId })
         this.renderDetailsForm(schemaJson)
       })
@@ -356,6 +329,12 @@ class ListingCreate extends Component {
       },
       price: {
         'ui:field': PriceField
+      },
+      unitsTotal: {
+        'ui:field': QuantityField
+      },
+      boostLimit: {
+        'ui:field': BoostLimitField
       },
       description: {
         'ui:widget': 'textarea',

@@ -65,7 +65,6 @@ export function dappFormDataToOriginListing(formData) {
         amount: formData.boostValue.toString(),
         currency: 'OGN'
       },
-      calendarStep: '60', // Note: this is currently always 60 minutes but may change later to allow for sub-1hr slots
       slots: formData.slots,
       slotLength: formData.slotLength,
       slotLengthUnit: formData.slotLengthUnit
