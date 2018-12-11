@@ -205,8 +205,6 @@ export default class Marketplace {
    * @return {Promise<List(Offer)>}
    */
   async getOffers(listingId, opts = {}) {
-    const idsOnly = opts.idsOnly
-
     //
     // Step 1: Fetch offers
     //
@@ -239,7 +237,7 @@ export default class Marketplace {
       allOffers = allOffers.filter(offer => offer !== null)
     }
 
-    // The filtering step is only necessary for unit listing.
+    // If not a unit listing, return right away since filtering is not necessary.
     const listing = opts.listing || await this.getListing(listingId)
     if (listing.type !== 'unit') {
       return opts.idsOnly ? allOffers.map(o => o.id) : allOffers

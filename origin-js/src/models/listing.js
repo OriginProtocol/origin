@@ -74,7 +74,7 @@ export class Listing {
       category: ipfsListing.category,
       subCategory: ipfsListing.subCategory,
       status: chainListing.status,
-      type: ipfsListing.type,
+      type: ipfsListing.listingType,
       unitsTotal: ipfsListing.unitsTotal,
       offers: chainListing.offers,
       events: chainListing.events,

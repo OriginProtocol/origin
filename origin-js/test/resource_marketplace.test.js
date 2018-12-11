@@ -1,12 +1,14 @@
 import sinon from 'sinon'
+import { expect } from 'chai'
+import Web3 from 'web3'
 
-import Marketplace from '../src/resources/marketplace.js'
+import Marketplace from '../src/resources/marketplace'
 import contractServiceHelper from './helpers/contract-service-helper'
 import asAccount from './helpers/as-account'
 import { validateOffer, validateListing, validateNotification } from './helpers/schema-validation-helper'
-import IpfsService from '../src/services/ipfs-service.js'
-import { expect } from 'chai'
-import Web3 from 'web3'
+import IpfsService from '../src/services/ipfs-service'
+import { Listing } from '../src/models/listing'
+import { Offer } from '../src/models/offer'
 
 import listingValid from './fixtures/listing-valid.json'
 import updatedListing from './fixtures/updated-listing.json'
@@ -987,11 +989,14 @@ describe('Marketplace Resource', function() {
 })
 
 describe('Marketplace Resource - Performance mode', function() {
+  const listing = Listing.init('1-000-123', {}, listingValid)
+  const offer1 = Offer.init('1-000-123-1', '1-000-123', {}, offerValid)
+  const offer2 = Offer.init('1-000-123-2', '1-000-123', {}, offerValid)
+
   const mockDiscoveryService = new Object()
   mockDiscoveryService.getListings = sinon.stub()
-  mockDiscoveryService.getListing = sinon.stub()
+  mockDiscoveryService.getListing = sinon.stub().resolves(listing)
   mockDiscoveryService.getOffer = sinon.stub()
-  mockDiscoveryService.getOffers = sinon.stub()
 
   const marketplace = new Marketplace({
     contractService: { web3: null },
@@ -1016,8 +1021,18 @@ describe('Marketplace Resource - Performance mode', function() {
 
   describe('getOffers', () => {
     it('Should call discovery service to fetch offers', async () => {
-      await marketplace.getOffers()
+      mockDiscoveryService.getOffers = sinon.stub().resolves([offer1])
+      const offers = await marketplace.getOffers()
       expect(mockDiscoveryService.getOffers.callCount).to.equal(1)
+      expect(offers.length).to.equal(1)
+    })
+
+    it('Should filter out invalid offers ', async () => {
+      // Return 2 offers. Since unitsTotal is 1, 1 offer should get filtered out.
+      mockDiscoveryService.getOffers = sinon.stub().resolves([offer1, offer2])
+      const offers = await marketplace.getOffers()
+      expect(mockDiscoveryService.getOffers.callCount).to.equal(1)
+      expect(offers.length).to.equal(1)
     })
   })
 
