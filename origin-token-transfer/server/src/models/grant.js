@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
     const now = this.now || moment()
 
     if (this.totalMonths === 0) {
-      return moment(this.grantedAt).isSameOrBefore(now) ? this.amount : 0
+      return BigNumber(moment(this.grantedAt).isSameOrBefore(now) ? this.amount : 0)
     }
 
     const schedule = this.vestingSchedule()
@@ -83,7 +83,10 @@ module.exports = (sequelize, DataTypes) => {
     const now = this.now || moment()
     for (const event of schedule) {
       if (now < event.date) {
-        return { date: event.date.toString(), amount: event.amount.toNumber() }
+        return {
+          date: event.date.format('YYYY-MM-DD'),
+          amount: event.amount.toNumber()
+        }
       }
     }
     return null
