@@ -87,8 +87,7 @@ class Warning extends Component {
                   </p>
                 </div>
                 <div className="pr-1 pl-3 caret">
-                  <img id="caret-up" src="images/caret-up.svg" />
-                  <img id="caret-down" src="images/caret-down.svg" />
+                  <img src="images/caret-grey.svg" />
                 </div>
               </div>
             </div>

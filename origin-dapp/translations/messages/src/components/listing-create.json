@@ -20,6 +20,10 @@
     "defaultMessage": "value too high. Should be equal or smaller of the Total boost required."
   },
   {
+    "id": "listing-create.selectOne",
+    "defaultMessage": "Select One"
+  },
+  {
     "id": "backButtonLabel",
     "defaultMessage": "Back"
   },
@@ -36,16 +40,20 @@
     "defaultMessage": "What type of listing do you want to create?"
   },
   {
-    "id": "listing-create.listingsMayInclude",
-    "defaultMessage": "{schemaName} listings may include:"
-  },
-  {
     "id": "listing-create.noSchemaSelectedError",
     "defaultMessage": "You must first select a listing type"
   },
   {
     "id": "listing-create.next",
     "defaultMessage": "Next"
+  },
+  {
+    "id": "listing-create.backButtonLabel",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "listing-create.continue",
+    "defaultMessage": "Continue"
   },
   {
     "id": "listing-create.editListingHeading",
@@ -108,6 +116,10 @@
     "defaultMessage": "Category"
   },
   {
+    "id": "listing-create.subcategory",
+    "defaultMessage": "Subcategory"
+  },
+  {
     "id": "listing-create.description",
     "defaultMessage": "Description"
   },
@@ -136,10 +148,6 @@
     "defaultMessage": "Boost Limit"
   },
   {
-    "id": "listing-create.backButtonLabel",
-    "defaultMessage": "Back"
-  },
-  {
     "id": "listing-create.doneButtonLabel",
     "defaultMessage": "Done"
   },
@@ -157,7 +165,7 @@
   },
   {
     "id": "listing-create.form-help-details",
-    "defaultMessage": "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if the want to buy your listing."
+    "defaultMessage": "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if they want to buy your listing."
   },
   {
     "id": "listing-create.about-visibility",

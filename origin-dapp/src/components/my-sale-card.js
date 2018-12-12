@@ -171,9 +171,9 @@ class MySaleCard extends Component {
                   defaultMessage={'View Details'}
                 />
                 <img
-                  src="images/carat-blue.svg"
-                  className="carat"
-                  alt="right carat"
+                  src="images/caret-blue.svg"
+                  className="caret"
+                  alt="right caret"
                 />
               </Link>
             </p>

@@ -34,7 +34,7 @@ class MultipleSelectionFilter extends Component {
 
     // do not translate anything from the schema
     // .map(untranslatedValue => {
-    //   return schemaMessages[this.toCamelCase(this.props.listingType)][untranslatedValue]
+    //   return schemaMessages[untranslatedValue]
     //     .defaultMessage
     // })
 
@@ -112,7 +112,7 @@ class MultipleSelectionFilter extends Component {
             />
             <label htmlFor={multipleSelectionValue}>
               {this.props.intl.formatMessage(
-                schemaMessages[this.toCamelCase(this.props.listingType.type)][
+                schemaMessages[
                   multipleSelectionValue
                 ]
               )}

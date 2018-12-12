@@ -92,12 +92,14 @@ class ContractService {
 
   newWalletNetwork() {
     this.web3.setProvider(this.walletLinker.getProvider())
+    // Fake it till you make it
+    this.web3.currentProvider.isOrigin = true
   }
 
   initWalletLinker(walletLinkerUrl, fetch, ecies) {
     // if there's no given provider
     // we do it the funny wallet way
-    if (!Web3.givenProvider && walletLinkerUrl) {
+    if (this.web3.currentProvider.isOrigin && walletLinkerUrl) {
       if (!this.walletLinker) {
         this.walletLinker = new WalletLinker({
           linkerServerUrl: walletLinkerUrl,

@@ -196,7 +196,7 @@ class ListingsDetail extends Component {
     try {
       const { wallet } = this.props
       const purchases = await origin.marketplace.getPurchases(wallet.address)
-      const transformedPurchases = transformPurchasesOrSales(purchases)
+      const transformedPurchases = await transformPurchasesOrSales(purchases)
       this.setState({ purchases: transformedPurchases })
     } catch (error) {
       console.error(error)
@@ -206,11 +206,16 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await getListing(this.props.listingId, true)
+      const isFractional = listing.listingType === 'fractional'
+      const slotLengthUnit = isFractional && listing.slotLengthUnit
+      const fractionalTimeIncrement = slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily'
 
       this.setState({
         ...listing,
+        loading: false,
         dappListing: listing,
-        loading: false
+        isFractional,
+        fractionalTimeIncrement
       })
     } catch (error) {
       this.props.showAlert(
@@ -258,6 +263,7 @@ class ListingsDetail extends Component {
       // boostLevel,
       // boostValue,
       category,
+      subCategory,
       description,
       display,
       isFractional,
@@ -270,10 +276,9 @@ class ListingsDetail extends Component {
       seller,
       status,
       step,
-      schemaType,
-      featuredImageIdx,
-      listingType,
-      unitsTotal
+      unitsTotal,
+      fractionalTimeIncrement,
+      featuredImageIdx
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -467,7 +472,7 @@ class ListingsDetail extends Component {
           <div className="row">
             <div className="col-12">
               <div className="category placehold d-flex">
-                <div>{category}</div>
+                <div>{category}&nbsp;&nbsp;|&nbsp;&nbsp;{subCategory}</div>
                 {!loading && (
                   <div className="badges">
                     {showPendingBadge && <PendingBadge />}
@@ -826,7 +831,7 @@ class ListingsDetail extends Component {
                   slots={ this.state.slots }
                   offers={ this.state.offers }
                   userType="buyer"
-                  viewType={ schemaType === 'housing' ? 'daily' : 'hourly' }
+                  viewType={ fractionalTimeIncrement }
                   onComplete={(slots) => this.handleMakeOffer(false, slots) }
                   step={ 60 }
                 />

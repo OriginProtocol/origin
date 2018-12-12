@@ -454,8 +454,8 @@ class Calendar extends Component {
                            ${userType === 'buyer' ? ' buyer-view' : ''}
                            ${viewType === 'daily' ? ' daily-view' : ' hourly-view'}`}>
             <div className="calendar-nav">
-              <img onClick={this.prevPeriod} className="prev-period" src="/images/carat-dark.svg" />
-              <img onClick={this.nextPeriod} className="next-period" src="/images/carat-dark.svg" />
+              <img onClick={this.prevPeriod} className="prev-period" src="/images/caret-dark.svg" />
+              <img onClick={this.nextPeriod} className="next-period" src="/images/caret-dark.svg" />
             </div>
             <BigCalendar
               components={{
