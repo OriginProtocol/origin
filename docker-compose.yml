@@ -40,6 +40,7 @@ services:
       # written to the build files
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/scripts:/app/origin-js/scripts
+      - ./origin-js/package.json:/app/origin-js/package.json
     command: npm run start --prefix origin-js
 
   ipfs-proxy:
@@ -52,6 +53,7 @@ services:
       - IPFS_GATEWAY_URL=http://origin:8080
     volumes:
       - ./ipfs-proxy/src:/app/ipfs-proxy/src
+      - ./ipfs-proxy/package.json:/app/ipfs-proxy/package.json
     command: npm run start --prefix ipfs-proxy
 
   origin-discovery:
@@ -61,6 +63,7 @@ services:
       - ./origin-js/src:/app/origin-js/src
       - ./origin-discovery/src:/app/origin-discovery/src
       - ./origin-discovery/config:/app/origin-discovery/config
+      - ./origin-discovery/package.json:/app/origin-discovery/package.json
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
@@ -101,6 +104,7 @@ services:
       - "9012:9012"
     volumes:
       - ./origin-messaging/src:/app/origin-messaging/src
+      - ./origin-messaging/package.json:/app/origin-messaging/package.json
       - ipfs:/app/ipfs
     environment:
       - MESSAGING_NAMESPACE=dev
@@ -133,6 +137,7 @@ services:
     volumes:
       - ./origin-notifications/src:/app/origin-notifications/src
       - ./origin-notifications/migrations:/app/origin-notifications/migrations
+      - ./origin-notifications/package.json:/app/origin-notifications/package.json
       - ./development/envfiles/origin-notifications.env:/app/origin-notifications/.env
     depends_on:
       - postgres
@@ -159,6 +164,7 @@ services:
       - ./origin-dapp/public:/app/origin-dapp/public
       - ./origin-dapp/translations:/app/origin-dapp/translations
       - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
+      - ./origin-dapp/package.json:/app/origin-dapp/package.json
       # Set the envfile from the local envfile
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
       - ipfs:/app/ipfs
