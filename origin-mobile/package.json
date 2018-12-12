@@ -39,6 +39,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "sequelize-cli": "^5.4.0",
+    "vm-browserify": "^1.1.0",
     "web3": "1.0.0-beta.34"
   },
   "rnpm": {
