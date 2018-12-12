@@ -38,7 +38,6 @@ import vi from 'react-intl/locale-data/vi'
 import zh from 'react-intl/locale-data/zh'
 import schemaMessages from '../schemaMessages/index'
 import localeCode from 'locale-code'
-import { dashToCamelCase } from 'utils/listing'
 
 let globalIntlProvider
 
@@ -250,28 +249,21 @@ export function GlobalIntlProvider() {
   return globalIntlProvider
 }
 
-export function translateSchema(schemaJson, schemaType) {
-  if (!schemaType || !schemaJson) {
+export function translateSchema(schemaJson) {
+  if (!schemaJson) {
     return
   }
   
   // Copy the schema so we don't modify the original
   const schema = JSON.parse(JSON.stringify(schemaJson))
   const properties = schema.properties
-  schemaType = dashToCamelCase(schemaType)
 
   for (const property in properties) {
     const propertyObj = properties[property]
 
     if (propertyObj.title) {
       propertyObj.title = globalIntlProvider.formatMessage(
-        schemaMessages[schemaType][propertyObj.title]
-      )
-    }
-
-    if (propertyObj.default && typeof propertyObj.default === 'number') {
-      propertyObj.default = globalIntlProvider.formatMessage(
-        schemaMessages[schemaType][propertyObj.default]
+        schemaMessages[propertyObj.title]
       )
     }
 
@@ -280,7 +272,7 @@ export function translateSchema(schemaJson, schemaType) {
         enumStr =>
           typeof enumStr === 'string'
             ? globalIntlProvider.formatMessage(
-              schemaMessages[schemaType][enumStr]
+              schemaMessages[enumStr]
             )
             : enumStr
       )
@@ -291,14 +283,15 @@ export function translateSchema(schemaJson, schemaType) {
 }
 
 export function translateListingCategory(rawCategory = '') {
-  const match = rawCategory.match(/^schema\.([^.]+)\.([^.]+)$/)
-  if (match === null) {
+  let messageKey = rawCategory
+
+  if (!/schema\./.test(rawCategory)) {
+    messageKey = `schema.${rawCategory}`
+  }
+
+  if (!schemaMessages[messageKey]) {
     return rawCategory
   }
-  const schemaType = match[1]
-  const schema = schemaMessages[schemaType]
-  if (schema === null || schema[rawCategory] === undefined) {
-    return rawCategory
-  }
-  return globalIntlProvider.formatMessage(schema[rawCategory])
+
+  return globalIntlProvider.formatMessage(schemaMessages[messageKey])
 }
