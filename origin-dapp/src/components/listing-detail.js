@@ -29,6 +29,7 @@ import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing, transformPurchasesOrSales } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 import { formattedAddress } from 'utils/user'
+import PicturesThumbPreview from 'components/pictures-thumb-preview'
 
 import origin from '../services/origin'
 
@@ -80,7 +81,6 @@ class ListingsDetail extends Component {
     this.loadListing = this.loadListing.bind(this)
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
-    this.setFeaturedImage = this.setFeaturedImage.bind(this)
   }
 
   async componentWillMount() {
@@ -234,12 +234,6 @@ class ListingsDetail extends Component {
 
   resetToStepOne() {
     this.setState({ step: this.STEP.VIEW })
-  }
-
-  setFeaturedImage(idx) {
-    this.setState({
-      featuredImageIdx: idx
-    })
   }
 
   render() {
@@ -473,25 +467,7 @@ class ListingsDetail extends Component {
             </div>
             <div className="col-12 col-md-8 detail-info-box">
               {(loading || (pictures && !!pictures.length)) && (
-                <div className="image-wrapper">
-                  <img
-                    className="featured-image"
-                    src={pictures[featuredImageIdx]}
-                  />
-                  {pictures.length > 1 &&
-                  <div className="photo-row">
-                    {pictures.map((pictureUrl, idx) => (
-                      <img
-                        onClick={() => this.setFeaturedImage(idx)}
-                        src={pictureUrl}
-                        key={idx}
-                        role="presentation"
-                        className={featuredImageIdx === idx ? 'featured-thumb' : ''}
-                      />
-                    ))}
-                  </div>
-                  }
-                </div>
+                <PicturesThumbPreview pictures={ pictures } wrapClassName='image-wrapper' />
               )}
               <p className="ws-aware description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
