@@ -4410,7 +4410,9 @@ form .stars img {
 }
 
 .chat-bubble.content-margin-left,
-.chat-bubble.content-margin-right {
+.chat-bubble.content-margin-right,
+.mobile-messaging .chat-bubble.tail-,
+.mobile-messaging .chat-bubble.tail- {
   margin-bottom: 0;
 }
 

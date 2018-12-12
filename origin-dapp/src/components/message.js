@@ -47,6 +47,7 @@ class Message extends Component {
     const correctSide = currentUser ? 'right' : 'left'
     const bubbleAlignment = currentUser ? 'justify-content-end' : 'justify-content-start'
     const bubbleColor = currentUser ? 'user' : ''
+    const bubbleTail = contentOnly ? '' : correctSide
     const mobileWidth = smallScreenOrDevice ? 'mobile-width' : ''
     const contentMargin = (!smallScreenOrDevice && contentOnly) ? `content-margin-${correctSide}` : ''
     const previousOffer = previousOfferMessage ? 'previous-offer' : ''
@@ -74,7 +75,7 @@ class Message extends Component {
                 </Link>
               )}
             </div>
-            <div className={`chat-bubble tail-${contentOnly ? '' : correctSide} ${bubbleColor} ${contentMargin}`}>
+            <div className={`chat-bubble tail-${bubbleTail} ${bubbleColor} ${contentMargin}`}>
               <div className="chat-text">
                 <div className="sender d-flex flex-row justify-content-start">
                   {currentUser ? <UserInfo /> : (

@@ -35,7 +35,7 @@ export default class CompactMessages extends Component {
   }
 
   render() {
-    const { formatOfferMessage } = this.props
+    const { formatOfferMessage, smallScreenOrDevice } = this.props
     const { sortedMessages } = this.state
     const firstMessage = sortedMessages.find((message) => message.created)
 
@@ -57,7 +57,8 @@ export default class CompactMessages extends Component {
       const showTime = isFirstMessage || timeElapsed >= MAX_MINUTES
       const sameSender = formattedAddress(senderAddress) === formattedAddress(nextMessage.senderAddress)
       const timeToElapse = getElapsedTime(nextMessage.created, created)
-      const contentOnly = (!nextOfferMessage && sameSender && (timeToElapse < MAX_MINUTES))
+      const offerMessageStatus = (nextOfferMessage && !smallScreenOrDevice) ? false : true
+      const contentOnly = (offerMessageStatus && sameSender && (timeToElapse < MAX_MINUTES))
 
       return (
         <Message key={hash}

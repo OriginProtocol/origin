@@ -314,7 +314,7 @@ class Conversation extends Component {
   }
 
   render() {
-    const { id, intl, messages, wallet } = this.props
+    const { id, intl, messages, wallet, smallScreenOrDevice } = this.props
     const {
       counterparty,
       files,
@@ -338,6 +338,7 @@ class Conversation extends Component {
             messages={combinedMessages}
             wallet={wallet}
             formatOfferMessage={this.formatOfferMessage}
+            smallScreenOrDevice={smallScreenOrDevice}
           />
         </div>
         {!shouldEnableForm && (
