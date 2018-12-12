@@ -8,7 +8,7 @@ Origin Protocol JSON Schema validator.
 import validator from 'origin-validator'
 
 const data = {
-  "schemaId": "http://schema.originprotocol.com/offer_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/offer_1.0.0.json",
   "listingType": "unit",
   "unitsPurchased": 1,
   "totalPrice": {
@@ -21,7 +21,7 @@ const data = {
   }
 }
 
-const isValid = validator(data, "http://schema.originprotocol.com/offer_v1.0.0")
+const isValid = validator(data, "https://schema.originprotocol.com/offer_1.0.0.json")
 
 ```
 

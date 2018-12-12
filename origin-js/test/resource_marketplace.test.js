@@ -1,12 +1,14 @@
 import sinon from 'sinon'
+import { expect } from 'chai'
+import Web3 from 'web3'
 
-import Marketplace from '../src/resources/marketplace.js'
+import Marketplace from '../src/resources/marketplace'
 import contractServiceHelper from './helpers/contract-service-helper'
 import asAccount from './helpers/as-account'
 import { validateOffer, validateListing, validateNotification } from './helpers/schema-validation-helper'
-import IpfsService from '../src/services/ipfs-service.js'
-import { expect } from 'chai'
-import Web3 from 'web3'
+import IpfsService from '../src/services/ipfs-service'
+import { Listing } from '../src/models/listing'
+import { Offer } from '../src/models/offer'
 
 import listingValid from './fixtures/listing-valid.json'
 import updatedListing from './fixtures/updated-listing.json'
@@ -104,7 +106,8 @@ describe('Marketplace Resource', function() {
       ipfsService,
       affiliate: validAffiliate,
       arbitrator: validArbitrator,
-      store
+      store,
+      blockEpoch: await web3.eth.getBlockNumber()
     })
 
     // Set default account for contract calls.
@@ -804,7 +807,9 @@ describe('Marketplace Resource', function() {
           .to.be.rejectedWith('cannot accept invalid offer 999-000-1-0')
       })
 
-      it('should not deduct units available for withdrawn offers', async () => {
+      it('should not deduct units available for withdrawn offers', async function() {
+        this.timeout(35000)
+
         // Create and accept offer for 1 unit.
         await marketplace.makeOffer('999-000-1', offerData)
         let offer1 = await marketplace.getOffer('999-000-1-0')
@@ -916,7 +921,12 @@ describe('Marketplace Resource', function() {
     })
 
     describe('makeOffer', () => {
-      it('should allow 3 offers to be accepted', async () => {
+      it('should allow 3 offers to be accepted', async function() {
+        // Without the discovery server, this test is slow. To allow CI to pass,
+        // we increase the timeout.
+        // TODO: optimize this test, if possible
+        this.timeout(35000)
+
         // Create first offer, for which there is sufficient listing commission
         // for an offer with full commission.
         const offer1Data = Object.assign({}, multiUnitCommissionOffer,
@@ -956,7 +966,7 @@ describe('Marketplace Resource', function() {
         expect(offers[1].id).to.equal('999-000-1-1')
         expect(offers[2].id).to.equal('999-000-1-2')
       })
-    }).timeout(30000)
+    })
 
     describe('getOffers', () => {
       it('should filter offers with insufficient per-unit commission', async () => {
@@ -979,11 +989,19 @@ describe('Marketplace Resource', function() {
 })
 
 describe('Marketplace Resource - Performance mode', function() {
+  const unitListingData = Object.assign({}, listingValid, { type: 'unit' })
+  const unitListing = Listing.init('1-000-123', {}, unitListingData)
+  const unitOffer1 = Offer.init('1-000-123-1', '1-000-123', {}, offerValid)
+  const unitOffer2 = Offer.init('1-000-123-2', '1-000-123', {}, offerValid)
+
+  const fracListingData = Object.assign({}, listingValid, { type: 'fractional' })
+  const fracListing = Listing.init('1-000-456', {}, fracListingData)
+  const fracOffer1 = Offer.init('1-000-456-1', '1-000-123', {}, offerValid)
+  const fracOffer2 = Offer.init('1-000-456-2', '1-000-123', {}, offerValid)
+
   const mockDiscoveryService = new Object()
   mockDiscoveryService.getListings = sinon.stub()
-  mockDiscoveryService.getListing = sinon.stub()
   mockDiscoveryService.getOffer = sinon.stub()
-  mockDiscoveryService.getOffers = sinon.stub()
 
   const marketplace = new Marketplace({
     contractService: { web3: null },
@@ -1001,15 +1019,28 @@ describe('Marketplace Resource - Performance mode', function() {
 
   describe('getListing', () => {
     it('Should call discovery service to fetch a listing', async () => {
+      mockDiscoveryService.getListing = sinon.stub().resolves(unitListing)
       await marketplace.getListing()
       expect(mockDiscoveryService.getListing.callCount).to.equal(1)
     })
   })
 
   describe('getOffers', () => {
-    it('Should call discovery service to fetch offers', async () => {
-      await marketplace.getOffers()
+    it('Should filter out invalid offers on multi-units listing', async () => {
+      mockDiscoveryService.getListing = sinon.stub().resolves(unitListing)
+      mockDiscoveryService.getOffers = sinon.stub().resolves([unitOffer1, unitOffer2])
+      const offers = await marketplace.getOffers()
       expect(mockDiscoveryService.getOffers.callCount).to.equal(1)
+      // 2 offers and unitsTotal is 1 => 1 offer should get filtered out.
+      expect(offers.length).to.equal(1)
+    })
+
+    it('Should not filter out any offer on fractional listing', async () => {
+      mockDiscoveryService.getListing = sinon.stub().resolves(fracListing)
+      mockDiscoveryService.getOffers = sinon.stub().resolves([fracOffer1, fracOffer2])
+      const offers = await marketplace.getOffers()
+      expect(mockDiscoveryService.getOffers.callCount).to.equal(1)
+      expect(offers.length).to.equal(2)
     })
   })
 

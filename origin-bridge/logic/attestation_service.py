@@ -403,7 +403,7 @@ class VerificationService:
         screen_name = query_string[b'screen_name'][0].decode('utf-8')
 
         ipfs_hash = ipfs_helper.add_json({
-            'schemaId': 'http://schema.originprotocol.com/twitter-attestation_v1.0.0',
+            'schemaId': 'https://schema.originprotocol.com/twitter-attestation_1.0.0.json',
             'screen_name': screen_name
         })
 
@@ -465,7 +465,7 @@ class VerificationService:
             )
 
         ipfs_hash = ipfs_helper.add_json({
-            'schemaId': 'http://schema.originprotocol.com/airbnb-attestation_v1.0.0',
+            'schemaId': 'https://schema.originprotocol.com/airbnb-attestation_1.0.0.json',
             'airbnb_user_id': airbnbUserId
         })
 

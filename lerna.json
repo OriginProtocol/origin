@@ -16,9 +16,6 @@
   ],
   "command": {
     "bootstrap": {
-      "hoist": [
-        "**"
-      ],
       "nohoist": [
         "openzeppelin-solidity"
       ]

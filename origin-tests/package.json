@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha --timeout 10000 --exit test"
+    "test": "mocha --timeout 30000 --exit test"
   },
   "author": "Tom Linton <tom@originprotocol.com>",
   "license": "MIT",

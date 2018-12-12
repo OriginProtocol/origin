@@ -381,12 +381,10 @@ class Profile extends Component {
                     <a
                       href="javascript:void(0);"
                       onClick={this.handleDescriptionReadMore}
+                      className={`description-caret${descriptionExpanded ? ' expanded' : ''}`}
                     >
                       {descriptionLinkText}
-                      <img
-                        id="description-caret"
-                        src={descriptionExpanded ? 'images/caret-up-blue.svg' : 'images/caret-down-blue.svg'}
-                      />
+                      <img src="images/caret-blue.svg" />
                     </a>
                   </div>
                 </div>
@@ -502,6 +500,7 @@ class Profile extends Component {
           isOpen={modalsOpen.cropModal}
           imageFileObj={imageToCrop}
           aspect={1} // force square aspect ratio
+          limitSize={false}
           onCropComplete={(croppedImageUri) => {
             this.props.updateProfile({
               data: {

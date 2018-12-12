@@ -2,12 +2,12 @@ databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '3dc402d'
+bridgeImageTag: '9853c94'
 bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'd5d2cf3'
+dappImageTag: '7eb9772'
 dappReplicas: 2
 
 # Rinkeby network configuration
@@ -24,11 +24,11 @@ ipfsProxyImageTag: 'be5adc2'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: 'be5adc2'
+faucetImageTag: '9853c94'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'd58d97b'
+eventlistenerImageTag: '7eb9772'
 
 # origin-discovery
 discoveryImage: origin-discovery

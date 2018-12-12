@@ -25,7 +25,9 @@ export class Listing {
    *  - {string} display - 'normal', 'featured', 'hidden'
    *  - {Array<Object>} media
    *  - {Object} comission - consists of 'amount' and 'currency' properties
-   *  - {Array} slots - to be implemented
+   *  - {Array} slots
+   *  - {Integer} slotLength - defines the length of a time slot in a fractional listing
+   *  - {String} slotLengthUnit - defines the unit of measurement for a fractional usage time slot
    *  - {string} schemaId
    *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
    *  - {string} deposit
@@ -33,7 +35,7 @@ export class Listing {
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit }) {
+    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit }) {
 
     this.id = id
     this.title = title
@@ -54,6 +56,8 @@ export class Listing {
     this.media = media
     this.commission = commission
     this.slots = slots
+    this.slotLength = slotLength
+    this.slotLengthUnit = slotLengthUnit
     this.schemaId = schemaId
     this.dappSchemaId = dappSchemaId
     this.deposit = deposit
@@ -84,6 +88,8 @@ export class Listing {
       media: ipfsListing.media,
       commission: ipfsListing.commission,
       slots: ipfsListing.slots,
+      slotLength: ipfsListing.slotLength,
+      slotLengthUnit: ipfsListing.slotLengthUnit,
       schemaId: ipfsListing.schemaId,
       dappSchemaId: ipfsListing.dappSchemaId,
       deposit: chainListing.deposit,
@@ -114,6 +120,8 @@ export class Listing {
       media: discoveryNodeData.media,
       commission: discoveryNodeData.commission,
       slots: discoveryNodeData.slots,
+      slotLength: discoveryNodeData.slotLength,
+      slotLengthUnit: discoveryNodeData.slotLengthUnit,
       schemaId: discoveryNodeData.schemaId,
       dappSchemaId: discoveryNodeData.dappSchemaId,
       deposit: discoveryNodeData.deposit,
