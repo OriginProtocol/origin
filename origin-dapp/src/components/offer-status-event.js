@@ -48,7 +48,7 @@ class OfferStatusEvent extends Component {
     case 'withdrawn':
       event = events.find(({ event }) => event === 'OfferWithdrawn')
 
-      const actor = event ? event.returnValues[0] : null
+      const actor = event ? event.returnValues.party : null
 
       return actor === buyer ? (
         <FormattedMessage
