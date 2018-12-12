@@ -10,15 +10,15 @@
 
 export default async (listing) => {
   let { dappSchemaId } = listing
-  const hostname = window.location.hostname
-  const isLocal = hostname === 'localhost' || hostname === '0.0.0.0'
+  const host = window.location.host
 
   // if the listing has a dappSchemaId, it was created using one of the newer generation of schemas
   if (dappSchemaId) {
     // try fetching schema by ID.
     try {
-      if (isLocal) {
-        dappSchemaId = dappSchemaId.replace('https://dapp.originprotocol.com', 'http://localhost:3000')
+
+      if (host !== 'dapp.originprotocol.com') {
+        dappSchemaId = dappSchemaId.replace('https://dapp.originprotocol.com', `${window.location.protocol}//${host}`)
       }
 
       return fetch(dappSchemaId)
@@ -81,9 +81,9 @@ export default async (listing) => {
         break
     }
 
-    if (isLocal) {
-      newSchemaId = newSchemaId.replace('https://dapp.originprotocol.com', 'http://localhost:3000')
-    }
+    if (host !== 'dapp.originprotocol.com') {
+        newSchemaId = newSchemaId.replace('https://dapp.originprotocol.com', `${window.location.protocol}//${host}`)
+      }
 
     return fetch(newSchemaId)
       .then(response => response.json())
