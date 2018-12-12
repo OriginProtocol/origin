@@ -4196,8 +4196,9 @@ form .stars img {
   overflow: scroll;
 }
 
-.conversation .message {
-  margin-bottom: 20px;
+.conversation .message.left,
+.conversation .message.right {
+  margin-top: 10px;
 }
 
 .conversation .compact-message {
@@ -4211,10 +4212,6 @@ form .stars img {
 .mobile-messaging .conversation .compact-message {
   margin: unset;
   margin-left: 65px;
-}
-
-.conversation .message:first-of-type {
-  margin-top: 20px;
 }
 
 .conversation .system-message {
@@ -4406,6 +4403,11 @@ form .stars img {
   -moz-border-radius: 15px;
 }
 
+.chat-bubble.content-margin-left,
+.chat-bubble.content-margin-right {
+  margin-bottom: 0;
+}
+
 .chat-bubble.content-margin-right {
   margin-right: 83px;
 }
@@ -4456,6 +4458,11 @@ form .stars img {
 
 .chat-bubble.user {
   background-color: var(--clear-blue);
+}
+
+.tail-left,
+.tail-right {
+  margin-top: 0;
 }
 
 .tail-right:after {

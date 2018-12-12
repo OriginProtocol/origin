@@ -36,16 +36,17 @@ export default class CompactMessages extends Component {
 
       const firstMessage = i === 0
       const previousOfferMessage = messages[i-1] && messages[i-1].timestamp
+      const nextOfferMessage = messages[i+1] && messages[i+1].timestamp
       const previousMessage = (firstMessage || previousOfferMessage) ? {} : messages[i-1]
       const nextMessage = messages.find((message, idx) => {
         return (idx >= (i+1)) && message && message.created
       }) || {}
+
       const timeElapsed = getElapsedTime(created, previousMessage.created)
       const showTime = previousOfferMessage || timeElapsed >= MAX_MINUTES || firstMessage
       const sameSender = formattedAddress(senderAddress) === formattedAddress(nextMessage.senderAddress)
       const timeToElapse = getElapsedTime(nextMessage.created, created)
-
-      const contentOnly = sameSender && (timeToElapse < MAX_MINUTES)
+      const contentOnly = (!nextOfferMessage && sameSender && (timeToElapse < MAX_MINUTES))
 
       return <Message key={hash} showTime={showTime} message={message} contentOnly={contentOnly}/>
     })

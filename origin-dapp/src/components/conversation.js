@@ -10,7 +10,7 @@ import CompactMessages from 'components/compact-messages'
 
 import { generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
-import { truncateAddress, formattedAddress } from 'utils/user'
+import { truncateAddress, formattedAddress, abbreviateName } from 'utils/user'
 import { getOfferEvents } from 'utils/offer'
 
 import origin from '../services/origin'
@@ -244,14 +244,18 @@ class Conversation extends Component {
 
   formatOfferMessage(info) {
     const { listing = {} } = this.state
+    const { users } = this.props
     const { returnValues = {}, event, timestamp } = info
-    const party = truncateAddress(returnValues.party)
+    const partyAddress = formattedAddress(returnValues.party)
+    const user = users.find((user) => formattedAddress(user.address) === partyAddress)
+    const userName = abbreviateName(user)
+    const party = userName || truncateAddress(returnValues.party)
 
     //have to translate these strings
     const offerMessage = {
       'OfferCreated': `${party} made an offer on`,
       'OfferWithdrawn': `${party} withdrew their offer on`,
-      'OfferAccepted': `${party}accepted the offer on`,
+      'OfferAccepted': `${party} accepted the offer on`,
       'OfferDisputed': `${party} initiated a dispute on`,
       'OfferRuling': `${party} made a ruling on the dispute for`,
       'OfferFinalized': `${party} finalized the offer`,
@@ -260,7 +264,7 @@ class Conversation extends Component {
 
     return (
       <span key={new Date() + Math.random()} className="purchase-info">
-      {offerMessage[event]} {listing.name} on {formatDate(timestamp)}
+        {offerMessage[event]} {listing.name} on {formatDate(timestamp)}
       </span>
     )
   }
@@ -292,7 +296,7 @@ class Conversation extends Component {
     })
     return (
       <Fragment>
-        <div ref={this.conversationDiv} className="conversation">
+        <div ref={this.conversationDiv} className="conversation text-center">
           <CompactMessages
             messages={sortedAndCombinedMessages}
             wallet={wallet}

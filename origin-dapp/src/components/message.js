@@ -47,7 +47,7 @@ class Message extends Component {
     const bubbleAlignment = currentUser ? 'justify-content-end' : 'justify-content-start'
     const bubbleColor = currentUser ? 'user' : ''
     const mobileWidth = smallScreenOrDevice ? 'mobile-width' : ''
-    const contentMargin = (!smallScreenOrDevice && contentOnly) && `content-margin-${correctSide}`
+    const contentMargin = (!smallScreenOrDevice && contentOnly) ? `content-margin-${correctSide}` : ''
     const UserInfo = () => (
       <Fragment>
         <div className={`name text-truncate align-self-center ${mobileWidth}`}>{userName}</div>
@@ -62,7 +62,7 @@ class Message extends Component {
             {moment(created).format('MMM Do h:mm a')}
           </div>
         )}
-        <div className="d-flex message">
+        <div className={`d-flex message ${contentOnly ? '' : correctSide}`}>
           <div className={`content-container d-flex ${bubbleAlignment}`}>
             <div className="align-self-end conversation-avatar">
               {(!smallScreenOrDevice && correctSide === 'left' && !contentOnly) && (
