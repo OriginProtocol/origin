@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import gqlClient from 'origin-graphql'
 
 import { ProgressBar } from '@blueprintjs/core'
-import { RefetchMutation } from '../mutations'
+import { RefetchMutation } from 'queries/Mutations'
 import Toaster from './Toaster'
 
 const TransactionSubscription = gql`

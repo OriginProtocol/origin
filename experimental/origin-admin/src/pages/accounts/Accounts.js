@@ -12,7 +12,7 @@ import CreateWallet from './mutations/CreateWallet'
 import Contracts from '../contracts/Contracts'
 
 import populate from './_populate'
-import query from './_query'
+import query from 'queries/AllAccounts'
 
 import AccountBalances from './AccountBalances'
 

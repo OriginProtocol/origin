@@ -1,4 +1,5 @@
 @import '~bootstrap/dist/css/bootstrap.css';
+@import '~react-image-crop/dist/ReactCrop.css';
 @import '~typeface-lato';
 @import '~typeface-poppins';
 @import 'variables.css';

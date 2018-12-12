@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import gql from 'graphql-tag'
-import get from 'lodash/get'
 import { Button } from '@blueprintjs/core'
 import { Query } from 'react-apollo'
+import get from 'lodash/get'
 
 import formatDate from 'utils/formatDate'
 import nextPageFactory from 'utils/nextPageFactory'
+
+import UsersQuery from 'queries/Users'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -15,38 +16,6 @@ import ThSort from 'components/ThSort'
 import QueryError from 'components/QueryError'
 
 const nextPage = nextPageFactory('marketplace.users')
-
-const UsersQuery = gql`
-  query Users($first: Int, $after: String, $sort: String) {
-    marketplace {
-      users(first: $first, after: $after, sort: $sort) {
-        totalCount
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          endCursor
-        }
-        nodes {
-          id
-          firstEvent {
-            id
-            timestamp
-          }
-          lastEvent {
-            id
-            timestamp
-          }
-          offers {
-            totalCount
-          }
-          listings {
-            totalCount
-          }
-        }
-      }
-    }
-  }
-`
 
 class Users extends Component {
   state = {}
@@ -68,9 +37,8 @@ class Users extends Component {
             } else if (error) {
               return <QueryError error={error} query={UsersQuery} />
             } else if (!data || !data.marketplace) {
-              return "No marketplace contract?"
+              return 'No marketplace contract?'
             }
-
 
             const { nodes, pageInfo } = data.marketplace.users
             const { hasNextPage, endCursor: after } = pageInfo

@@ -1,4 +1,18 @@
 export default `
+  extend type Query {
+    userRegistry: UserRegistry
+  }
+
+  extend type Mutation {
+    deployUserRegistry(from: String): Transaction
+    deployIdentityContract(from: String!, contract: String!): Transaction
+  }
+
+  type UserRegistry {
+    id: ID
+    users: [Identity]
+  }
+
   type Identity {
     id: ID!
     name: String

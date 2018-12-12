@@ -25,7 +25,7 @@ import Gallery from 'components/Gallery'
 import LoadingSpinner from 'components/LoadingSpinner'
 import QueryError from 'components/QueryError'
 
-import query from '../marketplace/queries/_offers'
+import query from 'queries/Listing'
 
 class Listing extends Component {
   state = {}

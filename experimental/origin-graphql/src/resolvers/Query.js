@@ -28,6 +28,7 @@ export default {
     return contracts
   },
   marketplaces: () => contracts.marketplaces,
+  userRegistry: () => contracts.userRegistry,
   tokens: () => contracts.tokens,
   token: (_, args) => {
     if (args.id === '0x0000000000000000000000000000000000000000') {

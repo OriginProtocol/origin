@@ -16,7 +16,7 @@ export default function eventCache(contract, fromBlock = 0) {
     return { updateBlock }
   }
 
-  let cacheStr = `eventCache${contract.options.address.slice(2, 8)}`
+  const cacheStr = `eventCache${contract.options.address.slice(2, 8)}`
 
   try {
     ({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr]))
@@ -94,7 +94,7 @@ export default function eventCache(contract, fromBlock = 0) {
 
   async function listings(listingId, eventName, blockNumber) {
     await getPastEvents()
-    var listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
+    const listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
     return events.filter(e => {
       const topics = e.raw.topics
       let matches = topics[2] === listingTopic
@@ -106,8 +106,8 @@ export default function eventCache(contract, fromBlock = 0) {
 
   async function offers(listingId, offerId, eventName) {
     await getPastEvents()
-    var listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
-    var offerTopic = web3.utils.padLeft(web3.utils.numberToHex(offerId), 64)
+    const listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
+    const offerTopic = web3.utils.padLeft(web3.utils.numberToHex(offerId), 64)
     return events.filter(e => {
       const topics = e.raw.topics
       return (

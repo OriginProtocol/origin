@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import fragments from '../../../fragments'
+import fragments from './Fragments'
 
 export default gql`
   query Listing($listingId: String!) {

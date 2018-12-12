@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
+import ImageCropper from 'components/ImageCropper'
 import Link from 'components/Link'
 
 import ListingPreview from './_ListingPreview'
@@ -22,6 +23,8 @@ class OnboardProfile extends Component {
   state = {}
   render() {
     const { listing } = this.props
+    const { pic } = this.state
+
     return (
       <>
         <div className="step">Step 4</div>
@@ -43,9 +46,13 @@ class OnboardProfile extends Component {
 
                 return (
                   <div className="onboard-box">
-                    <div className="profile-logo">
-                      <div className="cam" />
-                    </div>
+                    <ImageCropper onChange={pic => this.setState({ pic })}>
+                      <div
+                        className={`profile-logo ${pic ? 'custom' : 'default'}`}
+                        style={{ backgroundImage: pic ? `url(${pic})` : null }}
+                      />
+                    </ImageCropper>
+
                     <form className="profile">
                       <div className="form-group">
                         <label>First Name</label>
@@ -86,14 +93,20 @@ export default OnboardProfile
 require('react-styl')(`
   .onboard .onboard-box
     .profile-logo
-      width: 11rem
-      height: 11rem
-      background: #233040 url(images/avatar-blue.svg) no-repeat center bottom
-      background-size: 63%
       border-radius: 1rem
       margin-top: -5rem
       position: relative
-      .cam
+      width: 11rem
+      height: 11rem
+      &.default
+        background: #233040 url(images/avatar-blue.svg) no-repeat center bottom
+        background-size: 63%
+      &.custom
+        border: 1px solid var(--light)
+        background-size: cover
+
+      &::after
+        content: ""
         width: 2.5rem
         height: 2.5rem
         background: url(images/camera-icon-circle.svg) no-repeat center

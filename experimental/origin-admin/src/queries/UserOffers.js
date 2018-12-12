@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
-import fragments from '../../../fragments'
+import fragments from './Fragments'
 
-const UserListingsQuery = gql`
-  query UserListings($id: ID!, $first: Int, $after: String) {
+const UserOffersQuery = gql`
+  query UserOffers($id: ID!, $first: Int, $after: String) {
     marketplace {
       user(id: $id) {
         id
@@ -29,4 +29,4 @@ const UserListingsQuery = gql`
   ${fragments.Listing.basic}
 `
 
-export default UserListingsQuery
+export default UserOffersQuery

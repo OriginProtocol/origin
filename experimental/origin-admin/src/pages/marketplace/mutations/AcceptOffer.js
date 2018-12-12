@@ -4,7 +4,7 @@ import { Button } from '@blueprintjs/core'
 
 import { Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 
-import { AcceptOfferMutation } from '../../../mutations'
+import { AcceptOfferMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class AcceptOffer extends Component {

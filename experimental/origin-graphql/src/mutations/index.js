@@ -30,6 +30,9 @@ import deployToken from './token/deployToken'
 import transferToken from './token/transferToken'
 import updateTokenAllowance from './token/updateTokenAllowance'
 
+import deployUserRegistry from './identity/deployUserRegistry'
+import deployIdentityContract from './identity/deployIdentityContract'
+
 export default {
   addAffiliate,
   acceptOffer,
@@ -59,5 +62,7 @@ export default {
   toggleMetaMask,
   enableMessaging,
   sendMessage,
+  deployUserRegistry,
+  deployIdentityContract,
   refetch: () => true
 }

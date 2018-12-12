@@ -71,7 +71,8 @@
             "pages": "./src/pages",
             "reducers": "./src/reducers",
             "utils": "./src/utils",
-            "hoc": "./src/hoc"
+            "hoc": "./src/hoc",
+            "queries": "./src/queries"
           }
         }
       ],

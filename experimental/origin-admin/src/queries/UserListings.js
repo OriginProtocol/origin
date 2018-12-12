@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import fragments from '../../../fragments'
+import fragments from './Fragments'
 
 const UserListingsQuery = gql`
   query UserListings($id: ID!, $first: Int, $after: String) {

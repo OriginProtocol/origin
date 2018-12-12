@@ -22,7 +22,7 @@ import demoListings from './_demoListings'
 import {
   CreateListingMutation,
   UpdateListingMutation
-} from '../../../mutations'
+} from 'queries/Mutations'
 
 import ErrorCallout from 'components/ErrorCallout'
 import SelectAccount from 'components/SelectAccount'

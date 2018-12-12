@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 // import gqlClient from './graphqlClient'
 
-import fragments from './fragments'
+import fragments from 'queries/Fragments'
 
 export const RefetchMutation = gql`
   mutation Refetch {
@@ -118,6 +118,14 @@ export const DeployMarketplaceMutation = gql`
       version: $version
       autoWhitelist: $autoWhitelist
     ) {
+      id
+    }
+  }
+`
+
+export const DeployIdentityContractMutation = gql`
+  mutation DeployIdentityContract($from: String!, $contract: String!) {
+    deployIdentityContract(from: $from, contract: $contract) {
       id
     }
   }

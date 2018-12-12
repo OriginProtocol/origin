@@ -7,13 +7,11 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import LoadingSpinner from 'components/LoadingSpinner'
 import nextPageFactory from 'utils/nextPageFactory'
 
-import ListingsList from '../../listings/_ListingsList'
+import query from 'queries/UserOffers'
 
-import query from './_listingsQuery'
+const nextPage = nextPageFactory('marketplace.user.offers')
 
-const nextPage = nextPageFactory('marketplace.user.listings')
-
-class UserListings extends Component {
+class UserOffers extends Component {
   render() {
     const vars = { first: 15, id: this.props.userId }
 
@@ -28,7 +26,7 @@ class UserListings extends Component {
             return <p className="p-3">Error :(</p>
           }
 
-          const { nodes, pageInfo } = data.marketplace.user.listings
+          const { nodes, pageInfo } = data.marketplace.user.offers
           const { hasNextPage, endCursor: after } = pageInfo
 
           return (
@@ -38,7 +36,24 @@ class UserListings extends Component {
               onBottom={() => nextPage(fetchMore, { ...vars, after })}
             >
               <>
-                <ListingsList listings={nodes} />
+                <table className="bp3-html-table bp3-small bp3-html-table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Listing</th>
+                      <th>Offer</th>
+                      <th>Title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {nodes.map(offer => (
+                      <tr key={`${offer.listing.id}-${offer.id}`}>
+                        <td>{offer.listingId}</td>
+                        <td>{offer.offerId}</td>
+                        <td>{offer.listing.title}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
                 {!hasNextPage ? null : (
                   <Button
                     text="Load more..."
@@ -56,4 +71,4 @@ class UserListings extends Component {
   }
 }
 
-export default UserListings
+export default UserOffers
