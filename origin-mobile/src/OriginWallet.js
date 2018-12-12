@@ -9,7 +9,7 @@ import {EthNotificationTypes} from 'origin/common/enums'
 import ecies from 'eth-ecies'
 import CryptoJS from "crypto-js"
 
-import origin, {apiUrl, defaultProviderUrl, messageOpenUrl, localApi} from './services/origin'
+import origin, {apiUrl, defaultProviderUrl, messageOpenUrl, localApi, defaultLocalRemoteHost} from './services/origin'
 
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
@@ -850,6 +850,9 @@ class OriginWallet {
 
   async initWeb3() {
     this.remote_localhost = await loadData(REMOTE_LOCALHOST_STORE)
+    if (!this.remote_localhost) {
+      this.remote_localhost = defaultLocalRemoteHost
+    }
     setRemoteLocal(this.remote_localhost)
     this.initUrls()
 
