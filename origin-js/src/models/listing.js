@@ -126,7 +126,7 @@ export class Listing {
       dappSchemaId: discoveryNodeData.dappSchemaId,
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
-      commissionPerUnit: discoveryNodeData.commissionPerUnit,
+      commissionPerUnit: discoveryNodeData.commissionPerUnit
     })
   }
 
@@ -144,5 +144,19 @@ export class Listing {
       .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
 
     return Math.max(0, this.unitsTotal - unitsPurchased)
+  }
+
+  get commissionRemaining() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    // if not multi unit
+    if (!(this.type === 'unit' && this.unitsTotal > 0))
+      return undefined
+
+    const commissionRemaining = this.offers
+      .reduce((agg, offer) => agg + offer.commission.amount, 0)
+
+    return Math.max(0, this.commission.amount - commissionRemaining)
   }
 }

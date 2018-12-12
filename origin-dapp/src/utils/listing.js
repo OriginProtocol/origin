@@ -155,6 +155,7 @@ export async function originToDAppListing(originListing) {
 
   if (isMultiUnit) {
     dappListing.totalBoostValue = commission
+    dappListing.boostRemaining = originListing.commissionRemaining
   }
 
   // if multiunit listing
