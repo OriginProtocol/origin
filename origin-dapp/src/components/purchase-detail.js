@@ -39,6 +39,7 @@ import {
 } from 'utils/offer'
 import { translateSchema } from 'utils/translationUtils'
 import { formattedAddress } from 'utils/user'
+import { getOfferEvents } from 'utils/offer'
 
 import origin from '../services/origin'
 
@@ -318,7 +319,7 @@ class PurchaseDetail extends Component {
       if (!purchase) {
         return console.error(`Purchase ${offerId} not found`)
       }
-      
+
       const listing = await getListing(purchase.listingId, true, blockInfo)
 
       this.setState({
@@ -717,10 +718,13 @@ class PurchaseDetail extends Component {
 
     const pictures = listing.pictures || []
     const created = purchase.createdAt * 1000 // convert seconds since epoch to ms
+    const offerEvents = getOfferEvents(purchase)
 
-    const offerWithdrawn = purchase.event('OfferWithdrawn')
-    const offerDisputed = purchase.event('OfferDisputed')
-    const offerFinalized = purchase.event('OfferFinalized')
+    const [
+      offerWithdrawn,
+      offerDisputed,
+      offerFinalized,
+    ] = offerEvents
 
     const priceEth = `${Number(purchase.totalPrice.amount).toLocaleString(
       undefined,
