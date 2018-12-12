@@ -5630,6 +5630,7 @@ a:not([href]):not([tabindex]).span-link {
 
   .conversations-list-col {
     height: auto;
+    max-height: 100%;
     overflow-y: scroll;
   }
 

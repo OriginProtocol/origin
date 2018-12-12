@@ -33,13 +33,9 @@
       "type": "number",
       "title": "schema.priceInETH"
     },
-    "pictures": {
-      "type": "array",
-      "title": "schema.selectPhotos",
-      "items": {
-        "type": "string",
-        "format": "data-url"
-      }
+    "unitsTotal": {
+      "type": "integer",
+      "title": "schema.unitsTotal"
     },
     "sellerSteps": {
       "type": "string",
@@ -53,9 +49,13 @@
     "subCategory": {
       "const": "schema.atvsUtvsSnowmobiles"
     },
-    "unitsTotal": {
-      "type": "integer",
-      "title": "schema.unitsTotal"
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
     }
   }
 }

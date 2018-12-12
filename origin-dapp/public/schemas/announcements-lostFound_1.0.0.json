@@ -27,6 +27,9 @@
       "minLength": 10,
       "maxLength": 1024
     },
+    "subCategory": {
+      "const": "schema.lostFound"
+    },
     "pictures": {
       "type": "array",
       "title": "schema.selectPhotos",
@@ -34,9 +37,6 @@
         "type": "string",
         "format": "data-url"
       }
-    },
-    "subCategory": {
-      "const": "schema.lostFound"
     }
   }
 }
