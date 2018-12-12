@@ -32,14 +32,6 @@
       "type": "number",
       "title": "schema.priceInETH"
     },
-    "pictures": {
-      "type": "array",
-      "title": "schema.selectPhotos",
-      "items": {
-        "type": "string",
-        "format": "data-url"
-      }
-    },
     "sellerSteps": {
       "type": "string",
       "title": "schema.sellerSteps",
@@ -51,6 +43,14 @@
     },
     "subCategory": {
       "const": "schema.boatPartsAccessories"
+    },
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
     }
   }
 }
