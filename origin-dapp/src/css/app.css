@@ -3973,6 +3973,8 @@ form .stars img {
   color: var(--bluey-grey);
   font-style: italic;
   text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .conversation-col .content-container {
@@ -4288,6 +4290,10 @@ form .stars img {
 
 .mobile-messaging .conversation .timestamp {
   font-weight: bold;
+}
+
+.message-section .timestamp.previous-offer {
+  padding-top: 0;
 }
 
 .conversation .name {

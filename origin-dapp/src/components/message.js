@@ -31,7 +31,8 @@ class Message extends Component {
       showTime,
       mobileDevice,
       web3Account,
-      contentOnly
+      contentOnly,
+      previousOfferMessage
     } = this.props
     const { created, hash } = message
     const { address, profile } = user
@@ -48,6 +49,8 @@ class Message extends Component {
     const bubbleColor = currentUser ? 'user' : ''
     const mobileWidth = smallScreenOrDevice ? 'mobile-width' : ''
     const contentMargin = (!smallScreenOrDevice && contentOnly) ? `content-margin-${correctSide}` : ''
+    const previousOffer = previousOfferMessage ? 'previous-offer' : ''
+
     const UserInfo = () => (
       <Fragment>
         <div className={`name text-truncate align-self-center ${mobileWidth}`}>{userName}</div>
@@ -58,7 +61,7 @@ class Message extends Component {
     return (
       <div className="message-section">
         {showTime && (
-          <div className="timestamp text-center ml-auto">
+          <div className={`timestamp text-center ml-auto ${previousOffer}`}>
             {moment(created).format('MMM Do h:mm a')}
           </div>
         )}

@@ -4,6 +4,34 @@
     "defaultMessage": "Type something..."
   },
   {
+    "id": "conversation.offerCreated",
+    "defaultMessage": "made an offer on"
+  },
+  {
+    "id": "conversation.offerWithdrawn",
+    "defaultMessage": "withdrew their offer on"
+  },
+  {
+    "id": "conversation.offerAccepted",
+    "defaultMessage": "accepted the offer on"
+  },
+  {
+    "id": "conversation.offerDisputed",
+    "defaultMessage": "initiated a dispute on"
+  },
+  {
+    "id": "conversation.offerRuling",
+    "defaultMessage": "made a ruling on the dispute for"
+  },
+  {
+    "id": "conversation.offerFinalized",
+    "defaultMessage": "finalized the offer for"
+  },
+  {
+    "id": "conversation.offerData",
+    "defaultMessage": "updated information for"
+  },
+  {
     "id": "conversation.invalidTextInput",
     "defaultMessage": "Please add a message to send."
   }

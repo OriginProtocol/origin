@@ -26,7 +26,35 @@ class Conversation extends Component {
       newMessagePlaceholder: {
         id: 'conversation.newMessagePlaceholder',
         defaultMessage: 'Type something...'
-      }
+      },
+      offerCreated: {
+        id: 'conversation.offerCreated',
+        defaultMessage: 'made an offer on'
+      },
+      offerWithdrawn: {
+        id: 'conversation.offerWithdrawn',
+        defaultMessage: 'withdrew their offer on'
+      },
+      offerAccepted: {
+        id: 'conversation.offerAccepted',
+        defaultMessage: 'accepted the offer on'
+      },
+      offerDisputed: {
+        id: 'conversation.offerDisputed',
+        defaultMessage: 'initiated a dispute on'
+      },
+      offerRuling: {
+        id: 'conversation.offerRuling',
+        defaultMessage: 'made a ruling on the dispute for'
+      },
+      offerFinalized: {
+        id: 'conversation.offerFinalized',
+        defaultMessage: 'finalized the offer for'
+      },
+      offerData: {
+        id: 'conversation.offerData',
+        defaultMessage: 'updated information for'
+      },
     })
 
     this.handleClick = this.handleClick.bind(this)
@@ -244,33 +272,49 @@ class Conversation extends Component {
 
   formatOfferMessage(info) {
     const { listing = {} } = this.state
-    const { users } = this.props
+    const { users, intl, smallScreenOrDevice, withListingSummary } = this.props
+
+    if (smallScreenOrDevice || !withListingSummary) return
+
     const { returnValues = {}, event, timestamp } = info
     const partyAddress = formattedAddress(returnValues.party)
     const user = users.find((user) => formattedAddress(user.address) === partyAddress)
     const userName = abbreviateName(user)
     const party = userName || truncateAddress(returnValues.party)
 
-    //have to translate these strings
-    const offerMessage = {
-      'OfferCreated': `${party} made an offer on`,
-      'OfferWithdrawn': `${party} withdrew their offer on`,
-      'OfferAccepted': `${party} accepted the offer on`,
-      'OfferDisputed': `${party} initiated a dispute on`,
-      'OfferRuling': `${party} made a ruling on the dispute for`,
-      'OfferFinalized': `${party} finalized the offer`,
-      'OfferData': `${party} updated information for`
+    const offerMessages = {
+      'OfferCreated': `${party} ${intl.formatMessage(
+        this.intlMessages.offerCreated
+      )}`,
+      'OfferWithdrawn': `${party} ${intl.formatMessage(
+        this.intlMessages.offerWithdrawn
+      )}`,
+      'OfferAccepted': `${party} ${intl.formatMessage(
+        this.intlMessages.offerAccepted
+      )}`,
+      'OfferDisputed': `${party} ${intl.formatMessage(
+        this.intlMessages.offerDisputed
+      )}`,
+      'OfferRuling': `${party} ${intl.formatMessage(
+        this.intlMessages.offerRuling
+      )}`,
+      'OfferFinalized': `${party} ${intl.formatMessage(
+        this.intlMessages.offerFinalized
+      )}`,
+      'OfferData': `${party} ${intl.formatMessage(
+        this.intlMessages.offerData
+      )}`,
     }
 
     return (
-      <span key={new Date() + Math.random()} className="purchase-info">
-        {offerMessage[event]} {listing.name} on {formatDate(timestamp)}
-      </span>
+      <div key={new Date() + Math.random()} className="purchase-info">
+        {offerMessages[event]} {listing.name} on {formatDate(timestamp)}
+      </div>
     )
   }
 
   render() {
-    const { id, intl, messages, smallScreenOrDevice, wallet, withListingSummary } = this.props
+    const { id, intl, messages, wallet } = this.props
     const {
       counterparty,
       files,
@@ -285,24 +329,15 @@ class Conversation extends Component {
       origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
       canDeliverMessage
     const offerEvents = getOfferEvents(purchase)
+    const combinedMessages = [...offerEvents, ...messages]
 
-    const sortedAndCombinedMessages = [
-      ...offerEvents,
-      ...messages
-    ].sort((a, b) => {
-      const firstTime = (a.created && a.created) || (a.timestamp * 1000)
-      const nextTime = (b.created && b.created) || (b.timestamp * 1000)
-      return (firstTime < nextTime) ? -1 : 1
-    })
     return (
       <Fragment>
         <div ref={this.conversationDiv} className="conversation text-center">
           <CompactMessages
-            messages={sortedAndCombinedMessages}
+            messages={combinedMessages}
             wallet={wallet}
             formatOfferMessage={this.formatOfferMessage}
-            smallScreenOrDevice={smallScreenOrDevice}
-            withListingSummary={withListingSummary}
           />
         </div>
         {!shouldEnableForm && (

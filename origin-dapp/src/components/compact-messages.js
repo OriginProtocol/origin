@@ -11,44 +11,62 @@ function getElapsedTime(latestTime, earlierTime) {
   return isNaN(elapsedTime) ? 0 : elapsedTime
 }
 
-export default class CompactMessages extends Component {
-  render() {
-    const {
-      messages = [],
-      formatOfferMessage,
-      smallScreenOrDevice,
-      withListingSummary
-    } = this.props
+function sortOrder(a, b) {
+  const firstDate = (a.created && a.created) || (a.timestamp * 1000)
+  const nextDate = (b.created && b.created) || (b.timestamp * 1000)
+  return (firstDate < nextDate) ? -1 : 1
+}
 
-    return messages.map((message, i) => {
+export default class CompactMessages extends Component {
+  constructor(props) {
+    super(props)
+    const { messages = [] } = props
+    const sortedMessages = messages.sort(sortOrder)
+
+    this.state = { sortedMessages }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { messages = [] } = this.props
+    if (prevProps.messages !== messages) {
+      const sortedMessages = messages.sort(sortOrder)
+      this.setState({ sortedMessages })
+    }
+  }
+
+  render() {
+    const { formatOfferMessage } = this.props
+    const { sortedMessages } = this.state
+    const firstMessage = sortedMessages.find((message) => message.created)
+
+    return sortedMessages.map((message, i) => {
       if (!message) return
       const { created, hash, senderAddress, timestamp } = message
       const offerMessage = timestamp
+      if (offerMessage) return formatOfferMessage(message)
 
-      if (offerMessage) {
-        // I should do this in the conversation component
-        if (!smallScreenOrDevice && withListingSummary) {
-          return formatOfferMessage(message)
-        } else {
-          return
-        }
-      }
-
-      const firstMessage = i === 0
-      const previousOfferMessage = messages[i-1] && messages[i-1].timestamp
-      const nextOfferMessage = messages[i+1] && messages[i+1].timestamp
-      const previousMessage = (firstMessage || previousOfferMessage) ? {} : messages[i-1]
-      const nextMessage = messages.find((message, idx) => {
+      const isFirstMessage = firstMessage === message
+      const previousOfferMessage = sortedMessages[i-1] && sortedMessages[i-1].timestamp
+      const nextOfferMessage = sortedMessages[i+1] && sortedMessages[i+1].timestamp
+      const previousMessage = (isFirstMessage || previousOfferMessage) ? {} : sortedMessages[i-1]
+      const nextMessage = sortedMessages.find((message, idx) => {
         return (idx >= (i+1)) && message && message.created
       }) || {}
 
       const timeElapsed = getElapsedTime(created, previousMessage.created)
-      const showTime = previousOfferMessage || timeElapsed >= MAX_MINUTES || firstMessage
+      const showTime = isFirstMessage || timeElapsed >= MAX_MINUTES
       const sameSender = formattedAddress(senderAddress) === formattedAddress(nextMessage.senderAddress)
       const timeToElapse = getElapsedTime(nextMessage.created, created)
       const contentOnly = (!nextOfferMessage && sameSender && (timeToElapse < MAX_MINUTES))
 
-      return <Message key={hash} showTime={showTime} message={message} contentOnly={contentOnly}/>
+      return (
+        <Message key={hash}
+          showTime={showTime}
+          message={message}
+          contentOnly={contentOnly}
+          previousOfferMessage={previousOfferMessage}
+        />
+      )
     })
   }
 }
