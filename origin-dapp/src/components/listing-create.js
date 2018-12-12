@@ -553,21 +553,16 @@ class ListingCreate extends Component {
       case 1:
         return 1
       case 2:
-        return isMobile ? 2 : 1
       case 3:
-        return isMobile ? 3 : 2
       case 4:
-        // TODO
-        // return isMobile ?
-        return stepNum
-    }
-
-    if (stepNum < 4 || isMobile) {
-      return stepNum
-    } else if (isFractionalListing) {
-      return stepNum - 2
-    } else {
-      return stepNum - 1
+        return isMobile ? stepNum : stepNum - 1
+      case 5:
+      case 6:
+          if (isMobile) {
+            return isFractionalListing ? stepNum : stepNum - 1
+          } else {
+            return isFractionalListing ? stepNum - 1 : stepNum - 2
+          }
     }
   }
 
