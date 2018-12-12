@@ -67,8 +67,7 @@ class ListingsDetail extends Component {
       boostLevel: null,
       boostValue: 0,
       onboardingCompleted: false,
-      slotsToReserve: [],
-      featuredImageIdx: 0
+      slotsToReserve: []
     }
 
     this.intlMessages = defineMessages({
@@ -259,8 +258,7 @@ class ListingsDetail extends Component {
       seller,
       status,
       step,
-      fractionalTimeIncrement,
-      featuredImageIdx
+      fractionalTimeIncrement
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -473,7 +471,7 @@ class ListingsDetail extends Component {
             </div>
             <div className="col-12 col-md-8 detail-info-box">
               {(loading || (pictures && !!pictures.length)) && (
-                <PicturesThumbPreview pictures={ pictures } wrapClassName='image-wrapper' />
+                <PicturesThumbPreview pictures={ pictures } wrapClassName="image-wrapper" />
               )}
               <p className="ws-aware description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
