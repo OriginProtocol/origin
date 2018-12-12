@@ -24,8 +24,8 @@ export class Listing {
    *  - {string} seller - address of the seller
    *  - {string} display - 'normal', 'featured', 'hidden'
    *  - {Array<Object>} media
-   *  - {Object} comission - consists of 'amount' and 'currency' properties
-   *  - {Array} slots
+   *  - {Object} commission - consists of 'amount' and 'currency' properties
+   *  - {Array} slots - to be implemented
    *  - {Integer} slotLength - defines the length of a time slot in a fractional listing
    *  - {String} slotLengthUnit - defines the unit of measurement for a fractional usage time slot
    *  - {string} schemaId
@@ -132,5 +132,17 @@ export class Listing {
 
   get active() {
     return this.status === 'active'
+  }
+
+  get unitsRemaining() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    const unitsPurchased = this.offers
+      // filter out offers that have been withdrawn or are errorneous
+      .filter(offer => !['withdrawn', 'error'].includes(offer.status))
+      .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
+
+    return Math.max(0, this.unitsTotal - unitsPurchased)
   }
 }

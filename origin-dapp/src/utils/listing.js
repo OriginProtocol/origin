@@ -95,11 +95,14 @@ export function dappFormDataToOriginListing(formData) {
  * @return {object} DApp compatible listing object.
  */
 export async function originToDAppListing(originListing) {
+  const isUnit = originListing.type === 'unit'
+  const isMultiUnit = isUnit && originListing.unitsTotal > 1
+  const isFractional = originListing.type === 'fractional'
+
   const commission = originListing.commission
     ? parseFloat(originListing.commission.amount)
     : 0
 
-  const isUnit = originListing.listingType === 'unit'
   // detect and adapt listings that were created by deprecated schemas
   const schemaData = await fetchSchema(originListing)
   const {
@@ -111,6 +114,10 @@ export async function originToDAppListing(originListing) {
     schema,
     isDeprecatedSchema
   } = schemaData
+
+  const commissionPerUnit = originListing.commissionPerUnit
+    ? parseFloat(originListing.commissionPerUnit.amount)
+    : 0
 
   const dappListing = {
     id: originListing.id,
@@ -130,16 +137,24 @@ export async function originToDAppListing(originListing) {
       ? originListing.media.map(medium => medium.url)
       : [],
     price: originListing.price && originListing.price.amount,
-    boostValue: commission,
+    boostValue: isMultiUnit ? commissionPerUnit : commission,
     boostLevel: getBoostLevel(commission),
     unitsTotal: originListing.unitsTotal,
+    unitsRemaining: originListing.unitsRemaining,
     ipfsHash: originListing.ipfs.hash,
     isUnit: isUnit,
-    isFractional: originListing.listingType === 'fractional',
-    isMultiUnit: isUnit && originListing.unitsTotal > 1,
+    isFractional: isFractional,
+    isMultiUnit: isMultiUnit,
     listingType: originListing.type,
     slots: originListing.slots,
+    slotLengthUnit: isFractional && listing.slotLengthUnit,
+    fractionalTimeIncrement: isFractional && slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily',
+    offers: originListing.offers,
     events: originListing.events
+  }
+
+  if (isMultiUnit) {
+    dappListing.totalBoostValue = commission
   }
 
   // if multiunit listing
@@ -151,11 +166,6 @@ export async function originToDAppListing(originListing) {
     dappListing.commissionPerUnit = commissionPerUnit
   }
 
-  return dappListing
-}
-
-export function addOffersToDappListing(dappListing, offers){
-  console.log("ADDING OFFERS TO DAPP LISTING: ", dappListing, offers)
   return dappListing
 }
 
@@ -185,16 +195,26 @@ export const transformPurchasesOrSales = async purchasesOrSales => {
  * Loads a listing from origin-js, transforms it into a DApp compatible object and optionally
  * translates the listing's category.
  * @param {string} id - Listing ID.
- * @param {boolean} translate - Whether to translate the listing category or not.
+ * @param {object} opts - listing fetch options
+ * - {boolean} translate - Whether to translate the listing category or not.
+ * - {boolean} loadOffers - Should listing also contiain offers
+ * - {object} blockInfo - Should listing also contiain offers
  * @return {Promise<object>} DApp compatible listing object.
  */
-export async function getListing(id, translate = false, blockInfo) {
-  const originListing = await origin.marketplace.getListing(id, blockInfo)
+export async function getListing(id, opts = {}) {
+  const {
+    translate,
+    loadOffers,
+    blockInfo
+  } = opts
+
+  const originListing = await origin.marketplace.getListing(id, blockInfo, { loadOffers: !!loadOffers })
   const dappListing = await originToDAppListing(originListing)
-  if (translate) {
+  if (!!translate) {
     dappListing.category = translateListingCategory(dappListing.category)
     dappListing.subCategory = translateListingCategory(dappListing.subCategory)
   }
+
   return dappListing
 }
 

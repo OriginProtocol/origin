@@ -165,7 +165,7 @@ class ListingCreate extends Component {
       try {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
-        const listing = await getListing(this.props.listingId, false)
+        const listing = await getListing(this.props.listingId, { translate: false })
 
         this.ensureUserIsSeller(listing.seller)
         this.setState({

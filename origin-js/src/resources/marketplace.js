@@ -135,12 +135,13 @@ export default class Marketplace {
   /**
    * Returns listings.
    * TODO: This won't scale. Add support for pagination.
-   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean}
+   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean, loadOffers: boolean}
    *  - idsOnly: Returns only ids rather than the full Listing object.
    *  - listingsFor: Returns latest version of all listings created by a seller.
    *  - purchasesFor: Returns all listings a buyer made an offer on.
    *  - withBlockinfo: Only used in conjunction with purchasesFor option. Loads version
    *    of the listing at the time offer was made by the buyer.
+   *  - also load offers for this listing
    * @return {Promise<List(Listing)>}
    * @throws {Error}
    */
@@ -159,13 +160,13 @@ export default class Marketplace {
       return Promise.all(
         listingIds.map(async listingData => {
           const { listingId, blockInfo } = listingData
-          return await this.getListing(listingId, blockInfo)
+          return await this.getListing(listingId, blockInfo, { loadOffers: opts.loadOffers })
         })
       )
     } else {
       return Promise.all(
         listingIds.map(async listingId => {
-          return await this.getListing(listingId)
+          return await this.getListing(listingId, undefined, { loadOffers: opts.loadOffers })
         })
       )
     }
@@ -176,17 +177,31 @@ export default class Marketplace {
    * @param {string} listingId
    * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional argument
    *   to indicate a specific version of the listing should be loaded.
+   * @param opts: {loadOffers: boolean}
+   *  - also load offers for this listing
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
-  async getListing(listingId, blockInfo) {
+  async getListing(listingId, blockInfo, opts = {}) {
+    const addOffersToListing = async (listing) => {
+      const offers = await this.getOffers(listingId, listing)
+      listing.offers = offers
+      return listing
+    }
+
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
-      return await this.discoveryService.getListing(listingId, blockInfo)
+      let listing = await this.discoveryService.getListing(listingId, blockInfo)
+      if (opts.loadOffers)
+        listing = await addOffersToListing(listing)
+
+      return listing
     }
 
     // Get the on-chain listing data.
-    const chainListing = await this.resolver.getListing(listingId, blockInfo)
+    let chainListing = await this.resolver.getListing(listingId, blockInfo)
+    if (opts.loadOffers)
+        chainListing = await addOffersToListing(chainListing)
 
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(

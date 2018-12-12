@@ -26,7 +26,7 @@ import UserCard from 'components/user-card'
 
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { getListing, transformPurchasesOrSales, addOffersToDappListing } from 'utils/listing'
+import { getListing, transformPurchasesOrSales } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 import { formattedAddress } from 'utils/user'
 
@@ -91,7 +91,6 @@ class ListingsDetail extends Component {
     if (this.props.listingId) {
       // Load from IPFS
       await this.loadListing()
-      await this.loadOffers()
     } else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
       // Listing json passed in directly
@@ -111,11 +110,21 @@ class ListingsDetail extends Component {
   }
 
   async handleMakeOffer(skip, slotsToReserve) {
+    const {
+      boostValue,
+      isMultiUnit,
+      isFractional,
+      listingType,
+      onboardingCompleted,
+      price,
+      purchases
+    } = this.state
+
     // onboard if no identity, purchases, and not already completed
     const shouldOnboard =
       !this.props.profile.strength &&
-      !this.state.purchases.length &&
-      !this.state.onboardingCompleted
+      !purchases.length &&
+      !onboardingCompleted
 
     this.props.storeWeb3Intent('purchase this listing')
 
@@ -141,20 +150,20 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.METAMASK })
 
     const slots = slotsToReserve || this.state.slotsToReserve
-    const price = this.state.isFractional ?
+    const listingPrice = isFractional ?
         slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
-        this.state.price
+        price
 
     try {
       const offerData = {
         listingId: this.props.listingId,
-        listingType: this.state.listingType,
+        listingType: listingType,
         totalPrice: {
-          amount: price,
+          amount: listingPrice,
           currency: 'ETH'
         },
         commission: {
-          amount: this.state.boostValue.toString(),
+          amount: boostValue.toString(),
           currency: 'OGN'
         },
         // Set the finalization time to ~1 year after the offer is accepted.
@@ -162,7 +171,7 @@ class ListingsDetail extends Component {
         finalizes: 365 * 24 * 60 * 60
       }
 
-      if (this.state.isFractional) {
+      if (isFractional) {
         offerData.slots = prepareSlotsToSave(slots)
       } else {
         offerData.unitsPurchased = 1
@@ -205,17 +214,11 @@ class ListingsDetail extends Component {
 
   async loadListing() {
     try {
-      const listing = await getListing(this.props.listingId, true)
-      const isFractional = listing.listingType === 'fractional'
-      const slotLengthUnit = isFractional && listing.slotLengthUnit
-      const fractionalTimeIncrement = slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily'
+      const listing = await getListing(this.props.listingId, { translate: true, loadOffers: true })
 
       this.setState({
         ...listing,
-        loading: false,
-        dappListing: listing,
-        isFractional,
-        fractionalTimeIncrement
+        loading: false
       })
     } catch (error) {
       this.props.showAlert(
@@ -225,23 +228,6 @@ class ListingsDetail extends Component {
         `Error fetching contract or IPFS info for listing: ${
           this.props.listingId
         }`
-      )
-      console.error(error)
-    }
-  }
-
-  async loadOffers() {
-    try {
-      const offers = await origin.marketplace.getOffers(this.props.listingId)
-      console.log("READING OFFERS ", offers, this.props.listingId)
-      const listing = addOffersToDappListing(this.state.dappListing, offers)
-
-      this.setState({
-        ...listing
-      })
-    } catch (error) {
-      console.error(
-        `Error fetching offers for listing: ${this.props.listingId}`
       )
       console.error(error)
     }
@@ -307,7 +293,6 @@ class ListingsDetail extends Component {
     const userIsBuyer = currentOffer && formattedAddress(wallet.address) === formattedAddress(currentOffer.buyer)
     const userIsSeller = formattedAddress(wallet.address) === formattedAddress(seller)
 
-    console.log("LISTING STATE: ", this.state)
     return (
       <div className="listing-detail">
         {step === this.STEP.ONBOARDING && (

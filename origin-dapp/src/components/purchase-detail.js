@@ -319,7 +319,7 @@ class PurchaseDetail extends Component {
         return console.error(`Purchase ${offerId} not found`)
       }
       
-      const listing = await getListing(purchase.listingId, true, blockInfo)
+      const listing = await getListing(purchase.listingId, { translate: true, blockInfo })
 
       this.setState({
         listing,

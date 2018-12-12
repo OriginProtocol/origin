@@ -22,12 +22,11 @@ class ListingCard extends Component {
 
   async componentWillMount() {
     await this.loadListing()
-    await this.loadOffers()
   }
 
   async loadListing() {
     try {
-      const listing = await getListing(this.props.listingId, true)
+      const listing = await getListing(this.props.listingId, { translate: true, loadOffers: true })
 
       this.setState({
         // boostLevelIsPastSomeThreshold: listing.boostValue > 0,
@@ -40,18 +39,6 @@ class ListingCard extends Component {
           this.props.listingId
         }: ${error}`
       )
-    }
-  }
-
-  async loadOffers() {
-    try {
-      const offers = await origin.marketplace.getOffers(this.props.listingId)
-      this.setState({ offers })
-    } catch (error) {
-      console.error(
-        `Error fetching offers for listing: ${this.props.listingId}`
-      )
-      console.error(error)
     }
   }
 
