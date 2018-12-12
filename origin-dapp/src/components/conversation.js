@@ -90,6 +90,7 @@ class Conversation extends Component {
     if (smallScreenOrDevice) {
       this.loadListing()
       updateShowNav = false
+      this.scrollToBottom()
     }
 
     showMainNav(updateShowNav)
@@ -131,6 +132,10 @@ class Conversation extends Component {
     if (users.length > prevProps.users.length) {
       this.identifyCounterparty()
     }
+  }
+
+  componentWillUnmount() {
+    this.props.showMainNav(true)
   }
 
   handleClick() {
@@ -330,6 +335,7 @@ class Conversation extends Component {
       canDeliverMessage
     const offerEvents = getOfferEvents(purchase)
     const combinedMessages = [...offerEvents, ...messages]
+    const textAreaSize = smallScreenOrDevice ? '8' : '4'
 
     return (
       <Fragment>
@@ -343,7 +349,7 @@ class Conversation extends Component {
         </div>
         {!shouldEnableForm && (
           <form className="add-message d-flex">
-            <textarea rows="4" tabIndex="0" disabled />
+            <textarea rows={textAreaSize} tabIndex="0" disabled />
             <button type="submit" className="btn btn-sm btn-primary" disabled>
               Send
             </button>
@@ -364,7 +370,7 @@ class Conversation extends Component {
                 )}
                 onKeyDown={this.handleKeyDown}
                 tabIndex="0"
-                rows="4"
+                rows={textAreaSize}
                 autoFocus
               />
             )}
