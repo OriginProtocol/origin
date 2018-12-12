@@ -25,6 +25,9 @@ export function toggleSplitPanel(show) {
 }
 
 export function unblock() {
+  document.body.classList.remove('modal-open')
+  document.body.style.overflow = 'auto'
+
   return { type: OnboardingConstants.UNBLOCK }
 }
 

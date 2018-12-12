@@ -23,6 +23,12 @@ body {
   line-height: 1.5;
 }
 
+.modal-open {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+
 /* sticky footer sibling */
 main {
   flex: 1 0 auto;
