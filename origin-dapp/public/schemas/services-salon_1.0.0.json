@@ -3,14 +3,15 @@
   "type": "object",
   "required": [
     "name",
-    "description"
+    "description",
+    "price"
   ],
   "properties": {
     "dappSchemaId": {
       "const": "https://dapp.originprotocol.com/schemas/services-salon_1.0.0.json"
     },
     "listingType": {
-      "const": "fractional"
+      "const": "unit"
     },
     "category": {
       "const": "schema.services"
@@ -44,14 +45,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "pictures": {
-      "type": "array",
-      "title": "schema.selectPhotos",
-      "items": {
-        "type": "string",
-        "format": "data-url"
-      }
-    },
     "sellerSteps": {
       "type": "string",
       "title": "schema.sellerSteps",
@@ -63,6 +56,18 @@
     },
     "subCategory": {
       "const": "schema.salon"
+    },
+    "price": {
+      "type": "number",
+      "title": "schema.priceInETH"
+    },
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
     }
   }
 }
