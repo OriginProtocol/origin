@@ -30,6 +30,13 @@ export const getDataUri = async file => {
  */
 
 export const modifyImage = (imageFileObj, options, callback) => {
+  const loadImageOptions = {
+    orientation: true,
+    crossOrigin: 'anonymous',
+    // maxHeight: MAX_IMAGE_HEIGHT,
+    // maxWidth: MAX_IMAGE_WIDTH
+  }
+
   loadImage(imageFileObj, (canvas) => {
     const scaledImage = loadImage.scale(canvas, options)
 
@@ -39,7 +46,7 @@ export const modifyImage = (imageFileObj, options, callback) => {
 
       callback(dataUri)
     }, 'image/jpeg')
-  }, { orientation: true, crossOrigin: 'anonymous' })
+  }, loadImageOptions)
 }
 
 /*
@@ -50,7 +57,6 @@ export const modifyImage = (imageFileObj, options, callback) => {
  * as well as the aspect ratio. If undefined, the image will not be cropped
  * @param {number} aspectRatio - the ratio of the width to the height of an image (i.e. 4/3)
  * @param {bool} centerCrop - whether to auto-crop the image at its center
- * @param {bool} limitSize - limit the dimensions of the image (false for profile image)
  * @param {number} height - The height of the crop area
  * @param {number} width - The width of the crop area
  * @param {number} x - The x coordinate of the top-left corner of the crop area
@@ -65,7 +71,7 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
     width,
     height,
     aspectRatio,
-    centerCrop = false,
+    centerCrop = false
   } = options || {}
 
   const defaultConfig = {
@@ -77,6 +83,7 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
 
 
   function centerCropImage() {
+    //the natural width and height does not know about orientation
     const imageWidth = this.naturalWidth
     const imageHeight = this.naturalHeight
 
@@ -125,13 +132,11 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
 
   } else {
     // This is used by Profile (avatar selection) and messaging (resizing large images)
-    //  TODO(John) - dunno if this works yet but centerCrop is working I think
     config = {
       ...defaultConfig,
       sourceWidth: width,
       sourceHeight: height,
-      maxWidth: MAX_IMAGE_WIDTH,
-      maxHeight: MAX_IMAGE_HEIGHT,
+      aspectRatio
     }
 
     modifyImage(imageFileObj, config, callback)

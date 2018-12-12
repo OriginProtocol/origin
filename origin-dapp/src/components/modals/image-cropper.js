@@ -29,10 +29,10 @@ class ImageCropper extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { imageFileObj, limitSize } = this.props
+    const { imageFileObj } = this.props
     if (imageFileObj && imageFileObj !== prevProps.imageFileObj) {
 
-      generateCroppedImage(imageFileObj, { limitSize }, (dataUri) => {
+      generateCroppedImage(imageFileObj, null, (dataUri) => {
         this.setState({
           imageSrc: dataUri,
           ...this.props
@@ -59,12 +59,10 @@ class ImageCropper extends Component {
 
   onCropComplete() {
     const { imageFileObj, pixelCrop, crop = {} } = this.state
-    const { limitSize } = this.props
 
     const options = {
       ...pixelCrop,
       aspectRatio: crop.aspect,
-      limitSize
     }
     generateCroppedImage(imageFileObj, options, (croppedImageUri) => {
       this.props.onCropComplete(croppedImageUri, imageFileObj)
