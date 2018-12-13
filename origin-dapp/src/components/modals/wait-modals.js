@@ -14,8 +14,8 @@ const currentProvider = getCurrentProvider(
 // TODO:John - this modal isn't used for now, but the workflow step "PROCESSING"
 // exists in several workflows. We can use this modal once we are able to
 // listen to the .on('transactionHash') event
-export const ProcessingModal = () => (
-  <Modal backdrop="static" isOpen={true}>
+export const ProcessingModal = ({ isOpen=true }) => (
+  <Modal backdrop="static" isOpen={isOpen}>
     <div className="image-container">
       <img src="images/spinner-animation-light.svg" role="presentation" />
     </div>
@@ -32,8 +32,8 @@ export const ProcessingModal = () => (
   </Modal>
 )
 
-export const ProviderModal = ({ message }) => (
-  <Modal backdrop="static" isOpen={true}>
+export const ProviderModal = ({ isOpen=true, message }) => (
+  <Modal backdrop="static" isOpen={isOpen}>
     <div className="image-container">
       <img src="images/spinner-animation-light.svg" role="presentation" />
     </div>
