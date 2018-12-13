@@ -259,7 +259,7 @@ class Conversation extends Component {
 
   formatOfferMessage(info) {
     const { listing = {}, purchase } = this.state
-    const { users, intl, smallScreenOrDevice, withListingSummary } = this.props
+    const { users, smallScreenOrDevice, withListingSummary } = this.props
 
     if (smallScreenOrDevice || !withListingSummary) return
 
