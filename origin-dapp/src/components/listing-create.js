@@ -377,6 +377,17 @@ class ListingCreate extends Component {
       }
     }
 
+    const schemaSetValues = {}
+    for (const key in properties) {
+      if (properties[key].const) {
+        schemaSetValues[key] = properties[key].const
+      }
+
+      if (properties[key].default) {
+        schemaSetValues[key] = properties[key].default
+      }
+    }
+
     const translatedSchema = translateSchema(schemaJson)
 
     this.setState({
@@ -387,6 +398,7 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
+          ...schemaSetValues,
           ...this.state.formListing.formData,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
