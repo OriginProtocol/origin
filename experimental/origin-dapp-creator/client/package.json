@@ -21,6 +21,7 @@
   "author": "Tom Linton <tom@originprotocol.com>",
   "license": "MIT",
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "@blueprintjs/core": "^3.9.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "origin-dapp": "^0.3.0",
@@ -31,6 +32,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-styl": "^0.0.3",
+    "react-web3": "^1.2.0",
     "redux": "^4.0.1",
     "rework": "^1.0.1",
     "web3": "^1.0.0-beta.37",

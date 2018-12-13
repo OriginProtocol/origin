@@ -11,9 +11,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const isProduction = process.env.NODE_ENV === 'production'
 
 var config = {
-  entry: {
-    app: './src/index.js'
-  },
+  entry: ['@babel/polyfill', './src/index.js'],
   devtool: isProduction ? false : 'cheap-module-source-map',
   output: {
     filename: '[name].js',
@@ -65,7 +63,7 @@ var config = {
     extensions: ['.js', '.json']
   },
   node: {
-    console: 'empty',
+    console: true,
     fs: 'empty',
     net: 'empty',
     tls: 'empty'
@@ -73,7 +71,8 @@ var config = {
   mode: isProduction ? 'production' : 'development',
   plugins: [
     new HtmlWebpackPlugin({ template: 'public/index.html', inject: false }),
-    new webpack.EnvironmentPlugin({ HOST: 'localhost' })
+    new webpack.EnvironmentPlugin({ HOST: 'localhost' }),
+    new Dotenv()
   ]
 }
 
@@ -87,8 +86,7 @@ if (isProduction) {
     new CleanWebpackPlugin(['public/app.*', 'public/styles.*']),
     new MiniCssExtractPlugin({
       filename: '[name].[hash:8].css'
-    }),
-    new Dotenv()
+    })
   )
   config.plugins.push(new webpack.IgnorePlugin(/redux-logger/))
 }

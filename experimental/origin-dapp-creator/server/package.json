@@ -28,6 +28,6 @@
     "per-env": "^1.0.2"
   },
   "devDependencies": {
-    "nodemon": "^1.18.8"
+    "nodemon": "^1.18.7"
   }
 }

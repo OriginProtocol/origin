@@ -11,7 +11,7 @@ import SubdomainField from './fields/SubdomainField'
 
 import ColorPicker from './ColorPicker'
 
-import { baseConfig } from 'origin-dapp/src/reducers/Config'
+import { baseConfig } from 'origin-dapp/src/config'
 
 class Create extends Component {
   constructor(props, context) {

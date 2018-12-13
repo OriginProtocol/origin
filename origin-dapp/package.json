@@ -99,6 +99,7 @@
         "module-resolver",
         {
           "alias": {
+	    "@": "./",
             "actions": "./src/actions",
             "components": "./src/components",
             "constants": "./src/constants",
