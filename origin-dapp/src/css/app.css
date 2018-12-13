@@ -215,7 +215,7 @@ textarea:-moz-ui-invalid {
 /* Identification */
 
 .identification {
-  height: 60px;
+  height: 70px;
   padding: 0 0.75rem;
 }
 
@@ -1500,6 +1500,11 @@ textarea:-moz-ui-invalid {
 }
 
 /* Modal */
+.modal-open {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
 
 .modal-backdrop {
   background-color: rgba(235, 240, 243, 0.6);
