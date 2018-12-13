@@ -23,7 +23,13 @@ describe('create listing with offer and retrieve using discovery', () => {
       ipfsApiPort: 9999,
       discoveryServerUrl: 'http://origin-discovery:4000/graphql',
       web3: web3,
-      perfModeEnabled: true
+      perfModeEnabled: true,
+      // Note: make sure to use same affiliate and arbitrator as event-listener
+      // otherwise event-listener's data consistency checks will fail and
+      // data does not get indexed.
+      // See origin/development/envfiles/event-listener.env for values to use.
+      affiliate: '0x821aea9a577a9b44299b9c15c88cf3087f3b5544',
+      arbitrator: '0x0d1d4e623d10f9fba5db95830f7d3839406c6af2',
     })
 
     const { listingId } = await this.origin.marketplace.createListing(listingData)

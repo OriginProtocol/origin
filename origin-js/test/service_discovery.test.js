@@ -409,6 +409,7 @@ describe('Discovery service', function() {
                   'currency': 'ETH'
                 },
                 'ipfs': {
+                  'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
                   'data': {
                     'commission': {
                       'currency': 'OGN',
@@ -473,6 +474,7 @@ describe('Discovery service', function() {
                   'data': {
                     'id': '1-000-57-1',
                     'ipfs': {
+                      'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
                       'data': {
                         'commission': {
                           'currency': 'OGN',
@@ -502,6 +504,7 @@ describe('Discovery service', function() {
                   'data': {
                     'id': '1-000-57-2',
                     'ipfs': {
+                      'hash': 'ZZWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqYY',
                       'data': {
                         'commission': {
                           'currency': 'OGN',
@@ -559,6 +562,7 @@ describe('Discovery service', function() {
                   'data': {
                     'id': '1-000-57-1',
                     'ipfs': {
+                      'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
                       'data': {
                         'commission': {
                           'currency': 'OGN',
@@ -588,6 +592,7 @@ describe('Discovery service', function() {
                   'data': {
                     'id': '1-000-57-2',
                     'ipfs': {
+                      'hash': 'AAWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqBB',
                       'data': {
                         'commission': {
                           'currency': 'OGN',
