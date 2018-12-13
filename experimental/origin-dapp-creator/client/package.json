@@ -19,10 +19,11 @@
     "Ethereum"
   ],
   "author": "Tom Linton <tom@originprotocol.com>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@blueprintjs/core": "^3.9.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "origin-dapp": "^0.3.0",
     "per-env": "^1.0.2",
     "react": "^16.6.3",
     "react-color": "^2.14.1",
@@ -32,7 +33,7 @@
     "react-styl": "^0.0.3",
     "redux": "^4.0.1",
     "rework": "^1.0.1",
-    "web3": "1.0.0-beta.34",
+    "web3": "^1.0.0-beta.37",
     "webpack": "^4.27.0"
   },
   "devDependencies": {
@@ -44,6 +45,7 @@
     "babel-plugin-module-resolver": "^3.1.1",
     "clean-webpack-plugin": "^1.0.0",
     "css-loader": "^1.0.1",
+    "dotenv-webpack": "^1.5.7",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.5",

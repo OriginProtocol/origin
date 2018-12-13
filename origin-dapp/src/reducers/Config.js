@@ -70,3 +70,5 @@ export default function Config(state = initialState, action = {}) {
       return state
   }
 }
+
+export const initialState

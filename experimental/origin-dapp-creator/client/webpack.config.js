@@ -1,5 +1,6 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
+const Dotenv = require('dotenv-webpack')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
@@ -64,7 +65,10 @@ var config = {
     extensions: ['.js', '.json']
   },
   node: {
-     fs: "empty"
+    console: 'empty',
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
   },
   mode: isProduction ? 'production' : 'development',
   plugins: [
@@ -83,7 +87,8 @@ if (isProduction) {
     new CleanWebpackPlugin(['public/app.*', 'public/styles.*']),
     new MiniCssExtractPlugin({
       filename: '[name].[hash:8].css'
-    })
+    }),
+    new Dotenv()
   )
   config.plugins.push(new webpack.IgnorePlugin(/redux-logger/))
 }

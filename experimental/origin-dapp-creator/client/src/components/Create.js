@@ -11,21 +11,14 @@ import SubdomainField from './fields/SubdomainField'
 
 import ColorPicker from './ColorPicker'
 
+import { baseConfig } from 'origin-dapp/src/reducers/Config'
+
 class Create extends Component {
   constructor(props, context) {
     super(props)
 
     this.state = {
-      config: {
-        subdomain: '',
-        title: '',
-        about: '',
-        cssVars: {
-          dusk: '',
-          goldenRod: '',
-          paleGrey: ''
-        }
-      }
+      config: baseConfig
     }
 
     this.web3Context = context.web3
