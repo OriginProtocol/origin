@@ -5,7 +5,11 @@
     "name",
     "description",
     "price",
-    "unitsTotal"
+    "unitsTotal",
+    "dappSchemaId",
+    "category",
+    "subCategory",
+    "listingType"
   ],
   "properties": {
     "dappSchemaId": {
