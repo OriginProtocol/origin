@@ -77,7 +77,6 @@ class ImageCropper extends Component {
     }
     generateCroppedImage(imageFileObj, options, (croppedImageUri) => {
       this.props.onCropComplete(croppedImageUri, imageFileObj)
-      this.setState(this.defaultState)
     })
   }
 
