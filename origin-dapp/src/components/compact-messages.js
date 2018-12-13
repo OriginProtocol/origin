@@ -37,7 +37,7 @@ export default class CompactMessages extends Component {
   findPreviousMessage(currentMessage, idx, previousIdx) {
     const { sortedMessages } = this.state
 
-    if (previousIdx && previousIdx < 0) return
+    if (previousIdx && previousIdx < 0) return {}
     /*
       get the next index from recursion or set the
       index based on the current message
@@ -47,8 +47,10 @@ export default class CompactMessages extends Component {
 
     if (previousMessage.timestamp) {
       return this.findPreviousMessage(currentMessage, idx, index - 1)
-    } else {
+    } else if (previousMessage.created) {
       return previousMessage
+    } else {
+      return {}
     }
   }
 
