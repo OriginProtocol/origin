@@ -205,44 +205,47 @@ export default class Marketplace {
    * @return {Promise<List(Offer)>}
    */
   async getOffers(listingId, opts = {}) {
+    //
+    // Step 1: Fetch offers
+    //
+    let allOffers
     if (this.perfModeEnabled) {
       // In performance mode, fetch offers from the discovery back-end to reduce latency.
-      return await this.discoveryService.getOffers(listingId, opts)
+      // Note: we ignore the idsOnly option here in order to fetch the entire offer data.
+      const discoveryOpts = Object.assign({}, opts, { idsOnly: false })
+      allOffers = await this.discoveryService.getOffers(listingId, discoveryOpts)
+    } else {
+      // Fetch offers from the blockchain.
+      const offerIds = await this.resolver.getOfferIds(listingId, opts)
+      allOffers = await Promise.all(
+        offerIds.map(async offerId => {
+          try {
+            return await this.getOffer(offerId)
+          } catch (e) {
+            // TODO(John) - handle this error better. It's tricky b/c it happens in a map
+            // and we want to throw the error, but we don't want the whole getOffers() call to fail.
+            // We want it to return the offers that it was able to get but still let us know something failed.
+            console.error(
+              `Error getting offer data for offer ${
+                offerId
+                }: ${e}`
+            )
+            return null
+          }
+        })
+      )
+      allOffers = allOffers.filter(offer => offer !== null)
     }
 
-    // TODO: Return just the IDs of validated offers by moving this below.
-    const offerIds = await this.resolver.getOfferIds(listingId, opts)
-    if (opts.idsOnly) {
-      return offerIds
-    }
-
-    const allOffers = await Promise.all(
-      offerIds.map(async offerId => {
-        try {
-          return await this.getOffer(offerId)
-        } catch(e) {
-          // TODO(John) - handle this error better. It's tricky b/c it happens in a map
-          // and we want to throw the error, but we don't want the whole getOffers() call to fail.
-          // We want it to return the offers that it was able to get but still let us know something failed.
-          console.error(
-            `Error getting offer data for offer ${
-              offerId
-            }: ${e}`
-          )
-          return null
-        }
-      })
-    )
-
-    // Filter out invalid offers
-    const filteredOffers = allOffers.filter(offer => Boolean(offer))
+    // If not a unit listing, return right away since filtering is not necessary.
     const listing = opts.listing || await this.getListing(listingId)
     if (listing.type !== 'unit') {
-      return filteredOffers
+      return opts.idsOnly ? allOffers.map(o => o.id) : allOffers
     }
 
-    // Filter out offers for which the units purchased exceeds the units
-    // available at the time of the offer.
+    //
+    // Step 2: This is unit listing specific. Filter out offers for which
+    //   the units purchased exceeds the units available at the time of the offer.
     let unitsAvailable = listing.unitsTotal
     const commission = listing.commission.amount
       ? BigNumber(listing.commission.amount)
@@ -251,7 +254,7 @@ export default class Marketplace {
       ? BigNumber(listing.commissionPerUnit.amount)
       : commission
     const offers = []
-    filteredOffers.forEach(offer => {
+    allOffers.forEach(offer => {
       const unitsSoldBeforeOffer = listing.unitsTotal - unitsAvailable
 
       // Validate units purchased against units available.
@@ -288,7 +291,8 @@ export default class Marketplace {
       // hopefully be rare for the time being.
       offers.push(offer)
     })
-    return offers
+
+    return opts.idsOnly ? offers.map(o => o.id) : offers
   }
 
   /**

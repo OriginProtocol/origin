@@ -143,7 +143,7 @@ class ListingCreate extends Component {
     this.onDetailsEntered = this.onDetailsEntered.bind(this)
     this.onAvailabilityEntered = this.onAvailabilityEntered.bind(this)
     this.backFromBoostStep = this.backFromBoostStep.bind(this)
-    this.onBackToPickSchema = this.onBackToPickSchema.bind(this)
+    this.backFromDetailsStep = this.backFromDetailsStep.bind(this)
     this.onFormDataChange = this.onFormDataChange.bind(this)
     this.onBoostLimitChange = this.onBoostLimitChange.bind(this)
     this.onReview = this.onReview.bind(this)
@@ -297,13 +297,7 @@ class ListingCreate extends Component {
     return fetch(`schemas/${schemaFileName}`)
       .then(response => response.json())
       .then(schemaJson => {
-        PriceField.defaultProps = {
-          options: {
-            selectedSchema: schemaJson
-          }
-        }
-
-        this.setState({ selectedSchemaId })
+        this.setState({ selectedSchemaId: schemaFileName })
         this.renderDetailsForm(schemaJson)
       })
   }
@@ -314,6 +308,7 @@ class ListingCreate extends Component {
         selectedSchema: schemaJson
       }
     }
+
     this.uiSchema = {
       slotLength: {
         'ui:widget': 'hidden'
@@ -450,17 +445,16 @@ class ListingCreate extends Component {
           ...this.state.formListing.formData,
           slots
         }
-      }
-    })
-
-    this.setState({
+      },
       step: this.STEP[nextStep]
     })
   }
 
-  onBackToPickSchema() {
+  backFromDetailsStep() {
+    const step = this.props.mobileDevice ? this.STEP.PICK_SUBCATEGORY : this.STEP.PICK_CATEGORY
+
     this.setState({
-      step: this.STEP.PICK_SUBCATEGORY,
+      step,
       selectedSchema: null,
       schemaFetched: false,
       formListing: {
@@ -652,6 +646,7 @@ class ListingCreate extends Component {
     this.setState({ step: this.STEP.PREVIEW })
   }
 
+<<<<<<< HEAD
   renderBoostButtons(isMultiUnitListing) {
     return(
       <div className="btn-container">
@@ -722,6 +717,31 @@ class ListingCreate extends Component {
     }
   return errors
 }
+=======
+  getStepNumber(stepNum) {
+    // We have a different number of steps in the workflow based on
+    // mobile vs. desktop and fractional vs. unit.
+    // This method ensures that the step numbers that display at the top of the view are correct
+    const isMobile = this.props.mobileDevice
+    const { isFractionalListing } = this.state
+
+    switch (stepNum) {
+      case 1:
+        return 1
+      case 2:
+      case 3:
+      case 4:
+        return isMobile ? stepNum : stepNum - 1
+      case 5:
+      case 6:
+          if (isMobile) {
+            return isFractionalListing ? stepNum : stepNum - 1
+          } else {
+            return isFractionalListing ? stepNum - 1 : stepNum - 2
+          }
+    }
+  }
+>>>>>>> master
 
   render() {
     const {
@@ -765,7 +785,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: Number(step) }}
+                    values={{ stepNumber: this.getStepNumber(step) }}
                   />
                 </label>
                 <h2>
@@ -796,7 +816,11 @@ class ListingCreate extends Component {
                       </div>
                       {category.name}
                       {!this.props.mobileDevice && selectedCategory === category.type &&
-                        <select onChange={this.handleSchemaSelection} className="form-control">
+                        <select
+                          onChange={this.handleSchemaSelection}
+                          value={selectedSchemaId || undefined}
+                          className="form-control"
+                        >
                           <option value="">{intl.formatMessage(this.intlMessages.selectOne)}</option>
                           {selectedCategorySchemas.map(schemaObj => (
                             <option value={schemaObj.schema} key={schemaObj.name}>{schemaObj.name}</option>
@@ -854,7 +878,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: Number(step) }}
+                    values={{ stepNumber: this.getStepNumber(step) }}
                   />
                 </label>
                 <h2>
@@ -917,7 +941,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: Number(step) }}
+                    values={{ stepNumber: this.getStepNumber(step) }}
                   />
                 </label>
                 <h2>
@@ -969,7 +993,7 @@ class ListingCreate extends Component {
                       type="button"
                       className="btn btn-other btn-listing-create"
                       onClick={() =>
-                        this.onBackToPickSchema()
+                        this.backFromDetailsStep()
                       }
                       ga-category="create_listing"
                       ga-label="details_step_back"
@@ -1012,7 +1036,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: Number(step) }}
+                    values={{ stepNumber: this.getStepNumber(step) }}
                   />
                 </label>
                 <h2>
@@ -1165,7 +1189,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: Number(step) }}
+                    values={{ stepNumber: this.getStepNumber(step) }}
                   />
                 </label>
                 <h2>
