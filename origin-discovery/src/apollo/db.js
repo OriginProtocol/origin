@@ -180,7 +180,6 @@ function _makeOffer (row) {
     unitsPurchased: row.data.unitsPurchased,
     // See https://github.com/OriginProtocol/origin/issues/1087
     // as to why we extract commission from the ipfs data.
-    // TODO(franck): re-index that data.
     commission: row.data.ipfs.data.commission,
   }
 }

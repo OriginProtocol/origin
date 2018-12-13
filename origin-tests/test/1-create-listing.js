@@ -9,7 +9,7 @@ const Origin = require('origin').default
 const listingValid = require('origin/test/fixtures/listing-valid.json')
 const listingData = Object.assign({}, listingValid)
 
-const offerValid = require('origin/test/fixtures//offer-valid.json')
+const offerValid = require('origin/test/fixtures/offer-valid.json')
 const offerData = Object.assign({}, offerValid)
 
 
@@ -29,7 +29,7 @@ describe('create listing plus offer and retrieve using discovery', () => {
     const { listingId } = await this.origin.marketplace.createListing(listingData)
     this.listingId = listingId
 
-    const { offerId } = await this.origin.marketplace.makeOffer(listingData, offerData)
+    const { offerId } = await this.origin.marketplace.makeOffer(listingId, offerData)
     this.offerId = offerId
 
     // Wait to allow event-listener to index the data.
