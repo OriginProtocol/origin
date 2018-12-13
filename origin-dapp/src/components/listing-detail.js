@@ -248,6 +248,7 @@ class ListingsDetail extends Component {
     const {
       // boostLevel,
       // boostValue,
+      boostRemaining,
       category,
       subCategory,
       description,
@@ -263,9 +264,9 @@ class ListingsDetail extends Component {
       status,
       step,
       unitsTotal,
+      unitsRemaining,
       fractionalTimeIncrement,
       featuredImageIdx
-      // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
       const availability = offerStatusToListingAvailability(o.status)
@@ -278,7 +279,7 @@ class ListingsDetail extends Component {
     const isWithdrawn = status === 'inactive'
     const isPending = currentOfferAvailability === 'pending'
     const isSold = currentOfferAvailability === 'sold'
-    const isAvailable = !isPending && !isSold && !isWithdrawn
+    const isAvailable = (!isPending && !isSold && !isWithdrawn) || (isMultiUnit && unitsRemaining > 0)
     const showPendingBadge = isPending && !isWithdrawn
     const showSoldBadge = isSold || isWithdrawn
     /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
@@ -541,18 +542,6 @@ class ListingsDetail extends Component {
                       </div>
                     </div>
                   */}
-                  {isMultiUnit && <Fragment>
-                    <hr />
-                      <div className="quantity d-flex justify-content-between">
-                        <div className="ml-3">Quantity</div>
-                        <div className="text-right mr-3">
-                          {unitsTotal}
-                        </div>
-                      </div>
-                    <hr />
-                  </Fragment>
-
-                  }
                   {!loading && (
                     <div className="btn-container">
                       {!userIsSeller && !isFractional && (
@@ -569,8 +558,61 @@ class ListingsDetail extends Component {
                           />
                         </button>
                       )}
-                      {userIsSeller && (
-                        <Fragment>
+                      {userIsSeller && (<Fragment>
+                        {isMultiUnit && (
+                          <Fragment>
+                            <hr />
+                              <div className="quantity d-flex justify-content-between">
+                                <div className="ml-3">
+                                  <FormattedMessage
+                                    id={'listing-detail.unitsSold'}
+                                    defaultMessage={'Sold'}
+                                  />
+                                </div>
+                                <div className="text-right mr-3">
+                                  {unitsTotal - unitsRemaining}
+                                </div>
+                              </div>
+                              <div className="quantity d-flex justify-content-between">
+                                <div className="ml-3">
+                                  <FormattedMessage
+                                    id={'listing-detail.unitsUnsold'}
+                                    defaultMessage={'Unsold'}
+                                  />
+                                </div>
+                                <div className="text-right mr-3">
+                                  {unitsRemaining}
+                                </div>
+                              </div>
+                            <hr />
+                            <div className="quantity d-flex justify-content-between">
+                              <div className="ml-3">
+                                <FormattedMessage
+                                  id={'listing-detail.remainingBoost'}
+                                  defaultMessage={'Remaining Boost'}
+                                />
+                              </div>
+                              <div className="text-right mr-3">
+                                <p>
+                                  <img
+                                    className="ogn-icon"
+                                    src="images/ogn-icon.svg"
+                                    role="presentation"
+                                  />
+                                  <span className="text-bold">{boostRemaining}</span>&nbsp;
+                                  <Link
+                                    className="ogn-abbrev"
+                                    to="/about-tokens"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    OGN
+                                  </Link>
+                                </p>
+                              </div>
+                            </div>
+                          </Fragment>
+                        )}
                           <Link
                             to="/my-listings"
                             className="btn"

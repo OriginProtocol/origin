@@ -141,7 +141,7 @@ export default class Marketplace {
    *  - purchasesFor: Returns all listings a buyer made an offer on.
    *  - withBlockinfo: Only used in conjunction with purchasesFor option. Loads version
    *    of the listing at the time offer was made by the buyer.
-   *  - also load offers for this listing
+   *  - loadOffers: also load offers for this listing
    * @return {Promise<List(Listing)>}
    * @throws {Error}
    */
@@ -166,7 +166,7 @@ export default class Marketplace {
     } else {
       return Promise.all(
         listingIds.map(async listingId => {
-          return await this.getListing(listingId, undefined, { loadOffers: opts.loadOffers })
+          return await this.getListing(listingId, null, { loadOffers: opts.loadOffers })
         })
       )
     }
@@ -177,8 +177,7 @@ export default class Marketplace {
    * @param {string} listingId
    * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional argument
    *   to indicate a specific version of the listing should be loaded.
-   * @param opts: {loadOffers: boolean}
-   *  - also load offers for this listing
+   * @param opts: {loadOffers: boolean} also load offers for this listing
    * @returns {Promise<Listing>}
    * @throws {Error}
    */

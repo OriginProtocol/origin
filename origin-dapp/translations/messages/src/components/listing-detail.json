@@ -64,6 +64,18 @@
     "defaultMessage": "Purchase"
   },
   {
+    "id": "listing-detail.unitsSold",
+    "defaultMessage": "Sold"
+  },
+  {
+    "id": "listing-detail.unitsUnsold",
+    "defaultMessage": "Unsold"
+  },
+  {
+    "id": "listing-detail.remainingBoost",
+    "defaultMessage": "Remaining Boost"
+  },
+  {
     "id": "listing-detail.myListings",
     "defaultMessage": "My Listings"
   },
