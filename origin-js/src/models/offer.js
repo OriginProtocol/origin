@@ -5,6 +5,10 @@ export class Offer {
   /**
    * Offer object model.
    *
+   * Notice: when adding a field, be aware that the data in the discovery back-end
+   * is not automatically re-indexed. Therefore old offers will be returned by
+   * the back-end with the new field's value set to 'undefined'.
+   *
    * @param {Object} args - single object arguments used to construct an Offer
    *  - {string} id - Offer ID.
    *  - {string} listingId - Unique listing ID.
@@ -85,7 +89,9 @@ export class Offer {
       schemaId: discoveryNode.data.schemaId,
       listingType: discoveryNode.data.listingType,
       ipfs: discoveryNode.data.ipfs,
-      commission: discoveryNode.data.commission
+      // See https://github.com/OriginProtocol/origin/issues/1087
+      // as to why we extract commission from the ipfs data.
+      commission: discoveryNode.data.ipfs.data.commission
     })
   }
 

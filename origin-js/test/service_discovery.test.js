@@ -410,7 +410,12 @@ describe('Discovery service', function() {
                 },
                 'ipfs': {
                   'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
-                  'data': {}
+                  'data': {
+                    'commission': {
+                      'currency': 'OGN',
+                      'amount': '1'
+                    }
+                  }
                 }
               },
               'buyer': {
@@ -468,6 +473,15 @@ describe('Discovery service', function() {
                   'id': '1-000-57-1',
                   'data': {
                     'id': '1-000-57-1',
+                    'ipfs': {
+                      'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
+                      'data': {
+                        'commission': {
+                          'currency': 'OGN',
+                          'amount': '1'
+                        }
+                      }
+                    },
                     'events': [{
                       'event': 'OfferCreated',
                       'blockNumber': 0,
@@ -489,6 +503,15 @@ describe('Discovery service', function() {
                   'id': '1-000-57-2',
                   'data': {
                     'id': '1-000-57-2',
+                    'ipfs': {
+                      'hash': 'ZZWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqYY',
+                      'data': {
+                        'commission': {
+                          'currency': 'OGN',
+                          'amount': '1'
+                        }
+                      }
+                    },
                     'events': [{
                       'event': 'OfferCreated',
                       'blockNumber': 0,
@@ -538,6 +561,15 @@ describe('Discovery service', function() {
                   'id': '1-000-57-1',
                   'data': {
                     'id': '1-000-57-1',
+                    'ipfs': {
+                      'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
+                      'data': {
+                        'commission': {
+                          'currency': 'OGN',
+                          'amount': '1'
+                        }
+                      }
+                    },
                     'events': [{
                       'event': 'OfferCreated',
                       'blockNumber': 0,
@@ -559,6 +591,15 @@ describe('Discovery service', function() {
                   'id': '1-000-57-2',
                   'data': {
                     'id': '1-000-57-2',
+                    'ipfs': {
+                      'hash': 'AAWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqBB',
+                      'data': {
+                        'commission': {
+                          'currency': 'OGN',
+                          'amount': '1'
+                        }
+                      }
+                    },
                     'events': [{
                       'event': 'OfferCreated',
                       'blockNumber': 0,
