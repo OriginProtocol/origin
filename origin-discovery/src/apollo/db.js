@@ -25,12 +25,7 @@ function _makeListing (row) {
     // TODO: price may not be defined at the listing level for all listing types.
     // For example, for fractional usage it may vary based on time slot.
     price: row.data.price,
-    // Some legacy listings miss commission because they have not been
-    // re-indexed since this field got added to the listing model.
-    // As a temporary workaround until we re-index the data, use the
-    // commission data from IPFS.
-    // TODO(franck): re-index that data.
-    commission: row.data.ipfs.data.commission,
+    commission: row.data.commission,
     commissionPerUnit: row.data.commissionPerUnit,
     display: listingMetadata.getDisplay(row.id)
   }
@@ -183,10 +178,8 @@ function _makeOffer (row) {
     sellerAddress: row.sellerAddress,
     totalPrice: row.data.totalPrice,
     unitsPurchased: row.data.unitsPurchased,
-    // Some legacy offers miss commission because they have not been
-    // re-indexed since this field got added to the listing model.
-    // As a temporary workaround until we re-index the data, use the
-    // commission data from IPFS.
+    // See https://github.com/OriginProtocol/origin/issues/1087
+    // as to why we extract commission from the ipfs data.
     // TODO(franck): re-index that data.
     commission: row.data.ipfs.data.commission,
   }

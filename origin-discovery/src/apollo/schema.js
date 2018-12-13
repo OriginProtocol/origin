@@ -49,6 +49,7 @@ const typeDefs = gql`
     seller: User!
     status: String!
     affiliate: ID,
+    unitsPurchased: Int,
     totalPrice: Price!
     commission: Price!
     listing: Listing!

@@ -89,7 +89,9 @@ export class Offer {
       schemaId: discoveryNode.data.schemaId,
       listingType: discoveryNode.data.listingType,
       ipfs: discoveryNode.data.ipfs,
-      commission: discoveryNode.data.commission
+      // See https://github.com/OriginProtocol/origin/issues/1087
+      // as to why we extract commission from the ipfs data.
+      commission: discoveryNode.data.ipfs.data.commission
     })
   }
 
