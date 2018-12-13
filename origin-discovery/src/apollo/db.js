@@ -182,6 +182,7 @@ function _makeOffer (row) {
     buyerAddress: row.buyerAddress,
     sellerAddress: row.sellerAddress,
     totalPrice: row.data.totalPrice,
+    unitsPurchased: row.data.unitsPurchased,
     // Some legacy offers miss commission because they have not been
     // re-indexed since this field got added to the listing model.
     // As a temporary workaround until we re-index the data, use the

@@ -1,7 +1,6 @@
-import { expect } from 'chai'
-
 const chai = require('chai')
 const assert = chai.assert
+const expect = chai.expect
 const Web3 = require('web3')
 const web3Provider = new Web3.providers.HttpProvider('http://origin:8545')
 const web3 = new Web3(web3Provider)
@@ -10,7 +9,11 @@ const Origin = require('origin').default
 const listingValid = require('origin/test/fixtures/listing-valid.json')
 const listingData = Object.assign({}, listingValid)
 
-describe('create listing and retrieve using discovery', () => {
+const offerValid = require('origin/test/fixtures//offer-valid.json')
+const offerData = Object.assign({}, offerValid)
+
+
+describe('create listing plus offer and retrieve using discovery', () => {
 
   before(async () => {
     this.origin = new Origin({
@@ -26,10 +29,13 @@ describe('create listing and retrieve using discovery', () => {
     const { listingId } = await this.origin.marketplace.createListing(listingData)
     this.listingId = listingId
 
-    // Wait to allow event-listener to process listing
+    const { offerId } = await this.origin.marketplace.makeOffer(listingData, offerData)
+    this.offerId = offerId
+
+    // Wait to allow event-listener to index the data.
     // TODO: As opposed to sleeping for a fixed amount of time, it would make the tests
     // run faster if we would poll the event-listener or the discovery server until the
-    // newly created listing is returned.
+    // newly created listing and offer are returned.
     return new Promise(resolve => setTimeout(resolve, 20000))
   })
 
@@ -41,6 +47,8 @@ describe('create listing and retrieve using discovery', () => {
   it('discovery should return newly created listing', async () => {
     const listing = await this.origin.marketplace.getListing(this.listingId)
     assert.equal(listing.id, this.listingId)
+    expect(listing.blockInfo.blockNumber).to.be.a('number')
+    expect(listing.blockInfo.logIndex).to.be.a('number')
     assert.equal(listing.schemaId, listingData.schemaId)
     assert.equal(listing.dappSchemaId, listingData.dappSchemaId)
     assert.equal(listing.type, listingData.listingType)
@@ -50,7 +58,7 @@ describe('create listing and retrieve using discovery', () => {
     assert.equal(listing.description, listingData.description)
     assert.equal(listing.language, listingData.language)
     // Note: URL gets rewritten so can't compare URL equality.
-    expect(listing.media[0]).to.have.property('url').that.is.a('string')
+    expect(listing.media[0].url).to.be.a('string')
     assert.equal(listing.media[0].contentType, listingData.media[0].contentType)
     assert.equal(listing.unitsTotal, listingData.unitsTotal)
     assert.equal(listing.schemaId, listingData.schemaId)
@@ -61,6 +69,22 @@ describe('create listing and retrieve using discovery', () => {
     assert.equal(listing.commissionPerUnit.currency, listingData.commissionPerUnit.currency)
     assert.equal(listing.commissionPerUnit.amount, listingData.commissionPerUnit.amount)
   })
+
+  it('discovery should return offer', async () => {
+    const offer = await this.origin.marketplace.getOffer(this.offerId)
+    assert.equal(offer.id, this.offerId)
+    expect(offer.blockInfo.blockNumber).to.be.a('number')
+    expect(offer.blockInfo.logIndex).to.be.a('number')
+    assert.equal(offer.schemaId, offerData.schemaId)
+    assert.equal(offer.listingId, offerData.listingId)
+    assert.equal(offer.listingType, offerData.listingType)
+    assert.equal(offer.unitsPurchased, offerData.unitsPurchased)
+    assert.equal(offer.totalPrice.currency, offerData.totalPrice.currency)
+    assert.equal(offer.totalPrice.amount, offerData.totalPrice.amount)
+    assert.equal(offer.commission.currency, offerData.commission.currency)
+    assert.equal(offer.commission.amount, offerData.commission.amount)
+  })
+
 
   // TODO: An exercise for the reader...
   it('should allow created listing to be searched from discovery', () => {
