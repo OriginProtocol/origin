@@ -310,6 +310,22 @@ export const AddDataMutation = gql`
   }
 `
 
+export const DeployIdentityMutation = gql`
+  mutation DeployIdentity(
+    $from: String!
+    $profile: ProfileInput
+    $attestations: [AttestationInput]
+  ) {
+    deployIdentity(
+      from: $from
+      attestations: $attestations
+      profile: $profile
+    ) {
+      id
+    }
+  }
+`
+
 // await originJS.createListing({
 //   deposit: '2',
 //   arbitrator: '0x9d42726D0Aa33984c55a1076DBc68a42f2509684',

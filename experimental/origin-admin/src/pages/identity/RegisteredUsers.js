@@ -1,21 +1,19 @@
 import React, { Component } from 'react'
 import { Button } from '@blueprintjs/core'
 import { Query } from 'react-apollo'
-import get from 'lodash/get'
 
-import formatDate from 'utils/formatDate'
 import nextPageFactory from 'utils/nextPageFactory'
 
-import UsersQuery from 'queries/Users'
+import IdentitiesQuery from 'queries/Identities'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import LoadingSpinner from 'components/LoadingSpinner'
 import Address from 'components/Address'
-import Identity from 'components/Identity'
-import ThSort from 'components/ThSort'
 import QueryError from 'components/QueryError'
 
-const nextPage = nextPageFactory('marketplace.users')
+const nextPage = nextPageFactory('userRegistry.identities')
+
+import DeployIdentity from './DeployIdentity'
 
 class RegisteredUsers extends Component {
   state = {}
@@ -27,7 +25,7 @@ class RegisteredUsers extends Component {
     return (
       <div className="mt-3 ml-3">
         <Query
-          query={UsersQuery}
+          query={IdentitiesQuery}
           variables={vars}
           notifyOnNetworkStatusChange={true}
         >
@@ -35,12 +33,12 @@ class RegisteredUsers extends Component {
             if (networkStatus === 1) {
               return <LoadingSpinner />
             } else if (error) {
-              return <QueryError error={error} query={UsersQuery} />
-            } else if (!data || !data.marketplace) {
-              return 'No marketplace contract?'
+              return <QueryError error={error} query={IdentitiesQuery} />
+            } else if (!data || !data.userRegistry) {
+              return 'No user registry contract?'
             }
 
-            const { nodes, pageInfo } = data.marketplace.users
+            const { nodes, pageInfo } = data.userRegistry.identities
             const { hasNextPage, endCursor: after } = pageInfo
 
             return (
@@ -50,31 +48,18 @@ class RegisteredUsers extends Component {
                 onBottom={() => nextPage(fetchMore, { ...vars, after })}
               >
                 <>
+                  <div className="mb-3">
+                    <Button
+                      text="Create Identity"
+                      intent="primary"
+                      onClick={() => this.setState({ deployIdentity: true })}
+                    />
+                  </div>
                   <table className="bp3-html-table bp3-small bp3-html-table-bordered bp3-interactive">
                     <thead>
                       <tr>
-                        <th>Account</th>
                         <th>Identity</th>
-                        <ThSort
-                          onSort={() => this.setState({ sort: 'listings' })}
-                        >
-                          Listings
-                        </ThSort>
-                        <ThSort
-                          onSort={() => this.setState({ sort: 'offers' })}
-                        >
-                          Offers
-                        </ThSort>
-                        <ThSort
-                          onSort={() => this.setState({ sort: 'firstAction' })}
-                        >
-                          First Action
-                        </ThSort>
-                        <ThSort
-                          onSort={() => this.setState({ sort: 'lastAction' })}
-                        >
-                          Last Action
-                        </ThSort>
+                        <th>Deploy Date</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -89,22 +74,17 @@ class RegisteredUsers extends Component {
                             <td>
                               <Address address={user.id} />
                             </td>
-                            <td>
-                              <Identity account={user.id} />
-                            </td>
-                            <td>{user.listings.totalCount}</td>
-                            <td>{user.offers.totalCount}</td>
-                            <td>
-                              {formatDate(get(user, 'firstEvent.timestamp'))}
-                            </td>
-                            <td>
-                              {formatDate(get(user, 'lastEvent.timestamp'))}
-                            </td>
+                            <td />
                           </tr>
                         )
                       })}
                     </tbody>
                   </table>
+
+                  <DeployIdentity
+                    isOpen={this.state.deployIdentity}
+                    onCompleted={() => this.setState({ deployIdentity: false })}
+                  />
 
                   {!hasNextPage ? null : (
                     <Button

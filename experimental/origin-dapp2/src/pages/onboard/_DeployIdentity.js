@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Mutation, Query } from 'react-apollo'
-import { Redirect } from 'react-router'
 import get from 'lodash/get'
 
 import Modal from 'components/Modal'
-import MakeOfferMutation from 'mutations/MakeOffer'
+import DeployIdentityMutation from 'mutations/DeployIdentity'
 import CanBuyQuery from 'queries/CanBuy'
 
 const ErrorModal = ({ onClose }) => (
@@ -71,12 +70,9 @@ const ConfirmModal = () => (
   </div>
 )
 
-class Buy extends Component {
+class DeployProfile extends Component {
   state = {}
   render() {
-    if (this.state.onboard) {
-      return <Redirect push to={`/listings/${this.props.listing.id}/onboard`} />
-    }
     const modalProps = {
       shouldClose: this.state.shouldClose,
       submitted: this.state.success,
@@ -88,25 +84,25 @@ class Buy extends Component {
           {canBuy => {
             return (
               <Mutation
-                mutation={MakeOfferMutation}
-                onCompleted={({ makeOffer }) => {
+                mutation={DeployIdentityMutation}
+                onCompleted={({ deployIdentity }) => {
                   this.shouldClose({ success: true })
-                  console.log('Completed', makeOffer.id)
+                  console.log('Completed', deployIdentity.id)
                 }}
                 onError={error => {
                   console.log(error)
                   this.setState({ modal: 'error' })
                 }}
               >
-                {makeOffer => (
+                {deployIdentity => (
                   <>
                     <button
                       className="btn btn-primary"
-                      onClick={() => this.onClick(makeOffer, canBuy)}
+                      onClick={() => this.onClick(deployIdentity, canBuy)}
                       children={
                         canBuy.loading && this.state.loading
                           ? 'Loading'
-                          : 'Buy Now'
+                          : 'DeployIdentity'
                       }
                     />
                     {canBuy.error && this.state.showError && (
@@ -160,7 +156,7 @@ class Buy extends Component {
     })
   }
 
-  onClick(makeOffer, { data, loading, error }) {
+  onClick(deployIdentity, { data, loading, error }) {
     if (loading) {
       this.setState({ loading: true, showError: true })
       return
@@ -183,17 +179,12 @@ class Buy extends Component {
       this.setState({ noBalance: true })
     } else {
       this.setState({ modal: true })
-      makeOffer({ variables })
+      deployIdentity({ variables })
     }
   }
 }
 
-export default Buy
+export default DeployProfile
 
 require('react-styl')(`
-  .make-offer-modal
-    .spinner,.error-icon
-      margin-bottom: 2rem
-    .btn
-      margin-top: 2rem
 `)
