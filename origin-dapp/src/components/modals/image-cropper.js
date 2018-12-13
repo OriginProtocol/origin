@@ -15,7 +15,7 @@ class ImageCropper extends Component {
       aspect: 4/3
     }
 
-    this.state = {
+    this.defaultState = {
       imageFileObj: null,
       imageSrc: null,
       crop: this.defaultCrop,
@@ -24,29 +24,40 @@ class ImageCropper extends Component {
       croppedImageUrl: null
     }
 
+    this.state = this.defaultState
+
     this.onCropChange = this.onCropChange.bind(this)
     this.onCropComplete = this.onCropComplete.bind(this)
   }
 
   componentDidUpdate(prevProps) {
-    const { imageFileObj } = this.props
-    if (imageFileObj && imageFileObj !== prevProps.imageFileObj) {
+    const { imageFileObj, aspect, isOpen } = this.props
+    const imagePropChange = imageFileObj && imageFileObj !== prevProps.imageFileObj
+    const newImage = imageFileObj && !this.state.imageSrc
 
-      generateCroppedImage(imageFileObj, null, (dataUri) => {
-        this.setState({
-          imageSrc: dataUri,
-          ...this.props
+    if (isOpen) {
+      if (imagePropChange || newImage) {
+        generateCroppedImage(imageFileObj, null, (dataUri) => {
+          this.setState({
+            imageSrc: dataUri,
+            crop: this.defaultCrop,
+            imageFileObj
+          })
         })
-      })
+      }
+
+      if (aspect && aspect !== this.state.crop.aspect) {
+        this.setState({
+          crop: {
+            ...this.state.crop,
+            aspect: this.props.aspect
+          }
+        })
+      }
     }
 
-    if (this.props.aspect && this.props.aspect !== this.state.crop.aspect) {
-      this.setState({
-        crop: {
-          ...this.state.crop,
-          aspect: this.props.aspect
-        }
-      })
+    if (!isOpen && prevProps.isOpen) {
+      this.setState(this.defaultState)
     }
   }
 
@@ -66,10 +77,7 @@ class ImageCropper extends Component {
     }
     generateCroppedImage(imageFileObj, options, (croppedImageUri) => {
       this.props.onCropComplete(croppedImageUri, imageFileObj)
-      this.setState({
-        crop: this.defaultCrop,
-        imageSrc: null
-      })
+      this.setState(this.defaultState)
     })
   }
 
