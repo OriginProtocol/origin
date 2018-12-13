@@ -1,3 +1,5 @@
+import { expect } from 'chai'
+
 const chai = require('chai')
 const assert = chai.assert
 const Web3 = require('web3')
@@ -47,7 +49,8 @@ describe('create listing and retrieve using discovery', () => {
     assert.equal(listing.title, listingData.title)
     assert.equal(listing.description, listingData.description)
     assert.equal(listing.language, listingData.language)
-    assert.equal(listing.media[0].url, listingData.media[0].url)
+    // Note: URL gets rewritten so can't compare URL equality.
+    expect(listing.media[0]).to.have.property('url').that.is.a('string')
     assert.equal(listing.media[0].contentType, listingData.media[0].contentType)
     assert.equal(listing.unitsTotal, listingData.unitsTotal)
     assert.equal(listing.schemaId, listingData.schemaId)
