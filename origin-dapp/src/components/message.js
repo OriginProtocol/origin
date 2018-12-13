@@ -84,7 +84,7 @@ class Message extends Component {
                     </Link>
                   )}
                 </div>
-                <p className="chat-content">{chatContent}</p>
+                <div className="chat-content">{chatContent}</div>
               </div>
             </div>
             <div className="align-self-end conversation-avatar right">
