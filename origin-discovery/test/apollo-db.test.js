@@ -11,7 +11,8 @@ describe('Listing DB methods', () => {
   const data1 = {
     id: listingId1,
     ipfs: {
-      hash: 'QmPvmW469mYPXaBuvbEHB66MY7JAYGPvBncfESMourCKWW'
+      hash: 'QmPvmW469mYPXaBuvbEHB66MY7JAYGPvBncfESMourCKWW',
+      data: {}
     },
     title: 'test listing',
     description: 'test description',
@@ -26,7 +27,8 @@ describe('Listing DB methods', () => {
   const data2 = {
     id: listingId2,
     ipfs: {
-      hash: 'QmPvmW469mYPXaBuvbEHB66MY7JAYGPvBncfESMourCKWW'
+      hash: 'QmPvmW469mYPXaBuvbEHB66MY7JAYGPvBncfESMourCKWW',
+      data: {}
     },
     title: 'test listing',
     description: 'test description',
