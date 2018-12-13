@@ -144,6 +144,7 @@ class EditProfile extends Component {
                       <input
                         id="edit-profile-image"
                         type="file"
+                        accept="image/jpeg,image/gif,image/png"
                         ref={r => (this.editPic = r)}
                         style={{ opacity: 0, position: 'absolute', zIndex: -1, width: '30px' }}
                         onChange={e => {

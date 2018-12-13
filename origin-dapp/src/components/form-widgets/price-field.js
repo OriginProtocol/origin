@@ -63,7 +63,7 @@ class PriceField extends Component {
             {this.props.required && <span className="required">*</span>}
           </label>
           <div className="row">
-            <div className="col-sm-6">
+            <div className="col-6">
               <div className="price-field-container">
                 <input
                   type="number"
@@ -80,7 +80,7 @@ class PriceField extends Component {
                 </span>
               </div>
             </div>
-            <div className="col-sm-6 no-left-padding">
+            <div className="col-6 no-left-padding">
               <div className="price-field-fiat">
                 {priceUsd}&nbsp;
                 <span className="currency-badge text-grey">
