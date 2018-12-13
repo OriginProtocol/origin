@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Button, Intent } from '@blueprintjs/core'
+import request from 'request'
 
 import AboutField from './fields/AboutField'
 import TitleField from './fields/TitleField'
@@ -10,19 +12,23 @@ import SubdomainField from './fields/SubdomainField'
 import ColorPicker from './ColorPicker'
 
 class Create extends Component {
-  constructor(props) {
+  constructor(props, context) {
     super(props)
 
     this.state = {
-      subdomain: '',
-      title: '',
-      about: '',
-      cssVars: {
-        dusk: '',
-        goldenRod: '',
-        paleGrey: ''
+      config: {
+        subdomain: '',
+        title: '',
+        about: '',
+        cssVars: {
+          dusk: '',
+          goldenRod: '',
+          paleGrey: ''
+        }
       }
     }
+
+    this.web3Context = context.web3
 
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleColorChange = this.handleColorChange.bind(this)
@@ -30,9 +36,6 @@ class Create extends Component {
   }
 
   handleInputChange (event) {
-    console.log(event)
-    console.log(event.target.name)
-    console.log(event.target.value)
     this.setState({
       [event.target.name]: event.target.value
     })
@@ -41,14 +44,32 @@ class Create extends Component {
   handleColorChange (name, color) {
     this.setState({
       'cssVars': {
-        ...this.state.cssVars,
+        ...this.state.config.cssVars,
         [name]: color.hex
       }
     })
   }
 
-  handlePublish () {
-    alert(JSON.stringify(this.state))
+  async handlePublish () {
+    // Sign configuration using web3
+    web3.personal.sign(
+      JSON.stringify(this.state.config),
+      web3.eth.accounts[0],
+      (error, signature) => {
+        if (error) {
+          console.log('Signing failed: ', error)
+        } else {
+          // Send signed configuration to server
+          request.post(`${process.env.API_URL}/config`, {
+            json: {
+              config: this.state.config,
+              signature: signature,
+              address: web3.eth.accounts[0]
+            }
+          })
+        }
+      }
+    )
   }
 
   render () {
@@ -58,25 +79,25 @@ class Create extends Component {
 
         <h4>Subdomain</h4>
 
-        <SubdomainField value={this.state.subdomain}
+        <SubdomainField value={this.state.config.subdomain}
           onChange={this.handleInputChange}>
         </SubdomainField>
 
         <h4>Title & Description</h4>
 
-        <TitleField value={this.state.title}
+        <TitleField value={this.state.config.title}
           onChange={this.handleInputChange}>
         </TitleField>
-        <AboutField value={this.state.about}
+        <AboutField value={this.state.config.about}
           onChange={this.handleInputChange}>
         </AboutField>
 
         <h4>Logos and Icons</h4>
 
-        <LogoUrlField value={this.state.logoUrl}
+        <LogoUrlField value={this.state.config.logoUrl}
           onChange={this.handleInputChange}>
         </LogoUrlField>
-        <IconUrlField value={this.state.iconUrl}
+        <IconUrlField value={this.state.config.iconUrl}
           onChange={this.handleInputChange}>
         </IconUrlField>
 
@@ -84,17 +105,17 @@ class Create extends Component {
 
         <ColorPicker label="Navbar Background"
           name="dusk"
-          value={this.state.cssVars.dusk}
+          value={this.state.config.cssVars.dusk}
           onChange={this.handleColorChange}>
         </ColorPicker>
         <ColorPicker label="Searchbar Background"
           name="paleGrey"
-          value={this.state.cssVars.paleGrey}
+          value={this.state.config.cssVars.paleGrey}
           onChange={this.handleColorChange}>
         </ColorPicker>
         <ColorPicker label="Featured Tag"
           name="goldenRod"
-          value={this.state.cssVars.goldenRod}
+          value={this.state.config.cssVars.goldenRod}
           onChange={this.handleColorChange}>
         </ColorPicker>
 
@@ -107,6 +128,10 @@ class Create extends Component {
       </div>
     )
   }
+}
+
+Create.contextTypes = {
+  web3: PropTypes.object
 }
 
 export default Create

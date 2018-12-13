@@ -1,13 +1,20 @@
+require('dotenv').config()
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Route, HashRouter } from 'react-router-dom'
+import { Web3Provider } from 'react-web3'
 
 import App from './pages/App';
 
+console.log(process.env.PROVIDER_URL)
+
 ReactDOM.render(
-  <HashRouter>
-    <Route component={App} />
-  </HashRouter>,
+  <Web3Provider>
+    <HashRouter>
+      <Route component={App} />
+    </HashRouter>,
+  </Web3Provider>,
   document.getElementById('app')
 )
 

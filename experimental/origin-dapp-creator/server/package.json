@@ -1,0 +1,33 @@
+{
+  "name": "origin-dapp-creator-server",
+  "version": "1.0.0",
+  "description": "Server for managing configuration files for Origin DApps",
+  "main": "src/app.js",
+  "scripts": {
+    "lint": "eslint '**/*.js'",
+    "start": "per-env",
+    "start:development": "nodemon src/app.js",
+    "start:production": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/experimental/origin-dapp-creator"
+  },
+  "keywords": [
+    "Origin Protocol",
+    "DApp",
+    "Ethereum"
+  ],
+  "author": "Tom Linton <tom@originprotocol.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "per-env": "^1.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.8"
+  }
+}
