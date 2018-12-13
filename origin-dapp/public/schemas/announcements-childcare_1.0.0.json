@@ -37,6 +37,9 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "price": {
+      "const": 0
     }
   }
 }
