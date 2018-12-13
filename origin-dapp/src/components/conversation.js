@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -330,7 +331,9 @@ class Conversation extends Component {
 
     return (
       <div key={new Date() + Math.random()} className="purchase-info">
-        {offerMessages[event]}
+        <Link to={`/purchases/${purchase.id}`} target="_blank" rel="noopener noreferrer">
+          {offerMessages[event]}
+        </Link>
       </div>
     )
   }

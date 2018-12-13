@@ -34,6 +34,24 @@ export default class CompactMessages extends Component {
     }
   }
 
+  findPreviousMessage(currentMessage, idx, previousIdx) {
+    const { sortedMessages } = this.state
+
+    if (previousIdx && previousIdx < 0) return
+    /*
+      get the next index from recursion or set the
+      index based on the current message
+    */
+    const index = previousIdx || idx - 1
+    const previousMessage = sortedMessages[index]
+
+    if (previousMessage.timestamp) {
+      return this.findPreviousMessage(currentMessage, idx, index - 1)
+    } else {
+      return previousMessage
+    }
+  }
+
   render() {
     const { formatOfferMessage, smallScreenOrDevice } = this.props
     const { sortedMessages } = this.state
@@ -48,7 +66,7 @@ export default class CompactMessages extends Component {
       const isFirstMessage = firstMessage === message
       const previousOfferMessage = sortedMessages[i-1] && sortedMessages[i-1].timestamp
       const nextOfferMessage = sortedMessages[i+1] && sortedMessages[i+1].timestamp
-      const previousMessage = (isFirstMessage || previousOfferMessage) ? {} : sortedMessages[i-1]
+      const previousMessage = isFirstMessage ? {} : this.findPreviousMessage(message, i)
       const nextMessage = sortedMessages.find((message, idx) => {
         return (idx >= (i+1)) && message && message.created
       }) || {}

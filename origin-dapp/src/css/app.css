@@ -3982,6 +3982,10 @@ form .stars img {
   padding-bottom: 15px;
 }
 
+.messages-wrapper .purchase-info a {
+  color: var(--bluey-grey);
+}
+
 .conversation-col .content-container {
   flex-grow: 1;
   overflow: hidden;
