@@ -50,7 +50,7 @@ const typeDefs = gql`
     status: String!
     affiliate: ID,
     totalPrice: Price!
-    commission: Price
+    commission: Price!
     listing: Listing!
   }
   type OfferConnection {
@@ -90,6 +90,8 @@ const typeDefs = gql`
     category: String!
     subCategory: String!
     price: Price!
+    commission: Price!
+    commissionPerUnit: Price
     offers(page: Page): OfferConnection
     display: DisplayType!
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage

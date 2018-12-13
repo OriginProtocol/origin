@@ -25,6 +25,13 @@ function _makeListing (row) {
     // TODO: price may not be defined at the listing level for all listing types.
     // For example, for fractional usage it may vary based on time slot.
     price: row.data.price,
+    // Some legacy listings miss commission because they have not been
+    // re-indexed since this field got added to the listing model.
+    // As a temporary workaround until we re-index the data, use the
+    // commission data from IPFS.
+    // TODO(franck): re-index that data.
+    commission: row.data.ipfs.data.commission,
+    commissionPerUnit: row.data.commissionPerUnit,
     display: listingMetadata.getDisplay(row.id)
   }
 }
@@ -175,7 +182,12 @@ function _makeOffer (row) {
     buyerAddress: row.buyerAddress,
     sellerAddress: row.sellerAddress,
     totalPrice: row.data.totalPrice,
-    commission: row.data.commission,
+    // Some legacy offers miss commission because they have not been
+    // re-indexed since this field got added to the listing model.
+    // As a temporary workaround until we re-index the data, use the
+    // commission data from IPFS.
+    // TODO(franck): re-index that data.
+    commission: row.data.ipfs.data.commission,
   }
 }
 

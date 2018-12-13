@@ -21,7 +21,8 @@ describe('create listing and retrieve using discovery', () => {
       perfModeEnabled: true
     })
 
-    await this.origin.marketplace.createListing(listingData)
+    const { listingId } = await this.origin.marketplace.createListing(listingData)
+    this.listingId = listingId
 
     // Wait to allow event-listener to process listing
     // TODO: As opposed to sleeping for a fixed amount of time, it would make the tests
@@ -30,9 +31,32 @@ describe('create listing and retrieve using discovery', () => {
     return new Promise(resolve => setTimeout(resolve, 20000))
   })
 
-  it('should allow created listing to be retrieved from discovery', async () => {
+  it('discovery should return all listings', async () => {
     const listings = await this.origin.marketplace.getListings()
     assert.equal(listings.length, 6)
+  })
+
+  it('discovery should return newly created listing', async () => {
+    const listing = await this.origin.marketplace.getListing(this.listingId)
+    assert.equal(listing.id, this.listingId)
+    assert.equal(listing.schemaId, listingData.schemaId)
+    assert.equal(listing.dappSchemaId, listingData.dappSchemaId)
+    assert.equal(listing.type, listingData.listingType)
+    assert.equal(listing.category, listingData.category)
+    assert.equal(listing.subCategory, listingData.subCategory)
+    assert.equal(listing.title, listingData.title)
+    assert.equal(listing.description, listingData.description)
+    assert.equal(listing.language, listingData.language)
+    assert.equal(listing.media[0].url, listingData.media[0].url)
+    assert.equal(listing.media[0].contentType, listingData.media[0].contentType)
+    assert.equal(listing.unitsTotal, listingData.unitsTotal)
+    assert.equal(listing.schemaId, listingData.schemaId)
+    assert.equal(listing.price.currency, listingData.price.currency)
+    assert.equal(listing.price.amount, listingData.price.amount)
+    assert.equal(listing.commission.currency, listingData.commission.currency)
+    assert.equal(listing.commission.amount, listingData.commission.amount)
+    assert.equal(listing.commissionPerUnit.currency, listingData.commissionPerUnit.currency)
+    assert.equal(listing.commissionPerUnit.amount, listingData.commissionPerUnit.amount)
   })
 
   // TODO: An exercise for the reader...

@@ -97,18 +97,9 @@ const resolvers = {
       return userResolver(offer.buyerAddress)
     },
 
-
     affiliate ()  {
       //TODO: implement
       return ''
-    },
-
-    totalPrice (offer) {
-      return offer.totalPrice
-    },
-
-    commission (offer) {
-      return offer.commission
     },
 
     async listing (offer) {

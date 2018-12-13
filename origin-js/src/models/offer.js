@@ -5,6 +5,10 @@ export class Offer {
   /**
    * Offer object model.
    *
+   * Notice: when adding a field, be aware that the data in the discovery back-end
+   * is not automatically re-indexed. Therefore old offers will be returned by
+   * the back-end with the new field's value set to 'undefined'.
+   *
    * @param {Object} args - single object arguments used to construct an Offer
    *  - {string} id - Offer ID.
    *  - {string} listingId - Unique listing ID.
