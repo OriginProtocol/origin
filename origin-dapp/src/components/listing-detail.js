@@ -120,7 +120,7 @@ class ListingsDetail extends Component {
       !origin.contractService.walletLinker &&
       !this.props.messagingEnabled
     ) {
-      return
+       return
     }
 
     if ((!web3.currentProvider.isOrigin && this.props.wallet.address) || origin.contractService.walletLinker) {
@@ -137,8 +137,8 @@ class ListingsDetail extends Component {
 
     const slots = slotsToReserve || this.state.slotsToReserve
     const price = this.state.isFractional ?
-      slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
-      this.state.price
+        slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
+        this.state.price
 
     try {
       const offerData = {
@@ -219,7 +219,7 @@ class ListingsDetail extends Component {
       console.error(
         `Error fetching contract or IPFS info for listing: ${
           this.props.listingId
-          }`
+        }`
       )
       console.error(error)
     }
@@ -348,8 +348,8 @@ class ListingsDetail extends Component {
                 values={{
                   provider: getCurrentProvider(
                     origin &&
-                    origin.contractService &&
-                    origin.contractService.web3
+                      origin.contractService &&
+                      origin.contractService.web3
                   )
                 }}
               />
@@ -493,14 +493,14 @@ class ListingsDetail extends Component {
               {isAvailable && ((!!price && !!parseFloat(price)) || isFractional) && (
                 <div className="buy-box placehold">
                   {!isFractional &&
-                  <div className="price text-nowrap">
-                    <img src="images/eth-icon.svg" role="presentation" />
-                    {Number(price).toLocaleString(undefined, {
-                      maximumFractionDigits: 5,
-                      minimumFractionDigits: 5
-                    })}
-                    &nbsp;ETH
-                  </div>
+                    <div className="price text-nowrap">
+                      <img src="images/eth-icon.svg" role="presentation" />
+                      {Number(price).toLocaleString(undefined, {
+                        maximumFractionDigits: 5,
+                        minimumFractionDigits: 5
+                      })}
+                        &nbsp;ETH
+                    </div>
                   }
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
                   {/*
@@ -610,12 +610,12 @@ class ListingsDetail extends Component {
                     </div>
                   )}
                   {!loading &&
-                  !userIsBuyer &&
-                  !userIsSeller && (
+                    !userIsBuyer &&
+                    !userIsSeller && (
                     <Fragment>
                       <div className="suggestion">
                         {!isWithdrawn &&
-                          isPending && (
+                            isPending && (
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicPending'}
                             defaultMessage={
@@ -633,7 +633,7 @@ class ListingsDetail extends Component {
                         )}
                         {/* consider the possibility of a withdrawn listing despite a valid offer */}
                         {!isSold &&
-                          isWithdrawn && (
+                            isWithdrawn && (
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicWithdrawn'}
                             defaultMessage={
@@ -655,24 +655,24 @@ class ListingsDetail extends Component {
                     </Fragment>
                   )}
                   {!loading &&
-                  userIsBuyer && (
+                    userIsBuyer && (
                     <div className="suggestion">
                       {isPending &&
-                        currentOffer.status === 'created' && (
+                          currentOffer.status === 'created' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerCreated'}
                           defaultMessage={`You've made an offer on this listing. Please wait for the seller to accept or reject your offer.`}
                         />
                       )}
                       {isPending &&
-                        currentOffer.status === 'accepted' && (
+                          currentOffer.status === 'accepted' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerAccepted'}
                           defaultMessage={`You've made an offer on this listing. View the offer to complete the sale.`}
                         />
                       )}
                       {isPending &&
-                        currentOffer.status === 'disputed' && (
+                          currentOffer.status === 'disputed' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerDisputed'}
                           defaultMessage={`You've made an offer on this listing. View the offer to check the status.`}
@@ -690,21 +690,21 @@ class ListingsDetail extends Component {
                     userIsSeller && (
                     <div className="suggestion">
                       {isPending &&
-                        currentOffer.status === 'created' && (
+                          currentOffer.status === 'created' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionSellerCreated'}
                           defaultMessage={`A buyer is waiting for you to accept or reject their offer.`}
                         />
                       )}
                       {isPending &&
-                        currentOffer.status === 'accepted' && (
+                          currentOffer.status === 'accepted' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionSellerAccepted'}
                           defaultMessage={`You've accepted an offer for this listing. Please wait for the buyer to complete the sale.`}
                         />
                       )}
                       {isPending &&
-                        currentOffer.status === 'disputed' && (
+                          currentOffer.status === 'disputed' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionSellerDisputed'}
                           defaultMessage={`You've accepted an offer on this listing. View the offer to check the status.`}
@@ -718,13 +718,13 @@ class ListingsDetail extends Component {
                       )}
                       {/* consider the possibility of a withdrawn listing despite a valid offer */}
                       {!isPending &&
-                        !isSold &&
-                        isWithdrawn && (
-                          <FormattedMessage
-                            id={'listing-detail.sellerWithdrawn'}
-                            defaultMessage={`You've withdrawn this listing.`}
-                          />
-                        )}
+                          !isSold &&
+                          isWithdrawn && (
+                        <FormattedMessage
+                          id={'listing-detail.sellerWithdrawn'}
+                          defaultMessage={`You've withdrawn this listing.`}
+                        />
+                      )}
                     </div>
                   )}
                   {!loading &&
