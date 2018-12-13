@@ -56,8 +56,6 @@ describe('create listing with offer and retrieve using discovery', () => {
   it('discovery should return newly created listing', async () => {
     const listing = await this.origin.marketplace.getListing(this.listingId)
     assert.equal(listing.id, this.listingId)
-    expect(listing.blockInfo.blockNumber).to.be.a('number')
-    expect(listing.blockInfo.logIndex).to.be.a('number')
     assert.equal(listing.schemaId, listingData.schemaId)
     assert.equal(listing.dappSchemaId, listingData.dappSchemaId)
     assert.equal(listing.type, listingData.listingType)
@@ -85,7 +83,7 @@ describe('create listing with offer and retrieve using discovery', () => {
     expect(offer.blockInfo.blockNumber).to.be.a('number')
     expect(offer.blockInfo.logIndex).to.be.a('number')
     assert.equal(offer.schemaId, offerData.schemaId)
-    assert.equal(offer.listingId, offerData.listingId)
+    assert.equal(offer.listingId, this.listingId)
     assert.equal(offer.listingType, offerData.listingType)
     assert.equal(offer.unitsPurchased, offerData.unitsPurchased)
     assert.equal(offer.totalPrice.currency, offerData.totalPrice.currency)
