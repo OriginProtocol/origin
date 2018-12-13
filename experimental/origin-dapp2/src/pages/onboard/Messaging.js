@@ -20,6 +20,8 @@ const query = gql`
       pubKey
       pubSig
       enabled
+      synced
+      syncProgress
     }
   }
 `
@@ -34,6 +36,16 @@ const MessagingInitializing = () => (
     <div className="messaging-logo" />
     <div className="status">Origin Messaging</div>
     <div className="spinner" />
+  </div>
+)
+
+const MessagingSyncing = ({ pct }) => (
+  <div className="onboard-box">
+    <div className="messaging-logo" />
+    <div className="status">Origin Messaging Syncing</div>
+    <div className="progress">
+      <div className="progress-bar" style={{ width: pct }} />
+    </div>
   </div>
 )
 
@@ -82,7 +94,7 @@ const SignMessage = ({ num }) => (
   </div>
 )
 
-const MessagingEnabled = ({ next }) => (
+const MessagingEnabled = () => (
   <div className="onboard-box">
     <div className="messaging-logo">
       <div className="qm active" />
@@ -94,9 +106,6 @@ const MessagingEnabled = ({ next }) => (
       date with all your purchases and sales.
     </div>
     <em>You’re done and can continue by pressing the button below.</em>
-    <Link to={next} className="btn btn-outline-primary">
-      Continue
-    </Link>
   </div>
 )
 
@@ -122,9 +131,15 @@ class OnboardMessaging extends Component {
                 }
 
                 const nextLink = `/listings/${listing.id}/onboard/notifications`
+                let nextEnabled = false
 
                 let cmp
-                if (!data.messaging.enabled && !this.state.waitForSignature) {
+                if (!data.messaging.synced) {
+                  cmp = <MessagingSyncing pct={data.messaging.syncProgress} />
+                } else if (
+                  !data.messaging.enabled &&
+                  !this.state.waitForSignature
+                ) {
                   cmp = (
                     <EnableMessaging
                       next={() => this.setState({ waitForSignature: true })}
@@ -135,17 +150,26 @@ class OnboardMessaging extends Component {
                 } else if (!data.messaging.pubSig) {
                   cmp = <SignMessage num={2} />
                 } else {
-                  cmp = <MessagingEnabled next={nextLink} />
+                  nextEnabled = true
+                  cmp = <MessagingEnabled />
                 }
 
-                return cmp
-
-                // return (
-                //   <>
-                //     {cmp}
-                //     <pre>{JSON.stringify(data, null, 4)}</pre>
-                //   </>
-                // )
+                return (
+                  <>
+                    {cmp}
+                    <div className="continue-btn">
+                      <Link
+                        to={nextLink}
+                        className={`btn btn-primary${
+                          nextEnabled ? '' : ' disabled'
+                        }`}
+                      >
+                        Continue
+                      </Link>
+                    </div>
+                    {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}
+                  </>
+                )
               }}
             </Query>
           </div>
@@ -171,4 +195,7 @@ require('react-styl')(`
       background: var(--dusk) url(images/messages-icon.svg) no-repeat center
       background-size: 3.5rem
       position: relative
+    .progress
+      width: 50%
+      margin-top: 2rem
 `)

@@ -10,12 +10,14 @@ const MessagingStateQuery = gql`
     messaging(id: "defaultAccount") {
       id
       enabled
-      syncing
+      synced
+      syncProgress
       pubKey
       pubSig
     }
   }
 `
+let syncTimer
 
 export default function messagingSync(client) {
   function refresh() {
@@ -28,23 +30,40 @@ export default function messagingSync(client) {
   msg.events.on('initRemote', () => {
     console.log('Messaging initialized')
 
+    msg.synced = false
+    msg.syncProgress = '0%'
+    syncTimer = setTimeout(() => {
+      msg.synced = true
+      msg.syncProgress = '100%'
+      refresh()
+    }, 2000)
+
     msg.global_keys.events.on(
       'replicate.progress',
       (address, hash, entry, progress, have) => {
         // console.log('replicate.progress', address, hash, entry, progress, have, msg.global_keys._replicationStatus.buffered, msg.global_keys._replicationStatus.queued)
         console.log('replicate.progress', progress, have)
+        clearTimeout(syncTimer)
+        syncTimer = setTimeout(() => {
+          msg.synced = true
+          msg.syncProgress = '100%'
+          refresh()
+        }, 2000) // If no sync event in 1 second, assume we're synced
+        let pct = Math.round((progress / have) * 1000) / 10
+        if (pct > 99) pct = 99
+        msg.syncProgress = `${pct}%`
+        msg.synced = false
+        refresh()
       }
     )
     // msg.global_keys.events.on(
     //   'load.progress',
     //   (address, hash, entry, progress, have) => {
-    //     // console.log('replicate.progress', address, hash, entry, progress, have, msg.global_keys._replicationStatus.buffered, msg.global_keys._replicationStatus.queued)
     //     console.log('load.progress', progress, have)
     //   }
     // )
-    // msg.global_keys.events.on('replicated', (address, length) => console.log('replicated', address, length) )
+    // // msg.global_keys.events.on('replicated', (address, length) => console.log('replicated', address, length) )
     // msg.global_keys.events.on('load', (dbname) => console.log('load', dbname) )
-    // msg.global_keys.events.on('load.progress', (address, hash, entry, progress, total) => console.log('load.progress', address, hash, entry, progress, total) )
     // msg.global_keys.events.on('write', (address, entry, heads) =>
     //   console.log('write', address, entry, heads)
     // )

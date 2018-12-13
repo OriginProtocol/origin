@@ -63,10 +63,10 @@ export default {
         if (!accounts || !accounts.length) return null
         id = accounts[0]
       }
-      // if (messagingInitialized[id]) {
-      //   return resolve({ id })
-      // }
-      contracts.messaging.events.once('initialized', async () => {
+      if (messagingInitialized[id]) {
+        return resolve({ id })
+      }
+      contracts.messaging.events.once('initRemote', async () => {
         messagingInitialized[id] = true
         setTimeout(() => resolve({ id }), 500)
       })

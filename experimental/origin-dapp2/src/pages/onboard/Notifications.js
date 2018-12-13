@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
+import { Redirect } from 'react-router'
 
 import Link from 'components/Link'
 import Modal from 'components/Modal'
@@ -56,7 +57,7 @@ const WaitEnableNotifications = () => (
   </div>
 )
 
-const Enabled = ({ next }) => (
+const Enabled = () => (
   <div className="onboard-box">
     <div className="notifications-logo">
       <div className="qm active" />
@@ -67,9 +68,6 @@ const Enabled = ({ next }) => (
       buyers and sellers.
     </div>
     <em>Click the continue button below to proceed.</em>
-    <Link to={next} className="btn btn-primary">
-      Continue
-    </Link>
   </div>
 )
 
@@ -87,9 +85,7 @@ const Denied = () => (
       In order to fix this, please go into your browser settings and turn on
       notifications for our DApp.
     </div>
-    <button className="btn btn-link cancel big">
-      Visit Browser Settings
-    </button>
+    <button className="btn btn-link cancel big">Visit Browser Settings</button>
   </div>
 )
 
@@ -97,46 +93,20 @@ class OnboardNotifications extends Component {
   state = { permission: Notification.permission }
   render() {
     const { listing } = this.props
+    const nextLink = `/listings/${listing.id}/onboard/profile`
     return (
       <>
+        {this.state.redirect && (
+          <Redirect
+            to={{ pathname: nextLink, state: { scrollToTop: true } }}
+            push
+          />
+        )}
         <div className="step">Step 3</div>
         <h3>Turn On Desktop Notifications</h3>
         <div className="row">
           <div className="col-md-8">
             <Stage stage={3} />
-            {this.state.modal && (
-              <Modal
-                shouldClose={this.state.shouldClose}
-                onClose={() =>
-                  this.setState({ modal: false, shouldClose: false })
-                }
-              >
-                <div className="notifications-modal">
-                  <div className="no-notifications-logo">!</div>
-                  <h5>Wait! Don’t you want updates?</h5>
-                  <div>
-                    Not having desktop notifications increases the chances of
-                    missing important updates about your transactions.
-                  </div>
-                  <button
-                    className="btn btn-success"
-                    onClick={() =>
-                      this.setState({ shouldClose: true, permission: 'denied' })
-                    }
-                  >
-                    Wait! I want updates
-                  </button>
-                  <button
-                    className="btn btn-link"
-                    onClick={() =>
-                      this.setState({ shouldClose: true, permission: 'denied' })
-                    }
-                  >
-                    No, I don’t want to receive updates
-                  </button>
-                </div>
-              </Modal>
-            )}
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
@@ -147,34 +117,77 @@ class OnboardNotifications extends Component {
                   return <p className="p-3">No Web3</p>
                 }
 
-                const nextLink = `/listings/${listing.id}/onboard/profile`
-
+                let continueBtn = (
+                  <button
+                    className="btn btn-outline-primary"
+                    onClick={() => this.setState({ modal: true })}
+                  >
+                    Continue
+                  </button>
+                )
                 let cmp
                 if (this.state.permission === 'granted') {
-                  cmp = <Enabled next={nextLink} />
+                  cmp = <Enabled />
+                  continueBtn = (
+                    <Link className="btn btn-primary" to={nextLink}>
+                      Continue
+                    </Link>
+                  )
                 } else if (this.state.permission === 'denied') {
-                  cmp = <Denied next={nextLink} />
+                  cmp = <Denied />
+                  continueBtn = (
+                    <Link className="btn btn-outline-primary" to={nextLink}>
+                      Continue
+                    </Link>
+                  )
                 } else if (this.state.permissionRequested) {
                   cmp = <WaitEnableNotifications />
                 } else {
                   cmp = (
                     <EnableNotifications
-                      next={() => {
-                        this.setState({ permissionRequested: true })
-                        Notification.requestPermission().then(permission => {
-                          if (permission === 'denied') {
-                            this.setState({ modal: true })
-                          } else if (permission === 'granted') {
-                            this.setState({ permission })
-                            this.showNotification()
-                          }
-                        })
-                      }}
+                      next={() => this.requestPermission()}
                     />
                   )
                 }
 
-                return cmp
+                return (
+                  <>
+                    {cmp}
+                    <div className="continue-btn">{continueBtn}</div>
+
+                    {this.state.modal && (
+                      <Modal
+                        shouldClose={this.state.shouldClose}
+                        onClose={() =>
+                          this.setState({ modal: false, shouldClose: false })
+                        }
+                      >
+                        <div className="notifications-modal">
+                          <div className="no-notifications-logo">!</div>
+                          <h5>Wait! Don’t you want updates?</h5>
+                          <div>
+                            Not having desktop notifications increases the
+                            chances of missing important updates about your
+                            transactions.
+                          </div>
+                          <button
+                            className="btn btn-success"
+                            onClick={() => this.requestPermission()}
+                          >
+                            Wait! I want updates
+                          </button>
+                          <button
+                            className="btn btn-link"
+                            onClick={() => this.setState({ redirect: true })}
+                          >
+                            No, I don’t want to receive updates
+                          </button>
+                        </div>
+                      </Modal>
+                    )}
+                    {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}
+                  </>
+                )
               }}
             </Query>
           </div>
@@ -185,6 +198,16 @@ class OnboardNotifications extends Component {
         </div>
       </>
     )
+  }
+
+  requestPermission() {
+    this.setState({ permissionRequested: true, shouldClose: true })
+    Notification.requestPermission().then(permission => {
+      this.setState({ permission })
+      if (permission === 'granted') {
+        this.showNotification()
+      }
+    })
   }
 
   showNotification() {

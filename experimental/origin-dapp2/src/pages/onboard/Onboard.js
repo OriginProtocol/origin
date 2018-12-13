@@ -141,6 +141,7 @@ require('react-styl')(`
       a.cancel
         font-size: 14px
         font-weight: normal
+        margin-top: 1rem
         &.big
           font-size: 18px
           font-weight: 900
@@ -175,9 +176,16 @@ require('react-styl')(`
 
     .spinner
       margin: 2rem 0
+    .continue-btn
+      margin-top: 2rem
+      text-align: right
+      .btn.disabled
+        opacity: 0.25
+
   .spinner
     background: url(images/spinner-animation-dark.svg) no-repeat center
     background-size: contain
+    width: 4rem
     height: 4rem
     &.light
       background-image: url(images/spinner-animation-light.svg)

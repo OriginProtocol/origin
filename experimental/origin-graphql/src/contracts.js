@@ -20,6 +20,7 @@ const Configs = {
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
+    ipfsEventCache: 'QmVuNrzZKociLVtJ4AmSHb4XRcq8eRAGfuw3wW1MV9dKP9',
     discovery: 'https://discovery.originprotocol.com',
     V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
     OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
@@ -81,7 +82,8 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:9090`,
     ipfsRPC: `http://${HOST}:5002`,
-    automine: true
+    ipfsEventCache: 'QmaRfkZtiJfCreSsFPWK63H412c5hyFAbYPtzzLV9mQsew',
+    automine: true,
   }
 }
 
@@ -92,7 +94,6 @@ const DefaultMessagingConfig = {
 }
 
 const context = {}
-
 
 // web3.js version 35 + 36 need this hack...
 function applyWeb3Hack(web3Instance) {
@@ -116,6 +117,7 @@ export function setNetwork(net) {
     config.V00_UserRegistry = window.localStorage.userRegistryContract
   }
   context.net = net
+  context.config = config
   context.automine = config.automine
 
   context.ipfsGateway = config.ipfsGateway
@@ -267,7 +269,12 @@ export function toggleMetaMask(enabled) {
 
 export function setMarketplace(address, epoch) {
   context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
-  context.marketplace.eventCache = eventCache(context.marketplace, epoch)
+  context.marketplace.eventCache = eventCache(
+    context.marketplace,
+    epoch,
+    context.web3,
+    context.config
+  )
   if (address) {
     context.marketplaces = [context.marketplace]
   } else {

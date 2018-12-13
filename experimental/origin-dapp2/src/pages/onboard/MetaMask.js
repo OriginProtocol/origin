@@ -88,8 +88,8 @@ class AwaitingApproval extends Component {
         <div className="metamask-logo" />
         <div className="status">Waiting for you to grant permission</div>
         <div className="help">
-          Please grant Origin permission to access your MetaMask account so you can
-          buy and sell on our DApp.
+          Please grant Origin permission to access your MetaMask account so you
+          can buy and sell on our DApp.
         </div>
         <div className="click-metamask-extension" />
         <button
@@ -120,7 +120,7 @@ const IncorrectNetwork = ({ networkName, connectTo }) => (
   </div>
 )
 
-const Connected = ({ next, networkName }) => (
+const Connected = ({ networkName }) => (
   <div className="onboard-box">
     <div className="metamask-logo" />
     <div className="status">MetaMask Connected</div>
@@ -131,9 +131,6 @@ const Connected = ({ next, networkName }) => (
     <div className="help mb">
       MetaMask is connected and you’re ready to transact on Origin.
     </div>
-    <Link to={next} className="btn btn-outline-primary">
-      Continue
-    </Link>
   </div>
 )
 
@@ -160,6 +157,7 @@ class OnboardMetaMask extends Component {
 
                 const backLink = `/listings/${listing.id}/onboard`
                 const nextLink = `/listings/${listing.id}/onboard/messaging`
+                let nextEnabled = false
                 const { web3 } = data
 
                 let cmp
@@ -184,14 +182,27 @@ class OnboardMetaMask extends Component {
                     />
                   )
                 } else {
-                  cmp = (
-                    <Connected
-                      next={nextLink}
-                      networkName={web3.metaMaskNetworkName}
-                    />
-                  )
+                  nextEnabled = true
+                  cmp = <Connected networkName={web3.metaMaskNetworkName} />
                 }
-                return cmp
+
+                return (
+                  <>
+                    {cmp}
+                    <div className="continue-btn">
+                      <Link
+                        to={nextLink}
+                        className={`btn btn-primary${
+                          nextEnabled ? '' : ' disabled'
+                        }`}
+                      >
+                        Continue
+                      </Link>
+                    </div>
+                    {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}
+                  </>
+                )
+                // return cmp
               }}
             </Query>
             {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}

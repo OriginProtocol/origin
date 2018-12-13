@@ -15,7 +15,8 @@ export default {
       ? true
       : false
   },
-  syncing: () => false,
+  synced: () => contracts.messaging.synced,
+  syncProgress: () => contracts.messaging.syncProgress,
   pubKey: () =>
     contracts.messaging.account ? contracts.messaging.account.publicKey : null,
   pubSig: () => contracts.messaging.pub_sig
