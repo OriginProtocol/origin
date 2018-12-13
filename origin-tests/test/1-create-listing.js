@@ -13,7 +13,7 @@ const offerValid = require('origin/test/fixtures/offer-valid.json')
 const offerData = Object.assign({}, offerValid)
 
 
-describe('create listing plus offer and retrieve using discovery', () => {
+describe('create listing with offer and retrieve using discovery', () => {
 
   before(async () => {
     this.origin = new Origin({
@@ -29,13 +29,16 @@ describe('create listing plus offer and retrieve using discovery', () => {
     const { listingId } = await this.origin.marketplace.createListing(listingData)
     this.listingId = listingId
 
+    // Wait to allow event-listener to index the listing since the offer
+    // creation logic depends on being able to read the listing data from the back-end.
+    // TODO: As opposed to sleeping for a fixed amount of time, it would make the tests
+    // run faster if we would poll the event-listener or the discovery server until the
+    // newly created listing or offer is returned.
+    await new Promise(resolve => setTimeout(resolve, 20000))
     const { offerId } = await this.origin.marketplace.makeOffer(listingId, offerData)
     this.offerId = offerId
 
-    // Wait to allow event-listener to index the data.
-    // TODO: As opposed to sleeping for a fixed amount of time, it would make the tests
-    // run faster if we would poll the event-listener or the discovery server until the
-    // newly created listing and offer are returned.
+    // Wait to allow event-listener to index the offer data.
     return new Promise(resolve => setTimeout(resolve, 20000))
   })
 
