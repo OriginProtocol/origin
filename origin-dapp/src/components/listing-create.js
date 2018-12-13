@@ -646,7 +646,6 @@ class ListingCreate extends Component {
     this.setState({ step: this.STEP.PREVIEW })
   }
 
-<<<<<<< HEAD
   renderBoostButtons(isMultiUnitListing) {
     return(
       <div className="btn-container">
