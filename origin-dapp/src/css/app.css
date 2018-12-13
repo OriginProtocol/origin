@@ -2142,6 +2142,12 @@ textarea:-moz-ui-invalid {
   line-height: 1.375rem;
 }
 
+.price-container .append {
+  color: var(--steel);
+  font-weight: 300;
+  text-transform: none;
+}
+
 .price-container .fiat {
   color: var(--steel);
   font-size: 0.625rem;

@@ -1,5 +1,9 @@
 [
   {
+    "id": "listing-card-prices.multiUnitListing.each",
+    "defaultMessage": "each"
+  },
+  {
     "id": "listing-card-prices.loadingMessage",
     "defaultMessage": "Loading..."
   }
