@@ -54,7 +54,7 @@
   "messages.moment.years": "y",
   "conversation.newMessagePlaceholder": "Type something...",
   "conversation.offerCreated": "{party} made an offer on {name} on {date}",
-  "conversation.offerWithdrawn": "{party} withdrew their offer for {name} on {date}",
+  "conversation.offerWithdrawnOrRejected": "{party} {action} {name} on {date}",
   "conversation.offerAccepted": "{party} accepted the offer for {name} on {date}",
   "conversation.offerDisputed": "{party} initiated a dispute for {name} on {date}",
   "conversation.offerRuling": "{party} made a ruling on the dispute for {name} on {date}",

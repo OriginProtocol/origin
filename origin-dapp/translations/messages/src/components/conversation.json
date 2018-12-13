@@ -8,8 +8,8 @@
     "defaultMessage": "{party} made an offer on {name} on {date}"
   },
   {
-    "id": "conversation.offerWithdrawn",
-    "defaultMessage": "{party} withdrew their offer for {name} on {date}"
+    "id": "conversation.offerWithdrawnOrRejected",
+    "defaultMessage": "{party} {action} {name} on {date}"
   },
   {
     "id": "conversation.offerAccepted",

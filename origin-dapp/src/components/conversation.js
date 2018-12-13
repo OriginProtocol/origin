@@ -257,7 +257,7 @@ class Conversation extends Component {
   }
 
   formatOfferMessage(info) {
-    const { listing = {} } = this.state
+    const { listing = {}, purchase } = this.state
     const { users, intl, smallScreenOrDevice, withListingSummary } = this.props
 
     if (smallScreenOrDevice || !withListingSummary) return
@@ -268,6 +268,13 @@ class Conversation extends Component {
     const userName = abbreviateName(user)
     const party = userName || truncateAddress(returnValues.party)
     const date = formatDate(timestamp)
+    function withdrawnOrRejected() {
+      const withdrawn = formattedAddress(purchase.buyer) === partyAddress
+      const withdrawnMessage = 'withdrew their offer for'
+      const rejectedMessage = 'rejected the offer for'
+
+      return withdrawn ? withdrawnMessage : rejectedMessage
+    }
 
     const offerMessages = {
       'OfferCreated': (
@@ -279,9 +286,9 @@ class Conversation extends Component {
       ),
       'OfferWithdrawn': (
         <FormattedMessage
-          id={'conversation.offerWithdrawn'}
-          defaultMessage={'{party} withdrew their offer for {name} on {date}'}
-          values={{ party, date, name: listing.name }}
+          id={'conversation.offerWithdrawnOrRejected'}
+          defaultMessage={'{party} {action} {name} on {date}'}
+          values={{ party, date, name: listing.name, action: withdrawnOrRejected() }}
         />
       ),
       'OfferAccepted': (
