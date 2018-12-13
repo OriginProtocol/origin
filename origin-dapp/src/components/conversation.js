@@ -269,6 +269,7 @@ class Conversation extends Component {
     const userName = abbreviateName(user)
     const party = userName || truncateAddress(returnValues.party)
     const date = formatDate(timestamp)
+
     function withdrawnOrRejected() {
       const withdrawn = formattedAddress(purchase.buyer) === partyAddress
       const withdrawnMessage = 'withdrew their offer for'
