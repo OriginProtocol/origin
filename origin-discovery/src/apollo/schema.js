@@ -50,6 +50,7 @@ const typeDefs = gql`
     status: String!
     affiliate: ID,
     totalPrice: Price!
+    commission: Price
     listing: Listing!
   }
   type OfferConnection {

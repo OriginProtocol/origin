@@ -107,6 +107,10 @@ const resolvers = {
       return offer.totalPrice
     },
 
+    commission (offer) {
+      return offer.commission
+    },
+
     async listing (offer) {
       // Note: fetch listing version relative to the offer's blockInfo.
       return getListing(offer.data.listingId, offer.blockInfo)

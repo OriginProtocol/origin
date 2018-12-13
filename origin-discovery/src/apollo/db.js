@@ -174,7 +174,8 @@ function _makeOffer (row) {
     status: row.status,
     buyerAddress: row.buyerAddress,
     sellerAddress: row.sellerAddress,
-    totalPrice: row.data.totalPrice
+    totalPrice: row.data.totalPrice,
+    commission: row.data.commission,
   }
 }
 
