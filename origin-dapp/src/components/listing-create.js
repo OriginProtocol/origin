@@ -714,9 +714,9 @@ class ListingCreate extends Component {
         showBoostFormErrorMsg: false
       })
     }
-  return errors
-}
-=======
+    return errors
+  }
+  
   getStepNumber(stepNum) {
     // We have a different number of steps in the workflow based on
     // mobile vs. desktop and fractional vs. unit.
@@ -740,7 +740,6 @@ class ListingCreate extends Component {
           }
     }
   }
->>>>>>> master
 
   render() {
     const {
