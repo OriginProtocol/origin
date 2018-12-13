@@ -452,9 +452,8 @@ class ListingsDetail extends Component {
             </div>
           </Modal>
         )}
-        <div
-          className={`container listing-container${loading ? ' loading' : ''}`}
-        >
+        {/* Render if step === VIEW */}
+        <div className={`container listing-container${loading ? ' loading' : ''}`}>
           <div className="row">
             <div className="col-12">
               <div className="category placehold d-flex">
@@ -512,7 +511,7 @@ class ListingsDetail extends Component {
               */}
             </div>
             <div className="col-12 col-md-4">
-              {isAvailable && ((!!price && !!parseFloat(price)) || isFractional) && (
+              {isAvailable && !loading && ((!!price && !!parseFloat(price)) || isFractional) && (
                 <div className="buy-box placehold">
                   {!isFractional &&
                     <div className="price text-nowrap">
@@ -542,103 +541,102 @@ class ListingsDetail extends Component {
                       </div>
                     </div>
                   */}
-                  {!loading && (
-                    <div className="btn-container">
-                      {!userIsSeller && !isFractional && (
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => this.handleMakeOffer()}
-                          onMouseDown={e => e.preventDefault()}
-                          ga-category="listing"
-                          ga-label="purchase"
-                        >
+                  {userIsSeller && isMultiUnit && (
+                    <Fragment>
+                      <hr className="mb-2"/>
+                        <div className="d-flex justify-content-between mt-4 mb-2">
+                          <div className="ml-3">
+                            <FormattedMessage
+                              id={'listing-detail.unitsSold'}
+                              defaultMessage={'Sold'}
+                            />
+                          </div>
+                          <div className="text-right mr-3">
+                            {unitsTotal - unitsRemaining}
+                          </div>
+                        </div>
+                        <div className="d-flex justify-content-between mt-4 mb-2">
+                          <div className="ml-3">
+                            <FormattedMessage
+                              id={'listing-detail.unitsUnsold'}
+                              defaultMessage={'Unsold'}
+                            />
+                          </div>
+                          <div className="text-right mr-3">
+                            {unitsRemaining}
+                          </div>
+                        </div>
+                      <hr className="pt-1 mt-4 mb-2"/>
+                      <div className="d-flex justify-content-between mt-4 mb-2">
+                        <div className="ml-3">
                           <FormattedMessage
-                            id={'listing-detail.purchase'}
-                            defaultMessage={'Purchase'}
+                            id={'listing-detail.remainingBoost'}
+                            defaultMessage={'Remaining Boost'}
                           />
-                        </button>
-                      )}
-                      {userIsSeller && (<Fragment>
-                        {isMultiUnit && (
-                          <Fragment>
-                            <hr />
-                              <div className="quantity d-flex justify-content-between">
-                                <div className="ml-3">
-                                  <FormattedMessage
-                                    id={'listing-detail.unitsSold'}
-                                    defaultMessage={'Sold'}
-                                  />
-                                </div>
-                                <div className="text-right mr-3">
-                                  {unitsTotal - unitsRemaining}
-                                </div>
-                              </div>
-                              <div className="quantity d-flex justify-content-between">
-                                <div className="ml-3">
-                                  <FormattedMessage
-                                    id={'listing-detail.unitsUnsold'}
-                                    defaultMessage={'Unsold'}
-                                  />
-                                </div>
-                                <div className="text-right mr-3">
-                                  {unitsRemaining}
-                                </div>
-                              </div>
-                            <hr />
-                            <div className="quantity d-flex justify-content-between">
-                              <div className="ml-3">
-                                <FormattedMessage
-                                  id={'listing-detail.remainingBoost'}
-                                  defaultMessage={'Remaining Boost'}
-                                />
-                              </div>
-                              <div className="text-right mr-3">
-                                <p>
-                                  <img
-                                    className="ogn-icon"
-                                    src="images/ogn-icon.svg"
-                                    role="presentation"
-                                  />
-                                  <span className="text-bold">{boostRemaining}</span>&nbsp;
-                                  <Link
-                                    className="ogn-abbrev"
-                                    to="/about-tokens"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    OGN
-                                  </Link>
-                                </p>
-                              </div>
-                            </div>
-                          </Fragment>
-                        )}
-                          <Link
-                            to="/my-listings"
-                            className="btn"
-                            ga-category="listing"
-                            ga-label="sellers_own_listing_my_listings_cta"
-                          >
-                              <FormattedMessage
-                                id={'listing-detail.myListings'}
-                                defaultMessage={'My Listings'}
-                              />
-                          </Link>
-                          <Link
-                            to={`/update/${this.props.listingId}`}
-                            className="btn margin-top"
-                            ga-category="listing"
-                            ga-label="sellers_own_listing_edit_listing_cta"
-                          >
-                              <FormattedMessage
-                                id={'listing-detail.editListings'}
-                                defaultMessage={'Edit Listing'}
-                              />
-                          </Link>
-                        </Fragment>
-                      )}
-                    </div>
+                        </div>
+                        <div className="text-right mr-3">
+                          <span>
+                            <img
+                              className="ogn-icon"
+                              src="images/ogn-icon.svg"
+                              role="presentation"
+                            />
+                            <span className="text-bold">{boostRemaining}</span>&nbsp;
+                            <Link
+                              className="ogn-abbrev"
+                              to="/about-tokens"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              OGN
+                            </Link>
+                          </span>
+                        </div>
+                      </div>
+                    </Fragment>
                   )}
+                  <div className="btn-container">
+                    {!userIsSeller && !isFractional && (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => this.handleMakeOffer()}
+                        onMouseDown={e => e.preventDefault()}
+                        ga-category="listing"
+                        ga-label="purchase"
+                      >
+                        <FormattedMessage
+                          id={'listing-detail.purchase'}
+                          defaultMessage={'Purchase'}
+                        />
+                      </button>
+                    )}
+                    {userIsSeller && isMultiUnit && (
+                      <Fragment>
+                        <Link
+                          to="/my-listings"
+                          className="btn"
+                          ga-category="listing"
+                          ga-label="sellers_own_listing_my_listings_cta"
+                        >
+                            <FormattedMessage
+                              id={'listing-detail.myListings'}
+                              defaultMessage={'My Listings'}
+                            />
+                        </Link>
+                        <Link
+                          to={`/update/${this.props.listingId}`}
+                          className="btn margin-top"
+                          ga-category="listing"
+                          ga-label="sellers_own_listing_edit_listing_cta"
+                        >
+                            <FormattedMessage
+                              id={'listing-detail.editListings'}
+                              defaultMessage={'Edit Listing'}
+                            />
+                        </Link>
+                      </Fragment>
+                    )}
+                  </div>
                   {/* Via Matt 9/4/2018: Not necessary until we have staking */}
                   {/*
                     <div className="boost-level">
@@ -662,9 +660,8 @@ class ListingsDetail extends Component {
                   */}
                 </div>
               )}
-              {!isAvailable && (
+              {!isAvailable && !loading && (
                 <div className="buy-box placehold unavailable text-center">
-                  {!loading && (
                     <div className="reason">
                       {!isWithdrawn &&
                         isPending && (
@@ -686,10 +683,7 @@ class ListingsDetail extends Component {
                         />
                       )}
                     </div>
-                  )}
-                  {!loading &&
-                    !userIsBuyer &&
-                    !userIsSeller && (
+                  {!userIsBuyer && !userIsSeller && (
                     <Fragment>
                       <div className="suggestion">
                         {!isWithdrawn &&
@@ -732,8 +726,7 @@ class ListingsDetail extends Component {
                       </Link>
                     </Fragment>
                   )}
-                  {!loading &&
-                    userIsBuyer && (
+                  {userIsBuyer && (
                     <div className="suggestion">
                       {isPending &&
                           currentOffer.status === 'created' && (
@@ -764,8 +757,7 @@ class ListingsDetail extends Component {
                       )}
                     </div>
                   )}
-                  {!loading &&
-                    userIsSeller && (
+                  {userIsSeller && (
                     <div className="suggestion">
                       {isPending &&
                           currentOffer.status === 'created' && (
@@ -805,8 +797,7 @@ class ListingsDetail extends Component {
                       )}
                     </div>
                   )}
-                  {!loading &&
-                    (userIsBuyer || userIsSeller) &&
+                  {(userIsBuyer || userIsSeller) &&
                     currentOffer && (
                     <Link
                       to={`/purchases/${currentOffer.id}`}
@@ -827,8 +818,7 @@ class ListingsDetail extends Component {
                       )}
                     </Link>
                   )}
-                  {!loading &&
-                    userIsSeller &&
+                  { userIsSeller &&
                     !currentOffer &&
                     isWithdrawn && (
                     <Link

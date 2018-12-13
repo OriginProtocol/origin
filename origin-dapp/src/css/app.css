@@ -2713,7 +2713,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .listing-form .preview .eth-icon,
-.listing-form .preview .ogn-icon {
+.listing-form .preview .ogn-icon,
+.listing-detail .ogn-icon{
   margin-top: -5px;
   margin-right: 5px;
 }

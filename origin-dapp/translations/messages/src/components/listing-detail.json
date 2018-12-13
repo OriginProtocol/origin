@@ -60,10 +60,6 @@
     "defaultMessage": "OK"
   },
   {
-    "id": "listing-detail.purchase",
-    "defaultMessage": "Purchase"
-  },
-  {
     "id": "listing-detail.unitsSold",
     "defaultMessage": "Sold"
   },
@@ -74,6 +70,10 @@
   {
     "id": "listing-detail.remainingBoost",
     "defaultMessage": "Remaining Boost"
+  },
+  {
+    "id": "listing-detail.purchase",
+    "defaultMessage": "Purchase"
   },
   {
     "id": "listing-detail.myListings",
