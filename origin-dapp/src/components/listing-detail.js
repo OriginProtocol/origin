@@ -23,13 +23,13 @@ import Modal from 'components/modal'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
+import PicturesThumbPreview from 'components/pictures-thumb-preview'
 
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing, transformPurchasesOrSales } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 import { formattedAddress } from 'utils/user'
-import PicturesThumbPreview from 'components/pictures-thumb-preview'
 
 import origin from '../services/origin'
 
@@ -170,6 +170,7 @@ class ListingsDetail extends Component {
           this.props.updateTransaction(confirmationCount, transactionReceipt)
         }
       )
+
       this.props.upsertTransaction({
         ...transactionReceipt,
         transactionTypeKey: 'makeOffer'
@@ -471,7 +472,10 @@ class ListingsDetail extends Component {
             </div>
             <div className="col-12 col-md-8 detail-info-box">
               {(loading || (pictures && !!pictures.length)) && (
-                <PicturesThumbPreview pictures={ pictures } wrapClassName="image-wrapper" />
+                <PicturesThumbPreview
+                  pictures={ pictures }
+                  wrapClassName="image-wrapper">
+                </PicturesThumbPreview>
               )}
               <p className="ws-aware description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
@@ -537,10 +541,10 @@ class ListingsDetail extends Component {
                             ga-category="listing"
                             ga-label="sellers_own_listing_my_listings_cta"
                           >
-                            <FormattedMessage
-                              id={'listing-detail.myListings'}
-                              defaultMessage={'My Listings'}
-                            />
+                              <FormattedMessage
+                                id={'listing-detail.myListings'}
+                                defaultMessage={'My Listings'}
+                              />
                           </Link>
                           <Link
                             to={`/update/${this.props.listingId}`}
@@ -548,10 +552,10 @@ class ListingsDetail extends Component {
                             ga-category="listing"
                             ga-label="sellers_own_listing_edit_listing_cta"
                           >
-                            <FormattedMessage
-                              id={'listing-detail.editListings'}
-                              defaultMessage={'Edit Listing'}
-                            />
+                              <FormattedMessage
+                                id={'listing-detail.editListings'}
+                                defaultMessage={'Edit Listing'}
+                              />
                           </Link>
                         </Fragment>
                       )}
@@ -585,7 +589,7 @@ class ListingsDetail extends Component {
                   {!loading && (
                     <div className="reason">
                       {!isWithdrawn &&
-                      isPending && (
+                        isPending && (
                         <FormattedMessage
                           id={'listing-detail.reasonPending'}
                           defaultMessage={'This listing is {pending}'}
@@ -611,7 +615,7 @@ class ListingsDetail extends Component {
                     <Fragment>
                       <div className="suggestion">
                         {!isWithdrawn &&
-                        isPending && (
+                          isPending && (
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicPending'}
                             defaultMessage={
@@ -629,7 +633,7 @@ class ListingsDetail extends Component {
                         )}
                         {/* consider the possibility of a withdrawn listing despite a valid offer */}
                         {!isSold &&
-                        isWithdrawn && (
+                          isWithdrawn && (
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicWithdrawn'}
                             defaultMessage={
@@ -654,21 +658,21 @@ class ListingsDetail extends Component {
                   userIsBuyer && (
                     <div className="suggestion">
                       {isPending &&
-                      currentOffer.status === 'created' && (
+                        currentOffer.status === 'created' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerCreated'}
                           defaultMessage={`You've made an offer on this listing. Please wait for the seller to accept or reject your offer.`}
                         />
                       )}
                       {isPending &&
-                      currentOffer.status === 'accepted' && (
+                        currentOffer.status === 'accepted' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerAccepted'}
                           defaultMessage={`You've made an offer on this listing. View the offer to complete the sale.`}
                         />
                       )}
                       {isPending &&
-                      currentOffer.status === 'disputed' && (
+                        currentOffer.status === 'disputed' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerDisputed'}
                           defaultMessage={`You've made an offer on this listing. View the offer to check the status.`}
@@ -683,24 +687,24 @@ class ListingsDetail extends Component {
                     </div>
                   )}
                   {!loading &&
-                  userIsSeller && (
+                    userIsSeller && (
                     <div className="suggestion">
                       {isPending &&
-                      currentOffer.status === 'created' && (
+                        currentOffer.status === 'created' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionSellerCreated'}
                           defaultMessage={`A buyer is waiting for you to accept or reject their offer.`}
                         />
                       )}
                       {isPending &&
-                      currentOffer.status === 'accepted' && (
+                        currentOffer.status === 'accepted' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionSellerAccepted'}
                           defaultMessage={`You've accepted an offer for this listing. Please wait for the buyer to complete the sale.`}
                         />
                       )}
                       {isPending &&
-                      currentOffer.status === 'disputed' && (
+                        currentOffer.status === 'disputed' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionSellerDisputed'}
                           defaultMessage={`You've accepted an offer on this listing. View the offer to check the status.`}
@@ -714,18 +718,18 @@ class ListingsDetail extends Component {
                       )}
                       {/* consider the possibility of a withdrawn listing despite a valid offer */}
                       {!isPending &&
-                      !isSold &&
-                      isWithdrawn && (
-                        <FormattedMessage
-                          id={'listing-detail.sellerWithdrawn'}
-                          defaultMessage={`You've withdrawn this listing.`}
-                        />
-                      )}
+                        !isSold &&
+                        isWithdrawn && (
+                          <FormattedMessage
+                            id={'listing-detail.sellerWithdrawn'}
+                            defaultMessage={`You've withdrawn this listing.`}
+                          />
+                        )}
                     </div>
                   )}
                   {!loading &&
-                  (userIsBuyer || userIsSeller) &&
-                  currentOffer && (
+                    (userIsBuyer || userIsSeller) &&
+                    currentOffer && (
                     <Link
                       to={`/purchases/${currentOffer.id}`}
                       ga-category="listing"
@@ -746,9 +750,9 @@ class ListingsDetail extends Component {
                     </Link>
                   )}
                   {!loading &&
-                  userIsSeller &&
-                  !currentOffer &&
-                  isWithdrawn && (
+                    userIsSeller &&
+                    !currentOffer &&
+                    isWithdrawn && (
                     <Link
                       to={`/listings/create`}
                       ga-category="listing"

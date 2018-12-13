@@ -9,11 +9,13 @@ class PicturesThumbPreview extends Component {
     }
     this.setFeaturedImage = this.setFeaturedImage.bind(this)
   }
+
   setFeaturedImage(idx) {
     this.setState({
       featuredImageIdx: idx
     })
   }
+
   render(){
     const featuredImageIdx = this.state.featuredImageIdx
     const { pictures, wrapClassName } = this.props
