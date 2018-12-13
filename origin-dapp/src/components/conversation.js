@@ -122,7 +122,10 @@ class Conversation extends Component {
     }
 
     // on new message
-    if (messages.length > prevProps.messages.length) {
+    const message = JSON.stringify(this.getLatestMessage(messages))
+    const prevPropsMessage = JSON.stringify(this.getLatestMessage(prevProps.messages))
+
+    if (message !== prevPropsMessage) {
       this.loadListing()
       // auto-scroll to most recent message
       this.scrollToBottom()
@@ -259,6 +262,12 @@ class Conversation extends Component {
     if (el) {
       el.scrollTop = el.scrollHeight
     }
+  }
+
+  getLatestMessage(messages = []) {
+    const lastMessageIndex = messages.length - 1
+    const sortOrder = (a, b) => (a.created < b.created ? -1 : 1)
+    return messages.sort(sortOrder)[lastMessageIndex]
   }
 
   async sendMessage(content) {
