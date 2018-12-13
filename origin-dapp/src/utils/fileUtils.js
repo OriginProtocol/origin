@@ -21,6 +21,37 @@ export const getDataUri = async file => {
   })
 }
 
+export const getCroppedDimensions = (canvas) => {
+  const imageWidth = canvas.width
+  const imageHeight = canvas.height
+
+  let cropWidth
+  let cropHeight
+  let left
+  let top
+
+  if (imageWidth > imageHeight) {
+    // Landscape orientation
+    cropHeight = imageHeight
+    cropWidth = imageHeight * 1.3333
+    left = (imageWidth / 2) - (cropWidth / 2)
+    top = 0
+  } else {
+    // Portrait orientation
+    cropWidth = imageWidth
+    cropHeight = imageWidth / 1.3333
+    top = (imageHeight / 2) - (cropHeight / 2)
+    left = 0
+  }
+
+  return {
+    left,
+    top,
+    sourceWidth: cropWidth,
+    sourceHeight: cropHeight
+  }
+}
+
 /*
  * scaleAndCropImage
  * @description Creates a scaled & cropped imageDataUri when given options
@@ -29,15 +60,27 @@ export const getDataUri = async file => {
  * @param {function} callback- called with an imageDataUri
  */
 
-export const scaleAndCropImage = (canvas, config, callback) => {
-  const scaledImage = loadImage.scale(canvas, config)
+export const scaleAndCropImage = (props) => {
+  const { canvas, config, callback, imageFileObj, options } = props
 
-  scaledImage.toBlob(async (blob) => {
-    blob.name = imageFileObj.name
-    const dataUri = await getDataUri(blob)
+  loadImage(imageFileObj, (canvas) => {
+    let newConfig = config
 
-    callback(dataUri)
-  }, 'image/jpeg')
+    if (config.crop) {
+      const croppedConfig = getCroppedDimensions(canvas)
+
+      newConfig = { ...config, ...croppedConfig }
+    }
+
+    const scaledImage = loadImage.scale(canvas, newConfig)
+    scaledImage.toBlob(async (blob) => {
+      blob.name = imageFileObj.name
+      const dataUri = await getDataUri(blob)
+
+      callback(dataUri)
+    }, 'image/jpeg')
+  }, options)
+
 }
 
 /*
@@ -72,63 +115,28 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
   }
   let config = defaultConfig
 
-
-  function centerCropImage() {
-    const loadImageOptions = {
-      orientation: true,
-      crossOrigin: 'anonymous'
-    }
-
-    loadImage(imageFileObj, (canvas) => {
-      const imageWidth = canvas.width
-      const imageHeight = canvas.height
-
-      let cropWidth
-      let cropHeight
-
-      if (imageWidth > imageHeight) {
-        // Landscape orientation
-        cropHeight = imageHeight
-        cropWidth = imageHeight * 1.3333
-        config = {
-          ...defaultConfig,
-          left: (imageWidth / 2) - (cropWidth / 2),
-          top: 0,
-          sourceWidth: cropWidth,
-          sourceHeight: cropHeight,
-          crop: true,
-          aspectRatio,
-          maxHeight: MAX_IMAGE_HEIGHT,
-          maxWidth: MAX_IMAGE_WIDTH
-        }
-      } else {
-        // Portrait orientation
-        cropWidth = imageWidth
-        cropHeight = imageWidth / 1.3333
-        config = {
-          ...defaultConfig,
-          left: 0,
-          top: (imageHeight / 2) - (cropHeight / 2),
-          sourceWidth: cropWidth,
-          sourceHeight: cropHeight,
-          crop: true,
-          aspectRatio,
-          maxHeight: MAX_IMAGE_HEIGHT,
-          maxWidth: MAX_IMAGE_WIDTH
-        }
-      }
-
-      scaleAndCropImage(canvas, config, callback)
-    }, loadImageOptions)
-  }
-
   if (centerCrop) {
     // This is used by listing-create component to auto-crop images
     // Load the image, find the center, and auto-crop it
     const dataUri = await getDataUri(imageFileObj)
     const image = new Image()
 
-    image.onload = centerCropImage
+    image.onload = function centerCropImage() {
+      const options = {
+        orientation: true,
+        crossOrigin: 'anonymous'
+      }
+
+      config = {
+        ...defaultConfig,
+        aspectRatio,
+        crop: true,
+        maxHeight: MAX_IMAGE_HEIGHT,
+        maxWidth: MAX_IMAGE_WIDTH
+      }
+
+      scaleAndCropImage({ options, config, callback, imageFileObj })
+    }
     image.src = dataUri
 
   } else {
@@ -140,15 +148,13 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
       aspectRatio
     }
 
-    const loadImageOptions = {
+    const options = {
       orientation: true,
       crossOrigin: 'anonymous',
       maxHeight: MAX_IMAGE_HEIGHT,
       maxWidth: MAX_IMAGE_WIDTH
     }
 
-    loadImage(imageFileObj, (canvas) => {
-      scaleAndCropImage(canvas, config, callback)
-    }, loadImageOptions)
+    scaleAndCropImage({ options, imageFileObj, config, callback })
   }
 }
