@@ -33,5 +33,9 @@
   "commission": {
     "currency": "OGN",
     "amount": "0"
+  },
+  "commissionPerUnit": {
+    "currency": "OGN",
+    "amount": "0"
   }
 }
