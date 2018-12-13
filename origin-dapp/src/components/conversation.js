@@ -417,6 +417,7 @@ class Conversation extends Component {
             />
             <input
               type="file"
+              accept="image/jpeg,image/gif,image/png"
               ref={this.fileInput}
               className="d-none"
               onChange={this.handleInput}
