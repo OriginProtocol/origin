@@ -21,6 +21,12 @@ export const getDataUri = async file => {
   })
 }
 
+/*
+ * getCroppedDimensions
+ * @description uses the canvas dimensions to generate the auto-crop dimensions
+ * @param {file} canvas - The image canvas to be modified
+ */
+
 export const getCroppedDimensions = (canvas) => {
   const imageWidth = canvas.width
   const imageHeight = canvas.height
@@ -61,15 +67,13 @@ export const getCroppedDimensions = (canvas) => {
  */
 
 export const scaleAndCropImage = (props) => {
-  const { canvas, config, callback, imageFileObj, options } = props
+  const { config, callback, imageFileObj, options } = props
 
   loadImage(imageFileObj, (canvas) => {
     let newConfig = config
 
     if (config.crop) {
-      const croppedConfig = getCroppedDimensions(canvas)
-
-      newConfig = { ...config, ...croppedConfig }
+      newConfig = { ...config, ...getCroppedDimensions(canvas) }
     }
 
     const scaledImage = loadImage.scale(canvas, newConfig)
@@ -87,7 +91,7 @@ export const scaleAndCropImage = (props) => {
  * generateCroppedImage
  * @description Creates a cropped image file when given crop dimensions
  * @param {file} imageFileObj - The image file object from the file input element
- * @param {file} options - The object containing the dimensions of the crop area,
+ * @param {file} pixelCrop - The object containing the dimensions of the crop area,
  * as well as the aspect ratio. If undefined, the image will not be cropped
  * @param {number} aspectRatio - the ratio of the width to the height of an image (i.e. 4/3)
  * @param {bool} centerCrop - whether to auto-crop the image at its center
@@ -98,7 +102,7 @@ export const scaleAndCropImage = (props) => {
  * @param {function} callback- called with the result of modifyImage (an imageDataUri)
  */
 
-export const generateCroppedImage = async (imageFileObj, options, callback) => {
+export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) => {
   const {
     x = 0,
     y = 0,
@@ -106,14 +110,17 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
     height,
     aspectRatio,
     centerCrop = false
-  } = options || {}
+  } = pixelCrop || {}
 
   const defaultConfig = {
     left: x,
     top: y,
-    orientation: true
+    aspectRatio
   }
-  let config = defaultConfig
+  const defaultOptions = {
+    orientation: true,
+    crossOrigin: 'anonymous'
+  }
 
   if (centerCrop) {
     // This is used by listing-create component to auto-crop images
@@ -122,35 +129,27 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
     const image = new Image()
 
     image.onload = function centerCropImage() {
-      const options = {
-        orientation: true,
-        crossOrigin: 'anonymous'
-      }
-
-      config = {
+      const config = {
         ...defaultConfig,
-        aspectRatio,
         crop: true,
         maxHeight: MAX_IMAGE_HEIGHT,
         maxWidth: MAX_IMAGE_WIDTH
       }
 
-      scaleAndCropImage({ options, config, callback, imageFileObj })
+      scaleAndCropImage({ options: defaultOptions, config, callback, imageFileObj })
     }
     image.src = dataUri
 
   } else {
     // This is used by Profile (avatar selection) and messaging (resizing large images)
-    config = {
+    const config = {
       ...defaultConfig,
       sourceWidth: width,
       sourceHeight: height,
-      aspectRatio
     }
 
     const options = {
-      orientation: true,
-      crossOrigin: 'anonymous',
+      ...defaultOptions,
       maxHeight: MAX_IMAGE_HEIGHT,
       maxWidth: MAX_IMAGE_WIDTH
     }
