@@ -26,35 +26,7 @@ class Conversation extends Component {
       newMessagePlaceholder: {
         id: 'conversation.newMessagePlaceholder',
         defaultMessage: 'Type something...'
-      },
-      offerCreated: {
-        id: 'conversation.offerCreated',
-        defaultMessage: 'made an offer on'
-      },
-      offerWithdrawn: {
-        id: 'conversation.offerWithdrawn',
-        defaultMessage: 'withdrew their offer on'
-      },
-      offerAccepted: {
-        id: 'conversation.offerAccepted',
-        defaultMessage: 'accepted the offer on'
-      },
-      offerDisputed: {
-        id: 'conversation.offerDisputed',
-        defaultMessage: 'initiated a dispute on'
-      },
-      offerRuling: {
-        id: 'conversation.offerRuling',
-        defaultMessage: 'made a ruling on the dispute for'
-      },
-      offerFinalized: {
-        id: 'conversation.offerFinalized',
-        defaultMessage: 'finalized the offer for'
-      },
-      offerData: {
-        id: 'conversation.offerData',
-        defaultMessage: 'updated information for'
-      },
+      }
     })
 
     this.handleClick = this.handleClick.bind(this)
@@ -122,10 +94,10 @@ class Conversation extends Component {
     }
 
     // on new message
-    const message = JSON.stringify(this.getLatestMessage(messages))
-    const prevPropsMessage = JSON.stringify(this.getLatestMessage(prevProps.messages))
+    const newMessage = JSON.stringify(this.getLatestMessage(messages))
+    const prevPropsNewMessage = JSON.stringify(this.getLatestMessage(prevProps.messages))
 
-    if (message !== prevPropsMessage) {
+    if (newMessage !== prevPropsNewMessage) {
       this.loadListing()
       // auto-scroll to most recent message
       this.scrollToBottom()
@@ -295,34 +267,63 @@ class Conversation extends Component {
     const user = users.find((user) => formattedAddress(user.address) === partyAddress)
     const userName = abbreviateName(user)
     const party = userName || truncateAddress(returnValues.party)
+    const date = formatDate(timestamp)
 
     const offerMessages = {
-      'OfferCreated': `${party} ${intl.formatMessage(
-        this.intlMessages.offerCreated
-      )}`,
-      'OfferWithdrawn': `${party} ${intl.formatMessage(
-        this.intlMessages.offerWithdrawn
-      )}`,
-      'OfferAccepted': `${party} ${intl.formatMessage(
-        this.intlMessages.offerAccepted
-      )}`,
-      'OfferDisputed': `${party} ${intl.formatMessage(
-        this.intlMessages.offerDisputed
-      )}`,
-      'OfferRuling': `${party} ${intl.formatMessage(
-        this.intlMessages.offerRuling
-      )}`,
-      'OfferFinalized': `${party} ${intl.formatMessage(
-        this.intlMessages.offerFinalized
-      )}`,
-      'OfferData': `${party} ${intl.formatMessage(
-        this.intlMessages.offerData
-      )}`,
+      'OfferCreated': (
+        <FormattedMessage
+          id={'conversation.offerCreated'}
+          defaultMessage={'{party} made an offer on {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferWithdrawn': (
+        <FormattedMessage
+          id={'conversation.offerWithdrawn'}
+          defaultMessage={'{party} withdrew their offer for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferAccepted': (
+        <FormattedMessage
+          id={'conversation.offerAccepted'}
+          defaultMessage={'{party} accepted the offer for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferDisputed': (
+        <FormattedMessage
+          id={'conversation.offerDisputed'}
+          defaultMessage={'{party} initiated a dispute for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferRuling': (
+        <FormattedMessage
+          id={'conversation.offerRuling'}
+          defaultMessage={'{party} made a ruling on the dispute for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferFinalized': (
+        <FormattedMessage
+          id={'conversation.offerFinalized'}
+          defaultMessage={'{party} finalized the offer for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferData': (
+        <FormattedMessage
+          id={'conversation.offerData'}
+          defaultMessage={'{party} updated information for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
     }
 
     return (
       <div key={new Date() + Math.random()} className="purchase-info">
-        {offerMessages[event]} {listing.name} on {formatDate(timestamp)}
+        {offerMessages[event]}
       </div>
     )
   }

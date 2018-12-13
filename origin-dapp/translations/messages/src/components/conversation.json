@@ -5,31 +5,31 @@
   },
   {
     "id": "conversation.offerCreated",
-    "defaultMessage": "made an offer on"
+    "defaultMessage": "{party} made an offer on {name} on {date}"
   },
   {
     "id": "conversation.offerWithdrawn",
-    "defaultMessage": "withdrew their offer on"
+    "defaultMessage": "{party} withdrew their offer for {name} on {date}"
   },
   {
     "id": "conversation.offerAccepted",
-    "defaultMessage": "accepted the offer on"
+    "defaultMessage": "{party} accepted the offer for {name} on {date}"
   },
   {
     "id": "conversation.offerDisputed",
-    "defaultMessage": "initiated a dispute on"
+    "defaultMessage": "{party} initiated a dispute for {name} on {date}"
   },
   {
     "id": "conversation.offerRuling",
-    "defaultMessage": "made a ruling on the dispute for"
+    "defaultMessage": "{party} made a ruling on the dispute for {name} on {date}"
   },
   {
     "id": "conversation.offerFinalized",
-    "defaultMessage": "finalized the offer for"
+    "defaultMessage": "{party} finalized the offer for {name} on {date}"
   },
   {
     "id": "conversation.offerData",
-    "defaultMessage": "updated information for"
+    "defaultMessage": "{party} updated information for {name} on {date}"
   },
   {
     "id": "conversation.invalidTextInput",
