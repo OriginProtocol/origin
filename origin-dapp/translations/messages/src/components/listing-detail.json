@@ -8,6 +8,18 @@
     "defaultMessage": "each"
   },
   {
+    "id": "listing-detail.purchase",
+    "defaultMessage": "Purchase"
+  },
+  {
+    "id": "listing-detail.myListings",
+    "defaultMessage": "My Listings"
+  },
+  {
+    "id": "listing-detail.editListings",
+    "defaultMessage": "Edit Listing"
+  },
+  {
     "id": "listing-detail.firstPurchaseHeading",
     "defaultMessage": "You're about to make your first purchase on Origin."
   },
@@ -60,6 +72,14 @@
     "defaultMessage": "OK"
   },
   {
+    "id": "listing-detail.quantity",
+    "defaultMessage": "Quantity"
+  },
+  {
+    "id": "listing-detail.totalPrice",
+    "defaultMessage": "Total Price"
+  },
+  {
     "id": "listing-detail.unitsSold",
     "defaultMessage": "Sold"
   },
@@ -70,18 +90,6 @@
   {
     "id": "listing-detail.remainingBoost",
     "defaultMessage": "Remaining Boost"
-  },
-  {
-    "id": "listing-detail.purchase",
-    "defaultMessage": "Purchase"
-  },
-  {
-    "id": "listing-detail.myListings",
-    "defaultMessage": "My Listings"
-  },
-  {
-    "id": "listing-detail.editListings",
-    "defaultMessage": "Edit Listing"
   },
   {
     "id": "listing-detail.reasonPending",

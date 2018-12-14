@@ -21,6 +21,7 @@ import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Calendar from 'components/calendar'
 import Modal from 'components/modal'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
+import SelectNumberField from 'components/form-widgets/select-number-field'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
 
@@ -243,6 +244,50 @@ class ListingsDetail extends Component {
     })
   }
 
+  renderButtonContainer(userIsSeller, isFractional, isMultiUnit, listingId) {
+    return (<div className="btn-container">
+      {!userIsSeller && !isFractional && (
+        <button
+          className="btn btn-primary"
+          onClick={() => this.handleMakeOffer()}
+          onMouseDown={e => e.preventDefault()}
+          ga-category="listing"
+          ga-label="purchase"
+        >
+          <FormattedMessage
+            id={'listing-detail.purchase'}
+            defaultMessage={'Purchase'}
+          />
+        </button>
+      )}
+      {userIsSeller && isMultiUnit && (
+        <Fragment>
+          <Link
+            to="/my-listings"
+            className="btn"
+            ga-category="listing"
+            ga-label="sellers_own_listing_my_listings_cta"
+          >
+              <FormattedMessage
+                id={'listing-detail.myListings'}
+                defaultMessage={'My Listings'}
+              />
+          </Link>
+          <Link
+            to={`/update/${listingId}`}
+            className="btn margin-top"
+            ga-category="listing"
+            ga-label="sellers_own_listing_edit_listing_cta"
+          >
+              <FormattedMessage
+                id={'listing-detail.editListings'}
+                defaultMessage={'Edit Listing'}
+              />
+          </Link>
+        </Fragment>
+      )}
+    </div>)
+  }
   render() {
     const { wallet } = this.props
     const {
@@ -293,6 +338,7 @@ class ListingsDetail extends Component {
     const showFeaturedBadge = display === 'featured' && isAvailable
     const userIsBuyer = currentOffer && formattedAddress(wallet.address) === formattedAddress(currentOffer.buyer)
     const userIsSeller = formattedAddress(wallet.address) === formattedAddress(seller)
+    const unitsToPurchase = 2
 
     return (
       <div className="listing-detail">
@@ -526,6 +572,37 @@ class ListingsDetail extends Component {
                         </Fragment>}
                     </div>
                   }
+                  {!userIsSeller && isMultiUnit && <Fragment>
+                    <hr className="mb-2"/>
+                    <div className="d-flex justify-content-between mt-4 mb-2">
+                      <div className="ml-3">
+                        <FormattedMessage
+                          id={'listing-detail.quantity'}
+                          defaultMessage={'Quantity'}
+                        />
+                      </div>
+                      <div className="text-right mr-3">
+                        <SelectNumberField 
+                          selectedValue=""
+                          onChange={() => {"do nating"}}
+                        />
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between mt-4 mb-2">
+                      <div className="ml-3">
+                        <FormattedMessage
+                          id={'listing-detail.totalPrice'}
+                          defaultMessage={'Total Price'}
+                        />
+                      </div>
+                      <div className="text-right mr-3">
+                        {Number(price * unitsToPurchase).toLocaleString(undefined, {
+                          maximumFractionDigits: 5,
+                          minimumFractionDigits: 5
+                        })}&nbsp;ETH
+                      </div>
+                    </div>
+                  </Fragment>}
                   {/* Via Matt 4/5/2018: Hold off on allowing buyers to select quantity > 1 */}
                   {/*
                     <div className="quantity d-flex justify-content-between">
@@ -544,28 +621,28 @@ class ListingsDetail extends Component {
                   {userIsSeller && isMultiUnit && (
                     <Fragment>
                       <hr className="mb-2"/>
-                        <div className="d-flex justify-content-between mt-4 mb-2">
-                          <div className="ml-3">
-                            <FormattedMessage
-                              id={'listing-detail.unitsSold'}
-                              defaultMessage={'Sold'}
-                            />
-                          </div>
-                          <div className="text-right mr-3">
-                            {unitsTotal - unitsRemaining}
-                          </div>
+                      <div className="d-flex justify-content-between mt-4 mb-2">
+                        <div className="ml-3">
+                          <FormattedMessage
+                            id={'listing-detail.unitsSold'}
+                            defaultMessage={'Sold'}
+                          />
                         </div>
-                        <div className="d-flex justify-content-between mt-4 mb-2">
-                          <div className="ml-3">
-                            <FormattedMessage
-                              id={'listing-detail.unitsUnsold'}
-                              defaultMessage={'Unsold'}
-                            />
-                          </div>
-                          <div className="text-right mr-3">
-                            {unitsRemaining}
-                          </div>
+                        <div className="text-right mr-3">
+                          {unitsTotal - unitsRemaining}
                         </div>
+                      </div>
+                      <div className="d-flex justify-content-between mt-4 mb-2">
+                        <div className="ml-3">
+                          <FormattedMessage
+                            id={'listing-detail.unitsUnsold'}
+                            defaultMessage={'Unsold'}
+                          />
+                        </div>
+                        <div className="text-right mr-3">
+                          {unitsRemaining}
+                        </div>
+                      </div>
                       <hr className="pt-1 mt-4 mb-2"/>
                       <div className="d-flex justify-content-between mt-4 mb-2">
                         <div className="ml-3">
@@ -595,48 +672,7 @@ class ListingsDetail extends Component {
                       </div>
                     </Fragment>
                   )}
-                  <div className="btn-container">
-                    {!userIsSeller && !isFractional && (
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => this.handleMakeOffer()}
-                        onMouseDown={e => e.preventDefault()}
-                        ga-category="listing"
-                        ga-label="purchase"
-                      >
-                        <FormattedMessage
-                          id={'listing-detail.purchase'}
-                          defaultMessage={'Purchase'}
-                        />
-                      </button>
-                    )}
-                    {userIsSeller && isMultiUnit && (
-                      <Fragment>
-                        <Link
-                          to="/my-listings"
-                          className="btn"
-                          ga-category="listing"
-                          ga-label="sellers_own_listing_my_listings_cta"
-                        >
-                            <FormattedMessage
-                              id={'listing-detail.myListings'}
-                              defaultMessage={'My Listings'}
-                            />
-                        </Link>
-                        <Link
-                          to={`/update/${this.props.listingId}`}
-                          className="btn margin-top"
-                          ga-category="listing"
-                          ga-label="sellers_own_listing_edit_listing_cta"
-                        >
-                            <FormattedMessage
-                              id={'listing-detail.editListings'}
-                              defaultMessage={'Edit Listing'}
-                            />
-                        </Link>
-                      </Fragment>
-                    )}
-                  </div>
+                  {this.renderButtonContainer(userIsSeller, isFractional, isMultiUnit, this.props.listingId)}
                   {/* Via Matt 9/4/2018: Not necessary until we have staking */}
                   {/*
                     <div className="boost-level">
@@ -663,8 +699,7 @@ class ListingsDetail extends Component {
               {!isAvailable && !loading && (
                 <div className="buy-box placehold unavailable text-center">
                     <div className="reason">
-                      {!isWithdrawn &&
-                        isPending && (
+                      {!isWithdrawn && isPending && (
                         <FormattedMessage
                           id={'listing-detail.reasonPending'}
                           defaultMessage={'This listing is {pending}'}
@@ -686,8 +721,7 @@ class ListingsDetail extends Component {
                   {!userIsBuyer && !userIsSeller && (
                     <Fragment>
                       <div className="suggestion">
-                        {!isWithdrawn &&
-                            isPending && (
+                        {!isWithdrawn && isPending && (
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicPending'}
                             defaultMessage={
@@ -704,8 +738,7 @@ class ListingsDetail extends Component {
                           />
                         )}
                         {/* consider the possibility of a withdrawn listing despite a valid offer */}
-                        {!isSold &&
-                            isWithdrawn && (
+                        {!isSold && isWithdrawn && (
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicWithdrawn'}
                             defaultMessage={
@@ -728,22 +761,19 @@ class ListingsDetail extends Component {
                   )}
                   {userIsBuyer && (
                     <div className="suggestion">
-                      {isPending &&
-                          currentOffer.status === 'created' && (
+                      {isPending && currentOffer.status === 'created' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerCreated'}
                           defaultMessage={`You've made an offer on this listing. Please wait for the seller to accept or reject your offer.`}
                         />
                       )}
-                      {isPending &&
-                          currentOffer.status === 'accepted' && (
+                      {isPending && currentOffer.status === 'accepted' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerAccepted'}
                           defaultMessage={`You've made an offer on this listing. View the offer to complete the sale.`}
                         />
                       )}
-                      {isPending &&
-                          currentOffer.status === 'disputed' && (
+                      {isPending && currentOffer.status === 'disputed' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerDisputed'}
                           defaultMessage={`You've made an offer on this listing. View the offer to check the status.`}
@@ -797,8 +827,7 @@ class ListingsDetail extends Component {
                       )}
                     </div>
                   )}
-                  {(userIsBuyer || userIsSeller) &&
-                    currentOffer && (
+                  {(userIsBuyer || userIsSeller) && currentOffer && (
                     <Link
                       to={`/purchases/${currentOffer.id}`}
                       ga-category="listing"
@@ -818,9 +847,7 @@ class ListingsDetail extends Component {
                       )}
                     </Link>
                   )}
-                  { userIsSeller &&
-                    !currentOffer &&
-                    isWithdrawn && (
+                  { userIsSeller && !currentOffer && isWithdrawn && (
                     <Link
                       to={`/listings/create`}
                       ga-category="listing"
