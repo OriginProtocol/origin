@@ -6,7 +6,7 @@ class SelectNumberField extends Component {
     super(props)
     this.state = {
       open: false,
-      quantity: 1
+      selectedNumber: 1
     }
 
     this.onChange = this.onChange.bind(this)
@@ -14,14 +14,14 @@ class SelectNumberField extends Component {
   }
 
   componentDidMount() {
-    // If a quantity is passed in, we must call the onChange callback
-    // to set the quantity in the parent form
+    // If a selectedNumber is passed in, we must call the onChange callback
+    // to set the selectedNumber in the parent form
     // Unfortunately, the setTimeout is needed to allow the parent
     // form to render and be ready to handle the onChange event
-    const { quantity } = this.state
-    if (quantity) {
+    const { selectedNumber } = this.state
+    if (selectedNumber) {
       setTimeout(() => {
-        this.props.onChange(quantity)
+        this.props.onChange(selectedNumber)
       })
     }
   }
@@ -30,7 +30,7 @@ class SelectNumberField extends Component {
     if (selectedNumber >= this.props.minNum && selectedNumber <= this.props.maxNum){
       this.setState(
         {
-          quantity: selectedNumber,
+          selectedNumber: selectedNumber,
           open: false
         },
         () => this.props.onChange(selectedNumber)
@@ -43,7 +43,7 @@ class SelectNumberField extends Component {
   }
 
   render() {
-    const { quantity, open } = this.state
+    const { selectedNumber, open } = this.state
     const { minNum, maxNum } = this.props
     const selectNumRange = [...Array(maxNum - minNum + 1).keys()].map(i => i + minNum)
 
@@ -62,7 +62,7 @@ class SelectNumberField extends Component {
           ga-category="top_nav"
           ga-label="connectivity"
         >
-        {quantity}
+        {selectedNumber}
           <img
             src="images/caret-grey.svg"
             className="caret ml-2 mb-1"
@@ -71,7 +71,6 @@ class SelectNumberField extends Component {
         </a>
         <div
           className={`dropdown-menu flex-column dropdown-menu-right${open ? ' d-flex' : ' d-none'}`}
-          aria-labelledby="quantitySelectDropdown"
         >
         {selectNumRange.map(selectNum => 
           <a
@@ -79,32 +78,10 @@ class SelectNumberField extends Component {
             className="number-to-select"
             onClick={() => this.onChange(selectNum)}
           >
-            {selectNum}
+            {selectedNumber === selectNum ? '✓ ' : ''}&nbsp;{selectNum}
           </a>
         )}
         </div>
-      {/*
-      <div className="quantity-field">
-        <label className="control-label" htmlFor="root_quantity">
-          {this.props.schema.title}
-          {this.props.required && <span className="required">*</span>}
-        </label>
-        <div className="row">
-          <div className="col-12">
-            <div className="quality-field-container">
-              <input
-                type="number"
-                id="root_quantity"
-                step="1"
-                className="form-control"
-                defaultValue={quantity}
-                onChange={this.onChange}
-                required={this.props.required}
-              />
-            </div>
-          </div>
-        </div>
-      </div>*/}
       </Dropdown>
     )
   }
