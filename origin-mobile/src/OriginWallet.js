@@ -97,6 +97,15 @@ class OriginWallet {
       }
     })
 
+    this.events = new EventEmitter()
+    this.onQRScanned = this.onQRScanned.bind(this)
+  }
+
+  getNotifyType() {
+    return EthNotificationTypes.APN
+  }
+
+  initNotifications() {
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function(device_token) {
@@ -133,13 +142,6 @@ class OriginWallet {
         */
       requestPermissions: true,
     })
-
-    this.events = new EventEmitter()
-    this.onQRScanned = this.onQRScanned.bind(this)
-  }
-
-  getNotifyType() {
-    return EthNotificationTypes.APN
   }
 
   initUrls() {

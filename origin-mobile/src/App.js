@@ -1,24 +1,20 @@
-import React, { Component } from 'react'
-import {Alert, StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native'
+import React, { Component, Fragment } from 'react'
+import { ActivityIndicator, Alert, Image, StyleSheet, View, YellowBox } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
-import originWallet, {Events} from './OriginWallet'
-import NavigationService from './NavigationService'
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
+import { connect, Provider } from 'react-redux'
 
+import NavigationService from './NavigationService'
+import originWallet, { Events } from './OriginWallet'
+import Store from './Store'
+
+import { storeActivation } from 'actions/App'
+import { setDevices } from 'actions/Devices'
 import { fetchProfile } from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
 import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
-import { setDevices } from 'actions/Devices'
 
-import { connect, Provider } from 'react-redux'
-
-import Store from './Store'
-
-import {
-  createBottomTabNavigator,
-  createStackNavigator,
-} from 'react-navigation'
-import { FlatList, Image, Modal, SectionList, StatusBar, TouchableHighlight, YellowBox } from 'react-native'
-
+import Onboarding from './components/onboarding'
 import ScanMarker from './components/scan-marker'
 
 import AlertsScreen from './screens/alerts'
@@ -27,7 +23,9 @@ import HomeScreen from './screens/home'
 import SettingsScreen from './screens/settings'
 import WalletScreen from './screens/wallet'
 
-const IMAGES_PATH = "../assets/images/"
+import { loadData } from './tools'
+
+const IMAGES_PATH = '../assets/images/'
 
 YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/18868
@@ -35,7 +33,6 @@ YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/17504
   'Module RCTImageLoader requires main queue setup'
 ])
-
 
 class ScanScreen extends Component {
   static navigationOptions = {
@@ -175,29 +172,25 @@ const styles = StyleSheet.create({
 
 // Origin Nav wrapper
 class OriginNavWrapper extends Component {
-
-  render() {
-    return <OriginNavigator ref={navigatorRef=>
-        NavigationService.setTopLevelNavigator(navigatorRef)
-    } />
-  }
-
   componentDidMount() {
+    originWallet.initNotifications()
     //register the service here
     originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
       this.props.newEvent(matcher, data)
       this.props.setActiveEvent(data)
-      NavigationService.navigate("Alerts")
+      NavigationService.navigate('Alerts')
     })
+
     originWallet.events.on(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
       this.props.setActiveEvent(data)
-      NavigationService.navigate("Alerts")
+      NavigationService.navigate('Alerts')
     })
+
     originWallet.events.on(Events.PROMPT_SIGN, (data, matcher) => {
       this.props.newEvent(matcher, data)
       this.props.setActiveEvent(data)
-      NavigationService.navigate("Alerts")
+      NavigationService.navigate('Alerts')
     })
 
     originWallet.events.on(Events.NEW_ACCOUNT, (data, matcher) => {
@@ -207,22 +200,22 @@ class OriginNavWrapper extends Component {
 
     originWallet.events.on(Events.LINKED, (data, matcher) => {
       this.props.processedEvent(matcher, {}, data)
-      NavigationService.navigate("Home")
+      NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.TRANSACTED, (data, matcher) => {
-      this.props.processedEvent(matcher, {status:'completed'}, data)
+      this.props.processedEvent(matcher, { status: 'completed' }, data)
       this.props.getBalance()
-      NavigationService.navigate("Home")
+      NavigationService.navigate(['Home'])
     })
 
     originWallet.events.on(Events.UNLINKED, (data, matcher) => {
-      this.props.updateEvent(matcher, {linked:false})
+      this.props.updateEvent(matcher, { linked: false })
     })
 
     originWallet.events.on(Events.REJECT, (data, matcher) => {
-      this.props.processedEvent(matcher, {status:'rejected'}, data)
-      NavigationService.navigate("Home")
+      this.props.processedEvent(matcher, { status: 'rejected' }, data)
+      NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.LINKS, (devices) => {
@@ -239,24 +232,93 @@ class OriginNavWrapper extends Component {
   componentWillUnmount() {
     originWallet.closeWallet()
   }
+
+  render() {
+    return <OriginNavigator ref={navigatorRef =>
+      NavigationService.setTopLevelNavigator(navigatorRef)
+    } />
+  }
+}
+
+class OriginWrapper extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { loading: true }
+  }
+
+  async componentDidMount() {
+    const activated = await loadData('activated')
+
+    this.props.storeActivation(activated)
+
+    this.setState({ loading: false })
+  }
+
+  render() {
+    const { app, storeActivation } = this.props
+    const { loading } = this.state
+    const { activated } = app
+
+    return loading ?
+      <View style={{ backgroundColor: '#293f55', flex: 1, justifyContent: 'space-around' }}>
+        <ActivityIndicator size="large" color="white" />
+      </View> :
+      <Fragment>
+        {!activated &&
+          <Onboarding
+            onCompletion={() => this.props.storeActivation(true)}
+            pages={[
+              {
+                image: <Image style={{ height: 180, width: 130 }} source={require(IMAGES_PATH + 'clipart-wallet.png')} />,
+                title: 'Store & Use Crypto',
+                subtitle: 'The Origin Mobile Wallet will allow you to store cryptocurrency to buy and sell on the Origin Marketplace.',
+              },
+              {
+                image: <Image style={{ height: 150, width: 90 }} source={require(IMAGES_PATH + 'clipart-messaging.png')} />,
+                title: 'Message Buyers & Sellers',
+                subtitle: 'Use the app to communicate with others on the Origin Marketplace in order to move your transactions.',
+              },
+              {
+                image: <Image style={{ height: 168, width: 140 }} source={require(IMAGES_PATH + 'carousel-notifications.png')} />,
+                title: 'Stay Up to Date',
+                subtitle: 'The Origin Mobile Wallet will notify you when there are transactions that require your attention.',
+              },
+            ]}
+          />
+        }
+        {activated &&
+          <OriginNavWrapper />
+        }
+      </Fragment>
+  }
+}
+
+const mapStateToProps = ({ app }) => {
+  return {
+    app,
+  }
 }
 
 const mapDispatchToProps = dispatch => ({
   fetchProfile: () => dispatch(fetchProfile()),
   getBalance: () => dispatch(getBalance()),
   newEvent: (matcher, event) => dispatch(newEvent(matcher, event)),
-  updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
   processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event)),
-  setActiveEvent:(event) => dispatch(setActiveEvent(event)),
-  setDevices:(devices) => dispatch(setDevices(devices))
+  setActiveEvent: event => dispatch(setActiveEvent(event)),
+  setDevices: devices => dispatch(setDevices(devices)),
+  storeActivation: bool => dispatch(storeActivation(bool)),
+  updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
 })
 
-const OriginNavApp = connect(undefined, mapDispatchToProps)(OriginNavWrapper)
+const OriginWallet = connect(mapStateToProps, mapDispatchToProps)(OriginWrapper)
 
 export default class OriginApp extends Component {
   render() {
-    return <Provider store={Store}>
-        <OriginNavApp />
+    return (
+      <Provider store={Store}>
+        <OriginWallet />
       </Provider>
+    )
   }
 }

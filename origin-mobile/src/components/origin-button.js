@@ -3,17 +3,17 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default class OriginButton extends Component {
   render() {
-    const { onPress, size, style, title, type } = this.props
+    const { onPress, size, style, textStyle, title, type } = this.props
 
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={onPress} style={{ width: size === 'large' ? '100%' : undefined }}>
         <View style={[ {
           backgroundColor: type === 'primary' ? '#1a82ff' : 'transparent',
           borderColor: type === 'primary' ? '#1a82ff' : '#ff0000',
         }, (styles[size] || styles.small), styles.button, style]}>
           <Text style={[ {
             color: type === 'primary' ? 'white' : '#ff0000',
-          }, styles.buttonText ]}>
+          }, styles.buttonText, textStyle ]}>
             {title}
           </Text>
         </View>
@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
   large: {
     borderRadius: 25,
     height: 50,
-    width: '100%',
   },
   small: {
     borderRadius: 15,
