@@ -582,8 +582,9 @@ class ListingsDetail extends Component {
                         />
                       </div>
                       <div className="text-right mr-3">
-                        <SelectNumberField 
-                          selectedValue=""
+                        <SelectNumberField
+                          minNum={1}
+                          maxNum={10}
                           onChange={() => {"do nating"}}
                         />
                       </div>

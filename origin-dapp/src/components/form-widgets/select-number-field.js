@@ -6,7 +6,7 @@ class SelectNumberField extends Component {
     super(props)
     this.state = {
       open: false,
-      quantity: props.formData && parseInt(props.formData) || 1
+      quantity: 1
     }
 
     this.onChange = this.onChange.bind(this)
@@ -26,35 +26,34 @@ class SelectNumberField extends Component {
     }
   }
 
-  onChange(event) {
-    const value = event.target.value
-    const isNan = value === '' || isNaN(value)
-    let valueNum = isNan ? value : parseInt(value)
-    valueNum = valueNum <= 0 ? '' : valueNum
-    this.setState(
-      {
-        quantity: valueNum
-      },
-      () => this.props.onChange(valueNum)
-    )
+  onChange(selectedNumber) {
+    if (selectedNumber >= this.props.minNum && selectedNumber <= this.props.maxNum){
+      this.setState(
+        {
+          quantity: selectedNumber,
+          open: false
+        },
+        () => this.props.onChange(selectedNumber)
+      )
+    }
   }
 
   onClick(e) {
-    console.log("ON CLICK")
     this.setState({ open: !this.state.open })
   }
 
   render() {
     const { quantity, open } = this.state
+    const { minNum, maxNum } = this.props
+    const selectNumRange = [...Array(maxNum - minNum + 1).keys()].map(i => i + minNum)
 
     return (
       <Dropdown
-        className="nav-item connectivity"
+        className="select-number"
         open={open}
         onClose={() => this.setState({ open: false })}
       >
         <a
-          className="nav-link active dropdown-toggle"
           id="connectivityDropdown"
           onClick={this.onClick}
           role="button"
@@ -63,13 +62,26 @@ class SelectNumberField extends Component {
           ga-category="top_nav"
           ga-label="connectivity"
         >
-        {"YOYOYOYOYO"}
+        {quantity}
+          <img
+            src="images/caret-grey.svg"
+            className="caret ml-2 mb-1"
+            alt="caret down"
+          />
         </a>
         <div
-          className={`dropdown-menu dropdown-menu-right${open ? ' show' : ''}`}
-          aria-labelledby="connectivityDropdown"
+          className={`dropdown-menu flex-column dropdown-menu-right${open ? ' d-flex' : ' d-none'}`}
+          aria-labelledby="quantitySelectDropdown"
         >
-        WHAT IS UP YO BROOO???
+        {selectNumRange.map(selectNum => 
+          <a
+            key={selectNum}
+            className="number-to-select"
+            onClick={() => this.onChange(selectNum)}
+          >
+            {selectNum}
+          </a>
+        )}
         </div>
       {/*
       <div className="quantity-field">

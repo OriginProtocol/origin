@@ -2223,6 +2223,22 @@ textarea:-moz-ui-invalid {
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 }
 
+.listing-detail .select-number img {
+  transform: rotate(180deg);
+}
+
+.listing-detail .select-number .dropdown-menu {
+  min-width: 6rem;
+  text-align: right;
+  background-color: var(--dark);
+  color: white;
+  padding: 0.5rem 1rem;
+}
+
+.select-number .dropdown-menu .number-to-select {
+  cursor: pointer;
+}
+
 .buy-box {
   color: white;
   font-weight: normal;
