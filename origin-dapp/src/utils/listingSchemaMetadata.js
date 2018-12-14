@@ -44,6 +44,7 @@ const listingSchemaMetadata = {
     announcements: [
       {
         schema: 'announcements-activities_1.0.0.json',
+        type: 'activities',
         translationName: {
           id: 'schema.activities',
           defaultMessage: 'Activities'
@@ -51,6 +52,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-artists_1.0.0.json',
+        type: 'artists',
         translationName: {
           id: 'schema.artists',
           defaultMessage: 'Artists'
@@ -58,6 +60,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-barter_1.0.0.json',
+        type: 'barter',
         translationName: {
           id: 'schema.barter',
           defaultMessage: 'Barter'
@@ -65,6 +68,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-childcare_1.0.0.json',
+        type: 'childcare',
         translationName: {
           id: 'schema.childcare',
           defaultMessage: 'Childcare'
@@ -72,6 +76,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-classes_1.0.0.json',
+        type: 'classes',
         translationName: {
           id: 'schema.classes',
           defaultMessage: 'Classes'
@@ -79,6 +84,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-freeStuff_1.0.0.json',
+        type: 'freeStuff',
         translationName: {
           id: 'schema.freeStuff',
           defaultMessage: 'Free Stuff'
@@ -86,6 +92,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-garageMovingSales_1.0.0.json',
+        type: 'garageMovingSales',
         translationName: {
           id: 'schema.garageMovingSales',
           defaultMessage: 'Garage and Moving Sales'
@@ -93,6 +100,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-general_1.0.0.json',
+        type: 'general',
         translationName: {
           id: 'schema.general',
           defaultMessage: 'General'
@@ -100,6 +108,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-groups_1.0.0.json',
+        type: 'groups',
         translationName: {
           id: 'schema.groups',
           defaultMessage: 'Groups'
@@ -107,6 +116,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-localNews_1.0.0.json',
+        type: 'localNews',
         translationName: {
           id: 'schema.localNews',
           defaultMessage: 'Local News'
@@ -114,6 +124,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-lostFound_1.0.0.json',
+        type: 'lostFound',
         translationName: {
           id: 'schema.lostFound',
           defaultMessage: 'Lost and Found'
@@ -121,6 +132,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-marketing_1.0.0.json',
+        type: 'marketing',
         translationName: {
           id: 'schema.marketing',
           defaultMessage: 'Marketing'
@@ -128,6 +140,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-musicians_1.0.0.json',
+        type: 'musicians',
         translationName: {
           id: 'schema.musicians',
           defaultMessage: 'Musicians'
@@ -135,6 +148,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-other_1.0.0.json',
+        type: 'other',
         translationName: {
           id: 'schema.other',
           defaultMessage: 'Other'
@@ -142,6 +156,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-personals_1.0.0.json',
+        type: 'personals',
         translationName: {
           id: 'schema.personals',
           defaultMessage: 'Personals'
@@ -149,6 +164,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-pets_1.0.0.json',
+        type: 'pets',
         translationName: {
           id: 'schema.pets',
           defaultMessage: 'Pets'
@@ -156,6 +172,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-politics_1.0.0.json',
+        type: 'politics',
         translationName: {
           id: 'schema.politics',
           defaultMessage: 'Politics'
@@ -163,6 +180,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-resumes_1.0.0.json',
+        type: 'resumes',
         translationName: {
           id: 'schema.resumes',
           defaultMessage: 'Resumes'
@@ -170,6 +188,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'announcements-volunteers_1.0.0.json',
+        type: 'volunteers',
         translationName: {
           id: 'schema.volunteers',
           defaultMessage: 'Volunteers'
@@ -179,6 +198,7 @@ const listingSchemaMetadata = {
     forRent: [
       {
         schema: 'forRent-appliances_1.0.0.json',
+        type: 'appliances',
         translationName: {
           id: 'schema.appliances',
           defaultMessage: 'Appliances'
@@ -186,6 +206,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-atvsUtvsSnowmobiles_1.0.0.json',
+        type: 'atvsUtvsSnowmobiles',
         translationName: {
           id: 'schema.atvsUtvsSnowmobiles',
           defaultMessage: 'Atvs, Utvs, Snowmobiles'
@@ -193,6 +214,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-babyKidStuff_1.0.0.json',
+        type: 'babyKidStuff',
         translationName: {
           id: 'schema.babyKidStuff',
           defaultMessage: 'Baby and Kid Stuff'
@@ -200,6 +222,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-bicycles_1.0.0.json',
+        type: 'bicycles',
         translationName: {
           id: 'schema.bicycles',
           defaultMessage: 'Bicycles'
@@ -207,6 +230,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-boats_1.0.0.json',
+        type: 'boats',
         translationName: {
           id: 'schema.boats',
           defaultMessage: 'Boats'
@@ -214,6 +238,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-carsTrucks_1.0.0.json',
+        type: 'carsTrucks',
         translationName: {
           id: 'schema.carsTrucks',
           defaultMessage: 'Cars and Trucks'
@@ -221,6 +246,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-cellPhones_1.0.0.json',
+        type: 'cellPhones',
         translationName: {
           id: 'schema.cellPhones',
           defaultMessage: 'Cell Phones'
@@ -228,6 +254,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-clothingAccessories_1.0.0.json',
+        type: 'clothingAccessories',
         translationName: {
           id: 'schema.clothingAccessories',
           defaultMessage: 'Clothing and Accessories'
@@ -235,6 +262,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-computers_1.0.0.json',
+        type: 'computers',
         translationName: {
           id: 'schema.computers',
           defaultMessage: 'Computers'
@@ -242,6 +270,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-electronics_1.0.0.json',
+        type: 'electronics',
         translationName: {
           id: 'schema.electronics',
           defaultMessage: 'Electronics'
@@ -249,13 +278,15 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-farmGarden_1.0.0.json',
+        type: 'farmGarden',
         translationName: {
-          id: 'schema.farmGarden_1',
+          id: 'schema.farmGarden',
           defaultMessage: 'Farm and Garden'
         }
       },
       {
         schema: 'forRent-furniture_1.0.0.json',
+        type: 'furniture',
         translationName: {
           id: 'schema.furniture',
           defaultMessage: 'Furniture'
@@ -263,6 +294,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-healthBeauty_1.0.0.json',
+        type: 'healthBeauty',
         translationName: {
           id: 'schema.healthBeauty',
           defaultMessage: 'Health and Beauty'
@@ -270,6 +302,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-heavyEquipment_1.0.0.json',
+        type: 'heavyEquipment',
         translationName: {
           id: 'schema.heavyEquipment',
           defaultMessage: 'Heavy Equipment'
@@ -277,6 +310,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-householdItems_1.0.0.json',
+        type: 'householdItems',
         translationName: {
           id: 'schema.householdItems',
           defaultMessage: 'Household Items'
@@ -284,6 +318,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-housing_1.0.0.json',
+        type: 'housing',
         translationName: {
           id: 'schema.housing',
           defaultMessage: 'Housing'
@@ -291,6 +326,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-jewelry_1.0.0.json',
+        type: 'jewelry',
         translationName: {
           id: 'schema.jewelry',
           defaultMessage: 'Jewelry'
@@ -298,6 +334,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-motorcyclesScooters_1.0.0.json',
+        type: 'motorcyclesScooters',
         translationName: {
           id: 'schema.motorcyclesScooters',
           defaultMessage: 'Motorcycles and Scooters'
@@ -305,6 +342,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-musicalInstruments_1.0.0.json',
+        type: 'musicalInstruments',
         translationName: {
           id: 'schema.musicalInstruments',
           defaultMessage: 'Musical Instruments'
@@ -312,6 +350,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-other_1.0.0.json',
+        type: 'other',
         translationName: {
           id: 'schema.other',
           defaultMessage: 'Other'
@@ -319,6 +358,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-parking_1.0.0.json',
+        type: 'parking',
         translationName: {
           id: 'schema.parking',
           defaultMessage: 'Parking'
@@ -326,6 +366,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-recreationalVehicles_1.0.0.json',
+        type: 'recreationalVehicles',
         translationName: {
           id: 'schema.recreationalVehicles',
           defaultMessage: 'Recreational Vehicles'
@@ -333,6 +374,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-sportingGoods_1.0.0.json',
+        type: 'sportingGoods',
         translationName: {
           id: 'schema.sportingGoods',
           defaultMessage: 'Sporting Goods'
@@ -340,6 +382,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-storage_1.0.0.json',
+        type: 'storage',
         translationName: {
           id: 'schema.storage',
           defaultMessage: 'Storage'
@@ -347,6 +390,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-tools_1.0.0.json',
+        type: 'tools',
         translationName: {
           id: 'schema.tools',
           defaultMessage: 'Tools'
@@ -354,6 +398,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-toysGames_1.0.0.json',
+        type: 'toysGames',
         translationName: {
           id: 'schema.toysGames',
           defaultMessage: 'Toys and Games'
@@ -361,6 +406,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-trailers_1.0.0.json',
+        type: 'trailers',
         translationName: {
           id: 'schema.trailers',
           defaultMessage: 'Trailers'
@@ -368,6 +414,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forRent-videoGaming_1.0.0.json',
+        type: 'videoGaming',
         translationName: {
           id: 'schema.videoGaming',
           defaultMessage: 'Video Gaming'
@@ -377,6 +424,7 @@ const listingSchemaMetadata = {
     forSale: [
       {
         schema: 'forSale-antiques_1.0.0.json',
+        type: 'antiques',
         translationName: {
           id: 'schema.antiques',
           defaultMessage: 'Antiques'
@@ -384,6 +432,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-appliances_1.0.0.json',
+        type: 'appliances',
         translationName: {
           id: 'schema.appliances',
           defaultMessage: 'Appliances'
@@ -391,6 +440,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-artsCrafts_1.0.0.json',
+        type: 'artsCrafts',
         translationName: {
           id: 'schema.artsCrafts',
           defaultMessage: 'Arts and Crafts'
@@ -398,6 +448,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-atvsUtvsSnowmobiles_1.0.0.json',
+        type: 'atvsUtvsSnowmobiles',
         translationName: {
           id: 'schema.atvsUtvsSnowmobiles',
           defaultMessage: 'Atvs, Utvs, Snowmobiles'
@@ -405,6 +456,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-autoParts_1.0.0.json',
+        type: 'autoParts',
         translationName: {
           id: 'schema.autoParts',
           defaultMessage: 'Auto Parts'
@@ -412,6 +464,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-autoWheelsTires_1.0.0.json',
+        type: 'autoWheelsTires',
         translationName: {
           id: 'schema.autoWheelsTires',
           defaultMessage: 'Auto Wheels and Tires'
@@ -419,6 +472,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-babyKidStuff_1.0.0.json',
+        type: 'babyKidStuff',
         translationName: {
           id: 'schema.babyKidStuff',
           defaultMessage: 'Baby and Kid Stuff'
@@ -426,6 +480,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-bicycleParts_1.0.0.json',
+        type: 'bicycleParts',
         translationName: {
           id: 'schema.bicycleParts',
           defaultMessage: 'Bicycle Parts'
@@ -433,6 +488,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-bicycles_1.0.0.json',
+        type: 'bicycles',
         translationName: {
           id: 'schema.bicycles',
           defaultMessage: 'Bicycles'
@@ -440,6 +496,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-boatPartsAccessories_1.0.0.json',
+        type: 'boatPartsAccessories',
         translationName: {
           id: 'schema.boatPartsAccessories',
           defaultMessage: 'Boat Parts and Accessories'
@@ -447,6 +504,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-boats_1.0.0.json',
+        type: 'boats',
         translationName: {
           id: 'schema.boats',
           defaultMessage: 'Boats'
@@ -454,6 +512,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-booksMagazines_1.0.0.json',
+        type: 'booksMagazines',
         translationName: {
           id: 'schema.booksMagazines',
           defaultMessage: 'Books and Magazines'
@@ -461,6 +520,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-businesses_1.0.0.json',
+        type: 'businesses',
         translationName: {
           id: 'schema.businesses',
           defaultMessage: 'Businesses'
@@ -468,6 +528,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-carsTrucks_1.0.0.json',
+        type: 'carsTrucks',
         translationName: {
           id: 'schema.carsTrucks',
           defaultMessage: 'Cars and Trucks'
@@ -475,6 +536,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-cdsDvdsVhs_1.0.0.json',
+        type: 'cdsDvdsVhs',
         translationName: {
           id: 'schema.cdsDvdsVhs',
           defaultMessage: 'CDs, DVDs, VHS'
@@ -482,6 +544,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-cellPhones_1.0.0.json',
+        type: 'cellPhones',
         translationName: {
           id: 'schema.cellPhones',
           defaultMessage: 'Cell Phones'
@@ -489,6 +552,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-clothingAccessories_1.0.0.json',
+        type: 'clothingAccessories',
         translationName: {
           id: 'schema.clothingAccessories',
           defaultMessage: 'Clothing and Accessories'
@@ -496,6 +560,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-collectibles_1.0.0.json',
+        type: 'collectibles',
         translationName: {
           id: 'schema.collectibles',
           defaultMessage: 'Collectibles'
@@ -503,6 +568,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-computerParts_1.0.0.json',
+        type: 'computerParts',
         translationName: {
           id: 'schema.computerParts',
           defaultMessage: 'Computer Parts'
@@ -510,6 +576,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-computers_1.0.0.json',
+        type: 'computers',
         translationName: {
           id: 'schema.computers',
           defaultMessage: 'Computers'
@@ -517,6 +584,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-electronics_1.0.0.json',
+        type: 'electronics',
         translationName: {
           id: 'schema.electronics',
           defaultMessage: 'Electronics'
@@ -524,6 +592,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-farmGarden_1.0.0.json',
+        type: 'farmGarden',
         translationName: {
           id: 'schema.farmGarden',
           defaultMessage: 'Farm and Garden'
@@ -531,6 +600,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-furniture_1.0.0.json',
+        type: 'furniture',
         translationName: {
           id: 'schema.furniture',
           defaultMessage: 'Furniture'
@@ -538,6 +608,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-healthBeauty_1.0.0.json',
+        type: 'healthBeauty',
         translationName: {
           id: 'schema.healthBeauty',
           defaultMessage: 'Health and Beauty'
@@ -545,6 +616,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-heavyEquipment_1.0.0.json',
+        type: 'heavyEquipment',
         translationName: {
           id: 'schema.heavyEquipment',
           defaultMessage: 'Heavy Equipment'
@@ -552,6 +624,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-householdItems_1.0.0.json',
+        type: 'householdItems',
         translationName: {
           id: 'schema.householdItems',
           defaultMessage: 'Household Items'
@@ -559,6 +632,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-jewelry_1.0.0.json',
+        type: 'jewelry',
         translationName: {
           id: 'schema.jewelry',
           defaultMessage: 'Jewelry'
@@ -566,6 +640,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-materials_1.0.0.json',
+        type: 'materials',
         translationName: {
           id: 'schema.materials',
           defaultMessage: 'Materials'
@@ -573,6 +648,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-motorcyclePartsAccessories_1.0.0.json',
+        type: 'motorcyclePartsAccessories',
         translationName: {
           id: 'schema.motorcyclePartsAccessories',
           defaultMessage: 'Motorcycle Parts and Accessories'
@@ -580,6 +656,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-motorcyclesScooters_1.0.0.json',
+        type: 'motorcyclesScooters',
         translationName: {
           id: 'schema.motorcyclesScooters',
           defaultMessage: 'Motorcycles and Scooters'
@@ -587,6 +664,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-musicalInstruments_1.0.0.json',
+        type: 'musicalInstruments',
         translationName: {
           id: 'schema.musicalInstruments',
           defaultMessage: 'Musical Instruments'
@@ -594,6 +672,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-other_1.0.0.json',
+        type: 'other',
         translationName: {
           id: 'schema.other',
           defaultMessage: 'Other'
@@ -601,6 +680,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-photoVideo_1.0.0.json',
+        type: 'photoVideo',
         translationName: {
           id: 'schema.photoVideo',
           defaultMessage: 'Photo and Video'
@@ -608,6 +688,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-realEstate_1.0.0.json',
+        type: 'realEstate',
         translationName: {
           id: 'schema.realEstate',
           defaultMessage: 'Real Estate'
@@ -615,6 +696,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-recreationalVehicles_1.0.0.json',
+        type: 'recreationalVehicles',
         translationName: {
           id: 'schema.recreationalVehicles',
           defaultMessage: 'Recreational Vehicles'
@@ -622,6 +704,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-sportingGoods_1.0.0.json',
+        type: 'sportingGoods',
         translationName: {
           id: 'schema.sportingGoods',
           defaultMessage: 'Sporting Goods'
@@ -629,6 +712,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-tickets_1.0.0.json',
+        type: 'tickets',
         translationName: {
           id: 'schema.tickets',
           defaultMessage: 'Tickets'
@@ -636,6 +720,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-tools_1.0.0.json',
+        type: 'tools',
         translationName: {
           id: 'schema.tools',
           defaultMessage: 'Tools'
@@ -643,6 +728,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-toysGames_1.0.0.json',
+        type: 'toysGames',
         translationName: {
           id: 'schema.toysGames',
           defaultMessage: 'Toys and Games'
@@ -650,6 +736,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-trailers_1.0.0.json',
+        type: 'trailers',
         translationName: {
           id: 'schema.trailers',
           defaultMessage: 'Trailers'
@@ -657,6 +744,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'forSale-videoGaming_1.0.0.json',
+        type: 'videoGaming',
         translationName: {
           id: 'schema.videoGaming',
           defaultMessage: 'Video Gaming'
@@ -666,6 +754,7 @@ const listingSchemaMetadata = {
     services: [
       {
         schema: 'services-counseling_1.0.0.json',
+        type: 'counseling',
         translationName: {
           id: 'schema.counseling',
           defaultMessage: 'Counseling'
@@ -673,6 +762,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'services-design_1.0.0.json',
+        type: 'design',
         translationName: {
           id: 'schema.design',
           defaultMessage: 'Design'
@@ -680,6 +770,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'services-dogWalking_1.0.0.json',
+        type: 'dogWalking',
         translationName: {
           id: 'schema.dogWalking',
           defaultMessage: 'Dog Walking'
@@ -687,6 +778,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'services-musicLessons_1.0.0.json',
+        type: 'musicLessons',
         translationName: {
           id: 'schema.musicLessons',
           defaultMessage: 'Music Lessons'
@@ -694,6 +786,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'services-other_1.0.0.json',
+        type: 'other',
         translationName: {
           id: 'schema.other',
           defaultMessage: 'Other'
@@ -701,6 +794,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'services-photography_1.0.0.json',
+        type: 'photography',
         translationName: {
           id: 'schema.photography',
           defaultMessage: 'Photography'
@@ -708,6 +802,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'services-salon_1.0.0.json',
+        type: 'salon',
         translationName: {
           id: 'schema.salon',
           defaultMessage: 'Salon'
@@ -715,6 +810,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'services-spa_1.0.0.json',
+        type: 'spa',
         translationName: {
           id: 'schema.spa',
           defaultMessage: 'Spa'
@@ -722,6 +818,7 @@ const listingSchemaMetadata = {
       },
       {
         schema: 'services-transportation_1.0.0.json',
+        type: 'transportation',
         translationName: {
           id: 'schema.transportation',
           defaultMessage: 'Transportation'
