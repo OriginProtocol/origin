@@ -62,10 +62,10 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 | PC | Opera with MetaMask | ✅ | Operational |
 | PC | Brave with MetaMask | ✅ | Operational |
 |  |  |  |
-| iOS | Trust Wallet | ✅  | Operational |
-| iOS | Coinbase Wallet  |  ✅  |  |
-| iOS | IMToken  |  ✅  |  |
-| iOS | Cipher  | ⛔️  | Acquired by Coinbase. Not in development. |
+| iOS | Trust Wallet | ✅ | Operational |
+| iOS | Coinbase Wallet | ✅ | Operational |
+| iOS | IMToken | ✅ | Operational |
+| iOS | Cipher | ⛔️ | Acquired by Coinbase. Not in development. |
 |   |  |  |
 | Android | Trust Wallet | 🚫 | [Dapp hang + app does not currently work with test nets](https://github.com/OriginProtocol/origin-dapp/issues/331#issuecomment-416364784) |
 | Android | Coinbase Wallet  |  ✅ |  Operational |
