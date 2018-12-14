@@ -1,16 +1,12 @@
 pragma solidity ^0.4.24;
 
-// A contract to map users ETH address to an IPFS hash of their profile.
 //
-// It is expected that off-chain systems pinning the IPFS content will honor
-// the delete action and unpin all hashes associated with a deleted profile.
+// A contract to map users ETH address to an IPFS hash of their profile.
 //
 
 contract ProfileRegistry {
-    // @notice Event emitted on profile change.
-    // @param account ETH address of the user.
-    // @param action Created/Updated=1 Deleted=2
-    event ProfileAction(address indexed account, uint action, bytes32 ipfsHash);
+    event ProfileUpdated(address indexed account, bytes32 ipfsHash);
+    event ProfileDeleted(address indexed account);
 
     mapping(address => bytes32) public profiles;
 
@@ -18,12 +14,12 @@ contract ProfileRegistry {
     // @param ipfsHash IPFS hash of the updated profile.
     function updateProfile(bytes32 ipfsHash) public {
         profiles[msg.sender] = ipfsHash;
-        emit ProfileAction(msg.sender, 1, ipfsHash);
+        emit ProfileUpdated(msg.sender, ipfsHash);
     }
 
     // @dev Delete a profile.
     function deleteProfile() public {
         delete profiles[msg.sender];
-        emit ProfileAction(msg.sender, 2, 0x0);
+        emit ProfileDeleted(msg.sender);
     }
 }
