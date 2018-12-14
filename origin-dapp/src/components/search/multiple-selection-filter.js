@@ -69,14 +69,6 @@ class MultipleSelectionFilter extends Component {
     this.setState(stateObject)
   }
 
-  // toCamelCase(string) {
-  //   return string
-  //     .replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-  //       return index === 0 ? letter.toLowerCase() : letter.toUpperCase()
-  //     })
-  //     .replace(/-+/g, '')
-  // }
-
   render() {
     let containerClass = 'd-flex flex-column'
     let itemClass = 'form-check'
@@ -97,7 +89,6 @@ class MultipleSelectionFilter extends Component {
       <div className={containerClass} key={this.props.title}>
         {this.multipleSelectionValues.map(multipleSelectionValue => (
           <div className={itemClass} key={multipleSelectionValue}>
-          {console.log("MULTIPLE SELECTION VALUE: ", multipleSelectionValue)}
             <input
               type="checkbox"
               className="form-check-input"
