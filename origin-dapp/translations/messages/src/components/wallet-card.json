@@ -34,9 +34,5 @@
   {
     "id": "wallet-card.transactionHistory",
     "defaultMessage": "Transaction History"
-  },
-  {
-    "id": "wallet-card.enabledContact",
-    "defaultMessage": "Contact"
   }
 ]
