@@ -63,13 +63,12 @@ Browsers with wallets for both desktop and mobile that you can use with the Orig
 | PC | Brave with MetaMask | ✅ | Operational |
 |  |  |  |
 | iOS | Trust Wallet | ✅  | Operational |
-| iOS | Coinbase Wallet  |  🚫  |  |
-| iOS | Coinbase Wallet Developer  |  🚫  |  [DApp hangs on Toshi client #327](https://github.com/OriginProtocol/origin-dapp/issues/327) |
+| iOS | Coinbase Wallet  |  ✅  |  |
+| iOS | IMToken  |  ✅  |  |
 | iOS | Cipher  | ⛔️  | Acquired by Coinbase. Not in development. |
 |   |  |  |
 | Android | Trust Wallet | 🚫 | [Dapp hang + app does not currently work with test nets](https://github.com/OriginProtocol/origin-dapp/issues/331#issuecomment-416364784) |
 | Android | Coinbase Wallet  |  ✅ |  Operational |
-| Android | Coinbase Wallet Developer  |  🚫 | Toshi Developer app does not currently work with test nets |
 | Android | Cipher  |  ⛔️  | Not in development |
 
 <sup>Tests for http://demo.originprotocol.com</sup>
