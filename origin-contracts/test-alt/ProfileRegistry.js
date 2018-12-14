@@ -19,6 +19,10 @@ describe('ProfileRegistry', async function() {
     const ipfsHash = '0x1234567890123456789012345678901234567890123456789012345678901234'
     await registry.methods.updateProfile(ipfsHash).send({ from: user })
 
+    // Check profile hash was set.
+    const profileHash = await registry.methods.profiles(user).call()
+    assert.equal(profileHash, ipfsHash)
+
     // Check last event emitted is an update.
     const events = await registry.getPastEvents(
       'ProfileAction',
@@ -28,15 +32,15 @@ describe('ProfileRegistry', async function() {
     assert.equal(updateEvent.returnValues.account, user)
     assert.equal(updateEvent.returnValues.action, 1)
     assert.equal(updateEvent.returnValues.ipfsHash, ipfsHash)
-
-    // Check profile hash was set.
-    const profileHash = await registry.methods.profiles(user).call()
-    assert.equal(profileHash, ipfsHash)
   })
 
   it('profile delete', async function() {
     const emptyHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
     await registry.methods.deleteProfile().send({ from: user })
+
+    // Check profile hash was deleted.
+    const profileHash = await registry.methods.profiles(user).call()
+    assert.equal(profileHash, emptyHash)
 
     // Check last event emitted is a delete.
     const events = await registry.getPastEvents(
@@ -47,10 +51,6 @@ describe('ProfileRegistry', async function() {
     assert.equal(deleteEvent.returnValues.account, user)
     assert.equal(deleteEvent.returnValues.action, 2)
     assert.equal(deleteEvent.returnValues.ipfsHash, emptyHash)
-
-    // Check profile hash was deleted.
-    const profileHash = await registry.methods.profiles(user).call()
-    assert.equal(profileHash, emptyHash)
   })
 
 })
