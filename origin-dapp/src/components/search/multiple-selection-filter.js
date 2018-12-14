@@ -7,6 +7,7 @@ import {
 } from 'components/search/constants'
 
 import schemaMessages from '../../schemaMessages/index'
+import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 
 class MultipleSelectionFilter extends Component {
   constructor(props) {
@@ -16,6 +17,9 @@ class MultipleSelectionFilter extends Component {
     }
 
     this.onHandleClick = this.onHandleClick.bind(this)
+
+    this.multipleSelectionValues = listingSchemaMetadata.listingSchemasByCategory[props.listingType.type]
+      .map(subCategory => subCategory.translationName.id)
   }
 
   componentWillUnmount() {
@@ -31,12 +35,6 @@ class MultipleSelectionFilter extends Component {
     const values = Object.keys(this.state.checkboxValue)
       //keep only selected values
       .filter(checkBoxKey => this.state.checkboxValue[checkBoxKey])
-
-    // do not translate anything from the schema
-    // .map(untranslatedValue => {
-    //   return schemaMessages[untranslatedValue]
-    //     .defaultMessage
-    // })
 
     if (values.length === 0) return []
     else
@@ -71,14 +69,6 @@ class MultipleSelectionFilter extends Component {
     this.setState(stateObject)
   }
 
-  toCamelCase(string) {
-    return string
-      .replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-        return index === 0 ? letter.toLowerCase() : letter.toUpperCase()
-      })
-      .replace(/-+/g, '')
-  }
-
   render() {
     let containerClass = 'd-flex flex-column'
     let itemClass = 'form-check'
@@ -87,17 +77,17 @@ class MultipleSelectionFilter extends Component {
      * into 2 columns when between 10 and 19 elements,
      * and into 3 columns when 20 or more.
      */
-    if (this.props.multipleSelectionValues.length > 19) {
+    if (this.multipleSelectionValues.length > 19) {
       containerClass = 'd-flex flex-wrap three-column-container'
       itemClass = 'form-check limit-checkbox-three-columns'
-    } else if (this.props.multipleSelectionValues.length > 9) {
+    } else if (this.multipleSelectionValues.length > 9) {
       containerClass = 'd-flex flex-wrap two-column-container'
       itemClass = 'form-check limit-checkbox-two-columns'
     }
 
     return (
       <div className={containerClass} key={this.props.title}>
-        {this.props.multipleSelectionValues.map(multipleSelectionValue => (
+        {this.multipleSelectionValues.map(multipleSelectionValue => (
           <div className={itemClass} key={multipleSelectionValue}>
             <input
               type="checkbox"

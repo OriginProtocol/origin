@@ -1,9 +1,5 @@
 [
   {
-    "id": "messages-send.sendMessages",
-    "defaultMessage": "send messages"
-  },
-  {
     "id": "user-card.headingBuyer",
     "defaultMessage": "About the Buyer"
   },
@@ -14,14 +10,6 @@
   {
     "id": "user-card.ethAddress",
     "defaultMessage": "ETH Address:"
-  },
-  {
-    "id": "user-card.enabledContactBuyer",
-    "defaultMessage": "Contact Buyer"
-  },
-  {
-    "id": "user-card.enabledContactSeller",
-    "defaultMessage": "Contact Seller"
   },
   {
     "id": "transaction-progress.viewProfile",

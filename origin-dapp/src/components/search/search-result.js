@@ -18,7 +18,7 @@ import {
   FILTER_OPERATOR_EQUALS
 } from 'components/search/constants'
 import { LISTINGS_PER_PAGE } from 'components/constants'
-import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
+import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -26,7 +26,6 @@ class SearchResult extends Component {
 
     this.state = {
       filterSchema: undefined,
-      listingSchema: undefined,
       listingType: undefined,
       listingIds: [],
       totalNumberOfListings: 0,
@@ -62,10 +61,6 @@ class SearchResult extends Component {
 
   handleChangePage(page) {
     this.setState({ page: page })
-  }
-
-  shouldFetchListingSchema() {
-    return this.props.listingType.type !== 'all'
   }
 
   componentDidMount() {
@@ -110,8 +105,7 @@ class SearchResult extends Component {
     ) {
       this.setState({
         listingType: this.props.listingType,
-        filterSchema: undefined,
-        listingSchema: undefined
+        filterSchema: undefined
       })
 
       const filterSchemaPath = `schemas/searchFilters/${
@@ -131,14 +125,6 @@ class SearchResult extends Component {
           console.error(`Error reading schema ${filterSchemaPath}: ${e}`)
           throw e
         })
-
-      if (this.shouldFetchListingSchema()) {
-        fetch(`schemas/${this.props.listingType.type}.json`)
-          .then(response => response.json())
-          .then(schemaJson => {
-            this.setState({ listingSchema: schemaJson })
-          })
-      }
     }
   }
 
@@ -259,15 +245,13 @@ class SearchResult extends Component {
           <div className="container d-flex flex-row">
             {this.state.filterSchema &&
             this.state.listingType &&
-            this.state.filterSchema.items.length > 0 &&
-            (this.state.listingSchema || !this.shouldFetchListingSchema()) ? (
+            this.state.filterSchema.items.length > 0 ? (
                 <ul className="navbar-nav collapse navbar-collapse">
                   {this.state.filterSchema.items.map((filterGroup, index) => {
                     return (
                       <FilterGroup
                         filterGroup={filterGroup}
                         key={index}
-                        listingSchema={this.state.listingSchema}
                         listingType={this.state.listingType}
                         maxPrice={this.state.maxPrice}
                         minPrice={this.state.minPrice}
