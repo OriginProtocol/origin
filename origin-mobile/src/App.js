@@ -300,7 +300,7 @@ class OriginWrapper extends Component {
           />
         }
         {activated &&
-          <OriginNavWrapper />
+          <OriginNavWrapper {...this.props} />
         }
       </Fragment>
   }
