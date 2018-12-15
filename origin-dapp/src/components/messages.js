@@ -121,18 +121,20 @@ class Messages extends Component {
       if (selectedConversationId && selectedConversationId.length) {
         return (
           <div className="mobile-messaging messages-wrapper">
-            <div className="back d-flex flex-row justify-content-start"
-              onClick={() => this.handleConversationSelect()}
-            >
+            <div className="back d-flex flex-row justify-content-start">
               <div className="align-self-start">
-                <i className="icon-arrow-left align-self-start mr-auto"></i>
+                <i className="icon-arrow-left align-self-start mr-auto" onClick={() => this.handleConversationSelect()}></i>
               </div>
               <div className="align-self-center nav-avatar ml-auto">
                 <Link to={`/users/${counterpartyAddress}`}>
                   <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
                 </Link>
               </div>
-              <div className="counterparty text-truncate mr-auto">{counterpartyName}</div>
+              <div className="counterparty text-truncate mr-auto">
+                <Link to={`/users/${counterpartyAddress}`}>
+                  {counterpartyName}
+                </Link>
+              </div>
             </div>
             <div className="conversation-col d-flex flex-column">
               <Conversation
