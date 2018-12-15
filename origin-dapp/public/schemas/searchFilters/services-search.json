@@ -28,7 +28,6 @@
       "items": [
         {
           "type": "multipleSelectionFilter",
-          "listingPropertyName": "properties.category.enum",
           "searchParameterName": "subCategory",
           "multipleSelection": true
         }

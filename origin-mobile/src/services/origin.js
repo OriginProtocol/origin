@@ -11,7 +11,8 @@ import {
   IPFS_GATEWAY_PORT,
   IPFS_GATEWAY_PROTOCOL,
   MESSAGE_OPEN_URL,
-  DEFAULT_API_SERVER_DOMAIN
+  DEFAULT_API_SERVER_DOMAIN,
+  CB_BW_CODE
 } from 'react-native-dotenv'
 
 const API_SERVER = API_SERVER_PORT ? API_SERVER_DOMAIN + ":" + API_SERVER_PORT : API_SERVER_DOMAIN
@@ -25,6 +26,7 @@ const walletLinkerUrl = null
 const messageOpenUrl = MESSAGE_OPEN_URL
 const localApi = API_SERVER_DOMAIN == 'localhost'
 const defaultLocalRemoteHost = DEFAULT_API_SERVER_DOMAIN
+const getEthCode = CB_BW_CODE
 
 // create web3 with empty provider for now
 const web3 = new Web3()
@@ -51,4 +53,4 @@ const origin = new Origin(config)
 global.web3 = origin.contractService.web3
 global.originTest = origin
 export default origin
-export {apiUrl, defaultProviderUrl, messageOpenUrl, localApi, defaultLocalRemoteHost}
+export {apiUrl, defaultProviderUrl, messageOpenUrl, localApi, defaultLocalRemoteHost, getEthCode}
