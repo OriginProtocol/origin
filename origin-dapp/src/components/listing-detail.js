@@ -490,7 +490,7 @@ class ListingsDetail extends Component {
               */}
             </div>
             <div className="col-12 col-md-4">
-              {isAvailable && ((!!price && !!parseFloat(price)) || isFractional) && (
+              {isAvailable && ((!!price && !!parseFloat(price)) || (isFractional && userIsSeller)) && (
                 <div className="buy-box placehold">
                   {!isFractional &&
                     <div className="price text-nowrap">
