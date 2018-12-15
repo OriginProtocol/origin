@@ -356,7 +356,7 @@ class Conversation extends Component {
       canDeliverMessage
     const offerEvents = getOfferEvents(purchase)
     const combinedMessages = [...offerEvents, ...messages]
-    const textAreaSize = smallScreenOrDevice ? '8' : '4'
+    const textAreaSize = smallScreenOrDevice ? '2' : '4'
 
     return (
       <Fragment>
