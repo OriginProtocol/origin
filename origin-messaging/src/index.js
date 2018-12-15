@@ -2,6 +2,8 @@
 
 import '@babel/polyfill'
 import OrbitDB from 'orbit-db'
+import express from 'express'
+import { RateLimiterMemory } from 'rate-limiter-flexible'
 
 const Log = require('ipfs-log')
 const IPFSApi = require('ipfs-api')
@@ -161,6 +163,39 @@ async function _onPeerConnected(address, peer) {
   }
 }
 
+// supply an endpoint for querying global registry
+const initRESTApp = db => {
+  const app = express()
+  const port = 6647
+  // limit request to one per minute
+  const rateLimiterOptions = {
+    points: 1,
+    duration: 60,
+  }
+  const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
+
+  app.all((req, res, next) => {
+    rateLimiter.consume(req.connection.remoteAddress)
+      .then(() => {
+        next()
+      })
+      .catch(() => {
+        res.status(429).send('<h1>Too Many Requests</h1>')
+      })
+  })
+
+  app.get('/', async (req, res) => {
+    const kv = db.all()
+    const addresses = Object.keys(kv)
+
+    res.send(addresses)
+  })
+
+  app.listen(port, () => {
+    logger.debug(`REST endpoint listening on port ${port}`)
+  })
+}
+
 const startOrbitDbServer = async (ipfs) => {
   // Remap the peer connected to ours which will wait before exchanging heads
   // with the same peer
@@ -185,7 +220,6 @@ const startOrbitDbServer = async (ipfs) => {
     config.GLOBAL_KEYS, { write: ['*'] }
   )
   rebroadcastOnReplicate(orbitGlobal, globalRegistry)
-
   orbitGlobal.keystore.registerSignVerify(
     config.CONV_INIT_PREFIX,
     undefined,
@@ -203,6 +237,8 @@ const startOrbitDbServer = async (ipfs) => {
 
   globalRegistry.events.on('ready', () => {
     logger.info(`Ready...`)
+
+    initRESTApp(globalRegistry)
   })
 
   // testing it's best to drop this for now
