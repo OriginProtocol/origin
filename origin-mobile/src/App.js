@@ -20,6 +20,7 @@ import ScanMarker from './components/scan-marker'
 import AlertsScreen from './screens/alerts'
 import DevicesScreen from './screens/devices'
 import HomeScreen from './screens/home'
+import MessagingScreen from './screens/messaging'
 import SettingsScreen from './screens/settings'
 import WalletScreen from './screens/wallet'
 
@@ -78,6 +79,12 @@ const HomeStack = createStackNavigator({
   navigationOptions,
 })
 
+const MessagingStack = createStackNavigator({
+  Messaging: MessagingScreen,
+}, {
+  navigationOptions,
+})
+
 const ScanStack = createStackNavigator({
   Scan: ScanScreen,
 }, {
@@ -96,11 +103,12 @@ const SettingsStack = createStackNavigator({
 const OriginNavigator = createBottomTabNavigator({
   Alerts: AlertsStack,
   Home: HomeStack,
+  Messaging: MessagingStack,
   Scan: ScanStack,
   Settings: SettingsStack,
 }, {
   initialRouteName: 'Home',
-  order: ['Home', 'Alerts', 'Scan', 'Settings'],
+  order: ['Home', 'Messaging', 'Alerts', 'Scan', 'Settings'],
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
@@ -114,6 +122,10 @@ const OriginNavigator = createBottomTabNavigator({
         return focused ?
           <Image source={require(IMAGES_PATH + 'home-active.png')} /> :
           <Image source={require(IMAGES_PATH + 'home-inactive.png')} />
+      } else if (routeName === 'Messaging') {
+        return focused ?
+          <Image source={require(IMAGES_PATH + 'scan-active.png')} /> :
+          <Image source={require(IMAGES_PATH + 'scan-inactive.png')} />
       } else if (routeName === 'Scan') {
         return focused ?
           <Image source={require(IMAGES_PATH + 'scan-active.png')} /> :

@@ -62,13 +62,17 @@ const styles = {
   },
   title: {
     color: 'white',
+    fontFamily: 'Lato',
     fontSize: 24,
+    fontWeight: '300',
     paddingBottom: 15,
     textAlign: 'center',
   },
   subtitle: {
     color: 'white',
+    fontFamily: 'Lato',
     fontSize: 18,
+    fontWeight: '300',
     textAlign: 'center',
   },
 }
