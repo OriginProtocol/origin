@@ -19,11 +19,7 @@ describe('ProfileRegistry', async function() {
     const ipfsHash = '0x1234567890123456789012345678901234567890123456789012345678901234'
     await registry.methods.updateProfile(ipfsHash).send({ from: user })
 
-    // Check profile hash was set.
-    const profileHash = await registry.methods.profiles(user).call()
-    assert.equal(profileHash, ipfsHash)
-
-    // Check last event emitted is an update.
+    // Check an update event was emitted
     const events = await registry.getPastEvents(
       'ProfileUpdated',
       { filter: { user } },
@@ -36,12 +32,7 @@ describe('ProfileRegistry', async function() {
   it('profile delete', async function() {
     await registry.methods.deleteProfile().send({ from: user })
 
-    // Check profile hash was deleted.
-    const profileHash = await registry.methods.profiles(user).call()
-    const emptyHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
-    assert.equal(profileHash, emptyHash)
-
-    // Check last event emitted is a delete.
+    // Check a delete event was emitted.
     const events = await registry.getPastEvents(
       'ProfileDeleted',
       { filter: { user } },
