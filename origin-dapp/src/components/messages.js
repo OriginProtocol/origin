@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
+import queryString from 'query-string'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
@@ -98,7 +100,7 @@ class Messages extends Component {
   }
 
   render() {
-    const { conversations, messages, users, wallet } = this.props
+    const { conversations, location, messages, users, wallet } = this.props
     const { selectedConversationId, smallScreenOrDevice } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
@@ -116,6 +118,8 @@ class Messages extends Component {
     const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
     const counterpartyProfile = counterparty && counterparty.profile
     const counterpartyName = abbreviateName(counterparty) || truncateAddress(formattedAddress(counterpartyAddress))
+    const query = queryString.parse(location.search)
+    const includeNav = !query['no-nav']
 
     if (smallScreenOrDevice) {
       if (selectedConversationId && selectedConversationId.length) {
@@ -126,14 +130,22 @@ class Messages extends Component {
                 <i className="icon-arrow-left align-self-start mr-auto" onClick={() => this.handleConversationSelect()}></i>
               </div>
               <div className="align-self-center nav-avatar ml-auto">
-                <Link to={`/users/${counterpartyAddress}`}>
+                {includeNav && (
+                  <Link to={`/users/${counterpartyAddress}`}>
+                    <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
+                  </Link>
+                )}
+                {!includeNav && (
                   <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
-                </Link>
+                )}
               </div>
               <div className="counterparty text-truncate mr-auto">
-                <Link to={`/users/${counterpartyAddress}`}>
-                  {counterpartyName}
-                </Link>
+                {includeNav && (
+                  <Link to={includeNav ? `/users/${counterpartyAddress}` : '#'}>
+                    {counterpartyName}
+                  </Link>
+                )}
+                {!includeNav && counterpartyName}
               </div>
             </div>
             <div className="conversation-col d-flex flex-column">
@@ -233,7 +245,9 @@ const mapDispatchToProps = dispatch => ({
   showMainNav: (showNav) => dispatch(showMainNav(showNav)),
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Messages)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Messages)
+)
