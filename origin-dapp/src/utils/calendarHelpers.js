@@ -353,8 +353,10 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
         !moment(date).isBefore(moment().startOf('day'))
       ) {
 
-        event.isAvailable = event.isAvailable ? !isDateBooked(date) : false
-        eventsInSlot.push(event)
+        const eventClone = JSON.parse(JSON.stringify(event))
+
+        eventClone.isAvailable = eventClone.isAvailable ? !isDateBooked(date) : false
+        eventsInSlot.push(eventClone)
       }
     }
   }
