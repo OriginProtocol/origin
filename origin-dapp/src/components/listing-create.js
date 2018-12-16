@@ -166,6 +166,10 @@ class ListingCreate extends Component {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, { translate: false })
+        if (listing.isMultiUnit) {
+          listing.boostLimit = listing.totalBoostValue
+          delete listing.totalBoostValue
+        }
 
         this.ensureUserIsSeller(listing.seller)
         this.setState({
@@ -1362,7 +1366,7 @@ class ListingCreate extends Component {
                       </div>
                     </div>
                   }
-                  {isMultiUnitListing &&
+                  {isMultiUnitListing && !isEditMode &&
                     <div className="row">
                       <div className="col-md-3">
                         <p className="label">
