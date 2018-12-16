@@ -60,27 +60,19 @@ export default class Marketplace {
   async getPurchases(account) {
     const listings = await this.getListings({
       purchasesFor: account,
+      loadOffers: true,
       withBlockInfo: true
     })
 
-    const offerArrays = await Promise.all(
-      listings.map(async purchase => {
-        return await this.getOffers(purchase.id)
+    return listings
+      .map(listing => listing.offers)
+      .reduce((offers, offerArr) => [...offers, ...offerArr], [])
+      .map(offer => {
+        return {
+          offer,
+          listing: listings.find(listing => listing.id === offer.listingId)
+        }
       })
-    )
-
-    const offers =
-      offerArrays &&
-      offerArrays.length &&
-      offerArrays.reduce((offers = [], offerArr) => offers = [...offers, ...offerArr]) ||
-      []
-
-    return offers.map(offer => {
-      return {
-        offer,
-        listing: listings.find(listing => listing.id === offer.listingId)
-      }
-    })
   }
 
   /**
@@ -285,21 +277,21 @@ export default class Marketplace {
       // Validate that the offer commission is what we expect. If the amount
       // of commission for the listing isn't sufficient for this offer, we
       // require that the offer have whatever commission is available to it.
-      if (commissionPerUnit !== null && commissionPerUnit.isGreaterThan(0)) {
-        const commissionUsed = BigNumber(commissionPerUnit).times(unitsSoldBeforeOffer)
-        const remainingCommission = BigNumber.max(
-          commission.minus(commissionUsed),
-          BigNumber(0)
-        )
-        const expectedCommission = BigNumber.min(
-          remainingCommission,
-          commissionPerUnit.times(offer.unitsPurchased)
-        )
-        const offerCommission = offer.commission && BigNumber(offer.commission.amount)
-        if (!offerCommission || !offerCommission.isEqualTo(expectedCommission)) {
-          return
-        }
-      }
+      // if (commissionPerUnit !== null && commissionPerUnit.isGreaterThan(0)) {
+      //   const commissionUsed = BigNumber(commissionPerUnit).times(unitsSoldBeforeOffer)
+      //   const remainingCommission = BigNumber.max(
+      //     commission.minus(commissionUsed),
+      //     BigNumber(0)
+      //   )
+      //   const expectedCommission = BigNumber.min(
+      //     remainingCommission,
+      //     commissionPerUnit.times(offer.unitsPurchased)
+      //   )
+      //   const offerCommission = offer.commission && BigNumber(offer.commission.amount)
+      //   if (!offerCommission || !offerCommission.isEqualTo(expectedCommission)) {
+      //     return
+      //   }
+      // }
 
       // There is no special handling of disputes here, because disputes should
       // hopefully be rare for the time being.

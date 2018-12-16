@@ -86,6 +86,7 @@ class ListingsDetail extends Component {
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
     this.setFeaturedImage = this.setFeaturedImage.bind(this)
+    this.handleQuantityUpdate = this.handleQuantityUpdate.bind(this)
   }
 
   async componentWillMount() {
@@ -118,7 +119,9 @@ class ListingsDetail extends Component {
       listingType,
       onboardingCompleted,
       price,
-      purchases
+      purchases,
+      quantity,
+      boostRemaining
     } = this.state
 
     // onboard if no identity, purchases, and not already completed
@@ -151,9 +154,11 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.METAMASK })
 
     const slots = slotsToReserve || this.state.slotsToReserve
-    const listingPrice = isFractional ?
-        slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
-        price
+    let listingPrice = price
+    if (isFractional)
+      listingPrice = slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString()
+    else if (isMultiUnit)
+      listingPrice = (price * quantity).toString()
 
     try {
       const offerData = {
@@ -173,7 +178,14 @@ class ListingsDetail extends Component {
       }
 
       if (isFractional) {
+        //TODO: does commission change according to amount of slots bought?
         offerData.slots = prepareSlotsToSave(slots)
+      } else if (isMultiUnit) {
+        offerData.unitsPurchased = quantity
+        /* If listing has enough boost remaining, take commission for each unit purchased.
+         * In the case listing has ran out of boost, take up the remaining boost.
+         */
+        offerData.commission.amount = Math.min(boostValue * quantity, boostRemaining).toString()
       } else {
         offerData.unitsPurchased = 1
       }
@@ -195,6 +207,12 @@ class ListingsDetail extends Component {
       console.error(error)
       this.setState({ step: this.STEP.ERROR })
     }
+  }
+
+  handleQuantityUpdate(quantity) {
+    this.setState({
+      quantity: quantity
+    })
   }
 
   handleSkipOnboarding(e) {
@@ -311,7 +329,8 @@ class ListingsDetail extends Component {
       unitsTotal,
       unitsRemaining,
       fractionalTimeIncrement,
-      featuredImageIdx
+      featuredImageIdx,
+      quantity
     } = this.state
     const currentOffer = offers.find(o => {
       const availability = offerStatusToListingAvailability(o.status)
@@ -338,7 +357,6 @@ class ListingsDetail extends Component {
     const showFeaturedBadge = display === 'featured' && isAvailable
     const userIsBuyer = currentOffer && formattedAddress(wallet.address) === formattedAddress(currentOffer.buyer)
     const userIsSeller = formattedAddress(wallet.address) === formattedAddress(seller)
-    const unitsToPurchase = 2
 
     return (
       <div className="listing-detail">
@@ -584,8 +602,8 @@ class ListingsDetail extends Component {
                       <div className="text-right mr-3">
                         <SelectNumberField
                           minNum={1}
-                          maxNum={10}
-                          onChange={() => {"do nating"}}
+                          maxNum={Math.min(unitsRemaining, 10)}
+                          onChange={(quantity) => this.handleQuantityUpdate(quantity)}
                         />
                       </div>
                     </div>
@@ -597,7 +615,7 @@ class ListingsDetail extends Component {
                         />
                       </div>
                       <div className="text-right mr-3">
-                        {Number(price * unitsToPurchase).toLocaleString(undefined, {
+                        {Number(price * quantity).toLocaleString(undefined, {
                           maximumFractionDigits: 5,
                           minimumFractionDigits: 5
                         })}&nbsp;ETH

@@ -400,9 +400,9 @@ class V00_MarkeplaceAdapter {
         const listingId = Number(e.returnValues.listingID)
 
         if (opts.withBlockInfo) {
-          const existingId = listingIds.find(obj => obj.id === listingId)
+          const idExists = listingIds.some(obj => obj.listingIndex === listingId)
 
-          if (!existingId) {
+          if (!idExists) {
             const { blockNumber, logIndex } = e
             listingIds.push({
               listingIndex: listingId,

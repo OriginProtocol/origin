@@ -185,7 +185,7 @@ export const transformPurchasesOrSales = async purchasesOrSales => {
     transformedListing.category = translateListingCategory(transformedListing.category)
     return {
       offer,
-      listing: originToDAppListing(listing, true)
+      listing: transformedListing
     }
   })
 
