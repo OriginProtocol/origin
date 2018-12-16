@@ -4,6 +4,7 @@ import '@babel/polyfill'
 import OrbitDB from 'orbit-db'
 import express from 'express'
 import { RateLimiterMemory } from 'rate-limiter-flexible'
+import Web3 from 'web3'
 
 const Log = require('ipfs-log')
 const IPFSApi = require('ipfs-api')
@@ -185,10 +186,36 @@ const initRESTApp = db => {
   })
 
   app.get('/', async (req, res) => {
-    const kv = db.all()
-    const addresses = Object.keys(kv)
+    const markup = '<h1>Origin Messaging</h1>' +
+                 '<h2><a href="https://medium.com/originprotocol/introducing-origin-messaging-decentralized-secure-and-auditable-13c16fe0f13e">Learn More</a></h2>'
 
-    res.send(addresses)
+    res.send(markup)
+  })
+
+  app.get('/accounts', (req, res) => {
+    const kv = db.all()
+
+    res.send({ count: Object.keys(kv).length })
+  })
+
+  app.get('/accounts/:address', (req, res) => {
+    let { address } = req.params
+
+    if (!Web3.utils.isAddress(address)) {
+      res.statusMessage = 'Address is not a valid Ethereum address'
+
+      return res.status(400).end()
+    }
+
+    address = Web3.utils.toChecksumAddress(address)
+
+    const kv = db.all()
+
+    if (!kv.hasOwnProperty(address)) {
+      return res.status(204).end()
+    }
+
+    res.status(200).send(kv[address])
   })
 
   app.listen(port, () => {
