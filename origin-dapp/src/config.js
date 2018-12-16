@@ -28,7 +28,7 @@ export const baseConfig = {
     paleGreySeven: '#eaeef1',
     paleGreyTwoDarker: '#cfd8dd',
     paleGreyEight: '#f1f6f9',
-    dusk: '#455d75',
+    dusk: '#455d75', // Navbar colour
     lightDusk: '#889fb7',
     steel: '#6f8294',
     greenBlue: '#26d198',

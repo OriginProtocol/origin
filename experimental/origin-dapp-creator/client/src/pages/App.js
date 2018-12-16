@@ -62,6 +62,8 @@ require('react-styl')(`
     margin-bottom: 0.5rem
   .mb-3
     margin-bottom: 1rem
+  .ml-1
+    margin-left: 0.25rem
   .ml-2
     margin-left: 0.5rem
   .ml-3

@@ -7,10 +7,8 @@ import { fetchConfig } from 'actions/Config'
 class Customize extends Component {
 
   componentDidMount() {
-    const configUrlMatch = window.location.search.match(/configUrl=([^#]*)/)
+    const configUrlMatch = window.location.search.match(/config=([^#]*)/)
     const configUrl = configUrlMatch ? decodeURIComponent(configUrlMatch[1]) : false
-
-    console.log(`Configuring DApp based on file: ${configUrl}`)
 
     this.props.fetchConfig(configUrl)
       .then(() => {
@@ -20,17 +18,15 @@ class Customize extends Component {
             throw "url() not allowed in DApp custom CSS"
           }
 
-          document.documentElement.style.setProperty(`--${camelToDash(cssVarName)}`, cssVarValue);
+          document.documentElement.style.setProperty(
+            `--${camelToDash(cssVarName)}`,
+            cssVarValue
+          )
         }
 
         // Page title
-        if (this.props.config.name) {
-          document.title = this.props.config.name
-        }
-
-        // Page about
-        if (this.props.config.about) {
-          document.querySelector('.light-footer .description>p').innerText = this.props.config.about
+        if (this.props.config.title) {
+          document.title = this.props.config.title
         }
       })
   }

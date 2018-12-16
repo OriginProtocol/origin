@@ -35,6 +35,7 @@
     "react-web3": "^1.2.0",
     "redux": "^4.0.1",
     "rework": "^1.0.1",
+    "superagent": "^4.0.0",
     "web3": "^1.0.0-beta.37",
     "webpack": "^4.27.0"
   },

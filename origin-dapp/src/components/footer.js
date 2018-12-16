@@ -68,12 +68,14 @@ class Footer extends Component {
                 <div className="vl" />
                 <div className="description">
                   <p>
-                    <FormattedMessage
-                      id={'footer.description'}
-                      defaultMessage={
-                        'The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS.'
-                      }
-                    />
+                    {this.state.about ? ( this.state.about ) : (
+                      <FormattedMessage
+                        id={'footer.description'}
+                        defaultMessage={
+                          'The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS.'
+                        }
+                      />
+                    )}
                   </p>
                   <p>&copy; {new Date().getFullYear()} Origin Protocol, Inc.</p>
                 </div>
@@ -190,9 +192,10 @@ class Footer extends Component {
 }
 
 const mapStateToProps = state => ({
+  about: state.config.about,
   selectedLanguageCode: state.app.translations.selectedLanguageCode,
   selectedLanguageFull: state.app.translations.selectedLanguageFull,
-  availableLanguages: state.app.translations.availableLanguages
+  availableLanguages: state.app.translations.availableLanguages,
 })
 
 export default connect(mapStateToProps)(Footer)

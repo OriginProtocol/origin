@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Intent } from '@blueprintjs/core'
-import request from 'request'
+import superagent from 'superagent'
 
 import AboutField from './fields/AboutField'
 import TitleField from './fields/TitleField'
@@ -17,14 +17,13 @@ class Create extends Component {
   constructor(props, context) {
     super(props)
 
-    this.state = {
-      config: baseConfig
-    }
+    this.state = baseConfig
 
     this.web3Context = context.web3
 
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleColorChange = this.handleColorChange.bind(this)
+    this.handlePreview = this.handlePreview.bind(this)
     this.handlePublish = this.handlePublish.bind(this)
   }
 
@@ -37,7 +36,7 @@ class Create extends Component {
   handleColorChange (name, color) {
     this.setState({
       'cssVars': {
-        ...this.state.config.cssVars,
+        ...this.state.cssVars,
         [name]: color.hex
       }
     })
@@ -46,23 +45,30 @@ class Create extends Component {
   async handlePublish () {
     // Sign configuration using web3
     web3.personal.sign(
-      JSON.stringify(this.state.config),
+      JSON.stringify(this.state),
       web3.eth.accounts[0],
       (error, signature) => {
         if (error) {
           console.log('Signing failed: ', error)
         } else {
           // Send signed configuration to server
-          request.post(`${process.env.API_URL}/config`, {
-            json: {
-              config: this.state.config,
+          superagent.post(`${process.env.API_URL}/config`)
+            .send({
+              config: this.state,
               signature: signature,
               address: web3.eth.accounts[0]
-            }
-          })
+            })
         }
       }
     )
+  }
+
+  async handlePreview () {
+    const response = await superagent.post(`${process.env.API_URL}/config/preview`)
+      .send(this.state)
+    const ipfsHash = response.body[0].hash
+    const ipfsPath = `${process.env.IPFS_GATEWAY_URL}/ipfs/${ipfsHash}`
+    window.open(`${process.env.DAPP_URL}?config=${ipfsPath}`, '_blank')
   }
 
   render () {
@@ -72,25 +78,25 @@ class Create extends Component {
 
         <h4>Subdomain</h4>
 
-        <SubdomainField value={this.state.config.subdomain}
+        <SubdomainField value={this.state.subdomain}
           onChange={this.handleInputChange}>
         </SubdomainField>
 
         <h4>Title & Description</h4>
 
-        <TitleField value={this.state.config.title}
+        <TitleField value={this.state.title}
           onChange={this.handleInputChange}>
         </TitleField>
-        <AboutField value={this.state.config.about}
+        <AboutField value={this.state.about}
           onChange={this.handleInputChange}>
         </AboutField>
 
         <h4>Logos and Icons</h4>
 
-        <LogoUrlField value={this.state.config.logoUrl}
+        <LogoUrlField value={this.state.logoUrl}
           onChange={this.handleInputChange}>
         </LogoUrlField>
-        <IconUrlField value={this.state.config.iconUrl}
+        <IconUrlField value={this.state.iconUrl}
           onChange={this.handleInputChange}>
         </IconUrlField>
 
@@ -98,25 +104,31 @@ class Create extends Component {
 
         <ColorPicker label="Navbar Background"
           name="dusk"
-          value={this.state.config.cssVars.dusk}
+          value={this.state.cssVars.dusk}
           onChange={this.handleColorChange}>
         </ColorPicker>
         <ColorPicker label="Searchbar Background"
           name="paleGrey"
-          value={this.state.config.cssVars.paleGrey}
+          value={this.state.cssVars.paleGrey}
           onChange={this.handleColorChange}>
         </ColorPicker>
         <ColorPicker label="Featured Tag"
           name="goldenRod"
-          value={this.state.config.cssVars.goldenRod}
+          value={this.state.cssVars.goldenRod}
           onChange={this.handleColorChange}>
         </ColorPicker>
 
         <Button className="mt-3"
-          text="Publish Configuration"
+          text="Publish"
           large={true}
           intent={Intent.PRIMARY}
           onClick={this.handlePublish}>
+        </Button>
+
+        <Button className="ml-2 mt-3"
+          text="Preview"
+          large={true}
+          onClick={this.handlePreview}>
         </Button>
       </div>
     )
