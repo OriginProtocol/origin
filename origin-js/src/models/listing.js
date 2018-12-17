@@ -5,6 +5,10 @@ export class Listing {
   /**
    * Listing object model.
    *
+   * Notice: when adding a field, be aware that the data in the discovery back-end
+   * is not automatically re-indexed. Therefore old listings will be returned by
+   * the back-end with the new field's value set to 'undefined'.
+   *
    * @param {Object} args - single object arguments used to construct a Listing
    *  - {string} id
    *  - {string} title
@@ -25,15 +29,17 @@ export class Listing {
    *  - {string} display - 'normal', 'featured', 'hidden'
    *  - {Array<Object>} media
    *  - {Object} comission - consists of 'amount' and 'currency' properties
-   *  - {Array} slots - to be implemented
+   *  - {Array} slots
+   *  - {Integer} slotLength - defines the length of a time slot in a fractional listing
+   *  - {String} slotLengthUnit - defines the unit of measurement for a fractional usage time slot
    *  - {string} schemaId
-   *  - {string} expiry
+   *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
    *  - {string} deposit
    *  - {string} depositManager - address of depositManager
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    schemaId, deposit, depositManager, expiry, commissionPerUnit }) {
+    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit }) {
 
     this.id = id
     this.title = title
@@ -54,10 +60,12 @@ export class Listing {
     this.media = media
     this.commission = commission
     this.slots = slots
+    this.slotLength = slotLength
+    this.slotLengthUnit = slotLengthUnit
     this.schemaId = schemaId
+    this.dappSchemaId = dappSchemaId
     this.deposit = deposit
     this.depositManager = depositManager
-    this.expiry = expiry
     this.commissionPerUnit = commissionPerUnit
   }
 
@@ -84,7 +92,10 @@ export class Listing {
       media: ipfsListing.media,
       commission: ipfsListing.commission,
       slots: ipfsListing.slots,
+      slotLength: ipfsListing.slotLength,
+      slotLengthUnit: ipfsListing.slotLengthUnit,
       schemaId: ipfsListing.schemaId,
+      dappSchemaId: ipfsListing.dappSchemaId,
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
       commissionPerUnit: ipfsListing.commissionPerUnit,
@@ -113,7 +124,10 @@ export class Listing {
       media: discoveryNodeData.media,
       commission: discoveryNodeData.commission,
       slots: discoveryNodeData.slots,
+      slotLength: discoveryNodeData.slotLength,
+      slotLengthUnit: discoveryNodeData.slotLengthUnit,
       schemaId: discoveryNodeData.schemaId,
+      dappSchemaId: discoveryNodeData.dappSchemaId,
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
       commissionPerUnit: discoveryNodeData.commissionPerUnit,

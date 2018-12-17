@@ -15,11 +15,11 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "apollo-server-express": "^2.1.0",
+    "apollo-server-express": "^2.2.6",
     "cors": "^2.8.5",
-    "dotenv": "^6.1.0",
-    "elasticsearch": "^15.1.1",
-    "envkey": "^1.2.2",
+    "dotenv": "^6.2.0",
+    "elasticsearch": "^15.2.0",
+    "envkey": "^1.2.4",
     "express": "^4.16.4",
     "express-prom-bundle": "^4.2.1",
     "graphql": "^0.13.2",
@@ -27,23 +27,23 @@
     "http": "0.0.0",
     "origin": "^0.8.6",
     "per-env": "^1.0.2",
-    "pg": "^7.5.0",
+    "pg": "^7.7.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^5.0.0-beta.5",
-    "sequelize-cli": "^5.1.0",
+    "sequelize": "^5.0.0-beta.14",
+    "sequelize-cli": "^5.4.0",
     "url": "^0.11.0",
-    "web3": "^1.0.0-beta.36"
+    "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "chai-things": "^0.2.0",
     "chai": "^4.2.0",
     "chalk": "^2.4.1",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.6",
+    "nodemon": "^1.18.7",
     "rewire": "^4.0.1"
   },
   "scripts": {
-    "lint": "eslint 'src/**/*.js' devops/**/*.js --rulesdir ../",
+    "lint": "eslint 'src/**/*.js' 'devops/**/*.js'",
     "migrate": "sequelize db:migrate",
     "start": "npm run start:discovery",
     "start:listener": "per-env",

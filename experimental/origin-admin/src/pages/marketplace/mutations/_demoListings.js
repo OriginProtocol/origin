@@ -1,10 +1,11 @@
 const HawaiiHouse = {
-  schemaId: 'http://schema.originprotocol.com/listing_v1.0.0',
+  schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+  dappSchemaId: "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
   listingType: 'unit',
-  category: 'schema.housing',
-  subCategory: 'schema.housing.vacationRentals',
+  category: 'schema.forRent',
+  subCategory: 'schema.housing',
   language: 'en-US',
-  title: 'MAMALAHOA ESTATE',
+  title: 'Mamalahoa Estate',
   description:
     "Built on the slopes of Hualalai Mountain in Kailua, Hawaii, the Mamalahoa Estate knows how to make a first impression. You enter the property through a grove of citrus and macadamia trees. A floating walkway takes you across a koi pond, surrounded by lush greenery and a waterfall. Once inside, the 5,391-square-foot home is comprised of a master and two guest suites, each with a private staircase leading down to the garden courtyard. A chef's kitchen with koa cabinetry looks onto a double-height living area. Flanked by sliding doors, the room opens to a veranda that overlooks two swimming pools and the Kona coastline. Consisting of 90 acres, the grounds also feature a driving range, tennis court, bocce courts, and a three-car garage.",
   unitsTotal: 1,
@@ -41,10 +42,11 @@ const HawaiiHouse = {
 }
 
 const LakeHouse = {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
   "listingType": "unit",
-  "category": "schema.housing",
-  "subCategory": "schema.housing.vacationRentals",
+  "category": "schema.forRent",
+  "subCategory": "schema.housing",
   "language": "en-US",
   "title": "Casa Wolf",
   "description": "Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.",
@@ -82,12 +84,13 @@ const LakeHouse = {
 }
 
 const Car = {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-carsTrucks_1.0.0.json",
   "listingType": "unit",
   "category": "schema.forSale",
-  "subCategory": "schema.forSale.carsTrucks",
+  "subCategory": "schema.carsTrucks",
   "language": "en-US",
-  "title": "1977 INTERNATIONAL SCOUT II",
+  "title": "1977 International Scout II",
   "description": "Introduced in 1971, the International Scout II rode on a stretched-wheelbase version of the rugged Scout chassis as a competitor to trucks like the larger Chevrolet Blazer. The highly customizable Scout was popular for work and racing, taking home a class win in the 1977 Baja 1000. This restored beautifully restored 1977 Scout II's customizations run more than skin deep, with a 6.0-liter GM engine and transmission to go along with the wheels and suspension lift.",
   "unitsTotal": 1,
   "price": {
@@ -119,10 +122,11 @@ const Car = {
 }
 
 const TaylorSwiftTickets = {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-tickets_1.0.0.json",
   "listingType": "unit",
-  "category": "schema.tickets",
-  "subCategory": "schema.tickets.music",
+  "category": "schema.forSale",
+  "subCategory": "schema.tickets",
   "language": "en-US",
   "title": "Taylor Swift's Reputation Tour",
   "description": "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",
@@ -160,10 +164,11 @@ const TaylorSwiftTickets = {
 }
 
 const ZincHouse = {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
   "listingType": "unit",
-  "category": "schema.housing",
-  "subCategory": "schema.housing.vacationRentals",
+  "category": "schema.forRent",
+  "subCategory": "schema.housing",
   "language": "en-US",
   "title": "Zinc House",
   "description": "Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.",

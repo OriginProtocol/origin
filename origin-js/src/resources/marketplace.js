@@ -205,66 +205,94 @@ export default class Marketplace {
    * @return {Promise<List(Offer)>}
    */
   async getOffers(listingId, opts = {}) {
+    //
+    // Step 1: Fetch offers
+    //
+    let allOffers
     if (this.perfModeEnabled) {
       // In performance mode, fetch offers from the discovery back-end to reduce latency.
-      return await this.discoveryService.getOffers(listingId, opts)
+      // Note: we ignore the idsOnly option here in order to fetch the entire offer data.
+      const discoveryOpts = Object.assign({}, opts, { idsOnly: false })
+      allOffers = await this.discoveryService.getOffers(listingId, discoveryOpts)
+    } else {
+      // Fetch offers from the blockchain.
+      const offerIds = await this.resolver.getOfferIds(listingId, opts)
+      allOffers = await Promise.all(
+        offerIds.map(async offerId => {
+          try {
+            return await this.getOffer(offerId)
+          } catch (e) {
+            // TODO(John) - handle this error better. It's tricky b/c it happens in a map
+            // and we want to throw the error, but we don't want the whole getOffers() call to fail.
+            // We want it to return the offers that it was able to get but still let us know something failed.
+            console.error(
+              `Error getting offer data for offer ${
+                offerId
+                }: ${e}`
+            )
+            return null
+          }
+        })
+      )
+      allOffers = allOffers.filter(offer => offer !== null)
     }
 
-    const offerIds = await this.resolver.getOfferIds(listingId, opts)
-    if (opts.idsOnly) {
-      return offerIds
-    }
-
-    const allOffers = await Promise.all(
-      offerIds.map(async offerId => {
-        try {
-          return await this.getOffer(offerId)
-        } catch(e) {
-          // TODO(John) - handle this error better. It's tricky b/c it happens in a map
-          // and we want to throw the error, but we don't want the whole getOffers() call to fail.
-          // We want it to return the offers that it was able to get but still let us know something failed.
-          console.error(
-            `Error getting offer data for offer ${
-              offerId
-            }: ${e}`
-          )
-          return null
-        }
-      })
-    )
-
-    // Filter out invalid offers
-    const filteredOffers = allOffers.filter(offer => Boolean(offer))
+    // If not a unit listing, return right away since filtering is not necessary.
     const listing = opts.listing || await this.getListing(listingId)
     if (listing.type !== 'unit') {
-      return filteredOffers
+      return opts.idsOnly ? allOffers.map(o => o.id) : allOffers
     }
 
-    // Filter out offers for which the units purchased exceeds the units
-    // available at the time of the offer.
     //
-    // TODO: Handle edits of unitsAvailable.
-    // TODO: Determine whether it always makes sense to filter out listings
-    // based on available quantity. Filtering can cause some weirdness. For
-    // example, suppose that a listing has 2 units available. Also suppose
-    // that two offers are made on that listing: (1) for 1 unit; and (2) for 2
-    // units. Independently, these offers are both valid. However, accepting
-    // either offer would cause the other to be filtered out and thus be stuck
-    // until the buyer disputes.
+    // Step 2: This is unit listing specific. Filter out offers for which
+    //   the units purchased exceeds the units available at the time of the offer.
     let unitsAvailable = listing.unitsTotal
+    const commission = listing.commission.amount
+      ? BigNumber(listing.commission.amount)
+      : null
+    const commissionPerUnit = listing.commissionPerUnit
+      ? BigNumber(listing.commissionPerUnit.amount)
+      : commission
     const offers = []
-    filteredOffers.forEach(offer => {
+    allOffers.forEach(offer => {
+      const unitsSoldBeforeOffer = listing.unitsTotal - unitsAvailable
+
+      // Validate units purchased against units available.
+      // TODO: Validate units purchased vs. units available at offer creation
+      // time. This will handle the case where an edit of a listing invalidates
+      // a previously valid offer.
       if (offer.unitsPurchased > unitsAvailable) {
         return
       }
-      // TODO: handle refund and dispute cases
-      if (offer.status !== 'created' && offer.status !== 'withdrawn') {
-        // TODO: handle instant purchases
+      if (offer.status !== 'withdrawn') {
         unitsAvailable -= offer.unitsPurchased
       }
+
+      // Validate that the offer commission is what we expect. If the amount
+      // of commission for the listing isn't sufficient for this offer, we
+      // require that the offer have whatever commission is available to it.
+      if (commissionPerUnit !== null && commissionPerUnit.isGreaterThan(0)) {
+        const commissionUsed = BigNumber(commissionPerUnit).times(unitsSoldBeforeOffer)
+        const remainingCommission = BigNumber.max(
+          commission.minus(commissionUsed),
+          BigNumber(0)
+        )
+        const expectedCommission = BigNumber.min(
+          remainingCommission,
+          commissionPerUnit.times(offer.unitsPurchased)
+        )
+        const offerCommission = offer.commission && BigNumber(offer.commission.amount)
+        if (!offerCommission || !offerCommission.isEqualTo(expectedCommission)) {
+          return
+        }
+      }
+
+      // There is no special handling of disputes here, because disputes should
+      // hopefully be rare for the time being.
       offers.push(offer)
     })
-    return offers
+
+    return opts.idsOnly ? offers.map(o => o.id) : offers
   }
 
   /**
@@ -291,21 +319,7 @@ export default class Marketplace {
     if (chainOffer.status === 'created') {
       const listing = await this.getListing(listingId)
 
-      // Originally, listings had a single "commission" field. For multi-unit
-      // listings, we've added "commissionPerUnit." The code here handles both
-      // variants of the schema.
-      let listingCommission =
-          listing.commission && typeof listing.commission === 'object' ?
-            await this.contractService.moneyToUnits(listing.commission) :
-            '0'
-
       if (listing.type === 'unit') {
-        const commissionPerUnit =
-        listing.commissionPerUnit && typeof listing.commissionPerUnit === 'object' ?
-          await this.contractService.moneyToUnits(listing.commissionPerUnit) :
-          null
-        listingCommission = commissionPerUnit || listingCommission
-
         // TODO(John) - there is currently no way to know the currency of a fractional listing.
         // We probably need to add a required "currency" field to the listing schema and write a check here
         // to make sure the chainOffer and the listing have the same currency
@@ -328,19 +342,8 @@ export default class Marketplace {
         }
       }
 
-      // TODO: Figure out how to exhaustively handle the various cases. For
-      // example, if the seller edits the listing to increase "unitsTotal,"
-      // the following condition will no longer be true:
-      //
-      //   commission === commissionPerUnit * unitsTotal
-      //
-      // Initially, we're not going to support topping off commission OGN, so
-      // there will be no UI to fix this. We should find a way to handle this
-      // situation gracefully, such as allowing offers to be made with
-      // less commission when the commission tokens have been depleted.
-      if (!BigNumber(listingCommission).isEqualTo(BigNumber(chainOffer.commission))) {
-        throw new Error('Invalid offer: incorrect commission amount for listing')
-      }
+      // We do not validate commission amount here, because to do so would
+      // require every other offer for the listing.
 
       if (chainOffer.arbitrator.toLowerCase() !== this.arbitrator.toLowerCase()) {
         throw new Error('Invalid offer: arbitrator is invalid')
@@ -709,7 +712,7 @@ export default class Marketplace {
   /**
    * Returns units sold for a unit listing, taking into account pending offers.
    * @param {Listing} listing - listing JSON object
-   * @param {List(Offer)} offers - list of Offer JSON objects for the listing
+   * @param {List(Offer)} offers - list of valid Offer JSON objects for the listing
    * @return {number} - Units sold
    */
   unitsSold(listing, offers) {
@@ -717,14 +720,12 @@ export default class Marketplace {
       throw new Error('unitsAvailable only works for unit listings')
     }
     return Object.keys(offers).reduce((sold, offerId) => {
-      // TODO: handle instant purchases
       if (
         // Before offers are submitted to the blockchain, they have no status.
         //
         // TODO: We might need some explicit handling of arbitration rulings.
         offers[offerId].status &&
-        offers[offerId].status !== 'withdrawn' &&
-        offers[offerId].status !== 'created'
+        offers[offerId].status !== 'withdrawn'
       ) {
         return sold + offers[offerId].unitsPurchased
       }

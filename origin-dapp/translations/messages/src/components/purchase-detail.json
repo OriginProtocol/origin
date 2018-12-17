@@ -84,22 +84,6 @@
     "defaultMessage": "enable messaging"
   },
   {
-    "id": "purchase-detail.purchasedFrom",
-    "defaultMessage": "Purchased from {sellerLink}"
-  },
-  {
-    "id": "purchase-detail.soldTo",
-    "defaultMessage": "Sold to {buyerLink}"
-  },
-  {
-    "id": "purchase-detail.purchasingFrom",
-    "defaultMessage": "Purchasing from {sellerLink}"
-  },
-  {
-    "id": "purchase-detail.sellingTo",
-    "defaultMessage": "Selling to {buyerLink}"
-  },
-  {
     "id": "purchase-detail.transactionStatusHeading",
     "defaultMessage": "Transaction Status"
   },
@@ -150,5 +134,21 @@
   {
     "id": "purchase-detail.price",
     "defaultMessage": "Price"
+  },
+  {
+    "id": "purchase-detail.purchasedFrom",
+    "defaultMessage": "Purchased from {sellerLink}"
+  },
+  {
+    "id": "purchase-detail.soldTo",
+    "defaultMessage": "Sold to {buyerLink}"
+  },
+  {
+    "id": "purchase-detail.purchasingFrom",
+    "defaultMessage": "Purchasing from {sellerLink}"
+  },
+  {
+    "id": "purchase-detail.sellingTo",
+    "defaultMessage": "Selling to {buyerLink}"
   }
 ]

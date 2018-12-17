@@ -1,17 +1,25 @@
 {
   "packages": [
+    "experimental/*",
     "ipfs-proxy",
     "origin-contracts",
     "origin-dapp",
     "origin-discovery",
     "origin-faucet",
     "origin-js",
-    "origin-messaging",
     "origin-linking",
+    "origin-messaging",
     "origin-mobile",
     "origin-notifications",
-    "origin-token-transfer/*",
-    "experimental/*"
+    "origin-tests",
+    "origin-token-transfer/*"
   ],
+  "command": {
+    "bootstrap": {
+      "nohoist": [
+        "openzeppelin-solidity"
+      ]
+    }
+  },
   "version": "independent"
 }

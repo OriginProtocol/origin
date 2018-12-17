@@ -1,8 +1,9 @@
 {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
   "listingType": "unit",
-  "category": "schema.housing",
-  "subCategory": "schema.housing.vacationRentals",
+  "category": "schema.forRent",
+  "subCategory": "schema.housing",
   "language": "en-US",
   "title": "Mamalahoa Estate",
   "description": "Built on the slopes of Hualalai Mountain in Kailua, Hawaii, the Mamalahoa Estate knows how to make a first impression. You enter the property through a grove of citrus and macadamia trees. A floating walkway takes you across a koi pond, surrounded by lush greenery and a waterfall. Once inside, the 5,391-square-foot home is comprised of a master and two guest suites, each with a private staircase leading down to the garden courtyard. A chef's kitchen with koa cabinetry looks onto a double-height living area. Flanked by sliding doors, the room opens to a veranda that overlooks two swimming pools and the Kona coastline. Consisting of 90 acres, the grounds also feature a driving range, tennis court, bocce courts, and a three-car garage.",

@@ -1,9 +1,33 @@
 ---
 git:
-  depth: 3
+  depth: 1
 matrix:
   include:
-    - name: "origin-bridge tests"
+    # Run integration tests using docker compose
+    - name: "integration tests"
+      language: minimal
+      sudo: true
+      before_script:
+        # Setting required for Elasticsearch to run
+        - sudo sysctl -w vm.max_map_count=262144
+      script:
+        - docker-compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from origin-tests
+
+    - name: "javascript linting"
+      language: node_js
+      node_js: 10
+      cache:
+        npm: true
+        directories:
+          - node_modules
+      before_cache:
+        - rm -rf node_modules/.cache
+      install:
+        - npm install --loglevel notice --dev-only --ignore-scripts
+      script:
+        - npm run lint
+
+    - name: "origin-bridge unit tests"
       language: python
       python: 3.6
       before_script:
@@ -12,43 +36,18 @@ matrix:
       script:
         - pytest --flakes --codestyle
 
-    - name: "origin-contracts tests"
+    - name: "origin-contracts unit tests"
       language: node_js
       node_js: 10
-      cache:
-        npm: true
-        directories:
-          - origin-contracts/node_modules
-      before_cache:
-        - rm -rf origin-contracts/node_modules/.cache
       install:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts
       script:
         - npm run test --prefix origin-contracts
 
-    - name: "origin-dapp tests"
+    - name: "origin-discovery unit tests"
       language: node_js
       node_js: 10
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope origin-dapp
-      script:
-        - npm run lint --prefix origin-dapp
-
-    - name: "origin-discovery tests"
-      language: node_js
-      node_js: 10
-      cache:
-        npm: true
-        directories:
-          - origin-contracts/node_modules
-          - origin-js/node_modules
-          - origin-discovery/node_modules
-      before_cache:
-        - rm -rf origin-contracts/node_modules/.cache
-        - rm -rf origin-js/node_modules/.cache
-        - rm -rf origin-discovery/node_modules/.cache
       addons:
         postgresql: 9.6
       services:
@@ -60,67 +59,34 @@ matrix:
         - lerna run migrate --scope origin-discovery
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope origin-contracts
-        - npm run bootstrap -- --scope origin
-        - npm run bootstrap -- --scope origin-discovery
+        - npm run bootstrap -- --scope origin-contracts --scope origin --scope origin-discovery
       script:
-        - npm run lint --prefix origin-discovery
         - npm run test --prefix origin-discovery
 
-    - name: "origin-js tests"
+    - name: "origin-js unit tests"
       language: node_js
       node_js: 10
-      cache:
-        npm: true
-        directories:
-          - origin-contracts/node_modules
-          - origin-js/node_modules
-      before_cache:
-        - rm -rf origin-contracts/node_modules/.cache
-        - rm -rf origin-js/node_modules/.cache
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope origin-contracts
-        - npm run bootstrap -- --scope origin
+        - npm run bootstrap -- --scope origin-contracts --scope origin
       script:
-        - npm run lint --prefix origin-js
         - npm run test --prefix origin-js
 
-    - name: "origin-messaging tests"
-      language: node_js
-      node_js: 10
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope origin-messaging
-      script:
-        - npm run lint --prefix origin-messaging
-
-    - name: "origin-notifications tests"
+    - name: "origin-notifications unit tests"
       language: node_js
       node_js: 10
       install:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-notifications
       script:
-        - npm run lint --prefix origin-notifications
+        - npm run test --prefix origin-notifications
 
-    - name: "origin-token-transfer tests"
+    - name: "origin-token-transfer unit tests"
       language: node_js
       node_js: 10
-      cache:
-        npm: true
-        directories:
-          - origin-token-transfer/client/node_modules
-          - origin-token-transfer/server/node_modules
-      before_cache:
-        - rm -rf origin-token-transfer/client/node_modules/.cache
-        - rm -rf origin-token-transfer/server/node_modules/.cache
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope origin-token-transfer-client
-        - npm run bootstrap -- --scope origin-token-transfer-server
+        - npm run bootstrap -- --scope origin-contracts --scope origin-faucet --scope origin-token-transfer-client --scope origin-token-transfer-server
       script:
-        - npm run lint --prefix origin-token-transfer/server
         - npm run test --prefix origin-token-transfer/server
-        - npm run lint --prefix origin-token-transfer/client
         - npm run test --prefix origin-token-transfer/client

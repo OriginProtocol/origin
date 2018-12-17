@@ -4,6 +4,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import TransactionEvent from 'components/transaction-event'
 
 import { formattedAddress } from 'utils/user'
+import { getOfferEvents } from 'utils/offer'
 
 class TransactionHistory extends Component {
   constructor(props) {
@@ -47,14 +48,16 @@ class TransactionHistory extends Component {
 
   render() {
     const { purchase } = this.props
-
-    const offerCreated = purchase.event('OfferCreated')
-    const offerWithdrawn = purchase.event('OfferWithdrawn')
-    const offerAccepted = purchase.event('OfferAccepted')
-    const offerDisputed = purchase.event('OfferDisputed')
-    const offerRuling = purchase.event('OfferRuling')
-    const offerFinalized = purchase.event('OfferFinalized')
-    const offerData = purchase.event('OfferData')
+    const offerEvents = getOfferEvents(purchase)
+    const [
+      offerCreated,
+      offerWithdrawn,
+      offerAccepted,
+      offerDisputed,
+      offerRuling,
+      offerFinalized,
+      offerData
+    ] = offerEvents
 
     const withdrawnOrRejected = offerWithdrawn ? (
       formattedAddress(purchase.buyer) === offerWithdrawn.returnValues.party ? 'withdrawn' : 'rejected'

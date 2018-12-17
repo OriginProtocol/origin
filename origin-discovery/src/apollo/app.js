@@ -41,8 +41,9 @@ const server = new ApolloServer({
     listingMetadata.updateHiddenFeaturedListings()
     return {}
   },
-  // Always enable schema introspection, regardless of NODE_ENV value.
-  introspection: true
+  // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
+  introspection: true,
+  playground: true,
 })
 
 server.applyMiddleware({ app })

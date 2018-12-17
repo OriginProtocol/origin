@@ -7,12 +7,12 @@ import { fetchUser } from 'actions/User'
 import { getEthBalance, getOgnBalance } from 'actions/Wallet'
 
 import Avatar from 'components/avatar'
+import Contact from 'components/contact'
+import Dropdown from 'components/dropdown'
 import EtherscanLink from 'components/etherscan-link'
 import Identicon from 'components/identicon'
-import MessageNew from 'components/message-new'
-import UnnamedUser from 'components/unnamed-user'
 import Tooltip from 'components/tooltip'
-import Dropdown from 'components/dropdown'
+import UnnamedUser from 'components/unnamed-user'
 
 import { getFiatPrice } from 'utils/priceUtils'
 import { formattedAddress } from 'utils/user'
@@ -22,11 +22,6 @@ import origin from '../services/origin'
 class WalletCard extends Component {
   constructor(props) {
     super(props)
-
-    this.handleToggle = this.handleToggle.bind(this)
-    this.state = {
-      modalOpen: false
-    }
 
     this.intlMessages = defineMessages({
       yourBalance: {
@@ -53,14 +48,16 @@ class WalletCard extends Component {
         defaultMessage: 'Learn more'
       }
     })
+
+    this.state = { ethDropdown: false }
   }
 
   componentDidMount() {
     const {
+      address,
       fetchUser,
       getEthBalance,
-      getOgnBalance,
-      wallet: { address }
+      getOgnBalance
     } = this.props
 
     getEthBalance()
@@ -70,22 +67,18 @@ class WalletCard extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { fetchUser, wallet } = this.props
-    const { address } = wallet
+    const { address, fetchUser } = this.props
 
-    if (address !== prevProps.wallet.address) {
+    if (address !== prevProps.address) {
       fetchUser(address)
     }
   }
 
-  handleToggle(e) {
-    e.preventDefault()
-
-    this.setState({ modalOpen: !this.state.modalOpen })
-  }
-
   render() {
     const {
+      address,
+      ethBalance,
+      ognBalance,
       users,
       wallet,
       withBalanceTooltip,
@@ -94,14 +87,11 @@ class WalletCard extends Component {
     } = this.props
     const user =
       users.find(
-        u => formattedAddress(u.address) === formattedAddress(wallet.address)
+        u => formattedAddress(u.address) === formattedAddress(address)
       ) || {}
     const { attestations = [], fullName, profile = {} } = user
-    const { address, ethBalance, ognBalance } = wallet
-    const ethToUsdBalance = getFiatPrice(wallet.ethBalance, 'USD')
-    const userCanReceiveMessages =
-      formattedAddress(address) !== formattedAddress(wallet.address) &&
-      origin.messaging.canReceiveMessages(address)
+    const ethToUsdBalance = getFiatPrice(ethBalance, 'USD')
+    const contactButtonIncluded = formattedAddress(address) !== formattedAddress(wallet.address)
     const balanceTooltip = (
       <div>
         <p
@@ -134,7 +124,7 @@ class WalletCard extends Component {
 
     return (
       <div className="wallet-container">
-        <div className={`wallet${userCanReceiveMessages ? ' appended' : ''}`}>
+        <div className={`wallet${contactButtonIncluded ? ' appended' : ''}`}>
           <div className="d-flex">
             <div className="image-container">
               <Identicon address={address} size={50} />
@@ -160,13 +150,6 @@ class WalletCard extends Component {
               </div>
             </div>
           </div>
-          {userCanReceiveMessages && (
-            <MessageNew
-              open={this.state.modalOpen}
-              recipientAddress={address}
-              handleToggle={this.handleToggle}
-            />
-          )}
           {ethBalance !== undefined && (
             <Fragment>
               <hr className="dark sm" />
@@ -363,26 +346,17 @@ class WalletCard extends Component {
             </Fragment>
           )}
         </div>
-        {userCanReceiveMessages && (
-          <a href="#" onClick={this.handleToggle} className="btn contact-user">
-            <FormattedMessage
-              id={'wallet-card.enabledContact'}
-              defaultMessage={'Contact'}
-            />
-          </a>
+        {contactButtonIncluded && (
+          <Contact recipientAddress={address} className="btn contact-user" />
         )}
       </div>
     )
   }
 }
 
-const mapStateToProps = ({ activation, exchangeRates, users, wallet }) => {
+const mapStateToProps = ({ exchangeRates, users, wallet }) => {
   return {
     exchangeRates,
-    // for reactivity
-    messagingEnabled: activation.messaging.enabled,
-    // for reactivity
-    messagingInitialized: activation.messaging.initialized,
     users,
     wallet
   }

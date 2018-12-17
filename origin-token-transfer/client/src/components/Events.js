@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Intent, Toaster } from "@blueprintjs/core";
-import moment from 'moment';
+import { Intent, Toaster } from '@blueprintjs/core'
+import moment from 'moment'
 
 import { setSessionEmail } from '../actions'
 import NavBar from './NavBar'

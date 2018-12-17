@@ -24,14 +24,6 @@ class FilterGroup extends Component {
     this.state = {}
   }
 
-  resolveFromListingSchema(path) {
-    const properties = Array.isArray(path) ? path : path.split('.')
-    return properties.reduce(
-      (prev, curr) => prev && prev[curr],
-      this.props.listingSchema
-    )
-  }
-
   handleFilterMounted(filter) {
     this.childFilters.push(filter)
   }
@@ -94,9 +86,6 @@ class FilterGroup extends Component {
       return (
         <MultipleSelectionFilter
           filter={filter}
-          multipleSelectionValues={this.resolveFromListingSchema(
-            filter.listingPropertyName
-          )}
           listingType={this.props.listingType}
           title={title}
           onChildMounted={this.handleFilterMounted}

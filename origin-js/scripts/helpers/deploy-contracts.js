@@ -3,10 +3,10 @@ const { spawn } = require('child_process')
 const deployContracts = () => {
   return new Promise((resolve, reject) => {
     const truffleMigrate = spawn(
-      './node_modules/.bin/truffle',
+      'truffle',
       ['migrate', '--reset'],
       {
-        cwd: 'node_modules/origin-contracts',
+        cwd: '../origin-contracts',
         stdio: 'inherit',
         env: process.env
       }

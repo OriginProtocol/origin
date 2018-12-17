@@ -1,8 +1,9 @@
 {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-mushrooms_1.0.0.json",
   "listingType": "unit",
   "category": "schema.forSale",
-  "subCategory": "schema.forSale.mushrooms",
+  "subCategory": "schema.mushrooms",
   "language": "en-US",
   "title": "my listing",
   "description": "my description",
@@ -30,6 +31,10 @@
     "amount": "0.033"
   },
   "commission": {
+    "currency": "OGN",
+    "amount": "0"
+  },
+  "commissionPerUnit": {
     "currency": "OGN",
     "amount": "0"
   }

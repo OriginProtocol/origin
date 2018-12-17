@@ -941,8 +941,12 @@ class Messaging {
       )
     } else {
       remote_eth_address = room_id_or_address
+      if (!this.web3.utils.isAddress(remote_eth_address)) {
+        throw new Error(`${remote_eth_address} is not a valid Ethereum address`)
+      }
       room_id = this.generateRoomId(this.account_key, remote_eth_address)
     }
+    remote_eth_address = this.web3.utils.toChecksumAddress(remote_eth_address)
     let room
     if (this.convs[room_id] && this.convs[room_id].keys.length) {
       room = await this.initRoom(remote_eth_address)

@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { GoogleLogin } from 'react-google-login'
-import { Dialog, Intent, Toaster } from "@blueprintjs/core";
+import { Dialog, Intent, Toaster } from '@blueprintjs/core'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { setSessionEmail } from '../actions'
 
 class Login extends Component {
-  handleError = (err) => {
+  handleError = err => {
     Toaster.create({
-      message: `Google login error: {err}`,
+      message: `Google login error: ${err}`,
       intent: Intent.DANGER
     })
   }
@@ -39,7 +39,11 @@ class Login extends Component {
   render() {
     return (
       <div>
-        {this.props.sessionEmail && <Redirect to="/grants" /> }
+        {
+          this.props.sessionEmail
+          && this.props.sessionEmail !== '(need to login)'
+          && <Redirect to="/grants" />
+        }
         <Dialog id="loginDialog" isOpen={true}>
           <div className="bp3-dialog-header">
             <span className="bp3-icon-large bp3-icon-arrow-right"></span>

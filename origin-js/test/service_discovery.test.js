@@ -23,11 +23,12 @@ describe('Discovery service', function() {
             'listing': {
               'data': {
                 'id': listingId,
+                'dappSchemaId': 'https://schema.originprotocol.com/forSale.mushrooms_1.0.0.json',
                 'ipfs': {},
                 'title': 'title',
                 'description': 'some description',
                 'category': 'schema.housing',
-                'subCategory': 'schema.housing.vacationRentals',
+                'subCategory': 'schema.vacationRentals',
                 'status': 'active',
                 'type': 'unit',
                 'unitsTotal': 1,
@@ -58,7 +59,7 @@ describe('Discovery service', function() {
                   'amount': '0',
                   'currency': 'OGN'
                 },
-                'schemaId': 'http://schema.originprotocol.com/listing_v1.0.0',
+                'schemaId': 'https://schema.originprotocol.com/listing_1.0.0.json',
                 'deposit': '0',
                 'depositManager': '0x123',
               }
@@ -399,7 +400,7 @@ describe('Discovery service', function() {
                   'returnValues': {}
                 }],
                 'createdAt': 12345678,
-                'schemaId': 'http://schema.originprotocol.com/offer_v1.0.0',
+                'schemaId': 'https://schema.originprotocol.com/offer_1.0.0.json',
                 'refund': '0',
                 'listingType': 'unit',
                 'unitsPurchased': 1,
@@ -409,7 +410,12 @@ describe('Discovery service', function() {
                 },
                 'ipfs': {
                   'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
-                  'data': {}
+                  'data': {
+                    'commission': {
+                      'currency': 'OGN',
+                      'amount': '1'
+                    }
+                  }
                 }
               },
               'buyer': {
@@ -467,6 +473,15 @@ describe('Discovery service', function() {
                   'id': '1-000-57-1',
                   'data': {
                     'id': '1-000-57-1',
+                    'ipfs': {
+                      'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
+                      'data': {
+                        'commission': {
+                          'currency': 'OGN',
+                          'amount': '1'
+                        }
+                      }
+                    },
                     'events': [{
                       'event': 'OfferCreated',
                       'blockNumber': 0,
@@ -488,6 +503,15 @@ describe('Discovery service', function() {
                   'id': '1-000-57-2',
                   'data': {
                     'id': '1-000-57-2',
+                    'ipfs': {
+                      'hash': 'ZZWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqYY',
+                      'data': {
+                        'commission': {
+                          'currency': 'OGN',
+                          'amount': '1'
+                        }
+                      }
+                    },
                     'events': [{
                       'event': 'OfferCreated',
                       'blockNumber': 0,
@@ -537,6 +561,15 @@ describe('Discovery service', function() {
                   'id': '1-000-57-1',
                   'data': {
                     'id': '1-000-57-1',
+                    'ipfs': {
+                      'hash': 'QmWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqH2',
+                      'data': {
+                        'commission': {
+                          'currency': 'OGN',
+                          'amount': '1'
+                        }
+                      }
+                    },
                     'events': [{
                       'event': 'OfferCreated',
                       'blockNumber': 0,
@@ -558,6 +591,15 @@ describe('Discovery service', function() {
                   'id': '1-000-57-2',
                   'data': {
                     'id': '1-000-57-2',
+                    'ipfs': {
+                      'hash': 'AAWGAMUbpMrwtEqF3GMRe2GjRiCijRBbXxu97u8fBaXqBB',
+                      'data': {
+                        'commission': {
+                          'currency': 'OGN',
+                          'amount': '1'
+                        }
+                      }
+                    },
                     'events': [{
                       'event': 'OfferCreated',
                       'blockNumber': 0,

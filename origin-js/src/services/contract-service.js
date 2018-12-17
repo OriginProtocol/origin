@@ -68,14 +68,38 @@ class ContractService {
     }
   }
 
+  updateContractAddresses(contractAddresses) {
+    for (const name in this.contracts) {
+      try {
+        this.contracts[name].networks = Object.assign(
+          {},
+          this.contracts[name].networks,
+          contractAddresses[name]
+        )
+      } catch (e) {
+        /* Ignore */
+      }
+    }
+  }
+
+  getContractAddresses() {
+    const addresses = {}
+    for (const name in this.contracts) {
+      addresses[name] = this.contracts[name].networks
+    }
+    return addresses
+  }
+
   newWalletNetwork() {
     this.web3.setProvider(this.walletLinker.getProvider())
+    // Fake it till you make it
+    this.web3.currentProvider.isOrigin = true
   }
 
   initWalletLinker(walletLinkerUrl, fetch, ecies) {
     // if there's no given provider
     // we do it the funny wallet way
-    if (!Web3.givenProvider && walletLinkerUrl) {
+    if (this.web3.currentProvider.isOrigin && walletLinkerUrl) {
       if (!this.walletLinker) {
         this.walletLinker = new WalletLinker({
           linkerServerUrl: walletLinkerUrl,

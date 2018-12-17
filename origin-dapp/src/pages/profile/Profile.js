@@ -189,7 +189,7 @@ class Profile extends Component {
       this.props.intl.formatMessage(this.intlMessages.manageYourProfile)
     )
 
-    if ((web3.givenProvider && this.props.wallet.address) || origin.contractService.walletLinker) {
+    if ((!web3.currentProvider.isOrigin && this.props.wallet.address) || origin.contractService.walletLinker) {
       const { modal } = e.currentTarget.dataset
 
       /*
@@ -381,12 +381,10 @@ class Profile extends Component {
                     <a
                       href="javascript:void(0);"
                       onClick={this.handleDescriptionReadMore}
+                      className={`description-caret${descriptionExpanded ? ' expanded' : ''}`}
                     >
                       {descriptionLinkText}
-                      <img
-                        id="description-caret"
-                        src={descriptionExpanded ? 'images/caret-up-blue.svg' : 'images/caret-down-blue.svg'}
-                      />
+                      <img src="images/caret-blue.svg" />
                     </a>
                   </div>
                 </div>
@@ -456,7 +454,7 @@ class Profile extends Component {
             </div>
             <div className="col-12 col-lg-4 d-none d-lg-block">
               <WalletCard
-                wallet={wallet}
+                {...wallet}
                 identityAddress={this.props.identityAddress}
                 withMenus={true}
                 withProfile={false}

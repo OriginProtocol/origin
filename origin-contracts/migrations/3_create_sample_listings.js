@@ -31,27 +31,27 @@ async function deployContracts(deployer) {
 
   await createListing(
     marketplace00,
-    '0x551e4fd07429fd2d072ca0d6668ff1c45a03a24f03191986be9b4c30a242c2ed',
+    '0xf52f1addaf595a2a4be4f1e4d58901b93b06f07f8a4fb9d04af3d022be23a21b',
     Seller
   )
   await createListing(
     marketplace00,
-    '0xb1ddde9f48791e6519b6b19e4318398df8e432a4dd68e694a6e52c87810cb6cb',
+    '0x4775a5d673a7461efe0a06fd31885b50ab87ba3f9c47bab9a7c16ddecbaacd59',
     Seller
   )
   await createListing(
     marketplace00,
-    '0xe83be3434158c69d42c1269260d3c44eeb37c316017d3e22352dea86e6b5afaf',
+    '0xff47388f08b658fb4b0501a6dc82e00ab03b91503390c9aa6d7bead00b8ede7b',
     Seller
   )
   await createListing(
     marketplace00,
-    '0x0f70fe3695f72660752fde3eb6d6aa02290758bc7cf6111f4e1e6bcb53c42633',
+    '0x8bb6183b80bffe3565966cac40d82b30bfa66e0fed2cdaf20466689044512828',
     Seller
   )
   await createListing(
     marketplace00,
-    '0x4cf7707c33291cb383d5001d7fc9d7ec9963658b2a55be1ba81db05381f293e7',
+    '0x26b2acee72df5ce75b915cdef3a1a777331e97a5f50871cde1a0c51c2609f6d2',
     Seller
   )
 }

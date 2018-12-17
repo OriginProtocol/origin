@@ -19,7 +19,7 @@ class MyPurchases extends Component {
   componentDidMount() {
     if (
       this.props.wallet.address &&
-      (web3.givenProvider || origin.contractService.walletLinker)
+      (!web3.currentProvider.isOrigin || origin.contractService.walletLinker)
     ) {
       this.loadPurchases()
     } else {
@@ -40,7 +40,7 @@ class MyPurchases extends Component {
   async loadPurchases() {
     const { wallet } = this.props
     const purchases = await origin.marketplace.getPurchases(wallet.address)
-    const transformedPurchases = transformPurchasesOrSales(purchases)
+    const transformedPurchases = await transformPurchasesOrSales(purchases)
     this.setState({ loading: false, purchases: transformedPurchases })
   }
 
