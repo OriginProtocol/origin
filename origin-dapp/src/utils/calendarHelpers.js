@@ -124,16 +124,17 @@ export function getSlotsForDateChange(selectedEvent, whichDropdown, value, viewT
   return slots
 }
 
-export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents) {
+export function getDateDropdownOptions(date, viewType, userType, selectedEvent, allEvents, offers) {
   const numDatesToShow = 10
   const timeToAdd = viewType === 'daily' ? 'days' : 'hours'
   let beforeSelectedConflict
   let afterSelectedConflict
-  const eventsWithoutSelected = allEvents &&
-    allEvents.length &&
-    allEvents.filter((event) => event.id !== selectedEvent.id)
 
   const isSlotAvailable = (date) => {
+    const eventsWithoutSelected = allEvents &&
+      allEvents.length &&
+      allEvents.filter((event) => event.id !== selectedEvent.id)
+
     if (!eventsWithoutSelected || !eventsWithoutSelected.length) {
       return true
     }
@@ -151,7 +152,15 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .map((_, i) => {
       const thisDate = moment(date).subtract(i + 1, timeToAdd).toDate()
       if (!beforeSelectedConflict) {
-        const isAvailable = isSlotAvailable(thisDate)
+        let isAvailable
+
+        if (userType === 'seller') {
+          isAvailable = isSlotAvailable(thisDate)
+        } else {
+          const availData = getDateAvailabilityAndPrice(thisDate, allEvents, offers)
+          isAvailable = availData.isAvailable
+        }
+
         if (isAvailable) {
           return thisDate
         } else {
@@ -166,8 +175,15 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .reverse()
 
   if (viewType === 'hourly') {
-    const isNextSlotAvailable = isSlotAvailable(date)
-    if (!isNextSlotAvailable) {
+    let isAvailable
+
+    if (userType === 'seller') {
+      isAvailable = isSlotAvailable(date)
+    } else {
+      const availData = getDateAvailabilityAndPrice(date, allEvents, offers)
+      isAvailable = availData.isAvailable
+    }
+    if (!isAvailable) {
       afterSelectedConflict = true
     }
   }
@@ -176,7 +192,15 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .map((_, i) => {
       const thisDate = moment(date).add(i + 1, timeToAdd).toDate()
       if (!afterSelectedConflict) {
-        const isAvailable = isSlotAvailable(thisDate)
+        let isAvailable
+
+        if (userType === 'seller') {
+          isAvailable = isSlotAvailable(thisDate)
+        } else {
+          const availData = getDateAvailabilityAndPrice(thisDate, allEvents, offers)
+          isAvailable = availData.isAvailable
+        }
+
         if (isAvailable) {
           return thisDate
         } else {

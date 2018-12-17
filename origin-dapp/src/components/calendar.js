@@ -227,7 +227,7 @@ class Calendar extends Component {
   }
 
   saveEvent(selectedEvent) {
-    const thisEvent = (selectedEvent && selectedEvent.id ? selectedEvent : false) || this.state.selectedEvent
+    const thisEvent = (selectedEvent && selectedEvent.id) ? selectedEvent : this.state.selectedEvent
     const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
     const stateToSet = {
       events: [...allOtherEvents, thisEvent],
@@ -246,6 +246,7 @@ class Calendar extends Component {
     })
   }
 
+  // used by seller's calendar only
   deleteEvent() {
     const confirmation = confirm('Are you sure you want to delete this event?')
     const { selectedEvent, events } = this.state
@@ -300,18 +301,24 @@ class Calendar extends Component {
   onDateDropdownChange(event) {
     const whichDropdown = event.target.name
     const value = event.target.value
+    const selectedEvent = {
+      ...this.state.selectedEvent,
+      slots: getSlotsForDateChange(this.state.selectedEvent, whichDropdown, value, this.props.viewType),
+      [whichDropdown]: new Date(value)
+    }
 
-    this.setState({
-      selectedEvent: {
-        ...this.state.selectedEvent,
-        slots: getSlotsForDateChange(this.state.selectedEvent, whichDropdown, value, this.props.viewType),
-        [whichDropdown]: new Date(value)
-      }
-    })
+    this.setState({ selectedEvent })
 
-    setTimeout(() => {
-      this.saveEvent(this.state.selectedEvent)
-    })
+    if (this.props.userType === 'seller') {
+      setTimeout(() => {
+        this.saveEvent(this.state.selectedEvent)
+      })
+    } else {
+      // user is buyer
+      setTimeout(() => {
+        this.onSelectSlot(this.state.selectedEvent)
+      })
+    }
   }
 
   onIsRecurringEventChange(event) {
@@ -443,7 +450,7 @@ class Calendar extends Component {
 
   render() {
     const selectedEvent = this.state.selectedEvent
-    const { viewType, userType } = this.props
+    const { viewType, userType, offers } = this.props
     const { events } = this.state
 
     return (
@@ -505,7 +512,14 @@ class Calendar extends Component {
                         onChange={ this.onDateDropdownChange }
                         value={ selectedEvent.start.toString() }>
                         { 
-                          getDateDropdownOptions(selectedEvent.start, viewType, selectedEvent, events).map((date) => (
+                          getDateDropdownOptions(
+                            selectedEvent.start,
+                            viewType,
+                            userType,
+                            selectedEvent,
+                            events,
+                            offers
+                          ).map((date) => (
                             ((viewType === 'daily' && date <= selectedEvent.end) ||
                             (viewType === 'hourly' && date < selectedEvent.end)) &&
                             <option
@@ -524,7 +538,14 @@ class Calendar extends Component {
                         onChange={ this.onDateDropdownChange }
                         value={selectedEvent.end.toString()}>
                         { 
-                          getDateDropdownOptions(selectedEvent.end, viewType, selectedEvent, events).map((date) => (
+                          getDateDropdownOptions(
+                            selectedEvent.end,
+                            viewType,
+                            userType,
+                            selectedEvent,
+                            events,
+                            offers
+                          ).map((date) => (
                             ((viewType === 'daily' && date >= selectedEvent.start) ||
                             (viewType === 'hourly' && date > selectedEvent.start)) &&
                             <option
