@@ -51,7 +51,7 @@ class MyPurchaseCard extends Component {
   render() {
     const { listing, offer, offerId } = this.props
     const { category, name, pictures, price } = listing
-    const { status } = offer
+    const { status, totalPrice } = offer
     const voided = ['rejected', 'withdrawn'].includes(status)
     const maxStep = ['disputed', 'ruling'].includes(status) ? 4 : 3
     const step = offerStatusToStep(status)
@@ -93,10 +93,10 @@ class MyPurchaseCard extends Component {
                     </div>
                   }
                   <div className="d-flex">
-                    <p className="price">{`${Number(price).toLocaleString(
+                    <p className="price">{`${Number(totalPrice.amount).toLocaleString(
                       undefined,
                       { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                    )} ETH`}</p>
+                    )} ${totalPrice.currency}`}</p>
                     {/* Not Yet Relevant */}
                     {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
                   </div>
