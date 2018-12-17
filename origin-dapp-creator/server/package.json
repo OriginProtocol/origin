@@ -4,10 +4,13 @@
   "description": "Server for managing configuration files for Origin DApps",
   "main": "src/app.js",
   "scripts": {
+    "build": "per-env",
+    "build:development": "",
+    "build:production": "",
     "lint": "eslint '**/*.js'",
     "start": "per-env",
     "start:development": "nodemon --exec 'babel-node' -r env.js src/app.js --presets @babel/env",
-    "start:production": "node src/app.js",
+    "start:production": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -16,7 +16,7 @@ class LocaleField extends Component {
     })
 
 
-    this.availableLanguages.unshift({value: 'en-US', label: 'English'})
+    this.availableLanguages.unshift({ value: 'en-US', label: 'English' })
 
     this.handleChange = this.handleChange.bind(this)
   }

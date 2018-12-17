@@ -9,8 +9,8 @@ const app = express()
 const port = process.env.PORT || 4321
 const logger = Logger.create('origin-dapp-creator-server')
 
-import { getDnsRecord, configureRecords } from './dns'
-import { addConfigToIpfs, getConfigFromIpfs } from './ipfs'
+import { getDnsRecord, configureRecords, parseDnsTxtRecord } from './dns'
+import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './ipfs'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -39,6 +39,7 @@ app.post('/config', async (req, res) => {
 
   if (existingRecord) {
     const ipfsPath = parseDnsTxtRecord(existingRecord.data[0])
+    const existingConfig = await getConfigFromIpfs(ipfsPath)
     if (existingConfig.address !== address) {
       res.status(400).send('Wallet address mismatch, load configuration to modify')
       return
@@ -67,13 +68,9 @@ app.post('/config', async (req, res) => {
 })
 
 app.post('/config/preview', async (req, res) => {
-  const stream = new ReadableStream()
-  stream.push(JSON.stringify(req.body))
-  stream.push(null)
-
-  let response
+  let ipfsHash
   try {
-    response = await ipfsClient.add(stream)
+    ipfsHash = addConfigToIpfs(req.body)
   } catch(error) {
     logger.error(error)
     res.status(500).send('An error occurred saving configuration to IPFS')
@@ -81,12 +78,12 @@ app.post('/config/preview', async (req, res) => {
   }
 
   // Remove hash of preview config from pinset because this can be GCed
-  ipfsClient.pin.rm(response)
+  ipfsClient.pin.rm(ipfsHash)
 
-  res.send(response)
+  res.send(ipfsHash)
 })
 
-app.get('/validation/subdomain', async (req, res) => {
-})
+// app.get('/validation/subdomain', async (req, res) => {
+// })
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

@@ -10,7 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-var config = {
+const config = {
   entry: ['@babel/polyfill', './src/index.js'],
   devtool: isProduction ? false : 'cheap-module-source-map',
   output: {

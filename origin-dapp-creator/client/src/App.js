@@ -1,7 +1,6 @@
 import React from 'react'
-import { Switch, Route, Redirect, NavLink } from 'react-router-dom'
+import { Switch, Route, NavLink } from 'react-router-dom'
 import {
-  Alignment,
   Button,
   Classes,
   ControlGroup,

@@ -9,7 +9,7 @@ class ColorPicker extends Component {
     this.handleChangeComplete = this.handleChangeComplete.bind(this)
   }
 
-  handleChangeComplete(color, event) {
+  handleChangeComplete(color) {
     this.props.onChange(this.props.name, color)
   }
 
@@ -18,11 +18,11 @@ class ColorPicker extends Component {
       <FormGroup
           className="label-wide"
           label={this.props.label}
-          labelFor={this.props.label + "-color-picker"}
+          labelFor={this.props.label + '-color-picker'}
           inline={true}>
         <Popover>
           <Button>
-            <div className="color-preview" style={{background: this.props.value}}></div>
+            <div className="color-preview" style={{ background: this.props.value }}></div>
           </Button>
           <SketchPicker
             color={ this.props.value }

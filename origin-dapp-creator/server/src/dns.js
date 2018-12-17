@@ -49,32 +49,35 @@ export function getDnsRecord(subdomain, recordType) {
  *
  *
  */
-export function createRecord(subdomain, recordType, data) {
-  const name = getDnsName(subdomain, recordType)
-  return zone.record(recordType, {
-    name: name,
-    data: data,
-    ttl: DEFAULT_TTL
-  })
+export function _records(subdomain, ipfsHash) {
+  return [
+    zone.record('cname', {
+      name: getDnsName(subdomain, 'cname'),
+      data: 'dapp.originprotocol.com.',
+      ttl: DEFAULT_TTL
+    }),
+    zone.record('txt', {
+      name: getDnsName(subdomain, 'txt'),
+      data: `dnslink=/ipfs/${ipfsHash}`,
+      ttl: DEFAULT_TTL
+    })
+  ]
 }
 
 /*
  *
  *
  */
-
 export function configureRecords(subdomain, ipfsHash) {
-  let changes = {}
-  changes.add = []
-  changes.add.push(createRecord(subdomain, 'CNAME', 'dapp.originprotocol.com.'))
-  changes.add.push(createRecord(subdomain, 'TXT', `dnslink=/ipfs/${ipfsHash}`))
-  return executeChanges(changes)
+  const changes = {
+    add: _records(subdomain, ipfsHash)
+  }
+  return zone.createChanges(changes)
 }
 
-export function deleteRecords(subdomain) {
+export function deleteRecords(subdomain, ipfsHash) {
+  const changes = {
+    delete: _records(subdomain, ipfsHash)
+  }
+  return zone.createChanges(changes)
 }
-
-export function executeChanges(changes) {
-  return zone.createChange(changes)
-}
-

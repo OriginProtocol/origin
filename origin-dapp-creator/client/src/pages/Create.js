@@ -11,7 +11,7 @@ import IconUrlField from 'components/fields/IconUrlField'
 import DomainField from 'components/fields/DomainField'
 import ColorPicker from 'components/ColorPicker'
 
-import { AppToaster } from "../toaster";
+import { AppToaster } from '../toaster'
 
 import { baseConfig } from 'origin-dapp/src/config'
 
@@ -74,7 +74,7 @@ class Create extends Component {
               signature: signature,
               address: web3.eth.accounts[0]
             })
-            .catch((error) => {
+            .catch(() => {
               AppToaster.show({
                 message: 'There was an error publishing your DApp configuration'
               })
