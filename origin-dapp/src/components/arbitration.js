@@ -168,8 +168,8 @@ class Arbitration extends Component {
               </div>
               <h1>
                 {listing.name}
-                {isPending && <PendingBadge />}
-                {isSold && <SoldBadge />}
+                {isPending && listing.listingType !== 'fractional' && <PendingBadge />}
+                {isSold && listing.listingType !== 'fractional' && <SoldBadge />}
                 {/*listing.boostLevel &&
                   <span className={ `boosted badge boost-${listing.boostLevel}` }>
                     <img src="images/boost-icon-arrow.svg" role="presentation" />

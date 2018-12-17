@@ -66,7 +66,8 @@ class ListingCard extends Component {
       pictures,
       price,
       status,
-      unitsRemaining
+      unitsRemaining,
+      listingType
     } = this.state
     const photo = pictures && pictures.length && pictures[0]
     const isPending = offers.find(
@@ -76,8 +77,8 @@ class ListingCard extends Component {
       o => offerStatusToListingAvailability(o.status) === 'sold'
     )
     const isWithdrawn = status === 'inactive'
-    const showPendingBadge = isPending && !isWithdrawn
-    const showSoldBadge = isSold || isWithdrawn
+    const showPendingBadge = isPending && !isWithdrawn && listingType !== 'fractional'
+    const showSoldBadge = isSold || isWithdrawn && listingType !== 'fractional'
     const showFeaturedBadge = this.state.display == 'featured' && !showSoldBadge && !showPendingBadge
 
     return (

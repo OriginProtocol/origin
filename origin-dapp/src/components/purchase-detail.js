@@ -791,8 +791,8 @@ class PurchaseDetail extends Component {
               />
               <h1>
                 {listing.name}
-                {isPending && <PendingBadge />}
-                {isSold && <SoldBadge />}
+                {isPending && listing.listingType !== 'fractional' && <PendingBadge />}
+                {isSold && listing.listingType !== 'fractional' && <SoldBadge />}
                 {/*!!listing.boostValue && (
                   <span className={`boosted badge boost-${listing.boostLevel}`}>
                     <img

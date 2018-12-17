@@ -273,8 +273,8 @@ class ListingsDetail extends Component {
     const isPending = currentOfferAvailability === 'pending'
     const isSold = currentOfferAvailability === 'sold'
     const isAvailable = !isPending && !isSold && !isWithdrawn
-    const showPendingBadge = isPending && !isWithdrawn
-    const showSoldBadge = isSold || isWithdrawn
+    const showPendingBadge = isPending && !isWithdrawn && !isFractional
+    const showSoldBadge = isSold || isWithdrawn && !isFractional
     /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
      * show listings with the Featured badge, because listings are loaded from web3. We could
      * pass along featured information from elasticsearch, but that would increase the code
@@ -584,7 +584,7 @@ class ListingsDetail extends Component {
                   */}
                 </div>
               )}
-              {!isAvailable && (
+              {!isAvailable && !isFractional && (
                 <div className="buy-box placehold unavailable text-center">
                   {!loading && (
                     <div className="reason">
