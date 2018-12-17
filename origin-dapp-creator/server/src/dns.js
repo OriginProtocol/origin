@@ -12,7 +12,7 @@ function getDnsName(subdomain, recordType) {
   if (recordType.toLowerCase() === 'cname') {
     return baseName
   } else if (recordType.toLowerCase() === 'txt') {
-    return `origin.${baseName}`
+    return `config.${baseName}`
   }
 }
 
@@ -72,12 +72,12 @@ export function configureRecords(subdomain, ipfsHash) {
   const changes = {
     add: _records(subdomain, ipfsHash)
   }
-  return zone.createChanges(changes)
+  return zone.createChange(changes)
 }
 
 export function deleteRecords(subdomain, ipfsHash) {
   const changes = {
     delete: _records(subdomain, ipfsHash)
   }
-  return zone.createChanges(changes)
+  return zone.createChange(changes)
 }
