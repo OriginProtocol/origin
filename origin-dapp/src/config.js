@@ -1,5 +1,5 @@
 export const baseConfig = {
-  title: 'Origin Protocol DApp',
+  title: '',
   about: '',
   subdomain: '',
   logoUrl: 'images/origin-icon-white.svg',
