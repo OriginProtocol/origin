@@ -88,7 +88,8 @@ class Create extends Component {
   }
 
   async handlePreview () {
-    const response = await superagent.post(`${process.env.API_URL}/config/preview`)
+    const response = await superagent
+      .post(`${process.env.API_URL}/config/preview`)
       .send(this.state.config)
     const ipfsHash = response.body[0].hash
     const ipfsPath = `${process.env.IPFS_GATEWAY_URL}/ipfs/${ipfsHash}`

@@ -1,6 +1,18 @@
 import React from 'react'
 import { Switch, Route, Redirect, NavLink } from 'react-router-dom'
-import { Button, Navbar, Alignment, Icon, Tooltip } from '@blueprintjs/core'
+import {
+  Alignment,
+  Button,
+  Classes,
+  ControlGroup,
+  Dialog,
+  FormGroup,
+  Icon,
+  InputGroup,
+  Intent,
+  Navbar,
+  Tooltip
+} from '@blueprintjs/core'
 
 import Create from './pages/Create'
 
@@ -19,22 +31,79 @@ const Link = props => (
   </Tooltip>
 )
 
-const App = () => (
-  <>
-  <Navbar className="bp3-dark">
-    <Navbar.Group>
-      <Navbar.Heading className="logo">
-        <img src="public/images/origin-icon-white.svg" /> Creator
-      </Navbar.Heading>
-      <Link to="/" tooltip="Create a new configuration" icon="build" />
-      <Link to="/load" tooltip="Load an existing configuration" icon="floppy-disk" />
-    </Navbar.Group>
-  </Navbar>
-  <Switch>
-    <Route path="/" component={Create} />
-  </Switch>
-  </>
-)
+class App extends React.Component {
+  constructor (props) {
+    super(props)
+    this.isOpen = false
+    this.state = {
+      hostname: '',
+      isOpen: false
+    }
+    this.handleClose = this.handleClose.bind(this)
+    this.handleEdit = this.handleEdit.bind(this)
+  }
+
+  handleClose () {
+    this.setState({ isOpen: false })
+  }
+
+  handleEdit () {
+    this.setState({ isOpen: true })
+  }
+
+  render() {
+    const input = field => ({
+      value: this.state[field],
+      onChange: e => this.setState({ [field]: e.currentTarget.value })
+    })
+
+    return (
+      <>
+        <Navbar className="bp3-dark">
+          <Navbar.Group>
+            <Navbar.Heading className="logo">
+              <img src="public/images/origin-icon-white.svg" /> Creator
+            </Navbar.Heading>
+            <Link to="/" tooltip="Create a new configuration" icon="build" />
+            <Tooltip content="Edit an existing configuration" lazy={true}>
+              <Button className="bp3-minimal" onClick={this.handleEdit}>
+                <Icon icon="floppy-disk" />
+              </Button>
+            </Tooltip>
+          </Navbar.Group>
+        </Navbar>
+
+        <Switch>
+          <Route path="/" component={Create} />
+        </Switch>
+
+        <Dialog
+          title="Edit Existing Configuration"
+          isOpen={this.state.isOpen}
+          onClose={this.handleClose}
+        >
+          <div className={Classes.DIALOG_BODY}>
+            <FormGroup label="Hostname">
+              <ControlGroup fill={true}>
+                <InputGroup {...input('hostname')} />
+              </ControlGroup>
+            </FormGroup>
+          </div>
+
+          <div className={Classes.DIALOG_FOOTER}>
+            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+              <Button
+                intent={Intent.PRIMARY}
+              >
+                Load
+              </Button>
+            </div>
+          </div>
+        </Dialog>
+      </>
+    )
+  }
+}
 
 export default App
 
