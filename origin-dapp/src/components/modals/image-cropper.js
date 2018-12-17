@@ -1,47 +1,63 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import ReactCrop from 'react-image-crop'
-import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
+import { generateCroppedImage } from 'utils/fileUtils'
 import Modal from 'components/modal'
 
 class ImageCropper extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
+    this.defaultCrop = {
+      x: 0,
+      y: 0,
+      width: 100,
+      aspect: 4/3
+    }
+
+    this.defaultState = {
       imageFileObj: null,
       imageSrc: null,
-      crop: {
-        x: 0,
-        y: 0,
-        width: 100,
-        aspect: 4/3
-      },
+      crop: this.defaultCrop,
       pixelCrop: null,
       croppedImage: null,
       croppedImageUrl: null
     }
 
+    this.state = this.defaultState
+
     this.onCropChange = this.onCropChange.bind(this)
     this.onCropComplete = this.onCropComplete.bind(this)
   }
 
-  async componentDidUpdate(prevProps) {
-    if (this.props.imageFileObj && this.props.imageFileObj !== prevProps.imageFileObj) {
-      const imageSrc = await getDataUri(this.props.imageFileObj)
-      this.setState({
-        imageSrc,
-        ...this.props
-      })
+  componentDidUpdate(prevProps) {
+    const { imageFileObj, aspect, isOpen } = this.props
+    const imagePropChange = imageFileObj && imageFileObj !== prevProps.imageFileObj
+    const newImage = imageFileObj && !this.state.imageSrc
+
+    if (isOpen) {
+      if (imagePropChange || newImage) {
+        generateCroppedImage(imageFileObj, null, (dataUri) => {
+          this.setState({
+            imageSrc: dataUri,
+            crop: this.defaultCrop,
+            imageFileObj
+          })
+        })
+      }
+
+      if (aspect && aspect !== this.state.crop.aspect) {
+        this.setState({
+          crop: {
+            ...this.state.crop,
+            aspect: this.props.aspect
+          }
+        })
+      }
     }
 
-    if (this.props.aspect && this.props.aspect !== this.state.crop.aspect) {
-      this.setState({
-        crop: {
-          ...this.state.crop,
-          aspect: this.props.aspect
-        }
-      })
+    if (!isOpen && prevProps.isOpen) {
+      this.setState(this.defaultState)
     }
   }
 
@@ -52,11 +68,16 @@ class ImageCropper extends Component {
     })
   }
 
-  async onCropComplete() {
-    const { imageFileObj, pixelCrop } = this.state
-    const croppedImageFile = await generateCroppedImage(imageFileObj, pixelCrop)
-    const croppedImageUri = await getDataUri(croppedImageFile)
-    this.props.onCropComplete(croppedImageUri, imageFileObj)
+  onCropComplete() {
+    const { imageFileObj, pixelCrop, crop = {} } = this.state
+
+    const options = {
+      ...pixelCrop,
+      aspectRatio: crop.aspect,
+    }
+    generateCroppedImage(imageFileObj, options, (croppedImageUri) => {
+      this.props.onCropComplete(croppedImageUri, imageFileObj)
+    })
   }
 
   render() {

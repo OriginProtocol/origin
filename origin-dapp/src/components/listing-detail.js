@@ -23,6 +23,7 @@ import Modal from 'components/modal'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
+import PicturesThumbPreview from 'components/pictures-thumb-preview'
 
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
@@ -66,8 +67,7 @@ class ListingsDetail extends Component {
       boostLevel: null,
       boostValue: 0,
       onboardingCompleted: false,
-      slotsToReserve: [],
-      featuredImageIdx: 0
+      slotsToReserve: []
     }
 
     this.intlMessages = defineMessages({
@@ -80,7 +80,6 @@ class ListingsDetail extends Component {
     this.loadListing = this.loadListing.bind(this)
     this.handleMakeOffer = this.handleMakeOffer.bind(this)
     this.handleSkipOnboarding = this.handleSkipOnboarding.bind(this)
-    this.setFeaturedImage = this.setFeaturedImage.bind(this)
   }
 
   async componentWillMount() {
@@ -171,6 +170,7 @@ class ListingsDetail extends Component {
           this.props.updateTransaction(confirmationCount, transactionReceipt)
         }
       )
+
       this.props.upsertTransaction({
         ...transactionReceipt,
         transactionTypeKey: 'makeOffer'
@@ -192,7 +192,7 @@ class ListingsDetail extends Component {
     try {
       const { wallet } = this.props
       const purchases = await origin.marketplace.getPurchases(wallet.address)
-      const transformedPurchases = transformPurchasesOrSales(purchases)
+      const transformedPurchases = await transformPurchasesOrSales(purchases)
       this.setState({ purchases: transformedPurchases })
     } catch (error) {
       console.error(error)
@@ -202,10 +202,15 @@ class ListingsDetail extends Component {
   async loadListing() {
     try {
       const listing = await getListing(this.props.listingId, true)
+      const isFractional = listing.listingType === 'fractional'
+      const slotLengthUnit = isFractional && listing.slotLengthUnit
+      const fractionalTimeIncrement = slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily'
+
       this.setState({
         ...listing,
         loading: false,
-        isFractional: listing.listingType === 'fractional'
+        isFractional,
+        fractionalTimeIncrement
       })
     } catch (error) {
       this.props.showAlert(
@@ -236,18 +241,13 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.VIEW })
   }
 
-  setFeaturedImage(idx) {
-    this.setState({
-      featuredImageIdx: idx
-    })
-  }
-
   render() {
     const { wallet } = this.props
     const {
       // boostLevel,
       // boostValue,
       category,
+      subCategory,
       description,
       display,
       isFractional,
@@ -259,8 +259,7 @@ class ListingsDetail extends Component {
       seller,
       status,
       step,
-      schemaType,
-      featuredImageIdx
+      fractionalTimeIncrement
       // unitsRemaining
     } = this.state
     const currentOffer = offers.find(o => {
@@ -452,7 +451,7 @@ class ListingsDetail extends Component {
           <div className="row">
             <div className="col-12">
               <div className="category placehold d-flex">
-                <div>{category}</div>
+                <div>{category}&nbsp;&nbsp;|&nbsp;&nbsp;{subCategory}</div>
                 {!loading && (
                   <div className="badges">
                     {showPendingBadge && <PendingBadge />}
@@ -473,25 +472,10 @@ class ListingsDetail extends Component {
             </div>
             <div className="col-12 col-md-8 detail-info-box">
               {(loading || (pictures && !!pictures.length)) && (
-                <div className="image-wrapper">
-                  <img
-                    className="featured-image"
-                    src={pictures[featuredImageIdx]}
-                  />
-                  {pictures.length > 1 &&
-                    <div className="photo-row">
-                      {pictures.map((pictureUrl, idx) => (
-                        <img
-                          onClick={() => this.setFeaturedImage(idx)}
-                          src={pictureUrl}
-                          key={idx}
-                          role="presentation"
-                          className={featuredImageIdx === idx ? 'featured-thumb' : ''}
-                        />
-                      ))}
-                    </div>
-                  }
-                </div>
+                <PicturesThumbPreview
+                  pictures={ pictures }
+                  wrapClassName="image-wrapper">
+                </PicturesThumbPreview>
               )}
               <p className="ws-aware description placehold">{description}</p>
               {/* Via Stan 5/25/2018: Hide until contracts allow for unitsRemaining > 1 */}
@@ -796,7 +780,7 @@ class ListingsDetail extends Component {
                   slots={ this.state.slots }
                   offers={ this.state.offers }
                   userType="buyer"
-                  viewType={ schemaType === 'housing' ? 'daily' : 'hourly' }
+                  viewType={ fractionalTimeIncrement }
                   onComplete={(slots) => this.handleMakeOffer(false, slots) }
                   step={ 60 }
                 />

@@ -10,15 +10,13 @@
     "origin-js",
     "origin-linking",
     "origin-messaging",
+    "origin-mobile",
     "origin-notifications",
     "origin-tests",
     "origin-token-transfer/*"
   ],
   "command": {
     "bootstrap": {
-      "hoist": [
-        "**"
-      ],
       "nohoist": [
         "openzeppelin-solidity"
       ]

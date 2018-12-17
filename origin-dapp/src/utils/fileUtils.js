@@ -1,3 +1,8 @@
+import loadImage from 'blueimp-load-image'
+
+const MAX_IMAGE_WIDTH = 1000
+const MAX_IMAGE_HEIGHT = 1000
+
 export const getDataUri = async file => {
   const reader = new FileReader()
 
@@ -17,95 +22,138 @@ export const getDataUri = async file => {
 }
 
 /*
+ * getCroppedDimensions
+ * @description uses the canvas dimensions to generate the auto-crop dimensions
+ * @param {file} canvas - The image canvas to be modified
+ */
+
+export const getCroppedDimensions = (canvas) => {
+  const imageWidth = canvas.width
+  const imageHeight = canvas.height
+
+  let cropWidth
+  let cropHeight
+  let left
+  let top
+
+  if (imageWidth > imageHeight) {
+    // Landscape orientation
+    cropHeight = imageHeight
+    cropWidth = imageHeight * 1.3333
+    left = (imageWidth / 2) - (cropWidth / 2)
+    top = 0
+  } else {
+    // Portrait orientation
+    cropWidth = imageWidth
+    cropHeight = imageWidth / 1.3333
+    top = (imageHeight / 2) - (cropHeight / 2)
+    left = 0
+  }
+
+  return {
+    left,
+    top,
+    sourceWidth: cropWidth,
+    sourceHeight: cropHeight
+  }
+}
+
+/*
+ * scaleAndCropImage
+ * @description Creates a scaled & cropped imageDataUri when given options
+ * @param {file} canvas - The image canvas to be modified
+ * @param {object} config - https://github.com/blueimp/JavaScript-Load-Image#options
+ * @param {function} callback- called with an imageDataUri
+ */
+
+export const scaleAndCropImage = (props) => {
+  const { config, callback, imageFileObj, options } = props
+
+  loadImage(imageFileObj, (canvas) => {
+    let newConfig = config
+
+    if (config.crop) {
+      newConfig = { ...config, ...getCroppedDimensions(canvas) }
+    }
+
+    const scaledImage = loadImage.scale(canvas, newConfig)
+    scaledImage.toBlob(async (blob) => {
+      blob.name = imageFileObj.name
+      const dataUri = await getDataUri(blob)
+
+      callback(dataUri)
+    }, 'image/jpeg')
+  }, options)
+
+}
+
+/*
  * generateCroppedImage
  * @description Creates a cropped image file when given crop dimensions
- * @param {string} imageSrc - The source URL of the image
  * @param {file} imageFileObj - The image file object from the file input element
- * @param {object} pixelCrop - The object containing the dimensions of the crop area
- * @param {number} pixelCrop.height - The height of the crop area
- * @param {number} pixelCrop.width - The width of the crop area
- * @param {number} pixelCrop.x - The x coordinate of the top-left corner of the crop area
- * @param {number} pixelCrop.y - The y coordinate of the top-left corner of the crop area
- * @param {boolean} skipCropping - If set to true, the image is not cropped, only resized
+ * @param {file} pixelCrop - The object containing the dimensions of the crop area,
+ * as well as the aspect ratio. If undefined, the image will not be cropped
+ * @param {number} aspectRatio - the ratio of the width to the height of an image (i.e. 4/3)
+ * @param {bool} centerCrop - whether to auto-crop the image at its center
+ * @param {number} height - The height of the crop area
+ * @param {number} width - The width of the crop area
+ * @param {number} x - The x coordinate of the top-left corner of the crop area
+ * @param {number} y - The y coordinate of the top-left corner of the crop area
+ * @param {function} callback- called with the result of modifyImage (an imageDataUri)
  */
-export const generateCroppedImage = async (imageFileObj, pixelCrop, skipCropping = false) => {
-  const MAX_IMAGE_WIDTH = 1000
-  const MAX_IMAGE_HEIGHT = 1000
-  const imageSrc = await getDataUri(imageFileObj)
-  let image
-  let canvas
-  
-  function drawImageOnCanvas(imgEl) {
-    let defaultConfig
 
-    if (skipCropping) {
-      defaultConfig = {
-        x: 0,
-        y: 0,
-        width: imgEl.width,
-        height: imgEl.height
-      }
-    } else {
-      let cropWidth = imgEl.width
-      let cropHeight = imgEl.width / 1.33333 // 4:3 aspect ratio
+export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) => {
+  const {
+    x = 0,
+    y = 0,
+    width,
+    height,
+    aspectRatio,
+    centerCrop = false
+  } = pixelCrop || {}
 
-      if (cropHeight > imgEl.height) {
-        cropHeight = imgEl.height
-        cropWidth = cropHeight * 1.33333
-      }
-
-      defaultConfig = {
-        x: (imgEl.width - cropWidth) / 2, // center crop horizontally
-        y: (imgEl.height - cropHeight) / 2, // center crop area vertically
-        width: cropWidth,
-        height: cropHeight
-      }
-    }
-
-    const { x, y, width, height } = pixelCrop || defaultConfig
-
-    let resizedWidth = width
-    let resizedHeight = height
-
-    if (width > MAX_IMAGE_WIDTH) {
-      resizedWidth = MAX_IMAGE_WIDTH
-      const widthDiffRatio = resizedWidth / width
-      resizedHeight = height * widthDiffRatio
-    }
-
-    if (resizedHeight > MAX_IMAGE_HEIGHT) {
-      const heightDiffRatio = MAX_IMAGE_HEIGHT / resizedHeight
-      resizedHeight = MAX_IMAGE_HEIGHT
-      resizedWidth = resizedWidth * heightDiffRatio
-    }
-
-    canvas = document.createElement('canvas')
-    canvas.width = resizedWidth
-    canvas.height = resizedHeight
-    const ctx = canvas.getContext('2d')
-
-    ctx.drawImage(
-      image,
-      x,
-      y,
-      width,
-      height,
-      0,
-      0,
-      resizedWidth,
-      resizedHeight
-    )
+  const defaultConfig = {
+    left: x,
+    top: y,
+    aspectRatio
   }
- 
-  return new Promise(resolve => {
-    image = new Image()
-    image.onload = () => {
-      drawImageOnCanvas(image)
-      canvas.toBlob(file => {
-        file.name = imageFileObj.name
-        resolve(file)
-      }, 'image/jpeg')
+  const defaultOptions = {
+    orientation: true,
+    crossOrigin: 'anonymous'
+  }
+
+  if (centerCrop) {
+    // This is used by listing-create component to auto-crop images
+    // Load the image, find the center, and auto-crop it
+    const dataUri = await getDataUri(imageFileObj)
+    const image = new Image()
+
+    image.onload = function centerCropImage() {
+      const config = {
+        ...defaultConfig,
+        crop: true,
+        maxHeight: MAX_IMAGE_HEIGHT,
+        maxWidth: MAX_IMAGE_WIDTH
+      }
+
+      scaleAndCropImage({ options: defaultOptions, config, callback, imageFileObj })
     }
-    image.src = imageSrc
-  })
+    image.src = dataUri
+
+  } else {
+    // This is used by Profile (avatar selection) and messaging (resizing large images)
+    const config = {
+      ...defaultConfig,
+      sourceWidth: width,
+      sourceHeight: height,
+    }
+
+    const options = {
+      ...defaultOptions,
+      maxHeight: MAX_IMAGE_HEIGHT,
+      maxWidth: MAX_IMAGE_WIDTH
+    }
+
+    scaleAndCropImage({ options, imageFileObj, config, callback })
+  }
 }

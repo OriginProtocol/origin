@@ -9,7 +9,8 @@ class EditProfile extends Component {
     super(props)
     this.nameRef = React.createRef()
 
-    const { pic, firstName, lastName, description, } = this.props.data
+    const { pic, firstName, lastName, description } = props.data
+
     this.state = {
       pic,
       firstName,
@@ -39,9 +40,7 @@ class EditProfile extends Component {
     const { data } = this.props
     const { pic } = data
     if (pic && pic !== prevProps.data.pic) {
-      this.setState({
-        pic
-      })
+      this.setState({ pic })
     }
 
     if (!prevProps.open && this.props.open) {
@@ -49,16 +48,6 @@ class EditProfile extends Component {
         this.nameRef.current.focus()
       }, 500)
     }
-  }
-
-  blobToDataURL(blob) {
-    return new Promise(resolve => {
-      const a = new FileReader()
-      a.onload = function(e) {
-        resolve(e.target.result)
-      }
-      a.readAsDataURL(blob)
-    })
   }
 
   handleDescriptionChange(e) {
@@ -106,7 +95,7 @@ class EditProfile extends Component {
                 onClick={handleToggle}
                 className="col-2 d-flex align-items-center"
               >
-                <img src="images/carat-white.svg" />
+                <img src="images/caret-white.svg" />
               </a>
               <h2 className="col-8">
                 <FormattedMessage
@@ -155,6 +144,7 @@ class EditProfile extends Component {
                       <input
                         id="edit-profile-image"
                         type="file"
+                        accept="image/jpeg,image/gif,image/png"
                         ref={r => (this.editPic = r)}
                         style={{ opacity: 0, position: 'absolute', zIndex: -1, width: '30px' }}
                         onChange={e => {

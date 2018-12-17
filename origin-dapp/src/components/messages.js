@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
+import Avatar from 'components/avatar'
 
 import { showMainNav } from 'actions/App'
 
 import groupByArray from 'utils/groupByArray'
-import { formattedAddress } from 'utils/user'
+import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -15,25 +17,32 @@ class Messages extends Component {
   constructor(props) {
     super(props)
 
+    this.checkForSmallScreen = this.checkForSmallScreen.bind(this)
+
     this.state = {
-      selectedConversationId: null
+      selectedConversationId: null,
+      smallScreenOrDevice: false
     }
   }
 
   componentDidMount() {
-    const { mobileDevice, match } = this.props
+    const { match } = this.props
+    const smallSreenDetected = this.checkForSmallScreen()
+
     // try to detect the conversation before rendering
-    if (match.params.conversationId || !mobileDevice) {
+    if (match.params.conversationId || !smallSreenDetected) {
       this.detectSelectedConversation()
     }
+
+    window.addEventListener('resize', this.checkForSmallScreen)
   }
 
   componentDidUpdate(prevProps) {
-    const { conversations, match, mobileDevice } = this.props
-    const { selectedConversationId } = this.state
+    const { conversations, match } = this.props
+    const { selectedConversationId, smallScreenOrDevice } = this.state
     const { conversationId } = match.params
 
-    if (mobileDevice) return
+    if (smallScreenOrDevice) return
 
     // on route change
     if (
@@ -49,28 +58,48 @@ class Messages extends Component {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.checkForSmallScreen)
+  }
+
+  checkForSmallScreen() {
+    const { mobileDevice, showMainNav, selectedConversationId } = this.props
+
+    const smallScreen = window.innerWidth <= 991
+    const smallScreenOrDevice = smallScreen || mobileDevice
+    const stateChanged = (this.state && this.state.smallScreenOrDevice)
+
+    if (smallScreenOrDevice && selectedConversationId && !stateChanged) {
+      showMainNav(false)
+    }
+    this.setState({ smallScreenOrDevice })
+
+    return smallScreenOrDevice
+  }
+
   detectSelectedConversation() {
-    const { match, conversations, mobileDevice, showMainNav } = this.props
+    const { match, conversations, showMainNav } = this.props
+    const { smallScreenOrDevice } = this.state
+
     const selectedConversationId =
       match.params.conversationId ||
       (conversations[0] || {}).key
 
-    if (mobileDevice && selectedConversationId) showMainNav(false)
+    if (smallScreenOrDevice && selectedConversationId) showMainNav(false)
     selectedConversationId && this.setState({ selectedConversationId })
   }
 
   handleConversationSelect(selectedConversationId = '') {
-    const { mobileDevice } = this.props
-
-    const showMainNav = (mobileDevice && selectedConversationId.length) ? false : true
+    const { smallScreenOrDevice } = this.state
+    const showMainNav = (smallScreenOrDevice && selectedConversationId.length) ? false : true
 
     this.props.showMainNav(showMainNav)
     this.setState({ selectedConversationId })
   }
 
   render() {
-    const { conversations, messages, mobileDevice, users, wallet } = this.props
-    const { selectedConversationId } = this.state
+    const { conversations, messages, users, wallet } = this.props
+    const { selectedConversationId, smallScreenOrDevice } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
       .sort((a, b) => (a.created < b.created ? -1 : 1))
@@ -85,24 +114,32 @@ class Messages extends Component {
         ? recipients.find(addr => formattedAddress(addr) !== formattedAddress(senderAddress))
         : senderAddress
     const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
-    const counterpartyName = counterparty.fullName || formattedAddress(counterpartyAddress)
+    const counterpartyProfile = counterparty && counterparty.profile
+    const counterpartyName = abbreviateName(counterparty) || truncateAddress(formattedAddress(counterpartyAddress))
 
-    if (mobileDevice) {
+    if (smallScreenOrDevice) {
       if (selectedConversationId && selectedConversationId.length) {
         return (
           <div className="mobile-messaging messages-wrapper">
-            <div className="back d-flex flex-row justify-content-center align-items-center"
+            <div className="back d-flex flex-row justify-content-start"
               onClick={() => this.handleConversationSelect()}
             >
-              <i className="icon-arrow-left align-self-start mr-auto"></i>
-              <span className="counterparty text-truncate mr-auto">{counterpartyName}</span>
+              <div className="align-self-start">
+                <i className="icon-arrow-left align-self-start mr-auto"></i>
+              </div>
+              <div className="align-self-center nav-avatar ml-auto">
+                <Link to={`/users/${counterpartyAddress}`}>
+                  <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
+                </Link>
+              </div>
+              <div className="counterparty text-truncate mr-auto">{counterpartyName}</div>
             </div>
             <div className="conversation-col d-flex flex-column">
               <Conversation
                 id={selectedConversationId}
                 messages={filteredAndSorted}
                 withListingSummary={true}
-                mobileDevice={mobileDevice}
+                smallScreenOrDevice={smallScreenOrDevice}
               />
             </div>
           </div>
@@ -115,6 +152,7 @@ class Messages extends Component {
                 key={c.key}
                 conversation={c}
                 active={selectedConversationId === c.key}
+                fromMessages={true}
                 handleConversationSelect={() =>
                   this.handleConversationSelect(c.key)
                 }
@@ -136,6 +174,7 @@ class Messages extends Component {
                     key={c.key}
                     conversation={c}
                     active={selectedConversationId === c.key}
+                    fromMessages={true}
                     handleConversationSelect={() =>
                       this.handleConversationSelect(c.key)
                     }
