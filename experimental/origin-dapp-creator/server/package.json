@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint '**/*.js'",
     "start": "per-env",
-    "start:development": "nodemon --exec 'babel-node' src/app.js --presets @babel/env",
+    "start:development": "nodemon --exec 'babel-node' -r env.js src/app.js --presets @babel/env",
     "start:production": "node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -32,6 +32,7 @@
     "envkey": "^1.2.4",
     "express": "^4.16.4",
     "ipfs-api": "^26.1.2",
+    "logplease": "^1.2.15",
     "per-env": "^1.0.2",
     "web3": "^1.0.0-beta.37"
   },

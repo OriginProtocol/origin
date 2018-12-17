@@ -68,7 +68,7 @@ class Footer extends Component {
                 <div className="vl" />
                 <div className="description">
                   <p>
-                    {this.state.about ? ( this.state.about ) : (
+                    {this.props.about ? ( this.props.about ) : (
                       <FormattedMessage
                         id={'footer.description'}
                         defaultMessage={

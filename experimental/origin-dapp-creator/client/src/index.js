@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { Route, HashRouter } from 'react-router-dom'
 import { Web3Provider } from 'react-web3'
 
-import App from './pages/App';
+import App from './App';
 
 console.log(process.env.PROVIDER_URL)
 

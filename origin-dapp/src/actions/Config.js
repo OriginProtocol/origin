@@ -11,19 +11,15 @@ export const ConfigConstants = keyMirror(
 
 export function fetchConfig(url) {
   return async function(dispatch) {
-    try {
-      if (url) {
-        return fetch(url)
-          .then(response => response.json())
-          .then(configJson => {
-            dispatch({
-              type: ConfigConstants.FETCH_SUCCESS,
-              configJson
-            })
-          })
-      }
-    } catch (error) {
-      dispatch({ type: ConfigConstants.FETCH_ERROR, error })
+    if (url) {
+      return fetch(url)
+        .then(response => response.json())
+        .then(configJson => {
+          dispatch({ type: ConfigConstants.FETCH_SUCCESS, configJson })
+        })
+        .catch((error) => {
+          dispatch({ type: ConfigConstants.FETCH_ERROR, error })
+        })
     }
   }
 }

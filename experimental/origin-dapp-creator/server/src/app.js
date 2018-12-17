@@ -1,29 +1,16 @@
-require('dotenv').config()
-try {
-  require('envkey')
-} catch(error) {
-  console.warn('ENVKEY not configured')
-}
-
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
-const ipfsApi = require('ipfs-api')
-const ReadableStream = require('stream').Readable
+const Logger = require('logplease')
 const Web3 = require('web3')
 const web3 = new Web3()
 
 const app = express()
 const port = process.env.PORT || 4321
-const ipfsClient = ipfsApi(
-  process.env.IPFS_API_HOST || 'localhost',
-  process.env.IPFS_API_PORT || 5002,
-  {
-    protocol: process.env.IPFS_API_PROTOCOL || 'http'
-  }
-)
+const logger = Logger.create('origin-dapp-creator-server')
 
-import { getDnsRecord, setDnsRecord } from './dns'
+import { getDnsRecord, configureRecords } from './dns'
+import { addConfigToIpfs, getConfigFromIpfs } from './ipfs'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -32,7 +19,7 @@ app.use(cors())
 app.post('/config', async (req, res) => {
   const { config, signature, address } = req.body
 
-  // Validate signature
+  // Validate signature matches
   const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)
   // Address from recover is checksummed so lower case it
   if (signer.toLowerCase() !== address) {
@@ -40,26 +27,43 @@ app.post('/config', async (req, res) => {
     return
   }
 
-  const existingRecord = await getDnsRecord(config.subdomain, 'TXT')
-
-  if (existingRecord) {
-    // Retrieve IPFS content and match addresses of signing wallets
-  }
-
-  const stream = new ReadableStream()
-  stream.push(JSON.stringify(req.body))
-  stream.push(null)
-
-  let response
+  // Check if there is an existing configuration published for this subdomain
+  let existingRecord
   try {
-    response = await ipfsClient.add(stream)
-  } catch(error) {
-    console.log(error)
-    res.status(500).send('An error occurred saving configuration to IPFS')
+    existingRecord = await getDnsRecord(config.subdomain, 'TXT')
+  } catch (error) {
+    logger.error(error)
+    res.status(400).send('An error occurred retrieving DNS records')
     return
   }
 
-  res.send(response)
+  if (existingRecord) {
+    const ipfsPath = parseDnsTxtRecord(existingRecord.data[0])
+    if (existingConfig.address !== address) {
+      res.status(400).send('Wallet address mismatch, load configuration to modify')
+      return
+    }
+  }
+
+  // Add the new config to IPFS
+  let ipfsHash
+  try {
+    ipfsHash = await addConfigToIpfs(config)
+  } catch (error) {
+    logger.error(error)
+    res.status(400).send('An error occurred publishing configuration to IPFS')
+    return
+  }
+
+  try {
+    await configureRecords(config.subdomain, ipfsHash)
+  } catch(error) {
+    logger.error(error)
+    res.status(400).send('Failed to configure DNS records')
+    return
+  }
+
+  res.send(ipfsHash)
 })
 
 app.post('/config/preview', async (req, res) => {
@@ -71,16 +75,18 @@ app.post('/config/preview', async (req, res) => {
   try {
     response = await ipfsClient.add(stream)
   } catch(error) {
-    console.log(error)
+    logger.error(error)
     res.status(500).send('An error occurred saving configuration to IPFS')
     return
   }
-  console.log(response)
 
   // Remove hash of preview config from pinset because this can be GCed
   ipfsClient.pin.rm(response)
 
   res.send(response)
+})
+
+app.get('/validation/subdomain', async (req, res) => {
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

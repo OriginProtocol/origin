@@ -131,14 +131,14 @@ class App extends Component {
     }
 
     return this.props.selectedLanguageCode ? (
-      <IntlProvider
-        locale={this.props.selectedLanguageCode}
-        defaultLocale="en-US"
-        messages={this.props.messages}
-        textComponent={Fragment}
-      >
-        <Router>
-          <Customize>
+      <Router>
+        <Customize>
+          <IntlProvider
+            locale={this.props.selectedLanguageCode}
+            defaultLocale="en-US"
+            messages={this.props.messages}
+            textComponent={Fragment}
+          >
             <ScrollToTop>
               <Web3Provider>
                 <Onboarding>
@@ -182,9 +182,9 @@ class App extends Component {
                 </Onboarding>
               </Web3Provider>
             </ScrollToTop>
-          </Customize>
-        </Router>
-      </IntlProvider>
+          </IntlProvider>
+        </Customize>
+      </Router>
     ) : null // potentially a loading indicator
   }
 }

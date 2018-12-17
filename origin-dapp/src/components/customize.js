@@ -7,8 +7,19 @@ import { fetchConfig } from 'actions/Config'
 class Customize extends Component {
 
   componentDidMount() {
-    const configUrlMatch = window.location.search.match(/config=([^#]*)/)
-    const configUrl = configUrlMatch ? decodeURIComponent(configUrlMatch[1]) : false
+    let configUrl
+    if (window.location.hostname.includes('origindapp.com')) {
+      const ipfs = process.env.IPFS_GATEWAY_PROTOCOL +
+        `://${process.env.IPFS_DOMAIN}` +
+        `:${process.env.IPFS_GATEWAY_PORT}`
+      configUrl = `${ipfs}/ipns/origin.${window.location.hostname}`
+    } else {
+      const configUrlMatch = window.location.search.match(/config=([^#]*)/)
+      configUrl = configUrlMatch ? decodeURIComponent(configUrlMatch[1]) : false
+    }
+    console.log(this)
+
+    console.log(`Configuring from file at ${configUrl}`)
 
     this.props.fetchConfig(configUrl)
       .then(() => {

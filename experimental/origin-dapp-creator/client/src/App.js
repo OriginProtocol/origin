@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Route, Redirect, NavLink } from 'react-router-dom'
 import { Navbar, Alignment, Icon, Tooltip } from '@blueprintjs/core'
 
-import Create from '../components/Create'
+import Create from './pages/Create'
 
 require('normalize.css/normalize.css')
 require('@blueprintjs/core/lib/css/blueprint.css')
