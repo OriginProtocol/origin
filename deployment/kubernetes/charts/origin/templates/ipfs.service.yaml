@@ -16,7 +16,7 @@ spec:
   selector:
     app: {{ template "ipfs.fullname" . }}
   ports:
-    # 5001 and 8080 don't have an external ingress
+    # Most external usage is through ipfs-proxy, but ipns uses 8080
     - name: api
       port: 5001
     - name: gateway
