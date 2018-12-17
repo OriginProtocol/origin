@@ -39,6 +39,11 @@ class Customize extends Component {
         if (this.props.config.title) {
           document.title = this.props.config.title
         }
+
+        // Locale
+        if (this.props.config.locale) {
+          store.set('preferredLang', thiss.props.config.locale)
+        }
       })
   }
 

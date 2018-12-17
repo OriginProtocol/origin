@@ -7,8 +7,6 @@ import { Web3Provider } from 'react-web3'
 
 import App from './App';
 
-console.log(process.env.PROVIDER_URL)
-
 ReactDOM.render(
   <Web3Provider>
     <HashRouter>

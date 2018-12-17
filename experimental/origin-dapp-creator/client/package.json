@@ -5,8 +5,11 @@
   "main": "src/index.js",
   "scripts": {
     "build": "per-env",
+    "build:production": "babel src/* -d dist --presets @babel/env",
+    "lint": "eslint '**/*.js'",
     "start": "per-env",
     "start:development": "webpack-dev-server --watch --open",
+    "start:production": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,8 +24,8 @@
   "author": "Tom Linton <tom@originprotocol.com>",
   "license": "MIT",
   "dependencies": {
-    "@babel/polyfill": "^7.0.0",
     "@blueprintjs/core": "^3.9.0",
+    "@blueprintjs/select": "^3.4.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "origin-dapp": "^0.3.0",
     "per-env": "^1.0.2",
@@ -39,6 +42,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.2.0",
+    "@babel/node": "^7.2.0",
+    "@babel/polyfill": "^7.0.0",
     "@babel/plugin-proposal-decorators": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",

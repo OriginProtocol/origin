@@ -1,6 +1,6 @@
 import React from 'react'
 import { Switch, Route, Redirect, NavLink } from 'react-router-dom'
-import { Navbar, Alignment, Icon, Tooltip } from '@blueprintjs/core'
+import { Button, Navbar, Alignment, Icon, Tooltip } from '@blueprintjs/core'
 
 import Create from './pages/Create'
 
@@ -21,12 +21,13 @@ const Link = props => (
 
 const App = () => (
   <>
-  <Navbar>
+  <Navbar className="bp3-dark">
     <Navbar.Group>
-      <Icon icon="build" className="mr-3"></Icon>
       <Navbar.Heading className="logo">
-        <img src="public/images/origin-logo-dark.png" /> DApp Creator
+        <img src="public/images/origin-icon-white.svg" /> Creator
       </Navbar.Heading>
+      <Link to="/" tooltip="Create a new configuration" icon="build" />
+      <Link to="/load" tooltip="Load an existing configuration" icon="floppy-disk" />
     </Navbar.Group>
   </Navbar>
   <Switch>
@@ -41,13 +42,13 @@ require('react-styl')(`
   body
     min-width: 1000px
   .logo
-    opacity: 0.75
+    opacity: 1
     font-size: 1.2rem
     font-weight: 300
+    padding-right: 10px
     img
-      width: 68px
-      vertical-align: -1px
-      margin-right: 2px
+      vertical-align: -8px
+      margin-right: 10px
   .text-center
     text-align: center
   .p-3

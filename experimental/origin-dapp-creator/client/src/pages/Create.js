@@ -5,9 +5,10 @@ import superagent from 'superagent'
 
 import AboutField from 'components/fields/AboutField'
 import TitleField from 'components/fields/TitleField'
+import LocaleField from 'components/fields/LocaleField'
 import LogoUrlField from 'components/fields/LogoUrlField'
 import IconUrlField from 'components/fields/IconUrlField'
-import SubdomainField from 'components/fields/SubdomainField'
+import DomainField from 'components/fields/DomainField'
 import ColorPicker from 'components/ColorPicker'
 
 import { AppToaster } from "../toaster";
@@ -99,11 +100,11 @@ class Create extends Component {
       <div className="p-3">
         <h3>Create DApp Configuration</h3>
 
-        <h4>Subdomain</h4>
+        <h4>Domain</h4>
 
-        <SubdomainField value={this.state.config.subdomain}
+        <DomainField value={this.state.config.subdomain}
           onChange={this.handleInputChange}>
-        </SubdomainField>
+        </DomainField>
 
         <h4>Title & Description</h4>
 
@@ -122,6 +123,13 @@ class Create extends Component {
         <IconUrlField value={this.state.config.iconUrl}
           onChange={this.handleInputChange}>
         </IconUrlField>
+
+
+        <h4>Languages</h4>
+
+        <LocaleField value={this.state.config.locale}
+          onChange={this.handleInputChange}>
+        </LocaleField>
 
         <h4>Colors</h4>
 
@@ -164,3 +172,8 @@ Create.contextTypes = {
 }
 
 export default Create
+
+require('react-styl')(`
+  h4
+    margin-top: 2rem;
+`)
