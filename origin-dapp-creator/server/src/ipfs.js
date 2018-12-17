@@ -1,7 +1,7 @@
 const ReadableStream = require('stream').Readable
 const ipfsApi = require('ipfs-api')
 
-const ipfsClient = ipfsApi(
+export const ipfsClient = ipfsApi(
   process.env.IPFS_API_HOST || 'localhost',
   process.env.IPFS_API_PORT || 5002,
   {

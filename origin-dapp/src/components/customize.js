@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
 import { fetchConfig } from 'actions/Config'
+import store from 'store'
 
 class Customize extends Component {
 
@@ -17,7 +18,6 @@ class Customize extends Component {
       const configUrlMatch = window.location.search.match(/config=([^#]*)/)
       configUrl = configUrlMatch ? decodeURIComponent(configUrlMatch[1]) : false
     }
-    console.log(this)
 
     console.log(`Configuring from file at ${configUrl}`)
 
@@ -41,8 +41,8 @@ class Customize extends Component {
         }
 
         // Locale
-        if (this.props.config.locale) {
-          store.set('preferredLang', thiss.props.config.locale)
+        if (this.props.config.languageCode) {
+          store.set('preferredLang', this.props.config.languageCode)
         }
       })
   }

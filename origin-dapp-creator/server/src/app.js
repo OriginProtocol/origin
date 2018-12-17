@@ -70,7 +70,7 @@ app.post('/config', async (req, res) => {
 app.post('/config/preview', async (req, res) => {
   let ipfsHash
   try {
-    ipfsHash = addConfigToIpfs(req.body)
+    ipfsHash = await addConfigToIpfs(req.body)
   } catch(error) {
     logger.error(error)
     res.status(500).send('An error occurred saving configuration to IPFS')

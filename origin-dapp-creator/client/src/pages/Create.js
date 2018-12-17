@@ -5,7 +5,7 @@ import superagent from 'superagent'
 
 import AboutField from 'components/fields/AboutField'
 import TitleField from 'components/fields/TitleField'
-import LocaleField from 'components/fields/LocaleField'
+import LanguageCodeField from 'components/fields/LanguageCodeField'
 import LogoUrlField from 'components/fields/LogoUrlField'
 import IconUrlField from 'components/fields/IconUrlField'
 import DomainField from 'components/fields/DomainField'
@@ -21,7 +21,8 @@ class Create extends Component {
 
     this.state = {
       config: baseConfig,
-      publishing: false
+      publishing: false,
+      previewing: false
     }
 
     this.web3Context = context.web3
@@ -88,11 +89,14 @@ class Create extends Component {
   }
 
   async handlePreview () {
+    this.setState({ previewing: true })
     const response = await superagent
       .post(`${process.env.API_URL}/config/preview`)
       .send(this.state.config)
-    const ipfsHash = response.body[0].hash
-    const ipfsPath = `${process.env.IPFS_GATEWAY_URL}/ipfs/${ipfsHash}`
+
+    this.setState({ previewing: false })
+
+    const ipfsPath = `${process.env.IPFS_GATEWAY_URL}/ipfs/${response.text}`
     window.open(`${process.env.DAPP_URL}/?config=${ipfsPath}`, '_blank')
   }
 
@@ -128,9 +132,9 @@ class Create extends Component {
 
         <h4>Languages</h4>
 
-        <LocaleField value={this.state.config.locale}
+        <LanguageCodeField value={this.state.config.locale}
           onChange={this.handleInputChange}>
-        </LocaleField>
+        </LanguageCodeField>
 
         <h4>Colors</h4>
 
@@ -159,9 +163,9 @@ class Create extends Component {
         </Button>
 
         <Button className="ml-2 mt-3"
-          text="Preview"
-          large={true}
-          onClick={this.handlePreview}>
+            large={true}
+            onClick={this.handlePreview}>
+          {this.state.previewing ? 'Loading' : 'Preview' }
         </Button>
       </div>
     )

@@ -3,7 +3,7 @@ import { HTMLSelect, FormGroup } from '@blueprintjs/core'
 
 import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
 
-class LocaleField extends Component {
+class LanguageCodeField extends Component {
 
   constructor (props) {
     super(props)
@@ -14,7 +14,6 @@ class LocaleField extends Component {
         label: language.selectedLanguageFull
       }
     })
-
 
     this.availableLanguages.unshift({ value: 'en-US', label: 'English' })
 
@@ -28,12 +27,14 @@ class LocaleField extends Component {
   render () {
     return (
       <FormGroup
-          label="Locale"
-          labelFor="locale-field">
-        <HTMLSelect options={this.availableLanguages} />
+          label="Language Code"
+          labelFor="languageCode">
+        <HTMLSelect name="languageCode"
+          options={this.availableLanguages}
+          onChange={this.handleChange} />
       </FormGroup>
     )
   }
 }
 
-export default LocaleField
+export default LanguageCodeField
