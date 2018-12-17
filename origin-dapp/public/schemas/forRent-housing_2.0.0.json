@@ -3,18 +3,34 @@
   "type": "object",
   "required": [
     "name",
-    "description",
-    "price"
+    "description"
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "https://dapp.originprotocol.com/schemas/forRent-jewelry_1.0.0.json"
+      "const": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json"
     },
     "listingType": {
-      "const": "unit"
+      "const": "fractional"
     },
     "category": {
       "const": "schema.forRent"
+    },
+    "slotLength": {
+      "type": "integer",
+      "title": "schema.slotLength",
+      "default": 1
+    },
+    "slotLengthUnit": {
+      "type": "string",
+      "enum": [
+        "schema.minutes",
+        "schema.hours",
+        "schema.days",
+        "schema.weeks",
+        "schema.months",
+        "schema.years"
+      ],
+      "default": "schema.days"
     },
     "name": {
       "type": "string",
@@ -28,6 +44,14 @@
       "minLength": 10,
       "maxLength": 1024
     },
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
+    },
     "sellerSteps": {
       "type": "string",
       "title": "schema.sellerSteps",
@@ -38,19 +62,7 @@
       ]
     },
     "subCategory": {
-      "const": "schema.furniture"
-    },
-    "price": {
-      "type": "number",
-      "title": "schema.priceInETH"
-    },
-    "pictures": {
-      "type": "array",
-      "title": "schema.selectPhotos",
-      "items": {
-        "type": "string",
-        "format": "data-url"
-      }
+      "const": "schema.housing"
     }
   }
 }

@@ -731,4 +731,13 @@ const listingSchemaMetadata = {
   }
 }
 
+// TODO(John) - 
+if (process.env.ENABLE_FRACTIONAL) {
+  listingSchemaMetadata.listingSchemasByCategory.forRent.forEach(schemaObj => {
+    if (schemaObj.schema === 'forRent-housing_1.0.0.json' || schemaObj.schema === 'forRent-jewelry_1.0.0.json') {
+      schemaObj.schema = schemaObj.schema.replace('1.0.0', '2.0.0')
+    }
+  })
+}
+
 export default listingSchemaMetadata
