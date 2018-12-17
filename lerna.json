@@ -1,11 +1,11 @@
 {
   "packages": [
     "experimental/*",
-    "ipfs-proxy",
     "origin-contracts",
     "origin-dapp",
     "origin-discovery",
     "origin-faucet",
+    "origin-ipfs-proxy",
     "origin-js",
     "origin-linking",
     "origin-messaging",

@@ -6,7 +6,7 @@ rm ./experimental/origin-graphql/package-lock.json
 rm ./experimental/origin-graphql-simple-demo/package-lock.json
 rm ./experimental/origin-ipfs/package-lock.json
 rm ./experimental/origin-validator/package-lock.json
-rm ./ipfs-proxy/package-lock.json
+rm ./oriin-ipfs-proxy/package-lock.json
 rm ./origin-contracts/package-lock.json
 rm ./origin-dapp/package-lock.json
 rm ./origin-discovery/package-lock.json

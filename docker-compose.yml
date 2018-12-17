@@ -43,8 +43,8 @@ services:
       - ./origin-js/package.json:/app/origin-js/package.json
     command: npm run start --prefix origin-js
 
-  ipfs-proxy:
-    container_name: ipfs-proxy
+  origin-ipfs-proxy:
+    container_name: origin-ipfs-proxy
     image: origin
     ports:
       - "9999:9999"
@@ -52,9 +52,9 @@ services:
       - IPFS_API_URL=http://origin:5002
       - IPFS_GATEWAY_URL=http://origin:8080
     volumes:
-      - ./ipfs-proxy/src:/app/ipfs-proxy/src
-      - ./ipfs-proxy/package.json:/app/ipfs-proxy/package.json
-    command: npm run start --prefix ipfs-proxy
+      - ./origin-ipfs-proxy/src:/app/origin-ipfs-proxy/src
+      - ./origin-ipfs-proxy/package.json:/app/origin-ipfs-proxy/package.json
+    command: npm run start --prefix origin-ipfs-proxy
 
   origin-discovery:
     container_name: origin-discovery
