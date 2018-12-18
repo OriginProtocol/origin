@@ -2,8 +2,8 @@ export const baseConfig = {
   title: '',
   about: '',
   subdomain: '',
-  logoUrl: 'images/origin-icon-white.svg',
-  iconUrl: 'images/origin-icon-white.svg',
+  logoUrl: '',
+  iconUrl: '',
   cssVars: {
     // Fonts
     defaultFont: ['Lato', 'Helvetica Neue', 'Arial', 'Sans-Serif'],
