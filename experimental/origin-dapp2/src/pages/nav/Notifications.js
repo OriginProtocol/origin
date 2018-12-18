@@ -32,6 +32,9 @@ class NotificationsNav extends Component {
       <Query query={NotificationsQuery}>
         {({ subscribeToMore, ...result }) => {
           if (result.loading || result.error) return null
+          if (!get(result, 'data.web3.metaMaskAccount.id')) {
+            return null
+          }
 
           return (
             <NotificationsDropdown

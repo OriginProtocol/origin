@@ -6,6 +6,7 @@ import Footer from './_Footer'
 
 import Listings from './listings/Listings'
 import Listing from './listings/Listing'
+import Transaction from './transactions/Transaction'
 
 class App extends Component {
   componentDidUpdate() {
@@ -22,6 +23,7 @@ class App extends Component {
           <div className="container">
             <Switch>
               <Route path="/listings/:listingID" component={Listing} />
+              <Route path="/transaction" component={Transaction} />
               <Route component={Listings} />
             </Switch>
           </div>
