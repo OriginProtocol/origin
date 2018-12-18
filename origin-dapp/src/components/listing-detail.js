@@ -780,6 +780,7 @@ class ListingsDetail extends Component {
                   slots={ this.state.slots }
                   offers={ this.state.offers }
                   userType="buyer"
+                  userIsSeller={ userIsSeller  }
                   viewType={ fractionalTimeIncrement }
                   onComplete={(slots) => this.handleMakeOffer(false, slots) }
                   step={ 60 }

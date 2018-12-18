@@ -640,14 +640,16 @@ class Calendar extends Component {
                   <div>
                     <p className="font-weight-bold">Price</p>
                     <p>{selectedEvent.price && selectedEvent.price} ETH</p>
-                    <div className="cta-btns row">
-                      <div className="col-md-6">
-                        <button className="btn btn-dark" onClick={this.unselectSlots}>Cancel</button>
+                    {!this.props.userIsSeller &&
+                      <div className="cta-btns row">
+                        <div className="col-md-6">
+                          <button className="btn btn-dark" onClick={this.unselectSlots}>Cancel</button>
+                        </div>
+                        <div className="col-md-6">
+                          <button className="btn btn-light" onClick={this.reserveSlots}>Reserve</button>
+                        </div>
                       </div>
-                      <div className="col-md-6">
-                        <button className="btn btn-light" onClick={this.reserveSlots}>Reserve</button>
-                      </div>
-                    </div>
+                    }
                   </div>
                 }
               </div>
