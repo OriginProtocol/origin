@@ -1,5 +1,6 @@
-import { Component } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 
 import { fetchConfig } from 'actions/Config'
@@ -19,7 +20,9 @@ class Customize extends Component {
       configUrl = configUrlMatch ? decodeURIComponent(configUrlMatch[1]) : false
     }
 
-    console.log(`Configuring from file at ${configUrl}`)
+    if (configUrl) {
+      console.log(`Configuring from file at ${configUrl}`)
+    }
 
     this.props.fetchConfig(configUrl)
       .then(() => {
@@ -67,7 +70,9 @@ const mapDispatchToProps = dispatch => ({
   fetchConfig: url => dispatch(fetchConfig(url))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(Customize))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(injectIntl(Customize))
+)
