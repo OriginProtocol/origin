@@ -67,6 +67,8 @@ export default class Marketplace {
     return listings
       .map(listing => listing.offers)
       .reduce((offers, offerArr) => [...offers, ...offerArr], [])
+      // only keep the purchases where user identified by `account` is the buyer
+      .filter(offer => offer.buyer === account)
       .map(offer => {
         return {
           offer,
