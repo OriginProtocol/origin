@@ -124,8 +124,8 @@ const OriginNavigator = createBottomTabNavigator({
           <Image source={require(IMAGES_PATH + 'home-inactive.png')} />
       } else if (routeName === 'Messaging') {
         return focused ?
-          <Image source={require(IMAGES_PATH + 'scan-active.png')} /> :
-          <Image source={require(IMAGES_PATH + 'scan-inactive.png')} />
+          <Image source={require(IMAGES_PATH + 'messaging-active.png')} /> :
+          <Image source={require(IMAGES_PATH + 'messaging-inactive.png')} />
       } else if (routeName === 'Scan') {
         return focused ?
           <Image source={require(IMAGES_PATH + 'scan-active.png')} /> :
@@ -139,9 +139,9 @@ const OriginNavigator = createBottomTabNavigator({
   }),
   tabBarOptions: {
     activeTintColor: '#007fff',
-    inactiveTintColor: 'white',
+    inactiveTintColor: '#c0cbd4',
     style: {
-      backgroundColor: '#293f55',
+      backgroundColor: 'white',
     },
     iconStyle: {
       marginTop: 10,
@@ -282,17 +282,17 @@ class OriginWrapper extends Component {
             onCompletion={() => this.props.storeActivation(true)}
             pages={[
               {
-                image: <Image style={{ height: 180, width: 130 }} source={require(IMAGES_PATH + 'clipart-wallet.png')} />,
+                image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-1.png')} />,
                 title: 'Store & Use Crypto',
                 subtitle: 'The Origin Mobile Wallet will allow you to store cryptocurrency to buy and sell on the Origin Marketplace.',
               },
               {
-                image: <Image style={{ height: 150, width: 90 }} source={require(IMAGES_PATH + 'clipart-messaging.png')} />,
+                image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-2.png')} />,
                 title: 'Message Buyers & Sellers',
                 subtitle: 'Use the app to communicate with others on the Origin Marketplace in order to move your transactions.',
               },
               {
-                image: <Image style={{ height: 168, width: 140 }} source={require(IMAGES_PATH + 'carousel-notifications.png')} />,
+                image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-3.png')} />,
                 title: 'Stay Up to Date',
                 subtitle: 'The Origin Mobile Wallet will notify you when there are transactions that require your attention.',
               },

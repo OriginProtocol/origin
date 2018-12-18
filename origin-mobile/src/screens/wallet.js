@@ -20,7 +20,6 @@ class WalletScreen extends Component {
     this.state = {apiHost:originWallet.getCurrentRemoteLocal()}
   }
 
-
   render() {
     const { address, balance } = this.props
     // placeholders
