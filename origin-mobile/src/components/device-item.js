@@ -12,7 +12,6 @@ export default class DeviceItem extends Component {
     const app_info = item.link && item.link.app_info
     const { browser, platform } = app_info && app_info.user_agent
 
-
     return (
       <View style={[ styles.listItem, style ]}>
         <View style={styles.iconsContainer}>

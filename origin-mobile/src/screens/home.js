@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import Currency from '../components/currency'
 import Identicon from '../components/identicon'
 import DeviceItem from '../components/device-item'
 import Separator from '../components/separator'
-import TransactionItem from '../components/transaction-item'
 import SignItem from '../components/sign-item'
+import TransactionItem from '../components/transaction-item'
 
 import originWallet from '../OriginWallet'
 
@@ -15,7 +16,7 @@ class HomeScreen extends Component {
     super(props)
 
     this.state = {
-      recentItems:[]
+      recentItems: []
     }
   }
 
@@ -33,13 +34,33 @@ class HomeScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.walletContainer}>
+        <ScrollView
+          horizontal={true}
+          style={styles.svContainer}
+          contentContainerStyle={styles.walletContainer}
+        >
+          <Currency
+            abbreviation={'ETH'}
+            balance={ethBalance}
+            labelColor={'#a27cff'}
+            imageSource={require('../../assets/images/eth-icon.png')}
+          />
+          <Currency
+            abbreviation={'OGN'}
+            balance={'0'}
+            labelColor={'#007fff'}
+            imageSource={require('../../assets/images/eth-icon.png')}
+          />
+          <Currency
+            abbreviation={'DAI'}
+            balance={'0'}
+            labelColor={'#fdb134'}
+            imageSource={require('../../assets/images/eth-icon.png')}
+          />
+        </ScrollView>
+        <View style={styles.oldWalletContainer}>
           {myAddress && <Identicon address={myAddress} style={styles.identicon} />}
           <Text style={styles.address}>{myAddress}</Text>
-          <View style={styles.balance}>
-            <Image source={require('../../assets/images/eth-icon.png')} style={styles.icon} />
-            <Text>{ethBalance} ETH</Text>
-          </View>
         </View>
         <FlatList
           data={this.props.processed_events}
@@ -104,11 +125,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '66%',
   },
-  balance: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
   container: {
     flex: 1,
   },
@@ -137,11 +153,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f8f8',
     flex: 1,
   },
+  svContainer: {
+    backgroundColor: '#0b1823',
+    flexGrow: 0,
+    height: 76,
+  },
   text: {
     fontFamily: 'Lato',
     fontSize: 17,
   },
   walletContainer: {
+    paddingLeft: 10,
+    paddingVertical: 10,
+  },
+  oldWalletContainer: {
     alignItems: 'center',
     backgroundColor: '#f7f8f8',
     padding: 30,
