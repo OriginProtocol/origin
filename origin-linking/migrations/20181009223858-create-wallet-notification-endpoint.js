@@ -1,6 +1,6 @@
 'use strict';
 const {EthNotificationTypes} = require('origin/common/enums');
-const TableName = 'eth_notification_endpoint';
+const TableName = 'wallet_notification_endpoint';
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -15,22 +15,18 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull:false
       },
+      wallet_token: {
+        type: Sequelize.STRING(255),
+        allowNull:false,
+        unique:true
+      },
       device_token: {
         type: Sequelize.STRING(255),
         allowNull:false
       },
-      type: {
+      device_type: {
         type: Sequelize.ENUM(EthNotificationTypes),
         allowNull:false
-      },
-      active: {
-        type: Sequelize.BOOLEAN
-      },
-      verified: {
-        type: Sequelize.BOOLEAN
-      },
-      expires_at: {
-        type: Sequelize.DATE
       },
       created_at: {
         allowNull: false,
@@ -40,8 +36,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => queryInterface.addIndex(TableName, ['eth_address']))
-      .then(() => queryInterface.addIndex(TableName, ['type', 'device_token']));
+    }).then(() => queryInterface.addIndex(TableName, ['eth_address']));
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(TableName);

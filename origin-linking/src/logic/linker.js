@@ -48,13 +48,12 @@ class Linker {
 
   getWalletToken(linkedObj) {
     if (linkedObj.linked) {
-      return `${linkedObj.deviceType}:${linkedObj.deviceToken}`
+      return linkedObj.walletToken
     }
   }
 
-  parseWalletToken(walletToken) {
-    const parts = walletToken.split(':')
-    return {deviceType:parts[0], deviceToken:parts.slice(1).join(':')}
+  async getWalletNotification(walletToken) {
+    return await db.WalletNotificationEndpoint.findOne({where:{walletToken}})
   }
 
   async _generateNonConflictingCode() {
@@ -153,8 +152,9 @@ class Linker {
     return this.messages.addMessage(linkedObj.clientToken, {type, session_token:sessionToken, data})
   }
 
-  sendNotificationMessage(linkedObj, msg, data ={}) {
-    if (linkedObj.deviceType == EthNotificationTypes.APN && this.apnProvider)
+  async sendNotificationMessage(linkedObj, msg, data ={}) {
+    const notify = await this.getWalletNotification(linkedObj.walletToken)
+    if (notify && notify.deviceType == EthNotificationTypes.APN && this.apnProvider)
     {
       const note = new apn.Notification({
         alert:msg,
@@ -162,7 +162,7 @@ class Linker {
         payload:data,
         topic:this.apnBundle
       })
-      this.apnProvider.send(note, linkedObj.deviceToken)
+      this.apnProvider.send(note, notify.deviceToken)
     }
   }
 
@@ -216,7 +216,6 @@ class Linker {
 
     if(linkedObj.code && notifyWallet)
     {
-      console.log("Sending message to:", notifyWallet, " type:", MessageTypes.LINK_REQUEST)
       this.messages.addMessage(notifyWallet, {type:MessageTypes.LINK_REQUEST, data:{code:linkedObj.code}})
     }
     return {clientToken, sessionToken, code:linkedObj.code, linked:linkedObj.linked}
@@ -273,12 +272,11 @@ class Linker {
     await this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
     // send push notification via APN or fcm
-    this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta), {call_id})
+    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta), {call_id})
   }
 
   async walletCalled(walletToken, callId, linkId, sessionToken, result) {
-    const {deviceType, deviceToken} = this.parseWalletToken(walletToken)
-    const links = await db.LinkedToken.findAll({where:{deviceType, deviceToken, linked:true}})
+    const links = await db.LinkedToken.findAll({where:{walletToken, linked:true}})
 
     let linkedObj = null
     for (const link of links) {
@@ -318,10 +316,9 @@ class Linker {
     const pendingCallContext = linkedObj.pendingCallContext
     const appInfo = linkedObj.appInfo
 
-    const {deviceType, deviceToken} = this.parseWalletToken(walletToken)
+    const notify = await this.getWalletNotification(walletToken)
 
-    linkedObj.deviceToken = deviceToken
-    linkedObj.deviceType = deviceType
+    linkedObj.walletToken = walletToken
     linkedObj.linked = true
     linkedObj.code = null
     linkedObj.currentDeviceContext = {accounts:current_accounts, network_rpc:current_rpc, priv_data}
@@ -336,9 +333,7 @@ class Linker {
   }
 
   async getWalletLinks(walletToken) {
-    const {deviceType, deviceToken} = this.parseWalletToken(walletToken)
-
-    const links = await db.LinkedToken.findAll({where:{deviceType, deviceToken, linked:true}})
+    const links = await db.LinkedToken.findAll({where:{walletToken, linked:true}})
     return links.map(link => ({linked:link.linked, app_info:link.appInfo,  link_id:this.getLinkId(link.id, link.clientToken), linked_at:link.linkedAt, pub_key:link.clientPubKey}))
   }
 
@@ -357,15 +352,13 @@ class Linker {
   }
 
   async unlinkWallet(walletToken, linkId) {
-    const {deviceType, deviceToken} = this.parseWalletToken(walletToken)
-    const links = await db.LinkedToken.findAll({where:{deviceType, deviceToken, linked:true}})
+    const links = await db.LinkedToken.findAll({where:{walletToken, linked:true}})
 
     for (const link of links) {
       if (linkId == this.getLinkId(link.id, link.clientToken))
       {
         link.linked = false
-        link.deviceType = null
-        link.deviceToken = null
+        link.walletToken = null
         link.save()
         this.sendContextChange(link)
         return true
@@ -373,6 +366,21 @@ class Linker {
     }
     return false
   }
+
+  async registerWalletNotification(walletToken, ethAddress, deviceType, deviceToken) {
+    let notify = await this.getWalletNotification(walletToken)
+      
+    if (!notify)
+    {
+      notify = await db.WalletNotificationEndpoint.build({walletToken})
+    }
+
+    Object.assign(notify, {ethAddress, deviceType, deviceToken})
+    await notify.save()
+    return true
+  }
 }
+
+
 
 export default Linker

@@ -22,7 +22,6 @@ const linker = new Linker()
 
 router.post("/generate-code", async (req, res) => {
   const _clientToken = getClientToken(req)
-  console.log("generate code body:", req.body)
   const {return_url, session_token, pub_key, pending_call, notify_wallet} = req.body
   const {clientToken, sessionToken, code, linked} = await linker.generateCode(_clientToken, session_token, pub_key, req.useragent, return_url, pending_call, notify_wallet)
   clientTokenHandler(res, clientToken)
@@ -86,6 +85,14 @@ router.post("/unlink-wallet/:walletToken", async (req, res) => {
   const success = await linker.unlinkWallet(walletToken, link_id)
   res.send(success)
 })
+
+router.post("/register-wallet-notification/:walletToken", async (req, res) => {
+  const {walletToken} = req.params
+  const {eth_address, device_type, device_token} = req.body
+  const success = await linker.registerWalletNotification(walletToken, eth_address, device_type, device_token)
+  res.send(success)
+})
+
 
 router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
   const clientToken = getClientToken(req)
