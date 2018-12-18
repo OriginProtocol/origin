@@ -27,6 +27,17 @@ export function generateCalendarSlots(events) {
   return eventsClone
 }
 
+// Generate slots that will be used in the buyer's offer
+export function generateBuyerSlotStartEnd(selectionStart, viewType, slotIndex) {
+  const slotLength = viewType === 'hourly' ? 'hour' : 'day'
+  const start = moment(selectionStart).add(slotIndex, slotLength)
+  const end = moment(selectionStart).add(slotIndex, slotLength).add(1, slotLength).subtract(1, 'second')
+  return {
+    start: start.toDate(),
+    end: end.toDate()
+  }
+}
+
 export function checkSlotsForExistingEvent(slotInfo, events) {
   return events.filter((event) => {
     let isEventInSlot = false

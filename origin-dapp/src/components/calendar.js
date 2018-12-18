@@ -14,7 +14,8 @@ import {
   getRecurringEvents,
   getSlotsToReserve,
   getCleanEvents,
-  getDateAvailabilityAndPrice
+  getDateAvailabilityAndPrice,
+  generateBuyerSlotStartEnd
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -135,19 +136,26 @@ class Calendar extends Component {
       const selectionData = []
       let slotToTest = moment(slotInfo.start)
       let hasUnavailableSlot = false
+      let slotIndex = 0
 
       while (slotToTest.toDate() >= slotInfo.start && slotToTest.toDate() <= slotInfo.end) {
         const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events)
+        const { price, isAvailable, isRecurringEvent } = slotAvailData
 
-        if(!slotAvailData.isAvailable || moment(slotInfo.end).isBefore(moment())){
+        if (!isAvailable || moment(slotInfo.end).isBefore(moment())){
           hasUnavailableSlot = true
         }
 
+        const slot = generateBuyerSlotStartEnd(slotInfo.start, this.props.viewType, slotIndex)
+
         selectionData.push({
-          ...slotInfo,
-          price: slotAvailData.price,
-          isAvailable: slotAvailData.isAvailable
+          ...slot,
+          price,
+          isAvailable,
+          isRecurringEvent
         })
+
+        slotIndex++
 
         if (this.props.viewType === 'daily') {
           slotToTest = slotToTest.add(1, 'days')

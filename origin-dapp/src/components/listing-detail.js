@@ -136,9 +136,17 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.METAMASK })
 
     const slots = slotsToReserve || this.state.slotsToReserve
-    const price = this.state.isFractional ?
-        slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString() :
-        this.state.price
+    let price
+
+    if (this.state.isFractional) {
+      const rawPrice = slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString()
+      price = `${Number(rawPrice).toLocaleString(undefined, {
+          minimumFractionDigits: 5,
+          maximumFractionDigits: 5
+        })}`
+    } else {
+      price = this.state.price
+    }
 
     try {
       const offerData = {
