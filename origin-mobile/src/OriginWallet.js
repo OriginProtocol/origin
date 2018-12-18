@@ -14,8 +14,6 @@ import origin, {apiUrl, defaultProviderUrl, messagingUrl, localApi, defaultLocal
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
 const ORIGIN_WALLET = "OriginWallet"
-
-
 const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/"
 const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/"
 const LAST_MESSAGE_IDS = "last_message_ids"

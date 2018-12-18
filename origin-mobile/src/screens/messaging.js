@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-// To Do: switch to react-native-webview (https://github.com/react-native-community/react-native-webview)
-import { WebView } from "react-native-webview";
+import { WebView } from 'react-native-webview'
+
 import originWallet from '../OriginWallet'
 
 class MessagingScreen extends Component {
@@ -15,10 +15,10 @@ class MessagingScreen extends Component {
 
   render() {
     return (
-      <WebView source={{ uri: originWallet.getMessagingUrl() }}
-        injectedJavaScript = { `window.__linkToWalletContainer('${originWallet.getWalletToken()}');` }
-          />
-
+      <WebView
+        source={{ uri: originWallet.getMessagingUrl() }}
+        injectedJavaScript = {`window.__linkToWalletContainer('${originWallet.getWalletToken()}');`}
+      />
     )
   }
 }
