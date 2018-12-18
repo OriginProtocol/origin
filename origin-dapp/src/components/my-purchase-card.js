@@ -85,19 +85,45 @@ class MyPurchaseCard extends Component {
               </p>
               {!voided && (
                 <Fragment>
-                  {this.state.listing.listingType === 'fractional' &&
+                  {listing.listingType === 'fractional' &&
                     <div className="d-flex">
                       <p className="booking-dates">
                         { `${this.getBookingDates('startDate')} - ${this.getBookingDates('endDate')}`}
                       </p>
                     </div>
                   }
-                  <div className="d-flex flex-column">
-                    <p className="price">{`${Number(totalPrice.amount).toLocaleString(
-                      undefined,
-                      { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                    )} ${totalPrice.currency}`}</p>
-                    {isMultiUnit && <p className="quantity">Quantity: {unitsPurchased}</p>}
+                  {isMultiUnit && <div className="flex-grid d-flex pt-3">
+                    <div className="d-flex col-3 pl-0 pr-0 mr-auto">
+                      <div className="mr-auto">
+                        Quantity:
+                      </div>
+                      <div className="emphasis">
+                        {unitsPurchased}
+                      </div>
+                    </div>
+                    <div className="d-flex col-6 pl-0 pr-0">
+                      <div className="mr-auto">
+                        Price / unit:
+                      </div>
+                      <div className="emphasis">
+                        {`${Number(price).toLocaleString(
+                          undefined,
+                          { minimumFractionDigits: 5, maximumFractionDigits: 5 }
+                        )} ${totalPrice.currency}`}
+                      </div>
+                    </div>
+                  </div>}
+
+                  <div className="dflex-grid d-flex pt-3">
+                    <div className="col-3 pl-0 pr-0">
+                      Total Price: 
+                    </div>
+                    <div className="col-9 pl-0 pr-0 emphasis">
+                      {`${Number(price * unitsPurchased).toLocaleString(
+                        undefined,
+                        { minimumFractionDigits: 5, maximumFractionDigits: 5 }
+                      )} ${totalPrice.currency}`}
+                    </div>
                   </div>
                   <PurchaseProgress
                     currentStep={step}
