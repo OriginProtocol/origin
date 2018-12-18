@@ -152,8 +152,7 @@ class Linker {
     return this.messages.addMessage(linkedObj.clientToken, {type, session_token:sessionToken, data})
   }
 
-  async sendNotificationMessage(linkedObj, msg, data ={}) {
-    const notify = await this.getWalletNotification(linkedObj.walletToken)
+  sendNotify(notify, msg, data = {}) {
     if (notify && notify.deviceType == EthNotificationTypes.APN && this.apnProvider)
     {
       const note = new apn.Notification({
@@ -164,6 +163,11 @@ class Linker {
       })
       this.apnProvider.send(note, notify.deviceToken)
     }
+  }
+
+  async sendNotificationMessage(linkedObj, msg, data) {
+    const notify = await this.getWalletNotification(linkedObj.walletToken)
+    this.sendNotify(notify, msg, data)
   }
 
   generateInitSession(linkedObj) {
@@ -378,6 +382,15 @@ class Linker {
     Object.assign(notify, {ethAddress, deviceType, deviceToken})
     await notify.save()
     return true
+  }
+
+  async ethNotify(receivers) {
+    for (const ethAddress of receivers)
+    {
+      console.log("Notifying:", ethAddress)
+      const notify = await db.WalletNotificationEndpoint.findOne({where:{ethAddress}})
+      this.sendNotify(notify, "New message for: " +ethAddress)
+    }
   }
 }
 

@@ -7,6 +7,7 @@ const router = express.Router()
 expressWs(router)
 
 const CLIENT_TOKEN_COOKIE = "ct"
+const NOTIFY_TOKEN = process.env.NOTIFY_TOKEN
 
 const getClientToken = req => {
   return req.cookies[CLIENT_TOKEN_COOKIE]
@@ -71,6 +72,16 @@ router.get("/wallet-links/:walletToken", async (req, res) => {
   const {walletToken} = req.params
   const links = await linker.getWalletLinks(walletToken)
   res.send(links)
+})
+
+
+router.post("/eth-notify", async (req, res) => {
+  const {receivers, token} = req.body
+  if (token == NOTIFY_TOKEN)
+  {
+    linker.ethNotify(receivers)
+  }
+  res.send(true)
 })
 
 router.post("/unlink", async (req, res) => {
