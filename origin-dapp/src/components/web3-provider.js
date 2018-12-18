@@ -376,7 +376,9 @@ class Web3Provider extends Component {
     if (origin.contractService.walletLinker)
     {
         origin.contractService.walletLinker.showPopUp = this.showLinkerPopUp.bind(this)
-        origin.contractService.walletLinker.setLinkCode = this.setLinkerCode.bind(this)
+        if (!origin.contractService.walletLinker.setLinkCode) {
+          origin.contractService.walletLinker.setLinkCode = this.setLinkerCode.bind(this)
+        }
         origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
     }
   }

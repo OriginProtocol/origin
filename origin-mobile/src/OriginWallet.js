@@ -9,10 +9,11 @@ import {EthNotificationTypes} from 'origin/common/enums'
 import ecies from 'eth-ecies'
 import CryptoJS from "crypto-js"
 
-import origin, {apiUrl, defaultProviderUrl, messageOpenUrl, localApi, defaultLocalRemoteHost, getEthCode} from './services/origin'
+import origin, {apiUrl, defaultProviderUrl, messagingUrl, localApi, defaultLocalRemoteHost, getEthCode} from './services/origin'
 
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
+const ORIGIN_WALLET = "OriginWallet"
 
 
 const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/"
@@ -184,6 +185,14 @@ class OriginWallet {
     return this.remote_localhost
   }
 
+  getMessagingUrl() {
+    return localfy(messagingUrl) + ORIGIN_WALLET
+  }
+
+  getWalletToken() {
+    return getWalletToken(this.getNotifyType(), this.state.deviceToken)
+  }
+
   isLocalApi() {
     return localApi
   }
@@ -274,6 +283,11 @@ class OriginWallet {
 
       const link_id = responseJson.link_id
       const return_url = app_info && app_info.return_url
+
+      if (this.__internal_link_code == code)
+      {
+        return true
+      }
       this.fireEvent(Events.LINKED, {linked:true, link:{link_id, return_url:app_info.return_url, app_info:responseJson.app_info, linked_at:new Date(responseJson.linked_at)}})
 
       if (responseJson.pending_call_context)
@@ -656,6 +670,12 @@ class OriginWallet {
       console.log("Processing call:", message)
       await this.processCall(message.call, message.call_id, message.return_url, message.session_token, message.link_id)  
     }
+    else if ( type == "LINK_REQUEST")
+    {
+      console.log("requesting link:", message)
+      this.__internal_link_code = message.code
+      this.setLinkCode(message.code)
+    }
     this.last_message_ids[this.state.ethAddress] = msgId
     this.syncLastMessages()
   }
@@ -668,6 +688,7 @@ class OriginWallet {
     const ws = new WebSocket(this.WS_API_WALLET_LINKER_MESSAGES + getWalletToken(this.getNotifyType(), this.state.deviceToken) + '/' + last_message_id)
 
     ws.onmessage = e => {
+      console.log("got message:", e.data)
       this.processMessage(JSON.parse(e.data))
     }
 
@@ -702,7 +723,7 @@ class OriginWallet {
     console.log("notification.message:", notification.message)
     if (notification.message == "You've received a new message")
     {
-      Linking.openURL(this.messageOpenUrl)
+      // TODO:open up the messaging pane
     }
     this.checkSyncMessages(true)
   }

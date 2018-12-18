@@ -171,7 +171,7 @@ class Linker {
     return sessionToken
   }
 
-  async generateCode(clientToken, sessionToken, pubKey, userAgent, returnUrl, pendingCall) {
+  async generateCode(clientToken, sessionToken, pubKey, userAgent, returnUrl, pendingCall, notifyWallet) {
     let linkedObj
     if (clientToken)
     {
@@ -214,6 +214,11 @@ class Linker {
       linkedObj.save()
     }
 
+    if(linkedObj.code && notifyWallet)
+    {
+      console.log("Sending message to:", notifyWallet, " type:", MessageTypes.LINK_REQUEST)
+      this.messages.addMessage(notifyWallet, {type:MessageTypes.LINK_REQUEST, data:{code:linkedObj.code}})
+    }
     return {clientToken, sessionToken, code:linkedObj.code, linked:linkedObj.linked}
   }
   
