@@ -19,14 +19,19 @@ metadata:
     nginx.ingress.kubernetes.io/limit-rps: "50"
 spec:
   tls:
+    - secretName: origindapp-com
+      hosts:
+        - '*.origindapp.com'
     - secretName: {{ template "dapp.host" . }}
       hosts:
         - {{ template "dapp.host" . }}
   rules:
   - host: {{ template "dapp.host" . }}
-    http:
+    http: &http_rules`
       paths:
         - path: /
           backend:
             serviceName: {{ template "dapp.fullname" . }}
             servicePort: 80
+  - host: "*.origindapp.com"
+    http: *http_rules
