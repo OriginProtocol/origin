@@ -46,7 +46,7 @@ export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
               { method: 'evm_mine' },
               () => {}
             )
-          }, 1000)
+          }, contracts.automine)
         }
       })
       .on('confirmation', function(confNumber, receipt) {

@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
+import { Query } from 'react-apollo'
+import get from 'lodash/get'
+
+import WalletQuery from 'queries/Wallet'
 
 import Profile from './nav/Profile'
 import Notifications from './nav/Notifications'
+import Messages from './nav/Messages'
+import Confirmations from './nav/Confirmations'
 
 class Nav extends Component {
   state = {}
@@ -23,26 +29,65 @@ class Nav extends Component {
 
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ml-auto">
-              <li className="nav-item active">
-                <a className="nav-link" href="#">
-                  Get Started
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Sell on Origin
-                </a>
-              </li>
-              <Notifications
-                onOpen={() => this.setState({ open: 'notifications' })}
-                onClose={() => this.setState({ open: false })}
-                open={this.state.open === 'notifications'}
-              />
-              <Profile
-                onOpen={() => this.setState({ open: 'profile' })}
-                onClose={() => this.setState({ open: false })}
-                open={this.state.open === 'profile'}
-              />
+              <Query query={WalletQuery}>
+                {({ data }) => {
+                  if (!get(data, 'web3.metaMaskAccount.id'))
+                    return (
+                      <>
+                        <li className="nav-item active">
+                          <a className="nav-link" href="#">
+                            Get Started
+                          </a>
+                        </li>
+                        <li className="nav-item">
+                          <a className="nav-link" href="#">
+                            Sell on Origin
+                          </a>
+                        </li>
+                      </>
+                    )
+
+                  return (
+                    <>
+                      <li className="nav-item extra-margin active">
+                        <a className="nav-link" href="#">
+                          Buy
+                        </a>
+                      </li>
+                      <li className="nav-item extra-margin">
+                        <a className="nav-link" href="#">
+                          Sell
+                        </a>
+                      </li>
+                      <li className="nav-item extra-margin">
+                        <a className="nav-link add-listing" href="#">
+                          Add Listing
+                        </a>
+                      </li>
+                      <Confirmations
+                        onOpen={() => this.setState({ open: 'confirmations' })}
+                        onClose={() => this.setState({ open: false })}
+                        open={this.state.open === 'confirmations'}
+                      />
+                      <Messages
+                        onOpen={() => this.setState({ open: 'messages' })}
+                        onClose={() => this.setState({ open: false })}
+                        open={this.state.open === 'messages'}
+                      />
+                      <Notifications
+                        onOpen={() => this.setState({ open: 'notifications' })}
+                        onClose={() => this.setState({ open: false })}
+                        open={this.state.open === 'notifications'}
+                      />
+                      <Profile
+                        onOpen={() => this.setState({ open: 'profile' })}
+                        onClose={() => this.setState({ open: false })}
+                        open={this.state.open === 'profile'}
+                      />
+                    </>
+                  )
+                }}
+              </Query>
             </ul>
           </div>
         </div>
@@ -57,6 +102,7 @@ require('react-styl')(`
   .navbar
     padding: 0 1rem
     background-color: var(--dusk) !important
+
     .nav-item
       display: flex
       align-items: center
@@ -66,6 +112,8 @@ require('react-styl')(`
       font-weight: bold
       font-style: normal
       color: var(--pale-grey)
+      &.extra-margin
+        margin: 0 0.5rem
       &.show
         background-color: var(--white)
       &.dark
@@ -74,6 +122,12 @@ require('react-styl')(`
       .nav-link
         padding: 0 0.75rem
         color: var(--pale-grey)
+        &.add-listing
+          display: inline-block
+          padding-left: 1.25rem
+          margin-left: 0.75rem
+          background: url(images/add-listing-icon.svg) no-repeat left center
+          background-size: 1rem
 
       .dropdown-menu
         padding: 0

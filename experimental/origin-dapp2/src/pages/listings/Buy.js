@@ -192,6 +192,11 @@ export default Buy
 
 require('react-styl')(`
   .make-offer-modal
+    display: flex
+    flex-direction: column
+    align-items: center
+    .error-icon
+      width: 100%
     .spinner,.error-icon
       margin-bottom: 2rem
     .btn

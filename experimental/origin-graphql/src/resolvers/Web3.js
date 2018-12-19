@@ -9,6 +9,8 @@ function networkName(netId) {
   return `Private Network (${netId})`
 }
 
+const transactions = []
+
 export default {
   networkId: () => contracts.web3.eth.net.getId(),
   networkName: async () => {
@@ -43,6 +45,9 @@ export default {
       status,
       ...transaction
     }
+  },
+  transactions: async () => {
+    return transactions
   },
   metaMaskAvailable: () => (contracts.metaMask ? true : false),
   metaMaskNetworkId: async () => {

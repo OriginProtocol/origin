@@ -25,6 +25,7 @@ const query = gql`
     }
   }
 `
+
 const EnableMessagingMutation = gql`
   mutation EnableMessaging {
     enableMessaging

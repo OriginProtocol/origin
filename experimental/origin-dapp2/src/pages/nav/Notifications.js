@@ -64,6 +64,7 @@ class NotificationsDropdown extends Component {
       this.props.onOpen()
     }
   }
+  
   render() {
     const { data, loading, error, open, onOpen, onClose } = this.props
 

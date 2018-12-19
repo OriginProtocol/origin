@@ -1,6 +1,7 @@
 export default `
   type Subscription {
     newBlock: Block
+    newTransaction: NewTransaction
     transactionUpdated: TransactionUpdate
   }
 
@@ -9,6 +10,11 @@ export default `
     status: String
     mutation: String
     confirmations: Int
+  }
+
+  type NewTransaction {
+    node: Transaction!
+    totalCount: Int
   }
 
   type Query {
@@ -47,6 +53,7 @@ export default `
     account(id: ID!): Account
     defaultAccount: Account
     transaction(id: ID!): Transaction
+    transactions: [Transaction]
     useMetaMask: Boolean
     metaMaskAvailable: Boolean
     metaMaskEnabled: Boolean
