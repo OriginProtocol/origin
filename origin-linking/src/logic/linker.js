@@ -24,7 +24,8 @@ class Linker {
           key:process.env.APNS_KEY_FILE,
           keyId:process.env.APNS_KEY_ID,
           teamId:process.env.APNS_TEAM_ID
-        }
+        },
+        production:process.env.APNS_PRODUCTION?true:false
       })
       this.apnBundle = process.env.APNS_BUNDLE_ID
     }
