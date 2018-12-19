@@ -2,7 +2,7 @@ import { WalletEventsConstants } from '../actions/WalletEvents'
 
 const initialState = {
   active_event: null,
-  events: [],
+  pending_events: [],
   processed_events: [],
 }
 
@@ -45,15 +45,21 @@ function _updateAndMove(matcher, update, new_event, events_from, events_to) {
 export default function WalletEvents(state = initialState, action = {}) {
   switch (action.type) {
     case WalletEventsConstants.NEW_EVENT:
-      return { ...state, events:_addToEvents(action.matcher, action.event, state.events) }
+      return {
+        ...state,
+        pending_events: _addToEvents(action.matcher, action.event, state.pending_events),
+      }
 
     case WalletEventsConstants.UPDATE_EVENT:
-      return { ...state, events: state.events.map(_matchUpdate(action.matcher, action.update)),
-                processed_events: state.processed_events.map(_matchUpdate(action.matcher, action.update)) }
+      return {
+        ...state,
+        pending_events: state.pending_events.map(_matchUpdate(action.matcher, action.update)),
+        processed_events: state.processed_events.map(_matchUpdate(action.matcher, action.update)),
+      }
 
     case WalletEventsConstants.PROCESSED_EVENT:
-      const [events, processed_events] = _updateAndMove(action.matcher, action.update, action.new_event, state.events, state.processed_events)
-      return { ...state, events, processed_events }
+      const [pending_events, processed_events] = _updateAndMove(action.matcher, action.update, action.new_event, state.pending_events, state.processed_events)
+      return { ...state, pending_events, processed_events }
 
     case WalletEventsConstants.SET_ACTIVE_EVENT:
       return { ...state, active_event: action.event }
