@@ -50,6 +50,8 @@ app.post('/config', async (req, res) => {
         })
       }
     }
+
+    logger.debug('Validated signature of configuration')
   }
 
   // Add the new config to IPFS
@@ -60,6 +62,8 @@ app.post('/config', async (req, res) => {
     logger.error(error)
     res.status(500).send('An error occurred publishing configuration to IPFS')
   }
+
+  logger.debug('Uploaded configuration to IPFS')
 
   if (config.subdomain) {
     // Configure DNS settings if we are configuring for a subdomain
@@ -76,6 +80,8 @@ app.post('/config', async (req, res) => {
       res.status(500).send('Failed to configure DNS records')
     }
   }
+
+  logger.debug('Configured DNS records')
 
   // Return the IPFS hash of the new configuration in the response
   res.send(ipfsHash)
