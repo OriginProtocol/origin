@@ -134,16 +134,21 @@ export class Listing {
     return this.status === 'active'
   }
 
+  get unitsLockedInOffers() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    return this.offers
+      // filter out offers that have been withdrawn or are errorneous
+      .filter(offer => !['withdrawn', 'error'].includes(offer.status))
+      .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
+  }
+
   get unitsRemaining() {
     if (!Array.isArray(this.offers))
       return undefined
 
-    const unitsPurchased = this.offers
-      // filter out offers that have been withdrawn or are errorneous
-      .filter(offer => !['withdrawn', 'error'].includes(offer.status))
-      .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
-
-    return Math.max(0, this.unitsTotal - unitsPurchased)
+    return Math.max(0, this.unitsTotal - this.unitsLockedInOffers)
   }
 
   get commissionRemaining() {

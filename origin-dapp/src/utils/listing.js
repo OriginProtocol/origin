@@ -142,6 +142,7 @@ export async function originToDAppListing(originListing) {
     boostLevel: getBoostLevel(commission),
     unitsTotal: originListing.unitsTotal,
     unitsRemaining: originListing.unitsRemaining,
+    unitsLockedInOffers: originListing.unitsLockedInOffers,
     ipfsHash: originListing.ipfs.hash,
     isUnit: isUnit,
     isFractional: isFractional,

@@ -120,6 +120,10 @@ class ListingCreate extends Component {
       selectOne: {
         id: 'listing-create.selectOne',
         defaultMessage: 'Select One'
+      },
+      incorrectQuantity: {
+        id: 'listing-create.incorrectQuantity',
+        defaultMessage: 'Buyers have active (and finalized) purchases for {unitsInOffers} units. The quantity can not be lower than that.'
       }
     })
 
@@ -155,6 +159,7 @@ class ListingCreate extends Component {
     this.transformFormErrors = this.transformFormErrors.bind(this)
     this.updateBoostCap = this.updateBoostCap.bind(this)
     this.validateBoostForm = this.validateBoostForm.bind(this)
+    this.validateListingForm = this.validateListingForm.bind(this)
   }
 
   async componentDidMount() {
@@ -165,7 +170,7 @@ class ListingCreate extends Component {
       try {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
-        const listing = await getListing(this.props.listingId, { translate: false })
+        const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
         if (listing.isMultiUnit) {
           listing.boostLimit = listing.totalBoostValue
           delete listing.totalBoostValue
@@ -721,6 +726,36 @@ class ListingCreate extends Component {
     return errors
   }
   
+  validateListingForm(data, errors) {
+    const { 
+      isEditMode,
+      formListing
+    } = this.state
+
+    const formData = formListing.formData
+    const {
+      unitsTotal,
+      unitsLockedInOffers
+    } = formData
+
+    const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
+
+    if (isEditMode) {
+      if (isMultiUnitListing && unitsTotal < unitsLockedInOffers) {
+        errors.unitsTotal.addError(
+          this.props.intl.formatMessage(
+            this.intlMessages.incorrectQuantity,
+            {
+              unitsInOffers: unitsLockedInOffers
+            }
+          )
+        )
+      }
+    }
+
+    return errors
+  }
+
   getStepNumber(stepNum) {
     // We have a different number of steps in the workflow based on
     // mobile vs. desktop and fractional vs. unit.
@@ -978,6 +1013,7 @@ class ListingCreate extends Component {
                   formContext={{
                     isMultiUnitListing: isMultiUnitListing
                   }}
+                  validate={this.validateListingForm}
                 >
                   {showDetailsFormErrorMsg && (
                     <div className="info-box warn">

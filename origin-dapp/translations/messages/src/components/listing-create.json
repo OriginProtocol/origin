@@ -24,6 +24,10 @@
     "defaultMessage": "Select One"
   },
   {
+    "id": "listing-create.incorrectQuantity",
+    "defaultMessage": "Buyers have active (and finalized) purchases for {unitsInOffers} units. The quantity can not be lower than that."
+  },
+  {
     "id": "backButtonLabel",
     "defaultMessage": "Back"
   },

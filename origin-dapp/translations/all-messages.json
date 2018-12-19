@@ -110,6 +110,7 @@
   "schema.notEnoughOgnFunds": "not enough funds in wallet.",
   "schema.boostLimitTooHigh": "value too high. Should be equal or smaller of the Total boost required.",
   "listing-create.selectOne": "Select One",
+  "listing-create.incorrectQuantity": "Buyers have active (and finalized) purchases for {unitsInOffers} units. The quantity can not be lower than that.",
   "backButtonLabel": "Back",
   "listing-create.review": "Review",
   "listing-create.stepNumberLabel": "STEP {stepNumber}",
