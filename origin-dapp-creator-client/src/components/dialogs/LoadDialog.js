@@ -19,7 +19,7 @@ class LoadDialog extends React.Component {
   }
 
   handleLoad () {
-    const config = superagent
+    superagent
       .get(`${process.env.IPFS_GATEWAY_URL}/ipfs/${this.state.ipfsHash}`)
       .then((response) => { this.props.onConfigChange(response.body) })
   }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Intent, HTMLSelect, InputGroup, FormGroup } from '@blueprintjs/core'
+import { Button, Intent, InputGroup, FormGroup } from '@blueprintjs/core'
 
 class SubdomainField extends React.Component {
   constructor (props) {

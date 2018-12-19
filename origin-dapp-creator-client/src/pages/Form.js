@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button, FormGroup, Icon, Intent, Switch } from '@blueprintjs/core'
+import { Button, Intent, Switch } from '@blueprintjs/core'
 import superagent from 'superagent'
 
 import AboutField from 'components/fields/AboutField'
@@ -132,7 +132,7 @@ class Form extends Component {
     try {
       response = await superagent
         .post(`${process.env.API_URL}/config/preview`)
-        .send(this.state.config)
+        .send({ config: this.state.config })
     } catch(error) {
       console.log('An error occurred generating preview: ' + error)
       return

@@ -1,19 +1,11 @@
 import React from 'react'
 import { Switch, Route, NavLink } from 'react-router-dom'
 import {
-  Button,
-  Classes,
-  ControlGroup,
-  Dialog,
-  FormGroup,
   Icon,
-  InputGroup,
-  Intent,
   Navbar,
   Tooltip
 } from '@blueprintjs/core'
 
-import LoadDialog from 'components/dialogs/LoadDialog'
 import Form from 'pages/Form'
 import Help from 'pages/Help'
 
