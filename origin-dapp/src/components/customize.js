@@ -9,48 +9,75 @@ import store from 'store'
 class Customize extends Component {
 
   componentDidMount() {
-    let configUrl
-    if (window.location.hostname.includes('origindapp.com')) {
-      const ipfs = process.env.IPFS_GATEWAY_PROTOCOL +
-        `://${process.env.IPFS_DOMAIN}` +
-        `:${process.env.IPFS_GATEWAY_PORT}`
-      configUrl = `${ipfs}/ipns/origin.${window.location.hostname}`
-    } else {
-      const configUrlMatch = window.location.search.match(/config=([^#]*)/)
-      configUrl = configUrlMatch ? decodeURIComponent(configUrlMatch[1]) : false
+    this.getConfigUrl = this.getConfigUrl.bind(this)
+    this.setConfig = this.setConfig.bind(this)
+
+    let configUrl = this.getConfigUrl()
+    if (configUrl) {
+      this.props.fetchConfig(configUrl)
+        .then(this.setConfig)
+        .catch((error) => {
+          console.log('Could not load custom configuration: ' + error)
+        })
+    }
+  }
+
+  getConfigUrl () {
+    // Config override specified as URL parameter
+    let configUrl = this.getConfigOverrideUrl()
+    if (!configUrl && this.isWhiteLabelHostname()) {
+      // Retrieve the config from config.hostname
+      const ipfsGateway = `${process.env.IPFS_GATEWAY_PROTOCOL}://${process.env.IPFS_DOMAIN}:${process.env.IPFS_GATEWAY_PORT}`
+      configUrl = `${ipfsGateway}/ipns/config.${window.location.hostname}`
     }
 
     if (configUrl) {
       console.log(`Configuring from file at ${configUrl}`)
     }
+    return configUrl
+  }
 
-    this.props.fetchConfig(configUrl)
-      .then(() => {
-        // CSS vars
-        for (let [cssVarName, cssVarValue] of Object.entries(this.props.config.cssVars)) {
-          if (cssVarValue.toString().match(/url *\(/)) {
-            throw "url() not allowed in DApp custom CSS"
-          }
+  getConfigOverrideUrl () {
+    const configUrlMatch = window.location.search.match(/config=([^#]*)/)
+    return configUrlMatch ? decodeURIComponent(configUrlMatch[1]) : false
+  }
 
-          document.documentElement.style.setProperty(
-            `--${camelToDash(cssVarName)}`,
-            cssVarValue
-          )
-        }
+  setConfig () {
+    // CSS vars
+    for (let [cssVarName, cssVarValue] of Object.entries(this.props.config.cssVars)) {
+      if (cssVarValue.toString().match(/url *\(/)) {
+        throw "url() not allowed in DApp custom CSS"
+      }
 
-        // Page title
-        if (this.props.config.title) {
-          document.title = this.props.config.title
-        }
+      document.documentElement.style.setProperty(
+        `--${camelToDash(cssVarName)}`,
+        cssVarValue
+      )
+    }
 
-        // Locale
-        if (this.props.config.languageCode) {
-          if (this.props.config.languageCode !== this.props.selectedLanguageCode) {
-            store.set('preferredLang', this.props.config.languageCode)
-            window.location.reload()
-          }
-        }
-      })
+    // Page title
+    if (this.props.config.title) {
+      document.title = this.props.config.title
+    }
+
+    // Locale
+    if (this.props.config.languageCode) {
+      if (this.props.config.languageCode !== this.props.selectedLanguageCode) {
+        store.set('preferredLang', this.props.config.languageCode)
+        window.location.reload()
+      }
+    }
+  }
+
+  isWhiteLabelHostname () {
+    const exceptionNeedles = [
+      'originprotocol.com',
+      'localhost',
+      '127.0.0.1'
+    ]
+    return exceptionNeedles.find((needle) => {
+      return window.location.hostname.includes(needle)
+    }) === undefined
   }
 
   render() {
