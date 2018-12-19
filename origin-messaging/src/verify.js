@@ -59,16 +59,17 @@ function verifyMessageSignature(keysMap, orbitGlobal) {
     if (config.NOTIFY_API_ENDPOINT && db_store && db_store.__snapshot_loaded && db_store.access.write.includes(key))
     {
       const value = message.payload.value
-      if (value.length && value[0].emsg)
-      {
+      if (value.length && value[0].emsg) {
         const receivers = db_store.access.write.filter(address => address != key)
-        fetch(config.NOTIFY_API_ENDPOINT,
-          {method: "POST",
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'},
-            body:JSON.stringify({receivers, token:config.NOTIFY_API_SECURE_TOKEN})
-            })
+
+        fetch(config.NOTIFY_API_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ receivers, token:config.NOTIFY_API_SECURE_TOKEN })
+        })
       }
     }
 
