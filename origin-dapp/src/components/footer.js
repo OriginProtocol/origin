@@ -142,7 +142,6 @@ class Footer extends Component {
                         </div>
                       </div>
                     </Dropdown>
-                  }
                   <div className="d-lg-inline-block link-container">
                     <a
                       href="https://www.originprotocol.com"
