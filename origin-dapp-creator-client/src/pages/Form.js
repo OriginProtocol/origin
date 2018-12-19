@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Icon, Intent } from '@blueprintjs/core'
+import { Button, FormGroup, Icon, Intent, Switch } from '@blueprintjs/core'
 import superagent from 'superagent'
 
 import AboutField from 'components/fields/AboutField'
@@ -8,7 +8,7 @@ import TitleField from 'components/fields/TitleField'
 import LanguageCodeField from 'components/fields/LanguageCodeField'
 import LogoUrlField from 'components/fields/LogoUrlField'
 import IconUrlField from 'components/fields/IconUrlField'
-import DomainField from 'components/fields/DomainField'
+import SubdomainField from 'components/fields/SubdomainField'
 import ColorPicker from 'components/ColorPicker'
 import SuccessDialog from 'components/dialogs/SuccessDialog'
 import LoadDialog from 'components/dialogs/LoadDialog'
@@ -22,6 +22,7 @@ class Form extends Component {
 
     this.state = {
       config: baseConfig,
+      ipfsHash: '',
       submitting: false,
       previewing: false,
       successDialogIsOpen: false,
@@ -56,10 +57,18 @@ class Form extends Component {
   }
 
   handleInputChange (event) {
+    let value
+    // Hacky handling of use custom domain switch
+    if (event.target.name == 'subdomain' && event.target.type == 'checkbox') {
+      value = event.target.checked ? false : ''
+    } else {
+      value = event.target.value
+    }
+
     this.setState({
       'config': {
         ...this.state.config,
-        [event.target.name]: event.target.value
+        [event.target.name]: value
       }
     })
   }
@@ -76,20 +85,44 @@ class Form extends Component {
     })
   }
 
+  async web3Sign(data, account) {
+    // Promise wrapper for web3 signing
+    return new Promise((resolve, reject) => {
+      web3.personal.sign(data, account, (err, sig) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(sig)
+      })
+    })
+  }
+
   async handleSubmit (event) {
     event.preventDefault()
 
     this.setState({ publishing: true })
 
-    const dataToSign = JSON.stringify(this.state.config)
-    web3.personal.sign(dataToSign, web3.eth.accounts[0], (err, sig) => {
-      // Send signed configuration to server
-      return superagent.post(`${process.env.API_URL}/config`)
-        .send({ config: this.state.config, signature: sig, address: web3.eth.accounts[0] })
-        .catch(this.handleServerErrors)
-        .then(() => { this.setState({ successDialogIsOpen: true }) })
-        .finally(() => this.setState({ publishing: false }))
-    })
+    let signature = null
+    if (this.state.config.subdomain) {
+      // Generate a valid signature if a subdomain is in use
+      const dataToSign = JSON.stringify(this.state.config)
+      signature = await this.web3Sign(dataToSign, web3.eth.accounts[0])
+    }
+
+    return superagent.post(`${process.env.API_URL}/config`)
+      .send({
+        config: this.state.config,
+        signature: signature,
+        address: web3.eth.accounts[0]
+      })
+      .then((res) => {
+        this.setState({
+          ipfsHash: res.text,
+          successDialogIsOpen: true
+        })
+      })
+      .catch(this.handleServerErrors)
+      .finally(() => this.setState({ publishing: false }))
   }
 
   async handlePreview () {
@@ -116,18 +149,25 @@ class Form extends Component {
       <div className="p-3">
         <h3>DApp Configuration</h3>
 
-        <a
-            onClick={() => this.setState({ loadDialogIsOpen: true })}>
+        <a onClick={() => this.setState({ loadDialogIsOpen: true })}>
           Load existing configuration
         </a>
 
         <form onSubmit={this.handleSubmit}>
           <h4>Domain</h4>
 
-          <DomainField value={this.state.config.subdomain}
+          <Switch
+            name="subdomain"
             onChange={this.handleInputChange}
-            error={this.state.errors.subdomain}>
-          </DomainField>
+            labelElement={<>Use your own domain</>}>
+          </Switch>
+
+          {this.state.config.subdomain !== false && (
+            <SubdomainField value={this.state.config.subdomain}
+              onChange={this.handleInputChange}
+              error={this.state.errors.subdomain}>
+            </SubdomainField>
+          )}
 
           <h4>Title & Description</h4>
 
@@ -196,7 +236,8 @@ class Form extends Component {
 
         <SuccessDialog
           isOpen={this.state.successDialogIsOpen}
-          subdomain={this.state.config.subdomain}
+          config={this.state.config}
+          ipfsHash={this.state.ipfsHash}
           onClose={() => this.setState({ successDialogIsOpen: false })} />
 
         <LoadDialog

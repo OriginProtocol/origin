@@ -1,5 +1,5 @@
 import React from 'react'
-import { HashRouter as Router, Switch, Route, NavLink } from 'react-router-dom'
+import { Switch, Route, NavLink } from 'react-router-dom'
 import {
   Button,
   Classes,
@@ -39,26 +39,24 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router>
-        <>
-          <Navbar className="bp3-dark">
-            <Navbar.Group>
-              <Navbar.Heading className="logo">
-                <img src="public/images/origin-icon-white.svg" /> Creator
-              </Navbar.Heading>
-              <Link to="/" tooltip="Create a new configuration" icon="build" />
-              <Link to="/docs" tooltip="Documentation" icon="help" />
-            </Navbar.Group>
-          </Navbar>
+      <>
+        <Navbar className="bp3-dark">
+          <Navbar.Group>
+            <Navbar.Heading className="logo">
+              <img src="public/images/origin-icon-white.svg" /> Creator
+            </Navbar.Heading>
+            <Link to="/" tooltip="Create a new configuration" icon="build" />
+            <Link to="/docs" tooltip="Documentation" icon="help" />
+          </Navbar.Group>
+        </Navbar>
 
-          <div className="p-3">
-            <Switch>
-              <Route path="/" exact component={Form} />
-              <Route path="/docs" component={Help} />
-            </Switch>
-          </div>
-        </>
-      </Router>
+        <div className="p-3">
+          <Switch>
+            <Route path="/" exact component={Form} />
+            <Route path="/docs" component={Help} />
+          </Switch>
+        </div>
+      </>
     )
   }
 }

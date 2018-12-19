@@ -18,63 +18,66 @@ app.use(cors())
 
 app.post('/config', async (req, res) => {
   const { config, signature, address } = req.body
-
-  // Validate signature matches
-  const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)
-  // Address from recover is checksummed so lower case it
-  if (signer.toLowerCase() !== address) {
-    res.status(400).send('Signature was invalid')
-    return
-  }
-
-  // Check if there is an existing configuration published for this subdomain
   let existingRecord
-  try {
-    existingRecord = await getDnsRecord(config.subdomain, 'TXT')
-  } catch (error) {
-    logger.error(error)
-    res.status(500).send('An error occurred retrieving DNS records')
-    return
+
+  if (config.subdomain) {
+    // Validating signing is only necessary if we are configuring for a subdomain
+
+    // Validate signature matches
+    const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)
+    // Address from recover is checksummed so lower case it
+    if (signer.toLowerCase() !== address) {
+      res.status(400).send('Signature was invalid')
+    }
+
+    // Check if there is an existing configuration published for this subdomain
+    try {
+      existingRecord = await getDnsRecord(config.subdomain, 'TXT')
+    } catch (error) {
+      logger.error(error)
+      res.status(500).send('An error occurred retrieving DNS records')
+    }
+
+    if (existingRecord) {
+      const ipfsHash = parseDnsTxtRecord(existingRecord.data[0])
+      if (!ipfsHash) {
+        res.status(500).send('An error occurred retrieving existing configuration')
+      }
+      const existingConfig = await getConfigFromIpfs(ipfsHash)
+      if (existingConfig.address !== address) {
+        res.status(400).send({
+          subdomain: 'Subdomain in use by another wallet'
+        })
+      }
+    }
   }
 
-  if (existingRecord) {
-    const ipfsHash = parseDnsTxtRecord(existingRecord.data[0])
-    if (!ipfsHash) {
-      res.status(500).send('An error occurred retrieving existing configuration')
-    }
-    const existingConfig = await getConfigFromIpfs(ipfsHash)
-    if (existingConfig.address !== address) {
-      res.status(400).send({
-        subdomain: 'Subdomain in use by another wallet'
-      })
-      return
-    }
-  }
-
-  // Add the new config to IPFS with signature and wallet address
+  // Add the new config to IPFS
   let ipfsHash
   try {
     ipfsHash = await addConfigToIpfs(req.body)
   } catch (error) {
     logger.error(error)
     res.status(500).send('An error occurred publishing configuration to IPFS')
-    return
   }
 
-  try {
-    if (existingRecord) {
-      // Record exists, must be updating an existing configuration
-      await updateTxtRecord(config.subdomain, ipfsHash, existingRecord)
-    } else {
-      // No existing record, must be a fresh configuration
-      await setAllRecords(config.subdomain, ipfsHash)
+  if (config.subdomain) {
+    // Configure DNS settings if we are configuring for a subdomain
+    try {
+      if (existingRecord) {
+        // Record exists, must be updating an existing configuration
+        await updateTxtRecord(config.subdomain, ipfsHash, existingRecord)
+      } else {
+        // No existing record, must be a fresh configuration
+        await setAllRecords(config.subdomain, ipfsHash)
+      }
+    } catch(error) {
+      logger.error(error)
+      res.status(500).send('Failed to configure DNS records')
     }
-  } catch(error) {
-    logger.error(error)
-    res.status(500).send('Failed to configure DNS records')
-    return
   }
 
+  // Return the IPFS hash of the new configuration in the response
   res.send(ipfsHash)
 })
 
