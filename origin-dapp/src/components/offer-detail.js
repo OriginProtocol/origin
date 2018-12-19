@@ -115,19 +115,19 @@ class OfferDetail extends Component {
         icon: 'images/offer-number-icon.svg',
         iconAlt: 'offer number icon',
         labelId: 'offerNumber',
-        value: moment(createdAt * 1000).format('MMM. D, YYYY')
+        value: id
       },
       {
         icon: 'images/payment-status-icon.svg',
         iconAlt: 'payment status icon',
         labelId: 'paymentStatus',
-        value: id
+        value: this.getPaymentStatus(status)
       },
       {
         icon: 'images/offer-date-icon.svg',
         iconAlt: 'offer date icon',
         labelId: 'offerDate',
-        value: this.getPaymentStatus(status)
+        value: moment(createdAt * 1000).format('MMM. D, YYYY')
       }
     ]
 
