@@ -1,5 +1,5 @@
 import assert from 'assert'
-import helper from 'origin-contracts/test-alt/_helper'
+import helper from './_helper'
 import Token from '../lib/token'
 
 // These tests are for the token library that the token CLI uses. We don't
