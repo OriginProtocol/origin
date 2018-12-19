@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Intent } from '@blueprintjs/core'
+import { Button, Icon, Intent } from '@blueprintjs/core'
 import superagent from 'superagent'
 
 import AboutField from 'components/fields/AboutField'
@@ -11,11 +11,12 @@ import IconUrlField from 'components/fields/IconUrlField'
 import DomainField from 'components/fields/DomainField'
 import ColorPicker from 'components/ColorPicker'
 import SuccessDialog from 'components/dialogs/SuccessDialog'
+import LoadDialog from 'components/dialogs/LoadDialog'
 import { AppToaster } from '../toaster'
 
 import { baseConfig } from 'origin-dapp/src/config'
 
-class Create extends Component {
+class Form extends Component {
   constructor(props, context) {
     super(props)
 
@@ -113,7 +114,12 @@ class Create extends Component {
   render () {
     return (
       <div className="p-3">
-        <h3>Create DApp Configuration</h3>
+        <h3>DApp Configuration</h3>
+
+        <a
+            onClick={() => this.setState({ loadDialogIsOpen: true })}>
+          Load existing configuration
+        </a>
 
         <form onSubmit={this.handleSubmit}>
           <h4>Domain</h4>
@@ -190,17 +196,22 @@ class Create extends Component {
 
         <SuccessDialog
           isOpen={this.state.successDialogIsOpen}
-          subdomain={this.state.config.subdomain} />
+          subdomain={this.state.config.subdomain}
+          onClose={() => this.setState({ successDialogIsOpen: false })} />
+
+        <LoadDialog
+          isOpen={this.state.loadDialogIsOpen}
+          onClose={() => this.setState({ loadDialogIsOpen: false })} />
       </div>
     )
   }
 }
 
-Create.contextTypes = {
+Form.contextTypes = {
   web3: PropTypes.object
 }
 
-export default Create
+export default Form
 
 require('react-styl')(`
   h4

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Route, NavLink } from 'react-router-dom'
+import { HashRouter as Router, Switch, Route, NavLink } from 'react-router-dom'
 import {
   Button,
   Classes,
@@ -13,8 +13,9 @@ import {
   Tooltip
 } from '@blueprintjs/core'
 
-import Create from './pages/Create'
-import Help from './pages/Help'
+import LoadDialog from 'components/dialogs/LoadDialog'
+import Form from 'pages/Form'
+import Help from 'pages/Help'
 
 require('normalize.css/normalize.css')
 require('@blueprintjs/core/lib/css/blueprint.css')
@@ -22,10 +23,10 @@ require('@blueprintjs/core/lib/css/blueprint.css')
 const Link = props => (
   <Tooltip content={props.tooltip} lazy={true}>
     <NavLink
-      className="bp3-button bp3-minimal"
-      activeClassName="bp3-active"
-      to={props.to}
-    >
+        exact
+        className="bp3-button bp3-minimal"
+        activeClassName="bp3-active"
+        to={props.to}>
       <Icon icon={props.icon} />
     </NavLink>
   </Tooltip>
@@ -34,75 +35,30 @@ const Link = props => (
 class App extends React.Component {
   constructor (props) {
     super(props)
-    this.isOpen = false
-    this.state = {
-      hostname: '',
-      isOpen: false
-    }
-    this.handleClose = this.handleClose.bind(this)
-    this.handleLoad = this.handleLoad.bind(this)
-  }
-
-  handleClose () {
-    this.setState({ isOpen: false })
-  }
-
-  handleLoad () {
-    this.setState({ isOpen: true })
   }
 
   render() {
-    const input = field => ({
-      value: this.state[field],
-      onChange: e => this.setState({ [field]: e.currentTarget.value })
-    })
-
     return (
-      <>
-        <Navbar className="bp3-dark">
-          <Navbar.Group>
-            <Navbar.Heading className="logo">
-              <img src="public/images/origin-icon-white.svg" /> Creator
-            </Navbar.Heading>
-            <Link to="/" tooltip="Create a new configuration" icon="build" />
-            <Tooltip content="Load an existing configuration" lazy={true}>
-              <Button className="bp3-minimal" onClick={this.handleLoad}>
-                <Icon icon="floppy-disk" />
-              </Button>
-            </Tooltip>
-            <Link to="/docs" tooltip="Documentation" icon="help" />
-          </Navbar.Group>
-        </Navbar>
+      <Router>
+        <>
+          <Navbar className="bp3-dark">
+            <Navbar.Group>
+              <Navbar.Heading className="logo">
+                <img src="public/images/origin-icon-white.svg" /> Creator
+              </Navbar.Heading>
+              <Link to="/" tooltip="Create a new configuration" icon="build" />
+              <Link to="/docs" tooltip="Documentation" icon="help" />
+            </Navbar.Group>
+          </Navbar>
 
-        <Switch>
-          <Route path="/" component={Create} />
-          <Route path="/docs" component={Help} />
-        </Switch>
-
-        <Dialog
-          title="Load Existing Configuration"
-          isOpen={this.state.isOpen}
-          onClose={this.handleClose}
-        >
-          <div className={Classes.DIALOG_BODY}>
-            <FormGroup label="Hostname">
-              <ControlGroup fill={true}>
-                <InputGroup {...input('hostname')} />
-              </ControlGroup>
-            </FormGroup>
+          <div className="p-3">
+            <Switch>
+              <Route path="/" exact component={Form} />
+              <Route path="/docs" component={Help} />
+            </Switch>
           </div>
-
-          <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button
-                intent={Intent.PRIMARY}
-              >
-                Load
-              </Button>
-            </div>
-          </div>
-        </Dialog>
-      </>
+        </>
+      </Router>
     )
   }
 }
