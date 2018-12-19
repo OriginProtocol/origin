@@ -27,7 +27,7 @@ app.post('/config', async (req, res) => {
     const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)
     // Address from recover is checksummed so lower case it
     if (signer.toLowerCase() !== address) {
-      res.status(400).send('Signature was invalid')
+      return res.status(400).send('Signature was invalid')
     }
 
     // Check if there is an existing configuration published for this subdomain
@@ -35,17 +35,17 @@ app.post('/config', async (req, res) => {
       existingRecord = await getDnsRecord(config.subdomain, 'TXT')
     } catch (error) {
       logger.error(error)
-      res.status(500).send('An error occurred retrieving DNS records')
+      return res.status(500).send('An error occurred retrieving DNS records')
     }
 
     if (existingRecord) {
       const ipfsHash = parseDnsTxtRecord(existingRecord.data[0])
       if (!ipfsHash) {
-        res.status(500).send('An error occurred retrieving existing configuration')
+        return res.status(500).send('An error occurred retrieving existing configuration')
       }
       const existingConfig = await getConfigFromIpfs(ipfsHash)
       if (existingConfig.address !== address) {
-        res.status(400).send({
+        return res.status(400).send({
           subdomain: 'Subdomain in use by another wallet'
         })
       }
@@ -60,10 +60,10 @@ app.post('/config', async (req, res) => {
     ipfsHash = await addConfigToIpfs(req.body)
   } catch (error) {
     logger.error(error)
-    res.status(500).send('An error occurred publishing configuration to IPFS')
+    return res.status(500).send('An error occurred publishing configuration to IPFS')
   }
 
-  logger.debug('Uploaded configuration to IPFS')
+  logger.debug(`Uploaded configuration to IPFS: ${ipfsHash}`)
 
   if (config.subdomain) {
     // Configure DNS settings if we are configuring for a subdomain
@@ -84,7 +84,7 @@ app.post('/config', async (req, res) => {
   logger.debug('Configured DNS records')
 
   // Return the IPFS hash of the new configuration in the response
-  res.send(ipfsHash)
+  return res.send(ipfsHash)
 })
 
 app.post('/config/preview', async (req, res) => {
