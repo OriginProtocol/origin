@@ -776,6 +776,7 @@ class ListingCreate extends Component {
     const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
     const category = translateListingCategory(formData.category)
     const subCategory = translateListingCategory(formData.subCategory)
+    const stepNumber = this.getStepNumber(step)
 
     return (!web3.currentProvider.isOrigin || origin.contractService.walletLinker) ? (
       <div className="listing-form">
@@ -787,7 +788,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -800,7 +801,7 @@ class ListingCreate extends Component {
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
-                  stepCurrent={step}
+                  stepCurrent={stepNumber}
                 />
                 <div className="schema-options">
                   {this.categoryList.map(category => (
@@ -880,7 +881,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -943,7 +944,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -961,7 +962,7 @@ class ListingCreate extends Component {
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
-                  stepCurrent={step}
+                  stepCurrent={stepNumber}
                 />
                 <Form
                   schema={translatedSchema}
@@ -1038,7 +1039,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -1049,7 +1050,7 @@ class ListingCreate extends Component {
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
-                  stepCurrent={step}
+                  stepCurrent={stepNumber}
                 />
                 <p className="help-block">
                   <FormattedMessage
@@ -1191,7 +1192,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -1202,7 +1203,7 @@ class ListingCreate extends Component {
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
-                  stepCurrent={step}
+                  stepCurrent={stepNumber}
                 />
                 <div className="preview">
                   <div className="row">
