@@ -9,7 +9,7 @@ const app = express()
 const port = process.env.PORT || 4321
 const logger = Logger.create('origin-dapp-creator-server')
 
-import { getDnsRecord, configureRecords, parseDnsTxtRecord } from './dns'
+import { getDnsRecord, parseDnsTxtRecord, setAllRecords, updateTxtRecord } from './dns'
 import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './ipfs'
 
 app.use(bodyParser.json())
@@ -23,7 +23,7 @@ app.post('/config', async (req, res) => {
   const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)
   // Address from recover is checksummed so lower case it
   if (signer.toLowerCase() !== address) {
-    res.status(400).send('Invalid signature')
+    res.status(400).send('Signature was invalid')
     return
   }
 
@@ -33,34 +33,45 @@ app.post('/config', async (req, res) => {
     existingRecord = await getDnsRecord(config.subdomain, 'TXT')
   } catch (error) {
     logger.error(error)
-    res.status(400).send('An error occurred retrieving DNS records')
+    res.status(500).send('An error occurred retrieving DNS records')
     return
   }
 
   if (existingRecord) {
-    const ipfsPath = parseDnsTxtRecord(existingRecord.data[0])
-    const existingConfig = await getConfigFromIpfs(ipfsPath)
+    const ipfsHash = parseDnsTxtRecord(existingRecord.data[0])
+    if (!ipfsHash) {
+      res.status(500).send('An error occurred retrieving existing configuration')
+    }
+    const existingConfig = await getConfigFromIpfs(ipfsHash)
     if (existingConfig.address !== address) {
-      res.status(400).send('Wallet address mismatch, load configuration to modify')
+      res.status(400).send({
+        subdomain: 'Subdomain in use by another wallet'
+      })
       return
     }
   }
 
-  // Add the new config to IPFS
+  // Add the new config to IPFS with signature and wallet address
   let ipfsHash
   try {
-    ipfsHash = await addConfigToIpfs(config)
+    ipfsHash = await addConfigToIpfs(req.body)
   } catch (error) {
     logger.error(error)
-    res.status(400).send('An error occurred publishing configuration to IPFS')
+    res.status(500).send('An error occurred publishing configuration to IPFS')
     return
   }
 
   try {
-    await configureRecords(config.subdomain, ipfsHash)
+    if (existingRecord) {
+      // Record exists, must be updating an existing configuration
+      await updateTxtRecord(config.subdomain, ipfsHash, existingRecord)
+    } else {
+      // No existing record, must be a fresh configuration
+      await setAllRecords(config.subdomain, ipfsHash)
+    }
   } catch(error) {
     logger.error(error)
-    res.status(400).send('Failed to configure DNS records')
+    res.status(500).send('Failed to configure DNS records')
     return
   }
 
@@ -82,8 +93,5 @@ app.post('/config/preview', async (req, res) => {
 
   res.send(ipfsHash)
 })
-
-// app.get('/validation/subdomain', async (req, res) => {
-// })
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

@@ -1,4 +1,3 @@
-const ReadableStream = require('stream').Readable
 const ipfsApi = require('ipfs-api')
 
 export const ipfsClient = ipfsApi(
@@ -10,14 +9,12 @@ export const ipfsClient = ipfsApi(
 )
 
 export async function addConfigToIpfs(config) {
-  const stream = new ReadableStream()
-  stream.push(JSON.stringify(config))
-  stream.push(null)
-
-  const response = await ipfsClient.add(stream)
+  const configBuffer = Buffer.from(JSON.stringify(config))
+  const response = await ipfsClient.files.add(configBuffer)
   return response[0].hash
 }
 
-export function getConfigFromIpfs(path) {
-  return ipfsClient.get(path)
+export async function getConfigFromIpfs(hash) {
+  const response = await ipfsClient.files.cat(hash)
+  return JSON.parse(response)
 }

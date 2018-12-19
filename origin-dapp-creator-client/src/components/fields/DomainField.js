@@ -1,22 +1,25 @@
-import React, { Component } from 'react'
-import { Button, HTMLSelect, InputGroup, FormGroup } from '@blueprintjs/core'
+import React from 'react'
+import { Button, Intent, HTMLSelect, InputGroup, FormGroup } from '@blueprintjs/core'
 
-class SubdomainField extends Component {
+class DomainField extends React.Component {
   constructor (props) {
     super(props)
+
     this.state = {
       domainType: 'Subdomain'
     }
+
     this.handleDomainTypeChange = this.handleDomainTypeChange.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
 
   handleDomainTypeChange (event) {
-    this.setState({ domainType: event.target.value })
+    this.setState({
+      domainType: event.target.value
+    })
   }
 
   handleChange (event) {
-    // TODO validate subdomain does not have an entry already
     this.props.onChange(event)
   }
 
@@ -40,14 +43,18 @@ class SubdomainField extends Component {
           <FormGroup
               label="Subdomain"
               labelFor="subdomain-field"
-              labelInfo="(required)">
+              labelInfo="(required)"
+              helperText={this.props.error}
+              intent={this.props.error ? Intent.DANGER : Intent.NONE }>
             <InputGroup
               name="subdomain"
               placeholder="marketplace"
               className="input-width"
               rightElement={fieldSuffix}
               value={this.props.value}
-              onChange={this.handleChange}>
+              onChange={this.handleChange}
+              intent={this.props.error ? Intent.DANGER : Intent.NONE }
+              required>
             </InputGroup>
           </FormGroup>
         }
@@ -56,4 +63,4 @@ class SubdomainField extends Component {
   }
 }
 
-export default SubdomainField
+export default DomainField

@@ -14,6 +14,7 @@ import {
 } from '@blueprintjs/core'
 
 import Create from './pages/Create'
+import Help from './pages/Help'
 
 require('normalize.css/normalize.css')
 require('@blueprintjs/core/lib/css/blueprint.css')
@@ -39,14 +40,14 @@ class App extends React.Component {
       isOpen: false
     }
     this.handleClose = this.handleClose.bind(this)
-    this.handleEdit = this.handleEdit.bind(this)
+    this.handleLoad = this.handleLoad.bind(this)
   }
 
   handleClose () {
     this.setState({ isOpen: false })
   }
 
-  handleEdit () {
+  handleLoad () {
     this.setState({ isOpen: true })
   }
 
@@ -64,20 +65,22 @@ class App extends React.Component {
               <img src="public/images/origin-icon-white.svg" /> Creator
             </Navbar.Heading>
             <Link to="/" tooltip="Create a new configuration" icon="build" />
-            <Tooltip content="Edit an existing configuration" lazy={true}>
-              <Button className="bp3-minimal" onClick={this.handleEdit}>
+            <Tooltip content="Load an existing configuration" lazy={true}>
+              <Button className="bp3-minimal" onClick={this.handleLoad}>
                 <Icon icon="floppy-disk" />
               </Button>
             </Tooltip>
+            <Link to="/docs" tooltip="Documentation" icon="help" />
           </Navbar.Group>
         </Navbar>
 
         <Switch>
           <Route path="/" component={Create} />
+          <Route path="/docs" component={Help} />
         </Switch>
 
         <Dialog
-          title="Edit Existing Configuration"
+          title="Load Existing Configuration"
           isOpen={this.state.isOpen}
           onClose={this.handleClose}
         >
