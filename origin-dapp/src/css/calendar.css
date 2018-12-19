@@ -109,7 +109,7 @@
   position: absolute;
 }
 
-.calendar-container.buyer-view .rbc-day-bg.past-date,
+.rbc-day-bg.unavailable,
 .calendar-container.buyer-view .rbc-time-slot.unavailable {
   background: var(--pale-grey) !important;
 }
@@ -129,11 +129,6 @@
 
 .calendar-container.buyer-view.hourly-view .rbc-calendar .rbc-day-bg {
   font-size: 7px;
-}
-
-.rbc-day-bg.unavailable {
-  background: url(/images/diagonal-line.png);
-  background-size: 100% 100%;
 }
 
 .rbc-date-cell {

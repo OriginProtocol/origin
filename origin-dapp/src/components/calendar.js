@@ -363,7 +363,6 @@ class Calendar extends Component {
     const { value } = data
     const dateInfo = getDateAvailabilityAndPrice(value, this.state.events, this.props.offers)
     const availability = dateInfo.isAvailable ? 'available' : 'unavailable'
-    const isPastDate = moment(value).isBefore(moment().startOf('day')) ? ' past-date' : ''
     const selectedSlotsMatchingDate = 
       this.state.buyerSelectedSlotData &&
       this.state.buyerSelectedSlotData.filter((slot) => 
@@ -374,7 +373,7 @@ class Calendar extends Component {
     return (
       <Fragment>
         {this.props.userType === 'buyer' ?
-          <div className={`rbc-day-bg ${availability}${isPastDate}${isSelected}`}>
+          <div className={`rbc-day-bg ${availability}${isSelected}`}>
             {dateInfo.isAvailable &&
               <span>{dateInfo.price ? `${dateInfo.price} ETH` : `0 ETH`}</span>
             }
