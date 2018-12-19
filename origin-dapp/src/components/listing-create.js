@@ -727,7 +727,7 @@ class ListingCreate extends Component {
   }
   
   validateListingForm(data, errors) {
-    const { 
+    const {
       isEditMode,
       formListing
     } = this.state
