@@ -22,35 +22,79 @@ export const getDataUri = async file => {
 }
 
 /*
- * modifyImage
- * @description Creates a scaled & modified imageDataUri when given options
- * @param {file} imageFileObj - The image file object from the file input element
- * @param {object} options - https://github.com/blueimp/JavaScript-Load-Image#options
+ * getCroppedDimensions
+ * @description uses the canvas dimensions to generate the auto-crop dimensions
+ * @param {file} canvas - The image canvas to be modified
+ */
+
+export const getCroppedDimensions = (canvas) => {
+  const imageWidth = canvas.width
+  const imageHeight = canvas.height
+
+  let cropWidth
+  let cropHeight
+  let left
+  let top
+
+  if (imageWidth > imageHeight) {
+    // Landscape orientation
+    cropHeight = imageHeight
+    cropWidth = imageHeight * 1.3333
+    left = (imageWidth / 2) - (cropWidth / 2)
+    top = 0
+  } else {
+    // Portrait orientation
+    cropWidth = imageWidth
+    cropHeight = imageWidth / 1.3333
+    top = (imageHeight / 2) - (cropHeight / 2)
+    left = 0
+  }
+
+  return {
+    left,
+    top,
+    sourceWidth: cropWidth,
+    sourceHeight: cropHeight
+  }
+}
+
+/*
+ * scaleAndCropImage
+ * @description Creates a scaled & cropped imageDataUri when given options
+ * @param {file} canvas - The image canvas to be modified
+ * @param {object} config - https://github.com/blueimp/JavaScript-Load-Image#options
  * @param {function} callback- called with an imageDataUri
  */
 
-export const modifyImage = (imageFileObj, options, callback) => {
-  loadImage(imageFileObj, (canvas) => {
-    const scaledImage = loadImage.scale(canvas, options)
+export const scaleAndCropImage = (props) => {
+  const { config, callback, imageFileObj, options } = props
 
+  loadImage(imageFileObj, (canvas) => {
+    let newConfig = config
+
+    if (config.crop) {
+      newConfig = { ...config, ...getCroppedDimensions(canvas) }
+    }
+
+    const scaledImage = loadImage.scale(canvas, newConfig)
     scaledImage.toBlob(async (blob) => {
       blob.name = imageFileObj.name
       const dataUri = await getDataUri(blob)
 
       callback(dataUri)
     }, 'image/jpeg')
-  }, { orientation: true, crossOrigin: 'anonymous' })
+  }, options)
+
 }
 
 /*
  * generateCroppedImage
  * @description Creates a cropped image file when given crop dimensions
  * @param {file} imageFileObj - The image file object from the file input element
- * @param {file} options - The object containing the dimensions of the crop area,
+ * @param {file} pixelCrop - The object containing the dimensions of the crop area,
  * as well as the aspect ratio. If undefined, the image will not be cropped
  * @param {number} aspectRatio - the ratio of the width to the height of an image (i.e. 4/3)
  * @param {bool} centerCrop - whether to auto-crop the image at its center
- * @param {bool} limitSize - limit the dimensions of the image (false for profile image)
  * @param {number} height - The height of the crop area
  * @param {number} width - The width of the crop area
  * @param {number} x - The x coordinate of the top-left corner of the crop area
@@ -58,60 +102,24 @@ export const modifyImage = (imageFileObj, options, callback) => {
  * @param {function} callback- called with the result of modifyImage (an imageDataUri)
  */
 
-export const generateCroppedImage = async (imageFileObj, options, callback) => {
+export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) => {
   const {
     x = 0,
     y = 0,
     width,
     height,
     aspectRatio,
-    centerCrop = false,
-  } = options || {}
+    centerCrop = false
+  } = pixelCrop || {}
 
   const defaultConfig = {
     left: x,
     top: y,
-    orientation: true
+    aspectRatio
   }
-  let config = defaultConfig
-
-
-  function centerCropImage() {
-    const imageWidth = this.naturalWidth
-    const imageHeight = this.naturalHeight
-
-    let cropWidth
-    let cropHeight
-
-    if (imageWidth > imageHeight) {
-      // Landscape orientation
-      cropHeight = imageHeight
-      cropWidth = imageHeight * 1.3333
-      config = {
-        ...defaultConfig,
-        left: (imageWidth / 2) - (cropWidth / 2),
-        top: 0,
-        sourceWidth: cropWidth,
-        sourceHeight: cropHeight,
-        crop: true,
-        aspectRatio
-      }
-    } else {
-      // Portrait orientation
-      cropWidth = imageWidth
-      cropHeight = imageWidth / 1.3333
-      config = {
-        ...defaultConfig,
-        left: 0,
-        top: (imageHeight / 2) - (cropHeight / 2),
-        sourceWidth: cropWidth,
-        sourceHeight: cropHeight,
-        crop: true,
-        aspectRatio
-      }
-    }
-
-    modifyImage(imageFileObj, config, callback)
+  const defaultOptions = {
+    orientation: true,
+    crossOrigin: 'anonymous'
   }
 
   if (centerCrop) {
@@ -120,20 +128,32 @@ export const generateCroppedImage = async (imageFileObj, options, callback) => {
     const dataUri = await getDataUri(imageFileObj)
     const image = new Image()
 
-    image.onload = centerCropImage
+    image.onload = function centerCropImage() {
+      const config = {
+        ...defaultConfig,
+        crop: true,
+        maxHeight: MAX_IMAGE_HEIGHT,
+        maxWidth: MAX_IMAGE_WIDTH
+      }
+
+      scaleAndCropImage({ options: defaultOptions, config, callback, imageFileObj })
+    }
     image.src = dataUri
 
   } else {
     // This is used by Profile (avatar selection) and messaging (resizing large images)
-    //  TODO(John) - dunno if this works yet but centerCrop is working I think
-    config = {
+    const config = {
       ...defaultConfig,
       sourceWidth: width,
       sourceHeight: height,
-      maxWidth: MAX_IMAGE_WIDTH,
-      maxHeight: MAX_IMAGE_HEIGHT,
     }
 
-    modifyImage(imageFileObj, config, callback)
+    const options = {
+      ...defaultOptions,
+      maxHeight: MAX_IMAGE_HEIGHT,
+      maxWidth: MAX_IMAGE_WIDTH
+    }
+
+    scaleAndCropImage({ options, imageFileObj, config, callback })
   }
 }

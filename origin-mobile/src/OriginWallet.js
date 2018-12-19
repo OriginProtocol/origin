@@ -9,7 +9,7 @@ import {EthNotificationTypes} from 'origin/common/enums'
 import ecies from 'eth-ecies'
 import CryptoJS from "crypto-js"
 
-import origin, {apiUrl, defaultProviderUrl, messageOpenUrl, localApi, defaultLocalRemoteHost} from './services/origin'
+import origin, {apiUrl, defaultProviderUrl, messageOpenUrl, localApi, defaultLocalRemoteHost, getEthCode} from './services/origin'
 
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
@@ -846,6 +846,10 @@ class OriginWallet {
 
   isTestNet() {
     return this.state.netId == 999
+  }
+
+  getBuyEthUrl() {
+    return `https://buy.coinbase.com/widget?address=${this.state.ethAddress}&amount=0&code=${getEthCode}&crypto_currency=ETH`
   }
 
   async initWeb3() {
