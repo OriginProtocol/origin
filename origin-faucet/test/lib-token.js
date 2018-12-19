@@ -2,9 +2,9 @@ import assert from 'assert'
 import helper from './_helper'
 import Token from '../lib/token'
 
-// These tests are for the token library that the token CLI uses. We don't
-// validate the effects of various operations. That is left to the contract
-// tests.
+// These tests are for the token library that the token faucet uses. We don't
+// validate the effects of various basic OriginToken operations. That is left
+// to the contract tests.
 describe('Token CLI Library', async function() {
   const supply = 1000
   const networkId = '999'
