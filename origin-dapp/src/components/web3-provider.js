@@ -514,7 +514,7 @@ class Web3Provider extends Component {
       // TODO: fix this with some route magic!
       if (
         !walletLinkerEnabled ||
-        ['/my-listings', '/my-purchases','/my-sales'].includes(this.props.location.pathname) ||
+        previous || ['/my-listings', '/my-purchases','/my-sales'].includes(this.props.location.pathname) ||
         !current
       ) {
         // reload if changed from a prior account

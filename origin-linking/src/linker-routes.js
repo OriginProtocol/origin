@@ -75,6 +75,14 @@ router.get("/wallet-links/:walletToken", async (req, res) => {
 })
 
 
+router.post("/wallet-update-links/:walletToken", async (req, res) => {
+  const {walletToken} = req.params
+  const {updates} = req.body
+  const update_count = await linker.updateWalletLinks(walletToken, updates)
+  res.send({update_count})
+})
+
+
 router.post("/eth-notify", async (req, res) => {
   const {receivers, token} = req.body
   if (token == NOTIFY_TOKEN)

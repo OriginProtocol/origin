@@ -218,7 +218,7 @@ class OriginNavWrapper extends Component {
     originWallet.events.on(Events.TRANSACTED, (data, matcher) => {
       this.props.processedEvent(matcher, { status: 'completed' }, data)
       this.props.getBalance()
-      NavigationService.navigate(['Home'])
+      NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.UNLINKED, (data, matcher) => {
@@ -237,6 +237,16 @@ class OriginNavWrapper extends Component {
     originWallet.events.on(Events.UPDATE, () => {
       this.props.getBalance()
     })
+
+    originWallet.events.on(Events.NEW_MESSAGE, () => {
+      // TODO: show indicator of new message here
+    })
+
+    originWallet.events.on(Events.SHOW_MESSAGES, () => {
+      NavigationService.navigate('Messaging')
+    })
+
+
 
     originWallet.openWallet()
   }

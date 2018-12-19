@@ -341,6 +341,27 @@ class Linker {
     return links.map(link => ({linked:link.linked, app_info:link.appInfo,  link_id:this.getLinkId(link.id, link.clientToken), linked_at:link.linkedAt, pub_key:link.clientPubKey}))
   }
 
+  async updateWalletLinks(walletToken, updates) {
+    const links = await db.LinkedToken.findAll({where:{walletToken, linked:true}})
+    let update_count = 0
+
+    for (const link of links)
+    {
+      const link_id = this.getLinkId(link.id, link.clientToken)
+      if(updates[link_id])
+      {
+        const {current_rpc, current_accounts, priv_data}  = updates[link_id]
+        link.currentDeviceContext = {accounts:current_accounts, network_rpc:current_rpc, priv_data}
+        //send a global session message
+        this.sendContextChange(link)
+        link.save()
+        update_count +=1
+      }
+    }
+    return update_count
+  }
+
+
   async unlink(clientToken) {
     const linkedObj = await this.findLink(clientToken)
     if (!linkedObj || !linkedObj.linked)
@@ -389,7 +410,7 @@ class Linker {
     {
       console.log("Notifying:", ethAddress)
       const notify = await db.WalletNotificationEndpoint.findOne({where:{ethAddress}})
-      this.sendNotify(notify, "New message for: " +ethAddress)
+      this.sendNotify(notify, "New message for: " +ethAddress, {newMessage:true})
     }
   }
 }

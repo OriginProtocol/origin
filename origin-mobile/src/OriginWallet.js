@@ -35,7 +35,9 @@ const Events = keyMirror({
   UNLINKED:null,
   REJECT:null,
   LINKS:null,
-  UPDATE:null
+  UPDATE:null,
+  SHOW_MESSAGES:null,
+  NEW_MESSAGE:null
 }, "WalletEvents")
 
 const eventMatcherByLinkId = link_id => {
@@ -161,6 +163,7 @@ class OriginWallet {
     this.API_WALLET_LINK_INFO = API_WALLET_LINKER + "/link-info/"
     this.API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called/"
     this.API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
+    this.API_WALLET_UPDATE_LINKS = API_WALLET_LINKER + "/wallet-update-links/"
 
     if (!this._originalIpfsGateway)
     {
@@ -257,6 +260,14 @@ class OriginWallet {
     return origin.messaging.preGenKeys(this.getCurrentWeb3Account())
   }
 
+  async getPrivData(pub_key) {
+    if (pub_key)
+    {
+      const data = {messaging: await this.getMessagingKeys()}
+      return this.ecEncrypt(JSON.stringify(data), pub_key)
+    }
+  }
+
   async doLink(code, current_rpc, current_accounts) {
     const linkInfo = await this.getLinkInfo(code)
     if(!linkInfo || linkInfo.linked)
@@ -264,12 +275,7 @@ class OriginWallet {
       console.log(code, " already linked.")
       return
     }
-    let priv_data 
-    if (linkInfo.pub_key)
-    {
-      data = {messaging: await this.getMessagingKeys()}
-      priv_data = this.ecEncrypt(JSON.stringify(data), linkInfo.pub_key)
-    }
+    const priv_data = await this.getPrivData(linkInfo.pub_key)
     return this.doFetch(this.API_WALLET_LINKER_LINK + this.getWalletToken(), 'POST', {
       code,
       current_rpc,
@@ -731,9 +737,17 @@ class OriginWallet {
       notifyMessage:notification.message
     })
     console.log("notification.message:", notification.message)
-    if (notification.message == "You've received a new message")
+    if (notification.data.newMessage)
     {
-      // TODO:open up the messaging pane
+      if (notification.foreground)
+      {
+        this.fireEvent(Events.NEW_MESSAGE)
+        // TODO: micah put red dot here..
+      }
+      else
+      {
+        this.fireEvent(Events.SHOW_MESSAGES)
+      }
     }
     this.checkSyncMessages(true)
   }
@@ -920,6 +934,55 @@ class OriginWallet {
     }
   }
 
+  async updateLinks() {
+    try {
+      const links = await this.doFetch(this.API_WALLET_GET_LINKS + this.getWalletToken(), "GET")
+      const current_rpc = localfy(this.providerUrl)
+      const current_accounts = [this.state.ethAddress]
+      const updates = {}
+      for (const link of links) {
+        const priv_data = await this.getPrivData(link.pub_key)
+        updates[link.link_id] = {current_rpc, current_accounts, priv_data}
+      }
+      return await this.doFetch(this.API_WALLET_UPDATE_LINKS + this.getWalletToken(), 'POST', {
+        updates
+      })
+    } catch (error) {
+      console.log("error updating links ", error)
+    }
+
+
+  }
+
+  setPrivateKey(privateKey) {
+    if (privateKey)
+    {
+      // try private key first and then clear and add again
+      web3.eth.accounts.wallet.add(privateKey)
+      web3.eth.accounts.wallet.clear()
+      web3.eth.accounts.wallet.add(privateKey)
+      this.setWeb3Address()
+
+      this.updateLinks()
+    }
+  }
+
+  setWeb3Address() {
+    const ethAddress = web3.eth.accounts.wallet[0].address
+    if (ethAddress != this.state.ethAddress)
+    {
+      web3.eth.defaultAccount = ethAddress
+      Object.assign(this.state, {ethAddress})
+      if (this.state.netId)
+      {
+        this.fireEvent(Events.NEW_ACCOUNT, {address:this.state.ethAddress})
+      }
+      this.checkRegisterNotification()
+      this.checkDoLink()
+      this.saveWallet()
+    }
+  }
+
   openWallet() {
     let state = this.state
     const wallet_data = loadData(WALLET_STORE).then(async (wallet_data) => { 
@@ -959,19 +1022,7 @@ class OriginWallet {
         //web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
         web3.eth.accounts.wallet.create(1)
       }
-      let ethAddress = web3.eth.accounts.wallet[0].address
-      if (ethAddress != this.state.ethAddress)
-      {
-        web3.eth.defaultAccount = ethAddress
-        Object.assign(this.state, {ethAddress})
-        if (this.state.netId)
-        {
-          this.fireEvent(Events.NEW_ACCOUNT, {address:this.state.ethAddress})
-        }
-        this.checkRegisterNotification()
-        this.checkDoLink()
-        this.saveWallet()
-      }
+      this.setWeb3Address()
     })
 
     Linking.getInitialURL().then((url) => {
