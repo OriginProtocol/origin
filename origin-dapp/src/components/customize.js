@@ -13,28 +13,24 @@ class Customize extends Component {
     this.setConfig = this.setConfig.bind(this)
 
     let configUrl = this.getConfigUrl()
-    if (configUrl) {
-      this.props.fetchConfig(configUrl)
-        .then(this.setConfig)
-        .catch((error) => {
-          console.log('Could not load custom configuration: ' + error)
-        })
-    }
+
+    this.props.fetchConfig(configUrl)
+      .then(this.setConfig)
+      .catch((error) => {
+        console.log('Could not load custom configuration: ' + error)
+      })
   }
 
   getConfigUrl () {
     // Config override specified as URL parameter
     let configUrl = this.getConfigOverrideUrl()
-    if (!configUrl && this.isWhiteLabelHostname()) {
+    if (configUrl) {
+      return configUrl
+    } else if (this.isWhiteLabelHostname()) {
       // Retrieve the config from config.hostname
       const ipfsGateway = `${process.env.IPFS_GATEWAY_PROTOCOL}://${process.env.IPFS_DOMAIN}:${process.env.IPFS_GATEWAY_PORT}`
-      configUrl = `${ipfsGateway}/ipns/config.${window.location.hostname}`
+      return `${ipfsGateway}/ipns/config.${window.location.hostname}`
     }
-
-    if (configUrl) {
-      console.log(`Configuring from file at ${configUrl}`)
-    }
-    return configUrl
   }
 
   getConfigOverrideUrl () {
