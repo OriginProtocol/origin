@@ -17,7 +17,6 @@ import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/W
 import Onboarding from './components/onboarding'
 import ScanMarker from './components/scan-marker'
 
-import AlertsScreen from './screens/alerts'
 import DevicesScreen from './screens/devices'
 import HomeScreen from './screens/home'
 import MessagingScreen from './screens/messaging'
@@ -67,12 +66,6 @@ const navigationOptions = ({ navigation }) => ({
   },
 })
 
-const AlertsStack = createStackNavigator({
-  Alerts: AlertsScreen,
-}, {
-  navigationOptions,
-})
-
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
 }, {
@@ -101,24 +94,19 @@ const SettingsStack = createStackNavigator({
 })
 
 const OriginNavigator = createBottomTabNavigator({
-  Alerts: AlertsStack,
   Home: HomeStack,
   Messaging: MessagingStack,
   Scan: ScanStack,
   Settings: SettingsStack,
 }, {
   initialRouteName: 'Home',
-  order: ['Home', 'Messaging', 'Alerts', 'Scan', 'Settings'],
+  order: ['Home', 'Messaging', 'Scan', 'Settings'],
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
 
       // require expects string literal :(
-      if (routeName === 'Alerts') {
-        return focused ?
-          <Image source={require(IMAGES_PATH + 'alerts-active.png')} /> :
-          <Image source={require(IMAGES_PATH + 'alerts-inactive.png')} />
-      } else if (routeName === 'Home') {
+      if (routeName === 'Home') {
         return focused ?
           <Image source={require(IMAGES_PATH + 'home-active.png')} /> :
           <Image source={require(IMAGES_PATH + 'home-inactive.png')} />
@@ -190,19 +178,19 @@ class OriginNavWrapper extends Component {
     originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
       this.props.newEvent(matcher, data)
       this.props.setActiveEvent(data)
-      NavigationService.navigate('Alerts')
+      NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
       this.props.setActiveEvent(data)
-      NavigationService.navigate('Alerts')
+      NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.PROMPT_SIGN, (data, matcher) => {
       this.props.newEvent(matcher, data)
       this.props.setActiveEvent(data)
-      NavigationService.navigate('Alerts')
+      NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.NEW_ACCOUNT, (data, matcher) => {

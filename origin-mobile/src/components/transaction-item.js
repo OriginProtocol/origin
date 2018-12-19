@@ -8,10 +8,9 @@ export default class TransactionItem extends Component {
     const { item, address, balance, handleApprove, handlePress, handleReject, style } = this.props
     // placeholders
     const hasSufficientFunds = web3.utils.toBN(balance).gt(item.cost)
-    const myAddress = address || ""
+    const myAddress = address || ''
     const counterpartyAddress = (item.listing && item.listing.seller) || item.to
-    const meta = item.meta
-    const status = item.status
+    const { meta, status } = item
 
     return (
       <TouchableHighlight onPress={handlePress}>

@@ -12,9 +12,7 @@ export default class Currency extends Component {
           <Text style={{ ...styles.abbreviation, color: labelColor }}>{abbreviation}</Text>
           <Text style={styles.balance}>{Number(balance).toFixed(5)}</Text>
         </View>
-        <View style={styles.circle}>
-          <Text style={styles.plus}>+</Text>
-        </View>
+        <Image source={require('../../assets/images/plus-icon.png')} style={styles.plus} />
       </View>
     )
   }
@@ -30,16 +28,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato',
     fontSize: 14,
   },
-  circle: {
-    alignItems: 'center',
-    borderColor: '#007fff',
-    borderRadius: 7,
-    borderWidth: 1,
-    height: 14,
-    justifyContent: 'center',
-    marginLeft: 'auto',
-    width: 14,
-  },
   container: {
     backgroundColor: '#293f55',
     borderRadius: 10,
@@ -54,9 +42,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   plus: {
-    color: '#007fff',
-    fontSize: 10,
-    textAlign: 'center',
+    marginLeft: 'auto',
   },
   text: {
     paddingLeft: 10,
