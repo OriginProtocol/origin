@@ -14,6 +14,7 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 import { getOgnBalance } from 'actions/Wallet'
+import { updateState, clearState } from 'actions/ListingCreate'
 
 import BoostSlider from 'components/boost-slider'
 import PhotoPicker from 'components/form-widgets/photo-picker'
@@ -26,6 +27,7 @@ import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
+import { ListingDraftModal } from 'components/modals/listing-draft-modals'
 
 import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { dappFormDataToOriginListing } from 'utils/listing'
@@ -64,31 +66,9 @@ class ListingCreate extends Component {
       return listingType
     })
 
-    this.defaultState = {
-      step: this.STEP.PICK_CATEGORY,
-      selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
-      selectedCategory: null,
-      selectedCategoryName: null,
-      selectedCategorySchemas: null,
-      selectedSchemaId: null,
-      translatedSchema: null,
-      schemaFetched: false,
-      isFractionalListing: false,
-      isEditMode: false,
-      fractionalTimeIncrement: null,
-      showNoCategorySelectedError: false,
-      showNoSchemaSelectedError: false,
-      formListing: {
-        formData: {
-          boostValue: defaultBoostValue,
-          boostLevel: getBoostLevel(defaultBoostValue)
-        }
-      },
-      showDetailsFormErrorMsg: false,
-      showBoostTutorial: false
-    }
-
-    this.state = { ...this.defaultState }
+    props.updateState({
+      selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0
+    })
 
     this.intlMessages = defineMessages({
       navigationWarning: {
@@ -102,6 +82,9 @@ class ListingCreate extends Component {
       }
     })
 
+    this.onAddNew = this.onAddNew.bind(this)
+    this.onContinue = this.onContinue.bind(this)
+    this.showDraftModal = this.showDraftModal.bind(this)
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleCategorySelection = this.handleCategorySelection.bind(this)
     this.handleCategorySelectNextBtn = this.handleCategorySelectNextBtn.bind(this)
@@ -118,6 +101,17 @@ class ListingCreate extends Component {
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
     this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
+    this.checkWalletETHBalance = this.checkWalletETHBalance.bind(this)
+
+    let ShowDraftModal = false
+    if (this.props.selectedSchemaId) {
+      this.handleSchemaSelection(this.props.selectedSchemaId)
+      ShowDraftModal = true
+    }
+
+    this.state = {
+      showDraftModal: ShowDraftModal
+    }
   }
 
   async componentDidMount() {
@@ -129,9 +123,8 @@ class ListingCreate extends Component {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, false)
-
         this.ensureUserIsSeller(listing.seller)
-        this.setState({
+        this.props.updateState({
           formListing: {
             formData: listing
           },
@@ -140,7 +133,7 @@ class ListingCreate extends Component {
           isEditMode: true
         })
         this.renderDetailsForm(listing.schema)
-        this.setState({
+        this.props.updateState({
           step: this.STEP.DETAILS,
         })
       } catch (error) {
@@ -168,7 +161,7 @@ class ListingCreate extends Component {
 
   componentDidUpdate(prevProps) {
     // conditionally show boost tutorial
-    if (!this.state.showBoostTutorial) {
+    if (!this.props.showBoostTutorial) {
       this.detectNeedForBoostTutorial()
     }
 
@@ -176,8 +169,8 @@ class ListingCreate extends Component {
     // apply OGN detection to slider
     if (ognBalance !== prevProps.wallet.ognBalance) {
       // only if prior to boost selection step
-      this.state.step < this.STEP.BOOST &&
-        this.setState({
+      this.props.step < this.STEP.BOOST &&
+        this.props.updateState({
           selectedBoostAmount: ognBalance ? defaultBoostValue : 0
         })
     }
@@ -192,9 +185,32 @@ class ListingCreate extends Component {
     !Number(this.props.wallet.ognBalance) &&
       // ...tutorial has not been expanded or skipped via "Review"
       // !JSON.parse(localStorage.getItem('boostTutorialViewed')) &&
-      this.setState({
+      this.props.updateState({
         showBoostTutorial: true
       })
+  }
+
+  showDraftModal() {
+    this.setState({
+      showDraftModal: true
+    })
+  }
+
+  onContinue(e) {
+    this.setState({
+      showDraftModal: false
+    })
+    if (!web3.givenProvider || !this.props.web3Account) {
+      e.preventDefault()
+    }
+  }
+
+  onAddNew(e) {
+    e.preventDefault()
+    this.props.clearState()
+    this.setState({
+      showDraftModal: false
+    })
   }
 
   pollOgnBalance() {
@@ -225,23 +241,22 @@ class ListingCreate extends Component {
       stateToSet.step = this.STEP.PICK_SUBCATEGORY
       window.scrollTo(0, 0)
     }
-
-    this.setState(stateToSet)
+    this.props.updateState(stateToSet)
   }
 
   handleCategorySelectNextBtn() {
     // (The button that calls this method is only visibile on non-mobile devices)
     // check for category and schema selection and send to DETAILS step or show error
-    if (!this.state.selectedCategory) {
-      this.setState({
+    if (!this.props.selectedCategory) {
+      this.props.updateState({
         showNoCategorySelectedError: true
       })
-    } else if (!this.state.selectedSchemaId) {
-      this.setState({
+    } else if (!this.props.selectedSchemaId) {
+      this.props.updateState({
         showNoSchemaSelectedError: true
       })
     } else {
-      this.setState({
+      this.props.updateState({
         step: this.STEP.DETAILS,
         showNoCategorySelectedError: false,
         showNoSchemaSelectedError: false
@@ -253,14 +268,13 @@ class ListingCreate extends Component {
     let schemaFileName = selectedSchemaId
 
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
-    if (event.target.value) {
+    if (event && event.target.value) {
       schemaFileName = event.target.value
     }
-
     return fetch(`schemas/${schemaFileName}`)
       .then(response => response.json())
       .then(schemaJson => {
-        this.setState({ selectedSchemaId: schemaFileName })
+        this.props.updateState({ selectedSchemaId: schemaFileName })
         this.renderDetailsForm(schemaJson)
       })
   }
@@ -307,15 +321,15 @@ class ListingCreate extends Component {
       properties.listingType.const === 'fractional'
 
     const slotLength = enableFractional &&
-      this.state.formListing.formData.slotLength ?
-      this.state.formListing.formData.slotLength :
+      this.props.formListing.formData.slotLength ?
+      this.props.formListing.formData.slotLength :
         properties &&
         properties.slotLength &&
         properties.slotLength.default
 
     const slotLengthUnit = enableFractional &&
-      this.state.formListing.formData.slotLengthUnit ?
-      this.state.formListing.formData.slotLengthUnit :
+      this.props.formListing.formData.slotLengthUnit ?
+      this.props.formListing.formData.slotLengthUnit :
         properties &&
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
@@ -330,7 +344,7 @@ class ListingCreate extends Component {
 
     const translatedSchema = translateSchema(schemaJson)
 
-    this.setState({
+    this.props.updateState({
       schemaFetched: true,
       fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
@@ -338,7 +352,7 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
@@ -349,14 +363,24 @@ class ListingCreate extends Component {
     })
   }
 
+  checkWalletETHBalance() {
+    if (parseFloat(this.props.wallet.ethBalance) < 0.01){
+      this.props.updateState({
+        showEthNotEnough: true
+      })
+      return false
+    }
+    return true
+  }
+
   goToDetailsStep() {
-    if (this.state.schemaFetched) {
-      this.setState({
+    if (this.props.schemaFetched) {
+      this.props.updateState({
         step: this.STEP.DETAILS
       })
       window.scrollTo(0, 0)
     } else {
-      this.setState({
+      this.props.updateState({
         showNoSchemaSelectedError: true
       })
     }
@@ -370,7 +394,7 @@ class ListingCreate extends Component {
     let nextStep
     switch(direction) {
       case 'forward':
-        this.state.isEditMode ?
+        this.props.isEditMode ?
           nextStep = 'PREVIEW' :
           nextStep = 'BOOST'
         break
@@ -382,11 +406,11 @@ class ListingCreate extends Component {
 
     slots = prepareSlotsToSave(slots)
 
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           slots
         }
       },
@@ -397,7 +421,7 @@ class ListingCreate extends Component {
   backFromDetailsStep() {
     const step = this.props.mobileDevice ? this.STEP.PICK_SUBCATEGORY : this.STEP.PICK_CATEGORY
 
-    this.setState({
+    this.props.updateState({
       step,
       selectedSchema: null,
       schemaFetched: false,
@@ -406,25 +430,24 @@ class ListingCreate extends Component {
   }
 
   backFromBoostStep() {
-    const previousStep = this.state.isFractionalListing ? this.STEP.AVAILABILITY : this.STEP.DETAILS
-    this.setState({ step: previousStep })
+    const previousStep = this.props.isFractionalListing ? this.STEP.AVAILABILITY : this.STEP.DETAILS
+    this.props.updateState({ step: previousStep })
   }
 
   onDetailsEntered(formListing) {
-    const [nextStep, listingType] = this.state.isFractionalListing ?
+    const [nextStep, listingType] = this.props.isFractionalListing ?
       [this.STEP.AVAILABILITY, 'fractional'] :
-      this.state.isEditMode ?
+      this.props.isEditMode ?
         [this.STEP.PREVIEW, 'unit'] :
         [this.STEP.BOOST, 'unit']
 
     formListing.formData.listingType = listingType
-
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         ...formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           ...formListing.formData
         }
       },
@@ -436,12 +459,11 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
-
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           ...formData
         }
       }
@@ -454,18 +476,18 @@ class ListingCreate extends Component {
       this.props.wallet.ognBalance &&
       parseFloat(this.props.wallet.ognBalance) > 0
     ) {
-      this.setState({
+      this.props.updateState({
         showBoostTutorial: false
       })
     }
   }
 
   setBoost(boostValue, boostLevel) {
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           boostValue,
           boostLevel
         }
@@ -481,11 +503,11 @@ class ListingCreate extends Component {
       localStorage.setItem('boostTutorialViewed', true)
     }
 
-    if (ognBalance < this.state.formListing.formData.boostValue) {
+    if (ognBalance < this.props.formListing.formData.boostValue) {
       this.setBoost(ognBalance, getBoostLevel(ognBalance))
     }
 
-    this.setState({
+    this.props.updateState({
       step: this.STEP.PREVIEW
     })
 
@@ -493,10 +515,13 @@ class ListingCreate extends Component {
   }
 
   async onSubmitListing(formListing) {
-    const { isEditMode } = this.state
+    const { isEditMode } = this.props
+    if (!this.checkWalletETHBalance()) {
+      return
+    }
 
     try {
-      this.setState({ step: this.STEP.METAMASK })
+      this.props.updateState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
       let transactionReceipt
       if (isEditMode) {
@@ -524,22 +549,23 @@ class ListingCreate extends Component {
         transactionTypeKey
       })
       this.props.getOgnBalance()
-      this.setState({ step: this.STEP.SUCCESS })
+      this.props.updateState({ step: this.STEP.SUCCESS })
       this.props.handleNotificationsSubscription('seller', this.props)
     } catch (error) {
       console.error(error)
-      this.setState({ step: this.STEP.ERROR })
+      this.props.updateState({ step: this.STEP.ERROR })
     }
   }
 
   resetForm() {
-    this.setState(this.defaultState)
+    this.props.clearState()
+    // this.props.updateState(this.defaultState)
   }
 
   resetToPreview(e) {
     e.preventDefault()
 
-    this.setState({ step: this.STEP.PREVIEW })
+    this.props.updateState({ step: this.STEP.PREVIEW })
   }
 
   getStepNumber(stepNum) {
@@ -547,7 +573,7 @@ class ListingCreate extends Component {
     // mobile vs. desktop and fractional vs. unit.
     // This method ensures that the step numbers that display at the top of the view are correct
     const isMobile = this.props.mobileDevice
-    const { isFractionalListing } = this.state
+    const { isFractionalListing } = this.props
 
     switch (stepNum) {
       case 1:
@@ -583,8 +609,9 @@ class ListingCreate extends Component {
       showDetailsFormErrorMsg,
       showBoostTutorial,
       isFractionalListing,
-      isEditMode
-    } = this.state
+      isEditMode,
+      showEthNotEnough
+    } = this.props
     const { formData } = formListing
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
     const category = translateListingCategory(formData.category)
@@ -701,7 +728,7 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <button
-                  onClick={() => this.setState({
+                  onClick={() => this.props.updateState({
                     step: this.STEP.PICK_CATEGORY,
                     selectedSchemaId: null
                   })}
@@ -766,7 +793,7 @@ class ListingCreate extends Component {
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
                   onError={() =>
-                    this.setState({ showDetailsFormErrorMsg: true })
+                    this.props.updateState({ showDetailsFormErrorMsg: true })
                   }
                   onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
@@ -1121,7 +1148,7 @@ class ListingCreate extends Component {
                           this.STEP.AVAILABILITY :
                           this.STEP.DETAILS
                         : this.STEP.BOOST
-                      this.setState({ step })
+                      this.props.updateState({ step })
                     }}
                     ga-category="create_listing"
                     ga-label="review_step_back"
@@ -1385,6 +1412,42 @@ class ListingCreate extends Component {
                 </div>
               </Modal>
             )}
+            <Modal backdrop="static" isOpen={showEthNotEnough}>
+              <div className="image-container">
+                <img src="images/flat_cross_icon.svg" role="presentation" />
+              </div>
+              <FormattedMessage
+                id={'eth-not-enough.error1'}
+                defaultMessage={'Your ETH is not enough.'}
+              />
+              <br />
+              <FormattedMessage
+                id={'eth-not-enough.error2'}
+                defaultMessage={'Please funding your wallet.'}
+              />
+              <div className="button-container">
+                <a
+                  className="btn btn-clear"
+                  onClick={()=>{
+                    this.props.updateState({
+                      showEthNotEnough: false
+                    })
+                  }}
+                  ga-category="create_listing"
+                  ga-label="error_dismiss"
+                >
+                  <FormattedMessage
+                    id={'listing-create.OK'}
+                    defaultMessage={'OK'}
+                  />
+                </a>
+              </div>
+            </Modal>
+            <ListingDraftModal
+              isOpen={this.state.showDraftModal}
+              onContinue={this.onContinue}
+              onAddNew={this.onAddNew}
+            />
           </div>
         </div>
         <Prompt
@@ -1396,7 +1459,7 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
+const mapStateToProps = ({ activation, app, exchangeRates, wallet, listingCreate }) => {
   return {
     exchangeRates,
     messagingEnabled: activation.messaging.enabled,
@@ -1406,7 +1469,8 @@ const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
     serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,
     web3Intent: app.web3.intent,
-    mobileDevice: app.mobileDevice
+    mobileDevice: app.mobileDevice,
+    ...listingCreate
   }
 }
 
@@ -1417,7 +1481,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateTransaction(hash, confirmationCount)),
   upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
   getOgnBalance: () => dispatch(getOgnBalance()),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  updateState: payload => dispatch(updateState(payload)),
+  clearState: () => dispatch(clearState())
 })
 
 export default withRouter(
