@@ -41,6 +41,7 @@ services:
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./origin-js/scripts:/app/origin-js/scripts
       - ./origin-js/package.json:/app/origin-js/package.json
+      - ./origin-js/test/fixtures:/app/origin-js/test/fixtures
     command: npm run start --prefix origin-js
 
   ipfs-proxy:
