@@ -1,4 +1,4 @@
-var ProfileRegistry = artifacts.require("./ProfileRegistry.sol")
+var IdentityEvents = artifacts.require("./IdentityEvents.sol")
 
 module.exports = function(deployer, network) {
   return deployer.then(() => {
@@ -7,5 +7,5 @@ module.exports = function(deployer, network) {
 }
 
 async function deployContracts(deployer) {
-  await deployer.deploy(ProfileRegistry)
+  await deployer.deploy(IdentityEvents)
 }
