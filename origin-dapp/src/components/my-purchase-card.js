@@ -92,37 +92,29 @@ class MyPurchaseCard extends Component {
                       </p>
                     </div>
                   }
-                  {isMultiUnit && <div className="flex-grid d-flex pt-3">
-                    <div className="d-flex col-3 pl-0 pr-0 mr-auto">
+                  {isMultiUnit && <div className="flex-grid d-flex flex-column">
+                    <div className="d-flex col-12 pl-0 pr-0 mr-auto pt-3">
                       <div className="mr-auto">
-                        Quantity:
-                      </div>
-                      <div className="emphasis">
-                        {unitsPurchased}
-                      </div>
-                    </div>
-                    <div className="d-flex col-6 pl-0 pr-0">
-                      <div className="mr-auto">
-                        Price / unit:
-                      </div>
-                      <div className="emphasis">
-                        {`${Number(price).toLocaleString(
-                          undefined,
-                          { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                        )} ${totalPrice.currency}`}
+                        Quantity:<span className="emphasis ml-2">{unitsPurchased}</span>
                       </div>
                     </div>
                   </div>}
 
-                  <div className="dflex-grid d-flex pt-3">
-                    <div className="col-3 pl-0 pr-0">
-                      Total Price: 
-                    </div>
-                    <div className="col-9 pl-0 pr-0 emphasis">
-                      {`${Number(price * unitsPurchased).toLocaleString(
-                        undefined,
-                        { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                      )} ${totalPrice.currency}`}
+                  <div className={'dflex-grid d-flex ' + (isMultiUnit ? 'pt-2' : 'pt-3')}>
+                    <div className="d-flex col-12 pl-0 pr-0 pt-2">
+                      <div className="mr-auto">
+                        Price:
+                        <span className="emphasis ml-2">
+                          {`${Number(totalPrice.amount).toLocaleString(
+                            undefined,
+                            { minimumFractionDigits: 5, maximumFractionDigits: 5 }
+                        )} ${totalPrice.currency}`}</span>
+                        {isMultiUnit && <span className="emphasis ml-2">
+                          {`(${Number(price).toLocaleString(
+                            undefined,
+                            { minimumFractionDigits: 5, maximumFractionDigits: 5 }
+                        )} / unit)`}</span>}
+                      </div>
                     </div>
                   </div>
                   <PurchaseProgress

@@ -137,6 +137,7 @@ export async function originToDAppListing(originListing) {
       ? originListing.media.map(medium => medium.url)
       : [],
     price: originListing.price && originListing.price.amount,
+    priceCurrency: originListing.price && originListing.price.currency,
     boostValue: isMultiUnit ? commissionPerUnit : commission,
     boostLevel: getBoostLevel(commission),
     unitsTotal: originListing.unitsTotal,

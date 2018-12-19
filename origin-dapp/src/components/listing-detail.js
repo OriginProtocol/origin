@@ -278,7 +278,7 @@ class ListingsDetail extends Component {
           />
         </button>
       )}
-      {userIsSeller && isMultiUnit && (
+      {userIsSeller && (
         <Fragment>
           <Link
             to="/my-listings"

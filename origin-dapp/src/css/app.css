@@ -398,6 +398,18 @@ textarea:-moz-ui-invalid {
   width: 10px;
 }
 
+/* Offer Details */
+.offer-details {
+  background-color: var(--dark);
+  border-radius: var(--default-radius);
+  color: white;
+}
+
+.offer-details .identity {
+  padding: 1rem;
+}
+
+
 /* User Card */
 
 .user-card {
@@ -3427,6 +3439,10 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: 300;
   margin: 0;
   padding-top: 10px;
+}
+
+.purchase .emphasis {
+  font-weight: normal;
 }
 
 .purchase .price,
