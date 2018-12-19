@@ -71,7 +71,7 @@ class Calendar extends Component {
           price: slot.price && slot.price.amount && parseFloat(slot.price.amount),
           isAvailable: slot.isAvailable,
           slots: slot.slots,
-          isRecurringEvent: (slot.recurs === 'weekly')
+          isRecurringEvent: (slot.rrule === 'FREQ=DAILY;')
         }
       })
 

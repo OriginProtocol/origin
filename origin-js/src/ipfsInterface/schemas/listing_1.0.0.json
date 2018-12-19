@@ -66,6 +66,9 @@
         "isAvailable": {
           "type": "boolean"
         },
+        "rrule": {
+          "type": "string"
+        },
         "price": {
           "$ref": "#/definitions/money"
         }
