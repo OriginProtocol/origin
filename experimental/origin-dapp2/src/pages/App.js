@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
+import get from 'lodash/get'
 
 import Nav from './_Nav'
 import Footer from './_Footer'
@@ -10,8 +11,7 @@ import Transaction from './transactions/Transaction'
 
 class App extends Component {
   componentDidUpdate() {
-    const { state } = this.props.location
-    if (state && state.scrollToTop) {
+    if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
     }
   }
@@ -20,13 +20,11 @@ class App extends Component {
       <>
         <main>
           <Nav />
-          <div className="container">
-            <Switch>
-              <Route path="/listings/:listingID" component={Listing} />
-              <Route path="/transaction" component={Transaction} />
-              <Route component={Listings} />
-            </Switch>
-          </div>
+          <Switch>
+            <Route path="/listings/:listingID" component={Listing} />
+            <Route path="/transaction" component={Transaction} />
+            <Route component={Listings} />
+          </Switch>
         </main>
         <Footer />
       </>

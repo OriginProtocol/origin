@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import Gallery from 'components/Gallery'
-
 import Buy from './Buy'
 
 class ListingDetail extends Component {
@@ -74,10 +73,10 @@ require('react-styl')(`
       margin-top: 0.75rem
 
     .main-pic
-      padding-top: 66.6%
-      background-size: cover
+      padding-top: 56.6%
+      background-size: contain
       background-repeat: no-repeat
-      background-position: center
+      background-position: top center
 
     .description
       margin-top: 2rem

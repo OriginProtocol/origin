@@ -1,45 +1,56 @@
-import React from 'react'
-import { withRouter } from 'react-router'
+import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import { getIpfsGateway } from 'utils/config'
 import Price from 'components/Price'
 
-const Listings = ({ listings, history }) => {
-  if (!listings) return null
-  const ipfsGateway = getIpfsGateway()
-  return (
-    <div className="row">
-      {listings.map(a => (
-        <div
-          key={a.id}
-          onClick={() => history.push(`/listings/${a.id}`)}
-          className="col-md-4 listing-card"
-        >
-          {a.media && a.media.length ? (
-            <div
-              className="main-pic"
-              style={{
-                backgroundImage: `url(${ipfsGateway}/${a.media[0].url.replace(
-                  ':/',
-                  ''
-                )})`
-              }}
-            />
-          ) : null}
-          <div className="category">{a.categoryStr}</div>
-          <h5>{a.title}</h5>
-          <div className="price">
-            <div className="eth">{`${a.price.amount} ETH`}</div>
-            <div className="usd">
-              <Price amount={a.price.amount} />
+class Listings extends Component {
+  state = {}
+  render() {
+    const { listings } = this.props
+    if (!listings) return null
+    const ipfsGateway = getIpfsGateway()
+
+    return (
+      <div className="row">
+        {this.state.redirect && (
+          <Redirect
+            push
+            to={{ pathname: this.state.redirect, state: { scrollToTop: true } }}
+          />
+        )}
+        {listings.map(a => (
+          <div
+            key={a.id}
+            onClick={() => this.setState({ redirect: `/listings/${a.id}` })}
+            className="col-md-4 listing-card"
+          >
+            {a.media && a.media.length ? (
+              <div
+                className="main-pic"
+                style={{
+                  backgroundImage: `url(${ipfsGateway}/${a.media[0].url.replace(
+                    ':/',
+                    ''
+                  )})`
+                }}
+              />
+            ) : null}
+            <div className="category">{a.categoryStr}</div>
+            <h5>{a.title}</h5>
+            <div className="price">
+              <div className="eth">{`${a.price.amount} ETH`}</div>
+              <div className="usd">
+                <Price amount={a.price.amount} />
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
-  )
+        ))}
+      </div>
+    )
+  }
 }
 
-export default withRouter(Listings)
+export default Listings
 
 require('react-styl')(`
   .listing-card

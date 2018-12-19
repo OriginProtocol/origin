@@ -6,26 +6,23 @@ class Gallery extends Component {
   render() {
     const { pics } = this.props
     const active = pics[this.state.active]
-    const ipfsGateway = getIpfsGateway()
     if (!active) return null
+
+    const getUrl = url => `url(${getIpfsGateway()}/${url.replace(':/', '')})`
+
     return (
       <div className="gallery">
         <div
           className="main-pic"
-          style={{
-            backgroundImage: `url(${ipfsGateway}/${active.url.replace(
-              ':/',
-              ''
-            )})`
-          }}
+          style={{ backgroundImage: getUrl(active.url) }}
         />
         {pics.length === 1 ? null : (
           <div className="thumbnails">
             {pics.map((m, idx) => (
-              <img
+              <div
                 key={idx}
                 onClick={() => this.setState({ active: idx })}
-                src={`${ipfsGateway}/${m.url.replace(':/', '')}`}
+                style={{ backgroundImage: getUrl(m.url) }}
                 className={this.state.active === idx ? 'active' : ''}
               />
             ))}
@@ -49,17 +46,20 @@ require('react-styl')(`
       flex-direction: column
       width: 100px
       margin-left: 1rem
-      img
-        max-height: 80px
+      > div
+        height: 70px
+        margin-bottom: 5px
+        padding: 5px
+        background-position: center
+        background-repeat: no-repeat
+        background-size: contain
+        background-origin: content-box
         cursor: pointer
-        border-width: 2px
-        border-style: solid
-        border-color: #fff
         opacity: 0.75
         &:hover
           opacity: 1
         &.active
-          border-color: #ff6
+          box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5)
           opacity: 1
 
 `)

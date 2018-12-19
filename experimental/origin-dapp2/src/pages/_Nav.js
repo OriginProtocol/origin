@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import WalletQuery from 'queries/Wallet'
 
+import Link from 'components/Link'
 import Profile from './nav/Profile'
 import Notifications from './nav/Notifications'
 import Messages from './nav/Messages'
@@ -11,13 +12,21 @@ import Confirmations from './nav/Confirmations'
 
 class Nav extends Component {
   state = {}
+
   render() {
+
+    const navProps = nav => ({
+      onOpen: () => this.setState({ open: nav }),
+      onClose: () => this.setState({ open: false }),
+      open: this.state.open === nav
+    })
+
     return (
-      <nav className="navbar navbar-expand-lg">
+      <nav className="navbar navbar-expand-md">
         <div className="container">
-          <a className="navbar-brand" href="#">
+          <Link to="/" className="navbar-brand">
             Origin
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -34,7 +43,7 @@ class Nav extends Component {
                   if (!get(data, 'web3.metaMaskAccount.id'))
                     return (
                       <>
-                        <li className="nav-item active">
+                        <li className="nav-item">
                           <a className="nav-link" href="#">
                             Get Started
                           </a>
@@ -49,41 +58,25 @@ class Nav extends Component {
 
                   return (
                     <>
-                      <li className="nav-item extra-margin active">
-                        <a className="nav-link" href="#">
+                      <li className="nav-item extra-margin">
+                        <Link to="/" className="nav-link">
                           Buy
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item extra-margin">
-                        <a className="nav-link" href="#">
+                        <Link to="/" className="nav-link">
                           Sell
-                        </a>
+                        </Link>
                       </li>
                       <li className="nav-item extra-margin">
-                        <a className="nav-link add-listing" href="#">
+                        <Link to="/" className="nav-link add-listing">
                           Add Listing
-                        </a>
+                        </Link>
                       </li>
-                      <Confirmations
-                        onOpen={() => this.setState({ open: 'confirmations' })}
-                        onClose={() => this.setState({ open: false })}
-                        open={this.state.open === 'confirmations'}
-                      />
-                      <Messages
-                        onOpen={() => this.setState({ open: 'messages' })}
-                        onClose={() => this.setState({ open: false })}
-                        open={this.state.open === 'messages'}
-                      />
-                      <Notifications
-                        onOpen={() => this.setState({ open: 'notifications' })}
-                        onClose={() => this.setState({ open: false })}
-                        open={this.state.open === 'notifications'}
-                      />
-                      <Profile
-                        onOpen={() => this.setState({ open: 'profile' })}
-                        onClose={() => this.setState({ open: false })}
-                        open={this.state.open === 'profile'}
-                      />
+                      <Confirmations {...navProps('confirmations')} />
+                      <Messages {...navProps('messages')} />
+                      <Notifications {...navProps('notifications')} />
+                      <Profile {...navProps('profile')} />
                     </>
                   )
                 }}

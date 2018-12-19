@@ -8,6 +8,7 @@ import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
 
 import ListingsGallery from './ListingCards'
+import Search from './Search'
 
 import query from 'queries/Listings'
 
@@ -17,7 +18,6 @@ const nextPage = nextPageFactory('marketplace.listings')
 class Listings extends Component {
   state = {
     first: 15,
-    searchInput: memStore.get('listingsPage.search', ''),
     search: memStore.get('listingsPage.search'),
     sort: 'featured',
     hidden: true
@@ -27,44 +27,62 @@ class Listings extends Component {
     const vars = pick(this.state, 'first', 'sort', 'hidden', 'search')
 
     return (
-      <Query query={query} variables={vars} notifyOnNetworkStatusChange={true}>
-        {({ error, data, fetchMore, networkStatus }) => {
-          if (networkStatus === 1) {
-            return <h5 className="listings-count">Loading...</h5>
-          } else if (error) {
-            return <p className="p-3">Error :(</p>
-          } else if (!data || !data.marketplace) {
-            return <p className="p-3">No marketplace contract?</p>
-          }
+      <>
+        <Search
+          value={this.state.search}
+          onSearch={search => {
+            this.setState({ search })
+            memStore.set('listingsPage.search', search)
+          }}
+        />
+        <div className="container">
+          <Query
+            query={query}
+            variables={vars}
+            notifyOnNetworkStatusChange={true}
+          >
+            {({ error, data, fetchMore, networkStatus }) => {
+              if (networkStatus === 1) {
+                return <h5 className="listings-count">Loading...</h5>
+              } else if (error) {
+                return <p className="p-3">Error :(</p>
+              } else if (!data || !data.marketplace) {
+                return <p className="p-3">No marketplace contract?</p>
+              }
 
-          const { nodes, pageInfo, totalCount } = data.marketplace.listings
-          const { hasNextPage, endCursor: after } = pageInfo
+              const { nodes, pageInfo, totalCount } = data.marketplace.listings
+              const { hasNextPage, endCursor: after } = pageInfo
 
-          return (
-            <BottomScrollListener
-              offset={200}
-              ready={networkStatus === 7}
-              hasMore={hasNextPage}
-              onBottom={() => nextPage(fetchMore, { ...vars, after })}
-            >
-              <>
-                <h5 className="listings-count">{`${totalCount} Listings`}</h5>
+              return (
+                <BottomScrollListener
+                  offset={200}
+                  ready={networkStatus === 7}
+                  hasMore={hasNextPage}
+                  onBottom={() => nextPage(fetchMore, { ...vars, after })}
+                >
+                  <>
+                    <h5 className="listings-count">{`${totalCount} Listings`}</h5>
 
-                <ListingsGallery listings={nodes} hasNextPage={hasNextPage} />
+                    <ListingsGallery
+                      listings={nodes}
+                      hasNextPage={hasNextPage}
+                    />
 
-                {!hasNextPage ? null : (
-                  <button
-                    className="mt-3"
-                    onClick={() => nextPage(fetchMore, { ...vars, after })}
-                  >
-                    Load more...
-                  </button>
-                )}
-              </>
-            </BottomScrollListener>
-          )
-        }}
-      </Query>
+                    {!hasNextPage ? null : (
+                      <button
+                        className="mt-3"
+                        onClick={() => nextPage(fetchMore, { ...vars, after })}
+                      >
+                        Load more...
+                      </button>
+                    )}
+                  </>
+                </BottomScrollListener>
+              )
+            }}
+          </Query>
+        </div>
+      </>
     )
   }
 
