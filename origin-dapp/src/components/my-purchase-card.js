@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
-import { defineMessages, injectIntl } from 'react-intl'
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 
 import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
@@ -17,13 +17,6 @@ class MyPurchaseCard extends Component {
       purchasedSlots: [],
       loading: false
     }
-
-    this.intlMessages = defineMessages({
-      ETH: {
-        id: 'my-purchase-card.ethereumCurrencyAbbrev',
-        defaultMessage: 'ETH'
-      }
-    })
 
     this.getPrice = this.getPrice.bind(this)
   }
@@ -94,26 +87,45 @@ class MyPurchaseCard extends Component {
                   }
                   {isMultiUnit && <div className="flex-grid d-flex flex-column">
                     <div className="d-flex col-12 pl-0 pr-0 mr-auto pt-3">
-                      <div className="mr-auto">
-                        Quantity:<span className="emphasis ml-2">{unitsPurchased}</span>
+                      <div className="col-4 pl-0 pr-0">
+                        <FormattedMessage
+                          id={ 'my-purchase-card.quantity' }
+                          defaultMessage={ 'Quantity:' }
+                        />
+                      </div>
+                      <div className="emphasis col-8 pl-0 pr-0">
+                        {unitsPurchased}
+                      </div>
+                    </div>
+                    <div className="d-flex col-12 pl-0 pr-0 mr-auto pt-2">
+                      <div className="col-4 pl-0 pr-0">
+                        <FormattedMessage
+                          id={ 'my-purchase-card.pricePerUnit' }
+                          defaultMessage={ 'Price/Unit:' }
+                        />
+                      </div>
+                      <div className="emphasis col-8 pl-0 pr-0">
+                        {`${Number(price).toLocaleString(
+                            undefined,
+                            { minimumFractionDigits: 5, maximumFractionDigits: 5 }
+                        )} ${totalPrice.currency}`}
                       </div>
                     </div>
                   </div>}
 
-                  <div className={'dflex-grid d-flex ' + (isMultiUnit ? 'pt-2' : 'pt-3')}>
+                  <div className={'dflex-grid d-flex ' + (isMultiUnit ? 'pt-0' : 'pt-3')}>
                     <div className="d-flex col-12 pl-0 pr-0 pt-2">
-                      <div className="mr-auto">
-                        Price:
-                        <span className="emphasis ml-2">
-                          {`${Number(totalPrice.amount).toLocaleString(
+                      <div className="emphasis col-4 pl-0 pr-0">
+                        <FormattedMessage
+                          id={ 'my-purchase-card.totalPrice' }
+                          defaultMessage={ 'Total Price:' }
+                        />
+                      </div>
+                      <div className="emphasis col-8 pl-0 pr-0">
+                        {`${Number(totalPrice.amount).toLocaleString(
                             undefined,
                             { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                        )} ${totalPrice.currency}`}</span>
-                        {isMultiUnit && <span className="emphasis ml-2">
-                          {`(${Number(price).toLocaleString(
-                            undefined,
-                            { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                        )} / unit)`}</span>}
+                        )} ${totalPrice.currency}`}
                       </div>
                     </div>
                   </div>
@@ -126,22 +138,21 @@ class MyPurchaseCard extends Component {
                   />
                 </Fragment>
               )}
-              <div className="actions d-flex">
+              {/*<div className="actions d-flex">
                 <div className="links-container">
-                  {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
+                  {<a onClick={() => alert('To Do')}>Open a Dispute</a>}
                 </div>
                 <div className="button-container">
-                  {/* Hidden for current deployment */}
-                  {/* stage === 'buyer_pending' &&
+                  // Hidden for current deployment
+                  stage === 'buyer_pending' &&
                     <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>
                       <FormattedMessage
                         id={ 'my-purchase-card.iReceivedTheOrder' }
                         defaultMessage={ 'I\'ve Received the Order' }
                       />
                     </a>
-                  */}
                 </div>
-              </div>
+              </div>*/}
             </div>
           )}
         </div>
