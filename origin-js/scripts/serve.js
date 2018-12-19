@@ -5,7 +5,7 @@ const startIpfs = require('./helpers/start-ipfs')
 const args = process.argv.slice(2)
 const noGanache = args.length && args[0] === 'no-ganache'
 const Web3 = require('web3')
-const Origin = require('../dist/index.js')
+const Origin = require('../src/index.js')
 
 const web3Provider = new Web3.providers.HttpProvider('http://localhost:8545')
 const web3 = new Web3(web3Provider)
