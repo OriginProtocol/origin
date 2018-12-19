@@ -90,11 +90,17 @@ class Create extends Component {
 
   async handlePreview () {
     this.setState({ previewing: true })
-    const response = await superagent
-      .post(`${process.env.API_URL}/config/preview`)
-      .send(this.state.config)
 
-    this.setState({ previewing: false })
+    try {
+      const response = await superagent
+        .post(`${process.env.API_URL}/config/preview`)
+        .send(this.state.config)
+    } catch(error) {
+      console.log('An error occurred generating preview: ' + error)
+      return
+    } finally() {
+      this.setState({ previewing: false })
+    }
 
     const ipfsPath = `${process.env.IPFS_GATEWAY_URL}/ipfs/${response.text}`
     window.open(`${process.env.DAPP_URL}/?config=${ipfsPath}`, '_blank')
@@ -164,7 +170,8 @@ class Create extends Component {
 
         <Button className="ml-2 mt-3"
             large={true}
-            onClick={this.handlePreview}>
+            onClick={this.handlePreview}
+            disabled={this.state.previewing}>
           {this.state.previewing ? 'Loading' : 'Preview' }
         </Button>
       </div>
