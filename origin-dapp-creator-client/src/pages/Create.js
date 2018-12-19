@@ -98,7 +98,7 @@ class Create extends Component {
     } catch(error) {
       console.log('An error occurred generating preview: ' + error)
       return
-    } finally() {
+    } finally {
       this.setState({ previewing: false })
     }
 
