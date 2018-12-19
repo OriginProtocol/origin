@@ -45,7 +45,10 @@ class Customize extends Component {
 
         // Locale
         if (this.props.config.languageCode) {
-          store.set('preferredLang', this.props.config.languageCode)
+          if (this.props.config.languageCode !== this.props.selectedLanguageCode) {
+            store.set('preferredLang', this.props.config.languageCode)
+            window.location.reload()
+          }
         }
       })
   }
@@ -60,9 +63,10 @@ const camelToDash = str => str
   .replace(/(^[A-Z])/, ([first]) => first.toLowerCase())
   .replace(/([A-Z])/g, ([letter]) => `-${letter.toLowerCase()}`)
 
-const mapStateToProps = ({ config }) => {
+const mapStateToProps = state => {
   return {
-    config: config
+    config: state.config,
+    selectedLanguageCode: state.app.translations.selectedLanguageCode
   }
 }
 
