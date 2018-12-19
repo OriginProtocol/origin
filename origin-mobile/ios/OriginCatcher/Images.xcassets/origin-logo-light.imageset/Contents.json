@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "origin-mobile-wallet-logo.png",
+      "filename" : "origin-logo-light.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "origin-mobile-wallet-logo@2x.png",
+      "filename" : "origin-logo-light@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "origin-mobile-wallet-logo@3x.png",
+      "filename" : "origin-logo-light@3x.png",
       "scale" : "3x"
     }
   ],

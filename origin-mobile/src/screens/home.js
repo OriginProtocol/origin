@@ -23,7 +23,7 @@ class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
     headerTitle: () => (
-      <Image source={require('../../assets/images/origin-logo.png')} />
+      <Image source={require('../../assets/images/origin-logo-dark.png')} />
     ),
   }
 
@@ -49,13 +49,13 @@ class HomeScreen extends Component {
             abbreviation={'OGN'}
             balance={'0'}
             labelColor={'#007fff'}
-            imageSource={require('../../assets/images/eth-icon.png')}
+            imageSource={require('../../assets/images/ogn-icon.png')}
           />
           <Currency
             abbreviation={'DAI'}
             balance={'0'}
             labelColor={'#fdb134'}
-            imageSource={require('../../assets/images/eth-icon.png')}
+            imageSource={require('../../assets/images/ogn-icon.png')}
           />
         </ScrollView>
         <View style={styles.oldWalletContainer}>

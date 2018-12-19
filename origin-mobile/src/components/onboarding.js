@@ -72,7 +72,7 @@ class Onboarding extends Component {
       >
         <StatusBar barStyle={'light-content'} />
         <SafeAreaView style={{ alignItems: 'center', width }}>
-          <Image source={require(IMAGES_PATH + 'origin-mobile-wallet-logo.png')} />
+          <Image source={require(IMAGES_PATH + 'origin-logo-light.png')} />
         </SafeAreaView>
         <FlatList
           ref={list => {
