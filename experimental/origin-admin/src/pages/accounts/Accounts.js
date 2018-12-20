@@ -80,6 +80,11 @@ const Accounts = props => (
           />
           <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
           <Contracts />
+          <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
+          <pre>
+          {`localStorage.OGNContract = "${localStorage.OGNContract}"\n`}
+          {`localStorage.marketplaceContract = "${localStorage.marketplaceContract}"`}
+          </pre>
         </div>
       )
     }}

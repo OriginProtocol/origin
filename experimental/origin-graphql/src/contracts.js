@@ -82,7 +82,6 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:9090`,
     ipfsRPC: `http://${HOST}:5002`,
-    ipfsEventCache: 'QmaRfkZtiJfCreSsFPWK63H412c5hyFAbYPtzzLV9mQsew',
     automine: 2000,
   }
 }

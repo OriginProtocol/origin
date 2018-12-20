@@ -12,11 +12,13 @@ export default {
     if (marketplaceExists[address]) {
       return contracts.marketplace
     }
-    const exists = await contracts.web3.eth.getCode(address)
-    if (exists && exists.length > 2) {
-      marketplaceExists[address] = true
-      return contracts.marketplace
-    }
+    try {
+      const exists = await contracts.web3.eth.getCode(address)
+      if (exists && exists.length > 2) {
+        marketplaceExists[address] = true
+        return contracts.marketplace
+      }
+    } catch(e) { /* Ignore */ }
   },
   contracts: () => {
     let contracts = []
@@ -28,7 +30,11 @@ export default {
     return contracts
   },
   marketplaces: () => contracts.marketplaces,
-  userRegistry: () => contracts.userRegistry,
+  userRegistry: () => {
+    const address = contracts.userRegistry.options.address
+    if (!address) return null
+    return contracts.userRegistry
+  },
   tokens: () => contracts.tokens,
   token: (_, args) => {
     if (args.id === '0x0000000000000000000000000000000000000000') {
