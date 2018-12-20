@@ -1,0 +1,18 @@
+FROM node:10
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./origin-js ./origin-js
+COPY ./origin-linking ./origin-linking
+COPY ./origin-contracts ./origin-contracts
+COPY ./scripts ./scripts
+
+RUN npm install:mobile --unsafe-perm
+
+COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
+
+CMD npm run start --prefix origin-linking
