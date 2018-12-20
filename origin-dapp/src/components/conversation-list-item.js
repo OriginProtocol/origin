@@ -5,7 +5,7 @@ import Avatar from 'components/avatar'
 import { getListing } from 'utils/listing'
 import { defineMessages, injectIntl } from 'react-intl'
 
-import { formattedAddress } from 'utils/user'
+import { formattedAddress, abbreviateName } from 'utils/user'
 
 class ConversationListItem extends Component {
   constructor(props) {
@@ -112,7 +112,8 @@ class ConversationListItem extends Component {
       handleConversationSelect,
       mobileDevice,
       users,
-      wallet
+      wallet,
+      fromMessages = false
     } = this.props
     const { listing, lastMessage, createdAt } = this.state
 
@@ -128,7 +129,10 @@ class ConversationListItem extends Component {
       return msg.status === 'unread' && formattedAddress(msg.senderAddress) !== formattedAddress(wallet.address)
     }).length
     const { profile } = counterparty
-    const conversationItem = mobileDevice ? 'mobile-conversation-list-item' : `conversation-list-item${active ? ' active' : ''}`
+    const smallScreen = window.innerWidth <= 991
+    const smallScreenOrDevice = smallScreen || mobileDevice
+    const conversationItem = smallScreenOrDevice ?
+      'mobile-conversation-list-item' : `conversation-list-item${active ? ' active' : ''}`
 
     return (
       <div
@@ -138,19 +142,18 @@ class ConversationListItem extends Component {
         <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
         <div className="content-container text-truncate">
           <div className="sender text-truncate">
-            <span>{counterparty.fullName || formattedAddress(counterpartyAddress)}</span>
+            <span>{abbreviateName(counterparty) || formattedAddress(counterpartyAddress)}</span>
           </div>
-          { mobileDevice && <div className="listing-title text-truncate">{listing.name}</div> }
+          {(smallScreenOrDevice) && <div className="listing-title text-truncate">{listing.name}</div>}
           <div className={`message text-truncate ${!listing.name ? 'no-listing' : ''}`}>{content}</div>
         </div>
-        <div className={`meta-container ${mobileDevice ? 'justify-content-start ml-auto' : 'text-right'}`}>
-          { mobileDevice && (
-            <div className="timestamp align-self-end">
-              {createdAt}
-            </div>
-          )}
-          {(!!unreadCount && active) && (
-            <div className={`unread count ${mobileDevice ? 'text-center mx-auto' : 'text-right'}`}>
+        <div className={`meta-container ${(smallScreenOrDevice)? 'justify-content-start ml-auto' : 'text-right'}`}>
+          <div className="timestamp align-self-end">
+            {createdAt}
+          </div>
+
+          {(!!unreadCount && fromMessages) && (
+            <div className="unread count text-right mx-auto">
               <div>{unreadCount}</div>
             </div>
           )}

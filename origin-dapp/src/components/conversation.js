@@ -1,21 +1,23 @@
 import React, { Component, Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import moment from 'moment'
 
 import { fetchUser } from 'actions/User'
+import { showMainNav } from 'actions/App'
 
 import CompactMessages from 'components/compact-messages'
-import OfferStatusEvent from 'components/offer-status-event'
-import PurchaseProgress from 'components/purchase-progress'
 
 import { generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
-import { formattedAddress } from 'utils/user'
+import { truncateAddress, formattedAddress, abbreviateName } from 'utils/user'
+import { getOfferEvents } from 'utils/offer'
 
 import origin from '../services/origin'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || 2 * 1024 * 1024 // 2 MiB
+const formatDate = timestamp => moment(timestamp * 1000).format('MMM D, YYYY')
 
 class Conversation extends Component {
   constructor(props) {
@@ -33,6 +35,8 @@ class Conversation extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
+    this.loadPurchase = this.loadPurchase.bind(this)
+    this.formatOfferMessage = this.formatOfferMessage.bind(this)
 
     this.conversationDiv = React.createRef()
     this.fileInput = React.createRef()
@@ -49,12 +53,20 @@ class Conversation extends Component {
   }
 
   componentDidMount() {
+    const { smallScreenOrDevice, showMainNav } = this.props
+    let updateShowNav = true
+
     // try to detect the user before rendering
     this.identifyCounterparty()
 
-    if (this.props.mobileDevice) {
+
+    if (smallScreenOrDevice) {
       this.loadListing()
+      updateShowNav = false
+      this.scrollToBottom()
     }
+
+    showMainNav(updateShowNav)
 
     // why does the page jump ?????
     // regardless, need to scroll past the banner for now anyway
@@ -83,7 +95,10 @@ class Conversation extends Component {
     }
 
     // on new message
-    if (messages.length > prevProps.messages.length) {
+    const newMessage = JSON.stringify(this.getLatestMessage(messages))
+    const prevPropsNewMessage = JSON.stringify(this.getLatestMessage(prevProps.messages))
+
+    if (newMessage !== prevPropsNewMessage) {
       this.loadListing()
       // auto-scroll to most recent message
       this.scrollToBottom()
@@ -93,6 +108,10 @@ class Conversation extends Component {
     if (users.length > prevProps.users.length) {
       this.identifyCounterparty()
     }
+  }
+
+  componentWillUnmount() {
+    this.props.showMainNav(true)
   }
 
   handleClick() {
@@ -182,30 +201,29 @@ class Conversation extends Component {
     const { wallet } = this.props
     const { counterparty, listing, purchase } = this.state
 
-    // listing may not be found
     if (!listing.id) {
       return this.setState({ purchase: {} })
     }
 
     const offers = await origin.marketplace.getOffers(listing.id)
-    const involvingCounterparty = offers.filter(
-      o => formattedAddress(o.buyer) === formattedAddress(counterparty.address) || formattedAddress(o.buyer) === formattedAddress(wallet.address)
-    )
-    const mostRecent = involvingCounterparty.sort(
-      (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
-    )[0]
+    const involvingCounterparty = offers.filter(o => {
+      const buyerIsCounterparty = formattedAddress(o.buyer) === formattedAddress(counterparty.address)
+      const buyerIsCurrentUser = formattedAddress(o.buyer) === formattedAddress(wallet.address)
 
-    // purchase may not be found
+      return buyerIsCounterparty || buyerIsCurrentUser
+    })
+
+    const sortOrder = (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
+    const mostRecent = involvingCounterparty.sort(sortOrder)[0]
+
     if (!mostRecent) {
       return this.setState({ purchase: {} })
     }
-    // compare with existing state
-    if (
-      // purchase is different
-      mostRecent.id !== purchase.id ||
-      // stage has changed
-      mostRecent.status !== purchase.status
-    ) {
+
+    const purchaseHasChanged = mostRecent.id !== purchase.id
+    const statusHasChanged = mostRecent.status !== purchase.status
+
+    if (purchaseHasChanged || statusHasChanged) {
       this.setState({ purchase: mostRecent })
       this.scrollToBottom()
     }
@@ -217,6 +235,12 @@ class Conversation extends Component {
     if (el) {
       el.scrollTop = el.scrollHeight
     }
+  }
+
+  getLatestMessage(messages = []) {
+    const lastMessageIndex = messages.length - 1
+    const sortOrder = (a, b) => (a.created < b.created ? -1 : 1)
+    return messages.sort(sortOrder)[lastMessageIndex]
   }
 
   async sendMessage(content) {
@@ -233,78 +257,120 @@ class Conversation extends Component {
     }
   }
 
+  formatOfferMessage(info) {
+    const { listing = {}, purchase } = this.state
+    const { users, smallScreenOrDevice, withListingSummary } = this.props
+
+    if (smallScreenOrDevice || !withListingSummary) return
+
+    const { returnValues = {}, event, timestamp } = info
+    const partyAddress = formattedAddress(returnValues.party)
+    const user = users.find((user) => formattedAddress(user.address) === partyAddress)
+    const userName = abbreviateName(user)
+    const party = userName || truncateAddress(returnValues.party)
+    const date = formatDate(timestamp)
+
+    function withdrawnOrRejected() {
+      const withdrawn = formattedAddress(purchase.buyer) === partyAddress
+      const withdrawnMessage = 'withdrew their offer for'
+      const rejectedMessage = 'rejected the offer for'
+
+      return withdrawn ? withdrawnMessage : rejectedMessage
+    }
+
+    const offerMessages = {
+      'OfferCreated': (
+        <FormattedMessage
+          id={'conversation.offerCreated'}
+          defaultMessage={'{party} made an offer on {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferWithdrawn': (
+        <FormattedMessage
+          id={'conversation.offerWithdrawnOrRejected'}
+          defaultMessage={'{party} {action} {name} on {date}'}
+          values={{ party, date, name: listing.name, action: withdrawnOrRejected() }}
+        />
+      ),
+      'OfferAccepted': (
+        <FormattedMessage
+          id={'conversation.offerAccepted'}
+          defaultMessage={'{party} accepted the offer for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferDisputed': (
+        <FormattedMessage
+          id={'conversation.offerDisputed'}
+          defaultMessage={'{party} initiated a dispute for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferRuling': (
+        <FormattedMessage
+          id={'conversation.offerRuling'}
+          defaultMessage={'{party} made a ruling on the dispute for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferFinalized': (
+        <FormattedMessage
+          id={'conversation.offerFinalized'}
+          defaultMessage={'{party} finalized the offer for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferData': (
+        <FormattedMessage
+          id={'conversation.offerData'}
+          defaultMessage={'{party} updated information for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+    }
+
+    return (
+      <div key={new Date() + Math.random()} className="purchase-info">
+        <Link to={`/purchases/${purchase.id}`} target="_blank" rel="noopener noreferrer">
+          {offerMessages[event]}
+        </Link>
+      </div>
+    )
+  }
+
   render() {
-    const { id, intl, messages, mobileDevice, wallet, withListingSummary } = this.props
+    const { id, intl, messages, wallet, smallScreenOrDevice } = this.props
     const {
       counterparty,
       files,
       invalidTextInput,
-      listing,
       purchase
     } = this.state
-    const { name, pictures } = listing
-    const { buyer, status } = purchase
-    const perspective = buyer
-      ? formattedAddress(buyer) === formattedAddress(wallet.address)
-        ? 'buyer'
-        : 'seller'
-      : null
-    const photo = pictures && pictures.length > 0 && pictures[0]
+    const counterpartyAddress = formattedAddress(counterparty.address)
     const canDeliverMessage =
       counterparty.address &&
-      origin.messaging.canConverseWith(formattedAddress(counterparty.address))
+      origin.messaging.canConverseWith(counterpartyAddress)
     const shouldEnableForm = id &&
       origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
       canDeliverMessage
-
-    const classNames = mobileDevice ? 'justify-content-start' : 'justify-content-center'
+    const offerEvents = getOfferEvents(purchase)
+    const combinedMessages = [...offerEvents, ...messages]
+    const textAreaSize = smallScreenOrDevice ? '8' : '4'
 
     return (
       <Fragment>
-        {withListingSummary &&
-          listing.id && (
-          <Link to={`/listing/${listing.id}`}>
-            <div className="listing-summary d-flex">
-              <div className="aspect-ratio">
-                <div
-                  className={`${
-                    photo ? '' : 'placeholder '
-                  }image-container d-flex ${classNames}`}
-                >
-                  <img
-                    src={photo || 'images/default-image.svg'}
-                    role="presentation"
-                  />
-                </div>
-              </div>
-              <div className="content-container d-flex flex-column">
-                <h1 className="seller">{listing.seller}</h1>
-                <h1 className="listing-title text-truncate">{name}</h1>
-                {purchase.id && (
-                  <div className="state">
-                    <OfferStatusEvent offer={purchase} />
-                  </div>
-                )}
-                {buyer &&
-                    purchase.id && (
-                  <PurchaseProgress
-                    purchase={purchase}
-                    perspective={perspective}
-                    subdued={true}
-                    currentStep={parseInt(status)}
-                    maxStep={perspective === 'buyer' ? 3 : 4}
-                  />
-                )}
-              </div>
-            </div>
-          </Link>
-        )}
-        <div ref={this.conversationDiv} className="conversation">
-          <CompactMessages messages={messages} />
+        <div ref={this.conversationDiv} className="conversation text-center">
+          <CompactMessages
+            messages={combinedMessages}
+            wallet={wallet}
+            formatOfferMessage={this.formatOfferMessage}
+            smallScreenOrDevice={smallScreenOrDevice}
+          />
         </div>
         {!shouldEnableForm && (
           <form className="add-message d-flex">
-            <textarea tabIndex="0" disabled />
+            <textarea rows={textAreaSize} tabIndex="0" disabled />
             <button type="submit" className="btn btn-sm btn-primary" disabled>
               Send
             </button>
@@ -325,6 +391,7 @@ class Conversation extends Component {
                 )}
                 onKeyDown={this.handleKeyDown}
                 tabIndex="0"
+                rows={textAreaSize}
                 autoFocus
               />
             )}
@@ -386,15 +453,17 @@ class Conversation extends Component {
   }
 }
 
-const mapStateToProps = ({ users, wallet }) => {
+const mapStateToProps = ({ users, wallet, app }) => {
   return {
     users,
-    wallet
+    wallet,
+    showNav: app.showNav
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: addr => dispatch(fetchUser(addr))
+  fetchUser: addr => dispatch(fetchUser(addr)),
+  showMainNav: (showNav) => dispatch(showMainNav(showNav))
 })
 
 export default connect(

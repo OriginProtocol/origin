@@ -5,6 +5,10 @@ export class Listing {
   /**
    * Listing object model.
    *
+   * Notice: when adding a field, be aware that the data in the discovery back-end
+   * is not automatically re-indexed. Therefore old listings will be returned by
+   * the back-end with the new field's value set to 'undefined'.
+   *
    * @param {Object} args - single object arguments used to construct a Listing
    *  - {string} id
    *  - {string} title

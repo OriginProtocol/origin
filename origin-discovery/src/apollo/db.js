@@ -25,6 +25,8 @@ function _makeListing (row) {
     // TODO: price may not be defined at the listing level for all listing types.
     // For example, for fractional usage it may vary based on time slot.
     price: row.data.price,
+    commission: row.data.commission,
+    commissionPerUnit: row.data.commissionPerUnit,
     display: listingMetadata.getDisplay(row.id)
   }
 }
@@ -174,7 +176,11 @@ function _makeOffer (row) {
     status: row.status,
     buyerAddress: row.buyerAddress,
     sellerAddress: row.sellerAddress,
-    totalPrice: row.data.totalPrice
+    totalPrice: row.data.totalPrice,
+    unitsPurchased: row.data.unitsPurchased,
+    // See https://github.com/OriginProtocol/origin/issues/1087
+    // as to why we extract commission from the ipfs data.
+    commission: row.data.ipfs.data.commission,
   }
 }
 

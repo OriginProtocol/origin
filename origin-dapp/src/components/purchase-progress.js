@@ -5,6 +5,7 @@ import moment from 'moment'
 import Tooltip from 'components/tooltip'
 
 import { formattedAddress } from 'utils/user'
+import { getOfferEvents } from 'utils/offer'
 
 const formatDate = timestamp => moment(timestamp * 1000).format('MMM D, YYYY')
 
@@ -46,14 +47,17 @@ class PurchaseProgress extends Component {
   render() {
     const { currentStep, maxStep, perspective, purchase, subdued } = this.props
     const { progressCalculated, progressWidth } = this.state
+    const offerEvents = getOfferEvents(purchase)
 
-    const offerCreated = purchase && purchase.event('OfferCreated')
-    const offerWithdrawn = purchase && purchase.event('OfferWithdrawn')
-    const offerAccepted = purchase && purchase.event('OfferAccepted')
-    const offerDisputed = purchase && purchase.event('OfferDisputed')
-    const offerRuling = purchase && purchase.event('OfferRuling')
-    const offerFinalized = purchase && purchase.event('OfferFinalized')
-    const offerData = purchase && purchase.event('OfferData')
+    const [
+      offerCreated,
+      offerWithdrawn,
+      offerAccepted,
+      offerDisputed,
+      offerRuling,
+      offerFinalized,
+      offerData
+    ] = offerEvents
 
     const withdrawnOrRejected = offerWithdrawn ? (
       formattedAddress(purchase.buyer) === offerWithdrawn.returnValues.party ? 'withdrawn' : 'rejected'

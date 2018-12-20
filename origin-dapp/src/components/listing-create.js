@@ -26,7 +26,7 @@ import Calendar from './calendar'
 
 import { getListing } from 'utils/listing'
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
-import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
+import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
 
