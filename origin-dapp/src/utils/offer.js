@@ -27,3 +27,27 @@ export function offerStatusToListingAvailability(status) {
 export function offerStatusToStep(status) {
   return statusMap[status] || 0
 }
+
+export function getOfferEvents(purchase = {}) {
+  const purchasePresent = Object.keys(purchase).length
+
+  if (!purchasePresent) return []
+
+  const offerCreated = purchase.event('OfferCreated')
+  const offerWithdrawn = purchase.event('OfferWithdrawn')
+  const offerAccepted = purchase.event('OfferAccepted')
+  const offerDisputed = purchase.event('OfferDisputed')
+  const offerRuling = purchase.event('OfferRuling')
+  const offerFinalized = purchase.event('OfferFinalized')
+  const offerData = purchase.event('OfferData')
+
+  return [
+    offerCreated,
+    offerWithdrawn,
+    offerAccepted,
+    offerDisputed,
+    offerRuling,
+    offerFinalized,
+    offerData
+  ]
+}
