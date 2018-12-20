@@ -35,6 +35,7 @@
   "badges.seller": "Seller",
   "badges.sold": "Sold",
   "badges.featured": "Featured",
+  "boost-slider.boost-level-multi-unit": "Boost Level (per unit)",
   "boost-slider.boost-level": "Boost Level",
   "boost-slider.no-ogn": "You have 0 OGN in your wallet and cannot boost.",
   "boost-slider.insufficient-ogn": "You don't have enough OGN in your wallet.",
