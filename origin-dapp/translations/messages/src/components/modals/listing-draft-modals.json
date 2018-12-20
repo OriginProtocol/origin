@@ -1,0 +1,18 @@
+[
+  {
+    "id": "nav-listing-create.title",
+    "defaultMessage": "You have unfinished listing"
+  },
+  {
+    "id": "nav-listing-create.descript",
+    "defaultMessage": "Are you going to continue or create a new one?"
+  },
+  {
+    "id": "nav-listing-create.recover",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "nav-listing-create.addNew",
+    "defaultMessage": "Create a new"
+  }
+]

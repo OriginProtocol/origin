@@ -1,6 +1,5 @@
 import keyMirror from 'utils/keyMirror'
 
-
 export const ListingCreateConstants = keyMirror(
   {
     UPDATE: null,

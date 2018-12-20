@@ -16,7 +16,6 @@ import alert from 'reducers/Alert'
 import users from 'reducers/Users'
 import app from 'reducers/App'
 
-
 const middlewares = [thunkMiddleware]
 
 if (process.env.REDUX_LOGGER) {

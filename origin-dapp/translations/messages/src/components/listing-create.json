@@ -202,5 +202,13 @@
   {
     "id": "listing-create.OK",
     "defaultMessage": "OK"
+  },
+  {
+    "id": "eth-not-enough.error1",
+    "defaultMessage": "Your ETH is not enough."
+  },
+  {
+    "id": "eth-not-enough.error2",
+    "defaultMessage": "Please funding your wallet."
   }
 ]
