@@ -1,23 +1,13 @@
+const Web3 = require('web3')
+const Marketplace = require('../src/resources/marketplace')
+const contractServiceHelper = require('./helpers/contract-service-helper')
+const IpfsService = require('../src/services/ipfs-service')
 const chalk = require('chalk')
 const startGanache = require('./helpers/start-ganache')
 const deployContracts = require('./helpers/deploy-contracts')
 const startIpfs = require('./helpers/start-ipfs')
 const args = process.argv.slice(2)
 const noGanache = args.length && args[0] === 'no-ganache'
-const Web3 = require('web3')
-const Origin = require('../src/index.js')
-
-const web3Provider = new Web3.providers.HttpProvider('http://localhost:8545')
-const web3 = new Web3(web3Provider)
-const ipfsUrl = urllib.parse('http://origin-js:8080')
-const o = new Origin({
-  ipfsDomain: ipfsUrl.hostname,
-  ipfsGatewayProtocol: ipfsUrl.protocol.replace(':', ''),
-  ipfsGatewayPort: ipfsUrl.port,
-  web3
-})
-
-
 const start = async () => {
   if (!noGanache) {
     console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Local Blockchain }\n`)
@@ -29,10 +19,48 @@ const start = async () => {
   await startIpfs()
 }
 
+
+class StoreMock {
+  constructor() {
+    this.storage = {}
+  }
+
+  get(key) {
+    return this.storage[key]
+  }
+
+  set(key, value) {
+    this.storage[key] = value
+  }
+}
+
 const createSamples = async() => {
+  const provider = new Web3.providers.HttpProvider('http://localhost:8545')
+  const web3 = new Web3(provider)
+  const accounts = await web3.eth.getAccounts()
+  const contractService = await contractServiceHelper(web3)
+  const ipfsService = new IpfsService({
+    ipfsDomain: '127.0.0.1',
+    ipfsApiPort: '5002',
+    ipfsGatewayPort: '8080',
+    ipfsGatewayProtocol: 'http'
+  })
+  const store = new StoreMock()
+  store.set(
+    'notification_subscription_start',
+    new Date().getTime()
+  )
+  marketplace = new Marketplace({
+    contractService,
+    ipfsService,
+    affiliate: accounts[3],
+    arbitrator: accounts[4],
+    store,
+    blockEpoch: await web3.eth.getBlockNumber()
+  })
 
   //hawai-house
-  await o.marketplace.createListing({
+  await marketplace.createListing({
     listingType: 'unit',
     category: 'schema.forRent',
     subCategory: 'schema.housing',
@@ -51,7 +79,7 @@ const createSamples = async() => {
   })
 
   // lake-house
-  await o.marketplace.createListing({
+  await marketplace.createListing({
     listingType: 'unit',
     category: 'schema.forRent',
     subCategory: 'schema.housing',
@@ -70,7 +98,7 @@ const createSamples = async() => {
   })
 
   // scout
-  await o.marketplace.createListing({
+  await marketplace.createListing({
     listingType: 'unit',
     category: 'schema.forSale',
     subCategory: 'schema.carsTrucks',
@@ -89,7 +117,7 @@ const createSamples = async() => {
   })
 
   // taylor-swioft-tix
-  await o.marketplace.createListing({
+  await marketplace.createListing({
     listingType: 'unit',
     category: 'schema.forSale',
     subCategory: 'schema.tickets',
@@ -108,7 +136,7 @@ const createSamples = async() => {
   })
 
   // zinc-house
-  await o.marketplace.createListing({
+  await marketplace.createListing({
     listingType: 'unit',
     category: 'schema.forRent',
     subCategory: 'schema.housing',
