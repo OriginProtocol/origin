@@ -22,62 +22,8 @@
   float: right;
 }
 
-.rbc-event,
-.rbc-event-content {
-  border: none !important;
-  padding: 0;
-}
-
-.rbc-event,
-.rbc-event-content,
-.calendar-event {
-  background-color: var(--dusk) !important;
-  border: 1px solid var(--dusk) !important;
-  border-radius: 0;
-}
-
-.calendar-event {
-  font-size: 12px;
-  padding: 0 5px;
-}
-
-.calendar-event.recurring {
-  background-color: var(--dusk) !important;
-  border: 1px solid var(--dusk) !important;
-}
-
-.calendar-event.non-recurring {
-  background-color: var(--dark-grey) !important;
-  border: 1px solid var(--dark-grey) !important;
-}
-
-.calendar-container.daily-view .calendar-event {
-  font-size: 15px;
-  font-weight: bold;
-}
-
-.rbc-event.rbc-selected .calendar-event {
-  background-color: var(--dark-grey) !important;
-  border: 1px solid var(--dark-grey) !important;
-}
-
-.calendar-container.hourly-view .rbc-event-content {
-  position: absolute;
-  bottom: 0;
-  height: inherit !important;
-  min-height: inherit !important;
-}
-
-.calendar-container.hourly-view .calendar-event {
-  position: absolute;
-  bottom: 0;
-  padding-bottom: 5px;
-}
-
-.rbc-event-label {
-  max-width: 100%;
-  font-size: 12px;
-  white-space: inherit;
+.rbc-event {
+  display: none !important;
 }
 
 .rbc-allday-cell {
@@ -103,7 +49,13 @@
   position: relative;
 }
 
-.rbc-day-bg span {
+.rbc-day-bg span.override-icon {
+  position: absolute;
+  top: 0;
+  right: 9px;
+}
+
+.rbc-day-bg span.slot-price {
   bottom: 0;
   left: 5px;
   position: absolute;
@@ -131,7 +83,12 @@
   font-size: 7px;
 }
 
+.rbc-row-content {
+  pointer-events: none;
+}
+
 .rbc-date-cell {
+  pointer-events: none;
   padding-left: 5px;
   text-align: left;
   vertical-align: top;
@@ -141,6 +98,11 @@
 .calendar-container.buyer-view.hourly-view .rbc-calendar .rbc-date-cell {
   cursor: default;
   font-size: 10px;
+}
+
+.rbc-day-bg:hover {
+  background: var(--pale-grey-eight) !important;
+  cursor: pointer;
 }
 
 .calendar-nav {

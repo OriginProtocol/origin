@@ -38,7 +38,7 @@ export function generateBuyerSlotStartEnd(selectionStart, viewType, slotIndex) {
   }
 }
 
-export function checkSlotsForExistingEvent(slotInfo, events) {
+export function checkSlotForExistingEvents(slotInfo, events) {
   return events.filter((event) => {
     let isEventInSlot = false
 
@@ -153,7 +153,7 @@ export function getDateDropdownOptions(date, viewType, userType, selectedEvent, 
       date = moment(date).startOf('day').toDate()
     }
     const slotInfo = { slots: [date] }
-    const existingEventInSlot = checkSlotsForExistingEvent(slotInfo, eventsWithoutSelected)
+    const existingEventInSlot = checkSlotForExistingEvents(slotInfo, eventsWithoutSelected)
     return !existingEventInSlot.length || doAllEventsRecur(existingEventInSlot)
   }
 

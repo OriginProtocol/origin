@@ -5,8 +5,7 @@ import moment from 'moment'
 import uuid from 'uuid/v1'
 import { 
   generateCalendarSlots,
-  checkSlotsForExistingEvent,
-  doAllEventsRecur,
+  checkSlotForExistingEvents,
   renderHourlyPrices,
   updateOriginalEvent,
   getSlotsForDateChange,
@@ -25,7 +24,9 @@ class Calendar extends Component {
 
     this.getViewType = this.getViewType.bind(this)
     this.onSelectSlot = this.onSelectSlot.bind(this)
-    this.onSelectEvent = this.onSelectEvent.bind(this)
+    this.createSellerSlot = this.createSellerSlot.bind(this)
+    this.handleBuyerSelection = this.handleBuyerSelection.bind(this)
+    this.selectEvent = this.selectEvent.bind(this)
     this.handlePriceChange = this.handlePriceChange.bind(this)
     this.saveEvent = this.saveEvent.bind(this)
     this.deleteEvent = this.deleteEvent.bind(this)
@@ -42,7 +43,6 @@ class Calendar extends Component {
     this.prevPeriod = this.prevPeriod.bind(this)
     this.nextPeriod = this.nextPeriod.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
-    this.eventComponent = this.eventComponent.bind(this)
     this.renderRecurringEvents = this.renderRecurringEvents.bind(this)
 
     this.state = {
@@ -96,102 +96,130 @@ class Calendar extends Component {
 
   onSelectSlot(slotInfo) {
     if (this.props.userType === 'seller') {
-      // remove last slot time for hourly calendars - not sure why React Big Calendar includes
-      // the next slot after the last selected time slot - seems like a bug.
-      if (this.props.viewType === 'hourly') {
-        slotInfo.slots && slotInfo.slots.length && slotInfo.slots.splice(-1)
-      }
+      const eventsInSlot = checkSlotForExistingEvents(slotInfo, this.state.events)
 
-      // if slot doesn't already contain an event, create an event
-      const existingEventInSlot = checkSlotsForExistingEvent(slotInfo, this.state.events)
+      if (eventsInSlot.length) {
+        let selectedEvent
 
-      if (!existingEventInSlot.length || doAllEventsRecur(existingEventInSlot)) {
-
-        const endDate = this.props.viewType === 'daily' ?
-          moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
-          slotInfo.end
-
-        const newEvent = {
-          ...slotInfo,
-          id: uuid(),
-          end: endDate,
-          allDay: false
-        }
-
-        this.setState({
-          events: [
-            ...this.state.events,
-            newEvent
-          ],
-          showOverlappingEventsErrorMsg: false
+        eventsInSlot.map(event => {
+          if (!selectedEvent) {
+            selectedEvent = event
+          } else if (!event.isRecurringEvent) {
+            selectedEvent = event
+          }
         })
 
-        this.onSelectEvent(newEvent, true)
-
+        this.selectEvent(selectedEvent)
       } else {
-        return this.setState({ showOverlappingEventsErrorMsg: true })
+        this.createSellerSlot(slotInfo)
       }
     } else {
       // user is a buyer
-      const selectionData = []
-      let slotToTest = moment(slotInfo.start)
-      let hasUnavailableSlot = false
-      let slotIndex = 0
+      this.handleBuyerSlotSelection(slotInfo)
+    } 
+  }
 
-      while (slotToTest.toDate() >= slotInfo.start && slotToTest.toDate() <= slotInfo.end) {
-        const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events)
-        const { price, isAvailable, isRecurringEvent } = slotAvailData
+  createSellerSlot(slotInfo, isOverrideEvent) {
+    // remove last slot time for hourly calendars - not sure why React Big Calendar includes
+    // the next slot after the last selected time slot - seems like a bug.
+    if (this.props.viewType === 'hourly') {
+      slotInfo.slots && slotInfo.slots.length && slotInfo.slots.splice(-1)
+    }
 
-        if (!isAvailable || moment(slotInfo.end).isBefore(moment())){
-          hasUnavailableSlot = true
-        }
+    let endDate = slotInfo.end
 
-        const slot = generateBuyerSlotStartEnd(slotInfo.start, this.props.viewType, slotIndex)
+    if (!isOverrideEvent) {
+      endDate = this.props.viewType === 'daily' ?
+        moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
+        slotInfo.end
+    }
 
-        selectionData.push({
-          ...slot,
-          price,
-          isAvailable,
-          isRecurringEvent
-        })
+    let newEvent = {
+      ...slotInfo,
+      id: uuid(),
+      end: endDate,
+      allDay: false
+    }
 
-        slotIndex++
+    if (isOverrideEvent) {
+      newEvent = {
+        ...newEvent,
+        price: 0,
+        isAvailable: true,
+        isRecurringEvent: false,
+        slots: []
+      }
+    }
 
-        if (this.props.viewType === 'daily') {
-          slotToTest = slotToTest.add(1, 'days')
-        } else {
-          slotToTest = slotToTest.add(this.props.step || 60, 'minutes').add(1, 'second')
-        }
+    this.setState({
+      events: [
+        ...this.state.events,
+        newEvent
+      ]
+    })
+
+    this.selectEvent(newEvent, true)
+  }
+
+  handleBuyerSelection(slotInfo) {
+    const selectionData = []
+    let slotToTest = moment(slotInfo.start)
+    let hasUnavailableSlot = false
+    let slotIndex = 0
+
+    while (slotToTest.toDate() >= slotInfo.start && slotToTest.toDate() <= slotInfo.end) {
+      const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events)
+      const { price, isAvailable, isRecurringEvent } = slotAvailData
+
+      if (!isAvailable || moment(slotInfo.end).isBefore(moment())){
+        hasUnavailableSlot = true
       }
 
-      if (hasUnavailableSlot) {
-        this.setState({
-          selectionUnavailable: true,
-          selectedEvent: {}
-        })
+      const slot = generateBuyerSlotStartEnd(slotInfo.start, this.props.viewType, slotIndex)
+
+      selectionData.push({
+        ...slot,
+        price,
+        isAvailable,
+        isRecurringEvent
+      })
+
+      slotIndex++
+
+      if (this.props.viewType === 'daily') {
+        slotToTest = slotToTest.add(1, 'days')
       } else {
-        const price = selectionData.reduce(
-          (totalPrice, nextPrice) => totalPrice + nextPrice.price, 0
-        )
-        const priceFormatted = `${Number(price).toLocaleString(undefined, {
-          minimumFractionDigits: 5,
-          maximumFractionDigits: 5
-        })}`
-
-        this.setState({
-          selectionUnavailable: false,
-          selectedEvent: {
-            start: slotInfo.start,
-            end: slotInfo.end,
-            price: priceFormatted
-          },
-          buyerSelectedSlotData: selectionData
-        })
+        slotToTest = slotToTest.add(this.props.step || 60, 'minutes').add(1, 'second')
       }
+    }
+
+    if (hasUnavailableSlot) {
+      this.setState({
+        selectionUnavailable: true,
+        selectedEvent: {}
+      })
+    } else {
+      const price = selectionData.reduce(
+        (totalPrice, nextPrice) => totalPrice + nextPrice.price, 0
+      )
+      const priceFormatted = `${Number(price).toLocaleString(undefined, {
+        minimumFractionDigits: 5,
+        maximumFractionDigits: 5
+      })}`
+
+      this.setState({
+        selectionUnavailable: false,
+        selectedEvent: {
+          start: slotInfo.start,
+          end: slotInfo.end,
+          price: priceFormatted
+        },
+        buyerSelectedSlotData: selectionData
+      })
     }
   }
 
-  onSelectEvent(selectedEvent, shouldSaveEvent) {
+  selectEvent(selectedEvent, shouldSaveEvent) {
     const event = {
       ...selectedEvent,
       price: selectedEvent.price || '',
@@ -200,11 +228,10 @@ class Calendar extends Component {
     }
 
     const stateToSet = {
-      selectedEvent: event,
-      showOverlappingEventsErrorMsg: false
+      selectedEvent: event
     }
 
-    const existingEventInSlot = checkSlotsForExistingEvent(selectedEvent, this.state.events)
+    const existingEventInSlot = checkSlotForExistingEvents(selectedEvent, this.state.events)
     if (existingEventInSlot.length && existingEventInSlot.length > 1) {
       if (!selectedEvent.isRecurringEvent) {
         stateToSet.hideRecurringEventCheckbox = true
@@ -339,49 +366,32 @@ class Calendar extends Component {
     })
   }
 
-  eventComponent(data) {
-    const { event } = data
-    const { isAvailable, price, isRecurringEvent } = event
-    const stepAbbrev = this.props.step === 60 ? 'hr' : `${this.props.step} min.`
-    const perTimePeriod = this.props.viewType === 'hourly' ? ` /${stepAbbrev}` : ''
-    const availClass = isAvailable !== false ? 'available' : 'unavailable'
-    const recurringClass = isRecurringEvent ? 'recurring' : 'non-recurring'
-
-    return (
-      <div className={ `calendar-event ${availClass} ${recurringClass}` }>
-        {isAvailable !== false &&
-          <span>{ price ? `${price} ETH${perTimePeriod}` : '0 ETH' }</span>
-        }
-        {isAvailable === false &&
-          <span>Unavailable</span>
-        }
-      </div>
-    )
-  }
-
   dateCellWrapper(data) {
     const { value } = data
-    const dateInfo = getDateAvailabilityAndPrice(value, this.state.events, this.props.offers)
-    const availability = dateInfo.isAvailable ? 'available' : 'unavailable'
-    const selectedSlotsMatchingDate = 
+    const slotData = getDateAvailabilityAndPrice(value, this.state.events, this.props.offers)
+    const availability = slotData.isAvailable ? 'available' : 'unavailable'
+    const selectedSlotsMatchingDate =
       this.state.buyerSelectedSlotData &&
-      this.state.buyerSelectedSlotData.filter((slot) => 
+      this.state.buyerSelectedSlotData.filter((slot) =>
         moment(value).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end).add(1, 'second'))
       )
     const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
 
     return (
-      <Fragment>
-        {this.props.userType === 'buyer' ?
-          <div className={`rbc-day-bg ${availability}${isSelected}`}>
-            {dateInfo.isAvailable &&
-              <span>{dateInfo.price ? `${dateInfo.price} ETH` : `0 ETH`}</span>
-            }
-          </div>
-          :
-          <div className="rbc-day-bg"></div>
+      <div className={`rbc-day-bg ${availability}${isSelected}`}>
+        {slotData.isRecurringEvent &&
+          <span
+            className="override-icon"
+            title="Override this recurring event"
+            onClick={() => this.createSellerSlot(slotData, true)}
+          >
+            &#x25d9;
+          </span>
         }
-      </Fragment>
+        {slotData.isAvailable &&
+          <span className="slot-price">{slotData.price ? `${slotData.price} ETH` : `0 ETH`}</span>
+        }
+      </div>
     )
   }
 
@@ -473,7 +483,6 @@ class Calendar extends Component {
             </div>
             <BigCalendar
               components={{
-                event: this.eventComponent,
                 dateCellWrapper: this.dateCellWrapper,
                 month: {
                   header: this.monthHeader
@@ -482,7 +491,6 @@ class Calendar extends Component {
               selectable={ true }
               events={ (userType === 'seller' && this.state.events) || [] }
               defaultView={ BigCalendar.Views[this.getViewType().toUpperCase()] }
-              onSelectEvent={ this.onSelectEvent }
               onSelectSlot={ this.onSelectSlot }
               step={ this.props.step || 60 }
               timeslots={ 1 }
@@ -501,10 +509,7 @@ class Calendar extends Component {
             }
           </div>
           <div className="col-md-4">
-            {this.state.showOverlappingEventsErrorMsg &&
-              <p className="calendar-error-msg">Only one recurring price and one non-recurring price can be set for each time slot.</p>
-            }
-            {selectedEvent && selectedEvent.start && !this.state.showOverlappingEventsErrorMsg &&
+            {selectedEvent && selectedEvent.start &&
               <div className="calendar-cta">
                 {userType === 'seller' &&
                   <span className="delete-btn" onClick={this.deleteEvent}>delete</span>
