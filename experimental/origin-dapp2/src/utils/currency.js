@@ -1,6 +1,7 @@
 export default function currency(obj) {
   if (!obj) return null
-  let { amount, currency, converted } = obj
+  let { amount, currency } = obj
+  const { converted } = obj
   if (currency === 'OGN' && !converted) {
     amount = web3.utils.fromWei(amount, 'ether')
   }

@@ -15,7 +15,7 @@ const CurrentTokenPrice = gql`
 class TokenPrice extends Component {
   render() {
     const { amount, currency } = this.props
-    if (amount === undefined) return "???"
+    if (amount === undefined) return '???'
     if (currency === 'ETH') {
       return `${amount} ETH`
     }
@@ -29,7 +29,9 @@ class TokenPrice extends Component {
           if (amount.indexOf('.') >= 0) return `${amount} ${symbol}`
 
           const supplyBN = web3.utils.toBN(amount)
-          const decimalsBN = web3.utils.toBN(web3.utils.padRight('1', decimals + 1))
+          const decimalsBN = web3.utils.toBN(
+            web3.utils.padRight('1', decimals + 1)
+          )
           const formatted = supplyBN.div(decimalsBN).toString()
 
           return <span>{`${formatted} ${symbol}`}</span>

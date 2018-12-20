@@ -1,4 +1,4 @@
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer } from 'apollo-server'
 import Web3 from 'web3'
 
 global.web3 = new Web3('wss://mainnet.infura.io/ws')
@@ -35,19 +35,16 @@ const context = {
   )
 }
 
-context.marketplace.eventCache = eventCache(
-  context.marketplace,
-  EventBlock
-)
+context.marketplace.eventCache = eventCache(context.marketplace, EventBlock)
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: () => ({ contracts: context })
-});
+})
 
 // This `listen` method launches a web-server.  Existing apps
 // can utilize middleware options, which we'll discuss later.
 server.listen().then(async ({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+  console.log(`🚀  Server ready at ${url}`)
+})

@@ -12,7 +12,7 @@ export default function mnemonicToAccounts(
   num = 5
 ) {
   const keys = []
-  for (var offset = 0; offset < num; offset++) {
+  for (let offset = 0; offset < num; offset++) {
     const seed = bip39.mnemonicToSeed(mnemonic)
     const acct = HDKey.fromMasterSeed(seed).derive(`m/44'/60'/0'/0/${offset}`)
     keys.push({

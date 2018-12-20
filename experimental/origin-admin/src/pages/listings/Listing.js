@@ -16,7 +16,12 @@ import {
 
 import currency from 'utils/currency'
 import withAccounts from 'hoc/withAccounts'
-import { MakeOffer, WithdrawListing, AddData, CreateListing } from '../marketplace/mutations'
+import {
+  MakeOffer,
+  WithdrawListing,
+  AddData,
+  CreateListing
+} from '../marketplace/mutations'
 import Offers from '../marketplace/_Offers'
 import EventsTable from '../marketplace/_EventsTable'
 import Identity from 'components/Identity'
@@ -37,13 +42,12 @@ class Listing extends Component {
         {this.renderBreadcrumbs()}
         <Query query={query} variables={{ listingId }}>
           {({ networkStatus, error, data }) => {
-
             if (networkStatus === 1) {
               return <LoadingSpinner />
             } else if (error) {
               return <QueryError error={error} query={query} />
             } else if (!data || !data.marketplace) {
-              return "No marketplace contract?"
+              return 'No marketplace contract?'
             }
 
             const listing = data.marketplace.listing

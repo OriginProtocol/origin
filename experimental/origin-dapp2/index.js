@@ -1,3 +1,5 @@
+/* eslint no-unused-vars: 0 */ 
+
 import express from 'express'
 import serveStatic from 'serve-static'
 import { spawn } from 'child_process'
