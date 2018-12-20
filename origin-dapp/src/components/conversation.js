@@ -259,7 +259,7 @@ class Conversation extends Component {
 
   formatOfferMessage(info) {
     const { listing = {}, purchase } = this.state
-    const { users, smallScreenOrDevice, withListingSummary } = this.props
+    const { includeNav, users, smallScreenOrDevice, withListingSummary } = this.props
 
     if (smallScreenOrDevice || !withListingSummary) return
 
@@ -332,15 +332,18 @@ class Conversation extends Component {
 
     return (
       <div key={new Date() + Math.random()} className="purchase-info">
-        <Link to={`/purchases/${purchase.id}`} target="_blank" rel="noopener noreferrer">
-          {offerMessages[event]}
-        </Link>
+        {includeNav && (
+          <Link to={`/purchases/${purchase.id}`} target="_blank" rel="noopener noreferrer">
+            {offerMessages[event]}
+          </Link>
+        )}
+        {!includeNav && offerMessages[event]}
       </div>
     )
   }
 
   render() {
-    const { id, intl, messages, wallet, smallScreenOrDevice } = this.props
+    const { id, includeNav, intl, messages, wallet, smallScreenOrDevice } = this.props
     const {
       counterparty,
       files,
@@ -362,6 +365,7 @@ class Conversation extends Component {
       <Fragment>
         <div ref={this.conversationDiv} className="conversation text-center">
           <CompactMessages
+            includeNav={includeNav}
             messages={combinedMessages}
             wallet={wallet}
             formatOfferMessage={this.formatOfferMessage}
