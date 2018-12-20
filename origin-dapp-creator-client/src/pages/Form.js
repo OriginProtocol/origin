@@ -215,6 +215,14 @@ class Form extends Component {
             onChange={this.handleColorChange}>
           </ColorPicker>
 
+          <ColorPicker label="Font Color"
+            name="dark"
+            value={this.state.config.cssVars.dark}
+            onChange={this.handleColorChange}>
+          </ColorPicker>
+
+          <h4>Fonts</h4>
+
           <Button type="submit"
               id="publish-button"
               className="mt-3"
