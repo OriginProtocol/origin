@@ -38,7 +38,7 @@ class SelectNumberField extends Component {
     }
   }
 
-  onClick(e) {
+  onClick() {
     this.setState({ open: !this.state.open })
   }
 

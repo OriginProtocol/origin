@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'

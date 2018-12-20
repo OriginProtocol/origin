@@ -149,7 +149,6 @@ export async function originToDAppListing(originListing) {
     isMultiUnit: isMultiUnit,
     listingType: originListing.type,
     slots: originListing.slots,
-    slotLengthUnit: isFractional && listing.slotLengthUnit,
     fractionalTimeIncrement: isFractional && slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily',
     offers: originListing.offers,
     events: originListing.events
@@ -213,7 +212,7 @@ export async function getListing(id, opts = {}) {
 
   const originListing = await origin.marketplace.getListing(id, { blockInfo: blockInfo, loadOffers: !!loadOffers })
   const dappListing = await originToDAppListing(originListing)
-  if (!!translate) {
+  if (translate) {
     dappListing.category = translateListingCategory(dappListing.category)
     dappListing.subCategory = translateListingCategory(dappListing.subCategory)
   }

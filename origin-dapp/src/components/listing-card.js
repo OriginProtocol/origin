@@ -7,8 +7,6 @@ import ListingCardPrices from 'components/listing-card-prices'
 import { getListing } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 
-import origin from '../services/origin'
-
 class ListingCard extends Component {
   constructor(props) {
     super(props)

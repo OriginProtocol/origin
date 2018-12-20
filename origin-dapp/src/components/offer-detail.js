@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import origin from '../services/origin'
 import moment from 'moment'
 
 class OfferDetail extends Component {
