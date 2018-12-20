@@ -33,13 +33,13 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "price": {
-      "type": "number",
-      "title": "schema.priceInETH"
-    },
     "unitsTotal": {
       "type": "integer",
       "title": "schema.unitsTotal"
+    },
+    "price": {
+      "type": "number",
+      "title": "schema.priceInETH"
     },
     "sellerSteps": {
       "type": "string",
