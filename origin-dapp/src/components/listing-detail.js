@@ -332,12 +332,24 @@ class ListingsDetail extends Component {
       return ['pending', 'sold'].includes(availability)
     })
 
-    const currentOfferAvailability =
-      currentOffer && offerStatusToListingAvailability(currentOffer.status)
+    const multiUnitListingIsSold = () => {
+      const unitsSold = offers.reduce((accumulator, offer) => {
+        accumulator += offerStatusToListingAvailability(offer.status) === 'sold' ? offer.unitsPurchased : 0
+      }, [])
+
+      return unitsSold === unitsTotal
+    }
+
+    const offerWithStatusExists = (status) => {
+      return offers.some(offer => {
+        offerStatusToListingAvailability(offer.status) === status
+      })
+    }
+
     const isWithdrawn = status === 'inactive'
-    const isPending = currentOfferAvailability === 'pending'
-    const isSold = currentOfferAvailability === 'sold'
-    const isAvailable = (!isPending && !isSold && !isWithdrawn) || (isMultiUnit && unitsRemaining > 0)
+    const isPending = offerWithStatusExists('pending')
+    const isSold = isMultiUnit ? multiUnitListingIsSold() : offerWithStatusExists('sold')
+    const isAvailable = isMultiUnit ? unitsRemaining > 0 : (!isPending && !isSold && !isWithdrawn)
     const showPendingBadge = isPending && !isWithdrawn
     const showSoldBadge = isSold || isWithdrawn
     /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
