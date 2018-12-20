@@ -114,7 +114,7 @@ export default class Marketplace {
     const listingsAtTimeOfPurchase = await Promise.all(
       listingsToFetch.map(async listingData => {
         const { listingId, blockInfo } = listingData
-        return await this.getListing(listingId, blockInfo)
+        return await this.getListing(listingId, { blockInfo: blockInfo })
       })
     )
 
@@ -154,13 +154,13 @@ export default class Marketplace {
       return Promise.all(
         listingIds.map(async listingData => {
           const { listingId, blockInfo } = listingData
-          return await this.getListing(listingId, blockInfo, { loadOffers: opts.loadOffers })
+          return await this.getListing(listingId, { blockInfo: blockInfo, loadOffers: opts.loadOffers })
         })
       )
     } else {
       return Promise.all(
         listingIds.map(async listingId => {
-          return await this.getListing(listingId, null, { loadOffers: opts.loadOffers })
+          return await this.getListing(listingId, { loadOffers: opts.loadOffers })
         })
       )
     }
@@ -171,11 +171,18 @@ export default class Marketplace {
    * @param {string} listingId
    * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional argument
    *   to indicate a specific version of the listing should be loaded.
-   * @param opts: {loadOffers: boolean} also load offers for this listing
+   * @param opts: {loadOffers: boolean, blockInfo: Object}
+   *   - loadOffers: also load offers for this listing
+   *   - blockInfo: {{blockNumber: integer, logIndex: integer}} - Optional argument
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
-  async getListing(listingId, blockInfo, opts = {}) {
+  async getListing(listingId, opts = {}) {
+    const {
+      blockInfo,
+      loadOffers
+    } = opts
+
     const addOffersToListing = async (listing) => {
       const offers = await this.getOffers(listingId, listing)
       listing.offers = offers
@@ -185,7 +192,7 @@ export default class Marketplace {
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
       let listing = await this.discoveryService.getListing(listingId, blockInfo)
-      if (opts.loadOffers)
+      if (loadOffers)
         listing = await addOffersToListing(listing)
 
       return listing
@@ -193,7 +200,7 @@ export default class Marketplace {
 
     // Get the on-chain listing data.
     let chainListing = await this.resolver.getListing(listingId, blockInfo)
-    if (opts.loadOffers)
+    if (loadOffers)
         chainListing = await addOffersToListing(chainListing)
 
     // Get the off-chain listing data from IPFS.

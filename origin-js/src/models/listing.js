@@ -10,7 +10,6 @@ export class Listing {
    *  - {string} title
    *  - {string} description
    *  - {string} category
-   *  - {Object} commission - consists of 'amount' and 'currency' properties
    *  - {string} subCategory
    *  - {string} status - 'active', 'inactive'
    *  - {string} type - 'unit', 'fractional'
@@ -24,7 +23,7 @@ export class Listing {
    *  - {string} seller - address of the seller
    *  - {string} display - 'normal', 'featured', 'hidden'
    *  - {Array<Object>} media
-   *  - {Object} commission - consists of 'amount' and 'currency' properties
+   *  - {Object} commission - Total commission of a listing. Consists of 'amount' and 'currency' properties
    *  - {Array} slots - to be implemented
    *  - {Integer} slotLength - defines the length of a time slot in a fractional listing
    *  - {String} slotLengthUnit - defines the unit of measurement for a fractional usage time slot
@@ -32,6 +31,7 @@ export class Listing {
    *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
    *  - {string} deposit
    *  - {string} depositManager - address of depositManager
+   *  - {Object} commissionPerUnit - Commission per unit in multi unit listings. Consists of 'amount' and 'currency' properties
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,

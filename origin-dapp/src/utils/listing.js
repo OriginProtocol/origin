@@ -211,7 +211,7 @@ export async function getListing(id, opts = {}) {
     blockInfo
   } = opts
 
-  const originListing = await origin.marketplace.getListing(id, blockInfo, { loadOffers: !!loadOffers })
+  const originListing = await origin.marketplace.getListing(id, { blockInfo: blockInfo, loadOffers: !!loadOffers })
   const dappListing = await originToDAppListing(originListing)
   if (!!translate) {
     dappListing.category = translateListingCategory(dappListing.category)
