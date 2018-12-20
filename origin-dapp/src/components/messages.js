@@ -168,6 +168,7 @@ class Messages extends Component {
             <div className="conversation-col d-flex flex-column">
               <Conversation
                 id={selectedConversationId}
+                includeNav={includeNav}
                 messages={filteredAndSorted}
                 withListingSummary={true}
                 smallScreenOrDevice={smallScreenOrDevice}
