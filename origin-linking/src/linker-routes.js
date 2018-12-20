@@ -36,10 +36,11 @@ router.get("/link-info/:code", async (req, res) => {
   res.send({app_info:appInfo, link_id:linkId, pub_key:pubKey})
 })
 
-router.get("/web3-info", (req, res) => {
+router.get("/server-info", (req, res) => {
   // this is the context
-  const {providerUrl, contractAddresses} = linker.getWeb3Info()
-  res.send({provider_url:providerUrl, contract_addresses:contractAddresses})
+  const {providerUrl, contractAddresses, ipfsGateway, ipfsApi} = linker.getServerInfo()
+  res.send({provider_url:providerUrl, contract_addresses:contractAddresses, 
+    ipfs_gateway:ipfsGateway, ipfs_api:ipfsApi })
 })
 
 

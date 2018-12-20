@@ -4,7 +4,7 @@ import uuidv4 from 'uuid/v4'
 import { Op } from 'sequelize'
 import { MessageTypes,EthNotificationTypes } from 'origin/common/enums'
 import MessageQueue from './../utils/message-queue'
-import origin, {providerUrl, mobilize} from './../services/origin'
+import origin, {providerUrl} from './../services/origin'
 import {sha3_224} from 'js-sha3'
 import apn from 'apn'
 
@@ -236,8 +236,9 @@ class Linker {
     return {}
   }
 
-  getWeb3Info() {
-    return {providerUrl:mobilize(providerUrl), contractAddresses:origin.contractService.getContractAddresses()}
+  getServerInfo() {
+    return {providerUrl:providerUrl, contractAddresses:origin.contractService.getContractAddresses(),
+    ipfsGateway:origin.ipfsService.gateway, ipfsApi:origin.ipfsService.api}
   }
 
   async getMetaFromCall({call, net_id, params:{txn_object}}){

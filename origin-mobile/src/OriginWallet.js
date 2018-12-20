@@ -159,7 +159,7 @@ class OriginWallet {
     this.API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet/"
     this.API_WALLET_LINKER_UNLINK = API_WALLET_LINKER + "/unlink-wallet/"
     this.WS_API_WALLET_LINKER_MESSAGES = `${wsApiUrl}/api/wallet-linker/wallet-messages/`
-    this.API_WALLET_WEB3_INFO = API_WALLET_LINKER + "/web3-info"
+    this.API_WALLET_SERVER_INFO = API_WALLET_LINKER + "/server-info"
     this.API_WALLET_LINK_INFO = API_WALLET_LINKER + "/link-info/"
     this.API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called/"
     this.API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
@@ -916,11 +916,15 @@ class OriginWallet {
     this.initUrls()
 
     try {
-      const {provider_url, contract_addresses} = await this.doFetch(this.API_WALLET_WEB3_INFO, 'GET')
+      const {provider_url, contract_addresses, 
+          ipfs_gateway, ipfs_api} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       console.log("Set network to:", provider_url, contract_addresses)
-      web3.setProvider(new Web3.providers.HttpProvider(provider_url, 20000))
+      web3.setProvider(new Web3.providers.HttpProvider(localfy(provider_url), 20000))
       // update the contract addresses contract
       origin.contractService.updateContractAddresses(contract_addresses)
+      origin.ipfsService.gateway = localfy(ipfs_gateway)
+      origin.ipfsService.api = localfy(ipfs_api)
+
       await this.setNetId()
       if (this.state.ethAddress)
       {
@@ -930,7 +934,7 @@ class OriginWallet {
       this.providerUrl = provider_url
     } catch(error)
     {
-      console.log("Cannot fetch web3 info:", error)
+      console.log("Cannot fetch server info:", error)
     }
   }
 
