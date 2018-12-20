@@ -343,7 +343,7 @@ class Conversation extends Component {
   }
 
   render() {
-    const { id, intl, messages, wallet, smallScreenOrDevice } = this.props
+    const { id, includeNav, intl, messages, wallet, smallScreenOrDevice } = this.props
     const {
       counterparty,
       files,
