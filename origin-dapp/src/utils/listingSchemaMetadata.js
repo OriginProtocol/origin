@@ -250,7 +250,7 @@ const listingSchemaMetadata = {
       {
         schema: 'forRent-farmGarden_1.0.0.json',
         translationName: {
-          id: 'schema.farmGarden_1',
+          id: 'schema.farmGarden',
           defaultMessage: 'Farm and Garden'
         }
       },
