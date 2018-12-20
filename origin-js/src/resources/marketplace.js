@@ -288,11 +288,10 @@ export default class Marketplace {
       }
       /* Validate units purchased against units available.
        *
-       * TODO: Validate units purchased vs. units available at offer creation
-       * time. This will handle the case where an edit of a listing invalidates
-       * a previously valid offer.
-       * - note: even after the todo implemented there is still an edge case where
-       *   2 users create an offer at the same time.
+       * This check is required because of an edge case, where 2 users can make an offer at the same
+       * time for the remaining amount of units in a listing. Both offers will get mined, since they
+       * are both valid at the time transaction to the blockchain is issued. After they are mined, only
+       * the first one is valid.
        */
       if (offer.unitsPurchased > unitsAvailable) {
         return false
@@ -315,6 +314,10 @@ export default class Marketplace {
        * Validate that the offer commission is what we expect. If the amount
        * of commission for the listing isn't sufficient for this offer, we
        * require that the offer have whatever commission is available to it.
+       *
+       * Currenlty (Dec 2018) sellers can not edit commission and commissionPerUnit
+       * on a listing. Once this option is unlocked, this code needs to be
+       * modified also.
        */
       const expectedCommission = BigNumber.min(
         commissionAvailable,
