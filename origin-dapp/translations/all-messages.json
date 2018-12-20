@@ -129,7 +129,7 @@
   "listing-create.post-acquisition": "Once you acquire some OGN you will be able to boost your listing.",
   "listing-create.totalNumberOfUnits": "Total number of units: {units}",
   "listing-create.totalBoostRequired": "Total boost required: {boost}",
-  "listing-create.boostCapTooLow": "Your boost cap is lower than the total amount needed to boost all your units. After the cap is reached, the remaining units will not be boosted.",
+  "listing-create.boostCapTooLow": "Your boost limit is lower than the total amount needed to boost all your units. After the limit is reached, the remaining units will not be boosted.",
   "listing-create.showBoostFormErrorMsg": "Please fix errors before continuing.",
   "listing-create.reviewListingHeading": "Review your listing",
   "listing-create.title": "Title",

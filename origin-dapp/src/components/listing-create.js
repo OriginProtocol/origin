@@ -1197,7 +1197,7 @@ class ListingCreate extends Component {
                             {boostCapTooLow && <p className="boost-text mt-4">
                               <FormattedMessage
                                 id={'listing-create.boostCapTooLow'}
-                                defaultMessage={'Your boost cap is lower than the total amount needed to boost all your units. After the cap is reached, the remaining units will not be boosted.'}
+                                defaultMessage={'Your boost limit is lower than the total amount needed to boost all your units. After the limit is reached, the remaining units will not be boosted.'}
                               />
                             </p>}
                           </div>
