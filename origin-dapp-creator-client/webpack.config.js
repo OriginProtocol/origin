@@ -81,10 +81,12 @@ const config = {
       'IPFS_GATEWAY_URL'
     ]),
     new CopyWebpackPlugin([
+      'public/favicon.ico',
       { from: 'public/images', to: 'images' }
     ]),
     new Dotenv()
-  ]
+  ],
+  optimization: {}
 }
 
 if (isProduction) {
