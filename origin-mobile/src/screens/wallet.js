@@ -20,7 +20,6 @@ class WalletScreen extends Component {
     this.state = {apiHost:originWallet.getCurrentRemoteLocal()}
   }
 
-
   render() {
     const { address, balance } = this.props
     // placeholders
@@ -42,13 +41,21 @@ class WalletScreen extends Component {
           <Text style={[styles.text, styles.address]}>{address}</Text>
           <View style={styles.buttonContainer}>
             {originWallet.isLocalApi() && <View>
-              <Text style={[styles.text, styles.heading]}>Api host IP:</Text>
-              <TextInput style={{ height:40, borderColor:'gray', borderWidth:1 }}
+              <Text style={[styles.text, styles.smallLabel]}>Api host IP:</Text>
+              <TextInput style={{ height:32, borderColor:'gray', borderWidth:1 }}
                   onSubmitEditing={(e) => originWallet.setRemoteLocal(e.nativeEvent.text)}
                   onChangeText={(apiHost) => this.setState({apiHost})}
                   value={this.state.apiHost}
                 />
               </View>}
+            <View>
+              <Text style={[styles.text, styles.smallLabel]}>Set Private Key:</Text>
+              <TextInput style={{ height:32, borderColor:'gray', borderWidth:1 }}
+                  onSubmitEditing={(e) => originWallet.setPrivateKey(e.nativeEvent.text)}
+                  onChangeText={(inputPrivateKey) => this.setState({inputPrivateKey})}
+                  value={this.state.inputPrivateKey}
+                />
+            </View>
             <OriginButton
               type="primary"
               title="Show Private Key"
@@ -144,6 +151,10 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginBottom: 18,
+  },
+  smallLabel: {
+    fontSize: 8,
+    marginBottom:2
   },
   text: {
     fontFamily: 'Lato',

@@ -1,5 +1,4 @@
 'use strict';
-const {EthNotificationTypes} = require('origin/common/enums');
 const TableName = 'linked_token';
 
 module.exports = {
@@ -15,11 +14,8 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull:false
       },
-      device_token: {
+      wallet_token: {
         type: Sequelize.STRING(255)
-      },
-      device_type: {
-        type: Sequelize.ENUM(EthNotificationTypes)
       },
       code: {
         type: Sequelize.STRING(255)
@@ -54,7 +50,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     }).then(() => queryInterface.addIndex(TableName, ['client_token']))
-      .then(() => queryInterface.addIndex(TableName, ['device_type', 'device_token']))
+      .then(() => queryInterface.addIndex(TableName, ['wallet_token']))
       .then(() => queryInterface.addIndex(TableName, ['code']));
   },
   down: (queryInterface, Sequelize) => {
