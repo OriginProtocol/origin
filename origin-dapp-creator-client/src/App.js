@@ -35,7 +35,7 @@ class App extends React.Component {
         <Navbar className="bp3-dark">
           <Navbar.Group>
             <Navbar.Heading className="logo">
-              <img src="public/images/origin-icon-white.svg" /> Creator
+              <img src="images/origin-icon-white.svg" /> Creator
             </Navbar.Heading>
             <Link to="/" tooltip="Create a new configuration" icon="build" />
             <Link to="/docs" tooltip="Documentation" icon="help" />
