@@ -14,8 +14,10 @@ const config = {
   entry: ['@babel/polyfill', './src/index.js'],
   devtool: isProduction ? false : 'cheap-module-source-map',
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'public')
+    path: path.resolve(__dirname, 'build'),
+    pathinfo: true,
+    filename: '[name].[hash:8].js',
+    publicPath: ''
   },
   externals: {
     Web3: 'web3'
