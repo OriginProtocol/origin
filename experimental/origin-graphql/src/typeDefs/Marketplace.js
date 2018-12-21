@@ -82,6 +82,8 @@ export default `
       hidden: Boolean
     ): ListingConnection!
 
+    offer(id: ID!): Offer
+
     totalEvents: Int
     events(offset: Int, limit: Int): [Event]
 
@@ -108,6 +110,7 @@ export default `
     lastEvent: Event
     listings(first: Int, after: String): ListingConnection!
     offers(first: Int, after: String): OfferConnection!
+    sales(first: Int, after: String): OfferConnection!
   }
 
   type OfferConnection {
@@ -170,6 +173,7 @@ export default `
 
   type Media {
     url: String
+    urlExpanded: String
     contentType: String
   }
 
@@ -181,6 +185,7 @@ export default `
 
     # Connections
     listing: Listing
+    createdEvent: Event
 
     # On-Chain
     value: String
@@ -193,7 +198,9 @@ export default `
     finalizes: Int
     status: Int
 
+    # Computed
     withdrawnBy: Account
+    statusStr: String
   }
 
   input NewListingInput {

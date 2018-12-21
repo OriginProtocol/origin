@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import { getIpfsGateway } from 'utils/config'
 import Price from 'components/Price'
 
 class Listings extends Component {
@@ -8,7 +7,6 @@ class Listings extends Component {
   render() {
     const { listings } = this.props
     if (!listings) return null
-    const ipfsGateway = getIpfsGateway()
 
     return (
       <div className="row">
@@ -28,10 +26,7 @@ class Listings extends Component {
               <div
                 className="main-pic"
                 style={{
-                  backgroundImage: `url(${ipfsGateway}/${a.media[0].url.replace(
-                    ':/',
-                    ''
-                  )})`
+                  backgroundImage: `url(${a.media[0].urlExpanded})`
                 }}
               />
             ) : null}

@@ -49,6 +49,7 @@ export default {
         }
         media {
           url
+          urlExpanded
           contentType
         }
       }
@@ -78,6 +79,10 @@ export default {
         withdrawnBy {
           id
         }
+        createdEvent {
+          timestamp
+        }
+        statusStr
       }
     `
   }

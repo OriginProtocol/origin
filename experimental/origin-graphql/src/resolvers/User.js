@@ -64,8 +64,32 @@ async function offers(buyer, { first = 10, after }, _, info) {
   return await resultsFromIds({ after, ids, first, totalCount, fields })
 }
 
+async function sales(seller, { first = 10, after }, _, info) {
+  const fields = graphqlFields(info)
+  const listings = await contracts.marketplace.eventCache.allEvents(
+    'ListingCreated',
+    seller.id
+  )
+
+  const listingIds = listings.map(e => Number(e.returnValues.listingID))
+
+  const events = await contracts.marketplace.eventCache.offers(
+    listingIds,
+    null,
+    'OfferCreated'
+  )
+
+  const ids = events.map(
+    e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
+  )
+  const totalCount = ids.length
+
+  return await resultsFromIds({ after, ids, first, totalCount, fields })
+}
+
 export default {
   offers,
+  sales,
   listings: listingsBySeller,
   firstEvent: async user => {
     if (user.firstEvent) return user.firstEvent

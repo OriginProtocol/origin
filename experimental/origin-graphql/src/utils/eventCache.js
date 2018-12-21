@@ -136,20 +136,24 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     })
   }
 
-  async function offers(listingId, offerId, eventName) {
+  async function offers(listingIds, offerId, eventName) {
     await getPastEvents()
-    const listingTopic = web3.utils.padLeft(
-      web3.utils.numberToHex(listingId),
-      64
+    if (!Array.isArray(listingIds)) {
+      listingIds = [listingIds]
+    }
+    const listingTopics = listingIds.map(listingId =>
+      web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
     )
-    const offerTopic = web3.utils.padLeft(web3.utils.numberToHex(offerId), 64)
+    const offerTopic = offerId
+      ? web3.utils.padLeft(web3.utils.numberToHex(offerId), 64)
+      : null
+
     return events.filter(e => {
       const topics = e.raw.topics
-      return (
-        topics[2] === listingTopic &&
-        topics[3] === offerTopic &&
-        (eventName ? e.event === eventName : true)
-      )
+      const matchesListing = listingTopics.indexOf(topics[2]) >= 0,
+        matchesOffer = offerId ? topics[3] === offerTopic : true,
+        matchesEvent = eventName ? e.event === eventName : true
+      return matchesListing && matchesOffer && matchesEvent
     })
   }
 
