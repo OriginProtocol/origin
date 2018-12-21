@@ -109,7 +109,7 @@ class Form extends Component {
       signature = await this.web3Sign(dataToSign, web3.eth.accounts[0])
     }
 
-    return superagent.post(`${process.env.API_URL}/config`)
+    return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/config`)
       .send({
         config: this.state.config,
         signature: signature,
@@ -131,7 +131,7 @@ class Form extends Component {
     let response
     try {
       response = await superagent
-        .post(`${process.env.API_URL}/config/preview`)
+        .post(`${process.env.DAPP_CREATOR_API_URL}/config/preview`)
         .send({ config: this.state.config })
     } catch(error) {
       console.log('An error occurred generating preview: ' + error)

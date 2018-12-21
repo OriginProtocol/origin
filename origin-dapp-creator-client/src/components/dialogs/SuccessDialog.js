@@ -77,7 +77,7 @@ class SuccessDialog extends React.Component {
                 {this.props.config.subdomain && (
                   <AnchorButton
                       intent={Intent.PRIMARY}
-                      href={`https://${this.props.config.subdomain}.${process.env.CREATOR_DOMAIN}`}
+                      href={`https://${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`}
                       target="_blank">
                     Visit my marketplace
                   </AnchorButton>
