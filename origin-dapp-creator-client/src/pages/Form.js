@@ -156,11 +156,13 @@ class Form extends Component {
         <form onSubmit={this.handleSubmit}>
           <h4>Domain</h4>
 
+          {/*
           <Switch
             name="subdomain"
             onChange={this.handleInputChange}
             labelElement={<>Use your own domain</>}>
           </Switch>
+          */}
 
           {this.state.config.subdomain !== false && (
             <SubdomainField value={this.state.config.subdomain}
