@@ -38,18 +38,17 @@ class Messages extends Component {
 
     window.addEventListener('resize', this.checkForSmallScreen)
 
-    const {location} = this.props
+    const { location } = this.props
     const query = queryString.parse(location.search)
     const walletContainer = query['wallet-container']
-    if (walletContainer && origin.contractService.walletLinker)
-    {
-      window.__linkToWalletContainer = (notify_wallet) => {
-        origin.contractService.walletLinker.setLinkCode = code => {
-          //don't do anything here
+    if (walletContainer && origin.contractService.walletLinker) {
+      window.__linkToWalletContainer = notify_wallet => {
+        origin.contractService.walletLinker.setLinkCode = () => {
+          // don't do anything here
         }
         origin.contractService.walletLinker.notify_wallet = notify_wallet
 
-        if ( !this.props.wallet.address && web3.currentProvider.isOrigin ) {
+        if (!this.props.wallet.address && web3.currentProvider.isOrigin) {
           origin.contractService.showLinkPopUp()
         }
       }

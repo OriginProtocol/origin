@@ -68,7 +68,7 @@ function verifyMessageSignature(keysMap, orbitGlobal) {
             Accept: 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ receivers, token:config.NOTIFY_API_SECURE_TOKEN })
+          body: JSON.stringify({ receivers, token: config.NOTIFY_API_SECURE_TOKEN })
         })
       }
     }

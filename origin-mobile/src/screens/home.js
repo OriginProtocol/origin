@@ -167,16 +167,7 @@ class HomeScreen extends Component {
             ) 
           }}
           sections={[
-            { title: 'Pending', data: [...pending_events, {
-              event_id: '1', action: 'transaction', cost: 1,
-              to: "0xf25186b5081ff5ce73482ad761db0eb0d25abfbf", gas_cost: 409542000000000, transaction_type: 'purchase',
-              listing: { id: '-000-4', title: 'Zinc House', media: [{ url: 'http://10.0.0.78:8080/ipfs/QmUr6VYTKF22p3PSziFrjZHgynWRhzZkndL1gPpeZjZeE6' }] }
-            }, {
-              event_id: '2', action: 'transaction', cost: 1,
-              to: "0xf25186b5081ff5ce73482ad761db0eb0d25abfbf", gas_cost: 409542000000000, transaction_type: 'purchase',
-              listing: { id: '-000-4', title: 'Zinc House', media: [{ url: 'http://10.0.0.78:8080/ipfs/QmUr6VYTKF22p3PSziFrjZHgynWRhzZkndL1gPpeZjZeE6' }] }
-            },
-          ]},
+            { title: 'Pending', data: pending_events },
             { title: 'Recent Activity', data: processed_events },
           ]}
           style={styles.list}
