@@ -15,7 +15,7 @@ import {
   ControlGroup
 } from '@blueprintjs/core'
 
-import { ImportWalletsMutation } from '../../../mutations'
+import { ImportWalletsMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 const RoleOptions = ['Buyer', 'Seller', 'Arbitrator', 'Affiliate', 'Admin']

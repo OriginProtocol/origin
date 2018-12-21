@@ -39,6 +39,7 @@
     "logplease": "^1.2.15",
     "orbit-db": "^0.19.9",
     "per-env": "^1.0.2",
+    "rate-limiter-flexible": "^0.19.4",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {

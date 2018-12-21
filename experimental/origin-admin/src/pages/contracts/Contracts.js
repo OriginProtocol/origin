@@ -1,38 +1,13 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
-
 import { Button } from '@blueprintjs/core'
 
+import query from 'queries/AllContracts'
+
 import Address from 'components/Address'
-
-import gql from 'graphql-tag'
-
-const query = gql`
-  query AllContracts {
-    marketplaces {
-      address
-      totalListings
-      version
-      token {
-        id
-      }
-      owner {
-        id
-      }
-    }
-    tokens {
-      id
-      symbol
-      address
-      name
-      decimals
-      totalSupply
-    }
-  }
-`
-
 import DeployToken from './_DeployToken'
 import DeployMarketplace from './_DeployMarketplace'
+import DeployContract from './_DeployContract'
 import AddAffiliate from './_AddAffiliate'
 
 function totalSupply(supply, decimals) {
@@ -56,7 +31,7 @@ class Contracts extends Component {
           const marketplaces = data.marketplaces || []
           const tokens = data.tokens || []
           return (
-            <div className="">
+            <div>
               <div
                 style={{
                   display: 'flex',
@@ -149,6 +124,44 @@ class Contracts extends Component {
                 </tbody>
               </table>
 
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  marginTop: '1.5rem'
+                }}
+              >
+                <h3 className="bp3-heading">Identity</h3>
+                <Button
+                  small={true}
+                  icon="plus"
+                  text="User Registry"
+                  className="ml-2"
+                  onClick={() => this.setState({ deployUserRegistry: true })}
+                />
+                <Button
+                  small={true}
+                  icon="plus"
+                  text="Key Holder Lib"
+                  className="ml-2"
+                  onClick={() => this.setState({ deployKeyHolderLib: true })}
+                />
+                <Button
+                  small={true}
+                  icon="plus"
+                  text="Claim Holder Lib"
+                  className="ml-2"
+                  onClick={() => this.setState({ deployClaimHolderLib: true })}
+                />
+                <Button
+                  small={true}
+                  icon="plus"
+                  text="Origin Identity"
+                  className="ml-2"
+                  onClick={() => this.setState({ deployOriginIdentity: true })}
+                />
+              </div>
+
               <DeployToken
                 isOpen={this.state.deployToken}
                 onCompleted={() => this.setState({ deployToken: false })}
@@ -162,6 +175,34 @@ class Contracts extends Component {
                 isOpen={this.state.addAffiliate ? true : false}
                 from={this.state.addAffiliate}
                 onCompleted={() => this.setState({ addAffiliate: false })}
+              />
+              <DeployContract
+                title="Deploy User Registry"
+                contract="UserRegistry"
+                isOpen={this.state.deployUserRegistry ? true : false}
+                onCompleted={() => this.setState({ deployUserRegistry: false })}
+              />
+              <DeployContract
+                title="Deploy Key Holder Lib"
+                contract="KeyHolderLibrary"
+                isOpen={this.state.deployKeyHolderLib ? true : false}
+                onCompleted={() => this.setState({ deployKeyHolderLib: false })}
+              />
+              <DeployContract
+                title="Deploy Claim Holder Lib"
+                contract="ClaimHolderLibrary"
+                isOpen={this.state.deployClaimHolderLib ? true : false}
+                onCompleted={() =>
+                  this.setState({ deployClaimHolderLib: false })
+                }
+              />
+              <DeployContract
+                title="Deploy Origin Identity"
+                contract="OriginIdentity"
+                isOpen={this.state.deployOriginIdentity ? true : false}
+                onCompleted={() =>
+                  this.setState({ deployOriginIdentity: false })
+                }
               />
             </div>
           )

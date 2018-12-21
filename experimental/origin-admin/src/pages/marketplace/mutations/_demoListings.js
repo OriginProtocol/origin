@@ -1,6 +1,7 @@
 const HawaiiHouse = {
   schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
-  dappSchemaId: "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
+  dappSchemaId:
+    'https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json',
   listingType: 'unit',
   category: 'schema.forRent',
   subCategory: 'schema.housing',
@@ -42,102 +43,108 @@ const HawaiiHouse = {
 }
 
 const LakeHouse = {
-  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
-  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
-  "listingType": "unit",
-  "category": "schema.forRent",
-  "subCategory": "schema.housing",
-  "language": "en-US",
-  "title": "Casa Wolf",
-  "description": "Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.",
-  "unitsTotal": 1,
-  "price": {
-    "currency": "ETH",
-    "amount": "1.5"
+  schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+  dappSchemaId:
+    'https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json',
+  listingType: 'unit',
+  category: 'schema.forRent',
+  subCategory: 'schema.housing',
+  language: 'en-US',
+  title: 'Casa Wolf',
+  description:
+    'Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.',
+  unitsTotal: 1,
+  price: {
+    currency: 'ETH',
+    amount: '1.5'
   },
-  "commission": {
-    "currency": "OGN",
-    "amount": "10"
+  commission: {
+    currency: 'OGN',
+    amount: '10'
   },
-  "media": [
+  media: [
     {
-      contentType: "image/jpeg",
-      url: "ipfs://QmTTNxNNQYUupKpbxRu5yUruSCasadBAeyNsw2RrRtG83S"
+      contentType: 'image/jpeg',
+      url: 'ipfs://QmTTNxNNQYUupKpbxRu5yUruSCasadBAeyNsw2RrRtG83S'
     },
     {
-      contentType: "image/jpeg",
-      url: "ipfs://QmcDrQANRcL4pUpGxiaAVi36MpJ22QMCNKr4wAHSgYyTiF"
+      contentType: 'image/jpeg',
+      url: 'ipfs://QmcDrQANRcL4pUpGxiaAVi36MpJ22QMCNKr4wAHSgYyTiF'
     },
     {
-      contentType: "image/jpeg",
-      url: "ipfs://QmTouE2NfAKB2AeVHf1u58181Uqb24Tj2zntrqjVz8BJL6"
+      contentType: 'image/jpeg',
+      url: 'ipfs://QmTouE2NfAKB2AeVHf1u58181Uqb24Tj2zntrqjVz8BJL6'
     },
     {
-      contentType: "image/jpeg",
-      url: "ipfs://QmfBczWEtgkSAiq1LQ7cgYSxbw96fVbos2fB21qgjdhuPY"
+      contentType: 'image/jpeg',
+      url: 'ipfs://QmfBczWEtgkSAiq1LQ7cgYSxbw96fVbos2fB21qgjdhuPY'
     },
     {
-      contentType: "image/jpeg",
-      url: "ipfs://QmZEdyf8mqmSQX6ty3u7APMoSQJVi1xjKMHNx5JefTdtpp"
+      contentType: 'image/jpeg',
+      url: 'ipfs://QmZEdyf8mqmSQX6ty3u7APMoSQJVi1xjKMHNx5JefTdtpp'
     }
   ]
 }
 
 const Car = {
-  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
-  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-carsTrucks_1.0.0.json",
-  "listingType": "unit",
-  "category": "schema.forSale",
-  "subCategory": "schema.carsTrucks",
-  "language": "en-US",
-  "title": "1977 International Scout II",
-  "description": "Introduced in 1971, the International Scout II rode on a stretched-wheelbase version of the rugged Scout chassis as a competitor to trucks like the larger Chevrolet Blazer. The highly customizable Scout was popular for work and racing, taking home a class win in the 1977 Baja 1000. This restored beautifully restored 1977 Scout II's customizations run more than skin deep, with a 6.0-liter GM engine and transmission to go along with the wheels and suspension lift.",
-  "unitsTotal": 1,
-  "price": {
-    "currency": "ETH",
-    "amount": "0.6"
+  schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+  dappSchemaId:
+    'https://dapp.originprotocol.com/schemas/forSale-carsTrucks_1.0.0.json',
+  listingType: 'unit',
+  category: 'schema.forSale',
+  subCategory: 'schema.carsTrucks',
+  language: 'en-US',
+  title: '1977 International Scout II',
+  description:
+    "Introduced in 1971, the International Scout II rode on a stretched-wheelbase version of the rugged Scout chassis as a competitor to trucks like the larger Chevrolet Blazer. The highly customizable Scout was popular for work and racing, taking home a class win in the 1977 Baja 1000. This restored beautifully restored 1977 Scout II's customizations run more than skin deep, with a 6.0-liter GM engine and transmission to go along with the wheels and suspension lift.",
+  unitsTotal: 1,
+  price: {
+    currency: 'ETH',
+    amount: '0.6'
   },
-  "commission": {
-    "currency": "OGN",
-    "amount": "10"
+  commission: {
+    currency: 'OGN',
+    amount: '10'
   },
   media: [
     {
       contentType: 'image/jpeg',
-      url: 'ipfs://QmUBTPFWw69XJ4zKySJg3sS672nBzfkexEvijPk7BfwJJD',
+      url: 'ipfs://QmUBTPFWw69XJ4zKySJg3sS672nBzfkexEvijPk7BfwJJD'
     },
     {
       contentType: 'image/jpeg',
-      url: 'ipfs://QmXkceEJtmPsdNQF5R1b5XF8fMLhpckCPJZB4dMUpkz8z5',
+      url: 'ipfs://QmXkceEJtmPsdNQF5R1b5XF8fMLhpckCPJZB4dMUpkz8z5'
     },
     {
       contentType: 'image/jpeg',
-      url: 'ipfs://QmZWiwb6Tm5AGeDoocs7aZn73XpQYftcqDJdBMoLxNgunH',
+      url: 'ipfs://QmZWiwb6Tm5AGeDoocs7aZn73XpQYftcqDJdBMoLxNgunH'
     },
     {
       contentType: 'image/jpeg',
-      url: 'ipfs://QmVBqmMYH25TacoT1a8yKDcEb3iPsEf8XuAfHNRnK4GxM9',
+      url: 'ipfs://QmVBqmMYH25TacoT1a8yKDcEb3iPsEf8XuAfHNRnK4GxM9'
     }
   ]
 }
 
 const TaylorSwiftTickets = {
-  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
-  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-tickets_1.0.0.json",
-  "listingType": "unit",
-  "category": "schema.forSale",
-  "subCategory": "schema.tickets",
-  "language": "en-US",
-  "title": "Taylor Swift's Reputation Tour",
-  "description": "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",
-  "unitsTotal": 10,
-  "price": {
-    "currency": "ETH",
-    "amount": "0.3"
+  schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+  dappSchemaId:
+    'https://dapp.originprotocol.com/schemas/forSale-tickets_1.0.0.json',
+  listingType: 'unit',
+  category: 'schema.forSale',
+  subCategory: 'schema.tickets',
+  language: 'en-US',
+  title: "Taylor Swift's Reputation Tour",
+  description:
+    "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",
+  unitsTotal: 10,
+  price: {
+    currency: 'ETH',
+    amount: '0.3'
   },
-  "commission": {
-    "currency": "OGN",
-    "amount": "10"
+  commission: {
+    currency: 'OGN',
+    amount: '10'
   },
   media: [
     {
@@ -164,22 +171,24 @@ const TaylorSwiftTickets = {
 }
 
 const ZincHouse = {
-  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
-  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
-  "listingType": "unit",
-  "category": "schema.forRent",
-  "subCategory": "schema.housing",
-  "language": "en-US",
-  "title": "Zinc House",
-  "description": "Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.",
-  "unitsTotal": 1,
-  "price": {
-    "currency": "ETH",
-    "amount": "3.999"
+  schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+  dappSchemaId:
+    'https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json',
+  listingType: 'unit',
+  category: 'schema.forRent',
+  subCategory: 'schema.housing',
+  language: 'en-US',
+  title: 'Zinc House',
+  description:
+    'Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.',
+  unitsTotal: 1,
+  price: {
+    currency: 'ETH',
+    amount: '3.999'
   },
-  "commission": {
-    "currency": "OGN",
-    "amount": "10"
+  commission: {
+    currency: 'OGN',
+    amount: '10'
   },
   media: [
     {
