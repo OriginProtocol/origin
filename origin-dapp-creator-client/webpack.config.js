@@ -73,7 +73,16 @@ const config = {
   mode: isProduction ? 'production' : 'development',
   plugins: [
     new HtmlWebpackPlugin({ template: 'public/index.html', inject: false }),
-    new webpack.EnvironmentPlugin({ HOST: 'localhost' }),
+    new webpack.EnvironmentPlugin([
+      'DAPP_CREATOR_API_URL',
+      'DAPP_CREATOR_DOMAIN',
+      'DAPP_URL',
+      'PROVIDER_URL',
+      'IPFS_GATEWAY_URL'
+    ]),
+    new CopyWebpackPlugin([
+      { from: 'public/images', to: 'images' }
+    ]),
     new Dotenv()
   ]
 }
