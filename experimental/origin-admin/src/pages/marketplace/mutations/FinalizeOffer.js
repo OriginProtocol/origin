@@ -3,7 +3,7 @@ import { Mutation } from 'react-apollo'
 
 import { Button, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 
-import { FinalizeOfferMutation } from '../../../mutations'
+import { FinalizeOfferMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class FinalizeOffer extends Component {
