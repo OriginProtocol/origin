@@ -23,6 +23,12 @@
   "author": "Tom Linton <tom@originprotocol.com>",
   "license": "MIT",
   "dependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/node": "^7.2.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/plugin-proposal-decorators": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
     "@blueprintjs/core": "^3.9.0",
     "@blueprintjs/select": "^3.4.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
@@ -40,12 +46,6 @@
     "webpack": "^4.27.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.0",
-    "@babel/node": "^7.2.0",
-    "@babel/polyfill": "^7.0.0",
-    "@babel/plugin-proposal-decorators": "^7.2.0",
-    "@babel/preset-env": "^7.2.0",
-    "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-module-resolver": "^3.1.1",
     "clean-webpack-plugin": "^1.0.0",
