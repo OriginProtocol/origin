@@ -3,9 +3,11 @@ import { StyleSheet, View } from 'react-native'
 
 export default class Separator extends Component {
   render() {
+    const { padded } = this.props
+
     return (
       <View style={styles.container}>
-        <View style={styles.space}></View>
+        {padded && <View style={styles.space}></View>}
         <View style={styles.line}></View>
       </View>
     )

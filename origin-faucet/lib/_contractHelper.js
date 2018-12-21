@@ -1,15 +1,11 @@
 const Web3 = require('web3')
 
-const IMultiSigWallet = require('origin-contracts/build/contracts/IMultiSigWallet.json')
 const { withRetries } = require('../faucet/util.js')
-
-const { isValidOwner, validOwners } = require('./owner_whitelist.js')
 
 class ContractHelper {
   constructor(config) {
     this.config = config
     this.retries = 7
-    this.validOwners = validOwners
   }
 
   /**
@@ -20,42 +16,6 @@ class ContractHelper {
   web3(networkId) {
     const provider = this.config.providers[networkId]
     return new Web3(provider)
-  }
-
-  /**
-   * Changes the owner of the given contract to the given address.
-   * @param {string} networkId - Ethereum network ID.
-   * @param {string} newOwner - Address of the new owner.
-   */
-  async _setOwner(networkId, contract, newOwner) {
-    const sender = await this.defaultAccount(networkId)
-    const newOwnerLower = newOwner.toLowerCase()
-
-    // Pre-contract call validations.
-    if (
-      !this.config.overrideOwnerWhitelist &&
-      !isValidOwner(networkId, newOwner, this.validOwners)
-    ) {
-      throw new Error(`${newOwner} is not a valid owner for the token contract`)
-    }
-    await this.ensureContractOwner(contract, sender)
-    const oldOwner = await contract.methods.owner().call()
-    if (oldOwner.toLowerCase() === newOwnerLower) {
-      throw new Error('old and new owner are the same')
-    }
-
-    const transaction = contract.methods.transferOwnership(newOwner)
-    await this.sendTransaction(networkId, transaction, { from: sender })
-    await withRetries({ verbose: this.config.verbose }, async () => {
-      const ownerAfterTransaction =
-        (await contract.methods.owner().call()).toLowerCase()
-      if (
-        !this.config.multisig &&
-        ownerAfterTransaction !== newOwner.toLowerCase()
-      ) {
-        throw new Error(`New owner should be ${newOwner} but is ${ownerAfterTransaction}`)
-      }
-    })
   }
 
   /**
@@ -70,19 +30,6 @@ class ContractHelper {
 
     if (!opts.from) {
       opts.from = await this.defaultAccount(networkId)
-    }
-
-    if (this.config.multisig) {
-      // For multi-sig transactions, we submit the transaction to the multi-sig
-      // wallet instead of the token contract.
-      const contract = await this.contract(networkId)
-      transaction = await this.multiSigTransaction({
-        networkId,
-        sender: opts.from,
-        multiSigWalletAddress: this.config.multisig,
-        contractAddress: contract._address,
-        transaction
-      })
     }
 
     if (!opts.gas) {
@@ -132,59 +79,6 @@ class ContractHelper {
         throw new Error('still waiting for transaction hash')
       }
     })
-  }
-
-  /**
-   * Sends the given transaction to the multi-sig wallet for potentially further
-   * signatures.
-   * @param {string} networkId - Ethereum network ID.
-   * @param {string} sender - Transaction sender address.
-   * @param {string} multiSigWalletAddress - Address of multi-sig wallet.
-   * @param {string} contractAddress - Address of contract for which we're making the contract call.
-   * @param {Object} transaction - Ethereum transaction to be sent to the multi-sig wallet.
-   */
-  async multiSigTransaction({
-    networkId,
-    sender,
-    multiSigWalletAddress,
-    contractAddress,
-    transaction
-  }) {
-    const web3 = this.web3(networkId)
-    const data = await transaction.encodeABI()
-    const wallet = new web3.eth.Contract(IMultiSigWallet.abi, multiSigWalletAddress)
-    this.vlog('transaction data:', data)
-    this.vlog(`using multi-sig wallet ${multiSigWalletAddress} for txn to ${contractAddress}`)
-
-    // Ensure that the sender is a signer/owner for the wallet.
-    const isOwner = await wallet.methods.isOwner(sender).call()
-    if (!isOwner) {
-      throw `${sender} is not an owner of the multisig wallet`
-    }
-
-    return wallet.methods.submitTransaction(contractAddress, 0, data)
-  }
-
-  // TODO: extract this into a separate base class
-  /**
-   * Throws an error if 'address' isn't the owner of the contract.
-   * @param {string} networkId - Ethereum network ID.
-   * @param {string} address - Address to check.
-   */
-  async ensureContractOwner(contract, address) {
-    const owner = await contract.methods.owner().call()
-    const multisig = this.config.multisig
-
-    if (multisig) {
-      // Ensure that the multisig wallet is the owner of the contract.
-      if (multisig.toLowerCase() !== owner.toLowerCase()) {
-        throw new Error(`multi-sig wallet ${this.config.multisig} isn't contract owner ${owner}`)
-      }
-    } else {
-      if (address.toLowerCase() !== owner.toLowerCase()) {
-        throw new Error(`sender ${address} isn't contract owner ${owner}`)
-      }
-    }
   }
 
   /**

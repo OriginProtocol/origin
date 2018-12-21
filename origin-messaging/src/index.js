@@ -136,6 +136,7 @@ async function loadSnapshotDB(db) {
     await db._updateIndex()
     db.events.emit('replicated', db.address.toString())
   }
+  db.__snapshot_loaded = true
   db.events.emit('ready', db.address.toString(), db._oplog.heads)
 }
 
@@ -258,7 +259,7 @@ const startOrbitDbServer = async (ipfs) => {
     }
   )
   orbitGlobal.keystore.registerSignVerify(
-    config.CONV, undefined, verifyMessageSignature(globalRegistry)
+    config.CONV, undefined, verifyMessageSignature(globalRegistry, orbitGlobal)
   )
   logger.debug(`Orbit registry started...: ${globalRegistry.id}`)
 
