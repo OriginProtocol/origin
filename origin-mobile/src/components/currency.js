@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
+const IMAGES_PATH = '../../assets/images/'
+
 export default class Currency extends Component {
   render() {
     const { abbreviation, balance, imageSource, labelColor } = this.props
@@ -12,7 +14,7 @@ export default class Currency extends Component {
           <Text style={{ ...styles.abbreviation, color: labelColor }}>{abbreviation}</Text>
           <Text style={styles.balance}>{Number(balance).toFixed(5)}</Text>
         </View>
-        <Image source={require('../../assets/images/plus-icon.png')} style={styles.plus} />
+        <Image source={require(`${IMAGES_PATH}plus-icon.png`)} style={styles.plus} />
       </View>
     )
   }

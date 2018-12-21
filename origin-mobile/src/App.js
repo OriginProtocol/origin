@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { ActivityIndicator, Alert, Image, StyleSheet, View, YellowBox } from 'react-native'
-import QRCodeScanner from 'react-native-qrcode-scanner'
+import { ActivityIndicator, Alert, Image, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { connect, Provider } from 'react-redux'
 
@@ -8,18 +7,18 @@ import NavigationService from './NavigationService'
 import originWallet, { Events } from './OriginWallet'
 import Store from './Store'
 
-import { storeActivation } from 'actions/App'
+import { storeNotificationsPermissions, updateCarouselStatus } from 'actions/Activation'
 import { setDevices } from 'actions/Devices'
 import { fetchProfile } from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
 import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
 
 import Onboarding from './components/onboarding'
-import ScanMarker from './components/scan-marker'
 
 import DevicesScreen from './screens/devices'
 import HomeScreen from './screens/home'
 import MessagingScreen from './screens/messaging'
+import ScanScreen from './screens/scan'
 import SettingsScreen from './screens/settings'
 import WalletScreen from './screens/wallet'
 
@@ -33,32 +32,6 @@ YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/17504
   'Module RCTImageLoader requires main queue setup'
 ])
-
-class ScanScreen extends Component {
-  static navigationOptions = {
-    title: 'Scan',
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal',
-    },
-  }
-    
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <QRCodeScanner
-          reactivate={true}
-          reactivateTimeout={5000}
-          onRead={originWallet.onQRScanned}
-          showMarker={true}
-          customMarker={<ScanMarker />}
-          cameraStyle={{ height: '100%' }}
-        />
-      </View>
-    )
-  }
-}
 
 const navigationOptions = ({ navigation }) => ({
   headerStyle: {
@@ -173,6 +146,10 @@ const styles = StyleSheet.create({
 // Origin Nav wrapper
 class OriginNavWrapper extends Component {
   componentDidMount() {
+    PushNotificationIOS.checkPermissions(permissions => {
+      this.props.storeNotificationsPermissions(permissions)
+    })
+
     originWallet.initNotifications()
     //register the service here
     originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
@@ -234,8 +211,6 @@ class OriginNavWrapper extends Component {
       NavigationService.navigate('Messaging')
     })
 
-
-
     originWallet.openWallet()
   }
 
@@ -258,26 +233,26 @@ class OriginWrapper extends Component {
   }
 
   async componentDidMount() {
-    const activated = await loadData('activated')
+    const completed = await loadData('carouselCompleted')
 
-    this.props.storeActivation(activated)
+    this.props.updateCarouselStatus(!!completed)
 
     this.setState({ loading: false })
   }
 
   render() {
-    const { app, storeActivation } = this.props
+    const { activation, updateCarouselStatus } = this.props
     const { loading } = this.state
-    const { activated } = app
+    const { carouselCompleted } = activation
 
     return loading ?
       <View style={{ backgroundColor: '#293f55', flex: 1, justifyContent: 'space-around' }}>
         <ActivityIndicator size="large" color="white" />
       </View> :
       <Fragment>
-        {!activated &&
+        {!carouselCompleted &&
           <Onboarding
-            onCompletion={() => this.props.storeActivation(true)}
+            onCompletion={() => this.props.updateCarouselStatus(true)}
             pages={[
               {
                 image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-1.png')} />,
@@ -297,16 +272,16 @@ class OriginWrapper extends Component {
             ]}
           />
         }
-        {activated &&
+        {carouselCompleted &&
           <OriginNavWrapper {...this.props} />
         }
       </Fragment>
   }
 }
 
-const mapStateToProps = ({ app }) => {
+const mapStateToProps = ({ activation }) => {
   return {
-    app,
+    activation,
   }
 }
 
@@ -317,7 +292,8 @@ const mapDispatchToProps = dispatch => ({
   processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event)),
   setActiveEvent: event => dispatch(setActiveEvent(event)),
   setDevices: devices => dispatch(setDevices(devices)),
-  storeActivation: bool => dispatch(storeActivation(bool)),
+  storeNotificationsPermissions: () => dispatch(storeNotificationsPermissions()),
+  updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool)),
   updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
 })
 

@@ -143,8 +143,12 @@ class OriginWallet {
         * - Specified if permissions (ios) and token (android and ios) will requested or not,
         * - if not, you must call PushNotificationsHandler.requestPermissions() later
         */
-      requestPermissions: true,
+      requestPermissions: false,
     })
+  }
+
+  requestNotifictions() {
+    return PushNotificationIOS.requestPermissions()
   }
 
   initUrls() {
@@ -390,7 +394,6 @@ class OriginWallet {
   }
 
   onNotificationRegistered(deviceToken, notification_type) {
-    // TODO: Send the token to my server so it could send back push notifications...
     console.log("Device Token Received", deviceToken)
 
     Object.assign(this.state, {deviceToken, notificationType:notification_type})
@@ -423,9 +426,9 @@ class OriginWallet {
       const gas_cost = this.extractTransactionGasCost(transaction.call)
       const listing = this.extractListing(meta)
       const to = this.extractTo(transaction.call)
-      const action_label = this.extractTransactionActionLabel(meta)
+      const transaction_type = this.extractTransactionActionType(meta)
       const action = "transaction"
-      return {...event_data, meta, action, action_label, to, cost, gas_cost, listing}
+      return {...event_data, meta, action, to, cost, gas_cost, listing, transaction_type}
     }
     else if (link)
     {
@@ -450,7 +453,7 @@ class OriginWallet {
     return origin.reflection.extractContractCallMeta(netId, txn_object.to, txn_object.data)
   }
 
-  extractTransactionActionLabel({marketplace, originToken, contract, method, params, subMeta}) {
+  extractTransactionActionType({marketplace, originToken, contract, method, params, subMeta}) {
     if (originToken && subMeta)
     {
       method = subMeta.method
@@ -462,11 +465,11 @@ class OriginWallet {
     {
       if (method == "makeOffer")
       {
-        return "Purchase"
+        return 'purchase'
       }
       else if (method.startsWith("createListing"))
       {
-        return "Create listing"
+        return 'sell'
       }
     }
     // TODO: need something better here

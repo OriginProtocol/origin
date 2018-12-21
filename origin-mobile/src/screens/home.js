@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, SectionList, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { setActiveEvent } from 'actions/WalletEvents'
@@ -7,6 +7,7 @@ import { setActiveEvent } from 'actions/WalletEvents'
 import Currency from '../components/currency'
 import DeviceItem from '../components/device-item'
 import DeviceModal from '../components/device-modal'
+import NotificationsModal from '../components/notifications-modal'
 import Separator from '../components/separator'
 import SignItem from '../components/sign-item'
 import SignModal from '../components/sign-modal'
@@ -14,6 +15,8 @@ import TransactionItem from '../components/transaction-item'
 import TransactionModal from '../components/transaction-modal'
 
 import originWallet from '../OriginWallet'
+
+const IMAGES_PATH = '../../assets/images/'
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -28,7 +31,7 @@ class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
     headerTitle: () => (
-      <Image source={require('../../assets/images/origin-logo-dark.png')} />
+      <Image source={require(`${IMAGES_PATH}origin-logo-dark.png`)} />
     ),
   }
 
@@ -55,155 +58,170 @@ class HomeScreen extends Component {
     const ethBalance = web3.utils.fromWei(balance, 'ether')
 
     return (
-      <View style={styles.container}>
-        <ScrollView
-          horizontal={true}
-          style={styles.svContainer}
-          contentContainerStyle={styles.walletContainer}
-        >
-          <Currency
-            abbreviation={'ETH'}
-            balance={ethBalance}
-            labelColor={'#a27cff'}
-            imageSource={require('../../assets/images/eth-icon.png')}
-          />
-          <Currency
-            abbreviation={'OGN'}
-            balance={'0'}
-            labelColor={'#007fff'}
-            imageSource={require('../../assets/images/ogn-icon.png')}
-          />
-          <Currency
-            abbreviation={'DAI'}
-            balance={'0'}
-            labelColor={'#fdb134'}
-            imageSource={require('../../assets/images/ogn-icon.png')}
-          />
-        </ScrollView>
-        {!!pending_events.length &&
-          <View style={styles.callsToAction}>
-            <FlatList
-              data={pending_events}
-              renderItem={({ item }) => {
-                switch(item.action) {
-                  case 'transaction':
-                    return (
-                      <TransactionItem
-                        item={item}
-                        address={address}
-                        balance={balance}
-                        handleApprove={() => originWallet.handleEvent(item) }
-                        handlePress={() => this.props.setActiveEvent(item)}
-                        handleReject={() => originWallet.handleReject(item) }
-                      />
-                    )
-                  case 'link':
-                    return (
-                      <DeviceItem
-                        item={item}
-                        handleLink={() => originWallet.handleEvent(item)}
-                        handleReject={() => originWallet.handleReject(item)}
-                      />
-                    )
-                  case 'sign':
-                    return (
-                      <SignItem
+      <Fragment>
+        <View style={styles.walletContainer}>
+          <View style={styles.walletHeader}>
+            <Text style={styles.walletHeading}>Wallet Balances</Text>
+            <Image source={require('../../assets/images/expand-icon.png')} style={styles.expand} />
+          </View>
+          <ScrollView
+            horizontal={true}
+            style={styles.svContainer}
+            contentContainerStyle={styles.walletSVContainer}
+          >
+            <Currency
+              abbreviation={'ETH'}
+              balance={ethBalance}
+              labelColor={'#a27cff'}
+              imageSource={require(`${IMAGES_PATH}eth-icon.png`)}
+            />
+            <Currency
+              abbreviation={'OGN'}
+              balance={'0'}
+              labelColor={'#007fff'}
+              imageSource={require(`${IMAGES_PATH}ogn-icon.png`)}
+            />
+            <Currency
+              abbreviation={'DAI'}
+              balance={'0'}
+              labelColor={'#fdb134'}
+              imageSource={require(`${IMAGES_PATH}eth-icon.png`)}
+            />
+          </ScrollView>
+        </View>
+        <SectionList
+          keyExtractor={({ event_id }) => event_id}
+          renderItem={({ item, section }) => {
+            if (section.title === 'Pending') {
+              switch(item.action) {
+                case 'transaction':
+                  return (
+                    <TransactionItem
                       item={item}
                       address={address}
                       balance={balance}
                       handleApprove={() => originWallet.handleEvent(item) }
                       handlePress={() => this.props.setActiveEvent(item)}
                       handleReject={() => originWallet.handleReject(item) }
-                      />
-                    )
-                  default:
-                    return null
-                }
-              }}
-              keyExtractor={(item, index) => item.event_id}
-              ItemSeparatorComponent={() => (<Separator />)}
-              style={styles.list}
-            />
-            {active_event &&
-              active_event.transaction &&
-              address &&
-              <TransactionModal
-                item={active_event}
-                address={address}
-                balance={balance}
-                handleApprove={() => this.acceptItem(active_event)}
-                handleReject={() => this.rejectItem(active_event)}
-                toggleModal={this.toggleModal}
-              />
+                    />
+                  )
+                case 'link':
+                  return (
+                    <DeviceItem
+                      item={item}
+                      handleLink={() => originWallet.handleEvent(item)}
+                      handleReject={() => originWallet.handleReject(item)}
+                    />
+                  )
+                case 'sign':
+                  return (
+                    <SignItem
+                    item={item}
+                    address={address}
+                    balance={balance}
+                    handleApprove={() => originWallet.handleEvent(item) }
+                    handlePress={() => this.props.setActiveEvent(item)}
+                    handleReject={() => originWallet.handleReject(item) }
+                    />
+                  )
+                default:
+                  return null
+              }
+            } else {
+              switch(item.action) {
+                case 'transaction':
+                  return (
+                    <TransactionItem item={item} 
+                      address={address}
+                      balance={balance}
+                    />
+                  )
+                case 'sign':
+                  return (
+                    <SignItem item={item} 
+                      address={address}
+                      balance={balance}
+                    />
+                  )
+                case 'link':
+                  return (
+                    <DeviceItem item={item}
+                      address={address}
+                      balance={balance}
+                      handleUnlink={() => originWallet.handleUnlink(item)}/>
+                  )
+                default:
+                  return null
+              }
             }
-            {active_event &&
-              active_event.sign &&
-              address &&
-              <SignModal
-                item={active_event}
-                address={address}
-                balance={balance}
-                handleApprove={() => this.acceptItem(active_event)}
-                handleReject={() => this.rejectItem(active_event)}
-                toggleModal={this.toggleModal}
-              />
+          }}
+          renderSectionHeader={({ section: { title }}) => {
+            if (!processed_events.length || title === 'Pending') {
+              return null
             }
-            {active_event &&
-              active_event.link &&
-              address &&
-              <DeviceModal
-                item={active_event}
-                address={address}
-                balance={balance}
-                handleApprove={() => this.acceptItem(active_event)}
-                handleReject={() => this.rejectItem(active_event)}
-                toggleModal={this.toggleModal}
-              />
-            }
-          </View>
+
+            return (
+              <View style={styles.header}>
+                <Text style={styles.headerText}>{title.toUpperCase()}</Text>
+              </View>
+            ) 
+          }}
+          sections={[
+            { title: 'Pending', data: [...pending_events, {
+              event_id: '1', action: 'transaction', cost: 1,
+              to: "0xf25186b5081ff5ce73482ad761db0eb0d25abfbf", gas_cost: 409542000000000, transaction_type: 'purchase',
+              listing: { id: '-000-4', title: 'Zinc House', media: [{ url: 'http://10.0.0.78:8080/ipfs/QmUr6VYTKF22p3PSziFrjZHgynWRhzZkndL1gPpeZjZeE6' }] }
+            }, {
+              event_id: '2', action: 'transaction', cost: 1,
+              to: "0xf25186b5081ff5ce73482ad761db0eb0d25abfbf", gas_cost: 409542000000000, transaction_type: 'purchase',
+              listing: { id: '-000-4', title: 'Zinc House', media: [{ url: 'http://10.0.0.78:8080/ipfs/QmUr6VYTKF22p3PSziFrjZHgynWRhzZkndL1gPpeZjZeE6' }] }
+            },
+          ]},
+            { title: 'Recent Activity', data: processed_events },
+          ]}
+          style={styles.list}
+          ItemSeparatorComponent={({ section }) => {
+            return <Separator padded={section.title !== 'Pending'} />
+          }}
+        />
+        {active_event &&
+          active_event.transaction &&
+          address &&
+          <TransactionModal
+            item={active_event}
+            address={address}
+            balance={balance}
+            handleApprove={() => this.acceptItem(active_event)}
+            handleReject={() => this.rejectItem(active_event)}
+            toggleModal={this.toggleModal}
+          />
         }
-        {!!processed_events.length &&
-          <Fragment>
-            <View style={styles.header}>
-              <Text style={styles.headerText}>RECENT ACTIVITY</Text>
-            </View>
-            <FlatList
-              data={processed_events}
-              renderItem={({item}) => {
-                console.log("Event item:", item)
-                switch(item.action) {
-                  case 'transaction':
-                    return (
-                      <TransactionItem item={item} 
-                        address ={address}
-                        balance ={balance}
-                      />
-                    )
-                  case 'sign':
-                    return (
-                      <SignItem item={item} 
-                        address ={address}
-                        balance ={balance}
-                      />
-                    )
-                  case 'link':
-                    return (
-                      <DeviceItem item={item}
-                        address ={address}
-                        balance ={balance}
-                        handleUnlink = {() => originWallet.handleUnlink(item)}/>
-                    )
-                  default:
-                    return null
-                }
-              }}
-              keyExtractor={(item, index) => item.event_id}
-              ItemSeparatorComponent={() => (<Separator />)}
-              style={styles.alertslist}
-            />
-          </Fragment>
+        {active_event &&
+          active_event.sign &&
+          address &&
+          <SignModal
+            item={active_event}
+            address={address}
+            balance={balance}
+            handleApprove={() => this.acceptItem(active_event)}
+            handleReject={() => this.rejectItem(active_event)}
+            toggleModal={this.toggleModal}
+          />
         }
-      </View>
+        {active_event &&
+          active_event.link &&
+          address &&
+          <DeviceModal
+            item={active_event}
+            address={address}
+            balance={balance}
+            handleApprove={() => this.acceptItem(active_event)}
+            handleReject={() => this.rejectItem(active_event)}
+            toggleModal={this.toggleModal}
+          />
+        }
+        <NotificationsModal />
+      </Fragment>
     )
   }
 }
@@ -225,12 +243,8 @@ const mapDispatchToProps = dispatch => ({
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
 
 const styles = StyleSheet.create({
-  callsToAction: {
-    flexGrow: 1,
-    height: 100,
-  },
-  container: {
-    flex: 1,
+  expand: {
+    marginLeft: 'auto',
   },
   header: {
     backgroundColor: '#f8fafa',
@@ -252,19 +266,28 @@ const styles = StyleSheet.create({
   },
   list: {
     backgroundColor: '#f7f8f8',
-    flex: 1,
   },
   svContainer: {
     backgroundColor: '#0b1823',
-    flexGrow: 0,
     height: 76,
   },
   text: {
     fontFamily: 'Lato',
     fontSize: 17,
   },
-  walletContainer: {
+  walletSVContainer: {
     paddingLeft: 10,
     paddingVertical: 10,
+  },
+  walletHeader: {
+    backgroundColor: '#0b1823',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+  walletHeading: {
+    color: '#c0cbd4',
+    fontFamily: 'Lato',
+    fontSize: 12,
   },
 })

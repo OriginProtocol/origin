@@ -3,6 +3,8 @@ import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'r
 
 import OriginButton from './origin-button'
 
+const IMAGES_PATH = '../../assets/images/'
+
 export default class DeviceModal extends Component {
   render() {
     const { item,  handleApprove, handleReject, toggleModal } = this.props
@@ -22,17 +24,17 @@ export default class DeviceModal extends Component {
         <View style={styles.main}>
           <TouchableOpacity onPress={toggleModal} style={{ width: '100%' }}>
             <View style={styles.close}>
-              <Image source={require('../../assets/images/arrow-down.png')} />
+              <Image source={require(`${IMAGES_PATH}arrow-down.png`)} />
             </View>
           </TouchableOpacity>
           <View style={styles.imageContainer}>
             {browser == 'chrome' &&
-              <Image source={require('../../assets/images/chrome-icon.png')} />
+              <Image source={require(`${IMAGES_PATH}chrome-icon.png`)} />
             }
             {browser !== 'chrome' &&
-              <Image source={require('../../assets/images/app-icon.png')} />
+              <Image source={require(`${IMAGES_PATH}app-icon.png`)} />
             }
-            <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />
+            <Image source={require(`${IMAGES_PATH}link-icon.png`)} style={styles.icon} />
           </View>
           <View style={styles.promptContainer}>
             <Text style={styles.question}>

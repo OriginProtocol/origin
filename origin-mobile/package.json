@@ -22,7 +22,6 @@
   "dependencies": {
     "cross-fetch": "^2.2.3",
     "eth-ecies": "^1.0.3",
-    "identicon.js": "^2.3.3",
     "moment": "^2.22.2",
     "node-libs-react-native": "^1.0.3",
     "origin": "^0.8.6",
