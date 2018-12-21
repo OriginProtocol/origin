@@ -56,7 +56,7 @@ async function deployContracts(deployer) {
   // QmXx5Qo2xh5TWZXbsDmyquBpojpqoUVpgZt3kNgqsonw9j
   await createListing(
     marketplace00,
-    '0x8ecc70d4c694d22f72efbbe154fba7b4c9bae69f0b6f02d92ddcbcde24798b3a',
+    '0x929c6ef53a5fd00e51d935e228f4719b522b6b5d2076bf0d725b0b5ab2c6fe4c',
     Seller
   )
   // zinc-house
