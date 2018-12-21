@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import ListingCardPrices from 'components/listing-card-prices'
 
-import { getListing } from 'utils/listing'
+import { getListing, getDerivedListingData } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 
 class ListingCard extends Component {
@@ -13,8 +13,10 @@ class ListingCard extends Component {
 
     this.state = {
       loading: true,
-      display: 'normal',
-      offers: []
+      listing: {
+        display: 'normal',
+        offers: []
+      }
     }
   }
 
@@ -28,7 +30,7 @@ class ListingCard extends Component {
 
       this.setState({
         // boostLevelIsPastSomeThreshold: listing.boostValue > 0,
-        ...listing,
+        listing,
         loading: false
       })
     } catch (error) {
@@ -42,29 +44,34 @@ class ListingCard extends Component {
 
   render() {
     const {
-      // boostLevelIsPastSomeThreshold,
+      listing,
+      loading
+    } = this.state
+
+    const {
       category,
       subCategory,
-      loading,
       name,
+      display,
       offers,
       pictures,
       price,
       status,
       isMultiUnit,
       unitsRemaining
-    } = this.state
+    } = listing
+
     const photo = pictures && pictures.length && pictures[0]
-    const isPending = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'pending'
-    )
-    const isSold = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'sold'
-    )
-    const isWithdrawn = status === 'inactive'
-    const showPendingBadge = isPending && !isWithdrawn
-    const showSoldBadge = isSold || isWithdrawn
-    const showFeaturedBadge = this.state.display == 'featured' && !showSoldBadge && !showPendingBadge
+
+
+    const {
+      isWithdrawn,
+      isPending,
+      isSold,
+      showPendingBadge,
+      showSoldBadge,
+      showFeaturedBadge
+    } = getDerivedListingData(listing)
 
     return (
       <div

@@ -2,6 +2,8 @@ import { translateListingCategory } from 'utils/translationUtils'
 import { getBoostLevel } from 'utils/boostUtils'
 import fetchSchema from 'utils/schemaAdapter'
 import origin from '../services/origin'
+import { offerStatusToListingAvailability } from 'utils/offer'
+import { formattedAddress } from 'utils/user'
 
 /**
  * Transforms data from the listing creation form into Origin Protocol core listing schema v1
@@ -191,6 +193,100 @@ export const transformPurchasesOrSales = async purchasesOrSales => {
   })
 
   return Promise.all(promises)
+}
+
+/**
+ * Gets the derived data that describes additional states of a listing that help with rendering. (Displaying
+ * various badges and UI elements)
+ * @param {object} listing - Dapp listing object with offers
+ * @return {object}
+ */
+export function getDerivedListingData(listing, usersWalletAddress = null) {
+  const {
+    status,
+    unitsTotal,
+    isMultiUnit,
+    offers,
+    display,
+    seller,
+    unitsRemaining
+  } = listing
+
+  /* Find the most relevant offer where user is a seller. If there is a pending offer choose
+   * that one, if not choose a sold one (if one exists).
+   */
+  const userIsSellerOffer = (() => {
+    if (usersWalletAddress === null || formattedAddress(usersWalletAddress) !== formattedAddress(listing.seller))
+      return undefined
+
+    const findOfferWithAvailability = (status) => {
+      return offers.find(offer => {
+        const availability = offerStatusToListingAvailability(offer.status)
+        return availability === status
+      })
+    }
+    const pendingOffer = findOfferWithAvailability('pending')
+    if (pendingOffer)
+      return pendingOffer
+
+    const soldOffer = findOfferWithAvailability('sold')
+    if (soldOffer)
+      return soldOffer
+
+    return undefined
+  })()
+
+  const userIsBuyerOffer = offers.find(offer => {
+    const availability = offerStatusToListingAvailability(offer.status)
+
+    return ['pending', 'sold'].includes(availability) && usersWalletAddress !== null &&
+      formattedAddress(usersWalletAddress) === formattedAddress(offer.buyer)
+  })
+
+  const multiUnitListingIsSold = () => {
+    const unitsSold = offers.reduce((accumulator, offer) => {
+      accumulator += offerStatusToListingAvailability(offer.status) === 'sold' ? offer.unitsPurchased : 0
+    }, [])
+
+    return unitsSold === unitsTotal
+  }
+
+  const offerWithStatusExists = (status) => {
+    return offers.some(offer => {
+      return offerStatusToListingAvailability(offer.status) === status
+    })
+  }
+
+  const isWithdrawn = status === 'inactive'
+  const isPending = offerWithStatusExists('pending')
+  const isSold = isMultiUnit ? multiUnitListingIsSold() : offerWithStatusExists('sold')
+  const isAvailable = isMultiUnit ? unitsRemaining > 0 : (!isPending && !isSold && !isWithdrawn)
+  const showPendingBadge = isPending && !isWithdrawn
+  const showSoldBadge = isSold || isWithdrawn
+
+  /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
+   * show listings with the Featured badge, because listings are loaded from web3. We could
+   * pass along featured information from elasticsearch, but that would increase the code
+   * complexity.
+   *
+   * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to
+   * true, and show "featured" badge.
+   */
+  const showFeaturedBadge = display === 'featured' && isAvailable
+
+  return {
+    userIsBuyerOffer,
+    userIsSellerOffer,
+    isWithdrawn,
+    isPending,
+    isSold,
+    isAvailable,
+    showPendingBadge,
+    showSoldBadge,
+    showFeaturedBadge,
+    userIsBuyer: userIsBuyerOffer !== undefined,
+    userIsSeller: usersWalletAddress !== null && formattedAddress(usersWalletAddress) === formattedAddress(listing.seller)
+  }
 }
 
 /**

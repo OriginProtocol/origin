@@ -28,7 +28,7 @@ import PicturesThumbPreview from 'components/pictures-thumb-preview'
 
 import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
-import { getListing, transformPurchasesOrSales } from 'utils/listing'
+import { getListing, transformPurchasesOrSales, getDerivedListingData } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
 import { formattedAddress } from 'utils/user'
 
@@ -59,16 +59,18 @@ class ListingsDetail extends Component {
 
     this.state = {
       etherscanDomain: null,
-      display: 'normal',
-      loading: true,
-      offers: [],
-      pictures: [],
+      listing: {
+        display: 'normal',
+        offers: [],
+        pictures: [],
+        boostLevel: null,
+        boostValue: 0
+      },
       purchases: [],
+      slotsToReserve: [],
+      loading: true,
       step: this.STEP.VIEW,
-      boostLevel: null,
-      boostValue: 0,
-      onboardingCompleted: false,
-      slotsToReserve: []
+      onboardingCompleted: false
     }
 
     this.intlMessages = defineMessages({
@@ -95,7 +97,7 @@ class ListingsDetail extends Component {
     } else if (this.props.listingJson) {
       const obj = Object.assign({}, this.props.listingJson, { loading: false })
       // Listing json passed in directly
-      this.setState(obj)
+      this.setState({ listing: obj })
     }
     const networkId = await web3.eth.net.getId()
     this.setState({
@@ -112,17 +114,20 @@ class ListingsDetail extends Component {
 
   async handleMakeOffer(skip, slotsToReserve) {
     const {
+      listing,
+      onboardingCompleted,
+      purchases,
+      quantity
+    } = this.state
+
+    const {
       boostValue,
       isMultiUnit,
       isFractional,
       listingType,
-      onboardingCompleted,
       price,
-      purchases,
-      quantity,
       boostRemaining
-    } = this.state
-
+    } = listing
     // onboard if no identity, purchases, and not already completed
     const shouldOnboard =
       !this.props.profile.strength &&
@@ -236,7 +241,7 @@ class ListingsDetail extends Component {
       const listing = await getListing(this.props.listingId, { translate: true, loadOffers: true })
 
       this.setState({
-        ...listing,
+        listing,
         loading: false
       })
     } catch (error) {
@@ -256,7 +261,7 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.VIEW })
   }
 
-  renderButtonContainer(userIsSeller, isFractional, isMultiUnit, listingId) {
+  renderButtonContainer(userIsSeller, isFractional, listingId) {
     return (<div className="btn-container">
       {!userIsSeller && !isFractional && (
         <button
@@ -304,8 +309,14 @@ class ListingsDetail extends Component {
   render() {
     const { wallet } = this.props
     const {
-      // boostLevel,
-      // boostValue,
+      listing,
+      loading,
+      step,
+      slots,
+      quantity
+    } = this.state
+
+    const {
       boostRemaining,
       category,
       subCategory,
@@ -313,56 +324,41 @@ class ListingsDetail extends Component {
       display,
       isFractional,
       isMultiUnit,
-      loading,
       name,
       offers,
       pictures,
       price,
       seller,
       status,
-      step,
       unitsTotal,
       unitsRemaining,
-      fractionalTimeIncrement,
-      quantity
-    } = this.state
-    const currentOffer = offers.find(o => {
-      const availability = offerStatusToListingAvailability(o.status)
+      fractionalTimeIncrement
+    } = listing
 
-      return ['pending', 'sold'].includes(availability)
-    })
+    const {
+      isWithdrawn,
+      isPending,
+      isSold,
+      isAvailable,
+      showPendingBadge,
+      showSoldBadge,
+      showFeaturedBadge,
+      userIsBuyerOffer,
+      userIsSellerOffer,
+      userIsBuyer,
+      userIsSeller
+    } = getDerivedListingData(listing, wallet.address)
 
-    const multiUnitListingIsSold = () => {
-      const unitsSold = offers.reduce((accumulator, offer) => {
-        accumulator += offerStatusToListingAvailability(offer.status) === 'sold' ? offer.unitsPurchased : 0
-      }, [])
+    // only expose where user is a buyer or a seller
+    let offerToExpose = undefined
+    if (userIsSellerOffer)
+      offerToExpose = userIsSellerOffer
+    else if (userIsBuyerOffer)
+      offerToExpose = userIsBuyerOffer
 
-      return unitsSold === unitsTotal
-    }
-
-    const offerWithStatusExists = (status) => {
-      return offers.some(offer => {
-        offerStatusToListingAvailability(offer.status) === status
-      })
-    }
-
-    const isWithdrawn = status === 'inactive'
-    const isPending = offerWithStatusExists('pending')
-    const isSold = isMultiUnit ? multiUnitListingIsSold() : offerWithStatusExists('sold')
-    const isAvailable = isMultiUnit ? unitsRemaining > 0 : (!isPending && !isSold && !isWithdrawn)
-    const showPendingBadge = isPending && !isWithdrawn
-    const showSoldBadge = isSold || isWithdrawn
-    /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
-     * show listings with the Featured badge, because listings are loaded from web3. We could
-     * pass along featured information from elasticsearch, but that would increase the code
-     * complexity.
-     *
-     * Deployed versions of the DApp will always have ENABLE_PERFORMANCE_MODE set to
-     * true, and show "featured" badge.
-     */
-    const showFeaturedBadge = display === 'featured' && isAvailable
-    const userIsBuyer = currentOffer && formattedAddress(wallet.address) === formattedAddress(currentOffer.buyer)
-    const userIsSeller = formattedAddress(wallet.address) === formattedAddress(seller)
+    // in general an offer exists (even if user is not a buyer or a seller)
+    const offerExists = isSold || isPending
+    const usersNotBuyerOrSeller = !userIsBuyer && !userIsSeller
 
     return (
       <div className="listing-detail">
@@ -682,7 +678,7 @@ class ListingsDetail extends Component {
                       </div>
                     </Fragment>
                   )}
-                  {this.renderButtonContainer(userIsSeller, isFractional, isMultiUnit, this.props.listingId)}
+                  {this.renderButtonContainer(userIsSeller, isFractional, this.props.listingId)}
                   {/* Via Matt 9/4/2018: Not necessary until we have staking */}
                   {/*
                     <div className="boost-level">
@@ -706,32 +702,43 @@ class ListingsDetail extends Component {
                   */}
                 </div>
               )}
-              {!isAvailable && !loading && (
+              { !loading &&
+                (
+                  // Show offer information if this is a single unit listing
+                  (offerExists && !isMultiUnit) ||
+                  // Multi unit no more units are available (so we can show explanation)
+                  (isMultiUnit && usersNotBuyerOrSeller && !isAvailable) ||
+                  // Multi unit and the user is seller and there is a pending offer
+                  (isMultiUnit && userIsSeller && userIsSellerOffer !== undefined &&
+                    offerStatusToListingAvailability(userIsSellerOffer.status) === 'pending') ||
+                  // Multi unit and the user is buyer and there is a pending offer
+                  (isMultiUnit && userIsBuyer && offerStatusToListingAvailability(userIsBuyerOffer.status) === 'pending')
+                ) && (
                 <div className="buy-box placehold unavailable text-center">
-                    <div className="reason">
-                      {!isWithdrawn && isPending && (
-                        <FormattedMessage
-                          id={'listing-detail.reasonPending'}
-                          defaultMessage={'This listing is {pending}'}
-                          values={{
-                            pending: <strong>Pending</strong>
-                          }}
-                        />
-                      )}
-                      {isSold && (
-                        <FormattedMessage
-                          id={'listing-detail.reasonSold'}
-                          defaultMessage={'This listing is {sold}'}
-                          values={{
-                            sold: <strong>Sold</strong>
-                          }}
-                        />
-                      )}
-                    </div>
+                  <div className="reason">
+                    {!isWithdrawn && isPending && (
+                      <FormattedMessage
+                        id={'listing-detail.reasonPending'}
+                        defaultMessage={'This listing is {pending}'}
+                        values={{
+                          pending: <strong>Pending</strong>
+                        }}
+                      />
+                    )}
+                    {isSold && (
+                      <FormattedMessage
+                        id={'listing-detail.reasonSold'}
+                        defaultMessage={'This listing is {sold}'}
+                        values={{
+                          sold: <strong>Sold</strong>
+                        }}
+                      />
+                    )}
+                  </div>
                   {!userIsBuyer && !userIsSeller && (
                     <Fragment>
                       <div className="suggestion">
-                        {!isWithdrawn && isPending && (
+                        {!isWithdrawn && isPending && (isMultiUnit && !isAvailable) && (
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicPending'}
                             defaultMessage={
@@ -769,21 +776,21 @@ class ListingsDetail extends Component {
                       </Link>
                     </Fragment>
                   )}
-                  {userIsBuyer && (
+                  {userIsBuyerOffer !== undefined && (
                     <div className="suggestion">
-                      {isPending && currentOffer.status === 'created' && (
+                      {isPending && userIsBuyerOffer.status === 'created' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerCreated'}
                           defaultMessage={`You've made an offer on this listing. Please wait for the seller to accept or reject your offer.`}
                         />
                       )}
-                      {isPending && currentOffer.status === 'accepted' && (
+                      {isPending && userIsBuyerOffer.status === 'accepted' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerAccepted'}
                           defaultMessage={`You've made an offer on this listing. View the offer to complete the sale.`}
                         />
                       )}
-                      {isPending && currentOffer.status === 'disputed' && (
+                      {isPending && userIsBuyerOffer.status === 'disputed' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionBuyerDisputed'}
                           defaultMessage={`You've made an offer on this listing. View the offer to check the status.`}
@@ -797,24 +804,21 @@ class ListingsDetail extends Component {
                       )}
                     </div>
                   )}
-                  {userIsSeller && (
+                  {userIsSellerOffer !== undefined && (
                     <div className="suggestion">
-                      {isPending &&
-                          currentOffer.status === 'created' && (
+                      {isPending && userIsSellerOffer.status === 'created' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionSellerCreated'}
                           defaultMessage={`A buyer is waiting for you to accept or reject their offer.`}
                         />
                       )}
-                      {isPending &&
-                          currentOffer.status === 'accepted' && (
+                      {isPending && userIsSellerOffer.status === 'accepted' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionSellerAccepted'}
                           defaultMessage={`You've accepted an offer for this listing. Please wait for the buyer to complete the sale.`}
                         />
                       )}
-                      {isPending &&
-                          currentOffer.status === 'disputed' && (
+                      {isPending && userIsSellerOffer.status === 'disputed' && (
                         <FormattedMessage
                           id={'listing-detail.suggestionSellerDisputed'}
                           defaultMessage={`You've accepted an offer on this listing. View the offer to check the status.`}
@@ -837,9 +841,9 @@ class ListingsDetail extends Component {
                       )}
                     </div>
                   )}
-                  {(userIsBuyer || userIsSeller) && currentOffer && (
+                  {(userIsBuyer || userIsSeller) && offerToExpose && (
                     <Link
-                      to={`/purchases/${currentOffer.id}`}
+                      to={`/purchases/${offerToExpose.id}`}
                       ga-category="listing"
                       ga-label={ `view_${isPending ? 'offer' : 'sale'}` }
                     >
@@ -857,7 +861,7 @@ class ListingsDetail extends Component {
                       )}
                     </Link>
                   )}
-                  { userIsSeller && !currentOffer && isWithdrawn && (
+                  { userIsSeller && offerToExpose === undefined && isWithdrawn && (
                     <Link
                       to={`/listings/create`}
                       ga-category="listing"
@@ -879,13 +883,13 @@ class ListingsDetail extends Component {
                 />
               )}
             </div>
-            {!this.state.loading && isFractional &&
+            {!loading && isFractional &&
               <div className="col-12">
                 <Calendar
-                  slots={ this.state.slots }
-                  offers={ this.state.offers }
+                  slots={slots}
+                  offers={offers}
                   userType="buyer"
-                  viewType={ fractionalTimeIncrement }
+                  viewType={fractionalTimeIncrement}
                   onComplete={(slots) => this.handleMakeOffer(false, slots) }
                   step={ 60 }
                 />
@@ -896,8 +900,8 @@ class ListingsDetail extends Component {
             <div className="row">
               <div className="col-12 col-md-8">
                 <hr />
-                {this.state.seller && (
-                  <Reviews userAddress={this.state.seller} />
+                {seller && (
+                  <Reviews userAddress={seller} />
                 )}
               </div>
             </div>
