@@ -5,7 +5,6 @@ import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import ListingCardPrices from 'components/listing-card-prices'
 
 import { getListing, getDerivedListingData } from 'utils/listing'
-import { offerStatusToListingAvailability } from 'utils/offer'
 
 class ListingCard extends Component {
   constructor(props) {
@@ -52,11 +51,8 @@ class ListingCard extends Component {
       category,
       subCategory,
       name,
-      display,
-      offers,
       pictures,
       price,
-      status,
       isMultiUnit,
       unitsRemaining
     } = listing
@@ -65,9 +61,6 @@ class ListingCard extends Component {
 
 
     const {
-      isWithdrawn,
-      isPending,
-      isSold,
       showPendingBadge,
       showSoldBadge,
       showFeaturedBadge

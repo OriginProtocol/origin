@@ -30,7 +30,6 @@ import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing, transformPurchasesOrSales, getDerivedListingData } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
-import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -321,7 +320,6 @@ class ListingsDetail extends Component {
       category,
       subCategory,
       description,
-      display,
       isFractional,
       isMultiUnit,
       name,
@@ -329,7 +327,6 @@ class ListingsDetail extends Component {
       pictures,
       price,
       seller,
-      status,
       unitsTotal,
       unitsRemaining,
       fractionalTimeIncrement
@@ -357,7 +354,7 @@ class ListingsDetail extends Component {
       offerToExpose = userIsBuyerOffer
 
     // in general an offer exists (even if user is not a buyer or a seller)
-    const offerExists = isSold || isPending
+    const offerExists = isSold || isPending
     const usersNotBuyerOrSeller = !userIsBuyer && !userIsSeller
 
     return (

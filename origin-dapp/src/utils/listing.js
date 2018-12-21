@@ -285,7 +285,7 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     showSoldBadge,
     showFeaturedBadge,
     userIsBuyer: userIsBuyerOffer !== undefined,
-    userIsSeller: usersWalletAddress !== null && formattedAddress(usersWalletAddress) === formattedAddress(listing.seller)
+    userIsSeller: usersWalletAddress !== null && formattedAddress(usersWalletAddress) === formattedAddress(seller)
   }
 }
 
