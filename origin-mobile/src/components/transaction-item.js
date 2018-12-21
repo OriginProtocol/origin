@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 
-import OriginButton from './origin-button'
+import OriginButton from 'components/origin-button'
 
 export default class TransactionItem extends Component {
   render() {

@@ -1,4 +1,4 @@
-import { UserConstants } from '../actions/User'
+import { UserConstants } from 'actions/User'
 
 export default function Users(state = [], action = {}) {
   switch (action.type) {

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-import OriginButton from './origin-button'
+import OriginButton from 'components/origin-button'
 
 export default class TransactionModal extends Component {
   render() {

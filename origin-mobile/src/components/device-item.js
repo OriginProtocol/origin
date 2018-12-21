@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import Moment from 'react-moment'
 import { Image, StyleSheet, Text, View } from 'react-native'
-
 import PropTypes from 'prop-types'
 
-import OriginButton from './origin-button'
+import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
 

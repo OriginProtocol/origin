@@ -13,14 +13,14 @@ import { fetchProfile } from 'actions/Profile'
 import { getBalance } from 'actions/Wallet'
 import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
 
-import Onboarding from './components/onboarding'
+import Onboarding from 'components/onboarding'
 
-import DevicesScreen from './screens/devices'
-import HomeScreen from './screens/home'
-import MessagingScreen from './screens/messaging'
-import ScanScreen from './screens/scan'
-import SettingsScreen from './screens/settings'
-import WalletScreen from './screens/wallet'
+import DevicesScreen from 'screens/devices'
+import HomeScreen from 'screens/home'
+import MessagingScreen from 'screens/messaging'
+import ScanScreen from 'screens/scan'
+import SettingsScreen from 'screens/settings'
+import WalletScreen from 'screens/wallet'
 
 import { loadData } from './tools'
 

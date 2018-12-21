@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { storeNotificationsPermissions } from 'actions/Activation'
 
-import OriginButton from './origin-button'
+import OriginButton from 'components/origin-button'
 
 import originWallet from '../OriginWallet'
 
