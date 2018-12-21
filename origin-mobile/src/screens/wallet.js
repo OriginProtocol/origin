@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Modal, TouchableOpacity, Alert, Clipboard, StyleSheet, Text, View, TextInput, WebView } from 'react-native'
 import { connect } from 'react-redux'
 
+import OriginButton from 'components/origin-button'
+
 import originWallet from '../OriginWallet'
-import OriginButton from '../components/origin-button'
 
 class WalletScreen extends Component {
   static navigationOptions = {

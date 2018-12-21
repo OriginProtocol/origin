@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Animated, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 
-import OriginButton from './origin-button'
-import Dots from './dots'
+import Dots from 'components/dots'
+import OriginButton from 'components/origin-button'
 
 const BUTTON_SIZE = 40
 const MARGIN_RIGHT = 10

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 
-import ScanMarker from '../components/scan-marker'
+import ScanMarker from 'components/scan-marker'
 
 import originWallet from '../OriginWallet'
 

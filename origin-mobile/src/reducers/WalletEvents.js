@@ -1,4 +1,4 @@
-import { WalletEventsConstants } from '../actions/WalletEvents'
+import { WalletEventsConstants } from 'actions/WalletEvents'
 
 const initialState = {
   active_event: null,

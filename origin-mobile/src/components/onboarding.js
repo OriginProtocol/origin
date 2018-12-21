@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Animated, Dimensions, FlatList, Image, SafeAreaView, StatusBar } from 'react-native'
 
-import OnboardingPage from './onboarding-page'
-import OnboardingPagination from './onboarding-pagination'
+import OnboardingPage from 'components/onboarding-page'
+import OnboardingPagination from 'components/onboarding-pagination'
 
 const IMAGES_PATH = '../../assets/images/'
 // hotfix: https://github.com/facebook/react-native/issues/16710

@@ -1,4 +1,4 @@
-import { DevicesConstants } from '../actions/Devices'
+import { DevicesConstants } from 'actions/Devices'
 
 const initialState = {
   devices: []

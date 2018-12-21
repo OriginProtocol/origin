@@ -1,16 +1,17 @@
 import {PushNotificationIOS,Linking, Clipboard} from 'react-native'
 import PushNotification from 'react-native-push-notification'
-import {setRemoteLocal, localfy, storeData, loadData} from './tools'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
 import EventEmitter from 'events'
 import {EthNotificationTypes} from 'origin/common/enums'
 import ecies from 'eth-ecies'
-import CryptoJS from "crypto-js"
+import CryptoJS from 'crypto-js'
 import UUIDGenerator from 'react-native-uuid-generator'
 
-import origin, {apiUrl, defaultProviderUrl, messagingUrl, localApi, defaultLocalRemoteHost, getEthCode} from './services/origin'
+import origin, {apiUrl, defaultProviderUrl, messagingUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
+
+import {setRemoteLocal, localfy, storeData, loadData} from './tools'
 
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"

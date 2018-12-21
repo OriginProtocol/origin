@@ -1,4 +1,4 @@
-import { ActivationConstants } from '../actions/Activation'
+import { ActivationConstants } from 'actions/Activation'
 
 const initialState = {
   carouselCompleted: false,
