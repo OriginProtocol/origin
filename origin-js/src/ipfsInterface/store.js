@@ -38,7 +38,7 @@ export class IpfsDataStore {
   /**
    * Loads and validates data from IPFS.
    * @param {string} expectedDataType - Type of object to load.
-   * @param {bytes} ipfsHash - Base58 encoded IPFS hash.
+   * @param {string} ipfsHash - Base58 encoded IPFS hash.
    * @returns {object} data
    * @throws {Error}
    */
