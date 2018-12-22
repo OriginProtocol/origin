@@ -20,7 +20,6 @@ import HomeScreen from 'screens/home'
 import MessagingScreen from 'screens/messaging'
 import ScanScreen from 'screens/scan'
 import SettingsScreen from 'screens/settings'
-import WalletScreen from 'screens/wallet'
 
 import { loadData } from './tools'
 
@@ -60,7 +59,6 @@ const ScanStack = createStackNavigator({
 const SettingsStack = createStackNavigator({
   Devices: DevicesScreen,
   Settings: SettingsScreen,
-  Wallet: WalletScreen,
 }, {
   initialRouteName: 'Settings',
   navigationOptions,

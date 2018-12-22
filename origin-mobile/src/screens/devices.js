@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert, FlatList, StyleSheet, View } from 'react-native'
+import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import DeviceItem from 'components/device-item'
@@ -25,9 +25,11 @@ class DevicesScreen extends Component {
   }
 
   render() {
-    return (
+    const { devices } = this.props
+
+    return devices.length ? (
       <FlatList
-        data={this.props.devices}
+        data={devices}
         renderItem={({item}) => (
           <DeviceItem
             item={item}
@@ -40,6 +42,10 @@ class DevicesScreen extends Component {
         )}
         style={styles.list}
       />
+    ) : (
+      <View style={styles.container}>
+        <Text style={styles.placeholder}>No Devices Linked</Text>
+      </View>
     )
   }
 }
@@ -53,9 +59,21 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(DevicesScreen)
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f7f8f8',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
   list: {
     backgroundColor: '#f7f8f8',
     height: '100%',
+  },
+  placeholder: {
+    fontFamily: 'Lato',
+    fontSize: 13,
+    opacity: 0.5,
+    textAlign: 'center',
   },
   separator: {
     backgroundColor: 'white',

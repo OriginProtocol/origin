@@ -22,9 +22,9 @@ class WalletScreen extends Component {
   }
 
   render() {
-    const { address, balance } = this.props
+    const { address, balances: { eth } } = this.props
     // placeholders
-    const amountETH = web3.utils.fromWei(balance, "ether")
+    const amountETH = web3.utils.fromWei(eth, "ether")
     const amountUSD = 0
     // really dangerous function
     const privateKey = address ? web3.eth.accounts.wallet[0].privateKey : ""
@@ -110,8 +110,8 @@ class WalletScreen extends Component {
 
 const mapStateToProps = state => {
   return {
-    balance: state.wallet.balance,
     address: state.wallet.address,
+    balances: state.wallet.balances,
   }
 }
 

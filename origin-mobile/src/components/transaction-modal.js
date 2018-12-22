@@ -36,7 +36,7 @@ export default class TransactionModal extends Component {
             <View style={styles.imageContainer}>
               <Image
                 style={styles.image}
-                source={{uri:pictures[0]}}
+                source={{ uri:pictures[0] }}
                 resizeMethod={'resize'}
                 resizeMode={'cover'}
               />

@@ -5,7 +5,7 @@ import OriginButton from 'components/origin-button'
 
 export default class SignItem extends Component {
   render() {
-    const { item, address, balance, handleApprove, handlePress, handleReject, style } = this.props
+    const { item, address, handleApprove, handlePress, handleReject, style } = this.props
     // placeholders
     const myAddress = address
     const msg = item.sign && item.sign.params.msg

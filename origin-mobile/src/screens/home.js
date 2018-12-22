@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Image, ScrollView, SectionList, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { setActiveEvent } from 'actions/WalletEvents'
@@ -13,6 +13,7 @@ import SignItem from 'components/sign-item'
 import SignModal from 'components/sign-modal'
 import TransactionItem from 'components/transaction-item'
 import TransactionModal from 'components/transaction-modal'
+import WalletModal from 'components/wallet-modal'
 
 import originWallet from '../OriginWallet'
 
@@ -23,8 +24,10 @@ class HomeScreen extends Component {
     super(props)
 
     this.toggleModal = this.toggleModal.bind(this)
+    this.toggleWallet = this.toggleWallet.bind(this)
     this.state = {
-      recentItems: []
+      recentItems: [],
+      walletExpanded: false,
     }
   }
 
@@ -53,17 +56,26 @@ class HomeScreen extends Component {
     this.props.setActiveEvent(null)
   }
 
+  toggleWallet() {
+    this.setState({ walletExpanded: !this.state.walletExpanded })
+  }
+
   render() {
-    const { active_event, address, balance, pending_events, processed_events } = this.props
-    const ethBalance = web3.utils.fromWei(balance, 'ether')
+    const { active_event, address, balances: { eth, ogn, dai }, pending_events, processed_events } = this.props
+    const ethBalance = web3.utils.fromWei(eth, 'ether')
+    // To Do: convert tokens with decimal counts
+    const daiBalance = dai
+    const ognBalance = ogn
 
     return (
       <Fragment>
         <View style={styles.walletContainer}>
-          <View style={styles.walletHeader}>
-            <Text style={styles.walletHeading}>Wallet Balances</Text>
-            <Image source={require('../../assets/images/expand-icon.png')} style={styles.expand} />
-          </View>
+          <TouchableOpacity activeOpacity={0.9} onPress={this.toggleWallet}>
+            <View style={styles.walletHeader}>
+              <Text style={styles.walletHeading}>Wallet Balances</Text>
+              <Image source={require('../../assets/images/expand-icon.png')} style={styles.expand} />
+            </View>
+          </TouchableOpacity>
           <ScrollView
             horizontal={true}
             style={styles.svContainer}
@@ -73,21 +85,28 @@ class HomeScreen extends Component {
               abbreviation={'ETH'}
               balance={ethBalance}
               labelColor={'#a27cff'}
+              name="Ethereum"
               imageSource={require(`${IMAGES_PATH}eth-icon.png`)}
+              onPress={this.toggleWallet}
             />
             <Currency
               abbreviation={'OGN'}
-              balance={'0'}
+              balance={ognBalance}
               labelColor={'#007fff'}
+              name="Origin Token"
               imageSource={require(`${IMAGES_PATH}ogn-icon.png`)}
+              onPress={this.toggleWallet}
             />
             <Currency
               abbreviation={'DAI'}
-              balance={'0'}
-              labelColor={'#fdb134'}
-              imageSource={require(`${IMAGES_PATH}eth-icon.png`)}
+              balance={daiBalance}
+              labelColor={'#fec100'}
+              name="Maker Dai"
+              imageSource={require(`${IMAGES_PATH}dai-icon.png`)}
+              onPress={this.toggleWallet}
             />
           </ScrollView>
+          <WalletModal address={address} visible={this.state.walletExpanded} onPress={this.toggleWallet} />
         </View>
         <SectionList
           keyExtractor={({ event_id }) => event_id}
@@ -99,7 +118,7 @@ class HomeScreen extends Component {
                     <TransactionItem
                       item={item}
                       address={address}
-                      balance={balance}
+                      balance={eth}
                       handleApprove={() => originWallet.handleEvent(item) }
                       handlePress={() => this.props.setActiveEvent(item)}
                       handleReject={() => originWallet.handleReject(item) }
@@ -118,7 +137,7 @@ class HomeScreen extends Component {
                     <SignItem
                     item={item}
                     address={address}
-                    balance={balance}
+                    balance={eth}
                     handleApprove={() => originWallet.handleEvent(item) }
                     handlePress={() => this.props.setActiveEvent(item)}
                     handleReject={() => originWallet.handleReject(item) }
@@ -133,21 +152,21 @@ class HomeScreen extends Component {
                   return (
                     <TransactionItem item={item} 
                       address={address}
-                      balance={balance}
+                      balance={eth}
                     />
                   )
                 case 'sign':
                   return (
                     <SignItem item={item} 
                       address={address}
-                      balance={balance}
+                      balance={eth}
                     />
                   )
                 case 'link':
                   return (
                     <DeviceItem item={item}
                       address={address}
-                      balance={balance}
+                      balance={eth}
                       handleUnlink={() => originWallet.handleUnlink(item)}/>
                   )
                 default:
@@ -181,7 +200,7 @@ class HomeScreen extends Component {
           <TransactionModal
             item={active_event}
             address={address}
-            balance={balance}
+            balance={eth}
             handleApprove={() => this.acceptItem(active_event)}
             handleReject={() => this.rejectItem(active_event)}
             toggleModal={this.toggleModal}
@@ -193,7 +212,7 @@ class HomeScreen extends Component {
           <SignModal
             item={active_event}
             address={address}
-            balance={balance}
+            balance={eth}
             handleApprove={() => this.acceptItem(active_event)}
             handleReject={() => this.rejectItem(active_event)}
             toggleModal={this.toggleModal}
@@ -205,7 +224,7 @@ class HomeScreen extends Component {
           <DeviceModal
             item={active_event}
             address={address}
-            balance={balance}
+            balance={eth}
             handleApprove={() => this.acceptItem(active_event)}
             handleReject={() => this.rejectItem(active_event)}
             toggleModal={this.toggleModal}
@@ -221,7 +240,7 @@ const mapStateToProps = state => {
   return {
     active_event: state.wallet_events.active_event,
     address: state.wallet.address,
-    balance: state.wallet.balance,
+    balances: state.wallet.balances,
     pending_events: state.wallet_events.pending_events,
     processed_events: state.wallet_events.processed_events,
   }
@@ -260,21 +279,20 @@ const styles = StyleSheet.create({
   },
   svContainer: {
     backgroundColor: '#0b1823',
-    height: 76,
+    height: 66,
   },
   text: {
     fontFamily: 'Lato',
     fontSize: 17,
   },
   walletSVContainer: {
+    paddingBottom: 10,
     paddingLeft: 10,
-    paddingVertical: 10,
   },
   walletHeader: {
     backgroundColor: '#0b1823',
     flexDirection: 'row',
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    padding: 10,
   },
   walletHeading: {
     color: '#c0cbd4',

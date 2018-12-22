@@ -5,7 +5,7 @@ import OriginButton from 'components/origin-button'
 
 export default class SignModal extends Component {
   render() {
-    const { item, address, balance, handleApprove, handleReject, toggleModal } = this.props
+    const { item, address, handleApprove, handleReject, toggleModal } = this.props
     const msg = item.sign && item.sign.params.msg
 
     return (

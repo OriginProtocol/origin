@@ -21,7 +21,7 @@ export function init() {
 
     dispatch({
       type: WalletConstants.INIT_SUCCESS,
-      address
+      address,
     })
   }
 }
@@ -34,7 +34,7 @@ export function getBalance() {
 
     dispatch({
       type: WalletConstants.BALANCE_SUCCESS,
-      balance: balance
+      balance,
     })
   }
 }
