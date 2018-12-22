@@ -70,11 +70,11 @@ class Notification extends Component {
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
               {!listing.id && (
-                <img src={logoUrl} alt="Origin zero" />
+                <img src="images/origin-icon-white.svg" alt="Origin zero" />
               )}
               {listing.id &&
                 !listingImageURL && (
-                <img src={iconUrl} alt="Origin zero" />
+                <img src="images/origin-icon-white.svg" alt="Origin zero" />
               )}
               {listing.id &&
                 listingImageURL && (
@@ -137,12 +137,10 @@ class Notification extends Component {
   }
 }
 
-const mapStateToProps = ({ users, wallet, config }) => {
+const mapStateToProps = ({ users, wallet }) => {
   return {
     users,
-    wallet,
-    logoUrl: config.logoUrl,
-    iconUrl: config.iconUrl
+    wallet
   }
 }
 

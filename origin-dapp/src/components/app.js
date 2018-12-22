@@ -31,7 +31,6 @@ import NotFound from 'components/not-found'
 import Notifications from 'components/notifications'
 import PurchaseDetail from 'components/purchase-detail'
 import ScrollToTop from 'components/scroll-to-top'
-import Customize from 'components/customize'
 import SearchResult from 'components/search/search-result'
 import Web3Provider from 'components/web3-provider'
 
@@ -138,51 +137,49 @@ class App extends Component {
         textComponent={Fragment}
       >
         <Router>
-          <Customize>
-            <ScrollToTop>
-              <Web3Provider>
-                <Onboarding>
-                  <Analytics>
-                    <Layout>
-                      <Switch>
-                        <Route exact path="/" component={HomePage} />
-                        <Route path="/page/:activePage" component={HomePage} />
-                        <Route
-                          path="/listing/:listingId"
-                          component={ListingDetailPage}
-                        />
-                        <Route path="/create" component={CreateListingPage} />
-                        <Route path="/update/:listingId" component={CreateListingPage} />
-                        <Route path="/my-listings" component={MyListings} />
-                        <Route
-                          path="/purchases/:offerId"
-                          component={PurchaseDetailPage}
-                        />
-                        <Route
-                          path="/arbitration/:offerId"
-                          component={ArbitrationPage}
-                        />
-                        <Route path="/my-purchases" component={MyPurchases} />
-                        <Route path="/my-sales" component={MySales} />
-                        <Route
-                          path="/messages/:conversationId?"
-                          component={Messages}
-                        />
-                        <Route path="/notifications" component={Notifications} />
-                        <Route path="/profile" component={Profile} />
-                        <Route path="/users/:userAddress" component={UserPage} />
-                        <Route path="/search" component={SearchResult} />
-                        <Route path="/about-tokens" component={AboutTokens} />
-                        <Route path="/dapp-info" component={DappInfo} />
-                        <Route component={NotFound} />
-                      </Switch>
-                    </Layout>
-                  </Analytics>
-                  <Alert />
-                </Onboarding>
-              </Web3Provider>
-            </ScrollToTop>
-          </Customize>
+          <ScrollToTop>
+            <Web3Provider>
+              <Onboarding>
+                <Analytics>
+                  <Layout>
+                    <Switch>
+                      <Route exact path="/" component={HomePage} />
+                      <Route path="/page/:activePage" component={HomePage} />
+                      <Route
+                        path="/listing/:listingId"
+                        component={ListingDetailPage}
+                      />
+                      <Route path="/create" component={CreateListingPage} />
+                      <Route path="/update/:listingId" component={CreateListingPage} />
+                      <Route path="/my-listings" component={MyListings} />
+                      <Route
+                        path="/purchases/:offerId"
+                        component={PurchaseDetailPage}
+                      />
+                      <Route
+                        path="/arbitration/:offerId"
+                        component={ArbitrationPage}
+                      />
+                      <Route path="/my-purchases" component={MyPurchases} />
+                      <Route path="/my-sales" component={MySales} />
+                      <Route
+                        path="/messages/:conversationId?"
+                        component={Messages}
+                      />
+                      <Route path="/notifications" component={Notifications} />
+                      <Route path="/profile" component={Profile} />
+                      <Route path="/users/:userAddress" component={UserPage} />
+                      <Route path="/search" component={SearchResult} />
+                      <Route path="/about-tokens" component={AboutTokens} />
+                      <Route path="/dapp-info" component={DappInfo} />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </Layout>
+                </Analytics>
+                <Alert />
+              </Onboarding>
+            </Web3Provider>
+          </ScrollToTop>
         </Router>
       </IntlProvider>
     ) : null // potentially a loading indicator
