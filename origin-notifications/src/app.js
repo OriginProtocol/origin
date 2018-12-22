@@ -120,6 +120,7 @@ app.post('/events', async (req, res) => {
 
   // Return 200 to the event-listener without
   // waiting for processing of the event.
+  res.json({ status: 'ok' })
   res.sendStatus(200)
 
   if (!listing || (!seller.address && !buyer.address)) {
@@ -196,7 +197,6 @@ app.post('/events', async (req, res) => {
       }
     }
   })
-  res.json({ status: 'ok' })
 })
 
 app.listen(port, () => console.log(`Notifications server listening on port ${port}!`))

@@ -1,4 +1,4 @@
-const ipfs = require ('origin-ipfs')
+const ipfs = require('origin-ipfs')
 const get = ipfs.get
 // import { get } from 'origin-ipfs'
 const startCase = require('lodash/startCase')
@@ -30,7 +30,11 @@ class OriginEventSource {
       return null
     }
 
-    const events = await this.contract.eventCache.listings(listingId, undefined, blockNumber)
+    const events = await this.contract.eventCache.listings(
+      listingId,
+      undefined,
+      blockNumber
+    )
     let soldUnits = 0
 
     events.forEach(e => {
@@ -61,7 +65,17 @@ class OriginEventSource {
     let data
     try {
       data = await get(this.ipfsGateway, ipfsHash)
-      data = pick(data, 'title', 'description', 'currencyId', 'price', 'category', 'media', 'unitsTotal')
+      data = pick(
+        data,
+        'title',
+        'description',
+        'currencyId',
+        'price',
+        'category',
+        'subCategory',
+        'media',
+        'unitsTotal'
+      )
     } catch (e) {
       return null
     }
@@ -87,7 +101,6 @@ class OriginEventSource {
   }
 
   async getOffer(listingId, offerId) {
-
     let blockNumber, status, ipfsHash, lastEvent, withdrawnBy
     const events = await this.contract.eventCache.offers(listingId, offerId)
 
@@ -97,7 +110,9 @@ class OriginEventSource {
       } else if (e.event === 'OfferFinalized') {
         status = 4
       }
-      if (!e.event.match(/(OfferFinalized|OfferWithdrawn|OfferRuling|OfferData)/)) {
+      if (
+        !e.event.match(/(OfferFinalized|OfferWithdrawn|OfferRuling|OfferData)/)
+      ) {
         blockNumber = e.blockNumber
       }
       if (e.event !== 'OfferData') {
@@ -116,7 +131,9 @@ class OriginEventSource {
       .offers(listingId, offerId)
       .call(undefined, blockNumber)
 
-    if (status === undefined) { status = offer.status }
+    if (status === undefined) {
+      status = offer.status
+    }
 
     return {
       id: `999-1-${listingId}-${offerId}`,

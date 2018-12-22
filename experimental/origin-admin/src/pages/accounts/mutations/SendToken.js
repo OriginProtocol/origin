@@ -12,7 +12,7 @@ import {
   HTMLSelect
 } from '@blueprintjs/core'
 
-import { TransferTokenMutation } from '../../../mutations'
+import { TransferTokenMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class SendToken extends Component {

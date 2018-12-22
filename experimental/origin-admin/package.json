@@ -41,7 +41,7 @@
     "node-fetch": "^2.3.0",
     "origin-contracts": "^0.8.6",
     "origin-graphql": "^0.1.0",
-    "prettier": "^1.15.3",
+    "prettier": "^1.15.2",
     "react": "^16.6.3",
     "react-apollo": "^2.3.2",
     "react-dom": "^16.6.3",
@@ -71,7 +71,8 @@
             "pages": "./src/pages",
             "reducers": "./src/reducers",
             "utils": "./src/utils",
-            "hoc": "./src/hoc"
+            "hoc": "./src/hoc",
+            "queries": "./src/queries"
           }
         }
       ],
@@ -91,7 +92,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.2.1",
-    "@babel/plugin-proposal-decorators": "^7.2.0",
+    "@babel/plugin-proposal-decorators": "^7.1.6",
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
     "@babel/plugin-transform-destructuring": "^7.2.0",

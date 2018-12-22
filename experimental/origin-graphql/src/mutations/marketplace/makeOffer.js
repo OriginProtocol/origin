@@ -3,6 +3,7 @@ import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import parseId from '../../utils/parseId'
+const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
@@ -17,7 +18,7 @@ async function makeOffer(_, data) {
       currency: 'ETH'
     },
     commission: {
-      amount: data.commission || "0",
+      amount: data.commission || '0',
       currency: 'OGN'
     },
     finalizes:
@@ -44,18 +45,18 @@ async function makeOffer(_, data) {
   }
 
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
-  const commission = web3.utils.toWei(data.commission, 'ether')
-  const value = web3.utils.toWei(data.value, 'ether')
+  const commission = contracts.web3.utils.toWei(ipfsData.commission.amount, 'ether')
+  const value = contracts.web3.utils.toWei(data.value, 'ether')
 
   const args = [
     data.listingID,
     ipfsHash,
-    data.finalizes,
-    data.affiliate,
+    ipfsData.finalizes,
+    data.affiliate || ZeroAddress,
     commission,
     value,
-    data.currency,
-    data.arbitrator
+    data.currency || ZeroAddress,
+    data.arbitrator || ZeroAddress
   ]
   if (data.withdraw) {
     const { offerId } = parseId(data.withdraw)

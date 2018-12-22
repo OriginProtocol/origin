@@ -17,11 +17,15 @@
     "lint": "eslint '**/*.js'",
     "start": "per-env",
     "start:development": "nodemon faucet/app.js",
-    "start:production": "node faucet/app.js"
+    "start:production": "node faucet/app.js",
+    "test": "mocha -r @babel/register -r @babel/polyfill --timeout 10000 --exit"
   },
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/register": "^7.0.0",
     "bignumber.js": "^8.0.1",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
@@ -29,11 +33,28 @@
     "origin-contracts": "^0.8.6",
     "per-env": "^1.0.2",
     "rate-limiter-flexible": "^0.19.4",
+    "solc": "^0.4.25",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "nodemon": "^1.18.7"
+    "@babel/cli": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.2.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.7",
+    "openzeppelin-solidity": "^1.10.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-runtime"
+    ]
   }
 }
