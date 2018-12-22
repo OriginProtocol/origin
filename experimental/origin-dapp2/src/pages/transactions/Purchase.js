@@ -8,6 +8,7 @@ import TxHistory from './_History'
 import TxProgress from './_Progress'
 import OfferDetails from './_OfferDetails'
 import ListingDetail from './_ListingDetail'
+import AboutSeller from './_AboutSeller'
 
 class Purchase extends Component {
   render() {
@@ -48,8 +49,8 @@ class Purchase extends Component {
                     <h4 className="side-bar">Offer Details</h4>
                     <OfferDetails offer={offer} />
 
-                    <h4 className="side-bar">About the Seller</h4>
-                    <div className="seller-details" />
+                    <h4 className="side-bar mt-4">About the Seller</h4>
+                    <AboutSeller id={offer.listing.seller.id} />
                   </div>
                 </div>
               </div>
@@ -85,5 +86,7 @@ require('react-styl')(`
       font-family: Poppins
       font-weight: 300
       font-size: 18px
+      &.mt-4
+        margin-top: 1.5rem
 
 `)

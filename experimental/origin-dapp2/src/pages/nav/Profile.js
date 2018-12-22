@@ -57,7 +57,10 @@ const ProfileDropdown = ({ data }) => {
   const { checksumAddress, balance, id } = data.web3.metaMaskAccount
   return (
     <div className="dropdown-menu dark dropdown-menu-right show profile">
-      <div className="connected">{`Connected to Ethereum Main Network`}</div>
+      <div className="connected">
+        {`Connected to `}
+        <span className="net">{data.web3.networkName}</span>
+      </div>
       <div className="wallet-info">
         <div>
           <h5>ETH Address</h5>
@@ -165,6 +168,19 @@ require('react-styl')(`
       font-size: 14px
     .connected
       padding: 0.75rem 1.5rem;
+      color: var(--light)
+      > span
+        display: inline-block
+        color: var(--greenblue)
+        &::before
+          content: ""
+          display: inline-block
+          background: var(--greenblue)
+          width: 10px
+          height: 10px
+          border-radius: 5px
+          margin-right: 4px
+          margin-left: 6px
     .nav-link img
       margin: 0 0.2rem
     .wallet-info
@@ -223,28 +239,6 @@ require('react-styl')(`
         .name
           font-size: 18px
 
-      .attestations
-        display: flex
-        .attestation
-          background-repeat: no-repeat
-          background-position: center
-          background-size: contain
-          width: 1.25rem
-          height: 1.25rem
-          margin-right: 0.25rem
-          &.email
-            background-image: url(images/identity/email-icon-verified.svg)
-          &.facebook
-            background-image: url(images/identity/facebook-icon-verified.svg)
-          &.phone
-            background-image: url(images/identity/phone-icon-verified.svg)
-          &.twitter
-            background-image: url(images/identity/twitter-icon-verified.svg)
-          &.airbnb
-            background-image: url(images/identity/airbnb-icon-verified.svg)
-          &.google
-            background-image: url(images/identity/google-icon-verified.svg)
-
       .strength
         font-size: 10px;
         text-transform: uppercase;
@@ -265,5 +259,27 @@ require('react-styl')(`
       padding: 0.75rem 1rem;
       font-weight: bold;
       border-radius: 0 0 5px 5px;
+
+  .attestations
+    display: flex
+    .attestation
+      background-repeat: no-repeat
+      background-position: center
+      background-size: contain
+      width: 1.25rem
+      height: 1.25rem
+      margin-right: 0.25rem
+      &.email
+        background-image: url(images/identity/email-icon-verified.svg)
+      &.facebook
+        background-image: url(images/identity/facebook-icon-verified.svg)
+      &.phone
+        background-image: url(images/identity/phone-icon-verified.svg)
+      &.twitter
+        background-image: url(images/identity/twitter-icon-verified.svg)
+      &.airbnb
+        background-image: url(images/identity/airbnb-icon-verified.svg)
+      &.google
+        background-image: url(images/identity/google-icon-verified.svg)
 
 `)

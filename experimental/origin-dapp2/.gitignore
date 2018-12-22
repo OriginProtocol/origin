@@ -4,7 +4,8 @@ public/app.*
 public/css/app.css
 public/index.html
 public/fonts
-data
+data/db
+data/ipfs
 NOTES
 src/contracts/deployed.js
 issuer-services/package-lock.json
