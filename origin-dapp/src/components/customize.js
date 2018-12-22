@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
@@ -6,13 +6,13 @@ import { withRouter } from 'react-router'
 import { fetchConfig } from 'actions/Config'
 import store from 'store'
 
-class Customize extends Component {
+class Customize extends React.Component {
 
   componentDidMount() {
     this.getConfigUrl = this.getConfigUrl.bind(this)
     this.setConfig = this.setConfig.bind(this)
 
-    let configUrl = this.getConfigUrl()
+    const configUrl = this.getConfigUrl()
 
     this.props.fetchConfig(configUrl)
       .then(this.setConfig)
@@ -23,7 +23,7 @@ class Customize extends Component {
 
   getConfigUrl () {
     // Config override specified as URL parameter
-    let configUrl = this.getConfigOverrideUrl()
+    const configUrl = this.getConfigOverrideUrl()
     if (configUrl) {
       return configUrl
     } else if (this.isWhiteLabelHostname()) {
@@ -40,9 +40,9 @@ class Customize extends Component {
 
   setConfig () {
     // CSS vars
-    for (let [cssVarName, cssVarValue] of Object.entries(this.props.config.cssVars)) {
+    for (const [cssVarName, cssVarValue] of Object.entries(this.props.config.cssVars)) {
       if (cssVarValue.toString().match(/url *\(/)) {
-        throw "url() not allowed in DApp custom CSS"
+        throw 'url() not allowed in DApp CSS variables'
       }
 
       document.documentElement.style.setProperty(
