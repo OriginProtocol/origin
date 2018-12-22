@@ -17,7 +17,13 @@ class NavBar extends Component {
     this.state = {}
   }
   render() {
-    const { showNav, mobileDevice } = this.props
+    const {
+      iconUrl,
+      isWhiteLabel,
+      logoUrl,
+      mobileDevice,
+      showNav
+    } = this.props
 
     return (
       showNav && (
@@ -28,7 +34,12 @@ class NavBar extends Component {
               aria-controls="navbarSupportedContent"
               aria-label="Toggle navigation"
             >
-              <img src="images/origin-icon-white.svg" alt="Origin menu" />
+              {!isWhiteLabel &&
+                <img src="images/origin-icon-white.svg" alt="Origin menu" />
+              }
+              {isWhiteLabel && iconUrl &&
+                <img src={iconUrl} alt="Origin menu" />
+              }
             </NavbarBS.Toggle>
             <Link
               to="/"
@@ -37,11 +48,20 @@ class NavBar extends Component {
               ga-label="logo"
             >
               <div className="d-none d-lg-block logo-container">
-                <img
-                  src="images/origin-logo.svg"
-                  className="origin-logo"
-                  alt="Origin Protocol"
-                />
+                {!isWhiteLabel &&
+                  <img
+                    src="images/origin-logo.svg"
+                    className="origin-logo"
+                    alt="Origin Protocol"
+                  />
+                }
+                {isWhiteLabel && logoUrl &&
+                  <img
+                    src={logoUrl}
+                    className="origin-logo"
+                    alt="Origin Protocol"
+                  />
+                }
               </div>
             </Link>
             <NavbarBS.Collapse
@@ -169,10 +189,13 @@ class NavBar extends Component {
   }
 }
 
-const mapStateToProps = ({ app }) => {
+const mapStateToProps = ({ app, config }) => {
   return {
+    iconUrl: config.iconUrl,
+    isWhiteLabel: config.isWhiteLabel,
+    logoUrl: config.logoUrl,
     mobileDevice: app.mobileDevice,
-    showNav: app.showNav
+    showNav: app.showNav,
   }
 }
 

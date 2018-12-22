@@ -1,5 +1,4 @@
 @import 'alertify.css';
-@import 'variables.css';
 @import 'bootstrap.css';
 @import '~react-big-calendar/lib/css/react-big-calendar.css';
 @import 'calendar.css';
@@ -27,6 +26,7 @@ body {
 main {
   flex: 1 0 auto;
   min-height: 100vh;
+  background-color: var(--background);
 }
 
 /* Common */
@@ -5338,7 +5338,7 @@ sup {
 /* Footer */
 
 .light-footer {
-  background-color: #f4f6f7;
+  background-color: var(--light-footer);
   padding: 100px 0;
 }
 
