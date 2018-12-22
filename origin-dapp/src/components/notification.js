@@ -22,6 +22,7 @@ class Notification extends Component {
     )
 
     this.handleClick = this.handleClick.bind(this)
+    this.listingImageElement = this.listingImageElement.bind(this)
     this.state = {
       counterpartyAddress,
       counterpartyName: '',
@@ -52,6 +53,32 @@ class Notification extends Component {
     }
   }
 
+  notificationListingImageElement(listing) {
+    const listingImageURL =
+      listing.media && listing.media.length && listing.media[0].url
+
+    // Listing has an id and an image to display
+    if (listing.id && listingImageURL) {
+      return (
+        <img
+          src={listingImageURL}
+          className="listing-related"
+          alt={listing.name}
+        />
+      )
+    }
+    // White labelled and has an icon URL set
+    else if (this.isWhiteLabel && this.iconUrl) {
+      return (
+        <img src={this.iconUrl} alt="No listing image" />
+      )
+    }
+    // Origin zero by default
+    return (
+      <img src="images/origin-icon-white.svg" alt="Origin zero" />
+    )
+  }
+
   render() {
     const { notification } = this.props
     const {
@@ -61,29 +88,13 @@ class Notification extends Component {
       offer
     } = this.state
 
-    const listingImageURL =
-      listing.media && listing.media.length && listing.media[0].url
 
     return (
       <li className="list-group-item notification">
         <Link to={`/purchases/${offer.id}`} onClick={this.handleClick}>
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
-              {!listing.id && (
-                <img src={logoUrl} alt="Origin zero" />
-              )}
-              {listing.id &&
-                !listingImageURL && (
-                <img src={iconUrl} alt="Origin zero" />
-              )}
-              {listing.id &&
-                listingImageURL && (
-                <img
-                  src={listingImageURL}
-                  className="listing-related"
-                  alt={listing.name}
-                />
-              )}
+              {this.listingImageElement(listing)}
             </div>
             <div className="content-container d-flex flex-column justify-content-between">
               <NotificationMessage
@@ -139,10 +150,10 @@ class Notification extends Component {
 
 const mapStateToProps = ({ users, wallet, config }) => {
   return {
+    iconUrl: config.iconUrl,
+    isWhiteLabel: config.isWhiteLabel,
     users,
     wallet,
-    logoUrl: config.logoUrl,
-    iconUrl: config.iconUrl
   }
 }
 
