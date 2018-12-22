@@ -9,13 +9,17 @@ const app = express()
 const port = process.env.PORT || 4321
 const logger = Logger.create('origin-dapp-creator-server')
 
-import { getDnsRecord, parseDnsTxtRecord, setAllRecords, updateTxtRecord } from './dns'
-import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './ipfs'
+import { getDnsRecord, parseDnsTxtRecord, setAllRecords, updateTxtRecord } from './lib/dns'
+import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './lib/ipfs'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
+/* Route for handling creation of configurations. Saves the configuration to
+ * IPFS and configures a subdomain if necessary. Subdomains are protected via
+ * web3 signatures so it isn't possible to overwrite another users subdomain.
+ */
 app.post('/config', async (req, res) => {
   const { config, signature, address } = req.body
   let existingRecord
@@ -87,6 +91,10 @@ app.post('/config', async (req, res) => {
   return res.send(ipfsHash)
 })
 
+/* Route for handling previews of configurations. Saves the configuration
+ * to IPFS and unpins it so that it can be garbage collected because previews
+ * are generally short lived.
+ */
 app.post('/config/preview', async (req, res) => {
   let ipfsHash
   try {

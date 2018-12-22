@@ -2,9 +2,12 @@ const { DNS } = require('@google-cloud/dns')
 const dns = new DNS({ projectId: process.env.GCLOUD_PROJECT_ID })
 const zone = dns.zone(process.env.GCLOUD_DNS_ZONE)
 
-/* Generates the name of the CNAME and TXT entries.
+/* Generates the DNS name of the CNAME and TXT entries.
  *
- * @param `subdomain`
+ * e.g. marketplace.origindapp.com
+ *
+ * @param {string} subdomain The subdomain of the DNS record.
+ * @param {string} recordType The DNS record type.
  */
 function getDnsName(subdomain, recordType) {
   const baseName = `${subdomain}.${process.env.DAPP_CREATOR_DOMAIN}.`
@@ -17,7 +20,7 @@ function getDnsName(subdomain, recordType) {
 
 /* Extract the IPFS hash from a dnslink= DNS entry.
  *
- *
+ * @param {string} data Data entry from a DNS txt record containing a dnslink.
  */
 export function parseDnsTxtRecord(data) {
   // Strip surrounding quotes
@@ -26,9 +29,10 @@ export function parseDnsTxtRecord(data) {
   return data.startsWith(prefix) ? data.slice(prefix.length) : false
 }
 
-/*
+/* Retrieve a DNS record for a subdomain and record type.
  *
- *
+ * @param {string} subdomain The subdomain of the DNS record.
+ * @param {string} recordType the DNS record type.
  */
 export function getDnsRecord(subdomain, recordType) {
   return new Promise((resolve, reject) => {
@@ -46,17 +50,18 @@ export function getDnsRecord(subdomain, recordType) {
   })
 }
 
-/*
+/* Helper method returning both the CNAME and TXT record for Google Cloud DNS.
  *
- *
+ * @param {string} subdomain The subdomain of the DNS records.
+ * @param {string} ipfsHash The IPFS hash of the DApp configuration.
  */
 export function _records(subdomain, ipfsHash) {
   return [_cnameRecord(subdomain), _txtRecord(subdomain, ipfsHash)]
 }
 
-/*
+/* Helper method to return the CNAME record for Google Cloud DNS.
  *
- *
+ * @param {string} subdomain The subdomain of the DNS record.
  */
 export function _cnameRecord(subdomain) {
   return zone.record('cname', {
@@ -66,9 +71,10 @@ export function _cnameRecord(subdomain) {
   })
 }
 
-/*
+/* Helper method to return the TXT record for Google Cloud DNS.
  *
- *
+ * @param {string} subdomain The subdomain of the DNS record.
+ * @param {string} ipfsHash The IPFS hash of the DApp configuration.
  */
 export function _txtRecord(subdomain, ipfsHash) {
   return zone.record('txt', {
@@ -78,18 +84,20 @@ export function _txtRecord(subdomain, ipfsHash) {
   })
 }
 
-/*
+/* Adds all DNS records required for the DApp creator.
  *
- *
+ * @param {string} subdomain The subdomain of the DNS record.
+ * @param {string} ipfsHash The IPFS hash of the DApp configuration.
  */
 export function setAllRecords(subdomain, ipfsHash) {
   const changes = { add: _records(subdomain, ipfsHash) }
   return zone.createChange(changes)
 }
 
-/*
+/* Removes all DNS records required for the DApp creator.
  *
- *
+ * @param {string} subdomain The subdomain of the DNS record.
+ * @param {string} ipfsHash The IPFS hash of the DApp configuration.
  */
 export function deleteAllRecords(subdomain, ipfsHash) {
   const changes = {
@@ -98,9 +106,11 @@ export function deleteAllRecords(subdomain, ipfsHash) {
   return zone.createChange(changes)
 }
 
-/*
+/* Updates a single DNS TXT record by removing an old record and replacing it.
  *
- *
+ * @param {string} subdomain The subdomain of the DNS record.
+ * @param {string} ipfsHash The IPFS hash of the DApp configuration.
+ * @param {Record} oldRecord The old DNS record to remove
  */
 export async function updateTxtRecord(subdomain, ipfsHash, oldRecord) {
   const changes = {
