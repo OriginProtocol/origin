@@ -34,8 +34,18 @@ spec:
         ports:
           - containerPort: 4321
         env:
-        - name: ENVKEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "creator.fullname" . }}
-              key: ENVKEY
+          - name: ENVKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "creator.fullname" . }}
+                key: ENVKEY
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: '/secrets/ga-credentials.json'
+        volumeMounts:
+          - name: gcloud-creator-sa-credentials
+            mountPath: /secrets
+            readOnly: true
+      volumes:
+        - name: gcloud-creator-sa-credentials
+          secret:
+            secretName: gcloud-creator-sa-credentials
