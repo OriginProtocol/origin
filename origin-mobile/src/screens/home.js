@@ -15,6 +15,8 @@ import TransactionItem from 'components/transaction-item'
 import TransactionModal from 'components/transaction-modal'
 import WalletModal from 'components/wallet-modal'
 
+import currencies from 'utils/currencies'
+
 import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
@@ -61,7 +63,7 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { active_event, address, balances: { eth, ogn, dai }, pending_events, processed_events } = this.props
+    const { active_event, address, balances: { eth, ogn, dai }, navigation, pending_events, processed_events } = this.props
     const ethBalance = web3.utils.fromWei(eth, 'ether')
     // To Do: convert tokens with decimal counts
     const daiBalance = dai
@@ -73,7 +75,7 @@ class HomeScreen extends Component {
           <TouchableOpacity activeOpacity={0.9} onPress={this.toggleWallet}>
             <View style={styles.walletHeader}>
               <Text style={styles.walletHeading}>Wallet Balances</Text>
-              <Image source={require('../../assets/images/expand-icon.png')} style={styles.expand} />
+              <Image source={require(`${IMAGES_PATH}expand-icon.png`)} style={styles.expand} />
             </View>
           </TouchableOpacity>
           <ScrollView
@@ -84,25 +86,25 @@ class HomeScreen extends Component {
             <Currency
               abbreviation={'ETH'}
               balance={ethBalance}
-              labelColor={'#a27cff'}
-              name="Ethereum"
-              imageSource={require(`${IMAGES_PATH}eth-icon.png`)}
+              labelColor={currencies['eth'].color}
+              name={currencies['eth'].name}
+              imageSource={currencies['eth'].icon}
               onPress={this.toggleWallet}
             />
             <Currency
               abbreviation={'OGN'}
               balance={ognBalance}
-              labelColor={'#007fff'}
-              name="Origin Token"
-              imageSource={require(`${IMAGES_PATH}ogn-icon.png`)}
+              labelColor={currencies['ogn'].color}
+              name={currencies['ogn'].name}
+              imageSource={currencies['ogn'].icon}
               onPress={this.toggleWallet}
             />
             <Currency
               abbreviation={'DAI'}
               balance={daiBalance}
-              labelColor={'#fec100'}
-              name="Maker Dai"
-              imageSource={require(`${IMAGES_PATH}dai-icon.png`)}
+              labelColor={currencies['dai'].color}
+              name={currencies['dai'].name}
+              imageSource={currencies['dai'].icon}
               onPress={this.toggleWallet}
             />
           </ScrollView>
@@ -119,6 +121,7 @@ class HomeScreen extends Component {
                       item={item}
                       address={address}
                       balance={eth}
+                      navigation={navigation}
                       handleApprove={() => originWallet.handleEvent(item) }
                       handlePress={() => this.props.setActiveEvent(item)}
                       handleReject={() => originWallet.handleReject(item) }
@@ -128,6 +131,7 @@ class HomeScreen extends Component {
                   return (
                     <DeviceItem
                       item={item}
+                      navigation={navigation}
                       handleLink={() => originWallet.handleEvent(item)}
                       handleReject={() => originWallet.handleReject(item)}
                     />
@@ -138,6 +142,7 @@ class HomeScreen extends Component {
                     item={item}
                     address={address}
                     balance={eth}
+                    navigation={navigation}
                     handleApprove={() => originWallet.handleEvent(item) }
                     handlePress={() => this.props.setActiveEvent(item)}
                     handleReject={() => originWallet.handleReject(item) }
@@ -153,6 +158,7 @@ class HomeScreen extends Component {
                     <TransactionItem item={item} 
                       address={address}
                       balance={eth}
+                      navigation={navigation}
                     />
                   )
                 case 'sign':
@@ -160,6 +166,7 @@ class HomeScreen extends Component {
                     <SignItem item={item} 
                       address={address}
                       balance={eth}
+                      navigation={navigation}
                     />
                   )
                 case 'link':
@@ -167,6 +174,7 @@ class HomeScreen extends Component {
                     <DeviceItem item={item}
                       address={address}
                       balance={eth}
+                      navigation={navigation}
                       handleUnlink={() => originWallet.handleUnlink(item)}/>
                   )
                 default:

@@ -3,6 +3,8 @@ import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'r
 
 import OriginButton from 'components/origin-button'
 
+const IMAGES_PATH = '../../assets/images/'
+
 export default class TransactionModal extends Component {
   render() {
     const { item, address, balance, handleApprove, handleReject, toggleModal } = this.props
@@ -29,7 +31,7 @@ export default class TransactionModal extends Component {
         <View style={{ ...styles.main }}>
           <TouchableOpacity onPress={toggleModal} style={{ width: '100%' }}>
             <View style={styles.close}>
-              <Image source={require('../../assets/images/arrow-down.png')} />
+              <Image source={require(`${IMAGES_PATH}arrow-down.png`)} />
             </View>
           </TouchableOpacity>
           {pictures && pictures.length > 0 &&
@@ -62,15 +64,15 @@ export default class TransactionModal extends Component {
           <View style={styles.counterparties}>
             <TouchableOpacity onPress={() => Alert.alert('From ETH Address', address)}>
               <View style={styles.party}>
-                <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
+                <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
                 <Text style={styles.address}>{`${address.slice(0, 4)}...${address.slice(38)}`}</Text>
               </View>
             </TouchableOpacity>
-            <Image source={require('../../assets/images/arrow-forward-material.png')} style={styles.arrow} />
+            <Image source={require(`${IMAGES_PATH}arrow-forward-material.png`)} style={styles.arrow} />
             {counterpartyAddress &&
               <TouchableOpacity onPress={() => Alert.alert('To ETH Address', counterpartyAddress)}>
                 <View style={styles.party}>
-                  <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
+                  <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
                   <Text style={styles.address}>{`${counterpartyAddress.slice(0, 4)}...${counterpartyAddress.slice(38)}`}</Text>
                 </View>
               </TouchableOpacity>

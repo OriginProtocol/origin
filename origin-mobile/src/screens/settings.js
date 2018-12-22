@@ -3,20 +3,9 @@ import { Alert, FlatList, Image, StyleSheet, Text, TouchableHighlight, View } fr
 
 import Separator from 'components/separator'
 
-const networks = [
-  {
-    id: '1',
-    name: 'Mainnet',
-  },
-  {
-    id: '4',
-    name: 'Rinkeby',
-  },
-  {
-    id: '999',
-    name: 'Localhost',
-  },
-]
+import networks from 'utils/networks'
+
+const IMAGES_PATH = '../../assets/images/'
 
 export default class SettingsScreen extends Component {
   constructor(props) {
@@ -35,7 +24,7 @@ export default class SettingsScreen extends Component {
   }
 
   handleNetwork({ id, name }) {
-    const { networkId = '999' } = this.props
+    const { networkId = 999 } = this.props
 
     if (id === networkId) {
       return
@@ -45,7 +34,7 @@ export default class SettingsScreen extends Component {
   }
 
   render() {
-    const { networkId = '999' } = this.props
+    const { networkId = 999 } = this.props
 
     return (
       <View style={styles.container}>
@@ -56,7 +45,7 @@ export default class SettingsScreen extends Component {
           <View style={styles.item}>
             <Text style={styles.text}>Devices</Text>
             <View style={styles.iconContainer}>
-              <Image source={require('../../assets/images/arrow-right.png')} />
+              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
             </View>
           </View>
         </TouchableHighlight>
@@ -70,10 +59,10 @@ export default class SettingsScreen extends Component {
                 <Text style={styles.text}>{n.name}</Text>
                 <View style={styles.iconContainer}>
                   {n.id === networkId &&
-                    <Image source={require('../../assets/images/ogn-icon.png')} style={styles.image} />
+                    <Image source={require(`${IMAGES_PATH}ogn-icon.png`)} style={styles.image} />
                   }
                   {n.id !== networkId &&
-                    <Image source={require('../../assets/images/eth-icon.png')} style={styles.image} />
+                    <Image source={require(`${IMAGES_PATH}eth-icon.png`)} style={styles.image} />
                   }
                 </View>
               </View>

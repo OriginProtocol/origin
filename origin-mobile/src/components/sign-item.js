@@ -3,6 +3,8 @@ import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 
 import OriginButton from 'components/origin-button'
 
+const IMAGES_PATH = '../../assets/images/'
+
 export default class SignItem extends Component {
   render() {
     const { item, address, handleApprove, handlePress, handleReject, style } = this.props
@@ -14,7 +16,7 @@ export default class SignItem extends Component {
     return (
       <TouchableHighlight onPress={handlePress}>
         <View style={[ styles.listItem, style ]}>
-          <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
+          <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
           <View style={styles.content}>
             <Text style={styles.imperative}>Do you wish to sign the following message?</Text>
             <Text style={styles.subject}>{msg}</Text>

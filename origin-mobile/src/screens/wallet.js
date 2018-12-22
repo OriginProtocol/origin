@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, TouchableOpacity, Alert, Clipboard, StyleSheet, Text, View, TextInput, WebView } from 'react-native'
+import { Modal, TouchableOpacity, Alert, StyleSheet, Text, View, TextInput, WebView } from 'react-native'
 import { connect } from 'react-redux'
 
 import OriginButton from 'components/origin-button'
@@ -26,8 +26,6 @@ class WalletScreen extends Component {
     // placeholders
     const amountETH = web3.utils.fromWei(eth, "ether")
     const amountUSD = 0
-    // really dangerous function
-    const privateKey = address ? web3.eth.accounts.wallet[0].privateKey : ""
     const isTestNet = originWallet.isTestNet()
     const showBuy = this.state.showBuy
     const hideBuy = () => {this.setState({showBuy:false})}
@@ -57,21 +55,6 @@ class WalletScreen extends Component {
                   value={this.state.inputPrivateKey}
                 />
             </View>
-            <OriginButton
-              type="primary"
-              title="Show Private Key"
-              style={[styles.button, { marginBottom: 10 }]}
-              onPress={() => Alert.alert('Private Key', privateKey)}
-            />
-            <OriginButton
-              type="primary"
-              title="Copy Private Key"
-              style={styles.button}
-              onPress={async () => {
-                await Clipboard.setString(privateKey)
-                Alert.alert('Copied to clipboard!')
-              }}
-            />
             <OriginButton
               type="primary"
               title="Get Eth via Coinbase"

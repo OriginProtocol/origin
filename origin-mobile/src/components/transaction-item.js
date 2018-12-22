@@ -8,7 +8,7 @@ const IMAGES_PATH = '../../assets/images/'
 
 class TransactionItem extends Component {
   render() {
-    const { activation, item, address = '', balance, handleApprove, handlePress, handleReject, style } = this.props
+    const { activation, item, address = '', balance, handleApprove, handlePress, handleReject, navigation, style } = this.props
     const { cost, listing, meta, status, to, transaction_type } = item
     const hasNotificationsEnabled = activation.notifications.permissions.hard.alerts
     const hasSufficientFunds = web3.utils.toBN(balance).gt(cost)
@@ -111,7 +111,7 @@ class TransactionItem extends Component {
                 </View>
               </View>
               <View style={styles.nav}>
-                <Image source={require('../../assets/images/arrow-right.png')} />
+                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
               </View>
             </View>
           </View>
@@ -133,7 +133,9 @@ class TransactionItem extends Component {
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={'Continue'}
               onPress={() => {
-                Alert.alert('Next')
+                navigation.navigate('WalletFunding', {
+                  currency: price.currency,
+                })
               }}
             />
           </Fragment>

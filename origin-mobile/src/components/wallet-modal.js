@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import Currency from 'components/currency'
 import OriginButton from 'components/origin-button'
 
+import currencies from 'utils/currencies'
+
 import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
@@ -30,7 +32,7 @@ class WalletModal extends Component {
             </View>
             <View style={styles.navImageContainer}>
               <TouchableOpacity onPress={onPress}>
-                <Image source={require('../../assets/images/close-icon.png')} style={styles.close} />
+                <Image source={require(`${IMAGES_PATH}close-icon.png`)} style={styles.close} />
               </TouchableOpacity>
             </View>
           </View>
@@ -44,9 +46,9 @@ class WalletModal extends Component {
             <Currency
               abbreviation={'ETH'}
               balance={ethBalance}
-              labelColor={'#a27cff'}
-              name="Ethereum"
-              imageSource={require(`${IMAGES_PATH}eth-icon.png`)}
+              labelColor={currencies['eth'].color}
+              name={currencies['eth'].name}
+              imageSource={currencies['eth'].icon}
               vertical={true}
               withAdd={true}
               onPress={() => originWallet.giveMeEth('1')}
@@ -54,18 +56,18 @@ class WalletModal extends Component {
             <Currency
               abbreviation={'OGN'}
               balance={ogn}
-              labelColor={'#007fff'}
-              name="Origin Token"
-              imageSource={require(`${IMAGES_PATH}ogn-icon.png`)}
+              labelColor={currencies['ogn'].color}
+              name={currencies['ogn'].name}
+              imageSource={currencies['ogn'].icon}
               vertical={true}
               onPress={() => Alert.alert('OGN can be earned by verifying your profile.')}
             />
             <Currency
               abbreviation={'DAI'}
               balance={dai}
-              labelColor={'#fec100'}
-              name="Maker Dai"
-              imageSource={require(`${IMAGES_PATH}dai-icon.png`)}
+              labelColor={currencies['dai'].color}
+              name={currencies['dai'].name}
+              imageSource={currencies['dai'].icon}
               vertical={true}
               onPress={() => Alert.alert('DAI can be purchased on an exchange and transferred into this wallet.')}
             />

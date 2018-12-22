@@ -20,6 +20,7 @@ import HomeScreen from 'screens/home'
 import MessagingScreen from 'screens/messaging'
 import ScanScreen from 'screens/scan'
 import SettingsScreen from 'screens/settings'
+import WalletFundingScreen from 'screens/wallet-funding'
 
 import { loadData } from './tools'
 
@@ -40,6 +41,7 @@ const navigationOptions = ({ navigation }) => ({
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  WalletFunding: WalletFundingScreen,
 }, {
   navigationOptions,
 })
@@ -152,19 +154,19 @@ class OriginNavWrapper extends Component {
     //register the service here
     originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
       this.props.newEvent(matcher, data)
-      this.props.setActiveEvent(data)
+      // this.props.setActiveEvent(data)
       NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
-      this.props.setActiveEvent(data)
+      // this.props.setActiveEvent(data)
       NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.PROMPT_SIGN, (data, matcher) => {
       this.props.newEvent(matcher, data)
-      this.props.setActiveEvent(data)
+      // this.props.setActiveEvent(data)
       NavigationService.navigate('Home')
     })
 
