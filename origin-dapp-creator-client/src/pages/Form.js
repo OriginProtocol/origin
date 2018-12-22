@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Intent, Switch } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 import superagent from 'superagent'
 
 import AboutField from 'components/fields/AboutField'

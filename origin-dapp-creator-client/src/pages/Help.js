@@ -16,7 +16,7 @@ class Help extends React.Component {
         <h2>Troubleshooting</h2>
         <h3>My subdomain is not working</h3>
         <p>Subdomains rely on DNS, and changes to DNS can take some time to propagate.</p>
-        <h3>I'm having another problem</h3>
+        <h3>I am having another problem</h3>
         <p>Our #engineering channel on our <a href="https://discord.gg/jyxpUSe">Discord server</a> is full of helpful engineers.</p>
       </>
     )
