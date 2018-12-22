@@ -6,7 +6,7 @@
   "scripts": {
     "build": "per-env",
     "build:production": "babel src/* -d dist --presets @babel/env",
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint 'src/**/*.js'",
     "start": "per-env",
     "start:development": "nodemon --exec 'babel-node' -r env.js src/app.js --presets @babel/env",
     "prestart:production": "npm run build",
