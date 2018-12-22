@@ -22,7 +22,9 @@ app.use(cors())
  */
 app.post('/config', async (req, res) => {
   const { config, signature, address } = req.body
+
   let existingRecord
+  let existingConfigIpfsHash
 
   if (config.subdomain) {
     // Validating signing is only necessary if we are configuring for a subdomain
@@ -30,7 +32,7 @@ app.post('/config', async (req, res) => {
     // Validate signature matches
     const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)
     // Address from recover is checksummed so lower case it
-    if (signer.toLowerCase() !== address) {
+    if (signer.toLowerCase() !== address.toLowerCase()) {
       return res.status(400).send('Signature was invalid')
     }
 
@@ -43,14 +45,14 @@ app.post('/config', async (req, res) => {
     }
 
     if (existingRecord) {
-      const ipfsHash = parseDnsTxtRecord(existingRecord.data[0])
-      if (!ipfsHash) {
+      existingConfigIpfsHash = parseDnsTxtRecord(existingRecord.data[0])
+      if (!existingConfigIpfsHash) {
         return res.status(500).send('An error occurred retrieving existing configuration')
       }
-      const existingConfig = await getConfigFromIpfs(ipfsHash)
+      const existingConfig = await getConfigFromIpfs(existingConfigIpfsHash)
       if (existingConfig.address !== address) {
         return res.status(400).send({
-          subdomain: 'Subdomain in use by another wallet'
+          subdomain: 'Subdomain in use by another account'
         })
       }
     }
@@ -61,6 +63,7 @@ app.post('/config', async (req, res) => {
   // Add the new config to IPFS
   let ipfsHash
   try {
+    // TODO: this should also be pinned on IPFS cluster
     ipfsHash = await addConfigToIpfs(req.body)
   } catch (error) {
     logger.error(error)
@@ -75,6 +78,8 @@ app.post('/config', async (req, res) => {
       if (existingRecord) {
         // Record exists, must be updating an existing configuration
         await updateTxtRecord(config.subdomain, ipfsHash, existingRecord)
+        // Unpin old config
+        ipfsClient.pin.rm(existingConfigIpfsHash)
       } else {
         // No existing record, must be a fresh configuration
         await setAllRecords(config.subdomain, ipfsHash)
