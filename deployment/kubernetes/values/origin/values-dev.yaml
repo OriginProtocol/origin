@@ -40,3 +40,11 @@ messagingImageTag: '9913a92'
 # origin-notifications
 notificationsImage: origin-notifications
 notificationsImageTag: 'dcb50c8'
+
+# origin-dapp-creator-client
+creatorClientImage: origin-dapp-creator-client
+creatorClientImageTag: 'latest'
+
+# origin-dapp-creator-server
+creatorServerImage: origin-dapp-creator-server
+creatorServerImageTag: 'latest'
