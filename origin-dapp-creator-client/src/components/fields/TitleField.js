@@ -23,7 +23,8 @@ class TitleField extends Component {
           placeholder="Decentralized Marketplace"
           className="input-width"
           value={this.props.value}
-          onChange={this.handleChange}>
+          onChange={this.handleChange}
+          required>
         </InputGroup>
       </FormGroup>
     )

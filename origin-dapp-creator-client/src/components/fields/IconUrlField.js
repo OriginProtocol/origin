@@ -16,8 +16,7 @@ class IconUrlField extends Component {
       <FormGroup
           helperText="The URL to the icon to be displayed in your DApp"
           label="Icon URL"
-          labelFor="icon-url-field"
-          labelInfo="(required)">
+          labelFor="icon-url-field">
         <InputGroup
           name="iconUrl"
           placeholder="https://dapp.originprotocol.com/images/origin-icon-white.svg"

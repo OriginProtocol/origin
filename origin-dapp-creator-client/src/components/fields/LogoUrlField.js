@@ -16,8 +16,7 @@ class LogoUrlField extends Component {
       <FormGroup
           helperText="The URL to the logo to be displayed in your DApp"
           label="Logo URL"
-          labelFor="logo-url-field"
-          labelInfo="(required)">
+          labelFor="logo-url-field">
         <InputGroup
           name="logoUrl"
           placeholder="https://www.originprotocol.com/static/img/origin-logo-dark.png"

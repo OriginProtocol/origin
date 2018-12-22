@@ -24,7 +24,8 @@ class AboutField extends Component {
           placeholder="A place for buying and selling things"
           className="input-width"
           value={this.props.value}
-          onChange={this.handleChange}>
+          onChange={this.handleChange}
+          required>
         </InputGroup>
       </FormGroup>
     )

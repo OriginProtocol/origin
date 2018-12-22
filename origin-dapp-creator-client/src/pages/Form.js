@@ -149,9 +149,11 @@ class Form extends Component {
       <div className="p-3">
         <h3>DApp Configuration</h3>
 
+        {/*
         <a onClick={() => this.setState({ loadDialogIsOpen: true })}>
           Load existing configuration
         </a>
+        */}
 
         <form onSubmit={this.handleSubmit}>
           <h4>Domain</h4>
