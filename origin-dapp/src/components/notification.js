@@ -153,7 +153,7 @@ const mapStateToProps = ({ users, wallet, config }) => {
     iconUrl: config.iconUrl,
     isWhiteLabel: config.isWhiteLabel,
     users,
-    wallet,
+    wallet
   }
 }
 
