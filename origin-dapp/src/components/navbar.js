@@ -195,7 +195,7 @@ const mapStateToProps = ({ app, config }) => {
     isWhiteLabel: config.isWhiteLabel,
     logoUrl: config.logoUrl,
     mobileDevice: app.mobileDevice,
-    showNav: app.showNav,
+    showNav: app.showNav
   }
 }
 
