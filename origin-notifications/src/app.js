@@ -121,7 +121,6 @@ app.post('/events', async (req, res) => {
   // Return 200 to the event-listener without
   // waiting for processing of the event.
   res.json({ status: 'ok' })
-  res.sendStatus(200)
 
   if (!listing || (!seller.address && !buyer.address)) {
     console.log(`Error: Missing data. Skipping ${eventDetails}`)
