@@ -31,7 +31,7 @@ const bridgeUrl = `${bridgeProtocol}://${bridgeDomain}`
 const attestationServerUrl = `${bridgeUrl}/api/attestations`
 const walletLinkerBaseUrl = mobilize(process.env.WALLET_LINKER_URL)
 const walletLinkerUrl = walletLinkerBaseUrl && `${walletLinkerBaseUrl}/api/wallet-linker`
-const ipfsSwarm = process.env.IPFS_SWARM
+const ipfsSwarm = mobilize(process.env.IPFS_SWARM)
 
 // See: https://gist.github.com/bitpshr/076b164843f0414077164fe7fe3278d9#file-provider-enable-js
 const getWeb3 = () => {
