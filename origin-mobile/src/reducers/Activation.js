@@ -26,7 +26,7 @@ export default function Activation(state = initialState, action = {}) {
           },
         },
       }
-console.log(obj)
+
       return obj
 
     case ActivationConstants.UPDATE_CAROUSEL_STATUS:
