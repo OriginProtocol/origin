@@ -53,7 +53,7 @@ class Notification extends Component {
     }
   }
 
-  notificationListingImageElement(listing) {
+  listingImageElement(listing) {
     const listingImageURL =
       listing.media && listing.media.length && listing.media[0].url
 
