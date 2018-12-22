@@ -1292,6 +1292,7 @@ textarea:-moz-ui-invalid {
 }
 
 .navigation-bar .navbar-brand img {
+  max-height: 40px;
   vertical-align: text-bottom;
 }
 
