@@ -31,11 +31,9 @@ class WalletModal extends Component {
             <View style={styles.navHeadingContainer}>
               <Text style={styles.heading}>Wallet Balances</Text>
             </View>
-            <View style={styles.navImageContainer}>
-              <TouchableOpacity onPress={onPress}>
-                <Image source={require(`${IMAGES_PATH}close-icon.png`)} style={styles.close} />
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity onPress={onPress} style={styles.navImageContainer}>
+              <Image source={require(`${IMAGES_PATH}close-icon.png`)} style={styles.close} />
+            </TouchableOpacity>
           </View>
           <View style={styles.addressContainer}>
             <Text style={styles.address}>{truncateAddress(address)}</Text>

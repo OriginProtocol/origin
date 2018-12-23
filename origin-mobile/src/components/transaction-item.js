@@ -122,8 +122,10 @@ class TransactionItem extends Component {
               {(!hasNotificationsEnabled && !hasSufficientFunds) ? 'Next Steps' : 'Next Step'}
             </Text>
             <View style={styles.nextSteps}>
-              <Text style={styles.step}>Enable Notifications</Text>
-              <Text style={{ color: 'white', fontWeight: '900' }}>></Text>
+              {!hasNotificationsEnabled && <Text style={styles.step}>Enable Notifications</Text>}
+              {!hasNotificationsEnabled && !hasSufficientFunds &&
+                <Text style={{ color: 'white', fontWeight: '900' }}>></Text>
+              }
               {!hasSufficientFunds && <Text style={styles.step}>Add Funds</Text>}
             </View>
             <OriginButton

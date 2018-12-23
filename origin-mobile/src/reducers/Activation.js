@@ -3,7 +3,7 @@ import { ActivationConstants } from 'actions/Activation'
 const initialState = {
   carouselCompleted: false,
   notifications: {
-    prompt: false,
+    prompt: null,
     permissions: {
       hard: {},
       soft: {},

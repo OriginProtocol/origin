@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, Image, Modal, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { storeNotificationsPermissions } from 'actions/Activation'
+import { promptForNotifications, storeNotificationsPermissions } from 'actions/Activation'
 
 import OriginButton from 'components/origin-button'
 
@@ -15,6 +15,7 @@ class NotifcationsModal extends Component {
     super(props)
 
     this.handlePress = this.handlePress.bind(this)
+    this.handleSkip = this.handleSkip.bind(this)
   }
 
   async handlePress() {
@@ -28,10 +29,88 @@ class NotifcationsModal extends Component {
     }
   }
 
+  handleSkip() {
+    this.props.promptForNotifications()
+  }
+
   render() {
     const { permissions, prompt } = this.props.activation.notifications
-    const perspective = 'seller' // 'buyer'
     const visible = prompt && !permissions.hard.alert
+    let instruction
+
+    switch(prompt) {
+      case 'createListing':
+        instruction = (
+          <Fragment>
+            {`We `}
+            <Text style={styles.emphatic}>highly recommend</Text>
+            {` enabling notifications so that you will know when an offer is made on your listing.`}
+          </Fragment>
+        )
+        break
+      case 'makeOffer':
+        instruction = (
+          <Fragment>
+            {`We `}
+            <Text style={styles.emphatic}>highly recommend</Text>
+            {` enabling notifications so that you will know when your offer is accepted.`}
+          </Fragment>
+        )
+        break
+      case 'withdrawOffer':
+        instruction = (
+          <Fragment>
+            {`We `}
+            <Text style={styles.emphatic}>highly recommend</Text>
+            {` enabling notifications so that you will know when someone sends you a message.`}
+          </Fragment>
+        )
+        break
+      case 'acceptOffer':
+        instruction = (
+          <Fragment>
+            {`We `}
+            <Text style={styles.emphatic}>highly recommend</Text>
+            {` enabling notifications so that you will know when your funds are released.`}
+          </Fragment>
+        )
+        break
+      case 'dispute':
+        instruction = (
+          <Fragment>
+            {`We `}
+            <Text style={styles.emphatic}>highly recommend</Text>
+            {` enabling notifications so that you will know when you recieve a response to your report of a problem.`}
+          </Fragment>
+        )
+        break
+      case 'finalize':
+        instruction = (
+          <Fragment>
+            {`We `}
+            <Text style={styles.emphatic}>highly recommend</Text>
+            {` enabling notifications so that you will know when you recieve a review.`}
+          </Fragment>
+        )
+        break
+      case 'addData':
+        instruction = (
+          <Fragment>
+            {`We `}
+            <Text style={styles.emphatic}>highly recommend</Text>
+            {` enabling notifications so that you will know when you recieve messages or new offers.`}
+          </Fragment>
+        )
+        break
+      default:
+        instruction = (
+          <Fragment>
+            {`We `}
+            <Text style={styles.emphatic}>highly recommend</Text>
+            {` enabling notifications so that you will know when you recieve messages and transaction updates.`}
+          </Fragment>
+        )
+    }
 
     return (
       <Modal
@@ -46,20 +125,7 @@ class NotifcationsModal extends Component {
             </View>
             <Text style={styles.heading}>Enable Notifications</Text>
             <Text style={styles.instruction}>
-              {perspective === 'buyer' &&
-                <Fragment>
-                  {`We `}
-                  <Text style={styles.emphatic}>highly recommend</Text>
-                  {` enabling notifications so that you will know when your offer is accepted.`}
-                </Fragment>
-              }
-              {perspective === 'seller' &&
-                <Fragment>
-                  {`We `}
-                  <Text style={styles.emphatic}>highly recommend</Text>
-                  {` enabling notifications so that you will know when an offer is made to purchase your listing.`}
-                </Fragment>
-              }
+              {instruction}
             </Text>
             <OriginButton
               onPress={this.handlePress}
@@ -69,7 +135,9 @@ class NotifcationsModal extends Component {
               title="Enable Notifications"
               type="success"
             />
-            <Text style={styles.skip}>{`I'll do this later`}</Text>
+            <TouchableOpacity onPress={this.handleSkip}>
+              <Text style={styles.skip}>{`I'll do this later`}</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -84,6 +152,7 @@ const mapStateToProps = ({ activation }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  promptForNotifications: () => dispatch(promptForNotifications(null)),
   storeNotificationsPermissions: permissions => dispatch(storeNotificationsPermissions(permissions)),
 })
 

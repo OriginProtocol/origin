@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Alert, Clipboard, Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import { promptForNotifications } from 'actions/Activation'
+
 import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
@@ -25,6 +27,12 @@ class WalletFundingScreen extends Component {
     },
   })
 
+  componentDidMount() {
+    const { method } = this.props.navigation.state.params.item.meta
+    
+    this.props.promptForNotifications(method)
+  }
+
   render() {
     const { address, balances, navigation } = this.props
     const { currency, item } = navigation.state.params
@@ -44,7 +52,7 @@ class WalletFundingScreen extends Component {
         <View style={styles.content}>
           <Text style={styles.contentHeading}>Add Funds</Text>
           <Text style={styles.contentBody}>
-            {`You don't have enough ${currencies[currency].name} in your wallet to complete this transaction. Please transfer ${currency} into your wallet.`}
+            {`You don't have enough ${currencies[currency].name} in your wallet to complete this transaction. Please transfer ${currency.toUpperCase()} into your wallet.`}
           </Text>
         </View>
         <View style={styles.buttonsContainer}>
@@ -87,7 +95,11 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(WalletFundingScreen)
+const mapDispatchToProps = dispatch => ({
+  promptForNotifications: perspective => dispatch(promptForNotifications(perspective)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(WalletFundingScreen)
 
 const styles = StyleSheet.create({
   address: {
