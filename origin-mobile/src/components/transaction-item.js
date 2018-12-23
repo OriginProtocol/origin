@@ -111,7 +111,7 @@ class TransactionItem extends Component {
                 </View>
               </View>
               <View style={styles.nav}>
-                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+                <Image source={require(`${IMAGES_PATH}nav-arrow.png`)} />
               </View>
             </View>
           </View>
@@ -122,11 +122,21 @@ class TransactionItem extends Component {
               {(!hasNotificationsEnabled && !hasSufficientFunds) ? 'Next Steps' : 'Next Step'}
             </Text>
             <View style={styles.nextSteps}>
-              {!hasNotificationsEnabled && <Text style={styles.step}>Enable Notifications</Text>}
-              {!hasNotificationsEnabled && !hasSufficientFunds &&
-                <Text style={{ color: 'white', fontWeight: '900' }}>></Text>
+              {!hasNotificationsEnabled &&
+                <View style={styles.stepContainer}>
+                  <Image source={require(`${IMAGES_PATH}chat-bubble.png`)} />
+                  <Text style={styles.step}>Enable Notifications</Text>
+                </View>
               }
-              {!hasSufficientFunds && <Text style={styles.step}>Add Funds</Text>}
+              {!hasNotificationsEnabled && !hasSufficientFunds &&
+                <Image source={require(`${IMAGES_PATH}white-arrow.png`)} style={styles.stepSeparator} />
+              }
+              {!hasSufficientFunds &&
+                <View style={styles.stepContainer}>
+                  <Image source={require(`${IMAGES_PATH}coin-stack.png`)} />
+                  <Text style={styles.step}>Add Funds</Text>
+                </View>
+              }
             </View>
             <OriginButton
               size="large"
@@ -266,6 +276,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eaf0f3',
     borderRadius: 7,
     flexDirection: 'row',
+    height: 38,
     marginBottom: 20,
   },
   pendingItem: {
@@ -282,16 +293,25 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
-  subject: {
-    fontFamily: 'Lato',
-    fontSize: 17,
-    marginBottom: 10,
-  },
   step: {
     fontFamily: 'Lato',
     fontSize: 14,
     fontWeight: '300',
+    marginLeft: 5,
+  },
+  stepContainer: {
+    flexDirection: 'row',
     margin: 10,
+  },
+  stepSeparator: {
+    height: 44,
+    marginTop: -3,
+    width: 22,
+  },
+  subject: {
+    fontFamily: 'Lato',
+    fontSize: 17,
+    marginBottom: 10,
   },
   thumbnail: {
     height: 50,

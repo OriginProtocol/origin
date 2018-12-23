@@ -59,10 +59,10 @@ export default class SettingsScreen extends Component {
                 <Text style={styles.text}>{n.name}</Text>
                 <View style={styles.iconContainer}>
                   {n.id === networkId &&
-                    <Image source={require(`${IMAGES_PATH}ogn-icon.png`)} style={styles.image} />
+                    <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
                   }
                   {n.id !== networkId &&
-                    <Image source={require(`${IMAGES_PATH}eth-icon.png`)} style={styles.image} />
+                    <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
                   }
                 </View>
               </View>
