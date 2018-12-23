@@ -20,6 +20,7 @@ import HomeScreen from 'screens/home'
 import MessagingScreen from 'screens/messaging'
 import ScanScreen from 'screens/scan'
 import SettingsScreen from 'screens/settings'
+import TransactionScreen from 'screens/transaction'
 import WalletFundingScreen from 'screens/wallet-funding'
 
 import { loadData } from './tools'
@@ -34,6 +35,7 @@ YellowBox.ignoreWarnings([
 ])
 
 const navigationOptions = ({ navigation }) => ({
+  headerBackTitle: ' ',
   headerStyle: {
     backgroundColor: 'white',
   },
@@ -41,6 +43,7 @@ const navigationOptions = ({ navigation }) => ({
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  Transaction: TransactionScreen,
   WalletFunding: WalletFundingScreen,
 }, {
   navigationOptions,

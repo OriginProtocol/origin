@@ -9,8 +9,6 @@ import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
 import { evenlySplitAddress, truncateAddress } from 'utils/user'
 
-import originWallet from '../OriginWallet'
-
 class WalletFundingScreen extends Component {
   constructor(props) {
     super(props)
@@ -19,7 +17,7 @@ class WalletFundingScreen extends Component {
   }
 
   static navigationOptions = ({ navigation }) => ({
-    title: `${navigation.state.params.currency.toUpperCase()} Balance`,
+    title: `${navigation.getParam('currency').toUpperCase()} Balance`,
     headerTitleStyle : {
       fontFamily: 'Poppins',
       fontSize: 17,
@@ -79,7 +77,7 @@ class WalletFundingScreen extends Component {
               Alert.alert('You must add funds to continue.')
             }}
             onPress={() => {
-              Alert.alert('To Do: navigate to the confirm/cancel screen')
+              navigation.navigate('Transaction', { item })
             }}
           />
         </View>
