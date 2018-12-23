@@ -35,7 +35,10 @@ class WalletFundingScreen extends Component {
     const { address, balances, navigation } = this.props
     const { currency, item } = navigation.state.params
     const balance = web3.utils.fromWei(balances[currency], 'ether')
-    const hasSufficientFunds = web3.utils.toBN(balances[currency]).gt(item.cost)
+    console.log('temp')
+    const fundsRequired = web3.utils.toBN(item.cost).add(web3.utils.toBN(item.gas_cost))
+    const hasSufficientFunds = web3.utils.toBN(balances[currency]).gt(fundsRequired)
+    const readableRequired = web3.utils.fromWei(fundsRequired)
 
     return (
       <View style={styles.container}>
@@ -50,7 +53,7 @@ class WalletFundingScreen extends Component {
         <View style={styles.content}>
           <Text style={styles.contentHeading}>Add Funds</Text>
           <Text style={styles.contentBody}>
-            {`You don't have enough ${currencies[currency].name} in your wallet to complete this transaction. Please transfer ${currency.toUpperCase()} into your wallet.`}
+            {`You don't have enough ${currencies[currency].name} in your wallet to complete this transaction. Please transfer at least ${Number(readableRequired).toFixed(5)} ${currency.toUpperCase()} into your wallet.`}
           </Text>
         </View>
         <View style={styles.buttonsContainer}>

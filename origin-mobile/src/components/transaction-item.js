@@ -9,9 +9,10 @@ const IMAGES_PATH = '../../assets/images/'
 class TransactionItem extends Component {
   render() {
     const { activation, item, address = '', balance, handleApprove, handlePress, handleReject, navigation, style } = this.props
-    const { cost, listing, meta, status, to, transaction_type } = item
+    const { cost, gas_cost, listing, meta, status, to, transaction_type } = item
     const hasNotificationsEnabled = activation.notifications.permissions.hard.alerts
-    const hasSufficientFunds = web3.utils.toBN(balance).gt(cost)
+    // To Do: account for possible commission
+    const hasSufficientFunds = web3.utils.toBN(balance).gt(web3.utils.toBN(cost).add(web3.utils.toBN(gas_cost)))
     const counterpartyAddress = (listing && listing.seller) || to
     const { price = { amount: '', currency: '' } } = listing
     const picture = listing && listing.media && listing.media[0]
@@ -22,7 +23,7 @@ class TransactionItem extends Component {
         case 'makeOffer':
           return status === 'completed' ? 'Offer made' : 'Offer canceled'
         case 'withdrawOffer':
-          return listing.seller === 'address' ?
+          return listing.seller === address ?
             (status === 'completed' ? 'Rejected offer' : 'Canceled offer rejection') :
             (status === 'completed' ? 'Withdrew offer' : 'Canceled offer withdrawal')
         case 'acceptOffer':
@@ -35,7 +36,7 @@ class TransactionItem extends Component {
           return status === 'completed' ? 'Reviewed sale' : 'Review canceled'
       }
     }
-
+console.log(item)
     return ['completed', 'rejected'].find(s => s === status) ? (
       <TouchableHighlight onPress={handlePress}>
         <View style={[ styles.listItem, style ]}>
