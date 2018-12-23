@@ -134,7 +134,8 @@ class TransactionItem extends Component {
               title={'Continue'}
               onPress={() => {
                 navigation.navigate('WalletFunding', {
-                  currency: price.currency,
+                  currency: price.currency.toLowerCase(),
+                  item,
                 })
               }}
             />

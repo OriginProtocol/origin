@@ -7,7 +7,7 @@ export default currencies = {
     name: 'Maker Dai',
   },
   eth: {
-    color: '#a27cff',
+    color: '#7a26f3',
     icon: require(`${IMAGES_PATH}eth-icon.png`),
     name: 'Ethereum',
   },

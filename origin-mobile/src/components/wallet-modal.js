@@ -6,6 +6,7 @@ import Currency from 'components/currency'
 import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
+import { truncateAddress } from 'utils/user'
 
 import originWallet from '../OriginWallet'
 
@@ -37,7 +38,7 @@ class WalletModal extends Component {
             </View>
           </View>
           <View style={styles.addressContainer}>
-            <Text style={styles.address}>{address}</Text>
+            <Text style={styles.address}>{truncateAddress(address)}</Text>
           </View>
           <ScrollView
             style={styles.svContainer}
