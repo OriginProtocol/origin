@@ -28,7 +28,7 @@ export function generateCalendarSlots(events) {
 }
 
 // Generate slots that will be used in the buyer's offer
-export function generateBuyerSlotStartEnd(selectionStart, viewType, slotIndex) {
+export function generateSlotStartEnd(selectionStart, viewType, slotIndex) {
   const slotLength = viewType === 'hourly' ? 'hour' : 'day'
   const start = moment(selectionStart).add(slotIndex, slotLength)
   const end = moment(selectionStart).add(slotIndex, slotLength).add(1, slotLength).subtract(1, 'second')

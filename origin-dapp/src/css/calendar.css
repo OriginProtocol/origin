@@ -49,13 +49,7 @@
   position: relative;
 }
 
-.rbc-day-bg span.override-icon {
-  position: absolute;
-  top: 0;
-  right: 9px;
-}
-
-.rbc-day-bg span.slot-price {
+.rbc-day-bg span {
   bottom: 0;
   left: 5px;
   position: absolute;
@@ -198,6 +192,10 @@
 
 .calendar-cta .cta-btns .col-md-6 {
   text-align: center;
+}
+
+.calendar-cta .edit-series-container {
+  padding-top: 25px;
 }
 
 /* Media queries */

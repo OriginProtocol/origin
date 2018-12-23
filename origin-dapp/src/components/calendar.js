@@ -14,7 +14,7 @@ import {
   getSlotsToReserve,
   getCleanEvents,
   getDateAvailabilityAndPrice,
-  generateBuyerSlotStartEnd
+  generateSlotStartEnd
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -24,9 +24,10 @@ class Calendar extends Component {
 
     this.getViewType = this.getViewType.bind(this)
     this.onSelectSlot = this.onSelectSlot.bind(this)
-    this.createSellerSlot = this.createSellerSlot.bind(this)
+    this.createSellerEvent = this.createSellerEvent.bind(this)
     this.handleBuyerSelection = this.handleBuyerSelection.bind(this)
     this.selectEvent = this.selectEvent.bind(this)
+    this.handleEditSeriesRadioChange = this.handleEditSeriesRadioChange.bind(this)
     this.handlePriceChange = this.handlePriceChange.bind(this)
     this.saveEvent = this.saveEvent.bind(this)
     this.deleteEvent = this.deleteEvent.bind(this)
@@ -55,7 +56,10 @@ class Calendar extends Component {
       buyerSelectedSlotData: null,
       defaultDate: new Date(),
       showSellerActionBtns: false,
-      hideRecurringEventCheckbox: false
+      hideRecurringEventCheckbox: false,
+      editAllEventsInSeries: true,
+      existingEventSelected: false,
+      clickedSlotInfo: null
     }
 
     this.localizer = BigCalendar.momentLocalizer(moment)
@@ -64,7 +68,7 @@ class Calendar extends Component {
   componentWillMount() {
     if (this.props.slots) {
       const events = generateCalendarSlots(this.props.slots).map((slot) =>  {
-        return { 
+        return {
           id: uuid(),
           start: moment(slot.startDate).toDate(),
           end: moment(slot.endDate).subtract(1, 'second').toDate(),
@@ -94,16 +98,21 @@ class Calendar extends Component {
     return this.props.viewType === 'daily' ? 'month' : 'week'
   }
 
-  onSelectSlot(slotInfo) {
+  onSelectSlot(clickedSlotInfo) {
+    this.setState({ clickedSlotInfo })
+
     if (this.props.userType === 'seller') {
-      const eventsInSlot = checkSlotForExistingEvents(slotInfo, this.state.events)
+      const eventsInSlot = checkSlotForExistingEvents(clickedSlotInfo, this.state.events)
 
       if (eventsInSlot.length) {
         let selectedEvent
 
         eventsInSlot.map(event => {
+          // If there's no selectedEvent, select this event
           if (!selectedEvent) {
             selectedEvent = event
+            // If there's already a selectedEvent, override it if this is a non-recurring event.
+            // Non-recurring events always override recurring events
           } else if (!event.isRecurringEvent) {
             selectedEvent = event
           }
@@ -111,44 +120,30 @@ class Calendar extends Component {
 
         this.selectEvent(selectedEvent)
       } else {
-        this.createSellerSlot(slotInfo)
+        this.createSellerEvent(clickedSlotInfo)
       }
     } else {
       // user is a buyer
-      this.handleBuyerSlotSelection(slotInfo)
+      this.handleBuyerSlotSelection(clickedSlotInfo)
     } 
   }
 
-  createSellerSlot(slotInfo, isOverrideEvent) {
+  createSellerEvent(eventInfo, isOverrideEvent) {
     // remove last slot time for hourly calendars - not sure why React Big Calendar includes
     // the next slot after the last selected time slot - seems like a bug.
     if (this.props.viewType === 'hourly') {
-      slotInfo.slots && slotInfo.slots.length && slotInfo.slots.splice(-1)
+      eventInfo.slots && eventInfo.slots.length && eventInfo.slots.splice(-1)
     }
 
-    let endDate = slotInfo.end
+    const endDate = this.props.viewType === 'daily' ?
+      moment(eventInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
+      eventInfo.end
 
-    if (!isOverrideEvent) {
-      endDate = this.props.viewType === 'daily' ?
-        moment(slotInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
-        slotInfo.end
-    }
-
-    let newEvent = {
-      ...slotInfo,
+    const newEvent = {
+      ...eventInfo,
       id: uuid(),
       end: endDate,
       allDay: false
-    }
-
-    if (isOverrideEvent) {
-      newEvent = {
-        ...newEvent,
-        price: 0,
-        isAvailable: true,
-        isRecurringEvent: false,
-        slots: []
-      }
     }
 
     this.setState({
@@ -158,7 +153,9 @@ class Calendar extends Component {
       ]
     })
 
-    this.selectEvent(newEvent, true)
+    const shouldSaveEvent = isOverrideEvent ? false : true
+
+    this.selectEvent(newEvent, shouldSaveEvent)
   }
 
   handleBuyerSelection(slotInfo) {
@@ -175,7 +172,7 @@ class Calendar extends Component {
         hasUnavailableSlot = true
       }
 
-      const slot = generateBuyerSlotStartEnd(slotInfo.start, this.props.viewType, slotIndex)
+      const slot = generateSlotStartEnd(slotInfo.start, this.props.viewType, slotIndex)
 
       selectionData.push({
         ...slot,
@@ -242,13 +239,34 @@ class Calendar extends Component {
       stateToSet.hideRecurringEventCheckbox = false
     }
 
-    this.setState(stateToSet)
-
-    // needs strict check for bool true value b/c the event gets passed in as a second param 
-    // when this method gets called by the calendar prop
-    if (shouldSaveEvent === true) {
+    if (shouldSaveEvent) {
       this.saveEvent(event)
+      stateToSet.existingEventSelected = false
+    } else {
+      stateToSet.existingEventSelected = true
     }
+
+    this.setState(stateToSet)
+  }
+
+  handleEditSeriesRadioChange(event) {
+    const editAllEventsInSeries = event.target.value === 'true'
+
+    if (!editAllEventsInSeries) {
+      const { start, end } = generateSlotStartEnd(this.state.clickedSlotInfo.start, this.props.viewType, 0)
+
+      this.setState({
+        selectedEvent: {
+          ...this.state.selectedEvent,
+          start,
+          end
+        }
+      })
+    }
+
+    this.setState({
+      editAllEventsInSeries
+    })
   }
 
   handlePriceChange(event) {
@@ -263,6 +281,21 @@ class Calendar extends Component {
 
   saveEvent(selectedEvent) {
     const thisEvent = (selectedEvent && selectedEvent.id) ? selectedEvent : this.state.selectedEvent
+
+    if (thisEvent.isRecurringEvent && !this.state.editAllEventsInSeries) {
+      const { start, end, isAvailable, price } = thisEvent
+      const overrideEvent = {
+        start,
+        end,
+        isAvailable,
+        price,
+        slots: [],
+        isRecurringEvent: false
+      }
+
+      return this.createSellerEvent(overrideEvent, true)
+    }
+
     const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
     const stateToSet = {
       events: [...allOtherEvents, thisEvent],
@@ -379,15 +412,6 @@ class Calendar extends Component {
 
     return (
       <div className={`rbc-day-bg ${availability}${isSelected}`}>
-        {slotData.isRecurringEvent &&
-          <span
-            className="override-icon"
-            title="Override this recurring event"
-            onClick={() => this.createSellerSlot(slotData, true)}
-          >
-            &#x25d9;
-          </span>
-        }
         {slotData.isAvailable &&
           <span className="slot-price">{slotData.price ? `${slotData.price} ETH` : `0 ETH`}</span>
         }
@@ -468,7 +492,7 @@ class Calendar extends Component {
   render() {
     const selectedEvent = this.state.selectedEvent
     const { viewType, userType, offers } = this.props
-    const { events } = this.state
+    const { events, editAllEventsInSeries, existingEventSelected } = this.state
 
     return (
       <div>
@@ -636,6 +660,32 @@ class Calendar extends Component {
                         </Fragment>
                       }
                     </div>
+                    {selectedEvent.isRecurringEvent && existingEventSelected &&
+                      <div className="edit-series-container">
+                        <label className="form-check-label" htmlFor="editAllEvents">
+                          Edit all events in this series
+                        </label>
+                        <input
+                          id="editAllEvents"
+                          type="radio"
+                          value={true}
+                          checked={editAllEventsInSeries}
+                          onChange={this.handleEditSeriesRadioChange}
+                          name="editRecurringEventRadio"
+                        />
+                        <label className="form-check-label" htmlFor="editOnlyThisEvent">
+                          Edit only this time slot
+                        </label>
+                        <input
+                          id="editOnlyThisEvent"
+                          type="radio"
+                          value={false}
+                          checked={!editAllEventsInSeries}
+                          onChange={this.handleEditSeriesRadioChange}
+                          name="editRecurringEventRadio"
+                        />
+                      </div>
+                    }
                     {this.state.showSellerActionBtns &&
                       <div className="cta-btns row">
                         <div className="col-md-6">
