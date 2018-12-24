@@ -12,7 +12,7 @@ const IMAGES_PATH = '../../assets/images/'
 class TransactionItem extends Component {
   render() {
     const { activation, item, address = '', handleApprove, handlePress, handleReject, navigation, style, wallet } = this.props
-    const { cost, gas_cost, listing, meta, status, to, transaction_type } = item
+    const { cost, gas_cost, listing, meta, status, to } = item
     const hasNotificationsEnabled = activation.notifications.permissions.hard.alerts
     // To Do: account for possible commission
     console.log(wallet, item)
@@ -20,27 +20,34 @@ class TransactionItem extends Component {
     const counterpartyAddress = (listing && listing.seller) || to
     const { price = { amount: '', currency: '' } } = listing
     const picture = listing && listing.media && listing.media[0]
-    const activitySummary = status => {
-      switch(meta.method) {
-        case 'createListing':
-          return status === 'completed' ? 'Created listing' : 'Canceled listing'
-        case 'makeOffer':
-          return status === 'completed' ? 'Offer made' : 'Offer canceled'
-        case 'withdrawOffer':
-          return listing.seller === address ?
-            (status === 'completed' ? 'Rejected offer' : 'Canceled offer rejection') :
-            (status === 'completed' ? 'Withdrew offer' : 'Canceled offer withdrawal')
-        case 'acceptOffer':
-          return status === 'completed' ? 'Offer accepted' : 'Offer acceptance canceled'
-        case 'dispute':
-          return status === 'completed' ? 'Dispute started' : 'Dispute canceled'
-        case 'finalize':
-          return status === 'completed' ? 'Funds released' : 'Release of funds canceled'
-        case 'addData':
-          return status === 'completed' ? 'Reviewed sale' : 'Review canceled'
-      }
+    let activitySummary, heading
+
+    switch(meta.method) {
+      case 'createListing':
+        activitySummary = status === 'completed' ? 'Created listing' : 'Canceled listing'
+        heading = 'Listing in progress'
+      case 'makeOffer':
+        activitySummary = status === 'completed' ? 'Offer made' : 'Offer canceled'
+        heading = 'Purchase in progress'
+      case 'withdrawOffer':
+        activitySummary = listing.seller === address ?
+          (status === 'completed' ? 'Rejected offer' : 'Canceled offer rejection') :
+          (status === 'completed' ? 'Withdrew offer' : 'Canceled offer withdrawal')
+        heading = listing.seller === address ? 'Rejecting an offer' : 'Withdrawing an offer'
+      case 'acceptOffer':
+        activitySummary = status === 'completed' ? 'Offer accepted' : 'Offer acceptance canceled'
+        heading = 'Accepting an offer'
+      case 'dispute':
+        activitySummary = status === 'completed' ? 'Dispute started' : 'Dispute canceled'
+        heading = 'Reporting a problem'
+      case 'finalize':
+        activitySummary = status === 'completed' ? 'Funds released' : 'Release of funds canceled'
+        heading = 'Releasing funds'
+      case 'addData':
+        activitySummary = status === 'completed' ? 'Reviewed sale' : 'Review canceled'
+        heading = 'Leaving a review'
     }
-console.log(item)
+
     return ['completed', 'rejected'].find(s => s === status) ? (
       <TouchableHighlight onPress={handlePress}>
         <View style={[ styles.listItem, style ]}>
@@ -49,7 +56,7 @@ console.log(item)
           <View style={styles.content}>
             {listing &&
               <View>
-                <Text style={styles.imperative}>{activitySummary(status)}</Text>
+                <Text style={styles.imperative}>{activitySummary}</Text>
                 <View style={styles.counterparties}>
                   <Address address={address} label="From Address" style={styles.address} />
                   <Image source={require(`${IMAGES_PATH}arrow-forward-material.png`)} style={styles.arrow} />
@@ -85,13 +92,7 @@ console.log(item)
       </TouchableHighlight>
     ) : (
       <View style={[ styles.pendingItem, style ]}>
-        <Text style={styles.heading}>
-          {
-            transaction_type === 'purchase' ?
-            'Offer in progress' :
-            'Listing in progress'
-          }
-        </Text>
+        <Text style={styles.heading}>{heading}</Text>
         <TouchableOpacity activeOpacity={0.8} style={styles.listingCardTouch} onPress={() => {
           navigation.navigate('Transaction', { item })
         }}>
@@ -155,10 +156,14 @@ console.log(item)
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={'Continue'}
               onPress={() => {
-                navigation.navigate('WalletFunding', {
-                  currency: price.currency.toLowerCase(),
-                  item,
-                })
+                if (hasSufficientFunds) {
+                  navigation.navigate('Transaction', { item })
+                } else {
+                  navigation.navigate('WalletFunding', {
+                    currency: price.currency.toLowerCase(),
+                    item,
+                  })
+                }
               }}
             />
           </Fragment>
