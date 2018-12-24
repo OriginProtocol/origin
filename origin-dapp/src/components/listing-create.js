@@ -1386,20 +1386,6 @@ class ListingCreate extends Component {
               </Modal>
             )}
           </div>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <Calendar
-            slots={ [] }
-            userType="seller"
-            viewType={ 'daily' }
-            step={ 60 }
-            onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
-            onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
-          />
         </div>
         <Prompt
           when={step !== this.STEP.PICK_CATEGORY && step !== this.STEP.SUCCESS}
