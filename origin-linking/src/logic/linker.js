@@ -247,7 +247,7 @@ class Linker {
     }
   }
 
-  getMessageFromMeta(meta) {
+  getMessageFromMeta(meta, account) {
     if (meta.subMeta)
     {
       meta = subMeta
@@ -255,7 +255,26 @@ class Linker {
 
     if (meta.listing)
     {
-        return `${meta.method} pending for ${meta.listing.title}`
+      switch(meta.method) {
+        case 'createListing':
+          return `Confirm your listing for ${meta.listing.title}`
+        case 'makeOffer':
+          return `Confirm your offer for ${meta.listing.title}`
+        case 'withdrawOffer':
+          return meta.listing.seller === account ?
+            `Confirm the rejection of an offer for ${meta.listing.title}` :
+            `Confirm the withdrawal of an offer for ${meta.listing.title}`
+        case 'acceptOffer':
+          return `Confirm the acceptance of an offer for ${meta.listing.title}`
+        case 'dispute':
+          return `Confirm your reporting of a problem ${meta.listing.title}`
+        case 'finalize':
+          return `Confirm the release of funds for ${meta.listing.title}`
+        case 'addData':
+          return `Confirm your review from selling ${meta.listing.title}`
+        default:
+          return `${meta.method} pending for ${meta.listing.title}`
+      }
     }
     else
     {
@@ -278,7 +297,7 @@ class Linker {
     await this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
     // send push notification via APN or fcm
-    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta), {call_id})
+    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta, account), {call_id})
   }
 
   async walletCalled(walletToken, callId, linkId, sessionToken, result) {
