@@ -45,6 +45,7 @@ class Calendar extends Component {
     this.nextPeriod = this.nextPeriod.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.renderRecurringEvents = this.renderRecurringEvents.bind(this)
+    this.shouldShowRecurringEventCheckbox = this.shouldShowRecurringEventCheckbox.bind(this)
 
     this.state = {
       events: [],
@@ -129,33 +130,42 @@ class Calendar extends Component {
   }
 
   createSellerEvent(eventInfo, isOverrideEvent) {
-    // remove last slot time for hourly calendars - not sure why React Big Calendar includes
-    // the next slot after the last selected time slot - seems like a bug.
-    if (this.props.viewType === 'hourly') {
-      eventInfo.slots && eventInfo.slots.length && eventInfo.slots.splice(-1)
+    if (isOverrideEvent) {
+      this.setState({
+        events: [
+          ...this.state.events,
+          eventInfo
+        ]
+      })
+
+      this.selectEvent(eventInfo, false)
+    } else {
+      // remove last slot time for hourly calendars - not sure why React Big Calendar includes
+      // the next slot after the last selected time slot - seems like a bug.
+      if (this.props.viewType === 'hourly') {
+        eventInfo.slots && eventInfo.slots.length && eventInfo.slots.splice(-1)
+      }
+
+      const endDate = this.props.viewType === 'daily' ?
+        moment(eventInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
+        eventInfo.end
+
+      const newEvent = {
+        ...eventInfo,
+        id: uuid(),
+        end: endDate,
+        allDay: false
+      }
+
+      this.setState({
+        events: [
+          ...this.state.events,
+          newEvent
+        ]
+      })
+
+      this.selectEvent(newEvent, true)
     }
-
-    const endDate = this.props.viewType === 'daily' ?
-      moment(eventInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
-      eventInfo.end
-
-    const newEvent = {
-      ...eventInfo,
-      id: uuid(),
-      end: endDate,
-      allDay: false
-    }
-
-    this.setState({
-      events: [
-        ...this.state.events,
-        newEvent
-      ]
-    })
-
-    const shouldSaveEvent = isOverrideEvent ? false : true
-
-    this.selectEvent(newEvent, shouldSaveEvent)
   }
 
   handleBuyerSelection(slotInfo) {
@@ -289,8 +299,10 @@ class Calendar extends Component {
         end,
         isAvailable,
         price,
-        slots: [],
-        isRecurringEvent: false
+        slots: this.state.clickedSlotInfo.slots,
+        isRecurringEvent: false,
+        id: uuid(),
+        allDay: false
       }
 
       return this.createSellerEvent(overrideEvent, true)
@@ -489,6 +501,18 @@ class Calendar extends Component {
     })
   }
 
+  shouldShowRecurringEventCheckbox() {
+    if (this.state.selectedEvent.isRecurringEvent && this.state.existingEventSelected) {
+      return this.state.editAllEventsInSeries
+    } else {
+      if (!this.state.hideRecurringEventCheckbox) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
+
   render() {
     const selectedEvent = this.state.selectedEvent
     const { viewType, userType, offers } = this.props
@@ -597,7 +621,7 @@ class Calendar extends Component {
                 </div>
                 {userType === 'seller' &&
                   <Fragment>
-                    {!this.state.hideRecurringEventCheckbox &&
+                    {this.shouldShowRecurringEventCheckbox() &&
                       <div className="form-check">
                         <input
                           className="form-check-input"
