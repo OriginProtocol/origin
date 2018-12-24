@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 
+import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
 
 export default class SignItem extends Component {
   render() {
-    const { item, address, handleApprove, handlePress, handleReject, style } = this.props
+    const { item, handleApprove, handlePress, handleReject, style } = this.props
     // placeholders
-    const myAddress = address
     const msg = item.sign && item.sign.params.msg
     const status = item.status
 
@@ -38,11 +38,6 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     paddingTop: '5%',
-  },
-  address: {
-    color: '#3e5d77',
-    fontSize: 12,
-    fontWeight: '300',
   },
   arrow: {
     marginLeft: 10,

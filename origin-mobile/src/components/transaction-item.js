@@ -2,17 +2,21 @@ import React, { Component, Fragment } from 'react'
 import { Alert, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import Address from 'components/address'
 import OriginButton from 'components/origin-button'
+
+import { sufficientFunds } from 'utils/transaction'
 
 const IMAGES_PATH = '../../assets/images/'
 
 class TransactionItem extends Component {
   render() {
-    const { activation, item, address = '', balance, handleApprove, handlePress, handleReject, navigation, style } = this.props
+    const { activation, item, address = '', handleApprove, handlePress, handleReject, navigation, style, wallet } = this.props
     const { cost, gas_cost, listing, meta, status, to, transaction_type } = item
     const hasNotificationsEnabled = activation.notifications.permissions.hard.alerts
     // To Do: account for possible commission
-    const hasSufficientFunds = web3.utils.toBN(balance).gt(web3.utils.toBN(cost).add(web3.utils.toBN(gas_cost)))
+    console.log(wallet, item)
+    const hasSufficientFunds = sufficientFunds(wallet, item)
     const counterpartyAddress = (listing && listing.seller) || to
     const { price = { amount: '', currency: '' } } = listing
     const picture = listing && listing.media && listing.media[0]
@@ -47,9 +51,9 @@ console.log(item)
               <View>
                 <Text style={styles.imperative}>{activitySummary(status)}</Text>
                 <View style={styles.counterparties}>
-                  <Text style={styles.address}>{`${address.slice(0, 4)}...${address.slice(38)}`}</Text>
+                  <Address address={address} label="From Address" style={styles.address} />
                   <Image source={require(`${IMAGES_PATH}arrow-forward-material.png`)} style={styles.arrow} />
-                  <Text style={styles.address}>{`${counterpartyAddress.slice(0, 4)}...${counterpartyAddress.slice(38)}`}</Text>
+                  <Address address={counterpartyAddress} label="To Address" style={styles.address} />
                 </View>
               </View>
             }
@@ -57,10 +61,13 @@ console.log(item)
               <View>
                 <Text style={styles.imperative}>called <Text style={styles.subject}>{meta.contract}.{meta.method}</Text></Text>
                 <View style={styles.counterparties}>
-                  <Text style={styles.address}>{`${address.slice(0, 4)}...${address.slice(38)}`}</Text>
+                  <Address address={address} label="From Address" style={styles.address} />
                   {cost && <Text style={styles.imperative}>Value: {cost} Eth</Text>}
                   <Text style={styles.imperative}>Gas: {gas_cost}</Text>
-                  <Text style={styles.address}>{meta.contract}({`${meta.to.slice(0, 4)}...${meta.to.slice(38)}`})</Text>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.address}>{meta.contract}</Text>
+                    <Address address={meta.to} label="To Address" style={styles.address} />
+                  </View>
                   {status && <Text style={styles.address}>Status: {status}</Text>}
                 </View>
               </View>
@@ -85,7 +92,9 @@ console.log(item)
             'Listing in progress'
           }
         </Text>
-        <TouchableOpacity activeOpacity={0.8} style={styles.listingCardTouch} onPress={handlePress}>
+        <TouchableOpacity activeOpacity={0.8} style={styles.listingCardTouch} onPress={() => {
+          navigation.navigate('Transaction', { item })
+        }}>
           <View style={styles.listingCard}>
             {picture &&
               <View style={styles.imageContainer}>
@@ -101,9 +110,9 @@ console.log(item)
               <View style={styles.detailsContainer}>
                 <Text style={styles.subject}>{listing.title}</Text>
                 <View style={styles.counterparties}>
-                  <Text style={styles.address}>{`${address.slice(0, 4)}...${address.slice(38)}`}</Text>
+                  <Address address={address} label="From Address" style={styles.address} />
                   <Image source={require(`${IMAGES_PATH}arrow-forward-material.png`)} style={styles.arrow} />
-                  <Text style={styles.address}>{`${counterpartyAddress.slice(0, 4)}...${counterpartyAddress.slice(38)}`}</Text>
+                  <Address address={counterpartyAddress} label="To Address" style={styles.address} />
                 </View>
                 <View style={styles.price}>
                   <Image source={require(`${IMAGES_PATH}eth-icon.png`)} style={styles.currencyIcon} />
@@ -172,10 +181,8 @@ console.log(item)
   }
 }
 
-const mapStateToProps = ({ activation }) => {
-  return {
-    activation,
-  }
+const mapStateToProps = ({ activation, wallet }) => {
+  return { activation, wallet }
 }
 
 export default connect(mapStateToProps)(TransactionItem)

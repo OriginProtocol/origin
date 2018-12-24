@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
+import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
@@ -60,20 +61,16 @@ export default class TransactionModal extends Component {
             </View>
           }
           <View style={styles.counterparties}>
-            <TouchableOpacity onPress={() => Alert.alert('From ETH Address', address)}>
-              <View style={styles.party}>
-                <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
-                <Text style={styles.address}>{`${address.slice(0, 4)}...${address.slice(38)}`}</Text>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.party}>
+              <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
+              <Address address={address} label="From Address" style={styles.address} />
+            </View>
             <Image source={require(`${IMAGES_PATH}arrow-forward-material.png`)} style={styles.arrow} />
             {counterpartyAddress &&
-              <TouchableOpacity onPress={() => Alert.alert('To ETH Address', counterpartyAddress)}>
-                <View style={styles.party}>
-                  <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
-                  <Text style={styles.address}>{`${counterpartyAddress.slice(0, 4)}...${counterpartyAddress.slice(38)}`}</Text>
-                </View>
-              </TouchableOpacity>
+              <View style={styles.party}>
+                <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
+                <Address address={counterpartyAddress} label="To Address" style={styles.address} />
+              </View>
             }
           </View>
           {!hasSufficientFunds &&
@@ -81,9 +78,7 @@ export default class TransactionModal extends Component {
               <Text style={styles.warning}>
                 You don’t have enough funds to complete this transaction. Please add funds to your wallet.
               </Text>
-              <Text style={styles.wallet}>
-                {address}
-              </Text>
+              <Address address={address} label="Wallet Address" style={styles.wallet} />
             </View>
           }
           {hasSufficientFunds &&

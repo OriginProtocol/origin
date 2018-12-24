@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { Alert, Clipboard, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import Address from 'components/address'
 import Currency from 'components/currency'
 import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
-import { truncateAddress } from 'utils/user'
 
 import originWallet from '../OriginWallet'
 
@@ -36,7 +36,7 @@ class WalletModal extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.addressContainer}>
-            <Text style={styles.address}>{truncateAddress(address)}</Text>
+            <Address address={address} label={'Wallet Address'} style={styles.address} />
           </View>
           <ScrollView
             style={styles.svContainer}

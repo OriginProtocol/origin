@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { promptForNotifications } from 'actions/Activation'
 
+import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
-import { truncateAddress } from 'utils/user'
+import { sufficientFunds } from 'utils/transaction'
 
 import originWallet from '../OriginWallet'
 
@@ -62,6 +63,14 @@ class TransactionScreen extends Component {
     })
   }
 
+  componentDidMount() {
+    const { activation, navigation } = this.props
+    const hasNotificationsEnabled = activation.notifications.permissions.hard.alerts
+    const { method } = navigation.state.params.item.meta
+    
+    !hasNotificationsEnabled && this.props.promptForNotifications(method)
+  }
+
   handleApprove() {
     const item = this.props.navigation.getParam('item')
 
@@ -75,21 +84,28 @@ class TransactionScreen extends Component {
   }
 
   render() {
-    const { address, navigation } = this.props
+    const { navigation, wallet } = this.props
     const item = navigation.getParam('item')
     const { cost, gas_cost, listing, to } = item
     const counterpartyAddress = (listing && listing.seller) || to
     const { price = { amount: '', currency: '' } } = listing
     const picture = listing && listing.media && listing.media[0]
+    const hasSufficientFunds = sufficientFunds(wallet, item)
 
     return (
       <View style={styles.container}>
         <View style={styles.summary}>
           <Text style={styles.subject}>{listing.title}</Text>
-          <Text style={styles.summaryText}>{`From: ${truncateAddress(address)}`}</Text>
-          <Text style={styles.summaryText}>{`To: ${truncateAddress(counterpartyAddress)}`}</Text>
-          <Text style={styles.summaryText}>{`Value Transfer: ${web3.utils.fromWei(cost, 'ether')}`}</Text>
-          <Text style={styles.summaryText}>{`Gas Cost: ${web3.utils.fromWei(gas_cost, 'ether')}`}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.summaryText}>From: </Text>
+            <Address address={wallet.address} label={'From Address'} style={styles.summaryText} />
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.summaryText}>To: </Text>
+            <Address address={counterpartyAddress} label={'To Address'} style={styles.summaryText} />
+          </View>
+          <Text style={styles.summaryText}>{`Value Transfer: ${web3.utils.fromWei(web3.utils.toBN(cost), 'ether')}`}</Text>
+          <Text style={styles.summaryText}>{`Gas Cost: ${web3.utils.fromWei(web3.utils.toBN(gas_cost), 'ether')}`}</Text>
           {picture && <Image source={{ uri: picture.url }} style={styles.thumbnail} />}
           <View style={styles.price}>
             <Image source={currencies[price.currency.toLowerCase()].icon} style={styles.currencyIcon} />
@@ -97,35 +113,60 @@ class TransactionScreen extends Component {
             <Text style={styles.abbreviation}>{price.currency}</Text>
           </View>
         </View>
-        <View style={styles.content}>
-          <Text style={styles.contentBody}>This transaction will be submitted to the blockchain.</Text>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Confirm'}
-            onPress={this.handleApprove}
-          />
-          <TouchableOpacity onPress={this.handleReject}>
-            <Text style={styles.cancel}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
+        {hasSufficientFunds &&
+          <Fragment>
+            <View style={styles.content}>
+              <Text style={styles.contentBody}>This transaction will be submitted to the blockchain.</Text>
+            </View>
+            <View style={styles.buttonsContainer}>
+              <OriginButton
+                size="large"
+                type="primary"
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={'Confirm'}
+                onPress={this.handleApprove}
+              />
+              <TouchableOpacity onPress={this.handleReject}>
+                <Text style={styles.cancel}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </Fragment>
+        }
+        {!hasSufficientFunds &&
+          <View style={styles.buttonsContainer}>
+            <Text style={styles.warning}>
+              {`You don't have enough ${currencies[price.currency.toLowerCase()].name} in your wallet to complete this transaction.`}
+            </Text>
+            <OriginButton
+              size="large"
+              type="primary"
+              style={styles.button}
+              textStyle={{ fontSize: 18, fontWeight: '900' }}
+              title={'Add Funds'}
+              onPress={() => {
+                navigation.navigate('WalletFunding', {
+                  currency: price.currency.toLowerCase(),
+                  item,
+                })
+              }}
+            />
+          </View>
+        }
       </View>
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    address: state.wallet.address,
-    balances: state.wallet.balances,
-  }
+const mapStateToProps = ({ activation, wallet }) => {
+  return { activation, wallet }
 }
 
-export default connect(mapStateToProps)(TransactionScreen)
+const mapDispatchToProps = dispatch => ({
+  promptForNotifications: method => dispatch(promptForNotifications(method)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionScreen)
 
 const styles = StyleSheet.create({
   abbreviation: {
@@ -182,7 +223,6 @@ const styles = StyleSheet.create({
   },
   price: {
     alignItems: 'flex-end',
-    flex: 1,
     flexDirection: 'row',
   },
   subject: {
@@ -205,5 +245,11 @@ const styles = StyleSheet.create({
     height: 50,
     marginRight: 10,
     width: 50,
+  },
+  warning: {
+    fontFamily: 'Lato',
+    fontWeight: '300',
+    marginBottom: 20,
+    textAlign: 'center',
   },
 })

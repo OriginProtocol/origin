@@ -4,18 +4,14 @@ import { connect } from 'react-redux'
 
 import { promptForNotifications } from 'actions/Activation'
 
+import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
-import { evenlySplitAddress, truncateAddress } from 'utils/user'
+import { sufficientFunds } from 'utils/transaction'
+import { evenlySplitAddress } from 'utils/user'
 
 class WalletFundingScreen extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {}
-  }
-
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.getParam('currency').toUpperCase()} Balance`,
     headerTitleStyle : {
@@ -26,18 +22,19 @@ class WalletFundingScreen extends Component {
   })
 
   componentDidMount() {
-    const { method } = this.props.navigation.state.params.item.meta
+    const { activation, navigation } = this.props
+    const hasNotificationsEnabled = activation.notifications.permissions.hard.alerts
+    const { method } = navigation.state.params.item.meta
     
-    this.props.promptForNotifications(method)
+    !hasNotificationsEnabled && this.props.promptForNotifications(method)
   }
 
   render() {
-    const { address, balances, navigation } = this.props
+    const { navigation, wallet } = this.props
+    const { address, balances } = wallet
     const { currency, item } = navigation.state.params
     const balance = web3.utils.fromWei(balances[currency], 'ether')
-    console.log('temp')
     const fundsRequired = web3.utils.toBN(item.cost).add(web3.utils.toBN(item.gas_cost))
-    const hasSufficientFunds = web3.utils.toBN(balances[currency]).gt(fundsRequired)
     const readableRequired = web3.utils.fromWei(fundsRequired)
 
     return (
@@ -48,7 +45,7 @@ class WalletFundingScreen extends Component {
           </Text>
           <Image source={currencies[currency].icon} style={styles.icon} />
           <Text style={styles.balance}>{Number(balance).toFixed(5)}</Text>
-          <Text style={styles.address}>{truncateAddress(address)}</Text>
+          <Address address={address} label="Wallet Address" style={styles.address} />
         </View>
         <View style={styles.content}>
           <Text style={styles.contentHeading}>Add Funds</Text>
@@ -70,7 +67,7 @@ class WalletFundingScreen extends Component {
             }}
           />
           <OriginButton
-            disabled={!hasSufficientFunds}
+            disabled={!sufficientFunds(wallet, item)}
             size="large"
             type="primary"
             style={styles.button}
@@ -89,15 +86,12 @@ class WalletFundingScreen extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    address: state.wallet.address,
-    balances: state.wallet.balances,
-  }
+const mapStateToProps = ({ activation, wallet }) => {
+  return { activation, wallet }
 }
 
 const mapDispatchToProps = dispatch => ({
-  promptForNotifications: perspective => dispatch(promptForNotifications(perspective)),
+  promptForNotifications: method => dispatch(promptForNotifications(method)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletFundingScreen)

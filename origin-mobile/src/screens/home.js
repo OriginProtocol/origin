@@ -120,11 +120,9 @@ class HomeScreen extends Component {
                     <TransactionItem
                       item={item}
                       address={address}
-                      balance={eth}
                       navigation={navigation}
-                      handleApprove={() => originWallet.handleEvent(item) }
-                      handlePress={() => this.props.setActiveEvent(item)}
-                      handleReject={() => originWallet.handleReject(item) }
+                      handleApprove={() => originWallet.handleEvent(item)}
+                      handleReject={() => originWallet.handleReject(item)}
                     />
                   )
                 case 'link':
@@ -143,9 +141,9 @@ class HomeScreen extends Component {
                     address={address}
                     balance={eth}
                     navigation={navigation}
-                    handleApprove={() => originWallet.handleEvent(item) }
+                    handleApprove={() => originWallet.handleEvent(item)}
                     handlePress={() => this.props.setActiveEvent(item)}
-                    handleReject={() => originWallet.handleReject(item) }
+                    handleReject={() => originWallet.handleReject(item)}
                     />
                   )
                 default:
@@ -155,7 +153,8 @@ class HomeScreen extends Component {
               switch(item.action) {
                 case 'transaction':
                   return (
-                    <TransactionItem item={item} 
+                    <TransactionItem
+                      item={item} 
                       address={address}
                       balance={eth}
                       navigation={navigation}
@@ -163,7 +162,8 @@ class HomeScreen extends Component {
                   )
                 case 'sign':
                   return (
-                    <SignItem item={item} 
+                    <SignItem
+                      item={item} 
                       address={address}
                       balance={eth}
                       navigation={navigation}
@@ -171,7 +171,8 @@ class HomeScreen extends Component {
                   )
                 case 'link':
                   return (
-                    <DeviceItem item={item}
+                    <DeviceItem
+                      item={item}
                       address={address}
                       balance={eth}
                       navigation={navigation}

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
+import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
@@ -35,12 +36,10 @@ export default class SignModal extends Component {
             </Text>
           </View>
           <View style={styles.counterparties}>
-            <TouchableOpacity onPress={() => Alert.alert('From ETH Address', address)}>
-              <View style={styles.party}>
-                <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
-                <Text style={styles.address}>{`${address.slice(0, 4)}...${address.slice(38)}`}</Text>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.party}>
+              <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
+              <Address address={address} label="From Address" style={styles.address} />
+            </View>
           </View>
           <View style={styles.fundingAvailable}>
             <View style={{ marginBottom: 20 }}>

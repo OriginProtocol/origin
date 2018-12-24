@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Modal, TouchableOpacity, Alert, StyleSheet, Text, View, TextInput, WebView } from 'react-native'
 import { connect } from 'react-redux'
 
+import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 
 import originWallet from '../OriginWallet'
@@ -37,7 +38,7 @@ class WalletScreen extends Component {
           <Text style={[styles.text, styles.eth]}>{amountETH}</Text>
           <Text style={[styles.text, styles.eth]}>ETH</Text>
           <Text style={[styles.text, styles.usd]}>{amountUSD} USD</Text>
-          <Text style={[styles.text, styles.address]}>{address}</Text>
+          <Address address={address} label="Wallet Address" style={[styles.text, styles.address]} />
           <View style={styles.buttonContainer}>
             {originWallet.isLocalApi() && <View>
               <Text style={[styles.text, styles.smallLabel]}>Api host IP:</Text>
