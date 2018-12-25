@@ -26,26 +26,36 @@ class TransactionItem extends Component {
       case 'createListing':
         activitySummary = status === 'completed' ? 'Created listing' : 'Canceled listing'
         heading = 'Listing in progress'
+        break
       case 'makeOffer':
         activitySummary = status === 'completed' ? 'Offer made' : 'Offer canceled'
         heading = 'Purchase in progress'
+        break
       case 'withdrawOffer':
         activitySummary = listing.seller === address ?
           (status === 'completed' ? 'Rejected offer' : 'Canceled offer rejection') :
           (status === 'completed' ? 'Withdrew offer' : 'Canceled offer withdrawal')
         heading = listing.seller === address ? 'Rejecting an offer' : 'Withdrawing an offer'
+        break
       case 'acceptOffer':
         activitySummary = status === 'completed' ? 'Offer accepted' : 'Offer acceptance canceled'
         heading = 'Accepting an offer'
+        break
       case 'dispute':
         activitySummary = status === 'completed' ? 'Dispute started' : 'Dispute canceled'
         heading = 'Reporting a problem'
+        break
       case 'finalize':
         activitySummary = status === 'completed' ? 'Funds released' : 'Release of funds canceled'
         heading = 'Releasing funds'
+        break
       case 'addData':
         activitySummary = status === 'completed' ? 'Reviewed sale' : 'Review canceled'
         heading = 'Leaving a review'
+        break
+      default:
+        activitySummary = status === 'completed' ? 'Confirmed transaction' : 'Canceled transaction'
+        heading = 'Transaction in progress'
     }
 
     return ['completed', 'rejected'].find(s => s === status) ? (
