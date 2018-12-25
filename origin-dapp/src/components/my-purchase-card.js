@@ -93,7 +93,7 @@ class MyPurchaseCard extends Component {
                           defaultMessage={ 'Quantity:' }
                         />
                       </div>
-                      <div className="emphasis col-8 pl-0 pr-0">
+                      <div className="col-8 pl-0 pr-0">
                         {unitsPurchased}
                       </div>
                     </div>
@@ -104,7 +104,7 @@ class MyPurchaseCard extends Component {
                           defaultMessage={ 'Price/Unit:' }
                         />
                       </div>
-                      <div className="emphasis col-8 pl-0 pr-0">
+                      <div className="col-8 pl-0 pr-0">
                         {`${Number(price).toLocaleString(
                             undefined,
                             { minimumFractionDigits: 5, maximumFractionDigits: 5 }

@@ -1532,7 +1532,7 @@ class ListingCreate extends Component {
                     <p>
                       <FormattedMessage
                         id={'listing-create.form-help-details'}
-                        defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if they want to buy your listing.`}
+                        defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos will increase the chances of selling your listing.`}
                       />
                     </p>
                   </div>
