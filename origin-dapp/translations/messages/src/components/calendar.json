@@ -1,6 +1,82 @@
 [
   {
-    "id": "listing-create.showNoEventsEnteredErrorMessage",
+    "id": "calendar.confirmDeleteEvent",
+    "defaultMessage": "Are you sure you want to delete this event?"
+  },
+  {
+    "id": "calendar.showNoEventsEnteredErrorMessage",
     "defaultMessage": "Please enter availability on the calendar"
+  },
+  {
+    "id": "calendar.back",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "calendar.next",
+    "defaultMessage": "Next"
+  },
+  {
+    "id": "calendar.selectedDates",
+    "defaultMessage": "Selected dates"
+  },
+  {
+    "id": "calendar.selectedTimes",
+    "defaultMessage": "Selected times"
+  },
+  {
+    "id": "calendar.isRepeatingEvent",
+    "defaultMessage": "This is a repeating event"
+  },
+  {
+    "id": "calendar.availability",
+    "defaultMessage": "Availability"
+  },
+  {
+    "id": "calendar.available",
+    "defaultMessage": "Availaible"
+  },
+  {
+    "id": "calendar.unavailable",
+    "defaultMessage": "Unavailable"
+  },
+  {
+    "id": "calendar.pricing",
+    "defaultMessage": "Pricing"
+  },
+  {
+    "id": "calendar.perHour",
+    "defaultMessage": "per hour"
+  },
+  {
+    "id": "calendar.perDay",
+    "defaultMessage": "per day"
+  },
+  {
+    "id": "calendar.editAllEventsInSeries",
+    "defaultMessage": "Edit all events in this series"
+  },
+  {
+    "id": "calendar.editOnlyThisTimeSlot",
+    "defaultMessage": "Edit only this time slot"
+  },
+  {
+    "id": "calendar.cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "calendar.save",
+    "defaultMessage": "Save"
+  },
+  {
+    "id": "calendar.price",
+    "defaultMessage": "Price"
+  },
+  {
+    "id": "calendar.reserve",
+    "defaultMessage": "Reserve"
+  },
+  {
+    "id": "calendar.selectionUnavailable",
+    "defaultMessage": "Your selection contains one or more unavailable time slots."
   }
 ]

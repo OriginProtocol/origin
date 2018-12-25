@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import BigCalendar from 'react-big-calendar'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import moment from 'moment'
 import uuid from 'uuid/v1'
 import { 
@@ -64,6 +64,14 @@ class Calendar extends Component {
     }
 
     this.localizer = BigCalendar.momentLocalizer(moment)
+
+    this.intlMessages = defineMessages({
+      confirmDeleteEvent: {
+        id: 'calendar.confirmDeleteEvent',
+        defaultMessage:
+          'Are you sure you want to delete this event?'
+      }
+    })
   }
 
   componentWillMount() {
@@ -328,7 +336,7 @@ class Calendar extends Component {
 
   // used by seller's calendar only
   deleteEvent() {
-    const confirmation = confirm('Are you sure you want to delete this event?')
+    const confirmation = confirm(this.props.intl.formatMessage(this.intlMessages.confirmDeleteEvent))
     const { selectedEvent, events } = this.state
 
     if (confirmation) {
@@ -568,7 +576,7 @@ class Calendar extends Component {
                   <div className="info-box warn">
                     <p>
                       <FormattedMessage
-                        id={'listing-create.showNoEventsEnteredErrorMessage'}
+                        id={'calendar.showNoEventsEnteredErrorMessage'}
                         defaultMessage={
                           'Please enter availability on the calendar'
                         }
@@ -576,8 +584,22 @@ class Calendar extends Component {
                     </p>
                   </div>
                 }
-                <button className="btn btn-other" onClick={this.goBack}>Back</button>
-                <button className="btn btn-primary" onClick={this.saveData}>Next</button>
+                <button className="btn btn-other" onClick={this.goBack}>
+                  <FormattedMessage
+                    id={'calendar.back'}
+                    defaultMessage={
+                      'Back'
+                    }
+                  />
+                </button>
+                <button className="btn btn-primary" onClick={this.saveData}>
+                  <FormattedMessage
+                    id={'calendar.next'}
+                    defaultMessage={
+                      'Next'
+                    }
+                  />
+                </button>
               </div>
             }
           </div>
@@ -587,7 +609,25 @@ class Calendar extends Component {
                 {userType === 'seller' &&
                   <span className="delete-btn" onClick={this.deleteEvent}>delete</span>
                 }
-                <p className="font-weight-bold">Selected { viewType === 'daily' ? 'dates' : 'times' }</p>
+                <p className="font-weight-bold">
+                  {viewType === 'daily' &&
+                    <FormattedMessage
+                      id={'calendar.selectedDates'}
+                      defaultMessage={
+                        'Selected dates'
+                      }
+                    />
+                  }
+                  {
+                    viewType !== 'daily' &&
+                    <FormattedMessage
+                      id={'calendar.selectedTimes'}
+                      defaultMessage={
+                        'Selected times'
+                      }
+                    />
+                  }
+                </p>
                 <div>
                   <div className="row">
                     <div className="col-md-6">
@@ -655,15 +695,32 @@ class Calendar extends Component {
                           checked={ selectedEvent.isRecurringEvent }
                           onChange={ this.onIsRecurringEventChange } />
                         <label className="form-check-label" htmlFor="isRecurringEvent">
-                          This is a repeating event
+                          <FormattedMessage
+                            id={'calendar.isRepeatingEvent'}
+                            defaultMessage={
+                              'This is a repeating event'
+                            }
+                          />
                         </label>
                       </div>
                     }
                     <div>
-                      <p className="font-weight-bold">Availability</p>
+                      <p className="font-weight-bold">
+                        <FormattedMessage
+                          id={'calendar.availability'}
+                          defaultMessage={
+                            'Availability'
+                          }
+                        />
+                      </p>
                       <div>
                         <label htmlFor="available">
-                          Availaible
+                          <FormattedMessage
+                            id={'calendar.available'}
+                            defaultMessage={
+                              'Availaible'
+                            }
+                          />
                         </label>
                         <input 
                           type="radio"
@@ -675,7 +732,12 @@ class Calendar extends Component {
                       </div>
                       <div>
                         <label className="form-check-label" htmlFor="unavailable">
-                          Unavailable
+                          <FormattedMessage
+                            id={'calendar.unavailable'}
+                            defaultMessage={
+                              'Unavailable'
+                            }
+                          />
                         </label>
                         <input
                           type="radio"
@@ -687,7 +749,14 @@ class Calendar extends Component {
                       </div>
                       {selectedEvent.isAvailable &&
                         <Fragment>
-                          <p className="font-weight-bold">Pricing</p>
+                          <p className="font-weight-bold">
+                            <FormattedMessage
+                              id={'calendar.pricing'}
+                              defaultMessage={
+                                'Pricing'
+                              }
+                            />
+                          </p>
                           <input 
                             placeholder="Price"
                             name="price"
@@ -700,11 +769,25 @@ class Calendar extends Component {
                             viewType === 'hourly' &&
                             this.props.step &&
                             <span className="price-label">
-                              &nbsp;ETH per hour
+                              &nbsp;ETH&nbsp;
+                              <FormattedMessage
+                                id={'calendar.perHour'}
+                                defaultMessage={
+                                  'per hour'
+                                }
+                              />
                             </span>
                           }
                           {viewType === 'daily' &&
-                            <span className="price-label">&nbsp;ETH</span>
+                            <span className="price-label">
+                              &nbsp;ETH&nbsp;
+                              <FormattedMessage
+                                id={'calendar.perDay'}
+                                defaultMessage={
+                                  'per day'
+                                }
+                              />
+                            </span>
                           }
                         </Fragment>
                       }
@@ -712,7 +795,12 @@ class Calendar extends Component {
                     {selectedEvent.isRecurringEvent && existingEventSelected &&
                       <div className="edit-series-container">
                         <label className="form-check-label" htmlFor="editAllEvents">
-                          Edit all events in this series
+                          <FormattedMessage
+                            id={'calendar.editAllEventsInSeries'}
+                            defaultMessage={
+                              'Edit all events in this series'
+                            }
+                          />
                         </label>
                         <input
                           id="editAllEvents"
@@ -723,7 +811,12 @@ class Calendar extends Component {
                           name="editRecurringEventRadio"
                         />
                         <label className="form-check-label" htmlFor="editOnlyThisEvent">
-                          Edit only this time slot
+                          <FormattedMessage
+                            id={'calendar.editOnlyThisTimeSlot'}
+                            defaultMessage={
+                              'Edit only this time slot'
+                            }
+                          />
                         </label>
                         <input
                           id="editOnlyThisEvent"
@@ -738,10 +831,24 @@ class Calendar extends Component {
                     {this.state.showSellerActionBtns &&
                       <div className="cta-btns row">
                         <div className="col-md-6">
-                          <button className="btn btn-dark" onClick={this.cancelEvent}>Cancel</button>
+                          <button className="btn btn-dark" onClick={this.cancelEvent}>
+                            <FormattedMessage
+                              id={'calendar.cancel'}
+                              defaultMessage={
+                                'Cancel'
+                              }
+                            />
+                          </button>
                         </div>
                         <div className="col-md-6">
-                          <button className="btn btn-light" onClick={this.saveEvent}>Save</button>
+                          <button className="btn btn-light" onClick={this.saveEvent}>
+                            <FormattedMessage
+                              id={'calendar.save'}
+                              defaultMessage={
+                                'Save'
+                              }
+                            />
+                          </button>
                         </div>
                       </div>
                     }
@@ -749,15 +856,36 @@ class Calendar extends Component {
                 }
                 {userType === 'buyer' &&
                   <div>
-                    <p className="font-weight-bold">Price</p>
+                    <p className="font-weight-bold">
+                      <FormattedMessage
+                        id={'calendar.price'}
+                        defaultMessage={
+                          'Price'
+                        }
+                      />
+                    </p>
                     <p>{selectedEvent.price && selectedEvent.price} ETH</p>
                     {!this.props.userIsSeller &&
                       <div className="cta-btns row">
                         <div className="col-md-6">
-                          <button className="btn btn-dark" onClick={this.unselectSlots}>Cancel</button>
+                          <button className="btn btn-dark" onClick={this.unselectSlots}>
+                            <FormattedMessage
+                              id={'calendar.cancel'}
+                              defaultMessage={
+                                'Cancel'
+                              }
+                            />
+                          </button>
                         </div>
                         <div className="col-md-6">
-                          <button className="btn btn-light" onClick={this.reserveSlots}>Reserve</button>
+                          <button className="btn btn-light" onClick={this.reserveSlots}>
+                            <FormattedMessage
+                              id={'calendar.reserve'}
+                              defaultMessage={
+                                'Reserve'
+                              }
+                            />
+                          </button>
                         </div>
                       </div>
                     }
@@ -767,7 +895,12 @@ class Calendar extends Component {
             }
             {this.state.selectionUnavailable &&
               <p className="selection-unavailable font-weight-bold">
-                Your selection contains one or more unavailable time slots.
+                <FormattedMessage
+                  id={'calendar.selectionUnavailable'}
+                  defaultMessage={
+                    'Your selection contains one or more unavailable time slots.'
+                  }
+                />
               </p>
             }
           </div>
