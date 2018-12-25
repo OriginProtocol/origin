@@ -363,10 +363,6 @@ class ListingCreate extends Component {
   }
 
   onAvailabilityEntered(slots, direction) {
-    if (!slots || !slots.length) {
-      return
-    }
-
     let nextStep
     switch(direction) {
       case 'forward':
@@ -380,7 +376,7 @@ class ListingCreate extends Component {
         break
     }
 
-    slots = prepareSlotsToSave(slots)
+    slots = (slots && slots.length && prepareSlotsToSave(slots)) || []
 
     this.setState({
       formListing: {

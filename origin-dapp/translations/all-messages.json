@@ -40,6 +40,7 @@
   "boost-slider.insufficient-ogn": "You don't have enough OGN in your wallet.",
   "boost-slider.denomination": "Boosts are always calculated and charged in OGN.",
   "boost-slider.learn-more": "Learn More",
+  "listing-create.showNoEventsEnteredErrorMessage": "Please enter availability on the calendar",
   "contact.sendMessages": "send messages",
   "contact.generic": "Contact",
   "contact.buyer": "Contact Buyer",

@@ -1,0 +1,6 @@
+[
+  {
+    "id": "listing-create.showNoEventsEnteredErrorMessage",
+    "defaultMessage": "Please enter availability on the calendar"
+  }
+]

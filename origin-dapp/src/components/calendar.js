@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import BigCalendar from 'react-big-calendar'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
 import uuid from 'uuid/v1'
 import { 
@@ -449,6 +449,14 @@ class Calendar extends Component {
   }
 
   saveData() {
+    const events = this.state.events
+
+    if (!events || !events.length) {
+      return this.setState({ showNoEventsEnteredErrorMessage: true })
+    } else {
+      this.setState({ showNoEventsEnteredErrorMessage: false })
+    }
+
     const cleanEvents = getCleanEvents(this.state.events)
     this.props.onComplete && this.props.onComplete(cleanEvents)
   }
@@ -516,7 +524,12 @@ class Calendar extends Component {
   render() {
     const selectedEvent = this.state.selectedEvent
     const { viewType, userType, offers } = this.props
-    const { events, editAllEventsInSeries, existingEventSelected } = this.state
+    const {
+      events,
+      editAllEventsInSeries,
+      existingEventSelected,
+      showNoEventsEnteredErrorMessage
+    } = this.state
 
     return (
       <div>
@@ -551,6 +564,18 @@ class Calendar extends Component {
             {
               userType === 'seller' &&
               <div className="btn-container">
+                {showNoEventsEnteredErrorMessage &&
+                  <div className="info-box warn">
+                    <p>
+                      <FormattedMessage
+                        id={'listing-create.showNoEventsEnteredErrorMessage'}
+                        defaultMessage={
+                          'Please enter availability on the calendar'
+                        }
+                      />
+                    </p>
+                  </div>
+                }
                 <button className="btn btn-other" onClick={this.goBack}>Back</button>
                 <button className="btn btn-primary" onClick={this.saveData}>Next</button>
               </div>
