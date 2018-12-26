@@ -36,7 +36,7 @@ class MySaleCard extends Component {
 
   render() {
     const { listing, purchase, user } = this.props
-    const { id: purchaseId, createdAt, status } = purchase
+    const { id: purchaseId, createdAt, status, totalPrice } = purchase
 
     if (!listing) {
       console.error(`Listing not found for purchase ${purchaseId}`)
@@ -44,6 +44,7 @@ class MySaleCard extends Component {
     }
 
     const { name, pictures, price } = listing
+    const priceToShow = listing.listingType === 'fractional' ? totalPrice.amount : price
     const buyerName = (user &&
       user.profile &&
       `${user.profile.firstName} ${user.profile.lastName}`) || <UnnamedUser />
@@ -91,7 +92,7 @@ class MySaleCard extends Component {
                   <FormattedMessage
                     id={'my-sale-card.price'}
                     defaultMessage={'Price'}
-                  />:&nbsp;{Number(price).toLocaleString(undefined, {
+                  />:&nbsp;{Number(priceToShow).toLocaleString(undefined, {
                     minimumFractionDigits: 5,
                     maximumFractionDigits: 5
                   })}
