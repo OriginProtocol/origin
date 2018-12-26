@@ -18,7 +18,7 @@ We also actively work on these repositories:
 
 ### Weekly Engineering Call
 
-We have an open weekly engineering call on Google Hangouts every Wednesday at 1pm pacific time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=M2llYjc1MDA1aXVhbzZnYWRmbWhjbmRvcmRfMjAxODA2MTNUMjAwMDAwWiBvcmlnaW5wcm90b2NvbC5jb21fcXY1NWNvNmd2bTN2c3Y3OW9iNXFsZjVhaWtAZw&tmsrc=originprotocol.com_qv55co6gvm3vsv79ob5qlf5aik%40group.calendar.google.com&scp=ALL)
+We have an open weekly engineering call on Google Hangouts every Wednesday at 1pm pacific time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&tmsrc=micah%40originprotocol.com&scp=ALL)
 
 <a href="https://meet.google.com/pws-cgyd-tqp"><img src="images/origin_engineering_call.png" /></a>
 
