@@ -630,7 +630,7 @@ class Calendar extends Component {
                   <FormattedMessage
                     id={'calendar.calendarTipsBuyer1'}
                     defaultMessage={
-                      'Click an available time slot to make an offer.'
+                      'Click one or more available time slots to make an offer.'
                     }
                   />
                 </p>
