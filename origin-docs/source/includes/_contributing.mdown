@@ -12,7 +12,7 @@ There are three main repositories that are considered core components of the Ori
 
 We also actively work on these repositories:
 
-- [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box) - Docker container for simplifying local development
+- [Origin Box](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md#using-docker-compose) - Docker container for simplifying local development
 - [Origin Website](https://github.com/OriginProtocol/origin-website) - Python/Flask for originprotocol.com
 - [Identity Playground](https://github.com/OriginProtocol/origin-playground#origin-identity-playground) - implementation of ERC 725/735 for blockchain identity
 
