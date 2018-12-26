@@ -19,10 +19,7 @@ import withAccounts from 'hoc/withAccountsAndAllowance'
 import withTokens from 'hoc/withTokens'
 
 import demoListings from './_demoListings'
-import {
-  CreateListingMutation,
-  UpdateListingMutation
-} from '../../../mutations'
+import { CreateListingMutation, UpdateListingMutation } from 'queries/Mutations'
 
 import ErrorCallout from 'components/ErrorCallout'
 import SelectAccount from 'components/SelectAccount'
@@ -42,13 +39,13 @@ class CreateListing extends Component {
     super()
 
     let seller = rnd(props.accounts.filter(a => a.role === 'Seller'))
-    if (props.metaMaskEnabled && props.metaMaskAccount) {
+    if (props.useMetaMask && props.metaMaskAccount) {
       seller = props.metaMaskAccount
     }
     const arbitrator = rnd(props.accounts.filter(a => a.role === 'Arbitrator'))
 
     if (props.listing && props.listing.id) {
-      let media = props.listing.media || []
+      const media = props.listing.media || []
 
       this.state = {
         title: props.listing.title || '',
@@ -115,7 +112,11 @@ class CreateListing extends Component {
             <div className="bp3-dialog-body">
               <ErrorCallout error={error} />
               <div className="mb-3">
-                <Button small="true" text="Empty" onClick={() => this.setDemoListing(-1)} />
+                <Button
+                  small="true"
+                  text="Empty"
+                  onClick={() => this.setDemoListing(-1)}
+                />
                 <Button
                   small="true"
                   text="House 1"

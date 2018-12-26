@@ -8,12 +8,16 @@ export default {
         Object.keys(convos).map(id => ({ id, timestamp: String(convos[id]) }))
       )
     }),
-  enabled: messaging => {
-    return new Promise(async resolve => {
-      const canReceive = await contracts.messaging.canReceiveMessages(
-        messaging.id
-      )
-      resolve(canReceive ? true : false)
-    })
-  }
+  enabled: () => {
+    return contracts.messaging.pub_sig &&
+      contracts.messaging.account &&
+      contracts.messaging.account.publicKey
+      ? true
+      : false
+  },
+  synced: () => contracts.messaging.synced,
+  syncProgress: () => contracts.messaging.syncProgress,
+  pubKey: () =>
+    contracts.messaging.account ? contracts.messaging.account.publicKey : null,
+  pubSig: () => contracts.messaging.pub_sig
 }

@@ -8,7 +8,7 @@ import SendToken from './mutations/SendToken'
 import SetWalletMutation from './_SetWalletMutation'
 import Identity from 'components/Identity'
 
-import query from './_query'
+import query from 'queries/AllAccounts'
 
 @ContextMenuTarget
 class AccountButton extends Component {

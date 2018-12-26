@@ -11,6 +11,10 @@ export default `
   type Messaging {
     id: ID!
     enabled: Boolean
+    syncProgress: String
+    synced: Boolean
+    pubKey: String
+    pubSig: String
     conversations: [Conversation]
   }
 
@@ -32,6 +36,5 @@ export default `
     content: String
     created: String
   }
-
 
 `

@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import gqlClient from 'origin-graphql'
 
 import { ProgressBar } from '@blueprintjs/core'
-import { RefetchMutation } from '../mutations'
+import { RefetchMutation } from 'queries/Mutations'
 import Toaster from './Toaster'
 
 const TransactionSubscription = gql`
@@ -40,7 +40,8 @@ const refetchQueries = {
   createWallet: ['AllAccounts'],
   sendFromNode: ['AllAccounts'],
   deployMarketplace: ['AllAccounts'],
-  transferToken: ['AllAccounts', 'AccountTokenBalance']
+  transferToken: ['AllAccounts', 'AccountTokenBalance'],
+  deployIdentity: ['AllAccounts', 'Identities']
 }
 
 const mutationNames = {

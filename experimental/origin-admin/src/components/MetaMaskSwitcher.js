@@ -10,6 +10,7 @@ const MetaMaskEnabled = gql`
       metaMaskAvailable
       metaMaskEnabled
       metaMaskNetworkId
+      useMetaMask
       networkId
       metaMaskAccount {
         id
@@ -37,7 +38,7 @@ class MetaMaskSwitcher extends Component {
               if (loading || error) return null
               const web3 = data && data.web3 ? data.web3 : {}
               const loggedIn = web3.metaMaskAccount ? true : false
-              const checked = web3.metaMaskEnabled && loggedIn
+              const checked = web3.useMetaMask && loggedIn
               let warning
               if (checked && web3.networkId !== web3.metaMaskNetworkId) {
                 warning = (
