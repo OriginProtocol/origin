@@ -133,7 +133,7 @@ class Calendar extends Component {
       }
     } else {
       // user is a buyer
-      this.handleBuyerSlotSelection(clickedSlotInfo)
+      this.handleBuyerSelection(clickedSlotInfo)
     } 
   }
 
