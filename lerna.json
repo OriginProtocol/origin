@@ -4,6 +4,8 @@
     "ipfs-proxy",
     "origin-contracts",
     "origin-dapp",
+    "origin-dapp-creator-client",
+    "origin-dapp-creator-server",
     "origin-discovery",
     "origin-faucet",
     "origin-js",
