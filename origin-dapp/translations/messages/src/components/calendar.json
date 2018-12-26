@@ -16,6 +16,22 @@
     "defaultMessage": "Next"
   },
   {
+    "id": "calendar.calendarTipsSeller1",
+    "defaultMessage": "Click the calendar to enter pricing and availability information."
+  },
+  {
+    "id": "calendar.calendarTipsSeller2",
+    "defaultMessage": "To select multiple time slots, click the starting time slot and drag to the ending one."
+  },
+  {
+    "id": "calendar.calendarTipsBuyer1",
+    "defaultMessage": "Click an available time slot to make an offer."
+  },
+  {
+    "id": "calendar.calendarTipsBuyer2",
+    "defaultMessage": "To select multiple time slots, click the starting time slot and drag to the ending one."
+  },
+  {
     "id": "calendar.selectedDates",
     "defaultMessage": "Selected dates"
   },

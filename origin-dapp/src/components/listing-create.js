@@ -811,6 +811,19 @@ class ListingCreate extends Component {
             )}
             {step === this.STEP.AVAILABILITY &&
               <div className="col-md-12 listing-availability">
+                <label>
+                  <FormattedMessage
+                    id={'listing-create.stepNumberLabel'}
+                    defaultMessage={'STEP {stepNumber}'}
+                    values={{ stepNumber: this.getStepNumber(step) }}
+                  />
+                </label>
+                <h2>
+                  <FormattedMessage
+                    id={'listing-create.availabilityHeading'}
+                    defaultMessage={'Add Availability and Pricing'}
+                  />
+                </h2>
                 <Calendar
                   slots={ formData && formData.slots }
                   userType="seller"

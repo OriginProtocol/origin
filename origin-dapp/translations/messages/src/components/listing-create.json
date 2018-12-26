@@ -48,6 +48,10 @@
     "defaultMessage": "Continue"
   },
   {
+    "id": "listing-create.availabilityHeading",
+    "defaultMessage": "Add Availability and Pricing"
+  },
+  {
     "id": "listing-create.boost-your-listing",
     "defaultMessage": "Boost Your Listing"
   },

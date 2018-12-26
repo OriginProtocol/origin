@@ -604,6 +604,46 @@ class Calendar extends Component {
             }
           </div>
           <div className="col-md-4">
+            {!selectedEvent || !selectedEvent.start && userType === 'seller' &&
+              <div className="info-box">
+                <p>
+                  <FormattedMessage
+                    id={'calendar.calendarTipsSeller1'}
+                    defaultMessage={
+                      'Click the calendar to enter pricing and availability information.'
+                    }
+                  />
+                </p>
+                <p>
+                  <FormattedMessage
+                    id={'calendar.calendarTipsSeller2'}
+                    defaultMessage={
+                      'To select multiple time slots, click the starting time slot and drag to the ending one.'
+                    }
+                  />
+                </p>
+              </div>
+            }
+            {!selectedEvent || !selectedEvent.start && userType === 'buyer' &&
+              <div className="info-box">
+                <p>
+                  <FormattedMessage
+                    id={'calendar.calendarTipsBuyer1'}
+                    defaultMessage={
+                      'Click an available time slot to make an offer.'
+                    }
+                  />
+                </p>
+                <p>
+                  <FormattedMessage
+                    id={'calendar.calendarTipsBuyer2'}
+                    defaultMessage={
+                      'To select multiple time slots, click the starting time slot and drag to the ending one.'
+                    }
+                  />
+                </p>
+              </div>
+            }
             {selectedEvent && selectedEvent.start &&
               <div className="calendar-cta">
                 {userType === 'seller' &&
@@ -894,14 +934,16 @@ class Calendar extends Component {
               </div>
             }
             {this.state.selectionUnavailable &&
-              <p className="selection-unavailable font-weight-bold">
-                <FormattedMessage
-                  id={'calendar.selectionUnavailable'}
-                  defaultMessage={
-                    'Your selection contains one or more unavailable time slots.'
-                  }
-                />
-              </p>
+              <div className="info-box warn">
+                <p>
+                  <FormattedMessage
+                    id={'calendar.selectionUnavailable'}
+                    defaultMessage={
+                      'Your selection contains one or more unavailable time slots.'
+                    }
+                  />
+                </p>
+              </div>
             }
           </div>
         </div>
