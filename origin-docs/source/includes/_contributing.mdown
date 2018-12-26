@@ -28,7 +28,6 @@ Everyone is welcome to join, even if you're just lurking. All we ask is that you
 
 - [Engineering Notes](https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU)
 - [Product/Design Notes](https://docs.google.com/document/d/1tVx2O3qeplh9vawJpURTsJxZfUe1B0FrTHOMJbxKm-s)
-- [Sprint Planning Notes](https://docs.google.com/document/d/1DvRWYhrr0UXdvhyZIpEd3WEU-1pQk2Frj1l-mQS8B4M)
 
 ### Dive Right In
 
