@@ -163,24 +163,35 @@ require('react-styl')(`
       padding: 0.5rem;
       display: flex
       .main-pic
-        width: 360px;
-        margin-right: 1rem;
-        background-size: contain;
-        background-repeat: no-repeat;
-        height: 260px;
-      .category
-        text-transform: uppercase;
-        color: var(--dusk);
-        font-weight: normal;
-        font-size: 14px;
+        width: 360px
+        margin-right: 1rem
+        background-size: contain
+        background-repeat: no-repeat
+        height: 260px
+      .details
+        flex: 1
+      .top
+        display: flex
+        align-items: flex-start
+        justify-content: space-between
+        > .category
+          text-transform: uppercase
+          color: var(--dusk)
+          font-weight: normal
+          font-size: 14px
+        > .status
+          color: var(--greenblue)
+          text-transform: uppercase
+          font-weight: 900
+          font-size: 11px
       .title
-        font-size: 24px;
-        font-weight: normal;
+        font-size: 24px
+        font-weight: normal
       .date
-        color: var(--dusk);
-        font-size: 12px;
-        font-weight: 300;
+        color: var(--dusk)
+        font-size: 12px
+        font-weight: 300
       .price
-        font-weight: normal;
-        margin-top: 0.5rem;
+        font-weight: normal
+        margin-top: 0.5rem
 `)

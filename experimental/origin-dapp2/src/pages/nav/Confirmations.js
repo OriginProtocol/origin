@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import set from 'lodash/set'
+import cloneDeep from 'lodash/cloneDeep'
 
 import TransactionsQuery from 'queries/Transactions'
 import TransactionsSubscription from 'queries/TransactionsSubscription'
@@ -10,16 +12,15 @@ import Dropdown from 'components/Dropdown'
 function subscribeToNewTransactions(subscribeToMore) {
   subscribeToMore({
     document: TransactionsSubscription,
-    updateQuery: (prev, { transactionData }) => {
-      if (!transactionData.data) return prev
-
-      const newTransaction = transactionData.data.newTransaction
-      return Object.assign({}, prev, {
-        transactions: {
-          ...prev.transactions,
-          nodes: [newTransaction, ...prev.transactions],
-        }
-      })
+    updateQuery: (prev, { subscriptionData }) => {
+      const newNode = get(subscriptionData, 'data.newTransaction.node')
+      if (!newNode) return prev
+      prev = cloneDeep(prev)
+      const oldNodes = get(prev, 'web3.transactions.nodes', [])
+      const newNodes = [newNode, ...oldNodes]
+      prev = set(prev, 'web3.transactions.nodes', [newNode, ...oldNodes])
+      prev = set(prev, 'web3.transactions.totalCount', newNodes.length)
+      return prev
     }
   })
 }
@@ -30,9 +31,7 @@ class TransactionsNav extends Component {
       <Query query={TransactionsQuery}>
         {({ subscribeToMore, ...result }) => {
           if (result.loading || result.error) return null
-          if (!get(result, 'data.web3.metaMaskAccount.id')) {
-            return null
-          }
+          if (!get(result, 'data.web3.metaMaskAccount.id')) return null
 
           return (
             <TransactionsDropdown
@@ -55,8 +54,8 @@ class TransactionsDropdown extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const unread = get(this.props, 'data.notifications.totalUnread', 0),
-      prevUnread = get(prevProps, 'data.notifications.totalUnread', 0)
+    const unread = get(this.props, 'data.web3.transactions.totalCount', 0),
+      prevUnread = get(prevProps, 'data.web3.transactions.totalCount', 0)
 
     if (unread > prevUnread && !prevProps.open) {
       this.props.onOpen()
@@ -100,6 +99,7 @@ class TransactionsDropdown extends Component {
 
 const TransactionsContent = ({ totalCount = 0, nodes = [] }) => {
   const title = `Pending Blockchain Confirmation${totalCount === 1 ? '' : 's'}`
+  console.log(nodes)
   return (
     <div className="dropdown-menu dropdown-menu-right show confirmations">
       <div className="count">
@@ -111,7 +111,7 @@ const TransactionsContent = ({ totalCount = 0, nodes = [] }) => {
           <div className="avatar" />
           <div className="detail">
             <div className="title">
-              {node.title}
+              {get(node, 'receipt.events.0.event', '?')}
               <span>{node.timestamp}</span>
             </div>
             <div className="description">{node.content}</div>

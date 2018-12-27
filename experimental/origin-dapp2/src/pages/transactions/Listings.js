@@ -91,8 +91,11 @@ class Listings extends Component {
                               />
                             ) : null}
                             <div className="details">
-                              <div className="category">
-                                {listing.categoryStr}
+                              <div className="top">
+                                <div className="category">
+                                  {listing.categoryStr}
+                                </div>
+                                <div className="status">{listing.status}</div>
                               </div>
                               <div className="title">
                                 <Link to={`/listings/${listing.id}`}>
