@@ -43,15 +43,18 @@ class Calendar extends Component {
     this.monthHeader = this.monthHeader.bind(this)
     this.prevPeriod = this.prevPeriod.bind(this)
     this.nextPeriod = this.nextPeriod.bind(this)
+    this.goToToday = this.goToToday.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.renderRecurringEvents = this.renderRecurringEvents.bind(this)
     this.shouldShowRecurringEventCheckbox = this.shouldShowRecurringEventCheckbox.bind(this)
+
+    this.currentDate = new Date()
 
     this.state = {
       events: [],
       selectedEvent: null,
       buyerSelectedSlotData: null,
-      defaultDate: new Date(),
+      calendarDate: this.currentDate,
       showSellerActionBtns: false,
       hideRecurringEventCheckbox: false,
       editAllEventsInSeries: true,
@@ -93,7 +96,7 @@ class Calendar extends Component {
 
   componentDidMount() {
     renderHourlyPrices(this.props.viewType, this.props.userType)
-    this.renderRecurringEvents(this.state.defaultDate)
+    this.renderRecurringEvents(this.state.calendarDate)
   }
 
   componentDidUpdate() {
@@ -337,7 +340,7 @@ class Calendar extends Component {
 
     // wait for state to update, then render recurring events on monthly calendar if recurring events checkbox is checked
     setTimeout(() => {
-      this.renderRecurringEvents(this.state.defaultDate)
+      this.renderRecurringEvents(this.state.calendarDate)
     })
   }
 
@@ -370,7 +373,7 @@ class Calendar extends Component {
       })
 
       setTimeout(() => {
-        this.renderRecurringEvents(this.state.defaultDate)
+        this.renderRecurringEvents(this.state.calendarDate)
       })
     }
   }
@@ -494,28 +497,34 @@ class Calendar extends Component {
   }
 
   prevPeriod() {
-    const date = moment(this.state.defaultDate).subtract(1, this.getViewType()).toDate()
+    const date = moment(this.state.calendarDate).subtract(1, this.getViewType()).toDate()
 
     this.renderRecurringEvents(date)
 
     this.setState({
-      defaultDate: date
+      calendarDate: date
     })
   }
 
   nextPeriod() {
-    const date = moment(this.state.defaultDate).add(1, this.getViewType()).toDate()
+    const date = moment(this.state.calendarDate).add(1, this.getViewType()).toDate()
 
     this.renderRecurringEvents(date)
 
     this.setState({
-      defaultDate: date
+      calendarDate: date
     })
+  }
+
+  goToToday() {
+    const date = new Date()
+    this.setState({ calendarDate: date })
+    this.currentDate = date
   }
 
   renderRecurringEvents(date) {
     this.setState({
-      defaultDate: date,
+      calendarDate: date,
       events: getRecurringEvents(date, this.state.events, this.props.viewType)
     })
 
@@ -541,6 +550,7 @@ class Calendar extends Component {
     const { viewType, userType, offers } = this.props
     const {
       events,
+      calendarDate,
       editAllEventsInSeries,
       existingEventSelected,
       showNoEventsEnteredErrorMessage,
@@ -557,6 +567,16 @@ class Calendar extends Component {
                            ${viewType === 'daily' ? ' daily-view' : ' hourly-view'}`}>
             <div className="calendar-nav">
               <img onClick={this.prevPeriod} className="prev-period" src="/images/caret-dark.svg" />
+              {calendarDate !== this.currentDate &&
+                <span className="go-to-today-btn" onClick={this.goToToday}>
+                  <FormattedMessage
+                    id={'calendar.goToToday'}
+                    defaultMessage={
+                      'Go to today'
+                    }
+                  />
+                </span>
+              }
               <img onClick={this.nextPeriod} className="next-period" src="/images/caret-dark.svg" />
             </div>
             <BigCalendar
@@ -572,10 +592,10 @@ class Calendar extends Component {
               onSelectSlot={ this.onSelectSlot }
               step={ this.props.step || 60 }
               timeslots={ 1 }
-              date={ this.state.defaultDate }
+              date={ this.state.calendarDate }
               onNavigate={ this.renderRecurringEvents }
               slotPropGetter={ this.slotPropGetter }
-              scrollToTime={ moment(this.state.defaultDate).hour(8).toDate() }
+              scrollToTime={ moment(this.state.calendarDate).hour(8).toDate() }
               localizer={this.localizer}
             />
             {

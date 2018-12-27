@@ -123,6 +123,15 @@
   cursor: pointer;
 }
 
+.calendar-nav .go-to-today-btn {
+  cursor: pointer;
+  margin-left: 40px;
+  margin-top: -5px;
+  display: inline-block;
+  vertical-align: bottom;
+  margin-bottom: 5px;
+}
+
 .calendar-cta {
   color: white;
   background: var(--dark);

@@ -41,6 +41,7 @@
   "boost-slider.denomination": "Boosts are always calculated and charged in OGN.",
   "boost-slider.learn-more": "Learn More",
   "calendar.confirmDeleteEvent": "Are you sure you want to delete this event?",
+  "calendar.goToToday": "Go to today",
   "calendar.showNoEventsEnteredErrorMessage": "Please enter availability on the calendar",
   "calendar.back": "Back",
   "calendar.next": "Next",
