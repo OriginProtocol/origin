@@ -34,7 +34,7 @@ class Customize extends React.Component {
   }
 
   getConfigOverrideUrl () {
-    const configUrlMatch = window.location.search.match(/config=([^#]*)/)
+    const configUrlMatch = window.location.search.match(/config=([^#&]*)/)
     return configUrlMatch ? decodeURIComponent(configUrlMatch[1]) : false
   }
 
