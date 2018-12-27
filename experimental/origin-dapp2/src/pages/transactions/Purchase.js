@@ -1,68 +1,78 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import { Link } from 'react-router-dom'
 
+import withWallet from 'hoc/withWallet'
 import OfferQuery from 'queries/Offer'
+
+import AboutParty from 'components/AboutParty'
 
 import TxHistory from './_History'
 import TxProgress from './_Progress'
 import OfferDetails from './_OfferDetails'
 import ListingDetail from './_ListingDetail'
-import AboutSeller from './_AboutSeller'
 
-class Purchase extends Component {
-  render() {
-    const offerId = this.props.match.params.offerId
-    return (
-      <Query query={OfferQuery} variables={{ offerId }}>
-        {({ networkStatus, error, data }) => {
-          if (networkStatus === 1) {
-            return <div>Loading...</div>
-          } else if (error) {
-            return <div>Error...</div>
-          } else if (!data || !data.marketplace) {
-            return <div>No marketplace contract?</div>
-          }
+const Purchase = props => {
+  const offerId = props.match.params.offerId
+  return (
+    <Query query={OfferQuery} variables={{ offerId }}>
+      {({ networkStatus, error, data }) => {
+        if (networkStatus === 1) {
+          return <div>Loading...</div>
+        } else if (error) {
+          return <div>Error...</div>
+        } else if (!data || !data.marketplace) {
+          return <div>No marketplace contract?</div>
+        }
 
-          const offer = data.marketplace.offer
-          if (!offer) {
-            return <div>Offer not found</div>
-          }
-          return (
-            <div className="container">
-              <div className="transaction-detail">
-                <Link to="/purchases">&lsaquo; My Purchases</Link>
-                <h2>{offer.listing.title}</h2>
+        const offer = data.marketplace.offer
+        if (!offer) {
+          return <div>Offer not found</div>
+        }
 
-                <div className="row">
-                  <div className="col-md-8">
-                    <h3>Transaction Progress</h3>
-                    <TxProgress />
+        const isSeller = offer.listing.seller.id === props.wallet
+        const party = isSeller ? offer.buyer.id : offer.listing.seller.id
 
-                    <h3>Transaction History</h3>
-                    <TxHistory />
+        return (
+          <div className="container">
+            <div className="transaction-detail">
+              {isSeller ? (
+                <Link to="/my-sales">&lsaquo; My Sales</Link>
+              ) : (
+                <Link to="/my-purchases">&lsaquo; My Purchases</Link>
+              )}
+              <h2>{offer.listing.title}</h2>
 
-                    <h3>Listing Details</h3>
-                    <ListingDetail />
-                  </div>
-                  <div className="col-md-4">
-                    <h4 className="side-bar">Offer Details</h4>
-                    <OfferDetails offer={offer} />
+              <div className="row">
+                <div className="col-md-8">
+                  <h3>Transaction Progress</h3>
+                  <TxProgress offer={offer} wallet={props.wallet} />
 
-                    <h4 className="side-bar mt-4">About the Seller</h4>
-                    <AboutSeller id={offer.listing.seller.id} />
-                  </div>
+                  <h3>Transaction History</h3>
+                  <TxHistory offer={offer} />
+
+                  <h3>Listing Details</h3>
+                  <ListingDetail />
+                </div>
+                <div className="col-md-4">
+                  <h4 className="side-bar">Offer Details</h4>
+                  <OfferDetails offer={offer} />
+
+                  <h4 className="side-bar mt-4">
+                    {`About the ${isSeller ? 'Buyer' : 'Seller'}`}
+                  </h4>
+                  <AboutParty id={party} />
                 </div>
               </div>
             </div>
-          )
-        }}
-      </Query>
-    )
-  }
+          </div>
+        )
+      }}
+    </Query>
+  )
 }
 
-export default Purchase
+export default withWallet(Purchase)
 
 require('react-styl')(`
   .transaction-detail
@@ -88,5 +98,4 @@ require('react-styl')(`
       font-size: 18px
       &.mt-4
         margin-top: 1.5rem
-
 `)

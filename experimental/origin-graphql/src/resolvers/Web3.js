@@ -2,7 +2,11 @@ import graphqlFields from 'graphql-fields'
 import contracts from '../contracts'
 import get from 'lodash/get'
 
-import { transactions, getTransaction } from './web3/transactions'
+import {
+  transactions,
+  getTransaction,
+  getTransactionReceipt
+} from './web3/transactions'
 
 function networkName(netId) {
   if (netId === 1) return 'Ethereum Main Network'
@@ -45,8 +49,7 @@ export default {
     return getTransaction(args.id, fields)
   },
   transactionReceipt: async (_, args) => {
-    const receipt = await contracts.web3.eth.getTransactionReceipt(args.id)
-    return { id: args.id, ...receipt }
+    return await getTransactionReceipt(args.id)
   },
   transactions: transactions,
   metaMaskAvailable: () => (contracts.metaMask ? true : false),

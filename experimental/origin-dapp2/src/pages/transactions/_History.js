@@ -1,16 +1,20 @@
 import React, { Component } from 'react'
+import { Query } from 'react-apollo'
+import get from 'lodash/get'
+import dayjs from 'dayjs'
 
-const data = [
-  {
-    title: 'Placed Offer',
-    hash: '0xb88e6f42c44d5be6f42c4',
-    date: 'Nov. 7, 2018 11:54AM'
-  }
-]
+import OfferEventsQuery from 'queries/OfferEvents'
+
+const date = timestamp => dayjs.unix(timestamp).format('MMM. D, YYYY h:mmA')
+const eventName = name => {
+  const [, , target] = name.split(/(Offer|Listing)/)
+  return target
+}
 
 class TxHistory extends Component {
   state = {}
   render() {
+    const offerId = this.props.offer.id
     return (
       <table className="tx-history table table-sm table-striped table-hover">
         <thead>
@@ -20,33 +24,48 @@ class TxHistory extends Component {
             <th className="expand" />
           </tr>
         </thead>
-        <tbody>
-          {data.map((row, idx) => (
-            <tr
-              className={this.state[`row${idx}`] ? 'active' : ''}
-              key={idx}
-              onClick={() =>
-                this.setState({
-                  [`row${idx}`]: this.state[`row${idx}`] ? false : true
-                })
-              }
-            >
-              <td>
-                <div className="tx">
-                  <i />
-                  {row.title}
-                  <div className="info">
-                    Tx Hash: <a href="#">{row.hash}</a>
-                  </div>
-                </div>
-              </td>
-              <td>{row.date}</td>
-              <td>
-                <i className="caret" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        <Query query={OfferEventsQuery} variables={{ offerId }}>
+          {({ loading, error, data }) => {
+            const events = get(data, 'marketplace.offer.events', [])
+            if (loading || error || !events.length) {
+              return null
+            }
+
+            return (
+              <tbody>
+                {events.map((event, idx) => (
+                  <tr
+                    className={this.state[`row${idx}`] ? 'active' : ''}
+                    key={idx}
+                    onClick={() =>
+                      this.setState({
+                        [`row${idx}`]: this.state[`row${idx}`] ? false : true
+                      })
+                    }
+                  >
+                    <td>
+                      <div className="tx">
+                        <i />
+                        {eventName(event.event)}
+                        <div className="info">
+                          {'Tx Hash: '}
+                          <a href="#">{event.transactionHash}</a>
+                          <br />
+                          {'IPFS Hash: '}
+                          <a href="#">{event.returnValues.ipfsHash}</a>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{date(event.block.timestamp)}</td>
+                    <td>
+                      <i className="caret" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            )
+          }}
+        </Query>
       </table>
     )
   }
@@ -80,18 +99,18 @@ require('react-styl')(`
           position: absolute
           left: 0
           top: 1px
-          background: var(--greenblue) url(images/checkmark.svg) center no-repeat;
-          background-size: 0.75rem;
-          border-radius: 2rem;
-          width: 1.2rem;
-          height: 1.2rem;
-          display: inline-block;
+          background: var(--greenblue) url(images/checkmark.svg) center no-repeat
+          background-size: 0.75rem
+          border-radius: 2rem
+          width: 1.2rem
+          height: 1.2rem
+          display: inline-block
 
       .caret
-        background: url(images/caret-dark.svg) center no-repeat;
-        width: 1rem;
-        height: 1rem;
-        display: inline-block;
+        background: url(images/caret-dark.svg) center no-repeat
+        width: 1rem
+        height: 1rem
+        display: inline-block
         transform: rotate(90deg)
         vertical-align: -2px
       tr.active
@@ -99,7 +118,6 @@ require('react-styl')(`
           display: block
         .caret
           transform: rotate(270deg)
-
 
     &.table-striped tbody tr:nth-of-type(odd)
       background-color: var(--pale-grey-eight)

@@ -13,11 +13,18 @@ import MySales from './transactions/Sales'
 import MyListings from './transactions/Listings'
 
 class App extends Component {
+  componentDidMount() {
+    if (window.ethereum) {
+      window.ethereum.enable()
+    }
+  }
+
   componentDidUpdate() {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
     }
   }
+
   render() {
     return (
       <>

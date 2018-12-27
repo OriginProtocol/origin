@@ -53,14 +53,14 @@ class TransactionsDropdown extends Component {
     this.props.subscribeToNewTransactions()
   }
 
-  componentDidUpdate(prevProps) {
-    const unread = get(this.props, 'data.web3.transactions.totalCount', 0),
-      prevUnread = get(prevProps, 'data.web3.transactions.totalCount', 0)
-
-    if (unread > prevUnread && !prevProps.open) {
-      this.props.onOpen()
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   const unread = get(this.props, 'data.web3.transactions.totalCount', 0),
+  //     prevUnread = get(prevProps, 'data.web3.transactions.totalCount', 0)
+  //
+  //   if (unread > prevUnread && !prevProps.open) {
+  //     this.props.onOpen()
+  //   }
+  // }
 
   render() {
     const { data, loading, error, open, onOpen, onClose } = this.props
@@ -69,7 +69,7 @@ class TransactionsDropdown extends Component {
     if (!get(data, 'web3.transactions')) {
       return null
     }
-    const hasUnread = data.web3.transactions.totalCount > 0 ? ' active' : ''
+    const hasUnread = '' //data.web3.transactions.totalCount > 0 ? ' active' : ''
 
     return (
       <Dropdown

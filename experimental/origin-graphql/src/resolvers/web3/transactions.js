@@ -13,41 +13,41 @@ function atob(input) {
   return new Buffer(input, 'base64').toString('binary')
 }
 
+export async function getTransactionReceipt(id) {
+  const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
+  const events = rawReceipt.logs.map(log => {
+    const eventDef = contracts.marketplace.options.jsonInterface.find(
+      s => s.signature === log.topics[0]
+    )
+    const logObj = {
+      ...log,
+      raw: log,
+      returnValues: null,
+      event: null
+    }
+    if (eventDef) {
+      const decoded = contracts.web3.eth.abi.decodeLog(
+        eventDef.inputs,
+        log.data,
+        log.topics.slice(1)
+      )
+      logObj.returnValues = decoded
+      logObj.event = eventDef.name
+    }
+    return logObj
+  })
+
+  return { id, ...rawReceipt, events }
+}
+
 export async function getTransaction(id, fields = {}) {
   const status = 'submitted'
   const transaction = await contracts.web3.eth.getTransaction(id)
 
-  let receipt = null
-  if (fields.receipt) {
-    const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
-    const events = rawReceipt.logs.map(log => {
-      const eventDef = contracts.marketplace.options.jsonInterface.find(
-        s => s.signature === log.topics[0]
-      )
-      const logObj = {
-        ...log,
-        raw: log,
-        returnValues: null,
-        event: null
-      }
-      if (eventDef) {
-        const decoded = contracts.web3.eth.abi.decodeLog(
-          eventDef.inputs,
-          log.data,
-          log.topics
-        )
-        logObj.returnValues = decoded
-        logObj.event = eventDef.name
-      }
-      return logObj
-    })
-    receipt = { id: id, ...rawReceipt, events }
-  }
-
   return {
     id,
     status,
-    receipt,
+    receipt: fields.receipt ? await getTransactionReceipt(id) : null,
     ...transaction
   }
 }

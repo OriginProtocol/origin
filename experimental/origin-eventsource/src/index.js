@@ -164,7 +164,18 @@ class OriginEventSource {
 
     return offerObj
   }
+
+  async getReview(listingId, offerId, party, ipfsHash) {
+    const data = await get(this.ipfsGateway, ipfsHash)
+    return {
+      id: `999-1-${listingId}-${offerId}`,
+      reviewer: { id: party, account: { id: party } },
+      listing: { id: listingId },
+      offer: { id: offerId },
+      review: data.text,
+      rating: data.rating
+    }
+  }
 }
 
 module.exports = OriginEventSource
-// export default OriginEventSource

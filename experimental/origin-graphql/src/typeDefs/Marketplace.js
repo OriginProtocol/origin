@@ -111,12 +111,29 @@ export default `
     listings(first: Int, after: String): ListingConnection!
     offers(first: Int, after: String): OfferConnection!
     sales(first: Int, after: String): OfferConnection!
+    reviews(first: Int, after: String): ReviewConnection!
   }
 
   type OfferConnection {
     nodes: [Offer]
     pageInfo: PageInfo!
     totalCount: Int!
+  }
+
+  type ReviewConnection {
+    nodes: [Review]
+    pageInfo: PageInfo!
+    totalCount: Int!
+  }
+
+  type Review {
+    id: ID!
+    reviewer: User
+    target: User
+    listing: Listing
+    offer: Offer
+    review: String
+    rating: Int
   }
 
   type ListingConnection {
@@ -185,6 +202,7 @@ export default `
 
     # Connections
     listing: Listing
+    events: [Event]
     createdEvent: Event
 
     # On-Chain

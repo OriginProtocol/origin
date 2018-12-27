@@ -90,7 +90,7 @@ class Sales extends Component {
                               {listing.categoryStr}
                             </div>
                             <div className="title">
-                              <Link to={`/sales/${offer.id}`}>
+                              <Link to={`/purchases/${offer.id}`}>
                                 {listing.title}
                               </Link>
                             </div>

@@ -5,7 +5,7 @@ import get from 'lodash/get'
 
 import Link from 'components/Link'
 import Modal from 'components/Modal'
-import MakeOfferMutation from 'mutations/MakeOffer'
+import AcceptOfferMutation from 'mutations/AcceptOffer'
 import CanBuyQuery from 'queries/CanBuy'
 import TransactionReceiptQuery from 'queries/TransactionReceipt'
 
@@ -67,23 +67,6 @@ const CompleteModal = ({ offerId }) => (
   <div className="make-offer-modal">
     <div className="success-icon" />
     <div>Success!</div>
-    <div className="disclaimer">
-      You have made an offer on this listing. Your offer will be visible within
-      a few seconds. Your ETH payment has been transferred to an escrow
-      contract. Here&apos;s what happens next:
-      <ul>
-        <li>The seller can choose to accept or reject your offer.</li>
-        <li>
-          If the offer is accepted and fulfilled, you will be able to confirm
-          that the sale is complete. Your escrowed payment will be sent to the
-          seller.
-        </li>
-        <li>
-          If the offer is rejected, the escrowed payment will be immediately
-          returned to your wallet.
-        </li>
-      </ul>
-    </div>
     <Link to={`/purchases/${offerId}`} className="btn btn-outline-light">
       View Purchase
     </Link>
@@ -110,7 +93,7 @@ class WaitFor extends Component {
       >
         {({ data }) => {
           const event = get(data, 'web3.transactionReceipt.events', []).find(
-            e => e.event === 'OfferCreated'
+            e => e.event === 'OfferAccepted'
           )
           if (!event) {
             return (
@@ -135,7 +118,7 @@ class WaitFor extends Component {
   }
 }
 
-class Buy extends Component {
+class AcceptOffer extends Component {
   state = {}
   render() {
     const redirect = this.state.redirect
@@ -153,32 +136,31 @@ class Buy extends Component {
       submitted: this.state.success,
       onClose: () => this.closeModal()
     }
+
     return (
       <>
         <Query query={CanBuyQuery}>
           {canBuy => {
             return (
               <Mutation
-                mutation={MakeOfferMutation}
-                onCompleted={({ makeOffer }) => {
-                  this.setState({ waitFor: makeOffer.id })
-                  // this.shouldClose({ success: true })
-                  // console.log('Completed', makeOffer.id)
+                mutation={AcceptOfferMutation}
+                onCompleted={({ acceptOffer }) => {
+                  this.setState({ waitFor: acceptOffer.id })
                 }}
                 onError={error => {
                   console.log(error)
                   this.setState({ modal: 'error' })
                 }}
               >
-                {makeOffer => (
+                {acceptOffer => (
                   <>
                     <button
-                      className="btn btn-primary"
-                      onClick={() => this.onClick(makeOffer, canBuy)}
+                      className={this.props.className}
+                      onClick={() => this.onClick(acceptOffer, canBuy)}
                       children={
                         canBuy.loading && this.state.loading
                           ? 'Loading'
-                          : 'Buy Now'
+                          : this.props.children
                       }
                     />
                     {canBuy.error && this.state.showError && (
@@ -245,15 +227,15 @@ class Buy extends Component {
     }
     if (!data || !data.web3) return
 
-    const { listing, from, value } = this.props
-    const variables = { listingID: listing.id, value, from }
+    const { offer } = this.props
+    const variables = { offerID: offer.id, from: offer.listing.seller.id }
 
     const eth = Number(get(data, 'web3.metaMaskAccount.balance.eth', 0))
     if (!data.web3.metaMaskAccount) {
       this.setState({ redirect: `/listings/${this.props.listing.id}/onboard` })
     } else if (data.web3.networkId !== data.web3.metaMaskNetworkId) {
       this.setState({ wrongNetwork: data })
-    } else if (eth < value) {
+    } else if (!eth) {
       this.setState({ noBalance: true })
     } else {
       this.setState({ modal: true })
@@ -262,26 +244,7 @@ class Buy extends Component {
   }
 }
 
-export default Buy
+export default AcceptOffer
 
 require('react-styl')(`
-  .make-offer-modal
-    display: flex
-    flex-direction: column
-    align-items: center
-    .success-icon
-      background: url(images/circular-check-button.svg) no-repeat center
-      background-size: contain
-      height: 3.5rem
-      width: 3.5rem
-      margin-bottom: 2rem
-    .error-icon
-      width: 100%
-    .spinner,.error-icon
-      margin-bottom: 2rem
-    .btn
-      margin-top: 2rem
-    .disclaimer
-      font-size: 14px
-      margin-top: 1rem
 `)

@@ -87,9 +87,49 @@ async function sales(seller, { first = 10, after }, _, info) {
   return await resultsFromIds({ after, ids, first, totalCount, fields })
 }
 
+async function reviews(user) {
+  const listings = await contracts.marketplace.eventCache.allEvents(
+    'ListingCreated',
+    user.id
+  )
+
+  const listingIds = listings.map(e => Number(e.returnValues.listingID))
+
+  const events = await contracts.marketplace.eventCache.offers(
+    listingIds,
+    null,
+    'OfferFinalized'
+  )
+
+  let nodes = await Promise.all(
+    events.map(event => {
+      return contracts.eventSource.getReview(
+        event.returnValues.listingID,
+        event.returnValues.offerID,
+        event.returnValues.party,
+        event.returnValues.ipfsHash
+      )
+    })
+  )
+
+  nodes = nodes.filter(n => n.rating)
+
+  return {
+    totalCount: nodes.length,
+    nodes,
+    pageInfo: {
+      endCursor: '',
+      hasNextPage: false,
+      hasPreviousPage: false,
+      startCursor: ''
+    }
+  }
+}
+
 export default {
   offers,
   sales,
+  reviews,
   listings: listingsBySeller,
   firstEvent: async user => {
     if (user.firstEvent) return user.firstEvent

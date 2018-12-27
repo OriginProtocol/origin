@@ -5,8 +5,8 @@ import get from 'lodash/get'
 import Identicon from 'components/Identicon'
 import IdentityQuery from 'queries/Identity'
 
-const AboutSeller = ({ id }) => (
-  <div className="about-seller">
+const AboutParty = ({ id }) => (
+  <div className="about-party">
     <Query query={IdentityQuery} variables={{ id }}>
       {({ data, loading, error }) => {
         if (loading || error) return null
@@ -60,10 +60,10 @@ const AboutSeller = ({ id }) => (
   </div>
 )
 
-export default AboutSeller
+export default AboutParty
 
 require('react-styl')(`
-  .about-seller
+  .about-party
     background: var(--pale-grey-eight)
     border-radius: 5px
     padding: 1rem
