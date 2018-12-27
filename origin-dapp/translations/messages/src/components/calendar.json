@@ -94,5 +94,9 @@
   {
     "id": "calendar.selectionUnavailable",
     "defaultMessage": "Your selection contains one or more unavailable time slots."
+  },
+  {
+    "id": "calendar.showPastDateSelectedError",
+    "defaultMessage": "Past dates may not be selected."
   }
 ]

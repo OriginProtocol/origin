@@ -49,18 +49,15 @@ class Calendar extends Component {
 
     this.state = {
       events: [],
-      selectedEvent: {
-        price: 0,
-        isAvailable: true,
-        isRecurringEvent: false
-      },
+      selectedEvent: null,
       buyerSelectedSlotData: null,
       defaultDate: new Date(),
       showSellerActionBtns: false,
       hideRecurringEventCheckbox: false,
       editAllEventsInSeries: true,
       existingEventSelected: false,
-      clickedSlotInfo: null
+      clickedSlotInfo: null,
+      showPastDateSelectedError: false
     }
 
     this.localizer = BigCalendar.momentLocalizer(moment)
@@ -111,6 +108,15 @@ class Calendar extends Component {
     this.setState({ clickedSlotInfo })
 
     if (this.props.userType === 'seller') {
+
+      // Check if slot is in the past
+      if (moment(clickedSlotInfo.end).isBefore(moment().startOf('day'))) {
+        return this.setState({
+          showPastDateSelectedError: true,
+          selectedEvent: null
+        })
+      }
+
       const eventsInSlot = checkSlotForExistingEvents(clickedSlotInfo, this.state.events)
 
       if (eventsInSlot.length) {
@@ -243,7 +249,8 @@ class Calendar extends Component {
     }
 
     const stateToSet = {
-      selectedEvent: event
+      selectedEvent: event,
+      showPastDateSelectedError: false
     }
 
     const existingEventInSlot = checkSlotForExistingEvents(selectedEvent, this.state.events)
@@ -536,7 +543,9 @@ class Calendar extends Component {
       events,
       editAllEventsInSeries,
       existingEventSelected,
-      showNoEventsEnteredErrorMessage
+      showNoEventsEnteredErrorMessage,
+      selectionUnavailable,
+      showPastDateSelectedError
     } = this.state
 
     return (
@@ -933,13 +942,25 @@ class Calendar extends Component {
                 }
               </div>
             }
-            {this.state.selectionUnavailable &&
+            {selectionUnavailable &&
               <div className="info-box warn">
                 <p>
                   <FormattedMessage
                     id={'calendar.selectionUnavailable'}
                     defaultMessage={
                       'Your selection contains one or more unavailable time slots.'
+                    }
+                  />
+                </p>
+              </div>
+            }
+            {showPastDateSelectedError &&
+              <div className="info-box warn">
+                <p>
+                  <FormattedMessage
+                    id={'calendar.showPastDateSelectedError'}
+                    defaultMessage={
+                      'Past dates may not be selected.'
                     }
                   />
                 </p>

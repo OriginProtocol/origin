@@ -64,6 +64,7 @@
   "calendar.price": "Price",
   "calendar.reserve": "Reserve",
   "calendar.selectionUnavailable": "Your selection contains one or more unavailable time slots.",
+  "calendar.showPastDateSelectedError": "Past dates may not be selected.",
   "contact.sendMessages": "send messages",
   "contact.generic": "Contact",
   "contact.buyer": "Contact Buyer",
