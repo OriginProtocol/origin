@@ -162,6 +162,7 @@ export default `
     currencyId: String
     price: Price
     category: String
+    subCategory: String
     categoryStr: String
     unitsTotal: Int
     media: [Media]

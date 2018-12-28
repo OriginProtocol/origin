@@ -4,7 +4,7 @@ import { Button } from '@blueprintjs/core'
 import { Dialog, FormGroup, InputGroup, HTMLSelect } from '@blueprintjs/core'
 
 import withAccounts from 'hoc/withAccounts'
-import { DeployTokenMutation } from '../../mutations'
+import { DeployTokenMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class DeployToken extends Component {

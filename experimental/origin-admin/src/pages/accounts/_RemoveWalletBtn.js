@@ -3,7 +3,7 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Button, Tooltip } from '@blueprintjs/core'
 
-import query from './_query'
+import query from 'queries/AllAccounts'
 
 const RemoveWallet = gql`
   mutation RemoveWallet($address: String!) {

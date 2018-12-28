@@ -15,5 +15,7 @@ module.exports = Object.freeze({
 
   ORBIT_DB_PATH: process.env.ORBIT_DB_PATH || './odb',
 
-  RPC_SERVER: process.env.RPC_SERVER
+  RPC_SERVER: process.env.RPC_SERVER,
+  NOTIFY_API_ENDPOINT: process.env.NOTIFY_API_ENDPOINT,
+  NOTIFY_API_SECURE_TOKEN: process.env.NOTIFY_API_SECURE_TOKEN
 })

@@ -1,4 +1,4 @@
-import { UserConstants } from '../actions/User'
+import { UserConstants } from 'actions/User'
 
 export default function Users(state = [], action = {}) {
   switch (action.type) {
@@ -11,10 +11,7 @@ export default function Users(state = [], action = {}) {
       const users = [...state]
       const i = users.findIndex(u => u.address === user.address)
       const { firstName, lastName } = user.profile || {}
-      const userWithName = {
-                              ...user,
-                              fullName: (firstName || lastName) ? (`${firstName} ${lastName}`).trim() : 'Unnamed User'
-                            }
+      const userWithName = { ...user, fullName: (firstName || lastName) ? (`${firstName} ${lastName}`).trim() : 'Unnamed User' }
 
       return i === -1 ? [...users, userWithName] : users.map(u => u.address === user.address ? userWithName : u)
 
