@@ -9,8 +9,8 @@ const app = express()
 const port = process.env.PORT || 4321
 const logger = Logger.create('origin-dapp-creator-server')
 
-import { getDnsRecord, parseDnsTxtRecord, setAllRecords, updateTxtRecord } from './lib/dns'
-import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './lib/ipfs'
+import { getDnsRecord, parseDnsTxtRecord, setAllRecords, updateTxtRecord } from 'dns'
+import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from 'ipfs'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
