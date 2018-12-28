@@ -113,7 +113,8 @@ class Calendar extends Component {
     if (this.props.userType === 'seller') {
 
       // Check if slot is in the past
-      if (moment(clickedSlotInfo.end).isBefore(moment().startOf('day'))) {
+      const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
+      if (moment(clickedSlotInfo.end).isBefore(moment().startOf(timePeriod))) {
         return this.setState({
           showPastDateSelectedError: true,
           selectedEvent: null
@@ -444,9 +445,10 @@ class Calendar extends Component {
         moment(value).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end).add(1, 'second'))
       )
     const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
+    const isPastDate = moment(value).isBefore(moment().startOf('day')) ? ' past-date' : ''
 
     return (
-      <div className={`rbc-day-bg ${availability}${isSelected}`}>
+      <div className={`rbc-day-bg ${availability}${isSelected}${isPastDate}`}>
         {slotData.isAvailable &&
           <span className="slot-price">{slotData.price ? `${slotData.price} ETH` : `0 ETH`}</span>
         }
@@ -468,7 +470,9 @@ class Calendar extends Component {
       )
     const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
     const price = slotData.price ? ` priceEth-${slotData.price}` : ''
-    return { className: `${isAvailable}${isSelected}${price}` }
+    const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
+    const isPastDate = moment(date).isBefore(moment().startOf(timePeriod)) ? ' past-date' : ''
+    return { className: `${isAvailable}${isSelected}${price}${isPastDate}` }
   }
 
   saveData() {
@@ -637,7 +641,7 @@ class Calendar extends Component {
               </div>
             }
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 calendar-right-column">
             {!selectedEvent || !selectedEvent.start && userType === 'seller' &&
               <div className="info-box">
                 <p>

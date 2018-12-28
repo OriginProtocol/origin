@@ -1404,7 +1404,7 @@ class ListingCreate extends Component {
           <Calendar
             slots={ [] }
             userType="seller"
-            viewType={ 'daily' }
+            viewType={ 'hourly' }
             step={ 60 }
             onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
             onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }

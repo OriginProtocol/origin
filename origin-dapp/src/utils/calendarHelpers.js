@@ -70,11 +70,8 @@ export function doAllEventsRecur(events) {
 // This is a hackky way of showing the price in hourly time slots
 // since React Big Calendar doesn't give us full control over the content of those slots
 // Possible future optimization would be to create a PR to React Big Calendar to support custom slot content.
-export function renderHourlyPrices(viewType, userType) {
-  if (viewType &&
-      viewType === 'hourly' &&
-      userType &&
-      userType === 'buyer') {
+export function renderHourlyPrices(viewType) {
+  if (viewType && viewType === 'hourly') {
     const slots = document.querySelectorAll('.rbc-time-slot')
 
     for (let i = 0, slotsLen = slots.length; i < slotsLen; i++) {
