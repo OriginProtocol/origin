@@ -253,7 +253,9 @@ class Calendar extends Component {
 
     const stateToSet = {
       selectedEvent: event,
-      showPastDateSelectedError: false
+      showPastDateSelectedError: false,
+      editAllEventsInSeries: true,
+      isAvailable: true
     }
 
     const existingEventInSlot = checkSlotForExistingEvents(selectedEvent, this.state.events)
@@ -288,13 +290,14 @@ class Calendar extends Component {
           ...this.state.selectedEvent,
           start,
           end
-        }
+        },
+        editAllEventsInSeries
+      })
+    } else {
+      this.setState({
+        editAllEventsInSeries
       })
     }
-
-    this.setState({
-      editAllEventsInSeries
-    })
   }
 
   handlePriceChange(event) {
@@ -382,7 +385,9 @@ class Calendar extends Component {
     const unChangedEvent = this.state.events.filter((event) => event.id === this.state.selectedEvent.id)
     this.setState({
       selectedEvent: unChangedEvent[0],
-      showSellerActionBtns: false
+      showSellerActionBtns: false,
+      editAllEventsInSeries: true,
+      isAvailable: true
     })
   }
 
