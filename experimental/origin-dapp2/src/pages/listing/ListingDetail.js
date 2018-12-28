@@ -5,7 +5,7 @@ import Link from 'components/Link'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 
-import Buy from './Buy'
+import Buy from './mutations/Buy'
 
 class ListingDetail extends Component {
   state = {}

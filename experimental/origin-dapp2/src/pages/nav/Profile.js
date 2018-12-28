@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
 
+import Link from 'components/Link'
 import Identicon from 'components/Identicon'
 import Dropdown from 'components/Dropdown'
 import Price from 'components/Price'
@@ -30,7 +31,12 @@ class ProfileNav extends Component {
               className="nav-item dark profile"
               open={this.props.open}
               onClose={() => this.props.onClose()}
-              content={<ProfileDropdown data={data} />}
+              content={
+                <ProfileDropdown
+                  onClose={() => this.props.onClose()}
+                  data={data}
+                />
+              }
             >
               <a
                 className="nav-link"
@@ -53,7 +59,7 @@ class ProfileNav extends Component {
   }
 }
 
-const ProfileDropdown = ({ data }) => {
+const ProfileDropdown = ({ data, onClose }) => {
   const { checksumAddress, balance, id } = data.web3.metaMaskAccount
   return (
     <div className="dropdown-menu dark dropdown-menu-right show profile">
@@ -96,7 +102,9 @@ const ProfileDropdown = ({ data }) => {
         </div>
       </div>
       <Identity id={id} />
-      <a href="#">View Profile</a>
+      <Link onClick={() => onClose()} to={`/user/${id}`}>
+        View Profile
+      </Link>
     </div>
   )
 }

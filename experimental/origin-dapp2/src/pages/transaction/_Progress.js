@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
-import AcceptOffer from './AcceptOffer'
-import FinalizeOffer from './FinalizeOffer'
+import AcceptOffer from './mutations/AcceptOffer'
+import FinalizeOffer from './mutations/FinalizeOffer'
 import StarRating from 'components/StarRating'
 
 const TransactionProgress = ({ offer, wallet }) => {

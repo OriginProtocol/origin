@@ -6,8 +6,8 @@ import Nav from './_Nav'
 import Footer from './_Footer'
 
 import Listings from './listings/Listings'
-import Listing from './listings/Listing'
-import Purchase from './transactions/Purchase'
+import Listing from './listing/Listing'
+import Transaction from './transaction/Transaction'
 import MyPurchases from './transactions/Purchases'
 import MySales from './transactions/Sales'
 import MyListings from './transactions/Listings'
@@ -33,7 +33,7 @@ class App extends Component {
           <Nav />
           <Switch>
             <Route path="/listings/:listingID" component={Listing} />
-            <Route path="/purchases/:offerId" component={Purchase} />
+            <Route path="/purchases/:offerId" component={Transaction} />
             <Route path="/my-purchases" component={MyPurchases} />
             <Route path="/my-sales" component={MySales} />
             <Route path="/my-listings" component={MyListings} />

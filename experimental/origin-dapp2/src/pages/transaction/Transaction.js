@@ -12,7 +12,7 @@ import TxProgress from './_Progress'
 import OfferDetails from './_OfferDetails'
 import ListingDetail from './_ListingDetail'
 
-const Purchase = props => {
+const Transaction = props => {
   const offerId = props.match.params.offerId
   return (
     <Query query={OfferQuery} variables={{ offerId }}>
@@ -52,7 +52,7 @@ const Purchase = props => {
                   <TxHistory offer={offer} />
 
                   <h3>Listing Details</h3>
-                  <ListingDetail />
+                  <ListingDetail listing={offer.listing} />
                 </div>
                 <div className="col-md-4">
                   <h4 className="side-bar">Offer Details</h4>
@@ -72,7 +72,7 @@ const Purchase = props => {
   )
 }
 
-export default withWallet(Purchase)
+export default withWallet(Transaction)
 
 require('react-styl')(`
   .transaction-detail

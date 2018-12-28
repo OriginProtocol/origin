@@ -22,10 +22,14 @@ class User extends Component {
               <>
                 <div className="row">
                   <div className="col-lg-2 col-md-3">
-                    <div
-                      className="main-avatar"
-                      style={{ backgroundImage: `url(${profile.avatar})` }}
-                    />
+                    {profile.avatar ? (
+                      <div
+                        className="main-avatar"
+                        style={{ backgroundImage: `url(${profile.avatar})` }}
+                      />
+                    ) : (
+                      <div className="main-avatar empty" />
+                    )}
                     <div className="verified-info">
                       <h5>Verified Info</h5>
                       {profile.phoneVerified && (
@@ -96,6 +100,9 @@ require('react-styl')(`
       border-radius: 1rem;
       background-repeat: no-repeat
       background-position: center
+      &.empty
+        background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
+        background-size: 63%
     .verified-info
       background-color: var(--pale-grey)
       padding: 1rem

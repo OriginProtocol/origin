@@ -93,8 +93,11 @@ class Purchases extends Component {
                             />
                           ) : null}
                           <div className="details">
-                            <div className="category">
-                              {listing.categoryStr}
+                            <div className="top">
+                              <div className="category">
+                                {listing.categoryStr}
+                              </div>
+                              <div className="status">{offer.statusStr}</div>
                             </div>
                             <div className="title">
                               <Link to={`/purchases/${offer.id}`}>
