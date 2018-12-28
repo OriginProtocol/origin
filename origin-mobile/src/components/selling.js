@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert, Image, Linking, StyleSheet, Text, View } from 'react-native'
+import { Alert, Dimensions, Image, Linking, StyleSheet, Text, View } from 'react-native'
 import { SELLING_URL } from 'react-native-dotenv'
 
 import OriginButton from 'components/origin-button'
@@ -12,9 +12,17 @@ export default class Selling extends Component {
   }
 
   render() {
+    const { height, width } = Dimensions.get('window')
+    const smallScreen = height < 812
+
     return (
       <View style={styles.container}>
-        <Image source={require(`${IMAGES_PATH}eth-pile.png`)} style={styles.image} />
+        <Image
+          source={require(`${IMAGES_PATH}eth-pile.png`)}
+          resizeMethod={'scale'}
+          resizeMode={'contain'}
+          style={smallScreen ? { height: '25%', marginBottom: 15 } : { marginBottom: 30 }}
+        />
         <Text style={styles.heading}>Start Selling On Origin</Text>
         <Text style={styles.paragraph}>Create your first listing in minutes by opening the Origin decentralized marketplace application from right here in your wallet.</Text>
         <OriginButton size="large" type="primary" title="Open DApp" textStyle={styles.buttonText} onPress={this.handlePress} />
@@ -40,9 +48,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     fontSize: 22,
     marginBottom: 10,
-  },
-  image: {
-    marginBottom: 30,
   },
   paragraph: {
     fontFamily: 'Lato',

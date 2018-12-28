@@ -120,11 +120,11 @@ const styles = StyleSheet.create({
     paddingVertical: 22,
   },
   button: {
+    marginBottom: 10,
     marginHorizontal: 10,
-    marginTop: 10,
   },
   buttonsContainer: {
-    flex: 1,
+    paddingTop: 10,
   },
   close: {
     margin: 'auto',
@@ -153,6 +153,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: 18 * 3,
+  },
+  svContainer: {
+    flex: 1,
   },
   walletSVContainer: {
     paddingHorizontal: 10,

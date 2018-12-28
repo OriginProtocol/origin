@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { ActivityIndicator, Alert, Image, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, Image, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { connect, Provider } from 'react-redux'
 
@@ -121,31 +121,6 @@ const OriginNavigator = createBottomTabNavigator({
   },
 })
 
-const styles = StyleSheet.create({
-  centerText: {
-    fontSize: 18,
-    padding: 10,
-    textAlign:'center',
-  },
-  textBold: {
-    fontWeight: '500',
-  },
-  buttonText: {
-    color: 'rgb(0,122,255)',
-    fontSize: 21,
-  },
-  buttonTouchable: {
-    padding: 16,
-  },
-  input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    color: 'black',
-    height: 40,
-    margin: 15,
-  },
-})
-
 // Origin Nav wrapper
 class OriginNavWrapper extends Component {
   componentDidMount() {
@@ -247,9 +222,11 @@ class OriginWrapper extends Component {
     const { activation, updateCarouselStatus } = this.props
     const { loading } = this.state
     const { carouselCompleted } = activation
+    const { height, width } = Dimensions.get('window')
+    const smallScreen = height < 812
 
     return loading ?
-      <View style={{ backgroundColor: '#293f55', flex: 1, justifyContent: 'space-around' }}>
+      <View style={styles.loading}>
         <ActivityIndicator size="large" color="white" />
       </View> :
       <Fragment>
@@ -258,17 +235,38 @@ class OriginWrapper extends Component {
             onCompletion={() => this.props.updateCarouselStatus(true)}
             pages={[
               {
-                image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-1.png')} />,
+                image: (
+                  <Image
+                    resizeMethod={'scale'}
+                    resizeMode={'contain'}
+                    source={require(IMAGES_PATH + 'carousel-1.png')}
+                    style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+                  />
+                ),
                 title: 'Store & Use Crypto',
                 subtitle: 'The Origin Mobile Wallet will allow you to store cryptocurrency to buy and sell on the Origin Marketplace.',
               },
               {
-                image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-2.png')} />,
+                image: (
+                  <Image
+                    resizeMethod={'scale'}
+                    resizeMode={'contain'}
+                    source={require(IMAGES_PATH + 'carousel-2.png')}
+                    style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+                  />
+                ),
                 title: 'Message Buyers & Sellers',
                 subtitle: 'Use the app to communicate with others on the Origin Marketplace in order to move your transactions.',
               },
               {
-                image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-3.png')} />,
+                image: (
+                  <Image
+                    resizeMethod={'scale'}
+                    resizeMode={'contain'}
+                    source={require(IMAGES_PATH + 'carousel-3.png')}
+                    style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+                  />
+                ),
                 title: 'Stay Up to Date',
                 subtitle: 'The Origin Mobile Wallet will notify you when there are transactions that require your attention.',
               },
@@ -301,6 +299,17 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const OriginWallet = connect(mapStateToProps, mapDispatchToProps)(OriginWrapper)
+
+const styles = StyleSheet.create({
+  image: {
+    marginBottom: '10%',
+  },
+  loading: {
+    backgroundColor: '#293f55',
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+})
 
 export default class OriginApp extends Component {
   render() {
