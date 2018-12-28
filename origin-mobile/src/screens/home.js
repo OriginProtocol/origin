@@ -8,6 +8,7 @@ import Currency from 'components/currency'
 import DeviceItem from 'components/device-item'
 import DeviceModal from 'components/device-modal'
 import NotificationsModal from 'components/notifications-modal'
+import Selling from 'components/selling'
 import Separator from 'components/separator'
 import SignItem from 'components/sign-item'
 import SignModal from 'components/sign-modal'
@@ -68,6 +69,7 @@ class HomeScreen extends Component {
     // To Do: convert tokens with decimal counts
     const daiBalance = dai
     const ognBalance = ogn
+    const eventsCount = pending_events.length + processed_events.length
 
     return (
       <Fragment>
@@ -110,99 +112,104 @@ class HomeScreen extends Component {
           </ScrollView>
           <WalletModal address={address} visible={this.state.walletExpanded} onPress={this.toggleWallet} />
         </View>
-        <SectionList
-          keyExtractor={({ event_id }) => event_id}
-          renderItem={({ item, section }) => {
-            if (section.title === 'Pending') {
-              switch(item.action) {
-                case 'transaction':
-                  return (
-                    <TransactionItem
+        {!eventsCount &&
+          <Selling />
+        }
+        {!!eventsCount &&
+          <SectionList
+            keyExtractor={({ event_id }) => event_id}
+            renderItem={({ item, section }) => {
+              if (section.title === 'Pending') {
+                switch(item.action) {
+                  case 'transaction':
+                    return (
+                      <TransactionItem
+                        item={item}
+                        address={address}
+                        navigation={navigation}
+                        handleApprove={() => originWallet.handleEvent(item)}
+                        handleReject={() => originWallet.handleReject(item)}
+                      />
+                    )
+                  case 'link':
+                    return (
+                      <DeviceItem
+                        item={item}
+                        navigation={navigation}
+                        handleLink={() => originWallet.handleEvent(item)}
+                        handleReject={() => originWallet.handleReject(item)}
+                      />
+                    )
+                  case 'sign':
+                    return (
+                      <SignItem
                       item={item}
                       address={address}
+                      balance={eth}
                       navigation={navigation}
                       handleApprove={() => originWallet.handleEvent(item)}
+                      handlePress={() => this.props.setActiveEvent(item)}
                       handleReject={() => originWallet.handleReject(item)}
-                    />
-                  )
-                case 'link':
-                  return (
-                    <DeviceItem
-                      item={item}
-                      navigation={navigation}
-                      handleLink={() => originWallet.handleEvent(item)}
-                      handleReject={() => originWallet.handleReject(item)}
-                    />
-                  )
-                case 'sign':
-                  return (
-                    <SignItem
-                    item={item}
-                    address={address}
-                    balance={eth}
-                    navigation={navigation}
-                    handleApprove={() => originWallet.handleEvent(item)}
-                    handlePress={() => this.props.setActiveEvent(item)}
-                    handleReject={() => originWallet.handleReject(item)}
-                    />
-                  )
-                default:
-                  return null
+                      />
+                    )
+                  default:
+                    return null
+                }
+              } else {
+                switch(item.action) {
+                  case 'transaction':
+                    return (
+                      <TransactionItem
+                        item={item} 
+                        address={address}
+                        balance={eth}
+                        navigation={navigation}
+                      />
+                    )
+                  case 'sign':
+                    return (
+                      <SignItem
+                        item={item} 
+                        address={address}
+                        balance={eth}
+                        navigation={navigation}
+                      />
+                    )
+                  case 'link':
+                    return (
+                      <DeviceItem
+                        item={item}
+                        address={address}
+                        balance={eth}
+                        navigation={navigation}
+                        handleUnlink={() => originWallet.handleUnlink(item)}/>
+                    )
+                  default:
+                    return null
+                }
               }
-            } else {
-              switch(item.action) {
-                case 'transaction':
-                  return (
-                    <TransactionItem
-                      item={item} 
-                      address={address}
-                      balance={eth}
-                      navigation={navigation}
-                    />
-                  )
-                case 'sign':
-                  return (
-                    <SignItem
-                      item={item} 
-                      address={address}
-                      balance={eth}
-                      navigation={navigation}
-                    />
-                  )
-                case 'link':
-                  return (
-                    <DeviceItem
-                      item={item}
-                      address={address}
-                      balance={eth}
-                      navigation={navigation}
-                      handleUnlink={() => originWallet.handleUnlink(item)}/>
-                  )
-                default:
-                  return null
+            }}
+            renderSectionHeader={({ section: { title }}) => {
+              if (!processed_events.length || title === 'Pending') {
+                return null
               }
-            }
-          }}
-          renderSectionHeader={({ section: { title }}) => {
-            if (!processed_events.length || title === 'Pending') {
-              return null
-            }
 
-            return (
-              <View style={styles.header}>
-                <Text style={styles.headerText}>{title.toUpperCase()}</Text>
-              </View>
-            ) 
-          }}
-          sections={[
-            { title: 'Pending', data: pending_events },
-            { title: 'Recent Activity', data: processed_events },
-          ]}
-          style={styles.list}
-          ItemSeparatorComponent={({ section }) => {
-            return <Separator padded={section.title !== 'Pending'} />
-          }}
-        />
+              return (
+                <View style={styles.header}>
+                  <Text style={styles.headerText}>{title.toUpperCase()}</Text>
+                </View>
+              ) 
+            }}
+            sections={[
+              { title: 'Pending', data: pending_events },
+              { title: 'Recent Activity', data: processed_events },
+            ]}
+            style={styles.list}
+            ItemSeparatorComponent={({ section }) => {
+              return <Separator padded={section.title !== 'Pending'} />
+            }}
+          />
+        }
         {active_event &&
           active_event.transaction &&
           address &&
