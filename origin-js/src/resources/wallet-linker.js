@@ -43,6 +43,27 @@ export default class WalletLinker {
     //clearInterval(self.interval)
   }
 
+  async preLinked(linkTokens) {
+    const [link_id, code, priv_key] = linkTokens.split("-")
+
+    if (link_id && code && priv_key)
+    {
+      const {session_token, linked} = await this.post('link-prelinked', {
+        code,
+        link_id,
+        return_url: this.getReturnUrl()
+      })
+
+      this.linked = linked
+      if (this.session_token != session_token)
+      {
+        this.session_token = session_token
+        this.startMessagesSync()
+      }
+      this.syncSessionStorage()
+    }
+  }
+
   async startLink() {
     const code = await this.generateLinkCode()
     this.setLinkCode(code)
@@ -249,7 +270,12 @@ export default class WalletLinker {
           {
             const data = JSON.parse(this.ecDecrypt(device.priv_data))
 
-            if (data.messaging && this.callbacks['messaging'])
+            if (!data)
+            {
+              // something is very wrong here, and we need to reset the link
+              this.logout()
+            }
+            else if (data.messaging && this.callbacks['messaging'])
             {
               this.callbacks['messaging'](data.messaging)
             }
