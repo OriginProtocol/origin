@@ -7,7 +7,7 @@
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "https://dapp.originprotocol.com/schemas/forRent-jewelry_1.0.0.json"
+      "const": "https://dapp.originprotocol.com/schemas/forRent-jewelry_2.0.0.json"
     },
     "listingType": {
       "const": "fractional"
