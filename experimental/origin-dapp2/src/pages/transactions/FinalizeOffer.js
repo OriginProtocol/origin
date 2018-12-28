@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Mutation, Query } from 'react-apollo'
-import { Redirect } from 'react-router'
 import get from 'lodash/get'
 
+import Redirect from 'components/Redirect'
 import Modal from 'components/Modal'
 import FinalizeOfferMutation from 'mutations/FinalizeOffer'
 import CanBuyQuery from 'queries/CanBuy'
@@ -121,14 +121,8 @@ class WaitFor extends Component {
 class FinalizeOffer extends Component {
   state = {}
   render() {
-    const redirect = this.state.redirect
-    if (redirect) {
-      return (
-        <Redirect
-          push
-          to={{ pathname: redirect, state: { scrollToTop: true } }}
-        />
-      )
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />
     }
 
     const modalProps = {

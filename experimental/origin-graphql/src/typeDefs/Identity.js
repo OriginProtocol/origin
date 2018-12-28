@@ -56,6 +56,7 @@ export default `
     id: ID!
     firstName: String
     lastName: String
+    fullName: String
     description: String
     avatar: String
     strength: String

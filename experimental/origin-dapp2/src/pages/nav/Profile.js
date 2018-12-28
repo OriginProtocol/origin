@@ -262,24 +262,24 @@ require('react-styl')(`
 
   .attestations
     display: flex
-    .attestation
-      background-repeat: no-repeat
-      background-position: center
-      background-size: contain
-      width: 1.25rem
-      height: 1.25rem
-      margin-right: 0.25rem
-      &.email
-        background-image: url(images/identity/email-icon-verified.svg)
-      &.facebook
-        background-image: url(images/identity/facebook-icon-verified.svg)
-      &.phone
-        background-image: url(images/identity/phone-icon-verified.svg)
-      &.twitter
-        background-image: url(images/identity/twitter-icon-verified.svg)
-      &.airbnb
-        background-image: url(images/identity/airbnb-icon-verified.svg)
-      &.google
-        background-image: url(images/identity/google-icon-verified.svg)
+  .attestation
+    background-repeat: no-repeat
+    background-position: center
+    background-size: contain
+    width: 1.25rem
+    height: 1.25rem
+    margin-right: 0.25rem
+    &.email
+      background-image: url(images/identity/email-icon-verified.svg)
+    &.facebook
+      background-image: url(images/identity/facebook-icon-verified.svg)
+    &.phone
+      background-image: url(images/identity/phone-icon-verified.svg)
+    &.twitter
+      background-image: url(images/identity/twitter-icon-verified.svg)
+    &.airbnb
+      background-image: url(images/identity/airbnb-icon-verified.svg)
+    &.google
+      background-image: url(images/identity/google-icon-verified.svg)
 
 `)

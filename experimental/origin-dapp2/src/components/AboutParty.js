@@ -1,64 +1,83 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
 
+import Redirect from 'components/Redirect'
 import Identicon from 'components/Identicon'
 import IdentityQuery from 'queries/Identity'
 
-const AboutParty = ({ id }) => (
-  <div className="about-party">
-    <Query query={IdentityQuery} variables={{ id }}>
-      {({ data, loading, error }) => {
-        if (loading || error) return null
-        const profile = get(data, 'web3.account.identity.profile')
-        if (!profile) {
-          return null
-        }
+class AboutParty extends Component {
+  state = {}
+  render() {
+    const { id } = this.props
 
-        const name = `${profile.firstName} ${profile.lastName}`
+    if (this.state.redirect) {
+      return <Redirect to={`/user/${id}`} />
+    }
 
-        return (
-          <div className="profile">
-            {profile.avatar ? (
-              <div
-                className="avatar"
-                style={{ backgroundImage: `url(${profile.avatar})` }}
-              />
-            ) : (
-              <div className="avatar empty" />
-            )}
-            <div>
-              <div className="name">{name}</div>
-              <div className="attestations">
-                {profile.twitterVerified && (
-                  <div className="attestation twitter" />
+    return (
+      <div
+        className="about-party"
+        onClick={() => this.setState({ redirect: true })}
+      >
+        <Query query={IdentityQuery} variables={{ id }}>
+          {({ data, loading, error }) => {
+            if (loading || error) return null
+            const profile = get(data, 'web3.account.identity.profile')
+            if (!profile) {
+              return null
+            }
+
+            const name = `${profile.firstName} ${profile.lastName}`
+
+            return (
+              <div className="profile">
+                {profile.avatar ? (
+                  <div
+                    className="avatar"
+                    style={{ backgroundImage: `url(${profile.avatar})` }}
+                  />
+                ) : (
+                  <div className="avatar empty" />
                 )}
-                {profile.googleVerified && (
-                  <div className="attestation google" />
-                )}
-                {profile.phoneVerified && <div className="attestation phone" />}
-                {profile.emailVerified && <div className="attestation email" />}
-                {profile.facebookVerified && (
-                  <div className="attestation facebook" />
-                )}
-                {profile.airbnbVerified && (
-                  <div className="attestation airbnb" />
-                )}
+                <div>
+                  <div className="name">{name}</div>
+                  <div className="attestations">
+                    {profile.twitterVerified && (
+                      <div className="attestation twitter" />
+                    )}
+                    {profile.googleVerified && (
+                      <div className="attestation google" />
+                    )}
+                    {profile.phoneVerified && (
+                      <div className="attestation phone" />
+                    )}
+                    {profile.emailVerified && (
+                      <div className="attestation email" />
+                    )}
+                    {profile.facebookVerified && (
+                      <div className="attestation facebook" />
+                    )}
+                    {profile.airbnbVerified && (
+                      <div className="attestation airbnb" />
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
+            )
+          }}
+        </Query>
+        <div className="eth-address">
+          <Identicon size={40} address={id} />
+          <div>
+            <div>ETH Address:</div>
+            <div className="address">{id}</div>
           </div>
-        )
-      }}
-    </Query>
-    <div className="eth-address">
-      <Identicon size={40} address={id} />
-      <div>
-        <div>ETH Address:</div>
-        <div className="address">{id}</div>
+        </div>
       </div>
-    </div>
-  </div>
-)
+    )
+  }
+}
 
 export default AboutParty
 
@@ -69,6 +88,7 @@ require('react-styl')(`
     padding: 1rem
     font-size: 14px
     font-weight: normal
+    cursor: pointer
     .profile
       display: flex
       margin-bottom: 1rem

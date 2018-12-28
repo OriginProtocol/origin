@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import Redirect from 'components/Redirect'
 import Price from 'components/Price'
 
 class Listings extends Component {
@@ -10,12 +10,7 @@ class Listings extends Component {
 
     return (
       <div className="row">
-        {this.state.redirect && (
-          <Redirect
-            push
-            to={{ pathname: this.state.redirect, state: { scrollToTop: true } }}
-          />
-        )}
+        {this.state.redirect && <Redirect to={this.state.redirect} />}
         {listings.map(a => (
           <div
             key={a.id}

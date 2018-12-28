@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Redirect } from 'react-router'
 
 import Link from 'components/Link'
+import Redirect from 'components/Redirect'
 import Modal from 'components/Modal'
 
 import ListingPreview from './_ListingPreview'
@@ -96,12 +96,7 @@ class OnboardNotifications extends Component {
     const nextLink = `/listings/${listing.id}/onboard/profile`
     return (
       <>
-        {this.state.redirect && (
-          <Redirect
-            to={{ pathname: nextLink, state: { scrollToTop: true } }}
-            push
-          />
-        )}
+        {this.state.redirect && <Redirect to={nextLink} />}
         <div className="step">Step 3</div>
         <h3>Turn On Desktop Notifications</h3>
         <div className="row">
