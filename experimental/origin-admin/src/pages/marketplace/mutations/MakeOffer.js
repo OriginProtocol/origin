@@ -13,7 +13,7 @@ import {
 
 import rnd from 'utils/rnd'
 import withAccounts from 'hoc/withAccounts'
-import { MakeOfferMutation } from '../../../mutations'
+import { MakeOfferMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 

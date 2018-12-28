@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
+import queryString from 'query-string'
 
 import ConversationListItem from 'components/conversation-list-item'
 import Conversation from 'components/conversation'
@@ -35,6 +37,22 @@ class Messages extends Component {
     }
 
     window.addEventListener('resize', this.checkForSmallScreen)
+
+    const { location } = this.props
+    const query = queryString.parse(location.search)
+    const walletContainer = query['wallet-container']
+    if (walletContainer && origin.contractService.walletLinker) {
+      window.__linkToWalletContainer = notify_wallet => {
+        origin.contractService.walletLinker.setLinkCode = () => {
+          // don't do anything here
+        }
+        origin.contractService.walletLinker.notify_wallet = notify_wallet
+
+        if (!this.props.wallet.address && web3.currentProvider.isOrigin) {
+          origin.contractService.showLinkPopUp()
+        }
+      }
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -98,7 +116,7 @@ class Messages extends Component {
   }
 
   render() {
-    const { conversations, messages, users, wallet } = this.props
+    const { conversations, location, messages, users, wallet } = this.props
     const { selectedConversationId, smallScreenOrDevice } = this.state
     const filteredAndSorted = messages
       .filter(m => m.conversationId === selectedConversationId)
@@ -116,27 +134,40 @@ class Messages extends Component {
     const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(counterpartyAddress)) || {}
     const counterpartyProfile = counterparty && counterparty.profile
     const counterpartyName = abbreviateName(counterparty) || truncateAddress(formattedAddress(counterpartyAddress))
+    const query = queryString.parse(location.search)
+    const includeNav = !query['no-nav']
 
     if (smallScreenOrDevice) {
       if (selectedConversationId && selectedConversationId.length) {
         return (
           <div className="mobile-messaging messages-wrapper">
-            <div className="back d-flex flex-row justify-content-start"
-              onClick={() => this.handleConversationSelect()}
-            >
+            <div className="back d-flex flex-row justify-content-start">
               <div className="align-self-start">
-                <i className="icon-arrow-left align-self-start mr-auto"></i>
+                <i className="icon-arrow-left align-self-start mr-auto" onClick={() => this.handleConversationSelect()}></i>
               </div>
               <div className="align-self-center nav-avatar ml-auto">
-                <Link to={`/users/${counterpartyAddress}`}>
+                {includeNav && (
+                  <Link to={`/users/${counterpartyAddress}`}>
+                    <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
+                  </Link>
+                )}
+                {!includeNav && (
                   <Avatar image={counterpartyProfile && counterpartyProfile.avatar} placeholderStyle="blue" />
-                </Link>
+                )}
               </div>
-              <div className="counterparty text-truncate mr-auto">{counterpartyName}</div>
+              <div className="counterparty text-truncate mr-auto">
+                {includeNav && (
+                  <Link to={includeNav ? `/users/${counterpartyAddress}` : '#'}>
+                    {counterpartyName}
+                  </Link>
+                )}
+                {!includeNav && counterpartyName}
+              </div>
             </div>
             <div className="conversation-col d-flex flex-column">
               <Conversation
                 id={selectedConversationId}
+                includeNav={includeNav}
                 messages={filteredAndSorted}
                 withListingSummary={true}
                 smallScreenOrDevice={smallScreenOrDevice}
@@ -231,7 +262,9 @@ const mapDispatchToProps = dispatch => ({
   showMainNav: (showNav) => dispatch(showMainNav(showNav)),
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Messages)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Messages)
+)

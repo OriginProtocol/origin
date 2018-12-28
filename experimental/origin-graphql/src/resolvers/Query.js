@@ -1,6 +1,8 @@
 import contracts from '../contracts'
 
-let ethPrice, marketplaceExists = {}
+let ethPrice
+const marketplaceExists = {},
+  messagingInitialized = {}
 
 export default {
   config: () => contracts.net,
@@ -10,11 +12,13 @@ export default {
     if (marketplaceExists[address]) {
       return contracts.marketplace
     }
-    const exists = await web3.eth.getCode(address)
-    if (exists && exists.length > 2) {
-      marketplaceExists[address] = true
-      return contracts.marketplace
-    }
+    try {
+      const exists = await contracts.web3.eth.getCode(address)
+      if (exists && exists.length > 2) {
+        marketplaceExists[address] = true
+        return contracts.marketplace
+      }
+    } catch(e) { /* Ignore */ }
   },
   contracts: () => {
     let contracts = []
@@ -26,6 +30,11 @@ export default {
     return contracts
   },
   marketplaces: () => contracts.marketplaces,
+  userRegistry: () => {
+    const address = contracts.userRegistry.options.address
+    if (!address) return null
+    return contracts.userRegistry
+  },
   tokens: () => contracts.tokens,
   token: (_, args) => {
     if (args.id === '0x0000000000000000000000000000000000000000') {
@@ -54,11 +63,33 @@ export default {
     }),
   messaging: (_, args) =>
     new Promise(async resolve => {
-      contracts.messaging.events.once('initialized', async () => {
-        setTimeout(() => {
-          resolve({ id: args.id })
-        }, 500)
+      let id = args.id
+      if (id === 'defaultAccount') {
+        const accounts = await contracts.metaMask.eth.getAccounts()
+        if (!accounts || !accounts.length) return null
+        id = accounts[0]
+      }
+      if (messagingInitialized[id]) {
+        return resolve({ id })
+      }
+      contracts.messaging.events.once('initRemote', async () => {
+        messagingInitialized[id] = true
+        setTimeout(() => resolve({ id }), 500)
       })
-      await contracts.messaging.init(args.id)
-    })
+      await contracts.messaging.init(id)
+    }),
+
+  notifications: () => {
+    return {
+      pageInfo: {
+        endCursor: '',
+        hasNextPage: false,
+        hasPreviousPage: false,
+        startCursor: ''
+      },
+      totalCount: 0,
+      totalUnread: 0,
+      nodes: []
+    }
+  }
 }
