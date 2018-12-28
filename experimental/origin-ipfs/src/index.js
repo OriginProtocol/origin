@@ -35,7 +35,7 @@ async function postFile(gateway, file) {
   return res.Hash
 }
 
-async function post(gateway, json) {
+async function post(gateway, json, rawHash) {
   const formData = new FormData()
   formData.append('file', new Blob([JSON.stringify(json)]))
 
@@ -44,8 +44,11 @@ async function post(gateway, json) {
     body: formData
   })
   const res = await rawRes.json()
-
-  return getBytes32FromIpfsHash(res.Hash)
+  if (rawHash) {
+    return res.Hash
+  } else {
+    return getBytes32FromIpfsHash(res.Hash)
+  }
 }
 
 async function postEnc(gateway, json, pubKeys) {
@@ -84,7 +87,10 @@ async function decode(text, key, pass) {
 }
 
 async function getText(gateway, hashAsBytes) {
-  const hash = getIpfsHashFromBytes32(hashAsBytes)
+  const hash =
+    hashAsBytes.indexOf('0x') === 0
+      ? getIpfsHashFromBytes32(hashAsBytes)
+      : hashAsBytes
   const response = await new Promise(resolve => {
     let didTimeOut = false
     const timeout = setTimeout(() => {
@@ -124,5 +130,9 @@ async function get(gateway, hashAsBytes, party) {
 }
 
 module.exports = {
-  get, getText, post, getBytes32FromIpfsHash, getIpfsHashFromBytes32
+  get,
+  getText,
+  post,
+  getBytes32FromIpfsHash,
+  getIpfsHashFromBytes32
 }

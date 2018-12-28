@@ -11,7 +11,7 @@ import {
   HTMLSelect
 } from '@blueprintjs/core'
 
-import { SendFromWalletMutation } from '../../../mutations'
+import { SendFromWalletMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class SendFromWallet extends Component {

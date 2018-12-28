@@ -1,7 +1,7 @@
 import { ApolloLink } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
 
-import config from './contracts'
+import './contracts'
 import SchemaLink from './links/schemaLink'
 import SubscriptionsLink from './links/SubscriptionsLink'
 

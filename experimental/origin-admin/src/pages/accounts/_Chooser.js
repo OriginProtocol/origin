@@ -4,7 +4,7 @@ import { Button, Popover, Position, Menu } from '@blueprintjs/core'
 
 import SetWalletMutation from './_SetWalletMutation'
 
-import query from './_query'
+import query from 'queries/AllAccounts'
 
 function accountTxt(acct) {
   return `${acct.name ? `${acct.name} ` : ''}${acct.id.substr(0, 6)} ${acct.balance.eth} ETH${

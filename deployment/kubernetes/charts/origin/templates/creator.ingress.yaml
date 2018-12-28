@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "creator.fullname" . }}
+  labels:
+    app: {{ template "creator.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: origin-creator
+  annotations:
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/limit-rps: "10"
+spec:
+  tls:
+    - secretName: {{ template "creator.host" . }}
+      hosts:
+        - {{ template "creator.host" . }}
+  rules:
+  - host: {{ template "creator.host" . }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{ template "creator.fullname" . }}
+            servicePort: 80
+        - path: /
+          backend:
+            serviceName: {{ template "creator.fullname" . }}
+            servicePort: 4321

@@ -1,6 +1,7 @@
 export default `
   type Subscription {
     newBlock: Block
+    newTransaction: NewTransaction
     transactionUpdated: TransactionUpdate
   }
 
@@ -9,6 +10,11 @@ export default `
     status: String
     mutation: String
     confirmations: Int
+  }
+
+  type NewTransaction {
+    node: Transaction!
+    totalCount: Int
   }
 
   type Query {
@@ -40,16 +46,22 @@ export default `
 
   type Web3 {
     networkId: Int
+    networkName: String
     nodeAccounts: [Account]
     nodeAccount(id: ID!): Account
     accounts: [Account]
     account(id: ID!): Account
     defaultAccount: Account
     transaction(id: ID!): Transaction
+    transactions: [Transaction]
+    useMetaMask: Boolean
     metaMaskAvailable: Boolean
     metaMaskEnabled: Boolean
+    metaMaskApproved: Boolean
+    metaMaskUnlocked: Boolean
     metaMaskAccount: Account
     metaMaskNetworkId: Int
+    metaMaskNetworkName: String
   }
 
   type Price {
@@ -59,6 +71,7 @@ export default `
 
   type Account {
     id: ID!
+    checksumAddress: String
     balance: Balance
     role: String
     name: String
