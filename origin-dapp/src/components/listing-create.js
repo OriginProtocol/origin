@@ -171,10 +171,6 @@ class ListingCreate extends Component {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
-        if (listing.isMultiUnit) {
-          listing.boostLimit = listing.totalBoostValue
-          delete listing.totalBoostValue
-        }
 
         this.ensureUserIsSeller(listing.seller)
         this.setState({
@@ -741,6 +737,7 @@ class ListingCreate extends Component {
     const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
 
     if (isEditMode) {
+      // do not allow quantity to be edited below the value of units already in offers
       if (isMultiUnitListing && unitsTotal < unitsLockedInOffers) {
         errors.unitsTotal.addError(
           this.props.intl.formatMessage(
