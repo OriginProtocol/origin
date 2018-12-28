@@ -23,7 +23,7 @@ class WalletFundingScreen extends Component {
 
   componentDidMount() {
     const { activation, navigation } = this.props
-    const hasNotificationsEnabled = activation.notifications.permissions.hard.alerts
+    const hasNotificationsEnabled = activation.notifications.permissions.hard.alert
     const { method } = navigation.state.params.item.meta
     
     !hasNotificationsEnabled && this.props.promptForNotifications(method)

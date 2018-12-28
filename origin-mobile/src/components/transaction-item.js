@@ -13,9 +13,8 @@ class TransactionItem extends Component {
   render() {
     const { activation, item, address = '', handleApprove, handlePress, handleReject, navigation, style, wallet } = this.props
     const { cost, gas_cost, listing, meta, status, to } = item
-    const hasNotificationsEnabled = activation.notifications.permissions.hard.alerts
+    const hasNotificationsEnabled = activation.notifications.permissions.hard.alert
     // To Do: account for possible commission
-    console.log(wallet, item)
     const hasSufficientFunds = sufficientFunds(wallet, item)
     const counterpartyAddress = (listing && listing.seller) || to
     const { price = { amount: '', currency: '' } } = listing
