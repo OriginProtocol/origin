@@ -11,6 +11,7 @@ import messages from 'reducers/Messages'
 import profile from 'reducers/Profile'
 import wallet from 'reducers/Wallet'
 import search from 'reducers/Search'
+import config from 'reducers/Config'
 import alert from 'reducers/Alert'
 import users from 'reducers/Users'
 import app from 'reducers/App'
@@ -34,6 +35,7 @@ const store = createStore(
     profile,
     wallet,
     search,
+    config,
     alert,
     users,
     app
