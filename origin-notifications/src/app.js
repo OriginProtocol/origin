@@ -153,20 +153,20 @@ app.post('/events', async (req, res) => {
 
   if (linking_notify_endpoint) {
     const receivers = {}
-    const buyerMessage = getNotificationMessage(eventName, party, buyerAddress, "buyer")
-    const sellerMessage = getNotificationMessage(eventName, party, sellerAddress, "seller")
-    const event_data = {url:offer && dapp_offer_url + offer.id, to_dapp:true}
+    const buyerMessage = getNotificationMessage(eventName, party, buyerAddress, 'buyer')
+    const sellerMessage = getNotificationMessage(eventName, party, sellerAddress, 'seller')
+    const event_data = { url: offer && dapp_offer_url + offer.id, to_dapp: true }
 
     if (buyerMessage || sellerMessage)
     {
 
       if (buyerMessage)
       {
-        receivers[buyerAddress] = Object.assign({msg:buyerMessage}, event_data)
+        receivers[buyerAddress] = Object.assign({ msg: buyerMessage }, event_data)
       }
       if (sellerMessage)
       {
-        receivers[sellerAddress] = Object.assign({msg:sellerMessage}, event_data)
+        receivers[sellerAddress] = Object.assign({ msg: sellerMessage }, event_data)
       }
       try {
         fetch(linking_notify_endpoint, {
@@ -178,7 +178,7 @@ app.post('/events', async (req, res) => {
           body: JSON.stringify({ receivers, token: linking_notify_token })
         })
       } catch (error) {
-        console.log("Error notifying linking api ", error)
+        console.log('Error notifying linking api ', error)
       }
     }
   }

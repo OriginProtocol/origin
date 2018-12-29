@@ -44,11 +44,11 @@ export default class WalletLinker {
   }
 
   async preLinked(linkTokens) {
-    const [link_id, code, priv_key] = linkTokens.split("-")
+    const [link_id, code, priv_key] = linkTokens.split('-')
 
     if (link_id && code && priv_key)
     {
-      const {session_token, linked} = await this.post('link-prelinked', {
+      const { session_token, linked } = await this.post('link-prelinked', {
         code,
         link_id,
         return_url: this.getReturnUrl()

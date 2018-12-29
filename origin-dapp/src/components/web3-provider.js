@@ -382,9 +382,9 @@ class Web3Provider extends Component {
       }
       origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
 
-      const {location} = this.props
+      const { location } = this.props
       const query = queryString.parse(location.search)
-      const plink = query["plink"]
+      const plink = query['plink']
       if (plink)
       {
         origin.contractService.walletLinker.preLinked(plink)

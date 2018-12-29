@@ -61,8 +61,8 @@ function verifyMessageSignature(keysMap, orbitGlobal) {
       const value = message.payload.value
       if (value.length && value[0].emsg) {
         const receivers = db_store.access.write.filter(address => address != key).
-          reduce((acc, i) => {acc[i]={newMessage:true}; return acc}, {})
-        
+          reduce((acc, i) => {acc[i] = { newMessage: true }; return acc}, {})
+
         fetch(config.NOTIFY_API_ENDPOINT, {
           method: 'POST',
           headers: {
