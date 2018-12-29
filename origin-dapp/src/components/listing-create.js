@@ -103,21 +103,26 @@ class ListingCreate extends Component {
     this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
     this.checkWalletETHBalance = this.checkWalletETHBalance.bind(this)
 
-    let ShowDraftModal = false
     if (this.props.selectedSchemaId) {
       this.handleSchemaSelection(this.props.selectedSchemaId)
-      ShowDraftModal = true
     }
 
     this.state = {
-      showDraftModal: ShowDraftModal
+      showDraftModal: false
     }
   }
 
   async componentDidMount() {
+    const listingId = this.props.listingId
+
+    if (!listingId && this.props.selectedSchemaId) {
+      this.showDraftModal()
+    }
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
-    if (this.props.listingId) {
+    if (listingId) {
       this.props.storeWeb3Intent('edit a listing')
+      // clear listing localStorage
+      this.props.clearState()
 
       try {
         // Pass false as second param so category doesn't get translated
@@ -559,7 +564,6 @@ class ListingCreate extends Component {
 
   resetForm() {
     this.props.clearState()
-    // this.props.updateState(this.defaultState)
   }
 
   resetToPreview(e) {
@@ -1373,6 +1377,7 @@ class ListingCreate extends Component {
                     to="/"
                     className="btn btn-clear"
                     ga-category="create_listing"
+                    onClick={ this.resetForm }
                     ga-label="listing_creation_confirmation_modal_see_all_listings"
                   >
                     <FormattedMessage
