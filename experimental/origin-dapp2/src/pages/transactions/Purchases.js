@@ -143,9 +143,9 @@ const NoPurchases = () => (
       <h1>You haven’t bought anything yet.</h1>
       <p>Click below to view all listings.</p>
       <br />
-      <a href="/" className="btn btn-lrg btn-primary">
+      <Link to="/" className="btn btn-lrg btn-primary">
         Browse Listings
-      </a>
+      </Link>
     </div>
   </div>
 )

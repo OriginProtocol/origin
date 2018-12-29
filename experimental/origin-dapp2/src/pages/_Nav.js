@@ -13,7 +13,7 @@ import Confirmations from './nav/Confirmations'
 import Sell from './nav/Sell'
 
 class Nav extends Component {
-  state = {} //open: 'confirmations' }
+  state = {}
 
   render() {
     const navProps = nav => ({

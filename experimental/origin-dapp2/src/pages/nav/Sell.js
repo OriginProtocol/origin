@@ -30,7 +30,7 @@ class SellNav extends Component {
             <Link
               onClick={() => this.props.onClose()}
               className="dropdown-item"
-              to="/add-listing"
+              to="/create"
             >
               Add a Listing
             </Link>
