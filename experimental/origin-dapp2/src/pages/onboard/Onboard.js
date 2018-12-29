@@ -84,17 +84,6 @@ require('react-styl')(`
       font-style: normal
       color: var(--dark)
       margin-bottom: 0.75rem
-    .stages
-      display: flex
-      margin-bottom: 1.5rem
-      .stage
-        flex: 1
-        height: 2px
-        background: var(--pale-grey-two)
-        margin-right: 2px
-        border-radius: 2px
-        &.active
-          background: var(--clear-blue)
 
     .listing-preview,.onboard-help
       background: var(--pale-grey-eight)

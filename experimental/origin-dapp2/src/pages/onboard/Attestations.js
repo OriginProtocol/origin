@@ -4,9 +4,9 @@ import gql from 'graphql-tag'
 
 import Link from 'components/Link'
 import Modal from 'components/Modal'
+import Steps from 'components/Steps'
 
 import ListingPreview from './_ListingPreview'
-import Stage from './_Stage'
 import HelpProfile from './_HelpProfile'
 import ProfileStrength from './_ProfileStrength'
 
@@ -47,7 +47,7 @@ class OnboardAttestations extends Component {
         <h3>Strengthen your profile with attestations</h3>
         <div className="row">
           <div className="col-md-8">
-            <Stage stage={5} />
+            <Steps step={5} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {

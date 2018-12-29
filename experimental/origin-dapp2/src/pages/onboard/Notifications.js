@@ -5,9 +5,9 @@ import gql from 'graphql-tag'
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import Modal from 'components/Modal'
+import Steps from 'components/Steps'
 
 import ListingPreview from './_ListingPreview'
-import Stage from './_Stage'
 import HelpMessaging from './_HelpMessaging'
 
 const query = gql`
@@ -101,7 +101,7 @@ class OnboardNotifications extends Component {
         <h3>Turn On Desktop Notifications</h3>
         <div className="row">
           <div className="col-md-8">
-            <Stage stage={3} />
+            <Steps step={3} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {

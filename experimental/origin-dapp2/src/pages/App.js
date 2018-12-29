@@ -12,6 +12,7 @@ import MyPurchases from './transactions/Purchases'
 import MySales from './transactions/Sales'
 import MyListings from './transactions/Listings'
 import User from './user/User'
+import CreateListing from './create-listing/CreateListing'
 
 class App extends Component {
   componentDidMount() {
@@ -37,6 +38,7 @@ class App extends Component {
             <Route path="/my-purchases" component={MyPurchases} />
             <Route path="/my-sales" component={MySales} />
             <Route path="/my-listings" component={MyListings} />
+            <Route path="/create" component={CreateListing} />
             <Route path="/user/:id" component={User} />
             <Route component={Listings} />
           </Switch>

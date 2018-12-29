@@ -13,7 +13,7 @@ import Confirmations from './nav/Confirmations'
 import Sell from './nav/Sell'
 
 class Nav extends Component {
-  state = { } //open: 'confirmations' }
+  state = {} //open: 'confirmations' }
 
   render() {
     const navProps = nav => ({
@@ -66,12 +66,12 @@ class Nav extends Component {
                       </li>
                       <Sell {...navProps('sell')} />
                       <li className="nav-item extra-margin">
-                        <Link
-                          to="/add-listing"
+                        <NavLink
+                          to="/create"
                           className="nav-link add-listing text"
                         >
                           Add Listing
-                        </Link>
+                        </NavLink>
                       </li>
                       <Confirmations {...navProps('confirmations')} />
                       <Messages {...navProps('messages')} />

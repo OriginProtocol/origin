@@ -3,9 +3,9 @@ import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import Link from 'components/Link'
+import Steps from 'components/Steps'
 
 import ListingPreview from './_ListingPreview'
-import Stage from './_Stage'
 import HelpMessaging from './_HelpMessaging'
 
 const query = gql`
@@ -120,7 +120,7 @@ class OnboardMessaging extends Component {
         <h3>Enable Messaging</h3>
         <div className="row">
           <div className="col-md-8">
-            <Stage stage={2} />
+            <Steps step={2} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ data, error, networkStatus }) => {
                 if (networkStatus === 1) {

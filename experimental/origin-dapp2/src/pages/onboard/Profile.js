@@ -4,9 +4,9 @@ import gql from 'graphql-tag'
 
 import ImageCropper from 'components/ImageCropper'
 import Link from 'components/Link'
+import Steps from 'components/Steps'
 
 import ListingPreview from './_ListingPreview'
-import Stage from './_Stage'
 import HelpProfile from './_HelpProfile'
 
 const query = gql`
@@ -31,7 +31,7 @@ class OnboardProfile extends Component {
         <h3>Enter Your Profile Information</h3>
         <div className="row">
           <div className="col-md-8">
-            <Stage stage={4} />
+            <Steps step={4} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
