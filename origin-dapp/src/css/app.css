@@ -2955,6 +2955,16 @@ select.form-control:not([size]):not([multiple]) {
   vertical-align: initial;
 }
 
+.listing-form input[type="number"]::-webkit-outer-spin-button,
+.listing-form input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.listing-form input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 .boost-Low {
   background: var(--boost-low);
 }
