@@ -129,12 +129,12 @@ class OriginNavWrapper extends Component {
     })
 
     originWallet.initNotifications()
-    //register the service here
-    originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
-      this.props.newEvent(matcher, data)
+    // skip the prompt
+    // originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
+      // this.props.newEvent(matcher, data)
       // this.props.setActiveEvent(data)
-      NavigationService.navigate('Home')
-    })
+      // NavigationService.navigate('Home')
+    // })
 
     originWallet.events.on(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
@@ -165,6 +165,7 @@ class OriginNavWrapper extends Component {
     })
 
     originWallet.events.on(Events.UNLINKED, (data, matcher) => {
+      originWallet.getDevices()
       this.props.updateEvent(matcher, { linked: false })
     })
 

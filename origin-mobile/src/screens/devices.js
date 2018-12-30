@@ -16,11 +16,11 @@ class DevicesScreen extends Component {
     },
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.refreshList()
   }
 
-  refreshList(){
+  refreshList() {
     originWallet.getDevices()
   }
 
@@ -30,14 +30,14 @@ class DevicesScreen extends Component {
     return devices.length ? (
       <FlatList
         data={devices}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <DeviceItem
             item={item}
-            handleUnlink={() => {originWallet.handleUnlink(item); this.refreshList()}}
+            handleUnlink={() => originWallet.handleUnlink(item)}
           />
         )}
         keyExtractor={(item, index) => item.event_id}
-        ItemSeparatorComponent={({highlighted}) => (
+        ItemSeparatorComponent={({ highlighted }) => (
           <View style={styles.separator} />
         )}
         style={styles.list}

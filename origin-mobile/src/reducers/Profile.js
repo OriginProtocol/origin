@@ -3,7 +3,7 @@ import { ProfileConstants } from 'actions/Profile'
 const initialState = {
   user: {
     profile: {},
-    attestations: []
+    attestations: [],
   },
   name: 'Unnamed User',
   published: {
@@ -14,14 +14,14 @@ const initialState = {
     email: false,
     facebook: false,
     phone: false,
-    twitter: false
+    twitter: false,
   },
   changes: [],
   lastPublish: null,
   provisionalProgress: 0,
   publishedProgress: 0,
   strength: 0,
-  status: null
+  status: null,
 }
 initialState.provisional = { ...initialState.published }
 
@@ -32,7 +32,7 @@ const progressPct = {
   email: 20,
   phone: 20,
   facebook: 10,
-  twitter: 10
+  twitter: 10,
 }
 
 function changes(state) {
@@ -131,7 +131,7 @@ export default function Profile(state = initialState, action = {}) {
       }
       return changes({
         ...state,
-        provisional: { ...state.provisional, ...toAdd }
+        provisional: { ...state.provisional, ...toAdd },
       })
 
     case ProfileConstants.UPDATE:
@@ -140,7 +140,7 @@ export default function Profile(state = initialState, action = {}) {
         provisional: {
           ...state.provisional,
           ...action.data
-        }
+        },
       })
 
     case ProfileConstants.DEPLOY:
@@ -154,7 +154,7 @@ export default function Profile(state = initialState, action = {}) {
         ...state,
         status: 'success',
         lastPublish: new Date(),
-        published: state.provisional
+        published: state.provisional,
       })
 
     case ProfileConstants.DEPLOY_RESET:

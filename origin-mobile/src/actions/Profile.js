@@ -14,7 +14,7 @@ export const ProfileConstants = keyMirror(
     DEPLOY_ERROR: null,
     DEPLOY_RESET: null,
 
-    ADD_ATTESTATION: null
+    ADD_ATTESTATION: null,
   },
   'PROFILE'
 )

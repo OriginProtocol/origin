@@ -131,6 +131,7 @@ class HomeScreen extends Component {
                         handleReject={() => originWallet.handleReject(item)}
                       />
                     )
+                /* To Do: display link events as notifications
                   case 'link':
                     return (
                       <DeviceItem
@@ -140,16 +141,17 @@ class HomeScreen extends Component {
                         handleReject={() => originWallet.handleReject(item)}
                       />
                     )
+                */
                   case 'sign':
                     return (
                       <SignItem
-                      item={item}
-                      address={address}
-                      balance={eth}
-                      navigation={navigation}
-                      handleApprove={() => originWallet.handleEvent(item)}
-                      handlePress={() => this.props.setActiveEvent(item)}
-                      handleReject={() => originWallet.handleReject(item)}
+                        item={item}
+                        address={address}
+                        balance={eth}
+                        navigation={navigation}
+                        handleApprove={() => originWallet.handleEvent(item)}
+                        handlePress={() => this.props.setActiveEvent(item)}
+                        handleReject={() => originWallet.handleReject(item)}
                       />
                     )
                   default:
@@ -182,7 +184,7 @@ class HomeScreen extends Component {
                         address={address}
                         balance={eth}
                         navigation={navigation}
-                        handleUnlink={() => originWallet.handleUnlink(item)}/>
+                      />
                     )
                   default:
                     return null

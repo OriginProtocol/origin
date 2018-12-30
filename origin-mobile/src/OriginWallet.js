@@ -208,7 +208,8 @@ class OriginWallet {
   }
 
   async fireEvent(event_type, event, matcher) {
-    if (typeof(event) == 'object')
+    // event may be an array (see doGetLinkedDevices)
+    if (typeof(event) == 'object' && event.length === undefined)
     {
       const ts = new Date()
       if(!event.event_id)
@@ -328,7 +329,8 @@ class OriginWallet {
       link_id
     }).then((responseJson) => {
       console.log("We are now unlinked from remote wallet:", link_id)
-      if (responseJson.success)
+      // response is simply true
+      if (responseJson)
       {
         this.fireEvent(Events.UNLINKED, {link_id, unlinked_at:new Date()}, eventMatcherByLinkId(link_id))
       }
@@ -795,7 +797,8 @@ class OriginWallet {
     let key = this.checkStripOriginUrl(url)
     if (key)
     {
-      this.promptForLink(key)
+      // this.promptForLink(key)
+      this._handleLink({ linkCode: key })
     }
   }
 
@@ -839,7 +842,8 @@ class OriginWallet {
       let linkCode = content.substr(ORIGIN_QR_PREFIX.length)
       this.copied_code = linkCode
       Clipboard.setString("")
-      this.promptForLink(linkCode)
+      // this.promptForLink(linkCode)
+      this._handleLink({ linkCode })
     }
   }
 
