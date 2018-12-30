@@ -29,7 +29,7 @@ spec:
           backend:
             serviceName: {{ template "creator.fullname" . }}
             servicePort: 80
-        - path: /
+        - path: /api
           backend:
             serviceName: {{ template "creator.fullname" . }}
             servicePort: 4321
