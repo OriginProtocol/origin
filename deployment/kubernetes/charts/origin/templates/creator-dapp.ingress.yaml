@@ -10,20 +10,18 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     app.kubernetes.io/component: frontend
-    app.kubernetes.io/part-of: origindapp-com-ingres
+    app.kubernetes.io/part-of: origindapp-com-ingress
   annotations:
     kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
-    kubernetes.io/tls-acme: "true"
-    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/limit-rps: "50"
 spec:
   tls:
-    - secretName: "*.{{template "creator-dapp.host" . }}"
-      hosts:
-        - "*.{{ template "creator-dapp.host" . }}"
+    - secretName: {{ .Release.Namespace }}-origindapp-com
+    - hosts:
+      - '*.{{ template "creator-dapp.host" . }}'
   rules:
-    - host: "*.{{ template "creator-dapp.host" . }}"
+    - host: '*.{{ template "creator-dapp.host" . }}'
       http:
         paths:
           - path: /
