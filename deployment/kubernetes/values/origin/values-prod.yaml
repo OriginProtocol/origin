@@ -15,6 +15,10 @@ gethTxReplicas: 1
 ipfsImageTag: ipfs/go-ipfs
 ipfsImageTag: master
 
+# origin-ipfs-proxy
+ipfsProxyImage: origin-ipfs-proxy
+ipfsProxyImageTag: 'ff20be8'
+
 faucetImage: origin-faucet
 faucetImageTag: '28438d2'
 

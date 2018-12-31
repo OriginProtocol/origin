@@ -20,7 +20,7 @@ faucetImageTag: latest
 ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
-# ipfs-proxy
+# origin-ipfs-proxy
 ipfsProxyImage: ipfs-proxy
 ipfsProxyImageTag: latest
 
