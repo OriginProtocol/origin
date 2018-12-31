@@ -130,30 +130,38 @@ class ListingCreate extends Component {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, false)
+        const state = {
+          formListing: {
+            formData: listing
+          },
+          selectedSchemaId: listing.dappSchemaId,
+          selectedBoostAmount: listing.boostValue,
+          isEditMode: true
+        }
+        this.ensureUserIsSeller(listing.seller)
         let pictures = []
 
-        listing.pictures.map((pic, idx) => generateCroppedImage(pic, null, (dataUri) => {
-          pictures = [...pictures, dataUri]
+        if (listing.pictures.length) {
+          listing.pictures.map((pic, idx) => generateCroppedImage(pic, null, (dataUri) => {
+            pictures = [...pictures, dataUri]
+            const lastMappedImage = idx === (listing.pictures.length - 1)
 
-          if ((listing.pictures.length -1) === idx) {
-            this.ensureUserIsSeller(listing.seller)
-            this.setState({
-              formListing: {
-                formData: {
-                  ...listing,
-                  pictures
+            if (lastMappedImage) {
+              this.setState({
+                ...state,
+                formListing: {
+                  formData: { ...listing, pictures }
                 }
-              },
-              selectedSchemaId: listing.dappSchemaId,
-              selectedBoostAmount: listing.boostValue,
-              isEditMode: true
-            })
-            this.renderDetailsForm(listing.schema)
-            this.setState({
-              step: this.STEP.DETAILS,
-            })
-          }
-        }))
+              })
+              this.renderDetailsForm(listing.schema)
+              this.setState({ step: this.STEP.DETAILS })
+            }
+          }))
+        } else {
+          this.setState(state)
+          this.renderDetailsForm(listing.schema)
+          this.setState({ step: this.STEP.DETAILS })
+        }
 
       } catch (error) {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
