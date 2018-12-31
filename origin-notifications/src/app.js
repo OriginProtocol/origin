@@ -120,7 +120,7 @@ app.post('/events', async (req, res) => {
 
   // Return 200 to the event-listener without
   // waiting for processing of the event.
-  res.sendStatus(200)
+  res.json({ status: 'ok' })
 
   if (!listing || (!seller.address && !buyer.address)) {
     console.log(`Error: Missing data. Skipping ${eventDetails}`)
@@ -196,7 +196,6 @@ app.post('/events', async (req, res) => {
       }
     }
   })
-  res.json({ status: 'ok' })
 })
 
 app.listen(port, () => console.log(`Notifications server listening on port ${port}!`))

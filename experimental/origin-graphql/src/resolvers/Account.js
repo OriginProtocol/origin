@@ -2,11 +2,13 @@ import balancesFromWei from '../utils/balancesFromWei'
 import contracts from '../contracts'
 
 export default {
+  checksumAddress: account =>
+    contracts.web3.utils.toChecksumAddress(account.id),
   balance: async account => {
     try {
-      const wei = await web3.eth.getBalance(account.id)
+      const wei = await contracts.web3.eth.getBalance(account.id)
       return balancesFromWei(wei)
-    } catch(e) {
+    } catch (e) {
       return null
     }
   },

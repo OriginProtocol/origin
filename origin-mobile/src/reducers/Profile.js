@@ -1,4 +1,4 @@
-import { ProfileConstants } from '../actions/Profile'
+import { ProfileConstants } from 'actions/Profile'
 
 const initialState = {
   user: {

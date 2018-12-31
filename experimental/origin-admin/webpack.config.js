@@ -1,5 +1,5 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
@@ -8,7 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-var config = {
+const config = {
   entry: {
     app: './src/index.js'
   },
@@ -92,11 +92,11 @@ var config = {
 }
 
 if (isProduction) {
-  config.output.filename = '[name].[hash:8].js',
-  config.optimization.minimizer = [
-    new TerserPlugin({ cache: true, parallel: true }),
-    new OptimizeCSSAssetsPlugin({})
-  ]
+  (config.output.filename = '[name].[hash:8].js'),
+    (config.optimization.minimizer = [
+      new TerserPlugin({ cache: true, parallel: true }),
+      new OptimizeCSSAssetsPlugin({})
+    ])
   config.plugins.push(
     new CleanWebpackPlugin(['public/app.*', 'public/styles.*']),
     new MiniCssExtractPlugin({

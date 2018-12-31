@@ -21,7 +21,7 @@ import ListingsList from './_ListingsList'
 import ListingsGallery from './_ListingsGallery'
 import CreateListing from '../marketplace/mutations/CreateListing'
 
-import query from '../marketplace/queries/_listings'
+import query from 'queries/AllListings'
 
 const memStore = store('memory')
 const localStore = store('localStorage')

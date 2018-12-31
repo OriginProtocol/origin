@@ -3,7 +3,7 @@ import { Mutation } from 'react-apollo'
 
 import { Button, Dialog, FormGroup, InputGroup, Tag } from '@blueprintjs/core'
 
-import { AddFundsMutation } from '../../../mutations'
+import { AddFundsMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class AddFunds extends Component {
