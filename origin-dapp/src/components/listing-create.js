@@ -31,7 +31,7 @@ import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
 import { formattedAddress } from 'utils/user'
-import { generateCroppedImage } from 'utils/fileUtils'
+import { getDataURIsFromImgURLs } from 'utils/fileUtils'
 
 import {
   translateSchema,
@@ -139,24 +139,17 @@ class ListingCreate extends Component {
           isEditMode: true
         }
         this.ensureUserIsSeller(listing.seller)
-        let pictures = []
 
         if (listing.pictures.length) {
-          listing.pictures.map((pic, idx) => generateCroppedImage(pic, null, (dataUri) => {
-            pictures = [...pictures, dataUri]
-            const lastMappedImage = idx === (listing.pictures.length - 1)
-
-            if (lastMappedImage) {
-              this.setState({
-                ...state,
-                formListing: {
-                  formData: { ...listing, pictures }
-                }
-              })
-              this.renderDetailsForm(listing.schema)
-              this.setState({ step: this.STEP.DETAILS })
+          const pictures = await getDataURIsFromImgURLs(listing.pictures)
+          this.setState({
+            ...state,
+            formListing: {
+              formData: { ...listing, pictures }
             }
-          }))
+          })
+          this.renderDetailsForm(listing.schema)
+          this.setState({ step: this.STEP.DETAILS })
         } else {
           this.setState(state)
           this.renderDetailsForm(listing.schema)

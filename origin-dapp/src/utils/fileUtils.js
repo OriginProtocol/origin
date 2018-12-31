@@ -161,3 +161,26 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) =>
     scaleAndCropImage({ options, imageFileObj, config, callback })
   }
 }
+
+export const getDataURIsFromImgURLs = async (picUrls) => {
+  const imagePromises = picUrls.map(url => {
+    return new Promise(async resolve => {
+      const image = new Image()
+      image.crossOrigin = 'anonymous'
+
+      image.onload = function() {
+        const canvas = document.createElement('canvas')
+        canvas.width = this.naturalWidth
+        canvas.height = this.naturalHeight
+        canvas.getContext('2d').drawImage(this, 0, 0)
+        canvas.toBlob(file => {
+          resolve(getDataUri(file))
+        }, 'image/jpeg')
+      }
+
+      image.src = url
+    })
+  })
+
+  return Promise.all(imagePromises)
+}
