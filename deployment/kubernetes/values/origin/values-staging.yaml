@@ -39,3 +39,11 @@ messagingImageTag: '4aa5387'
 # origin-notifications
 notificationsImage: origin-notifications
 notificationsImageTag: 'latest'
+
+# origin-dapp-creator-client
+creatorClientImage: origin-dapp-creator-client
+creatorClientImageTag: 'latest'
+
+# origin-dapp-creator-server
+creatorServerImage: origin-dapp-creator-server
+creatorServerImageTag: 'latest'

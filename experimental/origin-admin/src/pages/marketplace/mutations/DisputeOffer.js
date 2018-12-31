@@ -3,7 +3,7 @@ import { Mutation } from 'react-apollo'
 
 import { Button, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 
-import { DisputeOfferMutation } from '../../../mutations'
+import { DisputeOfferMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class DisputeOffer extends Component {

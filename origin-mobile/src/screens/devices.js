@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Alert, FlatList, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import DeviceItem from '../components/device-item'
+import DeviceItem from 'components/device-item'
+
 import originWallet from '../OriginWallet'
 
 class DevicesScreen extends Component {

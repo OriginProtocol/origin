@@ -1,5 +1,5 @@
 import AttestationObject from '../models/attestation'
-import RLP from 'rlp'
+import { encode as rlpEncode } from 'rlp'
 import UsersResolver from '../contractInterface/users/resolver'
 import Web3 from 'web3'
 
@@ -190,7 +190,7 @@ export class Attestations {
       })
     })
     const address =
-      '0x' + Web3.utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
+      '0x' + Web3.utils.sha3(rlpEncode([wallet, nonce])).substring(26, 66)
     return Web3.utils.toChecksumAddress(address)
   }
 }
