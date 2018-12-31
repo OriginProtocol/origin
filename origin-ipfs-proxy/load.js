@@ -79,11 +79,11 @@ async function main() {
   // await loadTest(`http://localhost:5002/api/v0/add`, [uploadRequest])
   logger.debug('Load test of IPFS node complete')
 
-  logger.debug('Starting load test of IPFS-Proxy')
+  logger.debug('Starting load test of origin-ipfs-proxy')
   await loadTest(`http://localhost:9999/ipfs/${imageHash}`, [downloadRequest])
   // See https://github.com/OriginProtocol/origin/issues/794
   // await loadTest(`http://localhost:9999/api/v0/add`, [uploadRequest])
-  logger.debug('Load test of IPFS-Proxy complete')
+  logger.debug('Load test of origin-ipfs-proxy complete')
 
   process.exit()
 }
