@@ -12,4 +12,4 @@ const origin = new Origin({
   web3})
 
 export default origin
-export {providerUrl}
+export {providerUrl, web3}
