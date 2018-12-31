@@ -11,9 +11,9 @@ COPY ./scripts/ ./scripts/
 # Docker to cache the npm install steps if none of the dependencies have changed
 COPY ./lerna.json ./
 COPY ./package*.json ./
-COPY ./ipfs-proxy/package*.json ./ipfs-proxy/
 COPY ./origin-dapp/package*.json ./origin-dapp/
 COPY ./origin-discovery/package*.json ./origin-discovery/
+COPY ./origin-ipfs-proxy/package*.json ./origin-ipfs-proxy/
 COPY ./origin-js/package*.json ./origin-js/
 COPY ./origin-messaging/package*.json ./origin-messaging/
 COPY ./origin-notifications/package*.json ./origin-notifications/
@@ -27,9 +27,9 @@ COPY ./origin-contracts ./origin-contracts
 RUN npm install --unsafe-perm
 
 # Copy all the source files for the packages
-COPY ./ipfs-proxy ./ipfs-proxy
 COPY ./origin-dapp ./origin-dapp
 COPY ./origin-discovery ./origin-discovery
+COPY ./origin-ipfs-proxy ./origin-ipfs-proxy
 COPY ./origin-js ./origin-js
 COPY ./origin-messaging ./origin-messaging
 COPY ./origin-notifications ./origin-notifications
