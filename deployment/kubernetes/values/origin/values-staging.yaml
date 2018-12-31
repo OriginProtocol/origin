@@ -17,7 +17,7 @@ ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
 # origin-ipfs-proxy
-ipfsProxyImage: ipfs-proxy
+ipfsProxyImage: origin-ipfs-proxy
 ipfsProxyImageTag: 'e0e12cd'
 
 # origin-faucet
