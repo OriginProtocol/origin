@@ -55,7 +55,7 @@ export default class CompactMessages extends Component {
   }
 
   render() {
-    const { formatOfferMessage, smallScreenOrDevice } = this.props
+    const { formatOfferMessage, includeNav, smallScreenOrDevice } = this.props
     const { sortedMessages } = this.state
     const firstMessage = sortedMessages.find((message) => message.created)
 
@@ -63,7 +63,9 @@ export default class CompactMessages extends Component {
       if (!message) return
       const { created, hash, senderAddress, timestamp } = message
       const offerMessage = timestamp
-      if (offerMessage) return formatOfferMessage(message)
+      if (offerMessage) {
+        return formatOfferMessage(message)
+      }
 
       const isFirstMessage = firstMessage === message
       const previousOfferMessage = sortedMessages[i-1] && sortedMessages[i-1].timestamp
@@ -82,6 +84,7 @@ export default class CompactMessages extends Component {
 
       return (
         <Message key={hash}
+          includeNav={includeNav}
           showTime={showTime}
           message={message}
           contentOnly={contentOnly}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FlatList, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 
-import Separator from '../components/separator'
+import Separator from 'components/separator'
 
 export default class SettingsScreen extends Component {
   static navigationOptions = {

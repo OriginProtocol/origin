@@ -9,3 +9,12 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod
     http01: {}
+    dns01:
+      providers:
+        - name: google-cloud-dns
+          clouddns:
+            # A secretKeyRef to a google cloud json service account
+            serviceAccountSecretRef:
+              name: gcloud-creator-sa-credentials
+              key: credentials.json
+            project: origin-214503

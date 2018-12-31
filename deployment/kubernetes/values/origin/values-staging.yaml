@@ -16,8 +16,8 @@ gethTxMemoryRequest: 6Gi
 ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
-# ipfs-proxy
-ipfsProxyImage: ipfs-proxy
+# origin-ipfs-proxy
+ipfsProxyImage: origin-ipfs-proxy
 ipfsProxyImageTag: 'e0e12cd'
 
 # origin-faucet
@@ -39,3 +39,11 @@ messagingImageTag: '4aa5387'
 # origin-notifications
 notificationsImage: origin-notifications
 notificationsImageTag: 'latest'
+
+# origin-dapp-creator-client
+creatorClientImage: origin-dapp-creator-client
+creatorClientImageTag: 'latest'
+
+# origin-dapp-creator-server
+creatorServerImage: origin-dapp-creator-server
+creatorServerImageTag: 'latest'

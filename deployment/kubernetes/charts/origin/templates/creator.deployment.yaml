@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "creator.fullname" . }}
+  labels:
+    app: {{ template "creator.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: origin-creator
+spec:
+  replicas: {{ default 2 .Values.creatorReplicas }}
+  selector:
+    matchLabels:
+      app: {{ template "creator.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "creator.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: origin-dapp-creator-client
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.creatorClientImage }}:{{ .Values.creatorClientImageTag }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+      - name: origin-dapp-creator-server
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.creatorServerImage }}:{{ .Values.creatorServerImageTag }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 4321
+        env:
+          - name: ENVKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "creator.fullname" . }}
+                key: ENVKEY
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: "/secrets/credentials.json"
+        volumeMounts:
+          - name: gcloud-creator-sa-credentials
+            mountPath: /secrets
+            readOnly: true
+      volumes:
+        - name: gcloud-creator-sa-credentials
+          secret:
+            secretName: gcloud-creator-sa-credentials
