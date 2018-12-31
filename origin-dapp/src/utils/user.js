@@ -4,7 +4,7 @@ const { web3 } = origin.contractService
 
 const MAX_ADDRESS_LENGTH = 10
 
-export function abbreviateName(party, defaultName = '') {
+export function abbreviateName(party = {}, defaultName = '') {
   const { profile = {}, fullName } = party
   const { firstName = '', lastName = '' } = profile
   const lastNameLetter = lastName.length ? `${lastName.charAt(0)}.` : ''

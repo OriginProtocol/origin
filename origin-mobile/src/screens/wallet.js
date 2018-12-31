@@ -3,6 +3,7 @@ import { Modal, TouchableOpacity, Alert, StyleSheet, Text, View, TextInput, WebV
 import { connect } from 'react-redux'
 
 import Address from 'components/address'
+
 import OriginButton from 'components/origin-button'
 
 import originWallet from '../OriginWallet'

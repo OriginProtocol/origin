@@ -5,13 +5,15 @@ import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
 import EventEmitter from 'events'
 import {EthNotificationTypes} from 'origin/common/enums'
+import secp256k1 from 'secp256k1'
 import ecies from 'eth-ecies'
 import CryptoJS from 'crypto-js'
 import UUIDGenerator from 'react-native-uuid-generator'
-
-import origin, {apiUrl, defaultProviderUrl, messagingUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
+import { randomBytes } from 'react-native-randombytes'
 
 import {setRemoteLocal, localfy, storeData, loadData} from './tools'
+
+import origin, {apiUrl, defaultProviderUrl, messagingUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
 
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
@@ -23,8 +25,8 @@ const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519
 const WALLET_PASSWORD = "TEST_PASS"
 const WALLET_STORE = "WALLET_STORE"
 const WALLET_INFO = "WALLET_INFO"
+const WALLET_LINK = "WALLET_LINK"
 const REMOTE_LOCALHOST_STORE = "REMOTE_LOCAL_STORE"
-
 
 const Events = keyMirror({
   PROMPT_LINK:null,
@@ -77,6 +79,9 @@ const eventMatcherByEvent = event => {
   return in_event => matchEvents(in_event, event)
 }
 
+const timeout = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 class OriginWallet {
   constructor() {
@@ -162,6 +167,7 @@ class OriginWallet {
 
     this.API_REGISTER_WALLET_NOTIFICATION = API_WALLET_LINKER + "/register-wallet-notification/"
     this.API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet/"
+    this.API_WALLET_LINKER_PRELINK = API_WALLET_LINKER + "/prelink-wallet/"
     this.API_WALLET_LINKER_UNLINK = API_WALLET_LINKER + "/unlink-wallet/"
     this.WS_API_WALLET_LINKER_MESSAGES = `${wsApiUrl}/api/wallet-linker/wallet-messages/`
     this.API_WALLET_SERVER_INFO = API_WALLET_LINKER + "/server-info"
@@ -196,7 +202,7 @@ class OriginWallet {
   }
 
   getMessagingUrl() {
-    return localfy(messagingUrl) + ORIGIN_WALLET
+    return this.messagingUrl + ORIGIN_WALLET
   }
 
   getWalletToken() {
@@ -737,11 +743,46 @@ class OriginWallet {
     }
   }
 
-  onNotification(notification) {
+  async getPrivateLink() {
+    const stored_link_id = await loadData(WALLET_LINK)
+
+    if (stored_link_id) 
+    {
+      const links = await this.doFetch(this.API_WALLET_GET_LINKS + this.getWalletToken(), "GET")
+      for (const link of links) {
+        if (stored_link_id == link.link_id)
+        {
+          return stored_link_id
+        }
+      }
+    }
+    const priv_key = randomBytes(32)
+    const current_rpc = localfy(this.providerUrl)
+    const current_accounts = [this.state.ethAddress]
+    const pub_key = this.getPublicKey(priv_key)
+    const priv_data = this.getPrivData(pub_key)
+    const {code, link_id} = await this.doFetch(this.API_WALLET_LINKER_PRELINK + this.getWalletToken(), 
+      'POST', {
+      pub_key,
+      current_rpc,
+      current_accounts,
+      priv_data
+    })
+
+    await storeData(WALLET_LINK, link_id)
+    return `${link_id}-${code}-${priv_key.toString('hex')}`
+  }
+
+  async onNotification(notification) {
     Object.assign( this.state, {
       notifyTime:new Date(),
       notifyMessage:notification.message
     })
+
+    while(!(this.state.walletToken && this.state.ethAddress && this.state.netId))
+    {
+      await timeout(1000)
+    }
     console.log("notification.message:", notification.message)
     if (notification.data.newMessage)
     {
@@ -753,6 +794,25 @@ class OriginWallet {
       else
       {
         this.fireEvent(Events.SHOW_MESSAGES)
+      }
+    }
+    else if (notification.data.to_dapp && notification.data.url)
+    {
+      let dapp_url = localfy(notification.data.url)
+      if (!dapp_url.includes('?'))
+      {
+        dapp_url += "?"
+      }
+      dapp_url += "plink=" + await this.getPrivateLink()
+
+      if (notification.foreground)
+      {
+        // TODO: micah do something silly here.
+      }
+      else
+      {
+        console.log("openning dapp_url", dapp_url)
+        Linking.openURL(dapp_url)
       }
     }
     this.checkSyncMessages(true)
@@ -826,6 +886,13 @@ class OriginWallet {
           this.fireEvent(Events.PROMPT_LINK, {linked:false, link:{linkCode, link_id:responseJson.link_id, return_url:responseJson.return_url, app_info:responseJson.app_info, expires_at:new Date(responseJson.expires_at)}})
         })
     }
+  }
+
+  getPublicKey(priv_key) {
+    return secp256k1
+      .publicKeyCreate(priv_key, false)
+      .slice(1)
+      .toString('hex')
   }
 
   ecEncrypt(text, pub_key) {
@@ -925,13 +992,16 @@ class OriginWallet {
 
     try {
       const {provider_url, contract_addresses, 
-          ipfs_gateway, ipfs_api} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
+          ipfs_gateway, ipfs_api, messaging_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       console.log("Set network to:", provider_url, contract_addresses)
       web3.setProvider(new Web3.providers.HttpProvider(localfy(provider_url), 20000))
+
+      this.messagingUrl = localfy(messaging_url)
       // update the contract addresses contract
       origin.contractService.updateContractAddresses(contract_addresses)
       origin.ipfsService.gateway = localfy(ipfs_gateway)
       origin.ipfsService.api = localfy(ipfs_api)
+      
 
       await this.setNetId()
       if (this.state.ethAddress)
