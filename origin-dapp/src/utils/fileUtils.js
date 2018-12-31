@@ -78,7 +78,11 @@ export const scaleAndCropImage = (props) => {
 
     const scaledImage = loadImage.scale(canvas, newConfig)
     scaledImage.toBlob(async (blob) => {
-      blob.name = imageFileObj.name
+      if (imageFileObj.name) {
+        blob.name = imageFileObj.name
+      } else {
+        blob.name = Math.random().toString(36).substring(4)
+      }
       const dataUri = await getDataUri(blob)
 
       callback(dataUri)
