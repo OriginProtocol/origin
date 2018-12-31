@@ -2,6 +2,7 @@ import Ajv from 'ajv'
 
 import { generateSchemaId, parseSchemaId } from '../schema-id'
 
+import identitySchemaV1 from '../schemas/identity_1.0.0'
 import listingSchemaV1 from '../schemas/listing_1.0.0.json'
 import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw_1.0.0.json'
 import offerSchemaV1 from '../schemas/offer_1.0.0.json'
@@ -16,6 +17,7 @@ const ajv = new Ajv({ allErrors: true })
 // To use the draft-06 JSON schema, we need to explicitly add it to ajv.
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
 ajv.addSchema([
+  identitySchemaV1,
   listingSchemaV1,
   listingWithdrawnSchemaV1,
   offerSchemaV1,

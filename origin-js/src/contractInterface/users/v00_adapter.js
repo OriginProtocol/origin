@@ -41,7 +41,7 @@ export default class V00_UsersAdapter {
 
   /**
    * Loads an identity. Returns false if no identity found associated with the address.
-   * @param address
+   * @param address - User's wallet address. If not specified, use current account.
    * @return {Promise<{
    *    profile: Object,
    *    attestations: List<AttestationObject>,
@@ -58,8 +58,8 @@ export default class V00_UsersAdapter {
   }
 
   /**
-   * Returns identity address or false
-   * @param {string} address - User's wallet address.
+   * Looks up user registry for an identity. Returns identity address or false.
+   * @param {string} address - User's wallet address. If not specified, uses current account.
    * @return {Promise<string|false>}
    */
   async identityAddress(address) {
@@ -78,7 +78,7 @@ export default class V00_UsersAdapter {
 
   /**
    * Validates a profile data and saves it as a JSON blob in IPFS.
-   * @param {Object} profile - Profile data. Uses format defined by profile JSON schema.
+   * @param {Object} profile - Profile data. Validates against JSON schema for profile.
    * @return {Promise<Attestation>} Attestation model object.
    */
   async profileAttestation(profile) {

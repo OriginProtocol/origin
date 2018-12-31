@@ -96,10 +96,10 @@ export const validateUser = (user) => {
   expect(user.profile).to.have.property('firstName').that.is.a('string')
   expect(user.profile).to.have.property('lastName').that.is.a('string')
 
-  expect(user.profile).to.have.property('schemaId').that.is.a('string')
-  expect(user.profile).to.have.property('ipfs').that.is.an('object')
-  expect(user.profile.ipfs).to.have.property('hash').that.is.a('string')
-  expect(user.profile.ipfs).to.have.property('data').that.is.an('object')
+  //expect(user.profile).to.have.property('schemaId').that.is.a('string')
+  //expect(user.profile).to.have.property('ipfs').that.is.an('object')
+  //expect(user.profile.ipfs).to.have.property('hash').that.is.a('string')
+  //expect(user.profile.ipfs).to.have.property('data').that.is.an('object')
 
   expect(user.attestations).to.be.an('array')
   if (user.attestations.length) user.attestations.map(validateAttestation)

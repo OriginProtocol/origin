@@ -1,5 +1,5 @@
 import V00_UsersAdapter from './v00_adapter'
-import V01_UsersAdapter from './v00_adapter'
+import V01_UsersAdapter from './v01_adapter'
 import UserObject from '../../models/user'
 
 export default class UsersResolver {
@@ -14,7 +14,7 @@ export default class UsersResolver {
   }
 
   /**
-   * Creates or updates an identity.
+   * Creates or updates an identity for the current account.
    * @param profile
    * @param attestations
    * @param options
@@ -26,7 +26,7 @@ export default class UsersResolver {
 
   /**
    * Loads an identity.
-   * @param address User's wallet address.
+   * @param {string} address - User's wallet address.
    * @return {Promise<User>} User model object.
    */
   async get(address) {
