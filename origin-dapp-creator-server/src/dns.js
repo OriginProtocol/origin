@@ -66,7 +66,7 @@ export function _records(subdomain, ipfsHash) {
 export function _cnameRecord(subdomain) {
   return zone.record('cname', {
     name: getDnsName(subdomain, 'cname'),
-    data: 'dapp.originprotocol.com.',
+    data: `${process.env.DAPP_HOSTNAME}.`,
     ttl: 86400
   })
 }
