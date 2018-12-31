@@ -27,8 +27,8 @@ It is active until there are no more units available or its expiration date is r
   <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"09398482-2834"</span><span class="p">,</span>
   <span class="na">unitsTotal</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="na">type</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
-  <span class="na">category</span><span class="p">:</span> <span class="s2">"Health and Beauty"</span><span class="p">,</span>
-  <span class="na">subCategory</span><span class="p">:</span> <span class="s2">"daily exercise"</span><span class="p">,</span>
+  <span class="na">category</span><span class="p">:</span> <span class="s2">"healthAndBeauty"</span><span class="p">,</span>
+  <span class="na">subCategory</span><span class="p">:</span> <span class="s2">"dailyExercise"</span><span class="p">,</span>
   <span class="na">language</span><span class="p">:</span> <span class="s2">"English"</span><span class="p">,</span>
   <span class="na">description</span><span class="p">:</span> <span class="s2">"32kg gorilla kettlebell"</span><span class="p">,</span>
   <span class="na">price</span><span class="p">:</span> <span class="p">{</span> <span class="na">currency</span><span class="p">:</span> <span class="s1">'ETH'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="s1">'0.5'</span> <span class="p">},</span>
@@ -38,7 +38,6 @@ It is active until there are no more units available or its expiration date is r
   <span class="na">depositManager</span><span class="p">:</span> <span class="s1">'0x02394099fu9dfse0920394u329u4024'</span><span class="p">,</span>
   <span class="na">status</span><span class="p">:</span> <span class="s1">'active'</span><span class="p">,</span>
   <span class="na">offers</span><span class="p">:</span> <span class="p">[],</span> <span class="c1">//is this supposed to be an array or an object?</span>
-  <span class="na">expiry</span><span class="p">:</span> <span class="s1">'1529674159'</span><span class="p">,</span>
   <span class="na">events</span><span class="p">:[{</span> <span class="na">id</span><span class="p">:</span> <span class="s1">'20949-345'</span><span class="p">,</span> <span class="na">event</span><span class="p">:</span> <span class="s1">'ListingCreated'</span> <span class="p">}]</span>
 <span class="p">}]</span>
 </code></pre><h3 id='marketplace-getlistings-arguments'>Arguments:</h3>
@@ -89,8 +88,8 @@ When a listing is successfully created, the <code>createListing</code> method ta
   <span class="na">listingType</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
   <span class="na">media</span><span class="p">:</span> <span class="p">[{</span><span class="err">…</span><span class="p">}],</span>
   <span class="na">price</span><span class="p">:</span> <span class="p">{</span> <span class="na">amount</span><span class="p">:</span> <span class="s2">"0.01"</span><span class="p">,</span> <span class="na">currency</span><span class="p">:</span> <span class="s2">"ETH"</span> <span class="p">},</span>
-  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/listing_v1.0.0"</span><span class="p">,</span>
-  <span class="na">subCategory</span><span class="p">:</span> <span class="s2">"schema.forSale.appliances"</span><span class="p">,</span>
+  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"https://schema.originprotocol.com/listing_1.0.0.json"</span><span class="p">,</span>
+  <span class="na">subCategory</span><span class="p">:</span> <span class="s2">"schema.appliances"</span><span class="p">,</span>
   <span class="na">title</span><span class="p">:</span> <span class="s2">"I am a great appliance listing"</span><span class="p">,</span>
   <span class="na">unitsTotal</span><span class="p">:</span> <span class="mi">1</span>
 <span class="p">}</span>
@@ -183,7 +182,7 @@ When a listing is successfully withdrawn, the <code>withdrawListing</code> metho
 <span class="c1">//returns</span>
 
 <span class="p">[{</span>
-  <span class="s2">"schemaId"</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/review_v1.0.0"</span><span class="p">,</span>
+  <span class="s2">"schemaId"</span><span class="p">:</span> <span class="s2">"https://schema.originprotocol.com/review_1.0.0.json"</span><span class="p">,</span>
   <span class="s2">"rating"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
   <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"Solid Listing"</span>
   <span class="s2">"reviewer"</span><span class="p">:</span> <span class="s2">"0x29884972398479234792"</span>
@@ -205,23 +204,20 @@ When a listing is successfully withdrawn, the <code>withdrawListing</code> metho
 </tr>
 </tbody></table>
 <h2 id='marketplace-getnotifications'>getNotifications</h2>
-<p>Each Notification corresponds to the status of a Listing. Notifications are currently generated for each of the following Listing statuses:</p>
+<p>Each Notification corresponds to the status of an Offer. Notifications are currently generated for each of the following Offer statuses:</p>
 
 <ul>
-<li>ListingCreated</li>
-<li>ListingUpdated</li>
-<li>ListingWithdrawn</li>
-<li>ListingArbitrated</li>
 <li>OfferCreated</li>
 <li>OfferAccepted</li>
 <li>OfferFinalized</li>
 <li>OfferWithdrawn</li>
-<li>OfferFundsAdded</li>
 <li>OfferDisputed</li>
 <li>OfferRuling</li>
+<li>OfferFinalized</li>
+<li>OfferData</li>
 </ul>
 
-<p>Notifications do not exist on the blockchain nor are they read from a database. They are derived from the blockchain transaction logs of the Listing statuses at the time of the API request. Because of this, there is no central record of a notification&#39;s status as &quot;read&quot; or &quot;unread&quot;. When a client first interacts with the notifications API, Origin.js will record a timestamp in local storage. All notifications resulting from blockchain events that happen prior to this timestamp will be considered to be &quot;read&quot;. This ensures that when the same user interacts with the notifications API from a different client for the first time, they will not receive a large number of &quot;unread&quot; notifications that they have previously read from their original client.</p>
+<p>Notifications do not exist on the blockchain nor are they read from a database. They are derived from the blockchain transaction logs of the Offer statuses at the time of the API request. Because of this, there is no central record of a notification&#39;s status as &quot;read&quot; or &quot;unread&quot;. When a client first interacts with the notifications API, Origin.js will record a timestamp in local storage. All notifications resulting from blockchain events that happen prior to this timestamp will be considered to be &quot;read&quot;. This ensures that when the same user interacts with the notifications API from a different client for the first time, they will not receive a large number of &quot;unread&quot; notifications that they have previously read from their original client.</p>
 
 <blockquote>
 <p>Example: getNotifications</p>
@@ -233,10 +229,10 @@ When a listing is successfully withdrawn, the <code>withdrawListing</code> metho
 
 <span class="p">[{</span>
   <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"2984803-23433"</span><span class="p">,</span>
-  <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"buyer_listing_shipped"</span><span class="p">,</span>
+  <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"buyer_offer_accepted"</span><span class="p">,</span>
   <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"unread"</span><span class="p">,</span>
-  <span class="s2">"event"</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="s2">"resources"</span><span class="p">:</span> <span class="p">{</span> <span class="na">listingId</span><span class="p">:</span> <span class="s2">"927-832"</span><span class="p">,</span> <span class="na">offerId</span><span class="p">:</span> <span class="s2">"183"</span><span class="p">,</span> <span class="na">listing</span><span class="p">:</span> <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="s2">"Whirlpool Microwave"</span> <span class="p">}</span> <span class="p">}</span>
+  <span class="s2">"event"</span><span class="p">:</span> <span class="p">{...},</span>
+  <span class="s2">"resources"</span><span class="p">:</span> <span class="p">{</span> <span class="na">listingId</span><span class="p">:</span> <span class="s2">"1-000-832"</span><span class="p">,</span> <span class="na">offerId</span><span class="p">:</span> <span class="s2">"183"</span><span class="p">,</span> <span class="na">listing</span><span class="p">:</span> <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="s2">"Whirlpool Microwave"</span> <span class="p">},</span> <span class="na">offer</span><span class="p">:</span> <span class="p">{...}</span> <span class="p">}</span>
 <span class="p">]}</span>
 </code></pre><h2 id='marketplace-setnotification'>setNotification</h2>
 <p>Since notification objects do not live on the blockchain or in a database, this method only records an update to the client&#39;s local storage. It accepts a single parameter, which should be an object containing the id of the notification and a status value of either read or unread. Any other properties included in this object will be ignored.</p>
@@ -297,7 +293,7 @@ When a listing is successfully withdrawn, the <code>withdrawListing</code> metho
   <span class="nx">buyer</span><span class="p">:</span> <span class="s2">"0x627306090274fwfiou97h0c78a8BEf57"</span><span class="p">,</span>
   <span class="nx">events</span><span class="p">:</span> <span class="p">[...],</span>
   <span class="nx">refund</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
-  <span class="nx">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/offer_v1.0.0"</span><span class="p">,</span>
+  <span class="nx">schemaId</span><span class="p">:</span> <span class="s2">"https://schema.originprotocol.com/offer_1.0.0.json"</span><span class="p">,</span>
   <span class="nx">listingType</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
   <span class="nx">unitsPurchased</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="nx">totalPrice</span><span class="p">:</span> <span class="p">{</span> <span class="nl">currency</span><span class="p">:</span> <span class="s2">"ETH"</span><span class="p">,</span> <span class="nx">amount</span><span class="p">:</span> <span class="s2">"0.033"</span> <span class="p">},</span>
@@ -343,7 +339,7 @@ When a listing is successfully withdrawn, the <code>withdrawListing</code> metho
   <span class="na">buyer</span><span class="p">:</span> <span class="s2">"0x627306090274fwfiou97h0c78a8BEf57"</span><span class="p">,</span>
   <span class="na">events</span><span class="p">:</span> <span class="p">[...],</span>
   <span class="na">refund</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
-  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/offer_v1.0.0"</span><span class="p">,</span>
+  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"https://schema.originprotocol.com/offer_1.0.0.json"</span><span class="p">,</span>
   <span class="na">listingType</span><span class="p">:</span> <span class="s2">"unit"</span><span class="p">,</span>
   <span class="na">unitsPurchased</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="na">totalPrice</span><span class="p">:</span> <span class="p">{</span> <span class="na">currency</span><span class="p">:</span> <span class="s2">"ETH"</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="s2">"0.033"</span> <span class="p">},</span>
@@ -492,7 +488,7 @@ When a listing is successfully withdrawn, the <code>withdrawListing</code> metho
 <span class="kr">const</span> <span class="nx">offerId</span> <span class="o">=</span> <span class="s2">"9903-75"</span>
 <span class="kr">const</span> <span class="nx">buyerReview</span> <span class="o">=</span> <span class="p">{</span>
   <span class="na">rating</span><span class="p">:</span> <span class="mi">5</span>
-  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/review_v1.0.0"</span>
+  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"https://schema.originprotocol.com/review_1.0.0.json"</span>
   <span class="na">text</span><span class="p">:</span> <span class="s2">"Great response times. Professional."</span>
 <span class="p">}</span>
 <span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -598,7 +594,7 @@ When a listing is successfully withdrawn, the <code>withdrawListing</code> metho
 <span class="kr">const</span> <span class="nx">listingId</span> <span class="o">=</span> <span class="s2">"9900-234"</span>
 <span class="kr">const</span> <span class="nx">sellerReview</span> <span class="o">=</span> <span class="p">{</span>
   <span class="na">rating</span><span class="p">:</span> <span class="mi">4</span>
-  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"http://schema.originprotocol.com/review_v1.0.0"</span>
+  <span class="na">schemaId</span><span class="p">:</span> <span class="s2">"https://schema.originprotocol.com/review_1.0.0.json"</span>
   <span class="na">text</span><span class="p">:</span> <span class="s2">""</span>
 <span class="p">}</span>
 <span class="kr">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">confirmationCount</span><span class="p">,</span> <span class="nx">transactionReceipt</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
