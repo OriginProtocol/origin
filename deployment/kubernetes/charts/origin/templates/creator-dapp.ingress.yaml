@@ -1,16 +1,16 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "dapp.fullname" . }}
+  name: {{ template "creator-dapp.fullname" . }}
   labels:
-    app: {{ template "dapp.fullname" . }}
+    app: {{ template "creator-dapp.fullname" . }}
     app.kubernetes.io/name: origin
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     app.kubernetes.io/component: frontend
-    app.kubernetes.io/part-of: origin-dapp
+    app.kubernetes.io/part-of: origindapp-com-ingres
   annotations:
     kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
     kubernetes.io/tls-acme: "true"
@@ -19,14 +19,14 @@ metadata:
     nginx.ingress.kubernetes.io/limit-rps: "50"
 spec:
   tls:
-    - secretName: {{ template "dapp.host" . }}
+    - secretName: "*.{{template "creator-dapp.host" . }}"
       hosts:
-        - {{ template "dapp.host" . }}
+        - "*.{{ template "creator-dapp.host" . }}"
   rules:
-  - host: {{ template "dapp.host" . }}
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: {{ template "dapp.fullname" . }}
-            servicePort: 80
+    - host: "*.{{ template "creator-dapp.host" . }}"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ template "dapp.fullname" . }}
+              servicePort: 80
