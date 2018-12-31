@@ -13,15 +13,16 @@ metadata:
     app.kubernetes.io/part-of: origindapp-com-ingress
   annotations:
     kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/limit-rps: "50"
 spec:
   tls:
     - secretName: {{ .Release.Namespace }}-origindapp-com
-    - hosts:
-      - '*.{{ template "creator-dapp.host" . }}'
+      hosts:
+        - "*.{{ template "creator-dapp.host" . }}"
   rules:
-    - host: '*.{{ template "creator-dapp.host" . }}'
+    - host: "*.{{ template "creator-dapp.host" . }}"
       http:
         paths:
           - path: /

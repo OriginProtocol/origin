@@ -25,4 +25,3 @@ spec:
         provider: google-cloud-dns
       domains:
         - '*.{{ template "creator-dapp.host" . }}'
-        - origindapp.com
