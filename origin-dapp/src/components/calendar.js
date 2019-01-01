@@ -81,6 +81,7 @@ class Calendar extends Component {
           id: uuid(),
           start: moment(slot.startDate).toDate(),
           end: moment(slot.endDate).subtract(1, 'second').toDate(),
+          timeZone: slot.timeZone,
           price: slot.price && slot.price.amount && parseFloat(slot.price.amount),
           isAvailable: slot.isAvailable,
           slots: slot.slots,
@@ -237,6 +238,7 @@ class Calendar extends Component {
         selectedEvent: {
           start: slotInfo.start,
           end: slotInfo.end,
+          timeZone: slotInfo.timeZone,
           price: priceFormatted
         },
         buyerSelectedSlotData: selectionData
@@ -324,7 +326,8 @@ class Calendar extends Component {
         slots: this.state.clickedSlotInfo.slots,
         isRecurringEvent: false,
         id: uuid(),
-        allDay: false
+        allDay: false,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
       }
 
       return this.createSellerEvent(overrideEvent, true)
