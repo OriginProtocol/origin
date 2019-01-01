@@ -294,7 +294,7 @@ const mapDispatchToProps = dispatch => ({
   processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event)),
   setActiveEvent: event => dispatch(setActiveEvent(event)),
   setDevices: devices => dispatch(setDevices(devices)),
-  storeNotificationsPermissions: () => dispatch(storeNotificationsPermissions()),
+  storeNotificationsPermissions: permissions => dispatch(storeNotificationsPermissions(permissions)),
   updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool)),
   updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
 })

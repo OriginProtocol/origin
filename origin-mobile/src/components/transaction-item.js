@@ -118,7 +118,7 @@ class TransactionItem extends Component {
             }
             <View style={styles.main}>
               <View style={styles.detailsContainer}>
-                <Text style={styles.subject}>{listing.title}</Text>
+                <Text numberOfLines={1} style={styles.subject}>{listing.title}</Text>
                 <View style={styles.counterparties}>
                   <Address address={address} label="From Address" style={styles.address} />
                   <Image source={require(`${IMAGES_PATH}arrow-forward.png`)} style={styles.arrow} />
@@ -158,38 +158,33 @@ class TransactionItem extends Component {
                 </View>
               }
             </View>
-            <OriginButton
-              size="large"
-              type="primary"
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Continue'}
-              onPress={() => {
-                if (hasSufficientFunds) {
-                  navigation.navigate('Transaction', { item })
-                } else {
-                  navigation.navigate('WalletFunding', {
-                    currency: price.currency.toLowerCase(),
-                    item,
-                  })
-                }
-              }}
-            />
           </Fragment>
         }
-        {(hasNotificationsEnabled && hasSufficientFunds) &&
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Confirm'}
-            onPress={handleApprove}
-          />
-        }
-        <TouchableOpacity onPress={handleReject}>
-          <Text style={styles.cancel}>Cancel</Text>
-        </TouchableOpacity>
+        <OriginButton
+          size="large"
+          type="primary"
+          style={styles.button}
+          textStyle={{ fontSize: 14, fontWeight: '900' }}
+          title={(hasNotificationsEnabled && hasSufficientFunds) ? 'Confirm' : 'Continue'}
+          onPress={(hasNotificationsEnabled && hasSufficientFunds) ? handleApprove : () => {
+            if (hasSufficientFunds) {
+              navigation.navigate('Transaction', { item })
+            } else {
+              navigation.navigate('WalletFunding', {
+                currency: price.currency.toLowerCase(),
+                item,
+              })
+            }
+          }}
+        />
+        <OriginButton
+          size="large"
+          type="danger"
+          style={styles.button}
+          textStyle={{ fontSize: 14, fontWeight: '900' }}
+          title={'Cancel'}
+          onPress={handleReject}
+        />
       </View>
     )
   }
@@ -234,14 +229,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   button: {
-    marginBottom: 20,
-    marginHorizontal: 10,
-  },
-  cancel: {
-    color: '#007fff',
-    fontFamily: 'Lato',
-    fontSize: 14,
+    borderRadius: 30,
+    height: 40,
     marginBottom: 10,
+    marginHorizontal: 10,
   },
   content: {
     flex: 1,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert, Clipboard, Image, StyleSheet, Text, View } from 'react-native'
+import { Alert, Clipboard, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { promptForNotifications } from 'actions/Activation'
@@ -36,6 +36,8 @@ class WalletFundingScreen extends Component {
     const balance = web3.utils.fromWei(balances[currency], 'ether')
     const fundsRequired = web3.utils.toBN(item.cost).add(web3.utils.toBN(item.gas_cost))
     const readableRequired = web3.utils.fromWei(fundsRequired)
+    const { height } = Dimensions.get('window')
+    const smallScreen = height < 812
 
     return (
       <View style={styles.container}>
@@ -43,13 +45,16 @@ class WalletFundingScreen extends Component {
           <Text style={{ ...styles.heading, color: currencies[currency].color }}>
             {currency.toUpperCase()}
           </Text>
-          <Image source={currencies[currency].icon} style={styles.icon} />
+          <Image
+            source={currencies[currency].icon}
+            style={smallScreen ? {...styles.icon, height: 30, width: 30, } : styles.icon}
+          />
           <Text style={styles.balance}>{Number(balance).toFixed(5)}</Text>
           <Address address={address} label="Wallet Address" style={styles.address} />
         </View>
         <View style={styles.content}>
           <Text style={styles.contentHeading}>Add Funds</Text>
-          <Text style={styles.contentBody}>
+          <Text style={{...styles.contentBody, fontSize: smallScreen ? 14 : 18 }}>
             {`You don't have enough ${currencies[currency].name} in your wallet to complete this transaction. Please transfer at least ${Number(readableRequired).toFixed(5)} ${currency.toUpperCase()} into your wallet.`}
           </Text>
         </View>
@@ -131,7 +136,6 @@ const styles = StyleSheet.create({
   },
   contentBody: {
     fontFamily: 'Lato',
-    fontSize: 18,
     fontWeight: '300',
     textAlign: 'center',
   },

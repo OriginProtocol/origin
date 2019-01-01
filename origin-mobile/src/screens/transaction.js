@@ -110,7 +110,7 @@ class TransactionScreen extends Component {
               />
             </View>
           }
-          <Text style={styles.title}>{listing.title}</Text>
+          <Text numberOfLines={1} style={styles.title}>{listing.title}</Text>
           <View style={styles.accounts}>
             <Avatar size={40} style={{ marginRight: 13 }} />
             <View style={styles.accountText}>
@@ -159,8 +159,13 @@ class TransactionScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Confirm'}
-            onPress={this.handleApprove}
+            title={hasSufficientFunds ? 'Confirm' : 'Continue'}
+            onPress={hasSufficientFunds ? this.handleApprove : () => {
+              navigation.navigate('WalletFunding', {
+                currency: price.currency.toLowerCase(),
+                item,
+              })
+            }}
           />
           <OriginButton
             size="large"
