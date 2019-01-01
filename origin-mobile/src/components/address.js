@@ -5,7 +5,7 @@ import { evenlySplitAddress, truncateAddress } from 'utils/user'
 
 export default class Address extends Component {
   render() {
-    const { address, label, style, onPress } = this.props
+    const { address, chars, label, style, onPress } = this.props
 
     return (
       <TouchableOpacity onPress={() => {
@@ -15,7 +15,7 @@ export default class Address extends Component {
           Alert.alert(label, evenlySplitAddress(address).join('\n'))
         }
       }}>
-        <Text style={style}>{truncateAddress(address)}</Text>
+        <Text style={style}>{truncateAddress(address, chars)}</Text>
       </TouchableOpacity>
     )
   }

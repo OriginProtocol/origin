@@ -51,12 +51,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 0,
   },
-  // imageContainer: {
-  //   alignItems: 'center',
-  //   flex: 0,
-  //   paddingBottom: 60,
-  //   width: '100%',
-  // },
   padding: {
     paddingHorizontal: 50,
   },

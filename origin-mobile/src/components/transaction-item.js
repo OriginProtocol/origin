@@ -68,7 +68,7 @@ class TransactionItem extends Component {
                 <Text style={styles.imperative}>{activitySummary}</Text>
                 <View style={styles.counterparties}>
                   <Address address={address} label="From Address" style={styles.address} />
-                  <Image source={require(`${IMAGES_PATH}arrow-forward-material.png`)} style={styles.arrow} />
+                  <Image source={require(`${IMAGES_PATH}arrow-forward.png`)} style={styles.arrow} />
                   <Address address={counterpartyAddress} label="To Address" style={styles.address} />
                 </View>
               </View>
@@ -121,7 +121,7 @@ class TransactionItem extends Component {
                 <Text style={styles.subject}>{listing.title}</Text>
                 <View style={styles.counterparties}>
                   <Address address={address} label="From Address" style={styles.address} />
-                  <Image source={require(`${IMAGES_PATH}arrow-forward-material.png`)} style={styles.arrow} />
+                  <Image source={require(`${IMAGES_PATH}arrow-forward.png`)} style={styles.arrow} />
                   <Address address={counterpartyAddress} label="To Address" style={styles.address} />
                 </View>
                 <View style={styles.price}>
@@ -225,8 +225,10 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   arrow: {
+    height: 12,
     marginLeft: 10,
     marginRight: 10,
+    width: 12,
   },
   avatar: {
     marginRight: 10,

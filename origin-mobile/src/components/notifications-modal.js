@@ -121,7 +121,12 @@ class NotifcationsModal extends Component {
         <View style={styles.backdrop}>
           <View style={styles.content}>
             <View style={styles.imageContainer}>
-              <Image style={styles.image} source={require(IMAGES_PATH + 'carousel-3.png')} />
+              <Image
+                source={require(IMAGES_PATH + 'carousel-3.png')}
+                resizeMethod={'scale'}
+                resizeMode={'contain'}
+                style={styles.image}
+              />
             </View>
             <Text style={styles.heading}>Enable Notifications</Text>
             <Text style={styles.instruction}>
@@ -174,6 +179,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#2e3f53',
     borderRadius: 10,
+    maxHeight: '100%',
     paddingHorizontal: 20,
     paddingVertical: 60,
   },
@@ -187,9 +193,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     marginBottom: 10,
   },
+  image: {
+    height: '100%',
+  },
   imageContainer: {
+    flexShrink: 1,
     marginBottom: 20,
-    paddingLeft: 60,
+    maxHeight: 209,
+    paddingLeft: '20%',
   },
   instruction: {
     color: 'white',

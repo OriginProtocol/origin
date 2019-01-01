@@ -32,13 +32,11 @@ export function formattedAddress(string) {
   return web3.utils.toChecksumAddress(string)
 }
 
-export function truncateAddress(address = '') {
+export function truncateAddress(address = '', chars = 5) {
   if (address.length <= MAX_ADDRESS_LENGTH) return address
   const separator = '...'
-  const frontChars = 5
-  const backChars = 5
 
-  return address.substr(0, frontChars)
+  return address.substr(0, chars)
     + separator
-    + address.substr(address.length - backChars)
+    + address.substr(address.length - chars)
 }

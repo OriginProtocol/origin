@@ -65,7 +65,7 @@ export default class TransactionModal extends Component {
               <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
               <Address address={address} label="From Address" style={styles.address} />
             </View>
-            <Image source={require(`${IMAGES_PATH}arrow-forward-material.png`)} style={styles.arrow} />
+            <Image source={require(`${IMAGES_PATH}arrow-forward.png`)} style={styles.arrow} />
             {counterpartyAddress &&
               <View style={styles.party}>
                 <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
