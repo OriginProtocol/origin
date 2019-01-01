@@ -1,5 +1,7 @@
-import AttestationObject from '../../models/attestation'
+import Web3 from 'web3'
+
 import { IDENTITY_DATA_TYPE, IpfsDataStore } from '../../ipfsInterface/store'
+
 
 export default class V01_UsersAdapter {
   constructor({ contractService, ipfsService, blockEpoch }) {
@@ -23,10 +25,6 @@ export default class V01_UsersAdapter {
   async set({ profile, attestations = [], options = {} }) {
     const address = await this.contractService.currentAccount()
     console.log("V01 ADAPTER set() - address=", address)
-
-    // Validate profile and attestations passed as arguments.
-    this._validateProfile(profile)
-    attestations.map(this._validateAttestation)
 
     // Load existing identity, if any.
     let ipfsHash = await this._getIdentityIpfsHash(address)
@@ -63,20 +61,21 @@ export default class V01_UsersAdapter {
    *    identityAddress: string}>|false}
    */
   async get(address) {
-    console.log("V01 ADAPTER - GET")
+    console.log("V01 ADAPTER - GET for address=", address)
     const account = await this.contractService.currentAccount()
     address = address || account
+    console.log("V01 ADAPTER GET: looking up using address ", address)
 
     // Scan blockchain for identity events to get latest IPFS hash of identity, if any.
     const ipfsHash = await this._getIdentityIpfsHash(address)
     if (!ipfsHash) {
-      console.log("Adapter v01 get - no identity event found for ", address)
+      console.log("V01 ADAPTER GET: no identity event found for ", address)
       return false
     }
 
     // Load identity from IPFS.
     const ipfsIdentity = await this.ipfsDataStore.load(IDENTITY_DATA_TYPE, ipfsHash)
-    console.log("Adapter v01 get - identity from ipfs= ", JSON.stringify(ipfsIdentity))
+    console.log("V01 ADAPTER GET: identity from ipfs= ", JSON.stringify(ipfsIdentity))
 
     const profile = ipfsIdentity.profile
     const attestations = ipfsIdentity.attestations
@@ -103,12 +102,16 @@ export default class V01_UsersAdapter {
    * @private
    */
   async _getIdentityIpfsHash(address) {
+    console.log("_getIdentityIpfsHash for address", address)
     // TODO: should this be cached like what marketplace does in getContract ???
     const contract = await this.contractService.deployed(
       this.contractService.contracts[this.contractName]
     )
+    // Note: filtering using 'topics' rather than 'filter' due to
+    // web3 bugs where 'filter' does not work with 'allEvents'.
+    // See https://github.com/ethereum/web3.js/issues/1219
     const events = await contract.getPastEvents('allEvents', {
-      filter: { account: address },
+      topics: [null, Web3.utils.padLeft(address.toLowerCase(), 64)],
       fromBlock: this.blockEpoch
     })
     let ipfsHash = null
@@ -125,36 +128,18 @@ export default class V01_UsersAdapter {
   }
 
   /**
-   *
+   * Merge existing attestations on an identity with new attestations.
+   * Note: The current logic only does deduping based on signature. It could potentially
+   * be enhanced to only keep latest attestation per type and possibly to trim expired attestations.
    * @param ipfsIdentity
    * @param attestations
    * @private
    * @return {List<AttestationObject>}
    */
   _mergeAttestations(ipfsIdentity, attestations) {
-    // TODO: dedupe based on signature
-    return attestations
-  }
-
-  /**
-   * Validates profile data against schema. Throws in case of validation error.
-   * @param profile
-   * @private
-   * @throws {Error}
-   */
-  _validateProfile(profile) {
-    // TODO: validate against JSON schema
-    return
-  }
-
-  /**
-   * Validates attestation data against schema. Throws in case of validation error.
-   * @param attestation
-   * @private
-   * @throws {Error}
-   */
-  _validateAttestation(attestation) {
-    // TODO: validate against JSON schema
-    return
+    const seen = {}
+    return attestations.filter( (a) => {
+      return seen[a.signature] ? false : (seen[a.signature] = true)
+    })
   }
 }

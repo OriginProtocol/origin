@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "https://schema.originprotocol.com/profile-v2_1.0.0.json",
+  "$id": "https://schema.originprotocol.com/profile_2.0.0.json",
   "title": "Origin Protocol profile schema",
   "definitions": {
     "person": {
@@ -62,6 +62,7 @@
     }
   ],
   "required": [
+    "schemaId",
     "ethAddress"
   ]
 }

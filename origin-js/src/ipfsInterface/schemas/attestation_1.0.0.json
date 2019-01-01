@@ -300,6 +300,7 @@
     }
   },
   "required": [
+    "schemaId",
     "data",
     "signature"
   ]
