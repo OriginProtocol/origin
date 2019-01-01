@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment-timezone'
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'

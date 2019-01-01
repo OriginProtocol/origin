@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { fetchUser } from 'actions/User'

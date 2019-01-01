@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { defineMessages, injectIntl } from 'react-intl'
 
 import OfferStatusEvent from 'components/offer-status-event'

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import { fetchUser } from 'actions/User'
 import { showMainNav } from 'actions/App'

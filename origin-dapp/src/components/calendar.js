@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import BigCalendar from 'react-big-calendar'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import uuid from 'uuid/v1'
 import { 
   generateCalendarSlots,
@@ -14,7 +14,8 @@ import {
   getSlotsToReserve,
   getCleanEvents,
   getDateAvailabilityAndPrice,
-  generateSlotStartEnd
+  generateSlotStartEnd,
+  localizeTimeStamp
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -599,7 +600,7 @@ class Calendar extends Component {
                 }
               }}
               selectable={ true }
-              events={ (userType === 'seller' && this.state.events) || [] }
+              events={ [] }
               defaultView={ BigCalendar.Views[this.getViewType().toUpperCase()] }
               onSelectSlot={ this.onSelectSlot }
               step={ this.props.step || 60 }

@@ -1,5 +1,9 @@
-import moment from 'moment'
+import moment from 'moment-timezone'
 import uuid from 'uuid/v1'
+
+export function localizeTimeStamp(timeStamp, timeZone) {
+  return moment(timeStamp).tz(timeZone).toDate()
+}
 
 export function generateCalendarSlots(events) {
 
