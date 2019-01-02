@@ -1,6 +1,6 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
-# IPFS-Proxy
+# origin-ipfs-proxy
 
 This directory contains a node server that sites in front of Origin's IPFS nodes to validate files being uploaded and downloaded. It allows the following filetypes:
 
@@ -9,7 +9,7 @@ This directory contains a node server that sites in front of Origin's IPFS nodes
 - jpeg
 - json
 
-## Running ipfs-proxy
+## Running origin-ipfs-proxy
 
 `npm run start`
 
@@ -17,6 +17,6 @@ This directory contains a node server that sites in front of Origin's IPFS nodes
 
 `npm run test`
 
-For some load testing and benchmarking of IPFS-Proxy vs a bare IPFS node run:
+For some load testing and benchmarking of origin-ipfs-proxy vs a bare IPFS node run:
 
 `npm run test:load`

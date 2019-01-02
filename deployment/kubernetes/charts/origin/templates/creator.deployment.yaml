@@ -40,7 +40,7 @@ spec:
                 name: {{ template "creator.fullname" . }}
                 key: ENVKEY
           - name: GOOGLE_APPLICATION_CREDENTIALS
-            value: '/secrets/ga-credentials.json'
+            value: "/secrets/credentials.json"
         volumeMounts:
           - name: gcloud-creator-sa-credentials
             mountPath: /secrets

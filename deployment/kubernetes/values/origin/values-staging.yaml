@@ -16,8 +16,8 @@ gethTxMemoryRequest: 6Gi
 ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
-# ipfs-proxy
-ipfsProxyImage: ipfs-proxy
+# origin-ipfs-proxy
+ipfsProxyImage: origin-ipfs-proxy
 ipfsProxyImageTag: 'e0e12cd'
 
 # origin-faucet
