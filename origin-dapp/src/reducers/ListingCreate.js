@@ -26,8 +26,7 @@ const defaultState = {
     }
   },
   showDetailsFormErrorMsg: false,
-  showBoostTutorial: false,
-  showEthNotEnough: false
+  showBoostTutorial: false
 }
 
 const initialState = { ...defaultState, ...data }

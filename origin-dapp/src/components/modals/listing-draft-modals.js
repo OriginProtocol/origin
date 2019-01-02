@@ -30,7 +30,7 @@ export const ListingDraftModal = ({ isOpen, onContinue, onAddNew }) => {
       </div>
       <div className="button-container">
         <button
-          className="btn btn-clear btn-primary"
+          className="btn btn-primary"
           onClick={onContinue}
         >
           <FormattedMessage

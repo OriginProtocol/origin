@@ -109,7 +109,8 @@ class ListingCreate extends Component {
     }
 
     this.state = {
-      showDraftModal: false
+      showDraftModal: false,
+      showEthNotEnough: false
     }
   }
 
@@ -387,7 +388,7 @@ class ListingCreate extends Component {
 
   checkWalletETHBalance() {
     if (parseFloat(this.props.wallet.ethBalance) < 0.01){
-      this.props.updateState({
+      this.setState({
         showEthNotEnough: true
       })
       return false
@@ -630,8 +631,7 @@ class ListingCreate extends Component {
       showDetailsFormErrorMsg,
       showBoostTutorial,
       isFractionalListing,
-      isEditMode,
-      showEthNotEnough
+      isEditMode
     } = this.props
     const { formData } = formListing
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
@@ -1434,21 +1434,16 @@ class ListingCreate extends Component {
                 </div>
               </Modal>
             )}
-            <Modal backdrop="static" isOpen={showEthNotEnough}>
+            <Modal backdrop="static" isOpen={this.state.showEthNotEnough}>
               <div className="image-container">
                 <img src="images/flat_cross_icon.svg" role="presentation" />
               </div>
               <FormattedMessage
                 id={'eth-not-enough.error1'}
-                defaultMessage={'Your ETH is not enough.'}
-              />
-              <br />
-              <FormattedMessage
-                id={'eth-not-enough.error2'}
-                defaultMessage={'Please funding your wallet.'}
+                defaultMessage={'You don’t have enough funds to complete this transaction. Please add funds to your wallet.'}
               />
               <div className="button-container">
-                <a
+                <button
                   className="btn btn-clear"
                   onClick={()=>{
                     this.props.updateState({
@@ -1462,7 +1457,7 @@ class ListingCreate extends Component {
                     id={'listing-create.OK'}
                     defaultMessage={'OK'}
                   />
-                </a>
+                </button>
               </div>
             </Modal>
             <ListingDraftModal
