@@ -17,7 +17,7 @@ describe('create listing with offer and retrieve using discovery', () => {
 
   before(async () => {
     this.origin = new Origin({
-      ipfsDomain: 'ipfs-proxy',
+      ipfsDomain: 'origin-ipfs-proxy',
       ipfsGatewayProtocol: 'http',
       ipfsGatewayPort: 9999,
       ipfsApiPort: 9999,

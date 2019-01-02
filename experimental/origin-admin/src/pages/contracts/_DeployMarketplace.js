@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 import { Button } from '@blueprintjs/core'
 
 import {
@@ -13,23 +12,8 @@ import {
 
 import ErrorCallout from 'components/ErrorCallout'
 import withAccounts from 'hoc/withAccounts'
+import { DeployMarketplaceMutation } from 'queries/Mutations'
 import rnd from 'utils/rnd'
-
-const DeployMarketplaceMutation = gql`
-  mutation DeployMarketplace(
-    $token: String!
-    $version: String
-    $from: String
-    $autoWhitelist: Boolean
-  ) {
-    deployMarketplace(
-      token: $token
-      version: $version
-      from: $from
-      autoWhitelist: $autoWhitelist
-    )
-  }
-`
 
 class DeployMarketplace extends Component {
   constructor(props) {

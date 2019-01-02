@@ -34,6 +34,7 @@ import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
 import { formattedAddress } from 'utils/user'
+import { getDataURIsFromImgURLs } from 'utils/fileUtils'
 
 import {
   translateSchema,
@@ -173,18 +174,32 @@ class ListingCreate extends Component {
         const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
 
         this.ensureUserIsSeller(listing.seller)
-        this.setState({
+        const state = {
           formListing: {
             formData: listing
           },
           selectedSchemaId: listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
-        })
-        this.renderDetailsForm(listing.schema)
-        this.setState({
-          step: this.STEP.DETAILS,
-        })
+        }
+        this.ensureUserIsSeller(listing.seller)
+
+        if (listing.pictures.length) {
+          const pictures = await getDataURIsFromImgURLs(listing.pictures)
+          this.setState({
+            ...state,
+            formListing: {
+              formData: { ...listing, pictures }
+            }
+          })
+          this.renderDetailsForm(listing.schema)
+          this.setState({ step: this.STEP.DETAILS })
+        } else {
+          this.setState(state)
+          this.renderDetailsForm(listing.schema)
+          this.setState({ step: this.STEP.DETAILS })
+        }
+
       } catch (error) {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
@@ -255,7 +270,7 @@ class ListingCreate extends Component {
       return schemaObj
     })
     const selectedCategoryObj = listingSchemaMetadata.listingTypes.find(
-      listingType => listingType.type === trimmedCategory 
+      listingType => listingType.type === trimmedCategory
     )
     const stateToSet = {
       selectedCategory: trimmedCategory,

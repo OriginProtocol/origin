@@ -1,6 +1,6 @@
 ---
 git:
-  depth: 1
+  depth: 6
 matrix:
   include:
     # Run integration tests using docker compose

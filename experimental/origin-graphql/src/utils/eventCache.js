@@ -1,11 +1,13 @@
+import { get, post } from 'origin-ipfs'
 import uniqBy from 'lodash/uniqBy'
 
-export default function eventCache(contract, fromBlock = 0) {
+export default function eventCache(contract, fromBlock = 0, web3, config) {
+  const queue = []
   let events = [],
     toBlock = 0,
     lastLookup = 0,
     processing = false,
-    queue = []
+    triedIpfs = false
 
   function updateBlock(block) {
     console.log('Update block', block)
@@ -16,11 +18,14 @@ export default function eventCache(contract, fromBlock = 0) {
     return { updateBlock }
   }
 
-  let cacheStr = `eventCache${contract.options.address.slice(2, 8)}`
+  const cacheStr = `eventCache${contract.options.address.slice(2, 8)}`
 
   try {
-    ({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr]))
-    fromBlock = lastLookup
+    if (window.localStorage[cacheStr]) {
+      ({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr]))
+      fromBlock = lastLookup
+      triedIpfs = true
+    }
   } catch (e) {
     /* Ignore */
   }
@@ -31,16 +36,37 @@ export default function eventCache(contract, fromBlock = 0) {
     if (processing) {
       await isDone()
     }
+    processing = true
+    if (!triedIpfs && config.ipfsEventCache) {
+      console.log('Try IPFS cache...')
+      let ipfsData
+      try {
+        ipfsData = await get(config.ipfsGateway, config.ipfsEventCache)
+      } catch (e) {
+        /* Ignore */
+      }
+      if (ipfsData && ipfsData.events) {
+        console.log('Got IPFS cache')
+        // console.log(ipfsData)
+        events = ipfsData.events
+        lastLookup = ipfsData.lastLookup
+        fromBlock = ipfsData.lastLookup
+        // ({ events, lastLookup } = ipfsData)
+      } else {
+        console.log('Error getting IPFS cache')
+      }
+      triedIpfs = true
+    }
     if (!toBlock) {
       toBlock = await web3.eth.getBlockNumber()
     }
     if (lastLookup && lastLookup === toBlock) {
+      processing = false
       return
     }
     if (lastLookup === fromBlock) {
       fromBlock += 1
     }
-    processing = true
     console.log(
       `Fetching events from ${fromBlock} to ${toBlock}, last lookup ${lastLookup}`
     )
@@ -72,6 +98,9 @@ export default function eventCache(contract, fromBlock = 0) {
         lastLookup,
         events
       })
+
+      // const hash = await post(config.ipfsRPC, { events, lastLookup }, true)
+      // console.log('IPFS Hash', hash)
     }
   }
 
@@ -94,7 +123,10 @@ export default function eventCache(contract, fromBlock = 0) {
 
   async function listings(listingId, eventName, blockNumber) {
     await getPastEvents()
-    var listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
+    const listingTopic = web3.utils.padLeft(
+      web3.utils.numberToHex(listingId),
+      64
+    )
     return events.filter(e => {
       const topics = e.raw.topics
       let matches = topics[2] === listingTopic
@@ -106,8 +138,11 @@ export default function eventCache(contract, fromBlock = 0) {
 
   async function offers(listingId, offerId, eventName) {
     await getPastEvents()
-    var listingTopic = web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
-    var offerTopic = web3.utils.padLeft(web3.utils.numberToHex(offerId), 64)
+    const listingTopic = web3.utils.padLeft(
+      web3.utils.numberToHex(listingId),
+      64
+    )
+    const offerTopic = web3.utils.padLeft(web3.utils.numberToHex(offerId), 64)
     return events.filter(e => {
       const topics = e.raw.topics
       return (

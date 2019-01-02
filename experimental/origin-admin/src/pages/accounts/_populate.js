@@ -10,7 +10,7 @@ import {
   DeployMarketplaceMutation,
   UpdateTokenAllowanceMutation,
   AddAffiliateMutation
-} from '../../mutations'
+} from 'queries/Mutations'
 
 const TransactionSubscription = gql`
   subscription onTransactionUpdated {
