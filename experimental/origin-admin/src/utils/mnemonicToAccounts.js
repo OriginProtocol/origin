@@ -5,7 +5,7 @@ const Names = ['Admin', 'Stan', 'Nick', 'Origin', 'Origin']
 const Roles = ['Admin', 'Seller', 'Buyer', 'Arbitrator', 'Affiliate']
 
 export const defaultMnemonic =
-  'enlist bamboo horror cream exit message dismiss asthma cruel sustain reason below'
+  'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
 
 export default function mnemonicToAccounts(
   mnemonic = defaultMnemonic,

@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 
 import Gallery from 'components/Gallery'
-import Buy from './Buy'
+import Link from 'components/Link'
+import Reviews from 'components/Reviews'
+import AboutParty from 'components/AboutParty'
+
+import Buy from './mutations/Buy'
 
 class ListingDetail extends Component {
+  state = {}
   render() {
     const { listing, quantity, from } = this.props
+
     const amount = String(Number(listing.price.amount) * Number(quantity))
 
     return (
@@ -16,6 +22,8 @@ class ListingDetail extends Component {
           <div className="col-md-8">
             <Gallery pics={listing.media} />
             <div className="description">{listing.description}</div>
+            <hr />
+            <Reviews id={listing.seller.id} />
           </div>
           <div className="col-md-4">
             <div className="listing-buy">
@@ -42,8 +50,25 @@ class ListingDetail extends Component {
                 <span>Total Price</span>
                 <span>{`${amount} ETH`}</span>
               </div>
-              <Buy listing={listing} from={from} value={amount} />
+              {listing.seller.id === from ? (
+                <>
+                  <Link
+                    className="btn btn-primary"
+                    to="/my-listings"
+                    children={'My Listings'}
+                  />
+                  <Link
+                    className="btn btn-primary mt-2"
+                    to={`/listings/${this.props.listing.id}/edit`}
+                    children={'Edit Listing'}
+                  />
+                </>
+              ) : (
+                <Buy listing={listing} from={from} value={amount} />
+              )}
             </div>
+            <h5 className="mt-3">About the Seller</h5>
+            <AboutParty id={listing.seller.id} />
           </div>
         </div>
       </div>

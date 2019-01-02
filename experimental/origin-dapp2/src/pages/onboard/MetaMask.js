@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import ListingPreview from './_ListingPreview'
-import Stage from './_Stage'
-import HelpWallet from './_HelpWallet'
+import Steps from 'components/Steps'
 import Link from 'components/Link'
+
+import ListingPreview from './_ListingPreview'
+import HelpWallet from './_HelpWallet'
 
 const MetaMaskURL =
   'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn/related'
@@ -144,7 +145,7 @@ class OnboardMetaMask extends Component {
         <h3>Connect a Crypto Wallet</h3>
         <div className="row">
           <div className="col-md-8">
-            <Stage stage={1} />
+            <Steps steps={4} step={1} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {

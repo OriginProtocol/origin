@@ -1,3 +1,5 @@
+import contracts from '../contracts'
+
 let timestamps = {}
 try {
   timestamps = JSON.parse(window.localStorage.blocktimes)
@@ -9,7 +11,7 @@ export default {
   block: event =>
     new Promise(async (resolve, reject) => {
       const id = event.blockNumber
-      web3.eth
+      contracts.web3.eth
         .getBlock(id)
         .then(block => resolve({ ...block, id }))
         .catch(reject)
@@ -19,12 +21,12 @@ export default {
       if (timestamps[event.blockNumber]) {
         return resolve(timestamps[event.blockNumber])
       }
-      web3.eth
+      contracts.web3.eth
         .getBlock(event.blockNumber)
         .then(block => {
           timestamps[event.blockNumber] = block.timestamp
           if (typeof window !== 'undefined') {
-            window.localStorage.blocktimes = JSON.stringify(timestamps)            
+            window.localStorage.blocktimes = JSON.stringify(timestamps)
           }
           resolve(block.timestamp)
         })

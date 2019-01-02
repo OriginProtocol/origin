@@ -1,4 +1,5 @@
 import contracts from '../contracts'
+import parseId from '../utils/parseId'
 import { getFeatured, getHidden } from './marketplace/_featuredAndHidden'
 
 export default {
@@ -9,7 +10,10 @@ export default {
   totalOffers: listing => {
     return listing.contract.methods.totalOffers(listing.id).call()
   },
-  offer: async (listing, args) => contracts.eventSource.getOffer(args.id),
+  offer: async (listing, args) => {
+    const { listingId, offerId } = parseId(args.id)
+    return contracts.eventSource.getOffer(listingId, offerId)
+  },
   offers: async listing => {
     if (!listing.contract) {
       return null

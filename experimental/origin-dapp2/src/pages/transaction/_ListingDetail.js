@@ -1,8 +1,8 @@
 import React from 'react'
 
-const ListingDetail = () => (
+const ListingDetail = ({ listing }) => (
   <div className="tx-listing-detail">
-    Test
+    {listing.title}
   </div>
 )
 
@@ -12,5 +12,5 @@ require('react-styl')(`
   .tx-listing-detail
     border: 1px solid var(--light)
     border-radius: 5px
-    padding: 2rem
+    padding: 1rem
 `)

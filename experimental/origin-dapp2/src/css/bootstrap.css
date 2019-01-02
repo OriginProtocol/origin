@@ -19,6 +19,11 @@
   background-color: var(--greenblue);
 }
 
+.btn-outline-danger {
+  color: var(--orange-red);
+  border-color: var(--orange-red);
+}
+
 .btn-success:hover {
   background-color: #0db87f;
 }

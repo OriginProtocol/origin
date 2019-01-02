@@ -2,9 +2,8 @@
 
 A UI leveraging origin-graphql. View and manage listings and offers.
 
-Demo at https://www.originadm.in
+Test builds at https://originprotocol.github.io/test-builds/
 
 ## Usage
 
-    npx lerna bootstrap
     npm start
