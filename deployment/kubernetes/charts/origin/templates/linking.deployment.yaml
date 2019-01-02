@@ -35,6 +35,10 @@ spec:
               secretKeyRef:
                 name: {{ template "linking.fullname" . }}
                 key: ENVKEY
+        volumeMounts:
+          - name: origin-apns-key-file
+            mountPath: /secrets
+            readOnly: true
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",
@@ -51,4 +55,6 @@ spec:
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
-
+        - name: origin-apns-key-file
+          secret:
+            secretName: origin-apns-key-file
