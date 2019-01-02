@@ -20,6 +20,10 @@
     "defaultMessage": "Edit Listing"
   },
   {
+    "id": "listing-detail.mySales",
+    "defaultMessage": "My Sales"
+  },
+  {
     "id": "listing-detail.firstPurchaseHeading",
     "defaultMessage": "You're about to make your first purchase on Origin."
   },

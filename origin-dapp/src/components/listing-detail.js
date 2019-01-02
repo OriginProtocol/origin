@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import BigNumber from 'bignumber.js'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {
@@ -161,7 +162,7 @@ class ListingsDetail extends Component {
     if (isFractional)
       listingPrice = slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString()
     else if (isMultiUnit)
-      listingPrice = (price * quantity).toString()
+      listingPrice = new BigNumber(price).multipliedBy(quantity).toString()
 
     try {
       const offerData = {
@@ -260,7 +261,7 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.VIEW })
   }
 
-  renderButtonContainer(userIsSeller, isFractional, listingId) {
+  renderButtonContainer(userIsSeller, isFractional, listingId, isMultiUnit, unitsSold) {
     return (<div className="btn-container">
       {!userIsSeller && !isFractional && (
         <button
@@ -300,6 +301,19 @@ class ListingsDetail extends Component {
                 defaultMessage={'Edit Listing'}
               />
           </Link>
+          {isMultiUnit && unitsSold > 0 && (
+            <Link
+              to={`/my-sales`}
+              className="btn margin-top"
+              ga-category="listing"
+              ga-label="sellers_own_listing_edit_listing_cta"
+            >
+              <FormattedMessage
+                id={'listing-detail.mySales'}
+                defaultMessage={'My Sales'}
+              />
+            </Link>
+          )}
         </Fragment>
       )}
     </div>)
@@ -356,6 +370,7 @@ class ListingsDetail extends Component {
     // in general an offer exists (even if user is not a buyer or a seller)
     const offerExists = isSold || isPending
     const usersNotBuyerOrSeller = !userIsBuyer && !userIsSeller
+    const unitsSold = unitsTotal - unitsRemaining
 
     return (
       <div className="listing-detail">
@@ -632,7 +647,7 @@ class ListingsDetail extends Component {
                           />
                         </div>
                         <div className="text-right mr-3">
-                          {unitsTotal - unitsRemaining}
+                          {unitsSold}
                         </div>
                       </div>
                       <div className="d-flex justify-content-between mt-4 mb-2">
@@ -675,7 +690,7 @@ class ListingsDetail extends Component {
                       </div>
                     </Fragment>
                   )}
-                  {this.renderButtonContainer(userIsSeller, isFractional, this.props.listingId)}
+                  {this.renderButtonContainer(userIsSeller, isFractional, this.props.listingId, isMultiUnit, unitsSold)}
                   {/* Via Matt 9/4/2018: Not necessary until we have staking */}
                   {/*
                     <div className="boost-level">
