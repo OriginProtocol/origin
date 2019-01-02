@@ -63,7 +63,9 @@ export default class CompactMessages extends Component {
       if (!message) return
       const { created, hash, senderAddress, timestamp } = message
       const offerMessage = timestamp
-      if (offerMessage) return formatOfferMessage(message)
+      if (offerMessage) {
+        return formatOfferMessage(message)
+      }
 
       const isFirstMessage = firstMessage === message
       const previousOfferMessage = sortedMessages[i-1] && sortedMessages[i-1].timestamp
