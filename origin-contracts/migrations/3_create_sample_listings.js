@@ -53,7 +53,7 @@ async function deployContracts(deployer) {
     Seller
   )
   // taylor-swift-tix
-  // QmXx5Qo2xh5TWZXbsDmyquBpojpqoUVpgZt3kNgqsonw9j
+  // QmYCxapbBzuJYuLDGRMcFtqBQ9umKYGYC3LnECDVs3H4qZ
   await createListing(
     marketplace00,
     '0x929c6ef53a5fd00e51d935e228f4719b522b6b5d2076bf0d725b0b5ab2c6fe4c',
