@@ -8,12 +8,11 @@
   },
   "scripts": {
     "build": "per-env",
-    "build:production": "babel src/* -d dist",
-    "migrate": "sequeqlize db:migrate",
+    "build:production": "babel src -d dist",
+    "migrate": "sequelize db:migrate",
     "start": "per-env",
     "start:development": "nodemon -r @babel/register -r source-map-support src/index.js",
-    "prestart:production": "npm run build",
-    "start:production": "start dist/index.js",
+    "start:production": "node dist/index.js",
     "test": "NODE_ENV=test mocha -r @babel/register --timeout 10000 --exit"
   },
   "author": "",
