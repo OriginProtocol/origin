@@ -1,0 +1,27 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{ template "creator-dapp.fullname" . }}
+  labels:
+    app: {{ template "creator-dapp.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: origindapp-com-ingress
+spec:
+  secretName: {{ .Release.Namespace }}-origindapp-com
+  commonName: '*.{{ template "creator-dapp.host" . }}'
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  dnsNames:
+    - origindapp.com
+  acme:
+    config:
+    - dns01:
+        provider: google-cloud-dns
+      domains:
+        - '*.{{ template "creator-dapp.host" . }}'

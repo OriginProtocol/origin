@@ -2,8 +2,8 @@ import React from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import fragments from '../../fragments'
-import query from './_query'
+import fragments from 'queries/Fragments'
+import query from 'queries/AllAccounts'
 
 const SetActiveWalletMutation = gql`
   mutation SetActiveWallet($address: String!) {

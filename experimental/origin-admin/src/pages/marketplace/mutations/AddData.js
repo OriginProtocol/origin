@@ -5,7 +5,7 @@ import rnd from 'utils/rnd'
 import { Button, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 import withAccounts from 'hoc/withAccounts'
 
-import { AddDataMutation } from '../../../mutations'
+import { AddDataMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 import SelectAccount from 'components/SelectAccount'
 

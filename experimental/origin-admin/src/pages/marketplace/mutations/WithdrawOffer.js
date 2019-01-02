@@ -3,7 +3,7 @@ import { Mutation } from 'react-apollo'
 
 import { Button, Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 
-import { WithdrawOfferMutation } from '../../../mutations'
+import { WithdrawOfferMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class WithdrawOffer extends Component {

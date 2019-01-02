@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import clipboard from 'clipboard-polyfill'
 import QRCode from 'qrcode.react'
+import queryString from 'query-string'
 
 import { storeWeb3Intent, storeNetwork } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
@@ -375,9 +376,19 @@ class Web3Provider extends Component {
     this.initNetworkPoll()
     if (origin.contractService.walletLinker)
     {
-        origin.contractService.walletLinker.showPopUp = this.showLinkerPopUp.bind(this)
+      origin.contractService.walletLinker.showPopUp = this.showLinkerPopUp.bind(this)
+      if (!origin.contractService.walletLinker.setLinkCode) {
         origin.contractService.walletLinker.setLinkCode = this.setLinkerCode.bind(this)
-        origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
+      }
+      origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
+
+      const { location } = this.props
+      const query = queryString.parse(location.search)
+      const plink = query['plink']
+      if (plink)
+      {
+        origin.contractService.walletLinker.preLinked(plink)
+      }
     }
   }
 
@@ -512,7 +523,7 @@ class Web3Provider extends Component {
       // TODO: fix this with some route magic!
       if (
         !walletLinkerEnabled ||
-        ['/my-listings', '/my-purchases','/my-sales'].includes(this.props.location.pathname) ||
+        previous || ['/my-listings', '/my-purchases','/my-sales'].includes(this.props.location.pathname) ||
         !current
       ) {
         // reload if changed from a prior account

@@ -1,5 +1,6 @@
+import origin from 'services/origin'
+
 import keyMirror from 'utils/keyMirror'
-import origin from '../services/origin'
 
 export const ProfileConstants = keyMirror(
   {
