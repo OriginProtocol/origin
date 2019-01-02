@@ -9,8 +9,8 @@ import Store from './Store'
 
 import { storeNotificationsPermissions, updateCarouselStatus } from 'actions/Activation'
 import { setDevices } from 'actions/Devices'
-import { fetchProfile } from 'actions/Profile'
-import { getBalance } from 'actions/Wallet'
+import { fetchUser } from 'actions/User'
+import { getBalance, init } from 'actions/Wallet'
 import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
 
 import Onboarding from 'components/onboarding'
@@ -18,6 +18,7 @@ import Onboarding from 'components/onboarding'
 import DevicesScreen from 'screens/devices'
 import HomeScreen from 'screens/home'
 import MessagingScreen from 'screens/messaging'
+import ProfileScreen from 'screens/profile'
 import ScanScreen from 'screens/scan'
 import SettingsScreen from 'screens/settings'
 import TransactionScreen from 'screens/transaction'
@@ -43,6 +44,7 @@ const navigationOptions = ({ navigation }) => ({
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  Profile: ProfileScreen,
   Transaction: TransactionScreen,
   WalletFunding: WalletFundingScreen,
 }, {
@@ -63,6 +65,7 @@ const ScanStack = createStackNavigator({
 
 const SettingsStack = createStackNavigator({
   Devices: DevicesScreen,
+  Profile: ProfileScreen,
   Settings: SettingsScreen,
 }, {
   initialRouteName: 'Settings',
@@ -148,8 +151,9 @@ class OriginNavWrapper extends Component {
       NavigationService.navigate('Home')
     })
 
-    originWallet.events.on(Events.NEW_ACCOUNT, (data, matcher) => {
-      this.props.fetchProfile()
+    originWallet.events.on(Events.NEW_ACCOUNT, ({ address }, matcher) => {
+      this.props.initWallet(address)
+      this.props.fetchUser(address)
       this.props.getBalance()
     })
 
@@ -288,8 +292,9 @@ const mapStateToProps = ({ activation }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchProfile: () => dispatch(fetchProfile()),
+  fetchUser: address => dispatch(fetchUser(address)),
   getBalance: () => dispatch(getBalance()),
+  initWallet: address => dispatch(init(address)),
   newEvent: (matcher, event) => dispatch(newEvent(matcher, event)),
   processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event)),
   setActiveEvent: event => dispatch(setActiveEvent(event)),

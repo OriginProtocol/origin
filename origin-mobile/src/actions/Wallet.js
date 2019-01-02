@@ -15,14 +15,10 @@ export const WalletConstants = keyMirror(
   'WALLET'
 )
 
-export function init() {
-  return async function(dispatch) {
-    const address = await origin.contractService.currentAccount()
-
-    dispatch({
-      type: WalletConstants.INIT_SUCCESS,
-      address,
-    })
+export function init(address) {
+  return {
+    type: WalletConstants.INIT_SUCCESS,
+    address,
   }
 }
 

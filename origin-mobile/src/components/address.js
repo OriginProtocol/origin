@@ -8,7 +8,7 @@ export default class Address extends Component {
     const { address, chars, label, style, onPress } = this.props
 
     return (
-      <TouchableOpacity onPress={() => {
+      <TouchableOpacity activeOpacity={onPress ? 0.5 : 1} onPress={() => {
         if (typeof onPress === 'function') {
           onPress()
         } else {

@@ -99,7 +99,6 @@ const LinkerPopUp = ({ linkerCode, mobileDevice, web3Intent, handleCancel, handl
             borderRadius: '4px',
             marginTop: '10px',
             padding: '0.5rem',
-            opacity: 0.5,
           }}>
             {linkerCode}
           </pre>

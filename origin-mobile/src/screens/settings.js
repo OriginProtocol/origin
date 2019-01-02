@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Alert, FlatList, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { connect } from 'react-redux'
 
 import Separator from 'components/separator'
 
@@ -7,7 +8,7 @@ import networks from 'utils/networks'
 
 const IMAGES_PATH = '../../assets/images/'
 
-export default class SettingsScreen extends Component {
+class SettingsScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -34,7 +35,7 @@ export default class SettingsScreen extends Component {
   }
 
   render() {
-    const { networkId = 999 } = this.props
+    const { networkId = 999, user } = this.props
 
     return (
       <View style={styles.container}>
@@ -44,6 +45,15 @@ export default class SettingsScreen extends Component {
         <TouchableHighlight onPress={() => this.props.navigation.navigate('Devices')}>
           <View style={styles.item}>
             <Text style={styles.text}>Devices</Text>
+            <View style={styles.iconContainer}>
+              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+            </View>
+          </View>
+        </TouchableHighlight>
+        <Separator padded={true} />
+        <TouchableHighlight onPress={() => this.props.navigation.navigate('Profile', { user })}>
+          <View style={styles.item}>
+            <Text style={styles.text}>Profile</Text>
             <View style={styles.iconContainer}>
               <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
             </View>
@@ -76,6 +86,14 @@ export default class SettingsScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = ({ users, wallet }) => {
+  return {
+    user: users.find(({ address }) => address === wallet.address) || { address: wallet.address },
+  }
+}
+
+export default connect(mapStateToProps)(SettingsScreen)
 
 const styles = StyleSheet.create({
   container: {

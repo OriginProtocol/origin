@@ -3,6 +3,7 @@ import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { connect } from 'react-redux'
 
 import { promptForNotifications } from 'actions/Activation'
+import { fetchUser } from 'actions/User'
 
 import Address from 'components/address'
 import Avatar from 'components/avatar'
@@ -21,6 +22,7 @@ class TransactionScreen extends Component {
     super(props)
 
     this.handleApprove = this.handleApprove.bind(this)
+    this.handleProfile = this.handleProfile.bind(this)
     this.handleReject = this.handleReject.bind(this)
     this.state = {}
   }
@@ -66,17 +68,27 @@ class TransactionScreen extends Component {
   }
 
   componentDidMount() {
-    const { activation, navigation } = this.props
+    const { activation, fetchUser, navigation, wallet } = this.props
     const hasNotificationsEnabled = activation.notifications.permissions.hard.alert
-    const { method } = navigation.state.params.item.meta
+    const item = navigation.getParam('item')
+    const { listing, meta, to } = navigation.state.params.item.meta
     
-    !hasNotificationsEnabled && this.props.promptForNotifications(method)
+    !hasNotificationsEnabled && this.props.promptForNotifications(meta.method)
+
+    fetchUser(wallet.address)
+    fetchUser(listing ? listing.seller : to)
   }
 
   handleApprove() {
     const item = this.props.navigation.getParam('item')
 
     originWallet.handleEvent(item)
+  }
+
+  handleProfile(address) {
+    this.props.navigation.navigate('Profile', {
+      user: this.props.users.find(user => user.address === address) || { address },
+    })
   }
 
   handleReject() {
@@ -86,7 +98,7 @@ class TransactionScreen extends Component {
   }
 
   render() {
-    const { navigation, wallet } = this.props
+    const { navigation, users, wallet } = this.props
     const item = navigation.getParam('item')
     const { cost, gas_cost, listing, to } = item
     const counterpartyAddress = (listing && listing.seller) || to
@@ -96,6 +108,8 @@ class TransactionScreen extends Component {
     const total = web3.utils.toBN(cost).add(web3.utils.toBN(gas_cost))
     const { width } = Dimensions.get('window')
     const innerWidth = width - DETAIL_PADDING * 2
+    const fromUser = users.find(({ address }) => address === wallet.address) || {}
+    const toUser = users.find(({ address }) => address === counterpartyAddress) || {}
 
     return (
       <View style={styles.container}>
@@ -112,7 +126,15 @@ class TransactionScreen extends Component {
           }
           <Text numberOfLines={1} style={styles.title}>{listing.title}</Text>
           <View style={styles.accounts}>
-            <Avatar size={40} style={{ marginRight: 13 }} />
+            <Avatar
+              image={fromUser.profile && fromUser.profile.avatar}
+              size={40}
+              style={[
+                styles.avatar, 
+                fromUser.profile && fromUser.profile.avatar ? { paddingTop: 0 } : {},
+              ]}
+              onPress={() => this.handleProfile(wallet.address)}
+            />
             <View style={styles.accountText}>
               <Text style={styles.direction}>From</Text>
               <Address
@@ -120,10 +142,19 @@ class TransactionScreen extends Component {
                 chars={4}
                 label={'From Address'}
                 style={styles.address}
+                onPress={() => this.handleProfile(wallet.address)}
               />
             </View>
             <Image source={require(`${IMAGES_PATH}arrow-forward.png`)} style={styles.arrow} />
-            <Avatar size={40} style={{ marginRight: 13 }} />
+            <Avatar
+              image={toUser.profile && toUser.profile.avatar}
+              size={40}
+              style={[
+                styles.avatar, 
+                toUser.profile && toUser.profile.avatar ? { paddingTop: 0 } : {},
+              ]}
+              onPress={() => this.handleProfile(counterpartyAddress)}
+            />
             <View style={styles.accountText}>
               <Text style={styles.direction}>To</Text>
               <Address
@@ -131,6 +162,7 @@ class TransactionScreen extends Component {
                 chars={4}
                 label={'To Address'}
                 style={styles.address}
+                onPress={() => this.handleProfile(counterpartyAddress)}
               />
             </View>
           </View>
@@ -181,11 +213,12 @@ class TransactionScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, wallet }) => {
-  return { activation, wallet }
+const mapStateToProps = ({ activation, users, wallet }) => {
+  return { activation, users, wallet }
 }
 
 const mapDispatchToProps = dispatch => ({
+  fetchUser: address => dispatch(fetchUser(address)),
   promptForNotifications: method => dispatch(promptForNotifications(method)),
 })
 
@@ -218,6 +251,9 @@ const styles = StyleSheet.create({
   arrow: {
     marginLeft: 'auto',
     marginRight: 'auto',
+  },
+  avatar: {
+    marginRight: 13,
   },
   button: {
     marginBottom: 10,
