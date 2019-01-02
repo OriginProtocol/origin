@@ -145,7 +145,7 @@ class OnboardMetaMask extends Component {
         <h3>Connect a Crypto Wallet</h3>
         <div className="row">
           <div className="col-md-8">
-            <Steps step={1} />
+            <Steps steps={4} step={1} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {

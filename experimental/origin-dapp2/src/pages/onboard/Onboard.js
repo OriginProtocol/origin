@@ -6,7 +6,6 @@ import MetaMask from './MetaMask'
 import Messaging from './Messaging'
 import Notifications from './Notifications'
 import Profile from './Profile'
-import Attestations from './Attestations'
 
 class Onboard extends Component {
   render() {
@@ -37,10 +36,6 @@ class Onboard extends Component {
           <Route
             path="/listings/:listingID/onboard/profile"
             render={() => <Profile listing={listing} />}
-          />
-          <Route
-            path="/listings/:listingID/onboard/attestations"
-            render={() => <Attestations listing={listing} />}
           />
           <Route render={() => <Wallet listing={listing} />} />
         </Switch>

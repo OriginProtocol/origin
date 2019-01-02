@@ -41,7 +41,7 @@ const MessagingInitializing = () => (
 )
 
 const MessagingSyncing = ({ pct }) => (
-  <div className="onboard-box">
+  <div className="onboard-box messaging-sync">
     <div className="messaging-logo" />
     <div className="status">Origin Messaging Syncing</div>
     <div className="progress">
@@ -120,7 +120,7 @@ class OnboardMessaging extends Component {
         <h3>Enable Messaging</h3>
         <div className="row">
           <div className="col-md-8">
-            <Steps step={2} />
+            <Steps steps={4} step={2} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ data, error, networkStatus }) => {
                 if (networkStatus === 1) {
@@ -196,7 +196,7 @@ require('react-styl')(`
       background: var(--dusk) url(images/messages-icon.svg) no-repeat center
       background-size: 3.5rem
       position: relative
-    .progress
-      width: 50%
-      margin-top: 2rem
+  .messaging-sync > .progress
+    width: 50%
+    margin-top: 2rem
 `)

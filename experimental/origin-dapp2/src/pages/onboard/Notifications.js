@@ -101,7 +101,7 @@ class OnboardNotifications extends Component {
         <h3>Turn On Desktop Notifications</h3>
         <div className="row">
           <div className="col-md-8">
-            <Steps step={3} />
+            <Steps steps={4} step={3} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {

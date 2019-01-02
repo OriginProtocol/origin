@@ -13,13 +13,15 @@ class Step2 extends Component {
           <div className="step-description">Provide listing details</div>
           <Steps steps={3} step={2} />
 
-          <form>
+          <form onSubmit={e => e.preventDefault()}>
             <div className="form-group">
               <label>Title</label>
               <input
                 className="form-control form-control-lg"
                 placeholder="This is the title of your listing"
+                required
               />
+              {/* <div className="invalid-feedback">Invalid</div> */}
             </div>
             <div className="form-group">
               <label>Category</label>
@@ -64,16 +66,19 @@ class Step2 extends Component {
                 estimate.
               </div>
             </div>
-          </form>
 
-          <div className="actions">
-            <Link className="btn btn-outline-primary" to="/create">
-              Back
-            </Link>
-            <Link className="btn btn-primary" to="/create/step-3">
-              Continue
-            </Link>
-          </div>
+            <div className="actions">
+              <Link className="btn btn-outline-primary" to="/create">
+                Back
+              </Link>
+              <button type="submit" className="btn btn-primary">
+                Continue
+              </button>
+              {/* <Link className="btn btn-primary" to="/create/step-3">
+                Continue
+              </Link> */}
+            </div>
+          </form>
         </div>
       </div>
     )
@@ -95,9 +100,18 @@ require('react-styl')(`
     .form-control
       border-color: var(--light)
       font-size: 18px;
+      &.is-invalid
+        border-color: #dc3545
+        // padding-right: 2.25rem;
+        // background-repeat: no-repeat;
+        // background-position: center right calc(2.25rem / 4);
+        // background-size: calc(2.25rem / 2) calc(2.25rem / 2);
+        // background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23dc3545' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E")
       &::-webkit-input-placeholder
         color: var(--bluey-grey)
         font-size: 18px;
+    .invalid-feedback
+      font-weight: normal
     textarea
       min-height: 120px
     .add-photos
