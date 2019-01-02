@@ -58,11 +58,11 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 The Origin Docker Compose configuration runs the following packages:
 
 ```
-- ipfs-proxy on http://localhost:9999
 - origin-bridge on http://localhost:5000
 - origin-dapp on http://localhost:3000
 - origin-discovery (event-listener)
 - origin-discovery (apollo server on http://localhost:4000)
+- origin-ipfs-proxy on http://localhost:9999
 - origin-messaging on http://localhost:9012
 - origin-notifications on http://localhost:3456)
 - origin-js (ipfs server)
