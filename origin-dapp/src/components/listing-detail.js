@@ -267,16 +267,16 @@ class ListingsDetail extends Component {
         id={'listing-detail.visitMyPurchases'}
         defaultMessage={'See {mypurchases} to view the status of your purchase.'}
         values={{
-          mypurchases:  <Link
-                          to="/my-purchases"
-                          ga-category="purchase"
-                          ga-label="my_purchase"
-                        >
-                          <FormattedMessage
-                            id={'listing-detail.mypurchases'}
-                            defaultMessage={'My Purchases'}
-                          />
-                        </Link>
+          mypurchases: <Link
+                        to="/my-purchases"
+                        ga-category="purchase"
+                        ga-label="my_purchase"
+                      >
+                        <FormattedMessage
+                          id={'listing-detail.mypurchases'}
+                          defaultMessage={'My Purchases'}
+                        />
+                      </Link>
         }}
       />
     </div>)
@@ -390,7 +390,6 @@ class ListingsDetail extends Component {
 
     // in general an offer exists (even if user is not a buyer or a seller)
     const offerExists = isSold || isPending
-    const usersNotBuyerOrSeller = !userIsBuyer && !userIsSeller
     const unitsSold = unitsTotal - unitsRemaining
     const isMultiUnitAndSeller = userIsSeller && isMultiUnit
     const isMultiPendingBuyer = isMultiUnit && userIsBuyer && offerStatusToListingAvailability(userIsBuyerOffer.status) === 'pending'
