@@ -174,7 +174,7 @@ export class Listing {
       return undefined
 
     const commissionRemaining = this.offers
-      .reduce((agg, offer) => agg + offer.commission.amount, 0)
+      .reduce((agg, offer) => agg + parseInt(offer.commission.amount), 0)
 
     return Math.max(0, this.commission.amount - commissionRemaining)
   }

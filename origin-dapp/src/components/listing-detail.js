@@ -261,24 +261,28 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.VIEW })
   }
 
-  renderMultiUnitPendingBuyerSuggestion() {
+  renderMultiUnitPendingBuyerSuggestion(userIsBuyerOffers) {
     return (<div className="mt-4 mb-2 hint">
-      <FormattedMessage
-        id={'listing-detail.visitMyPurchases'}
-        defaultMessage={'You have made an offer on this listing. View {mypurchases} to view offer status.'}
-        values={{
-          mypurchases: <Link
-                        to="/my-purchases"
-                        ga-category="purchase"
-                        ga-label="my_purchase"
-                      >
-                        <FormattedMessage
-                          id={'listing-detail.mypurchases'}
-                          defaultMessage={'My Purchases'}
-                        />
-                      </Link>
-        }}
-      />
+      {userIsBuyerOffers.length === 1 && <FormattedMessage
+        id={'listing-detail.madeAnOfferSingular'}
+        defaultMessage={'You have made an offer on this listing.'}
+      />}
+      {userIsBuyerOffers.length > 1 && <FormattedMessage
+        id={'listing-detail.madeAnOfferPlural'}
+        defaultMessage={'You have made multiple offers on this listing.'}
+      />}
+      <p class="mt-3 mb-0">
+        <Link
+          to="/my-purchases"
+          ga-category="purchase"
+          ga-label="my_purchase"
+        >
+          <FormattedMessage
+            id={'listing-detail.viewmypurchases'}
+            defaultMessage={'View My Purchases'}
+          />
+        </Link>
+      </p>
     </div>)
   }
 
@@ -378,6 +382,7 @@ class ListingsDetail extends Component {
       showSoldBadge,
       showFeaturedBadge,
       userIsBuyerOffer,
+      userIsBuyerOffers,
       userIsSellerOffer,
       userIsBuyer,
       userIsSeller
@@ -727,7 +732,7 @@ class ListingsDetail extends Component {
                     </Fragment>
                   )}
                   {this.renderButtonContainer(userIsSeller, isFractional, this.props.listingId, isMultiUnit, unitsPending, isAvailable)}
-                  {(isMultiPendingBuyer && isAvailable) && this.renderMultiUnitPendingBuyerSuggestion()}
+                  {(isMultiPendingBuyer && isAvailable) && this.renderMultiUnitPendingBuyerSuggestion(userIsBuyerOffers)}
                   {/* Via Matt 9/4/2018: Not necessary until we have staking */}
                   {/*
                     <div className="boost-level">
@@ -798,7 +803,7 @@ class ListingsDetail extends Component {
                       />
                     )}
                   </div>
-                  {(isMultiPendingBuyer && !isAvailable) && this.renderMultiUnitPendingBuyerSuggestion()}
+                  {(isMultiPendingBuyer && !isAvailable) && this.renderMultiUnitPendingBuyerSuggestion(userIsBuyerOffers)}
                   {!userIsBuyer && !userIsSeller && (
                     <Fragment>
                       <div className="suggestion">

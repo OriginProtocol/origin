@@ -8,12 +8,16 @@
     "defaultMessage": "each"
   },
   {
-    "id": "listing-detail.visitMyPurchases",
-    "defaultMessage": "You have made an offer on this listing. View {mypurchases} to view offer status."
+    "id": "listing-detail.madeAnOfferSingular",
+    "defaultMessage": "You have made an offer on this listing."
   },
   {
-    "id": "listing-detail.mypurchases",
-    "defaultMessage": "My Purchases"
+    "id": "listing-detail.madeAnOfferPlural",
+    "defaultMessage": "You have made multiple offers on this listing."
+  },
+  {
+    "id": "listing-detail.viewmypurchases",
+    "defaultMessage": "View My Purchases"
   },
   {
     "id": "listing-detail.purchase",

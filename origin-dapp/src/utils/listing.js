@@ -237,7 +237,7 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     return undefined
   })()
 
-  const userIsBuyerOffer = offers.find(offer => {
+  const userIsBuyerOffers = offers.filter(offer => {
     const availability = offerStatusToListingAvailability(offer.status)
 
     return ['pending', 'sold'].includes(availability) && usersWalletAddress !== null &&
@@ -276,7 +276,6 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
   const showFeaturedBadge = display === 'featured' && isAvailable
 
   return {
-    userIsBuyerOffer,
     userIsSellerOffer,
     isWithdrawn,
     isPending,
@@ -285,7 +284,9 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     showPendingBadge,
     showSoldBadge,
     showFeaturedBadge,
-    userIsBuyer: userIsBuyerOffer !== undefined,
+    userIsBuyerOffers,
+    userIsBuyerOffer: userIsBuyerOffers.length > 0 ? userIsBuyerOffers[0] : undefined,
+    userIsBuyer: userIsBuyerOffers.length > 0,
     userIsSeller: usersWalletAddress !== null && formattedAddress(usersWalletAddress) === formattedAddress(seller)
   }
 }
