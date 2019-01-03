@@ -96,12 +96,40 @@
     "defaultMessage": "Remaining Boost"
   },
   {
+    "id": "listing-detail.visitMyPurchases",
+    "defaultMessage": "See {mypurchases} to view the status of your purchase."
+  },
+  {
+    "id": "listing-detail.mypurchases",
+    "defaultMessage": "My Purchases"
+  },
+  {
+    "id": "listing-detail.reasonUnavailable",
+    "defaultMessage": "This listing is {unavailable}"
+  },
+  {
+    "id": "listing-detail.unavailable",
+    "defaultMessage": "Unavailable"
+  },
+  {
     "id": "listing-detail.reasonPending",
     "defaultMessage": "This listing is {pending}"
   },
   {
+    "id": "listing-detail.pending",
+    "defaultMessage": "Pending"
+  },
+  {
     "id": "listing-detail.reasonSold",
     "defaultMessage": "This listing is {sold}"
+  },
+  {
+    "id": "listing-detail.sold",
+    "defaultMessage": "Sold"
+  },
+  {
+    "id": "listing-detail.multiUnitNotAvailable",
+    "defaultMessage": "Offers have been made for all the remaining units of this listing. Try visiting the listings page and searching for something similar."
   },
   {
     "id": "listing-detail.suggestionPublicPending",
@@ -109,7 +137,7 @@
   },
   {
     "id": "listing-detail.suggestionPublicSold",
-    "defaultMessage": "Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar."
+    "defaultMessage": "This listing is sold out. Try visiting the listings page and searching for something similar."
   },
   {
     "id": "listing-detail.suggestionPublicWithdrawn",

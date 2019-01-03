@@ -261,9 +261,9 @@ class ListingsDetail extends Component {
     this.setState({ step: this.STEP.VIEW })
   }
 
-  renderButtonContainer(userIsSeller, isFractional, listingId, isMultiUnit, unitsSold) {
+  renderButtonContainer(userIsSeller, isFractional, listingId, isMultiUnit, unitsSold, isAvailable) {
     return (<div className="btn-container">
-      {!userIsSeller && !isFractional && (
+      {isAvailable && !userIsSeller && !isFractional && (
         <button
           className="btn btn-primary"
           onClick={() => this.handleMakeOffer()}
@@ -574,9 +574,10 @@ class ListingsDetail extends Component {
               */}
             </div>
             <div className="col-12 col-md-4">
-              {isAvailable && !loading && ((!!price && !!parseFloat(price)) || isFractional) && (
+              { (isAvailable || (userIsSeller && isMultiUnit)) &&
+                (!loading && ((!!price && !!parseFloat(price)) || isFractional)) && (
                 <div className="buy-box placehold">
-                  {!isFractional &&
+                  {isAvailable && !isFractional &&
                     <div className="price text-nowrap">
                       <img src="images/eth-icon.svg" role="presentation" />
                       {Number(price).toLocaleString(undefined, {
@@ -589,7 +590,7 @@ class ListingsDetail extends Component {
                         </Fragment>}
                     </div>
                   }
-                  {!userIsSeller && isMultiUnit && <Fragment>
+                  {isAvailable && !userIsSeller && isMultiUnit && <Fragment>
                     <hr className="mb-2"/>
                     <div className="d-flex justify-content-between mt-4 mb-2">
                       <div className="ml-3">
@@ -690,7 +691,27 @@ class ListingsDetail extends Component {
                       </div>
                     </Fragment>
                   )}
-                  {this.renderButtonContainer(userIsSeller, isFractional, this.props.listingId, isMultiUnit, unitsSold)}
+                  {this.renderButtonContainer(userIsSeller, isFractional, this.props.listingId, isMultiUnit, unitsSold, isAvailable)}
+                  {(isMultiUnit && userIsBuyer && offerStatusToListingAvailability(userIsBuyerOffer.status) === 'pending') && (
+                    <div className="mt-4 mb-2">
+                      <FormattedMessage
+                        id={'listing-detail.visitMyPurchases'}
+                        defaultMessage={'See {mypurchases} to view the status of your purchase.'}
+                        values={{
+                          mypurchases:  <Link
+                                          to="/my-purchases"
+                                          ga-category="purchase"
+                                          ga-label="my_purchase"
+                                        >
+                                          <FormattedMessage
+                                            id={'listing-detail.mypurchases'}
+                                            defaultMessage={'My Purchases'}
+                                          />
+                                        </Link>
+                        }}
+                      />
+                    </div>
+                  )}
                   {/* Via Matt 9/4/2018: Not necessary until we have staking */}
                   {/*
                     <div className="boost-level">
@@ -719,21 +740,32 @@ class ListingsDetail extends Component {
                   // Show offer information if this is a single unit listing
                   (offerExists && !isMultiUnit) ||
                   // Multi unit no more units are available (so we can show explanation)
-                  (isMultiUnit && usersNotBuyerOrSeller && !isAvailable) ||
-                  // Multi unit and the user is seller and there is a pending offer
-                  (isMultiUnit && userIsSeller && userIsSellerOffer !== undefined &&
-                    offerStatusToListingAvailability(userIsSellerOffer.status) === 'pending') ||
-                  // Multi unit and the user is buyer and there is a pending offer
-                  (isMultiUnit && userIsBuyer && offerStatusToListingAvailability(userIsBuyerOffer.status) === 'pending')
+                  (isMultiUnit && !userIsSeller && (!isAvailable || isSold))
                 ) && (
                 <div className="buy-box placehold unavailable text-center">
                   <div className="reason">
+                    {isMultiUnit && !isAvailable && !isSold && (
+                      <FormattedMessage
+                        id={'listing-detail.reasonUnavailable'}
+                        defaultMessage={'This listing is {unavailable}'}
+                        values={{
+                          unavailable: <strong>
+                            <FormattedMessage
+                              id={'listing-detail.unavailable'}
+                              defaultMessage={'Unavailable'}
+                            /></strong>
+                        }}
+                      />
+                    )}
                     {!isWithdrawn && isPending && (
                       <FormattedMessage
                         id={'listing-detail.reasonPending'}
                         defaultMessage={'This listing is {pending}'}
                         values={{
-                          pending: <strong>Pending</strong>
+                          pending: <strong><FormattedMessage
+                              id={'listing-detail.pending'}
+                              defaultMessage={'Pending'}
+                            /></strong>
                         }}
                       />
                     )}
@@ -742,7 +774,10 @@ class ListingsDetail extends Component {
                         id={'listing-detail.reasonSold'}
                         defaultMessage={'This listing is {sold}'}
                         values={{
-                          sold: <strong>Sold</strong>
+                          sold: <strong><FormattedMessage
+                              id={'listing-detail.sold'}
+                              defaultMessage={'Sold'}
+                            /></strong>
                         }}
                       />
                     )}
@@ -750,7 +785,15 @@ class ListingsDetail extends Component {
                   {!userIsBuyer && !userIsSeller && (
                     <Fragment>
                       <div className="suggestion">
-                        {!isWithdrawn && isPending && (isMultiUnit && !isAvailable) && (
+                        {isMultiUnit && !isAvailable && !isSold && (
+                          <FormattedMessage
+                            id={'listing-detail.multiUnitNotAvailable'}
+                            defaultMessage={
+                              'Offers have been made for all the remaining units of this listing. Try visiting the listings page and searching for something similar.'
+                            }
+                          />
+                        )}
+                        {!isWithdrawn && isPending && (
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicPending'}
                             defaultMessage={
@@ -762,7 +805,7 @@ class ListingsDetail extends Component {
                           <FormattedMessage
                             id={'listing-detail.suggestionPublicSold'}
                             defaultMessage={
-                              'Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar.'
+                              'This listing is sold out. Try visiting the listings page and searching for something similar.'
                             }
                           />
                         )}
