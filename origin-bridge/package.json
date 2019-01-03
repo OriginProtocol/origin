@@ -1,0 +1,39 @@
+{
+  "name": "origin-bridge",
+  "version": "1.0.0",
+  "description": "Third party identity verification attestation server",
+  "main": "src/app.js",
+  "scripts": {
+    "builld": "per-env",
+    "build:production": "babel src -d dist",
+    "start": "per-env",
+    "start:development": "nodemon src/app.js",
+    "start:production": "node dist/app.js",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol"
+  },
+  "keywords": [
+    "Origin",
+    "Protocol",
+    "Ethereum",
+    "DApp"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "logplease": "^1.2.15",
+    "per-env": "^1.0.2",
+    "web3": "^1.0.0-beta.37"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9",
+    "supertest": "^3.3.0"
+  }
+}
