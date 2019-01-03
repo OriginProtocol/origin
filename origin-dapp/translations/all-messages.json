@@ -180,7 +180,7 @@
   "listing-create.OK": "OK",
   "listing-detail.loadingError": "There was an error loading this listing.",
   "listing-detail.multiUnitListing.each": "each",
-  "listing-detail.visitMyPurchases": "See {mypurchases} to view the status of your purchase.",
+  "listing-detail.visitMyPurchases": "You have made an offer on this listing. View {mypurchases} to view offer status.",
   "listing-detail.mypurchases": "My Purchases",
   "listing-detail.purchase": "Purchase",
   "listing-detail.myListings": "My Listings",

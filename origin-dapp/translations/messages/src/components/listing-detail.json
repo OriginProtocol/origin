@@ -9,7 +9,7 @@
   },
   {
     "id": "listing-detail.visitMyPurchases",
-    "defaultMessage": "See {mypurchases} to view the status of your purchase."
+    "defaultMessage": "You have made an offer on this listing. View {mypurchases} to view offer status."
   },
   {
     "id": "listing-detail.mypurchases",

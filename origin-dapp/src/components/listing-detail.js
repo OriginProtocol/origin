@@ -265,7 +265,7 @@ class ListingsDetail extends Component {
     return (<div className="mt-4 mb-2 hint">
       <FormattedMessage
         id={'listing-detail.visitMyPurchases'}
-        defaultMessage={'See {mypurchases} to view the status of your purchase.'}
+        defaultMessage={'You have made an offer on this listing. View {mypurchases} to view offer status.'}
         values={{
           mypurchases: <Link
                         to="/my-purchases"
@@ -629,6 +629,7 @@ class ListingsDetail extends Component {
                         />
                       </div>
                     </div>
+                    <hr class="mb-2 pt-3"/>
                     <div className="d-flex justify-content-between mt-4 mb-2">
                       <div className="ml-3">
                         <FormattedMessage
