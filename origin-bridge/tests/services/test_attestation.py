@@ -194,6 +194,28 @@ def test_verify_phone_invalid_code():
     assert(validation_err.value.field_names[0]) == 'code'
 
 
+@mock.patch('logic.attestation_service.requests')
+@responses.activate
+def test_send_phone_verification_india_locale(mock_requests):
+    responses.add(
+        responses.POST,
+        'https://api.authy.com/protected/json/phones/verification/start',
+        status=200
+    )
+
+    args = {
+        'country_calling_code': '91',
+        'phone': '12341234',
+        'method': 'sms',
+        'locale': None
+    }
+    response = VerificationService.send_phone_verification(**args)
+
+    assert len(mock_requests.post.call_args_list) == 1
+    assert mock_requests.post.call_args_list[0][1]['params']['locale'] == 'en'
+    assert isinstance(response, VerificationServiceResponse)
+
+
 @mock.patch('logic.attestation_service._send_email_using_sendgrid')
 @mock.patch('logic.attestation_service.datetime')
 def test_send_email_verification(
