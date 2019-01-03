@@ -635,7 +635,7 @@ class ListingsDetail extends Component {
                         />
                       </div>
                     </div>
-                    <hr class="mb-2 pt-3"/>
+                    <hr className="mb-2 pt-3"/>
                     <div className="d-flex justify-content-between mt-4 mb-2">
                       <div className="ml-3">
                         <FormattedMessage
