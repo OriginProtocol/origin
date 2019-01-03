@@ -8,11 +8,6 @@ bridgeImageTag: '55eb8e4'
 dappImage: origin-dapp
 dappImageTag: 'b749da2'
 
-# Origin network configuration
-gethTxReplicas: 1
-gethMinerReplicas: 2
-gethMinerCpuLimit: 0.5
-
 # ipfs
 ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
@@ -48,3 +43,7 @@ creatorClientImageTag: 'b752f05'
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
 creatorServerImageTag: 'e53b079'
+
+# origin-linking
+linkingImage: origin-linking
+linkingImageTag: 'master'
