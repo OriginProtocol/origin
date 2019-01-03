@@ -8,6 +8,14 @@
     "defaultMessage": "each"
   },
   {
+    "id": "listing-detail.visitMyPurchases",
+    "defaultMessage": "See {mypurchases} to view the status of your purchase."
+  },
+  {
+    "id": "listing-detail.mypurchases",
+    "defaultMessage": "My Purchases"
+  },
+  {
     "id": "listing-detail.purchase",
     "defaultMessage": "Purchase"
   },
@@ -94,14 +102,6 @@
   {
     "id": "listing-detail.remainingBoost",
     "defaultMessage": "Remaining Boost"
-  },
-  {
-    "id": "listing-detail.visitMyPurchases",
-    "defaultMessage": "See {mypurchases} to view the status of your purchase."
-  },
-  {
-    "id": "listing-detail.mypurchases",
-    "defaultMessage": "My Purchases"
   },
   {
     "id": "listing-detail.reasonUnavailable",

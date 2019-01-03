@@ -245,8 +245,8 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
 
   const multiUnitListingIsSold = () => {
     const unitsSold = offers.reduce((accumulator, offer) => {
-      accumulator += offerStatusToListingAvailability(offer.status) === 'sold' ? offer.unitsPurchased : 0
-    }, [])
+      return accumulator += offerStatusToListingAvailability(offer.status) === 'sold' ? offer.unitsPurchased : 0
+    }, 0)
 
     return unitsSold === unitsTotal
   }
