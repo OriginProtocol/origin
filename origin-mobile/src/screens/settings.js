@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Alert, FlatList, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import Separator from 'components/separator'
 
 import networks from 'utils/networks'
+
+import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -12,7 +14,11 @@ class SettingsScreen extends Component {
   constructor(props) {
     super(props)
 
-    this.handleNetwork = this.handleNetwork.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    // this.handleNetwork = this.handleNetwork.bind(this)
+    this.state = {
+      apiHost: originWallet.getCurrentRemoteLocal()
+    }
   }
 
   static navigationOptions = {
@@ -24,14 +30,30 @@ class SettingsScreen extends Component {
     },
   }
 
-  handleNetwork({ id, name }) {
-    const { networkId = 999 } = this.props
+  // handleNetwork({ id, name }) {
+  //   const { networkId = 999 } = this.props
 
-    if (id === networkId) {
-      return
+  //   if (id === networkId) {
+  //     return
+  //   }
+
+  //   Alert.alert(`${name} is not yet supported.`)
+  // }
+
+  handleChange(apiHost) {
+    this.setState({ apiHost })
+  }
+
+  async handleSubmit(e) {
+    try {
+      await originWallet.setRemoteLocal(e.nativeEvent.text)
+
+      Alert.alert('Linking server host changed!')
+    } catch(error) {
+      Alert.alert('Linking server host change failed!')
+
+      console.error(error)
     }
-
-    Alert.alert(`${name} is not yet supported.`)
   }
 
   render() {
@@ -60,28 +82,44 @@ class SettingsScreen extends Component {
           </View>
         </TouchableHighlight>
         <View style={styles.header}>
-          <Text style={styles.heading}>NETWORK</Text>
+          <Text style={styles.heading}>LINKING SERVER HOST</Text>
         </View>
-        {networks.map((n, i) => (
-          <Fragment key={n.id}>
-            <TouchableHighlight onPress={() => this.handleNetwork(n)}>
-              <View style={styles.item}>
-                <Text style={styles.text}>{n.name}</Text>
-                <View style={styles.iconContainer}>
-                  {n.id === networkId &&
-                    <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
-                  }
-                  {n.id !== networkId &&
-                    <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
-                  }
-                </View>
-              </View>
-            </TouchableHighlight>
-            {(i + 1) < networks.length &&
-              <Separator padded={true} />
-            }
-          </Fragment>
-        ))}
+        {originWallet.isLocalApi() &&
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={this.handleChange}
+            onSubmitEditing={this.handleSubmit}
+            value={this.state.apiHost}
+            style={styles.input}
+          />
+        }
+        {
+          /* Don't offer toggleable networks yet
+
+            networks.map((n, i) => (
+              <Fragment key={n.id}>
+                <TouchableHighlight onPress={() => this.handleNetwork(n)}>
+                  <View style={styles.item}>
+                    <Text style={styles.text}>{n.name}</Text>
+                    <View style={styles.iconContainer}>
+                      {n.id === networkId &&
+                        <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
+                      }
+                      {n.id !== networkId &&
+                        <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
+                      }
+                    </View>
+                  </View>
+                </TouchableHighlight>
+                {(i + 1) < networks.length &&
+                  <Separator padded={true} />
+                }
+              </Fragment>
+            ))
+
+          */
+        }
       </View>
     )
   }
@@ -117,6 +155,13 @@ const styles = StyleSheet.create({
   image: {
     height: 24,
     width: 24,
+  },
+  input: {
+    backgroundColor: 'white',
+    fontFamily: 'Lato',
+    fontSize: 17,
+    paddingHorizontal: 20,
+    paddingVertical: '5%',
   },
   item: {
     backgroundColor: 'white',
