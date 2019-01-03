@@ -1,10 +1,6 @@
 import moment from 'moment-timezone'
 import uuid from 'uuid/v1'
 
-export function localizeTimeStamp(timeStamp, timeZone) {
-  return moment(timeStamp).tz(timeZone).toDate()
-}
-
 export function generateCalendarSlots(events) {
 
   const eventsClone = JSON.parse(JSON.stringify(events))
@@ -329,6 +325,7 @@ export function getSlotsToReserve(buyerSelectedSlotData) {
             const toReturn = {
               startDate: slot.start,
               endDate: slot.end,
+              timeZone: slot.timeZone,
               price: slot.price,
             }
 
@@ -351,6 +348,7 @@ export function getCleanEvents(events) {
       const toReturn = {
         startDate: event.start.toISOString(),
         endDate: event.end.toISOString(),
+        timeZone: event.timeZone,
         isAvailable: event.isAvailable,
         price: event.price
       }

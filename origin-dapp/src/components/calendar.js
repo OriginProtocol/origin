@@ -14,8 +14,7 @@ import {
   getSlotsToReserve,
   getCleanEvents,
   getDateAvailabilityAndPrice,
-  generateSlotStartEnd,
-  localizeTimeStamp
+  generateSlotStartEnd
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -86,7 +85,7 @@ class Calendar extends Component {
           price: slot.price && slot.price.amount && parseFloat(slot.price.amount),
           isAvailable: slot.isAvailable,
           slots: slot.slots,
-          isRecurringEvent: (slot.rrule === 'FREQ=DAILY;')
+          isRecurringEvent: (slot.rrule === 'FREQ=WEEKLY;')
         }
       })
 
@@ -174,6 +173,7 @@ class Calendar extends Component {
         ...eventInfo,
         id: uuid(),
         end: endDate,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         allDay: false
       }
 
