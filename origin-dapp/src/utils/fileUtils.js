@@ -184,3 +184,7 @@ export const getDataURIsFromImgURLs = async (picUrls) => {
 
   return Promise.all(imagePromises)
 }
+
+export const picURIsOnly = (pictures) => {
+  return pictures.map(pic => typeof pic === 'object' ? pic.croppedImageUri : pic)
+}
