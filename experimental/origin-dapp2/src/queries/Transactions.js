@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import fragments from './Fragments'
 
 export default gql`
   query Transactions {
@@ -7,11 +8,12 @@ export default gql`
         id
       }
       transactions {
-        id
-        status
-        mutation
-        confirmations
+        totalCount
+        nodes {
+          ...basicTransactionFields
+        }
       }
     }
   }
+  ${fragments.Transaction.basic}
 `

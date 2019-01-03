@@ -1,5 +1,12 @@
+import graphqlFields from 'graphql-fields'
 import contracts from '../contracts'
 import get from 'lodash/get'
+
+import {
+  transactions,
+  getTransaction,
+  getTransactionReceipt
+} from './web3/transactions'
 
 function networkName(netId) {
   if (netId === 1) return 'Ethereum Main Network'
@@ -9,14 +16,13 @@ function networkName(netId) {
   return `Private Network (${netId})`
 }
 
-const transactions = []
-
 export default {
   networkId: () => contracts.web3.eth.net.getId(),
   networkName: async () => {
     const netId = await contracts.web3.eth.net.getId()
     return networkName(netId)
   },
+  blockNumber: () => contracts.web3.eth.getBlockNumber(),
   nodeAccounts: () =>
     new Promise(resolve => {
       contracts.web3.eth
@@ -37,18 +43,15 @@ export default {
     contracts.web3.eth.defaultAccount
       ? { id: contracts.web3.eth.defaultAccount }
       : null,
-  transaction: async (_, args) => {
-    const status = 'submitted'
-    const transaction = await contracts.web3.eth.getTransaction(args.id)
-    return {
-      id: args.id,
-      status,
-      ...transaction
-    }
+
+  transaction: async (_, args, context, info) => {
+    const fields = graphqlFields(info)
+    return getTransaction(args.id, fields)
   },
-  transactions: async () => {
-    return transactions
+  transactionReceipt: async (_, args) => {
+    return await getTransactionReceipt(args.id)
   },
+  transactions: transactions,
   metaMaskAvailable: () => (contracts.metaMask ? true : false),
   metaMaskNetworkId: async () => {
     if (!contracts.metaMask) return null

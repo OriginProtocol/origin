@@ -11,10 +11,10 @@ export default class Modal extends Component {
     this.state = {
       anim: 'is-entering'
     }
+    this.portal = document.createElement('div')
   }
 
   componentDidMount() {
-    this.portal = document.createElement('div')
     document.body.appendChild(this.portal)
     document.body.className += ' pl-modal-open'
     document.body.addEventListener('touchmove', freezeVp, false)
@@ -40,12 +40,11 @@ export default class Modal extends Component {
     )
     document.body.removeEventListener('touchmove', freezeVp, false)
     window.removeEventListener('keydown', this.onKeyDown)
-    ReactDOM.unmountComponentAtNode(this.portal)
     document.body.removeChild(this.portal)
   }
 
   render() {
-    return null
+    return ReactDOM.createPortal(this.renderContent(), this.portal)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,12 +53,8 @@ export default class Modal extends Component {
     }
   }
 
-  componentDidUpdate() {
-    this.renderContent(this.props)
-  }
-
   renderContent() {
-    const content = (
+    return (
       <>
         <div
           className={`pl-modal-bg ${this.state.anim}${
@@ -96,8 +91,6 @@ export default class Modal extends Component {
         </div>
       </>
     )
-
-    ReactDOM.render(content, this.portal)
   }
 
   onClose(e) {
@@ -230,10 +223,8 @@ require('react-styl')(`
       bottom: 0;
       left: 0
       touch-action: none
-
-  .pl-modal-bg
+      z-index: 1999
       background: rgba(235, 240, 243, .6);
-      z-index: 1
 
   .pl-modal-bg.is-entering
       opacity: 0;

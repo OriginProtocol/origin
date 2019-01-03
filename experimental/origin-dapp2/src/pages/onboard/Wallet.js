@@ -1,8 +1,8 @@
 import React from 'react'
 import Link from 'components/Link'
+import Steps from 'components/Steps'
 
 import ListingPreview from './_ListingPreview'
-import Stage from './_Stage'
 import HelpWallet from './_HelpWallet'
 
 const Step1 = ({ listing }) => (
@@ -11,7 +11,7 @@ const Step1 = ({ listing }) => (
     <h3>Connect a Crypto Wallet</h3>
     <div className="row">
       <div className="col-md-8">
-        <Stage stage={1} />
+        <Steps steps={4} step={1} />
         <div className="connect mobile-wallet">
           <div className="image">
             <div />
