@@ -3,10 +3,10 @@ const router = express.Router()
 
 const Attestation = require('../models/attestation')
 
-router.post('/phone/generate-code', (req, res) => {
+router.post('/generate-code', (req, res) => {
 })
 
-router.post('/phone/verify', (req, res) => {
+router.post('/verify', (req, res) => {
 })
 
 module.exports = router
