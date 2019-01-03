@@ -40,6 +40,12 @@ class Listing extends Component {
                   )}
                 />
                 <Route
+                  path="/listings/:listingID/edit"
+                  render={() => (
+                    <div>Edit</div>
+                  )}
+                />
+                <Route
                   render={() => (
                     <ListingDetail
                       listing={listing}

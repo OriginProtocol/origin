@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { Mutation, Query } from 'react-apollo'
-import { Redirect } from 'react-router'
 import get from 'lodash/get'
 
+import Link from 'components/Link'
+import Redirect from 'components/Redirect'
 import Modal from 'components/Modal'
 import MakeOfferMutation from 'mutations/MakeOffer'
 import CanBuyQuery from 'queries/CanBuy'
+import TransactionReceiptQuery from 'queries/TransactionReceipt'
 
 const ErrorModal = ({ onClose }) => (
   <div className="make-offer-modal">
@@ -61,6 +63,33 @@ const MetaMaskError = ({ onClose }) => (
   </div>
 )
 
+const CompleteModal = ({ offerId }) => (
+  <div className="make-offer-modal">
+    <div className="success-icon" />
+    <div>Success!</div>
+    <div className="disclaimer">
+      You have made an offer on this listing. Your offer will be visible within
+      a few seconds. Your ETH payment has been transferred to an escrow
+      contract. Here&apos;s what happens next:
+      <ul>
+        <li>The seller can choose to accept or reject your offer.</li>
+        <li>
+          If the offer is accepted and fulfilled, you will be able to confirm
+          that the sale is complete. Your escrowed payment will be sent to the
+          seller.
+        </li>
+        <li>
+          If the offer is rejected, the escrowed payment will be immediately
+          returned to your wallet.
+        </li>
+      </ul>
+    </div>
+    <Link to={`/purchases/${offerId}`} className="btn btn-outline-light">
+      View Purchase
+    </Link>
+  </div>
+)
+
 const ConfirmModal = () => (
   <div className="make-offer-modal">
     <div className="spinner light" />
@@ -71,12 +100,48 @@ const ConfirmModal = () => (
   </div>
 )
 
+class WaitFor extends Component {
+  render() {
+    return (
+      <Query
+        query={TransactionReceiptQuery}
+        variables={{ id: this.props.transaction }}
+        pollInterval={3000}
+      >
+        {({ data }) => {
+          const event = get(data, 'web3.transactionReceipt.events', []).find(
+            e => e.event === 'OfferCreated'
+          )
+          if (!event) {
+            return (
+              <div className="make-offer-modal">
+                <div className="spinner light" />
+                <div>
+                  <b>Mining...</b>
+                </div>
+              </div>
+            )
+          }
+          return (
+            <CompleteModal
+              offerId={`999-1-${event.returnValues.listingID}-${
+                event.returnValues.offerID
+              }`}
+            />
+          )
+        }}
+      </Query>
+    )
+  }
+}
+
 class Buy extends Component {
   state = {}
   render() {
-    if (this.state.onboard) {
-      return <Redirect push to={`/listings/${this.props.listing.id}/onboard`} />
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />
     }
+
     const modalProps = {
       shouldClose: this.state.shouldClose,
       submitted: this.state.success,
@@ -90,8 +155,9 @@ class Buy extends Component {
               <Mutation
                 mutation={MakeOfferMutation}
                 onCompleted={({ makeOffer }) => {
-                  this.shouldClose({ success: true })
-                  console.log('Completed', makeOffer.id)
+                  this.setState({ waitFor: makeOffer.id })
+                  // this.shouldClose({ success: true })
+                  // console.log('Completed', makeOffer.id)
                 }}
                 onError={error => {
                   console.log(error)
@@ -124,6 +190,8 @@ class Buy extends Component {
           <Modal {...modalProps}>
             {this.state.modal === 'error' ? (
               <ErrorModal onClose={() => this.shouldClose()} />
+            ) : this.state.waitFor ? (
+              <WaitFor transaction={this.state.waitFor} />
             ) : (
               <ConfirmModal />
             )}
@@ -176,7 +244,7 @@ class Buy extends Component {
 
     const eth = Number(get(data, 'web3.metaMaskAccount.balance.eth', 0))
     if (!data.web3.metaMaskAccount) {
-      this.setState({ onboard: true })
+      this.setState({ redirect: `/listings/${this.props.listing.id}/onboard` })
     } else if (data.web3.networkId !== data.web3.metaMaskNetworkId) {
       this.setState({ wrongNetwork: data })
     } else if (eth < value) {
@@ -195,10 +263,19 @@ require('react-styl')(`
     display: flex
     flex-direction: column
     align-items: center
+    .success-icon
+      background: url(images/circular-check-button.svg) no-repeat center
+      background-size: contain
+      height: 3.5rem
+      width: 3.5rem
+      margin-bottom: 2rem
     .error-icon
       width: 100%
     .spinner,.error-icon
       margin-bottom: 2rem
     .btn
       margin-top: 2rem
+    .disclaimer
+      font-size: 14px
+      margin-top: 1rem
 `)

@@ -3,6 +3,7 @@ export default `
     newBlock: Block
     newTransaction: NewTransaction
     transactionUpdated: TransactionUpdate
+    transactionUpdated2(id: String!): TransactionUpdate
   }
 
   type TransactionUpdate {
@@ -13,8 +14,8 @@ export default `
   }
 
   type NewTransaction {
-    node: Transaction!
     totalCount: Int
+    node: Transaction!
   }
 
   type Query {
@@ -47,13 +48,20 @@ export default `
   type Web3 {
     networkId: Int
     networkName: String
+    blockNumber: Int
     nodeAccounts: [Account]
     nodeAccount(id: ID!): Account
     accounts: [Account]
     account(id: ID!): Account
     defaultAccount: Account
     transaction(id: ID!): Transaction
-    transactions: [Transaction]
+    transactionReceipt(id: ID!): TransactionReceipt
+    transactions(
+      first: Int
+      last: Int
+      before: String
+      after: String
+    ): TransactionConnection!
     useMetaMask: Boolean
     metaMaskAvailable: Boolean
     metaMaskEnabled: Boolean
@@ -121,6 +129,13 @@ export default `
     from: TokenHolder
   }
 
+  type TransactionConnection {
+    nodes: [Transaction]
+    pageInfo: PageInfo!
+    totalCount: Int!
+    hasPending: Boolean
+  }
+
   type Transaction {
     id: ID!
     status: String
@@ -135,6 +150,35 @@ export default `
     to: String
     value: String
     pct: Float
+    receipt: TransactionReceipt
+  }
+
+  type TransactionReceipt {
+    id: ID!
+    blockHash: String
+    blockNumber: Int
+    contractAddress: String
+    cumulativeGasUsed: Int
+    gasUsed: Int
+    logs: [Log]
+    events: [Event]
+    logsBloom: String
+    status: Boolean
+    transactionHash: String
+    transactionIndex: Int
+  }
+
+  type Log {
+    id: ID!
+    address: String
+    blockHash: String
+    blockNumber: Int
+    data: String
+    logIndex: Int
+    topics: [String]
+    transactionHash: String
+    transactionIndex: Int
+    type: String
   }
 
   type Event {

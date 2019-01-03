@@ -11,7 +11,7 @@ async function finalizeOffer(_, data) {
   const { listingId, offerId } = parseId(data.offerID)
 
   if (data.rating !== undefined) { ipfsData.rating = data.rating }
-  if (data.review !== undefined) { ipfsData.review = data.review }
+  if (data.review !== undefined) { ipfsData.text = data.review }
 
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
   const tx = contracts.marketplaceExec.methods

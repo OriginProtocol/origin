@@ -1,6 +1,8 @@
 import pubsub from '../utils/pubsub'
 import contracts from '../contracts'
 
+import { getTransaction } from '../resolvers/web3/transactions'
+
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
     const net = await contracts.web3.eth.net.getId()
@@ -18,9 +20,24 @@ export async function checkMetaMask(from) {
 export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
   return new Promise((resolve, reject) => {
     let txHash
-    tx.once('transactionHash', hash => {
+    tx.once('transactionHash', async hash => {
       txHash = hash
       resolve({ id: hash })
+
+      contracts.transactions.push({ id: hash })
+      try {
+        window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
+          contracts.transactions
+        )
+      } catch (e) {
+        /* Ignore */
+      }
+
+      const node = await getTransaction(hash, true)
+
+      pubsub.publish('NEW_TRANSACTION', {
+        newTransaction: { totalCount: 1, node }
+      })
       pubsub.publish('TRANSACTION_UPDATED', {
         transactionUpdated: {
           id: hash,

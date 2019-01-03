@@ -16,13 +16,13 @@ export default ProfileStrength
 
 require('react-styl')(`
   .profile-strength
-    font-family: Poppins
-    font-size: 24px
-    margin-bottom: 2rem
+    font-size: 18px
+    margin-bottom: 2.5rem
     .title
       display: flex
       justify-content: space-between
       margin-bottom: 0.5rem
+      font-weight: normal
     .pct
       font-weight: normal
     .progress
