@@ -577,7 +577,7 @@ class ListingsDetail extends Component {
               { (isAvailable || (userIsSeller && isMultiUnit)) &&
                 (!loading && ((!!price && !!parseFloat(price)) || isFractional)) && (
                 <div className="buy-box placehold">
-                  {isAvailable && !isFractional &&
+                  {(isAvailable && !isFractional || (userIsSeller && isMultiUnit)) &&
                     <div className="price text-nowrap">
                       <img src="images/eth-icon.svg" role="presentation" />
                       {Number(price).toLocaleString(undefined, {

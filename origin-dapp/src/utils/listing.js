@@ -259,10 +259,8 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
 
   const isWithdrawn = status === 'inactive'
   const isPending = isMultiUnit ? false : offerWithStatusExists('pending')
-  //const isSold = isMultiUnit ? multiUnitListingIsSold() : offerWithStatusExists('sold')
-  //const isAvailable = isMultiUnit ? unitsRemaining > 0 : (!isPending && !isSold && !isWithdrawn)
-  const isAvailable = false
-  const isSold = false
+  const isSold = isMultiUnit ? multiUnitListingIsSold() : offerWithStatusExists('sold')
+  const isAvailable = isMultiUnit ? unitsRemaining > 0 : (!isPending && !isSold && !isWithdrawn)
   const showPendingBadge = isPending && !isWithdrawn
   const showSoldBadge = isSold || isWithdrawn
 
