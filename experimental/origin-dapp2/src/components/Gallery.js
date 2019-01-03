@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import get from 'lodash/get'
 
 class Gallery extends Component {
   state = { active: 0 }
   render() {
-    const { pics } = this.props
+    const pics = get(this.props, 'pics', [])
     const active = pics[this.state.active]
     if (!active) return null
 

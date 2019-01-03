@@ -225,6 +225,7 @@ export default `
     title: String!
     description: String
     category: String
+    subCategory: String
     currency: String
     price: PriceInput
     unitsTotal: Int
