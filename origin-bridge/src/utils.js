@@ -1,43 +1,36 @@
-// 256 words so that bytes can be mapped to words
-const words = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb',
-  'abstract', 'absurd', 'abuse', 'access', 'accident', 'account', 'accuse',
-  'achieve', 'acid', 'acoustic', 'acquire', 'across', 'act', 'action',
-  'actor', 'actress', 'actual', 'adapt', 'add', 'addict', 'address', 'adjust',
-  'admit', 'adult', 'advance', 'advice', 'aerobic', 'affair', 'afford',
-  'afraid', 'again', 'age', 'agent', 'agree', 'ahead', 'aim', 'air',
-  'airport', 'aisle', 'alarm', 'album', 'alcohol', 'alert', 'alien', 'all',
-  'alley', 'allow', 'almost', 'alone', 'alpha', 'already', 'also', 'alter',
-  'always', 'amateur', 'amazing', 'among', 'amount', 'amused', 'analyst',
-  'anchor', 'ancient', 'anger', 'angle', 'angry', 'animal', 'ankle',
-  'announce', 'annual', 'another', 'answer', 'antenna', 'antique', 'anxiety',
-  'any', 'apart', 'apology', 'appear', 'apple', 'approve', 'april', 'arch',
-  'arctic', 'area', 'arena', 'argue', 'arm', 'armed', 'armor', 'army',
-  'around', 'arrange', 'arrest', 'arrive', 'arrow', 'art', 'artefact',
-  'artist', 'artwork', 'ask', 'aspect', 'assault', 'asset', 'assist',
-  'assume', 'asthma', 'athlete', 'atom', 'attack', 'attend', 'attitude',
-  'attract', 'auction', 'audit', 'august', 'aunt', 'author', 'auto', 'autumn',
-  'average', 'avocado', 'avoid', 'awake', 'aware', 'away', 'awesome', 'awful',
-  'awkward', 'axis', 'baby', 'bachelor', 'bacon', 'badge', 'bag', 'balance',
-  'balcony', 'ball', 'bamboo', 'banana', 'banner', 'bar', 'barely', 'bargain',
-  'barrel', 'base', 'basic', 'basket', 'battle', 'beach', 'bean', 'beauty',
-  'because', 'become', 'beef', 'before', 'begin', 'behave', 'behind',
-  'believe', 'below', 'belt', 'bench', 'benefit', 'best', 'betray', 'better',
-  'between', 'beyond', 'bicycle', 'bid', 'bike', 'bind', 'biology', 'bird',
-  'birth', 'bitter', 'black', 'blade', 'blame', 'blanket', 'blast', 'bleak',
-  'bless', 'blind', 'blood', 'blossom', 'blouse', 'blue', 'blur', 'blush',
-  'board', 'boat', 'body', 'boil', 'bomb', 'bone', 'bonus', 'book', 'boost',
-  'border', 'boring', 'borrow', 'boss', 'bottom', 'bounce', 'box', 'boy',
-  'bracket', 'brain', 'brand', 'brass', 'brave', 'bread', 'breeze', 'brick',
-  'bridge', 'brief', 'bright', 'bring', 'brisk', 'broccoli', 'broken',
-  'bronze', 'broom', 'brother', 'brown', 'brush', 'bubble', 'buddy', 'budget',
-  'buffalo', 'build', 'bulb', 'bulk', 'bullet', 'bundle', 'bunker', 'burden',
-  'burger', 'burst', 'bus', 'business', 'busy', 'butter', 'buyer', 'buzz',
-  'cabbage', 'cabin', 'cable'
+const web3 = require('web3')
+
+// 128 words to map character codes to words
+const words = ["surprise", "now", "mimic", "hood", "say", "glance", "there",
+  "lava", "mimic", "crouch", "utility", "sorry", "address", "marine",
+  "century", "wing", "farm", "citizen", "alone", "dentist", "knee", "bracket",
+  "measure", "faith", "shine", "disagree", "hood", "slot", "spirit",
+  "announce", "truly", "process", "response", "guard", "two", "connect",
+  "assist", "ordinary", "raise", "muscle", "mistake", "festival", "mix",
+  "flock", "puzzle", "ill", "border", "spy", "ozone", "uphold", "trumpet",
+  "figure", "borrow", "topple", "wedding", "february", "above", "ordinary",
+  "term", "nerve", "sure", "else", "hope", "submit", "ghost", "scatter",
+  "limit", "above", "jewel", "bundle", "tail", "reform", "drama", "model",
+  "stove", "bachelor", "kitchen", "combine", "swing", "trust", "mad",
+  "segment", "affair", "forest", "grocery", "album", "subway", "concert",
+  "aware", "bullet", "nominee", "juice", "oak", "sand", "toast", "celery",
+  "noble", "giraffe", "bitter", "across", "federal", "clean", "catalog",
+  "citizen", "street", "husband", "prefer", "term", "fun", "ranch", "entry",
+  "install", "appear", "purse", "virtual", "improve", "sea", "ghost", "grant",
+  "rule", "engage", "vicious", "struggle", "century", "nephew", "try",
+  "vehicle", "crystal"
 ]
 
 function generateAirbnbCode(ethAddress, userId) {
-  const hashCode = web3.utils.sha3(ethAddress + userId).substr(0, 7)
-  return hashCode.map((i) => {
-    return words[i.charCodeAt(0)]
-  })
+  const hashCode = web3.utils.sha3(ethAddress + userId).substr(-7)
+  console.log(hashCode)
+  return Array.prototype.map
+    .call(hashCode, (i) => words[i.charCodeAt(0)])
+    .join(' ')
 }
+
+function generateSixDigitCode() {
+  return Math.floor(100000 + Math.random() * 900000)
+}
+
+module.exports = { generateAirbnbCode, generateSixDigitCode }

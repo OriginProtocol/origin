@@ -6,10 +6,11 @@
   "scripts": {
     "builld": "per-env",
     "build:production": "babel src -d dist",
+    "lint": "eslint 'src/**/*.js'",
     "start": "per-env",
-    "start:development": "nodemon src/app.js",
-    "start:production": "node dist/app.js",
-    "test": "mocha"
+    "start:development": "nodemon -r src/env.js src/app.js",
+    "start:production": "node -r ./dist/env.js dist/app.js",
+    "test": "mocha --exit"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^6.2.0",
+    "envkey": "^1.2.4",
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
     "express-validator": "^5.3.1",
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
@@ -34,6 +38,7 @@
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.9",
-    "supertest": "^3.3.0"
+    "supertest": "^3.3.0",
+    "supertest-session": "^3.3.0"
   }
 }

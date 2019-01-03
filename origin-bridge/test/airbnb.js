@@ -17,7 +17,7 @@ describe('airbnb attestations', () => {
       })
       .expect(200)
       .then((response) => {
-        assert(response.body.code == 'art brick aspect accident brass betray antenna')
+        expect(response.body.code).equal('topple wedding catalog topple catalog above february')
       })
   })
 
