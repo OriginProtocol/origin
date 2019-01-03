@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert, Text, TouchableOpacity } from 'react-native'
+import { Alert, Clipboard, Text, TouchableOpacity } from 'react-native'
 
 import { evenlySplitAddress, truncateAddress } from 'utils/user'
 
@@ -12,7 +12,18 @@ export default class Address extends Component {
         if (typeof onPress === 'function') {
           onPress()
         } else {
-          Alert.alert(label, evenlySplitAddress(address).join('\n'))
+          Alert.alert(
+            label,
+            evenlySplitAddress(address).join('\n'),
+            [
+              { text: 'Copy', onPress: async () => {
+                await Clipboard.setString(address)
+
+                Alert.alert('Copied to clipboard!')
+              }},
+              { text: 'OK' },
+            ],
+          )
         }
       }}>
         <Text style={style}>{truncateAddress(address, chars)}</Text>
