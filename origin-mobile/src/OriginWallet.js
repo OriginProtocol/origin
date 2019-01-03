@@ -778,7 +778,7 @@ class OriginWallet {
     return localUrl + (localUrl.includes('?') ? '' : '?' ) + 'plink=' + await this.getPrivateLink()
   }
 
-  async openSellingUrl() {
+  async openSelling() {
     if (this.sellingUrl) {
         Linking.openURL(await this.toLinkedDappUrl(this.sellingUrl))
     }
