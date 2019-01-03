@@ -71,9 +71,9 @@ class TransactionScreen extends Component {
     const { activation, fetchUser, navigation, wallet } = this.props
     const hasNotificationsEnabled = activation.notifications.permissions.hard.alert
     const item = navigation.getParam('item')
-    const { listing, meta, to } = navigation.state.params.item.meta
+    const { listing, method, to } = navigation.state.params.item.meta
     
-    !hasNotificationsEnabled && this.props.promptForNotifications(meta.method)
+    !hasNotificationsEnabled && this.props.promptForNotifications(method)
 
     fetchUser(wallet.address)
     fetchUser(listing ? listing.seller : to)
