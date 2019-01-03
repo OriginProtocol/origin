@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { getDiscovery } from 'utils/config'
+import get from 'lodash/get'
 
+import withConfig from 'hoc/withConfig'
 import Dropdown from 'components/Dropdown'
 
 class Search extends Component {
@@ -13,7 +14,7 @@ class Search extends Component {
   }
 
   render() {
-    const enabled = getDiscovery()
+    const enabled = get(this.props, 'config.discovery', false)
     return (
       <div className="search-bar">
         <div className="container">
@@ -83,7 +84,7 @@ const SearchDropdown = ({ onChange }) => (
   </div>
 )
 
-export default Search
+export default withConfig(Search)
 
 require('react-styl')(`
   .search-bar

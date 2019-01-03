@@ -26,6 +26,11 @@ export default `
     tokens: [Token]
     token(id: String!): Token
     ethUsd: String
+    configObj: Config
+  }
+
+  type Config {
+    discovery: String
   }
 
   type Mutation {

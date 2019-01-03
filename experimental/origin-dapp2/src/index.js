@@ -4,13 +4,12 @@ import { ApolloProvider } from 'react-apollo'
 // import { persistCache } from 'apollo-cache-persist'
 import { Route, HashRouter } from 'react-router-dom'
 import Styl from 'react-styl'
-import client from 'origin-graphql'
+import client from 'origin-graphql/src/http'
 
 import './css/app.css'
 import App from './pages/App'
 
 class AppWrapper extends Component {
-
   state = { ready: false, client: null }
 
   async componentDidMount() {
