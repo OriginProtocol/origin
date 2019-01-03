@@ -23,11 +23,11 @@ class PriceField extends Component {
     this.intlMessages = defineMessages({
       'singularPrice': {
         id: 'schema.priceInEth.singular',
-        defaultMessage: 'Price in ETH'
+        defaultMessage: 'Price'
       },
       'multiUnitPrice': {
         id: 'schema.priceInEth.multiUnit',
-        defaultMessage: 'Price (per unit) in ETH'
+        defaultMessage: 'Price (per unit)'
       }
     })
   }

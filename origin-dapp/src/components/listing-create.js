@@ -121,6 +121,10 @@ class ListingCreate extends Component {
       selectOne: {
         id: 'listing-create.selectOne',
         defaultMessage: 'Select One'
+      },
+      incorrectQuantity: {
+        id: 'listing-create.incorrectQuantity',
+        defaultMessage: 'Buyers have active (and finalized) purchases for {unitsInOffers} units. The quantity can not be lower than that.'
       }
     })
 
@@ -156,6 +160,7 @@ class ListingCreate extends Component {
     this.transformFormErrors = this.transformFormErrors.bind(this)
     this.updateBoostCap = this.updateBoostCap.bind(this)
     this.validateBoostForm = this.validateBoostForm.bind(this)
+    this.validateListingForm = this.validateListingForm.bind(this)
   }
 
   async componentDidMount() {
@@ -166,7 +171,9 @@ class ListingCreate extends Component {
       try {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
-        const listing = await getListing(this.props.listingId, false)
+        const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
+
+        this.ensureUserIsSeller(listing.seller)
         const state = {
           formListing: {
             formData: listing
@@ -730,6 +737,37 @@ class ListingCreate extends Component {
     return errors
   }
   
+  validateListingForm(data, errors) {
+    const {
+      isEditMode,
+      formListing
+    } = this.state
+
+    const formData = formListing.formData
+    const {
+      unitsTotal,
+      unitsLockedInOffers
+    } = formData
+
+    const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
+
+    if (isEditMode) {
+      // do not allow quantity to be edited below the value of units already in offers
+      if (isMultiUnitListing && unitsTotal < unitsLockedInOffers) {
+        errors.unitsTotal.addError(
+          this.props.intl.formatMessage(
+            this.intlMessages.incorrectQuantity,
+            {
+              unitsInOffers: unitsLockedInOffers
+            }
+          )
+        )
+      }
+    }
+
+    return errors
+  }
+
   getStepNumber(stepNum) {
     // We have a different number of steps in the workflow based on
     // mobile vs. desktop and fractional vs. unit.
@@ -785,6 +823,7 @@ class ListingCreate extends Component {
     const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
     const category = translateListingCategory(formData.category)
     const subCategory = translateListingCategory(formData.subCategory)
+    const stepNumber = this.getStepNumber(step)
 
     return (!web3.currentProvider.isOrigin || origin.contractService.walletLinker) ? (
       <div className="listing-form">
@@ -796,7 +835,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -809,7 +848,7 @@ class ListingCreate extends Component {
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
-                  stepCurrent={step}
+                  stepCurrent={stepNumber}
                 />
                 <div className="schema-options">
                   {this.categoryList.map(category => (
@@ -889,7 +928,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -952,7 +991,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -970,7 +1009,7 @@ class ListingCreate extends Component {
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
-                  stepCurrent={step}
+                  stepCurrent={stepNumber}
                 />
                 <Form
                   schema={translatedSchema}
@@ -986,6 +1025,7 @@ class ListingCreate extends Component {
                   formContext={{
                     isMultiUnitListing: isMultiUnitListing
                   }}
+                  validate={this.validateListingForm}
                 >
                   {showDetailsFormErrorMsg && (
                     <div className="info-box warn">
@@ -1047,7 +1087,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -1058,7 +1098,7 @@ class ListingCreate extends Component {
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
-                  stepCurrent={step}
+                  stepCurrent={stepNumber}
                 />
                 <p className="help-block">
                   <FormattedMessage
@@ -1169,7 +1209,7 @@ class ListingCreate extends Component {
                             {boostCapTooLow && <p className="boost-text mt-4">
                               <FormattedMessage
                                 id={'listing-create.boostCapTooLow'}
-                                defaultMessage={'Your boost cap is lower than the total amount needed to boost all your units. After the cap is reached, the remaining units will not be boosted.'}
+                                defaultMessage={'Your boost limit is lower than the total amount needed to boost all your units. After the limit is reached, the remaining units will not be boosted.'}
                               />
                             </p>}
                           </div>
@@ -1200,7 +1240,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -1211,7 +1251,7 @@ class ListingCreate extends Component {
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
-                  stepCurrent={step}
+                  stepCurrent={stepNumber}
                 />
                 <div className="preview">
                   <div className="row">
@@ -1375,7 +1415,7 @@ class ListingCreate extends Component {
                       </div>
                     </div>
                   }
-                  {isMultiUnitListing &&
+                  {isMultiUnitListing && !isEditMode &&
                     <div className="row">
                       <div className="col-md-3">
                         <p className="label">
@@ -1504,7 +1544,7 @@ class ListingCreate extends Component {
                     <p>
                       <FormattedMessage
                         id={'listing-create.form-help-details'}
-                        defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if they want to buy your listing.`}
+                        defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos will increase the chances of selling your listing.`}
                       />
                     </p>
                   </div>

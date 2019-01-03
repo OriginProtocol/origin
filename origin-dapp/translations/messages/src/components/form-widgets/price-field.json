@@ -1,11 +1,11 @@
 [
   {
     "id": "schema.priceInEth.singular",
-    "defaultMessage": "Price in ETH"
+    "defaultMessage": "Price"
   },
   {
     "id": "schema.priceInEth.multiUnit",
-    "defaultMessage": "Price (per unit) in ETH"
+    "defaultMessage": "Price (per unit)"
   },
   {
     "id": "price-field.price-help-v1",

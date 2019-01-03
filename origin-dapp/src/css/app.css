@@ -398,6 +398,18 @@ textarea:-moz-ui-invalid {
   width: 10px;
 }
 
+/* Offer Details */
+.offer-details {
+  background-color: var(--dark);
+  border-radius: var(--default-radius);
+  color: white;
+}
+
+.offer-details .identity {
+  padding: 1rem;
+}
+
+
 /* User Card */
 
 .user-card {
@@ -2143,6 +2155,12 @@ textarea:-moz-ui-invalid {
   line-height: 1.375rem;
 }
 
+.price-container .append {
+  color: var(--steel);
+  font-weight: 300;
+  text-transform: none;
+}
+
 .price-container .fiat {
   color: var(--steel);
   font-size: 0.625rem;
@@ -2218,6 +2236,28 @@ textarea:-moz-ui-invalid {
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 }
 
+.listing-detail .select-number img {
+  transform: rotate(180deg);
+}
+
+.listing-detail .select-number .dropdown-menu {
+  min-width: 6rem;
+  text-align: right;
+  background-color: var(--dusk);
+  color: white;
+  padding: 0.5rem 0px;
+}
+
+.select-number .dropdown-menu .number-to-select {
+  cursor: pointer;
+  width: 100%;
+  padding-right: 1.2rem;
+}
+
+.select-number .dropdown-menu .number-to-select:hover {
+  background-color: var(--dark-grey-blue);
+}
+
 .buy-box {
   color: white;
   font-weight: normal;
@@ -2244,7 +2284,7 @@ textarea:-moz-ui-invalid {
 }
 
 .buy-box .price {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .buy-box .price img {
@@ -2286,6 +2326,10 @@ textarea:-moz-ui-invalid {
 .buy-box .boost-level .help-block {
   color: var(--steel);
   display: block;
+}
+
+.buy-box .hint {
+  text-align: center;
 }
 
 .carousel {
@@ -2714,7 +2758,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .listing-form .preview .eth-icon,
-.listing-form .preview .ogn-icon {
+.listing-form .preview .ogn-icon,
+.listing-detail .ogn-icon{
   margin-top: -5px;
   margin-right: 5px;
 }
@@ -2913,6 +2958,16 @@ select.form-control:not([size]):not([multiple]) {
   margin-right: 0.375rem;
   transform: rotate(270deg);
   vertical-align: initial;
+}
+
+.listing-form input[type="number"]::-webkit-outer-spin-button,
+.listing-form input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.listing-form input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 .boost-Low {
@@ -3399,6 +3454,10 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: 300;
   margin: 0;
   padding-top: 10px;
+}
+
+.purchase .emphasis {
+  font-weight: normal;
 }
 
 .purchase .price,
