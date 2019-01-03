@@ -113,6 +113,19 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
+{{- define "linking.fullname" -}}
+{{- printf "%s-%s" .Release.Name "linking" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "linking.host" -}}
+{{- $prefix := "linking" -}}
+{{- if ne .Release.Namespace "prod" -}}
+{{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
+{{- else -}}
+{{- printf "%s.originprotocol.com" $prefix -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "creator.fullname" -}}
 {{- printf "%s-%s" .Release.Name "creator" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
