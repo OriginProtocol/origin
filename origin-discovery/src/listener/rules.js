@@ -48,7 +48,7 @@ async function getListingDetails(log, origin) {
   // Note: Passing blockInfo as an arg to the getListing call ensures that we preserve
   // listings version history if the listener is re-indexing data.
   // Otherwise all the listing version rows in the DB would end up with the same data.
-  const listing = await origin.marketplace.getListing(listingId, blockInfo)
+  const listing = await origin.marketplace.getListing(listingId, { blockInfo: blockInfo })
   checkFreshness(listing.events, blockInfo)
 
   let seller
@@ -77,7 +77,7 @@ async function getOfferDetails(log, origin) {
   // Otherwise all the listing versions in the DB would end up with the same data.
   //  - BlockInfo is not needed for the call to getOffer since offer data stored in the DB
   // is not versioned.
-  const listing = await origin.marketplace.getListing(listingId, blockInfo)
+  const listing = await origin.marketplace.getListing(listingId, { blockInfo: blockInfo })
   checkFreshness(listing.events, blockInfo)
 
   const offer = await origin.marketplace.getOffer(offerId)

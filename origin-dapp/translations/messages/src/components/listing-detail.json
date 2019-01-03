@@ -4,6 +4,38 @@
     "defaultMessage": "There was an error loading this listing."
   },
   {
+    "id": "listing-detail.multiUnitListing.each",
+    "defaultMessage": "each"
+  },
+  {
+    "id": "listing-detail.madeAnOfferSingular",
+    "defaultMessage": "You have made an offer on this listing."
+  },
+  {
+    "id": "listing-detail.madeAnOfferPlural",
+    "defaultMessage": "You have made multiple offers on this listing."
+  },
+  {
+    "id": "listing-detail.viewmypurchases",
+    "defaultMessage": "View My Purchases"
+  },
+  {
+    "id": "listing-detail.purchase",
+    "defaultMessage": "Purchase"
+  },
+  {
+    "id": "listing-detail.myListings",
+    "defaultMessage": "My Listings"
+  },
+  {
+    "id": "listing-detail.editListings",
+    "defaultMessage": "Edit Listing"
+  },
+  {
+    "id": "listing-detail.mySales",
+    "defaultMessage": "My Sales"
+  },
+  {
     "id": "listing-detail.firstPurchaseHeading",
     "defaultMessage": "You're about to make your first purchase on Origin."
   },
@@ -56,24 +88,64 @@
     "defaultMessage": "OK"
   },
   {
-    "id": "listing-detail.purchase",
-    "defaultMessage": "Purchase"
+    "id": "listing-detail.quantity",
+    "defaultMessage": "Quantity"
   },
   {
-    "id": "listing-detail.myListings",
-    "defaultMessage": "My Listings"
+    "id": "listing-detail.totalPrice",
+    "defaultMessage": "Total Price"
   },
   {
-    "id": "listing-detail.editListings",
-    "defaultMessage": "Edit Listing"
+    "id": "listing-detail.unitsSold",
+    "defaultMessage": "Sold"
+  },
+  {
+    "id": "listing-detail.unitsPending",
+    "defaultMessage": "Pending"
+  },
+  {
+    "id": "listing-detail.unitsAvailable",
+    "defaultMessage": "Available"
+  },
+  {
+    "id": "listing-detail.remainingBoost",
+    "defaultMessage": "Remaining Boost"
+  },
+  {
+    "id": "listing-detail.reasonUnavailable",
+    "defaultMessage": "This listing is {unavailable}"
+  },
+  {
+    "id": "listing-detail.unavailable",
+    "defaultMessage": "Unavailable"
   },
   {
     "id": "listing-detail.reasonPending",
     "defaultMessage": "This listing is {pending}"
   },
   {
+    "id": "listing-detail.pending",
+    "defaultMessage": "Pending"
+  },
+  {
+    "id": "listing-detail.reasonSoldOut",
+    "defaultMessage": "This listing is {soldOut}"
+  },
+  {
+    "id": "listing-detail.soldOut",
+    "defaultMessage": "Sold Out"
+  },
+  {
     "id": "listing-detail.reasonSold",
     "defaultMessage": "This listing is {sold}"
+  },
+  {
+    "id": "listing-detail.sold",
+    "defaultMessage": "Sold"
+  },
+  {
+    "id": "listing-detail.multiUnitNotAvailable",
+    "defaultMessage": "Offers have been made for all the remaining units of this listing. Try visiting the listings page and searching for something similar."
   },
   {
     "id": "listing-detail.suggestionPublicPending",
@@ -81,7 +153,7 @@
   },
   {
     "id": "listing-detail.suggestionPublicSold",
-    "defaultMessage": "Another buyer has already purchased this listing. Try visiting the listings page and searching for something similar."
+    "defaultMessage": "This listing is sold out. Try visiting the listings page and searching for something similar."
   },
   {
     "id": "listing-detail.suggestionPublicWithdrawn",
