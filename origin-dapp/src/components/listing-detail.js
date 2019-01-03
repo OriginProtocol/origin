@@ -271,7 +271,7 @@ class ListingsDetail extends Component {
         id={'listing-detail.madeAnOfferPlural'}
         defaultMessage={'You have made multiple offers on this listing.'}
       />}
-      <p class="mt-3 mb-0">
+      <p className="mt-3 mb-0">
         <Link
           to="/my-purchases"
           ga-category="purchase"
@@ -366,7 +366,6 @@ class ListingsDetail extends Component {
       pictures,
       price,
       seller,
-      unitsTotal,
       unitsRemaining,
       unitsSold,
       unitsPending,

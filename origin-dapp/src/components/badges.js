@@ -44,7 +44,7 @@ export const SoldBadge = props => (
       defaultMessage={'Sold Out'}
     />
   }
-  {(!props.isMultiUnit || props.isMultiUnit === undefined) && <FormattedMessage
+  {(!props.isMultiUnit || props.isMultiUnit === undefined) && <FormattedMessage
       id={'badges.sold'}
       defaultMessage={'Sold'}
     />
