@@ -24,6 +24,10 @@
     "defaultMessage": "Select photos"
   },
   {
+    "id": "schema.unitsTotal",
+    "defaultMessage": "Quantity"
+  },
+  {
     "id": "schema.activities",
     "defaultMessage": "Activities"
   },

@@ -25,6 +25,10 @@ export default defineMessages({
     id: 'schema.selectPhotos',
     defaultMessage: 'Select photos'
   },
+  'schema.unitsTotal': {
+    id: 'schema.unitsTotal',
+    defaultMessage: 'Quantity'
+  },
   'schema.activities': {
     id: 'schema.activities',
     defaultMessage: 'Activities'

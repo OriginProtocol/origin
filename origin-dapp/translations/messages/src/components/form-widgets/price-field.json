@@ -1,7 +1,15 @@
 [
   {
-    "id": "price-field.price-help",
-    "defaultMessage": "The price is always in {currency}."
+    "id": "schema.priceInEth.singular",
+    "defaultMessage": "Price"
+  },
+  {
+    "id": "schema.priceInEth.multiUnit",
+    "defaultMessage": "Price (per unit)"
+  },
+  {
+    "id": "price-field.price-help-v1",
+    "defaultMessage": "Listings are always priced in {currency}."
   },
   {
     "id": "price-field.price-usd-disclaimer",

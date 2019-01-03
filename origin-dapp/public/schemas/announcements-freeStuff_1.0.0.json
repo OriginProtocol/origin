@@ -3,7 +3,12 @@
   "type": "object",
   "required": [
     "name",
-    "description"
+    "description",
+    "price",
+    "dappSchemaId",
+    "category",
+    "subCategory",
+    "listingType"
   ],
   "properties": {
     "dappSchemaId": {
@@ -37,6 +42,9 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "price": {
+      "const": 0
     }
   }
 }
