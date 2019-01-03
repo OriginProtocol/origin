@@ -59,12 +59,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     height: 88,
   },
-  address: {
-    color: '#3e5d77',
-    fontFamily: 'Lato',
-    fontSize: 12,
-    fontWeight: '300',
-  },
   arrow: {
     height: 22,
     marginLeft: 20,

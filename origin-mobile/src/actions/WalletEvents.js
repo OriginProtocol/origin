@@ -11,14 +11,9 @@ export const WalletEventsConstants = keyMirror(
   },
   'WalletEvents'
 )
- 
 
 export function newEvent(matcher, event) {
   return { type: WalletEventsConstants.NEW_EVENT, matcher, event }
-}
-
-export function updateEvent(matcher, update) {
-  return { type: WalletEventsConstants.UPDATE_EVENT, matcher, update }
 }
 
 export function processedEvent(matcher, update, new_event) {
@@ -29,4 +24,6 @@ export function setActiveEvent(event) {
   return { type: WalletEventsConstants.SET_ACTIVE_EVENT, event }
 }
 
-
+export function updateEvent(matcher, update) {
+  return { type: WalletEventsConstants.UPDATE_EVENT, matcher, update }
+}

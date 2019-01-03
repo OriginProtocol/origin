@@ -11,6 +11,7 @@ export default gql`
             id
             firstName
             lastName
+            fullName
             description
             avatar
             strength

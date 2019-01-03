@@ -4,9 +4,9 @@ import gql from 'graphql-tag'
 
 import Link from 'components/Link'
 import Modal from 'components/Modal'
+import Steps from 'components/Steps'
 
 import ListingPreview from './_ListingPreview'
-import Stage from './_Stage'
 import HelpProfile from './_HelpProfile'
 import ProfileStrength from './_ProfileStrength'
 
@@ -25,7 +25,7 @@ const Attestation = ({ type, text, active, onClick, soon }) => {
   soon = soon ? ' soon' : ''
   return (
     <div
-      className={`attestation ${type}${active}${soon}`}
+      className={`ob-attestation ${type}${active}${soon}`}
       onClick={onClick ? () => onClick() : null}
     >
       <i>
@@ -47,7 +47,7 @@ class OnboardAttestations extends Component {
         <h3>Strengthen your profile with attestations</h3>
         <div className="row">
           <div className="col-md-8">
-            <Stage stage={5} />
+            <Steps step={5} />
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
@@ -111,26 +111,26 @@ require('react-styl')(`
     grid-template-columns: repeat(auto-fill,minmax(220px, 1fr))
     margin-bottom: 2rem
 
-    .attestation.phone i span.bg
+    .ob-attestation.phone i span.bg
       background-image: url(images/identity/phone-icon-light.svg)
       background-size: 1.5rem
-    .attestation.email i span.bg
+    .ob-attestation.email i span.bg
       background-image: url(images/identity/email-icon-light.svg)
       background-size: 2rem
-    .attestation.airbnb i span.bg
+    .ob-attestation.airbnb i span.bg
       background-image: url(images/identity/airbnb-icon-light.svg)
       background-size: 2.8rem
-    .attestation.facebook i span.bg
+    .ob-attestation.facebook i span.bg
       background-image: url(images/identity/facebook-icon-light.svg)
       background-size: 1.3rem
-    .attestation.twitter i span.bg
+    .ob-attestation.twitter i span.bg
       background-image: url(images/identity/twitter-icon-light.svg)
       background-size: 2.4rem
-    .attestation.google i span.bg
+    .ob-attestation.google i span.bg
       background-image: url(images/identity/google-icon.svg)
       background-size: 2.4rem
 
-    .attestation
+    .ob-attestation
       padding: 2rem
       border: 1px dashed var(--light)
       border-radius: 5px
@@ -146,8 +146,8 @@ require('react-styl')(`
         display: block
         position: relative
         background: url(images/identity/verification-shape-grey.svg) no-repeat center;
-        width: 5rem;
-        height: 5rem;
+        width: 3rem;
+        height: 3rem;
         background-size: 95%;
         margin-bottom: 1.5rem
         display: flex

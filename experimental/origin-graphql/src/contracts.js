@@ -223,6 +223,13 @@ export function setNetwork(net) {
     token.contractExec = contract
   })
 
+  context.transactions = []
+  try {
+    context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
+  } catch(e) {
+    /* Ignore */
+  }
+
   if (metaMask) {
     context.metaMask = metaMask
     context.ognMM = new metaMask.eth.Contract(

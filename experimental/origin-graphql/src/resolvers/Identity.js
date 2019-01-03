@@ -86,6 +86,7 @@ export default {
     let data
     try {
       data = await get(contracts.ipfsGateway, profileIpfsHash)
+      data.fullName = `${data.firstName} ${data.lastName}`
     } catch (e) {
       return null
     }
