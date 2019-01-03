@@ -3,7 +3,7 @@ import contracts from '../contracts'
 
 export default {
   balance: async (contract) => {
-    const wei = await web3.eth.getBalance(contract.id)
+    const wei = await contracts.web3.eth.getBalance(contract.id)
     return balancesFromWei(wei)
   },
   type: contract => {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
-import { getIpfsGateway } from 'utils/config'
+import Redirect from 'components/Redirect'
 import Price from 'components/Price'
 
 class Listings extends Component {
@@ -8,16 +7,10 @@ class Listings extends Component {
   render() {
     const { listings } = this.props
     if (!listings) return null
-    const ipfsGateway = getIpfsGateway()
 
     return (
       <div className="row">
-        {this.state.redirect && (
-          <Redirect
-            push
-            to={{ pathname: this.state.redirect, state: { scrollToTop: true } }}
-          />
-        )}
+        {this.state.redirect && <Redirect to={this.state.redirect} />}
         {listings.map(a => (
           <div
             key={a.id}
@@ -28,10 +21,7 @@ class Listings extends Component {
               <div
                 className="main-pic"
                 style={{
-                  backgroundImage: `url(${ipfsGateway}/${a.media[0].url.replace(
-                    ':/',
-                    ''
-                  )})`
+                  backgroundImage: `url(${a.media[0].urlExpanded})`
                 }}
               />
             ) : null}

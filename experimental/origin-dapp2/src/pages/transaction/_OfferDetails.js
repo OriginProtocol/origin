@@ -1,31 +1,34 @@
 import React from 'react'
+import TokenPrice from 'components/TokenPrice'
+import dayjs from 'dayjs'
 
-const OfferDetails = () => (
+const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">
-    <li className="price-unit">
+    {/* <li className="price-unit">
       <span>Price/unit</span>
-      <span>1.22222 ETH</span>
+      <span><TokenPrice {...offer.listing.price} /></span>
     </li>
     <li className="quantity">
       <span>Quantity</span>
       <span>5</span>
-    </li>
+    </li> */}
     <li className="total-price">
       <span>Total Price</span>
-      <span>6.00000 ETH</span>
+      <span><TokenPrice {...offer} /></span>
     </li>
     <li className="payment-status">
       <span>Payment Status</span>
-      <span>In Escrow</span>
+      <span>{offer.statusStr}</span>
     </li>
     <li className="offer-date">
       <span>Offer Date</span>
-      <span>Nov. 7, 2018</span>
+      <span>{dayjs.unix(offer.createdEvent.timestamp).format('MMM. D, YYYY')}</span>
     </li>
     <li className="offer-number">
       <span>Offer Number</span>
-      <span>1-001-123</span>
+      <span>{offer.id}</span>
     </li>
+    {/*
     <li className="start-date">
       <span>Start Date</span>
       <span>Nov. 15, 2018</span>
@@ -42,6 +45,7 @@ const OfferDetails = () => (
       <span>Damages</span>
       <span>$100.00</span>
     </li>
+    */}
   </ul>
 )
 

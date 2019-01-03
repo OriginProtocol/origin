@@ -107,4 +107,5 @@ export default ImageCropper
 require('react-styl')(`
   .image-cropper
     cursor: pointer
+    display: block
 `)
