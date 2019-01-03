@@ -24,7 +24,7 @@ const styles = {
     alignItems: 'center',
     flex: 0,
     flexDirection: 'row',
-    marginBottom: 56,
+    marginBottom: '10%',
   },
   dot: {
     borderRadius: 4,

@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default class OriginButton extends Component {
   render() {
-    const { onPress, size, style, textStyle, title, type } = this.props
+    const { disabled, size, style, textStyle, title, type, onDisabledPress, onPress } = this.props
     let backgroundColor, borderColor, color
     
     switch(type) {
@@ -24,8 +24,16 @@ export default class OriginButton extends Component {
     }
 
     return (
-      <TouchableOpacity onPress={onPress} style={{ width: size === 'large' ? '100%' : undefined }}>
-        <View style={[ { backgroundColor, borderColor }, (styles[size] || styles.small), styles.button, style]}>
+      <TouchableOpacity activeOpacity={disabled ? 1 : 0.5} onPress={() => {
+        if (disabled && onDisabledPress) {
+          onDisabledPress()
+        }
+
+        if (!disabled && onPress) {
+          onPress()
+        }
+      }} style={{ width: size === 'large' ? '100%' : undefined }}>
+        <View style={[ { backgroundColor, borderColor, opacity: disabled ? 0.2 : 1 }, (styles[size] || styles.small), styles.button, style]}>
           <Text style={[ { color }, styles.buttonText, textStyle ]}>
             {title}
           </Text>

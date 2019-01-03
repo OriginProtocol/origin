@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { ActivityIndicator, Alert, Image, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, Image, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { connect, Provider } from 'react-redux'
 
@@ -9,8 +9,8 @@ import Store from './Store'
 
 import { storeNotificationsPermissions, updateCarouselStatus } from 'actions/Activation'
 import { setDevices } from 'actions/Devices'
-import { fetchProfile } from 'actions/Profile'
-import { getBalance } from 'actions/Wallet'
+import { fetchUser } from 'actions/User'
+import { getBalance, init } from 'actions/Wallet'
 import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
 
 import Onboarding from 'components/onboarding'
@@ -18,9 +18,11 @@ import Onboarding from 'components/onboarding'
 import DevicesScreen from 'screens/devices'
 import HomeScreen from 'screens/home'
 import MessagingScreen from 'screens/messaging'
+import ProfileScreen from 'screens/profile'
 import ScanScreen from 'screens/scan'
 import SettingsScreen from 'screens/settings'
-import WalletScreen from 'screens/wallet'
+import TransactionScreen from 'screens/transaction'
+import WalletFundingScreen from 'screens/wallet-funding'
 
 import { loadData } from './tools'
 
@@ -34,6 +36,7 @@ YellowBox.ignoreWarnings([
 ])
 
 const navigationOptions = ({ navigation }) => ({
+  headerBackTitle: ' ',
   headerStyle: {
     backgroundColor: 'white',
   },
@@ -41,6 +44,9 @@ const navigationOptions = ({ navigation }) => ({
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  Profile: ProfileScreen,
+  Transaction: TransactionScreen,
+  WalletFunding: WalletFundingScreen,
 }, {
   navigationOptions,
 })
@@ -59,8 +65,8 @@ const ScanStack = createStackNavigator({
 
 const SettingsStack = createStackNavigator({
   Devices: DevicesScreen,
+  Profile: ProfileScreen,
   Settings: SettingsScreen,
-  Wallet: WalletScreen,
 }, {
   initialRouteName: 'Settings',
   navigationOptions,
@@ -118,31 +124,6 @@ const OriginNavigator = createBottomTabNavigator({
   },
 })
 
-const styles = StyleSheet.create({
-  centerText: {
-    fontSize: 18,
-    padding: 10,
-    textAlign:'center',
-  },
-  textBold: {
-    fontWeight: '500',
-  },
-  buttonText: {
-    color: 'rgb(0,122,255)',
-    fontSize: 21,
-  },
-  buttonTouchable: {
-    padding: 16,
-  },
-  input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    color: 'black',
-    height: 40,
-    margin: 15,
-  },
-})
-
 // Origin Nav wrapper
 class OriginNavWrapper extends Component {
   componentDidMount() {
@@ -151,27 +132,28 @@ class OriginNavWrapper extends Component {
     })
 
     originWallet.initNotifications()
-    //register the service here
-    originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
-      this.props.newEvent(matcher, data)
-      this.props.setActiveEvent(data)
-      NavigationService.navigate('Home')
-    })
+    // skip the prompt
+    // originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
+      // this.props.newEvent(matcher, data)
+      // this.props.setActiveEvent(data)
+      // NavigationService.navigate('Home')
+    // })
 
     originWallet.events.on(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
-      this.props.setActiveEvent(data)
+      // this.props.setActiveEvent(data)
       NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.PROMPT_SIGN, (data, matcher) => {
       this.props.newEvent(matcher, data)
-      this.props.setActiveEvent(data)
+      // this.props.setActiveEvent(data)
       NavigationService.navigate('Home')
     })
 
-    originWallet.events.on(Events.NEW_ACCOUNT, (data, matcher) => {
-      this.props.fetchProfile()
+    originWallet.events.on(Events.NEW_ACCOUNT, ({ address }, matcher) => {
+      this.props.initWallet(address)
+      this.props.fetchUser(address)
       this.props.getBalance()
     })
 
@@ -187,6 +169,7 @@ class OriginNavWrapper extends Component {
     })
 
     originWallet.events.on(Events.UNLINKED, (data, matcher) => {
+      originWallet.getDevices()
       this.props.updateEvent(matcher, { linked: false })
     })
 
@@ -244,9 +227,11 @@ class OriginWrapper extends Component {
     const { activation, updateCarouselStatus } = this.props
     const { loading } = this.state
     const { carouselCompleted } = activation
+    const { height, width } = Dimensions.get('window')
+    const smallScreen = height < 812
 
     return loading ?
-      <View style={{ backgroundColor: '#293f55', flex: 1, justifyContent: 'space-around' }}>
+      <View style={styles.loading}>
         <ActivityIndicator size="large" color="white" />
       </View> :
       <Fragment>
@@ -255,17 +240,38 @@ class OriginWrapper extends Component {
             onCompletion={() => this.props.updateCarouselStatus(true)}
             pages={[
               {
-                image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-1.png')} />,
+                image: (
+                  <Image
+                    resizeMethod={'scale'}
+                    resizeMode={'contain'}
+                    source={require(IMAGES_PATH + 'carousel-1.png')}
+                    style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+                  />
+                ),
                 title: 'Store & Use Crypto',
                 subtitle: 'The Origin Mobile Wallet will allow you to store cryptocurrency to buy and sell on the Origin Marketplace.',
               },
               {
-                image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-2.png')} />,
+                image: (
+                  <Image
+                    resizeMethod={'scale'}
+                    resizeMode={'contain'}
+                    source={require(IMAGES_PATH + 'carousel-2.png')}
+                    style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+                  />
+                ),
                 title: 'Message Buyers & Sellers',
                 subtitle: 'Use the app to communicate with others on the Origin Marketplace in order to move your transactions.',
               },
               {
-                image: <Image style={{ maxHeight: '100%', maxWidth: '50%' }} source={require(IMAGES_PATH + 'carousel-3.png')} />,
+                image: (
+                  <Image
+                    resizeMethod={'scale'}
+                    resizeMode={'contain'}
+                    source={require(IMAGES_PATH + 'carousel-3.png')}
+                    style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+                  />
+                ),
                 title: 'Stay Up to Date',
                 subtitle: 'The Origin Mobile Wallet will notify you when there are transactions that require your attention.',
               },
@@ -286,18 +292,30 @@ const mapStateToProps = ({ activation }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchProfile: () => dispatch(fetchProfile()),
+  fetchUser: address => dispatch(fetchUser(address)),
   getBalance: () => dispatch(getBalance()),
+  initWallet: address => dispatch(init(address)),
   newEvent: (matcher, event) => dispatch(newEvent(matcher, event)),
   processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event)),
   setActiveEvent: event => dispatch(setActiveEvent(event)),
   setDevices: devices => dispatch(setDevices(devices)),
-  storeNotificationsPermissions: () => dispatch(storeNotificationsPermissions()),
+  storeNotificationsPermissions: permissions => dispatch(storeNotificationsPermissions(permissions)),
   updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool)),
   updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
 })
 
 const OriginWallet = connect(mapStateToProps, mapDispatchToProps)(OriginWrapper)
+
+const styles = StyleSheet.create({
+  image: {
+    marginBottom: '10%',
+  },
+  loading: {
+    backgroundColor: '#293f55',
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+})
 
 export default class OriginApp extends Component {
   render() {

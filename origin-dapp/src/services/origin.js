@@ -4,17 +4,14 @@ import Web3 from 'web3'
 import ecies from 'eth-ecies'
 import OrbitDB from 'orbit-db'
 
-import detectMobile from 'utils/detectMobile'
+import { mobileDevice } from 'utils/mobile'
 
 const mobilize = (str) => {
-  if (detectMobile() && process.env.MOBILE_LOCALHOST_IP)
-  {
+  if (mobileDevice() && process.env.MOBILE_LOCALHOST_IP) {
     return str
       .replace('localhost', process.env.MOBILE_LOCALHOST_IP)
       .replace(/127\.0\.0\.1(?=[^0-9]|$)/, process.env.MOBILE_LOCALHOST_IP)
-  }
-  else
-  {
+  } else {
     return str
   }
 }
