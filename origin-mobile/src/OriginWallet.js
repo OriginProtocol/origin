@@ -773,6 +773,17 @@ class OriginWallet {
     return `${link_id}-${code}-${priv_key.toString('hex')}`
   }
 
+  async toLinkedDappUrl(dappUrl) {
+    const localUrl = localfy(dappUrl)
+    return localUrl + (localUrl.includes('?') ? '' : '?' ) + 'plink=' + await this.getPrivateLink()
+  }
+
+  async openSellingUrl() {
+    if (this.sellingUrl) {
+        Linking.openURL(await this.toLinkedDappUrl(this.sellingUrl))
+    }
+  }
+
   async onNotification(notification) {
     Object.assign( this.state, {
       notifyTime:new Date(),
@@ -798,21 +809,13 @@ class OriginWallet {
     }
     else if (notification.data.to_dapp && notification.data.url)
     {
-      let dapp_url = localfy(notification.data.url)
-      if (!dapp_url.includes('?'))
-      {
-        dapp_url += "?"
-      }
-      dapp_url += "plink=" + await this.getPrivateLink()
-
       if (notification.foreground)
       {
         // TODO: micah do something silly here.
       }
       else
       {
-        console.log("openning dapp_url", dapp_url)
-        Linking.openURL(dapp_url)
+        Linking.openURL(await this.toLinkedDappUrl(notification.data.url))
       }
     }
     this.checkSyncMessages(true)
@@ -992,11 +995,13 @@ class OriginWallet {
 
     try {
       const {provider_url, contract_addresses, 
-          ipfs_gateway, ipfs_api, messaging_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
+          ipfs_gateway, ipfs_api, messaging_url,
+          selling_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       console.log("Set network to:", provider_url, contract_addresses)
       web3.setProvider(new Web3.providers.HttpProvider(localfy(provider_url), 20000))
 
       this.messagingUrl = localfy(messaging_url)
+      this.sellingUrl = selling_url
       // update the contract addresses contract
       origin.contractService.updateContractAddresses(contract_addresses)
       origin.ipfsService.gateway = localfy(ipfs_gateway)

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Alert, Dimensions, Image, Linking, StyleSheet, Text, View } from 'react-native'
-import { SELLING_URL } from 'react-native-dotenv'
+import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import originWallet from '../OriginWallet'
 
 import OriginButton from 'components/origin-button'
 
@@ -8,7 +8,7 @@ const IMAGES_PATH = '../../assets/images/'
 
 export default class Selling extends Component {
   handlePress() {
-    Linking.openURL(SELLING_URL).catch(Alert.alert);
+    originWallet.openSelling()
   }
 
   render() {
