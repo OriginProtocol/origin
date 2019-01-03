@@ -128,6 +128,14 @@
     "defaultMessage": "Pending"
   },
   {
+    "id": "listing-detail.reasonSoldOut",
+    "defaultMessage": "This listing is {soldOut}"
+  },
+  {
+    "id": "listing-detail.soldOut",
+    "defaultMessage": "Sold Out"
+  },
+  {
     "id": "listing-detail.reasonSold",
     "defaultMessage": "This listing is {sold}"
   },

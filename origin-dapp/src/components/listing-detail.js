@@ -567,7 +567,7 @@ class ListingsDetail extends Component {
                 {!loading && (
                   <div className="badges">
                     {showPendingBadge && <PendingBadge />}
-                    {showSoldBadge && <SoldBadge />}
+                    {showSoldBadge && <SoldBadge isMultiUnit={isMultiUnit} />}
                     {showFeaturedBadge && <FeaturedBadge />}
                     {/*boostValue > 0 && (
                       <span className={`boosted badge boost-${boostLevel}`}>
@@ -790,7 +790,19 @@ class ListingsDetail extends Component {
                         }}
                       />
                     )}
-                    {isSold && (
+                    {isSold && isMultiUnit && (
+                      <FormattedMessage
+                        id={'listing-detail.reasonSoldOut'}
+                        defaultMessage={'This listing is {soldOut}'}
+                        values={{
+                          soldOut: <strong><FormattedMessage
+                              id={'listing-detail.soldOut'}
+                              defaultMessage={'Sold Out'}
+                            /></strong>
+                        }}
+                      />
+                    )}
+                    {isSold && !isMultiUnit && (
                       <FormattedMessage
                         id={'listing-detail.reasonSold'}
                         defaultMessage={'This listing is {sold}'}

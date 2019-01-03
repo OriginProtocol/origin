@@ -91,7 +91,7 @@ class ListingCard extends Component {
           <div className="category placehold d-flex justify-content-between">
             <div>{category}&nbsp;&nbsp;|&nbsp;&nbsp;{subCategory}</div>
             {!loading && showPendingBadge && <PendingBadge />}
-            {!loading && showSoldBadge && <SoldBadge />}
+            {!loading && showSoldBadge && <SoldBadge isMultiUnit={isMultiUnit} />}
             {!loading && showFeaturedBadge && <FeaturedBadge />}
             {/*!loading &&
               boostLevelIsPastSomeThreshold && (
