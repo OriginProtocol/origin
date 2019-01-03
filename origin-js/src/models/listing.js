@@ -138,13 +138,23 @@ export class Listing {
     return this.status === 'active'
   }
 
-  get unitsLockedInOffers() {
+  get unitsPending() {
     if (!Array.isArray(this.offers))
       return undefined
 
     return this.offers
-      // filter out offers that have been withdrawn or are errorneous
-      .filter(offer => !['withdrawn', 'error'].includes(offer.status))
+      // only keep offers that are in a pending state
+      .filter(offer => ['created', 'accepted', 'disputed'].includes(offer.status))
+      .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
+  }
+
+  get unitsSold() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    return this.offers
+      // only keep offers that are in a sold state
+      .filter(offer => ['finalized', 'sellerReviewed', 'ruling'].includes(offer.status))
       .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
   }
 
@@ -152,7 +162,7 @@ export class Listing {
     if (!Array.isArray(this.offers))
       return undefined
 
-    return Math.max(0, this.unitsTotal - this.unitsLockedInOffers)
+    return Math.max(0, this.unitsTotal - this.unitsPending - this.unitsSold)
   }
 
   get commissionRemaining() {

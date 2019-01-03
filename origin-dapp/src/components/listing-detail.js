@@ -282,7 +282,7 @@ class ListingsDetail extends Component {
     </div>)
   }
 
-  renderButtonContainer(userIsSeller, isFractional, listingId, isMultiUnit, unitsSold, isAvailable) {
+  renderButtonContainer(userIsSeller, isFractional, listingId, isMultiUnit, unitsPending, isAvailable) {
     return (<div className="btn-container">
       {isAvailable && !userIsSeller && !isFractional && (
         <button
@@ -322,7 +322,7 @@ class ListingsDetail extends Component {
                 defaultMessage={'Edit Listing'}
               />
           </Link>
-          {isMultiUnit && unitsSold > 0 && (
+          {isMultiUnit && unitsPending > 0 && (
             <Link
               to={`/my-sales`}
               className="btn margin-top"
@@ -364,6 +364,8 @@ class ListingsDetail extends Component {
       seller,
       unitsTotal,
       unitsRemaining,
+      unitsSold,
+      unitsPending,
       fractionalTimeIncrement
     } = listing
 
@@ -390,7 +392,6 @@ class ListingsDetail extends Component {
 
     // in general an offer exists (even if user is not a buyer or a seller)
     const offerExists = isSold || isPending
-    const unitsSold = unitsTotal - unitsRemaining
     const isMultiUnitAndSeller = userIsSeller && isMultiUnit
     const isMultiPendingBuyer = isMultiUnit && userIsBuyer && offerStatusToListingAvailability(userIsBuyerOffer.status) === 'pending'
 
@@ -677,8 +678,19 @@ class ListingsDetail extends Component {
                       <div className="d-flex justify-content-between mt-4 mb-2">
                         <div className="ml-3">
                           <FormattedMessage
-                            id={'listing-detail.unitsUnsold'}
-                            defaultMessage={'Unsold'}
+                            id={'listing-detail.unitsPending'}
+                            defaultMessage={'Pending'}
+                          />
+                        </div>
+                        <div className="text-right mr-3">
+                          {unitsPending}
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-between mt-4 mb-2">
+                        <div className="ml-3">
+                          <FormattedMessage
+                            id={'listing-detail.unitsAvailable'}
+                            defaultMessage={'Available'}
                           />
                         </div>
                         <div className="text-right mr-3">
@@ -714,7 +726,7 @@ class ListingsDetail extends Component {
                       </div>
                     </Fragment>
                   )}
-                  {this.renderButtonContainer(userIsSeller, isFractional, this.props.listingId, isMultiUnit, unitsSold, isAvailable)}
+                  {this.renderButtonContainer(userIsSeller, isFractional, this.props.listingId, isMultiUnit, unitsPending, isAvailable)}
                   {(isMultiPendingBuyer && isAvailable) && this.renderMultiUnitPendingBuyerSuggestion()}
                   {/* Via Matt 9/4/2018: Not necessary until we have staking */}
                   {/*

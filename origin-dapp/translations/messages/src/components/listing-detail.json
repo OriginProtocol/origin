@@ -96,8 +96,12 @@
     "defaultMessage": "Sold"
   },
   {
-    "id": "listing-detail.unitsUnsold",
-    "defaultMessage": "Unsold"
+    "id": "listing-detail.unitsPending",
+    "defaultMessage": "Pending"
+  },
+  {
+    "id": "listing-detail.unitsAvailable",
+    "defaultMessage": "Available"
   },
   {
     "id": "listing-detail.remainingBoost",
