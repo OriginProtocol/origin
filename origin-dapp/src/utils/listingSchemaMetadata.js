@@ -731,7 +731,7 @@ const listingSchemaMetadata = {
   }
 }
 
-// TODO(John) - 
+// TODO(John) - Remove this once all fractional usage schemas are released
 if (process.env.ENABLE_FRACTIONAL) {
   listingSchemaMetadata.listingSchemasByCategory.forRent.forEach(schemaObj => {
     if (schemaObj.schema === 'forRent-housing_1.0.0.json' || schemaObj.schema === 'forRent-jewelry_1.0.0.json') {
