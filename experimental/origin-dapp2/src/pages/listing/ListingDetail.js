@@ -6,6 +6,7 @@ import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 
 import Buy from './mutations/Buy'
+import ListingBadge from '../_ListingBadge'
 
 class ListingDetail extends Component {
   state = {}
@@ -16,7 +17,13 @@ class ListingDetail extends Component {
 
     return (
       <div className="listing-detail">
-        <div className="category">{listing.categoryStr}</div>
+        <div className="header">
+          <div className="category">{listing.categoryStr}</div>
+          <ListingBadge
+            status={listing.status}
+            featured={listing.featured}
+          />
+        </div>
         <h2>{listing.title}</h2>
         <div className="row">
           <div className="col-md-8">
@@ -89,12 +96,20 @@ require('react-styl')(`
       font-style: normal
       color: var(--dark)
 
+    .header
+      display: flex
+      align-items: center
+      justify-content: space-between
+
     .category
       font-family: Lato
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
       text-transform: uppercase
+      margin-top: 0.75rem
+
+    .badge
       margin-top: 0.75rem
 
     .main-pic
