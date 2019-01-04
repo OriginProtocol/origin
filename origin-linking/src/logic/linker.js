@@ -192,6 +192,7 @@ class Linker {
     // keys have to match
     if (linkedObj.clientPubKey != pubKey)
     {
+      console.log("Pub key: ", linkedObj.clientPubKey, " does not match: ", pubKey)
       linkedObj.clientPubKey = pubKey
       linkedObj.linked = false
     }
