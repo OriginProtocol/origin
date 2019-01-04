@@ -117,9 +117,17 @@ secrets-prod.yaml
 /origin-messaging/odb
 
 # origin-messaging #
-#############
+####################
 /origin-messaging/ipfs/
 /origin-messaging/odb/
+
+# origin-dapp-creator-server #
+##############################
+/origin-dapp-creator-server/dist
+
+# origin-linking #
+##################
+/origin-linking/dist
 
 # Recommended rules per https://gist.github.com/octocat/9257657 #
 # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv #

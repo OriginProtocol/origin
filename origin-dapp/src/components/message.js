@@ -9,7 +9,7 @@ import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
 
-import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
+import { abbreviateName, formattedAddress, truncateAddress } from 'utils/user'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
 
@@ -32,7 +32,8 @@ class Message extends Component {
       mobileDevice,
       web3Account,
       contentOnly,
-      previousOfferMessage
+      previousOfferMessage,
+      includeNav
     } = this.props
     const { created, hash } = message
     const { address, profile } = user
@@ -78,7 +79,7 @@ class Message extends Component {
             <div className={`chat-bubble tail-${bubbleTail} ${bubbleColor} ${contentMargin}`}>
               <div className="chat-text">
                 <div className="sender d-flex flex-row justify-content-start">
-                  {currentUser ? <UserInfo /> : (
+                  {(currentUser || !includeNav) ? <UserInfo /> : (
                     <Link to={`/users/${fullAddress}`} className="d-flex flex-row justify-content-start">
                       <UserInfo />
                     </Link>

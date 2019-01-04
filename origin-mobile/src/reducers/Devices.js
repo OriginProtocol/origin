@@ -1,7 +1,7 @@
-import { DevicesConstants } from '../actions/Devices'
+import { DevicesConstants } from 'actions/Devices'
 
 const initialState = {
-  devices:[]
+  devices: [],
 }
 
 export default function Devices(state = initialState, action = {}) {
@@ -9,5 +9,6 @@ export default function Devices(state = initialState, action = {}) {
     case DevicesConstants.SET_DEVICES:
       return { ...state, devices: action.devices }
   }
+  
   return state
 }

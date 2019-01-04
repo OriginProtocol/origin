@@ -1,20 +1,22 @@
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 
-import OriginButton from './origin-button'
+import Address from 'components/address'
+import OriginButton from 'components/origin-button'
+
+const IMAGES_PATH = '../../assets/images/'
 
 export default class SignItem extends Component {
   render() {
-    const { item, address, balance, handleApprove, handlePress, handleReject, style } = this.props
+    const { item, handleApprove, handlePress, handleReject, style } = this.props
     // placeholders
-    const myAddress = address
     const msg = item.sign && item.sign.params.msg
     const status = item.status
 
     return (
       <TouchableHighlight onPress={handlePress}>
         <View style={[ styles.listItem, style ]}>
-          <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
+          <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
           <View style={styles.content}>
             <Text style={styles.imperative}>Do you wish to sign the following message?</Text>
             <Text style={styles.subject}>{msg}</Text>
@@ -36,11 +38,6 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     paddingTop: '5%',
-  },
-  address: {
-    color: '#3e5d77',
-    fontSize: 12,
-    fontWeight: '300',
   },
   arrow: {
     marginLeft: 10,

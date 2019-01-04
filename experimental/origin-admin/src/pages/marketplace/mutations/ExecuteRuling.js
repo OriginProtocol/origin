@@ -10,7 +10,7 @@ import {
   Tag
 } from '@blueprintjs/core'
 
-import { ExecuteRulingMutation } from '../../../mutations'
+import { ExecuteRulingMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class ExecuteRuling extends Component {

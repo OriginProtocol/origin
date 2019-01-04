@@ -10,7 +10,7 @@ import {
 } from '@blueprintjs/core'
 
 import withAccounts from 'hoc/withAccounts'
-import { WithdrawListingMutation } from '../../../mutations'
+import { WithdrawListingMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class WithdrawListing extends Component {

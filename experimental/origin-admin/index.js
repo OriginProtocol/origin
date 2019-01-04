@@ -14,7 +14,7 @@ const HOST = process.env.HOST || 'localhost'
 const app = express()
 
 app.get('/', (req, res) => {
-  var html = fs.readFileSync(__dirname + '/public/dev.html').toString()
+  const html = fs.readFileSync(__dirname + '/public/dev.html').toString()
   res.send(html.replace(/\{HOST\}/g, `http://${HOST}:8082/`))
 })
 app.use(serveStatic('public'))
@@ -33,12 +33,12 @@ const startGanache = () =>
     } catch (e) {
       /* Ignore */
     }
-    var server = Ganache.server({
+    const server = Ganache.server({
       total_accounts: 5,
       default_balance_ether: 100,
       db_path: 'data/db',
       network_id: 999,
-      seed: 123,
+      seed: 123
       // blockTime: 3
     })
     server.listen(8545, err => {
@@ -74,15 +74,19 @@ const startIpfs = (opts = {}) =>
 
 const populateIpfs = () =>
   new Promise((resolve, reject) => {
-    var ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
+    const ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
     console.log('Populate IPFS:')
-    ipfs.util.addFromFs('../../origin-js/test/fixtures', { recursive: true }, (err, result) => {
-      if (err) {
-        return reject(err)
+    ipfs.util.addFromFs(
+      '../../origin-js/test/fixtures',
+      { recursive: true },
+      (err, result) => {
+        if (err) {
+          return reject(err)
+        }
+        result.forEach(r => console.log(`  ${r.hash} ${r.path}`))
+        resolve(result)
       }
-      result.forEach(r => console.log(`  ${r.hash} ${r.path}`))
-      resolve(result)
-    })
+    )
   })
 
 async function start() {

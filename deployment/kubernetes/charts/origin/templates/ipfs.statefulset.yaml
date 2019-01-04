@@ -25,7 +25,6 @@ spec:
         release: "{{ .Release.Name }}"
     spec:
       containers:
-      {{- if ne .Release.Namespace "prod" }}
       - name: {{ template "ipfsProxy.fullname" . }}
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.ipfsProxyImage }}:{{ .Values.ipfsProxyImageTag }}"
         imagePullPolicy: Always
@@ -36,7 +35,6 @@ spec:
             value: "http://127.0.0.1:5001"
           - name: IPFS_GATEWAY_URL
             value: "http://127.0.0.1:8080"
-      {{- end }}
       - name: {{ template "ipfs.fullname" . }}
         image: "{{ .Values.ipfsImage }}:{{ .Values.ipfsImageTag }}"
         command: ["/usr/local/bin/start_ipfs"]

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "schema.boostLimit",
+    "defaultMessage": "Boost Limit"
+  },
+  {
+    "id": "boost-limit-field.boost-help",
+    "defaultMessage": "Maximum amount that will be spent to boost this listing."
+  }
+]

@@ -16,9 +16,10 @@ spec:
   selector:
     app: {{ template "ipfs.fullname" . }}
   ports:
-  - name: api
-    port: 5001
-  - name: gateway
-    port: 8080
-  - name: proxy
-    port: 9999
+    # Most external usage is through ipfs-proxy, but ipns uses 8080
+    - name: api
+      port: 5001
+    - name: gateway
+      port: 8080
+    - name: proxy
+      port: 9999

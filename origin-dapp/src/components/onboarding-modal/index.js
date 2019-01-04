@@ -88,7 +88,7 @@ class OnboardingModal extends Component {
       })
       const listings = await Promise.all(
         ids.map(async id => {
-          return getListing(id, true)
+          return getListing(id, { translate: true })
         })
       )
 
