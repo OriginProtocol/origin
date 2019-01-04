@@ -336,6 +336,10 @@ class DappInfo extends Component {
                   <td>RINKEBY_DAPP_BASEURL</td>
                   <td>{process.env.RINKEBY_DAPP_BASEURL}</td>
                 </tr>
+                <tr>
+                  <td>WALLET_LINKER_URL</td>
+                  <td>{process.env.WALLET_LINKER_URL}</td>
+                </tr>
 
                 <tr>
                   <th colSpan="2">Marketplace Contracts</th>
