@@ -121,6 +121,10 @@ Restart a container. In a new terminal window:
 
 	docker-compose restart <container_name>
 
+Rebuild containers (takes some time), in case you update dependencies (including npm). In a new terminal window:
+
+	docker-compose build --no-cache origin
+
 ### Troubleshooting
 
 #### Elasticsearch fails to start with virtual memory error

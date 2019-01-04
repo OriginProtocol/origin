@@ -1,4 +1,5 @@
 const ipfs = require('origin-ipfs')
+const offerStatus = require('./offerStatus')
 const get = ipfs.get
 // import { get } from 'origin-ipfs'
 const startCase = require('lodash/startCase')
@@ -84,6 +85,12 @@ class OriginEventSource {
     }
 
     data.unitsTotal = data.unitsTotal ? data.unitsTotal - soldUnits : 0
+    if (data.media && data.media.length) {
+      data.media = data.media.map(m => ({
+        ...m,
+        urlExpanded: `${this.ipfsGateway}/${m.url.replace(':/', '')}`
+      }))
+    }
 
     return {
       id: listingId,
@@ -135,7 +142,7 @@ class OriginEventSource {
       status = offer.status
     }
 
-    return {
+    const offerObj = {
       id: `999-1-${listingId}-${offerId}`,
       listingId: String(listingId),
       offerId: String(offerId),
@@ -153,8 +160,22 @@ class OriginEventSource {
       affiliate: { id: offer.affiliate },
       arbitrator: { id: offer.arbitrator }
     }
+    offerObj.statusStr = offerStatus(offerObj)
+
+    return offerObj
+  }
+
+  async getReview(listingId, offerId, party, ipfsHash) {
+    const data = await get(this.ipfsGateway, ipfsHash)
+    return {
+      id: `999-1-${listingId}-${offerId}`,
+      reviewer: { id: party, account: { id: party } },
+      listing: { id: listingId },
+      offer: { id: offerId },
+      review: data.text,
+      rating: data.rating
+    }
   }
 }
 
 module.exports = OriginEventSource
-// export default OriginEventSource

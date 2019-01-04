@@ -8,7 +8,7 @@ import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
 
 import ListingsGallery from './ListingCards'
-import Search from './Search'
+import Search from './_Search'
 
 import query from 'queries/Listings'
 

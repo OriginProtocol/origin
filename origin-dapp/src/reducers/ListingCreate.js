@@ -6,6 +6,7 @@ const data_key = 'last_listing_data'
 const data = store.get(data_key)
 
 const defaultState = {
+  boostCapTooLow: false,
   step: 1,
   selectedBoostAmount: 0,
   selectedCategory: null,
@@ -26,6 +27,7 @@ const defaultState = {
     }
   },
   showDetailsFormErrorMsg: false,
+  showBoostFormErrorMsg: false,
   showBoostTutorial: false
 }
 

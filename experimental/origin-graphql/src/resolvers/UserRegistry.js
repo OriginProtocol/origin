@@ -35,8 +35,8 @@ async function identities(contract, { first = 10, after }) {
   const end = start + first
   nodes = nodes.slice(start, end)
 
-  const firstNodeId = nodes[0].id
-  const lastNodeId = nodes[nodes.length - 1].id
+  const firstNodeId = nodes.length ? nodes[0].id : 0
+  const lastNodeId = nodes.length ? nodes[nodes.length - 1].id : 0
 
   return {
     totalCount,
