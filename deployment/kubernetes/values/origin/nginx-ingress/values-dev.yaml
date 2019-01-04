@@ -9,6 +9,5 @@ controller:
     enabled: true
   extraArgs:
     enable-ssl-chain-completion: false
-    enable-dynamic-configuration: true
     watch-namespace: dev
     force-namespace-isolation: true
