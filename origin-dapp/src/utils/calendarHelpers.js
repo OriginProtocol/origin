@@ -330,7 +330,7 @@ export function getSlotsToReserve(buyerSelectedSlotData) {
             }
 
             if (slot.isRecurringEvent) {
-              toReturn.rrule = 'FREQ=DAILY;'
+              toReturn.rrule = 'FREQ=WEEKLY;'
             }
 
             return toReturn
@@ -354,7 +354,7 @@ export function getCleanEvents(events) {
       }
 
       if (event.isRecurringEvent) {
-        toReturn.rrule = 'FREQ=DAILY;'
+        toReturn.rrule = 'FREQ=WEEKLY;'
       }
       return toReturn
     })
