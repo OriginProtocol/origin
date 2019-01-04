@@ -34,7 +34,7 @@ import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
 import { formattedAddress } from 'utils/user'
-import { generateCroppedImage, getDataURIsFromImgURLs, picURIsOnly } from 'utils/fileUtils'
+import { getDataURIsFromImgURLs, picURIsOnly } from 'utils/fileUtils'
 
 import {
   translateSchema,
