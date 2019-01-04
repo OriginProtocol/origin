@@ -6,8 +6,6 @@ import clipboard from 'clipboard-polyfill'
 import QRCode from 'qrcode.react'
 import queryString from 'query-string'
 
-import { mobileDevice } from 'utils/mobile'
-
 import { storeWeb3Intent, storeNetwork } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
 import { getEthBalance, storeAccountAddress } from 'actions/Wallet'
@@ -394,17 +392,19 @@ class Web3Provider extends Component {
     const { location } = this.props
     const search = location.search || window.location.search
 
-    if(this.latestSearch != search) {
+    if (this.latestSearch != search) {
       this.latestSearch = search
+
       const query = queryString.parse(search)
       const plink = query['plink']
 
       if (plink) {
         origin.contractService.walletLinker.preLinked(plink)
       }
+
       const testWalletLinker = query['testWalletLinker']
-      if (testWalletLinker == '1')
-      {
+
+      if (testWalletLinker == '1') {
         origin.contractService.activeWalletLinker = true
       }
     }
@@ -415,20 +415,19 @@ class Web3Provider extends Component {
     const now = this.props.location.pathname
 
     if (isMobileDevice) {
-      if (now.startsWith('/listing/'))
-      {
+      if (now.startsWith('/listing/')) {
         const url = new URL(window.location)
+
         url.hash = '#/my-purchases'
+
         return url.href
-      }
-      else if (now.startsWith('/create'))
-      {
+      } else if (now.startsWith('/create')) {
         const url = new URL(window.location)
+
         url.hash = '#/my-listings'
+
         return url.href
-      }
-      else
-      {
+      } else {
         return window.location.href
       }
     } else {
@@ -455,13 +454,12 @@ class Web3Provider extends Component {
 
       origin.contractService.walletLinker.getReturnUrl = this.getWalletReturnUrl.bind(this)
       origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
-      this.updateSearchWalletLinker()
 
+      this.updateSearchWalletLinker()
     }
   }
 
-  componentDidUpdate()
-  {
+  componentDidUpdate() {
     if (origin.contractService.walletLinker) {
       this.updateSearchWalletLinker()
     }
@@ -529,6 +527,7 @@ class Web3Provider extends Component {
     }
 
     const code = origin.contractService.getMobileWalletLink()
+    
     if (this.state.linkerCode != code) {
       // let's set the linker code
       this.setState({ linkerCode: code })
