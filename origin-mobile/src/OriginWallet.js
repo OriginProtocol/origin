@@ -11,9 +11,9 @@ import CryptoJS from 'crypto-js'
 import UUIDGenerator from 'react-native-uuid-generator'
 import { randomBytes } from 'react-native-randombytes'
 
-import origin, {apiUrl, defaultProviderUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
-
 import {setRemoteLocal, localfy, storeData, loadData} from './tools'
+
+import origin, {apiUrl, defaultProviderUrl, messagingUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
 
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
@@ -27,7 +27,6 @@ const WALLET_STORE = "WALLET_STORE"
 const WALLET_INFO = "WALLET_INFO"
 const WALLET_LINK = "WALLET_LINK"
 const REMOTE_LOCALHOST_STORE = "REMOTE_LOCAL_STORE"
-
 
 const Events = keyMirror({
   PROMPT_LINK:null,
@@ -215,7 +214,8 @@ class OriginWallet {
   }
 
   async fireEvent(event_type, event, matcher) {
-    if (typeof(event) == 'object')
+    // event may be an array (see doGetLinkedDevices)
+    if (typeof(event) == 'object' && event.length === undefined)
     {
       const ts = new Date()
       if(!event.event_id)
@@ -335,7 +335,8 @@ class OriginWallet {
       link_id
     }).then((responseJson) => {
       console.log("We are now unlinked from remote wallet:", link_id)
-      if (responseJson.success)
+      // response is simply true
+      if (responseJson)
       {
         this.fireEvent(Events.UNLINKED, {link_id, unlinked_at:new Date()}, eventMatcherByLinkId(link_id))
       }
@@ -751,7 +752,7 @@ class OriginWallet {
       for (const link of links) {
         if (stored_link_id == link.link_id)
         {
-          return stored_link_id
+          return randomBytes(4).toString('hex') + stored_link_id
         }
       }
     }
@@ -770,6 +771,17 @@ class OriginWallet {
 
     await storeData(WALLET_LINK, link_id)
     return `${link_id}-${code}-${priv_key.toString('hex')}`
+  }
+
+  async toLinkedDappUrl(dappUrl) {
+    const localUrl = localfy(dappUrl)
+    return localUrl + (localUrl.includes('?') ? '' : '?' ) + 'plink=' + await this.getPrivateLink()
+  }
+
+  async openSelling() {
+    if (this.sellingUrl) {
+        Linking.openURL(await this.toLinkedDappUrl(this.sellingUrl))
+    }
   }
 
   async onNotification(notification) {
@@ -797,21 +809,13 @@ class OriginWallet {
     }
     else if (notification.data.to_dapp && notification.data.url)
     {
-      let dapp_url = localfy(notification.data.url)
-      if (!dapp_url.includes('?'))
-      {
-        dapp_url += "?"
-      }
-      dapp_url += "plink=" + await this.getPrivateLink()
-
       if (notification.foreground)
       {
         // TODO: micah do something silly here.
       }
       else
       {
-        console.log("openning dapp_url", dapp_url)
-        Linking.openURL(dapp_url)
+        Linking.openURL(await this.toLinkedDappUrl(notification.data.url))
       }
     }
     this.checkSyncMessages(true)
@@ -842,13 +846,15 @@ class OriginWallet {
   }
 
   checkStripOriginUrl(url){
-    if (url.startsWith(ORIGIN_PROTOCOL_PREFIX))
+    const urlWithoutQueryParams = url.split('?')[0]
+    
+    if (urlWithoutQueryParams.startsWith(ORIGIN_PROTOCOL_PREFIX))
     {
-      return url.substr(ORIGIN_PROTOCOL_PREFIX.length)
+      return urlWithoutQueryParams.substr(ORIGIN_PROTOCOL_PREFIX.length)
     }
-    if (url.startsWith(SECURE_ORIGIN_PROTOCOL_PREFIX))
+    if (urlWithoutQueryParams.startsWith(SECURE_ORIGIN_PROTOCOL_PREFIX))
     {
-      return url.substr(SECURE_ORIGIN_PROTOCOL_PREFIX.length)
+      return urlWithoutQueryParams.substr(SECURE_ORIGIN_PROTOCOL_PREFIX.length)
     }
   }
 
@@ -856,7 +862,8 @@ class OriginWallet {
     let key = this.checkStripOriginUrl(url)
     if (key)
     {
-      this.promptForLink(key)
+      // this.promptForLink(key)
+      this._handleLink({ linkCode: key })
     }
   }
 
@@ -907,7 +914,8 @@ class OriginWallet {
       let linkCode = content.substr(ORIGIN_QR_PREFIX.length)
       this.copied_code = linkCode
       Clipboard.setString("")
-      this.promptForLink(linkCode)
+      // this.promptForLink(linkCode)
+      this._handleLink({ linkCode })
     }
   }
 
@@ -989,11 +997,13 @@ class OriginWallet {
 
     try {
       const {provider_url, contract_addresses, 
-          ipfs_gateway, ipfs_api, messaging_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
+          ipfs_gateway, ipfs_api, messaging_url,
+          selling_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       console.log("Set network to:", provider_url, contract_addresses)
       web3.setProvider(new Web3.providers.HttpProvider(localfy(provider_url), 20000))
 
       this.messagingUrl = localfy(messaging_url)
+      this.sellingUrl = selling_url
       // update the contract addresses contract
       origin.contractService.updateContractAddresses(contract_addresses)
       origin.ipfsService.gateway = localfy(ipfs_gateway)

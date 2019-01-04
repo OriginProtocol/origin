@@ -9,7 +9,7 @@ import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
 
-import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
+import { abbreviateName, formattedAddress, truncateAddress } from 'utils/user'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
 

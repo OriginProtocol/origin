@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Animated, StatusBar, Text, TouchableOpacity, View } from 'react-native'
+import { Animated, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import Dots from 'components/dots'
 import OriginButton from 'components/origin-button'
@@ -62,18 +62,18 @@ const OnboardingPagination = ({
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     paddingHorizontal: 40,
     width: '100%',
   },
   container: {
-    paddingHorizontal: 0,
+    alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingHorizontal: 0,
   },
-}
+})
 
 export default OnboardingPagination
