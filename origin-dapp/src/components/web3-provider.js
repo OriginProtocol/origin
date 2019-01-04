@@ -6,6 +6,8 @@ import clipboard from 'clipboard-polyfill'
 import QRCode from 'qrcode.react'
 import queryString from 'query-string'
 
+import { mobileDevice } from 'utils/mobile'
+
 import { storeWeb3Intent, storeNetwork } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
 import { getEthBalance, storeAccountAddress } from 'actions/Wallet'
@@ -388,6 +390,34 @@ class Web3Provider extends Component {
 
   }
 
+  getWalletReturnUrl() {
+    const isMobileDevice = this.props.mobileDevice
+    const now = this.props.location.pathname
+    
+    if (isMobileDevice) {
+      if (now.startsWith('/listing/'))
+      {
+        const url = new URL(window.location)
+        url.hash = '#/my-purchases'
+        return url.href
+      }
+      else if (now.startsWith('/create'))
+      {
+        const url = new URL(window.location)
+        url.hash = '#/my-listings'
+        return url.href
+      }
+      else
+      {
+        return window.location.href
+      }
+    } else {
+      return ''
+    }
+
+    
+  }
+
   /**
    * Start polling accounts and network. We poll indefinitely so that we can
    * react to the user changing accounts or networks.
@@ -406,9 +436,11 @@ class Web3Provider extends Component {
       }
 
       origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
+      origin.contractService.walletLinker.getReturnUrl = this.getWalletReturnUrl.bind(this)
 
       const { location } = this.props
-      const query = queryString.parse(location.search)
+      const search = location.search || window.location.search
+      const query = queryString.parse(search)
       const plink = query['plink']
 
       if (plink) {

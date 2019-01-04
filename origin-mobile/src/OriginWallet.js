@@ -315,7 +315,7 @@ class OriginWallet {
       {
         if (return_url && this.copied_code == code)
         {
-          Linking.openURL(return_url)
+          Linking.openURL(this.toSaltedUrl(return_url))
         }
         else
         {
@@ -553,7 +553,7 @@ class OriginWallet {
             (success) => {
               if (return_url)
               {
-                Linking.openURL(return_url)
+                Linking.openURL(this.toSaltedUrl(return_url))
               }
               resolve(true)
             })
@@ -576,7 +576,7 @@ class OriginWallet {
                 if (return_url)
                 {
                   console.log("transaction approved returning to:", return_url)
-                  Linking.openURL(return_url)
+                  Linking.openURL(this.toSaltedUrl(return_url))
                 }
                 resolve(true)
               }
@@ -625,7 +625,7 @@ class OriginWallet {
               if (return_url)
               {
                 console.log("transaction approved returning to:", return_url)
-                Linking.openURL(return_url)
+                Linking.openURL(this.toSaltedUrl(return_url))
               }
               resolve(success)
             })
@@ -752,7 +752,7 @@ class OriginWallet {
       for (const link of links) {
         if (stored_link_id == link.link_id)
         {
-          return stored_link_id
+          return randomBytes(4).toString('hex') + stored_link_id
         }
       }
     }
@@ -773,9 +773,33 @@ class OriginWallet {
     return `${link_id}-${code}-${priv_key.toString('hex')}`
   }
 
+  toSaltedUrl(toUrl) {
+    const url = new URL(toUrl)
+    if (!url.search)
+    {
+      url.search = '?'
+    }
+    else
+    {
+      url.search += '&'
+    }
+    url.search += 'salt=' + randomBytes(4).toString('hex')
+    return url.href
+  }
+
   async toLinkedDappUrl(dappUrl) {
     const localUrl = localfy(dappUrl)
-    return localUrl + (localUrl.includes('?') ? '' : '?' ) + 'plink=' + await this.getPrivateLink()
+    const url = new URL(localUrl)
+    if (!url.search)
+    {
+      url.search = '?'
+    }
+    else
+    {
+      url.search += '&'
+    }
+    url.search += 'plink=' + await this.getPrivateLink()
+    return url.href
   }
 
   async openSelling() {

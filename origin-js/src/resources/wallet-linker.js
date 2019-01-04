@@ -55,6 +55,11 @@ export default class WalletLinker {
       })
 
       this.linked = linked
+
+      if (linked)
+      {
+        localStorage.setItem(LOCAL_KEY_STORE, priv_key)
+      }
       if (this.session_token != session_token)
       {
         this.session_token = session_token
