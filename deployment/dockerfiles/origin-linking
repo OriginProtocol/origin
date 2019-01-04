@@ -19,10 +19,11 @@ COPY ./origin-linking ./origin-linking
 COPY ./origin-contracts ./origin-contracts
 COPY ./scripts ./scripts
 
-RUN npm run install:mobile --unsafe-perm
+RUN npm install --unsafe-perm
 
 COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
 
+RUN npm run build --prefix origin-js
 RUN npm run build --prefix origin-linking
 
 CMD eval $(envkey-source) && \

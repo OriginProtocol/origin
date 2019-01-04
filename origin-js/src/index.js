@@ -29,6 +29,7 @@ export default class Origin {
     attestationServerUrl = defaultAttestationServerUrl,
     discoveryServerUrl = defaultDiscoveryServerUrl,
     walletLinkerUrl = null,
+    activeWalletLinker = false,
     affiliate,
     arbitrator,
     contractAddresses,
@@ -47,7 +48,8 @@ export default class Origin {
     //
     // Services (Internal, should not be used directly by the Origin client).
     //
-    this.contractService = new ContractService({ contractAddresses, web3, ethereum, walletLinkerUrl, fetch, ecies })
+    this.contractService = new ContractService({ contractAddresses, web3, ethereum, walletLinkerUrl, 
+      activeWalletLinker, fetch, ecies })
     this.ipfsService = new IpfsService({
       ipfsDomain,
       ipfsApiPort,
