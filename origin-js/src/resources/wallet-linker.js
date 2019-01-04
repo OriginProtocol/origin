@@ -426,7 +426,7 @@ export default class WalletLinker {
           if (this.msg_ws === ws) {
             this.syncLinkMessages()
           }
-        }, 60000) // check in 60 seconds
+        }, 30000) // check in 60 seconds
       }
     }
     this.msg_ws = ws

@@ -390,10 +390,30 @@ class Web3Provider extends Component {
 
   }
 
+  updateSearchWalletLinker() {
+    const { location } = this.props
+    const search = location.search || window.location.search
+
+    if(this.latestSearch != search) {
+      this.latestSearch = search
+      const query = queryString.parse(search)
+      const plink = query['plink']
+
+      if (plink) {
+        origin.contractService.walletLinker.preLinked(plink)
+      }
+      const testWalletLinker = query['testWalletLinker']
+      if (testWalletLinker == '1')
+      {
+        origin.contractService.activeWalletLinker = true
+      }
+    }
+  }
+
   getWalletReturnUrl() {
     const isMobileDevice = this.props.mobileDevice
     const now = this.props.location.pathname
-    
+
     if (isMobileDevice) {
       if (now.startsWith('/listing/'))
       {
@@ -414,8 +434,6 @@ class Web3Provider extends Component {
     } else {
       return ''
     }
-
-    
   }
 
   /**
@@ -435,22 +453,17 @@ class Web3Provider extends Component {
         origin.contractService.walletLinker.setLinkCode = this.setLinkerCode.bind(this)
       }
 
-      origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
       origin.contractService.walletLinker.getReturnUrl = this.getWalletReturnUrl.bind(this)
+      origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
+      this.updateSearchWalletLinker()
 
-      const { location } = this.props
-      const search = location.search || window.location.search
-      const query = queryString.parse(search)
-      const plink = query['plink']
+    }
+  }
 
-      if (plink) {
-        origin.contractService.walletLinker.preLinked(plink)
-      }
-      const testWalletLinker = query['testWalletLinker']
-      if (testWalletLinker == '1')
-      {
-        origin.contractService.activeWalletLinker = true
-      }
+  componentDidUpdate()
+  {
+    if (origin.contractService.walletLinker) {
+      this.updateSearchWalletLinker()
     }
   }
 
