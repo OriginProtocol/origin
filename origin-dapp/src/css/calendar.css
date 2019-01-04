@@ -99,8 +99,8 @@
   font-size: 10px;
 }
 
-.rbc-time-slot:not(.past-date):hover,
-.rbc-day-bg:not(.past-date):hover {
+.rbc-time-slot.future-date:hover,
+.rbc-day-bg.future-date:hover {
   background: var(--pale-grey-eight) !important;
   cursor: pointer;
 }

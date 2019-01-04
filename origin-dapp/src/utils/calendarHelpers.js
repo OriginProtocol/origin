@@ -80,12 +80,19 @@ export function renderHourlyPrices(viewType) {
       const isAvailable = classes.indexOf('unavailable') === -1
       const priceIdx = classes.indexOf('priceEth-')
 
-      slot.innerHTML = ''
+      // slot.innerHTML = ''
+      const childSpan = slot.querySelector('span')
+      if (childSpan && !childSpan.className.includes('rbc-label')) {
+        childSpan.remove()
+      }
+
 
       if (priceIdx > -1 && isAvailable) {
         const price = classes.substring(priceIdx + 9, classes.length)
-        const priceNode = document.createTextNode(`${price} ETH`)
-        slot.appendChild(priceNode)
+        const priceWrapper = document.createElement('span')
+        const priceText = document.createTextNode(`${price} ETH`)
+        priceWrapper.appendChild(priceText)
+        slot.appendChild(priceWrapper)
       }
     }
   }

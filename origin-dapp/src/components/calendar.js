@@ -449,7 +449,7 @@ class Calendar extends Component {
         moment(value).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end).add(1, 'second'))
       )
     const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
-    const isPastDate = moment(value).isBefore(moment().startOf('day')) ? ' past-date' : ''
+    const isPastDate = moment(value).isBefore(moment().startOf('day')) ? ' past-date' : ' future-date'
 
     return (
       <div className={`rbc-day-bg ${availability}${isSelected}${isPastDate}`}>
@@ -475,8 +475,8 @@ class Calendar extends Component {
     const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
     const price = slotData.price ? ` priceEth-${slotData.price}` : ' priceEth-0'
     const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
-    const isPastDate = moment(date).isBefore(moment().startOf(timePeriod)) ? ' past-date' : ''
-    return { className: `${isAvailable}${isSelected}${price}${isPastDate}` }
+    const isPastDate = moment(date).isBefore(moment().startOf(timePeriod)) ? ' past-date' : ' future-date'
+    return { className: `${isAvailable}${isSelected}${isPastDate}${price}` }
   }
 
   saveData() {
