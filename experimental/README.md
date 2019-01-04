@@ -10,3 +10,7 @@ Code in here may not be well tested or maintained... use at your own risk!
 - **origin-dapp2** - A rewrite of the DApp leveraging origin-graphql
 - **origin-admin** - An admin UI leveraging origin-graphql
 - **origin-graphql-simple-demo** - A minimal UI leveraging origin-graphql showing listings and a buy button.
+
+## GraphQL re-write
+
+We are currently going through a re-write of our dapp to leverage the power of GraphQL. Watch [this video](https://drive.google.com/a/originprotocol.com/file/d/1JHXtYzl7qFyTNB62lNlOwZ_L6QCQnydB/view?usp=sharing) to get started.

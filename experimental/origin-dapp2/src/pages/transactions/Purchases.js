@@ -165,6 +165,7 @@ require('react-styl')(`
       border-radius: 5px;
       padding: 0.5rem;
       display: flex
+      margin-bottom: 1rem
       .main-pic
         width: 360px
         margin-right: 1rem

@@ -3,9 +3,14 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import ImageCropper from 'components/ImageCropper'
-import Link from 'components/Link'
+// import Link from 'components/Link'
 import Steps from 'components/Steps'
+import { formInput, formFeedback } from 'utils/formHelpers'
 
+import withWallet from 'hoc/withWallet'
+
+import PhoneAttestation from 'pages/identity/PhoneAttestation'
+import DeployIdentity from '../identity/mutations/DeployIdentity'
 import ProfileStrength from './_ProfileStrength'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
@@ -35,10 +40,13 @@ const Attestation = ({ type, text, active, onClick, soon }) => {
 }
 
 class OnboardProfile extends Component {
-  state = {}
+  state = { firstName: '', lastName: '', description: '' }
   render() {
-    const { listing } = this.props
+    const { listing, wallet } = this.props
     const { pic } = this.state
+
+    const input = formInput(this.state, state => this.setState(state))
+    const Feedback = formFeedback(this.state)
 
     return (
       <>
@@ -57,11 +65,17 @@ class OnboardProfile extends Component {
                   return <p className="p-3">No Web3</p>
                 }
 
-                const nextLink = `/listings/${listing.id}`
+                // const nextLink = `/listings/${listing.id}`
 
                 return (
                   <div className="onboard-box pt-3">
-                    <form className="profile">
+                    <form
+                      className="profile"
+                      onSubmit={e => {
+                        e.preventDefault()
+                        this.validate()
+                      }}
+                    >
                       <div className="row">
                         <div className="col-4">
                           <ImageCropper
@@ -81,11 +95,21 @@ class OnboardProfile extends Component {
                           <div className="row">
                             <div className="form-group col-6">
                               <label>First Name</label>
-                              <input type="text" className="form-control" />
+                              <input
+                                type="text"
+                                className="form-control"
+                                {...input('firstName')}
+                              />
+                              {Feedback('firstName')}
                             </div>
                             <div className="form-group col-6">
                               <label>Last Name</label>
-                              <input type="text" className="form-control" />
+                              <input
+                                type="text"
+                                className="form-control"
+                                {...input('lastName')}
+                              />
+                              {Feedback('lastName')}
                             </div>
                           </div>
                           <div className="form-group">
@@ -93,7 +117,9 @@ class OnboardProfile extends Component {
                             <textarea
                               className="form-control"
                               placeholder="Tell us a bit about yourself"
+                              {...input('description')}
                             />
+                            {Feedback('description')}
                           </div>
                         </div>
                       </div>
@@ -102,7 +128,7 @@ class OnboardProfile extends Component {
                       <div className="profile-attestations">
                         <Attestation
                           type="phone"
-                          active
+                          active={this.state.phoneAttestation ? true : false}
                           onClick={() => this.setState({ phone: true })}
                           text="Phone Number"
                         />
@@ -114,16 +140,25 @@ class OnboardProfile extends Component {
                       </div>
                       <ProfileStrength width="25%" />
 
-                      <div className="no-funds">
+                      {/* <div className="no-funds">
                         <h5>You don&apos;t have funds</h5>
                         You need to have funds in your wallet to create an
                         identity. You can always do this later after you fund
                         your wallet by going to your settings.
-                      </div>
+                      </div> */}
                     </form>
-                    <Link to={nextLink} className="btn btn-primary">
-                      Publish
-                    </Link>
+                    <DeployIdentity
+                      className="btn btn-primary"
+                      profile={{
+                        firstName: this.state.firstName,
+                        lastName: this.state.lastName,
+                        description: this.state.description,
+                        avatar: this.state.pic
+                      }}
+                      attestations={[]}
+                      validate={() => this.validate()}
+                      children="Publish"
+                    />
                   </div>
                 )
               }}
@@ -134,12 +169,35 @@ class OnboardProfile extends Component {
             <HelpProfile />
           </div>
         </div>
+
+        <PhoneAttestation
+          wallet={wallet}
+          open={this.state.phone}
+          onClose={() => this.setState({ phone: false })}
+          onComplete={phoneAttestation => this.setState({ phoneAttestation })}
+        />
       </>
     )
   }
+
+  validate() {
+    const newState = {}
+
+    if (!this.state.firstName) {
+      newState.firstNameError = 'First Name is required'
+    }
+
+    newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
+
+    if (!newState.valid) {
+      window.scrollTo(0, 0)
+    }
+    this.setState(newState)
+    return newState.valid
+  }
 }
 
-export default OnboardProfile
+export default withWallet(OnboardProfile)
 
 require('react-styl')(`
   .onboard .onboard-box
@@ -204,73 +262,73 @@ require('react-styl')(`
       textarea
         min-height: 3rem
 
-    .profile-attestations
-      display: grid
-      grid-column-gap: 0.5rem
-      grid-row-gap: 0.5rem
-      grid-template-columns: repeat(auto-fill,minmax(220px, 1fr))
-      margin-bottom: 2rem
-      .profile-attestation
-        padding: 0.75rem 1rem
-        border: 1px dashed var(--light)
-        border-radius: 5px
+  .profile-attestations
+    display: grid
+    grid-column-gap: 0.5rem
+    grid-row-gap: 0.5rem
+    grid-template-columns: repeat(auto-fill,minmax(220px, 1fr))
+    margin-bottom: 2rem
+    .profile-attestation
+      padding: 0.75rem 1rem
+      border: 1px dashed var(--light)
+      border-radius: 5px
+      display: flex
+      font-size: 18px
+      font-weight: normal
+      color: var(--bluey-grey)
+      background-color: var(--pale-grey-eight)
+      align-items: center;
+      cursor: pointer
+      &:hover
+        border-color: var(--clear-blue)
+        border-style: solid
+      > i
+        display: block
+        position: relative
+        background: url(images/identity/verification-shape-grey.svg) no-repeat center;
+        width: 2.5rem;
+        height: 2.5rem;
+        background-size: 95%;
         display: flex
-        font-size: 18px
-        font-weight: normal
-        color: var(--bluey-grey)
-        background-color: var(--pale-grey-eight)
-        align-items: center;
-        cursor: pointer
-        &:hover
-          border-color: var(--clear-blue)
-          border-style: solid
+        margin-right: 1rem
+        &::before
+          content: ""
+          flex: 1
+          background-repeat: no-repeat
+          background-position: center
+
+      &.phone > i::before
+        background-image: url(images/identity/phone-icon-light.svg)
+        background-size: 0.9rem
+      &.email > i::before
+        background-image: url(images/identity/email-icon-light.svg)
+        background-size: 1.4rem
+      &.airbnb > i::before
+        background-image: url(images/identity/airbnb-icon-light.svg)
+        background-size: 1.6rem
+      &.facebook > i::before
+        background-image: url(images/identity/facebook-icon-light.svg)
+        background-size: 0.8rem
+      &.twitter > i::before
+        background-image: url(images/identity/twitter-icon-light.svg)
+        background-size: 1.3rem
+      &.google > i::before
+        background-image: url(images/identity/google-icon.svg)
+        background-size: 1.3rem
+
+      &.active
+        background-color: white
+        border-style: solid
+        color: var(--dusk)
         > i
-          display: block
-          position: relative
-          background: url(images/identity/verification-shape-grey.svg) no-repeat center;
-          width: 2.5rem;
-          height: 2.5rem;
-          background-size: 95%;
-          display: flex
-          margin-right: 1rem
-          &::before
-            content: ""
-            flex: 1
-            background-repeat: no-repeat
-            background-position: center
-
-        &.phone > i::before
-          background-image: url(images/identity/phone-icon-light.svg)
-          background-size: 0.9rem
-        &.email > i::before
-          background-image: url(images/identity/email-icon-light.svg)
-          background-size: 1.4rem
-        &.airbnb > i::before
-          background-image: url(images/identity/airbnb-icon-light.svg)
-          background-size: 1.6rem
-        &.facebook > i::before
-          background-image: url(images/identity/facebook-icon-light.svg)
-          background-size: 0.8rem
-        &.twitter > i::before
-          background-image: url(images/identity/twitter-icon-light.svg)
-          background-size: 1.3rem
-        &.google > i::before
-          background-image: url(images/identity/google-icon.svg)
-          background-size: 1.3rem
-
-        &.active
-          background-color: white
-          border-style: solid
-          color: var(--dusk)
-          > i
-            background-image: url(images/identity/verification-shape-blue.svg)
-          &::after
-            content: "";
-            background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center;
-            width: 2rem;
-            height: 2rem;
-            border-radius: 2rem;
-            margin-left: auto;
-            background-size: 59%;
+          background-image: url(images/identity/verification-shape-blue.svg)
+        &::after
+          content: "";
+          background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center;
+          width: 2rem;
+          height: 2rem;
+          border-radius: 2rem;
+          margin-left: auto;
+          background-size: 59%;
 
 `)

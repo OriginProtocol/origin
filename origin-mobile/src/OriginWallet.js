@@ -158,7 +158,10 @@ class OriginWallet {
   }
 
   initUrls() {
-    const localApiUrl = localfy(apiUrl)
+    const remote_is_url = this.remote_localhost.startsWith("http://") 
+      || this.remote_localhost.startsWith("https://")
+
+    const localApiUrl = remote_is_url ? this.remote_localhost : localfy(apiUrl)
     console.log("localApi Url:", localApiUrl)
 
     const wsApiUrl = localApiUrl.replace(/^http/, 'ws')
@@ -193,6 +196,10 @@ class OriginWallet {
   }
 
   async setRemoteLocal(remote_ip) {
+    if (remote_ip) {
+      //in case there's a url!
+      remote_ip = remote_ip.replace(/\/$/, "")
+    }
     await storeData(REMOTE_LOCALHOST_STORE, remote_ip)
     this.initWeb3()
   }
@@ -257,7 +264,17 @@ class OriginWallet {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    }).then((response) => response.json())
+    }).then((response) => {
+      try {
+        return response.json()
+      } catch (error) {
+        console.log("Json Error on fetch[", endpoint, "]:", error)
+        throw error
+      }
+    }).catch(error => {
+      console.log("fetch Error on fetch[", endpoint, "]:", error, " response: ")
+      throw error
+    })
   }
 
   registerNotificationAddress(eth_address, device_token, notification_type) {
@@ -992,7 +1009,13 @@ class OriginWallet {
     if (!this.remote_localhost) {
       this.remote_localhost = defaultLocalRemoteHost
     }
-    setRemoteLocal(this.remote_localhost)
+    if (this.remote_localhost.startsWith("http://") || this.remote_localhost.startsWith("https://"))
+    {
+      const rurl = new URL(this.remote_localhost)
+      setRemoteLocal(rurl.hostname)
+    } else {
+      setRemoteLocal(this.remote_localhost)
+    }
     this.initUrls()
 
     try {
@@ -1000,6 +1023,7 @@ class OriginWallet {
           ipfs_gateway, ipfs_api, messaging_url,
           selling_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       console.log("Set network to:", provider_url, contract_addresses)
+      console.log("service urls:", messaging_url, selling_url)
       web3.setProvider(new Web3.providers.HttpProvider(localfy(provider_url), 20000))
 
       this.messagingUrl = localfy(messaging_url)
@@ -1009,7 +1033,6 @@ class OriginWallet {
       origin.ipfsService.gateway = localfy(ipfs_gateway)
       origin.ipfsService.api = localfy(ipfs_api)
       
-
       await this.setNetId()
       if (this.state.ethAddress)
       {
