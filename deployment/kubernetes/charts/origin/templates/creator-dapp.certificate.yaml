@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/component: frontend
     app.kubernetes.io/part-of: origindapp-com-ingress
 spec:
-  secretName: {{ .Release.Namespace }}-creator-dapp
+  secretName: {{ template "creator-dapp.fullname" . }}
   commonName: '*.{{ template "creator-dapp.host" . }}'
   issuerRef:
     kind: ClusterIssuer
