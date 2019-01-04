@@ -102,7 +102,7 @@ const ProfileDropdown = ({ data, onClose }) => {
         </div>
       </div>
       <Identity id={id} />
-      <Link onClick={() => onClose()} to={`/user/${id}`}>
+      <Link onClick={() => onClose()} to={`/profile`}>
         View Profile
       </Link>
     </div>

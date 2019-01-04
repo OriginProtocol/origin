@@ -6,6 +6,7 @@ const marketplaceExists = {},
 
 export default {
   config: () => contracts.net,
+  configObj: () => contracts.config,
   web3: () => ({}),
   marketplace: async () => {
     const address = contracts.marketplace.options.address

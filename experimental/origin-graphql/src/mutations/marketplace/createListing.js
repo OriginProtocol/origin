@@ -8,8 +8,8 @@ export function listingInputToIPFS(data) {
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
     listingType: 'unit',
-    category: 'schema.forSale',
-    subCategory: 'schema.mushrooms',
+    category: data.category,
+    subCategory: data.subCategory,
     language: 'en-US',
     title: data.title,
     description: data.description,
