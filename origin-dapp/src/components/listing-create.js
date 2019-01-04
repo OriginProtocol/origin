@@ -1,3 +1,4 @@
+import { showAlert } from 'actions/Alert'
 import React, { Component, Fragment } from 'react'
 import { withRouter } from 'react-router'
 import { Link, Prompt } from 'react-router-dom'
@@ -5,7 +6,6 @@ import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
 
-import { showAlert } from 'actions/Alert'
 
 import { handleNotificationsSubscription } from 'actions/Activation'
 import { storeWeb3Intent } from 'actions/App'
@@ -622,6 +622,9 @@ class ListingCreate extends Component {
     try {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
+      if (this.props.marketplacePublisher) {
+        listing['marketplacePublisher'] = this.props.marketplacePublisher
+      }
       let transactionReceipt
       if (isEditMode) {
         transactionReceipt = await origin.marketplace.updateListing(
@@ -1756,9 +1759,10 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
+const mapStateToProps = ({ activation, app, config, exchangeRates, wallet }) => {
   return {
     exchangeRates,
+    marketplacePublisher: config.marketplacePublisher,
     messagingEnabled: activation.messaging.enabled,
     notificationsHardPermission: activation.notifications.permissions.hard,
     notificationsSoftPermission: activation.notifications.permissions.soft,

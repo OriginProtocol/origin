@@ -39,7 +39,8 @@ export class Listing {
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit }) {
+    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit,
+    marketplacePublisher }) {
 
     this.id = id
     this.title = title
@@ -67,6 +68,7 @@ export class Listing {
     this.deposit = deposit
     this.depositManager = depositManager
     this.commissionPerUnit = commissionPerUnit
+    this.marketplacePublisher = marketplacePublisher
   }
 
   // creates a Listing using on-chain and off-chain data
@@ -99,6 +101,7 @@ export class Listing {
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
       commissionPerUnit: ipfsListing.commissionPerUnit,
+      marketplacePublisher: ipfsListing.marketplacePublisher
     })
   }
 
@@ -130,7 +133,8 @@ export class Listing {
       dappSchemaId: discoveryNodeData.dappSchemaId,
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
-      commissionPerUnit: discoveryNodeData.commissionPerUnit
+      commissionPerUnit: discoveryNodeData.commissionPerUnit,
+      marketplacePublisher: discoveryNodeData.marketplacePublisher
     })
   }
 

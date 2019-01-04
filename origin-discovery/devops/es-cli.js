@@ -44,6 +44,7 @@ const index = {
         unitsTotal: { type: 'integer' },
         language: { type: 'keyword' },
         listingType: { type: 'keyword' },
+        marketplacePublisher: { type: 'text' },
         status: { type: 'keyword' },
         category: { type: 'keyword', copy_to: 'all_text' },
         subCategory: { type: 'keyword', copy_to: 'all_text' },

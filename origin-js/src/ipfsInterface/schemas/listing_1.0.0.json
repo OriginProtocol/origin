@@ -56,8 +56,7 @@
       "type": "object",
       "properties": {
         "startDate": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string", "format": "date-time"
         },
         "endDate": {
           "type": "string",
@@ -138,6 +137,9 @@
       "type": "string"
     },
     "description": {
+      "type": "string"
+    },
+    "marketplacePublisher": {
       "type": "string"
     },
     "media": {
