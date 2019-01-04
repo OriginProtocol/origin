@@ -127,6 +127,16 @@ export default class Marketplace {
   }
 
   /**
+   * private helper function to enrich listing with offers
+   * @param {[type]} listing [description]
+   */
+  async _addOffersToListing(listing) {
+    const offers = await this.getOffers(listing.id, listing)
+    listing.offers = offers
+    return listing
+  }
+
+  /**
    * Returns listings.
    * TODO: This won't scale. Add support for pagination.
    * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean, loadOffers: boolean}
@@ -142,7 +152,15 @@ export default class Marketplace {
   async getListings(opts = {}) {
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
-      return await this.discoveryService.getListings(opts)
+      const listings = await this.discoveryService.getListings(opts)
+      if (opts.loadOffers){
+        return Promise.all(
+          listings.map(async listing => {
+            return await this._addOffersToListing(listing)
+          })
+        )
+      }
+      return listings
     }
 
     const listingIds = await this.resolver.getListingIds(opts)
@@ -183,25 +201,23 @@ export default class Marketplace {
       loadOffers
     } = opts
 
-    const addOffersToListing = async (listing) => {
-      const offers = await this.getOffers(listingId, listing)
-      listing.offers = offers
-      return listing
-    }
-
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
       let listing = await this.discoveryService.getListing(listingId, blockInfo)
-      if (loadOffers)
-        listing = await addOffersToListing(listing)
+      if (loadOffers){
+        listing.id = listingId
+        listing = await this._addOffersToListing(listing)
+      }
 
       return listing
     }
 
     // Get the on-chain listing data.
     let chainListing = await this.resolver.getListing(listingId, blockInfo)
-    if (loadOffers)
-        chainListing = await addOffersToListing(chainListing)
+    if (loadOffers){
+      chainListing.id = listingId
+      chainListing = await this._addOffersToListing(chainListing)
+    }
 
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
