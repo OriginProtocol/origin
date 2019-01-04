@@ -37,6 +37,7 @@ export default {
 
         category
         categoryStr
+        subCategory
         title
         description
         currencyId

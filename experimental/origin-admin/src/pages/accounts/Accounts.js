@@ -84,7 +84,9 @@ const Accounts = props => (
           <pre>
           {`localStorage.OGNContract = "${localStorage.OGNContract}"\n`}
           {`localStorage.marketplaceContract = "${localStorage.marketplaceContract}"\n`}
-          {`localStorage.userRegistryContract = "${localStorage.userRegistryContract}"`}
+          {`localStorage.userRegistryContract = "${localStorage.userRegistryContract}"\n`}
+          {`localStorage.KeyHolderLibrary = "${localStorage.KeyHolderLibrary}"\n`}
+          {`localStorage.ClaimHolderLibrary = "${localStorage.ClaimHolderLibrary}"`}
           </pre>
         </div>
       )
