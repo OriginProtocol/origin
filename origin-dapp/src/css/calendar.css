@@ -99,8 +99,14 @@
   font-size: 10px;
 }
 
-.rbc-time-slot.future-date:hover,
-.rbc-day-bg.future-date:hover {
+.buyer-view .rbc-time-slot.available:not(.selected):hover,
+.buyer-view .rbc-day-bg.available:not(.selected):hover {
+  background: var(--pale-grey-eight) !important;
+  cursor: pointer;
+}
+
+.seller-view .rbc-time-slot.future-date:hover,
+.seller-view .rbc-day-bg.future-date:hover {
   background: var(--pale-grey-eight) !important;
   cursor: pointer;
 }

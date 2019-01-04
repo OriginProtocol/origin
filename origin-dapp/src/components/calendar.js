@@ -577,7 +577,7 @@ class Calendar extends Component {
         <div className="row">
           <div className={`col-md-8 
                            calendar-container
-                           ${userType === 'buyer' ? ' buyer-view' : ''}
+                           ${userType === 'buyer' ? ' buyer-view' : ' seller-view'}
                            ${viewType === 'daily' ? ' daily-view' : ' hourly-view'}`}>
             <div className="calendar-nav">
               <img onClick={this.prevPeriod} className="prev-period" src="/images/caret-dark.svg" />
