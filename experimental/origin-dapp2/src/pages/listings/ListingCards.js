@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import Redirect from 'components/Redirect'
 import Price from 'components/Price'
-
-import ListingBadge from '../_ListingBadge'
+import ListingBadge from 'components/ListingBadge'
 
 class Listings extends Component {
   state = {}

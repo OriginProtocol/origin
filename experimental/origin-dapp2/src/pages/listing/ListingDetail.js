@@ -4,9 +4,9 @@ import Gallery from 'components/Gallery'
 import Link from 'components/Link'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
+import ListingBadge from 'components/ListingBadge'
 
 import Buy from './mutations/Buy'
-import ListingBadge from '../_ListingBadge'
 
 class ListingDetail extends Component {
   state = {}
