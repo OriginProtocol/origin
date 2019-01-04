@@ -752,7 +752,7 @@ class OriginWallet {
       for (const link of links) {
         if (stored_link_id == link.link_id)
         {
-          return stored_link_id
+          return randomBytes(4).toString('hex') + stored_link_id
         }
       }
     }
@@ -846,13 +846,15 @@ class OriginWallet {
   }
 
   checkStripOriginUrl(url){
-    if (url.startsWith(ORIGIN_PROTOCOL_PREFIX))
+    const urlWithoutQueryParams = url.split('?')[0]
+    
+    if (urlWithoutQueryParams.startsWith(ORIGIN_PROTOCOL_PREFIX))
     {
-      return url.substr(ORIGIN_PROTOCOL_PREFIX.length)
+      return urlWithoutQueryParams.substr(ORIGIN_PROTOCOL_PREFIX.length)
     }
-    if (url.startsWith(SECURE_ORIGIN_PROTOCOL_PREFIX))
+    if (urlWithoutQueryParams.startsWith(SECURE_ORIGIN_PROTOCOL_PREFIX))
     {
-      return url.substr(SECURE_ORIGIN_PROTOCOL_PREFIX.length)
+      return urlWithoutQueryParams.substr(SECURE_ORIGIN_PROTOCOL_PREFIX.length)
     }
   }
 

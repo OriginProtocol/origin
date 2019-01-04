@@ -55,6 +55,11 @@ export default class WalletLinker {
       })
 
       this.linked = linked
+
+      if (linked)
+      {
+        localStorage.setItem(LOCAL_KEY_STORE, priv_key)
+      }
       if (this.session_token != session_token)
       {
         this.session_token = session_token
@@ -421,7 +426,7 @@ export default class WalletLinker {
           if (this.msg_ws === ws) {
             this.syncLinkMessages()
           }
-        }, 60000) // check in 60 seconds
+        }, 30000) // check in 60 seconds
       }
     }
     this.msg_ws = ws
