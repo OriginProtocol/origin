@@ -128,7 +128,7 @@ export default class Marketplace {
 
   /**
    * private helper function to enrich listing with offers
-   * @param {[type]} listing [description]
+   * @param {Listing} listing to be enriched with offer information
    */
   async _addOffersToListing(listing) {
     const offers = await this.getOffers(listing.id, listing)
