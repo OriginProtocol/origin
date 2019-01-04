@@ -402,6 +402,11 @@ class Web3Provider extends Component {
       {
         origin.contractService.walletLinker.preLinked(plink)
       }
+      const testWalletLinker = query['testWalletLinker']
+      if (testWalletLinker == '1')
+      {
+        origin.contractService.activeWalletLinker = true
+      }
     }
   }
 
@@ -529,7 +534,7 @@ class Web3Provider extends Component {
     const { messagingInitialized, storeAccountAddress, wallet } = this.props
     const current = accounts[0]
     const previous = wallet.address ? formattedAddress(wallet.address) : null
-    const walletLinkerEnabled = origin.contractService.walletLinker
+    const walletLinkerEnabled = origin.contractService.isActiveWalletLinker()
 
     // on account detection
     if (formattedAddress(current) !== previous) {
@@ -580,7 +585,7 @@ class Web3Provider extends Component {
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
     const supportedNetworkName = supportedNetwork && supportedNetwork.name
-    const walletLinkerEnabled = origin.contractService.walletLinker
+    const walletLinkerEnabled = origin.contractService.isActiveWalletLinker() 
 
     return (
       <Fragment>
