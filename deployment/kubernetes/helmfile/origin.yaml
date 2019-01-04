@@ -22,6 +22,12 @@ releases:
       - ../values/origin/values-{{ requiredEnv "NAMESPACE" }}.yaml
       - ../values/origin/secrets-{{ requiredEnv "NAMESPACE" }}.yaml
 
+  - name: {{ requiredEnv "NAMESPACE" }}-redis
+    namespace: {{ requiredEnv "NAMESPACE" }}
+    chart: stable/redis
+    values:
+      - ../values/origin/redis/values-{{ requiredEnv "NAMESPACE" }}.yaml
+
   - name: origin-monitoring
     namespace: monitoring
     chart: ../charts/origin-monitoring
