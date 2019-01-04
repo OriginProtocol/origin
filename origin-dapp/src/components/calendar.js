@@ -473,7 +473,7 @@ class Calendar extends Component {
         moment(date).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end))
       )
     const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
-    const price = slotData.price ? ` priceEth-${slotData.price}` : ''
+    const price = slotData.price ? ` priceEth-${slotData.price}` : ' priceEth-0'
     const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
     const isPastDate = moment(date).isBefore(moment().startOf(timePeriod)) ? ' past-date' : ''
     return { className: `${isAvailable}${isSelected}${price}${isPastDate}` }

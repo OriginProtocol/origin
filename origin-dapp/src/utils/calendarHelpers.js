@@ -67,7 +67,7 @@ export function doAllEventsRecur(events) {
   return recurringEvents.length === events.length
 }
 
-// This is a hackky way of showing the price in hourly time slots
+// This is a hackey way of showing the price in hourly time slots
 // since React Big Calendar doesn't give us full control over the content of those slots
 // Possible future optimization would be to create a PR to React Big Calendar to support custom slot content.
 export function renderHourlyPrices(viewType) {
