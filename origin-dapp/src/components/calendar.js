@@ -122,6 +122,13 @@ class Calendar extends Component {
         })
       }
 
+      // remove last slot time for hourly calendars - not sure why React Big Calendar includes
+      // the next slot after the last selected time slot - seems like a bug.
+      // Potential oppportunity for PR or issue creation in React Big Calendar
+      if (this.props.viewType === 'hourly') {
+        clickedSlotInfo.slots && clickedSlotInfo.slots.length && clickedSlotInfo.slots.splice(-1)
+      }
+
       const eventsInSlot = checkSlotForExistingEvents(clickedSlotInfo, this.state.events)
 
       if (eventsInSlot.length) {
@@ -159,15 +166,9 @@ class Calendar extends Component {
 
       this.selectEvent(eventInfo, false)
     } else {
-      // remove last slot time for hourly calendars - not sure why React Big Calendar includes
-      // the next slot after the last selected time slot - seems like a bug.
-      if (this.props.viewType === 'hourly') {
-        eventInfo.slots && eventInfo.slots.length && eventInfo.slots.splice(-1)
-      }
-
       const endDate = this.props.viewType === 'daily' ?
         moment(eventInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
-        eventInfo.end
+        moment(eventInfo.end).subtract(1, 'second').toDate()
 
       const newEvent = {
         ...eventInfo,
