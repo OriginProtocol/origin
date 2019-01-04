@@ -4,7 +4,7 @@ import { ApolloProvider } from 'react-apollo'
 // import { persistCache } from 'apollo-cache-persist'
 import { Route, HashRouter } from 'react-router-dom'
 import Styl from 'react-styl'
-import client from 'origin-graphql/src/http'
+import client from 'origin-graphql'
 
 import './css/app.css'
 import App from './pages/App'

@@ -5,7 +5,7 @@ import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 
 import Categories from './_categories'
-import { formInput, formFeedback } from './_formHelpers'
+import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Step1 extends Component {
   constructor(props) {

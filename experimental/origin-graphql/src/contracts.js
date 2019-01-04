@@ -1,6 +1,7 @@
 import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplace'
 import UserRegistryContract from 'origin-contracts/build/contracts/V00_UserRegistry'
 import ClaimHolderRegisteredContract from 'origin-contracts/build/contracts/ClaimHolderRegistered'
+import ClaimHolderPresignedContract from 'origin-contracts/build/contracts/ClaimHolderPresigned'
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
 import TokenContract from 'origin-contracts/build/contracts/TestToken'
 
@@ -87,6 +88,7 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:9090`,
     ipfsRPC: `http://${HOST}:5002`,
+    bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000
   }
 }
@@ -166,6 +168,9 @@ export function setNetwork(net) {
 
   context.claimHolderRegistered = new web3.eth.Contract(
     ClaimHolderRegisteredContract.abi
+  )
+  context.claimHolderPresigned = new web3.eth.Contract(
+    ClaimHolderPresignedContract.abi
   )
 
   context.userRegistry = new web3.eth.Contract(

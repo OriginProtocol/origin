@@ -20,7 +20,8 @@
     "origin-eventsource": "^0.1.0",
     "origin-ipfs": "^0.1.0",
     "origin-messaging-client": "^0.1.0",
-    "origin-validator": "^0.1.0"
+    "origin-validator": "^0.1.0",
+    "rlp": "^2.2.1"
   },
   "prettier": {
     "semi": false,

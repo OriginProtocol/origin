@@ -5,7 +5,7 @@ import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 
-import { formInput, formFeedback } from './_formHelpers'
+import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Step2 extends Component {
   constructor(props) {

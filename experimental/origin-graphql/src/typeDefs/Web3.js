@@ -196,6 +196,7 @@ export default `
     logIndex: Int
     raw: EventRaw
     returnValues: EventReturnValues
+    returnValuesArr: [EventReturnValuesArr]
     signature: String
     transactionHash: String
     transactionIndex: Int
@@ -213,6 +214,11 @@ export default `
     offerID: ID
     party: String!
     ipfsHash: String!
+  }
+
+  type EventReturnValuesArr {
+    field: String
+    value: String
   }
 
   type Block {
