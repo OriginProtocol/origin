@@ -48,4 +48,4 @@ creatorClientImageTag: 'latest'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: 'latest'
+creatorServerImageTag: '2e15a29'
