@@ -1,4 +1,6 @@
 import store from '../Store'
+import fetch from 'cross-fetch'
+
 import { setExchangeRate } from 'actions/ExchangeRates'
 
 const DEFAULT_CRYPTO = 'ETH'
@@ -26,7 +28,7 @@ const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
       .then(json => {
         resolve({
           rate: parseFloat(json.ticker.price),
-          cacheHit: false
+          cacheHit: false,
         })
       })
       .catch(console.error)
@@ -50,7 +52,7 @@ const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
     if (new Date().getTime() - timestamp.getTime() < EXCHANGE_RATE_CACHE_TTL) {
       return {
         rate: parseFloat(rate),
-        cacheHit: true
+        cacheHit: true,
       }
     } else {
       return await fetchRate(fiatCode, cryptoCode)
@@ -74,7 +76,7 @@ const setDefaults = (fiatCode, cryptoCode, exchangeRates) => {
   return {
     fiatCode: fiatCode || DEFAULT_FIAT,
     cryptoCode: cryptoCode || DEFAULT_CRYPTO,
-    exchangeRates: exchangeRates || store.getState().exchangeRates
+    exchangeRates: exchangeRates || store.getState().exchangeRates,
   }
 }
 
@@ -109,7 +111,7 @@ export const getFiatPrice = (
   priceEth,
   fiatCurrencyCode = DEFAULT_FIAT,
   cryptoCurrencyCode = DEFAULT_CRYPTO,
-  formatResult = true
+  formatResult = true,
 ) => {
   if (!priceEth) {
     priceEth = 0
@@ -120,7 +122,7 @@ export const getFiatPrice = (
   if (formatResult) {
     return Number(priceEth * (rate || 0)).toLocaleString(undefined, {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     })
   } else {
     return priceEth * (rate || 0)
@@ -140,11 +142,12 @@ export const getFiatPrice = (
 export const getCryptoPrice = async (
   priceFiat,
   fiatCurrencyCode,
-  cryptoCurrencyCode
+  cryptoCurrencyCode,
 ) => {
   if (!priceFiat) {
     priceFiat = 0
   }
+
   const { rate } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
 
   return Number(priceFiat / rate)
@@ -159,6 +162,7 @@ export const getCryptoPrice = async (
 
 const updateExchangeRate = async () => {
   const exchangeRate = await getFiatExchangeRate()
+
   if (!exchangeRate.cacheHit) {
     store.dispatch(setExchangeRate(DEFAULT_FIAT, DEFAULT_CRYPTO, exchangeRate.rate))
   }
