@@ -1,6 +1,7 @@
 import gql from 'graphql-tag'
 
 import mnemonicToAccounts from 'utils/mnemonicToAccounts'
+import demoListings from '../marketplace/mutations/_demoListings'
 
 import {
   ImportWalletsMutation,
@@ -9,8 +10,11 @@ import {
   TransferTokenMutation,
   DeployMarketplaceMutation,
   UpdateTokenAllowanceMutation,
-  AddAffiliateMutation
-} from '../../mutations'
+  AddAffiliateMutation,
+  DeployIdentityContractMutation,
+  DeployIdentityMutation,
+  CreateListingMutation
+} from 'queries/Mutations'
 
 const TransactionSubscription = gql`
   subscription onTransactionUpdated {
@@ -135,4 +139,73 @@ export default async function populate(NodeAccount, gqlClient) {
   })).data.addAffiliate.id
   await transactionConfirmed(hash, gqlClient)
   console.log('Added affiliate to marketplace')
+
+  hash = (await gqlClient.mutate({
+    mutation: DeployIdentityContractMutation,
+    variables: { contract: 'UserRegistry', from: Admin }
+  })).data.deployIdentityContract.id
+  await transactionConfirmed(hash, gqlClient)
+  console.log('Added affiliate to marketplace')
+
+  hash = (await gqlClient.mutate({
+    mutation: DeployIdentityContractMutation,
+    variables: { contract: 'KeyHolderLibrary', from: Admin }
+  })).data.deployIdentityContract.id
+  await transactionConfirmed(hash, gqlClient)
+  console.log('Deployed KeyHolderLibrary')
+
+  hash = (await gqlClient.mutate({
+    mutation: DeployIdentityContractMutation,
+    variables: { contract: 'ClaimHolderLibrary', from: Admin }
+  })).data.deployIdentityContract.id
+  await transactionConfirmed(hash, gqlClient)
+  console.log('Deployed ClaimHolderLibrary')
+
+  hash = (await gqlClient.mutate({
+    mutation: DeployIdentityContractMutation,
+    variables: { contract: 'OriginIdentity', from: Admin }
+  })).data.deployIdentityContract.id
+  await transactionConfirmed(hash, gqlClient)
+  console.log('Deployed OriginIdentity')
+
+  hash = (await gqlClient.mutate({
+    mutation: DeployIdentityMutation,
+    variables: {
+      from: Seller,
+      attestations: [],
+      profile: {
+        firstName: 'Stan',
+        lastName: 'James',
+        description: 'Hi from Stan',
+        avatar: ''
+      }
+    }
+  })).data.deployIdentity.id
+  await transactionConfirmed(hash, gqlClient)
+  console.log('Deployed Seller Identity')
+
+  for (const listing of demoListings) {
+    hash = (await gqlClient.mutate({
+      mutation: CreateListingMutation,
+      variables: {
+        deposit: '5',
+        depositManager: Arbitrator,
+        from: Seller,
+        autoApprove: true,
+        data: {
+          title: listing.title,
+          description: listing.description,
+          price: {
+            currency: '0x0000000000000000000000000000000000000000',
+            amount: listing.price.amount
+          },
+          category: listing.category,
+          media: listing.media,
+          unitsTotal: listing.unitsTotal
+        }
+      }
+    })).data.createListing.id
+    await transactionConfirmed(hash, gqlClient)
+    console.log('Deployed Listing')
+  }
 }

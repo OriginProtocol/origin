@@ -80,7 +80,7 @@ class ConversationListItem extends Component {
     }
     const lastMessage = this.getLastMessage(conversation)
 
-    const listing = lastMessage.listingId ? await getListing(lastMessage.listingId, true) : {}
+    const listing = lastMessage.listingId ? await getListing(lastMessage.listingId, { translate: true }) : {}
     moment.updateLocale(modifiedLanguageCode, localeConfig)
     const createdAt = moment(lastMessage.created).fromNow()
     this.setState({ listing, lastMessage, createdAt })

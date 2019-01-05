@@ -27,23 +27,27 @@ class BoostSlider extends Component {
   async onChange(value) {
     const disableNextBtn = value > this.props.ognBalance
     this.props.onChange(value, getBoostLevel(value), disableNextBtn)
-    // const selectedBoostAmountUsd = await getFiatPrice(value, 'USD')
-    // this.setState({
-    //   selectedBoostAmountUsd
-    // })
   }
 
   render() {
-    const { ognBalance } = this.props
+    const { ognBalance, isMultiUnitListing } = this.props
     const boostLevel = getBoostLevel(this.props.selectedBoostAmount)
 
     return (
       <div className="boost-slider">
         <p>
-          <FormattedMessage
-            id={'boost-slider.boost-level'}
-            defaultMessage={'Boost Level'}
-          />
+          {
+            isMultiUnitListing ?
+              <FormattedMessage
+                id={'boost-slider.boost-level-multi-unit'}
+                defaultMessage={'Boost Level (per unit)'}
+              />
+            :
+              <FormattedMessage
+                id={'boost-slider.boost-level'}
+                defaultMessage={'Boost Level'}
+              />
+          }
         </p>
         <Tooltip
           placement="top"

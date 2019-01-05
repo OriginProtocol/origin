@@ -9,7 +9,7 @@ import EventSource from 'origin-eventsource'
 
 import eventCache from './utils/eventCache'
 import pubsub from './utils/pubsub'
-import msg from './utils/messagingInstance'
+import OriginMessaging from 'origin-messaging-client'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3
 const HOST = process.env.HOST || 'localhost'
@@ -20,6 +20,7 @@ const Configs = {
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
+    ipfsEventCache: 'QmVuNrzZKociLVtJ4AmSHb4XRcq8eRAGfuw3wW1MV9dKP9',
     discovery: 'https://discovery.originprotocol.com',
     V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
     OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
@@ -81,48 +82,22 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:9090`,
     ipfsRPC: `http://${HOST}:5002`,
-    automine: true
+    automine: 2000,
   }
+}
+
+const DefaultMessagingConfig = {
+  ipfsSwarm:
+    '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
+  messagingNamespace: 'origin:staging'
 }
 
 const context = {}
 
-msg.events.on('initialized', accountKey => {
-  console.log('Messaging initialized', accountKey)
-})
-msg.events.on('new', accountKey => {
-  console.log('Messaging new', accountKey)
-})
-
-// detect existing messaging account
-msg.events.on('ready', accountKey => {
-  console.log('Messaging ready', accountKey)
-})
-// detect existing messaging account
-msg.events.on('pending_conv', conv => {
-  console.log('Messaging pending_conv', conv)
-})
-
-// detect new decrypted messages
-msg.events.on('msg', obj => {
-  console.log('Messaging msg', obj)
-  // if (obj.decryption) {
-  //   const { roomId, keys } = obj.decryption
-  //
-  //   origin.messaging.initRoom(roomId, keys)
-  // }
-  //
-  // this.props.addMessage(obj)
-  //
-  // this.debouncedFetchUser(obj.senderAddress)
-})
-
-// To Do: handle incoming messages when no Origin Messaging Private Key is available
-msg.events.on('emsg', obj => {
-  console.error('A message has arrived that could not be decrypted:', obj)
-})
-
+// web3.js version 35 + 36 need this hack...
 function applyWeb3Hack(web3Instance) {
+  if (!web3Instance.version.match(/(35|36)$/)) return web3Instance
+
   web3Instance.eth.abi.decodeParameters = function(outputs, bytes) {
     if (bytes === '0x') bytes = '0x00'
     return web3Instance.eth.abi.__proto__.decodeParameters(outputs, bytes)
@@ -141,6 +116,7 @@ export function setNetwork(net) {
     config.V00_UserRegistry = window.localStorage.userRegistryContract
   }
   context.net = net
+  context.config = config
   context.automine = config.automine
 
   context.ipfsGateway = config.ipfsGateway
@@ -164,10 +140,11 @@ export function setNetwork(net) {
     window.localStorage.ognNetwork = net
     window.web3 = web3
   }
+  context.web3 = web3
   context.web3Exec = web3
 
-  context.messaging = msg
-  msg.web3 = web3
+  const MessagingConfig = config.messaging || DefaultMessagingConfig
+  context.messaging = OriginMessaging({ ...MessagingConfig, web3 })
 
   context.metaMaskEnabled = metaMaskEnabled
   web3WS = applyWeb3Hack(new Web3(config.providerWS))
@@ -207,6 +184,7 @@ export function setNetwork(net) {
         }
       })
     })
+    context.pubsub = pubsub
   }
 
   context.tokens = config.tokens || []
@@ -245,6 +223,13 @@ export function setNetwork(net) {
     token.contractExec = contract
   })
 
+  context.transactions = []
+  try {
+    context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
+  } catch(e) {
+    /* Ignore */
+  }
+
   if (metaMask) {
     context.metaMask = metaMask
     context.ognMM = new metaMask.eth.Contract(
@@ -275,6 +260,7 @@ function setMetaMask() {
     context.ognExec = context.ogn
     context.tokens.forEach(token => (token.contractExec = token.contract))
   }
+  context.messaging.web3 = context.web3Exec
 }
 
 export function toggleMetaMask(enabled) {
@@ -289,7 +275,12 @@ export function toggleMetaMask(enabled) {
 
 export function setMarketplace(address, epoch) {
   context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
-  context.marketplace.eventCache = eventCache(context.marketplace, epoch)
+  context.marketplace.eventCache = eventCache(
+    context.marketplace,
+    epoch,
+    context.web3,
+    context.config
+  )
   if (address) {
     context.marketplaces = [context.marketplace]
   } else {

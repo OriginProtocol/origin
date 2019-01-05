@@ -1,33 +1,32 @@
-import React, { Component } from 'react'
-import {Alert, StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native'
-import QRCodeScanner from 'react-native-qrcode-scanner'
-import originWallet, {Events} from './OriginWallet'
-import NavigationService from './NavigationService'
-
-import { fetchProfile } from 'actions/Profile'
-import { getBalance } from 'actions/Wallet'
-import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
-import { setDevices } from 'actions/Devices'
-
+import React, { Component, Fragment } from 'react'
+import { ActivityIndicator, Alert, Dimensions, Image, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { connect, Provider } from 'react-redux'
 
+import NavigationService from './NavigationService'
+import originWallet, { Events } from './OriginWallet'
 import Store from './Store'
 
-import {
-  createBottomTabNavigator,
-  createStackNavigator,
-} from 'react-navigation'
-import { FlatList, Image, Modal, SectionList, StatusBar, TouchableHighlight, YellowBox } from 'react-native'
+import { storeNotificationsPermissions, updateCarouselStatus } from 'actions/Activation'
+import { setDevices } from 'actions/Devices'
+import { fetchUser } from 'actions/User'
+import { getBalance, init } from 'actions/Wallet'
+import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
 
-import ScanMarker from './components/scan-marker'
+import Onboarding from 'components/onboarding'
 
-import AlertsScreen from './screens/alerts'
-import DevicesScreen from './screens/devices'
-import HomeScreen from './screens/home'
-import SettingsScreen from './screens/settings'
-import WalletScreen from './screens/wallet'
+import DevicesScreen from 'screens/devices'
+import HomeScreen from 'screens/home'
+import MessagingScreen from 'screens/messaging'
+import ProfileScreen from 'screens/profile'
+import ScanScreen from 'screens/scan'
+import SettingsScreen from 'screens/settings'
+import TransactionScreen from 'screens/transaction'
+import WalletFundingScreen from 'screens/wallet-funding'
 
-const IMAGES_PATH = "../assets/images/"
+import { loadData } from './tools'
+
+const IMAGES_PATH = '../assets/images/'
 
 YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/18868
@@ -36,47 +35,24 @@ YellowBox.ignoreWarnings([
   'Module RCTImageLoader requires main queue setup'
 ])
 
-
-class ScanScreen extends Component {
-  static navigationOptions = {
-    title: 'Scan',
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal',
-    },
-  }
-    
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <QRCodeScanner
-          reactivate={true}
-          reactivateTimeout={5000}
-          onRead={originWallet.onQRScanned}
-          showMarker={true}
-          customMarker={<ScanMarker />}
-          cameraStyle={{ height: '100%' }}
-        />
-      </View>
-    )
-  }
-}
-
 const navigationOptions = ({ navigation }) => ({
+  headerBackTitle: ' ',
   headerStyle: {
     backgroundColor: 'white',
   },
 })
 
-const AlertsStack = createStackNavigator({
-  Alerts: AlertsScreen,
+const HomeStack = createStackNavigator({
+  Home: HomeScreen,
+  Profile: ProfileScreen,
+  Transaction: TransactionScreen,
+  WalletFunding: WalletFundingScreen,
 }, {
   navigationOptions,
 })
 
-const HomeStack = createStackNavigator({
-  Home: HomeScreen,
+const MessagingStack = createStackNavigator({
+  Messaging: MessagingScreen,
 }, {
   navigationOptions,
 })
@@ -89,34 +65,34 @@ const ScanStack = createStackNavigator({
 
 const SettingsStack = createStackNavigator({
   Devices: DevicesScreen,
+  Profile: ProfileScreen,
   Settings: SettingsScreen,
-  Wallet: WalletScreen,
 }, {
   initialRouteName: 'Settings',
   navigationOptions,
 })
 
 const OriginNavigator = createBottomTabNavigator({
-  Alerts: AlertsStack,
   Home: HomeStack,
+  Messaging: MessagingStack,
   Scan: ScanStack,
   Settings: SettingsStack,
 }, {
   initialRouteName: 'Home',
-  order: ['Home', 'Alerts', 'Scan', 'Settings'],
+  order: ['Home', 'Messaging', 'Scan', 'Settings'],
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
 
       // require expects string literal :(
-      if (routeName === 'Alerts') {
-        return focused ?
-          <Image source={require(IMAGES_PATH + 'alerts-active.png')} /> :
-          <Image source={require(IMAGES_PATH + 'alerts-inactive.png')} />
-      } else if (routeName === 'Home') {
+      if (routeName === 'Home') {
         return focused ?
           <Image source={require(IMAGES_PATH + 'home-active.png')} /> :
           <Image source={require(IMAGES_PATH + 'home-inactive.png')} />
+      } else if (routeName === 'Messaging') {
+        return focused ?
+          <Image source={require(IMAGES_PATH + 'messaging-active.png')} /> :
+          <Image source={require(IMAGES_PATH + 'messaging-inactive.png')} />
       } else if (routeName === 'Scan') {
         return focused ?
           <Image source={require(IMAGES_PATH + 'scan-active.png')} /> :
@@ -130,9 +106,9 @@ const OriginNavigator = createBottomTabNavigator({
   }),
   tabBarOptions: {
     activeTintColor: '#007fff',
-    inactiveTintColor: 'white',
+    inactiveTintColor: '#c0cbd4',
     style: {
-      backgroundColor: '#293f55',
+      backgroundColor: 'white',
     },
     iconStyle: {
       marginTop: 10,
@@ -148,81 +124,58 @@ const OriginNavigator = createBottomTabNavigator({
   },
 })
 
-const styles = StyleSheet.create({
-  centerText: {
-    fontSize: 18,
-    padding: 10,
-    textAlign:'center',
-  },
-  textBold: {
-    fontWeight: '500',
-  },
-  buttonText: {
-    color: 'rgb(0,122,255)',
-    fontSize: 21,
-  },
-  buttonTouchable: {
-    padding: 16,
-  },
-  input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    color: 'black',
-    height: 40,
-    margin: 15,
-  },
-})
-
 // Origin Nav wrapper
 class OriginNavWrapper extends Component {
-
-  render() {
-    return <OriginNavigator ref={navigatorRef=>
-        NavigationService.setTopLevelNavigator(navigatorRef)
-    } />
-  }
-
   componentDidMount() {
-    //register the service here
-    originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
-      this.props.newEvent(matcher, data)
-      this.props.setActiveEvent(data)
-      NavigationService.navigate("Alerts")
+    PushNotificationIOS.checkPermissions(permissions => {
+      this.props.storeNotificationsPermissions(permissions)
     })
+
+    originWallet.initNotifications()
+    // skip the prompt
+    // originWallet.events.on(Events.PROMPT_LINK, (data, matcher) => {
+      // this.props.newEvent(matcher, data)
+      // this.props.setActiveEvent(data)
+      // NavigationService.navigate('Home')
+    // })
+
     originWallet.events.on(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
-      this.props.setActiveEvent(data)
-      NavigationService.navigate("Alerts")
-    })
-    originWallet.events.on(Events.PROMPT_SIGN, (data, matcher) => {
-      this.props.newEvent(matcher, data)
-      this.props.setActiveEvent(data)
-      NavigationService.navigate("Alerts")
+      // this.props.setActiveEvent(data)
+      NavigationService.navigate('Home')
     })
 
-    originWallet.events.on(Events.NEW_ACCOUNT, (data, matcher) => {
-      this.props.fetchProfile()
+    originWallet.events.on(Events.PROMPT_SIGN, (data, matcher) => {
+      this.props.newEvent(matcher, data)
+      // this.props.setActiveEvent(data)
+      NavigationService.navigate('Home')
+    })
+
+    originWallet.events.on(Events.NEW_ACCOUNT, ({ address }, matcher) => {
+      this.props.initWallet(address)
+      this.props.fetchUser(address)
       this.props.getBalance()
     })
 
     originWallet.events.on(Events.LINKED, (data, matcher) => {
       this.props.processedEvent(matcher, {}, data)
-      NavigationService.navigate("Home")
+      NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.TRANSACTED, (data, matcher) => {
-      this.props.processedEvent(matcher, {status:'completed'}, data)
+      this.props.processedEvent(matcher, { status: 'completed' }, data)
       this.props.getBalance()
-      NavigationService.navigate("Home")
+      NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.UNLINKED, (data, matcher) => {
-      this.props.updateEvent(matcher, {linked:false})
+      originWallet.getDevices()
+      this.props.updateEvent(matcher, { linked: false })
     })
 
     originWallet.events.on(Events.REJECT, (data, matcher) => {
-      this.props.processedEvent(matcher, {status:'rejected'}, data)
-      NavigationService.navigate("Home")
+      this.props.processedEvent(matcher, { status: 'rejected' }, data)
+      NavigationService.navigate('Home')
     })
 
     originWallet.events.on(Events.LINKS, (devices) => {
@@ -233,30 +186,143 @@ class OriginNavWrapper extends Component {
       this.props.getBalance()
     })
 
+    originWallet.events.on(Events.NEW_MESSAGE, () => {
+      // TODO: show indicator of new message here
+    })
+
+    originWallet.events.on(Events.SHOW_MESSAGES, () => {
+      NavigationService.navigate('Messaging')
+    })
+
     originWallet.openWallet()
   }
 
   componentWillUnmount() {
     originWallet.closeWallet()
   }
+
+  render() {
+    return <OriginNavigator ref={navigatorRef =>
+      NavigationService.setTopLevelNavigator(navigatorRef)
+    } />
+  }
+}
+
+class OriginWrapper extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { loading: true }
+  }
+
+  async componentDidMount() {
+    const completed = await loadData('carouselCompleted')
+
+    this.props.updateCarouselStatus(!!completed)
+
+    this.setState({ loading: false })
+  }
+
+  render() {
+    const { activation, updateCarouselStatus } = this.props
+    const { loading } = this.state
+    const { carouselCompleted } = activation
+    const { height, width } = Dimensions.get('window')
+    const smallScreen = height < 812
+
+    return loading ?
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color="white" />
+      </View> :
+      <Fragment>
+        {!carouselCompleted &&
+          <Onboarding
+            onCompletion={() => this.props.updateCarouselStatus(true)}
+            pages={[
+              {
+                image: (
+                  <Image
+                    resizeMethod={'scale'}
+                    resizeMode={'contain'}
+                    source={require(IMAGES_PATH + 'carousel-1.png')}
+                    style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+                  />
+                ),
+                title: 'Store & Use Crypto',
+                subtitle: 'The Origin Mobile Wallet will allow you to store cryptocurrency to buy and sell on the Origin Marketplace.',
+              },
+              {
+                image: (
+                  <Image
+                    resizeMethod={'scale'}
+                    resizeMode={'contain'}
+                    source={require(IMAGES_PATH + 'carousel-2.png')}
+                    style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+                  />
+                ),
+                title: 'Message Buyers & Sellers',
+                subtitle: 'Use the app to communicate with others on the Origin Marketplace in order to move your transactions.',
+              },
+              {
+                image: (
+                  <Image
+                    resizeMethod={'scale'}
+                    resizeMode={'contain'}
+                    source={require(IMAGES_PATH + 'carousel-3.png')}
+                    style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+                  />
+                ),
+                title: 'Stay Up to Date',
+                subtitle: 'The Origin Mobile Wallet will notify you when there are transactions that require your attention.',
+              },
+            ]}
+          />
+        }
+        {carouselCompleted &&
+          <OriginNavWrapper {...this.props} />
+        }
+      </Fragment>
+  }
+}
+
+const mapStateToProps = ({ activation }) => {
+  return {
+    activation,
+  }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchProfile: () => dispatch(fetchProfile()),
+  fetchUser: address => dispatch(fetchUser(address)),
   getBalance: () => dispatch(getBalance()),
+  initWallet: address => dispatch(init(address)),
   newEvent: (matcher, event) => dispatch(newEvent(matcher, event)),
-  updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
   processedEvent: (matcher, update, new_event) => dispatch(processedEvent(matcher, update, new_event)),
-  setActiveEvent:(event) => dispatch(setActiveEvent(event)),
-  setDevices:(devices) => dispatch(setDevices(devices))
+  setActiveEvent: event => dispatch(setActiveEvent(event)),
+  setDevices: devices => dispatch(setDevices(devices)),
+  storeNotificationsPermissions: permissions => dispatch(storeNotificationsPermissions(permissions)),
+  updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool)),
+  updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
 })
 
-const OriginNavApp = connect(undefined, mapDispatchToProps)(OriginNavWrapper)
+const OriginWallet = connect(mapStateToProps, mapDispatchToProps)(OriginWrapper)
+
+const styles = StyleSheet.create({
+  image: {
+    marginBottom: '10%',
+  },
+  loading: {
+    backgroundColor: '#293f55',
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+})
 
 export default class OriginApp extends Component {
   render() {
-    return <Provider store={Store}>
-        <OriginNavApp />
+    return (
+      <Provider store={Store}>
+        <OriginWallet />
       </Provider>
+    )
   }
 }

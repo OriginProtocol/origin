@@ -7,7 +7,7 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import LoadingSpinner from 'components/LoadingSpinner'
 import QueryError from 'components/QueryError'
 
-import query from './queries/events'
+import query from 'queries/AllEvents'
 
 let lastFetched = 0
 function nextPage(fetchMore, numEvents) {

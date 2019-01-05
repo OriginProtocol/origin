@@ -1,20 +1,6 @@
 import Origin from 'origin'
 import Web3 from 'web3'
 
-const mobilize = (str) => {
-  if (process.env.MOBILE_LOCALHOST_IP)
-  {
-    return str
-      .replace('localhost', process.env.MOBILE_LOCALHOST_IP)
-      .replace(/127\.0\.0\.1(?=[^0-9]|$)/, process.env.MOBILE_LOCALHOST_IP)
-  }
-  else
-  {
-    return str
-  }
-}
-
-
 const providerUrl = process.env.PROVIDER_URL
 const mobileLocalhostIp = process.env.MOBILE_LOCALHOST_IP
 const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl, 20000))
@@ -26,4 +12,4 @@ const origin = new Origin({
   web3})
 
 export default origin
-export {providerUrl, mobilize}
+export {providerUrl, web3}

@@ -5,14 +5,14 @@ const Names = ['Admin', 'Stan', 'Nick', 'Origin', 'Origin']
 const Roles = ['Admin', 'Seller', 'Buyer', 'Arbitrator', 'Affiliate']
 
 export const defaultMnemonic =
-  'enlist bamboo horror cream exit message dismiss asthma cruel sustain reason below'
+  'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
 
 export default function mnemonicToAccounts(
   mnemonic = defaultMnemonic,
   num = 5
 ) {
   const keys = []
-  for (var offset = 0; offset < num; offset++) {
+  for (let offset = 0; offset < num; offset++) {
     const seed = bip39.mnemonicToSeed(mnemonic)
     const acct = HDKey.fromMasterSeed(seed).derive(`m/44'/60'/0'/0/${offset}`)
     keys.push({

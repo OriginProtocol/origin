@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import moment from 'moment-timezone'
-import { defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
@@ -17,13 +17,6 @@ class MyPurchaseCard extends Component {
       purchasedSlots: [],
       loading: false
     }
-
-    this.intlMessages = defineMessages({
-      ETH: {
-        id: 'my-purchase-card.ethereumCurrencyAbbrev',
-        defaultMessage: 'ETH'
-      }
-    })
 
     this.getPrice = this.getPrice.bind(this)
   }
@@ -50,8 +43,8 @@ class MyPurchaseCard extends Component {
 
   render() {
     const { listing, offer, offerId } = this.props
-    const { category, name, pictures, price } = listing
-    const { status, totalPrice } = offer
+    const { category, name, pictures, price, isMultiUnit } = listing
+    const { status, totalPrice, unitsPurchased } = offer
     const voided = ['rejected', 'withdrawn'].includes(status)
     const maxStep = ['disputed', 'ruling'].includes(status) ? 4 : 3
     const step = offerStatusToStep(status)
@@ -86,20 +79,56 @@ class MyPurchaseCard extends Component {
               </p>
               {!voided && (
                 <Fragment>
-                  {this.state.listing.listingType === 'fractional' &&
+                  {listing.listingType === 'fractional' &&
                     <div className="d-flex">
                       <p className="booking-dates">
                         { `${this.getBookingDates('startDate')} - ${this.getBookingDates('endDate')}`}
                       </p>
                     </div>
                   }
-                  <div className="d-flex">
-                    <p className="price">{`${Number(priceToShow).toLocaleString(
-                      undefined,
-                      { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                    )} ETH`}</p>
-                    {/* Not Yet Relevant */}
-                    {/* <p className="quantity">Quantity: {quantity.toLocaleString()}</p> */}
+                  {isMultiUnit && <div className="flex-grid d-flex flex-column">
+                    <div className="d-flex col-12 pl-0 pr-0 mr-auto pt-3">
+                      <div className="col-4 pl-0 pr-0">
+                        <FormattedMessage
+                          id={ 'my-purchase-card.quantity' }
+                          defaultMessage={ 'Quantity:' }
+                        />
+                      </div>
+                      <div className="col-8 pl-0 pr-0">
+                        {unitsPurchased}
+                      </div>
+                    </div>
+                    <div className="d-flex col-12 pl-0 pr-0 mr-auto pt-2">
+                      <div className="col-4 pl-0 pr-0">
+                        <FormattedMessage
+                          id={ 'my-purchase-card.pricePerUnit' }
+                          defaultMessage={ 'Price/Unit:' }
+                        />
+                      </div>
+                      <div className="col-8 pl-0 pr-0">
+                        {`${Number(price).toLocaleString(
+                            undefined,
+                            { minimumFractionDigits: 5, maximumFractionDigits: 5 }
+                        )} ${totalPrice.currency}`}
+                      </div>
+                    </div>
+                  </div>}
+
+                  <div className={'dflex-grid d-flex ' + (isMultiUnit ? 'pt-0' : 'pt-3')}>
+                    <div className="d-flex col-12 pl-0 pr-0 pt-2">
+                      <div className="emphasis col-4 pl-0 pr-0">
+                        <FormattedMessage
+                          id={ 'my-purchase-card.totalPrice' }
+                          defaultMessage={ 'Total Price:' }
+                        />
+                      </div>
+                      <div className="emphasis col-8 pl-0 pr-0">
+                        {`${Number(priceToShow).toLocaleString(
+                            undefined,
+                            { minimumFractionDigits: 5, maximumFractionDigits: 5 }
+                        )} ${totalPrice.currency}`}
+                      </div>
+                    </div>
                   </div>
                   <PurchaseProgress
                     currentStep={step}
@@ -110,22 +139,6 @@ class MyPurchaseCard extends Component {
                   />
                 </Fragment>
               )}
-              <div className="actions d-flex">
-                <div className="links-container">
-                  {/*<a onClick={() => alert('To Do')}>Open a Dispute</a>*/}
-                </div>
-                <div className="button-container">
-                  {/* Hidden for current deployment */}
-                  {/* stage === 'buyer_pending' &&
-                    <a className="btn btn-primary btn-sm" onClick={() => alert('To Do')}>
-                      <FormattedMessage
-                        id={ 'my-purchase-card.iReceivedTheOrder' }
-                        defaultMessage={ 'I\'ve Received the Order' }
-                      />
-                    </a>
-                  */}
-                </div>
-              </div>
             </div>
           )}
         </div>

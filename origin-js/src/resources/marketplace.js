@@ -60,27 +60,21 @@ export default class Marketplace {
   async getPurchases(account) {
     const listings = await this.getListings({
       purchasesFor: account,
+      loadOffers: true,
       withBlockInfo: true
     })
 
-    const offerArrays = await Promise.all(
-      listings.map(async purchase => {
-        return await this.getOffers(purchase.id)
+    return listings
+      .map(listing => listing.offers)
+      .reduce((offers, offerArr) => [...offers, ...offerArr], [])
+      // only keep the purchases where user identified by `account` is the buyer
+      .filter(offer => offer.buyer === account)
+      .map(offer => {
+        return {
+          offer,
+          listing: listings.find(listing => listing.id === offer.listingId)
+        }
       })
-    )
-
-    const offers =
-      offerArrays &&
-      offerArrays.length &&
-      offerArrays.reduce((offers = [], offerArr) => offers = [...offers, ...offerArr]) ||
-      []
-
-    return offers.map(offer => {
-      return {
-        offer,
-        listing: listings.find(listing => listing.id === offer.listingId)
-      }
-    })
   }
 
   /**
@@ -120,7 +114,7 @@ export default class Marketplace {
     const listingsAtTimeOfPurchase = await Promise.all(
       listingsToFetch.map(async listingData => {
         const { listingId, blockInfo } = listingData
-        return await this.getListing(listingId, blockInfo)
+        return await this.getListing(listingId, { blockInfo: blockInfo })
       })
     )
 
@@ -135,12 +129,13 @@ export default class Marketplace {
   /**
    * Returns listings.
    * TODO: This won't scale. Add support for pagination.
-   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean}
+   * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean, loadOffers: boolean}
    *  - idsOnly: Returns only ids rather than the full Listing object.
    *  - listingsFor: Returns latest version of all listings created by a seller.
    *  - purchasesFor: Returns all listings a buyer made an offer on.
    *  - withBlockinfo: Only used in conjunction with purchasesFor option. Loads version
    *    of the listing at the time offer was made by the buyer.
+   *  - loadOffers: also load offers for this listing
    * @return {Promise<List(Listing)>}
    * @throws {Error}
    */
@@ -159,13 +154,13 @@ export default class Marketplace {
       return Promise.all(
         listingIds.map(async listingData => {
           const { listingId, blockInfo } = listingData
-          return await this.getListing(listingId, blockInfo)
+          return await this.getListing(listingId, { blockInfo: blockInfo, loadOffers: opts.loadOffers })
         })
       )
     } else {
       return Promise.all(
         listingIds.map(async listingId => {
-          return await this.getListing(listingId)
+          return await this.getListing(listingId, { loadOffers: opts.loadOffers })
         })
       )
     }
@@ -176,17 +171,37 @@ export default class Marketplace {
    * @param {string} listingId
    * @param {{blockNumber: integer, logIndex: integer}} blockInfo - Optional argument
    *   to indicate a specific version of the listing should be loaded.
+   * @param opts: {loadOffers: boolean, blockInfo: Object}
+   *   - loadOffers: also load offers for this listing
+   *   - blockInfo: {{blockNumber: integer, logIndex: integer}} - Optional argument
    * @returns {Promise<Listing>}
    * @throws {Error}
    */
-  async getListing(listingId, blockInfo) {
+  async getListing(listingId, opts = {}) {
+    const {
+      blockInfo,
+      loadOffers
+    } = opts
+
+    const addOffersToListing = async (listing) => {
+      const offers = await this.getOffers(listingId, listing)
+      listing.offers = offers
+      return listing
+    }
+
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
-      return await this.discoveryService.getListing(listingId, blockInfo)
+      let listing = await this.discoveryService.getListing(listingId, blockInfo)
+      if (loadOffers)
+        listing = await addOffersToListing(listing)
+
+      return listing
     }
 
     // Get the on-chain listing data.
-    const chainListing = await this.resolver.getListing(listingId, blockInfo)
+    let chainListing = await this.resolver.getListing(listingId, blockInfo)
+    if (loadOffers)
+        chainListing = await addOffersToListing(chainListing)
 
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
@@ -244,52 +259,77 @@ export default class Marketplace {
     }
 
     //
-    // Step 2: This is unit listing specific. Filter out offers for which
-    //   the units purchased exceeds the units available at the time of the offer.
-    let unitsAvailable = listing.unitsTotal
+    // Step 2:
+    // This is unit listing specific. Filter out offers for which the units purchased exceeds 
+    // the units available or boost exceeds the expected boost at the time of the offer.
+    const isMultiUnit = listing.unitsTotal > 1 && listing.type === 'unit'
     const commission = listing.commission.amount
       ? BigNumber(listing.commission.amount)
       : null
-    const commissionPerUnit = listing.commissionPerUnit
+    const commissionPerUnit = isMultiUnit
       ? BigNumber(listing.commissionPerUnit.amount)
       : commission
-    const offers = []
-    allOffers.forEach(offer => {
-      const unitsSoldBeforeOffer = listing.unitsTotal - unitsAvailable
+    let commissionAvailable = new BigNumber(commission) // create new instance
+    let unitsAvailable = listing.unitsTotal
 
-      // Validate units purchased against units available.
-      // TODO: Validate units purchased vs. units available at offer creation
-      // time. This will handle the case where an edit of a listing invalidates
-      // a previously valid offer.
-      if (offer.unitsPurchased > unitsAvailable) {
-        return
-      }
-      if (offer.status !== 'withdrawn') {
+    const offers = allOffers.filter(offer => {
+      const offerCommission = offer.commission && BigNumber(offer.commission.amount)
+
+      // required for multi-unit commission and unitsAvailable calculations
+      const onValidOffer = () => {
+        if (offer.status === 'withdrawn')
+          return
+
         unitsAvailable -= offer.unitsPurchased
-      }
-
-      // Validate that the offer commission is what we expect. If the amount
-      // of commission for the listing isn't sufficient for this offer, we
-      // require that the offer have whatever commission is available to it.
-      if (commissionPerUnit !== null && commissionPerUnit.isGreaterThan(0)) {
-        const commissionUsed = BigNumber(commissionPerUnit).times(unitsSoldBeforeOffer)
-        const remainingCommission = BigNumber.max(
-          commission.minus(commissionUsed),
+        commissionAvailable = BigNumber.max(
+          commissionAvailable.minus(offerCommission),
           BigNumber(0)
         )
-        const expectedCommission = BigNumber.min(
-          remainingCommission,
-          commissionPerUnit.times(offer.unitsPurchased)
-        )
-        const offerCommission = offer.commission && BigNumber(offer.commission.amount)
-        if (!offerCommission || !offerCommission.isEqualTo(expectedCommission)) {
-          return
-        }
+      }
+      /* Validate units purchased against units available.
+       *
+       * This check is required because of an edge case, where 2 users can make an offer at the same
+       * time for the remaining amount of units in a listing. Both offers will get mined, since they
+       * are both valid at the time transaction to the blockchain is issued. After they are mined, only
+       * the first one is valid.
+       */
+      if (offer.unitsPurchased > unitsAvailable) {
+        return false
       }
 
-      // There is no special handling of disputes here, because disputes should
-      // hopefully be rare for the time being.
-      offers.push(offer)
+      // listing has no commission
+      if (!isMultiUnit && (commissionPerUnit === null || commissionPerUnit.isEqualTo(0))) {
+        onValidOffer()
+        return true
+      }
+      else if (!isMultiUnit) {
+        if (offerCommission && offerCommission.isEqualTo(commission)){
+          onValidOffer()
+          return true
+        }
+        return false
+      }
+
+      /* Multi unit logic with commission and commission limit from here on...
+       * Validate that the offer commission is what we expect. If the amount
+       * of commission for the listing isn't sufficient for this offer, we
+       * require that the offer have whatever commission is available to it.
+       *
+       * Currenlty (Dec 2018) sellers can not edit commission and commissionPerUnit
+       * on a listing. Once this option is unlocked, this code needs to be
+       * modified also.
+       */
+      const expectedCommission = BigNumber.min(
+        commissionAvailable,
+        commissionPerUnit.times(offer.unitsPurchased)
+      )
+
+      if (!offerCommission || !offerCommission.isEqualTo(expectedCommission)) {
+        return false
+      }
+
+      onValidOffer()
+      return true
     })
 
     return opts.idsOnly ? offers.map(o => o.id) : offers

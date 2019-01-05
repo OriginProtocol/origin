@@ -67,7 +67,7 @@ class PurchaseProgress extends Component {
       <div
         className={`progress-container${progressCalculated ? ' ready' : ''}${
           subdued ? ' subdued' : ''
-        }`}
+        } mt-auto mb-3`}
       >
         <div className="progress">
           <div

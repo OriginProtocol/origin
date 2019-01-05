@@ -31,6 +31,7 @@ import Reviews from 'components/reviews'
 import TransactionHistory from 'components/transaction-history'
 import UnnamedUser from 'components/unnamed-user'
 import UserCard from 'components/user-card'
+import OfferDetail from 'components/offer-detail'
 
 import { getListing } from 'utils/listing'
 import {
@@ -328,8 +329,8 @@ class PurchaseDetail extends Component {
       if (!purchase) {
         return console.error(`Purchase ${offerId} not found`)
       }
-
-      const listing = await getListing(purchase.listingId, true, blockInfo)
+      
+      const listing = await getListing(purchase.listingId, { translate: true, blockInfo })
 
       this.setState({
         listing,
@@ -1089,6 +1090,10 @@ class PurchaseDetail extends Component {
               <hr />
             </div>
             <div className="col-12 col-lg-4">
+              <OfferDetail
+                listing={listing}
+                offer={purchase}
+              />
               {counterpartyUser.address && (
                 <UserCard
                   title={counterparty}

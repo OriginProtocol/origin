@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import Moment from 'react-moment'
 import { Image, StyleSheet, Text, View } from 'react-native'
-
 import PropTypes from 'prop-types'
 
-import OriginButton from './origin-button'
+import OriginButton from 'components/origin-button'
+
+const IMAGES_PATH = '../../assets/images/'
 
 export default class DeviceItem extends Component {
   render() {
@@ -12,23 +13,21 @@ export default class DeviceItem extends Component {
     const app_info = item.link && item.link.app_info
     const { browser, platform } = app_info && app_info.user_agent
 
-
     return (
       <View style={[ styles.listItem, style ]}>
         <View style={styles.iconsContainer}>
           {browser == 'Chrome' &&
-            <Image source={require('../../assets/images/chrome-icon.png')} />
+            <Image source={require(`${IMAGES_PATH}chrome-icon.png`)} />
           }
           {browser !== 'Chrome' &&
-            <Image source={require('../../assets/images/app-icon.png')} />
+            <Image source={require(`${IMAGES_PATH}app-icon.png`)} />
           }
-        {item.linked && <Image source={require('../../assets/images/link-icon.png')} style={styles.icon} />}
+          {item.linked && <Image source={require(`${IMAGES_PATH}link-icon.png`)} style={styles.icon} />}
         </View>
         {!item.linked && handleLink &&
           <View style={styles.content}>
             <Text style={styles.identification}>Link <Text style={styles.vendor}>{browser} on {platform}</Text>?</Text>
             <Text style={styles.muted}>Expires on <Moment element={Text} format="MMMM D, YYYY @ h:mmA">{item.link.expires_at}</Moment></Text>
-            <Text style={styles.muted}></Text>
             <View style={styles.actions}>
               <OriginButton size="small" type="primary" title="Link" onPress={handleLink} style={{ marginRight: 10 }} />
               <OriginButton size="small" type="danger" title="No Thanks" onPress={handleReject} />
@@ -36,11 +35,10 @@ export default class DeviceItem extends Component {
           </View>
         }
         {!item.linked && !handleLink &&
-         <View style={styles.content}>
+          <View style={styles.content}>
             <Text style={styles.identification}>You had been linked to <Text style={styles.vendor}>{browser} on {platform}</Text></Text>
             <Text style={styles.muted}>Unlinked on <Moment element={Text} format="MMMM D, YYYY @ h:mmA">{item.link.unlinked_at}</Moment></Text>
-            <Text style={styles.muted}></Text>
-        </View>
+          </View>
         }
         {item.linked &&
           <View style={styles.content}>

@@ -4,10 +4,7 @@ import { Link } from 'react-router-dom'
 import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import ListingCardPrices from 'components/listing-card-prices'
 
-import { getListing } from 'utils/listing'
-import { offerStatusToListingAvailability } from 'utils/offer'
-
-import origin from '../services/origin'
+import { getListing, getDerivedListingData } from 'utils/listing'
 
 class ListingCard extends Component {
   constructor(props) {
@@ -15,23 +12,24 @@ class ListingCard extends Component {
 
     this.state = {
       loading: true,
-      display: 'normal',
-      offers: []
+      listing: {
+        display: 'normal',
+        offers: []
+      }
     }
   }
 
   async componentWillMount() {
     await this.loadListing()
-    await this.loadOffers()
   }
 
   async loadListing() {
     try {
-      const listing = await getListing(this.props.listingId, true)
+      const listing = await getListing(this.props.listingId, { translate: true, loadOffers: true })
 
       this.setState({
         // boostLevelIsPastSomeThreshold: listing.boostValue > 0,
-        ...listing,
+        listing,
         loading: false
       })
     } catch (error) {
@@ -43,43 +41,29 @@ class ListingCard extends Component {
     }
   }
 
-  async loadOffers() {
-    try {
-      const offers = await origin.marketplace.getOffers(this.props.listingId)
-      this.setState({ offers })
-    } catch (error) {
-      console.error(
-        `Error fetching offers for listing: ${this.props.listingId}`
-      )
-      console.error(error)
-    }
-  }
-
   render() {
     const {
-      // boostLevelIsPastSomeThreshold,
+      listing,
+      loading
+    } = this.state
+
+    const {
       category,
       subCategory,
-      loading,
       name,
-      offers,
       pictures,
       price,
-      status,
-      unitsRemaining,
-      listingType
-    } = this.state
+      isMultiUnit,
+      unitsRemaining
+    } = listing
+
     const photo = pictures && pictures.length && pictures[0]
-    const isPending = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'pending'
-    )
-    const isSold = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'sold'
-    )
-    const isWithdrawn = status === 'inactive'
-    const showPendingBadge = isPending && !isWithdrawn && listingType !== 'fractional'
-    const showSoldBadge = isSold || isWithdrawn && listingType !== 'fractional'
-    const showFeaturedBadge = this.state.display == 'featured' && !showSoldBadge && !showPendingBadge
+
+    const {
+      showPendingBadge,
+      showSoldBadge,
+      showFeaturedBadge
+    } = getDerivedListingData(listing)
 
     return (
       <div
@@ -106,7 +90,7 @@ class ListingCard extends Component {
           <div className="category placehold d-flex justify-content-between">
             <div>{category}&nbsp;&nbsp;|&nbsp;&nbsp;{subCategory}</div>
             {!loading && showPendingBadge && <PendingBadge />}
-            {!loading && showSoldBadge && <SoldBadge />}
+            {!loading && showSoldBadge && <SoldBadge isMultiUnit={isMultiUnit} />}
             {!loading && showFeaturedBadge && <FeaturedBadge />}
             {/*!loading &&
               boostLevelIsPastSomeThreshold && (
@@ -120,7 +104,11 @@ class ListingCard extends Component {
           </div>
           <h2 className="title placehold text-truncate" title={name}>{name}</h2>
           {price > 0 && (
-            <ListingCardPrices price={price} unitsRemaining={unitsRemaining} />
+            <ListingCardPrices
+              price={price}
+              unitsRemaining={unitsRemaining}
+              isMultiUnit={isMultiUnit}
+            />
           )}
         </Link>
       </div>
