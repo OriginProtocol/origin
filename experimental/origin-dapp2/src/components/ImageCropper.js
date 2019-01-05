@@ -8,9 +8,9 @@ class ImageCropper extends Component {
     src: null,
     crop: {
       aspect: 1,
-      x: 10,
-      y: 10,
-      width: 50
+      // x: 10,
+      // y: 10,
+      // width: 50
     }
   }
 
@@ -85,7 +85,7 @@ class ImageCropper extends Component {
                 />
               </div>
               <button
-                className="btn btn-outline-primary"
+                className="btn btn-outline-light"
                 onClick={async () => {
                   const croppedImageUrl = await this.getCroppedImg()
                   this.setState({ shouldClose: true })

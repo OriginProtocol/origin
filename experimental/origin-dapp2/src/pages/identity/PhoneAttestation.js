@@ -145,7 +145,7 @@ class PhoneAttestation extends Component {
       <Mutation
         mutation={GeneratePhoneCodeMutation}
         onCompleted={res => {
-          const result = res.attestationsGeneratePhoneCode
+          const result = res.generatePhoneCode
           if (result.success) {
             this.setState({ stage: 'VerifyCode' })
           } else {
@@ -178,7 +178,7 @@ class PhoneAttestation extends Component {
       <Mutation
         mutation={VerifyPhoneCodeMutation}
         onCompleted={res => {
-          const result = res.attestationsVerifyPhoneCode
+          const result = res.verifyPhoneCode
           console.log(result)
           if (result.success) {
             this.setState({ stage: 'VerifiedOK' })

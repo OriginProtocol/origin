@@ -7,14 +7,22 @@ export default `
   extend type Mutation {
     deployUserRegistry(from: String): Transaction
     deployIdentityContract(from: String!, contract: String!): Transaction
+
     deployIdentity(
       from: String!
       profile: ProfileInput
       attestations: [AttestationInput]
     ): Transaction
 
-    attestationsGeneratePhoneCode(prefix: String!, method: String, phone: String!): PhoneCodeResult!
-    attestationsVerifyPhoneCode(prefix: String!, identity: String, phone: String!, code: String!): PhoneVerifyResult!
+    updateIdentity(
+      from: String!
+      identity: String!
+      profile: ProfileInput
+      attestations: [AttestationInput]
+    ): Transaction
+
+    generatePhoneCode(prefix: String!, method: String, phone: String!): PhoneCodeResult!
+    verifyPhoneCode(prefix: String!, identity: String, phone: String!, code: String!): PhoneVerifyResult!
   }
 
   type PhoneCodeResult {

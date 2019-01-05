@@ -1,7 +1,7 @@
 import contracts from '../../contracts'
 import get from 'lodash/get'
 
-async function attestationsGeneratePhoneCode(
+async function generatePhoneCode(
   _,
   { prefix, method = 'sms', phone }
 ) {
@@ -31,4 +31,4 @@ async function attestationsGeneratePhoneCode(
 
 }
 
-export default attestationsGeneratePhoneCode
+export default generatePhoneCode

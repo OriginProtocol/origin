@@ -1,10 +1,10 @@
 import React from 'react'
 
-const ProfileStrength = ({ width = '0' }) => (
+const ProfileStrength = ({ width = '0%' }) => (
   <div className="profile-strength">
     <div className="title">
       Profile Strength
-      <div className="pct">25%</div>
+      <div className="pct">{width}</div>
     </div>
     <div className="progress">
       <div className="progress-bar" style={{ width }} />

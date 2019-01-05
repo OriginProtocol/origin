@@ -1,7 +1,7 @@
 import contracts from '../../contracts'
 import get from 'lodash/get'
 
-async function attestationsVerifyPhoneCode(
+async function verifyPhoneCode(
   _,
   { identity, prefix, phone, code }
 ) {
@@ -38,4 +38,4 @@ async function attestationsVerifyPhoneCode(
   }
 }
 
-export default attestationsVerifyPhoneCode
+export default verifyPhoneCode

@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
+import pick from 'lodash/pick'
+import get from 'lodash/get'
 
 import ImageCropper from 'components/ImageCropper'
-// import Link from 'components/Link'
 import Steps from 'components/Steps'
+
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import DeployIdentity from '../identity/mutations/DeployIdentity'
@@ -28,10 +31,34 @@ const Attestation = ({ type, text, active, onClick, soon }) => {
 }
 
 class OnboardProfile extends Component {
-  state = { firstName: '', lastName: '', description: '' }
+  constructor(props) {
+    super(props)
+    this.state = {
+      firstName: '',
+      lastName: '',
+      description: '',
+      strength: '0%'
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const profile = get(this.props, 'identity.profile')
+    if (!prevProps.identity && profile) {
+      this.setState(
+        pick(profile, [
+          'firstName',
+          'lastName',
+          'description',
+          'avatar',
+          'strength'
+        ])
+      )
+    }
+  }
+
   render() {
     const { listing, wallet } = this.props
-    const { pic } = this.state
+    const { avatar } = this.state
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
@@ -58,11 +85,15 @@ class OnboardProfile extends Component {
               >
                 <div className="row">
                   <div className="col-4">
-                    <ImageCropper onChange={pic => this.setState({ pic })}>
+                    <ImageCropper
+                      onChange={avatar => this.setState({ avatar })}
+                    >
                       <div
-                        className={`profile-logo ${pic ? 'custom' : 'default'}`}
+                        className={`profile-logo ${
+                          avatar ? 'custom' : 'default'
+                        }`}
                         style={{
-                          backgroundImage: pic ? `url(${pic})` : null
+                          backgroundImage: avatar ? `url(${avatar})` : null
                         }}
                       />
                     </ImageCropper>
@@ -114,7 +145,7 @@ class OnboardProfile extends Component {
                   <Attestation type="twitter" text="Twitter" />
                   <Attestation type="google" text="Google" soon />
                 </div>
-                <ProfileStrength width="25%" />
+                <ProfileStrength width={this.state.strength} />
 
                 {/* <div className="no-funds">
                   <h5>You don&apos;t have funds</h5>
@@ -125,11 +156,12 @@ class OnboardProfile extends Component {
               </form>
               <DeployIdentity
                 className="btn btn-primary"
+                identity={get(this.props, 'identity.id')}
                 profile={{
                   firstName: this.state.firstName,
                   lastName: this.state.lastName,
                   description: this.state.description,
-                  avatar: this.state.pic
+                  avatar: this.state.avatar
                 }}
                 attestations={attestations}
                 validate={() => this.validate()}
@@ -170,7 +202,7 @@ class OnboardProfile extends Component {
   }
 }
 
-export default withWallet(OnboardProfile)
+export default withWallet(withIdentity(OnboardProfile))
 
 require('react-styl')(`
   .onboard .onboard-box

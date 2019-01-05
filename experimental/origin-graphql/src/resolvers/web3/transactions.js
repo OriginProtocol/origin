@@ -49,6 +49,9 @@ export async function getTransactionReceipt(id) {
     return logObj
   })
 
+  // console.log(events)
+
+
   return { id, ...rawReceipt, events }
 }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 
 import DeployIdentityMutation from 'mutations/DeployIdentity'
+import UpdateIdentityMutation from 'mutations/UpdateIdentity'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
@@ -12,17 +13,19 @@ import withWallet from 'hoc/withWallet'
 class DeployIdentity extends Component {
   state = {}
   render() {
+    const update = true
     return (
       <Mutation
-        mutation={DeployIdentityMutation}
-        onCompleted={({ deployIdentity }) => {
-          this.setState({ waitFor: deployIdentity.id })
+        mutation={update ? UpdateIdentityMutation : DeployIdentityMutation}
+        onCompleted={res => {
+          const resObj = update ? res.updateIdentity : res.deployIdentity
+          this.setState({ waitFor: resObj.id })
         }}
         onError={errorData =>
           this.setState({ waitFor: false, error: 'mutation', errorData })
         }
       >
-        {deployIdentity => (
+        {upsertIdentity => (
           <>
             <button
               className={this.props.className}
@@ -32,12 +35,12 @@ class DeployIdentity extends Component {
                   canDeploy = this.props.validate()
                 }
                 if (canDeploy) {
-                  this.onClick(deployIdentity)
+                  this.onClick(upsertIdentity, update)
                 }
               }}
               children={this.props.children}
             />
-            {this.renderWaitModal()}
+            {this.renderWaitModal(update)}
             {this.state.error && (
               <TransactionError
                 reason={this.state.error}
@@ -51,7 +54,7 @@ class DeployIdentity extends Component {
     )
   }
 
-  onClick(deployIdentity) {
+  onClick(upsertIdentity, update) {
     if (this.props.cannotTransact) {
       this.setState({
         error: this.props.cannotTransact,
@@ -61,26 +64,45 @@ class DeployIdentity extends Component {
     }
 
     this.setState({ waitFor: 'pending' })
-    deployIdentity({
-      variables: {
-        from: this.props.wallet,
-        attestations: this.props.attestations,
-        profile: this.props.profile
-      }
-    })
+    const variables = {
+      from: this.props.wallet,
+      attestations: this.props.attestations,
+      profile: this.props.profile
+    }
+
+    if (update) {
+      variables.identity = this.props.identity
+    }
+
+    upsertIdentity({ variables })
   }
 
-  renderWaitModal() {
+  renderWaitModal(update) {
     if (!this.state.waitFor) return null
 
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="NewUser">
-        {({ event }) => {
-          console.log(event)
+      <WaitForTransaction
+        shouldClose={this.state.shouldClose}
+        onClose={() =>
+          this.setState({ waitFor: false, error: false, shouldClose: false })
+        }
+        hash={this.state.waitFor}
+        event={update ? 'ClaimAdded' : 'NewUser'}
+      >
+        {({ client }) => {
+          // console.log(event)
           return (
             <div className="make-offer-modal">
               <div className="success-icon" />
               <div>Success!</div>
+              <button
+                className="btn btn-outline-light"
+                onClick={() => {
+                  client.resetStore()
+                  this.setState({ shouldClose: true })
+                }}
+                children="OK"
+              />
             </div>
           )
         }}
