@@ -20,7 +20,6 @@ export async function getTransactionReceipt(id) {
     ...contracts.claimHolderPresigned.options.jsonInterface,
     ...contracts.userRegistry.options.jsonInterface
   ]
-  window.jsonInterfaces = jsonInterfaces
 
   const events = rawReceipt.logs.map(log => {
     const eventDef = jsonInterfaces.find(s => s.signature === log.topics[0])

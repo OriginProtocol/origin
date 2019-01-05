@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
 
 import ImageCropper from 'components/ImageCropper'
 // import Link from 'components/Link'
@@ -14,16 +12,6 @@ import DeployIdentity from '../identity/mutations/DeployIdentity'
 import ProfileStrength from './_ProfileStrength'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
-
-const query = gql`
-  query WalletStatus {
-    web3 {
-      metaMaskAccount {
-        id
-      }
-    }
-  }
-`
 
 const Attestation = ({ type, text, active, onClick, soon }) => {
   active = active ? ' active' : ''
@@ -48,6 +36,11 @@ class OnboardProfile extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
+    const attestations = []
+    if (this.state.phoneAttestation) {
+      attestations.push(this.state.phoneAttestation)
+    }
+
     return (
       <>
         <div className="step">Step 4</div>
@@ -55,114 +48,94 @@ class OnboardProfile extends Component {
         <div className="row">
           <div className="col-md-8">
             <Steps steps={4} step={4} />
-            <Query query={query} notifyOnNetworkStatusChange={true}>
-              {({ error, data, networkStatus }) => {
-                if (networkStatus === 1) {
-                  return <div>Loading...</div>
-                } else if (error) {
-                  return <p className="p-3">Error :(</p>
-                } else if (!data || !data.web3) {
-                  return <p className="p-3">No Web3</p>
-                }
-
-                // const nextLink = `/listings/${listing.id}`
-
-                return (
-                  <div className="onboard-box pt-3">
-                    <form
-                      className="profile"
-                      onSubmit={e => {
-                        e.preventDefault()
-                        this.validate()
-                      }}
-                    >
-                      <div className="row">
-                        <div className="col-4">
-                          <ImageCropper
-                            onChange={pic => this.setState({ pic })}
-                          >
-                            <div
-                              className={`profile-logo ${
-                                pic ? 'custom' : 'default'
-                              }`}
-                              style={{
-                                backgroundImage: pic ? `url(${pic})` : null
-                              }}
-                            />
-                          </ImageCropper>
-                        </div>
-                        <div className="col-8">
-                          <div className="row">
-                            <div className="form-group col-6">
-                              <label>First Name</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                {...input('firstName')}
-                              />
-                              {Feedback('firstName')}
-                            </div>
-                            <div className="form-group col-6">
-                              <label>Last Name</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                {...input('lastName')}
-                              />
-                              {Feedback('lastName')}
-                            </div>
-                          </div>
-                          <div className="form-group">
-                            <label>Description</label>
-                            <textarea
-                              className="form-control"
-                              placeholder="Tell us a bit about yourself"
-                              {...input('description')}
-                            />
-                            {Feedback('description')}
-                          </div>
-                        </div>
-                      </div>
-
-                      <label className="mt-3">Attestations</label>
-                      <div className="profile-attestations">
-                        <Attestation
-                          type="phone"
-                          active={this.state.phoneAttestation ? true : false}
-                          onClick={() => this.setState({ phone: true })}
-                          text="Phone Number"
-                        />
-                        <Attestation type="email" text="Email" />
-                        <Attestation type="airbnb" text="Airbnb" />
-                        <Attestation type="facebook" text="Facebook" />
-                        <Attestation type="twitter" text="Twitter" />
-                        <Attestation type="google" text="Google" soon />
-                      </div>
-                      <ProfileStrength width="25%" />
-
-                      {/* <div className="no-funds">
-                        <h5>You don&apos;t have funds</h5>
-                        You need to have funds in your wallet to create an
-                        identity. You can always do this later after you fund
-                        your wallet by going to your settings.
-                      </div> */}
-                    </form>
-                    <DeployIdentity
-                      className="btn btn-primary"
-                      profile={{
-                        firstName: this.state.firstName,
-                        lastName: this.state.lastName,
-                        description: this.state.description,
-                        avatar: this.state.pic
-                      }}
-                      attestations={[]}
-                      validate={() => this.validate()}
-                      children="Publish"
-                    />
+            <div className="onboard-box pt-3">
+              <form
+                className="profile"
+                onSubmit={e => {
+                  e.preventDefault()
+                  this.validate()
+                }}
+              >
+                <div className="row">
+                  <div className="col-4">
+                    <ImageCropper onChange={pic => this.setState({ pic })}>
+                      <div
+                        className={`profile-logo ${pic ? 'custom' : 'default'}`}
+                        style={{
+                          backgroundImage: pic ? `url(${pic})` : null
+                        }}
+                      />
+                    </ImageCropper>
                   </div>
-                )
-              }}
-            </Query>
+                  <div className="col-8">
+                    <div className="row">
+                      <div className="form-group col-6">
+                        <label>First Name</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          {...input('firstName')}
+                        />
+                        {Feedback('firstName')}
+                      </div>
+                      <div className="form-group col-6">
+                        <label>Last Name</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          {...input('lastName')}
+                        />
+                        {Feedback('lastName')}
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label>Description</label>
+                      <textarea
+                        className="form-control"
+                        placeholder="Tell us a bit about yourself"
+                        {...input('description')}
+                      />
+                      {Feedback('description')}
+                    </div>
+                  </div>
+                </div>
+
+                <label className="mt-3">Attestations</label>
+                <div className="profile-attestations">
+                  <Attestation
+                    type="phone"
+                    active={this.state.phoneAttestation ? true : false}
+                    onClick={() => this.setState({ phone: true })}
+                    text="Phone Number"
+                  />
+                  <Attestation type="email" text="Email" />
+                  <Attestation type="airbnb" text="Airbnb" />
+                  <Attestation type="facebook" text="Facebook" />
+                  <Attestation type="twitter" text="Twitter" />
+                  <Attestation type="google" text="Google" soon />
+                </div>
+                <ProfileStrength width="25%" />
+
+                {/* <div className="no-funds">
+                  <h5>You don&apos;t have funds</h5>
+                  You need to have funds in your wallet to create an
+                  identity. You can always do this later after you fund
+                  your wallet by going to your settings.
+                </div> */}
+              </form>
+              <DeployIdentity
+                className="btn btn-primary"
+                profile={{
+                  firstName: this.state.firstName,
+                  lastName: this.state.lastName,
+                  description: this.state.description,
+                  avatar: this.state.pic
+                }}
+                attestations={attestations}
+                validate={() => this.validate()}
+                children="Publish"
+              />
+            </div>
           </div>
           <div className="col-md-4">
             <ListingPreview listing={listing} />

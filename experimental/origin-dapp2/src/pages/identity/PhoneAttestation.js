@@ -94,7 +94,14 @@ class PhoneAttestation extends Component {
           <button
             className="btn btn-link"
             onClick={() => {
-              this.props.onComplete({ success: true })
+              this.props.onComplete({
+                topic: '10',
+                issuer: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+                signature:
+                  '0x3226075acca86687a5d8918e1880bc63878b45e444ad9de98a3a070823c74cc844c8648c9a88d2554793377659211b93dc55781e1ee0c23e5ec8f03549b1ac3e1c',
+                data:
+                  '0xcaa54e1b0a1dbfc8e1ecf2baef72247781ea07547f878d8b29b21543d990a365'
+              })
               this.setState({ shouldClose: true })
             }}
             children="Fake"

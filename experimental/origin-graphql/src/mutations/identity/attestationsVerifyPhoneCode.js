@@ -33,7 +33,7 @@ async function attestationsVerifyPhoneCode(
   return {
     success: true,
     claimType: data['claim-type'],
-    data: data.data,
+    data: contracts.web3.utils.soliditySha3(data.data),
     signature: data.signature
   }
 }
