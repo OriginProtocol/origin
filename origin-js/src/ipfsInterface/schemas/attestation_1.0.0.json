@@ -144,11 +144,7 @@
                 "proofUrl": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "challenge",
-                "proofUrl"
-              ]
+              }
             }
           },
           "required": [

@@ -7,6 +7,7 @@ export default class IdentityAdapterV1 extends AdapterBase {
    * @throws {Error} If validation fails.
    */
   validate(data) {
+    console.log("VALIDATING identity:", data)
     //
     // Step 1: validate the identity wrapper.
     //
@@ -54,6 +55,7 @@ export default class IdentityAdapterV1 extends AdapterBase {
     //
     const attestations = data.attestations
     attestations.forEach(attestation => {
+      console.log("VALIDATING attestation:", attestation)
       schemaId = attestation.schemaId
       validator = this.ajv.getSchema(schemaId)
       if (!validator) {

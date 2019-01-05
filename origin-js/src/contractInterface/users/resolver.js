@@ -49,7 +49,7 @@ export default class UsersResolver {
    *  - In V00 identity was stored in a separate contract.
    *  - In V01 identity is stored off-chain and identity address === wallet address.
    * @param wallet
-   * @return {Promise<boolean>}
+   * @return {Promise<string|boolean>}
    */
   async identityAddress(wallet) {
     let result = false

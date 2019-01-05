@@ -82,13 +82,13 @@ export const validateOffer = (offer) => {
 }
 
 export const validateAttestation = (attestation) => {
-  // FIXME FIXME
-  //expect(attestation).to.have.property('topic').that.is.a('number')
-  //expect(attestation).to.have.property('service').that.is.a('string')
+  expect(attestation).to.have.property('topic').that.is.a('number')
+  expect(attestation).to.have.property('service').that.is.a('string')
+  // FIXME: with identity v1, data is a string. in v2 it is an object.
   //expect(attestation).to.have.property('data').that.is.a('string')
   //expect(attestation).to.have.property('data').to.startWith('0x')
-  //expect(attestation).to.have.property('signature').that.is.a('string')
-  //expect(attestation).to.have.property('signature').to.startWith('0x')
+  expect(attestation).to.have.property('signature').that.is.a('string')
+  expect(attestation).to.have.property('signature').to.startWith('0x')
 }
 
 export const validateUser = (user) => {
@@ -97,8 +97,8 @@ export const validateUser = (user) => {
   expect(user.profile).to.have.property('firstName').that.is.a('string')
   expect(user.profile).to.have.property('lastName').that.is.a('string')
 
+  expect(user.profile).to.have.property('schemaId').that.is.a('string')
   // FIXME FIXME
-  //expect(user.profile).to.have.property('schemaId').that.is.a('string')
   //expect(user.profile).to.have.property('ipfs').that.is.an('object')
   //expect(user.profile.ipfs).to.have.property('hash').that.is.a('string')
   //expect(user.profile.ipfs).to.have.property('data').that.is.an('object')

@@ -14,6 +14,7 @@ export default class Users {
    *   transactionHashCallback(hash) -> called immediately when the transaction hash is received
    * @return {Promise<txReceipt>}
    */
+  // TODO: document the type of attestation. Probably not an AttestationObject. Is it the data as returned by the bridge ?
   async set({ profile, attestations = [], options = {} }) {
     return this.resolver.set({ profile, attestations, options })
   }

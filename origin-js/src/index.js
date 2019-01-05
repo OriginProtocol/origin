@@ -62,8 +62,7 @@ export default class Origin {
     this.attestations = new Attestations({
       serverUrl: attestationServerUrl,
       contractService: this.contractService,
-      fetch,
-      blockEpoch
+      fetch
     })
 
     this.marketplace = new Marketplace({
