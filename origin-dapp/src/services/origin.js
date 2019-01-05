@@ -29,6 +29,7 @@ const attestationServerUrl = `${bridgeUrl}/api/attestations`
 const walletLinkerBaseUrl = mobilize(process.env.WALLET_LINKER_URL)
 const walletLinkerUrl = walletLinkerBaseUrl && `${walletLinkerBaseUrl}/api/wallet-linker`
 const ipfsSwarm = mobilize(process.env.IPFS_SWARM)
+const activeWalletLinker = process.env.SHOW_WALLET_LINKER
 
 // See: https://gist.github.com/bitpshr/076b164843f0414077164fe7fe3278d9#file-provider-enable-js
 const getWeb3 = () => {
@@ -95,6 +96,7 @@ const config = {
   blockAttestattionV1: process.env.BLOCK_ATTESTATION_V1,
   attestationServerUrl,
   walletLinkerUrl,
+  activeWalletLinker,
   ipfsCreator,
   OrbitDB,
   ecies,

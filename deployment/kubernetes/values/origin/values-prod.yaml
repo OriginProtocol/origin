@@ -43,3 +43,7 @@ creatorClientImageTag: 'latest'
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
 creatorServerImageTag: 'latest'
+
+# origin-linking
+linkingImage: origin-linking
+linkingImageTag: 'latest'
