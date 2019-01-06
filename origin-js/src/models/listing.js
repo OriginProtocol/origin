@@ -39,8 +39,8 @@ export class Listing {
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit,
-    marketplacePublisher }) {
+    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager,
+    commissionPerUnit, marketplacePublisher }) {
 
     this.id = id
     this.title = title
