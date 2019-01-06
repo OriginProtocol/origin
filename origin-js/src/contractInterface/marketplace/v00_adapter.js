@@ -260,7 +260,7 @@ class V00_MarkeplaceAdapter {
 
     // Loop through the events looking and update the IPFS hash and offers appropriately.
     let ipfsHash
-    const offers = {}
+    const offers = []
     events.forEach(event => {
       if (event.event === 'ListingCreated') {
         ipfsHash = event.returnValues.ipfsHash
@@ -276,19 +276,19 @@ class V00_MarkeplaceAdapter {
       } else if (event.event === 'ListingWithdrawn') {
         status = 'inactive'
       } else if (event.event === 'OfferCreated') {
-        offers[event.returnValues.offerID] = { status: 'created', event }
+        offers.push({ status: 'created', event })
       } else if (event.event === 'OfferAccepted') {
-        offers[event.returnValues.offerID] = { status: 'accepted', event }
+        offers.push({ status: 'accepted', event })
       } else if (event.event === 'OfferDisputed') {
-        offers[event.returnValues.offerID] = { status: 'disputed', event }
+        offers.push({ status: 'disputed', event })
       } else if (event.event === 'OfferRuling') {
-        offers[event.returnValues.offerID] = { status: 'ruling', event }
+        offers.push({ status: 'ruling', event })
       } else if (event.event === 'OfferFinalized') {
-        offers[event.returnValues.offerID] = { status: 'finalized', event }
+        offers.push({ status: 'finalized', event })
       } else if (event.event === 'OfferWithdrawn') {
-        offers[event.returnValues.offerID] = { status: 'withdrawn', event }
+        offers.push({ status: 'withdrawn', event })
       } else if (event.event === 'OfferData') {
-        offers[event.returnValues.offerID] = { status: 'sellerReviewed', event }
+        offers.push({ status: 'sellerReviewed', event })
       }
     })
 

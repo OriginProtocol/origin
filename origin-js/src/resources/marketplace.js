@@ -68,7 +68,7 @@ export default class Marketplace {
       .map(listing => listing.offers)
       .reduce((offers, offerArr) => [...offers, ...offerArr], [])
       // only keep the purchases where user identified by `account` is the buyer
-      .filter(offer => offer.buyer === account)
+      .filter(offer => offer.buyer.toLowerCase() === account.toLowerCase())
       .map(offer => {
         return {
           offer,
@@ -131,9 +131,7 @@ export default class Marketplace {
    * @param {Listing} listing to be enriched with offer information
    */
   async _addOffersToListing(listingId, listing) {
-    const offers = await this.getOffers(listingId, { listing })
-    listing.offers = {}
-    offers.forEach(offer => listing.offers[offer.id] = offer)
+    listing.offers = await this.getOffers(listingId, { listing })
     return listing
   }
 

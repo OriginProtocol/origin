@@ -47,7 +47,7 @@ export const validateListing = (listing) => {
   expect(listing).to.have.property('depositManager').startsWith('0x')
   expect(listing).to.have.property('seller').startsWith('0x')
   expect(listing).to.have.property('status').that.is.a('string')
-  expect(listing).to.have.property('offers').that.is.an('object')
+  expect(listing).to.have.property('offers').that.is.an('array')
   expect(listing).to.have.property('events').that.is.an('array')
 
   if (listing.events.length) {

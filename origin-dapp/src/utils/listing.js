@@ -153,7 +153,7 @@ export async function originToDAppListing(originListing) {
     listingType: originListing.type,
     slots: originListing.slots,
     fractionalTimeIncrement: isFractional && slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily',
-    offers: Object.values(originListing.offers),
+    offers: originListing.offers,
     events: originListing.events
   }
 
@@ -170,7 +170,7 @@ export async function originToDAppListing(originListing) {
 
     dappListing.commissionPerUnit = commissionPerUnit
   }
-
+  
   return dappListing
 }
 
