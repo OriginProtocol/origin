@@ -182,7 +182,6 @@ class ListingCreate extends Component {
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
         }
-        this.ensureUserIsSeller(listing.seller)
 
         if (listing.pictures.length) {
           const pictures = await getDataURIsFromImgURLs(listing.pictures)

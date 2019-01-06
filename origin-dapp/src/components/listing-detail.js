@@ -355,7 +355,6 @@ class ListingsDetail extends Component {
       listing,
       loading,
       step,
-      slots,
       quantity
     } = this.state
 
@@ -371,6 +370,7 @@ class ListingsDetail extends Component {
       pictures,
       price,
       seller,
+      slots,
       unitsRemaining,
       unitsSold,
       unitsPending,

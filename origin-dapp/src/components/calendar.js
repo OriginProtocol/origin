@@ -647,7 +647,7 @@ class Calendar extends Component {
             }
           </div>
           <div className="col-md-4 calendar-right-column">
-            {!selectedEvent || !selectedEvent.start && userType === 'seller' &&
+            {(!selectedEvent || !selectedEvent.start) && userType === 'seller' &&
               <div className="info-box">
                 <p>
                   <FormattedMessage
@@ -667,7 +667,7 @@ class Calendar extends Component {
                 </p>
               </div>
             }
-            {!selectedEvent || !selectedEvent.start && userType === 'buyer' &&
+            {(!selectedEvent || !selectedEvent.start) && userType === 'buyer' &&
               <div className="info-box">
                 <p>
                   <FormattedMessage
