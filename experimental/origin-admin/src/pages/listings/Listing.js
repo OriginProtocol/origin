@@ -172,7 +172,7 @@ class Listing extends Component {
     const sellerPresent = accounts.find(
       a => listing.seller && a.id === listing.seller.id
     )
-    const units = listing.unitsTotal <= 1 ? '' : `${listing.unitsTotal} items `
+    const units = listing.unitsRemaining <= 1 ? '' : `${listing.unitsRemaining} items `
     return (
       <div style={{ marginBottom: 10 }}>
         {`${units}${listing.categoryStr} by `}

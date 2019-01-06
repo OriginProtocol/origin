@@ -42,6 +42,10 @@ export default {
         description
         currencyId
         unitsTotal
+        unitsRemaining
+        unitsPending
+        unitsSold
+        isMultiUnit
         featured
         hidden
         price {

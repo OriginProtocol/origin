@@ -175,6 +175,9 @@ export default `
     status: String
     hidden: Boolean
     featured: Boolean
+    unitsRemaining: Int
+    unitsPending: Int
+    unitsSold: Int
 
     # IPFS
     title: String
@@ -185,6 +188,7 @@ export default `
     subCategory: String
     categoryStr: String
     unitsTotal: Int
+    isMultiUnit: Boolean
     media: [Media]
   }
 
@@ -228,6 +232,7 @@ export default `
     subCategory: String
     currency: String
     price: PriceInput
+    isMultiUnit: Boolean
     unitsTotal: Int
     media: [MediaInput]
   }

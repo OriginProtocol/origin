@@ -36,7 +36,11 @@ class OriginEventSource {
       undefined,
       blockNumber
     )
-    let soldUnits = 0
+    const units = {
+      sold: 0,
+      pending: 0,
+      remaining: 0
+    }
 
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
@@ -50,13 +54,17 @@ class OriginEventSource {
         status = 'withdrawn'
       }
       if (e.event === 'OfferCreated') {
-        soldUnits += 1
+        units.sold += 1
       }
       if (e.event === 'OfferWithdrawn') {
-        soldUnits -= 1
+        units.sold -= 1
+      }
+      if (e.event === 'OfferPending') {
+        units.pending += 1
       }
       if (e.event === 'OfferFinalized') {
         status = 'sold'
+        units.pending -= 1
       }
       if (e.event === 'OfferRuling') {
         status = 'sold'
@@ -75,7 +83,8 @@ class OriginEventSource {
         'category',
         'subCategory',
         'media',
-        'unitsTotal'
+        'unitsTotal',
+        'isMultiUnit'
       )
     } catch (e) {
       return null
@@ -84,7 +93,12 @@ class OriginEventSource {
       data.categoryStr = startCase(data.category.replace(/^schema\./, ''))
     }
 
-    data.unitsTotal = data.unitsTotal ? data.unitsTotal - soldUnits : 0
+    units.remaining = data.unitsTotal - (units.sold + units.pending)
+
+    data.unitsRemaining = units.remaining
+    data.unitsPending = units.pending
+    data.unitsSold = units.sold
+
     if (data.media && data.media.length) {
       data.media = data.media.map(m => ({
         ...m,

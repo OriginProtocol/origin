@@ -66,7 +66,8 @@ class CreateListing extends Component {
           category: listing.category,
           subCategory: listing.subCategory,
           media: listing.media,
-          unitsTotal: Number(listing.quantity)
+          unitsTotal: Number(listing.quantity),
+          isMultiUnit: Number(listing.quantity) > 1
         },
         autoApprove: true
       }

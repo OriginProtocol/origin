@@ -54,11 +54,13 @@ class CreateListing extends Component {
         from: seller ? seller.id : '',
         deposit: 0,
         category: props.listing.category || 'For Sale',
+        subCategory: props.listing.subCategory || '', // TODO: There's no subcategory dropdown in the modal yet
         description: props.listing.description || '',
         autoApprove: true,
         media,
         initialMedia: media,
-        unitsTotal: props.listing.unitsTotal
+        unitsTotal: props.listing.unitsTotal,
+        isMultiUnit: props.listing.isMultiUnit
       }
     } else {
       this.state = {
@@ -69,11 +71,13 @@ class CreateListing extends Component {
         from: seller ? seller.id : '',
         deposit: 5,
         category: '',
+        subCategory: '',
         description: '',
         autoApprove: true,
         media: [],
         initialMedia: [],
-        unitsTotal: 1
+        unitsTotal: 1,
+        isMultiUnit: false
       }
     }
   }
@@ -169,7 +173,7 @@ class CreateListing extends Component {
                   </FormGroup>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <FormGroup label="Units">
+                  <FormGroup label="Total Units">
                     <InputGroup {...input('unitsTotal')} />
                   </FormGroup>
                 </div>
@@ -201,7 +205,7 @@ class CreateListing extends Component {
                   </FormGroup>
                 </div>
 
-                <div style={{ flex: 1, marginRight: 30, padding: '0 5px' }}>
+                <div style={{ flex: 1, padding: '0 5px' }}>
                   <FormGroup label="Deposit" labelInfo="(OGN)">
                     <Slider
                       fill={true}
@@ -214,12 +218,24 @@ class CreateListing extends Component {
                     />
                   </FormGroup>
                 </div>
-                <div style={{ flex: 1 }}>
+              </div>
+              <div style={{ display: 'flex' }}>
+                <div style={{ flex: 1, marginRight: 30 }}>
                   <FormGroup label="Auto-Approve">
                     <Checkbox
                       checked={this.state.autoApprove}
                       onChange={e =>
                         this.setState({ autoApprove: e.target.checked })
+                      }
+                    />
+                  </FormGroup>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <FormGroup label="Multi Unit?">
+                    <Checkbox
+                      checked={this.state.isMultiUnit}
+                      onChange={e =>
+                        this.setState({ isMultiUnit: e.target.checked })
                       }
                     />
                   </FormGroup>
@@ -274,10 +290,12 @@ class CreateListing extends Component {
         title: '',
         price: '',
         category: '',
+        subCategory: '',
         description: '',
         media: [],
         initialMedia: [],
-        unitsTotal: 1
+        unitsTotal: 1,
+        isMultiUnit: false
       })
       return
     }
@@ -286,10 +304,12 @@ class CreateListing extends Component {
       title: egListing.title,
       price: egListing.price.amount,
       category: egListing.category,
+      subCategory: egListing.subCategory,
       description: egListing.description,
       media: egListing.media,
       initialMedia: egListing.media,
-      unitsTotal: egListing.unitsTotal
+      unitsTotal: egListing.unitsTotal,
+      isMultiUnit: egListing.isMultiUnit
     })
   }
 
@@ -305,8 +325,10 @@ class CreateListing extends Component {
           description: this.state.description,
           price: { currency: this.state.currency, amount: this.state.price },
           category: this.state.category,
+          subCategory: this.state.subCategory,
           media: this.state.media,
-          unitsTotal: Number(this.state.unitsTotal)
+          unitsTotal: Number(this.state.unitsTotal),
+          isMultiUnit: this.state.isMultiUnit
         }
       }
     }
@@ -324,8 +346,10 @@ class CreateListing extends Component {
           description: this.state.description,
           price: { currency: this.state.currency, amount: this.state.price },
           category: this.state.category,
+          subCategory: this.state.subCategory,
           media: this.state.media.map(m => pick(m, 'contentType', 'url')),
-          unitsTotal: Number(this.state.unitsTotal)
+          unitsTotal: Number(this.state.unitsTotal),
+          isMultiUnit: this.state.isMultiUnit
         }
       }
     }

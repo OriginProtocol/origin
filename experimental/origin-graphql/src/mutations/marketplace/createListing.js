@@ -15,6 +15,7 @@ export function listingInputToIPFS(data) {
     description: data.description,
     media: data.media,
     unitsTotal: data.unitsTotal,
+    isMultiUnit: data.isMultiUnit,
     price: data.price,
     commission: {
       currency: 'OGN',

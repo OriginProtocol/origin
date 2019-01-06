@@ -37,10 +37,15 @@ export default {
 
         category
         categoryStr
+        subCategory
         title
         description
         currencyId
         unitsTotal
+        unitsRemaining
+        unitsSold
+        unitsPending
+        isMultiUnit
         featured
         hidden
         price {

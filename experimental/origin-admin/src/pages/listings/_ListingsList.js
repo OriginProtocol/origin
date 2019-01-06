@@ -75,7 +75,7 @@ const Listings = ({ listings, history }) => {
               {a.createdEvent ? formatDate(a.createdEvent.timestamp) : null}
             </td>
             <td>{a.totalEvents > 1 ? a.totalEvents : null}</td>
-            <td>{a.unitsTotal}</td>
+            <td>{a.unitsRemaining}</td>
           </tr>
         ))}
       </tbody>
