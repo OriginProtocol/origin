@@ -42,6 +42,7 @@ const env = {
   PROVIDER_URL: null,
   REDUX_LOGGER: false,
   RINKEBY_DAPP_BASEURL: 'https://demo.staging.originprotocol.com',
+  WALLET_LANDING_URL: null,
   WALLET_LINKER_URL: null
 }
 
