@@ -751,14 +751,14 @@ class OriginWallet {
           if (this.messages_ws === ws) {
             this.syncServerMessages()
           }
-        }, 60000) // check in 60 seconds
+        }, 5000) // check in 5 seconds
       }
     }
     this.messages_ws = ws
   }
 
   checkSyncMessages(force) {
-    const doSync = !this.messages_ws || (force && !this.isLinkMessagesOpen())
+    const doSync = !this.messages_ws || force // && !this.isLinkMessagesOpen())
     if (this.state.walletToken && this.state.ethAddress && this.state.netId && doSync)
     {
       this.syncServerMessages()
@@ -844,7 +844,8 @@ class OriginWallet {
         Linking.openURL(await this.toLinkedDappUrl(notification.data.url))
       }
     }
-    this.checkSyncMessages(true)
+    //force if it's comming from the background
+    this.checkSyncMessages(!notification.foreground)
   }
 
   onQRScanned(scan) {
