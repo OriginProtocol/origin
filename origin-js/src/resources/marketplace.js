@@ -132,7 +132,8 @@ export default class Marketplace {
    */
   async _addOffersToListing(listingId, listing) {
     const offers = await this.getOffers(listingId, { listing })
-    listing.offers = offers
+    listing.offers = {}
+    offers.forEach(offer => listing.offers[offer.id] = offer)
     return listing
   }
 

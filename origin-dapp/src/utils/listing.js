@@ -153,7 +153,7 @@ export async function originToDAppListing(originListing) {
     listingType: originListing.type,
     slots: originListing.slots,
     fractionalTimeIncrement: isFractional && slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily',
-    offers: originListing.offers,
+    offers: Object.values(originListing.offers),
     events: originListing.events
   }
 
