@@ -797,7 +797,9 @@ class OriginWallet {
 
   async openSelling() {
     if (this.sellingUrl) {
-        Linking.openURL(await this.toLinkedDappUrl(this.sellingUrl))
+      const linkingUrl = await this.toLinkedDappUrl(this.sellingUrl)
+      console.log("Opening selling url:", linkingUrl)
+      Linking.openURL(linkingUrl)
     }
   }
 
