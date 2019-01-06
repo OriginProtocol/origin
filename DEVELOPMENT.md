@@ -53,6 +53,10 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 
 - You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
 
+### Troubleshooting
+ - If IPFS fails to start with error "UnhandledPromiseRejectionWarning: Error: Lock file is already being hold", clean up the IPFS local data:
+```rm -rf ~/.jsipfs/```
+
 ## Using Docker Compose
 
 The Origin Docker Compose configuration runs the following packages:

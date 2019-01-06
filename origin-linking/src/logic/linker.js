@@ -163,7 +163,10 @@ class Linker {
         payload:data,
         topic:this.apnBundle
       })
-      this.apnProvider.send(note, notify.deviceToken)
+      this.apnProvider.send(note, notify.deviceToken).then( result => {
+        console.log("APNS sent:", result.sent.length);
+        console.log("APNS failed:", result.failed);
+      });
     }
   }
 
