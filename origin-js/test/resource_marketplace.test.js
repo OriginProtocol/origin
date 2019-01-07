@@ -163,8 +163,9 @@ describe('Marketplace Resource', function() {
     it ('should return all detailed listings with offers', async () => {
       const listings = await marketplace.getListings({ loadOffers: true })
       expect(listings).to.have.lengthOf(1)
-      expect(Object.values(listings[0].offers)).to.have.lengthOf(1)
+      expect(listings[0].offers).to.have.lengthOf(1)
 
+      listings[0].offers.map(validateOffer)
       listings.map(validateListing)
     })
 
