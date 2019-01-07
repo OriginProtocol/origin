@@ -13,7 +13,6 @@ async function updateIdentity(
 
   const contract = new web3.eth.Contract(ClaimHolderRegistered.abi, identity)
   const args = await attestationArgs(profile, attestations)
-  console.log(args)
   const tx = contract.methods.addClaims(...args).send({ gas: 4612388, from })
 
   return txHelper({ tx, mutation: 'updateIdentity' })
