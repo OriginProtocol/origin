@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 0 */ 
+/* eslint no-unused-vars: 0 */
 
 import express from 'express'
 import serveStatic from 'serve-static'

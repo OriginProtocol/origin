@@ -158,7 +158,10 @@ class OriginWallet {
   }
 
   initUrls() {
-    const localApiUrl = localfy(apiUrl)
+    const remote_is_url = this.remote_localhost.startsWith("http://") 
+      || this.remote_localhost.startsWith("https://")
+
+    const localApiUrl = remote_is_url ? this.remote_localhost : localfy(apiUrl)
     console.log("localApi Url:", localApiUrl)
 
     const wsApiUrl = localApiUrl.replace(/^http/, 'ws')
@@ -175,6 +178,7 @@ class OriginWallet {
     this.API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called/"
     this.API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
     this.API_WALLET_UPDATE_LINKS = API_WALLET_LINKER + "/wallet-update-links/"
+    this.state.localApiUrl = localApiUrl
 
     if (!this._originalIpfsGateway)
     {
@@ -193,6 +197,10 @@ class OriginWallet {
   }
 
   async setRemoteLocal(remote_ip) {
+    if (remote_ip) {
+      //in case there's a url!
+      remote_ip = remote_ip.replace(/\/$/, "")
+    }
     await storeData(REMOTE_LOCALHOST_STORE, remote_ip)
     this.initWeb3()
   }
@@ -257,7 +265,17 @@ class OriginWallet {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    }).then((response) => response.json())
+    }).then((response) => {
+      try {
+        return response.json()
+      } catch (error) {
+        console.log("Json Error on fetch[", endpoint, "]:", error)
+        throw error
+      }
+    }).catch(error => {
+      console.log("fetch Error on fetch[", endpoint, "]:", error, " response: ")
+      throw error
+    })
   }
 
   registerNotificationAddress(eth_address, device_token, notification_type) {
@@ -365,10 +383,13 @@ class OriginWallet {
 
   async checkRegisterNotification() {
     let state = this.state
+    console.log("checking server notification:", state)
     if (state.ethAddress && state.notificationType && state.deviceToken)
     {
+      console.log("save wallet info:", this.save_wallet_info)
       if (this.save_wallet_info && 
         ( (this.save_wallet_info.ethAddress != state.ethAddress 
+          || this.save_wallet_info.localApiUrl != state.localApiUrl
           || this.save_wallet_info.deviceToken != state.deviceToken)))
       {
         try {
@@ -377,6 +398,7 @@ class OriginWallet {
           //only after registering do we store the notification info
           this.save_wallet_info.ethAddress = state.ethAddress
           this.save_wallet_info.deviceToken = state.deviceToken
+          this.save_wallet_info.localApiUrl = state.localApiUrl
           this.saveInfo()
         } catch (error) {
           console.log("Error registering notification:", error)
@@ -729,14 +751,14 @@ class OriginWallet {
           if (this.messages_ws === ws) {
             this.syncServerMessages()
           }
-        }, 60000) // check in 60 seconds
+        }, 5000) // check in 5 seconds
       }
     }
     this.messages_ws = ws
   }
 
   checkSyncMessages(force) {
-    const doSync = !this.messages_ws || (force && !this.isLinkMessagesOpen())
+    const doSync = !this.messages_ws || force // && !this.isLinkMessagesOpen())
     if (this.state.walletToken && this.state.ethAddress && this.state.netId && doSync)
     {
       this.syncServerMessages()
@@ -744,6 +766,8 @@ class OriginWallet {
   }
 
   async getPrivateLink() {
+    // TODO: someone fix this
+    await PushNotificationIOS.requestPermissions()
     const stored_link_id = await loadData(WALLET_LINK)
 
     if (stored_link_id) 
@@ -780,7 +804,9 @@ class OriginWallet {
 
   async openSelling() {
     if (this.sellingUrl) {
-        Linking.openURL(await this.toLinkedDappUrl(this.sellingUrl))
+      const linkingUrl = await this.toLinkedDappUrl(this.sellingUrl)
+      console.log("Opening selling url:", linkingUrl)
+      Linking.openURL(linkingUrl)
     }
   }
 
@@ -818,7 +844,8 @@ class OriginWallet {
         Linking.openURL(await this.toLinkedDappUrl(notification.data.url))
       }
     }
-    this.checkSyncMessages(true)
+    //force if it's comming from the background
+    this.checkSyncMessages(!notification.foreground)
   }
 
   onQRScanned(scan) {
@@ -992,7 +1019,13 @@ class OriginWallet {
     if (!this.remote_localhost) {
       this.remote_localhost = defaultLocalRemoteHost
     }
-    setRemoteLocal(this.remote_localhost)
+    if (this.remote_localhost.startsWith("http://") || this.remote_localhost.startsWith("https://"))
+    {
+      const rurl = new URL(this.remote_localhost)
+      setRemoteLocal(rurl.hostname)
+    } else {
+      setRemoteLocal(this.remote_localhost)
+    }
     this.initUrls()
 
     try {
@@ -1000,6 +1033,7 @@ class OriginWallet {
           ipfs_gateway, ipfs_api, messaging_url,
           selling_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       console.log("Set network to:", provider_url, contract_addresses)
+      console.log("service urls:", messaging_url, selling_url)
       web3.setProvider(new Web3.providers.HttpProvider(localfy(provider_url), 20000))
 
       this.messagingUrl = localfy(messaging_url)
@@ -1009,7 +1043,6 @@ class OriginWallet {
       origin.ipfsService.gateway = localfy(ipfs_gateway)
       origin.ipfsService.api = localfy(ipfs_api)
       
-
       await this.setNetId()
       if (this.state.ethAddress)
       {

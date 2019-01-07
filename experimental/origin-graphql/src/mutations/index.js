@@ -33,6 +33,8 @@ import updateTokenAllowance from './token/updateTokenAllowance'
 import deployUserRegistry from './identity/deployUserRegistry'
 import deployIdentityContract from './identity/deployIdentityContract'
 import deployIdentity from './identity/deployIdentity'
+import attestationsGeneratePhoneCode from './identity/attestationsGeneratePhoneCode'
+import attestationsVerifyPhoneCode from './identity/attestationsVerifyPhoneCode'
 
 export default {
   addAffiliate,
@@ -66,5 +68,7 @@ export default {
   deployUserRegistry,
   deployIdentityContract,
   deployIdentity,
+  attestationsGeneratePhoneCode,
+  attestationsVerifyPhoneCode,
   refetch: () => true
 }
