@@ -66,9 +66,9 @@ export default class Marketplace {
 
     return listings
       .map(listing => listing.offers)
-      .reduce((offers = [], offerArr) => offers = [...offers, ...offerArr])
+      .reduce((offers = [], offerArr) => offers = [...offers, ...offerArr], [])
       // only keep the purchases where user identified by `account` is the buyer
-      .filter(offer => offer.buyer === account)
+      .filter(offer => offer.buyer.toLowerCase() === account.toLowerCase())
       .map(offer => {
         return {
           offer,
@@ -127,6 +127,15 @@ export default class Marketplace {
   }
 
   /**
+   * private helper function to enrich listing with offers
+   * @param {Listing} listing to be enriched with offer information
+   */
+  async _addOffersToListing(listingId, listing) {
+    listing.offers = await this.getOffers(listingId, { listing })
+    return listing
+  }
+
+  /**
    * Returns listings.
    * TODO: This won't scale. Add support for pagination.
    * @param opts: {idsOnly: boolean, listingsFor: sellerAddress, purchasesFor: buyerAddress, withBlockInfo: boolean, loadOffers: boolean}
@@ -142,7 +151,15 @@ export default class Marketplace {
   async getListings(opts = {}) {
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
-      return await this.discoveryService.getListings(opts)
+      const listings = await this.discoveryService.getListings(opts)
+      if (opts.loadOffers){
+        return Promise.all(
+          listings.map(async listing => {
+            return await this._addOffersToListing(listing.id, listing)
+          })
+        )
+      }
+      return listings
     }
 
     const listingIds = await this.resolver.getListingIds(opts)
@@ -183,17 +200,11 @@ export default class Marketplace {
       loadOffers
     } = opts
 
-    const addOffersToListing = async (listing) => {
-      const offers = await this.getOffers(listingId, listing)
-      listing.offers = offers
-      return listing
-    }
-
     if (this.perfModeEnabled) {
       // In performance mode, fetch data from the discovery back-end to reduce latency.
       let listing = await this.discoveryService.getListing(listingId, blockInfo)
       if (loadOffers)
-        listing = await addOffersToListing(listing)
+        listing = await this._addOffersToListing(listingId, listing)
 
       return listing
     }
@@ -201,7 +212,7 @@ export default class Marketplace {
     // Get the on-chain listing data.
     let chainListing = await this.resolver.getListing(listingId, blockInfo)
     if (loadOffers)
-        chainListing = await addOffersToListing(chainListing)
+      chainListing = await this._addOffersToListing(listingId, chainListing)
 
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
