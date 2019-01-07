@@ -16,6 +16,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 const env = {
   ARBITRATOR_ACCOUNT: null,
   AFFILIATE_ACCOUNT: null,
+  ATTESTATION_ACCOUNT: null,
   BLOCK_EPOCH: 0,
   BRIDGE_SERVER_DOMAIN: 'bridge.originprotocol.com',
   BRIDGE_SERVER_PROTOCOL: 'https',

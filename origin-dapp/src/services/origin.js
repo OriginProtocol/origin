@@ -94,6 +94,7 @@ const config = {
   messagingNamespace: process.env.MESSAGING_NAMESPACE,
   arbitrator: process.env.ARBITRATOR_ACCOUNT,
   affiliate: process.env.AFFILIATE_ACCOUNT,
+  attestationAccount: process.env.ATTESTATION_ACCOUNT,
   blockEpoch: process.env.BLOCK_EPOCH,
   blockAttestattionV1: process.env.BLOCK_ATTESTATION_V1,
   attestationServerUrl,

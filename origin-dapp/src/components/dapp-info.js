@@ -200,6 +200,7 @@ class DappInfo extends Component {
               <h1>DApp Info</h1>
               <h3 className="lead">Developer information about this build</h3>
               <table width="100%">
+                <tbody>
                 <tr>
                   <th colSpan="2">origin.js</th>
                 </tr>
@@ -229,6 +230,10 @@ class DappInfo extends Component {
                 <tr>
                   <td>ARBITRATOR_ACCOUNT</td>
                   <td>{process.env.ARBITRATOR_ACCOUNT}</td>
+                </tr>
+                <tr>
+                  <td>ATTESTATION_ACCOUNT</td>
+                  <td>{process.env.ATTESTATION_ACCOUNT}</td>
                 </tr>
                 <tr>
                   <td>BRIDGE_SERVER_DOMAIN</td>
@@ -351,6 +356,7 @@ class DappInfo extends Component {
                   <th colSpan="2">ABIs</th>
                 </tr>
                 {this.state.multiSigData}
+                </tbody>
               </table>
               &nbsp;
             </div>

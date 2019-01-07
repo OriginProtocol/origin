@@ -40,7 +40,8 @@ export default class Origin {
     blockEpoch,
     blockAttestattionV1,
     ethereum,
-    perfModeEnabled
+    perfModeEnabled,
+    attestationAccount
   } = {}) {
     this.version = VERSION
 
@@ -84,7 +85,8 @@ export default class Origin {
       contractService: this.contractService,
       ipfsService: this.ipfsService,
       blockEpoch,
-      blockAttestattionV1
+      blockAttestattionV1,
+      attestationAccount
     })
 
     this.messaging = new Messaging({

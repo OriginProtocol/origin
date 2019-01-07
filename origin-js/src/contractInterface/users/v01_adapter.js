@@ -6,13 +6,15 @@ import { IDENTITY_DATA_TYPE, IpfsDataStore } from '../../ipfsInterface/store'
 
 
 export default class V01_UsersAdapter {
-  constructor({ contractService, ipfsService, blockEpoch }) {
+  constructor({ contractService, ipfsService, blockEpoch, attestationAccount }) {
     this.contractService = contractService
     this.ipfsDataStore = new IpfsDataStore(ipfsService)
     this.contractName = 'IdentityEvents'
     this.blockEpoch = blockEpoch || 0
-    // FIXME: get this from env var
-    this.issuerAddress = '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101'
+    if (!attestationAccount) {
+      console.log("INVALID attestation account")
+    }
+    this.issuerAddress = attestationAccount
   }
 
   /**
@@ -20,9 +22,9 @@ export default class V01_UsersAdapter {
    * If the identity already exists:
    *   - profile is overwritten.
    *   - new attestations are merged with already present ones.
-   * @param {Object} profile
+   * @param {{firstName:string, lastName:string, description:string, avatar:string}} profile object
    * @param {Array<AttestationObject>} attestations
-   * @param {transactionHashCallback:func,confirmationCallback:func} options
+   * @param {{transactionHashCallback:func, confirmationCallback:func}} options object
    * @return {Promise<txReceipt>}
    * @throws {Error}
    */
@@ -41,8 +43,11 @@ export default class V01_UsersAdapter {
     profile.ethAddress = address
     ipfsIdentity.profile = profile
 
-    // Merge attestations passed as argument with existing ones.
-    ipfsIdentity.attestations = this._mergeAttestations(ipfsIdentity.attestations || [], attestations)
+    // Validate the new attestations.
+    const newAttestations = attestations.filter(a => this._validateAttestation(address, a))
+
+    // Merge new attestations with existing ones.
+    ipfsIdentity.attestations = this._mergeAttestations(ipfsIdentity.attestations || [], newAttestations)
 
     // Save identity to IPFS.
     ipfsHash = await this.ipfsDataStore.save(IDENTITY_DATA_TYPE, ipfsIdentity)
@@ -87,9 +92,9 @@ export default class V01_UsersAdapter {
     const profile = ipfsIdentity.profile
     this._validateProfile(address, profile)
 
-    // Validate the attestation data loaded from IPFS and create model objects from it.
-    const validAttestations = ipfsIdentity.attestations.map(a => this._validateAttestation(address, a))
-    const attestations = validAttestations.map(a => this._getAttestationModel(a))
+    // Validate the attestations loaded from IPFS and then create model objects from them.
+    const validAttestations = ipfsIdentity.attestations.filter(a => this._validateAttestation(address, a))
+    const attestations = validAttestations.map(a => { return this._getAttestationModel(a) })
 
     return { address, identityAddress: address, profile, attestations }
   }
@@ -176,8 +181,8 @@ export default class V01_UsersAdapter {
    * Validates an attestation by checking its signature matches against the
    * hash of (user's eth address, attestation data).
    * @param {string} account - User's ETH address.
-   * @param {Object} attestation - Attestation data from the user's identity stored in IPFS.
-   * @throws {Error} If validation fails.
+   * @param {{data:string, signature:string}} attestation
+   * @return Boolean - True if attestation is valid, false otherwise.
    * @private
    */
   _validateAttestation(account, attestation) {
@@ -188,10 +193,14 @@ export default class V01_UsersAdapter {
     const messageHash = this.contractService.web3.eth.accounts.hashMessage(message)
     const issuerAddress = this.contractService.web3.eth.accounts.recover(messageHash, attestation.signature, true)
     if (issuerAddress !== this.issuerAddress) {
-      throw new Error(
+      console.log(
         `Attestation signature validation failure.
+        Account ${account}
         Expected issuer ${this.issuerAddress}, got ${issuerAddress}`)
+      return false
     }
+    console.log("Attestation validation succeeded")
+    return true
   }
 
   /**

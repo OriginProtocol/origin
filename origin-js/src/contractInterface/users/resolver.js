@@ -3,12 +3,13 @@ import V01_UsersAdapter from './v01_adapter'
 import UserObject from '../../models/user'
 
 export default class UsersResolver {
-  constructor({ contractService, ipfsService, blockEpoch, blockAttestattionV1 }) {
+  constructor({ contractService, ipfsService, blockEpoch, blockAttestattionV1, attestationAccount }) {
     this.adapters = {
       '000': new V00_UsersAdapter({ contractService, ipfsService, blockEpoch, blockAttestattionV1 }),
-      '001': new V01_UsersAdapter({ contractService, ipfsService, blockEpoch })
+//      '001': new V01_UsersAdapter({ contractService, ipfsService, blockEpoch, attestationAccount })
     }
-    this.versions = ['000', '001']
+//    this.versions = ['000', '001']
+    this.versions = ['000']
     this.currentVersion = this.versions[this.versions.length - 1]
     this.currentAdapter = this.adapters[this.currentVersion]
   }
@@ -42,23 +43,5 @@ export default class UsersResolver {
     } else {
       return new UserObject({ address })
     }
-  }
-
-  /**
-   * Returns the user's identity address.
-   *  - In V00 identity was stored in a separate contract.
-   *  - In V01 identity is stored off-chain and identity address === wallet address.
-   * @param wallet
-   * @return {Promise<string|boolean>}
-   */
-  async identityAddress(wallet) {
-    let result = false
-    for (let i = this.versions.length - 1; i >= 0; i--) {
-      if (!result) {
-        const version = this.versions[i]
-        result = await this.adapters[version].identityAddress(wallet)
-      }
-    }
-    return result
   }
 }

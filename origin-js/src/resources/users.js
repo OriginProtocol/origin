@@ -1,8 +1,19 @@
 import UsersResolver from '../contractInterface/users/resolver'
 
 export default class Users {
-  constructor({ contractService, ipfsService, blockEpoch, blockAttestattionV1 }) {
-    this.resolver = new UsersResolver({ contractService, ipfsService, blockEpoch, blockAttestattionV1 })
+  constructor(
+    { contractService,
+      ipfsService,
+      blockEpoch,
+      blockAttestattionV1,
+      attestationAccount
+    }) {
+    this.resolver = new UsersResolver({
+      contractService,
+      ipfsService,
+      blockEpoch,
+      blockAttestattionV1,
+      attestationAccount })
   }
 
   /**
