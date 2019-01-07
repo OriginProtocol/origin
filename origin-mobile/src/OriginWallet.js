@@ -1034,7 +1034,13 @@ class OriginWallet {
           selling_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       console.log("Set network to:", provider_url, contract_addresses)
       console.log("service urls:", messaging_url, selling_url)
-      web3.setProvider(new Web3.providers.HttpProvider(localfy(provider_url), 20000))
+
+      const newProviderUrl = localfy(provider_url)
+      if (this.currentProviderUrl != newProviderUrl)
+      {
+        web3.setProvider(new Web3.providers.HttpProvider(newProviderUrl, 20000))
+        this.currentProviderUrl = newProviderUrl
+      }
 
       this.messagingUrl = localfy(messaging_url)
       this.sellingUrl = selling_url
@@ -1121,6 +1127,7 @@ class OriginWallet {
       //this should probably also come from the data block
       //in case when we want to let people change providers...
       web3.setProvider(new Web3.providers.HttpProvider(defaultProviderUrl, 20000))
+      this.currentProviderUrl = defaultProviderUrl
       await this.initWeb3()
 
       if (wallet_data)
