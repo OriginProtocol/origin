@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import ImageCropper from '../modals/image-cropper'
-import { generateCroppedImage, getDataURIsFromImgURLs } from 'utils/fileUtils'
+import { generateCroppedImage, getDataURIsFromImgURLs, picURIsOnly } from 'utils/fileUtils'
 
 const MAX_IMAGE_COUNT = 10
 
@@ -89,7 +89,7 @@ class PhotoPicker extends Component {
 
             this.setState(
               { pictures },
-              () => this.props.onChange(this.picURIsOnly(pictures))
+              () => this.props.onChange(picURIsOnly(pictures))
             )
           })
         }
@@ -125,14 +125,10 @@ class PhotoPicker extends Component {
         showMaxImageCountMsg,
         showCropModal: false,
       },
-      () => this.props.onChange(this.picURIsOnly(pictures))
+      () => this.props.onChange(picURIsOnly(pictures))
     )
 
     imgInput.value = null
-  }
-
-  picURIsOnly(pictures) {
-    return pictures.map(pic => typeof pic === 'object' ? pic.croppedImageUri : pic)
   }
 
   onCropCancel() {
@@ -149,7 +145,7 @@ class PhotoPicker extends Component {
         pictures,
         showMaxImageCountMsg: false
       },
-      () => this.props.onChange(this.picURIsOnly(pictures))
+      () => this.props.onChange(picURIsOnly(pictures))
     )
   }
 
