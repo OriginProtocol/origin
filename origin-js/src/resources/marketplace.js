@@ -64,9 +64,27 @@ export default class Marketplace {
       withBlockInfo: true
     })
 
-    return listings
+    return listings && listings.length && listings
       .map(listing => listing.offers)
-      .reduce((offers = [], offerArr) => offers = [...offers, ...offerArr])
+      .reduce((offers=[], offersCur) => { 
+        //cover all cases
+        if (Array.isArray(offersCur) && Array.isArray(offers))
+        {
+          return [...offers, ...offersCur]
+        }
+        else if (Array.isArray(offerCur))
+        {
+          return [offers, ...offersCur]
+        }
+        else if (Array.isArray(offers))
+        {
+          return [...offers, offersCur]
+        }
+        else
+        {
+          return [offers, offersCur]
+        }
+      })
       // only keep the purchases where user identified by `account` is the buyer
       .filter(offer => offer.buyer === account)
       .map(offer => {
@@ -74,7 +92,7 @@ export default class Marketplace {
           offer,
           listing: listings.find(listing => listing.id === offer.listingId)
         }
-      })
+      }) || []
   }
 
   /**
