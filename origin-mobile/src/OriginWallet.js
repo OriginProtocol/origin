@@ -597,7 +597,7 @@ class OriginWallet {
               (success) => {
                 if (return_url)
                 {
-                  const successUrl = this.addTransactionHashToUrl(return_url, transactionResult)
+                  const successUrl = this.addTransactionHashToUrl(return_url, receipt.transactionHash)
                   console.log("transaction approved returning to:", successUrl)
                   Linking.openURL(successUrl)
                 }
