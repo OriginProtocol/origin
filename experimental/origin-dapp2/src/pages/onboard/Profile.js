@@ -6,28 +6,26 @@ import ImageCropper from 'components/ImageCropper'
 import Steps from 'components/Steps'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
+import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
+import EmailAttestation from 'pages/identity/EmailAttestation'
+import FacebookAttestation from 'pages/identity/FacebookAttestation'
+import TwitterAttestation from 'pages/identity/TwitterAttestation'
+
 import DeployIdentity from '../identity/mutations/DeployIdentity'
 import ProfileStrength from './_ProfileStrength'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 
-const Attestation = ({ type, text, active, onClick, soon }) => {
-  active = active ? ' active' : ''
-  soon = soon ? ' soon' : ''
-  return (
-    <div
-      className={`profile-attestation ${type}${active}${soon}`}
-      onClick={onClick ? () => onClick() : null}
-    >
-      <i />
-      {text}
-    </div>
-  )
+const AttestationComponents = {
+  phone: PhoneAttestation,
+  email: EmailAttestation,
+  facebook: FacebookAttestation,
+  twitter: TwitterAttestation
 }
 
 class OnboardProfile extends Component {
@@ -36,8 +34,7 @@ class OnboardProfile extends Component {
     this.state = {
       firstName: '',
       lastName: '',
-      description: '',
-      strength: '0%'
+      description: ''
     }
   }
 
@@ -50,23 +47,28 @@ class OnboardProfile extends Component {
           'lastName',
           'description',
           'avatar',
-          'strength'
+          'facebookVerified',
+          'twitterVerified',
+          'airbnbVerified',
+          'phoneVerified',
+          'emailVerified'
         ])
       )
     }
   }
 
   render() {
-    const { listing, wallet } = this.props
+    const { listing } = this.props
     const { avatar } = this.state
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const attestations = []
-    if (this.state.phoneAttestation) {
-      attestations.push(this.state.phoneAttestation)
-    }
+    const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
+      if (this.state[`${key}Attestation`])
+        m.push(this.state[`${key}Attestation`])
+      return m
+    }, [])
 
     return (
       <>
@@ -85,9 +87,7 @@ class OnboardProfile extends Component {
               >
                 <div className="row">
                   <div className="col-4">
-                    <ImageCropper
-                      onChange={avatar => this.setState({ avatar })}
-                    >
+                    <ImageCropper onChange={a => this.setState({ avatar: a })}>
                       <div
                         className={`profile-logo ${
                           avatar ? 'custom' : 'default'
@@ -133,19 +133,18 @@ class OnboardProfile extends Component {
 
                 <label className="mt-3">Attestations</label>
                 <div className="profile-attestations">
-                  <Attestation
-                    type="phone"
-                    active={this.state.phoneAttestation ? true : false}
-                    onClick={() => this.setState({ phone: true })}
-                    text="Phone Number"
-                  />
-                  <Attestation type="email" text="Email" />
-                  <Attestation type="airbnb" text="Airbnb" />
-                  <Attestation type="facebook" text="Facebook" />
-                  <Attestation type="twitter" text="Twitter" />
-                  <Attestation type="google" text="Google" soon />
+                  {this.renderAtt('phone', 'Phone Number')}
+                  {this.renderAtt('email', 'Email')}
+                  {this.renderAtt('airbnb', 'Airbnb')}
+                  {this.renderAtt('facebook', 'Facebook')}
+                  {this.renderAtt('twitter', 'Twitter')}
+                  {this.renderAtt('google', 'Google', true)}
                 </div>
-                <ProfileStrength width={this.state.strength} />
+
+                <ProfileStrength
+                  published={get(this.props, 'identity.profile.strength', 0)}
+                  unpublished={unpublishedProfileStrength(this)}
+                />
 
                 {/* <div className="no-funds">
                   <h5>You don&apos;t have funds</h5>
@@ -157,12 +156,12 @@ class OnboardProfile extends Component {
               <DeployIdentity
                 className="btn btn-primary"
                 identity={get(this.props, 'identity.id')}
-                profile={{
-                  firstName: this.state.firstName,
-                  lastName: this.state.lastName,
-                  description: this.state.description,
-                  avatar: this.state.avatar
-                }}
+                profile={pick(this.state, [
+                  'firstName',
+                  'lastName',
+                  'description',
+                  'avatar'
+                ])}
                 attestations={attestations}
                 validate={() => this.validate()}
                 children="Publish"
@@ -174,13 +173,46 @@ class OnboardProfile extends Component {
             <HelpProfile />
           </div>
         </div>
+      </>
+    )
+  }
 
-        <PhoneAttestation
+  renderAtt(type, text, soon) {
+    const { wallet } = this.props
+    const profile = get(this.props, 'identity.profile', {})
+
+    let status = ''
+    if (profile[`${type}Verified`]) {
+      status = ' published'
+    } else if (this.state[`${type}Attestation`]) {
+      status = ' provisional'
+    } else if (soon) {
+      status = ' soon'
+    }
+    let AttestationComponent = AttestationComponents[type]
+    if (AttestationComponent) {
+      AttestationComponent = (
+        <AttestationComponent
           wallet={wallet}
-          open={this.state.phone}
-          onClose={() => this.setState({ phone: false })}
-          onComplete={phoneAttestation => this.setState({ phoneAttestation })}
+          open={this.state[type]}
+          onClose={() => {
+            this.setState({ [type]: false })
+          }}
+          onComplete={att => this.setState({ [`${type}Attestation`]: att })}
         />
+      )
+    }
+
+    return (
+      <>
+        <div
+          className={`profile-attestation ${type}${status}`}
+          onClick={() => this.setState({ [type]: true })}
+        >
+          <i />
+          {text}
+        </div>
+        {AttestationComponent}
       </>
     )
   }
@@ -321,7 +353,7 @@ require('react-styl')(`
         background-image: url(images/identity/google-icon.svg)
         background-size: 1.3rem
 
-      &.active
+      &.published,&.provisional
         background-color: white
         border-style: solid
         color: var(--dusk)
@@ -335,5 +367,7 @@ require('react-styl')(`
           border-radius: 2rem;
           margin-left: auto;
           background-size: 59%;
+      &.published > i
+        background-image: url(images/identity/verification-shape-green.svg)
 
 `)

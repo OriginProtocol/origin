@@ -13,7 +13,7 @@ import withWallet from 'hoc/withWallet'
 class DeployIdentity extends Component {
   state = {}
   render() {
-    const update = true
+    const update = this.props.identity ? true : false
     return (
       <Mutation
         mutation={update ? UpdateIdentityMutation : DeployIdentityMutation}

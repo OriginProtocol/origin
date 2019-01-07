@@ -35,8 +35,12 @@ import deployIdentityContract from './identity/deployIdentityContract'
 import deployIdentity from './identity/deployIdentity'
 import updateIdentity from './identity/updateIdentity'
 
-import generatePhoneCode from './attestations/GeneratePhoneCode'
-import verifyPhoneCode from './attestations/VerifyPhoneCode'
+import generateEmailCode from './attestations/generateEmailCode'
+import verifyEmailCode from './attestations/verifyEmailCode'
+import generatePhoneCode from './attestations/generatePhoneCode'
+import verifyPhoneCode from './attestations/verifyPhoneCode'
+import verifyFacebook from './attestations/verifyFacebook'
+import verifyTwitter from './attestations/verifyTwitter'
 
 export default {
   addAffiliate,
@@ -73,5 +77,9 @@ export default {
   updateIdentity,
   generatePhoneCode,
   verifyPhoneCode,
+  generateEmailCode,
+  verifyEmailCode,
+  verifyFacebook,
+  verifyTwitter,
   refetch: () => true
 }

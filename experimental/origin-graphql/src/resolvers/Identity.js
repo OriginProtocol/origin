@@ -108,7 +108,7 @@ export default {
 
     let strength = 0
     Object.keys(progressPct).forEach(key => {
-      if (data[key]) {
+      if (data[key] || profile[key]) {
         strength += progressPct[key]
       }
     })
@@ -117,7 +117,7 @@ export default {
       ...data,
       id: profileIpfsHash,
       ...profile,
-      strength: `${strength}%`
+      strength
     }
   }
 }

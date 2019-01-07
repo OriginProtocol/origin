@@ -20,22 +20,6 @@ export default `
       profile: ProfileInput
       attestations: [AttestationInput]
     ): Transaction
-
-    generatePhoneCode(prefix: String!, method: String, phone: String!): PhoneCodeResult!
-    verifyPhoneCode(prefix: String!, identity: String, phone: String!, code: String!): PhoneVerifyResult!
-  }
-
-  type PhoneCodeResult {
-    success: Boolean
-    reason: String
-  }
-
-  type PhoneVerifyResult {
-    success: Boolean
-    reason: String
-    claimType: String
-    data: String
-    signature: String
   }
 
   input ProfileInput {
@@ -84,7 +68,7 @@ export default `
     fullName: String
     description: String
     avatar: String
-    strength: String
+    strength: Int
 
     facebookVerified: Boolean
     twitterVerified: Boolean

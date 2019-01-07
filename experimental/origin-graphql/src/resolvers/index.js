@@ -13,6 +13,7 @@ import Identity from './Identity'
 import Conversation from './Conversation'
 import Messaging from './Messaging'
 import UserRegistry from './UserRegistry'
+import Config from './Config'
 import Mutation from '../mutations/index'
 
 export default {
@@ -31,5 +32,6 @@ export default {
   Identity,
   Conversation,
   Messaging,
-  UserRegistry
+  UserRegistry,
+  Config
 }
