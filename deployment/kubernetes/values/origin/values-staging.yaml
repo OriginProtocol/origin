@@ -7,7 +7,7 @@ bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '198912c'
+dappImageTag: '98c14c5'
 dappReplicas: 2
 
 # Rinkeby network configuration
