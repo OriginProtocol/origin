@@ -1080,12 +1080,12 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <Calendar
-                  slots={ formData && formData.availability }
+                  slots={formData && formData.availability}
                   userType="seller"
-                  viewType={ fractionalTimeIncrement }
-                  step={ 60 }
-                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
-                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
+                  viewType={fractionalTimeIncrement}
+                  step={60}
+                  onComplete={(slots) => this.onAvailabilityEntered(slots, 'forward')}
+                  onGoBack={(slots) => this.onAvailabilityEntered(slots, 'back')}
                 />
               </div>
             }

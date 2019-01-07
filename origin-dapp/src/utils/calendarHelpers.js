@@ -435,3 +435,31 @@ export const prepareSlotsToSave = (slots) => {
     return slot
   })
 }
+
+export const slotsToJCal = (events) => {
+  const jCal = [
+    'vcalendar',
+      [
+        ['version', {}, 'text', '1.0'],
+        ['prodid', {}, 'text', 'origin.js'],
+      ]
+  ]
+
+  events && events.forEach((event) => {
+    jCal.push(
+      [
+        'vevent',
+        ['uid', {}, 'text', 'TODO - generate UID somehow'],
+        ['dtstart',  { 'tzid': '/US/Eastern' }, 'date-time', event.startDate],
+        ['dtend',  { 'tzid': '/US/Eastern' }, 'date-time', event.endDate],
+        ['rrule', {}, 'text', (event.rrule || '')],
+        ['x-currency', {}, 'text', 'ETH'], 
+        ['x-price', {}, 'text', event.price.toString()],
+        ['x-is-available', {}, 'boolean', event.isAvailable],
+        ['x-priority', {}, 'integer', event.rrule ? 1 : 2], 
+      ]
+    )
+  })
+
+  return jCal
+}

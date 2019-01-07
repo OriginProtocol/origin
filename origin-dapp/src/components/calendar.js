@@ -14,7 +14,8 @@ import {
   getSlotsToReserve,
   getCleanEvents,
   getDateAvailabilityAndPrice,
-  generateSlotStartEnd
+  generateSlotStartEnd,
+  slotsToJCal
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -490,7 +491,9 @@ class Calendar extends Component {
     }
 
     const cleanEvents = getCleanEvents(this.state.events)
-    this.props.onComplete && this.props.onComplete(cleanEvents)
+    const jCalEvents = slotsToJCal(cleanEvents, this.props.listingId)
+console.log('========================== jCalEvents: ', jCalEvents)
+    this.props.onComplete && this.props.onComplete(jCalEvents)
   }
 
   goBack() {
