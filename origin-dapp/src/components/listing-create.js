@@ -548,7 +548,7 @@ class ListingCreate extends Component {
 
   onBoostLimitChange({ formData }) {
     const boostLimit = formData.boostLimit
-    if (boostLimit && boostLimit !== this.state.formListing.formData.boostLimit
+    if (boostLimit !== undefined && boostLimit !== this.state.formListing.formData.boostLimit
     ) {
       this.setState({
         formListing: {
