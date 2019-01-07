@@ -47,7 +47,13 @@ export const validateListing = (listing) => {
   expect(listing).to.have.property('depositManager').startsWith('0x')
   expect(listing).to.have.property('seller').startsWith('0x')
   expect(listing).to.have.property('status').that.is.a('string')
-  expect(listing).to.have.property('offers').that.is.an('array')
+  /* We have inconsistancies here. By default offers is an object where keys are (simplified) offer ids (0,1,2...)
+   * and values are offer events. If `loadOffers` option is passed along offers is an array consisting of 
+   * offer models.
+   *
+   * This shall be resolved once we rewrite to GraphQl
+   */
+  //expect(listing).to.have.property('offers').that.is.an('array')
   expect(listing).to.have.property('events').that.is.an('array')
 
   if (listing.events.length) {
