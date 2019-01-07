@@ -28,7 +28,7 @@ export class Listing {
    *  - {string} display - 'normal', 'featured', 'hidden'
    *  - {Array<Object>} media
    *  - {Object} commission - Total commission of a listing. Consists of 'amount' and 'currency' properties
-   *  - {Array} slots - to be implemented
+   *  - {Array} availability - to be implemented
    *  - {Integer} slotLength - defines the length of a time slot in a fractional listing
    *  - {String} slotLengthUnit - defines the unit of measurement for a fractional usage time slot
    *  - {string} schemaId
@@ -38,7 +38,7 @@ export class Listing {
    *  - {Object} commissionPerUnit - Commission per unit in multi unit listings. Consists of 'amount' and 'currency' properties
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
-    unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
+    unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, availability,
     slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit }) {
 
     this.id = id
@@ -59,7 +59,7 @@ export class Listing {
     this.display = display
     this.media = media
     this.commission = commission
-    this.slots = slots
+    this.availability = availability
     this.slotLength = slotLength
     this.slotLengthUnit = slotLengthUnit
     this.schemaId = schemaId
@@ -91,7 +91,7 @@ export class Listing {
       display: 'normal',
       media: ipfsListing.media,
       commission: ipfsListing.commission,
-      slots: ipfsListing.slots,
+      availability: ipfsListing.availability,
       slotLength: ipfsListing.slotLength,
       slotLengthUnit: ipfsListing.slotLengthUnit,
       schemaId: ipfsListing.schemaId,
@@ -123,7 +123,7 @@ export class Listing {
       display: discoveryNodeData.display,
       media: discoveryNodeData.media,
       commission: discoveryNodeData.commission,
-      slots: discoveryNodeData.slots,
+      availability: discoveryNodeData.availability,
       slotLength: discoveryNodeData.slotLength,
       slotLengthUnit: discoveryNodeData.slotLengthUnit,
       schemaId: discoveryNodeData.schemaId,

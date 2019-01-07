@@ -1080,7 +1080,7 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <Calendar
-                  slots={ formData && formData.slots }
+                  slots={ formData && formData.availability }
                   userType="seller"
                   viewType={ fractionalTimeIncrement }
                   step={ 60 }

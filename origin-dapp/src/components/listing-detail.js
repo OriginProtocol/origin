@@ -370,7 +370,7 @@ class ListingsDetail extends Component {
       pictures,
       price,
       seller,
-      slots,
+      availability,
       unitsRemaining,
       unitsSold,
       unitsPending,
@@ -979,7 +979,7 @@ class ListingsDetail extends Component {
             {!loading && isFractional &&
               <div className="col-12">
                 <Calendar
-                  slots={slots}
+                  slots={availability}
                   offers={offers}
                   userType="buyer"
                   userIsSeller={userIsSeller}

@@ -110,7 +110,7 @@
         "slotLengthUnit": {
           "type": "string"
         },
-        "slots": {
+        "availability": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/timeSlot"
@@ -120,7 +120,7 @@
       "required": [
         "slotLength",
         "slotLengthUnit",
-        "slots"
+        "availability"
       ]
     }
   },
