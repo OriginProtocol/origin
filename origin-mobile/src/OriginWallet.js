@@ -597,8 +597,9 @@ class OriginWallet {
               (success) => {
                 if (return_url)
                 {
-                  console.log("transaction approved returning to:", return_url)
-                  Linking.openURL(return_url)
+                  const successUrl = this.addTransactionHashToUrl(return_url, transactionResult)
+                  console.log("transaction approved returning to:", successUrl)
+                  Linking.openURL(successUrl)
                 }
                 resolve(true)
               }
@@ -799,7 +800,11 @@ class OriginWallet {
 
   async toLinkedDappUrl(dappUrl) {
     const localUrl = localfy(dappUrl)
-    return localUrl + (localUrl.includes('?') ? '' : '?' ) + 'plink=' + await this.getPrivateLink()
+    return localUrl + (localUrl.includes('?') ? '&' : '?' ) + 'plink=' + await this.getPrivateLink()
+  }
+
+  addTransactionHashToUrl(url, thash) {
+    return url + (url.includes('?') ? '&' : '?' ) + 'thash=' + thash
   }
 
   async openSelling() {
