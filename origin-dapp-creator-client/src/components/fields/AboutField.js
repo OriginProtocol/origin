@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { InputGroup, FormGroup } from '@blueprintjs/core'
+import { TextArea, FormGroup } from '@blueprintjs/core'
 
 class AboutField extends Component {
 
@@ -19,14 +19,14 @@ class AboutField extends Component {
           label="About"
           labelFor="about-field"
           labelInfo="(required)">
-        <InputGroup
+        <TextArea
           name="about"
           placeholder="A place for buying and selling things"
-          className="input-width"
           value={this.props.value}
           onChange={this.handleChange}
-          required>
-        </InputGroup>
+          large
+          fill
+          required />
       </FormGroup>
     )
   }

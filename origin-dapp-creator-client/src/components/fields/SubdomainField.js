@@ -21,17 +21,17 @@ class SubdomainField extends React.Component {
       <FormGroup
           label="Subdomain"
           labelFor="subdomain-field"
-          labelInfo="(required)"
           helperText={this.props.error}
           intent={this.props.error ? Intent.DANGER : Intent.NONE }>
         <InputGroup
           name="subdomain"
           placeholder="marketplace"
-          className="input-width"
           rightElement={fieldSuffix}
           value={this.props.value}
           onChange={this.handleChange}
           intent={this.props.error ? Intent.DANGER : Intent.NONE }
+          fill
+          large
           required>
         </InputGroup>
       </FormGroup>

@@ -31,7 +31,9 @@ class LanguageCodeField extends Component {
           labelFor="languageCode">
         <HTMLSelect name="languageCode"
           options={this.availableLanguages}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+          large
+          fill />
       </FormGroup>
     )
   }

@@ -14,16 +14,15 @@ class TitleField extends Component {
   render () {
     return (
       <FormGroup
-          helperText="The title of your DApp"
-          label="Title"
-          labelFor="title-field"
-          labelInfo="(required)">
+          label="Marketplace Title"
+          labelFor="title-field">
         <InputGroup
           name="title"
           placeholder="Decentralized Marketplace"
-          className="input-width"
           value={this.props.value}
           onChange={this.handleChange}
+          large
+          fill
           required>
         </InputGroup>
       </FormGroup>
