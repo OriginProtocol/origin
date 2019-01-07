@@ -178,6 +178,7 @@ class OriginWallet {
     this.API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called/"
     this.API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
     this.API_WALLET_UPDATE_LINKS = API_WALLET_LINKER + "/wallet-update-links/"
+    this.state.localApiUrl = localApiUrl
 
     if (!this._originalIpfsGateway)
     {
@@ -382,10 +383,13 @@ class OriginWallet {
 
   async checkRegisterNotification() {
     let state = this.state
+    console.log("checking server notification:", state)
     if (state.ethAddress && state.notificationType && state.deviceToken)
     {
+      console.log("save wallet info:", this.save_wallet_info)
       if (this.save_wallet_info && 
         ( (this.save_wallet_info.ethAddress != state.ethAddress 
+          || this.save_wallet_info.localApiUrl != state.localApiUrl
           || this.save_wallet_info.deviceToken != state.deviceToken)))
       {
         try {
@@ -394,6 +398,7 @@ class OriginWallet {
           //only after registering do we store the notification info
           this.save_wallet_info.ethAddress = state.ethAddress
           this.save_wallet_info.deviceToken = state.deviceToken
+          this.save_wallet_info.localApiUrl = state.localApiUrl
           this.saveInfo()
         } catch (error) {
           console.log("Error registering notification:", error)
@@ -746,14 +751,14 @@ class OriginWallet {
           if (this.messages_ws === ws) {
             this.syncServerMessages()
           }
-        }, 60000) // check in 60 seconds
+        }, 5000) // check in 5 seconds
       }
     }
     this.messages_ws = ws
   }
 
   checkSyncMessages(force) {
-    const doSync = !this.messages_ws || (force && !this.isLinkMessagesOpen())
+    const doSync = !this.messages_ws || force // && !this.isLinkMessagesOpen())
     if (this.state.walletToken && this.state.ethAddress && this.state.netId && doSync)
     {
       this.syncServerMessages()
@@ -761,6 +766,8 @@ class OriginWallet {
   }
 
   async getPrivateLink() {
+    // TODO: someone fix this
+    await PushNotificationIOS.requestPermissions()
     const stored_link_id = await loadData(WALLET_LINK)
 
     if (stored_link_id) 
@@ -837,7 +844,8 @@ class OriginWallet {
         Linking.openURL(await this.toLinkedDappUrl(notification.data.url))
       }
     }
-    this.checkSyncMessages(true)
+    //force if it's comming from the background
+    this.checkSyncMessages(!notification.foreground)
   }
 
   onQRScanned(scan) {

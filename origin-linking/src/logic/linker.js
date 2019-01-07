@@ -256,7 +256,7 @@ class Linker {
   getMessageFromMeta(meta, account) {
     if (meta.subMeta)
     {
-      meta = subMeta
+      meta = meta.subMeta
     }
 
     if (meta.listing)
