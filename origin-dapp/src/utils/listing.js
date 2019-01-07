@@ -289,7 +289,8 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     userIsBuyerOffers,
     userIsBuyerOffer: userIsBuyerOffers.length > 0 ? userIsBuyerOffers[0] : undefined,
     userIsBuyer: userIsBuyerOffers.length > 0,
-    userIsSeller: usersWalletAddress !== null && formattedAddress(usersWalletAddress) === formattedAddress(seller)
+    userIsSeller: usersWalletAddress !== null && formattedAddress(usersWalletAddress) === formattedAddress(seller),
+    showRemainingBoost
   }
 }
 
