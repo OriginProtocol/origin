@@ -1,13 +1,20 @@
 import React from 'react'
 
-const ProfileStrength = ({ width = '0' }) => (
+const ProfileStrength = ({ published = 0, unpublished = 0 }) => (
   <div className="profile-strength">
     <div className="title">
       Profile Strength
-      <div className="pct">25%</div>
+      <div className="pct">{`${published + unpublished}%`}</div>
     </div>
     <div className="progress">
-      <div className="progress-bar" style={{ width }} />
+      <div
+        className="progress-bar published"
+        style={{ width: `${published}%` }}
+      />
+      <div
+        className="progress-bar unpublished"
+        style={{ width: `${unpublished}%` }}
+      />
     </div>
   </div>
 )
@@ -30,4 +37,7 @@ require('react-styl')(`
       height: 6px
       .progress-bar
         background-color: var(--greenblue)
+        &.unpublished
+          background-color: var(--clear-blue)
+
 `)

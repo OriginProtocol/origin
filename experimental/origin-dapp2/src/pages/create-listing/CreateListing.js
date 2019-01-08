@@ -9,25 +9,16 @@ import Review from './Review'
 class CreateListing extends Component {
   state = {
     listing: {
-      title: 'Cool Bike',
-      description: 'A very cool bike',
-      category: 'forSale',
-      subCategory: 'schema.bicycles',
+      title: '',
+      description: '',
+      category: '',
+      subCategory: '',
       quantity: '1',
       location: '',
-      price: '0.5',
-      boost: '5',
+      price: '',
+      boost: '0',
       media: []
     }
-    // listing: {
-    //   title: '',
-    //   description: '',
-    //   category: '',
-    //   subCategory: '',
-    //   quantity: '1',
-    //   price: '',
-    //   boost: '0'
-    // }
   }
 
   render() {

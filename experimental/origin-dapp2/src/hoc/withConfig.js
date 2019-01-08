@@ -9,7 +9,7 @@ function withConfig(WrappedComponent) {
     return (
       <Query query={ConfigQuery}>
         {({ data, networkStatus }) => {
-          const config = get(data, 'config', {})
+          const config = get(data, 'configObj', {})
           return (
             <WrappedComponent
               {...props}

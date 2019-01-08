@@ -68,7 +68,7 @@ class RegisteredUsers extends Component {
                           <tr
                             key={user.id}
                             onClick={() =>
-                              this.props.history.push(`/users/${user.id}`)
+                              this.props.history.push(`/identities/${user.id}`)
                             }
                           >
                             <td>

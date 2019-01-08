@@ -72,7 +72,7 @@ class ListingCardPrices extends Component {
                         &nbsp;ETH
                     </span>
                     {isMultiUnit && (<span className="append">
-                      &nbsp;/{this.props.intl.formatMessage(this.intlMessages.each)}
+                      &nbsp;{this.props.intl.formatMessage(this.intlMessages.each)}
                     </span>)}
                   </div>
                   <div className="fiat">
