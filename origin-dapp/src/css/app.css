@@ -2017,7 +2017,6 @@ textarea:-moz-ui-invalid {
 }
 
 .modal.getting-started {
-  top: auto;
   left: auto;
   right: 20px;
   z-index: 997;
