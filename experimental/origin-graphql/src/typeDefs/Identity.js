@@ -1,32 +1,25 @@
 export default `
   extend type Query {
     userRegistry: UserRegistry
+    identity(id: ID!): Identity
   }
 
   extend type Mutation {
     deployUserRegistry(from: String): Transaction
     deployIdentityContract(from: String!, contract: String!): Transaction
+
     deployIdentity(
       from: String!
       profile: ProfileInput
       attestations: [AttestationInput]
     ): Transaction
 
-    attestationsGeneratePhoneCode(prefix: String!, method: String, phone: String!): PhoneCodeResult!
-    attestationsVerifyPhoneCode(prefix: String!, identity: String, phone: String!, code: String!): PhoneVerifyResult!
-  }
-
-  type PhoneCodeResult {
-    success: Boolean
-    reason: String
-  }
-
-  type PhoneVerifyResult {
-    success: Boolean
-    reason: String
-    claimType: String
-    data: String
-    signature: String
+    updateIdentity(
+      from: String!
+      identity: String!
+      profile: ProfileInput
+      attestations: [AttestationInput]
+    ): Transaction
   }
 
   input ProfileInput {
@@ -75,7 +68,7 @@ export default `
     fullName: String
     description: String
     avatar: String
-    strength: String
+    strength: Int
 
     facebookVerified: Boolean
     twitterVerified: Boolean

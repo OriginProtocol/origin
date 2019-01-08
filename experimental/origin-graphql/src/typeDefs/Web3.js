@@ -31,6 +31,7 @@ export default `
 
   type Config {
     discovery: String
+    facebookAuthUrl: String
   }
 
   type Mutation {

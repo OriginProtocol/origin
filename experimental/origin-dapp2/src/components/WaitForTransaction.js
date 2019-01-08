@@ -45,7 +45,17 @@ class WaitForTransaction extends Component {
             content = this.props.children({ event, client })
           }
 
-          return <Modal>{content}</Modal>
+          return (
+            <Modal
+              shouldClose={this.props.shouldClose}
+              onClose={() => {
+                if (this.props.onClose) {
+                  this.props.onClose()
+                }
+              }}
+              children={content}
+            />
+          )
         }}
       </Query>
     )

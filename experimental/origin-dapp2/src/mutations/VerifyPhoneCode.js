@@ -7,7 +7,7 @@ export default gql`
     $phone: String!
     $code: String!
   ) {
-    attestationsVerifyPhoneCode(
+    verifyPhoneCode(
       identity: $identity
       prefix: $prefix
       phone: $phone

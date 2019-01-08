@@ -6,7 +6,7 @@ export default gql`
     $method: String
     $phone: String!
   ) {
-    attestationsGeneratePhoneCode(
+    generatePhoneCode(
       prefix: $prefix
       method: $method
       phone: $phone
