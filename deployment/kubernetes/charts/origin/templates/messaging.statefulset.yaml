@@ -38,18 +38,31 @@ spec:
         volumeMounts:
           - mountPath: /data/ipfs
             name: {{ template "messaging.fullname" . }}-data
+          - mountPath: /data/odb
+            name: {{ template "messaging.fullname" . }}-odb
         resources:
           requests:
             memory: 1Gi
   volumeClaimTemplates:
-  - metadata:
-      name: {{ template "messaging.fullname" . }}-data
-      labels:
-        app: {{ template "messaging.fullname" . }}
-    spec:
-      accessModes:
-        - ReadWriteOnce  # Read-write for a single node only
-      storageClassName: "standard"
-      resources:
-        requests:
-          storage: {{ default "8Gi" .Values.messagingIpfsStorageRequestSize }}
+    - metadata:
+        name: {{ template "messaging.fullname" . }}-data
+        labels:
+          app: {{ template "messaging.fullname" . }}
+      spec:
+        accessModes:
+          - ReadWriteOnce  # Read-write for a single node only
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: {{ default "8Gi" .Values.messagingIpfsStorageRequestSize }}
+    - metadata:
+        name: {{ template "messaging.fullname" . }}-odb
+        labels:
+          app: {{ template "messaging.fullname" . }}
+      spec:
+        accessModes:
+          - ReadWriteOnce  # Read-write for a single node only
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: {{ default "8Gi" .Values.messagingOdbStorageRequestSize }}
