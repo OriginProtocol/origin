@@ -1125,6 +1125,15 @@ class OriginWallet {
         //brand new info
         wallet_info = {walletToken: await UUIDGenerator.getRandomUUID()}
       }
+      else
+      {
+        if (wallet_info.deviceToken)
+        {
+          // if we have a deviceToken store, then assume we already have notifications on
+          // and make sure we have the correct(non-expired) token
+          this.requestNotifictions()
+        }
+      }
       this.state.walletToken = wallet_info.walletToken
       this.save_wallet_info = wallet_info
       this.saveInfo()
