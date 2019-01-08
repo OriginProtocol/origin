@@ -4,7 +4,7 @@
 @import 'origin-bootstrap.css';
 
 body {
-  background-color: #fafbfc;
+  background-color: var(--pale-grey-four);
 }
 
 .logo {
@@ -14,12 +14,16 @@ body {
 }
 
 .main {
-  padding: 4rem 8rem;
   background-color: white;
-  border-radius: 5px;
+  border-bottom-left-radius: var(--default-radius);
+  border-bottom-right-radius: var(--default-radius);
   border: 1px solid #c2cbd3;
   margin: 2rem auto;
   width: 810px;
+}
+
+.form {
+  padding: 4rem 8rem;
 }
 
 h1 {

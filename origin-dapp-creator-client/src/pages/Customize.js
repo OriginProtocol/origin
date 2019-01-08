@@ -3,15 +3,6 @@ import PropTypes from 'prop-types'
 import { Button, Intent } from '@blueprintjs/core'
 import superagent from 'superagent'
 
-import AboutField from 'components/fields/AboutField'
-import TitleField from 'components/fields/TitleField'
-import LanguageCodeField from 'components/fields/LanguageCodeField'
-import LogoUrlField from 'components/fields/LogoUrlField'
-import IconUrlField from 'components/fields/IconUrlField'
-import SubdomainField from 'components/fields/SubdomainField'
-import ColorPicker from 'components/ColorPicker'
-import SuccessDialog from 'components/dialogs/SuccessDialog'
-import LoadDialog from 'components/dialogs/LoadDialog'
 import { AppToaster } from '../toaster'
 
 import { baseConfig } from 'origin-dapp/src/config'
@@ -85,7 +76,7 @@ class Form extends Component {
   render () {
     return (
       <>
-        <form onSubmit={this.handleSubmit}
+        <form onSubmit={this.handleSubmit}>
           <h1>Customize your Marketplace's Appearance</h1>
           <h4>Choose a logo and colors for your marketplace below.</h4>
         </form>

@@ -1,9 +1,10 @@
 require('dotenv').config()
 
-import React from 'react'
-import ReactDOM from 'react-dom'
 import { Route, HashRouter } from 'react-router-dom'
 import { Web3Provider } from 'react-web3'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Styl from 'react-styl'
 
 import './css/app.css'
 import App from './pages/App'
@@ -21,3 +22,5 @@ class AppWrapper extends React.Component {
 }
 
 ReactDOM.render(<AppWrapper />, document.getElementById('app'))
+
+Styl.addStylesheet()

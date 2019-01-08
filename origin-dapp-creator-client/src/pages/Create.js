@@ -61,7 +61,6 @@ class Form extends React.Component {
   render () {
     return (
       <>
-        <Steps steps={3} step={1} />
         <h1>Welcome to the Origin Marketplace Creator</h1>
         <h4>Please provide the information below to get started.</h4>
 
