@@ -46,9 +46,11 @@ TOPICS = {
 
 logger = logging.getLogger(__name__)
 
+
 def current_time():
     """Returns current time in ISO 8601 format. Ex: 2019-01-04T06:17:37+00:00"""
     return datetime.datetime.now(tz=pytz.utc).replace(microsecond=0).isoformat()
+
 
 class VerificationServiceResponse():
     def __init__(self, data={}):
@@ -545,7 +547,7 @@ class VerificationService:
                     'pubAuditableUrl': {}
                 },
                 'site': {
-                    'siteName': 'twitter.com',
+                    'siteName': 'airbnb.com',
                     'userId': {
                         'raw': airbnbUserId
                     }

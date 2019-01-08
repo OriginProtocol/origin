@@ -58,7 +58,13 @@ def test_verify_phone(client):
         assert response.status_code == 200
         response_json = json_of_response(response)
         assert len(response_json['signature']) == 132
-        assert response_json['data'] == 'phone verified'
+        assert response_json['schemaId'] == \
+            'https://schema.originprotocol.com/attestation_1.0.0.json'
+        assert response_json['data']['issuer']['name'] == 'Origin Protocol'
+        assert response_json['data']['issuer']['url'] == 'https://www.originprotocol.com'
+        assert response_json['data']['issueDate']
+        assert response_json['data']['attestation']['verificationMethod']['phone']
+        assert response_json['data']['attestation']['phone']['verified']
 
 
 @mock.patch('logic.attestation_service._send_email_using_sendgrid')
@@ -84,7 +90,12 @@ def test_email_verify(mock_send_email_using_sendgrid, client):
     assert response.status_code == 200
     response_json = json_of_response(response)
     assert len(response_json['signature']) == 132
-    assert response_json['data'] == 'email verified'
+    assert response_json['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
+    assert response_json['data']['issuer']['name'] == 'Origin Protocol'
+    assert response_json['data']['issuer']['url'] == 'https://www.originprotocol.com'
+    assert response_json['data']['issueDate']
+    assert response_json['data']['attestation']['verificationMethod']['email']
+    assert response_json['data']['attestation']['email']['verified']
 
 
 def test_facebook_verify(client):
@@ -128,14 +139,17 @@ def test_facebook_verify(client):
         response_json = json_of_response(response)
         assert response.status_code == 200
         assert len(response_json['signature']) == 132
-        assert response_json['data'] == 'facebook verified'
+        assert response_json['schemaId'] == \
+            'https://schema.originprotocol.com/attestation_1.0.0.json'
+        assert response_json['data']['issuer']['name'] == 'Origin Protocol'
+        assert response_json['data']['issuer']['url'] == 'https://www.originprotocol.com'
+        assert response_json['data']['issueDate']
+        assert response_json['data']['attestation']['verificationMethod']['oAuth']
+        assert response_json['data']['attestation']['site']['siteName'] == 'facebook.com'
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
-def test_twitter_verify(mock_ipfs, client):
+def test_twitter_verify(client):
     response_content = b'oauth_token=peaches&oauth_token_secret=pears'
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with responses.RequestsMock() as rsps:
         rsps.add(
@@ -167,5 +181,11 @@ def test_twitter_verify(mock_ipfs, client):
         response_json = json_of_response(response)
         assert response.status_code == 200
         assert len(response_json['signature']) == 132
-        assert response_json['data'] \
-            == 'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
+        assert response_json['schemaId'] == \
+            'https://schema.originprotocol.com/attestation_1.0.0.json'
+        assert response_json['data']['issuer']['name'] == 'Origin Protocol'
+        assert response_json['data']['issuer']['url'] == 'https://www.originprotocol.com'
+        assert response_json['data']['issueDate']
+        assert response_json['data']['attestation']['verificationMethod']['oAuth']
+        assert response_json['data']['attestation']['site']['siteName'] == 'twitter.com'
+        assert response_json['data']['attestation']['site']['userId']['raw'] == 'originprotocol'

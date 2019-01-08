@@ -140,7 +140,12 @@ def test_verify_phone_valid_code(app):
 
     assert len(response.data['signature']) == SIGNATURE_LENGTH
     assert response.data['claim_type'] == TOPICS['phone']
-    assert response.data['data'] == 'phone verified'
+    assert response.data['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
+    assert response.data['data']['issuer']['name'] == 'Origin Protocol'
+    assert response.data['data']['issuer']['url'] == 'https://www.originprotocol.com'
+    assert response.data['data']['issueDate']
+    assert response.data['data']['attestation']['verificationMethod']['phone']
+    assert response.data['data']['attestation']['phone']['verified']
 
     attestations = Attestation.query.all()
     assert(len(attestations)) == 1
@@ -255,7 +260,12 @@ def test_verify_email_valid_code(mock_session, app):
 
     assert len(response.data['signature']) == SIGNATURE_LENGTH
     assert response.data['claim_type'] == TOPICS['email']
-    assert response.data['data'] == 'email verified'
+    assert response.data['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
+    assert response.data['data']['issuer']['name'] == 'Origin Protocol'
+    assert response.data['data']['issuer']['url'] == 'https://www.originprotocol.com'
+    assert response.data['data']['issueDate']
+    assert response.data['data']['attestation']['verificationMethod']['email']
+    assert response.data['data']['attestation']['email']['verified']
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
@@ -411,7 +421,13 @@ def test_verify_facebook_valid_code(app):
     assert isinstance(verification_response, VerificationServiceResponse)
     assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
     assert verification_response.data['claim_type'] == TOPICS['facebook']
-    assert verification_response.data['data'] == 'facebook verified'
+    assert verification_response.data['schemaId'] == \
+        'https://schema.originprotocol.com/attestation_1.0.0.json'
+    assert verification_response.data['data']['issuer']['name'] == 'Origin Protocol'
+    assert verification_response.data['data']['issuer']['url'] == 'https://www.originprotocol.com'
+    assert verification_response.data['data']['issueDate']
+    assert verification_response.data['data']['attestation']['verificationMethod']['oAuth']
+    assert verification_response.data['data']['attestation']['site']['siteName'] == 'facebook.com'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
@@ -469,10 +485,9 @@ def test_twitter_auth_url(app):
     )
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
 @mock.patch('logic.attestation_service.session')
 @responses.activate
-def test_verify_twitter_valid_code(mock_session, mock_ipfs, app):
+def test_verify_twitter_valid_code(mock_session, app):
     responses.add(
         responses.POST,
         twitter_access_token_url,
@@ -492,23 +507,22 @@ def test_verify_twitter_valid_code(mock_session, mock_ipfs, app):
         }
     }
 
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
-
     with mock.patch('logic.attestation_service.session', session_dict):
         with app.test_request_context():
             verification_response = VerificationService.verify_twitter(**args)
 
     assert isinstance(verification_response, VerificationServiceResponse)
-
-    assert str(mock_ipfs().add_json()) == verification_response.data['data']
-    assert verification_response.data['signature'] \
-        == '0xd397a2a7ae96714aa7e68c62d400b2786e919fe445c471e574e5' \
-        + '20bd2faade13333310b20c5555b416b095bf7fce36ec5b0af2c35b2fcfd3154138677027edb11b'
     assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
     assert verification_response.data['claim_type'] == TOPICS['twitter']
-    assert verification_response.data['data'] \
-        == 'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
+    assert verification_response.data['schemaId'] == \
+        'https://schema.originprotocol.com/attestation_1.0.0.json'
+    assert verification_response.data['data']['issuer']['name'] == 'Origin Protocol'
+    assert verification_response.data['data']['issuer']['url'] == 'https://www.originprotocol.com'
+    assert verification_response.data['data']['issueDate']
+    assert verification_response.data['data']['attestation']['verificationMethod']['oAuth']
+    assert verification_response.data['data']['attestation']['site']['siteName'] == 'twitter.com'
+    assert verification_response.data['data']['attestation']['site']['userId']['raw'] == \
+        'originprotocol'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
@@ -517,10 +531,9 @@ def test_verify_twitter_valid_code(mock_session, mock_ipfs, app):
     assert(attestations[0].value) == 'originprotocol'
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
 @mock.patch('logic.attestation_service.session')
 @responses.activate
-def test_verify_twitter_invalid_verifier(mock_session, mock_ipfs, app):
+def test_verify_twitter_invalid_verifier(mock_session, app):
     responses.add(
         responses.POST,
         twitter_access_token_url,
@@ -539,9 +552,6 @@ def test_verify_twitter_invalid_verifier(mock_session, mock_ipfs, app):
         }
     }
 
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
-
     with mock.patch('logic.attestation_service.session', session_dict):
         with pytest.raises(TwitterVerificationError) as service_err:
             with app.test_request_context():
@@ -554,17 +564,13 @@ def test_verify_twitter_invalid_verifier(mock_session, mock_ipfs, app):
     assert(len(attestations)) == 0
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
 @mock.patch('logic.attestation_service.requests')
 @mock.patch('logic.attestation_service.session')
-def test_verify_twitter_invalid_session(mock_session, mock_requests, mock_ipfs):
+def test_verify_twitter_invalid_session(mock_session, mock_requests):
     args = {
         'eth_address': '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         'oauth_verifier': 'pineapples'
     }
-
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with pytest.raises(TwitterVerificationError) as service_err:
         VerificationService.verify_twitter(**args)
@@ -596,30 +602,32 @@ def test_generate_airbnb_verification_code_incorrect_user_id_format():
     assert str(validation_error.value) == 'AirbnbUserId should be a number.'
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
 @mock.patch('logic.attestation_service.urlopen')
-def test_verify_airbnb(mock_urllib_request, mock_ipfs, app):
+def test_verify_airbnb(mock_urllib_request, app):
     mock_urllib_request.return_value.read.return_value = """
         <html><div>
             Airbnb profile description
             Origin verification code: art brick aspect accident brass betray antenna
             some more profile description
         </div></html>""".encode('utf-8')
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
     airbnbUserId = "123456"
 
     with app.test_request_context():
-        verification_response = VerificationService.verify_airbnb(
+        response = VerificationService.verify_airbnb(
             '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
             airbnbUserId
         )
-    assert isinstance(verification_response, VerificationServiceResponse)
+    assert isinstance(response, VerificationServiceResponse)
 
-    assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
-    assert verification_response.data['claim_type'] == TOPICS['airbnb']
-    assert verification_response.data['data'] \
-        == 'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
+    assert len(response.data['signature']) == SIGNATURE_LENGTH
+    assert response.data['claim_type'] == TOPICS['airbnb']
+    assert response.data['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
+    assert response.data['data']['issuer']['name'] == 'Origin Protocol'
+    assert response.data['data']['issuer']['url'] == 'https://www.originprotocol.com'
+    assert response.data['data']['issueDate']
+    assert response.data['data']['attestation']['verificationMethod']['pubAuditableUrl'] == {}
+    assert response.data['data']['attestation']['site']['siteName'] == 'airbnb.com'
+    assert response.data['data']['attestation']['site']['userId']['raw'] == '123456'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
@@ -628,15 +636,12 @@ def test_verify_airbnb(mock_urllib_request, mock_ipfs, app):
     assert(attestations[0].value) == "123456"
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
 @mock.patch('logic.attestation_service.urlopen')
-def test_verify_airbnb_verification_code_missing(mock_urllib_request, mock_ipfs):
+def test_verify_airbnb_verification_code_missing(mock_urllib_request):
     mock_urllib_request.return_value.read.return_value = """
         <html><div>
         Airbnb profile description some more profile description
         </div></html>""".encode('utf-8')
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with pytest.raises(AirbnbVerificationError) as service_err:
         VerificationService.verify_airbnb(
@@ -652,17 +657,14 @@ def test_verify_airbnb_verification_code_missing(mock_urllib_request, mock_ipfs)
     assert(len(attestations)) == 0
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
 @mock.patch('logic.attestation_service.urlopen')
-def test_verify_airbnb_verification_code_incorrect(mock_urllib_request, mock_ipfs):
+def test_verify_airbnb_verification_code_incorrect(mock_urllib_request):
     mock_urllib_request.return_value.read.return_value = """
         <html><div>
         Airbnb profile description
         Origin verification code: art brick aspect pimpmobile
         some more profile description
         </div></html>""".encode('utf-8')
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with pytest.raises(AirbnbVerificationError) as service_err:
         VerificationService.verify_airbnb(
@@ -678,18 +680,15 @@ def test_verify_airbnb_verification_code_incorrect(mock_urllib_request, mock_ipf
     assert(len(attestations)) == 0
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
 @mock.patch('logic.attestation_service.urlopen')
 def test_verify_airbnb_verification_code_incorrect_user_id_format(
-        mock_urllib_request, mock_ipfs):
+        mock_urllib_request):
     mock_urllib_request.return_value.read.return_value = """
         <html><div>
         Airbnb profile description
         Origin verification code: art brick aspect accident brass betray antenna
         some more profile description
         </div></html>""".encode('utf-8')
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
 
     with pytest.raises(ValidationError) as validation_error:
         VerificationService.verify_airbnb(
@@ -704,7 +703,6 @@ def test_verify_airbnb_verification_code_incorrect_user_id_format(
     assert(len(attestations)) == 0
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
 @mock.patch('logic.attestation_service.urlopen', side_effect=HTTPError(
     'https://www.airbnb.com/users/show/99999999999999999',
     404,
@@ -713,9 +711,7 @@ def test_verify_airbnb_verification_code_incorrect_user_id_format(
     {}
 ))
 def test_verify_airbnb_verification_code_non_existing_user(
-        mock_urllib_request, mock_ipfs):
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
+        mock_urllib_request):
     with pytest.raises(AirbnbVerificationError) as service_err:
         VerificationService.verify_airbnb(
             '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
@@ -730,7 +726,6 @@ def test_verify_airbnb_verification_code_non_existing_user(
     assert(len(attestations)) == 0
 
 
-@mock.patch('logic.attestation_service.IPFSHelper')
 @mock.patch('logic.attestation_service.urlopen', side_effect=HTTPError(
     'https://www.airbnb.com/users/show/123',
     500,
@@ -739,9 +734,7 @@ def test_verify_airbnb_verification_code_non_existing_user(
     {}
 ))
 def test_verify_airbnb_verification_code_internal_server_error(
-        mock_urllib_request, mock_ipfs):
-    mock_ipfs.return_value.add_json.return_value = \
-        'QmYpVLAyQ2SV7NLATdN3xnHTewoQ3LYN85LAcvN1pr2k3z'
+        mock_urllib_request):
     with pytest.raises(AirbnbVerificationError) as service_err:
         VerificationService.verify_airbnb(
             '0x112234455C3a32FD11230C42E7Bccd4A84e02010',

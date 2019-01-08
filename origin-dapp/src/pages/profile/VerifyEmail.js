@@ -109,9 +109,11 @@ class VerifyEmail extends Component {
           code: this.state.code,
           wallet: this.props.wallet
         })
+        console.log("origin.attestations.emailVerify return=", emailAttestation)
         this.props.onSuccess(emailAttestation)
       }
     } catch (exception) {
+      console.log("EMAIL VERIFY EXCEPTION", exception)
       const errorsJson = JSON.parse(exception).errors
 
       if (Array.isArray(errorsJson))

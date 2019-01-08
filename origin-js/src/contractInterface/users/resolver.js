@@ -6,10 +6,9 @@ export default class UsersResolver {
   constructor({ contractService, ipfsService, blockEpoch, blockAttestattionV1, attestationAccount }) {
     this.adapters = {
       '000': new V00_UsersAdapter({ contractService, ipfsService, blockEpoch, blockAttestattionV1 }),
-//      '001': new V01_UsersAdapter({ contractService, ipfsService, blockEpoch, attestationAccount })
+      '001': new V01_UsersAdapter({ contractService, ipfsService, blockEpoch, attestationAccount })
     }
-//    this.versions = ['000', '001']
-    this.versions = ['000']
+    this.versions = ['000', '001']
     this.currentVersion = this.versions[this.versions.length - 1]
     this.currentAdapter = this.adapters[this.currentVersion]
   }

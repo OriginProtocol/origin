@@ -4,9 +4,11 @@ from marshmallow import Schema, fields
 from logic.attestation_service import VerificationService
 from api.helpers import StandardRequest, StandardResponse, handle_request
 
+
 class PubAuditableUrl(Schema):
     challenge = fields.Str()
     proofUrl = fields.Str()
+
 
 class VerificationMethod(Schema):
     oAuth = fields.Boolean()
@@ -16,14 +18,17 @@ class VerificationMethod(Schema):
     human = fields.Boolean()
     pubAuditableUrl = fields.Nested(PubAuditableUrl)
 
+
 class Hash(Schema):
     function = fields.Str()
     value = fields.Str()
+
 
 class Attribute(Schema):
     raw = fields.Str()
     verified = fields.Boolean()
     hash = fields.Nested(Hash)
+
 
 class Site(Schema):
     siteName = fields.Str()
@@ -31,30 +36,42 @@ class Site(Schema):
     username = fields.Nested(Attribute)
     profileUrl = fields.Nested(Attribute)
 
+
 class Attestation(Schema):
     verificationMethod = fields.Nested(VerificationMethod)
     email = fields.Nested(Attribute)
     phone = fields.Nested(Attribute)
     site = fields.Nested(Site)
 
+
 class Issuer(Schema):
     name = fields.Str()
     url = fields.Str()
 
+
 class AttestationData(Schema):
     issuer = fields.Nested(Issuer)
-    issueDate = fields.Str() # TODO: change to fields.DateTime ??
+    issueDate = fields.Str()
     attestation = fields.Nested(Attestation)
+
+
+class PhoneVerificationCodeRequest(StandardRequest):
+    country_calling_code = fields.Str(required=True)
+    phone = fields.Str(required=True)
+    method = fields.Str(missing='sms')
+    locale = fields.Str(missing=None)
 
 
 class PhoneVerificationCodeResponse(StandardResponse):
     pass
+
 
 class VerifyPhoneRequest(StandardRequest):
     eth_address = fields.Str(required=True, data_key='identity')
     country_calling_code = fields.Str(required=True)
     phone = fields.Str(required=True)
     code = fields.Str(required=True)
+
 
 class VerifyPhoneResponse(StandardResponse):
     schemaId = fields.Str(required=True)
@@ -66,13 +83,16 @@ class VerifyPhoneResponse(StandardResponse):
 class EmailVerificationCodeRequest(StandardRequest):
     email = fields.Email(required=True)
 
+
 class EmailVerificationCodeResponse(StandardResponse):
     pass
+
 
 class VerifyEmailRequest(StandardRequest):
     eth_address = fields.Str(required=True, data_key='identity')
     email = fields.Email(required=True)
     code = fields.Str(required=True)
+
 
 class VerifyEmailResponse(StandardResponse):
     schemaId = fields.Str(required=True)
@@ -84,12 +104,15 @@ class VerifyEmailResponse(StandardResponse):
 class FacebookAuthUrlRequest(StandardRequest):
     pass
 
+
 class FacebookAuthUrlResponse(StandardResponse):
     url = fields.Url()
+
 
 class VerifyFacebookRequest(StandardRequest):
     eth_address = fields.Str(required=True, data_key='identity')
     code = fields.Str(required=True)
+
 
 class VerifyFacebookResponse(StandardResponse):
     schemaId = fields.Str(required=True)
@@ -101,12 +124,15 @@ class VerifyFacebookResponse(StandardResponse):
 class TwitterAuthUrlRequest(StandardRequest):
     pass
 
+
 class TwitterAuthUrlResponse(StandardResponse):
     url = fields.Url()
+
 
 class VerifyTwitterRequest(StandardRequest):
     eth_address = fields.Str(required=True, data_key='identity')
     oauth_verifier = fields.Str(required=True, data_key='oauth-verifier')
+
 
 class VerifyTwitterResponse(StandardResponse):
     schemaId = fields.Str(required=True)
@@ -119,8 +145,10 @@ class AirbnbRequest(StandardRequest):
     eth_address = fields.Str(required=True, data_key='identity')
     airbnbUserId = fields.Str(required=True)
 
+
 class AirbnbVerificationCodeResponse(StandardResponse):
     code = fields.Str()
+
 
 class VerifyAirbnbResponse(StandardResponse):
     schemaId = fields.Str(required=True)

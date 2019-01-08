@@ -11,9 +11,9 @@ export default class V01_UsersAdapter {
     this.ipfsDataStore = new IpfsDataStore(ipfsService)
     this.contractName = 'IdentityEvents'
     this.blockEpoch = blockEpoch || 0
-    if (!attestationAccount) {
-      console.log("INVALID attestation account")
-    }
+    // TODO: In the future when we have multiple attestation issuers and not just Origin,
+    // the issuer's account should be looked up on a per attestation basis rather
+    // than being hardcoded as it is currently.
     this.issuerAddress = attestationAccount
   }
 
@@ -32,25 +32,27 @@ export default class V01_UsersAdapter {
     const address = await this.contractService.currentAccount()
     console.log(`V01 ADAPTER set() - address=${address} profile=${JSON.stringify(profile)} attestation=${JSON.stringify(attestations)}`)
 
-    // Load existing identity, if any.
+    // Load existing identity, if any and use it to populate newIpfsIdentity.
     let ipfsHash = await this._getIdentityIpfsHash(address)
-    const ipfsIdentity = ipfsHash ?
-      await this.ipfsDataStore.load(IDENTITY_DATA_TYPE, ipfsHash) :
-      { schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json' }
+    const currentIpfsIdentity = ipfsHash ?
+      await this.ipfsDataStore.load(IDENTITY_DATA_TYPE, ipfsHash) : {}
 
-    // Overwrite profile.
+    // Add some extra required fields to the profile.
     profile.schemaId = 'https://schema.originprotocol.com/profile_2.0.0.json'
     profile.ethAddress = address
-    ipfsIdentity.profile = profile
 
-    // Validate the new attestations.
-    const newAttestations = attestations.filter(a => this._validateAttestation(address, a))
+    // Validate the new attestations and merge them with the ones from current profile.
+    const newAttestations = attestations.filter(a => this._validateAttestation(address, a.data))
+    const allAttestations = this._mergeAttestations(currentIpfsIdentity.attestations || [], newAttestations)
 
-    // Merge new attestations with existing ones.
-    ipfsIdentity.attestations = this._mergeAttestations(ipfsIdentity.attestations || [], newAttestations)
+    const newIpfsIdentity = {
+      schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',
+      profile: profile,
+      attestations: allAttestations
+    }
 
-    // Save identity to IPFS.
-    ipfsHash = await this.ipfsDataStore.save(IDENTITY_DATA_TYPE, ipfsIdentity)
+    // Save new identity to IPFS.
+    ipfsHash = await this.ipfsDataStore.save(IDENTITY_DATA_TYPE, newIpfsIdentity)
 
     // Call contract to emit an IdentityUpdated event.
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
@@ -189,6 +191,7 @@ export default class V01_UsersAdapter {
     // Note: we use stringify rather than the default JSON.stringify
     // to produce a deterministic JSON representation.
     const attestationJson = stringify(attestation.data)
+    console.log("VALIDATING ATTESTATION account=", account, " data=", attestationJson)
     const message = Web3.utils.soliditySha3(account, Web3.utils.sha3(attestationJson))
     const messageHash = this.contractService.web3.eth.accounts.hashMessage(message)
     const issuerAddress = this.contractService.web3.eth.accounts.recover(messageHash, attestation.signature, true)
