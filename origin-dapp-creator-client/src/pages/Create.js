@@ -4,7 +4,6 @@ import pick from 'lodash/pick'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import Redirect from 'components/Redirect'
-import Steps from 'components/Steps'
 
 class Create extends React.Component {
   constructor(props, context) {

@@ -1,7 +1,6 @@
 import React from 'react'
 
 class ImagePicker extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -55,10 +54,10 @@ class ImagePicker extends React.Component {
           onClick={this.handlePreviewClick}
         >
           <h2>{this.props.title}</h2>
-          <p>Drag and drop your logo or click the button below to browase</p>
-          <btn class="btn btn-default">
+          <p>Drag and drop your logo or click the button below to browse</p>
+          <button className="btn btn-default">
             Upload
-          </btn>
+          </button>
         </div>
       </>
     )

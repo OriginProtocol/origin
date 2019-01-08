@@ -1,57 +1,20 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Button, Intent } from '@blueprintjs/core'
+import React from 'react'
 import superagent from 'superagent'
 
 import { AppToaster } from '../toaster'
+import { formInput, formFeedback } from 'utils/formHelpers'
+import ImagePicker from 'components/ImagePicker'
+import Redirect from 'components/Redirect'
 
-import { baseConfig } from 'origin-dapp/src/config'
-
-class Form extends Component {
+class Customize extends React.Component {
   constructor(props, context) {
     super(props)
 
-    this.web3Context = context.web3
-  }
-
-  async web3Sign(data, account) {
-    // Promise wrapper for web3 signing
-    return new Promise((resolve, reject) => {
-      web3.personal.sign(data, account, (err, sig) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(sig)
-      })
-    })
+    this.themes = {
+    }
   }
 
   async handleSubmit (event) {
-    event.preventDefault()
-
-    this.setState({ publishing: true })
-
-    let signature = null
-    if (this.state.config.subdomain) {
-      // Generate a valid signature if a subdomain is in use
-      const dataToSign = JSON.stringify(this.state.config)
-      signature = await this.web3Sign(dataToSign, web3.eth.accounts[0])
-    }
-
-    return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/config`)
-      .send({
-        config: this.state.config,
-        signature: signature,
-        address: web3.eth.accounts[0]
-      })
-      .then((res) => {
-        this.setState({
-          ipfsHash: res.text,
-          successDialogIsOpen: true
-        })
-      })
-      .catch(this.handleServerErrors)
-      .finally(() => this.setState({ publishing: false }))
   }
 
   async handlePreview () {
@@ -74,18 +37,51 @@ class Form extends Component {
   }
 
   render () {
+    const input = formInput(this.state, state => this.setState(state))
+    const Feedback = formFeedback(this.state)
+
     return (
       <>
         <form onSubmit={this.handleSubmit}>
           <h1>Customize your Marketplace's Appearance</h1>
           <h4>Choose a logo and colors for your marketplace below.</h4>
 
-          <div>
-            <ImagePicker />
+          <div className="row">
+            <div className="col-6">
+              <ImagePicker />
+            </div>
+
+            <div className="col-6">
+              <ImagePicker />
+            </div>
           </div>
 
-          <div>
-            <ImagePicker />
+          <div className="form-group">
+            <label>Theme</label>
+            <select className="form-control form-control-lg">
+              <option>Matt Dreams of Poultry</option>
+            </select>
+          </div>
+
+          <div className="row">
+            <div className="col-8">
+            </div>
+
+            <div className="col-4">
+              <label>Colors</label>
+              <br/>
+              <label>Font</label>
+            </div>
+          </div>
+
+          <div className="form-actions">
+            <button className="btn btn-outline-primary btn-lg">
+              Back
+            </button>
+
+            <button type="submit" className="btn btn-primary btn-lg">
+              Continue
+            </button>
           </div>
         </form>
       </>
@@ -93,8 +89,4 @@ class Form extends Component {
   }
 }
 
-Form.contextTypes = {
-  web3: PropTypes.object
-}
-
-export default Form
+export default Customize
