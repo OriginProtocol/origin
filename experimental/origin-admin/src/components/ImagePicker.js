@@ -3,7 +3,7 @@ import { FileInput, Button } from '@blueprintjs/core'
 import { getIpfsApi, getIpfsGateway } from 'utils/config'
 import { postFile } from 'utils/ipfsHash'
 
-var acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
+const acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
 
 function fileSize(number) {
   if (number < 1024) {

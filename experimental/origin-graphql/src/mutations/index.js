@@ -30,6 +30,18 @@ import deployToken from './token/deployToken'
 import transferToken from './token/transferToken'
 import updateTokenAllowance from './token/updateTokenAllowance'
 
+import deployUserRegistry from './identity/deployUserRegistry'
+import deployIdentityContract from './identity/deployIdentityContract'
+import deployIdentity from './identity/deployIdentity'
+import updateIdentity from './identity/updateIdentity'
+
+import generateEmailCode from './attestations/generateEmailCode'
+import verifyEmailCode from './attestations/verifyEmailCode'
+import generatePhoneCode from './attestations/generatePhoneCode'
+import verifyPhoneCode from './attestations/verifyPhoneCode'
+import verifyFacebook from './attestations/verifyFacebook'
+import verifyTwitter from './attestations/verifyTwitter'
+
 export default {
   addAffiliate,
   acceptOffer,
@@ -59,5 +71,15 @@ export default {
   toggleMetaMask,
   enableMessaging,
   sendMessage,
+  deployUserRegistry,
+  deployIdentityContract,
+  deployIdentity,
+  updateIdentity,
+  generatePhoneCode,
+  verifyPhoneCode,
+  generateEmailCode,
+  verifyEmailCode,
+  verifyFacebook,
+  verifyTwitter,
   refetch: () => true
 }

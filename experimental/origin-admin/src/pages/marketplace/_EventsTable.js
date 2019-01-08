@@ -6,7 +6,7 @@ import Identity from 'components/Identity'
 import { getIpfsGateway } from 'utils/config'
 
 function ipfs(rawHash) {
-  var hash = getIpfsHashFromBytes32(rawHash)
+  const hash = getIpfsHashFromBytes32(rawHash)
   const ipfsGateway = getIpfsGateway()
   return (
     <a

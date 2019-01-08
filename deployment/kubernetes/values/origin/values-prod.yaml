@@ -3,24 +3,18 @@ databaseInstance: origin-214503:us-west1:prod
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: '0df9014'
-bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
 dappImageTag: 'c879f31'
-dappReplicas: 2
-
-# Rinkeby network configuration
-gethTxReplicas: 1
-gethTxMemoryRequest: 6Gi
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
-# ipfs-proxy
-ipfsProxyImage: ipfs-proxy
-ipfsProxyImageTag: '08dda92'
+# origin-ipfs-proxy
+ipfsProxyImage: origin-ipfs-proxy
+ipfsProxyImageTag: 'ff20be8'
 
 # origin-faucet
 faucetImage: origin-faucet
@@ -41,3 +35,15 @@ messagingImageTag: 'c879f31'
 # origin-notifications
 notificationsImage: origin-notifications
 notificationsImageTag: '08dda92'
+
+# origin-dapp-creator-client
+creatorClientImage: origin-dapp-creator-client
+creatorClientImageTag: 'latest'
+
+# origin-dapp-creator-server
+creatorServerImage: origin-dapp-creator-server
+creatorServerImageTag: 'latest'
+
+# origin-linking
+linkingImage: origin-linking
+linkingImageTag: 'latest'

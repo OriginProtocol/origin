@@ -1,10 +1,11 @@
 'use strict'
 
-const web3 = new Web3(config.RPC_SERVER)
-
 import logger from './logger'
 import Web3 from 'web3'
 import * as config from './config'
+import fetch from 'cross-fetch'
+
+const web3 = new Web3(config.RPC_SERVER)
 
 function joinConversationKey(converser1, converser2) {
   return [converser1, converser2].sort().join('-')
@@ -44,7 +45,7 @@ function verifyConversers(conversee, keysMap){
   }
 }
 
-function verifyMessageSignature(keysMap) {
+function verifyMessageSignature(keysMap, orbitGlobal) {
   return (signature, key, message, buffer) => {
     logger.debug(`Verify message: ${message.id}, Key: ${key}, Signature: ${signature}`)
 
@@ -53,6 +54,28 @@ function verifyMessageSignature(keysMap) {
       signature
     )
     const entry = keysMap.get(key)
+
+    const db_store = orbitGlobal.stores[message.id]
+    if (config.LINKING_NOTIFY_ENDPOINT &&
+      db_store &&
+      db_store.__snapshot_loaded &&
+      db_store.access.write.includes(key)
+    ) {
+      const value = message.payload.value
+      if (value.length && value[0].emsg) {
+        const receivers = db_store.access.write.filter(address => address != key).
+          reduce((acc, i) => {acc[i] = { newMessage: true }; return acc}, {})
+
+        fetch(config.LINKING_NOTIFY_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ receivers, token: config.LINKING_NOTIFY_TOKEN })
+        })
+      }
+    }
 
     //only two addresses should have write access to here
     return entry.address == verifyAddress

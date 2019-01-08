@@ -4,7 +4,7 @@ import { Button } from '@blueprintjs/core'
 
 import { Dialog, FormGroup, InputGroup } from '@blueprintjs/core'
 
-import { AddAffiliateMutation } from '../../mutations'
+import { AddAffiliateMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class AddAffiliate extends Component {

@@ -12,7 +12,7 @@ import CreateWallet from './mutations/CreateWallet'
 import Contracts from '../contracts/Contracts'
 
 import populate from './_populate'
-import query from './_query'
+import query from 'queries/AllAccounts'
 
 import AccountBalances from './AccountBalances'
 
@@ -80,6 +80,14 @@ const Accounts = props => (
           />
           <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
           <Contracts />
+          <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
+          <pre>
+          {`localStorage.OGNContract = "${localStorage.OGNContract}"\n`}
+          {`localStorage.marketplaceContract = "${localStorage.marketplaceContract}"\n`}
+          {`localStorage.userRegistryContract = "${localStorage.userRegistryContract}"\n`}
+          {`localStorage.KeyHolderLibrary = "${localStorage.KeyHolderLibrary}"\n`}
+          {`localStorage.ClaimHolderLibrary = "${localStorage.ClaimHolderLibrary}"`}
+          </pre>
         </div>
       )
     }}

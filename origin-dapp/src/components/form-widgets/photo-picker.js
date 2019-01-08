@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import ImageCropper from '../modals/image-cropper'
-import { getDataUri, generateCroppedImage } from 'utils/fileUtils'
+import { generateCroppedImage, getDataURIsFromImgURLs, picURIsOnly } from 'utils/fileUtils'
 
 const MAX_IMAGE_COUNT = 10
 
@@ -66,33 +66,10 @@ class PhotoPicker extends Component {
     const { pictures } = this.state
     if (pictures) {
       setTimeout(async () => {
-        const picDataURIs = await this.getDataURIsFromImgURLs(pictures)
+        const picDataURIs = await getDataURIsFromImgURLs(pictures)
         this.props.onChange(picDataURIs)
       })
     }
-  }
-
-  async getDataURIsFromImgURLs(picUrls) {
-    const imagePromises = picUrls.map(url => {
-      return new Promise(async resolve => {
-        const image = new Image()
-        image.crossOrigin = 'anonymous'
-
-        image.onload = function() {
-          const canvas = document.createElement('canvas')
-          canvas.width = this.naturalWidth
-          canvas.height = this.naturalHeight
-          canvas.getContext('2d').drawImage(this, 0, 0)
-          canvas.toBlob(file => {
-            resolve(getDataUri(file))
-          }, 'image/jpeg')
-        }
-
-        image.src = url
-      })
-    })
-
-    return Promise.all(imagePromises)
   }
 
   onFileSelected(e) {
@@ -112,7 +89,7 @@ class PhotoPicker extends Component {
 
             this.setState(
               { pictures },
-              () => this.props.onChange(this.picURIsOnly(pictures))
+              () => this.props.onChange(picURIsOnly(pictures))
             )
           })
         }
@@ -148,14 +125,10 @@ class PhotoPicker extends Component {
         showMaxImageCountMsg,
         showCropModal: false,
       },
-      () => this.props.onChange(this.picURIsOnly(pictures))
+      () => this.props.onChange(picURIsOnly(pictures))
     )
 
     imgInput.value = null
-  }
-
-  picURIsOnly(pictures) {
-    return pictures.map(pic => typeof pic === 'object' ? pic.croppedImageUri : pic)
   }
 
   onCropCancel() {
@@ -172,7 +145,7 @@ class PhotoPicker extends Component {
         pictures,
         showMaxImageCountMsg: false
       },
-      () => this.props.onChange(this.picURIsOnly(pictures))
+      () => this.props.onChange(picURIsOnly(pictures))
     )
   }
 

@@ -7,6 +7,7 @@ const router = express.Router()
 expressWs(router)
 
 const CLIENT_TOKEN_COOKIE = "ct"
+const NOTIFY_TOKEN = process.env.NOTIFY_TOKEN
 
 const getClientToken = req => {
   return req.cookies[CLIENT_TOKEN_COOKIE]
@@ -22,8 +23,8 @@ const linker = new Linker()
 
 router.post("/generate-code", async (req, res) => {
   const _clientToken = getClientToken(req)
-  const {return_url, session_token, pub_key, pending_call} = req.body
-  const {clientToken, sessionToken, code, linked} = await linker.generateCode(_clientToken, session_token, pub_key, req.useragent, return_url, pending_call)
+  const {return_url, session_token, pub_key, pending_call, notify_wallet} = req.body
+  const {clientToken, sessionToken, code, linked} = await linker.generateCode(_clientToken, session_token, pub_key, req.useragent, return_url, pending_call, notify_wallet)
   clientTokenHandler(res, clientToken)
   res.send({session_token:sessionToken, link_code:code, linked})
 })
@@ -35,10 +36,13 @@ router.get("/link-info/:code", async (req, res) => {
   res.send({app_info:appInfo, link_id:linkId, pub_key:pubKey})
 })
 
-router.get("/web3-info", (req, res) => {
+router.get("/server-info", (req, res) => {
   // this is the context
-  const {providerUrl, contractAddresses} = linker.getWeb3Info()
-  res.send({provider_url:providerUrl, contract_addresses:contractAddresses})
+  const {providerUrl, contractAddresses, ipfsGateway, ipfsApi,
+    messagingUrl, sellingUrl} = linker.getServerInfo()
+  res.send({provider_url:providerUrl, contract_addresses:contractAddresses, 
+    ipfs_gateway:ipfsGateway, ipfs_api:ipfsApi, messaging_url:messagingUrl,
+    selling_url:sellingUrl})
 })
 
 
@@ -67,10 +71,48 @@ router.post("/link-wallet/:walletToken", async (req, res) => {
     app_info:appInfo, link_id:linkId, linked_at:linkedAt})
 })
 
+router.post("/prelink-wallet/:walletToken", async (req, res) => {
+  const {walletToken} = req.params
+  const {pub_key, current_rpc, current_accounts, priv_data} = req.body
+  const {code, linkId} 
+    = await linker.prelinkWallet(walletToken, pub_key, current_rpc, current_accounts, priv_data)
+
+  res.send({code, link_id:linkId})
+})
+
+router.post("/link-prelinked", async (req, res) => {
+  const {code, link_id, return_url} = req.body
+  const {clientToken, sessionToken, linked} 
+    = await linker.linkPrelinked(code, link_id, req.useragent, return_url)
+
+  clientTokenHandler(res, clientToken)
+  res.send({session_token:sessionToken, linked})
+})
+
+
+
 router.get("/wallet-links/:walletToken", async (req, res) => {
   const {walletToken} = req.params
   const links = await linker.getWalletLinks(walletToken)
   res.send(links)
+})
+
+
+router.post("/wallet-update-links/:walletToken", async (req, res) => {
+  const {walletToken} = req.params
+  const {updates} = req.body
+  const update_count = await linker.updateWalletLinks(walletToken, updates)
+  res.send({update_count})
+})
+
+
+router.post("/eth-notify", async (req, res) => {
+  const {receivers, token} = req.body
+  if (token == NOTIFY_TOKEN)
+  {
+    linker.ethNotify(receivers)
+  }
+  res.send(true)
 })
 
 router.post("/unlink", async (req, res) => {
@@ -85,6 +127,14 @@ router.post("/unlink-wallet/:walletToken", async (req, res) => {
   const success = await linker.unlinkWallet(walletToken, link_id)
   res.send(success)
 })
+
+router.post("/register-wallet-notification/:walletToken", async (req, res) => {
+  const {walletToken} = req.params
+  const {eth_address, device_type, device_token} = req.body
+  const success = await linker.registerWalletNotification(walletToken, eth_address, device_type, device_token)
+  res.send(success)
+})
+
 
 router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
   const clientToken = getClientToken(req)

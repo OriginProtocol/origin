@@ -43,6 +43,32 @@ export default class WalletLinker {
     //clearInterval(self.interval)
   }
 
+  async preLinked(linkTokens) {
+    const [link_id, code, priv_key] = linkTokens.split('-')
+
+    if (link_id && code && priv_key)
+    {
+      const { session_token, linked } = await this.post('link-prelinked', {
+        code,
+        link_id,
+        return_url: this.getReturnUrl()
+      })
+
+      this.linked = linked
+
+      if (linked)
+      {
+        localStorage.setItem(LOCAL_KEY_STORE, priv_key)
+      }
+      if (this.session_token != session_token)
+      {
+        this.session_token = session_token
+        this.startMessagesSync()
+      }
+      this.syncSessionStorage()
+    }
+  }
+
   async startLink() {
     const code = await this.generateLinkCode()
     this.setLinkCode(code)
@@ -249,7 +275,12 @@ export default class WalletLinker {
           {
             const data = JSON.parse(this.ecDecrypt(device.priv_data))
 
-            if (data.messaging && this.callbacks['messaging'])
+            if (!data)
+            {
+              // something is very wrong here, and we need to reset the link
+              this.logout()
+            }
+            else if (data.messaging && this.callbacks['messaging'])
             {
               this.callbacks['messaging'](data.messaging)
             }
@@ -350,7 +381,8 @@ export default class WalletLinker {
       session_token: this.session_token,
       return_url: this.getReturnUrl(),
       pending_call: this.pending_call,
-      pub_key: this.getLinkPubKey()
+      pub_key: this.getLinkPubKey(),
+      notify_wallet: this.notify_wallet
     })
     if (ret) {
       this.link_code = ret.link_code
@@ -394,7 +426,7 @@ export default class WalletLinker {
           if (this.msg_ws === ws) {
             this.syncLinkMessages()
           }
-        }, 60000) // check in 60 seconds
+        }, 30000) // check in 60 seconds
       }
     }
     this.msg_ws = ws

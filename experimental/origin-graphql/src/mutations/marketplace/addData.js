@@ -6,7 +6,7 @@ import parseId from '../../utils/parseId'
 async function addData(_, data) {
   await checkMetaMask(data.from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
-  let listingId = data.listingID,
+  const listingId = data.listingID,
     offerId = data.offerID
 
   let args = [ipfsHash]

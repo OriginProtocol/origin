@@ -19,11 +19,11 @@ Each package implements its own unit tests that should be runnable by using `ler
 Integration testing is provided by the `origin-tests` package. It uses the Docker Compose setup to run Origin components and then executes tests against those services. The available services and their addresses are:
 
 ```
-- ipfs-proxy on http://ipfs-proxy:9999 (also localhost)
 - origin-bridge on http://origin-bridge:5000 (also localhost)
 - origin-dapp on http://origin-dapp:3000 (also localhost)
 - origin-discovery (event-listener)
 - origin-discovery (apollo server on http://localhost:4000)
+- origin-ipfs-proxy on http://origin-ipfs-proxy:9999 (also localhost)
 - origin-messaging on http://origin-messaging:9012 (also localhost)
 - origin-notifications on http://origin-notifications:3456 (also localhost)
 - ipfs at http://origin:5002 (gateway) and http://origin:8080 (api)

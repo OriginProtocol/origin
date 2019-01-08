@@ -9,10 +9,22 @@ import contracts from '../contracts'
 //   11: email
 //   13: self attestation
 
-export default {
-  claims: (identity) =>
-    new Promise(async resolve => {
+const progressPct = {
+  firstName: 10,
+  lastName: 10,
+  description: 10,
+  avatar: 10,
 
+  emailVerified: 15,
+  phoneVerified: 15,
+  facebookVerified: 10,
+  twitterVerified: 10,
+  airbnbVerified: 10
+}
+
+export default {
+  claims: identity =>
+    new Promise(async resolve => {
       const contract = contracts.claimHolderRegistered
       contract.options.address = identity.id
 
@@ -50,11 +62,13 @@ export default {
     const contract = contracts.claimHolderRegistered
     contract.options.address = identity.id
 
-    let claims = await contract.getPastEvents('ClaimAdded', {
+    const claims = await contract.getPastEvents('ClaimAdded', {
       fromBlock: contracts.EventBlock
     })
 
-    if (!claims.length) { return null }
+    if (!claims.length) {
+      return null
+    }
     let profileIpfsHash
     const profile = {
       facebookVerified: false,
@@ -63,8 +77,8 @@ export default {
       phoneVerified: false,
       emailVerified: false
     }
+
     claims.forEach(claim => {
-      // console.log(claim)
       if (claim.returnValues.topic === '13') {
         profileIpfsHash = claim.returnValues.data
       }
@@ -84,9 +98,26 @@ export default {
     let data
     try {
       data = await get(contracts.ipfsGateway, profileIpfsHash)
+      data.fullName = data.firstName
+      if (data.lastName) {
+        data.fullName += ` ${data.lastName}`
+      }
     } catch (e) {
       return null
     }
-    return { ...data, id: profileIpfsHash, ...profile }
+
+    let strength = 0
+    Object.keys(progressPct).forEach(key => {
+      if (data[key] || profile[key]) {
+        strength += progressPct[key]
+      }
+    })
+
+    return {
+      ...data,
+      id: profileIpfsHash,
+      ...profile,
+      strength
+    }
   }
 }

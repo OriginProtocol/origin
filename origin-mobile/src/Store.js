@@ -1,19 +1,23 @@
-import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
+import thunkMiddleware from 'redux-thunk'
 
-import profile from './reducers/Profile'
-import wallet from './reducers/Wallet'
-import wallet_events from './reducers/WalletEvents'
-import devices from './reducers/Devices'
+import activation from 'reducers/Activation'
+import devices from 'reducers/Devices'
+import exchangeRates from 'reducers/ExchangeRates'
+import users from 'reducers/Users'
+import wallet from 'reducers/Wallet'
+import wallet_events from 'reducers/WalletEvents'
 
 let middlewares = [thunkMiddleware]
 
 const store = createStore(
   combineReducers({
-    profile,
+    activation,
+    devices,
+    exchangeRates,
+    users,
     wallet,
     wallet_events,
-    devices
   }),
   applyMiddleware(...middlewares)
 )

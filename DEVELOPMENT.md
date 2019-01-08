@@ -53,16 +53,20 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
 
 - You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
 
+### Troubleshooting
+ - If IPFS fails to start with error "UnhandledPromiseRejectionWarning: Error: Lock file is already being hold", clean up the IPFS local data:
+```rm -rf ~/.jsipfs/```
+
 ## Using Docker Compose
 
 The Origin Docker Compose configuration runs the following packages:
 
 ```
-- ipfs-proxy on http://localhost:9999
 - origin-bridge on http://localhost:5000
 - origin-dapp on http://localhost:3000
 - origin-discovery (event-listener)
 - origin-discovery (apollo server on http://localhost:4000)
+- origin-ipfs-proxy on http://localhost:9999
 - origin-messaging on http://localhost:9012
 - origin-notifications on http://localhost:3456)
 - origin-js (ipfs server)
@@ -120,6 +124,10 @@ Follow log output for all containers:
 Restart a container. In a new terminal window:
 
 	docker-compose restart <container_name>
+
+Rebuild containers (takes some time), in case you update dependencies (including npm). In a new terminal window:
+
+	docker-compose build --no-cache origin
 
 ### Troubleshooting
 
