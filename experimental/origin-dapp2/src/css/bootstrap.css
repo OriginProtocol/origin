@@ -15,6 +15,17 @@
   background-color: var(--greenblue);
 }
 
+.btn-primary {
+  border-color: var(--clear-blue);
+  background-color: var(--clear-blue);
+}
+
+.btn-rounded {
+  border-radius: 10rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .btn-success {
   background-color: var(--greenblue);
 }
@@ -38,4 +49,13 @@
 
 .alert-warning {
   background-color: #fff8de;
+}
+
+.form-control.dark {
+  background-color: var(--dark-two);
+  border: 0;
+  color: var(--white);
+}
+.form-control.dark::-webkit-input-placeholder {
+  color: var(--dusk);
 }
