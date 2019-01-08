@@ -34,7 +34,7 @@ import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
 import { formattedAddress } from 'utils/user'
-import { getDataURIsFromImgURLs } from 'utils/fileUtils'
+import { getDataURIsFromImgURLs, picURIsOnly } from 'utils/fileUtils'
 
 import {
   translateSchema,
@@ -520,13 +520,15 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
+  const pictures = picURIsOnly(formData.pictures)
 
     this.setState({
       formListing: {
         ...this.state.formListing,
         formData: {
           ...this.state.formListing.formData,
-          ...formData
+          ...formData,
+          pictures
         }
       }
     })
@@ -546,7 +548,7 @@ class ListingCreate extends Component {
 
   onBoostLimitChange({ formData }) {
     const boostLimit = formData.boostLimit
-    if (boostLimit && boostLimit !== this.state.formListing.formData.boostLimit
+    if (boostLimit !== undefined && boostLimit !== this.state.formListing.formData.boostLimit
     ) {
       this.setState({
         formListing: {
@@ -723,10 +725,10 @@ class ListingCreate extends Component {
       errorFound = true
       errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.positiveNumber))
     }
-    
+
     if (boostLimit > formData.unitsTotal * formData.boostValue) {
       errorFound = true
-      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.boostLimitTooHigh)) 
+      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.boostLimitTooHigh))
     }
 
     if (!errorFound){
@@ -736,7 +738,7 @@ class ListingCreate extends Component {
     }
     return errors
   }
-  
+
   validateListingForm(data, errors) {
     const {
       isEditMode,

@@ -42,7 +42,8 @@ services:
       - ./origin-contracts/migrations:/app/origin-contracts/migrations
       - ./origin-js/scripts:/app/origin-js/scripts
       - ./origin-js/package.json:/app/origin-js/package.json
-      - ./origin-js/test/fixtures:/app/origin-js/test/fixtures
+      - ./origin-js/test:/app/origin-js/test
+      - ./origin-js/src:/app/origin-js/src
     command: npm run start --prefix origin-js
 
   origin-ipfs-proxy:

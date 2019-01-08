@@ -24,7 +24,14 @@ const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
 
   return new Promise(resolve => {
     fetch(exchangeURL)
-      .then(res => res.json())
+      .then(res =>  {  
+        try {
+          return res.json()
+        } catch (error) 
+        {
+          console.log("Cannot get currency:", error, " response:", res)
+        }
+      })
       .then(json => {
         resolve({
           rate: parseFloat(json.ticker.price),
