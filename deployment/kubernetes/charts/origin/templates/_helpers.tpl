@@ -83,6 +83,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
+{{- define "messaging-api.fullname" -}}
+{{- printf "%s-%s" .Release.Name "messaging-api" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "messaging-api.host" -}}
 {{- $prefix := "messaging-api" -}}
 {{- if ne .Release.Namespace "prod" -}}
