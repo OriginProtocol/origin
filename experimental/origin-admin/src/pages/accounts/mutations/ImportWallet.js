@@ -10,7 +10,7 @@ import {
   HTMLSelect
 } from '@blueprintjs/core'
 
-import { ImportWalletMutation } from '../../../mutations'
+import { ImportWalletMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 
 class ImportWallet extends Component {

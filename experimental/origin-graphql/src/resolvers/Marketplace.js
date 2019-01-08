@@ -1,6 +1,7 @@
 import contracts from '../contracts'
 import listings from './marketplace/listings'
 import users from './marketplace/users'
+import parseId from '../utils/parseId'
 
 export default {
   address: contract => {
@@ -18,6 +19,11 @@ export default {
 
   listing: (contract, args) => contracts.eventSource.getListing(args.id),
   listings,
+
+  offer: async (contract, args) => {
+    const { listingId, offerId } = parseId(args.id)
+    return contracts.eventSource.getOffer(listingId, offerId)
+  },
 
   account: contract => {
     if (!contract) {

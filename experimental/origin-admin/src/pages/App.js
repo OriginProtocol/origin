@@ -8,8 +8,10 @@ import Accounts from './accounts/Accounts'
 import Listings from './listings/Listings'
 import Listing from './listings/Listing'
 import Activity from './marketplace/Activity'
-import Users from './marketplace/users/Users'
-import User from './marketplace/users/User'
+import Users from './users/Users'
+import User from './users/User'
+import RegisteredUsers from './identity/RegisteredUsers'
+import Identity from './identity/Identity'
 import Messaging from './messaging/Messaging'
 import Contracts from './contracts/Contracts'
 import Explorer from './GraphIQL'
@@ -50,7 +52,8 @@ const App = () => (
         </Navbar.Heading>
         <Link to="/marketplace" icon="shop" tooltip="Listings" />
         <Link to="/activity" icon="pulse" tooltip="Activity" />
-        <Link to="/users" icon="person" tooltip="Users" />
+        <Link to="/users" icon="people" tooltip="Users" />
+        <Link to="/identities" icon="mugshot" tooltip="Identities" />
         <Link to="/messaging" icon="chat" tooltip="Messaging" />
         <Link to="/explorer" icon="console" tooltip="GraphQL Console" />
         <Link to="/accounts" icon="settings" tooltip="Settings" />
@@ -67,6 +70,8 @@ const App = () => (
       <Route path="/marketplace" component={Listings} />
       <Route path="/users/:userId" component={User} />
       <Route path="/users" component={Users} />
+      <Route path="/identities/:identityId" component={Identity} />
+      <Route path="/identities" component={RegisteredUsers} />
       <Route path="/activity" component={Activity} />
       <Route path="/contracts" component={Contracts} />
       <Route path="/explorer" component={Explorer} />

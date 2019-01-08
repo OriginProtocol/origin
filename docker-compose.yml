@@ -39,12 +39,15 @@ services:
       # Addresses for deployment of contracts to local blockchain will get
       # written to the build files
       - ./origin-contracts/build:/app/origin-contracts/build
+      - ./origin-contracts/migrations:/app/origin-contracts/migrations
       - ./origin-js/scripts:/app/origin-js/scripts
       - ./origin-js/package.json:/app/origin-js/package.json
+      - ./origin-js/test:/app/origin-js/test
+      - ./origin-js/src:/app/origin-js/src
     command: npm run start --prefix origin-js
 
-  ipfs-proxy:
-    container_name: ipfs-proxy
+  origin-ipfs-proxy:
+    container_name: origin-ipfs-proxy
     image: origin
     ports:
       - "9999:9999"
@@ -52,9 +55,9 @@ services:
       - IPFS_API_URL=http://origin:5002
       - IPFS_GATEWAY_URL=http://origin:8080
     volumes:
-      - ./ipfs-proxy/src:/app/ipfs-proxy/src
-      - ./ipfs-proxy/package.json:/app/ipfs-proxy/package.json
-    command: npm run start --prefix ipfs-proxy
+      - ./origin-ipfs-proxy/src:/app/origin-ipfs-proxy/src
+      - ./origin-ipfs-proxy/package.json:/app/origin-ipfs-proxy/package.json
+    command: npm run start --prefix origin-ipfs-proxy
 
   origin-discovery:
     container_name: origin-discovery
@@ -89,7 +92,7 @@ services:
       - origin
       - postgres
       - elasticsearch
-      - ipfs-proxy
+      - origin-ipfs-proxy
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q origin:8080 --
@@ -169,7 +172,7 @@ services:
       - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
       - ipfs:/app/ipfs
     depends_on:
-      - ipfs-proxy
+      - origin-ipfs-proxy
       - event-listener
       - origin
       - origin-discovery

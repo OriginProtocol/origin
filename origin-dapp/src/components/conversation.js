@@ -59,7 +59,6 @@ class Conversation extends Component {
     // try to detect the user before rendering
     this.identifyCounterparty()
 
-
     if (smallScreenOrDevice) {
       this.loadListing()
       updateShowNav = false
@@ -176,9 +175,13 @@ class Conversation extends Component {
 
     const recipients = origin.messaging.getRecipients(id)
     const address = recipients.find(addr => formattedAddress(addr) !== formattedAddress(wallet.address))
-    const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(address)) || { address }
+    let counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(address))
 
-    !counterparty.address && fetchUser(address)
+    if (!counterparty) {
+      fetchUser(address)
+
+      counterparty = { address }
+    }
 
     this.setState({ counterparty })
     this.loadPurchase()
@@ -191,7 +194,7 @@ class Conversation extends Component {
 
     // If listingId does not match state, store and check for a purchase.
     if (listingId !== this.state.listing.id) {
-      const listing = listingId ? await getListing(listingId, true) : {}
+      const listing = listingId ? await getListing(listingId, { translate: true }) : {}
       this.setState({ listing })
       this.loadPurchase()
     }
@@ -259,7 +262,7 @@ class Conversation extends Component {
 
   formatOfferMessage(info) {
     const { listing = {}, purchase } = this.state
-    const { users, smallScreenOrDevice, withListingSummary } = this.props
+    const { includeNav, users, smallScreenOrDevice, withListingSummary } = this.props
 
     if (smallScreenOrDevice || !withListingSummary) return
 
@@ -332,15 +335,18 @@ class Conversation extends Component {
 
     return (
       <div key={new Date() + Math.random()} className="purchase-info">
-        <Link to={`/purchases/${purchase.id}`} target="_blank" rel="noopener noreferrer">
-          {offerMessages[event]}
-        </Link>
+        {includeNav && (
+          <Link to={`/purchases/${purchase.id}`} target="_blank" rel="noopener noreferrer">
+            {offerMessages[event]}
+          </Link>
+        )}
+        {!includeNav && offerMessages[event]}
       </div>
     )
   }
 
   render() {
-    const { id, intl, messages, wallet, smallScreenOrDevice } = this.props
+    const { id, includeNav, intl, messages, wallet, smallScreenOrDevice } = this.props
     const {
       counterparty,
       files,
@@ -356,12 +362,13 @@ class Conversation extends Component {
       canDeliverMessage
     const offerEvents = getOfferEvents(purchase)
     const combinedMessages = [...offerEvents, ...messages]
-    const textAreaSize = smallScreenOrDevice ? '8' : '4'
+    const textAreaSize = smallScreenOrDevice ? '2' : '4'
 
     return (
       <Fragment>
         <div ref={this.conversationDiv} className="conversation text-center">
           <CompactMessages
+            includeNav={includeNav}
             messages={combinedMessages}
             wallet={wallet}
             formatOfferMessage={this.formatOfferMessage}

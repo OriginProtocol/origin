@@ -1,30 +1,32 @@
 import {PushNotificationIOS,Linking, Clipboard} from 'react-native'
 import PushNotification from 'react-native-push-notification'
-import {setRemoteLocal, localfy, storeData, loadData} from './tools'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
 import EventEmitter from 'events'
 import {EthNotificationTypes} from 'origin/common/enums'
+import secp256k1 from 'secp256k1'
 import ecies from 'eth-ecies'
-import CryptoJS from "crypto-js"
+import CryptoJS from 'crypto-js'
+import UUIDGenerator from 'react-native-uuid-generator'
+import { randomBytes } from 'react-native-randombytes'
 
-import origin, {apiUrl, defaultProviderUrl, messageOpenUrl, localApi, defaultLocalRemoteHost, getEthCode} from './services/origin'
+import {setRemoteLocal, localfy, storeData, loadData} from './tools'
+
+import origin, {apiUrl, defaultProviderUrl, messagingUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
 
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
-
-
+const ORIGIN_WALLET = "OriginWallet"
 const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/"
 const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/"
 const LAST_MESSAGE_IDS = "last_message_ids"
 const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
 const WALLET_PASSWORD = "TEST_PASS"
 const WALLET_STORE = "WALLET_STORE"
+const WALLET_INFO = "WALLET_INFO"
+const WALLET_LINK = "WALLET_LINK"
 const REMOTE_LOCALHOST_STORE = "REMOTE_LOCAL_STORE"
-
-// This is the format of the walletToken
-const getWalletToken = (deviceType, deviceToken) => `${deviceType}:${deviceToken}`
 
 const Events = keyMirror({
   PROMPT_LINK:null,
@@ -36,7 +38,9 @@ const Events = keyMirror({
   UNLINKED:null,
   REJECT:null,
   LINKS:null,
-  UPDATE:null
+  UPDATE:null,
+  SHOW_MESSAGES:null,
+  NEW_MESSAGE:null
 }, "WalletEvents")
 
 const eventMatcherByLinkId = link_id => {
@@ -75,6 +79,9 @@ const eventMatcherByEvent = event => {
   return in_event => matchEvents(in_event, event)
 }
 
+const timeout = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 class OriginWallet {
   constructor() {
@@ -85,6 +92,7 @@ class OriginWallet {
       notificationType: undefined,
       ethAddress: undefined,
       linkCode: undefined,
+      walletToken: undefined
     }
 
     this.last_message_ids = {}
@@ -97,6 +105,16 @@ class OriginWallet {
       }
     })
 
+    this.events = new EventEmitter()
+    this.onQRScanned = this.onQRScanned.bind(this)
+
+  }
+
+  getNotifyType() {
+    return EthNotificationTypes.APN
+  }
+
+  initNotifications() {
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function(device_token) {
@@ -131,33 +149,36 @@ class OriginWallet {
         * - Specified if permissions (ios) and token (android and ios) will requested or not,
         * - if not, you must call PushNotificationsHandler.requestPermissions() later
         */
-      requestPermissions: true,
+      requestPermissions: false,
     })
-
-    this.events = new EventEmitter()
-    this.onQRScanned = this.onQRScanned.bind(this)
   }
 
-  getNotifyType() {
-    return EthNotificationTypes.APN
+  requestNotifications() {
+    return PushNotificationIOS.requestPermissions()
   }
 
   initUrls() {
-    const localApiUrl = localfy(apiUrl)
+    const remote_is_url = this.remote_localhost.startsWith("http://") 
+      || this.remote_localhost.startsWith("https://")
+
+    const localApiUrl = remote_is_url ? this.remote_localhost : localfy(apiUrl)
     console.log("localApi Url:", localApiUrl)
 
     const wsApiUrl = localApiUrl.replace(/^http/, 'ws')
 
     const API_WALLET_LINKER = `${localApiUrl}/api/wallet-linker`
 
-    this.API_ETH_NOTIFICATION = `${localApiUrl}/api/notifications/eth-endpoint`
+    this.API_REGISTER_WALLET_NOTIFICATION = API_WALLET_LINKER + "/register-wallet-notification/"
     this.API_WALLET_LINKER_LINK = API_WALLET_LINKER + "/link-wallet/"
+    this.API_WALLET_LINKER_PRELINK = API_WALLET_LINKER + "/prelink-wallet/"
     this.API_WALLET_LINKER_UNLINK = API_WALLET_LINKER + "/unlink-wallet/"
     this.WS_API_WALLET_LINKER_MESSAGES = `${wsApiUrl}/api/wallet-linker/wallet-messages/`
-    this.API_WALLET_WEB3_INFO = API_WALLET_LINKER + "/web3-info"
+    this.API_WALLET_SERVER_INFO = API_WALLET_LINKER + "/server-info"
     this.API_WALLET_LINK_INFO = API_WALLET_LINKER + "/link-info/"
     this.API_WALLET_LINKER_RETURN_CALL = API_WALLET_LINKER + "/wallet-called/"
     this.API_WALLET_GET_LINKS = API_WALLET_LINKER + "/wallet-links/"
+    this.API_WALLET_UPDATE_LINKS = API_WALLET_LINKER + "/wallet-update-links/"
+    this.state.localApiUrl = localApiUrl
 
     if (!this._originalIpfsGateway)
     {
@@ -171,9 +192,15 @@ class OriginWallet {
 
     origin.ipfsService.gateway = localfy(this._originalIpfsGateway)
     origin.ipfsService.api = localfy(this._originalIpfsApi)
+
+    console.log("ipfsGateway is:", origin.ipfsService.gateway)
   }
 
   async setRemoteLocal(remote_ip) {
+    if (remote_ip) {
+      //in case there's a url!
+      remote_ip = remote_ip.replace(/\/$/, "")
+    }
     await storeData(REMOTE_LOCALHOST_STORE, remote_ip)
     this.initWeb3()
   }
@@ -182,12 +209,21 @@ class OriginWallet {
     return this.remote_localhost
   }
 
+  getMessagingUrl() {
+    return this.messagingUrl + ORIGIN_WALLET
+  }
+
+  getWalletToken() {
+    return this.state.walletToken
+  }
+
   isLocalApi() {
     return localApi
   }
 
   async fireEvent(event_type, event, matcher) {
-    if (typeof(event) == 'object')
+    // event may be an array (see doGetLinkedDevices)
+    if (typeof(event) == 'object' && event.length === undefined)
     {
       const ts = new Date()
       if(!event.event_id)
@@ -229,23 +265,37 @@ class OriginWallet {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    }).then((response) => response.json())
+    }).then((response) => {
+      try {
+        return response.json()
+      } catch (error) {
+        console.log("Json Error on fetch[", endpoint, "]:", error)
+        throw error
+      }
+    }).catch(error => {
+      console.log("fetch Error on fetch[", endpoint, "]:", error, " response: ")
+      throw error
+    })
   }
 
   registerNotificationAddress(eth_address, device_token, notification_type) {
-    return this.doFetch(this.API_ETH_NOTIFICATION, 'POST', {
+    return this.doFetch(this.API_REGISTER_WALLET_NOTIFICATION + this.getWalletToken(), 'POST', {
       eth_address: eth_address,
       device_token: device_token,
-      type: notification_type
-    }).then((responseJson) => {
-      console.log("We are now subscribed to:" + eth_address)
-    }).catch((error) => {
-      console.error(error)
+      device_type: notification_type
     })
   }
 
   async getMessagingKeys( ) {
     return origin.messaging.preGenKeys(this.getCurrentWeb3Account())
+  }
+
+  async getPrivData(pub_key) {
+    if (pub_key)
+    {
+      const data = {messaging: await this.getMessagingKeys()}
+      return this.ecEncrypt(JSON.stringify(data), pub_key)
+    }
   }
 
   async doLink(code, current_rpc, current_accounts) {
@@ -255,13 +305,8 @@ class OriginWallet {
       console.log(code, " already linked.")
       return
     }
-    let priv_data 
-    if (linkInfo.pub_key)
-    {
-      data = {messaging: await this.getMessagingKeys()}
-      priv_data = this.ecEncrypt(JSON.stringify(data), linkInfo.pub_key)
-    }
-    return this.doFetch(this.API_WALLET_LINKER_LINK + getWalletToken(this.getNotifyType(), this.state.deviceToken), 'POST', {
+    const priv_data = await this.getPrivData(linkInfo.pub_key)
+    return this.doFetch(this.API_WALLET_LINKER_LINK + this.getWalletToken(), 'POST', {
       code,
       current_rpc,
       current_accounts,
@@ -272,6 +317,11 @@ class OriginWallet {
 
       const link_id = responseJson.link_id
       const return_url = app_info && app_info.return_url
+
+      if (this.__internal_link_code == code)
+      {
+        return true
+      }
       this.fireEvent(Events.LINKED, {linked:true, link:{link_id, return_url:app_info.return_url, app_info:responseJson.app_info, linked_at:new Date(responseJson.linked_at)}})
 
       if (responseJson.pending_call_context)
@@ -299,11 +349,12 @@ class OriginWallet {
 
   doUnlink(link_id) {
     console.log("Unlink from:", link_id)
-    return this.doFetch(this.API_WALLET_LINKER_UNLINK + getWalletToken(this.getNotifyType(), this.state.deviceToken), 'POST', {
+    return this.doFetch(this.API_WALLET_LINKER_UNLINK + this.getWalletToken(), 'POST', {
       link_id
     }).then((responseJson) => {
       console.log("We are now unlinked from remote wallet:", link_id)
-      if (responseJson.success)
+      // response is simply true
+      if (responseJson)
       {
         this.fireEvent(Events.UNLINKED, {link_id, unlinked_at:new Date()}, eventMatcherByLinkId(link_id))
       }
@@ -315,7 +366,7 @@ class OriginWallet {
 
 
   doGetLinkedDevices() {
-    return this.doFetch(this.API_WALLET_GET_LINKS + getWalletToken(this.getNotifyType(), this.state.deviceToken), "GET").then((responseJson) => {
+    return this.doFetch(this.API_WALLET_GET_LINKS + this.getWalletToken(), "GET").then((responseJson) => {
       let devices = []
       for(const l of responseJson){
         devices.push({event_id:l.link_id, linked:l.linked, link:{app_info:l.app_info, link_id:l.link_id, linked_at:new Date(l.linked_at)}})
@@ -330,19 +381,35 @@ class OriginWallet {
     this.doGetLinkedDevices()
   }
 
-
-  checkRegisterNotification() {
+  async checkRegisterNotification() {
     let state = this.state
+    console.log("checking server notification:", state)
     if (state.ethAddress && state.notificationType && state.deviceToken)
     {
-      // TODO: figure out where to implement this later
-      //this.registerNotificationAddress(state.ethAddress, state.deviceToken, state.notificationType)
+      console.log("save wallet info:", this.save_wallet_info)
+      if (this.save_wallet_info && 
+        ( (this.save_wallet_info.ethAddress != state.ethAddress 
+          || this.save_wallet_info.localApiUrl != state.localApiUrl
+          || this.save_wallet_info.deviceToken != state.deviceToken)))
+      {
+        try {
+          await this.registerNotificationAddress(state.ethAddress, state.deviceToken, state.notificationType)
+
+          //only after registering do we store the notification info
+          this.save_wallet_info.ethAddress = state.ethAddress
+          this.save_wallet_info.deviceToken = state.deviceToken
+          this.save_wallet_info.localApiUrl = state.localApiUrl
+          this.saveInfo()
+        } catch (error) {
+          console.log("Error registering notification:", error)
+        }
+      }
     }
   }
 
   checkDoLink() {
     let state = this.state
-    if (state.linkCode && state.deviceToken && state.ethAddress && state.netId)
+    if (state.linkCode && state.ethAddress && state.netId)
     {
       let rpc_server = this.copied_code == state.linkCode ? localfy(this.providerUrl) : this.providerUrl
       return this.doLink(state.linkCode, rpc_server, [state.ethAddress])
@@ -351,14 +418,13 @@ class OriginWallet {
 
 
   checkDoUnlink(link_id) {
-    if (this.state.deviceToken)
+    if (this.state.walletToken)
     {
       return this.doUnlink(link_id)
     }
   }
 
   onNotificationRegistered(deviceToken, notification_type) {
-    // TODO: Send the token to my server so it could send back push notifications...
     console.log("Device Token Received", deviceToken)
 
     Object.assign(this.state, {deviceToken, notificationType:notification_type})
@@ -366,7 +432,7 @@ class OriginWallet {
   }
 
   returnCall(event_id, call_id, session_token, link_id, result, fire_event) {
-    return this.doFetch(this.API_WALLET_LINKER_RETURN_CALL + getWalletToken(this.getNotifyType(), this.state.deviceToken), 'POST', {
+    return this.doFetch(this.API_WALLET_LINKER_RETURN_CALL + this.getWalletToken(), 'POST', {
       call_id,
       link_id,
       session_token,
@@ -391,9 +457,9 @@ class OriginWallet {
       const gas_cost = this.extractTransactionGasCost(transaction.call)
       const listing = this.extractListing(meta)
       const to = this.extractTo(transaction.call)
-      const action_label = this.extractTransactionActionLabel(meta)
+      const transaction_type = this.extractTransactionActionType(meta)
       const action = "transaction"
-      return {...event_data, meta, action, action_label, to, cost, gas_cost, listing}
+      return {...event_data, meta, action, to, cost, gas_cost, listing, transaction_type}
     }
     else if (link)
     {
@@ -418,7 +484,7 @@ class OriginWallet {
     return origin.reflection.extractContractCallMeta(netId, txn_object.to, txn_object.data)
   }
 
-  extractTransactionActionLabel({marketplace, originToken, contract, method, params, subMeta}) {
+  extractTransactionActionType({marketplace, originToken, contract, method, params, subMeta}) {
     if (originToken && subMeta)
     {
       method = subMeta.method
@@ -430,11 +496,11 @@ class OriginWallet {
     {
       if (method == "makeOffer")
       {
-        return "Purchase"
+        return 'purchase'
       }
       else if (method.startsWith("createListing"))
       {
-        return "Create listing"
+        return 'sell'
       }
     }
     // TODO: need something better here
@@ -531,8 +597,9 @@ class OriginWallet {
               (success) => {
                 if (return_url)
                 {
-                  console.log("transaction approved returning to:", return_url)
-                  Linking.openURL(return_url)
+                  const successUrl = this.addTransactionHashToUrl(return_url, receipt.transactionHash)
+                  console.log("transaction approved returning to:", successUrl)
+                  Linking.openURL(successUrl)
                 }
                 resolve(true)
               }
@@ -654,6 +721,12 @@ class OriginWallet {
       console.log("Processing call:", message)
       await this.processCall(message.call, message.call_id, message.return_url, message.session_token, message.link_id)  
     }
+    else if ( type == "LINK_REQUEST")
+    {
+      console.log("requesting link:", message)
+      this.__internal_link_code = message.code
+      this.setLinkCode(message.code)
+    }
     this.last_message_ids[this.state.ethAddress] = msgId
     this.syncLastMessages()
   }
@@ -663,9 +736,10 @@ class OriginWallet {
     const last_message_id = this.last_message_ids[this.state.ethAddress] || '0'
     console.log("syncing messages on last_message_id:", last_message_id)
     // Connect the websocket
-    const ws = new WebSocket(this.WS_API_WALLET_LINKER_MESSAGES + getWalletToken(this.getNotifyType(), this.state.deviceToken) + '/' + last_message_id)
+    const ws = new WebSocket(this.WS_API_WALLET_LINKER_MESSAGES + this.getWalletToken() + '/' + last_message_id)
 
     ws.onmessage = e => {
+      console.log("got message:", e.data)
       this.processMessage(JSON.parse(e.data))
     }
 
@@ -678,37 +752,111 @@ class OriginWallet {
           if (this.messages_ws === ws) {
             this.syncServerMessages()
           }
-        }, 60000) // check in 60 seconds
+        }, 5000) // check in 5 seconds
       }
     }
     this.messages_ws = ws
   }
 
   checkSyncMessages(force) {
-    const doSync = !this.messages_ws || (force && !this.isLinkMessagesOpen())
-    if (this.state.deviceToken && this.state.ethAddress && this.state.netId && doSync)
+    const doSync = !this.messages_ws || force // && !this.isLinkMessagesOpen())
+    if (this.state.walletToken && this.state.ethAddress && this.state.netId && doSync)
     {
       this.syncServerMessages()
     }
   }
 
-  onNotification(notification) {
+  async getPrivateLink() {
+    // TODO: someone fix this
+    await PushNotificationIOS.requestPermissions()
+    const stored_link_id = await loadData(WALLET_LINK)
+
+    if (stored_link_id) 
+    {
+      const links = await this.doFetch(this.API_WALLET_GET_LINKS + this.getWalletToken(), "GET")
+      for (const link of links) {
+        if (stored_link_id == link.link_id)
+        {
+          return randomBytes(4).toString('hex') + stored_link_id
+        }
+      }
+    }
+    const priv_key = randomBytes(32)
+    const current_rpc = localfy(this.providerUrl)
+    const current_accounts = [this.state.ethAddress]
+    const pub_key = this.getPublicKey(priv_key)
+    const priv_data = this.getPrivData(pub_key)
+    const {code, link_id} = await this.doFetch(this.API_WALLET_LINKER_PRELINK + this.getWalletToken(), 
+      'POST', {
+      pub_key,
+      current_rpc,
+      current_accounts,
+      priv_data
+    })
+
+    await storeData(WALLET_LINK, link_id)
+    return `${link_id}-${code}-${priv_key.toString('hex')}`
+  }
+
+  async toLinkedDappUrl(dappUrl) {
+    const localUrl = localfy(dappUrl)
+    return localUrl + (localUrl.includes('?') ? '&' : '?' ) + 'plink=' + await this.getPrivateLink()
+  }
+
+  addTransactionHashToUrl(url, thash) {
+    return url + (url.includes('?') ? '&' : '?' ) + 'thash=' + thash
+  }
+
+  async openSelling() {
+    if (this.sellingUrl) {
+      const linkingUrl = await this.toLinkedDappUrl(this.sellingUrl)
+      console.log("Opening selling url:", linkingUrl)
+      Linking.openURL(linkingUrl)
+    }
+  }
+
+  async onNotification(notification) {
     Object.assign( this.state, {
       notifyTime:new Date(),
       notifyMessage:notification.message
     })
-    console.log("notification.message:", notification.message)
-    if (notification.message == "You've received a new message")
+
+    while(!(this.state.walletToken && this.state.ethAddress && this.state.netId))
     {
-      Linking.openURL(this.messageOpenUrl)
+      await timeout(1000)
     }
-    this.checkSyncMessages(true)
+    console.log("notification.message:", notification.message)
+    if (notification.data.newMessage)
+    {
+      if (notification.foreground)
+      {
+        this.fireEvent(Events.NEW_MESSAGE)
+        // TODO: micah put red dot here..
+      }
+      else
+      {
+        this.fireEvent(Events.SHOW_MESSAGES)
+      }
+    }
+    else if (notification.data.to_dapp && notification.data.url)
+    {
+      if (notification.foreground)
+      {
+        // TODO: micah do something silly here.
+      }
+      else
+      {
+        Linking.openURL(await this.toLinkedDappUrl(notification.data.url))
+      }
+    }
+    //force if it's comming from the background
+    this.checkSyncMessages(!notification.foreground)
   }
 
   onQRScanned(scan) {
     console.log("Address scanned:", scan.data)
     let key
-    if (scan.data.startsWith(ETHEREUM_QR_PREFIX))
+    /*if (scan.data.startsWith(ETHEREUM_QR_PREFIX))
     {
       let ethAddress = scan.data.substr(ETHEREUM_QR_PREFIX.length)
       if (ethAddress != this.state.ethAddress)
@@ -717,7 +865,8 @@ class OriginWallet {
         this.checkRegisterNotification()
       }
     }
-    else if (scan.data.startsWith(ORIGIN_QR_PREFIX))
+    else*/
+    if (scan.data.startsWith(ORIGIN_QR_PREFIX))
     {
       let linkCode = scan.data.substr(ORIGIN_QR_PREFIX.length)
       this.setLinkCode(linkCode)
@@ -729,13 +878,15 @@ class OriginWallet {
   }
 
   checkStripOriginUrl(url){
-    if (url.startsWith(ORIGIN_PROTOCOL_PREFIX))
+    const urlWithoutQueryParams = url.split('?')[0]
+    
+    if (urlWithoutQueryParams.startsWith(ORIGIN_PROTOCOL_PREFIX))
     {
-      return url.substr(ORIGIN_PROTOCOL_PREFIX.length)
+      return urlWithoutQueryParams.substr(ORIGIN_PROTOCOL_PREFIX.length)
     }
-    if (url.startsWith(SECURE_ORIGIN_PROTOCOL_PREFIX))
+    if (urlWithoutQueryParams.startsWith(SECURE_ORIGIN_PROTOCOL_PREFIX))
     {
-      return url.substr(SECURE_ORIGIN_PROTOCOL_PREFIX.length)
+      return urlWithoutQueryParams.substr(SECURE_ORIGIN_PROTOCOL_PREFIX.length)
     }
   }
 
@@ -743,7 +894,8 @@ class OriginWallet {
     let key = this.checkStripOriginUrl(url)
     if (key)
     {
-      this.promptForLink(key)
+      // this.promptForLink(key)
+      this._handleLink({ linkCode: key })
     }
   }
 
@@ -773,6 +925,13 @@ class OriginWallet {
     }
   }
 
+  getPublicKey(priv_key) {
+    return secp256k1
+      .publicKeyCreate(priv_key, false)
+      .slice(1)
+      .toString('hex')
+  }
+
   ecEncrypt(text, pub_key) {
     return ecies
       .encrypt(new Buffer(pub_key, 'hex'), new Buffer(text))
@@ -787,7 +946,8 @@ class OriginWallet {
       let linkCode = content.substr(ORIGIN_QR_PREFIX.length)
       this.copied_code = linkCode
       Clipboard.setString("")
-      this.promptForLink(linkCode)
+      // this.promptForLink(linkCode)
+      this._handleLink({ linkCode })
     }
   }
 
@@ -815,6 +975,13 @@ class OriginWallet {
       await storeData(WALLET_STORE, encrypted_accounts)
     } catch (error) {
       console.log("Cannot store wallet data:", error)
+    }
+  }
+
+  async saveInfo() {
+    if (this.save_wallet_info)
+    {
+      await storeData(WALLET_INFO, this.save_wallet_info)
     }
   }
 
@@ -857,35 +1024,125 @@ class OriginWallet {
     if (!this.remote_localhost) {
       this.remote_localhost = defaultLocalRemoteHost
     }
-    setRemoteLocal(this.remote_localhost)
+    if (this.remote_localhost.startsWith("http://") || this.remote_localhost.startsWith("https://"))
+    {
+      const rurl = new URL(this.remote_localhost)
+      setRemoteLocal(rurl.hostname)
+    } else {
+      setRemoteLocal(this.remote_localhost)
+    }
     this.initUrls()
 
     try {
-      const {provider_url, contract_addresses} = await this.doFetch(this.API_WALLET_WEB3_INFO, 'GET')
-      web3.setProvider(new Web3.providers.HttpProvider(provider_url, 20000))
+      const {provider_url, contract_addresses, 
+          ipfs_gateway, ipfs_api, messaging_url,
+          selling_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
+      console.log("Set network to:", provider_url, contract_addresses)
+      console.log("service urls:", messaging_url, selling_url)
+
+      const newProviderUrl = localfy(provider_url)
+      if (this.currentProviderUrl != newProviderUrl)
+      {
+        web3.setProvider(new Web3.providers.HttpProvider(newProviderUrl, 20000))
+        this.currentProviderUrl = newProviderUrl
+      }
+
+      this.messagingUrl = localfy(messaging_url)
+      this.sellingUrl = selling_url
       // update the contract addresses contract
       origin.contractService.updateContractAddresses(contract_addresses)
+      origin.ipfsService.gateway = localfy(ipfs_gateway)
+      origin.ipfsService.api = localfy(ipfs_api)
+      
       await this.setNetId()
       if (this.state.ethAddress)
       {
+        this.checkRegisterNotification()
         this.fireEvent(Events.NEW_ACCOUNT, {address:this.state.ethAddress})
       }
       this.providerUrl = provider_url
-      console.log("Set network to:", provider_url, contract_addresses)
     } catch(error)
     {
-      console.log("Cannot fetch web3 info:", error)
+      console.log("Cannot fetch server info:", error)
+    }
+  }
+
+  async updateLinks() {
+    try {
+      const links = await this.doFetch(this.API_WALLET_GET_LINKS + this.getWalletToken(), "GET")
+      const current_rpc = localfy(this.providerUrl)
+      const current_accounts = [this.state.ethAddress]
+      const updates = {}
+      for (const link of links) {
+        const priv_data = await this.getPrivData(link.pub_key)
+        updates[link.link_id] = {current_rpc, current_accounts, priv_data}
+      }
+      return await this.doFetch(this.API_WALLET_UPDATE_LINKS + this.getWalletToken(), 'POST', {
+        updates
+      })
+    } catch (error) {
+      console.log("error updating links ", error)
+    }
+
+
+  }
+
+  setPrivateKey(privateKey) {
+    if (privateKey)
+    {
+      // try private key first and then clear and add again
+      web3.eth.accounts.wallet.add(privateKey)
+      web3.eth.accounts.wallet.clear()
+      web3.eth.accounts.wallet.add(privateKey)
+      this.setWeb3Address()
+
+      this.updateLinks()
+    }
+  }
+
+  setWeb3Address() {
+    const ethAddress = web3.eth.accounts.wallet[0].address
+    if (ethAddress != this.state.ethAddress)
+    {
+      web3.eth.defaultAccount = ethAddress
+      Object.assign(this.state, {ethAddress})
+      if (this.state.netId)
+      {
+        this.fireEvent(Events.NEW_ACCOUNT, {address:this.state.ethAddress})
+      }
+      this.checkRegisterNotification()
+      this.checkDoLink()
+      this.saveWallet()
     }
   }
 
   openWallet() {
     let state = this.state
-    loadData(WALLET_STORE).then((wallet_data) => { 
+    const wallet_data = loadData(WALLET_STORE).then(async (wallet_data) => { 
+      let wallet_info = await loadData(WALLET_INFO)
+      if (!wallet_info)
+      {
+        //brand new info
+        wallet_info = {walletToken: await UUIDGenerator.getRandomUUID()}
+      }
+      else
+      {
+        if (wallet_info.deviceToken)
+        {
+          // if we have a deviceToken store, then assume we already have notifications on
+          // and make sure we have the correct(non-expired) token
+          this.requestNotifications()
+        }
+      }
+      this.state.walletToken = wallet_info.walletToken
+      this.save_wallet_info = wallet_info
+      this.saveInfo()
       //set the provider here..
       //this should probably also come from the data block
       //in case when we want to let people change providers...
       web3.setProvider(new Web3.providers.HttpProvider(defaultProviderUrl, 20000))
-      this.initWeb3()
+      this.currentProviderUrl = defaultProviderUrl
+      await this.initWeb3()
 
       if (wallet_data)
       {
@@ -908,21 +1165,8 @@ class OriginWallet {
         //web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
         web3.eth.accounts.wallet.create(1)
       }
-      let ethAddress = web3.eth.accounts.wallet[0].address
-      if (ethAddress != this.state.ethAddress)
-      {
-        web3.eth.defaultAccount = ethAddress
-        Object.assign(this.state, {ethAddress})
-        if (this.state.netId)
-        {
-          this.fireEvent(Events.NEW_ACCOUNT, {address:this.state.ethAddress})
-        }
-        this.checkRegisterNotification()
-        this.saveWallet()
-      }
+      this.setWeb3Address()
     })
-
-
 
     Linking.getInitialURL().then((url) => {
       if (url) {

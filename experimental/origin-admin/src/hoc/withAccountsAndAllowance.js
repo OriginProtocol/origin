@@ -16,7 +16,7 @@ const AccountsWithAllowance = gql`
           allowance(contract: $marketplace)
         }
       }
-      metaMaskEnabled
+      useMetaMask
       metaMaskAccount {
         id
         role
@@ -34,7 +34,7 @@ const AllAccounts = gql`
         role
         name
       }
-      metaMaskEnabled
+      useMetaMask
       metaMaskAccount {
         id
         role

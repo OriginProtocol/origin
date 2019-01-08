@@ -3,17 +3,38 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default class OriginButton extends Component {
   render() {
-    const { onPress, size, style, title, type } = this.props
+    const { disabled, size, style, textStyle, title, type, onDisabledPress, onPress } = this.props
+    let backgroundColor, borderColor, color
+    
+    switch(type) {
+      case 'primary':
+        backgroundColor = '#1a82ff'
+        borderColor = '#1a82ff'
+        color = 'white'
+        break
+      case 'success':
+        backgroundColor = '#26d198'
+        borderColor = '#26d198'
+        color = 'white'
+        break
+      default:
+        backgroundColor = 'transparent'
+        borderColor = '#ff0000'
+        color = '#ff0000'
+    }
 
     return (
-      <TouchableOpacity onPress={onPress}>
-        <View style={[ {
-          backgroundColor: type === 'primary' ? '#1a82ff' : 'transparent',
-          borderColor: type === 'primary' ? '#1a82ff' : '#ff0000',
-        }, (styles[size] || styles.small), styles.button, style]}>
-          <Text style={[ {
-            color: type === 'primary' ? 'white' : '#ff0000',
-          }, styles.buttonText ]}>
+      <TouchableOpacity activeOpacity={disabled ? 1 : 0.5} onPress={() => {
+        if (disabled && onDisabledPress) {
+          onDisabledPress()
+        }
+
+        if (!disabled && onPress) {
+          onPress()
+        }
+      }} style={{ width: size === 'large' ? '100%' : undefined }}>
+        <View style={[ { backgroundColor, borderColor, opacity: disabled ? 0.2 : 1 }, (styles[size] || styles.small), styles.button, style]}>
+          <Text style={[ { color }, styles.buttonText, textStyle ]}>
             {title}
           </Text>
         </View>
@@ -31,6 +52,7 @@ const styles = StyleSheet.create({
     paddingRight: 30,
   },
   buttonText: {
+    fontFamily: 'Lato',
     fontSize: 13,
     fontWeight: '900',
     textAlign: 'center',
@@ -38,7 +60,6 @@ const styles = StyleSheet.create({
   large: {
     borderRadius: 25,
     height: 50,
-    width: '100%',
   },
   small: {
     borderRadius: 15,

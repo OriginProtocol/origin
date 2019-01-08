@@ -23,7 +23,7 @@ const SUPPORTED_ERC20 = [
 ]
 
 class ContractService {
-  constructor({ web3, contractAddresses, ethereum, walletLinkerUrl, fetch, ecies } = {}) {
+  constructor({ web3, contractAddresses, ethereum, walletLinkerUrl, activeWalletLinker, fetch, ecies } = {}) {
     const externalWeb3 = web3 || ((typeof window !== 'undefined') && window.web3)
     if (!externalWeb3) {
       throw new Error(
@@ -36,6 +36,7 @@ class ContractService {
     if (walletLinkerUrl && fetch){
       this.initWalletLinker(walletLinkerUrl, fetch, ecies)
     }
+    this.activeWalletLinker = activeWalletLinker
 
     this.marketplaceContracts = { V00_Marketplace }
 
@@ -93,7 +94,11 @@ class ContractService {
   newWalletNetwork() {
     this.web3.setProvider(this.walletLinker.getProvider())
     // Fake it till you make it
-    this.web3.currentProvider.isOrigin = true
+    this.web3.currentProvider.isOrigin = !this.walletLinker.linked
+  }
+
+  isActiveWalletLinker() {
+    return this.walletLinker && (this.walletLinker.linked || this.activeWalletLinker)
   }
 
   initWalletLinker(walletLinkerUrl, fetch, ecies) {
@@ -448,7 +453,7 @@ class ContractService {
     // set gas
     opts.gas = (opts.gas || (await method.estimateGas(opts))) + additionalGas
     const transactionReceipt = await new Promise((resolve, reject) => {
-      if (!opts.from && this.walletLinker && !this.walletLinker.linked) {
+      if (!opts.from && this.isActiveWalletLinker() && !this.walletLinker.linked) {
         opts.from = this.walletPlaceholderAccount()
       }
       const sendCallback = method
