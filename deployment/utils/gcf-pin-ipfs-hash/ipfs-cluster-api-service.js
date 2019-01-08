@@ -1,8 +1,10 @@
 const fetch = require('cross-fetch');
 
 class IpfsClusterApiService {
-  constructor(ifpsClusterUrl) {
-    this.ifpsClusterUrl = ifpsClusterUrl
+  constructor(ifpsClusterUrl, username, password) {
+    this.ifpsClusterUrl = ifpsClusterUrl;
+    this.username = username || '';
+    this.password = password || '';
   }
 
   async _sendRequest(method, path, params=null) {
@@ -10,6 +12,9 @@ class IpfsClusterApiService {
         this.ifpsClusterUrl+path,
         {
           method: method,
+          headers: {
+            "Authorization": "Basic " + Buffer.from(this.username + ":" + this.password).toString('base64')
+          }
         },
         function(error){
           throw new Error(`Error occured while trying to connect to ipfs cluster`)
@@ -21,24 +26,14 @@ class IpfsClusterApiService {
       }
 
       if (resp.status == 202){
-        // e.g succesfully pinning a hash returns a 202
+        // e.g succesfully sending a request to pin a hash returns a 202
         return true
       }
-
       const data = await resp.json()
-      if (data.code != 200){
+      if (data.code && data.code != 200){
         throw new Error(`ipfs cluster api responded with an error, status: ${data['code']}, message: ${data['message']}`)
       }
       return data;
-  }
-
-  async listPins(){
-    try {
-      const pins = await this._sendRequest('GET', '/pins')
-      return pins
-    } catch(err){
-      console.error(err);
-    }
   }
 
   async pin(ipfsHash){
@@ -49,6 +44,25 @@ class IpfsClusterApiService {
       console.error(err);
     }
   }
+
+  async unpin(ipfsHash){
+    try {
+      const unpinned = await this._sendRequest('DELETE', '/pins/'+ipfsHash)
+      return unpinned
+    } catch(err){
+      console.error(err);
+    }
+  }
+
+  async getPinStatus(ipfsHash){
+    try {
+      const pinStatus = await this._sendRequest('GET', '/pins/'+ipfsHash)
+      return pinStatus
+    } catch(err){
+      console.error(err);
+    }
+  }
+
 }
 
 module.exports = IpfsClusterApiService
