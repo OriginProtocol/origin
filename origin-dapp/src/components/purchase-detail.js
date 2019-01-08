@@ -66,7 +66,8 @@ const defaultState = {
   processing: false,
   purchase: {},
   seller: {},
-  areSellerStepsOpen: true
+  areSellerStepsOpen: true,
+  perspective: '',
 }
 
 class PurchaseDetail extends Component {
@@ -320,7 +321,7 @@ class PurchaseDetail extends Component {
   }
 
   async loadPurchase() {
-    const { offerId } = this.props
+    const { offerId, wallet } = this.props
 
     try {
       const purchase = await origin.marketplace.getOffer(offerId)
@@ -332,9 +333,20 @@ class PurchaseDetail extends Component {
       
       const listing = await getListing(purchase.listingId, { translate: true, blockInfo })
 
+      let perspective
+      // may potentially be neither buyer nor seller
+      if (formattedAddress(wallet.address) === formattedAddress(purchase.buyer)) {
+        perspective = 'buyer'
+      } else if (
+        formattedAddress(wallet.address) === formattedAddress(listing.seller)
+      ) {
+        perspective = 'seller'
+      }
+
       this.setState({
         listing,
-        purchase
+        purchase,
+        perspective
       })
 
       if (!listing) {
@@ -581,7 +593,7 @@ class PurchaseDetail extends Component {
     })
 
     // anticipate the need for a dispute per Josh
-    if (rating < 3) {
+    if (rating < 3 && this.state.perspective === 'buyer') {
       this.setState({ problemInferred: true })
 
       this.toggleModal('confirmation')
@@ -707,7 +719,8 @@ class PurchaseDetail extends Component {
       purchase,
       seller,
       translatedSchema,
-      areSellerStepsOpen
+      areSellerStepsOpen,
+      perspective
     } = this.state
     const availability = offerStatusToListingAvailability(purchase.status)
     const isPending = availability === 'pending'
@@ -717,16 +730,6 @@ class PurchaseDetail extends Component {
     // Data not loaded yet.
     if (!purchase.status || !listing.status) {
       return null
-    }
-
-    let perspective
-    // may potentially be neither buyer nor seller
-    if (formattedAddress(wallet.address) === formattedAddress(purchase.buyer)) {
-      perspective = 'buyer'
-    } else if (
-      formattedAddress(wallet.address) === formattedAddress(listing.seller)
-    ) {
-      perspective = 'seller'
     }
 
     const pictures = listing.pictures || []
