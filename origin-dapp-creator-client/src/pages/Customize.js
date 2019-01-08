@@ -3,6 +3,7 @@ import superagent from 'superagent'
 
 import { AppToaster } from '../toaster'
 import { formInput, formFeedback } from 'utils/formHelpers'
+import ColorPicker from 'components/ColorPicker'
 import ImagePicker from 'components/ImagePicker'
 import Redirect from 'components/Redirect'
 
@@ -48,11 +49,13 @@ class Customize extends React.Component {
 
           <div className="row">
             <div className="col-6">
-              <ImagePicker />
+              <ImagePicker title="Marketplace Logo"
+                description="Recommended Size: 300px x 100px"/>
             </div>
 
             <div className="col-6">
-              <ImagePicker />
+              <ImagePicker title="Marketplace Favicon"
+                description="Recommended Size: 16px x 16px" />
             </div>
           </div>
 
@@ -64,14 +67,22 @@ class Customize extends React.Component {
           </div>
 
           <div className="row">
-            <div className="col-8">
+            <div className="col-7">
             </div>
 
-            <div className="col-4">
+            <div className="col-5">
               <label>Colors</label>
-              <br/>
-              <label>Font</label>
+              <ColorPicker description="Navbar Background" />
+              <ColorPicker description="Search Background" />
+              <ColorPicker description="Featured Tag" />
+              <ColorPicker description="Footer Color" />
             </div>
+          </div>
+
+          <div class="actions">
+            <a href="#" onClick={this.handlePreview}>
+              Preview Appearance
+            </a>
           </div>
 
           <div className="form-actions">
@@ -88,5 +99,14 @@ class Customize extends React.Component {
     )
   }
 }
+
+require('react-styl')(`
+  .actions
+    margin-top: 1rem
+    background-color: var(--pale-grey-four)
+    border: 1px solid var(--light)
+    text-align: center
+    padding: 0.75rem
+`)
 
 export default Customize

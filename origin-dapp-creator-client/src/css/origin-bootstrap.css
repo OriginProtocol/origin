@@ -45,6 +45,7 @@
 }
 
 body {
+  font-family: var(--default-font);
   color: var(--dusk);
 }
 

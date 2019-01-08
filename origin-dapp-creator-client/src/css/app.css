@@ -17,7 +17,7 @@ body {
   background-color: white;
   border-bottom-left-radius: var(--default-radius);
   border-bottom-right-radius: var(--default-radius);
-  border: 1px solid #c2cbd3;
+  border: 1px solid var(--light);
   margin: 2rem auto;
   width: 810px;
 }

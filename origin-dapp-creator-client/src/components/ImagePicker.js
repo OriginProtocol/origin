@@ -53,9 +53,9 @@ class ImagePicker extends React.Component {
           className="image-picker"
           onClick={this.handlePreviewClick}
         >
-          <h2>{this.props.title}</h2>
-          <p>Drag and drop your logo or click the button below to browse</p>
-          <button className="btn btn-default">
+          <p class="title">{this.props.title}</p>
+          <p>{this.props.description}</p>
+          <button className="btn btn-outline-primary">
             Upload
           </button>
         </div>
@@ -65,7 +65,18 @@ class ImagePicker extends React.Component {
 }
 
 require('react-styl')(`
-  input
+  .image-picker
+    border: 1px dashed var(--light)
+    border-radius: var(--default-radius)
+    background-color: var(--pale-grey-four)
+    padding: 2rem
+    text-align: center;
+
+  .title
+    color: var(--dark)
+    font-size: 1.125rem
+
+  .form-control-file
     width: 1px
     height: 1px
     opacity: 0
