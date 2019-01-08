@@ -3,20 +3,15 @@ import { Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
 
 import Modal from 'components/Modal'
-import CountryDropdown from './_CountryDropdown'
 
-import GeneratePhoneCodeMutation from 'mutations/GeneratePhoneCode'
-import VerifyPhoneCodeMutation from 'mutations/VerifyPhoneCode'
+import GenerateAirbnbCodeMutation from 'mutations/GenerateAirbnbCode'
+import VerifyAirbnbCodeMutation from 'mutations/VerifyAirbnbCode'
 
-class PhoneAttestation extends Component {
+class AirbnbAttestation extends Component {
   state = {
-    active: 'us',
-    dropdown: true,
     stage: 'GenerateCode',
-    phone: '',
-    code: '',
-    prefix: '1',
-    method: 'sms'
+    airbnbUserId: '',
+    code: ''
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -34,7 +29,7 @@ class PhoneAttestation extends Component {
 
     return (
       <Modal
-        className={`attestation-modal phone${
+        className={`attestation-modal airbnb${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
         shouldClose={this.state.shouldClose}
@@ -55,34 +50,23 @@ class PhoneAttestation extends Component {
   renderGenerateCode() {
     return (
       <>
-        <h2>Verify your Phone Number</h2>
-        <div className="instructions">
-          Enter your phone number below and OriginID will send you a
-          verification code via SMS.
-        </div>
-        <div className="d-flex mt-3">
-          <CountryDropdown
-            onChange={({ code, prefix }) =>
-              this.setState({ active: code, prefix })
-            }
-            active={this.state.active}
+        <h2>Verify your Airbnb account</h2>
+        <div className="instructions">Enter Airbnb profile URL below</div>
+        <div className="mt-3">
+          <input
+            ref={ref => (this.inputRef = ref)}
+            className="form-control form-control-lg"
+            placeholder="https://www.airbnb.com/users/show/123"
+            value={this.state.airbnbUserId}
+            onChange={e => this.setState({ airbnbUserId: e.target.value })}
           />
-          <div className="form-control-wrap">
-            <input
-              ref={ref => (this.inputRef = ref)}
-              className="form-control form-control-lg"
-              placeholder="Area code and phone number"
-              value={this.state.phone}
-              onChange={e => this.setState({ phone: e.target.value })}
-            />
-          </div>
         </div>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="help">
-          Other users will know that you have a verified phone number. Your
-          actual phone number will not be published on the blockchain.
+          Other users will know that you have a verified Airbnb profile and your
+          user id will be published on the blockchain.
         </div>
         <div className="actions">
           {this.renderCodeButton()}
@@ -99,19 +83,24 @@ class PhoneAttestation extends Component {
   renderVerifyCode() {
     return (
       <>
-        <h2>Verify your Phone Number</h2>
-        <div className="instructions">Enter the code we sent you below</div>
+        <h2>Verify your Airbnb account</h2>
+        <div className="instructions">
+          Go to the Airbnb website, edit your profile and paste the following
+          text into profile description:
+        </div>
         <div className="my-3 verification-code">
           <input
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg"
-            placeholder="Verification code"
             value={this.state.code}
-            onChange={e => this.setState({ code: e.target.value })}
+            readOnly
           />
           {this.state.error && (
             <div className="alert alert-danger mt-3">{this.state.error}</div>
           )}
+        </div>
+        <div className="help">
+          Continue once the confirmation code is entered in your Airbnb profile.
         </div>
         <div className="actions">
           {this.renderVerifyButton()}
@@ -128,11 +117,15 @@ class PhoneAttestation extends Component {
   renderCodeButton() {
     return (
       <Mutation
-        mutation={GeneratePhoneCodeMutation}
+        mutation={GenerateAirbnbCodeMutation}
         onCompleted={res => {
-          const result = res.generatePhoneCode
+          const result = res.generateAirbnbCode
           if (result.success) {
-            this.setState({ stage: 'VerifyCode', loading: false })
+            this.setState({
+              stage: 'VerifyCode',
+              code: result.code,
+              loading: false
+            })
           } else {
             this.setState({ error: result.reason, loading: false })
           }
@@ -149,7 +142,10 @@ class PhoneAttestation extends Component {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               generateCode({
-                variables: pick(this.state, ['prefix', 'method', 'phone'])
+                variables: {
+                  identity: this.props.wallet,
+                  airbnbUserId: this.state.airbnbUserId
+                }
               })
             }}
             children={this.state.loading ? 'Loading...' : 'Continue'}
@@ -162,9 +158,9 @@ class PhoneAttestation extends Component {
   renderVerifyButton() {
     return (
       <Mutation
-        mutation={VerifyPhoneCodeMutation}
+        mutation={VerifyAirbnbCodeMutation}
         onCompleted={res => {
-          const result = res.verifyPhoneCode
+          const result = res.verifyAirbnbCode
           console.log(result)
           if (result.success) {
             this.setState({
@@ -193,9 +189,7 @@ class PhoneAttestation extends Component {
               verifyCode({
                 variables: {
                   identity: this.props.wallet,
-                  prefix: this.state.prefix,
-                  phone: this.state.phone,
-                  code: this.state.code
+                  airbnbUserId: this.state.airbnbUserId
                 }
               })
             }}
@@ -209,7 +203,7 @@ class PhoneAttestation extends Component {
   renderVerifiedOK() {
     return (
       <>
-        <h2>Phone number verified!</h2>
+        <h2>Airbnb account verified!</h2>
         <div className="instructions">
           Don&apos;t forget to publish your changes.
         </div>
@@ -234,81 +228,7 @@ class PhoneAttestation extends Component {
   }
 }
 
-export default PhoneAttestation
+export default AirbnbAttestation
 
 require('react-styl')(`
-  .attestation-modal
-    overflow: visible !important
-    padding-bottom: 1.5rem !important
-    > div
-      h2
-        background: url(images/identity/verification-shape-grey.svg) no-repeat center;
-        background-size: 7rem;
-        padding-top: 9rem;
-        background-position: center top;
-        position: relative
-        &::before
-          content: ""
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 7.5rem;
-          right: 0;
-          background-repeat: no-repeat;
-          background-position: center;
-      font-size: 18px
-      .form-control-wrap
-        flex: 1
-      .form-control
-        background-color: var(--dark-two)
-        border: 0
-        color: var(--white)
-        &::-webkit-input-placeholder
-          color: var(--dusk)
-      .help
-        font-size: 14px
-        margin-top: 1rem
-      .verification-code
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        .form-control
-          max-width: 15rem
-          text-align: center
-      .actions
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 1.5rem
-        .btn-link
-          margin-top: 1rem
-          text-decoration: none
-
-    &.phone > div h2::before
-      background-image: url(images/identity/phone-icon-dark.svg);
-      background-size: 2rem;
-    &.email > div h2::before
-      background-image: url(images/identity/email-icon-dark.svg);
-      background-size: 3.5rem
-    &.facebook > div h2::before
-      background-image: url(images/identity/facebook-icon-dark.svg);
-      background-size: 2rem
-    &.twitter > div h2::before
-      background-image: url(images/identity/twitter-icon-dark.svg);
-      background-size: 3.5rem
-    &.airbnb > div h2::before
-      background-image: url(images/identity/airbnb-icon-dark.svg);
-      background-size: 4rem
-
-    &.success
-      > div
-        h2
-          color: var(--greenblue)
-          background-image: url(images/circular-check-button.svg)
-          background-size: 3.5rem;
-          padding-top: 5rem;
-          &::before
-            background-image: none
-        .actions
-          margin-bottom: 1.5rem
 `)

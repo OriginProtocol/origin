@@ -4,6 +4,7 @@ import pick from 'lodash/pick'
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
+import Wallet from 'components/Wallet'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -35,82 +36,89 @@ class Step2 extends Component {
     const Feedback = formFeedback(this.state)
 
     return (
-      <div className="create-listing-step-2">
-        <div className="wrap">
-          <div className="step">Step 2</div>
-          <div className="step-description">Provide listing details</div>
-          <Steps steps={3} step={2} />
+      <div className="row">
+        <div className="col-md-8">
+          <div className="create-listing-step-2">
+            <div className="wrap">
+              <div className="step">Step 2</div>
+              <div className="step-description">Provide listing details</div>
+              <Steps steps={3} step={2} />
 
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              this.validate()
-            }}
-          >
-            {this.state.valid !== false ? null : (
-              <div className="alert alert-danger">
-                Please fix the errors below...
-              </div>
-            )}
-            <div className="form-group">
-              <label>Title</label>
-              <input
-                {...input('title')}
-                placeholder="This is the title of your listing"
-                ref={r => (this.title = r)}
-              />
-              {Feedback('title')}
-            </div>
-            <div className="form-group">
-              <label className="mb-0">Description</label>
-              <div className="help-text">
-                Make sure to include any product variant details here. Learn
-                more
-              </div>
-              <textarea
-                {...input('description')}
-                placeholder="Tell us a bit about this listing"
-              />
-              {Feedback('description')}
-            </div>
-            <div className="form-group">
-              <label>Location</label>
-              <input
-                className="form-control form-control-lg"
-                placeholder="Where is this listing being offered"
-              />
-            </div>
-            <div className="form-group">
-              <label>Add Photos</label>
-              <div className="add-photos">Add photo</div>
-            </div>
-            <div className="form-group">
-              <label>Quantity</label>
-              <input
-                {...input('quantity')}
-                placeholder="How many are you selling?"
-              />
-              {Feedback('quantity')}
-            </div>
-            <div className="form-group">
-              <label>Listing Price (per unit)</label>
-              <input {...input('price')} />
-              {Feedback('price')}
-              <div className="help-text price">
-                The cost to buy this listing. Price is always in ETH, USD is an
-                estimate.
-              </div>
-            </div>
+              <form
+                onSubmit={e => {
+                  e.preventDefault()
+                  this.validate()
+                }}
+              >
+                {this.state.valid !== false ? null : (
+                  <div className="alert alert-danger">
+                    Please fix the errors below...
+                  </div>
+                )}
+                <div className="form-group">
+                  <label>Title</label>
+                  <input
+                    {...input('title')}
+                    placeholder="This is the title of your listing"
+                    ref={r => (this.title = r)}
+                  />
+                  {Feedback('title')}
+                </div>
+                <div className="form-group">
+                  <label className="mb-0">Description</label>
+                  <div className="help-text">
+                    Make sure to include any product variant details here. Learn
+                    more
+                  </div>
+                  <textarea
+                    {...input('description')}
+                    placeholder="Tell us a bit about this listing"
+                  />
+                  {Feedback('description')}
+                </div>
+                <div className="form-group">
+                  <label>Location</label>
+                  <input
+                    className="form-control form-control-lg"
+                    placeholder="Where is this listing being offered"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Add Photos</label>
+                  <div className="add-photos">Add photo</div>
+                </div>
+                <div className="form-group">
+                  <label>Quantity</label>
+                  <input
+                    {...input('quantity')}
+                    placeholder="How many are you selling?"
+                  />
+                  {Feedback('quantity')}
+                </div>
+                <div className="form-group">
+                  <label>Listing Price (per unit)</label>
+                  <input {...input('price')} />
+                  {Feedback('price')}
+                  <div className="help-text price">
+                    The cost to buy this listing. Price is always in ETH, USD is
+                    an estimate.
+                  </div>
+                </div>
 
-            <div className="actions">
-              <Link className="btn btn-outline-primary" to={prefix}>
-                Back
-              </Link>
-              <button type="submit" className="btn btn-primary">
-                Continue
-              </button>
+                <div className="actions">
+                  <Link className="btn btn-outline-primary" to={prefix}>
+                    Back
+                  </Link>
+                  <button type="submit" className="btn btn-primary">
+                    Continue
+                  </button>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <Wallet />
         </div>
       </div>
     )
@@ -127,7 +135,7 @@ class Step2 extends Component {
 
     if (!this.state.description) {
       newState.descriptionError = 'Description is required'
-    } else if (this.state.description.length < 3) {
+    } else if (this.state.description.length < 10) {
       newState.descriptionError = 'Description is too short'
     }
 
