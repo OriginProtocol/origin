@@ -1,5 +1,6 @@
+import { Route, Switch } from 'react-router-dom'
+import { baseConfig } from 'origin-dapp/src/config'
 import React from 'react'
-import { Switch, Route, NavLink } from 'react-router-dom'
 
 import Create from 'pages/Create'
 import Customize from 'pages/Customize'
@@ -9,6 +10,10 @@ import Steps from 'components/Steps'
 class App extends React.Component {
   constructor (props) {
     super(props)
+
+    this.state = {
+      config: baseConfig
+    }
   }
 
   render() {
@@ -23,9 +28,34 @@ class App extends React.Component {
 
           <div className="form">
             <Switch>
-              <Route path="/" exact component={Create} />
-              <Route path="/customize" exact component={Customize} />
-              <Route path="/configure" exact component={Configure} />
+              <Route
+                path="/"
+                exact
+                render={() => (
+                  <Create
+                    config={this.state.config}
+                    onChange={config => this.setState({ config })}
+                  />
+                )}
+              />
+              <Route
+                path="/customize"
+                render={() => (
+                  <Customize
+                    config={this.state.config}
+                    onChange={config => this.setState({ config })}
+                  />
+                )}
+              />
+              <Route
+                path="/"
+                render={() => (
+                  <Configure
+                    config={this.state.config}
+                    onChange={config => this.setState({ config })}
+                  />
+                )}
+              />
             </Switch>
           </div>
         </div>

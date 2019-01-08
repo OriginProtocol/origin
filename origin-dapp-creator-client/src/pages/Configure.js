@@ -254,8 +254,3 @@ Form.contextTypes = {
 }
 
 export default Form
-
-require('react-styl')(`
-  h4
-    margin-top: 2rem;
-`)

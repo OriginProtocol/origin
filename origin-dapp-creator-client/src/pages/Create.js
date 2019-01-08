@@ -1,28 +1,16 @@
-import { Button, Intent } from '@blueprintjs/core'
-import { baseConfig } from 'origin-dapp/src/config'
-import PropTypes from 'prop-types'
+import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
 import React from 'react'
-import superagent from 'superagent'
+import pick from 'lodash/pick'
 
-import { AppToaster } from '../toaster'
+import { formInput, formFeedback } from 'utils/formHelpers'
+import Redirect from 'components/Redirect'
 import Steps from 'components/Steps'
 
-import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
-
-class Form extends React.Component {
+class Create extends React.Component {
   constructor(props, context) {
     super(props)
 
-    this.state = {
-      config: baseConfig,
-      ipfsHash: '',
-      submitting: false,
-      previewing: false,
-      successDialogIsOpen: false,
-      errors: {
-        subdomain: ''
-      }
-    }
+    this.state = { ...props.config, fields: Object.keys(props.config) }
 
     this.availableLanguages = getAvailableLanguages().map((language) => {
       return {
@@ -37,32 +25,47 @@ class Form extends React.Component {
       return (<option key={x.value} value={x.value}>{x.label}</option>)
     })
 
-    this.handleInputChange = this.handleInputChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  handleInputChange (event) {
-    let value
-    // Hacky handling of use custom domain switch
-    if (event.target.name == 'subdomain' && event.target.type == 'checkbox') {
-      value = event.target.checked ? false : ''
-    } else {
-      value = event.target.value
+  handleSubmit (event) {
+    event.preventDefault()
+
+    const newState = {}
+
+    if (!this.state.title) {
+      newState.titleError = 'Title is required'
+    } else if (this.state.title.length < 3) {
+      newState.titleError = 'Title is too short'
     }
 
-    this.setState({
-      'config': {
-        ...this.state.config,
-        [event.target.name]: value
-      }
-    })
-  }
+    if (!this.state.subdomain) {
+      newState.subdomainError = 'Subdomain is required'
+    } else if (this.state.subdomain.length < 2) {
+      newState.subdomainError = 'Subdomain is too short'
+    }
 
-  handleSubmit (event) {
-    console.log('Submit')
+    newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
+
+    if (!newState.valid) {
+      window.scrollTo(0, 0)
+    } else if (this.props.onChange) {
+      this.props.onChange(pick(this.state, this.state.fields))
+    }
+
+    this.setState(newState)
+
+    return newState.valid
   }
 
   render () {
+    const input = formInput(this.state, state => this.setState(state))
+    const Feedback = formFeedback(this.state)
+
+    if (this.state.valid) {
+      return <Redirect to={`/customize`} push />
+    }
+
     return (
       <>
         <h1>Welcome to the Origin Marketplace Creator</h1>
@@ -71,12 +74,19 @@ class Form extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>Marketplace Title</label>
-            <input className="form-control form-control-lg" />
+            <input {...input('title')} />
+            {Feedback('title')}
           </div>
 
           <div className="form-group">
             <label>Subdomain</label>
-            <input className="form-control form-control-lg" />
+            <div className="input-group">
+              <input {...input('subdomain')} />
+              <div className="input-group-append">
+                <span className="input-group-text">.origindapp.com</span>
+              </div>
+              {Feedback('subdomain')}
+            </div>
             <div className="helper-text">
               You can use your own custom domain name. <a href="#">Here's how</a>
             </div>
@@ -84,18 +94,16 @@ class Form extends React.Component {
 
           <div className="form-group">
             <label>About</label>
-            <textarea className="form-control form-control-lg" />
+            <textarea {...input('about')} />
             <div className="helper-text">
               A description that will be displayed in the footer of your DApp
             </div>
+            {Feedback('description')}
           </div>
 
           <div className="form-group">
             <label>Language</label>
-            <select className="form-control form-control-lg"
-              value={this.state.language}
-              onChange={e => this.props.updateState(e.target.value) }
-            >
+            <select {...input('languageCode')}>
               {this.availableLanguageOptions}
             </select>
           </div>
@@ -111,10 +119,4 @@ class Form extends React.Component {
   }
 }
 
-Form.contextTypes = {
-  web3: PropTypes.object
-}
-
-export default Form
-
-require('react-styl')(``)
+export default Create

@@ -79,6 +79,14 @@ class Form extends Component {
         <form onSubmit={this.handleSubmit}>
           <h1>Customize your Marketplace's Appearance</h1>
           <h4>Choose a logo and colors for your marketplace below.</h4>
+
+          <div>
+            <ImagePicker />
+          </div>
+
+          <div>
+            <ImagePicker />
+          </div>
         </form>
       </>
     )
