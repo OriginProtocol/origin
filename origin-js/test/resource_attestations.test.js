@@ -6,17 +6,64 @@ import fetchMock from 'fetch-mock'
 chai.use(require('chai-string'))
 
 const sampleWallet = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
+
+const testSignature = '0x30d931388271b39ca042853c983a0aacf3dc61216970f2b9a73ba5d035bc07204eec913217c1691475273b0bfff02cddcb983eaa3ca88f9f2f016f8cd4a910a51b'
+
 const sampleAttestation = {
   'claim-type': 1,
-  data: 'some data',
-  signature: '0x1a2b3c'
+  data: {
+    schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
+    data: {
+      issuer: {
+        name: 'Origin Protocol',
+        url: 'https://www.originprotocol.com'
+      },
+      issueDate: 'Jan 1st 2019',
+      attestation: {
+        verificationMethod: {
+          email: true
+        },
+        email: {
+          verified: true,
+        }
+      }
+    },
+    signature: {
+      bytes: null, // Populate by calling signAttestation()
+      version: '1.0.0'
+    }
+  },
+  signature: testSignature
 }
 
 const sampleTwitterAttestation = {
   'claim-type': 4,
-  // data from bridge server is returned as base58 encoded string
-  data: 'QmWeTW6u1jZ1q9VBfATXsnzgDLEE6EKPrU5etTyBXATMcd',
-  signature: '0x30d931388271b39ca042853c983a0aacf3dc61216970f2b9a73ba5d035bc07204eec913217c1691475273b0bfff02cddcb983eaa3ca88f9f2f016f8cd4a910a51b'
+  data: {
+    schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
+    data: {
+      issuer: {
+        name: 'Origin Protocol',
+        url: 'https://www.originprotocol.com'
+      },
+      issueDate: 'Jan 1st 2019',
+      attestation: {
+        verificationMethod: {
+          oAuth: true
+        },
+        site: {
+          userId: {
+            raw: '123'
+          },
+          siteName: 'twitter.com'
+        }
+      }
+    },
+    signature: {
+      bytes: testSignature,
+      version: '1.0.0'
+    }
+  },
+  signature: testSignature
 }
 
 const expectPostParams = (requestBody, params) => {
@@ -37,7 +84,7 @@ const expectGetParams = (requestUrl, params) => {
 
 const expectAttestation = result => {
   expect(result.signature).to.equal(sampleAttestation.signature)
-  expect(result.data).to.equal(Web3.utils.soliditySha3(sampleAttestation.data))
+  expect(result.data).to.deep.equal(sampleAttestation)
   expect(result.topic).to.equal(sampleAttestation['claim-type'])
 }
 
@@ -93,7 +140,7 @@ describe('Attestation Resource', function() {
       const attestations = setup()
       const wallet = await attestations.contractService.currentAccount()
       const identityAddress = await attestations.getIdentityAddress(wallet)
-      expect(identityAddress).to.be.a('string')
+      expect(identityAddress).to.equal(wallet)
     })
   })
 
@@ -217,7 +264,7 @@ describe('Attestation Resource', function() {
         code: 'foo.bar'
       })
 
-      expect(response.data).to.eql('0x7b6d4739164e722b313c3f00dd61ab3e79781e919d7aaeb651c1277d591b6bc2')
+      expect(response.data).to.deep.equal(sampleTwitterAttestation)
       expect(response.signature).to.equal(sampleTwitterAttestation.signature)
       expect(response.topic).to.equal(sampleTwitterAttestation['claim-type'])
     })

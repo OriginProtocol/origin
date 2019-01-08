@@ -149,7 +149,7 @@ export default class V01_UsersAdapter {
   /**
    * Merge existing attestations on an identity with new attestations.
    * Note: The current logic only does deduping based on signature. It could potentially
-   * be enhanced to only keep latest attestation per type and possibly to trim expired attestations.
+   * be enhanced to only keep latest attestation per type and also to trim expired attestations.
    * @param {Array<Object>>} existingAttestations - Existing attestations as JSON objects.
    * @param {Array<AttestationObject>} attestations - New attestations to add as model objects.
    * @private
@@ -159,7 +159,8 @@ export default class V01_UsersAdapter {
     const seen = {}
     const allAttestations = [...existingAttestations, ...newAttestations.map(a => a.data)]
     return allAttestations.filter( (a) => {
-      return seen[a.signature] ? false : (seen[a.signature] = true)
+      const signature = a.signature.bytes
+      return seen[signature] ? false : (seen[signature] = true)
     })
   }
 
@@ -183,7 +184,7 @@ export default class V01_UsersAdapter {
    * Validates an attestation by checking its signature matches against the
    * hash of (user's eth address, attestation data).
    * @param {string} account - User's ETH address.
-   * @param {{data:string, signature:string}} attestation
+   * @param {{data:string, signature:{bytes: string, version:string}}} attestation
    * @return Boolean - True if attestation is valid, false otherwise.
    * @private
    */
@@ -194,7 +195,8 @@ export default class V01_UsersAdapter {
     console.log("VALIDATING ATTESTATION account=", account, " data=", attestationJson)
     const message = Web3.utils.soliditySha3(account, Web3.utils.sha3(attestationJson))
     const messageHash = this.contractService.web3.eth.accounts.hashMessage(message)
-    const issuerAddress = this.contractService.web3.eth.accounts.recover(messageHash, attestation.signature, true)
+    const issuerAddress = this.contractService.web3.eth.accounts.recover(
+      messageHash, attestation.signature.bytes, true)
     if (issuerAddress !== this.issuerAddress) {
       console.log(
         `Attestation signature validation failure.

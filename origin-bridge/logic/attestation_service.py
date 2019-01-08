@@ -186,15 +186,16 @@ class VerificationService:
 
             # Note: use sort_keys option to make the output deterministic for hashing purposes.
             json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
-            signature = attestations.generate_signature(
-                 signing_key, eth_address, json_data
-             )
+            signature = {
+                'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+                'version': '1.0.0'
+            }
 
             attestation = Attestation(
                 method=AttestationTypes.PHONE,
                 eth_address=eth_address,
                 value="{} {}".format(country_calling_code, phone),
-                signature=signature,
+                signature=signature['bytes'],
                 remote_ip_address=request.remote_addr
             )
             db.session.add(attestation)
@@ -305,15 +306,16 @@ class VerificationService:
 
         # Note: use sort_keys option to make the output deterministic for hashing purposes.
         json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
-        signature = attestations.generate_signature(
-            signing_key, eth_address, json_data
-        )
+        signature = {
+            'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+            'version': '1.0.0'
+        }
 
         attestation = Attestation(
             method=AttestationTypes.EMAIL,
             eth_address=eth_address,
             value=email,
-            signature=signature,
+            signature=signature['bytes'],
             remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
@@ -379,15 +381,16 @@ class VerificationService:
 
         # Note: use sort_keys option to make the output deterministic for hashing purposes.
         json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
-        signature = attestations.generate_signature(
-            signing_key, eth_address, json_data
-        )
+        signature = {
+            'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+            'version': '1.0.0'
+        }
 
         attestation = Attestation(
             method=AttestationTypes.FACEBOOK,
             eth_address=eth_address,
             value=response.json()['name'],
-            signature=signature,
+            signature=signature['bytes'],
             remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
@@ -479,15 +482,16 @@ class VerificationService:
 
         # Note: use sort_keys option to make the output deterministic for hashing purposes.
         json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
-        signature = attestations.generate_signature(
-            signing_key, eth_address, json_data
-        )
+        signature = {
+            'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+            'version': '1.0.0'
+        }
 
         attestation = Attestation(
             method=AttestationTypes.TWITTER,
             eth_address=eth_address,
             value=screen_name,
-            signature=signature,
+            signature=signature['bytes'],
             remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
@@ -557,15 +561,16 @@ class VerificationService:
 
         # Note: use sort_keys option to make the output deterministic for hashing purposes.
         json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
-        signature = attestations.generate_signature(
-            signing_key, eth_address, json_data
-        )
+        signature = {
+            'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+            'version': '1.0.0'
+        }
 
         attestation = Attestation(
             method=AttestationTypes.AIRBNB,
             eth_address=eth_address,
             value=airbnbUserId,
-            signature=signature,
+            signature=signature['bytes'],
             remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)

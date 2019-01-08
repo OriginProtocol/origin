@@ -55,6 +55,11 @@ class AttestationData(Schema):
     attestation = fields.Nested(Attestation)
 
 
+class Signature(Schema):
+    bytes = fields.Str()
+    version = fields.Str()
+
+
 class PhoneVerificationCodeRequest(StandardRequest):
     country_calling_code = fields.Str(required=True)
     phone = fields.Str(required=True)
@@ -76,7 +81,7 @@ class VerifyPhoneRequest(StandardRequest):
 class VerifyPhoneResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
-    signature = fields.Str(required=True)
+    signature = fields.Nested(Signature, required=True)
     claim_type = fields.Integer(data_key='claim-type')
 
 
@@ -97,7 +102,7 @@ class VerifyEmailRequest(StandardRequest):
 class VerifyEmailResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
-    signature = fields.Str(required=True)
+    signature = fields.Nested(Signature, required=True)
     claim_type = fields.Integer(data_key='claim-type')
 
 
@@ -117,7 +122,7 @@ class VerifyFacebookRequest(StandardRequest):
 class VerifyFacebookResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
-    signature = fields.Str(required=True)
+    signature = fields.Nested(Signature, required=True)
     claim_type = fields.Integer(data_key='claim-type')
 
 
@@ -137,7 +142,7 @@ class VerifyTwitterRequest(StandardRequest):
 class VerifyTwitterResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
-    signature = fields.Str(required=True)
+    signature = fields.Nested(Signature, required=True)
     claim_type = fields.Integer(data_key='claim-type')
 
 
@@ -153,7 +158,7 @@ class AirbnbVerificationCodeResponse(StandardResponse):
 class VerifyAirbnbResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
-    signature = fields.Str(required=True)
+    signature = fields.Nested(Signature, required=True)
     claim_type = fields.Integer(data_key='claim-type')
 
 

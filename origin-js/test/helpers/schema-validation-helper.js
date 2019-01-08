@@ -84,11 +84,12 @@ export const validateOffer = (offer) => {
 export const validateAttestation = (attestation) => {
   expect(attestation).to.have.property('topic').that.is.a('number')
   expect(attestation).to.have.property('service').that.is.a('string')
-  // FIXME: with identity v1, data is a string. in v2 it is an object.
+  // FIXME: identity v0: data is a string. in v1 it is an object.
   //expect(attestation).to.have.property('data').that.is.a('string')
   //expect(attestation).to.have.property('data').to.startWith('0x')
-  expect(attestation).to.have.property('signature').that.is.a('string')
-  expect(attestation).to.have.property('signature').to.startWith('0x')
+  // FIXME: identity v0: signature is a string. in v1 it is an object
+  //expect(attestation).to.have.property('signature').that.is.a('object')
+  //expect(attestation).to.have.property('signature').to.startWith('0x')
 }
 
 export const validateUser = (user) => {

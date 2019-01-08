@@ -16,7 +16,6 @@ export class Attestations {
     this.fetch = fetch
 
     this.responseToAttestation = (resp = {}) => {
-      console.log("RECEIVED BRIDGE RESPONSE:", resp)
       return new AttestationObject({
         topic: resp['claim-type'],
         data: resp,

@@ -138,7 +138,8 @@ def test_verify_phone_valid_code(app):
         response = VerificationService.verify_phone(**args)
     assert isinstance(response, VerificationServiceResponse)
 
-    assert len(response.data['signature']) == SIGNATURE_LENGTH
+    assert response.data['signature']['version'] == '1.0.0'
+    assert len(response.data['signature']['bytes']) == SIGNATURE_LENGTH
     assert response.data['claim_type'] == TOPICS['phone']
     assert response.data['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
     assert response.data['data']['issuer']['name'] == 'Origin Protocol'
@@ -258,7 +259,8 @@ def test_verify_email_valid_code(mock_session, app):
 
     assert isinstance(response, VerificationServiceResponse)
 
-    assert len(response.data['signature']) == SIGNATURE_LENGTH
+    assert response.data['signature']['version'] == '1.0.0'
+    assert len(response.data['signature']['bytes']) == SIGNATURE_LENGTH
     assert response.data['claim_type'] == TOPICS['email']
     assert response.data['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
     assert response.data['data']['issuer']['name'] == 'Origin Protocol'
@@ -417,17 +419,18 @@ def test_verify_facebook_valid_code(app):
     }
 
     with app.test_request_context():
-        verification_response = VerificationService.verify_facebook(**args)
-    assert isinstance(verification_response, VerificationServiceResponse)
-    assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
-    assert verification_response.data['claim_type'] == TOPICS['facebook']
-    assert verification_response.data['schemaId'] == \
-        'https://schema.originprotocol.com/attestation_1.0.0.json'
-    assert verification_response.data['data']['issuer']['name'] == 'Origin Protocol'
-    assert verification_response.data['data']['issuer']['url'] == 'https://www.originprotocol.com'
-    assert verification_response.data['data']['issueDate']
-    assert verification_response.data['data']['attestation']['verificationMethod']['oAuth']
-    assert verification_response.data['data']['attestation']['site']['siteName'] == 'facebook.com'
+        response = VerificationService.verify_facebook(**args)
+    assert isinstance(response, VerificationServiceResponse)
+
+    assert response.data['signature']['version'] == '1.0.0'
+    assert len(response.data['signature']['bytes']) == SIGNATURE_LENGTH
+    assert response.data['claim_type'] == TOPICS['facebook']
+    assert response.data['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
+    assert response.data['data']['issuer']['name'] == 'Origin Protocol'
+    assert response.data['data']['issuer']['url'] == 'https://www.originprotocol.com'
+    assert response.data['data']['issueDate']
+    assert response.data['data']['attestation']['verificationMethod']['oAuth']
+    assert response.data['data']['attestation']['site']['siteName'] == 'facebook.com'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
@@ -509,20 +512,19 @@ def test_verify_twitter_valid_code(mock_session, app):
 
     with mock.patch('logic.attestation_service.session', session_dict):
         with app.test_request_context():
-            verification_response = VerificationService.verify_twitter(**args)
+            response = VerificationService.verify_twitter(**args)
+    assert isinstance(response, VerificationServiceResponse)
 
-    assert isinstance(verification_response, VerificationServiceResponse)
-    assert len(verification_response.data['signature']) == SIGNATURE_LENGTH
-    assert verification_response.data['claim_type'] == TOPICS['twitter']
-    assert verification_response.data['schemaId'] == \
-        'https://schema.originprotocol.com/attestation_1.0.0.json'
-    assert verification_response.data['data']['issuer']['name'] == 'Origin Protocol'
-    assert verification_response.data['data']['issuer']['url'] == 'https://www.originprotocol.com'
-    assert verification_response.data['data']['issueDate']
-    assert verification_response.data['data']['attestation']['verificationMethod']['oAuth']
-    assert verification_response.data['data']['attestation']['site']['siteName'] == 'twitter.com'
-    assert verification_response.data['data']['attestation']['site']['userId']['raw'] == \
-        'originprotocol'
+    assert response.data['signature']['version'] == '1.0.0'
+    assert len(response.data['signature']['bytes']) == SIGNATURE_LENGTH
+    assert response.data['claim_type'] == TOPICS['twitter']
+    assert response.data['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
+    assert response.data['data']['issuer']['name'] == 'Origin Protocol'
+    assert response.data['data']['issuer']['url'] == 'https://www.originprotocol.com'
+    assert response.data['data']['issueDate']
+    assert response.data['data']['attestation']['verificationMethod']['oAuth']
+    assert response.data['data']['attestation']['site']['siteName'] == 'twitter.com'
+    assert response.data['data']['attestation']['site']['userId']['raw'] == 'originprotocol'
 
     # Verify attestation stored in database
     attestations = Attestation.query.all()
@@ -619,7 +621,7 @@ def test_verify_airbnb(mock_urllib_request, app):
         )
     assert isinstance(response, VerificationServiceResponse)
 
-    assert len(response.data['signature']) == SIGNATURE_LENGTH
+    assert len(response.data['signature']['bytes']) == SIGNATURE_LENGTH
     assert response.data['claim_type'] == TOPICS['airbnb']
     assert response.data['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
     assert response.data['data']['issuer']['name'] == 'Origin Protocol'

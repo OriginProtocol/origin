@@ -260,6 +260,22 @@
       "required": [
         "verificationMethod"
       ]
+    },
+    "signature": {
+      "type": "object",
+      "title": "Attestation signature",
+      "properties": {
+        "bytes": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bytes",
+        "version"
+      ]
     }
   },
   "type": "object",
@@ -289,7 +305,7 @@
       ]
     },
     "signature": {
-      "type": "string"
+      "$ref": "#/definitions/signature"
     },
     "salt": {
       "type": "string"

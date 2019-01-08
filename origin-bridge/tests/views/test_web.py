@@ -9,6 +9,8 @@ from logic.attestation_service import twitter_request_token_url
 from tests.helpers.rest_utils import post_json, json_of_response
 from tests.helpers.eth_utils import sample_eth_address, str_eth
 
+SIGNATURE_LENGTH = 132
+
 
 def test_index(client):
     resp = client.get('/')
@@ -57,7 +59,7 @@ def test_verify_phone(client):
 
         assert response.status_code == 200
         response_json = json_of_response(response)
-        assert len(response_json['signature']) == 132
+        assert len(response_json['signature']['bytes']) == SIGNATURE_LENGTH
         assert response_json['schemaId'] == \
             'https://schema.originprotocol.com/attestation_1.0.0.json'
         assert response_json['data']['issuer']['name'] == 'Origin Protocol'
@@ -89,7 +91,7 @@ def test_email_verify(mock_send_email_using_sendgrid, client):
 
     assert response.status_code == 200
     response_json = json_of_response(response)
-    assert len(response_json['signature']) == 132
+    assert len(response_json['signature']['bytes']) == SIGNATURE_LENGTH
     assert response_json['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
     assert response_json['data']['issuer']['name'] == 'Origin Protocol'
     assert response_json['data']['issuer']['url'] == 'https://www.originprotocol.com'
@@ -138,7 +140,7 @@ def test_facebook_verify(client):
         )
         response_json = json_of_response(response)
         assert response.status_code == 200
-        assert len(response_json['signature']) == 132
+        assert len(response_json['signature']['bytes']) == SIGNATURE_LENGTH
         assert response_json['schemaId'] == \
             'https://schema.originprotocol.com/attestation_1.0.0.json'
         assert response_json['data']['issuer']['name'] == 'Origin Protocol'
@@ -180,7 +182,7 @@ def test_twitter_verify(client):
         )
         response_json = json_of_response(response)
         assert response.status_code == 200
-        assert len(response_json['signature']) == 132
+        assert len(response_json['signature']['bytes']) == SIGNATURE_LENGTH
         assert response_json['schemaId'] == \
             'https://schema.originprotocol.com/attestation_1.0.0.json'
         assert response_json['data']['issuer']['name'] == 'Origin Protocol'
