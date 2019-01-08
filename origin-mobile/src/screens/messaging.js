@@ -17,7 +17,7 @@ class MessagingScreen extends Component {
     return (
       <WebView
         source={{ uri: originWallet.getMessagingUrl() }}
-        injectedJavaScript = {`window.__linkToWalletContainer && window.__linkToWalletContainer('${originWallet.getWalletToken()};')`}
+        injectedJavaScript = {`window.__linkToWalletContainer && window.__linkToWalletContainer('${originWallet.getWalletToken()}');`}
       />
     )
   }
