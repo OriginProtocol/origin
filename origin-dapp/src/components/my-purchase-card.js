@@ -14,7 +14,6 @@ class MyPurchaseCard extends Component {
 
     this.state = {
       listing: {},
-      purchasedSlots: [],
       loading: false
     }
 
@@ -25,7 +24,8 @@ class MyPurchaseCard extends Component {
     let price
 
     if (this.state.listing.listingType === 'fractional') {
-      price = this.state.purchasedSlots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
+      const { offer } = this.props
+      price = offer.slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
     } else {
       price = Number(this.state.listing.price).toLocaleString(undefined, { minimumFractionDigits: 3 })
     }
@@ -34,11 +34,12 @@ class MyPurchaseCard extends Component {
   }
 
   getBookingDates(whichDate) {
-    const { purchasedSlots, listing } = this.state
+    const { listing, offer } = this.props
+    const { slots } = offer
     const timeFormat = listing.slotLengthUnit === 'schema.hours' ? 'l LT' : 'LL'
-    const index = whichDate === 'startDate' ? 0 : purchasedSlots.length - 1
+    const index = whichDate === 'startDate' ? 0 : slots.length - 1
 
-    return moment(purchasedSlots[index][whichDate]).format(timeFormat)
+    return moment(slots[index][whichDate]).format(timeFormat)
   }
 
   render() {
