@@ -36,11 +36,11 @@ discoveryImageTag: '3ccf562'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'e71fa06'
+messagingImageTag: 'fcd592c'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '2e15a29'
+notificationsImageTag: 'dbf2de5'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client

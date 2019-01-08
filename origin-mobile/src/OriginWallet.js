@@ -153,7 +153,7 @@ class OriginWallet {
     })
   }
 
-  requestNotifictions() {
+  requestNotifications() {
     return PushNotificationIOS.requestPermissions()
   }
 
@@ -1124,6 +1124,15 @@ class OriginWallet {
       {
         //brand new info
         wallet_info = {walletToken: await UUIDGenerator.getRandomUUID()}
+      }
+      else
+      {
+        if (wallet_info.deviceToken)
+        {
+          // if we have a deviceToken store, then assume we already have notifications on
+          // and make sure we have the correct(non-expired) token
+          this.requestNotifications()
+        }
       }
       this.state.walletToken = wallet_info.walletToken
       this.save_wallet_info = wallet_info
