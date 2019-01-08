@@ -15,6 +15,10 @@ function atob(input) {
 
 export async function getTransactionReceipt(id) {
   const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
+  if (!rawReceipt) {
+    return null
+  }
+
   const jsonInterfaces = [
     ...contracts.marketplace.options.jsonInterface,
     ...contracts.claimHolderPresigned.options.jsonInterface,
@@ -48,9 +52,6 @@ export async function getTransactionReceipt(id) {
     }
     return logObj
   })
-
-  // console.log(events)
-
 
   return { id, ...rawReceipt, events }
 }

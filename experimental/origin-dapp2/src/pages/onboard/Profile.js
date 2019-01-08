@@ -11,13 +11,14 @@ import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 
+import ProfileStrength from 'components/ProfileStrength'
+
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
+import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
-import DeployIdentity from '../identity/mutations/DeployIdentity'
-import ProfileStrength from './_ProfileStrength'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 
