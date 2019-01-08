@@ -5,6 +5,7 @@ import get from 'lodash/get'
 
 import ListingQuery from 'queries/Listing'
 import ListingDetail from './ListingDetail'
+import EditListing from './Edit'
 import Onboard from '../onboard/Onboard'
 
 class Listing extends Component {
@@ -42,7 +43,7 @@ class Listing extends Component {
                 <Route
                   path="/listings/:listingID/edit"
                   render={() => (
-                    <div>Edit</div>
+                    <EditListing listing={listing} />
                   )}
                 />
                 <Route

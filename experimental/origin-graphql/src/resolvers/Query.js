@@ -6,6 +6,7 @@ const marketplaceExists = {},
 
 export default {
   config: () => contracts.net,
+  configObj: () => contracts.config,
   web3: () => ({}),
   marketplace: async () => {
     const address = contracts.marketplace.options.address
@@ -18,7 +19,9 @@ export default {
         marketplaceExists[address] = true
         return contracts.marketplace
       }
-    } catch(e) { /* Ignore */ }
+    } catch (e) {
+      /* Ignore */
+    }
   },
   contracts: () => {
     let contracts = []
@@ -35,6 +38,7 @@ export default {
     if (!address) return null
     return contracts.userRegistry
   },
+  identity: (_, args) => ({ id: args.id }),
   tokens: () => contracts.tokens,
   token: (_, args) => {
     if (args.id === '0x0000000000000000000000000000000000000000') {

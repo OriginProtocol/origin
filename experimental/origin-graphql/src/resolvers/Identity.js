@@ -9,6 +9,19 @@ import contracts from '../contracts'
 //   11: email
 //   13: self attestation
 
+const progressPct = {
+  firstName: 10,
+  lastName: 10,
+  description: 10,
+  avatar: 10,
+
+  emailVerified: 15,
+  phoneVerified: 15,
+  facebookVerified: 10,
+  twitterVerified: 10,
+  airbnbVerified: 10
+}
+
 export default {
   claims: identity =>
     new Promise(async resolve => {
@@ -62,11 +75,10 @@ export default {
       twitterVerified: false,
       airbnbVerified: false,
       phoneVerified: false,
-      emailVerified: false,
-      strength: '10%'
+      emailVerified: false
     }
+
     claims.forEach(claim => {
-      // console.log(claim)
       if (claim.returnValues.topic === '13') {
         profileIpfsHash = claim.returnValues.data
       }
@@ -86,10 +98,26 @@ export default {
     let data
     try {
       data = await get(contracts.ipfsGateway, profileIpfsHash)
-      data.fullName = `${data.firstName} ${data.lastName}`
+      data.fullName = data.firstName
+      if (data.lastName) {
+        data.fullName += ` ${data.lastName}`
+      }
     } catch (e) {
       return null
     }
-    return { ...data, id: profileIpfsHash, ...profile }
+
+    let strength = 0
+    Object.keys(progressPct).forEach(key => {
+      if (data[key] || profile[key]) {
+        strength += progressPct[key]
+      }
+    })
+
+    return {
+      ...data,
+      id: profileIpfsHash,
+      ...profile,
+      strength
+    }
   }
 }
