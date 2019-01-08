@@ -1,31 +1,46 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import moment from 'moment-timezone'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import OfferStatusEvent from 'components/offer-status-event'
 import PurchaseProgress from 'components/purchase-progress'
 
 import { offerStatusToStep } from 'utils/offer'
+import { getStartEndDatesFromSlots } from 'utils/calendarHelpers'
 
 class MyPurchaseCard extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      listing: {},
-      loading: false
+      listing: this.props.listing,
+      loading: false,
+      isFractional: this.props.listing.listingType === 'fractional',
+      startDate: null,
+      endDate: null
     }
 
     this.getPrice = this.getPrice.bind(this)
   }
 
+  componentDidMount() {
+    if (this.state.isFractional) {
+      const { offer, listing } = this.props
+      const { startDate, endDate } = getStartEndDatesFromSlots(offer.slots, listing.slotLengthUnit)
+
+      this.setState({
+        startDate,
+        endDate
+      })
+    }
+  }
+
   getPrice() {
     let price
 
-    if (this.state.listing.listingType === 'fractional') {
+    if (this.state.isFractional) {
       const { offer } = this.props
-      price = offer.slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0)
+      price = offer.totalPrice.amount
     } else {
       price = Number(this.state.listing.price).toLocaleString(undefined, { minimumFractionDigits: 3 })
     }
@@ -33,19 +48,11 @@ class MyPurchaseCard extends Component {
     return price
   }
 
-  getBookingDates(whichDate) {
-    const { listing, offer } = this.props
-    const { slots } = offer
-    const timeFormat = listing.slotLengthUnit === 'schema.hours' ? 'l LT' : 'LL'
-    const index = whichDate === 'startDate' ? 0 : slots.length - 1
-
-    return moment(slots[index][whichDate]).format(timeFormat)
-  }
-
   render() {
     const { listing, offer, offerId } = this.props
     const { category, name, pictures, price, isMultiUnit } = listing
     const { status, totalPrice, unitsPurchased } = offer
+    const { isFractional, startDate, endDate } = this.state
     const voided = ['rejected', 'withdrawn'].includes(status)
     const maxStep = ['disputed', 'ruling'].includes(status) ? 4 : 3
     const step = offerStatusToStep(status)
@@ -80,10 +87,10 @@ class MyPurchaseCard extends Component {
               </p>
               {!voided && (
                 <Fragment>
-                  {listing.listingType === 'fractional' &&
+                  {isFractional &&
                     <div className="d-flex">
                       <p className="booking-dates">
-                        { `${this.getBookingDates('startDate')} - ${this.getBookingDates('endDate')}`}
+                        { `${startDate} - ${endDate}`}
                       </p>
                     </div>
                   }
