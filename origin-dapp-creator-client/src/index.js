@@ -5,15 +5,19 @@ import ReactDOM from 'react-dom'
 import { Route, HashRouter } from 'react-router-dom'
 import { Web3Provider } from 'react-web3'
 
-import App from './App'
+import './css/app.css'
+import App from './pages/App'
 
-ReactDOM.render(
-  <Web3Provider>
-    <HashRouter>
-      <Route component={App} />
-    </HashRouter>,
-  </Web3Provider>,
-  document.getElementById('app')
-)
+class AppWrapper extends React.Component {
+  render () {
+    return (
+      <Web3Provider>
+        <HashRouter>
+          <Route component={App} />
+        </HashRouter>
+      </Web3Provider>
+    )
+  }
+}
 
-require('react-styl').addStylesheet()
+ReactDOM.render(<AppWrapper />, document.getElementById('app'))

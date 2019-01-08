@@ -1,22 +1,15 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { Button, Intent } from '@blueprintjs/core'
+import { baseConfig } from 'origin-dapp/src/config'
+import PropTypes from 'prop-types'
+import React from 'react'
 import superagent from 'superagent'
 
-import AboutField from 'components/fields/AboutField'
-import TitleField from 'components/fields/TitleField'
-import LanguageCodeField from 'components/fields/LanguageCodeField'
-import LogoUrlField from 'components/fields/LogoUrlField'
-import IconUrlField from 'components/fields/IconUrlField'
-import SubdomainField from 'components/fields/SubdomainField'
-import ColorPicker from 'components/ColorPicker'
-import SuccessDialog from 'components/dialogs/SuccessDialog'
-import LoadDialog from 'components/dialogs/LoadDialog'
 import { AppToaster } from '../toaster'
+import Steps from 'components/Steps'
 
-import { baseConfig } from 'origin-dapp/src/config'
+import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
 
-class Form extends Component {
+class Form extends React.Component {
   constructor(props, context) {
     super(props)
 
@@ -31,29 +24,17 @@ class Form extends Component {
       }
     }
 
-    this.web3Context = context.web3
+    this.availableLanguages = getAvailableLanguages().map((language) => {
+      return {
+        value: language.selectedLanguageCode,
+        label: language.selectedLanguageFull
+      }
+    })
+    // Add English to the list of available languages
+    this.availableLanguages.unshift({ value: 'en-US', label: 'English' })
 
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleColorChange = this.handleColorChange.bind(this)
-    this.handlePreview = this.handlePreview.bind(this)
-    this.handleServerErrors = this.handleServerErrors.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  handleServerErrors (error) {
-    if (error.status == 400) {
-      this.setState({ errors: error.response.body })
-      AppToaster.show({
-        intent: Intent.WARNING,
-        message: 'There was an error with your submission. Please check the' +
-          ' form for details.'
-      })
-    } else {
-      AppToaster.show({
-        intent: Intent.DANGER,
-        message: 'There was an error publishing your DApp configuration'
-      })
-    }
   }
 
   handleInputChange (event) {
@@ -73,132 +54,56 @@ class Form extends Component {
     })
   }
 
-  handleColorChange (name, color) {
-    this.setState({
-      'config': {
-        ...this.state.config,
-        'cssVars': {
-          ...this.state.config.cssVars,
-          [name]: color.hex
-        }
-      }
-    })
-  }
-
-  async web3Sign(data, account) {
-    // Promise wrapper for web3 signing
-    return new Promise((resolve, reject) => {
-      web3.personal.sign(data, account, (err, sig) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(sig)
-      })
-    })
-  }
-
-  async handleSubmit (event) {
-    event.preventDefault()
-
-    this.setState({ publishing: true })
-
-    let signature = null
-    if (this.state.config.subdomain) {
-      // Generate a valid signature if a subdomain is in use
-      const dataToSign = JSON.stringify(this.state.config)
-      signature = await this.web3Sign(dataToSign, web3.eth.accounts[0])
-    }
-
-    return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/config`)
-      .send({
-        config: this.state.config,
-        signature: signature,
-        address: web3.eth.accounts[0]
-      })
-      .then((res) => {
-        this.setState({
-          ipfsHash: res.text,
-          successDialogIsOpen: true
-        })
-      })
-      .catch(this.handleServerErrors)
-      .finally(() => this.setState({ publishing: false }))
-  }
-
-  async handlePreview () {
-    this.setState({ previewing: true })
-
-    let response
-    try {
-      response = await superagent
-        .post(`${process.env.DAPP_CREATOR_API_URL}/config/preview`)
-        .send({ config: this.state.config })
-    } catch(error) {
-      console.log('An error occurred generating preview: ' + error)
-      return
-    } finally {
-      this.setState({ previewing: false })
-    }
-
-    const ipfsPath = `${process.env.IPFS_GATEWAY_URL}/ipfs/${response.text}`
-    window.open(`${process.env.DAPP_URL}/?config=${ipfsPath}`, '_blank')
+  handleSubmit (event) {
+    console.log('Submit')
   }
 
   render () {
     return (
-      <div className="p-3">
+      <>
+        <Steps steps={3} step={1} />
         <h1>Welcome to the Origin Marketplace Creator</h1>
-        <p>Please provide the information below to get started.</p>
+        <h4>Please provide the information below to get started.</h4>
 
         <form onSubmit={this.handleSubmit}>
+          <div className="form-group">
+            <label>Marketplace Title</label>
+            <input className="form-control form-control-lg" />
+          </div>
 
-          <TitleField value={this.state.config.title}
-            onChange={this.handleInputChange}>
-          </TitleField>
+          <div className="form-group">
+            <label>Subdomain</label>
+            <input className="form-control form-control-lg" />
+            <div className="helper-text">
+              You can use your own custom domain name. <a href="#">Here's how</a>
+            </div>
+          </div>
 
-          {/*
-          <Switch
-            name="subdomain"
-            onChange={this.handleInputChange}
-            labelElement={<>Use your own domain</>}>
-          </Switch>
-          */}
+          <div className="form-group">
+            <label>About</label>
+            <textarea className="form-control form-control-lg" />
+            <div className="helper-text">
+              A description that will be displayed in the footer of your DApp
+            </div>
+          </div>
 
-          {this.state.config.subdomain !== false && (
-            <SubdomainField value={this.state.config.subdomain}
-              onChange={this.handleInputChange}
-              error={this.state.errors.subdomain}
-              helper="You can use your own custom domain name. Here's how">
-            </SubdomainField>
-          )}
+          <div className="form-group">
+            <label>Language</label>
+            <select className="form-control form-control-lg"
+              value={this.state.language}
+              onChange={e => this.props.updateState(e.target.value) }
+            >
+              <option></option>
+            </select>
+          </div>
 
-          <AboutField value={this.state.config.about}
-            onChange={this.handleInputChange}>
-          </AboutField>
-
-          <LanguageCodeField value={this.state.config.locale}
-            onChange={this.handleInputChange}>
-          </LanguageCodeField>
-
-          <Button type="submit"
-              id="publish-button"
-              className="mt-3"
-              large={true}
-              intent={Intent.PRIMARY}>
-            Continue
-          </Button>
+          <div className="form-actions">
+            <button type="submit" className="btn btn-primary btn-lg">
+              Continue
+            </button>
+          </div>
         </form>
-
-        <SuccessDialog
-          isOpen={this.state.successDialogIsOpen}
-          config={this.state.config}
-          ipfsHash={this.state.ipfsHash}
-          onClose={() => this.setState({ successDialogIsOpen: false })} />
-
-        <LoadDialog
-          isOpen={this.state.loadDialogIsOpen}
-          onClose={() => this.setState({ loadDialogIsOpen: false })} />
-      </div>
+      </>
     )
   }
 }
@@ -209,7 +114,4 @@ Form.contextTypes = {
 
 export default Form
 
-require('react-styl')(`
-  h4
-    margin-top: 2rem;
-`)
+require('react-styl')(``)

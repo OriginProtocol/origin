@@ -13,19 +13,6 @@ class TitleField extends Component {
 
   render () {
     return (
-      <FormGroup
-          label="Marketplace Title"
-          labelFor="title-field">
-        <InputGroup
-          name="title"
-          placeholder="Decentralized Marketplace"
-          value={this.props.value}
-          onChange={this.handleChange}
-          large
-          fill
-          required>
-        </InputGroup>
-      </FormGroup>
     )
   }
 }

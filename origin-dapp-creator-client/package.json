@@ -29,8 +29,6 @@
     "@babel/plugin-proposal-decorators": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
-    "@blueprintjs/core": "^3.9.0",
-    "@blueprintjs/select": "^3.4.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-module-resolver": "^3.1.1",
     "clean-webpack-plugin": "^1.0.0",
@@ -58,6 +56,9 @@
     "webpack-cli": "^3.1.2"
   },
   "devDependencies": {
+    "bootstrap": "^4.2.1",
+    "typeface-lato": "0.0.54",
+    "typeface-poppins": "0.0.54",
     "webpack-dev-server": "^3.1.10"
   },
   "babel": {

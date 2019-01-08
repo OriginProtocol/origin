@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { HTMLSelect, FormGroup } from '@blueprintjs/core'
 
-import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
-
 class LanguageCodeField extends Component {
 
   constructor (props) {

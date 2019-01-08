@@ -1,0 +1,44 @@
+@import '~bootstrap/dist/css/bootstrap.css';
+@import '~typeface-lato';
+@import '~typeface-poppins';
+@import 'origin-bootstrap.css';
+
+body {
+  background-color: #fafbfc;
+}
+
+.logo {
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.main {
+  padding: 4rem 8rem;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid #c2cbd3;
+  margin: 2rem auto;
+  width: 810px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.42;
+}
+
+h4 {
+  font-size: 1rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+label {
+  margin-top: 0.5rem;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 3rem;
+}
