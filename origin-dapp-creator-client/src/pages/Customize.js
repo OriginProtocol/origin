@@ -5,6 +5,7 @@ import { AppToaster } from '../toaster'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import ColorPicker from 'components/ColorPicker'
 import ImagePicker from 'components/ImagePicker'
+import Preview from 'components/Preview'
 import Redirect from 'components/Redirect'
 
 class Customize extends React.Component {
@@ -47,15 +48,17 @@ class Customize extends React.Component {
           <h1>Customize your Marketplace's Appearance</h1>
           <h4>Choose a logo and colors for your marketplace below.</h4>
 
-          <div className="row">
-            <div className="col-6">
-              <ImagePicker title="Marketplace Logo"
-                description="Recommended Size: 300px x 100px"/>
-            </div>
+          <div className="form-group">
+            <div className="row">
+              <div className="col-6">
+                <ImagePicker title="Marketplace Logo"
+                  description="Recommended Size: 300px x 100px"/>
+              </div>
 
-            <div className="col-6">
-              <ImagePicker title="Marketplace Favicon"
-                description="Recommended Size: 16px x 16px" />
+              <div className="col-6">
+                <ImagePicker title="Marketplace Favicon"
+                  description="Recommended Size: 16px x 16px" />
+              </div>
             </div>
           </div>
 
@@ -66,31 +69,36 @@ class Customize extends React.Component {
             </select>
           </div>
 
-          <div className="row">
-            <div className="col-7">
-            </div>
+          <div className="form-group">
+            <div className="row">
+              <div className="col-7">
+                <Preview />
+              </div>
 
-            <div className="col-5">
-              <label>Colors</label>
-              <ColorPicker description="Navbar Background" />
-              <ColorPicker description="Search Background" />
-              <ColorPicker description="Featured Tag" />
-              <ColorPicker description="Footer Color" />
+              <div className="col-5">
+                <label className="colors-label">Colors</label>
+                <ColorPicker description="Navbar Background" />
+                <ColorPicker description="Search Background" />
+                <ColorPicker description="Featured Tag" />
+                <ColorPicker description="Footer Color" />
+              </div>
             </div>
           </div>
 
-          <div class="actions">
-            <a href="#" onClick={this.handlePreview}>
-              Preview Appearance
-            </a>
+          <div className="form-group">
+            <div className="actions">
+              <a href="#" onClick={this.handlePreview}>
+                Preview Appearance
+              </a>
+            </div>
           </div>
 
-          <div className="form-actions">
-            <button className="btn btn-outline-primary btn-lg">
+          <div className="form-actions clearfix">
+            <button className="btn btn-outline-primary btn-lg btn-left">
               Back
             </button>
 
-            <button type="submit" className="btn btn-primary btn-lg">
+            <button type="submit" className="btn btn-primary btn-lg btn-right">
               Continue
             </button>
           </div>
@@ -102,11 +110,12 @@ class Customize extends React.Component {
 
 require('react-styl')(`
   .actions
-    margin-top: 1rem
     background-color: var(--pale-grey-four)
     border: 1px solid var(--light)
     text-align: center
     padding: 0.75rem
+  .colors-label
+    margin-top: -0.25rem
 `)
 
 export default Customize

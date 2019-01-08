@@ -53,7 +53,7 @@ class ImagePicker extends React.Component {
           className="image-picker"
           onClick={this.handlePreviewClick}
         >
-          <p class="title">{this.props.title}</p>
+          <p className="title">{this.props.title}</p>
           <p>{this.props.description}</p>
           <button className="btn btn-outline-primary">
             Upload

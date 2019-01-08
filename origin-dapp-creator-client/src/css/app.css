@@ -26,6 +26,10 @@ body {
   padding: 4rem 8rem;
 }
 
+.form-group {
+  margin-bottom: 2rem;
+}
+
 h1 {
   font-size: 1.5rem;
   font-weight: 300;
@@ -35,7 +39,7 @@ h1 {
 h4 {
   font-size: 1rem;
   font-weight: 300;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 label {
@@ -45,4 +49,12 @@ label {
 .form-actions {
   text-align: center;
   margin-top: 3rem;
+}
+
+.btn-left {
+  float: left;
+}
+
+.btn-right {
+  float: right;
 }
