@@ -52,6 +52,7 @@ class BoostSlider extends Component {
         <Tooltip
           placement="top"
           trigger="click"
+          triggerClass="info-icon"
           content={
             <div className="boost-tooltip">
               <p>
@@ -62,7 +63,6 @@ class BoostSlider extends Component {
           }
         >
           <img
-            className="info-icon"
             src="images/info-icon-inactive.svg"
             role="presentation"
           />
