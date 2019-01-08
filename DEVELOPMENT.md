@@ -10,7 +10,7 @@ The more full featured development environment uses Docker Compose to orchestrat
 
 ## About the Origin repository
 
-Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common depdencies to the root of the monorepo on installation.
+Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common dependencies to the root of the monorepo on installation.
 
 ## Using NPM & Lerna
 
