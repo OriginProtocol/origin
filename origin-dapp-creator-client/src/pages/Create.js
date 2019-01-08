@@ -33,6 +33,10 @@ class Form extends React.Component {
     // Add English to the list of available languages
     this.availableLanguages.unshift({ value: 'en-US', label: 'English' })
 
+    this.availableLanguageOptions = this.availableLanguages.map((x) => {
+      return (<option key={x.value} value={x.value}>{x.label}</option>)
+    })
+
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
@@ -92,7 +96,7 @@ class Form extends React.Component {
               value={this.state.language}
               onChange={e => this.props.updateState(e.target.value) }
             >
-              <option></option>
+              {this.availableLanguageOptions}
             </select>
           </div>
 
