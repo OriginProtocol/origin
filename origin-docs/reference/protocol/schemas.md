@@ -16,7 +16,7 @@ This describes a listing for purchase on the Origin marketplace.
 ```javascript
 {
     schemaId: "https://schema.originprotocol.com/listing_1.0.0.json",
-    dappSchemaId: "https://dapp.originprotocol.com/schemas/forSale-toysGames_1.0.0.json"
+    dappSchemaId: "https://dapp.originprotocol.com/schemas/forSale-toysGames_1.0.0.json",
     listingType: "unit",
     category: "schema.forSale",
     subCategory: "schema.carsTrucks",
