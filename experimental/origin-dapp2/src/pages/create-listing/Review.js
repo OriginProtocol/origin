@@ -40,15 +40,19 @@ class Review extends Component {
             <div className="row">
               <div className="col-3 label">Photos</div>
               <div className="col-9">
-                <div className="photos">
-                  {listing.media.map((image, idx) => (
-                    <div
-                      key={idx}
-                      className="photo-row"
-                      style={{ backgroundImage: `url(${image.urlExpanded})` }}
-                    />
-                  ))}
-                </div>
+                {listing.media.length ? (
+                  <div className="photos">
+                    {listing.media.map((image, idx) => (
+                      <div
+                        key={idx}
+                        className="photo-row"
+                        style={{ backgroundImage: `url(${image.urlExpanded})` }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <i>No Images</i>
+                )}
               </div>
             </div>
             <div className="row">

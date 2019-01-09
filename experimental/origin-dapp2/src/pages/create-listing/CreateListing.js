@@ -77,6 +77,11 @@ export default CreateListing
 require('react-styl')(`
   .create-listing
     padding-top: 3rem
+    .gray-box
+      border-radius: 5px
+      padding: 2rem
+      background-color: var(--pale-grey-eight)
+
     .step
       font-family: Lato
       font-size: 14px

@@ -129,6 +129,13 @@ class Step2 extends Component {
         </div>
         <div className="col-md-4">
           <Wallet />
+          <div className="gray-box">
+            <h5>Add Listing Details</h5>
+            Be sure to give your listing an appropriate
+            title and description to let others know what you&apos;re offering.
+            Adding some photos will increase the chances of selling your
+            listing.
+          </div>
         </div>
       </div>
     )
