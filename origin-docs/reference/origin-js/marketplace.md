@@ -37,8 +37,8 @@ It is active until there are no more units available or its expiration date is r
   schemaId: "09398482-2834",
   unitsTotal: 1,
   type: "unit",
-  category: "Health and Beauty",
-  subCategory: "daily exercise",
+  category: "healthAndBeauty",
+  subCategory: "dailyExercise",
   language: "English",
   description: "32kg gorilla kettlebell",
   price: { currency: 'ETH', amount: '0.5' },
@@ -48,7 +48,6 @@ It is active until there are no more units available or its expiration date is r
   depositManager: '0x02394099fu9dfse0920394u329u4024',
   status: 'active',
   offers: [], //is this supposed to be an array or an object?
-  expiry: '1529674159',
   events:[{ id: '20949-345', event: 'ListingCreated' }]
 }]
 ```
@@ -82,8 +81,8 @@ const listing = {
   listingType: "unit",
   media: [{…}],
   price: { amount: "0.01", currency: "ETH" },
-  schemaId: "http://schema.originprotocol.com/listing_v1.0.0",
-  subCategory: "schema.forSale.appliances",
+  schemaId: "https://schema.originprotocol.com/listing_1.0.0.json",
+  subCategory: "schema.appliances",
   title: "I am a great appliance listing",
   unitsTotal: 1
 }
@@ -147,7 +146,7 @@ const listingId = "927-832"
 //returns
 
 [{
-  "schemaId": "http://schema.originprotocol.com/review_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/review_1.0.0.json",
   "rating": 4,
   "text": "Solid Listing"
   "reviewer": "0x29884972398479234792"
@@ -162,21 +161,18 @@ const listingId = "927-832"
 
 ## .getNotifications
 
-Each Notification corresponds to the status of a Listing. Notifications are currently generated for each of the following Listing statuses:
+Each Notification corresponds to the status of an Offer. Notifications are currently generated for each of the following Offer statuses:
 
-- ListingCreated
-- ListingUpdated
-- ListingWithdrawn
-- ListingArbitrated
 - OfferCreated
 - OfferAccepted
 - OfferFinalized
 - OfferWithdrawn
-- OfferFundsAdded
 - OfferDisputed
 - OfferRuling
+- OfferFinalized
+- OfferData
 
-Notifications do not exist on the blockchain nor are they read from a database. They are derived from the blockchain transaction logs of the Listing statuses at the time of the API request. Because of this, there is no central record of a notification's status as "read" or "unread". When a client first interacts with the notifications API, Origin.js will record a timestamp in local storage. All notifications resulting from blockchain events that happen prior to this timestamp will be considered to be "read". This ensures that when the same user interacts with the notifications API from a different client for the first time, they will not receive a large number of "unread" notifications that they have previously read from their original client.
+Notifications do not exist on the blockchain nor are they read from a database. They are derived from the blockchain transaction logs of the Offer statuses at the time of the API request. Because of this, there is no central record of a notification's status as "read" or "unread". When a client first interacts with the notifications API, Origin.js will record a timestamp in local storage. All notifications resulting from blockchain events that happen prior to this timestamp will be considered to be "read". This ensures that when the same user interacts with the notifications API from a different client for the first time, they will not receive a large number of "unread" notifications that they have previously read from their original client.
 
 > Example: getNotifications
 
@@ -188,10 +184,10 @@ Notifications do not exist on the blockchain nor are they read from a database. 
 
 [{
   "id": "2984803-23433",
-  "type": "buyer_listing_shipped",
+  "type": "buyer_offer_accepted",
   "status": "unread",
-  "event": {},
-  "resources": { listingId: "927-832", offerId: "183", listing: { title: "Whirlpool Microwave" } }
+  "event": {...},
+  "resources": { listingId: "1-000-832", offerId: "183", listing: { title: "Whirlpool Microwave" }, offer: {...} }
 ]}
 ```
 
@@ -244,7 +240,7 @@ const offerId = "2403-234"
   buyer: "0x627306090274fwfiou97h0c78a8BEf57",
   events: [...],
   refund: "0",
-  schemaId: "http://schema.originprotocol.com/offer_v1.0.0",
+  schemaId: "https://schema.originprotocol.com/offer_1.0.0.json",
   listingType: "unit",
   unitsPurchased: 1,
   totalPrice: { currency: "ETH", amount: "0.033" },
@@ -284,7 +280,7 @@ const options = {
   buyer: "0x627306090274fwfiou97h0c78a8BEf57",
   events: [...],
   refund: "0",
-  schemaId: "http://schema.originprotocol.com/offer_v1.0.0",
+  schemaId: "https://schema.originprotocol.com/offer_1.0.0.json",
   listingType: "unit",
   unitsPurchased: 1,
   totalPrice: { currency: "ETH", amount: "0.033" },
@@ -387,7 +383,7 @@ The `finalizeOffer` method takes a callback with two arguments:
 const offerId = "9903-75"
 const buyerReview = {
   rating: 5
-  schemaId: "http://schema.originprotocol.com/review_v1.0.0"
+  schemaId: "https://schema.originprotocol.com/review_1.0.0.json"
   text: "Great response times. Professional."
 }
 const callback = (confirmationCount, transactionReceipt) => {
@@ -459,7 +455,7 @@ const offerId = "543-0099"
 const listingId = "9900-234"
 const sellerReview = {
   rating: 4
-  schemaId: "http://schema.originprotocol.com/review_v1.0.0"
+  schemaId: "https://schema.originprotocol.com/review_1.0.0.json"
   text: ""
 }
 const callback = (confirmationCount, transactionReceipt) => {
