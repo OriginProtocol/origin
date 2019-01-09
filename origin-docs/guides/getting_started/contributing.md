@@ -16,6 +16,14 @@ You are most likely interested in these projects inside the monorepo:
 - [Origin.js](https://github.com/OriginProtocol/origin/tree/master/origin-js#origin-js) - Solidity contracts and JavaScript API
 - [Origin DApp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-dapp) - example React-powered decentralized application
 
+## Discord
+
+We work in public and our company Discord is open to all. If you have questions or need help getting started, our [Discord #engineering channel](https://www.originprotocol.com/discord) is the absoulute best place to get assistance from our team of engineers and developers.
+
+## Email
+
+You can also reach us by email at [support@originprotocol.com](mailto:support@originprotocol.com).
+
 ### Weekly Engineering Call
 
 We have an open weekly engineering call on Google Hangouts every Wednesday at 12:30 Pacific Time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&tmsrc=micah%40originprotocol.com&scp=ALL)
@@ -54,7 +62,7 @@ Your development flow should look like:
 1. Push your branch to the upstream repository (i.e. https://github.com/OriginProtocol/[repo]) so that other contributors can easily work off of it if necessary.
 1. Please request a review in the PR by clicking on the gear icon next to "Reviewers" in the right column.
 
-Both the `master` and `stable` branches are locked so that only members of the [core team](https://github.com/orgs/OriginProtocol/teams/core) are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the `#engineering` Discord channel for appropriate reviewers.
+The `master` branche is locked so that only members of the [core team](https://github.com/orgs/OriginProtocol/teams/core) are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the `#engineering` Discord channel for appropriate reviewers.
 
 ### Coding Style
 
