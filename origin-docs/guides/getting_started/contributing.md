@@ -24,7 +24,7 @@ We work in public and our company Discord is open to all. If you have questions 
 
 You can also reach us by email at [support@originprotocol.com](mailto:support@originprotocol.com).
 
-### Weekly Engineering Call
+## Weekly Engineering Call
 
 We have an open weekly engineering call on Google Hangouts every Wednesday at 12:30 Pacific Time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&tmsrc=micah%40originprotocol.com&scp=ALL)
 
@@ -36,7 +36,7 @@ Everyone is welcome to join, even if you're just lurking. All we ask is that you
 - [Product/Design Notes](https://docs.google.com/document/d/1tVx2O3qeplh9vawJpURTsJxZfUe1B0FrTHOMJbxKm-s)
 - [Sprint Planning Notes](https://docs.google.com/document/d/1DvRWYhrr0UXdvhyZIpEd3WEU-1pQk2Frj1l-mQS8B4M)
 
-### Dive Right In
+## Dive Right In
 
 If you're ready to start hacking on Origin right now and you just need an issue to focus on, check out our [open issues](https://github.com/search?utf8=%E2%9C%93&q=user%3AOriginProtocol+is%3Aopen+&type=Issues) especially those tagged as a [good first issue](
 https://github.com/search?utf8=%E2%9C%93&q=user%3AOriginProtocol+is%3Aopen++label%3A%22good+first+issue%22&type=Issues&ref=advsearch&l=&l=).
@@ -45,7 +45,7 @@ We use two week development sprints and you can see what we're currently priorit
 
 Read our [development process](#contributing-email-development-process) and [community guidelines](#contributing-email-community-guidelines) first and have fun!
 
-### Development Process
+## Development Process
 
 Getting your local environment running is easy with [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box). We recommend using this Docker container for any development or testing that involves running a local blockchain.
 
@@ -64,7 +64,7 @@ Your development flow should look like:
 
 The `master` branche is locked so that only members of the [core team](https://github.com/orgs/OriginProtocol/teams/core) are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the `#engineering` Discord channel for appropriate reviewers.
 
-### Coding Style
+## Coding Style
 
 We use a variety of programming languages in our repositories. When contributing, please follow existing coding conventions and refer to the CONTRIBUTING.md file in the repository, if one exists. 
 
@@ -72,13 +72,13 @@ For JavaScript, we use [NPM's style](https://docs.npmjs.com/misc/coding-style), 
 
 For Solidity, we use two space indents.
 
-### Troubleshooting a Development Environment
+## Troubleshooting a Development Environment
 
 * If you encounter errors while executing `npm install` for any of the Origin repositories, try running a recent LTS version of Node.js. [nvm](https://github.com/creationix/nvm) is a tool that can install specific versions of Node.js. After installing `nvm`, run `nvm install --lts`, remove your `node_modules` directory, and run `npm install` again.
 
 * If you are using `origin-box` Docker setup and are running OSX Sierra below 10.13.4 Docker volumes might randomly stop syncing. This results in problems where host machine source code updates do not get propagated to file system inside Docker. To resolve this issue update OSX Sierra to 10.13.4 or above. See [this thread](https://github.com/EugenMayer/docker-sync/issues/517) for more details. 
 
-### Protocol Design
+## Protocol Design
 
 When considering protocol or implementation design proposals, we are looking for:
 
@@ -90,7 +90,7 @@ When considering protocol or implementation design proposals, we are looking for
 
 Please note that protocol design is hard and meticulous work. You may need to review existing literature and think through generalized use cases.
 
-### Community Guidelines
+## Community Guidelines
 
 We want to keep the Origin community awesome, growing and collaborative. We need your help to keep it that way. To help with this we've come up with some general guidelines for the community as a whole:
 
@@ -102,7 +102,7 @@ We want to keep the Origin community awesome, growing and collaborative. We need
 
 - Stay on topic: Make sure that you are posting to the correct channel and avoid off-topic discussions. Remember when you update an issue or respond to an email you are potentially sending to a large number of people. Please consider this before you update. Also remember that nobody likes spam.
 
-### Reporting Issues
+## Reporting Issues
 
 If you find bugs, mistakes or inconsistencies in the Origin project's code or
 documents, please let us know by filing an issue at the appropriate issue
@@ -119,7 +119,7 @@ No issue is too small. Help us fix our tpyos!
 - [Playground issues](https://github.com/OriginProtocol/origin-playground/issues)
 - [Company website issues](https://github.com/OriginProtocol/origin-website/issues)
 
-### Security Issues
+## Security Issues
 
 The Origin Protocol and its implementations are still in early development, which means there may be problems with the protocol or in our implementations. We take security vulnerabilities very seriously. If you discover a security issue, please bring it to our attention right away!
 
@@ -127,7 +127,7 @@ If you find a vulnerability please send your report privately to [security@origi
 
 If the issue is a protocol weakness or something not yet deployed, feel free to discuss it openly.
 
-### Community Improvement
+## Community Improvement
 
 Origin is just as much about community as it is about our technology.
 
@@ -135,7 +135,7 @@ We need constant help in improving our documentation, building new tools to inte
 
 Please get in touch if you would like to help out. Our `general` channel on [Discord](https://discord.gg/jyxpUSe) is a great place to share ideas and volunteer to help.
 
-### Full Time Positions
+## Full Time Positions
 
 Origin occasionally hires developers for part time or full time positions. 
 
