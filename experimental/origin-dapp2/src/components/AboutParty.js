@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import Redirect from 'components/Redirect'
 import Identicon from 'components/Identicon'
+import Avatar from 'components/Avatar'
 import IdentityQuery from 'queries/Identity'
 
 class AboutParty extends Component {
@@ -32,14 +33,7 @@ class AboutParty extends Component {
 
             return (
               <div className="profile">
-                {profile.avatar ? (
-                  <div
-                    className="avatar"
-                    style={{ backgroundImage: `url(${profile.avatar})` }}
-                  />
-                ) : (
-                  <div className="avatar empty" />
-                )}
+                <Avatar avatar={profile.avatar} size={50} />
                 <div>
                   <div className="name">{name}</div>
                   <div className="attestations">
@@ -93,14 +87,7 @@ require('react-styl')(`
       display: flex
       margin-bottom: 1rem
       .avatar
-        width: 50px;
-        height: 50px;
-        background-size: contain;
-        border-radius: 5px;
         margin-right: 1rem
-        &.empty
-          background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
-          background-size: 1.9rem;
       .name
         font-size: 18px
         font-weight: bold

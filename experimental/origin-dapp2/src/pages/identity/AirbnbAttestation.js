@@ -4,12 +4,13 @@ import pick from 'lodash/pick'
 
 import Modal from 'components/Modal'
 
-import VerifyFacebookMutation from 'mutations/VerifyFacebook'
+import GenerateAirbnbCodeMutation from 'mutations/GenerateAirbnbCode'
+import VerifyAirbnbCodeMutation from 'mutations/VerifyAirbnbCode'
 
-class FacebookAttestation extends Component {
+class AirbnbAttestation extends Component {
   state = {
     stage: 'GenerateCode',
-    email: '',
+    airbnbUserId: '',
     code: ''
   }
 
@@ -28,7 +29,7 @@ class FacebookAttestation extends Component {
 
     return (
       <Modal
-        className={`attestation-modal facebook${
+        className={`attestation-modal airbnb${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
         shouldClose={this.state.shouldClose}
@@ -49,14 +50,57 @@ class FacebookAttestation extends Component {
   renderGenerateCode() {
     return (
       <>
-        <h2>Verify your Facebook Account</h2>
+        <h2>Verify your Airbnb account</h2>
+        <div className="instructions">Enter Airbnb profile URL below</div>
+        <div className="mt-3">
+          <input
+            ref={ref => (this.inputRef = ref)}
+            className="form-control form-control-lg"
+            placeholder="https://www.airbnb.com/users/show/123"
+            value={this.state.airbnbUserId}
+            onChange={e => this.setState({ airbnbUserId: e.target.value })}
+          />
+        </div>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="help">
-          Other users will know that you have a verified Facebook account, but
-          your account details will not be published on the blockchain. We will
-          never post on your behalf.
+          Other users will know that you have a verified Airbnb profile and your
+          user id will be published on the blockchain.
+        </div>
+        <div className="actions">
+          {this.renderCodeButton()}
+          <button
+            className="btn btn-link"
+            onClick={() => this.setState({ shouldClose: true })}
+            children="Cancel"
+          />
+        </div>
+      </>
+    )
+  }
+
+  renderVerifyCode() {
+    return (
+      <>
+        <h2>Verify your Airbnb account</h2>
+        <div className="instructions">
+          Go to the Airbnb website, edit your profile and paste the following
+          text into profile description:
+        </div>
+        <div className="my-3 verification-code">
+          <input
+            ref={ref => (this.inputRef = ref)}
+            className="form-control form-control-lg"
+            value={this.state.code}
+            readOnly
+          />
+          {this.state.error && (
+            <div className="alert alert-danger mt-3">{this.state.error}</div>
+          )}
+        </div>
+        <div className="help">
+          Continue once the confirmation code is entered in your Airbnb profile.
         </div>
         <div className="actions">
           {this.renderVerifyButton()}
@@ -70,12 +114,53 @@ class FacebookAttestation extends Component {
     )
   }
 
+  renderCodeButton() {
+    return (
+      <Mutation
+        mutation={GenerateAirbnbCodeMutation}
+        onCompleted={res => {
+          const result = res.generateAirbnbCode
+          if (result.success) {
+            this.setState({
+              stage: 'VerifyCode',
+              code: result.code,
+              loading: false
+            })
+          } else {
+            this.setState({ error: result.reason, loading: false })
+          }
+        }}
+        onError={errorData => {
+          console.log('Error', errorData)
+          this.setState({ error: 'Check console' })
+        }}
+      >
+        {generateCode => (
+          <button
+            className="btn btn-outline-light"
+            onClick={() => {
+              if (this.state.loading) return
+              this.setState({ error: false, loading: true })
+              generateCode({
+                variables: {
+                  identity: this.props.wallet,
+                  airbnbUserId: this.state.airbnbUserId
+                }
+              })
+            }}
+            children={this.state.loading ? 'Loading...' : 'Continue'}
+          />
+        )}
+      </Mutation>
+    )
+  }
+
   renderVerifyButton() {
     return (
       <Mutation
-        mutation={VerifyFacebookMutation}
+        mutation={VerifyAirbnbCodeMutation}
         onCompleted={res => {
-          const result = res.verifyFacebook
+          const result = res.verifyAirbnbCode
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
@@ -103,8 +188,7 @@ class FacebookAttestation extends Component {
               verifyCode({
                 variables: {
                   identity: this.props.wallet,
-                  email: this.state.email,
-                  code: this.state.code
+                  airbnbUserId: this.state.airbnbUserId
                 }
               })
             }}
@@ -118,7 +202,7 @@ class FacebookAttestation extends Component {
   renderVerifiedOK() {
     return (
       <>
-        <h2>Facebook account verified!</h2>
+        <h2>Airbnb account verified!</h2>
         <div className="instructions">
           Don&apos;t forget to publish your changes.
         </div>
@@ -143,7 +227,7 @@ class FacebookAttestation extends Component {
   }
 }
 
-export default FacebookAttestation
+export default AirbnbAttestation
 
 require('react-styl')(`
 `)
