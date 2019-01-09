@@ -173,9 +173,10 @@ class Listing extends Component {
       a => listing.seller && a.id === listing.seller.id
     )
     const units = listing.unitsTotal <= 1 ? '' : `${listing.unitsTotal} items `
+    const available = ` (${listing.unitsAvailable} available) `
     return (
       <div style={{ marginBottom: 10 }}>
-        {`${units}${listing.categoryStr} by `}
+        {`${units}${available}${listing.categoryStr} by `}
         <Identity account={listing.seller} />
         <span style={{ marginRight: 10 }}>
           {` for `}
@@ -186,6 +187,8 @@ class Listing extends Component {
           {`. Deposit managed by `}
           <Identity account={listing.arbitrator} />
           <span style={{ marginLeft: 10 }}>
+            {currency({ amount: listing.depositAvailable, currency: 'OGN' })}
+            /
             {currency({ amount: listing.deposit, currency: 'OGN' })}
           </span>
         </span>

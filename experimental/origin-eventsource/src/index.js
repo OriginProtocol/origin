@@ -36,8 +36,20 @@ class OriginEventSource {
       undefined,
       blockNumber
     )
-    let soldUnits = 0
 
+    // Retrieve the IPFS data for all offers
+    const offerCreationData = {}
+    await Promise.all(
+      events.map(async e => {
+        if (e.event === 'OfferCreated') {
+          const data = await get(this.ipfsGateway, e.returnValues.ipfsHash)
+          offerCreationData[e.returnValues.offerID] = data
+        }
+      })
+    )
+
+    let unitsSold = 0
+    let depositAvailable = web3.utils.toBN(listing.deposit)
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -49,11 +61,28 @@ class OriginEventSource {
       if (e.event === 'ListingWithdrawn') {
         status = 'withdrawn'
       }
+
+      const offerId = e.returnValues.offerID
+      const offer = offerId && offerCreationData[offerId]
+      const offerCommission = offer &&
+        web3.utils.toBN(web3.utils.toWei(offer.commission.amount, 'ether'))
       if (e.event === 'OfferCreated') {
-        soldUnits += 1
+        const unitsPurchased = offer && offer.unitsPurchased
+        if (unitsPurchased) {
+          unitsSold += unitsPurchased
+        }
+        if (offerCommission) {
+          depositAvailable = depositAvailable.sub(offerCommission)
+        }
       }
       if (e.event === 'OfferWithdrawn') {
-        soldUnits -= 1
+        const unitsPurchased = offer && offer.unitsPurchased
+        if (unitsPurchased) {
+          unitsSold -= unitsPurchased
+        }
+        if (offerCommission) {
+          depositAvailable = depositAvailable.add(offerCommission)
+        }
       }
       if (e.event === 'OfferFinalized') {
         status = 'sold'
@@ -84,7 +113,6 @@ class OriginEventSource {
       data.categoryStr = startCase(data.category.replace(/^schema\./, ''))
     }
 
-    data.unitsTotal = data.unitsTotal ? data.unitsTotal - soldUnits : 0
     if (data.media && data.media.length) {
       data.media = data.media.map(m => ({
         ...m,
@@ -92,10 +120,15 @@ class OriginEventSource {
       }))
     }
 
+    const unitsAvailable = data.unitsTotal >= unitsSold
+      ? data.unitsTotal - unitsSold
+      : 0
+    console.log()
     return {
       id: listingId,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
+      depositAvailable: depositAvailable.toString(),
       arbitrator: listing.depositManager
         ? { id: listing.depositManager }
         : null,
@@ -103,6 +136,8 @@ class OriginEventSource {
       contract: this.contract,
       status,
       events,
+      unitsSold,
+      unitsAvailable,
       ...data
     }
   }
@@ -142,6 +177,12 @@ class OriginEventSource {
       status = offer.status
     }
 
+    let data = await get(this.ipfsGateway, ipfsHash)
+    data = pick(
+      data,
+      'unitsPurchased'
+    )
+
     const offerObj = {
       id: `999-1-${listingId}-${offerId}`,
       listingId: String(listingId),
@@ -158,7 +199,8 @@ class OriginEventSource {
       ipfs: { id: ipfsHash },
       buyer: { id: offer.buyer },
       affiliate: { id: offer.affiliate },
-      arbitrator: { id: offer.arbitrator }
+      arbitrator: { id: offer.arbitrator },
+      quantity: data.unitsPurchased
     }
     offerObj.statusStr = offerStatus(offerObj)
 
