@@ -89,7 +89,12 @@ const Configs = {
     ipfsGateway: `http://${HOST}:9090`,
     ipfsRPC: `http://${HOST}:5002`,
     bridge: 'https://bridge.staging.originprotocol.com',
-    automine: 2000
+    automine: 2000,
+    messaging: {
+      ipfsSwarm:
+        '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
+      messagingNamespace: 'origin:dev'
+    }
   }
 }
 

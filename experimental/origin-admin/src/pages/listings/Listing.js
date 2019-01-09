@@ -187,8 +187,7 @@ class Listing extends Component {
           {`. Deposit managed by `}
           <Identity account={listing.arbitrator} />
           <span style={{ marginLeft: 10 }}>
-            {currency({ amount: listing.depositAvailable, currency: 'OGN' })}
-            /
+            {currency({ amount: listing.depositAvailable, currency: 'OGN' })}/
             {currency({ amount: listing.deposit, currency: 'OGN' })}
           </span>
         </span>
@@ -254,7 +253,7 @@ class Listing extends Component {
           <span className="bp3-breadcrumb bp3-breadcrumb-current">
             {`Listing #${listingId}`}
           </span>
-          {/*<ButtonGroup>
+          <ButtonGroup>
             <Button
               icon="arrow-left"
               style={{ marginLeft: 10 }}
@@ -273,7 +272,7 @@ class Listing extends Component {
                 )
               }}
             />
-          </ButtonGroup>*/}
+          </ButtonGroup>
         </li>
       </ul>
     )
