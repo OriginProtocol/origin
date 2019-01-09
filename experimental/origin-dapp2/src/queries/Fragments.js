@@ -31,6 +31,7 @@ export default {
           id
         }
         deposit
+        depositAvailable
         createdEvent {
           timestamp
         }
@@ -42,6 +43,8 @@ export default {
         description
         currencyId
         unitsTotal
+        unitsAvailable
+        unitsSold
         featured
         hidden
         price {
