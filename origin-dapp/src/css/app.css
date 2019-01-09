@@ -5143,8 +5143,8 @@ sup {
   font-size: 1.125rem;
   font-weight: 900;
   margin: 0 auto 1rem;
-  padding: 0.375rem 3rem;
-  width: auto;
+  padding: 0.375rem 1rem;
+  width: 100%;
 }
 
 .published-status {
