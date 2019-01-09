@@ -111,10 +111,12 @@ tracker (we use multiple repositories).
 No issue is too small. Help us fix our tpyos!
 </aside>
 
- - [Origin.js issues (JS API & Solidity contracts)](https://github.com/OriginProtocol/origin-js/issues)
- - [Demo Dapp issues](https://github.com/OriginProtocol/demo-dapp/issues)
- - [Identity Playground issues](https://github.com/OriginProtocol/identity-playground/issues)
- - [Company website issues](https://github.com/OriginProtocol/company-website/issues)
+- [Good first issues](https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+)
+- [Docs issues](https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Adocs)
+- [Origin.js issues (JS API & Solidity contracts)](https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Aorigin.js)
+- [DApp issues](https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Adapp)
+- [Playground issues](https://github.com/OriginProtocol/origin-playground/issues)
+- [Company website issues](https://github.com/OriginProtocol/origin-website/issues)
 
 ### Security Issues
 
