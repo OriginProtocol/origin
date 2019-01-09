@@ -44,6 +44,7 @@ router.get("/server-info", (req, res) => {
     ipfsGateway,
     ipfsApi,
     messagingUrl,
+    profileUrl,
     rootUrl,
     sellingUrl
   } = linker.getServerInfo()
@@ -53,6 +54,7 @@ router.get("/server-info", (req, res) => {
     ipfs_gateway:ipfsGateway,
     ipfs_api:ipfsApi,
     messaging_url:messagingUrl,
+    profile_url:profileUrl,
     root_url:rootUrl,
     selling_url:sellingUrl
   })

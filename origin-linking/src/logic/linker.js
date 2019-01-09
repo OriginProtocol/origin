@@ -9,6 +9,7 @@ import {sha3_224} from 'js-sha3'
 import apn from 'apn'
 
 const MESSAGING_URL = process.env.MESSAGING_URL
+const PROFILE_URL = process.env.PROFILE_URL
 const ROOT_URL = process.env.ROOT_URL
 const SELLING_URL = process.env.SELLING_URL
 const CODE_EXPIRATION_TIME_MINUTES = 60
@@ -248,6 +249,7 @@ class Linker {
       ipfsGateway:origin.ipfsService.gateway,
       ipfsApi:origin.ipfsService.api,
       messagingUrl:MESSAGING_URL,
+      profileUrl:PROFILE_URL,
       rootUrl:ROOT_URL,
       sellingUrl:SELLING_URL
     }

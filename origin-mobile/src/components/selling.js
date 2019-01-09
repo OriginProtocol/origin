@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
-import originWallet from '../OriginWallet'
 
 import OriginButton from 'components/origin-button'
+
+import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
 
