@@ -242,7 +242,7 @@ class Listing extends Component {
   }
 
   renderBreadcrumbs() {
-    const listingId = Number(this.props.match.params.listingID)
+    const listingId = this.props.match.params.listingID
     return (
       <ul className="bp3-breadcrumbs">
         <li>
@@ -254,7 +254,7 @@ class Listing extends Component {
           <span className="bp3-breadcrumb bp3-breadcrumb-current">
             {`Listing #${listingId}`}
           </span>
-          <ButtonGroup>
+          {/*<ButtonGroup>
             <Button
               icon="arrow-left"
               style={{ marginLeft: 10 }}
@@ -273,7 +273,7 @@ class Listing extends Component {
                 )
               }}
             />
-          </ButtonGroup>
+          </ButtonGroup>*/}
         </li>
       </ul>
     )

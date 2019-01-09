@@ -161,7 +161,6 @@ class AirbnbAttestation extends Component {
         mutation={VerifyAirbnbCodeMutation}
         onCompleted={res => {
           const result = res.verifyAirbnbCode
-          console.log(result)
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',

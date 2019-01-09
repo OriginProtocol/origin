@@ -165,7 +165,6 @@ class PhoneAttestation extends Component {
         mutation={VerifyPhoneCodeMutation}
         onCompleted={res => {
           const result = res.verifyPhoneCode
-          console.log(result)
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',

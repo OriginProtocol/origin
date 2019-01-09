@@ -78,8 +78,8 @@ const ProfileDropdown = ({ data, onClose }) => {
       </div>
       <Balances balance={balance} account={id} />
       <Identity id={id} />
-      <Link onClick={() => onClose()} to={`/profile`}>
-        View Profile
+      <Link onClick={() => onClose()} to="/profile">
+        Edit Profile
       </Link>
     </div>
   )

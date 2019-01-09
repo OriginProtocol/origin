@@ -127,7 +127,7 @@ class OnboardProfile extends Component {
                 </div>
 
                 <label className="mt-3">Attestations</label>
-                <div className="profile-attestations">
+                <div className="profile-attestations with-checkmarks">
                   {this.renderAtt('phone', 'Phone Number')}
                   {this.renderAtt('email', 'Email')}
                   {this.renderAtt('airbnb', 'Airbnb')}
@@ -337,19 +337,11 @@ require('react-styl')(`
         background-size: 1.3rem
 
       &.published,&.provisional
-        background-color: white
+        background-color: var(--pale-clear-blue)
         border-style: solid
         color: var(--dusk)
         > i
           background-image: url(images/identity/verification-shape-blue.svg)
-        &::after
-          content: "";
-          background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center;
-          width: 2rem;
-          height: 2rem;
-          border-radius: 2rem;
-          margin-left: auto;
-          background-size: 59%;
       &.soon
         opacity: 0.5
         &::after
@@ -367,7 +359,21 @@ require('react-styl')(`
           width: 6rem
           text-align: center
           line-height: 8px
-      &.published > i
-        background-image: url(images/identity/verification-shape-green.svg)
+      &.published
+        background-color: var(--pale-greenblue)
+        border-color: var(--greenblue)
+        > i
+          background-image: url(images/identity/verification-shape-green.svg)
 
+
+  .profile-attestations.with-checkmarks
+    .profile-attestation
+      &.published::after,&.provisional::after
+        content: "";
+        background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 2rem;
+        margin-left: auto;
+        background-size: 59%;
 `)

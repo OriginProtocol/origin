@@ -10,6 +10,9 @@ import Redirect from 'components/Redirect'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 
+import Store from 'utils/store'
+const store = Store('sessionStorage')
+
 class CreateListing extends Component {
   state = {}
   render() {
@@ -91,6 +94,7 @@ class CreateListing extends Component {
               className="btn btn-outline-light"
               onClick={() => {
                 client.resetStore()
+                store.set('create-listing', undefined)
                 // TODO: Fix listing ID
                 this.setState({ redirect: `/listings/999-1-${event.returnValues.listingID}` })
               }}

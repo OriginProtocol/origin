@@ -52,7 +52,7 @@ class ImagePicker extends Component {
   imagesFromProps(props) {
     const { ipfsGateway } = props.config
     if (!ipfsGateway) return []
-    return (props.media || []).map(image => {
+    return (props.images || []).map(image => {
       const hash = image.url.replace(/ipfs:\/\//, '')
       return {
         ...image,
@@ -64,7 +64,7 @@ class ImagePicker extends Component {
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.media !== this.props.media ||
+      prevProps.images !== this.props.images ||
       prevProps.config.ipfsGateway !== this.props.config.ipfsGateway
     ) {
       this.setState({ images: this.imagesFromProps(this.props) })
@@ -75,11 +75,13 @@ class ImagePicker extends Component {
     const { ipfsRPC } = this.props.config
     return (
       <div className="image-picker">
+        {this.renderPreview()}
         <label htmlFor="upload">
           {this.state.open ? null : (
             <input
               id="upload"
               type="file"
+              multiple={true}
               onChange={async e => {
                 const newImages = await getImages(
                   ipfsRPC,
@@ -93,7 +95,6 @@ class ImagePicker extends Component {
           )}
           {this.props.children}
         </label>
-        {this.renderPreview()}
       </div>
     )
   }
@@ -114,31 +115,24 @@ class ImagePicker extends Component {
 
   renderPreview() {
     if (this.state.images.length === 0) return null
-    return (
-      <div className="preview">
-        {this.state.images.map((image, idx) => (
-          <div key={idx} className="preview-row">
-            <div
-              className="img"
-              style={{ backgroundImage: `url(${image.src})` }}
-            />
-            <div className="info">
-              {image.size}
-              <a
-                href="#"
-                onClick={e => {
-                  e.preventDefault()
-                  this.onChange(
-                    this.state.images.filter((i, offset) => idx !== offset)
-                  )
-                }}
-                children="X"
-              />
-            </div>
-          </div>
-        ))}
+    return this.state.images.map((image, idx) => (
+      <div key={idx} className="preview-row">
+        <div className="img" style={{ backgroundImage: `url(${image.src})` }} />
+        <div className="info">
+          {image.size}
+          <a
+            href="#"
+            onClick={e => {
+              e.preventDefault()
+              this.onChange(
+                this.state.images.filter((i, offset) => idx !== offset)
+              )
+            }}
+            children="×"
+          />
+        </div>
       </div>
-    )
+    ))
   }
 }
 
@@ -146,30 +140,36 @@ export default withConfig(ImagePicker)
 
 require('react-styl')(`
   .image-picker
-    display: block
+    margin-bottom: 1rem
+    display: grid
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+    grid-template-columns: repeat(auto-fill,minmax(150px, 1fr));
+
     > label
       cursor: pointer
-    .preview
-      margin-bottom: 1rem
-      display: grid
-      grid-column-gap: 10px;
-      grid-row-gap: 10px;
-      grid-template-columns: repeat(auto-fill,minmax(90px, 1fr));
+      margin: 0
     .preview-row
-      font-size: 12px
-      box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.15), inset 0 1px 1px rgba(16, 22, 26, 0.2);
-      background: #fff
-      padding: 5px;
+      position: relative
       .info
-        display: flex
-        justify-content: space-between
-        margin-top: 5px
-        padding-left: 2px
-        align-items: center
+        position: absolute
+        top: 0
+        right: 0
+        background: rgba(255, 255, 255, 0.75)
+        line-height: normal
+        border-radius: 0 0 0 2px
+        > a
+          padding: 0 0.375rem
+          font-weight: bold
+          color: var(--dusk)
+        &:hover
+          a
+            color: #000
+          background: rgba(255, 255, 255, 0.85)
       .img
         background-position: center
         width: 100%
-        height: 80px
+        padding-top: 66%
         background-size: contain
         background-repeat: no-repeat
 

@@ -13,6 +13,12 @@ class EditProfileModal extends Component {
     this.state = pick(props, ['firstName', 'lastName', 'description', 'avatar'])
   }
 
+  componentDidMount() {
+    if (this.input) {
+      this.input.focus()
+    }
+  }
+
   render() {
     const { avatar } = this.state
     const input = formInput(this.state, state => this.setState(state), 'dark')
@@ -40,7 +46,11 @@ class EditProfileModal extends Component {
             <div className="col-6">
               <div className="form-group">
                 <label>First Name</label>
-                <input type="text" {...input('firstName')} />
+                <input
+                  type="text"
+                  {...input('firstName')}
+                  ref={r => (this.input = r)}
+                />
                 {Feedback('firstName')}
               </div>
               <div className="form-group">

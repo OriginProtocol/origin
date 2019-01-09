@@ -12,12 +12,15 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 class Step2 extends Component {
   constructor(props) {
     super(props)
-    this.state = { ...props.listing, fields: Object.keys(props.listing) }
+    this.state = {
+      ...props.listing,
+      fields: Object.keys(props.listing)
+    }
   }
 
   componentDidMount() {
-    if (this.title) {
-      this.title.focus()
+    if (this.titleInput) {
+      this.titleInput.focus()
     }
   }
 
@@ -61,7 +64,7 @@ class Step2 extends Component {
                   <input
                     {...input('title')}
                     placeholder="This is the title of your listing"
-                    ref={r => (this.title = r)}
+                    ref={r => (this.titleInput = r)}
                   />
                   {Feedback('title')}
                 </div>
@@ -78,22 +81,6 @@ class Step2 extends Component {
                   {Feedback('description')}
                 </div>
                 <div className="form-group">
-                  <label>Location</label>
-                  <input
-                    className="form-control form-control-lg"
-                    placeholder="Where is this listing being offered"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Add Photos</label>
-                  <ImagePicker
-                    media={this.state.media}
-                    onChange={media => this.setState({ media })}
-                  >
-                    <div className="add-photos">Add photo</div>
-                  </ImagePicker>
-                </div>
-                <div className="form-group">
                   <label>Quantity</label>
                   <input
                     {...input('quantity')}
@@ -102,13 +89,30 @@ class Step2 extends Component {
                   {Feedback('quantity')}
                 </div>
                 <div className="form-group">
-                  <label>Listing Price (per unit)</label>
-                  <input {...input('price')} />
+                  <label>Price</label>
+                  <div className="d-flex">
+                    <div style={{ flex: 1 }}>
+                      <div className="with-symbol">
+                        <input {...input('price')} />
+                        <span className="eth">ETH</span>
+                      </div>
+                    </div>
+                    <div style={{ flex: 1 }} />
+                  </div>
                   {Feedback('price')}
                   <div className="help-text price">
                     The cost to buy this listing. Price is always in ETH, USD is
                     an estimate.
                   </div>
+                </div>
+                <div className="form-group">
+                  <label>Add Photos</label>
+                  <ImagePicker
+                    images={this.state.media}
+                    onChange={media => this.setState({ media })}
+                  >
+                    <div className="add-photos">Add photo</div>
+                  </ImagePicker>
                 </div>
 
                 <div className="actions">
@@ -161,10 +165,6 @@ class Step2 extends Component {
       newState.priceError = 'Price must be greater than zero'
     }
 
-    if (!this.state.category) {
-      newState.categoryError = 'Category is required'
-    }
-
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
     if (!newState.valid) {
@@ -201,13 +201,15 @@ require('react-styl')(`
       font-weight: normal
     textarea
       min-height: 120px
+    .image-picker label
+      margin: 0
     .add-photos
       border: 1px dashed var(--light)
       font-size: 14px;
       font-weight: normal;
       color: var(--bluey-grey);
-      width: 15rem;
-      height: 9rem;
+      height: 100%
+      min-height: 9rem
       display: flex
       align-items: center
       justify-content: center
@@ -221,6 +223,8 @@ require('react-styl')(`
         background-size: 100%;
         background-position: center;
         opacity: 0.4;
+      &:hover::before
+        opacity: 0.6
     .help-text
       font-size: 14px
       font-weight: normal
@@ -228,7 +232,7 @@ require('react-styl')(`
       color: var(--dusk)
       &.price
         color: var(--bluey-grey)
-        margin-top: 1rem
+        margin-top: 0.5rem
     .actions
       margin-top: 2.5rem
       display: flex
@@ -238,4 +242,18 @@ require('react-styl')(`
         border-radius: 2rem
         padding: 0.625rem
         font-size: 18px
+  .with-symbol
+    position: relative
+    > span
+      position: absolute
+      right: 10px
+      top: 50%
+      transform: translateY(-50%)
+      padding: 2px 9px 2px 1.75rem
+      border-radius: 12px
+      background: var(--pale-grey) url(/images/eth-icon.svg) no-repeat 6px center
+      background-size: 17px
+      color: var(--bluish-purple)
+      font-weight: bold
+      font-size: 14px
 `)

@@ -9,11 +9,6 @@
 - 'Pending Listing' state
 
 
-# Create / update listing
-
-- Image management
-
-
 # Transaction Detail
 
 - Arbitration
@@ -61,7 +56,7 @@
 
 - Active / Inactive filters
 - Order most recent first
-- Empty page button style
+
 
 # Onboarding
 
