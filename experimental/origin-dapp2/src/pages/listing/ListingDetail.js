@@ -71,7 +71,7 @@ class ListingDetail extends Component {
                   />
                 </>
               ) : (
-                <Buy listing={listing} from={from} value={amount} />
+                <Buy listing={listing} from={from} value={amount} quantity={quantity} />
               )}
             </div>
             <h5 className="mt-3">About the Seller</h5>

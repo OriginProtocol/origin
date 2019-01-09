@@ -239,8 +239,13 @@ class Buy extends Component {
     }
     if (!data || !data.web3) return
 
-    const { listing, from, value } = this.props
-    const variables = { listingID: listing.id, value, from }
+    const { listing, from, value, quantity } = this.props
+    const variables = {
+      listingID: listing.id,
+      value,
+      from,
+      quantity: Number(quantity)
+    }
 
     const eth = Number(get(data, 'web3.metaMaskAccount.balance.eth', 0))
     if (!data.web3.metaMaskAccount) {
