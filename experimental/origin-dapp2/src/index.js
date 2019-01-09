@@ -10,7 +10,6 @@ import './css/app.css'
 import App from './pages/App'
 
 class AppWrapper extends Component {
-
   state = { ready: false, client: null }
 
   async componentDidMount() {

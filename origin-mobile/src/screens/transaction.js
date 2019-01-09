@@ -10,6 +10,7 @@ import Avatar from 'components/avatar'
 import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
+import { getFiatPrice } from 'utils/price'
 import { sufficientFunds } from 'utils/transaction'
 
 import originWallet from '../OriginWallet'
@@ -105,11 +106,14 @@ class TransactionScreen extends Component {
     const { price = { amount: '', currency: '' } } = listing
     const picture = listing && listing.media && listing.media[0]
     const hasSufficientFunds = sufficientFunds(wallet, item)
-    const total = web3.utils.toBN(cost).add(web3.utils.toBN(gas_cost))
     const { width } = Dimensions.get('window')
     const innerWidth = width - DETAIL_PADDING * 2
     const fromUser = users.find(({ address }) => address === wallet.address) || {}
     const toUser = users.find(({ address }) => address === counterpartyAddress) || {}
+    const priceInETH = Number(web3.utils.fromWei(web3.utils.toBN(cost))).toFixed(5)
+    const fiatPrice = getFiatPrice(priceInETH)
+    const gasCostInETH = Number(web3.utils.fromWei(web3.utils.toBN(gas_cost))).toFixed(5)
+    const fiatGasCost = getFiatPrice(gasCostInETH)
 
     return (
       <View style={styles.container}>
@@ -169,19 +173,19 @@ class TransactionScreen extends Component {
           <View style={styles.lineItem}>
             <Image source={currencies['eth'].icon} style={styles.icon} />
             <Text style={styles.label}>Price</Text>
-            <Text style={styles.amount}>{Number(web3.utils.fromWei(web3.utils.toBN(cost))).toFixed(5)}</Text>
+            <Text style={styles.amount}>{priceInETH}</Text>
             <View style={styles.currencyContainer}>
               <Text style={[styles.label, styles.currency, { color: currencies['eth'].color }]}>ETH</Text>
-              <Text style={[styles.label, styles.currency, { color: '#94a7b5' }]}>123.45 USD</Text>
+              {fiatPrice && <Text style={[styles.label, styles.currency, { color: '#94a7b5' }]}>{fiatPrice} USD</Text>}
             </View>
           </View>
           <View style={styles.lineItem}>
             <Image source={currencies['eth'].icon} style={styles.icon} />
             <Text style={styles.label}>Gas Cost</Text>
-            <Text style={styles.amount}>{Number(web3.utils.fromWei(web3.utils.toBN(gas_cost))).toFixed(5)}</Text>
+            <Text style={styles.amount}>{gasCostInETH}</Text>
             <View style={styles.currencyContainer}>
               <Text style={[styles.label, styles.currency, { color: currencies['eth'].color }]}>ETH</Text>
-              <Text style={[styles.label, styles.currency, { color: '#94a7b5' }]}>123.45 USD</Text>
+              {fiatGasCost && <Text style={[styles.label, styles.currency, { color: '#94a7b5' }]}>{fiatGasCost} USD</Text>}
             </View>
           </View>
         </View>
@@ -279,6 +283,9 @@ const styles = StyleSheet.create({
   },
   currency: {
     fontSize: 10,
+  },
+  currencyContainer: {
+    width: 66,
   },
   details: {
     flex: 1,

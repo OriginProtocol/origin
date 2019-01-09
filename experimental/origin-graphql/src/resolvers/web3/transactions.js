@@ -15,10 +15,18 @@ function atob(input) {
 
 export async function getTransactionReceipt(id) {
   const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
+  if (!rawReceipt) {
+    return null
+  }
+
+  const jsonInterfaces = [
+    ...contracts.marketplace.options.jsonInterface,
+    ...contracts.claimHolderPresigned.options.jsonInterface,
+    ...contracts.userRegistry.options.jsonInterface
+  ]
+
   const events = rawReceipt.logs.map(log => {
-    const eventDef = contracts.marketplace.options.jsonInterface.find(
-      s => s.signature === log.topics[0]
-    )
+    const eventDef = jsonInterfaces.find(s => s.signature === log.topics[0])
     const logObj = {
       ...log,
       raw: log,
@@ -31,7 +39,15 @@ export async function getTransactionReceipt(id) {
         log.data,
         log.topics.slice(1)
       )
-      logObj.returnValues = decoded
+      if (decoded.listingID) {
+        logObj.returnValues = decoded
+      }
+      logObj.returnValuesArr = Object.keys(decoded)
+        .filter(f => !f.match(/^[0-9]+$/) && !f.match(/^__/))
+        .map(field => ({
+          field,
+          value: decoded[field]
+        }))
       logObj.event = eventDef.name
     }
     return logObj

@@ -42,7 +42,7 @@
       ]
     },
     "subCategory": {
-      "const": "schema.furniture"
+      "const": "schema.jewelry"
     },
     "price": {
       "type": "number",

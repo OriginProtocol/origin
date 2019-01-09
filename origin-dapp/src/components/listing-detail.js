@@ -389,7 +389,8 @@ class ListingsDetail extends Component {
       userIsBuyerOffers,
       userIsSellerOffer,
       userIsBuyer,
-      userIsSeller
+      userIsSeller,
+      showRemainingBoost
     } = getDerivedListingData(listing, wallet.address)
 
     // only expose where user is a buyer or a seller
@@ -618,7 +619,7 @@ class ListingsDetail extends Component {
                       })}
                         &nbsp;ETH
                         {isMultiUnit && <Fragment>
-                          &nbsp;/{this.props.intl.formatMessage(this.intlMessages.each)}&nbsp;
+                          &nbsp;{this.props.intl.formatMessage(this.intlMessages.each)}&nbsp;
                         </Fragment>}
                     </div>
                   }
@@ -707,7 +708,7 @@ class ListingsDetail extends Component {
                         </div>
                       </div>
                       <hr className="pt-1 mt-4 mb-2"/>
-                      <div className="d-flex justify-content-between mt-4 mb-2">
+                      {showRemainingBoost && <div className="d-flex justify-content-between mt-4 mb-2">
                         <div className="ml-3">
                           <FormattedMessage
                             id={'listing-detail.remainingBoost'}
@@ -732,7 +733,7 @@ class ListingsDetail extends Component {
                             </Link>
                           </span>
                         </div>
-                      </div>
+                      </div>}
                     </Fragment>
                   )}
                   {this.renderButtonContainer(userIsSeller, isFractional, this.props.listingId, isMultiUnit, unitsPending, isAvailable)}

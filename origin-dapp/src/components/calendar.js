@@ -198,7 +198,7 @@ class Calendar extends Component {
 
     while (slotToTest.toDate() >= slotInfo.start && slotToTest.toDate() <= slotInfo.end) {
       const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events)
-      const { price, isAvailable, isRecurringEvent } = slotAvailData
+      const { price, isAvailable, isRecurringEvent, timeZone } = slotAvailData
 
       if (!isAvailable || moment(slotInfo.end).isBefore(moment())){
         hasUnavailableSlot = true
@@ -210,7 +210,8 @@ class Calendar extends Component {
         ...slot,
         price,
         isAvailable,
-        isRecurringEvent
+        isRecurringEvent,
+        timeZone
       })
 
       slotIndex++

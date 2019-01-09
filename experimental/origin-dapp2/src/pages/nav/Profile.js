@@ -102,7 +102,7 @@ const ProfileDropdown = ({ data, onClose }) => {
         </div>
       </div>
       <Identity id={id} />
-      <Link onClick={() => onClose()} to={`/user/${id}`}>
+      <Link onClick={() => onClose()} to={`/profile`}>
         View Profile
       </Link>
     </div>
@@ -122,7 +122,14 @@ const Identity = ({ id }) => (
         <div className="identity">
           <h5>My Identity</h5>
           <div className="info">
-            <div className="avatar" />
+            {profile.avatar ? (
+              <div
+                className="avatar"
+                style={{ backgroundImage: `url(${profile.avatar})` }}
+              />
+            ) : (
+              <div className="avatar empty" />
+            )}
             <div>
               <div className="name">{`${profile.firstName} ${
                 profile.lastName
@@ -149,10 +156,10 @@ const Identity = ({ id }) => (
             <div className="progress">
               <div
                 className="progress-bar"
-                style={{ width: profile.strength }}
+                style={{ width: `${profile.strength}%` }}
               />
             </div>
-            {`Profile Strength - ${profile.strength}`}
+            {`Profile Strength - ${profile.strength}%`}
           </div>
         </div>
       )
@@ -238,8 +245,10 @@ require('react-styl')(`
         margin-top: 0.75rem
         display: flex
         .avatar
-          background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
-          background-size: 1.9rem;
+          background-size: cover
+          &.empty
+            background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
+            background-size: 1.9rem;
           width: 3rem;
           height: 3rem;
           margin-right: 0.75rem
