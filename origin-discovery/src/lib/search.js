@@ -1,4 +1,5 @@
 const elasticsearch = require('elasticsearch')
+const OriginListing = require('./../../../origin-js/src/models/listing.js')
 
 /*
   Module to interface with ElasticSearch.
@@ -51,11 +52,20 @@ class Listing {
    * @returns The listingId indexed.
    */
   static async index (listingId, buyerAddress, ipfsHash, listing) {
+    // make a copy of the ipfs data
+    const ipfsListing = JSON.parse(JSON.stringify(listing.ipfs.data))
+    ipfsListing.ipfs = listing.ipfs
+    ipfsListing.type = ipfsListing.listingType
+    const originListing = OriginListing.Listing.init(listingId, listing, ipfsListing)
+
+    // boost stays unchanged for the normal listings, but can be used up in multi-unit listings
+    originListing.commission = originListing.commissionUsedToBoostListing
+
     await client.index({
       index: LISTINGS_INDEX,
       id: listingId,
       type: LISTINGS_TYPE,
-      body: listing
+      body: originListing
     })
     return listingId
   }
@@ -179,13 +189,15 @@ class Listing {
 
     /* When users boost their listing using OGN tokens we boost that listing in elasticSearch.
      * For more details see document: https://docs.google.com/spreadsheets/d/1bgBlwWvYL7kgAb8aUH4cwDtTHQuFThQ4BCp870O-zEs/edit#gid=0
+     *
+     * If boost slider max value (currently 100) on listing-create changes this factor needs tweaking as well. (see referenced document)
      */
     const boostScoreQuery = {
       function_score: {
         query: esQuery,
         field_value_factor: {
           field: 'commission.amount',
-          factor: 0.005 // the same as delimited by 200
+          factor: 0.05 // the same as delimited by 20
         },
         boost_mode: 'sum'
       }
@@ -197,6 +209,7 @@ class Listing {
       numberOfItems = 1000
     }
 
+    console.log("BOOST QUERY SCORE", JSON.stringify(boostScoreQuery))
     const searchRequest = client.search({
       index: LISTINGS_INDEX,
       type: LISTINGS_TYPE,
