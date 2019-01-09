@@ -5,6 +5,7 @@ import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Wallet from 'components/Wallet'
+import ImagePicker from 'components/ImagePicker'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -85,7 +86,12 @@ class Step2 extends Component {
                 </div>
                 <div className="form-group">
                   <label>Add Photos</label>
-                  <div className="add-photos">Add photo</div>
+                  <ImagePicker
+                    media={this.state.media}
+                    onChange={media => this.setState({ media })}
+                  >
+                    <div className="add-photos">Add photo</div>
+                  </ImagePicker>
                 </div>
                 <div className="form-group">
                   <label>Quantity</label>
@@ -188,11 +194,6 @@ require('react-styl')(`
       font-size: 18px;
       &.is-invalid
         border-color: #dc3545
-        // padding-right: 2.25rem;
-        // background-repeat: no-repeat;
-        // background-position: center right calc(2.25rem / 4);
-        // background-size: calc(2.25rem / 2) calc(2.25rem / 2);
-        // background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23dc3545' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E")
       &::-webkit-input-placeholder
         color: var(--bluey-grey)
         font-size: 18px;
@@ -202,10 +203,6 @@ require('react-styl')(`
       min-height: 120px
     .add-photos
       border: 1px dashed var(--light)
-      // border-image-source: url(http://i.stack.imgur.com/wLdVc.png)
-      // border-image-slice: 2
-      // border-image-repeat: round;
-
       font-size: 14px;
       font-weight: normal;
       color: var(--bluey-grey);

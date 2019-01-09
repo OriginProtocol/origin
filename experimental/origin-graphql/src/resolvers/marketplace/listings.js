@@ -103,7 +103,7 @@ export async function listingsBySeller(
     listingSeller.id
   )
 
-  const ids = events.map(e => Number(e.returnValues.listingID))
+  const ids = events.map(e => Number(e.returnValues.listingID)).reverse()
   const totalCount = ids.length
 
   return await resultsFromIds({ after, ids, first, totalCount, fields })

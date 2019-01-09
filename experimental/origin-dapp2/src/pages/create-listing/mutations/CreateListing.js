@@ -1,17 +1,21 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import pick from 'lodash/pick'
 
 import CreateListingMutation from 'mutations/CreateListing'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
-import Link from 'components/Link'
+import Redirect from 'components/Redirect'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 
 class CreateListing extends Component {
   state = {}
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} push />
+    }
     return (
       <Mutation
         mutation={CreateListingMutation}
@@ -65,7 +69,7 @@ class CreateListing extends Component {
           price: { currency: 'ETH', amount: listing.price },
           category: listing.category,
           subCategory: listing.subCategory,
-          media: listing.media,
+          media: listing.media.map(m => pick(m, 'contentType', 'url')),
           unitsTotal: Number(listing.quantity)
         },
         autoApprove: true
@@ -78,13 +82,18 @@ class CreateListing extends Component {
 
     return (
       <WaitForTransaction hash={this.state.waitFor} event="ListingCreated">
-        {({ event }) => (
+        {({ event, client }) => (
           <div className="make-offer-modal">
             <div className="success-icon" />
             <div>Success!</div>
-            <Link
-              to={`/listings/${event.returnValues.listingID}`}
+            <button
+              href="#"
               className="btn btn-outline-light"
+              onClick={() => {
+                client.resetStore()
+                // TODO: Fix listing ID
+                this.setState({ redirect: `/listings/999-1-${event.returnValues.listingID}` })
+              }}
               children="View Listing"
             />
           </div>

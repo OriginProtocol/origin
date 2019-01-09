@@ -7,10 +7,11 @@ const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
+  const { listingId } = parseId(data.listingID)
 
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
-    listingId: data.listingID,
+    listingId,
     listingType: 'unit',
     unitsPurchased: 1,
     totalPrice: {
@@ -49,7 +50,7 @@ async function makeOffer(_, data) {
   const value = contracts.web3.utils.toWei(data.value, 'ether')
 
   const args = [
-    data.listingID,
+    listingId,
     ipfsHash,
     ipfsData.finalizes,
     data.affiliate || ZeroAddress,

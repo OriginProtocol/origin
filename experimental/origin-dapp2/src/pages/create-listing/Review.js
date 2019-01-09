@@ -43,7 +43,17 @@ class Review extends Component {
             </div>
             <div className="row">
               <div className="col-3 label">Photos</div>
-              <div className="col-9" />
+              <div className="col-9">
+                <div className="photos">
+                  {listing.media.map((image, idx) => (
+                    <div
+                      key={idx}
+                      className="photo-row"
+                      style={{ backgroundImage: `url(${image.urlExpanded})` }}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
             <div className="row">
               <div className="col-3 label">Listing Price</div>
@@ -97,6 +107,22 @@ require('react-styl')(`
         margin-bottom: 1rem
         .label
           color: var(--dusk)
+    .photos
+      margin-bottom: 1rem
+      display: grid
+      grid-column-gap: 10px;
+      grid-row-gap: 10px;
+      grid-template-columns: repeat(auto-fill,minmax(90px, 1fr));
+      .photo-row
+        font-size: 12px
+        box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.15), inset 0 1px 1px rgba(16, 22, 26, 0.2);
+        background: #fff
+        padding: 5px;
+        background-position: center
+        width: 100%
+        height: 80px
+        background-size: contain
+        background-repeat: no-repeat
 
     .actions
       margin-top: 2.5rem
