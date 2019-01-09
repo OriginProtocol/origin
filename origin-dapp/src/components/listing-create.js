@@ -176,7 +176,10 @@ class ListingCreate extends Component {
         this.ensureUserIsSeller(listing.seller)
         const state = {
           formListing: {
-            formData: listing
+            formData: {
+              boostLimit: listing.totalBoostValue,
+              ...listing
+            }
           },
           selectedSchemaId: listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
