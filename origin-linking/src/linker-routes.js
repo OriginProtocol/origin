@@ -38,11 +38,24 @@ router.get("/link-info/:code", async (req, res) => {
 
 router.get("/server-info", (req, res) => {
   // this is the context
-  const {providerUrl, contractAddresses, ipfsGateway, ipfsApi,
-    messagingUrl, sellingUrl} = linker.getServerInfo()
-  res.send({provider_url:providerUrl, contract_addresses:contractAddresses, 
-    ipfs_gateway:ipfsGateway, ipfs_api:ipfsApi, messaging_url:messagingUrl,
-    selling_url:sellingUrl})
+  const {
+    providerUrl,
+    contractAddresses,
+    ipfsGateway,
+    ipfsApi,
+    messagingUrl,
+    rootUrl,
+    sellingUrl
+  } = linker.getServerInfo()
+  res.send({
+    provider_url:providerUrl,
+    contract_addresses:contractAddresses,
+    ipfs_gateway:ipfsGateway,
+    ipfs_api:ipfsApi,
+    messaging_url:messagingUrl,
+    root_url:rootUrl,
+    selling_url:sellingUrl
+  })
 })
 
 

@@ -25,7 +25,14 @@ export default class Selling extends Component {
         />
         <Text style={styles.heading}>Start Selling On Origin</Text>
         <Text style={styles.paragraph}>Create your first listing in minutes by opening the Origin decentralized marketplace application from right here in your wallet.</Text>
-        <OriginButton size="large" type="primary" title="Open DApp" textStyle={styles.buttonText} onPress={this.handlePress} />
+        <OriginButton
+          size="large"
+          image={<Image source={require(`${IMAGES_PATH}external-icon-light.png`)} />}
+          type="primary"
+          title="Open DApp"
+          textStyle={styles.buttonText}
+          onPress={this.handlePress}
+        />
       </View>
     )
   }

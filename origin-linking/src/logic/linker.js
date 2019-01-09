@@ -8,8 +8,8 @@ import origin, {providerUrl, web3} from './../services/origin'
 import {sha3_224} from 'js-sha3'
 import apn from 'apn'
 
-
 const MESSAGING_URL = process.env.MESSAGING_URL
+const ROOT_URL = process.env.ROOT_URL
 const SELLING_URL = process.env.SELLING_URL
 const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
@@ -242,9 +242,15 @@ class Linker {
   }
 
   getServerInfo() {
-    return {providerUrl:providerUrl, contractAddresses:origin.contractService.getContractAddresses(),
-    ipfsGateway:origin.ipfsService.gateway, ipfsApi:origin.ipfsService.api, messagingUrl:MESSAGING_URL,
-    sellingUrl:SELLING_URL}
+    return {
+      providerUrl:providerUrl,
+      contractAddresses:origin.contractService.getContractAddresses(),
+      ipfsGateway:origin.ipfsService.gateway,
+      ipfsApi:origin.ipfsService.api,
+      messagingUrl:MESSAGING_URL,
+      rootUrl:ROOT_URL,
+      sellingUrl:SELLING_URL
+    }
   }
 
   async getMetaFromCall({call, net_id, params:{txn_object}}){
