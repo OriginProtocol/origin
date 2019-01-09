@@ -9,17 +9,12 @@ Want to hack on Origin? Awesome!
 
 Origin is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
-There are three main repositories that are considered core components of the Origin platform:
+We use a monorepo for almost all of our development -- see [Origin](https://github.com/OriginProtocol/origin/) on GitHub.
+
+You are most likely interested in these projects inside the monorepo:
 
 - [Origin.js](https://github.com/OriginProtocol/origin/tree/master/origin-js#origin-js) - Solidity contracts and JavaScript API
 - [Origin DApp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-dapp) - example React-powered decentralized application
-- [Origin Bridge Server](https://github.com/OriginProtocol/origin/tree/master/origin-bridge#origin-bridge-server) - Python and JavaScript for indexing, attestations, and messaging
-
-We also actively work on these repositories:
-
-- [Origin Box](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md#using-docker-compose) - Docker container for simplifying local development
-- [Origin Website](https://github.com/OriginProtocol/origin-website) - Python/Flask for originprotocol.com
-- [Identity Playground](https://github.com/OriginProtocol/origin-playground#origin-identity-playground) - implementation of ERC 725/735 for blockchain identity
 
 ### Weekly Engineering Call
 
@@ -47,8 +42,6 @@ Read our [development process](#contributing-email-development-process) and [com
 Getting your local environment running is easy with [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box). We recommend using this Docker container for any development or testing that involves running a local blockchain.
 
 Our branching strategy is similar to [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/), but we do all of our development in the `master` branch and have a `stable` branch for code that has been released.
-
-![origin git branching model](https://user-images.githubusercontent.com/273937/44440088-78243780-a57b-11e8-9ecf-ec6c9490b302.jpeg)
 
 Your development flow should look like:
 
