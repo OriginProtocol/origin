@@ -493,7 +493,7 @@ class Profile extends Component {
               }
             })
           }}
-          data={profile.provisional}
+          data={provisional}
         />
 
         <ImageCropper

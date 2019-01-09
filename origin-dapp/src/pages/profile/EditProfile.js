@@ -36,18 +36,28 @@ class EditProfile extends Component {
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this)
   }
 
-  componentDidUpdate(prevProps) {
-    const { data } = this.props
-    const { pic } = data
-    if (pic && pic !== prevProps.data.pic) {
-      this.setState({ pic })
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {
+      data: { pic, firstName, lastName, description }
+    } = nextProps
+    
+    const {
+      pic: prevPic,
+      firstName: prevFirstName,
+      lastName: prevLastName,
+      description: prevDescription
+    } = prevState
+    
+    if (pic && pic !== prevPic) {
+      return {
+        pic,
+        firstName: firstName || prevFirstName,
+        lastName: lastName || prevLastName,
+        description: description || prevDescription
+      }
     }
 
-    if (!prevProps.open && this.props.open) {
-      setTimeout(() => {
-        this.nameRef.current.focus()
-      }, 500)
-    }
+    return prevState
   }
 
   handleDescriptionChange(e) {
