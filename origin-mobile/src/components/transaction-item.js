@@ -282,6 +282,7 @@ const styles = StyleSheet.create({
   },
   main: {
     flexDirection: 'row',
+    minWidth: 200,
   },
   nav: {
     justifyContent: 'center',

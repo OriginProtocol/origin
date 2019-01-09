@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import Tooltip from 'components/tooltip'
 

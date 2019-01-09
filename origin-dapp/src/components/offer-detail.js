@@ -2,9 +2,16 @@ import React, { Component } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import moment from 'moment'
 
+import { getStartEndDatesFromSlots } from 'utils/calendarHelpers'
+
 class OfferDetail extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      startDate: null,
+      endDate: null
+    }
 
     this.intlMessages = defineMessages({
       pricePerUnit: {
@@ -62,6 +69,18 @@ class OfferDetail extends Component {
     })
   }
 
+  componentDidMount() {
+    if (this.props.listing.isFractional) {
+      const { offer, listing } = this.props
+      const { startDate, endDate } = getStartEndDatesFromSlots(offer.slots, listing.slotLengthUnit)
+
+      this.setState({
+        startDate,
+        endDate
+      })
+    }
+  }
+
   getPaymentStatus(offerStatus) {
     if (['created', 'accepted', 'disputed'].includes(offerStatus))
       return this.props.intl.formatMessage(this.intlMessages.inEscrow)
@@ -101,6 +120,11 @@ class OfferDetail extends Component {
       createdAt
     } = offer
 
+    const {
+      startDate,
+      endDate
+    } = this.state
+
     let properties = [
       {
         icon: 'images/total-price-icon.svg',
@@ -108,7 +132,7 @@ class OfferDetail extends Component {
         labelId: 'totalPrice',
         value: `${Number(totalPrice.amount).toLocaleString(undefined,
                   { minimumFractionDigits: 5, maximumFractionDigits: 5 }
-                )} ${priceCurrency}`
+                )} ${priceCurrency || totalPrice.currency}`
       },
       {
         icon: 'images/offer-number-icon.svg',
@@ -155,13 +179,13 @@ class OfferDetail extends Component {
           icon: 'images/start-date-icon.svg',
           iconAlt: 'start date icon',
           labelId: 'startDate',
-          value: 'TODO'
+          value: startDate
         },
         {
           icon: 'images/end-date-icon.svg',
           iconAlt: 'end date icon',
           labelId: 'endDate',
-          value: 'TODO'
+          value: endDate
         }
       ])
     }

@@ -59,7 +59,6 @@ class ListingCard extends Component {
 
     const photo = pictures && pictures.length && pictures[0]
 
-
     const {
       showPendingBadge,
       showSoldBadge,

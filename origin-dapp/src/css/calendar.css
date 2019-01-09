@@ -22,62 +22,8 @@
   float: right;
 }
 
-.rbc-event,
-.rbc-event-content {
-  border: none !important;
-  padding: 0;
-}
-
-.rbc-event,
-.rbc-event-content,
-.calendar-event {
-  background-color: var(--dusk) !important;
-  border: 1px solid var(--dusk) !important;
-  border-radius: 0;
-}
-
-.calendar-event {
-  font-size: 12px;
-  padding: 0 5px;
-}
-
-.calendar-event.recurring {
-  background-color: var(--dusk) !important;
-  border: 1px solid var(--dusk) !important;
-}
-
-.calendar-event.non-recurring {
-  background-color: var(--dark-grey) !important;
-  border: 1px solid var(--dark-grey) !important;
-}
-
-.calendar-container.daily-view .calendar-event {
-  font-size: 15px;
-  font-weight: bold;
-}
-
-.rbc-event.rbc-selected .calendar-event {
-  background-color: var(--dark-grey) !important;
-  border: 1px solid var(--dark-grey) !important;
-}
-
-.calendar-container.hourly-view .rbc-event-content {
-  position: absolute;
-  bottom: 0;
-  height: inherit !important;
-  min-height: inherit !important;
-}
-
-.calendar-container.hourly-view .calendar-event {
-  position: absolute;
-  bottom: 0;
-  padding-bottom: 5px;
-}
-
-.rbc-event-label {
-  max-width: 100%;
-  font-size: 12px;
-  white-space: inherit;
+.rbc-event {
+  display: none !important;
 }
 
 .rbc-allday-cell {
@@ -109,34 +55,39 @@
   position: absolute;
 }
 
-.calendar-container.buyer-view .rbc-day-bg.past-date,
-.calendar-container.buyer-view .rbc-time-slot.unavailable {
+.rbc-day-bg.unavailable {
   background: var(--pale-grey) !important;
 }
 
-.calendar-container.buyer-view .rbc-day-bg.selected,
-.calendar-container.buyer-view .rbc-time-slot.selected {
+.calendar-container .rbc-time-slot.unavailable {
+  background: var(--pale-grey);
+}
+
+.calendar-container .rbc-day-bg.selected,
+.calendar-container .rbc-time-slot.selected {
   background: var(--dusk) !important;
   color: white;
 }
 
-.calendar-container.buyer-view .rbc-time-slot {
+.calendar-container .rbc-time-slot {
   font-size: 15px;
   display: flex;
   align-items: flex-end;
   padding: 2px 3px;
 }
 
-.calendar-container.buyer-view.hourly-view .rbc-calendar .rbc-day-bg {
+.calendar-container.hourly-view .rbc-calendar .rbc-day-bg {
   font-size: 7px;
 }
 
-.rbc-day-bg.unavailable {
-  background: url(/images/diagonal-line.png);
-  background-size: 100% 100%;
+.rbc-row-content,
+.rbc-time-header-cell,
+.rbc-events-container {
+  pointer-events: none;
 }
 
 .rbc-date-cell {
+  pointer-events: none;
   padding-left: 5px;
   text-align: left;
   vertical-align: top;
@@ -146,6 +97,18 @@
 .calendar-container.buyer-view.hourly-view .rbc-calendar .rbc-date-cell {
   cursor: default;
   font-size: 10px;
+}
+
+.buyer-view .rbc-time-slot.available:not(.selected):hover,
+.buyer-view .rbc-day-bg.available:not(.selected):hover {
+  background: var(--pale-grey-eight) !important;
+  cursor: pointer;
+}
+
+.seller-view .rbc-time-slot.future-date:hover,
+.seller-view .rbc-day-bg.future-date:hover {
+  background: var(--pale-grey-eight) !important;
+  cursor: pointer;
 }
 
 .calendar-nav {
@@ -172,11 +135,23 @@
   cursor: pointer;
 }
 
+.calendar-nav .go-to-today-btn {
+  cursor: pointer;
+  margin-left: 40px;
+  margin-top: -5px;
+  display: inline-block;
+  vertical-align: bottom;
+  margin-bottom: 5px;
+}
+
+.calendar-right-column {
+  padding-top: 45px;
+}
+
 .calendar-cta {
   color: white;
   background: var(--dark);
   padding: 1px 15px 15px;
-  margin-top: 45px;
   position: relative;
 }
 
@@ -241,6 +216,10 @@
 
 .calendar-cta .cta-btns .col-md-6 {
   text-align: center;
+}
+
+.calendar-cta .edit-series-container {
+  padding-top: 25px;
 }
 
 /* Media queries */
