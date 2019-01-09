@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import BigCalendar from 'react-big-calendar'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import moment from 'moment-timezone'
-import uuid from 'uuid/v1'
+import uuid from 'utils/uuid'
 import { 
   generateCalendarSlots,
   checkSlotForExistingEvents,
@@ -493,7 +493,7 @@ class Calendar extends Component {
 
     const cleanEvents = getCleanEvents(this.state.events)
     const jCalEvents = slotsToJCal(cleanEvents, this.props.listingId)
-console.log('========================== jCalEvents: ', jCalEvents)
+
     this.props.onComplete && this.props.onComplete(jCalEvents)
   }
 

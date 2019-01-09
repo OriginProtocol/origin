@@ -1,5 +1,5 @@
 import moment from 'moment-timezone'
-import uuid from 'uuid/v1'
+import uuid from 'utils/uuid'
 
 export function generateCalendarSlots(events) {
 
@@ -415,27 +415,6 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
   return toReturn
 }
 
-export const prepareSlotsToSave = (slots) => {
-  return slots.map((slot) => {
-    let amount = '0'
-    const { price, startDate, endDate } = slot
-
-    if (price && (typeof price === 'number' || typeof price.amount === 'number')) {
-      amount = price.toString()
-    }
-
-    slot.price = {
-      currency: 'ETH',
-      amount
-    }
-
-    slot.startDate = typeof startDate === 'string' ? startDate : startDate.toISOString()
-    slot.endDate = typeof endDate === 'string' ? endDate : endDate.toISOString()
-
-    return slot
-  })
-}
-
 export const getStartEndDatesFromSlots = (slots, slotLengthUnit) => {
   const timeFormat = slotLengthUnit === 'schema.hours' ? 'l LT' : 'LL'
 
@@ -458,7 +437,7 @@ export const slotsToJCal = (events) => {
     jCal.push(
       [
         'vevent',
-        ['uid', {}, 'text', 'TODO - generate UID somehow'],
+        ['uid', {}, 'text', uuid()],
         ['dtstart',  { 'tzid': '/US/Eastern' }, 'date-time', event.startDate],
         ['dtend',  { 'tzid': '/US/Eastern' }, 'date-time', event.endDate],
         ['rrule', {}, 'text', (event.rrule || '')],

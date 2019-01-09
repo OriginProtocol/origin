@@ -27,7 +27,7 @@ import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
 import PicturesThumbPreview from 'components/pictures-thumb-preview'
 
-import { prepareSlotsToSave } from 'utils/calendarHelpers'
+// import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing, transformPurchasesOrSales, getDerivedListingData } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
@@ -188,7 +188,7 @@ class ListingsDetail extends Component {
 
       if (isFractional) {
         //TODO: does commission change according to amount of slots bought?
-        offerData.slots = prepareSlotsToSave(slots)
+        // offerData.slots = prepareSlotsToSave(slots)
       } else if (isMultiUnit) {
         offerData.unitsPurchased = quantity
         /* If listing has enough boost remaining, take commission for each unit purchased.

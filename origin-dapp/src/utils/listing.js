@@ -67,7 +67,7 @@ export function dappFormDataToOriginListing(formData) {
         amount: formData.boostValue.toString(),
         currency: 'OGN'
       },
-      slots: formData.slots,
+      availability: formData.availability,
       slotLength: formData.slotLength,
       slotLengthUnit: formData.slotLengthUnit
     }

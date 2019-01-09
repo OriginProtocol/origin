@@ -451,14 +451,12 @@ class ListingCreate extends Component {
         break
     }
 
-    slots = (slots && slots.length && prepareSlotsToSave(slots)) || []
-
     this.setState({
       formListing: {
         ...this.state.formListing,
         formData: {
           ...this.state.formListing.formData,
-          slots
+          availability: slots
         }
       },
       step: this.STEP[nextStep]
