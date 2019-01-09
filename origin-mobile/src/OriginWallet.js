@@ -785,7 +785,7 @@ class OriginWallet {
     const current_rpc = localfy(this.providerUrl)
     const current_accounts = [this.state.ethAddress]
     const pub_key = this.getPublicKey(priv_key)
-    const priv_data = this.getPrivData(pub_key)
+    const priv_data = await this.getPrivData(pub_key)
     const {code, link_id} = await this.doFetch(this.API_WALLET_LINKER_PRELINK + this.getWalletToken(), 
       'POST', {
       pub_key,

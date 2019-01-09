@@ -230,6 +230,10 @@ class ContractService {
   // Returns the first account listed, unless a default account has been set
   // explicitly
   async currentAccount() {
+    // shortcut to make webkit work
+    if (this.walletLinker && this.walletLinker.linked) {
+      return this.walletLinker.accounts[0]
+    }
     await this.ensureEthereumIsEnabled()
     const defaultAccount = this.web3.eth.defaultAccount
     if (defaultAccount) {

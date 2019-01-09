@@ -56,7 +56,7 @@ export default class WalletLinker {
 
       this.linked = linked
 
-      if (linked)
+      if (linked && priv_key)
       {
         localStorage.setItem(LOCAL_KEY_STORE, priv_key)
       }
@@ -275,14 +275,12 @@ export default class WalletLinker {
           {
             const data = JSON.parse(this.ecDecrypt(device.priv_data))
 
-            if (!data)
+            if (data)
             {
-              // something is very wrong here, and we need to reset the link
-              this.logout()
-            }
-            else if (data.messaging && this.callbacks['messaging'])
-            {
-              this.callbacks['messaging'](data.messaging)
+              if (data.messaging && this.callbacks['messaging'])
+              {
+                this.callbacks['messaging'](data.messaging)
+              }
             }
           }
         }
