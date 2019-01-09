@@ -286,14 +286,14 @@ class OriginWallet {
     })
   }
 
-  async getMessagingKeys( ) {
+  getMessagingKeys( ) {
     return origin.messaging.preGenKeys(this.getCurrentWeb3Account())
   }
 
-  async getPrivData(pub_key) {
+  getPrivData(pub_key) {
     if (pub_key)
     {
-      const data = {messaging: await this.getMessagingKeys()}
+      const data = {messaging:this.getMessagingKeys()}
       return this.ecEncrypt(JSON.stringify(data), pub_key)
     }
   }
@@ -305,7 +305,7 @@ class OriginWallet {
       console.log(code, " already linked.")
       return
     }
-    const priv_data = await this.getPrivData(linkInfo.pub_key)
+    const priv_data = this.getPrivData(linkInfo.pub_key)
     return this.doFetch(this.API_WALLET_LINKER_LINK + this.getWalletToken(), 'POST', {
       code,
       current_rpc,
@@ -785,7 +785,7 @@ class OriginWallet {
     const current_rpc = localfy(this.providerUrl)
     const current_accounts = [this.state.ethAddress]
     const pub_key = this.getPublicKey(priv_key)
-    const priv_data = await this.getPrivData(pub_key)
+    const priv_data = this.getPrivData(pub_key)
     const {code, link_id} = await this.doFetch(this.API_WALLET_LINKER_PRELINK + this.getWalletToken(), 
       'POST', {
       pub_key,
@@ -1074,7 +1074,7 @@ class OriginWallet {
       const current_accounts = [this.state.ethAddress]
       const updates = {}
       for (const link of links) {
-        const priv_data = await this.getPrivData(link.pub_key)
+        const priv_data = this.getPrivData(link.pub_key)
         updates[link.link_id] = {current_rpc, current_accounts, priv_data}
       }
       return await this.doFetch(this.API_WALLET_UPDATE_LINKS + this.getWalletToken(), 'POST', {
