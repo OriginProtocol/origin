@@ -179,7 +179,7 @@ class Listing {
     return Math.max(0, this.commission.amount - commissionUsedInOffers)
   }
 
-  // Commission used to prioritize this listing over the others
+  // Commission used to prioritize this listing over the others in search functionality
   get commissionUsedToBoostListing() {
     // if is multi unit listing
     if (this.type === 'unit' && this.unitsTotal > 1) {

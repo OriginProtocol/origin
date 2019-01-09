@@ -19,6 +19,8 @@ async function getLastBlock (config) {
       const json = fs.readFileSync(config.continueFile, { encoding: 'utf8' })
       const data = JSON.parse(json)
 
+      // check for undefined explicitly -> just checking `if (!data.lastLogBlock)` will throw
+      // an error when lastLogBlock === 0
       if (data.lastLogBlock === undefined) {
         throw new Error(`Error: invalid format for continue file.`)
       }
