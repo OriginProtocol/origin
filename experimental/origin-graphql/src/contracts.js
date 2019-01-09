@@ -1,6 +1,7 @@
 import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplace'
 import UserRegistryContract from 'origin-contracts/build/contracts/V00_UserRegistry'
 import ClaimHolderRegisteredContract from 'origin-contracts/build/contracts/ClaimHolderRegistered'
+import ClaimHolderPresignedContract from 'origin-contracts/build/contracts/ClaimHolderPresigned'
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
 import TokenContract from 'origin-contracts/build/contracts/TestToken'
 
@@ -9,10 +10,15 @@ import EventSource from 'origin-eventsource'
 
 import eventCache from './utils/eventCache'
 import pubsub from './utils/pubsub'
-import OriginMessaging from 'origin-messaging-client'
+// import OriginMessaging from 'origin-messaging-client'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3
 const HOST = process.env.HOST || 'localhost'
+
+let OriginMessaging
+if (typeof window !== 'undefined') {
+  OriginMessaging = require('origin-messaging-client').default
+}
 
 const Configs = {
   mainnet: {
@@ -82,7 +88,8 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:9090`,
     ipfsRPC: `http://${HOST}:5002`,
-    automine: 2000,
+    bridge: 'https://bridge.staging.originprotocol.com',
+    automine: 2000
   }
 }
 
@@ -143,8 +150,10 @@ export function setNetwork(net) {
   context.web3 = web3
   context.web3Exec = web3
 
-  const MessagingConfig = config.messaging || DefaultMessagingConfig
-  context.messaging = OriginMessaging({ ...MessagingConfig, web3 })
+  if (typeof window !== 'undefined') {
+    const MessagingConfig = config.messaging || DefaultMessagingConfig
+    context.messaging = OriginMessaging({ ...MessagingConfig, web3 })
+  }
 
   context.metaMaskEnabled = metaMaskEnabled
   web3WS = applyWeb3Hack(new Web3(config.providerWS))
@@ -159,6 +168,9 @@ export function setNetwork(net) {
 
   context.claimHolderRegistered = new web3.eth.Contract(
     ClaimHolderRegisteredContract.abi
+  )
+  context.claimHolderPresigned = new web3.eth.Contract(
+    ClaimHolderPresignedContract.abi
   )
 
   context.userRegistry = new web3.eth.Contract(
@@ -223,6 +235,13 @@ export function setNetwork(net) {
     token.contractExec = contract
   })
 
+  context.transactions = []
+  try {
+    context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
+  } catch (e) {
+    /* Ignore */
+  }
+
   if (metaMask) {
     context.metaMask = metaMask
     context.ognMM = new metaMask.eth.Contract(
@@ -253,7 +272,9 @@ function setMetaMask() {
     context.ognExec = context.ogn
     context.tokens.forEach(token => (token.contractExec = token.contract))
   }
-  context.messaging.web3 = context.web3Exec
+  if (context.messaging) {
+    context.messaging.web3 = context.web3Exec
+  }
 }
 
 export function toggleMetaMask(enabled) {
@@ -296,7 +317,7 @@ export function setMarketplace(address, epoch) {
   }
 }
 
-if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'CSS') {
+if (typeof window !== 'undefined') {
   if (window.ethereum) {
     metaMask = applyWeb3Hack(new Web3(window.ethereum))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false

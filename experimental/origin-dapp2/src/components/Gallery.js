@@ -1,20 +1,18 @@
 import React, { Component } from 'react'
-import { getIpfsGateway } from 'utils/config'
+import get from 'lodash/get'
 
 class Gallery extends Component {
   state = { active: 0 }
   render() {
-    const { pics } = this.props
+    const pics = get(this.props, 'pics', [])
     const active = pics[this.state.active]
     if (!active) return null
-
-    const getUrl = url => `url(${getIpfsGateway()}/${url.replace(':/', '')})`
 
     return (
       <div className="gallery">
         <div
           className="main-pic"
-          style={{ backgroundImage: getUrl(active.url) }}
+          style={{ backgroundImage: `url(${active.urlExpanded})` }}
         />
         {pics.length === 1 ? null : (
           <div className="thumbnails">
@@ -22,7 +20,7 @@ class Gallery extends Component {
               <div
                 key={idx}
                 onClick={() => this.setState({ active: idx })}
-                style={{ backgroundImage: getUrl(m.url) }}
+                style={{ backgroundImage: `url(${m.urlExpanded})` }}
                 className={this.state.active === idx ? 'active' : ''}
               />
             ))}

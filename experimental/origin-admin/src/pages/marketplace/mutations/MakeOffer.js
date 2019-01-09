@@ -36,6 +36,7 @@ class MakeOffer extends Component {
       affiliate: affiliate ? affiliate.id : ZeroAddress,
       commission: '2',
       value: '0.1',
+      quantity: 1,
       currency: ZeroAddress,
       arbitrator: arbitrator ? arbitrator.id : '',
       from: buyer ? buyer.id : ''
@@ -78,6 +79,11 @@ class MakeOffer extends Component {
                       rightElement={<Tag minimal={true}>ETH</Tag>}
                     />
                   </FormGroup>
+                </div>
+                <div style={{ flex: 1, marginRight: 20 }} >
+                      <FormGroup label="Quantity">
+                      <InputGroup {...input('quantity')} />
+                      </FormGroup>
                 </div>
                 <div style={{ flex: 1, marginRight: 20 }}>
                   <FormGroup label="Finalizes">
@@ -177,7 +183,8 @@ class MakeOffer extends Component {
       commission: affiliate === ZeroAddress ? '0' : this.state.commission,
       value: this.state.value,
       currency: ZeroAddress,
-      arbitrator: this.state.arbitrator
+      arbitrator: this.state.arbitrator,
+      quantity: Number(this.state.quantity)
     }
     if (this.props.offer) {
       variables.withdraw = String(this.props.offer.id)

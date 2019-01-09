@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
 
+import Link from 'components/Link'
 import Identicon from 'components/Identicon'
 import Dropdown from 'components/Dropdown'
 import Price from 'components/Price'
@@ -30,7 +31,12 @@ class ProfileNav extends Component {
               className="nav-item dark profile"
               open={this.props.open}
               onClose={() => this.props.onClose()}
-              content={<ProfileDropdown data={data} />}
+              content={
+                <ProfileDropdown
+                  onClose={() => this.props.onClose()}
+                  data={data}
+                />
+              }
             >
               <a
                 className="nav-link"
@@ -53,11 +59,14 @@ class ProfileNav extends Component {
   }
 }
 
-const ProfileDropdown = ({ data }) => {
+const ProfileDropdown = ({ data, onClose }) => {
   const { checksumAddress, balance, id } = data.web3.metaMaskAccount
   return (
     <div className="dropdown-menu dark dropdown-menu-right show profile">
-      <div className="connected">{`Connected to Ethereum Main Network`}</div>
+      <div className="connected">
+        {`Connected to `}
+        <span className="net">{data.web3.networkName}</span>
+      </div>
       <div className="wallet-info">
         <div>
           <h5>ETH Address</h5>
@@ -93,7 +102,9 @@ const ProfileDropdown = ({ data }) => {
         </div>
       </div>
       <Identity id={id} />
-      <a href="#">View Profile</a>
+      <Link onClick={() => onClose()} to={`/profile`}>
+        View Profile
+      </Link>
     </div>
   )
 }
@@ -111,7 +122,14 @@ const Identity = ({ id }) => (
         <div className="identity">
           <h5>My Identity</h5>
           <div className="info">
-            <div className="avatar" />
+            {profile.avatar ? (
+              <div
+                className="avatar"
+                style={{ backgroundImage: `url(${profile.avatar})` }}
+              />
+            ) : (
+              <div className="avatar empty" />
+            )}
             <div>
               <div className="name">{`${profile.firstName} ${
                 profile.lastName
@@ -138,10 +156,10 @@ const Identity = ({ id }) => (
             <div className="progress">
               <div
                 className="progress-bar"
-                style={{ width: profile.strength }}
+                style={{ width: `${profile.strength}%` }}
               />
             </div>
-            {`Profile Strength - ${profile.strength}`}
+            {`Profile Strength - ${profile.strength}%`}
           </div>
         </div>
       )
@@ -165,6 +183,19 @@ require('react-styl')(`
       font-size: 14px
     .connected
       padding: 0.75rem 1.5rem;
+      color: var(--light)
+      > span
+        display: inline-block
+        color: var(--greenblue)
+        &::before
+          content: ""
+          display: inline-block
+          background: var(--greenblue)
+          width: 10px
+          height: 10px
+          border-radius: 5px
+          margin-right: 4px
+          margin-left: 6px
     .nav-link img
       margin: 0 0.2rem
     .wallet-info
@@ -214,36 +245,16 @@ require('react-styl')(`
         margin-top: 0.75rem
         display: flex
         .avatar
-          background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
-          background-size: 1.9rem;
+          background-size: cover
+          &.empty
+            background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
+            background-size: 1.9rem;
           width: 3rem;
           height: 3rem;
           margin-right: 0.75rem
           border-radius: 0.5rem
         .name
           font-size: 18px
-
-      .attestations
-        display: flex
-        .attestation
-          background-repeat: no-repeat
-          background-position: center
-          background-size: contain
-          width: 1.25rem
-          height: 1.25rem
-          margin-right: 0.25rem
-          &.email
-            background-image: url(images/identity/email-icon-verified.svg)
-          &.facebook
-            background-image: url(images/identity/facebook-icon-verified.svg)
-          &.phone
-            background-image: url(images/identity/phone-icon-verified.svg)
-          &.twitter
-            background-image: url(images/identity/twitter-icon-verified.svg)
-          &.airbnb
-            background-image: url(images/identity/airbnb-icon-verified.svg)
-          &.google
-            background-image: url(images/identity/google-icon-verified.svg)
 
       .strength
         font-size: 10px;
@@ -265,5 +276,27 @@ require('react-styl')(`
       padding: 0.75rem 1rem;
       font-weight: bold;
       border-radius: 0 0 5px 5px;
+
+  .attestations
+    display: flex
+  .attestation
+    background-repeat: no-repeat
+    background-position: center
+    background-size: contain
+    width: 1.25rem
+    height: 1.25rem
+    margin-right: 0.25rem
+    &.email
+      background-image: url(images/identity/email-icon-verified.svg)
+    &.facebook
+      background-image: url(images/identity/facebook-icon-verified.svg)
+    &.phone
+      background-image: url(images/identity/phone-icon-verified.svg)
+    &.twitter
+      background-image: url(images/identity/twitter-icon-verified.svg)
+    &.airbnb
+      background-image: url(images/identity/airbnb-icon-verified.svg)
+    &.google
+      background-image: url(images/identity/google-icon-verified.svg)
 
 `)

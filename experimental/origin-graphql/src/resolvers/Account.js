@@ -47,6 +47,9 @@ export default {
     const ur = contracts.userRegistry
     if (!ur || !ur.options.address) return null
     const id = await ur.methods.users(account.id).call()
+    if (id.indexOf('0x0000') === 0) {
+      return null
+    }
     return { id }
   }
 }

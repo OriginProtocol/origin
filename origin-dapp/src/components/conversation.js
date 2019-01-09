@@ -59,7 +59,6 @@ class Conversation extends Component {
     // try to detect the user before rendering
     this.identifyCounterparty()
 
-
     if (smallScreenOrDevice) {
       this.loadListing()
       updateShowNav = false
@@ -176,9 +175,13 @@ class Conversation extends Component {
 
     const recipients = origin.messaging.getRecipients(id)
     const address = recipients.find(addr => formattedAddress(addr) !== formattedAddress(wallet.address))
-    const counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(address)) || { address }
+    let counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(address))
 
-    !counterparty.address && fetchUser(address)
+    if (!counterparty) {
+      fetchUser(address)
+
+      counterparty = { address }
+    }
 
     this.setState({ counterparty })
     this.loadPurchase()
@@ -191,7 +194,7 @@ class Conversation extends Component {
 
     // If listingId does not match state, store and check for a purchase.
     if (listingId !== this.state.listing.id) {
-      const listing = listingId ? await getListing(listingId, true) : {}
+      const listing = listingId ? await getListing(listingId, { translate: true }) : {}
       this.setState({ listing })
       this.loadPurchase()
     }

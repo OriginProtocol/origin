@@ -1,29 +1,75 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
+import pick from 'lodash/pick'
+import get from 'lodash/get'
 
 import ImageCropper from 'components/ImageCropper'
-import Link from 'components/Link'
+import Steps from 'components/Steps'
+
+import { formInput, formFeedback } from 'utils/formHelpers'
+import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
+
+import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
+
+import ProfileStrength from 'components/ProfileStrength'
+
+import PhoneAttestation from 'pages/identity/PhoneAttestation'
+import EmailAttestation from 'pages/identity/EmailAttestation'
+import FacebookAttestation from 'pages/identity/FacebookAttestation'
+import TwitterAttestation from 'pages/identity/TwitterAttestation'
+import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
 import ListingPreview from './_ListingPreview'
-import Stage from './_Stage'
 import HelpProfile from './_HelpProfile'
 
-const query = gql`
-  query WalletStatus {
-    web3 {
-      metaMaskAccount {
-        id
-      }
-    }
-  }
-`
+const AttestationComponents = {
+  phone: PhoneAttestation,
+  email: EmailAttestation,
+  facebook: FacebookAttestation,
+  twitter: TwitterAttestation
+}
 
 class OnboardProfile extends Component {
-  state = {}
+  constructor(props) {
+    super(props)
+    this.state = {
+      firstName: '',
+      lastName: '',
+      description: ''
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const profile = get(this.props, 'identity.profile')
+    if (!prevProps.identity && profile) {
+      this.setState(
+        pick(profile, [
+          'firstName',
+          'lastName',
+          'description',
+          'avatar',
+          'facebookVerified',
+          'twitterVerified',
+          'airbnbVerified',
+          'phoneVerified',
+          'emailVerified'
+        ])
+      )
+    }
+  }
+
   render() {
     const { listing } = this.props
-    const { pic } = this.state
+    const { avatar } = this.state
+
+    const input = formInput(this.state, state => this.setState(state))
+    const Feedback = formFeedback(this.state)
+
+    const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
+      if (this.state[`${key}Attestation`])
+        m.push(this.state[`${key}Attestation`])
+      return m
+    }, [])
 
     return (
       <>
@@ -31,52 +77,97 @@ class OnboardProfile extends Component {
         <h3>Enter Your Profile Information</h3>
         <div className="row">
           <div className="col-md-8">
-            <Stage stage={4} />
-            <Query query={query} notifyOnNetworkStatusChange={true}>
-              {({ error, data, networkStatus }) => {
-                if (networkStatus === 1) {
-                  return <div>Loading...</div>
-                } else if (error) {
-                  return <p className="p-3">Error :(</p>
-                } else if (!data || !data.web3) {
-                  return <p className="p-3">No Web3</p>
-                }
-
-                const nextLink = `/listings/${listing.id}/onboard/attestations`
-
-                return (
-                  <div className="onboard-box">
-                    <ImageCropper onChange={pic => this.setState({ pic })}>
+            <Steps steps={4} step={4} />
+            <div className="onboard-box pt-3">
+              <form
+                className="profile"
+                onSubmit={e => {
+                  e.preventDefault()
+                  this.validate()
+                }}
+              >
+                <div className="row">
+                  <div className="col-4">
+                    <ImageCropper onChange={a => this.setState({ avatar: a })}>
                       <div
-                        className={`profile-logo ${pic ? 'custom' : 'default'}`}
-                        style={{ backgroundImage: pic ? `url(${pic})` : null }}
+                        className={`profile-logo ${
+                          avatar ? 'custom' : 'default'
+                        }`}
+                        style={{
+                          backgroundImage: avatar ? `url(${avatar})` : null
+                        }}
                       />
                     </ImageCropper>
-
-                    <form className="profile">
-                      <div className="form-group">
-                        <label>First Name</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                      <div className="form-group">
-                        <label>Last Name</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                      <div className="form-group">
-                        <label>Description</label>
-                        <textarea
-                          className="form-control"
-                          placeholder="Tell us a bit about yourself"
-                        />
-                      </div>
-                    </form>
-                    <Link to={nextLink} className="btn btn-primary">
-                      Continue
-                    </Link>
                   </div>
-                )
-              }}
-            </Query>
+                  <div className="col-8">
+                    <div className="row">
+                      <div className="form-group col-6">
+                        <label>First Name</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          {...input('firstName')}
+                        />
+                        {Feedback('firstName')}
+                      </div>
+                      <div className="form-group col-6">
+                        <label>Last Name</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          {...input('lastName')}
+                        />
+                        {Feedback('lastName')}
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label>Description</label>
+                      <textarea
+                        className="form-control"
+                        placeholder="Tell us a bit about yourself"
+                        {...input('description')}
+                      />
+                      {Feedback('description')}
+                    </div>
+                  </div>
+                </div>
+
+                <label className="mt-3">Attestations</label>
+                <div className="profile-attestations">
+                  {this.renderAtt('phone', 'Phone Number')}
+                  {this.renderAtt('email', 'Email')}
+                  {this.renderAtt('airbnb', 'Airbnb')}
+                  {this.renderAtt('facebook', 'Facebook')}
+                  {this.renderAtt('twitter', 'Twitter')}
+                  {this.renderAtt('google', 'Google', true)}
+                </div>
+
+                <ProfileStrength
+                  published={get(this.props, 'identity.profile.strength', 0)}
+                  unpublished={unpublishedProfileStrength(this)}
+                />
+
+                {/* <div className="no-funds">
+                  <h5>You don&apos;t have funds</h5>
+                  You need to have funds in your wallet to create an
+                  identity. You can always do this later after you fund
+                  your wallet by going to your settings.
+                </div> */}
+              </form>
+              <DeployIdentity
+                className="btn btn-primary"
+                identity={get(this.props, 'identity.id')}
+                profile={pick(this.state, [
+                  'firstName',
+                  'lastName',
+                  'description',
+                  'avatar'
+                ])}
+                attestations={attestations}
+                validate={() => this.validate()}
+                children="Publish"
+              />
+            </div>
           </div>
           <div className="col-md-4">
             <ListingPreview listing={listing} />
@@ -86,18 +177,92 @@ class OnboardProfile extends Component {
       </>
     )
   }
+
+  renderAtt(type, text, soon) {
+    const { wallet } = this.props
+    const profile = get(this.props, 'identity.profile', {})
+
+    let status = ''
+    if (profile[`${type}Verified`]) {
+      status = ' published'
+    } else if (this.state[`${type}Attestation`]) {
+      status = ' provisional'
+    } else if (soon) {
+      status = ' soon'
+    }
+    let AttestationComponent = AttestationComponents[type]
+    if (AttestationComponent) {
+      AttestationComponent = (
+        <AttestationComponent
+          wallet={wallet}
+          open={this.state[type]}
+          onClose={() => {
+            this.setState({ [type]: false })
+          }}
+          onComplete={att => this.setState({ [`${type}Attestation`]: att })}
+        />
+      )
+    }
+
+    return (
+      <>
+        <div
+          className={`profile-attestation ${type}${status}`}
+          onClick={() => this.setState({ [type]: true })}
+        >
+          <i />
+          {text}
+        </div>
+        {AttestationComponent}
+      </>
+    )
+  }
+
+  validate() {
+    const newState = {}
+
+    if (!this.state.firstName) {
+      newState.firstNameError = 'First Name is required'
+    }
+
+    newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
+
+    if (!newState.valid) {
+      window.scrollTo(0, 0)
+    }
+    this.setState(newState)
+    return newState.valid
+  }
 }
 
-export default OnboardProfile
+export default withWallet(withIdentity(OnboardProfile))
 
 require('react-styl')(`
   .onboard .onboard-box
+    .no-funds
+      background-color: rgba(244, 193, 16, 0.1)
+      border: 1px solid var(--golden-rod)
+      border-radius: 5px
+      padding: 2rem 2rem 2rem 5rem
+      position: relative
+      &::before
+        content: ""
+        background-color: var(--steel);
+        border-radius: 2rem;
+        width: 3rem;
+        height: 3rem;
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+      h5
+        font-family: Poppins;
+        font-size: 24px;
+        font-weight: 200;
     .profile-logo
       border-radius: 1rem
-      margin-top: -5rem
       position: relative
-      width: 11rem
-      height: 11rem
+      width: 100%
+      padding-top: 100%
       &.default
         background: #233040 url(images/avatar-blue.svg) no-repeat center bottom
         background-size: 63%
@@ -116,9 +281,9 @@ require('react-styl')(`
         right: 0.5rem
 
     form.profile
-      width: 75%
       text-align: left
       margin-top: 1rem
+      width: 100%
       label
         font-weight: normal
         color: black
@@ -133,6 +298,77 @@ require('react-styl')(`
         padding-top: 1.5rem
         padding-bottom: 1.5rem
       textarea
-        min-height: 10rem
+        min-height: 3rem
+
+  .profile-attestations
+    display: grid
+    grid-column-gap: 0.5rem
+    grid-row-gap: 0.5rem
+    grid-template-columns: repeat(auto-fill,minmax(220px, 1fr))
+    margin-bottom: 2rem
+    .profile-attestation
+      padding: 0.75rem 1rem
+      border: 1px dashed var(--light)
+      border-radius: 5px
+      display: flex
+      font-size: 18px
+      font-weight: normal
+      color: var(--bluey-grey)
+      background-color: var(--pale-grey-eight)
+      align-items: center;
+      cursor: pointer
+      &:hover
+        border-color: var(--clear-blue)
+        border-style: solid
+      > i
+        display: block
+        position: relative
+        background: url(images/identity/verification-shape-grey.svg) no-repeat center;
+        width: 2.5rem;
+        height: 2.5rem;
+        background-size: 95%;
+        display: flex
+        margin-right: 1rem
+        &::before
+          content: ""
+          flex: 1
+          background-repeat: no-repeat
+          background-position: center
+
+      &.phone > i::before
+        background-image: url(images/identity/phone-icon-light.svg)
+        background-size: 0.9rem
+      &.email > i::before
+        background-image: url(images/identity/email-icon-light.svg)
+        background-size: 1.4rem
+      &.airbnb > i::before
+        background-image: url(images/identity/airbnb-icon-light.svg)
+        background-size: 1.6rem
+      &.facebook > i::before
+        background-image: url(images/identity/facebook-icon-light.svg)
+        background-size: 0.8rem
+      &.twitter > i::before
+        background-image: url(images/identity/twitter-icon-light.svg)
+        background-size: 1.3rem
+      &.google > i::before
+        background-image: url(images/identity/google-icon.svg)
+        background-size: 1.3rem
+
+      &.published,&.provisional
+        background-color: white
+        border-style: solid
+        color: var(--dusk)
+        > i
+          background-image: url(images/identity/verification-shape-blue.svg)
+        &::after
+          content: "";
+          background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center;
+          width: 2rem;
+          height: 2rem;
+          border-radius: 2rem;
+          margin-left: auto;
+          background-size: 59%;
+      &.published > i
+        background-image: url(images/identity/verification-shape-green.svg)
 
 `)

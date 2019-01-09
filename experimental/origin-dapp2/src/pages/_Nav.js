@@ -5,16 +5,17 @@ import get from 'lodash/get'
 import WalletQuery from 'queries/Wallet'
 
 import Link from 'components/Link'
+import NavLink from 'components/NavLink'
 import Profile from './nav/Profile'
 import Notifications from './nav/Notifications'
 import Messages from './nav/Messages'
 import Confirmations from './nav/Confirmations'
+import Sell from './nav/Sell'
 
 class Nav extends Component {
   state = {}
 
   render() {
-
     const navProps = nav => ({
       onOpen: () => this.setState({ open: nav }),
       onClose: () => this.setState({ open: false }),
@@ -59,19 +60,18 @@ class Nav extends Component {
                   return (
                     <>
                       <li className="nav-item extra-margin">
-                        <Link to="/" className="nav-link">
+                        <NavLink to="/my-purchases" className="nav-link text">
                           Buy
-                        </Link>
+                        </NavLink>
                       </li>
+                      <Sell {...navProps('sell')} />
                       <li className="nav-item extra-margin">
-                        <Link to="/" className="nav-link">
-                          Sell
-                        </Link>
-                      </li>
-                      <li className="nav-item extra-margin">
-                        <Link to="/" className="nav-link add-listing">
+                        <NavLink
+                          to="/create"
+                          className="nav-link add-listing text"
+                        >
                           Add Listing
-                        </Link>
+                        </NavLink>
                       </li>
                       <Confirmations {...navProps('confirmations')} />
                       <Messages {...navProps('messages')} />
@@ -109,17 +109,23 @@ require('react-styl')(`
         margin: 0 0.5rem
       &.show
         background-color: var(--white)
+        .nav-link
+          color: var(--dark)
       &.dark
         &.show
           background-color: var(--dark)
       .nav-link
         padding: 0 0.75rem
         color: var(--pale-grey)
+        &.text
+          padding: 0.25rem 0.75rem;
+          border-radius: 1rem;
+          &:hover,&.active
+            background-color: var(--dark-grey-blue);
         &.add-listing
           display: inline-block
-          padding-left: 1.25rem
-          margin-left: 0.75rem
-          background: url(images/add-listing-icon.svg) no-repeat left center
+          padding-left: 2rem
+          background: url(images/add-listing-icon.svg) no-repeat 0.5rem center
           background-size: 1rem
 
       .dropdown-menu

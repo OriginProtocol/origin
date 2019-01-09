@@ -6,7 +6,6 @@ import MetaMask from './MetaMask'
 import Messaging from './Messaging'
 import Notifications from './Notifications'
 import Profile from './Profile'
-import Attestations from './Attestations'
 
 class Onboard extends Component {
   render() {
@@ -37,10 +36,6 @@ class Onboard extends Component {
           <Route
             path="/listings/:listingID/onboard/profile"
             render={() => <Profile listing={listing} />}
-          />
-          <Route
-            path="/listings/:listingID/onboard/attestations"
-            render={() => <Attestations listing={listing} />}
           />
           <Route render={() => <Wallet listing={listing} />} />
         </Switch>
@@ -84,17 +79,6 @@ require('react-styl')(`
       font-style: normal
       color: var(--dark)
       margin-bottom: 0.75rem
-    .stages
-      display: flex
-      margin-bottom: 1.5rem
-      .stage
-        flex: 1
-        height: 2px
-        background: var(--pale-grey-two)
-        margin-right: 2px
-        border-radius: 2px
-        &.active
-          background: var(--clear-blue)
 
     .listing-preview,.onboard-help
       background: var(--pale-grey-eight)

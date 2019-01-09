@@ -83,7 +83,10 @@ const Accounts = props => (
           <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
           <pre>
           {`localStorage.OGNContract = "${localStorage.OGNContract}"\n`}
-          {`localStorage.marketplaceContract = "${localStorage.marketplaceContract}"`}
+          {`localStorage.marketplaceContract = "${localStorage.marketplaceContract}"\n`}
+          {`localStorage.userRegistryContract = "${localStorage.userRegistryContract}"\n`}
+          {`localStorage.KeyHolderLibrary = "${localStorage.KeyHolderLibrary}"\n`}
+          {`localStorage.ClaimHolderLibrary = "${localStorage.ClaimHolderLibrary}"`}
           </pre>
         </div>
       )

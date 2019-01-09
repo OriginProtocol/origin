@@ -1,23 +1,17 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
-import { getIpfsGateway } from 'utils/config'
+import Redirect from 'components/Redirect'
 import Price from 'components/Price'
+import ListingBadge from 'components/ListingBadge'
 
 class Listings extends Component {
   state = {}
   render() {
     const { listings } = this.props
     if (!listings) return null
-    const ipfsGateway = getIpfsGateway()
 
     return (
       <div className="row">
-        {this.state.redirect && (
-          <Redirect
-            push
-            to={{ pathname: this.state.redirect, state: { scrollToTop: true } }}
-          />
-        )}
+        {this.state.redirect && <Redirect to={this.state.redirect} />}
         {listings.map(a => (
           <div
             key={a.id}
@@ -28,14 +22,17 @@ class Listings extends Component {
               <div
                 className="main-pic"
                 style={{
-                  backgroundImage: `url(${ipfsGateway}/${a.media[0].url.replace(
-                    ':/',
-                    ''
-                  )})`
+                  backgroundImage: `url(${a.media[0].urlExpanded})`
                 }}
               />
             ) : null}
-            <div className="category">{a.categoryStr}</div>
+            <div className="header">
+              <div className="category">{a.categoryStr}</div>
+              <ListingBadge
+                status={a.status}
+                featured={a.featured}
+              />
+            </div>
             <h5>{a.title}</h5>
             <div className="price">
               <div className="eth">{`${a.price.amount} ETH`}</div>
@@ -62,11 +59,18 @@ require('react-styl')(`
     margin-bottom: 2rem
     margin-top: 1rem
     cursor: pointer
+
     .main-pic
       padding-top: 66.6%
       background-size: cover
       background-repeat: no-repeat
       background-position: center
+
+    .header
+      display: flex
+      align-items: center
+      justify-content: space-between
+
     .category
       font-family: Lato
       font-size: 14px
@@ -74,6 +78,10 @@ require('react-styl')(`
       font-weight: normal
       text-transform: uppercase
       margin-top: 0.75rem
+
+    .badge
+      margin-top: 0.75rem
+
     h5
       font-family: Poppins
       font-size: 24px
@@ -83,15 +91,18 @@ require('react-styl')(`
       overflow: hidden
       text-overflow: ellipsis
       margin-top: 0.5rem
+
     .price
       background: url(images/eth-icon.svg) no-repeat
       padding-left: 2rem
       line-height: 1.25rem
       font-family: Lato
+
       .eth
         font-size: 18px
         font-weight: normal
         color: var(--bluish-purple)
+
       .usd
         font-size: 10px
         font-weight: normal

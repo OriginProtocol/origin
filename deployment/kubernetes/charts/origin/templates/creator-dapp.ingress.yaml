@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "creator-dapp.fullname" . }}
+  labels:
+    app: {{ template "creator-dapp.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: origindapp-com-ingress
+  annotations:
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/limit-rps: "50"
+spec:
+  tls:
+    - secretName: {{ .Release.Namespace }}-creator-dapp
+      hosts:
+        - "*.{{ template "creator-dapp.host" . }}"
+  rules:
+    - host: "*.{{ template "creator-dapp.host" . }}"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ template "dapp.fullname" . }}
+              servicePort: 80

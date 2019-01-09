@@ -14,7 +14,7 @@ async function acceptOffer(_, data) {
     .acceptOffer(listingId, offerId, ipfsHash)
     .send({
       gas: 4612388,
-      from: data.from || web3.eth.defaultAccount
+      from: data.from
     })
   return txHelper({ tx, mutation: 'acceptOffer' })
 }

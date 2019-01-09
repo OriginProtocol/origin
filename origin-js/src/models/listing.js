@@ -14,7 +14,6 @@ export class Listing {
    *  - {string} title
    *  - {string} description
    *  - {string} category
-   *  - {Object} commission - consists of 'amount' and 'currency' properties
    *  - {string} subCategory
    *  - {string} status - 'active', 'inactive'
    *  - {string} type - 'unit', 'fractional'
@@ -28,14 +27,15 @@ export class Listing {
    *  - {string} seller - address of the seller
    *  - {string} display - 'normal', 'featured', 'hidden'
    *  - {Array<Object>} media
-   *  - {Object} comission - consists of 'amount' and 'currency' properties
-   *  - {Array} slots
+   *  - {Object} commission - Total commission of a listing. Consists of 'amount' and 'currency' properties
+   *  - {Array} slots - to be implemented
    *  - {Integer} slotLength - defines the length of a time slot in a fractional listing
    *  - {String} slotLengthUnit - defines the unit of measurement for a fractional usage time slot
    *  - {string} schemaId
    *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
    *  - {string} deposit
    *  - {string} depositManager - address of depositManager
+   *  - {Object} commissionPerUnit - Commission per unit in multi unit listings. Consists of 'amount' and 'currency' properties
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
@@ -130,11 +130,52 @@ export class Listing {
       dappSchemaId: discoveryNodeData.dappSchemaId,
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
-      commissionPerUnit: discoveryNodeData.commissionPerUnit,
+      commissionPerUnit: discoveryNodeData.commissionPerUnit
     })
   }
 
   get active() {
     return this.status === 'active'
+  }
+
+  get unitsPending() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    return this.offers
+      // only keep offers that are in a pending state
+      .filter(offer => ['created', 'accepted', 'disputed'].includes(offer.status))
+      .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
+  }
+
+  get unitsSold() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    return this.offers
+      // only keep offers that are in a sold state
+      .filter(offer => ['finalized', 'sellerReviewed', 'ruling'].includes(offer.status))
+      .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
+  }
+
+  get unitsRemaining() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    return Math.max(0, this.unitsTotal - this.unitsPending - this.unitsSold)
+  }
+
+  get commissionRemaining() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    // if not multi unit
+    if (!(this.type === 'unit' && this.unitsTotal > 0))
+      return undefined
+
+    const commissionRemaining = this.offers
+      .reduce((agg, offer) => agg + parseInt(offer.commission.amount), 0)
+
+    return Math.max(0, this.commission.amount - commissionRemaining)
   }
 }

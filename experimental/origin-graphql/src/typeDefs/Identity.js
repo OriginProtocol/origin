@@ -1,13 +1,22 @@
 export default `
   extend type Query {
     userRegistry: UserRegistry
+    identity(id: ID!): Identity
   }
 
   extend type Mutation {
     deployUserRegistry(from: String): Transaction
     deployIdentityContract(from: String!, contract: String!): Transaction
+
     deployIdentity(
       from: String!
+      profile: ProfileInput
+      attestations: [AttestationInput]
+    ): Transaction
+
+    updateIdentity(
+      from: String!
+      identity: String!
       profile: ProfileInput
       attestations: [AttestationInput]
     ): Transaction
@@ -56,9 +65,10 @@ export default `
     id: ID!
     firstName: String
     lastName: String
+    fullName: String
     description: String
     avatar: String
-    strength: String
+    strength: Int
 
     facebookVerified: Boolean
     twitterVerified: Boolean

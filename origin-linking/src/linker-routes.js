@@ -38,9 +38,11 @@ router.get("/link-info/:code", async (req, res) => {
 
 router.get("/server-info", (req, res) => {
   // this is the context
-  const {providerUrl, contractAddresses, ipfsGateway, ipfsApi} = linker.getServerInfo()
+  const {providerUrl, contractAddresses, ipfsGateway, ipfsApi,
+    messagingUrl, sellingUrl} = linker.getServerInfo()
   res.send({provider_url:providerUrl, contract_addresses:contractAddresses, 
-    ipfs_gateway:ipfsGateway, ipfs_api:ipfsApi })
+    ipfs_gateway:ipfsGateway, ipfs_api:ipfsApi, messaging_url:messagingUrl,
+    selling_url:sellingUrl})
 })
 
 
@@ -68,6 +70,26 @@ router.post("/link-wallet/:walletToken", async (req, res) => {
   res.send({linked, pending_call_context:pendingCallContext, 
     app_info:appInfo, link_id:linkId, linked_at:linkedAt})
 })
+
+router.post("/prelink-wallet/:walletToken", async (req, res) => {
+  const {walletToken} = req.params
+  const {pub_key, current_rpc, current_accounts, priv_data} = req.body
+  const {code, linkId} 
+    = await linker.prelinkWallet(walletToken, pub_key, current_rpc, current_accounts, priv_data)
+
+  res.send({code, link_id:linkId})
+})
+
+router.post("/link-prelinked", async (req, res) => {
+  const {code, link_id, return_url} = req.body
+  const {clientToken, sessionToken, linked} 
+    = await linker.linkPrelinked(code, link_id, req.useragent, return_url)
+
+  clientTokenHandler(res, clientToken)
+  res.send({session_token:sessionToken, linked})
+})
+
+
 
 router.get("/wallet-links/:walletToken", async (req, res) => {
   const {walletToken} = req.params

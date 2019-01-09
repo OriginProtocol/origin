@@ -31,16 +31,20 @@ export default {
           id
         }
         deposit
+        depositAvailable
         createdEvent {
           timestamp
         }
 
         category
         categoryStr
+        subCategory
         title
         description
         currencyId
         unitsTotal
+        unitsAvailable
+        unitsSold
         featured
         hidden
         price {
@@ -49,6 +53,7 @@ export default {
         }
         media {
           url
+          urlExpanded
           contentType
         }
       }
@@ -77,6 +82,29 @@ export default {
         }
         withdrawnBy {
           id
+        }
+        createdEvent {
+          timestamp
+        }
+        statusStr
+      }
+    `
+  },
+  Transaction: {
+    basic: gql`
+      fragment basicTransactionFields on Transaction {
+        id
+        status
+        receipt {
+          id
+          events {
+            event
+            returnValues {
+              listingID
+              offerID
+              party
+            }
+          }
         }
       }
     `

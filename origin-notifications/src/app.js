@@ -5,10 +5,12 @@ try {
   console.log('EnvKey not configured')
 }
 
+const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const webpush = require('web-push')
 const Sequelize = require('sequelize')
+const fetch = require('cross-fetch')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 const PushSubscription = require('./models').PushSubscription
 const { getNotificationMessage, processableEvent } = require('./notification')
@@ -18,6 +20,9 @@ const port = 3456
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
 let privateKey = process.env.VAPID_PRIVATE_KEY
 let publicKey = process.env.VAPID_PUBLIC_KEY
+const linking_notify_endpoint = process.env.LINKING_NOTIFY_ENDPOINT
+const linking_notify_token = process.env.LINKING_NOTIFY_TOKEN
+const dapp_offer_url = process.env.DAPP_OFFER_URL
 
 if (!privateKey || !publicKey) {
   console.log('Warning: VAPID public or private key not defined, generating one')
@@ -121,7 +126,7 @@ app.post('/events', async (req, res) => {
   // Return 200 to the event-listener without
   // waiting for processing of the event.
   res.json({ status: 'ok' })
-  res.sendStatus(200)
+  //res.sendStatus(200)
 
   if (!listing || (!seller.address && !buyer.address)) {
     console.log(`Error: Missing data. Skipping ${eventDetails}`)
@@ -145,6 +150,39 @@ app.post('/events', async (req, res) => {
   }
 
   console.log(`Info: Processing event ${eventDetails}`)
+
+
+  if (linking_notify_endpoint) {
+    const receivers = {}
+    const buyerMessage = getNotificationMessage(eventName, party, buyerAddress, 'buyer')
+    const sellerMessage = getNotificationMessage(eventName, party, sellerAddress, 'seller')
+    const event_data = { url: offer && path.join(dapp_offer_url, offer.id), to_dapp: true }
+
+    if (buyerMessage || sellerMessage)
+    {
+
+      if (buyerMessage)
+      {
+        receivers[buyerAddress] = Object.assign({ msg: buyerMessage }, event_data)
+      }
+      if (sellerMessage)
+      {
+        receivers[sellerAddress] = Object.assign({ msg: sellerMessage }, event_data)
+      }
+      try {
+        fetch(linking_notify_endpoint, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ receivers, token: linking_notify_token })
+        })
+      } catch (error) {
+        console.log('Error notifying linking api ', error)
+      }
+    }
+  }
 
   // Query the DB to get subscriptions from the seller and/or buyer.
   // Note the filter ensures we do not send notification to the party

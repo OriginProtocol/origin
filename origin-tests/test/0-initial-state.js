@@ -16,7 +16,7 @@ describe('initial state', () => {
 
   it('should return 5 listings in performance mode', async () => {
     const origin = new Origin({
-      ipfsDomain: 'ipfs-proxy',
+      ipfsDomain: 'origin-ipfs-proxy',
       ipfsGatewayProtocol: 'http',
       ipfsGatewayPort: 9999,
       discoveryServerUrl: 'http://origin-discovery:4000/graphql',
@@ -29,7 +29,7 @@ describe('initial state', () => {
 
   it('should return 5 listings', async () => {
     const origin = new Origin({
-      ipfsDomain: 'ipfs-proxy',
+      ipfsDomain: 'origin-ipfs-proxy',
       ipfsGatewayProtocol: 'http',
       ipfsGatewayPort: 9999,
       web3: web3,

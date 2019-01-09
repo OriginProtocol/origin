@@ -34,8 +34,13 @@ export default function(client) {
     // config.metaMask.currentProvider.publicConfigStore.on('notification', () => {
     //   console.log("MM Notification")
     // })
-    config.metaMask.currentProvider.publicConfigStore.on('update', () => {
-      // console.log("MM Update")
+    let currentState
+    config.metaMask.currentProvider.publicConfigStore.on('update', state => {
+      // console.log("MM Update", ok)
+      if (currentState === JSON.stringify(state)) {
+        return
+      }
+      currentState = JSON.stringify(state)
       client
         .query({
           query: GetMetaMaskStateQuery,

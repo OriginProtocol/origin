@@ -85,6 +85,10 @@ class VerificationService:
             # If a locale is not set Twilio will use a sensible default based on
             # the country of the telephone number
             params['locale'] = locale
+        elif country_calling_code == '91':
+            # Locale not provided, and calling India, so we want to set English
+            # instead of Hindi, which is Twilio's default there (#1124)
+            params['locale'] = 'en'
 
         headers = {
             'X-Authy-API-Key': settings.TWILIO_VERIFY_API_KEY

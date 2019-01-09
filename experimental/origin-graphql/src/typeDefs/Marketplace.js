@@ -40,6 +40,7 @@ export default `
       arbitrator: String
       from: String
       withdraw: String
+      quantity: Int
     ): Transaction
 
     executeRuling(
@@ -82,6 +83,8 @@ export default `
       hidden: Boolean
     ): ListingConnection!
 
+    offer(id: ID!): Offer
+
     totalEvents: Int
     events(offset: Int, limit: Int): [Event]
 
@@ -108,12 +111,30 @@ export default `
     lastEvent: Event
     listings(first: Int, after: String): ListingConnection!
     offers(first: Int, after: String): OfferConnection!
+    sales(first: Int, after: String): OfferConnection!
+    reviews(first: Int, after: String): ReviewConnection!
   }
 
   type OfferConnection {
     nodes: [Offer]
     pageInfo: PageInfo!
     totalCount: Int!
+  }
+
+  type ReviewConnection {
+    nodes: [Review]
+    pageInfo: PageInfo!
+    totalCount: Int!
+  }
+
+  type Review {
+    id: ID!
+    reviewer: User
+    target: User
+    listing: Listing
+    offer: Offer
+    review: String
+    rating: Int
   }
 
   type ListingConnection {
@@ -155,6 +176,9 @@ export default `
     status: String
     hidden: Boolean
     featured: Boolean
+    unitsAvailable: Int
+    unitsSold: Int
+    depositAvailable: String
 
     # IPFS
     title: String
@@ -170,6 +194,7 @@ export default `
 
   type Media {
     url: String
+    urlExpanded: String
     contentType: String
   }
 
@@ -181,6 +206,8 @@ export default `
 
     # Connections
     listing: Listing
+    events: [Event]
+    createdEvent: Event
 
     # On-Chain
     value: String
@@ -192,14 +219,18 @@ export default `
     arbitrator: Account
     finalizes: Int
     status: Int
+    quantity: Int
 
+    # Computed
     withdrawnBy: Account
+    statusStr: String
   }
 
   input NewListingInput {
     title: String!
     description: String
     category: String
+    subCategory: String
     currency: String
     price: PriceInput
     unitsTotal: Int
