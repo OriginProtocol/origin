@@ -195,6 +195,8 @@ class OriginNavWrapper extends Component {
     })
 
     originWallet.openWallet()
+    // get the balance every five seconds
+    setInterval(() => this.props.getBalance(), 5000)
   }
 
   componentWillUnmount() {
