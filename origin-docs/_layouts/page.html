@@ -10,9 +10,9 @@
 </head>
 <body>
     <div class="header">
-        <div class="logo">Origin Documentation</div>
+        <div class="logo"><a href="/">Origin Documentation</a></div>
         <nav>
-                <a class="topNav {% if page.dir contains 'guides' %}current{% endif %}" href="/guides/">Guides</a>
+                <a class="topNav {% unless page.dir contains 'reference' %}{% unless page.dir contains 'software' %}current{% endunless %}{% endunless %}" href="/">Guides</a>
                 <a class="topNav {% if page.dir contains 'reference' %}current{% endif %}" href="/reference/">API Reference</a>
                 <a class="topNav {% if page.dir contains 'software' %}current{% endif %}" href="/software/">Software</a>
         </nav>

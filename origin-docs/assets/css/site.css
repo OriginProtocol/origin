@@ -72,6 +72,11 @@ th {
   padding-bottom: 2px;
   padding-left: 22px;
 }
+
+.header > .logo > a {
+  color: black;
+}
+
 .header > nav {
   margin-left: 80px;
 }

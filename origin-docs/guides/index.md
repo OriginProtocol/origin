@@ -3,6 +3,7 @@ layout: page
 title: Introduction
 nav_weight: 2100
 category: "Overview"
+permalink: /
 ---
 
 Origin provides a simple and powerful javascript library for developers to build decentralized marketplaces, allowing buyers and sellers to meet and transact without requiring any trusted intermediaries.
