@@ -4,6 +4,8 @@ export default gql`
   query Config {
     configObj {
       discovery
+      ipfsRPC
+      ipfsGateway
     }
   }
 `

@@ -18,9 +18,7 @@ export default gql`
                 identity {
                   profile {
                     id
-                    firstName
-                    lastName
-                    description
+                    fullName
                     avatar
                   }
                 }

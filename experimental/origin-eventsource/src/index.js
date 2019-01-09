@@ -125,7 +125,7 @@ class OriginEventSource {
       : 0
     console.log()
     return {
-      id: listingId,
+      id: `999-1-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
       depositAvailable: depositAvailable.toString(),
@@ -143,12 +143,13 @@ class OriginEventSource {
   }
 
   async getOffer(listingId, offerId) {
-    let blockNumber, status, ipfsHash, lastEvent, withdrawnBy
-    const events = await this.contract.eventCache.offers(listingId, offerId)
+    let blockNumber, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
+    const events = await this.contract.eventCache.offers(listingId, Number(offerId))
 
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
         ipfsHash = e.returnValues.ipfsHash
+        createdBlock = e.blockNumber
       } else if (e.event === 'OfferFinalized') {
         status = 4
       }
@@ -187,7 +188,7 @@ class OriginEventSource {
       id: `999-1-${listingId}-${offerId}`,
       listingId: String(listingId),
       offerId: String(offerId),
-      createdBlock: blockNumber,
+      createdBlock,
       status,
       contract: this.contract,
       withdrawnBy,

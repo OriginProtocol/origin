@@ -152,7 +152,6 @@ class EmailAttestation extends Component {
         mutation={VerifyEmailCodeMutation}
         onCompleted={res => {
           const result = res.verifyEmailCode
-          console.log(result)
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
