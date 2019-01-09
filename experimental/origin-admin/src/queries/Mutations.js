@@ -201,6 +201,7 @@ export const MakeOfferMutation = gql`
     $data: MakeOfferInput
     $from: String
     $withdraw: String
+    $quantity: Int
   ) {
     makeOffer(
       listingID: $listingID
@@ -213,6 +214,7 @@ export const MakeOfferMutation = gql`
       data: $data
       from: $from
       withdraw: $withdraw
+      quantity: $quantity
     ) {
       id
     }

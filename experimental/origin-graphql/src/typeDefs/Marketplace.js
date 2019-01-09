@@ -40,6 +40,7 @@ export default `
       arbitrator: String
       from: String
       withdraw: String
+      quantity: Int
     ): Transaction
 
     executeRuling(
@@ -175,6 +176,9 @@ export default `
     status: String
     hidden: Boolean
     featured: Boolean
+    unitsAvailable: Int
+    unitsSold: Int
+    depositAvailable: String
 
     # IPFS
     title: String
@@ -215,6 +219,7 @@ export default `
     arbitrator: Account
     finalizes: Int
     status: Int
+    quantity: Int
 
     # Computed
     withdrawnBy: Account
