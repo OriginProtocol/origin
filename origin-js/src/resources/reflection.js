@@ -42,7 +42,7 @@ export default class Reflection {
     if (!address)
     {
       // this is a new deploy we have no clue what it is...
-      return {newDeploy:true}
+      return { newDeploy: true }
     }
     const web3 = this.contractService.web3
     const contracts = Object.values(this.contractService.contracts)
