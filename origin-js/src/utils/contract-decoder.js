@@ -1,6 +1,7 @@
 function extractCallParams(web3, abi, functionSig, paramsData, inputOffset = 0) {
   for (const method of abi) {
     const sig = web3.eth.abi.encodeFunctionSignature(method)
+    console.log("matching: ", sig, " vs ", functionSig)
     if (sig == functionSig)
     {
       return {
@@ -9,6 +10,7 @@ function extractCallParams(web3, abi, functionSig, paramsData, inputOffset = 0) 
       }
     }
   }
+  return {}
 }
 
 module.exports = {

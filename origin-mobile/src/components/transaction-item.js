@@ -12,7 +12,7 @@ const IMAGES_PATH = '../../assets/images/'
 class TransactionItem extends Component {
   render() {
     const { activation, item, address = '', handleApprove, handlePress, handleReject, navigation, style, wallet } = this.props
-    const { cost, gas_cost, listing, meta, status, to } = item
+    const { cost, gas_cost, listing = {}, meta, status, to } = item
     const hasNotificationsEnabled = activation.notifications.permissions.hard.alert
     // To Do: account for possible commission
     const hasSufficientFunds = sufficientFunds(wallet, item)
