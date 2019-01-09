@@ -82,7 +82,6 @@ const config = {
       'DAPP_CREATOR_API_URL',
       'DAPP_CREATOR_DOMAIN',
       'DAPP_URL',
-      'PROVIDER_URL',
       'IPFS_GATEWAY_URL'
     ])
   ],

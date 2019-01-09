@@ -14,24 +14,29 @@ class Customize extends React.Component {
 
     this.state = {
       config: props.config,
-      previewing: false
+      previewing: false,
+      redirect: null
     }
 
+    this.handleFileUpload = this.handleFileUpload.bind(this)
     this.handlePreview = this.handlePreview.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.onColorChange = this.onColorChange.bind(this)
   }
 
   async handleSubmit (event) {
+    this.props.onChange(this.state.config)
+    this.setState({ redirect: '/configure' })
   }
 
-  handlePreview (event) {
+  async handlePreview (event) {
     event.preventDefault()
 
     this.setState({ previewing: true })
 
     let response
     try {
-      response = superagent
+      response = await superagent
         .post(`${process.env.DAPP_CREATOR_API_URL}/config/preview`)
         .send({ config: this.state.config })
     } catch(error) {
@@ -55,6 +60,14 @@ class Customize extends React.Component {
     }
 
     this.props.onChange(newConfig)
+    this.setState({ config: newConfig })
+  }
+
+  handleFileUpload (name, url) {
+    const newConfig = {
+      ...this.state.config,
+      [name]: url
+    }
 
     this.setState({ config: newConfig })
   }
@@ -64,80 +77,91 @@ class Customize extends React.Component {
     const Feedback = formFeedback(this.state)
 
     return (
-      <>
-        <form onSubmit={this.handleSubmit}>
-          <h1>Customize your Marketplace's Appearance</h1>
-          <h4>Choose a logo and colors for your marketplace below.</h4>
+      <form onSubmit={this.handleSubmit}>
+        {this.renderRedirect()}
 
-          <div className="form-group">
-            <div className="row">
-              <div className="col-6">
-                <ImagePicker title="Marketplace Logo"
-                  description="Recommended Size: 300px x 100px"/>
-              </div>
+        <h1>Customize your Marketplace's Appearance</h1>
+        <h4>Choose a logo and colors for your marketplace below.</h4>
 
-              <div className="col-6">
-                <ImagePicker title="Marketplace Favicon"
-                  description="Recommended Size: 16px x 16px" />
-              </div>
+        <div className="form-group">
+          <div className="row">
+            <div className="col-6">
+              <ImagePicker title="Marketplace Logo"
+                name="logoUrl"
+                description={["Recommended Size:", <br/>,  "300px x 100px"]}
+                onUpload={this.handleFileUpload} />
+            </div>
+
+            <div className="col-6">
+              <ImagePicker title="Marketplace Favicon"
+                name="faviconUrl"
+                description={["Recommended Size:", <br/>,  "16px x 16px"]}
+                onUpload={this.handleFileUpload} />
             </div>
           </div>
+        </div>
 
-          <div className="form-group">
-            <label>Theme</label>
-            <select className="form-control form-control-lg">
-              <option>Matt Dreams of Poultry</option>
-            </select>
-          </div>
+        <div className="form-group">
+          <label>Theme</label>
+          <select className="form-control form-control-lg">
+            <option>Matt Dreams of Poultry</option>
+          </select>
+        </div>
 
-          <div className="form-group">
-            <div className="row">
-              <div className="col-7">
-                <Preview config={this.state.config} />
-              </div>
+        <div className="form-group">
+          <div className="row">
+            <div className="col-7">
+              <Preview config={this.state.config} />
+            </div>
 
-              <div className="col-5">
-                <label className="colors-label">Colors</label>
-                <ColorPicker description="Navbar Background"
-                  name="dusk"
-                  config={this.state.config.cssVars}
-                  onChange={this.onColorChange} />
-                <ColorPicker description="Search Background"
-                  name="paleGrey"
-                  config={this.state.config.cssVars}
-                  onChange={this.onColorChange} />
-                <ColorPicker description="Featured Tag"
-                  name="goldenRod"
-                  config={this.state.config.cssVars}
-                  onChange={this.onColorChange} />
-                <ColorPicker description="Footer Color"
-                  name="dark"
-                  config={this.state.config.cssVars}
-                  onChange={this.onColorChange} />
-              </div>
+            <div className="col-5">
+              <label className="colors-label">Colors</label>
+              <ColorPicker description="Navbar Background"
+                name="dusk"
+                config={this.state.config.cssVars}
+                onChange={this.onColorChange} />
+              <ColorPicker description="Search Background"
+                name="paleGrey"
+                config={this.state.config.cssVars}
+                onChange={this.onColorChange} />
+              <ColorPicker description="Featured Tag"
+                name="goldenRod"
+                config={this.state.config.cssVars}
+                onChange={this.onColorChange} />
+              <ColorPicker description="Footer Color"
+                name="dark"
+                config={this.state.config.cssVars}
+                onChange={this.onColorChange} />
             </div>
           </div>
+        </div>
 
-          <div className="form-group">
-            <div className="actions">
-              <a href="#" onClick={this.handlePreview}>
-                Preview Appearance
-              </a>
-            </div>
+        <div className="form-group">
+          <div className="actions">
+            <a href="#" onClick={this.handlePreview}>
+              Preview Appearance
+            </a>
           </div>
+        </div>
 
-          <div className="form-actions clearfix">
-            <button className="btn btn-outline-primary btn-lg btn-left">
-              Back
-            </button>
+        <div className="form-actions clearfix">
+          <button onClick={() => this.setState({ redirect: '/' })}
+              className="btn btn-outline-primary btn-lg btn-left">
+            Back
+          </button>
 
-            <button type="submit" className="btn btn-primary btn-lg btn-right">
-              Continue
-            </button>
-          </div>
-        </form>
-      </>
+          <button type="submit" className="btn btn-primary btn-lg btn-right">
+            Continue
+          </button>
+        </div>
+      </form>
     )
+  }
+
+  renderRedirect () {
+    if (this.state.redirect !== null) {
+      return <Redirect to={this.state.redirect} />
+    }
   }
 }
 
@@ -147,6 +171,7 @@ require('react-styl')(`
     border: 1px solid var(--light)
     text-align: center
     padding: 0.75rem
+
   .colors-label
     margin-top: -0.25rem
 `)

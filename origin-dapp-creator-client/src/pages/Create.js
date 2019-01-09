@@ -82,7 +82,7 @@ class Create extends React.Component {
             <div className="input-group">
               <input {...input('subdomain')} />
               <div className="input-group-append">
-                <span className="input-group-text">.origindapp.com</span>
+                <span className="input-group-text">.{process.env.DAPP_CREATOR_DOMAIN}</span>
               </div>
               {Feedback('subdomain')}
             </div>

@@ -1,11 +1,18 @@
 import React from 'react'
 
+const acceptedFileTypes = [
+  'image/jpeg',
+  'image/pjpeg',
+  'image/png',
+  'image/ico'
+]
+
 class ImagePicker extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      data: null,
+      imageUrl: null,
       loading: false
     }
 
@@ -13,23 +20,29 @@ class ImagePicker extends React.Component {
     this.handleClearClick = this.handleClearClick.bind(this)
   }
 
-  handleFileChange(event) {
+  async handleFileChange(event) {
     const { target } = event
     const { files } = target
 
     if (files && files[0]) {
-      var reader = new FileReader();
+      const file = files[0]
 
-      reader.onloadstart = () => this.setState({ loading: true })
+      if (acceptedFileTypes.indexOf(file.type) >= 0) {
+        const body = new FormData()
+        body.append('file', file)
 
-      reader.onload = event => {
-        this.setState({
-          data: event.target.result,
-          loading: false
-        })
+        const rawRes = await fetch(`${process.env.IPFS_API_URL}/api/v0/add`, { method: 'POST', body })
+        const res = await rawRes.json()
+        const hash = res.Hash
+
+        const imageUrl = `${process.env.IPFS_API_URL}/ipfs/${hash}`
+
+        this.setState({ imageUrl: imageUrl })
+
+        if (this.props.onUpload) {
+          this.props.onUpload(this.props.name, imageUrl)
+        }
       }
-
-      reader.readAsDataURL(files[0]);
     }
   }
 
@@ -43,23 +56,38 @@ class ImagePicker extends React.Component {
     return (
       <>
         <input
+          id={this.props.name + '-picker'}
           className="form-control-file"
           type="file"
           accept="image/*"
           onChange={this.handleFileChange}
         />
 
+        {this.renderPreview()}
+
         <div
           className="image-picker"
           onClick={this.handlePreviewClick}
         >
+          <img src="images/upload-icon.svg" />
           <p className="title">{this.props.title}</p>
-          <p>{this.props.description}</p>
-          <button className="btn btn-outline-primary">
+          <p>{this.props.description.map((x, i) => <span key={i}>{x}</span>)}</p>
+          <label htmlFor={this.props.name + '-picker'} className="btn btn-outline-primary">
             Upload
-          </button>
+          </label>
         </div>
       </>
+    )
+  }
+
+  renderPreview () {
+    if (this.state.imageUrl === null) return null
+    return (
+      <div className="preview">
+        <div className="img"
+          style={{ backgroundImage: `url(${this.state.imageUrl})` }}>
+        </div>
+      </div>
     )
   }
 }
@@ -72,6 +100,9 @@ require('react-styl')(`
     padding: 2rem
     text-align: center;
 
+  .image-picker img
+    margin-bottom: 0.25rem
+
   .title
     color: var(--dark)
     font-size: 1.125rem
@@ -83,6 +114,16 @@ require('react-styl')(`
     position: absolute
     overflow: hidden
     z-index: -1
+
+  .preview
+    width: 100%
+    height: 100%;
+
+  .img
+    width: 100%
+    height: 100%;
+    background-repeat: no-repeat
+    background-size:contain
 `)
 
 export default ImagePicker
