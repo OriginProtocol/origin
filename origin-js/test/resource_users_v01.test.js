@@ -15,12 +15,17 @@ chai.use(chaiAsPromised)
 chai.use(chaiString)
 const expect = chai.expect
 
+const issuerSigningKey =
+  '0x1fc2b755568ce8402e422f8fd0da54d384f42962c8f925116964f39245d429e0'
+const issuerAddress = '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101'
+
 const emailAttestationData = {
   schemaId: "https://schema.originprotocol.com/attestation_1.0.0.json",
   data: {
     issuer: {
       name: "Origin Protocol",
-      url: "https://www.originprotocol.com"
+      url: "https://www.originprotocol.com",
+      ethAddress: issuerAddress
     },
     issueDate: "Jan 1st 2019",
     attestation: {
@@ -43,7 +48,8 @@ const twitterAttestationData = {
   data: {
     issuer: {
       name: "Origin Protocol",
-      url: "https://www.originprotocol.com"
+      url: "https://www.originprotocol.com",
+      ethAddress: issuerAddress
     },
     issueDate: "Jan 1st 2019",
     attestation: {
@@ -63,10 +69,6 @@ const twitterAttestationData = {
     version: '1.0.0'
   }
 }
-
-const issuerSigningKey =
-  '0x1fc2b755568ce8402e422f8fd0da54d384f42962c8f925116964f39245d429e0'
-const issuerAddress = '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101'
 
 /**
  * Helper function to sign an attestation for testing purposes.
@@ -112,22 +114,11 @@ describe('User Resource v01', function() {
 
     twitterAttestationData.signature.bytes = signAttestation(
       web3, this.userAddress, twitterAttestationData.data)
-
-    twitterAttestation = new AttestationObject({
-      topic: 4,
-      data: twitterAttestationData,
-      signature: twitterAttestationData.signature
-    })
+    twitterAttestation = AttestationObject.create(twitterAttestationData)
 
     emailAttestationData.signature.bytes = signAttestation(
       web3, this.userAddress, emailAttestationData.data)
-
-    emailAttestation = new AttestationObject({
-      topic: 11,
-      data: emailAttestationData,
-      signature: emailAttestationData.signature
-    })
-
+    emailAttestation = AttestationObject.create(emailAttestationData)
   })
 
   describe('set', () => {

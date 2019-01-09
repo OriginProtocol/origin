@@ -3,13 +3,19 @@ import mock
 import responses
 
 from flask import session
-
+from config import settings
 from logic.attestation_service import twitter_access_token_url
 from logic.attestation_service import twitter_request_token_url
 from tests.helpers.rest_utils import post_json, json_of_response
 from tests.helpers.eth_utils import sample_eth_address, str_eth
 
 SIGNATURE_LENGTH = 132
+
+
+def validate_issuer(issuer):
+    assert issuer['name'] == 'Origin Protocol'
+    assert issuer['url'] == 'https://www.originprotocol.com'
+    assert issuer['ethAddress'] == settings.ATTESTATION_ACCOUNT
 
 
 def test_index(client):
@@ -62,8 +68,8 @@ def test_verify_phone(client):
         assert len(response_json['signature']['bytes']) == SIGNATURE_LENGTH
         assert response_json['schemaId'] == \
             'https://schema.originprotocol.com/attestation_1.0.0.json'
-        assert response_json['data']['issuer']['name'] == 'Origin Protocol'
-        assert response_json['data']['issuer']['url'] == 'https://www.originprotocol.com'
+        validate_issuer(response_json['data']['issuer'])
+
         assert response_json['data']['issueDate']
         assert response_json['data']['attestation']['verificationMethod']['phone']
         assert response_json['data']['attestation']['phone']['verified']
@@ -93,8 +99,7 @@ def test_email_verify(mock_send_email_using_sendgrid, client):
     response_json = json_of_response(response)
     assert len(response_json['signature']['bytes']) == SIGNATURE_LENGTH
     assert response_json['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
-    assert response_json['data']['issuer']['name'] == 'Origin Protocol'
-    assert response_json['data']['issuer']['url'] == 'https://www.originprotocol.com'
+    validate_issuer(response_json['data']['issuer'])
     assert response_json['data']['issueDate']
     assert response_json['data']['attestation']['verificationMethod']['email']
     assert response_json['data']['attestation']['email']['verified']
@@ -143,8 +148,7 @@ def test_facebook_verify(client):
         assert len(response_json['signature']['bytes']) == SIGNATURE_LENGTH
         assert response_json['schemaId'] == \
             'https://schema.originprotocol.com/attestation_1.0.0.json'
-        assert response_json['data']['issuer']['name'] == 'Origin Protocol'
-        assert response_json['data']['issuer']['url'] == 'https://www.originprotocol.com'
+        validate_issuer(response_json['data']['issuer'])
         assert response_json['data']['issueDate']
         assert response_json['data']['attestation']['verificationMethod']['oAuth']
         assert response_json['data']['attestation']['site']['siteName'] == 'facebook.com'
@@ -185,8 +189,7 @@ def test_twitter_verify(client):
         assert len(response_json['signature']['bytes']) == SIGNATURE_LENGTH
         assert response_json['schemaId'] == \
             'https://schema.originprotocol.com/attestation_1.0.0.json'
-        assert response_json['data']['issuer']['name'] == 'Origin Protocol'
-        assert response_json['data']['issuer']['url'] == 'https://www.originprotocol.com'
+        validate_issuer(response_json['data']['issuer'])
         assert response_json['data']['issueDate']
         assert response_json['data']['attestation']['verificationMethod']['oAuth']
         assert response_json['data']['attestation']['site']['siteName'] == 'twitter.com'

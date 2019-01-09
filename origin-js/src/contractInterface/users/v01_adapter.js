@@ -11,9 +11,10 @@ export default class V01_UsersAdapter {
     this.ipfsDataStore = new IpfsDataStore(ipfsService)
     this.contractName = 'IdentityEvents'
     this.blockEpoch = blockEpoch || 0
-    // TODO: In the future when we have multiple attestation issuers and not just Origin,
-    // the issuer's account should be looked up on a per attestation basis rather
-    // than being hardcoded as it is currently.
+    // TODO: As opposed to a single issuer address, add support for a list of valid addresses
+    // in order to accommodate future use cases such as:
+    //   - attestation server key rotation
+    //   - 3rd party attestation servers
     this.issuerAddress = attestationAccount
   }
 
@@ -30,20 +31,24 @@ export default class V01_UsersAdapter {
    */
   async set({ profile, attestations = [], options = {} }) {
     const address = await this.contractService.currentAccount()
-    console.log(`V01 ADAPTER set() - address=${address} profile=${JSON.stringify(profile)} attestation=${JSON.stringify(attestations)}`)
 
     // Load existing identity, if any and use it to populate newIpfsIdentity.
     let ipfsHash = await this._getIdentityIpfsHash(address)
     const currentIpfsIdentity = ipfsHash ?
       await this.ipfsDataStore.load(IDENTITY_DATA_TYPE, ipfsHash) : {}
 
-    // Add some extra required fields to the profile.
+    // Add required fields to the profile.
     profile.schemaId = 'https://schema.originprotocol.com/profile_2.0.0.json'
     profile.ethAddress = address
 
-    // Validate the new attestations and merge them with the ones from current profile.
-    const newAttestations = attestations.filter(a => this._validateAttestation(address, a.data))
-    const allAttestations = this._mergeAttestations(currentIpfsIdentity.attestations || [], newAttestations)
+    // Validate the new attestations and merge them with the ones from the current profile.
+    attestations.forEach( (attestation) => {
+      if (!this._validateAttestation(address, attestation)) {
+        throw new Error(`Invalid attestation ${attestation}`)
+      }
+    })
+    const allAttestations = this._mergeAttestations(
+      currentIpfsIdentity.attestations || [], attestations)
 
     const newIpfsIdentity = {
       schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',
@@ -74,29 +79,26 @@ export default class V01_UsersAdapter {
    *    identityAddress: string}>|false}
    */
   async get(address) {
-    console.log("V01 ADAPTER - GET for address=", address)
     const account = await this.contractService.currentAccount()
     address = address || account
-    console.log("V01 ADAPTER GET: looking up using address ", address)
 
     // Scan blockchain for identity events to get latest IPFS hash of identity, if any.
     const ipfsHash = await this._getIdentityIpfsHash(address)
     if (!ipfsHash) {
-      console.log("V01 ADAPTER GET: no identity event found for ", address)
       return false
     }
 
     // Load identity from IPFS.
     const ipfsIdentity = await this.ipfsDataStore.load(IDENTITY_DATA_TYPE, ipfsHash)
-    console.log("V01 ADAPTER GET: identity from ipfs= ", JSON.stringify(ipfsIdentity))
 
     // Validate the profile data loaded from IPFS.
     const profile = ipfsIdentity.profile
     this._validateProfile(address, profile)
 
-    // Validate the attestations loaded from IPFS and then create model objects from them.
-    const validAttestations = ipfsIdentity.attestations.filter(a => this._validateAttestation(address, a))
-    const attestations = validAttestations.map(a => { return this._getAttestationModel(a) })
+    // Create model object and validate attestations loaded from IPFS.
+    const attestations = ipfsIdentity.attestations
+      .map(a => { return AttestationObject.create(a) })
+      .filter(a => this._validateAttestation(address, a))
 
     return { address, identityAddress: address, profile, attestations }
   }
@@ -121,7 +123,6 @@ export default class V01_UsersAdapter {
    * @private
    */
   async _getIdentityIpfsHash(address) {
-    console.log("_getIdentityIpfsHash for address", address)
     // TODO: should this be cached like what marketplace does in getContract ???
     const contract = await this.contractService.deployed(
       this.contractService.contracts[this.contractName]
@@ -148,16 +149,28 @@ export default class V01_UsersAdapter {
 
   /**
    * Merge existing attestations on an identity with new attestations.
+   *
    * Note: The current logic only does deduping based on signature. It could potentially
    * be enhanced to only keep latest attestation per type and also to trim expired attestations.
-   * @param {Array<Object>>} existingAttestations - Existing attestations as JSON objects.
-   * @param {Array<AttestationObject>} attestations - New attestations to add as model objects.
+   *
+   * @param {Array<Object>>} existingAttestations - Existing attestations loaded from IPFS.
+   * @param {Array<AttestationObject>} newAttestations - New attestations to add as model objects.
    * @private
    * @return {Array<Object>} - Array of attestations in JSON format ready to be saved to IPFS.
    */
   _mergeAttestations(existingAttestations, newAttestations) {
+    // The AttestationObject includes some field for the purpose of driving the UI
+    // that we filter out before saving the attestation to IPFS.
+    const newIpfsAttestation = newAttestations.map( (attestation) => {
+      return {
+        schemaId: attestation.schemaId,
+        data: attestation.data,
+        signature: attestation.signature
+      }
+    })
+    const allAttestations = [...existingAttestations, ...newIpfsAttestation]
+
     const seen = {}
-    const allAttestations = [...existingAttestations, ...newAttestations.map(a => a.data)]
     return allAttestations.filter( (a) => {
       const signature = a.signature.bytes
       return seen[signature] ? false : (seen[signature] = true)
@@ -181,70 +194,37 @@ export default class V01_UsersAdapter {
   }
 
   /**
-   * Validates an attestation by checking its signature matches against the
-   * hash of (user's eth address, attestation data).
+   * Validates an attestation:
+   *  1. check issuer address in attestation is a known address
+   *  2. check signature matches against the ash of (user's eth address, attestation data).
    * @param {string} account - User's ETH address.
-   * @param {{data:string, signature:{bytes: string, version:string}}} attestation
+   * @param {AttestationObject} attestation
    * @return Boolean - True if attestation is valid, false otherwise.
    * @private
    */
   _validateAttestation(account, attestation) {
+    if (this.issuerAddress.toLowerCase() !== attestation.data.issuer.ethAddress.toLowerCase()) {
+      console.log(
+        `Attestation issuer address validation failure.
+        Account ${account}
+        Expected issuer ${this.issuerAddress}, got ${attestation.data.issuer.ethAddress}`)
+      return false
+    }
+
     // Note: we use stringify rather than the default JSON.stringify
-    // to produce a deterministic JSON representation.
+    // to produce a deterministic JSON representation of the data that was signed.
     const attestationJson = stringify(attestation.data)
-    console.log("VALIDATING ATTESTATION account=", account, " data=", attestationJson)
     const message = Web3.utils.soliditySha3(account, Web3.utils.sha3(attestationJson))
     const messageHash = this.contractService.web3.eth.accounts.hashMessage(message)
-    const issuerAddress = this.contractService.web3.eth.accounts.recover(
+    const signerAddress = this.contractService.web3.eth.accounts.recover(
       messageHash, attestation.signature.bytes, true)
-    if (issuerAddress !== this.issuerAddress) {
+    if (signerAddress.toLowerCase() !== this.issuerAddress.toLowerCase()) {
       console.log(
         `Attestation signature validation failure.
         Account ${account}
-        Expected issuer ${this.issuerAddress}, got ${issuerAddress}`)
+        Expected issuer ${this.issuerAddress}, got ${signerAddress}`)
       return false
     }
-    console.log("Attestation validation succeeded")
     return true
-  }
-
-  /**
-   * Computes topic compatible with Attestation model.
-   * @param {Object} attestation - Attestation data from the user's identity stored in IPFS.
-   * @private
-   */
-  _getModelTopic(attestation) {
-    if (attestation.data.attestation.site) {
-      const siteName = attestation.data.attestation.site.siteName
-      if (siteName === 'facebook.com') {
-        return 3
-      } else if (siteName === 'twitter.com') {
-        return 4
-      } else if (siteName === 'airbnb.com') {
-        return 5
-      } else {
-        throw new Error(`Unexpected siteName for attestation ${attestation}`)
-      }
-    } else if (attestation.data.attestation.phone) {
-      return 10
-    } else if (attestation.data.attestation.email) {
-      return 11
-    } else {
-      throw new Error(`Failed extracting topic from attestation ${attestation}`)
-    }
-  }
-
-  /**
-   * Creates an Attestation model object based on an attestation stored in IPFS.
-   * @param {Object} attestation - Attestation data from IPFS.
-   * @return {AttestationObject}
-   * @throws {Error}
-   * @private
-   */
-  _getAttestationModel(attestation) {
-    const topic = this._getModelTopic(attestation)
-    const data = attestation.data
-    const signature = attestation.signature
-    return new AttestationObject({ topic, data, signature })
   }
 }

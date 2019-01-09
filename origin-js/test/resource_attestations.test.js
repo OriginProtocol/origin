@@ -9,61 +9,55 @@ const sampleWallet = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
 
 const testSignature = '0x30d931388271b39ca042853c983a0aacf3dc61216970f2b9a73ba5d035bc07204eec913217c1691475273b0bfff02cddcb983eaa3ca88f9f2f016f8cd4a910a51b'
 
-const sampleAttestation = {
-  'claim-type': 1,
+const attestationResponse = {
+  schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
   data: {
-    schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
-    data: {
-      issuer: {
-        name: 'Origin Protocol',
-        url: 'https://www.originprotocol.com'
-      },
-      issueDate: 'Jan 1st 2019',
-      attestation: {
-        verificationMethod: {
-          email: true
-        },
-        email: {
-          verified: true,
-        }
-      }
+    issuer: {
+      name: 'Origin Protocol',
+      url: 'https://www.originprotocol.com',
+      ethAddress: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101'
     },
-    signature: {
-      bytes: null, // Populate by calling signAttestation()
-      version: '1.0.0'
+    issueDate: 'Jan 1st 2019',
+    attestation: {
+      verificationMethod: {
+        email: true
+      },
+      email: {
+        verified: true,
+      }
     }
   },
-  signature: testSignature
+  signature: {
+    bytes: null, // Populate by calling signAttestation()
+    version: '1.0.0'
+  }
 }
 
-const sampleTwitterAttestation = {
-  'claim-type': 4,
+const twitterAttestationResponse = {
+  schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
   data: {
-    schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
-    data: {
-      issuer: {
-        name: 'Origin Protocol',
-        url: 'https://www.originprotocol.com'
-      },
-      issueDate: 'Jan 1st 2019',
-      attestation: {
-        verificationMethod: {
-          oAuth: true
-        },
-        site: {
-          userId: {
-            raw: '123'
-          },
-          siteName: 'twitter.com'
-        }
-      }
+    issuer: {
+      name: 'Origin Protocol',
+      url: 'https://www.originprotocol.com',
+      ethAddress: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101'
     },
-    signature: {
-      bytes: testSignature,
-      version: '1.0.0'
+    issueDate: 'Jan 1st 2019',
+    attestation: {
+      verificationMethod: {
+        oAuth: true
+      },
+      site: {
+        userId: {
+          raw: '123'
+        },
+        siteName: 'twitter.com'
+      }
     }
   },
-  signature: testSignature
+  signature: {
+    bytes: testSignature,
+    version: '1.0.0'
+  }
 }
 
 const expectPostParams = (requestBody, params) => {
@@ -83,9 +77,8 @@ const expectGetParams = (requestUrl, params) => {
 }
 
 const expectAttestation = result => {
-  expect(result.signature).to.equal(sampleAttestation.signature)
-  expect(result.data).to.deep.equal(sampleAttestation)
-  expect(result.topic).to.equal(sampleAttestation['claim-type'])
+  expect(result.signature).to.deep.equal(attestationResponse.signature)
+  expect(result.data).to.deep.equal(attestationResponse.data)
 }
 
 const setup = () => {
@@ -167,7 +160,7 @@ describe('Attestation Resource', function() {
         expectedMethod: 'POST',
         expectedPath: 'phone/verify',
         expectedParams: ['identity', 'country_calling_code', 'phone', 'code'],
-        responseStub: sampleAttestation
+        responseStub: attestationResponse
       })
       const response = await attestations.phoneVerify({
         wallet: sampleWallet,
@@ -200,7 +193,7 @@ describe('Attestation Resource', function() {
         expectedMethod: 'POST',
         expectedPath: 'email/verify',
         expectedParams: ['identity', 'email', 'code'],
-        responseStub: sampleAttestation
+        responseStub: attestationResponse
       })
       const response = await attestations.emailVerify({
         wallet: sampleWallet,
@@ -229,7 +222,7 @@ describe('Attestation Resource', function() {
         expectedMethod: 'POST',
         expectedPath: 'facebook/verify',
         expectedParams: ['identity', 'code'],
-        responseStub: sampleAttestation
+        responseStub: attestationResponse
       })
       const response = await attestations.facebookVerify({
         wallet: sampleWallet,
@@ -257,16 +250,15 @@ describe('Attestation Resource', function() {
         expectedMethod: 'POST',
         expectedPath: 'twitter/verify',
         expectedParams: ['identity', 'oauth-verifier'],
-        responseStub: sampleTwitterAttestation
+        responseStub: twitterAttestationResponse
       })
       const response = await attestations.twitterVerify({
         wallet: sampleWallet,
         code: 'foo.bar'
       })
 
-      expect(response.data).to.deep.equal(sampleTwitterAttestation)
-      expect(response.signature).to.equal(sampleTwitterAttestation.signature)
-      expect(response.topic).to.equal(sampleTwitterAttestation['claim-type'])
+      expect(response.data).to.deep.equal(twitterAttestationResponse.data)
+      expect(response.signature).to.deep.equal(twitterAttestationResponse.signature)
     })
   })
 
@@ -293,7 +285,7 @@ describe('Attestation Resource', function() {
         expectedMethod: 'POST',
         expectedPath: 'airbnb/verify',
         expectedParams: ['identity', 'airbnbUserId'],
-        responseStub: sampleAttestation
+        responseStub: attestationResponse
       })
       const response = await attestations.airbnbVerify({
         wallet: '0xB529f14AA8096f943177c09Ca294Ad66d2E08b1f',

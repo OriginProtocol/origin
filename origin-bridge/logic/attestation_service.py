@@ -36,12 +36,10 @@ twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
 
-TOPICS = {
-    'phone': 10,
-    'email': 11,
-    'facebook': 3,
-    'twitter': 4,
-    'airbnb': 5
+ISSUER = {
+    'name': 'Origin Protocol',
+    'url': 'https://www.originprotocol.com',
+    'ethAddress': settings.ATTESTATION_ACCOUNT
 }
 
 logger = logging.getLogger(__name__)
@@ -124,7 +122,7 @@ class VerificationService:
             phone (str): Phone number in national format.
             code (int): Verification code for the country_calling_code and phone
                 combination
-            eth_address (str): Address of ERC725 identity token for claim
+            eth_address (str): ETH address of the user
 
         Returns:
             VerificationServiceResponse
@@ -169,10 +167,7 @@ class VerificationService:
         # success field and the status code
         if response.json()['success'] is True:
             data = {
-                 'issuer': {
-                     'name': 'Origin Protocol',
-                     'url': 'https://www.originprotocol.com'
-                 },
+                 'issuer': ISSUER,
                  'issueDate': current_time(),
                  'attestation': {
                      'verificationMethod': {
@@ -204,8 +199,7 @@ class VerificationService:
             return VerificationServiceResponse({
                 'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
                 'data': data,
-                'signature': signature,
-                'claim_type': TOPICS['phone'],
+                'signature': signature
             })
 
         raise PhoneVerificationError(
@@ -263,7 +257,7 @@ class VerificationService:
         Args:
             email (str): Email address being verified
             code (int): Verification code for the email address
-            eth_address (str): Address of ERC725 identity token for claim
+            eth_address (str): ETH address of the user
 
         Returns:
             VerificationServiceResponse
@@ -289,10 +283,7 @@ class VerificationService:
         session.pop('email_attestation')
 
         data = {
-            'issuer': {
-                'name': 'Origin Protocol',
-                'url': 'https://www.originprotocol.com'
-            },
+            'issuer': ISSUER,
             'issueDate': current_time(),
             'attestation': {
                 'verificationMethod': {
@@ -324,8 +315,7 @@ class VerificationService:
         return VerificationServiceResponse({
             'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
             'data': data,
-            'signature': signature,
-            'claim_type': TOPICS['email'],
+            'signature': signature
         })
 
     def facebook_auth_url():
@@ -361,10 +351,7 @@ class VerificationService:
         )
 
         data = {
-            'issuer': {
-                'name': 'Origin Protocol',
-                'url': 'https://www.originprotocol.com'
-            },
+            'issuer': ISSUER,
             'issueDate': current_time(),
             'attestation': {
                 'verificationMethod': {
@@ -399,8 +386,7 @@ class VerificationService:
         return VerificationServiceResponse({
             'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
             'data': data,
-            'signature': signature,
-            'claim_type': TOPICS['facebook'],
+            'signature': signature
         })
 
     def twitter_auth_url():
@@ -462,10 +448,7 @@ class VerificationService:
         screen_name = query_string[b'screen_name'][0].decode('utf-8')
 
         data = {
-            'issuer': {
-                'name': 'Origin Protocol',
-                'url': 'https://www.originprotocol.com'
-            },
+            'issuer': ISSUER,
             'issueDate': current_time(),
             'attestation': {
                 'verificationMethod': {
@@ -501,7 +484,6 @@ class VerificationService:
             'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
             'data': data,
             'signature': signature,
-            'claim_type': TOPICS['twitter'],
         })
 
     def generate_airbnb_verification_code(eth_address, airbnbUserId):
@@ -541,10 +523,7 @@ class VerificationService:
             )
 
         data = {
-            'issuer': {
-                'name': 'Origin Protocol',
-                'url': 'https://www.originprotocol.com'
-            },
+            'issuer': ISSUER,
             'issueDate': current_time(),
             'attestation': {
                 'verificationMethod': {
@@ -579,8 +558,7 @@ class VerificationService:
         return VerificationServiceResponse({
             'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
             'data': data,
-            'signature': signature,
-            'claim_type': TOPICS['airbnb'],
+            'signature': signature
         })
 
 

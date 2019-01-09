@@ -16,11 +16,7 @@ export class Attestations {
     this.fetch = fetch
 
     this.responseToAttestation = (resp = {}) => {
-      return new AttestationObject({
-        topic: resp['claim-type'],
-        data: resp,
-        signature: resp['signature']
-      })
+      return AttestationObject.create(resp)
     }
   }
 

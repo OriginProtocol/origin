@@ -10,12 +10,9 @@ w3.eth.enable_unaudited_features()
 
 def generate_signature(private_key, subject, data):
     try:
-        print("Gen signature. subject=%s data=%s" % (subject, data))
         hash_to_sign = Web3.soliditySha3(['address', 'bytes32'], [
             subject, Web3.sha3(text=data)])
 
-        print("Gen signature. message=%s" % hash_to_sign)
-        print("Gen signature. hashedMessage=%s" % defunct_hash_message(hexstr=hash_to_sign.hex()))
         result = w3.eth.account.signHash(
             message_hash=defunct_hash_message(hexstr=hash_to_sign.hex()),
             private_key=private_key)

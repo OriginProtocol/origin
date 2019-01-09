@@ -134,7 +134,6 @@ export default class V00_UsersAdapter {
    * @return {Promise<txReceipt>}
    */
   async addAttestations(attestations, options) {
-    console.log("V00 ADD_ATTESTATIONS attestations=", attestations, " options=", options)
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
       this.contractService.contracts[this.contractName]

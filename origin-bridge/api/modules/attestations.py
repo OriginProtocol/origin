@@ -47,6 +47,7 @@ class Attestation(Schema):
 class Issuer(Schema):
     name = fields.Str()
     url = fields.Str()
+    ethAddress = fields.Str()
 
 
 class AttestationData(Schema):
@@ -82,7 +83,6 @@ class VerifyPhoneResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
     signature = fields.Nested(Signature, required=True)
-    claim_type = fields.Integer(data_key='claim-type')
 
 
 class EmailVerificationCodeRequest(StandardRequest):
@@ -103,7 +103,6 @@ class VerifyEmailResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
     signature = fields.Nested(Signature, required=True)
-    claim_type = fields.Integer(data_key='claim-type')
 
 
 class FacebookAuthUrlRequest(StandardRequest):
@@ -123,7 +122,6 @@ class VerifyFacebookResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
     signature = fields.Nested(Signature, required=True)
-    claim_type = fields.Integer(data_key='claim-type')
 
 
 class TwitterAuthUrlRequest(StandardRequest):
@@ -143,7 +141,6 @@ class VerifyTwitterResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
     signature = fields.Nested(Signature, required=True)
-    claim_type = fields.Integer(data_key='claim-type')
 
 
 class AirbnbRequest(StandardRequest):
@@ -159,7 +156,6 @@ class VerifyAirbnbResponse(StandardResponse):
     schemaId = fields.Str(required=True)
     data = fields.Nested(AttestationData, required=True)
     signature = fields.Nested(Signature, required=True)
-    claim_type = fields.Integer(data_key='claim-type')
 
 
 class PhoneVerificationCode(Resource):
