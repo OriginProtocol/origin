@@ -1,5 +1,6 @@
 import * as lGet from 'lodash/get'
 import * as lSet from 'lodash/set'
+import unset from 'lodash/unset'
 
 const memStore = {}
 
@@ -15,7 +16,11 @@ export default function store(type = 'localStorage') {
     } catch (e) {
       /* Ignore */
     }
-    lSet(currentValue, path, value)
+    if (value === undefined) {
+      unset(currentValue, path)
+    } else {
+      lSet(currentValue, path, value)
+    }
     storage.uiState = JSON.stringify(currentValue)
   }
 

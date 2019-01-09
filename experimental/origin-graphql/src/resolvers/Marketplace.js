@@ -17,7 +17,10 @@ export default {
     return contract.methods.totalListings().call()
   },
 
-  listing: (contract, args) => contracts.eventSource.getListing(args.id),
+  listing: async (contract, args) => {
+    const { listingId, blockNumber } = parseId(args.id)
+    return await contracts.eventSource.getListing(listingId, blockNumber)
+  },
   listings,
 
   offer: async (contract, args) => {

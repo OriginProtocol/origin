@@ -39,6 +39,11 @@ export default class Reflection {
   }
 
   async extractContractCallMeta(networkId, address, callData) {
+    if (!address)
+    {
+      // this is a new deploy we have no clue what it is...
+      return { newDeploy: true }
+    }
     const web3 = this.contractService.web3
     const contracts = Object.values(this.contractService.contracts)
     for (const contract of contracts) {
@@ -62,6 +67,7 @@ export default class Reflection {
         return meta
       }
     }
+    return {}
   }
 }
 

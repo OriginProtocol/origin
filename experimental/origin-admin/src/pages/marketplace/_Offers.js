@@ -29,6 +29,7 @@ const Offers = ({ listing, offers, accounts }) => {
           <th>ID</th>
           <th>Status</th>
           <th>Offer</th>
+          <th>Qty</th>
           <th>Refund</th>
           <th>Buyer</th>
           <th>Commission</th>
@@ -160,6 +161,7 @@ class OfferRow extends Component {
         <td>{offer.offerId}</td>
         <td>{status(offer)}</td>
         <td>{price(offer)}</td>
+        <td>{offer.quantity}</td>
         <td>{price(offer, 'refund')}</td>
         <td>
           <AccountButton account={offer.buyer} />

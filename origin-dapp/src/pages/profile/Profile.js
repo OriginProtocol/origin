@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Prompt } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import { storeWeb3Intent, showMainNav, showWelcomeWarning } from 'actions/App'
 import {
