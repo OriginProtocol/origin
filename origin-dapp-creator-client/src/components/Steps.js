@@ -3,17 +3,21 @@ import React from 'react'
 const Steps = () => (
   <div className="steps">
     <div className="step step-1">
-      <i></i>
+      <div>
+        <img src="images/marketplace-icon-inactive.svg" />
+      </div>
       Create Marketplace
     </div>
-
     <div className="step step-2">
-      <i></i>
+      <div>
+        <img src="images/appearance-icon-inactive.svg" />
+      </div>
       Customize Appearance
     </div>
-
     <div className="step step-3">
-      <i></i>
+      <div>
+        <img src="images/settings-icon-inactive.svg" />
+      </div>
       Configure Settings
     </div>
   </div>
@@ -30,35 +34,32 @@ require('react-styl')(`
     background-color: var(--pale-grey-four);
     border-bottom: 1px solid #c2cbd3;
     display: flex;
-    justify-content: center;
+    justify-content: space-between
     margin: 0 auto;
     position: relative;
 
   .step
-    width: 33.3%;
+    text-align: center
 
-  .step + .step
+  .step img
+    padding: 0.25rem
+
+  .step-1, .step-2
     &:after
-      content: "";
-      display: block;
-      width: 5%;
-      height: 1px;
-      top: px;
+      content: ""
+      display: block
+      width: 20%
+      height: 1px
+      top: 2.8rem
       position: absolute;
-      background-color: var(--dusk);
+      background-color: var(--light);
 
   .step-1
-    text-align: left;
+    &:after
+      left: 27%
 
   .step-2
-    text-align: center;
-
-  .step-3
-    text-align: right;
-
-  i
-    color: var(--dusk);
-    display: block;
-    content: "I";
-    font-size: 1.25rem;
+    &:after
+      left: 54%
 `)
+

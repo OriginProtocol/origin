@@ -43,7 +43,10 @@ class App extends React.Component {
                 render={() => (
                   <Customize
                     config={this.state.config}
-                    onChange={config => this.setState({ config })}
+                    onChange={config => {
+                      console.log(config)
+                      this.setState({ config })
+                    }}
                   />
                 )}
               />

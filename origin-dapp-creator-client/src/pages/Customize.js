@@ -12,19 +12,26 @@ class Customize extends React.Component {
   constructor(props, context) {
     super(props)
 
-    this.themes = {
+    this.state = {
+      config: props.config,
+      previewing: false
     }
+
+    this.handlePreview = this.handlePreview.bind(this)
+    this.onColorChange = this.onColorChange.bind(this)
   }
 
   async handleSubmit (event) {
   }
 
-  async handlePreview () {
+  handlePreview (event) {
+    event.preventDefault()
+
     this.setState({ previewing: true })
 
     let response
     try {
-      response = await superagent
+      response = superagent
         .post(`${process.env.DAPP_CREATOR_API_URL}/config/preview`)
         .send({ config: this.state.config })
     } catch(error) {
@@ -36,6 +43,20 @@ class Customize extends React.Component {
 
     const ipfsPath = `${process.env.IPFS_GATEWAY_URL}/ipfs/${response.text}`
     window.open(`${process.env.DAPP_URL}/?config=${ipfsPath}`, '_blank')
+  }
+
+  onColorChange (name, color) {
+    const newConfig = {
+      ...this.state.config,
+      cssVars: {
+        ...this.state.config.cssVars,
+        [name]: color.hex
+      }
+    }
+
+    this.props.onChange(newConfig)
+
+    this.setState({ config: newConfig })
   }
 
   render () {
@@ -72,15 +93,27 @@ class Customize extends React.Component {
           <div className="form-group">
             <div className="row">
               <div className="col-7">
-                <Preview />
+                <Preview config={this.state.config} />
               </div>
 
               <div className="col-5">
                 <label className="colors-label">Colors</label>
-                <ColorPicker description="Navbar Background" />
-                <ColorPicker description="Search Background" />
-                <ColorPicker description="Featured Tag" />
-                <ColorPicker description="Footer Color" />
+                <ColorPicker description="Navbar Background"
+                  name="dusk"
+                  config={this.state.config.cssVars}
+                  onChange={this.onColorChange} />
+                <ColorPicker description="Search Background"
+                  name="paleGrey"
+                  config={this.state.config.cssVars}
+                  onChange={this.onColorChange} />
+                <ColorPicker description="Featured Tag"
+                  name="goldenRod"
+                  config={this.state.config.cssVars}
+                  onChange={this.onColorChange} />
+                <ColorPicker description="Footer Color"
+                  name="dark"
+                  config={this.state.config.cssVars}
+                  onChange={this.onColorChange} />
               </div>
             </div>
           </div>
