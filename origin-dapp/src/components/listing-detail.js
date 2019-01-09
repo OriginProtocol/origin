@@ -159,10 +159,15 @@ class ListingsDetail extends Component {
 
     const slots = slotsToReserve || this.state.slotsToReserve
     let listingPrice = price
-    if (isFractional)
-      listingPrice = slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString()
-    else if (isMultiUnit)
+    if (isFractional) {
+      const rawPrice = slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString()
+      listingPrice = `${Number(rawPrice).toLocaleString(undefined, {
+          minimumFractionDigits: 5,
+          maximumFractionDigits: 5
+        })}`
+    } else if (isMultiUnit) {
       listingPrice = new BigNumber(price).multipliedBy(quantity).toString()
+    }
 
     try {
       const offerData = {
@@ -350,7 +355,6 @@ class ListingsDetail extends Component {
       listing,
       loading,
       step,
-      slots,
       quantity
     } = this.state
 
@@ -366,6 +370,7 @@ class ListingsDetail extends Component {
       pictures,
       price,
       seller,
+      slots,
       unitsRemaining,
       unitsSold,
       unitsPending,
@@ -603,7 +608,7 @@ class ListingsDetail extends Component {
             </div>
             <div className="col-12 col-md-4">
               { (isAvailable || isMultiUnitAndSeller || (isMultiPendingBuyer && isAvailable))  &&
-                (!loading && ((!!price && !!parseFloat(price)) || isFractional)) && (
+                (!loading && ((!!price && !!parseFloat(price)) || (isFractional && userIsSeller))) && (
                 <div className="buy-box placehold">
                   {(isAvailable && !isFractional || (userIsSeller && isMultiUnit)) &&
                     <div className="price text-nowrap">
@@ -758,8 +763,8 @@ class ListingsDetail extends Component {
               )}
               { !loading &&
                 (
-                  // Show offer information if this is a single unit listing
-                  (offerExists && !isMultiUnit) ||
+                  // Show offer information if this is a single unit listing and is not fractional
+                  (offerExists && !isMultiUnit && !isFractional) ||
                   // Multi unit no more units are available (so we can show explanation)
                   (isMultiUnit && !userIsSeller && (!isAvailable || isSold))
                 ) && (
@@ -978,6 +983,7 @@ class ListingsDetail extends Component {
                   slots={slots}
                   offers={offers}
                   userType="buyer"
+                  userIsSeller={userIsSeller}
                   viewType={fractionalTimeIncrement}
                   onComplete={(slots) => this.handleMakeOffer(false, slots) }
                   step={ 60 }
