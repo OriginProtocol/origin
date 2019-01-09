@@ -114,7 +114,7 @@
   color: #d93f35;
 }
 .highlight .s2 {
-  color: #d93f35;
+  color: #e8305f;
 }
 .highlight .se {
   color: #d93f35;
@@ -171,8 +171,8 @@
   color: #990000;
   font-weight: bold;
 }
-.highlight .nl {
-  color: #990000;
+.highlight .nl, .highlight .nx {
+  color: #7b1b7f;
   font-weight: bold;
 }
 .highlight .nn {
