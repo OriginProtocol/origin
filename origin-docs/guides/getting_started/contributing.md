@@ -12,18 +12,18 @@ Origin is an Open Source project and we welcome contributions of all sorts. Ther
 There are three main repositories that are considered core components of the Origin platform:
 
 - [Origin.js](https://github.com/OriginProtocol/origin/tree/master/origin-js#origin-js) - Solidity contracts and JavaScript API
-- [Origin DApp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-demo-dapp) - example React-powered decentralized application
+- [Origin DApp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-dapp) - example React-powered decentralized application
 - [Origin Bridge Server](https://github.com/OriginProtocol/origin/tree/master/origin-bridge#origin-bridge-server) - Python and JavaScript for indexing, attestations, and messaging
 
 We also actively work on these repositories:
 
-- [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box) - Docker container for simplifying local development
+- [Origin Box](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md#using-docker-compose) - Docker container for simplifying local development
 - [Origin Website](https://github.com/OriginProtocol/origin-website) - Python/Flask for originprotocol.com
 - [Identity Playground](https://github.com/OriginProtocol/origin-playground#origin-identity-playground) - implementation of ERC 725/735 for blockchain identity
 
 ### Weekly Engineering Call
 
-We have an open weekly engineering call on Google Hangouts every Wednesday at 1pm pacific time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=M2llYjc1MDA1aXVhbzZnYWRmbWhjbmRvcmRfMjAxODA2MTNUMjAwMDAwWiBvcmlnaW5wcm90b2NvbC5jb21fcXY1NWNvNmd2bTN2c3Y3OW9iNXFsZjVhaWtAZw&tmsrc=originprotocol.com_qv55co6gvm3vsv79ob5qlf5aik%40group.calendar.google.com&scp=ALL)
+We have an open weekly engineering call on Google Hangouts every Wednesday at 12:30 Pacific Time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&tmsrc=micah%40originprotocol.com&scp=ALL)
 
 Join the call here: [https://meet.google.com/pws-cgyd-tqp](https://meet.google.com/pws-cgyd-tqp)
 
