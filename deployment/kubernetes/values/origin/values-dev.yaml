@@ -6,7 +6,7 @@ bridgeImageTag: '55eb8e4'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '7f12d03'
+dappImageTag: '863e0bf'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -22,7 +22,7 @@ faucetImageTag: '98315f6'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '4b07ff1'
+eventlistenerImageTag: '863e0bf'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -46,4 +46,4 @@ creatorServerImageTag: 'e53b079'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: 'f8b08ea'
+linkingImageTag: '863e0bf'

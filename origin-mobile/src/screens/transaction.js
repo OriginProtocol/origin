@@ -170,24 +170,28 @@ class TransactionScreen extends Component {
               />
             </View>
           </View>
-          <View style={styles.lineItem}>
-            <Image source={currencies['eth'].icon} style={styles.icon} />
-            <Text style={styles.label}>Price</Text>
-            <Text style={styles.amount}>{priceInETH}</Text>
-            <View style={styles.currencyContainer}>
-              <Text style={[styles.label, styles.currency, { color: currencies['eth'].color }]}>ETH</Text>
-              {fiatPrice && <Text style={[styles.label, styles.currency, { color: '#94a7b5' }]}>{fiatPrice} USD</Text>}
+          {!!cost &&
+            <View style={styles.lineItem}>
+              <Image source={currencies['eth'].icon} style={styles.icon} />
+              <Text style={styles.label}>Price</Text>
+              <Text style={styles.amount}>{priceInETH}</Text>
+              <View style={styles.currencyContainer}>
+                <Text style={[styles.label, styles.currency, { color: currencies['eth'].color }]}>ETH</Text>
+                {fiatPrice && <Text style={[styles.label, styles.currency, { color: '#94a7b5' }]}>{fiatPrice} USD</Text>}
+              </View>
             </View>
-          </View>
-          <View style={styles.lineItem}>
-            <Image source={currencies['eth'].icon} style={styles.icon} />
-            <Text style={styles.label}>Gas Cost</Text>
-            <Text style={styles.amount}>{gasCostInETH}</Text>
-            <View style={styles.currencyContainer}>
-              <Text style={[styles.label, styles.currency, { color: currencies['eth'].color }]}>ETH</Text>
-              {fiatGasCost && <Text style={[styles.label, styles.currency, { color: '#94a7b5' }]}>{fiatGasCost} USD</Text>}
+          }
+          {!!gas_cost &&
+            <View style={styles.lineItem}>
+              <Image source={currencies['eth'].icon} style={styles.icon} />
+              <Text style={styles.label}>Gas Cost</Text>
+              <Text style={styles.amount}>{gasCostInETH}</Text>
+              <View style={styles.currencyContainer}>
+                <Text style={[styles.label, styles.currency, { color: currencies['eth'].color }]}>ETH</Text>
+                {fiatGasCost && <Text style={[styles.label, styles.currency, { color: '#94a7b5' }]}>{fiatGasCost} USD</Text>}
+              </View>
             </View>
-          </View>
+          }
         </View>
         <View style={styles.buttonsContainer}>
           <OriginButton

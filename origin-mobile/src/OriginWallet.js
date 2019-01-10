@@ -452,14 +452,15 @@ class OriginWallet {
     if (transaction)
     {
       const meta = await this.extractMetaFromCall(transaction.call) || {}
-      console.log("meta:", meta)
       const cost = this.extractTransactionCost(transaction.call)
       const gas_cost = this.extractTransactionGasCost(transaction.call)
+      const ogn_cost = meta && meta.originTokenValue
       const listing = this.extractListing(meta)
       const to = this.extractTo(transaction.call)
       const transaction_type = this.extractTransactionActionType(meta)
+      console.log("meta:", meta, " ogn_cost:", ogn_cost)
       const action = "transaction"
-      return {...event_data, meta, action, to, cost, gas_cost, listing, transaction_type}
+      return {...event_data, meta, action, to, cost, gas_cost, ogn_cost, listing, transaction_type}
     }
     else if (link)
     {
@@ -1060,10 +1061,10 @@ class OriginWallet {
         root_url,
         selling_url
       } = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
-      console.log("Set network to:", provider_url, contract_addresses)
+      const newProviderUrl = localfy(provider_url)
+      console.log("Set network to:", newProviderUrl, contract_addresses)
       console.log("Service urls:", messaging_url, profile_url, root_url, selling_url)
 
-      const newProviderUrl = localfy(provider_url)
       if (this.currentProviderUrl != newProviderUrl)
       {
         web3.setProvider(new Web3.providers.HttpProvider(newProviderUrl, 20000))
@@ -1110,7 +1111,7 @@ class OriginWallet {
     }
   }
 
-  setPrivateKey(privateKey) {
+  async setPrivateKey(privateKey) {
     if (privateKey)
     {
       // try private key first and then clear and add again
@@ -1119,7 +1120,8 @@ class OriginWallet {
       web3.eth.accounts.wallet.add(privateKey)
       this.setWeb3Address()
 
-      this.updateLinks()
+      await this.updateLinks()
+      return true
     }
   }
 
