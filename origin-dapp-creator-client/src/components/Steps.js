@@ -7,7 +7,6 @@ import MarketplaceIcon from 'react-svg-loader!../assets/marketplace-icon.svg'
 import AppearanceIcon from 'react-svg-loader!../assets/appearance-icon.svg'
 import SettingsIcon from 'react-svg-loader!../assets/settings-icon.svg'
 
-
 class Steps extends React.Component {
   constructor(props) {
     super(props)
@@ -28,8 +27,14 @@ class Steps extends React.Component {
           path: '/configure',
           title: 'Configure Settings',
           icon: <SettingsIcon />
+        },
+        {
+          path: '/resolver',
+        },
+        {
+          path: '/success',
         }
-      ]
+       ]
     }
   }
 
@@ -55,7 +60,7 @@ class Steps extends React.Component {
   render () {
     return (
       <div className="steps">
-        {this.state.steps.map((step, i) =>
+        {this.state.steps.map((step, i) => step.title &&
           <div className={this.stepClassNames(step, i)} key={i}>
             <div className="svg-wrapper">
               {step.icon}
