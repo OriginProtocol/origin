@@ -16,7 +16,7 @@ class Preview extends React.Component {
         <div className="searchbar"
           style={{ background: this.props.config.cssVars.paleGrey }}>
         </div>
-        {[...Array(2)].map((x, i) =>
+        {[...Array(this.props.rows || 2)].map((x, i) =>
           <div className="listings" key={'listings-' + i}>
             {[...Array(3)].map((x, y) =>
               <div className="listing" key={'listing-' + y}>
@@ -51,7 +51,6 @@ require('react-styl')(`
     border: 1px solid var(--light)
     border-radius: var(--default-radius)
     width: 100%
-    height: 100%
 
   .navbar
     width: 100%
@@ -62,19 +61,20 @@ require('react-styl')(`
     height: 1.5rem
 
   .footer
-    margin-top: 3rem
     height: 3rem
 
   .listings
     display: flex
     justify-content: space-around
-    padding: 1rem
+    padding: 1rem 1rem 1rem 0
 
   .listing
-    width: 25%;
+    flex: 0 0 33.333333%
+    max-width: 33.333333%
+    padding-left: 1rem
 
   .listing-image
-    height: 4rem;
+    height: 3rem;
     background-color: var(--pale-grey-two)
 
   .listing-desc

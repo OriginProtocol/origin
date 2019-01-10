@@ -17,13 +17,37 @@ class Customize extends React.Component {
     this.state = {
       config: props.config,
       previewing: false,
-      redirect: null
+      redirect: null,
+      themes: [
+        {
+          title: 'Matt Dreams of Poultry'
+        },
+        {
+          title: 'Matt Dreams of Chickens'
+        }
+      ],
+      themesExpanded: false,
+      themeIndex: 0
     }
 
+    this.handleClick = this.handleClick.bind(this)
     this.handleFileUpload = this.handleFileUpload.bind(this)
     this.handlePreview = this.handlePreview.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.onColorChange = this.onColorChange.bind(this)
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClick, false)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false)
+  }
+
+  handleClick (event) {
+    console.log(event.target)
+    this.setState({ themesExpanded: false })
   }
 
   async handleSubmit (event) {
@@ -105,42 +129,57 @@ class Customize extends React.Component {
 
         <div className="form-group">
           <label>Theme</label>
-          <select className="form-control form-control-lg">
-            <option>Matt Dreams of Poultry</option>
-          </select>
+          <div className="theme-select form-control form-control-lg"
+              onClick={() => this.setState({ themesExpanded: true })}>
+            {this.state.themes[this.state.themeIndex].title}
+          </div>
+          {this.state.themesExpanded &&
+            <div className="theme-dropdown">
+              <div className="row">
+                {this.state.themes.map((theme) =>
+                  <div className="theme-preview col-6">
+                    <Preview config={this.state.config} />
+                    {theme.title}
+                  </div>
+                )}
+              </div>
+            </div>
+          }
         </div>
 
-        <div className="form-group">
-          <div className="row">
-            <div className="col-7">
-              <Preview config={this.state.config} />
-            </div>
+        {!this.state.themesExpanded &&
+          <div className="form-group">
+            <div className="row">
+              <div className="col-7">
+                <Preview config={this.state.config} rows={3} />
+              </div>
 
-            <div className="col-5">
-              <label className="colors-label">Colors</label>
-              <ColorPicker description="Navbar Background"
-                name="dusk"
-                config={this.state.config.cssVars}
-                onChange={this.onColorChange} />
-              <ColorPicker description="Search Background"
-                name="paleGrey"
-                config={this.state.config.cssVars}
-                onChange={this.onColorChange} />
-              <ColorPicker description="Featured Tag"
-                name="goldenRod"
-                config={this.state.config.cssVars}
-                onChange={this.onColorChange} />
-              <ColorPicker description="Footer Color"
-                name="lightFooter"
-                config={this.state.config.cssVars}
-                onChange={this.onColorChange} />
-              <ColorPicker description="Font Color"
-                name="dark"
-                config={this.state.config.cssVars}
-                onChange={this.onColorChange} />
+              <div className="col-5">
+                <label className="colors-label">Colors</label>
+                <ColorPicker description="Navbar Background"
+                  name="dusk"
+                  config={this.state.config.cssVars}
+                  onChange={this.onColorChange} />
+                <ColorPicker description="Search Background"
+                  name="paleGrey"
+                  config={this.state.config.cssVars}
+                  onChange={this.onColorChange} />
+                <ColorPicker description="Featured Tag"
+                  name="goldenRod"
+                  config={this.state.config.cssVars}
+                  onChange={this.onColorChange} />
+                <ColorPicker description="Footer Color"
+                  name="lightFooter"
+                  config={this.state.config.cssVars}
+                  onChange={this.onColorChange} />
+                <ColorPicker description="Font Color"
+                  name="dark"
+                  config={this.state.config.cssVars}
+                  onChange={this.onColorChange} />
+              </div>
             </div>
           </div>
-        </div>
+        }
 
         <div className="form-group">
           <div className="actions">
@@ -180,6 +219,21 @@ require('react-styl')(`
 
   .colors-label
     margin-top: -0.25rem
+
+  .theme-actions
+    cursor: pointer
+
+  .theme-dropdown
+    padding: 1rem
+    border: 1px solid var(--light)
+    margin-top: -1px
+    border-bottom-left-radius: var(--default-radius)
+    border-bottom-right-radius: var(--default-radius)
+
+  .theme-preview
+    padding-left: 2rem
+    padding-right: 2rem
+    text-align: center
 `)
 
 export default Customize

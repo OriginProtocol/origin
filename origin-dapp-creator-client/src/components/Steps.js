@@ -3,9 +3,9 @@
 import { withRouter } from 'react-router-dom'
 import React from 'react'
 
-import MarketplaceIcon from 'react-svg-loader!../assets/marketplace-icon.svg'
-import AppearanceIcon from 'react-svg-loader!../assets/appearance-icon.svg'
-import SettingsIcon from 'react-svg-loader!../assets/settings-icon.svg'
+import MarketplaceIcon from '!react-svg-loader!../assets/marketplace-icon.svg'
+import AppearanceIcon from '!react-svg-loader!../assets/appearance-icon.svg'
+import SettingsIcon from '!react-svg-loader!../assets/settings-icon.svg'
 
 class Steps extends React.Component {
   constructor(props) {
