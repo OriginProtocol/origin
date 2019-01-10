@@ -12,6 +12,7 @@ import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
 import { getFiatPrice } from 'utils/price'
 import { sufficientFunds } from 'utils/transaction'
+import { toOgns } from 'utils/ogn'
 
 import originWallet from '../OriginWallet'
 
@@ -101,9 +102,9 @@ class TransactionScreen extends Component {
   render() {
     const { navigation, users, wallet } = this.props
     const item = navigation.getParam('item')
-    const { cost, gas_cost, listing, to } = item
+    const { cost, gas_cost, ogn_cost, listing, to } = item
     const counterpartyAddress = (listing && listing.seller) || to
-    const { price = { amount: '', currency: '' } } = listing
+    const { price = { amount: '', currency: '' } } = listing || {}
     const picture = listing && listing.media && listing.media[0]
     const hasSufficientFunds = sufficientFunds(wallet, item)
     const { width } = Dimensions.get('window')
@@ -112,6 +113,7 @@ class TransactionScreen extends Component {
     const toUser = users.find(({ address }) => address === counterpartyAddress) || {}
     const priceInETH = Number(web3.utils.fromWei(web3.utils.toBN(cost).toString())).toFixed(5)
     const fiatPrice = getFiatPrice(priceInETH)
+    const ognCost = toOgns(ogn_cost)
     const gasCostInETH = Number(web3.utils.fromWei(web3.utils.toBN(gas_cost).toString())).toFixed(5)
     const fiatGasCost = getFiatPrice(gasCostInETH)
 
@@ -128,7 +130,7 @@ class TransactionScreen extends Component {
               />
             </View>
           }
-          <Text numberOfLines={1} style={styles.title}>{listing.title}</Text>
+      {listing && <Text numberOfLines={1} style={styles.title}>{listing.title}</Text>}
           <View style={styles.accounts}>
             <Avatar
               image={fromUser.profile && fromUser.profile.avatar}
@@ -189,6 +191,16 @@ class TransactionScreen extends Component {
               <View style={styles.currencyContainer}>
                 <Text style={[styles.label, styles.currency, { color: currencies['eth'].color }]}>ETH</Text>
                 {fiatGasCost && <Text style={[styles.label, styles.currency, { color: '#94a7b5' }]}>{fiatGasCost} USD</Text>}
+              </View>
+            </View>
+          }
+          {ogn_cost > 0 &&
+            <View style={styles.lineItem}>
+              <Image source={currencies['ogn'].icon} style={styles.icon} />
+              <Text style={styles.label}>OGN Commision</Text>
+              <Text style={styles.amount}>{ognCost}</Text>
+              <View style={styles.currencyContainer}>
+                <Text style={[styles.label, styles.currency, { color: currencies['ogn'].color }]}>OGN</Text>
               </View>
             </View>
           }
