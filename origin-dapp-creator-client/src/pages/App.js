@@ -7,7 +7,10 @@ import { AppToaster } from '../toaster'
 import Create from 'pages/Create'
 import Customize from 'pages/Customize'
 import Configure from 'pages/Configure'
+import Resolver from 'pages/Resolver'
 import Steps from 'components/Steps'
+import Store from 'utils/store'
+const store = Store('sessionStorage')
 
 class App extends React.Component {
   constructor (props, context) {
@@ -16,13 +19,22 @@ class App extends React.Component {
     this.web3Context = context.web3
 
     this.state = {
-      config: baseConfig
+      config: store.get('creator-config', {
+        ...baseConfig
+      })
     }
+
+    this.handlePublish = this.handlePublish.bind(this)
+    this.handleServerErrors = this.handleServerErrors.bind(this)
+    this.setConfig = this.setConfig.bind(this)
+  }
+
+  setConfig(config) {
+    store.set('creator-config', config)
+    this.setState({ config })
   }
 
   async handlePublish (event) {
-    event.preventDefault()
-
     this.setState({ publishing: true })
 
     let signature = null
@@ -49,19 +61,10 @@ class App extends React.Component {
   }
 
   handleServerErrors (error) {
-    if (error.status == 400) {
-      this.setState({ errors: error.response.body })
-      AppToaster.show({
-        intent: Intent.WARNING,
-        message: 'There was an error with your submission. Please check the' +
-          ' form for details.'
-      })
-    } else {
-      AppToaster.show({
-        intent: Intent.DANGER,
-        message: 'There was an error publishing your DApp configuration'
-      })
-    }
+    AppToaster.show({
+      intent: Intent.DANGER,
+      message: 'There was an error publishing your DApp configuration'
+    })
   }
 
   async web3Sign(data, account) {
@@ -94,7 +97,7 @@ class App extends React.Component {
                 render={() => (
                   <Create
                     config={this.state.config}
-                    onChange={config => this.setState({ config })}
+                    onChange={config => this.setConfig(config)}
                   />
                 )}
               />
@@ -103,10 +106,7 @@ class App extends React.Component {
                 render={() => (
                   <Customize
                     config={this.state.config}
-                    onChange={config => {
-                      console.log(config)
-                      this.setState({ config })
-                    }}
+                    onChange={config => this.setConfig(config)}
                   />
                 )}
               />
@@ -115,7 +115,16 @@ class App extends React.Component {
                 render={() => (
                   <Configure
                     config={this.state.config}
-                    onChange={config => this.setState({ config })}
+                    onChange={config => this.setConfig(config)}
+                    handlePublish={this.handlePublish}
+                  />
+                )}
+              />
+              <Route
+                path="/resolver"
+                render={() => (
+                  <Resolver
+                    config={this.state.config}
                   />
                 )}
               />

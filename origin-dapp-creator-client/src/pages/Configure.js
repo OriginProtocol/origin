@@ -1,7 +1,8 @@
+'use strict'
+
 import React from 'react'
 
 import Redirect from 'components/Redirect'
-
 
 class Configure extends React.Component {
   constructor(props, context) {
@@ -9,15 +10,34 @@ class Configure extends React.Component {
 
     this.state = {
       config: props.config,
-      redirect: null
+      redirect: null,
+      publishing: false
     }
 
     this.toggleFilterByType = this.toggleFilterByType.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  toggleFilterByType () {
+  toggleFilterByType (event) {
     this.setState({
-      marketplacePublisher: '123'
+      config: {
+        ...this.state.config,
+        listingFilters: {
+          marketplacePublisher: event.target.checked ? web3.eth.accounts[0] : null
+        }
+      }
+    })
+  }
+
+  async handleSubmit (event) {
+    event.preventDefault()
+    this.setState({
+      publishing: true
+    })
+    await this.props.handlePublish(event)
+    this.setState({
+      redirect: '/resolver',
+      publishing: false
     })
   }
 
@@ -36,7 +56,6 @@ class Configure extends React.Component {
             Limit to only my own
             <input className="form-check-input"
               type="checkbox"
-              name=""
               onClick={this.toggleFilterByType} />
           </div>
 
@@ -52,8 +71,13 @@ class Configure extends React.Component {
             Back
           </button>
 
-          <button type="submit" className="btn btn-primary btn-lg btn-right">
-            Done
+          <button type="submit"
+              className="btn btn-primary btn-lg btn-right"
+              onClick={this.handleSubmit}
+              disabled={this.state.publishing}>
+            {this.state.publishing ?
+              <span>Loading</span> : <span>Done</span>
+            }
           </button>
         </div>
       </form>
