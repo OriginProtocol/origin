@@ -1,29 +1,77 @@
+'use strict'
+
+import { withRouter } from 'react-router-dom'
 import React from 'react'
 
-const Steps = () => (
-  <div className="steps">
-    <div className="step step-1">
-      <div>
-        <img src="images/marketplace-icon-inactive.svg" />
-      </div>
-      Create Marketplace
-    </div>
-    <div className="step step-2">
-      <div>
-        <img src="images/appearance-icon-inactive.svg" />
-      </div>
-      Customize Appearance
-    </div>
-    <div className="step step-3">
-      <div>
-        <img src="images/settings-icon-inactive.svg" />
-      </div>
-      Configure Settings
-    </div>
-  </div>
-)
+import MarketplaceIcon from 'react-svg-loader!../assets/marketplace-icon.svg'
+import AppearanceIcon from 'react-svg-loader!../assets/appearance-icon.svg'
+import SettingsIcon from 'react-svg-loader!../assets/settings-icon.svg'
 
-export default Steps
+
+class Steps extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      steps: [
+        {
+          path: '/',
+          title: 'Create Marketplace',
+          icon: <MarketplaceIcon />
+        },
+        {
+          path: '/customize',
+          title: 'Customize Appearance',
+          icon: <AppearanceIcon />
+        },
+        {
+          path: '/configure',
+          title: 'Configure Settings',
+          icon: <SettingsIcon />
+        }
+      ]
+    }
+  }
+
+
+  stepClassNames (step, i) {
+    let classNames = `step step-${i}`
+    if (this.props.location.pathname === step.path) {
+      classNames += ' active'
+    }
+    if (this.currentStepIndex() > i) {
+      classNames += ' completed'
+    }
+    return classNames
+  }
+
+  currentStepIndex() {
+    const currentStep = this.state.steps.find((step) => {
+      return this.props.location.pathname === step.path
+    })
+    return this.state.steps.indexOf(currentStep)
+  }
+
+  render () {
+    return (
+      <div className="steps">
+        {this.state.steps.map((step, i) =>
+          <div className={this.stepClassNames(step, i)} key={i}>
+            <div className="svg-wrapper">
+              {step.icon}
+              {this.currentStepIndex() > i &&
+                  <img src="images/checkmark-icon.svg" />
+              }
+            </div>
+            {step.title}
+          </div>
+        )}
+      </div>
+    )
+  }
+}
+
+export default withRouter(props => <Steps {...props} />)
 
 require('react-styl')(`
   .steps
@@ -40,11 +88,21 @@ require('react-styl')(`
 
   .step
     text-align: center
+    svg
+      margin: 0.25rem
 
-  .step img
-    padding: 0.25rem
+  .step.completed
+    img
+      margin-left: -0.6rem
+      margin-top: 0.8rem
 
-  .step-1, .step-2
+  .step.active
+    color: var(--dark)
+    svg
+      path
+        fill: var(--dark)
+
+  .step-0, .step-1
     &:after
       content: ""
       display: block
@@ -54,11 +112,11 @@ require('react-styl')(`
       position: absolute;
       background-color: var(--light);
 
-  .step-1
+  .step-0
     &:after
       left: 27%
 
-  .step-2
+  .step-1
     &:after
       left: 54%
 `)
