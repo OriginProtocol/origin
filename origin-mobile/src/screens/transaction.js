@@ -110,9 +110,9 @@ class TransactionScreen extends Component {
     const innerWidth = width - DETAIL_PADDING * 2
     const fromUser = users.find(({ address }) => address === wallet.address) || {}
     const toUser = users.find(({ address }) => address === counterpartyAddress) || {}
-    const priceInETH = Number(web3.utils.fromWei(web3.utils.toBN(cost))).toFixed(5)
+    const priceInETH = Number(web3.utils.fromWei(web3.utils.toBN(cost).toString())).toFixed(5)
     const fiatPrice = getFiatPrice(priceInETH)
-    const gasCostInETH = Number(web3.utils.fromWei(web3.utils.toBN(gas_cost))).toFixed(5)
+    const gasCostInETH = Number(web3.utils.fromWei(web3.utils.toBN(gas_cost).toString())).toFixed(5)
     const fiatGasCost = getFiatPrice(gasCostInETH)
 
     return (
