@@ -21,24 +21,27 @@ const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   const cryptoParam = cryptoCurrencyCode.toLowerCase()
   const fiatParam = fiatCurrencyCode.toLowerCase()
   const exchangeURL = `https://api.cryptonator.com/api/ticker/${cryptoParam}-${fiatParam}`
-
   return new Promise(resolve => {
     fetch(exchangeURL)
       .then(res =>  {  
+        if (!res.ok) {
+          throw Error(res.statusText)
+        }
+        return res.text()
+      })
+      .then(text => {
         try {
-          return res.json()
-        } catch (error) 
+          const json = JSON.parse(text)
+          resolve({
+            rate: parseFloat(json.ticker.price),
+            cacheHit: false,
+          })
+        } catch (error)
         {
-          console.log("Cannot get currency:", error, " response:", res)
+          console.log("Error parsing:", text, " error ", error)
         }
       })
-      .then(json => {
-        resolve({
-          rate: parseFloat(json.ticker.price),
-          cacheHit: false,
-        })
-      })
-      .catch(console.error)
+      .catch(e => console.log("Error getting currency", e))
   })
 }
 
@@ -54,7 +57,6 @@ const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
 const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   const { fiatCode, cryptoCode } = setDefaults(fiatCurrencyCode, cryptoCurrencyCode)
   const { rate, timestamp } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
-
   if (rate) {
     if (new Date().getTime() - timestamp.getTime() < EXCHANGE_RATE_CACHE_TTL) {
       return {
@@ -169,7 +171,6 @@ export const getCryptoPrice = async (
 
 const updateExchangeRate = async () => {
   const exchangeRate = await getFiatExchangeRate()
-
   if (!exchangeRate.cacheHit) {
     store.dispatch(setExchangeRate(DEFAULT_FIAT, DEFAULT_CRYPTO, exchangeRate.rate))
   }

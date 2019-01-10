@@ -16,6 +16,9 @@ export default function Wallet(state = initialState, action = {}) {
 
     case WalletConstants.BALANCE_SUCCESS:
       return { ...state, balances: { ...state.balances, eth: action.balance } }
+
+    case WalletConstants.OGN_SUCCESS:
+      return { ...state, balances: { ...state.balances, ogn: action.ogns } }
   }
 
   return state

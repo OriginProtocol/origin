@@ -120,11 +120,11 @@ class PurchaseDetail extends Component {
       },
       completePurchase: {
         id: 'purchase-detail.completePurchase',
-        defaultMessage: 'Complete sale and leave a review.'
+        defaultMessage: 'Complete transaction and leave a review.'
       },
       submitThisForm: {
         id: 'purchase-detail.submitThisForm',
-        defaultMessage: `Release funds and review the seller once you confirm that the sale is complete. Your escrowed payment will be sent to the seller. If you're unhappy, please report a problem instead.`
+        defaultMessage: `Release funds and review the seller once you confirm that the transaction is complete. Your escrowed payment will be sent to the seller. If you're unhappy, please report a problem instead.`
       },
       confirmAndReview: {
         id: 'purchase-detail.confirmAndReview',
@@ -143,7 +143,7 @@ class PurchaseDetail extends Component {
       fulfillObligation: {
         id: 'purchase-detail.fulfillObligation',
         defaultMessage:
-          'The buyer is waiting for you to fulfill this order. You will get paid when the buyer completes the sale.'
+          'The buyer is waiting for you to fulfill this order. You will get paid when the buyer completes the transaction.'
       },
       awaitSellerReview: {
         id: 'purchase-detail.awaitSellerReview',
@@ -792,8 +792,8 @@ class PurchaseDetail extends Component {
               />
               <h1>
                 {listing.name}
-                {isPending && <PendingBadge />}
-                {isSold && <SoldBadge />}
+                {isPending && listing.listingType !== 'fractional' && <PendingBadge />}
+                {isSold && listing.listingType !== 'fractional' && <SoldBadge />}
                 {/*!!listing.boostValue && (
                   <span className={`boosted badge boost-${listing.boostLevel}`}>
                     <img

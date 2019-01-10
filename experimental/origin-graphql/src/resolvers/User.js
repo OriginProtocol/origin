@@ -58,7 +58,7 @@ async function offers(buyer, { first = 10, after }, _, info) {
 
   const ids = events.map(
     e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-  )
+  ).reverse()
   const totalCount = ids.length
 
   return await resultsFromIds({ after, ids, first, totalCount, fields })
@@ -81,7 +81,7 @@ async function sales(seller, { first = 10, after }, _, info) {
 
   const ids = events.map(
     e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-  )
+  ).reverse()
   const totalCount = ids.length
 
   return await resultsFromIds({ after, ids, first, totalCount, fields })

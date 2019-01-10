@@ -66,6 +66,12 @@
         "isAvailable": {
           "type": "boolean"
         },
+        "rrule": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        },
         "price": {
           "$ref": "#/definitions/money"
         }
@@ -73,7 +79,8 @@
       "required": [
         "startDate",
         "endDate",
-        "isAvailable"
+        "isAvailable",
+        "timeZone"
       ]
     },
     "unitListing": {

@@ -187,8 +187,7 @@ class Listing extends Component {
           {`. Deposit managed by `}
           <Identity account={listing.arbitrator} />
           <span style={{ marginLeft: 10 }}>
-            {currency({ amount: listing.depositAvailable, currency: 'OGN' })}
-            /
+            {currency({ amount: listing.depositAvailable, currency: 'OGN' })}/
             {currency({ amount: listing.deposit, currency: 'OGN' })}
           </span>
         </span>
@@ -242,7 +241,7 @@ class Listing extends Component {
   }
 
   renderBreadcrumbs() {
-    const listingId = Number(this.props.match.params.listingID)
+    const listingId = this.props.match.params.listingID
     return (
       <ul className="bp3-breadcrumbs">
         <li>
