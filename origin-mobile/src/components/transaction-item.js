@@ -19,6 +19,7 @@ class TransactionItem extends Component {
     const counterpartyAddress = (listing && listing.seller) || to
     const { price = { amount: '', currency: '' } } = listing
     const picture = listing && listing.media && listing.media[0]
+    const totalEth = web3.utils.toBN(cost).add(web3.utils.toBN(gas_cost))
     let activitySummary, heading
 
     switch(meta.method) {
@@ -59,8 +60,8 @@ class TransactionItem extends Component {
 
     return ['completed', 'rejected'].find(s => s === status) ? (
       <TouchableHighlight onPress={handlePress}>
-        <View style={[ styles.listItem, style ]}>
-          {!picture && <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />}
+        <View style={[ styles.listItem, styles.completed, style ]}>
+          {!picture && <View style={{ ...styles.thumbnail, ...styles.imageless }} />}
           {picture && <Image source={{ uri: picture.url }} style={styles.thumbnail} />}
           <View style={styles.content}>
             {listing &&
@@ -126,8 +127,8 @@ class TransactionItem extends Component {
                 </View>
                 <View style={styles.price}>
                   <Image source={require(`${IMAGES_PATH}eth-icon.png`)} style={styles.currencyIcon} />
-                  <Text style={styles.amount}>{Number(price.amount).toFixed(5)}</Text>
-                  <Text style={styles.abbreviation}>{price.currency}</Text>
+                  <Text style={styles.amount}>{Number(web3.utils.fromWei(totalEth)).toFixed(5)}</Text>
+                  <Text style={styles.abbreviation}>ETH</Text>
                 </View>
               </View>
               <View style={styles.nav}>
@@ -225,14 +226,14 @@ const styles = StyleSheet.create({
     marginRight: 10,
     width: 12,
   },
-  avatar: {
-    marginRight: 10,
-  },
   button: {
     borderRadius: 30,
     height: 40,
     marginBottom: 10,
     marginHorizontal: 10,
+  },
+  completed: {
+    maxHeight: 94,
   },
   content: {
     flex: 1,
@@ -259,6 +260,9 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginBottom: 10,
+  },
+  imageless: {
+    backgroundColor: '#f7f8f8',
   },
   imperative: {
     fontSize: 17,
