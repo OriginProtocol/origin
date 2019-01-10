@@ -4,6 +4,9 @@ import { connect } from 'react-redux'
 
 import Address from 'components/address'
 import Avatar from 'components/avatar'
+import OriginButton from 'components/origin-button'
+
+import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -23,8 +26,12 @@ class ProfileScreen extends Component {
     })
   }
 
+  handlePress() {
+    originWallet.openProfile()
+  }
+
   render() {
-    const { navigation } = this.props
+    const { navigation, wallet } = this.props
     const { address, attestations = [], profile = {} } = navigation.getParam('user')
 
     return (
@@ -89,16 +96,30 @@ class ProfileScreen extends Component {
             </View>
           </View>
         )}
+        {address === wallet.address &&
+          <OriginButton
+            size="large"
+            image={<Image source={require(`${IMAGES_PATH}external-icon-light.png`)} />}
+            type="primary"
+            title="Edit Profile"
+            textStyle={styles.buttonText}
+            onPress={this.handlePress}
+          />
+        }
       </ScrollView>
     )
   }
+}
+
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
 }
 
 const mapDispatchToProps = dispatch => ({
   fetchUser: address => dispatch(fetchUser(address)),
 })
 
-export default connect(undefined, mapDispatchToProps)(ProfileScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen)
 
 const styles = StyleSheet.create({
   address: {
@@ -128,6 +149,11 @@ const styles = StyleSheet.create({
     height: 30,
     marginRight: 10,
     width: 30,
+  },
+  buttonText: {
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: '900',
   },
   container: {
     backgroundColor: '#f7f8f8',

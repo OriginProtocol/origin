@@ -165,7 +165,6 @@ class PhoneAttestation extends Component {
         mutation={VerifyPhoneCodeMutation}
         onCompleted={res => {
           const result = res.verifyPhoneCode
-          console.log(result)
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
@@ -296,6 +295,9 @@ require('react-styl')(`
     &.twitter > div h2::before
       background-image: url(images/identity/twitter-icon-dark.svg);
       background-size: 3.5rem
+    &.airbnb > div h2::before
+      background-image: url(images/identity/airbnb-icon-dark.svg);
+      background-size: 4rem
 
     &.success
       > div

@@ -6,11 +6,11 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 
 Origin has two development setups. One is the "light" version and consists of only our DApp and a local IPFS server and blockchain. It is intended to be easy to get started with but lacks some of the components of our stack making some of the DApp functionality unavailable.
 
-The more full featured development environment uses Docker Compose to orchestrate several containers and provides access to the full suite of Origin feaetures, include messaging, browser notifications, and attestation services.
+The more full featured development environment uses Docker Compose to orchestrate several containers and provides access to the full suite of Origin features, include messaging, browser notifications, and attestation services.
 
 ## About the Origin repository
 
-Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common depdencies to the root of the monorepo on installation.
+Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common dependencies to the root of the monorepo on installation.
 
 ## Using NPM & Lerna
 

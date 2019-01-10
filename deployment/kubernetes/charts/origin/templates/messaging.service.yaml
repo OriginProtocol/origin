@@ -16,7 +16,9 @@ spec:
   selector:
     app: {{ template "messaging.fullname" . }}
   ports:
-  - name: api
+  - name: ipfs-api
     port: 5001
   - name: websocket
     port: 9012
+  - name: api
+    port: 6647

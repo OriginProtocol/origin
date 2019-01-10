@@ -81,20 +81,37 @@ class SettingsScreen extends Component {
             </View>
           </View>
         </TouchableHighlight>
-        <View style={styles.header}>
-          <Text style={styles.heading}>LINKING SERVER HOST</Text>
-        </View>
         {originWallet.isLocalApi() &&
-          <TextInput
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={this.handleChange}
-            onSubmitEditing={this.handleSubmit}
-            value={this.state.apiHost}
-            style={styles.input}
-          />
+          <Fragment>
+            <View style={styles.header}>
+              <Text style={styles.heading}>LINKING SERVER HOST</Text>
+            </View>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={this.handleChange}
+              onSubmitEditing={this.handleSubmit}
+              value={this.state.apiHost}
+              style={styles.input}
+            />
+          </Fragment>
         }
-        {
+        {originWallet.isLocalApi() &&
+          <Fragment>
+              <View style={styles.header}>
+                <Text style={styles.heading}>SET PRIVATE KEY</Text>
+              </View>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              onSubmitEditing={async (e) => { if (await originWallet.setPrivateKey(e.nativeEvent.text)) {
+                  Alert.alert('A new private key has been set!')
+                }}}
+              onChangeText={(inputPrivateKey) => this.setState({inputPrivateKey})}
+              value={this.state.inputPrivateKey}
+              style={styles.input}
+            />
+          </Fragment>
           /* Don't offer toggleable networks yet
 
             networks.map((n, i) => (
