@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment-timezone'
 import store from 'store'
 
 import { unblock } from 'actions/Onboarding'

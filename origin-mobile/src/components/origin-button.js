@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default class OriginButton extends Component {
   render() {
-    const { disabled, size, style, textStyle, title, type, onDisabledPress, onPress } = this.props
+    const { disabled, image, size, style, textStyle, title, type, onDisabledPress, onPress } = this.props
     let backgroundColor, borderColor, color
     
     switch(type) {
@@ -37,6 +37,11 @@ export default class OriginButton extends Component {
           <Text style={[ { color }, styles.buttonText, textStyle ]}>
             {title}
           </Text>
+          {image &&
+            <View style={styles.image}>
+              {image}
+            </View>
+          }
         </View>
       </TouchableOpacity>
     )
@@ -47,6 +52,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     borderWidth: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     paddingLeft: 30,
     paddingRight: 30,
@@ -56,6 +62,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '900',
     textAlign: 'center',
+  },
+  image: {
+    marginLeft: 10,
   },
   large: {
     borderRadius: 25,

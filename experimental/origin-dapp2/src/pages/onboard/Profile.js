@@ -12,6 +12,7 @@ import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 
 import ProfileStrength from 'components/ProfileStrength'
+import Avatar from 'components/Avatar'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -89,14 +90,7 @@ class OnboardProfile extends Component {
                 <div className="row">
                   <div className="col-4">
                     <ImageCropper onChange={a => this.setState({ avatar: a })}>
-                      <div
-                        className={`profile-logo ${
-                          avatar ? 'custom' : 'default'
-                        }`}
-                        style={{
-                          backgroundImage: avatar ? `url(${avatar})` : null
-                        }}
-                      />
+                      <Avatar className="with-cam" avatar={avatar} />
                     </ImageCropper>
                   </div>
                   <div className="col-8">
@@ -133,7 +127,7 @@ class OnboardProfile extends Component {
                 </div>
 
                 <label className="mt-3">Attestations</label>
-                <div className="profile-attestations">
+                <div className="profile-attestations with-checkmarks">
                   {this.renderAtt('phone', 'Phone Number')}
                   {this.renderAtt('email', 'Email')}
                   {this.renderAtt('airbnb', 'Airbnb')}
@@ -187,8 +181,11 @@ class OnboardProfile extends Component {
       status = ' published'
     } else if (this.state[`${type}Attestation`]) {
       status = ' provisional'
-    } else if (soon) {
+    }
+    if (soon) {
       status = ' soon'
+    } else {
+      status += ' interactive'
     }
     let AttestationComponent = AttestationComponents[type]
     if (AttestationComponent) {
@@ -258,27 +255,8 @@ require('react-styl')(`
         font-family: Poppins;
         font-size: 24px;
         font-weight: 200;
-    .profile-logo
+    .avatar
       border-radius: 1rem
-      position: relative
-      width: 100%
-      padding-top: 100%
-      &.default
-        background: #233040 url(images/avatar-blue.svg) no-repeat center bottom
-        background-size: 63%
-      &.custom
-        border: 1px solid var(--light)
-        background-size: cover
-
-      &::after
-        content: ""
-        width: 2.5rem
-        height: 2.5rem
-        background: url(images/camera-icon-circle.svg) no-repeat center
-        background-size: 100%
-        position: absolute
-        bottom: 0.5rem
-        right: 0.5rem
 
     form.profile
       text-align: left
@@ -299,27 +277,31 @@ require('react-styl')(`
         padding-bottom: 1.5rem
       textarea
         min-height: 3rem
+    .profile-attestations
+      margin-bottom: 2rem
 
   .profile-attestations
     display: grid
     grid-column-gap: 0.5rem
     grid-row-gap: 0.5rem
     grid-template-columns: repeat(auto-fill,minmax(220px, 1fr))
-    margin-bottom: 2rem
     .profile-attestation
       padding: 0.75rem 1rem
       border: 1px dashed var(--light)
       border-radius: 5px
       display: flex
+      position: relative
       font-size: 18px
       font-weight: normal
       color: var(--bluey-grey)
       background-color: var(--pale-grey-eight)
       align-items: center;
-      cursor: pointer
-      &:hover
-        border-color: var(--clear-blue)
-        border-style: solid
+      overflow: hidden
+      &.interactive
+        cursor: pointer
+        &:hover
+          border-color: var(--clear-blue)
+          border-style: solid
       > i
         display: block
         position: relative
@@ -355,20 +337,43 @@ require('react-styl')(`
         background-size: 1.3rem
 
       &.published,&.provisional
-        background-color: white
+        background-color: var(--pale-clear-blue)
         border-style: solid
         color: var(--dusk)
         > i
           background-image: url(images/identity/verification-shape-blue.svg)
+      &.soon
+        opacity: 0.5
         &::after
-          content: "";
-          background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center;
-          width: 2rem;
-          height: 2rem;
-          border-radius: 2rem;
-          margin-left: auto;
-          background-size: 59%;
-      &.published > i
-        background-image: url(images/identity/verification-shape-green.svg)
+          content: "Coming Soon"
+          background: var(--light)
+          position: absolute;
+          color: var(--pale-grey-five);
+          font-size: 8px;
+          font-weight: 900;
+          right: -2.2rem;
+          top: -1rem
+          text-transform: uppercase;
+          transform: rotate(45deg);
+          padding: 2rem 2rem 0.5rem 2rem
+          width: 6rem
+          text-align: center
+          line-height: 8px
+      &.published
+        background-color: var(--pale-greenblue)
+        border-color: var(--greenblue)
+        > i
+          background-image: url(images/identity/verification-shape-green.svg)
 
+
+  .profile-attestations.with-checkmarks
+    .profile-attestation
+      &.published::after,&.provisional::after
+        content: "";
+        background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 2rem;
+        margin-left: auto;
+        background-size: 59%;
 `)

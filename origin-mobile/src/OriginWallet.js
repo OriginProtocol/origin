@@ -13,7 +13,7 @@ import { randomBytes } from 'react-native-randombytes'
 
 import {setRemoteLocal, localfy, storeData, loadData} from './tools'
 
-import origin, {apiUrl, defaultProviderUrl, messagingUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
+import origin, {apiUrl, defaultProviderUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
 
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
@@ -286,14 +286,14 @@ class OriginWallet {
     })
   }
 
-  async getMessagingKeys( ) {
+  getMessagingKeys( ) {
     return origin.messaging.preGenKeys(this.getCurrentWeb3Account())
   }
 
-  async getPrivData(pub_key) {
+  getPrivData(pub_key) {
     if (pub_key)
     {
-      const data = {messaging: await this.getMessagingKeys()}
+      const data = {messaging:this.getMessagingKeys()}
       return this.ecEncrypt(JSON.stringify(data), pub_key)
     }
   }
@@ -305,7 +305,7 @@ class OriginWallet {
       console.log(code, " already linked.")
       return
     }
-    const priv_data = await this.getPrivData(linkInfo.pub_key)
+    const priv_data = this.getPrivData(linkInfo.pub_key)
     return this.doFetch(this.API_WALLET_LINKER_LINK + this.getWalletToken(), 'POST', {
       code,
       current_rpc,
@@ -807,6 +807,22 @@ class OriginWallet {
     return url + (url.includes('?') ? '&' : '?' ) + 'thash=' + thash
   }
 
+  async openProfile() {
+    if (this.profileUrl) {
+      const linkingUrl = await this.toLinkedDappUrl(this.profileUrl)
+      console.log("Opening profile url:", linkingUrl)
+      Linking.openURL(linkingUrl)
+    }
+  }
+
+  async openRoot() {
+    if (this.rootUrl) {
+      const linkingUrl = await this.toLinkedDappUrl(this.rootUrl)
+      console.log("Opening root url:", linkingUrl)
+      Linking.openURL(linkingUrl)
+    }
+  }
+
   async openSelling() {
     if (this.sellingUrl) {
       const linkingUrl = await this.toLinkedDappUrl(this.sellingUrl)
@@ -1034,11 +1050,18 @@ class OriginWallet {
     this.initUrls()
 
     try {
-      const {provider_url, contract_addresses, 
-          ipfs_gateway, ipfs_api, messaging_url,
-          selling_url} = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
+      const {
+        provider_url,
+        contract_addresses,
+        ipfs_gateway,
+        ipfs_api,
+        messaging_url,
+        profile_url,
+        root_url,
+        selling_url
+      } = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       console.log("Set network to:", provider_url, contract_addresses)
-      console.log("service urls:", messaging_url, selling_url)
+      console.log("Service urls:", messaging_url, profile_url, root_url, selling_url)
 
       const newProviderUrl = localfy(provider_url)
       if (this.currentProviderUrl != newProviderUrl)
@@ -1048,6 +1071,8 @@ class OriginWallet {
       }
 
       this.messagingUrl = localfy(messaging_url)
+      this.profileUrl = profile_url
+      this.rootUrl = root_url
       this.sellingUrl = selling_url
       // update the contract addresses contract
       origin.contractService.updateContractAddresses(contract_addresses)
@@ -1074,7 +1099,7 @@ class OriginWallet {
       const current_accounts = [this.state.ethAddress]
       const updates = {}
       for (const link of links) {
-        const priv_data = await this.getPrivData(link.pub_key)
+        const priv_data = this.getPrivData(link.pub_key)
         updates[link.link_id] = {current_rpc, current_accounts, priv_data}
       }
       return await this.doFetch(this.API_WALLET_UPDATE_LINKS + this.getWalletToken(), 'POST', {
@@ -1083,8 +1108,6 @@ class OriginWallet {
     } catch (error) {
       console.log("error updating links ", error)
     }
-
-
   }
 
   setPrivateKey(privateKey) {

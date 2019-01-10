@@ -21,7 +21,7 @@ class EditListing extends Component {
         quantity: String(props.listing.unitsTotal),
         price: String(props.listing.price.amount),
         boost: '0',
-        media: props.listing.media.map(m => pick(m, 'contentType', 'url'))
+        media: props.listing.media
       }
     }
   }

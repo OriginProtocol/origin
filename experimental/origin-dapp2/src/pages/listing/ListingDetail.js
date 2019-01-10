@@ -19,10 +19,7 @@ class ListingDetail extends Component {
       <div className="listing-detail">
         <div className="header">
           <div className="category">{listing.categoryStr}</div>
-          <ListingBadge
-            status={listing.status}
-            featured={listing.featured}
-          />
+          <ListingBadge status={listing.status} featured={listing.featured} />
         </div>
         <h2>{listing.title}</h2>
         <div className="row">
@@ -60,18 +57,20 @@ class ListingDetail extends Component {
               {listing.seller.id === from ? (
                 <>
                   <Link
-                    className="btn btn-primary"
-                    to="/my-listings"
-                    children={'My Listings'}
-                  />
-                  <Link
                     className="btn btn-primary mt-2"
                     to={`/listings/${this.props.listing.id}/edit`}
                     children={'Edit Listing'}
                   />
                 </>
               ) : (
-                <Buy listing={listing} from={from} value={amount} />
+                <Buy
+                  listing={listing}
+                  from={from}
+                  value={amount}
+                  quantity={quantity}
+                  className="btn btn-primary"
+                  children="Buy Now"
+                />
               )}
             </div>
             <h5 className="mt-3">About the Seller</h5>
