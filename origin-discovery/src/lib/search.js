@@ -59,7 +59,7 @@ class Listing {
     const originListing = OriginListing.Listing.init(listingId, listing, ipfsListing)
 
     // boost stays unchanged for the normal listings, but can be used up in multi-unit listings
-    originListing.commission = originListing.commissionUsedToBoostListing
+    originListing.commission = originListing.boostCommission
 
     await client.index({
       index: LISTINGS_INDEX,

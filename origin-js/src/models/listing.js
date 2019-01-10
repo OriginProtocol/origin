@@ -183,12 +183,13 @@ class Listing {
   }
 
   // Commission used to prioritize this listing over the others in search functionality
-  get commissionUsedToBoostListing() {
+  get boostCommission() {
     // if is multi unit listing
     if (this.type === 'unit' && this.unitsTotal > 1) {
-      const boostCommission = JSON.parse(JSON.stringify(this.commissionPerUnit))
-      boostCommission.amount = Math.min(this.commissionRemaining, this.commissionPerUnit.amount)
-      return boostCommission
+      return {
+        currency: this.commissionPerUnit.currency,
+        amount: Math.min(this.commissionRemaining, this.commissionPerUnit.amount) 
+      }
     } else {
       return this.commission
     }
