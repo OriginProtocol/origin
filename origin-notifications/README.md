@@ -5,3 +5,54 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 # Origin Notifications
 
 See https://github.com/OriginProtocol/origin/issues/806 👊
+
+## Getting Started
+
+### The Easy Way
+
+We recommend [running Origin Box](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md#using-docker-compose) to simplify the process of configuring and running all of the modules within the Origin Monorepo.
+
+### The Not-As-Easy Way
+
+If you're interested in running just the notifications service (and the event listener) without messaging, attestations, etc, here are some suggestions for making that happen:
+
+
+In origin-notifications...
+
+  - Install and run [PostgreSQL](https://www.postgresql.org/)
+  - Run `npm install web-push -g`
+  - Run `web-push generate-vapid-keys`
+  - Add database url, email address, public and private keys to origin-notifications/.env
+  ```
+  DATABASE_URL=postgresql://localhost/notification
+  VAPID_EMAIL_ADDRESS=XXXXXXXXXX-your-email-address-XXXXXXXXXX
+  VAPID_PRIVATE_KEY=XXXXXXXXXX-your-private-key-XXXXXXXXXX
+  VAPID_PUBLIC_KEY=XXXXXXXXXX-your-public-key-XXXXXXXXXX
+  ```
+  - Run `createdb notification`
+  - Run `npm install -g sequelize-cli`
+  - Run `sequelize db:migrate`
+  - Run `npm run start:development`
+
+In origin-dapp...
+
+  - Add public key and notifications url to origin-dapp/.env
+  ```
+  NOTIFICATIONS_KEY=XXXXXXXXXX-your-public-key-XXXXXXXXXX
+  NOTIFICATIONS_URL=http://localhost:3456/
+  ```
+  - Run `npm start`
+  
+In origin-discovery...
+  
+  - Run `node src/listener/listener.js --continue-file=continue --webhook=http://localhost:3456/events`
+  
+  (From time to time, you may need to `rm continue` in origin-discovery.)
+  
+To test in the DApp...
+
+1. Create a listing
+1. Enable notifications
+1. Make an offer from a different account
+
+For more (outdated) information, see [the original pull request](https://github.com/OriginProtocol/origin/pull/795#issue-224602842).
