@@ -23,8 +23,12 @@ class Preview extends React.Component {
                 <div className="listing-image"></div>
                 <div className="listing-desc">
                   <div className="listing-text">
-                    <div className="listing-text-line"></div>
-                    <div className="listing-text-line"></div>
+                    <div className="listing-text-line"
+                      style={{  background: this.props.config.cssVars.dark }}>
+                    </div>
+                    <div className="listing-text-line"
+                      style={{  background: this.props.config.cssVars.dark }}>
+                    </div>
                   </div>
                   <div className="listing-featured-tag"
                     style={{ background: this.props.config.cssVars.goldenRod }}>
@@ -35,7 +39,7 @@ class Preview extends React.Component {
           </div>
         )}
         <div className="footer"
-          style={{ background: this.props.config.cssVars.dark }}>
+          style={{ background: this.props.config.cssVars.lightFooter }}>
         </div>
       </div>
     )

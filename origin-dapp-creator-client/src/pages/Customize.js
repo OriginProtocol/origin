@@ -131,6 +131,10 @@ class Customize extends React.Component {
                 config={this.state.config.cssVars}
                 onChange={this.onColorChange} />
               <ColorPicker description="Footer Color"
+                name="lightFooter"
+                config={this.state.config.cssVars}
+                onChange={this.onColorChange} />
+              <ColorPicker description="Font Color"
                 name="dark"
                 config={this.state.config.cssVars}
                 onChange={this.onColorChange} />
