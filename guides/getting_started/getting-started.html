@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Getting Started - Origin</title>
+
+  <link rel="stylesheet" href="/assets/css/highlight.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
+  <link rel="stylesheet" href="/assets/css/site.css"/>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a></div>
+        <nav>
+                <a class="topNav current" href="/">Guides</a>
+                <a class="topNav " href="/reference/">API Reference</a>
+                <a class="topNav " href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Getting started</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/getting-started.html">Getting Started</a> <!-- 3020-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/local-development.html">Local Development</a> <!-- 3010-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/contributing.html">Contributing</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>Overview</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/overview/architecture.html">Architecture</a> <!-- 2010-->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>Concepts</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/listing.html">Listing</a> <!-- 1100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/offer.html">Offer</a> <!-- 1090-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/identity.html">Identity</a> <!-- 1-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/messaging.html">Messaging</a> <!-- 1-->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">Getting Started</h1>
+
+            <h3 id="download-origin">Download Origin</h3>
+
+<p>Origin.js is under active development. Our latest releases are available on our <a href="https://github.com/OriginProtocol">Github</a>.</p>
+
+<h3 id="use-an-ethereum-enabled-browser">Use an Ethereum-enabled browser</h3>
+
+<p>For testing and interacting with your DApp, you will need to use a browser that supports Web3. We recommend using the <a href="https://metamask.io/">Metamask Chrome Browser Extension</a>. This will enable you to connect to the Ethereum network from your browser. Metamask allows you to run Ethereum DApps right in your browser without running a full Ethereum node.</p>
+
+<p>Alternatively, you can run the official Ethereum browser <a href="https://github.com/ethereum/mist">Mist</a>.</p>
+
+<p>On mobile, we recommend trying <a href="https://www.toshi.org/">Toshi</a>, <a href="https://www.cipherbrowser.com/">Cipher</a> and <a href="https://trustwalletapp.com/features/trust-browser">Trust Wallet</a>.</p>
+
+<h3 id="acquire-test-eth">Acquire Test ETH</h3>
+
+<p>Our smart contracts are currently deployed on the <code class="highlighter-rouge">Rinkeby testnet</code>. You will need to have test ETH to use this library. You can request test funds from the <a href="https://faucet.rinkeby.io/">Rinkeby faucet</a>. Do not yet send real ETH on the Origin network. Use Rinkeby testnet ETH instead.</p>
+
+<aside class="notice">
+Always confirm that you are on Rinkeby testnet when testing your DApp. Any Eth on mainnet that is sent to Origin contract addresses may be lost permanently.
+</aside>
+
+<h3 id="hello-world">Hello World</h3>
+
+<p>Simply include the downloaded javascript library in your html to get started.</p>
+
+<blockquote>
+  <p>Sample app</p>
+</blockquote>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;title&gt;</span>Hello World<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"origin.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">origin</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Origin</span><span class="p">();</span>
+
+<span class="kd">const</span> <span class="nx">listingData</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">name</span><span class="p">:</span> <span class="s2">"Kettlebell For Sale"</span><span class="p">,</span>
+  <span class="na">category</span><span class="p">:</span> <span class="s2">"Health and Beauty"</span><span class="p">,</span>
+  <span class="na">location</span><span class="p">:</span> <span class="s2">"San Fransisco, CA"</span><span class="p">,</span>
+  <span class="na">description</span><span class="p">:</span>
+    <span class="s2">"32kg gorilla kettlebell. Mint condition."</span><span class="p">,</span>
+  <span class="na">pictures</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="na">price</span><span class="p">:</span> <span class="mf">0.134</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">schema</span> <span class="o">=</span> <span class="s2">"for-sale"</span>
+<span class="kd">const</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">listings</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">listingData</span><span class="p">,</span> <span class="nx">schema</span><span class="p">)</span>
+<span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">contractService</span><span class="p">.</span><span class="nx">waitTransactionFinished</span><span class="p">(</span><span class="nx">transaction</span><span class="p">.</span><span class="nx">tx</span><span class="p">)</span>
+</code></pre></div></div>
+
+
+        </div>    
+    </div>
+
+    <footer>
+        <a href="https://www.originprotocol.com/">Origin Protocol</a>
+        <span>|</span>
+        <a href="https://dapp.originprotocol.com/">DApp</a>
+        <a href="https://github.com/OriginProtocol">GitHub</a>
+        <a href="https://www.originprotocol.com/discord">Discord</a>
+    </footer>
+</body>

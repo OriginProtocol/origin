@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Using Origin.js - Origin</title>
+
+  <link rel="stylesheet" href="/assets/css/highlight.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
+  <link rel="stylesheet" href="/assets/css/site.css"/>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a></div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav current" href="/reference/">API Reference</a>
+                <a class="topNav " href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Origin.js</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/reference/">Using Origin.js</a> <!-- 100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/marketplace.html">Marketplace</a> <!-- 90-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/users.html">Users</a> <!-- 50-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/reviews.html">Reviews</a> <!-- 50-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/attestations.html">Attestations</a> <!-- 50-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>The Protocol</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/reference/protocol/schemas.html">IPFS Schemas</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">Using Origin.js</h1>
+
+            <p>Origin.js is an easy-to-use libray for the Origin Protocol.</p>
+
+<p>The Origin object is the base of interaction with origin.js. Other resources are members of this object. For example, <code class="highlighter-rouge">origin.marketplace</code>, <code class="highlighter-rouge">origin.purchases</code>, <code class="highlighter-rouge">origin.attestations</code>, etc.</p>
+
+<h2 id="configuration">Configuration</h2>
+<p>Configuration options are passed into the Origin constructor at instantiation.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">configOptions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">option</span><span class="p">:</span> <span class="s1">'value'</span>
+<span class="p">}</span>
+<span class="kd">let</span> <span class="nx">origin</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Origin</span><span class="p">(</span><span class="nx">configOptions</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Valid options:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">ipfsDomain</code></li>
+  <li><code class="highlighter-rouge">ipfsApiPort</code></li>
+  <li><code class="highlighter-rouge">ipfsGatewayPort</code></li>
+  <li><code class="highlighter-rouge">ipfsGatewayProtocol</code></li>
+  <li><code class="highlighter-rouge">discoveryServerUrl</code></li>
+  <li><code class="highlighter-rouge">messagingNamespace</code></li>
+  <li><code class="highlighter-rouge">arbitrator</code></li>
+  <li><code class="highlighter-rouge">affiliate</code></li>
+  <li><code class="highlighter-rouge">blockEpoch</code></li>
+  <li><code class="highlighter-rouge">attestationServerUrl</code></li>
+  <li><code class="highlighter-rouge">ipfsCreator</code></li>
+  <li><code class="highlighter-rouge">OrbitDB</code></li>
+  <li><code class="highlighter-rouge">ecies</code></li>
+  <li><code class="highlighter-rouge">web3</code></li>
+  <li><code class="highlighter-rouge">contractAddresses</code></li>
+</ul>
+
+<blockquote>
+  <p>For example, if you are running a local IPFS daemon then you could set following config options:</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">const</span> <span class="nx">configOptions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">ipfsDomain</span><span class="p">:</span> <span class="s1">'127.0.0.1'</span><span class="p">,</span>
+  <span class="na">ipfsApiPort</span><span class="p">:</span> <span class="s1">'5001'</span><span class="p">,</span>
+  <span class="na">ipfsGatewayPort</span><span class="p">:</span> <span class="s1">'8080'</span><span class="p">,</span>
+  <span class="na">ipfsGatewayProtocol</span><span class="p">:</span> <span class="s1">'http'</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">origin</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Origin</span><span class="p">(</span><span class="nx">configOptions</span><span class="p">)</span>
+</code></pre></div></div>
+
+
+        </div>    
+    </div>
+
+    <footer>
+        <a href="https://www.originprotocol.com/">Origin Protocol</a>
+        <span>|</span>
+        <a href="https://dapp.originprotocol.com/">DApp</a>
+        <a href="https://github.com/OriginProtocol">GitHub</a>
+        <a href="https://www.originprotocol.com/discord">Discord</a>
+    </footer>
+</body>

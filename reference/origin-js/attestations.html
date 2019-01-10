@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Attestations - Origin</title>
+
+  <link rel="stylesheet" href="/assets/css/highlight.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
+  <link rel="stylesheet" href="/assets/css/site.css"/>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a></div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav current" href="/reference/">API Reference</a>
+                <a class="topNav " href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Origin.js</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/reference/">Using Origin.js</a> <!-- 100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/marketplace.html">Marketplace</a> <!-- 90-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/users.html">Users</a> <!-- 50-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/reviews.html">Reviews</a> <!-- 50-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/attestations.html">Attestations</a> <!-- 50-->
+                    
+                        <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#phonegeneratecode">.phoneGenerateCode</a></li>
+<li class="toc-entry toc-h2"><a href="#phoneverify">.phoneVerify</a></li>
+<li class="toc-entry toc-h2"><a href="#emailgeneratecode">.emailGenerateCode</a></li>
+<li class="toc-entry toc-h2"><a href="#emailverify">.emailVerify</a></li>
+<li class="toc-entry toc-h2"><a href="#facebookauthurl">.facebookAuthUrl</a></li>
+<li class="toc-entry toc-h2"><a href="#facebookverify">.facebookVerify</a></li>
+<li class="toc-entry toc-h2"><a href="#twitterauthurl">.twitterAuthUrl</a></li>
+<li class="toc-entry toc-h2"><a href="#twitterverify">.twitterVerify</a></li>
+<li class="toc-entry toc-h2"><a href="#airbnbgeneratecode">.airbnbGenerateCode</a></li>
+<li class="toc-entry toc-h2"><a href="#airbnbverify">.airbnbVerify</a></li>
+</ul>
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>The Protocol</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/reference/protocol/schemas.html">IPFS Schemas</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">Attestations</h1>
+
+            <p>An <strong>Attestation</strong> is a confirmation that some piece of identity information has been verified by a trusted 3rd party.</p>
+
+<p>Origin provides an attestation service that users can optionally use to add attestations to their profile.</p>
+
+<p>The following attestations are currently offered:</p>
+
+<ul>
+  <li>Email</li>
+  <li>Phone</li>
+  <li>Facebook</li>
+  <li>Twitter</li>
+  <li>Airbnb</li>
+</ul>
+
+<p>Currently, an attestation is simply a public <em>confirmation</em> that something has been verified by Origin.
+The information itself is not made public.</p>
+
+<p>For example, when a user adds an email attestation to their profile, all that anyone else will be able to see is that their email has been verified by Origin.
+The email address itself remains private.</p>
+
+<p>Note that these methods are used to simply generate attestation objects.
+Once an attestation object has been created, it needs to be added to a user object for it to take effect.</p>
+
+<h2 id="phonegeneratecode">
+<a id="phonegeneratecode" class="anchor" href="#phonegeneratecode" aria-hidden="true"><span class="octicon octicon-link"></span></a>.phoneGenerateCode</h2>
+
+<blockquote>
+  <p>To send an SMS verification code</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">phoneGenerateCode</span><span class="p">({</span>
+  <span class="na">countryCallingCode</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+  <span class="na">phone</span><span class="p">:</span> <span class="s2">"555-555-5555"</span><span class="p">,</span>
+  <span class="na">method</span><span class="p">:</span> <span class="s2">"sms"</span><span class="p">,</span>
+  <span class="na">locale</span><span class="p">:</span> <span class="s2">"en"</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>This will perform a phone verification by calling or sending a SMS to a phone number.</p>
+
+<p>The phone number that will receive the call or SMS is the <code class="highlighter-rouge">countryCallingCode</code> combined with the <code class="highlighter-rouge">phone</code>. The <code class="highlighter-rouge">phone</code> should therefore be provided in the national format.</p>
+
+<p>The <code class="highlighter-rouge">method</code> can either by “call” or “sms”.</p>
+
+<p>The <code class="highlighter-rouge">locale</code> parameter is optional and it defines the language of the call or the SMS. If not provided a sensible default is used based on the country of the phone number. Supported languages are af, ar, ca, zh, zh-CN, zh-HK, hr, cs, da, nl, en, fi, fr, de, el, he, hi, hu, id, it, ja, ko, ms, nb, pl, pt-BR, pt, ro, ru, es, sv, tl, th, tr, vi.</p>
+
+<h2 id="phoneverify">
+<a id="phoneverify" class="anchor" href="#phoneverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.phoneVerify</h2>
+
+<blockquote>
+  <p>To verify a ownership of a phone number</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">phoneAttestation</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">phoneVerify</span><span class="p">({</span>
+  <span class="na">wallet</span><span class="p">:</span> <span class="nx">myWalletAddress</span><span class="p">,</span>
+  <span class="na">countryCallingCode</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+  <span class="na">phone</span><span class="p">:</span> <span class="s2">"555-555-5555"</span><span class="p">,</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"123456"</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"phone"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This will verify that the <code class="highlighter-rouge">code</code> submitted in the request is the one that was sent to the phone number in the <code class="highlighter-rouge">phoneGenerateCode</code> call. If it is valid, an attestation object will be returned.</p>
+
+<p>Note that the <code class="highlighter-rouge">countryCallingCode</code> and <code class="highlighter-rouge">phone</code> must have the same values as the values used in the <code class="highlighter-rouge">phoneGenerateCode</code> call.</p>
+
+<h2 id="emailgeneratecode">
+<a id="emailgeneratecode" class="anchor" href="#emailgeneratecode" aria-hidden="true"><span class="octicon octicon-link"></span></a>.emailGenerateCode</h2>
+
+<blockquote>
+  <p>To send an email verification code</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">emailGenerateCode</span><span class="p">({</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s2">"me@my.domain"</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>This will send an email to the given email address containing a verification code.</p>
+
+<h2 id="emailverify">
+<a id="emailverify" class="anchor" href="#emailverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.emailVerify</h2>
+
+<blockquote>
+  <p>To verify ownership of an email address</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">emailAttestation</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">emailVerify</span><span class="p">({</span>
+  <span class="na">wallet</span><span class="p">:</span> <span class="nx">myWalletAddress</span><span class="p">,</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s2">"me@my.domain"</span><span class="p">,</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"123456"</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"email"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This will verify that the <code class="highlighter-rouge">code</code> submitted in the request is the one that was sent to the email address in the <code class="highlighter-rouge">emailGenerateCode</code> call. If it is valid, an attestation object will be returned.</p>
+
+<h2 id="facebookauthurl">
+<a id="facebookauthurl" class="anchor" href="#facebookauthurl" aria-hidden="true"><span class="octicon octicon-link"></span></a>.facebookAuthUrl</h2>
+
+<blockquote>
+  <p>To get Facebook authentication url</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">facebookAuthUrl</span><span class="p">()</span>
+
+<span class="nb">window</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'width=650,height=500'</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">code</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">).</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^origin-code:/</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="kc">false</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'code'</span><span class="p">,</span> <span class="nx">code</span><span class="p">)</span> <span class="c1">// use this value in `facebookVerify`</span>
+</code></pre></div></div>
+
+<p>This will return a url which your dapp should open in a popup window.
+The page will ask the user to grant permissions to the Origin app, which will be used to verify their Facebook identity.
+Once permissions have been granted, the popup window will <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">post a message</a> back to the dapp. You should listen for this message, which will contain the <code class="highlighter-rouge">code</code> needed for the <code class="highlighter-rouge">facebookVerify</code> call.</p>
+
+<h2 id="facebookverify">
+<a id="facebookverify" class="anchor" href="#facebookverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.facebookVerify</h2>
+
+<blockquote>
+  <p>To verify ownership of a Facebook account</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">facebookAttestation</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">facebookVerify</span><span class="p">({</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"12345"</span> <span class="c1">// code obtained from `facebookAuthUrl`</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"facebook"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This will perform Facebook oauth verification on the specified <code class="highlighter-rouge">code</code>. If it is valid, an attestation object will be returned.</p>
+
+<p>Note that <code class="highlighter-rouge">code</code> is the oauth code generated in <code class="highlighter-rouge">facebookAuthUrl</code>.</p>
+
+<h2 id="twitterauthurl">
+<a id="twitterauthurl" class="anchor" href="#twitterauthurl" aria-hidden="true"><span class="octicon octicon-link"></span></a>.twitterAuthUrl</h2>
+
+<blockquote>
+  <p>To get Twitter authentication url</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">twitterAuthUrl</span><span class="p">()</span>
+
+<span class="nb">window</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'width=650,height=500'</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">code</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">).</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^origin-code:/</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="kc">false</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'code'</span><span class="p">,</span> <span class="nx">code</span><span class="p">)</span> <span class="c1">// use this value in `twitterVerify`</span>
+</code></pre></div></div>
+
+<p>This will return a url which your dapp should open in a popup window.
+The page will ask the user to grant permissions to the Origin app, which will be used to verify their Twitter identity.
+Once permissions have been granted, the popup window will <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">post a message</a> back to the dapp. You should listen for this message, which will contain the <code class="highlighter-rouge">code</code> needed for the <code class="highlighter-rouge">twitterVerify</code> call.</p>
+
+<h2 id="twitterverify">
+<a id="twitterverify" class="anchor" href="#twitterverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.twitterVerify</h2>
+
+<blockquote>
+  <p>To verify ownership of a Twitter account</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">twitterAttestation</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">twitterVerify</span><span class="p">({</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"12345"</span> <span class="c1">// code obtained from `twitterAuthUrl`</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"twitter"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This will perform Twitter oauth verification on the specified <code class="highlighter-rouge">code</code>. If it is valid, an attestation object will be returned.</p>
+
+<p>Note that <code class="highlighter-rouge">code</code> is the code generated in <code class="highlighter-rouge">twitterAuthUrl</code></p>
+
+<h2 id="airbnbgeneratecode">
+<a id="airbnbgeneratecode" class="anchor" href="#airbnbgeneratecode" aria-hidden="true"><span class="octicon octicon-link"></span></a>.airbnbGenerateCode</h2>
+
+<blockquote>
+  <p>To generate verification code</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">airbnbGenerateCode</span><span class="p">({</span>
+  <span class="na">wallet</span><span class="p">:</span> <span class="nx">myWalletAddress</span><span class="p">,</span>
+  <span class="na">airbnbUserId</span><span class="p">:</span> <span class="c1">// user's id on Airbnb website</span>
+<span class="p">})</span>
+<span class="c1">// Returns (object)</span>
+<span class="p">{</span>
+  <span class="nl">code</span><span class="p">:</span> <span class="s2">"0x0deef6ef"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This will generate a unique code that should be inserted into user’s Airbnb profile description.</p>
+
+<h2 id="airbnbverify">
+<a id="airbnbverify" class="anchor" href="#airbnbverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.airbnbVerify</h2>
+
+<blockquote>
+  <p>To verify ownership of Airbnb profile</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">emailAttestation</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">airbnbVerify</span><span class="p">({</span>
+  <span class="na">wallet</span><span class="p">:</span> <span class="nx">myWalletAddress</span><span class="p">,</span>
+  <span class="na">airbnbUserId</span><span class="p">:</span> <span class="c1">// user's id on Airbnb website</span>
+<span class="p">})</span>
+<span class="c1">// Returns (attestation object)</span>
+<span class="p">{</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+  <span class="nx">claimType</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="nx">service</span><span class="p">:</span> <span class="s2">"airbnb"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If user has inserted the correct <code class="highlighter-rouge">code</code> in his Airbnb profile, an attestation object will be returned.</p>
+
+
+        </div>    
+    </div>
+
+    <footer>
+        <a href="https://www.originprotocol.com/">Origin Protocol</a>
+        <span>|</span>
+        <a href="https://dapp.originprotocol.com/">DApp</a>
+        <a href="https://github.com/OriginProtocol">GitHub</a>
+        <a href="https://www.originprotocol.com/discord">Discord</a>
+    </footer>
+</body>

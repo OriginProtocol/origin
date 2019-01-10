@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Introduction - Origin</title>
+  <title>Listing - Origin</title>
 
   <link rel="stylesheet" href="/assets/css/highlight.css"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
@@ -74,6 +74,12 @@
                 <li class="normal"> 
                     <a href="/guides/concepts/listing.html">Listing</a> <!-- 1100-->
                     
+                        <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#event-sourcing">Event Sourcing</a></li>
+<li class="toc-entry toc-h2"><a href="#creating-a-listing">Creating a Listing</a></li>
+<li class="toc-entry toc-h2"><a href="#withdrawing-a-listing">Withdrawing a Listing</a></li>
+</ul>
+                    
                 </li>
                 
                 <li class="normal"> 
@@ -98,33 +104,39 @@
             </ul>
         </div>
         <div class="content">
-            <h1 class="title">Introduction</h1>
+            <h1 class="title">Listing</h1>
 
-            <p>Origin provides a simple and powerful javascript library for developers to build decentralized marketplaces, allowing buyers and sellers to meet and transact without requiring any trusted intermediaries.</p>
+            <p>A Listing is an offer from a seller to sell, rent, announce, or exchange something. Active listings can be searched and browsed in Origin DApps.</p>
 
-<h3 id="usage">Usage</h3>
+<h2 id="event-sourcing">
+<a id="event-sourcing" class="anchor" href="#event-sourcing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event Sourcing</h2>
 
-<p>Visit our Github: <a href="https://github.com/OriginProtocol">https://github.com/OriginProtocol</a></p>
-
-<p>This API documentation will explain how developers can use the origin.js library to create and manage decentralized marketplaces that are built on top of <a href="https://github.com/ipfs">IPFS</a> and the <a href="https://www.ethereum.org/">Ethereum network</a>.</p>
-
-<p>Origin.js aims to create an easy and flexible abstraction layer that:</p>
+<p>The current state of a particular listing is built up from the actions that have modified it. For example:</p>
 
 <ul>
-  <li>Generates and deploys secure Ethereum smart contracts to the blockchain.</li>
-  <li>Creates and posts user and listing metadata to distributed IPFS nodes</li>
-  <li>Queries against open-source indexing servers to render content in decentralized applications (DApps)</li>
+  <li>Alice creates a listing for a selling two tickets to a local hockey game.</li>
+  <li>Bob offers to buy one ticket</li>
+  <li>Alice accepts Bob’s offer. Now the current state of the listing is one ticket available for sale.</li>
 </ul>
 
-<p>Origin.js enables developers to create DApps that onboard new users to the Origin platform, add new listings to the listings registry, create booking contracts, close out bookings (transfer funds, write reviews, etc.), and more.</p>
+<p>The blockchain provides an absolute ordered list of events that happened on it (block number and transaction index). This allows everyone to apply events in the same order, so everyone can calculate the same state for the listing.  In case of a conflict, everyone can agree which offers are valid and which are not. For example:</p>
 
-<h3 id="notes">Notes</h3>
+<ul>
+  <li>Alice creates a listing renting an apartment for two weeks.</li>
+  <li>Bob offers to rent the first week.</li>
+  <li>Alice accepts Bob’s offer.</li>
+  <li>Mallory offers to rent both weeks. Mallory’s offer is treated as invalid because it conflicts with a previously accepted offer. Mallory can withdraw her offer and her ETH at any time.</li>
+</ul>
 
-<p>Please note this project is still in heavy development and many of the features described below have not been implemented yet. This library should not be considered as production-ready.</p>
+<h2 id="creating-a-listing">
+<a id="creating-a-listing" class="anchor" href="#creating-a-listing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a Listing</h2>
 
-<p>Origin.js and the entire Origin Protocol project is 100% open-source and we welcome contributions from the community. There are many ways to help, from reporting issues and contributing code to helping us improve and grow our community.</p>
+<p>A listing’s initial data is posted to IPFS as JSON (<a href="/reference/protocol/schemas.html#listing-schema">listing schema</a>). A blockchain transaction <a href="../../reference/origin-js/marketplace.html#createlisting">createListing</a> is then sent to the marketplace contract to announce the listing to the world.</p>
 
-<p>If you are interested in getting involved, please read our section on <a href="/guides/getting_started/contributing.html">contributing</a>. If at any point you get stuck, please <a href="#getting-help">reach out</a> and we’ll do our best to help.</p>
+<h2 id="withdrawing-a-listing">
+<a id="withdrawing-a-listing" class="anchor" href="#withdrawing-a-listing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Withdrawing a Listing</h2>
+
+<p>Sending the blockchain transaction <a href="../../reference/origin-js/marketplace.html#withdrawlisting">withdrawListing</a> marks a listing as no longer able to be purchased.</p>
 
 
         </div>    

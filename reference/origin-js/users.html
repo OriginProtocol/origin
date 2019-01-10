@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Users - Origin</title>
+
+  <link rel="stylesheet" href="/assets/css/highlight.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
+  <link rel="stylesheet" href="/assets/css/site.css"/>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a></div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav current" href="/reference/">API Reference</a>
+                <a class="topNav " href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Origin.js</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/reference/">Using Origin.js</a> <!-- 100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/marketplace.html">Marketplace</a> <!-- 90-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/users.html">Users</a> <!-- 50-->
+                    
+                        <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#set">.set</a></li>
+<li class="toc-entry toc-h2"><a href="#get">.get</a></li>
+</ul>
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/reviews.html">Reviews</a> <!-- 50-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/attestations.html">Attestations</a> <!-- 50-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>The Protocol</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/reference/protocol/schemas.html">IPFS Schemas</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">Users</h1>
+
+            <p>A <strong>User</strong> is an object used to represent a particular user in Origin Protocol.
+Users are implemented as <a href="https://medium.com/originprotocol/managing-identity-with-a-ui-for-erc-725-5c7422b38c09">ERC725 identities</a>. Identities in Origin will be portable across platforms that support ERC725.</p>
+
+<p>A user object consists of 4 properties:</p>
+
+<ul>
+  <li>
+<code class="highlighter-rouge">address</code>: Ethereum address for the user contract</li>
+  <li>
+<code class="highlighter-rouge">profile</code>: Profile information a user chooses to reveal publicly
+    <ul>
+      <li><code class="highlighter-rouge">firstName</code></li>
+      <li><code class="highlighter-rouge">lastName</code></li>
+      <li><code class="highlighter-rouge">description</code></li>
+      <li><code class="highlighter-rouge">avatar</code></li>
+    </ul>
+  </li>
+  <li>
+<code class="highlighter-rouge">attestations</code>: A list of 3rd party attestations that the user has added to their identity (see <a href="#attestation">Attestation documentation</a> for details)</li>
+  <li>
+<code class="highlighter-rouge">identityAddress</code>: Ethereum address for the identity contract</li>
+</ul>
+
+<h2 id="set">
+<a id="set" class="anchor" href="#set" aria-hidden="true"><span class="octicon octicon-link"></span></a>.set</h2>
+
+<blockquote>
+  <p>To create/update a user</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Get a phone attestation object</span>
+<span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">phoneGenerateCode</span><span class="p">({</span>
+  <span class="na">phone</span><span class="p">:</span> <span class="s2">"555-555-5555"</span>
+<span class="p">})</span>
+<span class="kd">let</span> <span class="nx">phoneAttestation</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">phoneVerify</span><span class="p">({</span>
+  <span class="na">phone</span><span class="p">:</span> <span class="s2">"555-555-5555"</span><span class="p">,</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"123456"</span>
+<span class="p">})</span>
+
+<span class="c1">// Get a Facebook attestation object</span>
+<span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">facebookAuthUrl</span><span class="p">()</span>
+
+<span class="c1">// Open facebook authentication popup and retrieve authentication code</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'width=650,height=500'</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">code</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">).</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^origin-code:/</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="kc">false</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1">// Send code to obtain attestation</span>
+<span class="kd">let</span> <span class="nx">facebookAttestation</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">facebookVerify</span><span class="p">({</span>
+  <span class="na">code</span><span class="p">:</span> <span class="nx">code</span>
+<span class="p">})</span>
+
+<span class="kd">let</span> <span class="nx">myNewUser</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">firstName</span><span class="p">:</span> <span class="s2">"Wonder"</span><span class="p">,</span> <span class="na">lastName</span><span class="p">:</span> <span class="s2">"Woman"</span> <span class="p">},</span>
+  <span class="na">attestations</span><span class="p">:</span> <span class="p">[</span> <span class="nx">phoneAttestation</span><span class="p">,</span> <span class="nx">facebookAttestation</span> <span class="p">]</span>
+<span class="p">}</span>
+<span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">myNewUser</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">createdUser</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="kd">get</span><span class="p">()</span>
+
+<span class="c1">// User has been created!</span>
+
+<span class="c1">// Get an email attestation object</span>
+<span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">emailGenerateCode</span><span class="p">({</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s2">"me@my.domain"</span>
+<span class="p">})</span>
+<span class="kd">let</span> <span class="nx">emailAttestation</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">emailVerify</span><span class="p">({</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s2">"me@my.domain"</span><span class="p">,</span>
+  <span class="na">code</span><span class="p">:</span> <span class="s2">"123456"</span>
+<span class="p">})</span>
+
+<span class="nx">createdUser</span><span class="p">.</span><span class="nx">attestations</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">emailAttestation</span><span class="p">)</span>
+<span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">createdUser</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">updatedUser</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="kd">get</span><span class="p">()</span>
+
+<span class="c1">// User has been updated!</span>
+<span class="c1">// final `updatedUser`:</span>
+<span class="p">{</span>
+  <span class="p">{</span>
+    <span class="na">address</span><span class="p">:</span> <span class="s2">"0x627306090abaB3A6e1400e9345bC60c78a8BEf57"</span><span class="p">,</span>
+    <span class="na">profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">firstName</span><span class="p">:</span> <span class="s2">"Wonder"</span><span class="p">,</span> <span class="na">lastName</span><span class="p">:</span> <span class="s2">"Woman"</span> <span class="p">},</span>
+    <span class="na">attestations</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="na">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+        <span class="na">claimType</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="na">service</span><span class="p">:</span> <span class="s2">"phone"</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="na">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+        <span class="na">claimType</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="na">service</span><span class="p">:</span> <span class="s2">"facebook"</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="na">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+        <span class="na">claimType</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="na">service</span><span class="p">:</span> <span class="s2">"twitter"</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="na">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
+        <span class="na">claimType</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="na">service</span><span class="p">:</span> <span class="s2">"airbnb"</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="na">identityAddress</span><span class="p">:</span> <span class="s2">"0x4E72770760c011647D4873f60A3CF6cDeA896CD8"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If the user does not already exist, it will be created. If it exists, it will be updated.</p>
+
+<p><strong>Note</strong>: this method should be used as if it will completely override the existing data.
+Updates should be made by taking the existing user object, making modifications to it, and then passing the entire updated object into the <code class="highlighter-rouge">set</code> method.</p>
+
+<h2 id="get">
+<a id="get" class="anchor" href="#get" aria-hidden="true"><span class="octicon octicon-link"></span></a>.get</h2>
+
+<blockquote>
+  <p>To retrieve a user</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">myUser</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="kd">get</span><span class="p">()</span>
+<span class="kd">let</span> <span class="nx">anotherUser</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">otherUserAddress</span><span class="p">)</span>
+<span class="c1">// Returns (user object)</span>
+<span class="p">{</span>
+  <span class="nl">address</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+  <span class="nx">profile</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">firstName</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="nx">lastName</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="nx">description</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="nx">avatar</span><span class="p">:</span> <span class="s1">''</span>
+  <span class="p">},</span>
+  <span class="nx">attestations</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="nx">identityAddress</span><span class="p">:</span> <span class="s1">''</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>With no parameters passed in, this will return the current user.
+If a wallet address is passed in, this will return the user associated with that wallet.</p>
+
+
+        </div>    
+    </div>
+
+    <footer>
+        <a href="https://www.originprotocol.com/">Origin Protocol</a>
+        <span>|</span>
+        <a href="https://dapp.originprotocol.com/">DApp</a>
+        <a href="https://github.com/OriginProtocol">GitHub</a>
+        <a href="https://www.originprotocol.com/discord">Discord</a>
+    </footer>
+</body>

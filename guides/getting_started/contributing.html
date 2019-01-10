@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Contributing - Origin</title>
+
+  <link rel="stylesheet" href="/assets/css/highlight.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
+  <link rel="stylesheet" href="/assets/css/site.css"/>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a></div>
+        <nav>
+                <a class="topNav current" href="/">Guides</a>
+                <a class="topNav " href="/reference/">API Reference</a>
+                <a class="topNav " href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Getting started</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/getting-started.html">Getting Started</a> <!-- 3020-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/local-development.html">Local Development</a> <!-- 3010-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/contributing.html">Contributing</a> <!-- -->
+                    
+                        <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#discord">Discord</a></li>
+<li class="toc-entry toc-h2"><a href="#email">Email</a></li>
+<li class="toc-entry toc-h2"><a href="#weekly-engineering-call">Weekly Engineering Call</a></li>
+<li class="toc-entry toc-h2"><a href="#dive-right-in">Dive Right In</a></li>
+<li class="toc-entry toc-h2"><a href="#development-process">Development Process</a></li>
+<li class="toc-entry toc-h2"><a href="#coding-style">Coding Style</a></li>
+<li class="toc-entry toc-h2"><a href="#troubleshooting-a-development-environment">Troubleshooting a Development Environment</a></li>
+<li class="toc-entry toc-h2"><a href="#protocol-design">Protocol Design</a></li>
+<li class="toc-entry toc-h2"><a href="#community-guidelines">Community Guidelines</a></li>
+<li class="toc-entry toc-h2"><a href="#reporting-issues">Reporting Issues</a></li>
+<li class="toc-entry toc-h2"><a href="#security-issues">Security Issues</a></li>
+<li class="toc-entry toc-h2"><a href="#community-improvement">Community Improvement</a></li>
+<li class="toc-entry toc-h2"><a href="#full-time-positions">Full Time Positions</a></li>
+</ul>
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>Overview</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/overview/architecture.html">Architecture</a> <!-- 2010-->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>Concepts</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/listing.html">Listing</a> <!-- 1100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/offer.html">Offer</a> <!-- 1090-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/identity.html">Identity</a> <!-- 1-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/messaging.html">Messaging</a> <!-- 1-->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">Contributing</h1>
+
+            <p>Want to hack on Origin? Awesome!</p>
+
+<p>Origin is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.</p>
+
+<p>We use a monorepo for almost all of our development – see <a href="https://github.com/OriginProtocol/origin/">Origin</a> on GitHub.</p>
+
+<p>You are most likely interested in these projects inside the monorepo:</p>
+
+<ul>
+  <li>
+<a href="https://github.com/OriginProtocol/origin/tree/master/origin-js#origin-js">Origin.js</a> - Solidity contracts and JavaScript API</li>
+  <li>
+<a href="https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-dapp">Origin DApp</a> - example React-powered decentralized application</li>
+</ul>
+
+<h2 id="discord">
+<a id="discord" class="anchor" href="#discord" aria-hidden="true"><span class="octicon octicon-link"></span></a>Discord</h2>
+
+<p>We work in public and our company Discord is open to all. If you have questions or need help getting started, our <a href="https://www.originprotocol.com/discord">Discord #engineering channel</a> is the absoulute best place to get assistance from our team of engineers and developers.</p>
+
+<h2 id="email">
+<a id="email" class="anchor" href="#email" aria-hidden="true"><span class="octicon octicon-link"></span></a>Email</h2>
+
+<p>You can also reach us by email at <a href="mailto:support@originprotocol.com">support@originprotocol.com</a>.</p>
+
+<h2 id="weekly-engineering-call">
+<a id="weekly-engineering-call" class="anchor" href="#weekly-engineering-call" aria-hidden="true"><span class="octicon octicon-link"></span></a>Weekly Engineering Call</h2>
+
+<p>We have an open weekly engineering call on Google Hangouts every Wednesday at 12:30 Pacific Time. <a href="https://calendar.google.com/event?action=TEMPLATE&amp;tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&amp;tmsrc=micah%40originprotocol.com&amp;scp=ALL">Add to Calendar</a></p>
+
+<p>Join the call here: <a href="https://meet.google.com/pws-cgyd-tqp">https://meet.google.com/pws-cgyd-tqp</a></p>
+
+<p>Everyone is welcome to join, even if you’re just lurking. All we ask is that you mute when not speaking to minimize background noise. All our meeting notes are public and can be reviewed here:</p>
+
+<ul>
+  <li><a href="https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU">Engineering Notes</a></li>
+  <li><a href="https://docs.google.com/document/d/1tVx2O3qeplh9vawJpURTsJxZfUe1B0FrTHOMJbxKm-s">Product/Design Notes</a></li>
+  <li><a href="https://docs.google.com/document/d/1DvRWYhrr0UXdvhyZIpEd3WEU-1pQk2Frj1l-mQS8B4M">Sprint Planning Notes</a></li>
+</ul>
+
+<h2 id="dive-right-in">
+<a id="dive-right-in" class="anchor" href="#dive-right-in" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dive Right In</h2>
+
+<p>If you’re ready to start hacking on Origin right now and you just need an issue to focus on, check out our <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=user%3AOriginProtocol+is%3Aopen+&amp;type=Issues">open issues</a> especially those tagged as a <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=user%3AOriginProtocol+is%3Aopen++label%3A%22good+first+issue%22&amp;type=Issues&amp;ref=advsearch&amp;l=&amp;l=">good first issue</a>.</p>
+
+<p>We use two week development sprints and you can see what we’re currently prioritizing on <a href="https://github.com/orgs/OriginProtocol/projects/2">our Github project board</a>.</p>
+
+<p>Read our <a href="#contributing-email-development-process">development process</a> and <a href="#contributing-email-community-guidelines">community guidelines</a> first and have fun!</p>
+
+<h2 id="development-process">
+<a id="development-process" class="anchor" href="#development-process" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development Process</h2>
+
+<p>Getting your local environment running is easy with <a href="https://github.com/OriginProtocol/origin/tree/master/development#origin-box">Origin Box</a>. We recommend using this Docker container for any development or testing that involves running a local blockchain.</p>
+
+<p>Our branching strategy is similar to <a href="http://nvie.com/posts/a-successful-git-branching-model/">GitFlow</a>, but we do all of our development in the <code class="highlighter-rouge">master</code> branch and have a <code class="highlighter-rouge">stable</code> branch for code that has been released.</p>
+
+<p>Your development flow should look like:</p>
+
+<ol>
+  <li>Find an interesting issue and communicate! Please let the <code class="highlighter-rouge">#engineering</code> <a href="https://discord.gg/jyxpUSe">Discord</a> channel know what you want to work on.</li>
+  <li>Ping a <a href="https://github.com/orgs/OriginProtocol/teams/core/members">core team member</a> member on Discord and ask to be added to our <a href="https://github.com/orgs/OriginProtocol/teams/contributors">contributors team</a>. Otherwise, you’ll need to fork the relevant repository and push feature branches to your own fork.</li>
+  <li>Add a comment to the issue or self-assign so we don’t have multiple contributors unintentionally working on the same task.</li>
+  <li>Start with the <code class="highlighter-rouge">master</code> branch and check out a new feature branch unless you’re contributing to an existing feature.</li>
+  <li>Follow the appropriate <a href="#contributing-email-coding-style">coding style</a> and write some awesome code.</li>
+  <li>Pull the latest commits from <code class="highlighter-rouge">master</code> and confirm that your code works with any other work that has been merged since you started.</li>
+  <li>Push your branch to the upstream repository (i.e. https://github.com/OriginProtocol/[repo]) so that other contributors can easily work off of it if necessary.</li>
+  <li>Please request a review in the PR by clicking on the gear icon next to “Reviewers” in the right column.</li>
+</ol>
+
+<p>The <code class="highlighter-rouge">master</code> branche is locked so that only members of the <a href="https://github.com/orgs/OriginProtocol/teams/core">core team</a> are able to merge your pull requests. Pull requests that are peer reviewed by other trusted contributors will be fast-tracked and merged faster! Check in the <code class="highlighter-rouge">#engineering</code> Discord channel for appropriate reviewers.</p>
+
+<h2 id="coding-style">
+<a id="coding-style" class="anchor" href="#coding-style" aria-hidden="true"><span class="octicon octicon-link"></span></a>Coding Style</h2>
+
+<p>We use a variety of programming languages in our repositories. When contributing, please follow existing coding conventions and refer to the CONTRIBUTING.md file in the repository, if one exists.</p>
+
+<p>For JavaScript, we use <a href="https://docs.npmjs.com/misc/coding-style">NPM’s style</a>, which is automatically enforced via <a href="https://prettier.io/">prettier</a>.</p>
+
+<p>For Solidity, we use two space indents.</p>
+
+<h2 id="troubleshooting-a-development-environment">
+<a id="troubleshooting-a-development-environment" class="anchor" href="#troubleshooting-a-development-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Troubleshooting a Development Environment</h2>
+
+<ul>
+  <li>
+    <p>If you encounter errors while executing <code class="highlighter-rouge">npm install</code> for any of the Origin repositories, try running a recent LTS version of Node.js. <a href="https://github.com/creationix/nvm">nvm</a> is a tool that can install specific versions of Node.js. After installing <code class="highlighter-rouge">nvm</code>, run <code class="highlighter-rouge">nvm install --lts</code>, remove your <code class="highlighter-rouge">node_modules</code> directory, and run <code class="highlighter-rouge">npm install</code> again.</p>
+  </li>
+  <li>
+    <p>If you are using <code class="highlighter-rouge">origin-box</code> Docker setup and are running OSX Sierra below 10.13.4 Docker volumes might randomly stop syncing. This results in problems where host machine source code updates do not get propagated to file system inside Docker. To resolve this issue update OSX Sierra to 10.13.4 or above. See <a href="https://github.com/EugenMayer/docker-sync/issues/517">this thread</a> for more details.</p>
+  </li>
+</ul>
+
+<h2 id="protocol-design">
+<a id="protocol-design" class="anchor" href="#protocol-design" aria-hidden="true"><span class="octicon octicon-link"></span></a>Protocol Design</h2>
+
+<p>When considering protocol or implementation design proposals, we are looking for:</p>
+
+<ul>
+  <li>A description of the problem this design proposal solves</li>
+  <li>Discussion of the trade-offs involved</li>
+  <li>Review of other existing solutions</li>
+  <li>Links to relevant literature (RFCs, papers, etc)</li>
+  <li>Discussion of the proposed solution</li>
+</ul>
+
+<p>Please note that protocol design is hard and meticulous work. You may need to review existing literature and think through generalized use cases.</p>
+
+<h2 id="community-guidelines">
+<a id="community-guidelines" class="anchor" href="#community-guidelines" aria-hidden="true"><span class="octicon octicon-link"></span></a>Community Guidelines</h2>
+
+<p>We want to keep the Origin community awesome, growing and collaborative. We need your help to keep it that way. To help with this we’ve come up with some general guidelines for the community as a whole:</p>
+
+<ul>
+  <li>
+    <p>Be nice: Be courteous, respectful and polite to fellow community members: no regional, racial, gender, or other abuse will be tolerated. We like nice people way better than mean ones!</p>
+  </li>
+  <li>
+    <p>Encourage diversity and participation: Make everyone in our community feel welcome, regardless of their background and the extent of their contributions, and do everything possible to encourage participation in our community.</p>
+  </li>
+  <li>
+    <p>Keep it legal: Basically, don’t get anybody in trouble. Share only content that you own, do not share private or sensitive information, and don’t break laws.</p>
+  </li>
+  <li>
+    <p>Stay on topic: Make sure that you are posting to the correct channel and avoid off-topic discussions. Remember when you update an issue or respond to an email you are potentially sending to a large number of people. Please consider this before you update. Also remember that nobody likes spam.</p>
+  </li>
+</ul>
+
+<h2 id="reporting-issues">
+<a id="reporting-issues" class="anchor" href="#reporting-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reporting Issues</h2>
+
+<p>If you find bugs, mistakes or inconsistencies in the Origin project’s code or
+documents, please let us know by filing an issue at the appropriate issue
+tracker (we use multiple repositories).</p>
+
+<aside class="notice">
+No issue is too small. Help us fix our tpyos!
+</aside>
+
+<ul>
+  <li><a href="https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+">Good first issues</a></li>
+  <li><a href="https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+label%3Adocs">Docs issues</a></li>
+  <li><a href="https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+label%3Aorigin.js">Origin.js issues (JS API &amp; Solidity contracts)</a></li>
+  <li><a href="https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+label%3Adapp">DApp issues</a></li>
+  <li><a href="https://github.com/OriginProtocol/origin-playground/issues">Playground issues</a></li>
+  <li><a href="https://github.com/OriginProtocol/origin-website/issues">Company website issues</a></li>
+</ul>
+
+<h2 id="security-issues">
+<a id="security-issues" class="anchor" href="#security-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Security Issues</h2>
+
+<p>The Origin Protocol and its implementations are still in early development, which means there may be problems with the protocol or in our implementations. We take security vulnerabilities very seriously. If you discover a security issue, please bring it to our attention right away!</p>
+
+<p>If you find a vulnerability please send your report privately to <a href="mailto:security@originprotocol.com">security@originprotocol.com</a> or <a href="https://keybase.io/joshfraser">contact Josh Fraser via Keybase</a>. Please DO NOT file a public issue.</p>
+
+<p>If the issue is a protocol weakness or something not yet deployed, feel free to discuss it openly.</p>
+
+<h2 id="community-improvement">
+<a id="community-improvement" class="anchor" href="#community-improvement" aria-hidden="true"><span class="octicon octicon-link"></span></a>Community Improvement</h2>
+
+<p>Origin is just as much about community as it is about our technology.</p>
+
+<p>We need constant help in improving our documentation, building new tools to interface with our platform, spreading the word to new users, helping new users getting setup and much more.</p>
+
+<p>Please get in touch if you would like to help out. Our <code class="highlighter-rouge">general</code> channel on <a href="https://discord.gg/jyxpUSe">Discord</a> is a great place to share ideas and volunteer to help.</p>
+
+<h2 id="full-time-positions">
+<a id="full-time-positions" class="anchor" href="#full-time-positions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Full Time Positions</h2>
+
+<p>Origin occasionally hires developers for part time or full time positions.</p>
+
+<p>We have a strong preference for hiring people who have already started contributing to the project. If you want a full time position on our team, your best shot is to engage with our team and start contributing code. It is very unlikely that we would offer you a full time position on our engineering team unless you’ve had at least a few pull requests merged.</p>
+
+<p>If you are interested, check out <a href="https://angel.co/originprotocol/jobs">the Origin Protocol job listings</a>. If you’d like to help in other ways, please propose your ideas in the <a href="https://discord.gg/jyxpUSe">Origin Discord</a>.</p>
+
+
+        </div>    
+    </div>
+
+    <footer>
+        <a href="https://www.originprotocol.com/">Origin Protocol</a>
+        <span>|</span>
+        <a href="https://dapp.originprotocol.com/">DApp</a>
+        <a href="https://github.com/OriginProtocol">GitHub</a>
+        <a href="https://www.originprotocol.com/discord">Discord</a>
+    </footer>
+</body>

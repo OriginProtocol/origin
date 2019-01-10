@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Event Listener - Origin</title>
+
+  <link rel="stylesheet" href="/assets/css/highlight.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
+  <link rel="stylesheet" href="/assets/css/site.css"/>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a></div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav " href="/reference/">API Reference</a>
+                <a class="topNav current" href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Software</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/software/">Overview</a> <!-- 200-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/dapp.html">DApp</a> <!-- 110-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">Event Listener</h1>
+
+            <h1 id="origin-event-listener">Origin Event Listener</h1>
+
+<p>The Origin Event Listener follows the blockchain, looking for Origin events and passing those events on to whatever systems need that data. These events are annotated with full information about the Origin resources (listings/offers) that fired off these events.</p>
+
+<p>The data from the listener can be used to build and keep up-to-date an offline index of all Origin Protocol data on the chain.</p>
+
+<p>The listener will let you know one or more times about an event. Make sure your webhook endpoint is idempotent, and can handle receiving the same data multiple times!</p>
+
+<p>To allow the listener to be compatible with <a href="https://infura.io/">infura.io</a>, the listener does not use subscriptions, only API queries.</p>
+
+<h2 id="running-localy">Running Localy</h2>
+
+<p>Start the event-listener container.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up event-listener
+</code></pre></div></div>
+
+<p>You should see messages in the console indicating events are being indexed.</p>
+
+<h2 id="command-line-options">Command line options</h2>
+
+<p>Output:</p>
+
+<p><code class="highlighter-rouge">--verbose</code> Output json for all event information to stdout</p>
+
+<p><code class="highlighter-rouge">--webhook=yoururl</code> Post json for each event to the URL</p>
+
+<p><code class="highlighter-rouge">--discord-webhook=discordurl</code> Post a short Discord notification for each marketplace event.</p>
+
+<p><code class="highlighter-rouge">--elasticsearch</code> Experimental support for recording listings directly into elastic search</p>
+
+<p><code class="highlighter-rouge">--db</code> Experimental support for recording listings directly into postgres.</p>
+
+<p>Events:</p>
+
+<p><code class="highlighter-rouge">--continue-file=path</code> Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format <code class="highlighter-rouge">{"lastLogBlock":222, "version":1}</code>.</p>
+
+<h2 id="env-variables">Env variables</h2>
+
+<p>The listener calls out origin.js to load and validate data from the blockchain. In order to properly configure an origin.js object, the listener uses the following environment variables:</p>
+<ul>
+  <li>ARBITRATOR_ACCOUNT: Ethereum address of the Origin marketplace arbitrator account.</li>
+  <li>AFFILIATE_ACCOUNT:  Ethereum address of the Origin marketplace affilicate account.</li>
+  <li>BLOCK_EPOCH: Start block to use when scanning the blockchain for Origin events.</li>
+</ul>
+
+<p>Those values can be found via the DApp info page:</p>
+<ul>
+  <li>Mainnet: https://dapp.originprotocol.com/#/dapp-info</li>
+  <li>Rinkeby: https://dapp.staging.originprotocol.com/#/dapp-info</li>
+  <li>Local blockchain: http://localhost:3000/#/dapp-info</li>
+</ul>
+
+<h2 id="how-the-listener-works">How the listener works</h2>
+
+<p>The listener checks every few seconds for a new block number. If it sees one, it requests all Origin related events from the last block it saw an event on, to the new block.</p>
+
+<p>For each of those events, the listener decodes them, annotates them with some useful fields, then runs a rule based on the event/contract to load additional information about the event through origin.js. For example, a <code class="highlighter-rouge">ListingCreated</code> event on a marketplace contract will have the results of <code class="highlighter-rouge">origin.marketplace.get</code> added to it. The code that uses the event listener output doesn’t need to talk to the blockchain or IPFS at all.</p>
+
+<p>After being annotated with more information, the event is then output to the places set by the command line options.</p>
+
+<h2 id="error-handling">Error handling</h2>
+
+<ul>
+  <li>
+    <p>If there is an error loading information about an origin.js object, then the listener will skip that event and continue to the next. Because of the design of the Origin Protocol, there is zero guarantees that the associated IPFS data for a resource will be valid, or even there at all. Anyone can put whatever they want there.</p>
+  </li>
+  <li>
+    <p>When an error is raised when outputting to specific output handler (webhook, db, etc), the listener will attempt retries with increasing delays, up to two minutes. These retries will block all further event processing until the event goes through. If a maximum number of retries on one event has failed, then listener will quit, allowing it to be restarted from outside.</p>
+  </li>
+  <li>
+    <p>When an error is raised when getting event or block number information, the same retry strategy as for output errors is tried (increasing delays).</p>
+  </li>
+</ul>
+
+
+        </div>    
+    </div>
+
+    <footer>
+        <a href="https://www.originprotocol.com/">Origin Protocol</a>
+        <span>|</span>
+        <a href="https://dapp.originprotocol.com/">DApp</a>
+        <a href="https://github.com/OriginProtocol">GitHub</a>
+        <a href="https://www.originprotocol.com/discord">Discord</a>
+    </footer>
+</body>

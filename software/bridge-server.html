@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bridge Server - Origin</title>
+
+  <link rel="stylesheet" href="/assets/css/highlight.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
+  <link rel="stylesheet" href="/assets/css/site.css"/>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a></div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav " href="/reference/">API Reference</a>
+                <a class="topNav current" href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Software</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/software/">Overview</a> <!-- 200-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/dapp.html">DApp</a> <!-- 110-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">Bridge Server</h1>
+
+            <p>The Origin Bridge Server handles the server side of identity attestations.</p>
+
+<p>Most traditional web APIs, such as those from Facebook and Twitter, can only interact with a centralized server located at a specific domain. A decentralized application, like our Origin Demo DApp, doesn’t need to “live” on a particular server. (In fact, you can load it from any IPFS gateway!) Thus, in order for the DApp to use an “old world” API, it needs a Bridge Server.</p>
+
+<p>Origin hosts a Bridge Server, but in the true spirit of decentralization, anyone is free to clone our open source code and host their own.</p>
+
+<p>You can connect to and use our hosted Bridge Server at <a href="https://bridge.originprotocol.com">bridge.originprotocol.com</a>. The <code class="highlighter-rouge">develop</code> branch of this repo is available at <a href="https://dev.bridge.originprotocol.com">dev.bridge.originprotocol.com</a>.</p>
+
+<p>DApps can connect to the Bridge Server of their choosing to handle tasks like issuing identity attestations and decryptying data that is returned from third-party services like Civic. We also need proxies for fetching public data from services like Facebook and Twitter which require authentication keys.</p>
+
+<h2 id="api-documentation">API documentation</h2>
+
+<p>See the <a href="../../reference/origin-js/attestations.html">Attestation API</a></p>
+
+<h2 id="one-time-setup">One-time Setup</h2>
+
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+  <li>Python 3.5 or higher required</li>
+  <li>Postgresql 9.3 or higher required</li>
+</ul>
+
+<h4 id="mac-os-specifics">Mac OS specifics</h4>
+<p>Install build tools packages:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install automake autoconf libtool
+</code></pre></div></div>
+
+<h3 id="set-up-a-virtual-environment">Set Up A Virtual Environment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/OriginProtocol/origin.git <span class="o">&amp;&amp;</span> <span class="nb">cd </span>origin/origin-bridge
+
+python3 <span class="nt">-m</span> venv ve
+
+<span class="nb">source </span>ve/bin/activate
+
+pip install <span class="nt">-r</span> requirements.txt
+</code></pre></div></div>
+
+<h3 id="clone-the-starter-configuration-variables">Clone the Starter Configuration Variables</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp dev.env .env
+</code></pre></div></div>
+<p>Adjust the values in .env now and in the future to suit your local environment.</p>
+
+<p>For <a href="https://www.envkey.com/">EnvKey</a> support, set ENVKEY to the key of the
+generated local development key.</p>
+
+<h4 id="flask-secret">Flask secret</h4>
+<p>Set <code class="highlighter-rouge">FLASK_SECRET_KEY</code> to your unique Flask secret key. Use a unique Flask secret key per environment. Flask suggests that
+<code class="highlighter-rouge">python -c "import os; print(os.urandom(24))"</code>
+is a perfectly reasonable way to generate a secret key.</p>
+
+<h4 id="database">Database</h4>
+<p>Set up your <code class="highlighter-rouge">DATABASE_URL</code> to point to where you local database is or will be.</p>
+
+<h4 id="identity-attestation">Identity attestation</h4>
+<p>This is optional - only define these environment keys if you want to use your
+bridge server deployment as an endpoint for the DApp identity attestation functionality.</p>
+
+<ul>
+  <li><a href="https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow">Facebook</a>
+    <ul>
+      <li>FACEBOOK_CLIENT_ID</li>
+      <li>FACEBOOK_CLIENT_SECRET</li>
+    </ul>
+  </li>
+  <li><a href="https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html">Sendgrid</a>
+    <ul>
+      <li>SENDGRID_API_KEY</li>
+      <li>SENDGRID_FROM_EMAIL</li>
+    </ul>
+  </li>
+  <li><a href="https://www.twilio.com/docs/usage/your-request-to-twilio">Twilio</a>
+    <ul>
+      <li>TWILIO_VERIFY_API_KEY (Can be generated from your <a href="https://www.twilio.com/console/verify/applications">Twilio account</a>)</li>
+    </ul>
+  </li>
+  <li><a href="https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens">Twitter</a>
+    <ul>
+      <li>TWITTER_CONSUMER_KEY</li>
+      <li>TWITTER_CONSUMER_SECRET</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="mobile-push-notification">Mobile push notification</h4>
+<p>If you wish to setup push notification for your mobile apps</p>
+
+<ul>
+  <li><code class="highlighter-rouge">APNS_CERT_FILE</code>: Apple notification service certificate(This needs to be .pem file.
+Refer to <a href="http://www.apptuitions.com/generate-pem-file-for-push-notification/">this doc</a> for how to generate)</li>
+  <li><code class="highlighter-rouge">APNS_CERT_PASSWORD</code>: Passphrase for the pem file if you do not strip it out when you exported to pem</li>
+  <li><code class="highlighter-rouge">APNS_APP_BUNDLE_ID</code>: The bundle id of your app</li>
+</ul>
+
+<p>FCM support forthcoming.</p>
+
+<h4 id="production-configuration">Production configuration</h4>
+<p>When deploying to a production system, make sure to set appropriate environment
+variables, in your .env file, notably</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DEBUG</span><span class="o">=</span>0
+<span class="nv">HTTPS</span><span class="o">=</span>1
+<span class="nv">HOST</span><span class="o">=</span>&lt;your-prod-host&gt;
+<span class="nv">FLASK_SECRET_KEY</span><span class="o">=</span>&lt;unique-key&gt;
+<span class="nv">PROJECTPATH</span><span class="o">=</span>/app  <span class="c"># For Heroku</span>
+</code></pre></div></div>
+
+<h3 id="set-up-your-database">Set Up Your Database</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>createdb &lt;db-name&gt;  <span class="c"># Anything you want, perhaps bridge-server</span>
+</code></pre></div></div>
+
+<p>Make sure the DB name you used is indicated in your <code class="highlighter-rouge">DATABASE_URL</code> in the <code class="highlighter-rouge">.env</code> file.
+Example: <code class="highlighter-rouge">DATABASE_URL</code>=<code class="highlighter-rouge">postgresql://localhost:5432/bridge-server</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Applies all migrations to make the DB current. Works even on an empty database.</span>
+<span class="c">#</span>
+<span class="c"># Run this in the virtual environment you set up above.</span>
+<span class="nv">FLASK_APP</span><span class="o">=</span>main.py flask db upgrade
+</code></pre></div></div>
+
+<h2 id="every-time-you-develop">Every Time You Develop</h2>
+
+<h3 id="set-up-your-shell">Set Up Your Shell</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /path/to/environment/project
+<span class="nb">source</span> ../bin/activate
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nb">.</span>
+</code></pre></div></div>
+
+<p>It’s handy to save bash alias for this. Consider adding in your <code class="highlighter-rouge">~/.bash_profile</code>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">myenv</span><span class="o">=</span><span class="s1">'cd /path/to/environment/project &amp;&amp; source ../bin/activate &amp;&amp; export PYTHONPATH=.'</span>
+</code></pre></div></div>
+
+<h3 id="run-the-server">Run the Server</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run this in the virtual environment you set up above.</span>
+python main.py
+</code></pre></div></div>
+
+<p>This starts a development server on <code class="highlighter-rouge">localhost:5000</code> by default.</p>
+
+<h3 id="run-the-tests">Run the Tests</h3>
+
+<p>Throughout the development process and before committing or deploying, run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pytest <span class="nt">--flakes</span> <span class="nt">--codestyle</span>
+</code></pre></div></div>
+
+<p>Run individual test files simply as:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pytest path/to/test.py
+</code></pre></div></div>
+
+<p>Run a single test case, or an individual test, using:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pytest path/to/test.py::test_case_name
+</code></pre></div></div>
+
+<p><strong>Problems?</strong> Hit us up in the <code class="highlighter-rouge">engineering</code> channel on <a href="https://www.originprotocol.com/discord">Discord</a> if you need help.</p>
+
+<h3 id="code-formatting">Code Formatting</h3>
+
+<p>We are using <a href="https://github.com/PyCQA/pycodestyle">pycodestyle</a> to enforce code formatting. The tests will throw errors when code is not formatted properly, when using the <code class="highlighter-rouge">--codestyle</code> option.</p>
+
+<p>To automatically format the code:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>autopep8 --in-place --recursive --a --a .
+</code></pre></div></div>
+
+<h2 id="contributing">Contributing</h2>
+
+<p>Please send your pull requests to the <code class="highlighter-rouge">develop</code> branch. Everything on <code class="highlighter-rouge">master</code> should be live at <code class="highlighter-rouge">bridge.originprotocol.com</code></p>
+
+<h2 id="database-changes">Database changes</h2>
+
+<p>We use <a href="https://flask-migrate.readthedocs.io/en/latest/">Flask Migrate</a> to handle database revisions. If you make changes to the database, use</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">FLASK_APP</span><span class="o">=</span>main.py flask db migrate
+</code></pre></div></div>
+
+<p>to generate the required migration file. Rename it to add a description of the change after the underscore. Then run</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">FLASK_APP</span><span class="o">=</span>main.py flask db upgrade
+</code></pre></div></div>
+
+<p>to apply your migration to your local database, then test your changes before committing.</p>
+
+<h2 id="heroku-deploy">Heroku Deploy</h2>
+
+<p>To deploy a development copy of the site on Heroku, just choose which branch you would like to use and follow the instructions:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><code class="highlighter-rouge">Master</code> branch <br />(stable)</th>
+      <th><code class="highlighter-rouge">Develop</code> branch<br /> (active development)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin/tree/master/origin-bridge"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy" /></a></td>
+      <td><a href="https://heroku.com/deploy?template=https://github.com/OriginProtocol/origin/tree/master/origin-bridge"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Heroku will prompt you to set config variables. At a minium, you must set these three:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Config</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>FLASK_SECRET_KEY</td>
+      <td>(make something up)</td>
+    </tr>
+    <tr>
+      <td>PROJECTPATH</td>
+      <td>/app</td>
+    </tr>
+    <tr>
+      <td>HOST</td>
+      <td>(domain name of your dev heroku app)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>See the <code class="highlighter-rouge">dev.env</code> file for a full list of other optional config variables.</p>
+
+<p>We use following buildpacks:</p>
+
+<p>heroku buildpacks:set heroku/python</p>
+
+
+        </div>    
+    </div>
+
+    <footer>
+        <a href="https://www.originprotocol.com/">Origin Protocol</a>
+        <span>|</span>
+        <a href="https://dapp.originprotocol.com/">DApp</a>
+        <a href="https://github.com/OriginProtocol">GitHub</a>
+        <a href="https://www.originprotocol.com/discord">Discord</a>
+    </footer>
+</body>
