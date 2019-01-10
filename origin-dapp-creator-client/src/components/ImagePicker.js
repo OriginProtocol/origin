@@ -4,7 +4,11 @@ const acceptedFileTypes = [
   'image/jpeg',
   'image/pjpeg',
   'image/png',
-  'image/ico'
+  'image/vnd.microsoft.icon',
+  'image/x-icon',
+  // Not valid but sometimes used for icons
+  'image/ico',
+  'image/icon',
 ]
 
 class ImagePicker extends React.Component {
@@ -42,6 +46,8 @@ class ImagePicker extends React.Component {
         if (this.props.onUpload) {
           this.props.onUpload(this.props.name, imageUrl)
         }
+      } else {
+        console.log('Invalid file type: ', file.type)
       }
     }
   }
@@ -63,45 +69,68 @@ class ImagePicker extends React.Component {
           onChange={this.handleFileChange}
         />
 
-        {this.renderPreview()}
-
-        <div
-          className="image-picker"
-          onClick={this.handlePreviewClick}
-        >
-          <img src="images/upload-icon.svg" />
-          <p className="title">{this.props.title}</p>
-          <p>{this.props.description.map((x, i) => <span key={i}>{x}</span>)}</p>
-          <label htmlFor={this.props.name + '-picker'} className="btn btn-outline-primary">
-            Upload
-          </label>
-        </div>
+        {this.state.imageUrl !== null ? this.renderPreview() :
+          <div
+            className="image-picker"
+            onClick={this.handlePreviewClick}
+          >
+            <div className="upload-wrapper">
+              <img src="images/upload-icon.svg" />
+              <p className="title">{this.props.title}</p>
+              <p>{this.props.description.map((x, i) => <span key={i}>{x}</span>)}</p>
+            </div>
+            <label htmlFor={this.props.name + '-picker'} className="btn btn-outline-primary">
+              Upload
+            </label>
+          </div>
+        }
       </>
     )
   }
 
   renderPreview () {
-    if (this.state.imageUrl === null) return null
     return (
       <div className="preview">
-        <div className="img"
-          style={{ backgroundImage: `url(${this.state.imageUrl})` }}>
+        <div className="upload-wrapper">
+          <img src={this.state.imageUrl} />
         </div>
+        <label htmlFor={this.props.name + '-picker'} className="btn btn-outline-primary">
+          Change
+        </label>
       </div>
     )
   }
 }
 
 require('react-styl')(`
+  .upload-wrapper
+    height: 12rem
+    position: relative
+    background-color: var(--pale-grey-four)
+
+  .image-picker, .preview
+    text-align: center;
+
   .image-picker
+    padding: 2rem
     border: 1px dashed var(--light)
     border-radius: var(--default-radius)
     background-color: var(--pale-grey-four)
-    padding: 2rem
-    text-align: center;
 
   .image-picker img
     margin-bottom: 0.25rem
+
+  .preview
+    label
+      margin-top: 2rem
+    img
+      max-width: 100%
+      position: absolute
+      margin: auto
+      top: 0
+      bottom: 0
+      left: 0
+      right: 0
 
   .title
     color: var(--dark)
@@ -114,16 +143,6 @@ require('react-styl')(`
     position: absolute
     overflow: hidden
     z-index: -1
-
-  .preview
-    width: 100%
-    height: 100%;
-
-  .img
-    width: 100%
-    height: 100%;
-    background-repeat: no-repeat
-    background-size:contain
 `)
 
 export default ImagePicker
