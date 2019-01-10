@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://schema.originprotocol.com/offer_1.0.0.json",
+  "title": "Origin Protocol offer schema",
+  "definitions": {
+    "money": {
+      "type": "object",
+      "title": "An amount of money in a specified currency",
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "currency",
+        "amount"
+      ]
+    },
+    "timeSlot": {
+      "type": "object",
+      "required": [
+        "startDate",
+        "endDate"
+      ],
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "startDate",
+        "endDate"
+      ]
+    },
+    "unitOffer": {
+      "type": "object",
+      "properties": {
+        "unitsPurchased": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unitsPurchased"
+      ]
+    },
+    "fractionalOffer": {
+      "type": "object",
+      "properties": {
+        "slots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/timeSlot"
+          }
+        }
+      },
+      "required": [
+        "slots"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "schemaId": {
+      "type": "string"
+    },
+    "listingType": {
+      "enum": [
+        "unit",
+        "fractional"
+      ]
+    },
+    "totalPrice": {
+      "$ref": "#/definitions/money"
+    },
+    "commission": {
+      "$ref": "#/definitions/money"
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/definitions/unitOffer"
+    },
+    {
+      "$ref": "#/definitions/fractionalOffer"
+    }
+  ],
+  "required": [
+    "schemaId",
+    "listingType",
+    "totalPrice",
+    "commission"
+  ]
+}

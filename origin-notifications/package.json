@@ -2,22 +2,44 @@
   "name": "origin-notifications",
   "version": "0.0.1",
   "description": "Origin Notifications Service",
+  "engines": {
+    "node": "10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/origin-notifications"
+  },
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint '**/*.js'",
+    "migrate": "sequelize db:migrate",
+    "start": "per-env",
+    "start:development": "nodemon src/app.js",
+    "start:production": "node src/app.js",
+    "test": "mocha --timeout 10000 --exit"
   },
-  "author": "Micah Alcorn",
+  "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^6.1.0",
-    "envkey": "^1.2.2",
+    "cross-fetch": "^3.0.0",
+    "dotenv": "^6.2.0",
+    "envkey": "^1.2.4",
     "express": "^4.16.4",
-    "pg": "^7.5.0",
+    "per-env": "^1.0.2",
+    "pg": "^7.7.1",
     "pg-hstore": "^2.3.2",
-    "rate-limiter-flexible": "^0.17.3",
-    "sequelize": "^5.0.0-beta.5",
-    "sequelize-cli": "^5.2.0",
+    "rate-limiter-flexible": "^0.19.4",
+    "sequelize": "^5.0.0-beta.14",
+    "sequelize-cli": "^5.4.0",
     "web-push": "^3.3.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.9.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.7"
+  }
 }

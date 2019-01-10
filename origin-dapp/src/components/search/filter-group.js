@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import $ from 'jquery'
 
 import MultipleSelectionFilter from 'components/search/multiple-selection-filter'
 import PriceFilter from 'components/search/price-filter'
@@ -21,14 +20,8 @@ class FilterGroup extends Component {
     this.handleApplyClick = this.handleApplyClick.bind(this)
     this.handleClearClick = this.handleClearClick.bind(this)
     this.handleOpenDropdown = this.handleOpenDropdown.bind(this)
-  }
 
-  resolveFromListingSchema(path) {
-    const properties = Array.isArray(path) ? path : path.split('.')
-    return properties.reduce(
-      (prev, curr) => prev && prev[curr],
-      this.props.listingSchema
-    )
+    this.state = {}
   }
 
   handleFilterMounted(filter) {
@@ -42,6 +35,7 @@ class FilterGroup extends Component {
 
   async handleApplyClick(event) {
     event.preventDefault()
+    this.setState({ open: false })
 
     Promise.all(
       this.childFilters.map(childFilter => childFilter.getFilters())
@@ -50,12 +44,13 @@ class FilterGroup extends Component {
       this.props.updateFilters(this.title, filters)
 
       // close the dropdown menu. Handles the css clases and aria-expanded attribute
-      $('body').trigger('click')
+      // TODO - reimplement now that we no longer use jQuery
     })
   }
 
   async handleClearClick(event) {
     event.preventDefault()
+    this.setState({ open: false })
 
     this.childFilters
       // Also trigger the filter state chenge as you would with clicking apply
@@ -67,6 +62,12 @@ class FilterGroup extends Component {
   }
 
   handleOpenDropdown() {
+    if (this.state.open) {
+      this.setState({ open: false })
+      return
+    } else {
+      this.setState({ open: true })
+    }
     const containsDateFilter = this.props.filterGroup.items.some(
       filter => filter.type === 'date'
     )
@@ -85,9 +86,6 @@ class FilterGroup extends Component {
       return (
         <MultipleSelectionFilter
           filter={filter}
-          multipleSelectionValues={this.resolveFromListingSchema(
-            filter.listingPropertyName
-          )}
           listingType={this.props.listingType}
           title={title}
           onChildMounted={this.handleFilterMounted}
@@ -137,12 +135,14 @@ class FilterGroup extends Component {
         <a
           onClick={this.handleOpenDropdown}
           className="nav-link"
-          data-toggle="dropdown"
           data-parent="#search-filters-bar"
         >
           {this.props.intl.formatMessage(this.props.filterGroup.title)}
         </a>
-        <form className="dropdown-menu" id={formId}>
+        <form
+          className={`dropdown-menu${this.state.open ? ' show' : ''}`}
+          id={formId}
+        >
           <div className="d-flex flex-column">
             <div className="dropdown-form">
               {this.props.filterGroup.items.map((filter, index) =>

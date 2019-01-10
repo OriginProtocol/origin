@@ -56,5 +56,5 @@ export default function adapterFactory(schemaId, dataType, schemaVersion) {
     )
   }
   const adapter = adapterConfig[dataType][schemaVersion]
-  return new adapter(schemaId)
+  return new adapter(dataType, schemaVersion)
 }

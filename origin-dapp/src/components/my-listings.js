@@ -10,6 +10,8 @@ import { getListing } from 'utils/listing'
 
 import origin from '../services/origin'
 
+const { web3 } = origin.contractService
+
 class MyListings extends Component {
   constructor(props) {
     super(props)
@@ -26,18 +28,22 @@ class MyListings extends Component {
   }
 
   componentDidMount() {
-    if (this.props.web3Account) {
+    if (
+      this.props.wallet.address &&
+      (!web3.currentProvider.isOrigin || origin.contractService.walletLinker)
+    ) {
       this.loadListings()
-    } else if (!web3.givenProvider) {
+    } else if (web3.currentProvider.isOrigin) {
       this.props.storeWeb3Intent('view your listings')
+      origin.contractService.showLinkPopUp()
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { web3Account } = this.props
+    const { wallet } = this.props
 
     // on account change
-    if (web3Account && web3Account !== prevProps.web3Account) {
+    if (wallet.address && wallet.address !== prevProps.wallet.address) {
       this.loadListings()
     }
   }
@@ -46,11 +52,11 @@ class MyListings extends Component {
     try {
       const ids = await origin.marketplace.getListings({
         idsOnly: true,
-        listingsFor: this.props.web3Account
+        listingsFor: this.props.wallet.address
       })
       const listings = await Promise.all(
         ids.map(id => {
-          return getListing(id, true)
+          return getListing(id, { translate: true })
         })
       )
 
@@ -280,10 +286,10 @@ class MyListings extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, wallet }) => {
   return {
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    wallet,
+    web3Intent: app.web3.intent
   }
 }
 

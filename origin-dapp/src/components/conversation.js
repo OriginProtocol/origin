@@ -1,20 +1,23 @@
 import React, { Component, Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import moment from 'moment-timezone'
 
 import { fetchUser } from 'actions/User'
+import { showMainNav } from 'actions/App'
 
 import CompactMessages from 'components/compact-messages'
-import OfferStatusEvent from 'components/offer-status-event'
-import PurchaseProgress from 'components/purchase-progress'
 
-import { getDataUri } from 'utils/fileUtils'
+import { generateCroppedImage } from 'utils/fileUtils'
 import { getListing } from 'utils/listing'
+import { truncateAddress, formattedAddress, abbreviateName } from 'utils/user'
+import { getOfferEvents } from 'utils/offer'
 
 import origin from '../services/origin'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || 2 * 1024 * 1024 // 2 MiB
+const formatDate = timestamp => moment(timestamp * 1000).format('MMM D, YYYY')
 
 class Conversation extends Component {
   constructor(props) {
@@ -32,6 +35,8 @@ class Conversation extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
+    this.loadPurchase = this.loadPurchase.bind(this)
+    this.formatOfferMessage = this.formatOfferMessage.bind(this)
 
     this.conversationDiv = React.createRef()
     this.fileInput = React.createRef()
@@ -43,14 +48,24 @@ class Conversation extends Component {
       files: [],
       listing: {},
       purchase: {},
-      invalidFileSelected: false,
       invalidTextInput: false
     }
   }
 
   componentDidMount() {
+    const { smallScreenOrDevice, showMainNav } = this.props
+    let updateShowNav = true
+
     // try to detect the user before rendering
     this.identifyCounterparty()
+
+    if (smallScreenOrDevice) {
+      this.loadListing()
+      updateShowNav = false
+      this.scrollToBottom()
+    }
+
+    showMainNav(updateShowNav)
 
     // why does the page jump ?????
     // regardless, need to scroll past the banner for now anyway
@@ -79,7 +94,10 @@ class Conversation extends Component {
     }
 
     // on new message
-    if (messages.length > prevProps.messages.length) {
+    const newMessage = JSON.stringify(this.getLatestMessage(messages))
+    const prevPropsNewMessage = JSON.stringify(this.getLatestMessage(prevProps.messages))
+
+    if (newMessage !== prevPropsNewMessage) {
       this.loadListing()
       // auto-scroll to most recent message
       this.scrollToBottom()
@@ -91,36 +109,29 @@ class Conversation extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.showMainNav(true)
+  }
+
   handleClick() {
     this.fileInput.current.click()
   }
 
-  async handleInput(event) {
+  handleInput(event) {
     const filesObj = event.target.files
-    const filesArr = []
 
     for (const key in filesObj) {
       if (filesObj.hasOwnProperty(key)) {
-        // Base64 encoding will inflate size to roughly 4/3 of original
-        if ((filesObj[key].size / 3) * 4 > imageMaxSize) {
-          this.setState({ invalidFileSelected: true })
-        } else {
-          this.setState({ invalidFileSelected: false })
-
-          filesArr.push(filesObj[key])
-        }
+        generateCroppedImage(filesObj[key], null, (dataUri) => {
+          this.setState((state) => {
+            return {
+              ...state,
+              files: [...state.files, dataUri]
+            }
+          })
+        })
       }
     }
-
-    const filesAsDataUriArray = filesArr.map(async fileObj =>
-      getDataUri(fileObj)
-    )
-
-    Promise.all(filesAsDataUriArray).then(dataUriArray => {
-      this.setState({
-        files: dataUriArray
-      })
-    })
   }
 
   handleKeyDown(e) {
@@ -156,12 +167,21 @@ class Conversation extends Component {
   }
 
   identifyCounterparty() {
-    const { fetchUser, id, users, web3Account } = this.props
-    const recipients = origin.messaging.getRecipients(id)
-    const address = recipients.find(addr => addr !== web3Account)
-    const counterparty = users.find(u => u.address === address) || { address }
+    const { fetchUser, id, users, wallet } = this.props
 
-    !counterparty.address && fetchUser(address)
+    if (!id) {
+      return this.setState({ counterparty: {} })
+    }
+
+    const recipients = origin.messaging.getRecipients(id)
+    const address = recipients.find(addr => formattedAddress(addr) !== formattedAddress(wallet.address))
+    let counterparty = users.find(u => formattedAddress(u.address) === formattedAddress(address))
+
+    if (!counterparty) {
+      fetchUser(address)
+
+      counterparty = { address }
+    }
 
     this.setState({ counterparty })
     this.loadPurchase()
@@ -174,40 +194,39 @@ class Conversation extends Component {
 
     // If listingId does not match state, store and check for a purchase.
     if (listingId !== this.state.listing.id) {
-      const listing = listingId ? await getListing(listingId, true) : {}
+      const listing = listingId ? await getListing(listingId, { translate: true }) : {}
       this.setState({ listing })
       this.loadPurchase()
     }
   }
 
   async loadPurchase() {
-    const { web3Account } = this.props
+    const { wallet } = this.props
     const { counterparty, listing, purchase } = this.state
 
-    // listing may not be found
     if (!listing.id) {
       return this.setState({ purchase: {} })
     }
 
     const offers = await origin.marketplace.getOffers(listing.id)
-    const involvingCounterparty = offers.filter(
-      o => o.buyer === counterparty.address || o.buyer === web3Account
-    )
-    const mostRecent = involvingCounterparty.sort(
-      (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
-    )[0]
+    const involvingCounterparty = offers.filter(o => {
+      const buyerIsCounterparty = formattedAddress(o.buyer) === formattedAddress(counterparty.address)
+      const buyerIsCurrentUser = formattedAddress(o.buyer) === formattedAddress(wallet.address)
 
-    // purchase may not be found
+      return buyerIsCounterparty || buyerIsCurrentUser
+    })
+
+    const sortOrder = (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
+    const mostRecent = involvingCounterparty.sort(sortOrder)[0]
+
     if (!mostRecent) {
       return this.setState({ purchase: {} })
     }
-    // compare with existing state
-    if (
-      // purchase is different
-      mostRecent.id !== purchase.id ||
-      // stage has changed
-      mostRecent.status !== purchase.status
-    ) {
+
+    const purchaseHasChanged = mostRecent.id !== purchase.id
+    const statusHasChanged = mostRecent.status !== purchase.status
+
+    if (purchaseHasChanged || statusHasChanged) {
       this.setState({ purchase: mostRecent })
       this.scrollToBottom()
     }
@@ -219,6 +238,12 @@ class Conversation extends Component {
     if (el) {
       el.scrollTop = el.scrollHeight
     }
+  }
+
+  getLatestMessage(messages = []) {
+    const lastMessageIndex = messages.length - 1
+    const sortOrder = (a, b) => (a.created < b.created ? -1 : 1)
+    return messages.sort(sortOrder)[lastMessageIndex]
   }
 
   async sendMessage(content) {
@@ -235,77 +260,124 @@ class Conversation extends Component {
     }
   }
 
+  formatOfferMessage(info) {
+    const { listing = {}, purchase } = this.state
+    const { includeNav, users, smallScreenOrDevice, withListingSummary } = this.props
+
+    if (smallScreenOrDevice || !withListingSummary) return
+
+    const { returnValues = {}, event, timestamp } = info
+    const partyAddress = formattedAddress(returnValues.party)
+    const user = users.find((user) => formattedAddress(user.address) === partyAddress)
+    const userName = abbreviateName(user)
+    const party = userName || truncateAddress(returnValues.party)
+    const date = formatDate(timestamp)
+
+    function withdrawnOrRejected() {
+      const withdrawn = formattedAddress(purchase.buyer) === partyAddress
+      const withdrawnMessage = 'withdrew their offer for'
+      const rejectedMessage = 'rejected the offer for'
+
+      return withdrawn ? withdrawnMessage : rejectedMessage
+    }
+
+    const offerMessages = {
+      'OfferCreated': (
+        <FormattedMessage
+          id={'conversation.offerCreated'}
+          defaultMessage={'{party} made an offer on {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferWithdrawn': (
+        <FormattedMessage
+          id={'conversation.offerWithdrawnOrRejected'}
+          defaultMessage={'{party} {action} {name} on {date}'}
+          values={{ party, date, name: listing.name, action: withdrawnOrRejected() }}
+        />
+      ),
+      'OfferAccepted': (
+        <FormattedMessage
+          id={'conversation.offerAccepted'}
+          defaultMessage={'{party} accepted the offer for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferDisputed': (
+        <FormattedMessage
+          id={'conversation.offerDisputed'}
+          defaultMessage={'{party} initiated a dispute for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferRuling': (
+        <FormattedMessage
+          id={'conversation.offerRuling'}
+          defaultMessage={'{party} made a ruling on the dispute for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferFinalized': (
+        <FormattedMessage
+          id={'conversation.offerFinalized'}
+          defaultMessage={'{party} finalized the offer for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+      'OfferData': (
+        <FormattedMessage
+          id={'conversation.offerData'}
+          defaultMessage={'{party} updated information for {name} on {date}'}
+          values={{ party, date, name: listing.name }}
+        />
+      ),
+    }
+
+    return (
+      <div key={new Date() + Math.random()} className="purchase-info">
+        {includeNav && (
+          <Link to={`/purchases/${purchase.id}`} target="_blank" rel="noopener noreferrer">
+            {offerMessages[event]}
+          </Link>
+        )}
+        {!includeNav && offerMessages[event]}
+      </div>
+    )
+  }
+
   render() {
-    const { id, intl, messages, web3Account, withListingSummary } = this.props
+    const { id, includeNav, intl, messages, wallet, smallScreenOrDevice } = this.props
     const {
       counterparty,
       files,
-      invalidFileSelected,
       invalidTextInput,
-      listing,
       purchase
     } = this.state
-    const { name, pictures } = listing
-    const { buyer, status } = purchase
-    const perspective = buyer
-      ? buyer === web3Account
-        ? 'buyer'
-        : 'seller'
-      : null
-    const photo = pictures && pictures.length > 0 && pictures[0]
+    const counterpartyAddress = formattedAddress(counterparty.address)
     const canDeliverMessage =
       counterparty.address &&
-      origin.messaging.canConverseWith(counterparty.address)
-    const shouldEnableForm =
-      origin.messaging.getRecipients(id).includes(web3Account) &&
-      canDeliverMessage &&
-      id
+      origin.messaging.canConverseWith(counterpartyAddress)
+    const shouldEnableForm = id &&
+      origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
+      canDeliverMessage
+    const offerEvents = getOfferEvents(purchase)
+    const combinedMessages = [...offerEvents, ...messages]
+    const textAreaSize = smallScreenOrDevice ? '2' : '4'
 
     return (
       <Fragment>
-        {withListingSummary &&
-          listing.id && (
-          <Link to={`/listing/${listing.id}`}>
-            <div className="listing-summary d-flex">
-              <div className="aspect-ratio">
-                <div
-                  className={`${
-                    photo ? '' : 'placeholder '
-                  }image-container d-flex justify-content-center`}
-                >
-                  <img
-                    src={photo || 'images/default-image.svg'}
-                    role="presentation"
-                  />
-                </div>
-              </div>
-              <div className="content-container d-flex flex-column">
-                <h1 className="text-truncate">{name}</h1>
-                {purchase.id && (
-                  <div className="state">
-                    <OfferStatusEvent offer={purchase} />
-                  </div>
-                )}
-                {buyer &&
-                    purchase.id && (
-                  <PurchaseProgress
-                    purchase={purchase}
-                    perspective={perspective}
-                    subdued={true}
-                    currentStep={parseInt(status)}
-                    maxStep={perspective === 'buyer' ? 3 : 4}
-                  />
-                )}
-              </div>
-            </div>
-          </Link>
-        )}
-        <div ref={this.conversationDiv} className="conversation">
-          <CompactMessages messages={messages} />
+        <div ref={this.conversationDiv} className="conversation text-center">
+          <CompactMessages
+            includeNav={includeNav}
+            messages={combinedMessages}
+            wallet={wallet}
+            formatOfferMessage={this.formatOfferMessage}
+            smallScreenOrDevice={smallScreenOrDevice}
+          />
         </div>
         {!shouldEnableForm && (
           <form className="add-message d-flex">
-            <textarea tabIndex="0" disabled />
+            <textarea rows={textAreaSize} tabIndex="0" disabled />
             <button type="submit" className="btn btn-sm btn-primary" disabled>
               Send
             </button>
@@ -318,7 +390,6 @@ class Conversation extends Component {
             onSubmit={this.handleSubmit}
           >
             {!files.length &&
-              !invalidFileSelected &&
               !invalidTextInput && (
               <textarea
                 ref={this.textarea}
@@ -327,28 +398,20 @@ class Conversation extends Component {
                 )}
                 onKeyDown={this.handleKeyDown}
                 tabIndex="0"
+                rows={textAreaSize}
                 autoFocus
               />
             )}
-            {(invalidFileSelected || invalidTextInput) && (
+            {invalidTextInput && (
               <div className="files-container">
                 <p
                   className="text-danger"
                   onClick={() =>
                     this.setState({
-                      invalidFileSelected: false,
                       invalidTextInput: false
                     })
                   }
                 >
-                  {invalidFileSelected && (
-                    <FormattedMessage
-                      id={'conversation.invalidFileSelected'}
-                      defaultMessage={
-                        'File sizes must be less than 1.5 MB. Please select a smaller image.'
-                      }
-                    />
-                  )}
                   {invalidTextInput && (
                     <FormattedMessage
                       id={'conversation.invalidTextInput'}
@@ -364,7 +427,7 @@ class Conversation extends Component {
                   <div key={i} className="image-container">
                     <img src={dataUri} className="preview-thumbnail" />
                     <a
-                      className="close-btn cancel-image"
+                      className="image-overlay-btn cancel-image"
                       aria-label="Close"
                       onClick={() => this.setState({ files: [] })}
                     >
@@ -382,6 +445,7 @@ class Conversation extends Component {
             />
             <input
               type="file"
+              accept="image/jpeg,image/gif,image/png"
               ref={this.fileInput}
               className="d-none"
               onChange={this.handleInput}
@@ -396,15 +460,17 @@ class Conversation extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ users, wallet, app }) => {
   return {
-    users: state.users,
-    web3Account: state.app.web3.account
+    users,
+    wallet,
+    showNav: app.showNav
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: addr => dispatch(fetchUser(addr))
+  fetchUser: addr => dispatch(fetchUser(addr)),
+  showMainNav: (showNav) => dispatch(showMainNav(showNav))
 })
 
 export default connect(

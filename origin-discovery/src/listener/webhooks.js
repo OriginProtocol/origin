@@ -87,7 +87,7 @@ async function postToWebhook (urlString, json) {
   const postOptions = {
     host: url.hostname,
     port: url.port,
-    path: url.path,
+    path: url.pathname,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

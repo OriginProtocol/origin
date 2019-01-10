@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "required": [
+    "name",
+    "description",
+    "price",
+    "dappSchemaId",
+    "category",
+    "subCategory",
+    "listingType",
+    "unitsTotal"
+  ],
+  "properties": {
+    "dappSchemaId": {
+      "const": "https://dapp.originprotocol.com/schemas/services-design_1.0.0.json"
+    },
+    "listingType": {
+      "const": "unit"
+    },
+    "category": {
+      "const": "schema.services"
+    },
+    "slotLength": {
+      "type": "integer",
+      "title": "schema.slotLength",
+      "default": 1
+    },
+    "slotLengthUnit": {
+      "type": "string",
+      "enum": [
+        "schema.minutes",
+        "schema.hours",
+        "schema.days",
+        "schema.weeks",
+        "schema.months",
+        "schema.years"
+      ],
+      "default": "schema.hours"
+    },
+    "name": {
+      "type": "string",
+      "title": "schema.title",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "title": "schema.description",
+      "minLength": 10,
+      "maxLength": 1024
+    },
+    "sellerSteps": {
+      "type": "string",
+      "title": "schema.sellerSteps",
+      "enum": [
+        "schema.messageBuyer",
+        "schema.provideService",
+        "schema.rateBuyer"
+      ]
+    },
+    "subCategory": {
+      "const": "schema.design"
+    },
+    "price": {
+      "type": "number",
+      "title": "schema.priceInETH"
+    },
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
+    },
+    "unitsTotal": {
+      "const": -1
+    }
+  }
+}

@@ -68,7 +68,11 @@ describe('User Resource', function() {
       ipfsGatewayProtocol: 'http'
     })
     const attestations = new Attestations({ contractService })
-    users = new Users({ contractService, ipfsService })
+    users = new Users({
+      contractService,
+      ipfsService,
+      blockEpoch: await web3.eth.getBlockNumber()
+    })
 
     // clear user before each test because blockchain persists between tests
     // sort of a hack to force clean state at beginning of each test
@@ -282,14 +286,14 @@ describe('User Resource', function() {
           keyword: 'required',
           dataPath: '',
           schemaPath: '#/required',
-          params: { missingProperty:'firstName'},
+          params: { missingProperty: 'firstName' },
           message: 'should have required property \'firstName\''
         },
         {
           keyword: 'required',
           dataPath: '',
           schemaPath: '#/required',
-          params: { missingProperty: 'lastName'},
+          params: { missingProperty: 'lastName' },
           message: 'should have required property \'lastName\''
         }
       ]

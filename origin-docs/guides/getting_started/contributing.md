@@ -15,16 +15,30 @@ You are most likely interested in these projects inside the monorepo:
 
 - [Origin.js](https://github.com/OriginProtocol/origin/tree/master/origin-js#origin-js) - Solidity contracts and JavaScript API
 - [Origin DApp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-dapp) - example React-powered decentralized application
+<<<<<<< HEAD:origin-docs/guides/getting_started/contributing.md
 
 ## Discord
+=======
+- [Origin Bridge Server](https://github.com/OriginProtocol/origin/tree/master/origin-bridge#origin-bridge-server) - Python and JavaScript for indexing, attestations, and messaging
+>>>>>>> master:origin-docs/source/includes/_contributing.mdown
 
 We work in public and our company Discord is open to all. If you have questions or need help getting started, our [Discord #engineering channel](https://www.originprotocol.com/discord) is the absoulute best place to get assistance from our team of engineers and developers.
 
+<<<<<<< HEAD:origin-docs/guides/getting_started/contributing.md
 ## Email
+=======
+- [Origin Box](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md#using-docker-compose) - Docker container for simplifying local development
+- [Origin Website](https://github.com/OriginProtocol/origin-website) - Python/Flask for originprotocol.com
+- [Identity Playground](https://github.com/OriginProtocol/origin-playground#origin-identity-playground) - implementation of ERC 725/735 for blockchain identity
+>>>>>>> master:origin-docs/source/includes/_contributing.mdown
 
 You can also reach us by email at [support@originprotocol.com](mailto:support@originprotocol.com).
 
+<<<<<<< HEAD:origin-docs/guides/getting_started/contributing.md
 ## Weekly Engineering Call
+=======
+We have an open weekly engineering call on Google Hangouts every Wednesday at 12:30 Pacific Time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&tmsrc=micah%40originprotocol.com&scp=ALL)
+>>>>>>> master:origin-docs/source/includes/_contributing.mdown
 
 We have an open weekly engineering call on Google Hangouts every Wednesday at 12:30 Pacific Time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&tmsrc=micah%40originprotocol.com&scp=ALL)
 
@@ -34,7 +48,6 @@ Everyone is welcome to join, even if you're just lurking. All we ask is that you
 
 - [Engineering Notes](https://docs.google.com/document/d/1aRcAk_rEjRgd1BppzxZJK9RXfDkbuwKKH8nPQk7FfaU)
 - [Product/Design Notes](https://docs.google.com/document/d/1tVx2O3qeplh9vawJpURTsJxZfUe1B0FrTHOMJbxKm-s)
-- [Sprint Planning Notes](https://docs.google.com/document/d/1DvRWYhrr0UXdvhyZIpEd3WEU-1pQk2Frj1l-mQS8B4M)
 
 ## Dive Right In
 

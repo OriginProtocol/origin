@@ -5,9 +5,13 @@ metadata:
   name: {{ template "faucet.fullname" . }}
   labels:
     app: {{ template "faucet.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: origin-faucet
 spec:
   replicas: {{ default 2 .Values.faucetReplicas }}
   selector:
@@ -23,15 +27,12 @@ spec:
       - name: origin-faucet
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.faucetImage }}:{{ .Values.faucetImageTag }}"
         imagePullPolicy: Always
+        env:
+        - name: ENVKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "faucet.fullname" . }}
+              key: ENVKEY
         ports:
         - containerPort: 5000
-        env:
-          {{- if eq .Release.Namespace "dev" }}
-        - name: ORIGIN_MNEMONIC
-          {{- else if eq .Release.Namespace "staging" }}
-        - name: INFURA_ACCESS_TOKEN
-          value: {{ .Values.infuraAccessToken }}
-        - name: RINKEBY_MNEMONIC
-          {{- end }}
-          value: {{ .Values.faucetMnemonic }}
 {{ end }}

@@ -2,25 +2,33 @@ import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import clipboard from 'clipboard-polyfill'
+import QRCode from 'qrcode.react'
+import queryString from 'query-string'
 
-import { storeWeb3Account, storeWeb3Intent, storeNetwork } from 'actions/App'
+import { storeWeb3Intent, storeNetwork } from 'actions/App'
+import { fetchProfile } from 'actions/Profile'
+import { getEthBalance, storeAccountAddress } from 'actions/Wallet'
 
 import Modal from 'components/modal'
 
+import getCurrentNetwork, {
+  supportedNetwork,
+  supportedNetworkId
+} from 'utils/currentNetwork'
 import getCurrentProvider from 'utils/getCurrentProvider'
-import getCurrentNetwork, { supportedNetworkId, supportedNetwork } from 'utils/currentNetwork'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
-const web3 = origin.contractService.web3
+const { web3 } = origin.contractService
 
+const walletLandingUrl = process.env.WALLET_LANDING_URL
 const mainnetDappBaseUrl = process.env.MAINNET_DAPP_BASEURL
 const rinkebyDappBaseUrl = process.env.RINKEBY_DAPP_BASEURL
 const instructionsUrl = process.env.INSTRUCTIONS_URL
 const ONE_SECOND = 1000
 const ONE_MINUTE = ONE_SECOND * 60
-
-// TODO (micah): potentially add a loading indicator
 
 const NotWeb3EnabledDesktop = props => (
   <Modal
@@ -72,6 +80,59 @@ const NotWeb3EnabledDesktop = props => (
     </div>
   </Modal>
 )
+
+const LinkerPopUp = ({ linkerCode, mobileDevice, web3Intent, handleCancel, handleLinker }) => {
+  let role
+
+  if (web3Intent.match('purchase')) {
+    role = 'buyer'
+  } else if (web3Intent.match('create')) {
+    role = 'seller'
+  }
+
+  return (
+    <Modal backdrop="static" className="not-web3-enabled linker-popup" isOpen={true}>
+     <a
+        className="close"
+        aria-label="Close"
+        onClick={handleCancel}
+      >
+        <span aria-hidden="true">&times;</span>
+      </a>
+      {mobileDevice && (
+        <Fragment>
+          <div style={{ marginBottom: '10px' }}>
+            To {web3Intent}, link your Origin Wallet with this code:<br />
+            <pre className="d-inline-block" style={{
+              background: 'white',
+              borderRadius: '4px',
+              marginTop: '10px',
+              padding: '0.5rem',
+            }}>
+              {linkerCode}
+            </pre>
+          </div>
+          <button className="btn btn-primary" style={{ width: 'auto' }} onClick={() => handleLinker(role)}>
+            Copy &amp; Open App
+          </button>
+        </Fragment>
+      )}
+      {!mobileDevice && (
+        <Fragment>
+          <div style={{ marginBottom: '20px' }}>
+            To {web3Intent}, link your Origin Wallet by scanning the QR code with your phone&apos;s camera:<br />
+          </div>
+          <div style={{ backgroundColor: 'white', padding: '50px' }}>
+            <QRCode value={`${walletLandingUrl}/${linkerCode}${role ? `?role=${role}`: ''}`} />
+            <pre className="mb-0 mt-3">
+              {linkerCode}
+            </pre>
+          </div>
+        </Fragment>
+      )}
+    </Modal>
+  )
+}
 
 const NotWeb3EnabledMobile = props => (
   <Modal backdrop="static" className="not-web3-enabled" isOpen={true}>
@@ -127,7 +188,7 @@ const NotWeb3EnabledMobile = props => (
 )
 
 const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
-  <Modal backdrop="static" data-modal="account-unavailable" isOpen={true}>
+  <Modal backdrop="static" className="account-unavailable" isOpen={true}>
     <div className="image-container">
       <img
         src={`images/${
@@ -161,7 +222,7 @@ const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
 )
 
 const UnconnectedNetwork = () => (
-  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+  <Modal backdrop="static" className="web3-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
@@ -173,7 +234,7 @@ const UnconnectedNetwork = () => (
 )
 
 const UnsupportedNetwork = props => {
-  const { currentProvider, networkId, currentNetworkName, supportedNetworkName } = props
+  const { currentNetworkName, currentProvider, networkId, supportedNetworkName } = props
   const url = new URL(window.location)
   const path = url.pathname + url.hash
   const goToUrl = (url) => () => window.location.href = url + path
@@ -189,10 +250,8 @@ const UnsupportedNetwork = props => {
   return (
     <Modal
       backdrop="static"
-      className="unsupported-provider"
-      data-modal="web3-unavailable"
+      className="unsupported-provider web3-unavailable"
       isOpen={true}>
-
       <div className="image-container">
         <img src="images/flat_cross_icon.svg" role="presentation" />
       </div>
@@ -233,12 +292,12 @@ const UnsupportedNetwork = props => {
   )
 }
 
-const Web3Unavailable = props => (
-  <Modal backdrop="static" data-modal="web3-unavailable" isOpen={true}>
+const Web3Unavailable = ({ mobileDevice }) => (
+  <Modal backdrop="static" className="web3-unavailable" isOpen={true}>
     <div className="image-container">
       <img src="images/flat_cross_icon.svg" role="presentation" />
     </div>
-    {(!props.onMobile || props.onMobile === 'Android') && (
+    {(!mobileDevice || mobileDevice === 'Android') && (
       <div>
         <FormattedMessage
           id={'web3-provider.pleaseInstallMetaMask'}
@@ -270,8 +329,7 @@ const Web3Unavailable = props => (
         </a>
       </div>
     )}
-    {props.onMobile &&
-      props.onMobile !== 'Android' && (
+    {mobileDevice && mobileDevice !== 'Android' && (
       <div>
         <FormattedMessage
           id={'web3-provider.useWalletEnabledBrowser'}
@@ -314,16 +372,67 @@ class Web3Provider extends Component {
     this.fetchAccounts = this.fetchAccounts.bind(this)
     this.fetchNetwork = this.fetchNetwork.bind(this)
     this.handleAccounts = this.handleAccounts.bind(this)
+    this.handleLinker = this.handleLinker.bind(this)
     this.state = {
       networkConnected: null,
-      networkId: null,
       networkError: null,
-      currentProvider: getCurrentProvider(web3)
+      currentProvider: getCurrentProvider(web3),
+      provider: null,
+      linkerCode: '',
+      linkerPopUp: false
     }
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     this.setState({ provider: web3.currentProvider })
+
+  }
+
+  updateSearchWalletLinker() {
+    const { location } = this.props
+    const search = location.search || window.location.search
+
+    if (this.latestSearch != search) {
+      this.latestSearch = search
+
+      const query = queryString.parse(search)
+      const plink = query['plink']
+
+      if (plink) {
+        origin.contractService.walletLinker.preLinked(plink)
+      }
+
+      const testWalletLinker = query['testWalletLinker']
+
+      if (testWalletLinker == '1') {
+        origin.contractService.activeWalletLinker = true
+      }
+    }
+  }
+
+  getWalletReturnUrl() {
+    const isMobileDevice = this.props.mobileDevice
+    const now = this.props.location.pathname
+
+    if (isMobileDevice) {
+      if (now.startsWith('/listing/')) {
+        const url = new URL(window.location)
+
+        url.hash = '#/my-purchases'
+
+        return url.href
+      } else if (now.startsWith('/create')) {
+        const url = new URL(window.location)
+
+        url.hash = '#/my-listings'
+
+        return url.href
+      } else {
+        return window.location.href
+      }
+    } else {
+      return ''
+    }
   }
 
   /**
@@ -335,6 +444,42 @@ class Web3Provider extends Component {
     this.fetchNetwork()
     this.initAccountsPoll()
     this.initNetworkPoll()
+
+    if (origin.contractService.walletLinker) {
+      origin.contractService.walletLinker.showPopUp = this.showLinkerPopUp.bind(this)
+
+      if (!origin.contractService.walletLinker.setLinkCode) {
+        origin.contractService.walletLinker.setLinkCode = this.setLinkerCode.bind(this)
+      }
+
+      origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
+
+      this.updateSearchWalletLinker()
+    }
+  }
+
+  componentDidUpdate() {
+    if (origin.contractService.walletLinker) {
+      this.updateSearchWalletLinker()
+    }
+  }
+
+  showLinkerPopUp(linkerPopUp){
+    this.setState({ linkerPopUp })
+  }
+
+  setLinkerCode(linkerCode) {
+    this.setState({ linkerCode })
+  }
+
+  showNextPage() {
+    const now = this.props.location.pathname
+
+    if (now.startsWith('/listing/')) {
+      this.props.history.push('/my-purchases')
+    } else if (now.startsWith('/create')) {
+      this.props.history.push('/my-listings')
+    }
   }
 
   /**
@@ -342,7 +487,7 @@ class Web3Provider extends Component {
    * @return {void}
    */
   initAccountsPoll() {
-    if (!this.accountsInterval && web3.givenProvider) {
+    if (!this.accountsInterval && (!web3.currentProvider.isOrigin || origin.contractService.walletLinker)) {
       this.accountsInterval = setInterval(this.fetchAccounts, ONE_SECOND)
     }
   }
@@ -362,20 +507,30 @@ class Web3Provider extends Component {
    * @return {void}
    */
   fetchAccounts() {
-    this.state.networkConnected &&
-      web3.eth.getAccounts((err, accounts) => {
-        if (err) {
-          console.log(err)
+    web3.eth.getAccounts((err, accounts) => {
+      if (err) {
+        console.error(err)
+      } else {
+        this.handleAccounts(accounts)
+      }
+    })
 
-          this.setState({ accountsError: err })
-        } else {
-          this.handleAccounts(accounts)
-        }
+    if (web3.currentProvider !== this.state.provider) {
+      // got a real provider now
+      this.setState({ provider: web3.currentProvider })
+    }
 
-        if (!this.state.accountsLoaded) {
-          this.setState({ accountsLoaded: true })
-        }
-      })
+    // skip walletLink if browser is web3-enabled
+    if (!web3.currentProvider.isOrigin) {
+      return
+    }
+
+    const code = origin.contractService.getMobileWalletLink()
+    
+    if (this.state.linkerCode != code) {
+      // let's set the linker code
+      this.setState({ linkerCode: code })
+    }
   }
 
   /**
@@ -384,6 +539,7 @@ class Web3Provider extends Component {
    */
   fetchNetwork() {
     const providerExists = web3.currentProvider
+    const previousNetworkId = this.props.networkId
     const networkConnected =
       web3.currentProvider.connected ||
       (typeof web3.currentProvider.isConnected === 'function' &&
@@ -397,11 +553,13 @@ class Web3Provider extends Component {
         this.networkInterval = setInterval(this.fetchNetwork, ONE_MINUTE)
       }
 
-      this.setState({ networkConnected })
+      if (web3.currentProvider.connected !== undefined && web3.currentProvider.isConnected !== undefined)
+      {
+        this.setState({ networkConnected })
+      }
     }
 
     providerExists &&
-      networkConnected &&
       web3.version &&
       web3.eth.net.getId((err, netId) => {
         const networkId = parseInt(netId, 10)
@@ -410,14 +568,11 @@ class Web3Provider extends Component {
           this.setState({
             networkError: err
           })
-        } else {
-          if (networkId !== this.state.networkId) {
-            this.props.storeNetwork(networkId)
-            this.setState({
-              networkError: null,
-              networkId
-            })
-          }
+        } else if (networkId !== previousNetworkId) {
+          this.props.storeNetwork(networkId)
+          this.setState({
+            networkError: null
+          })
         }
 
         if (!this.state.networkConnected) {
@@ -429,40 +584,66 @@ class Web3Provider extends Component {
   }
 
   handleAccounts(accounts) {
-    const curr = accounts[0]
-    const prev = this.props.web3Account
+    const { messagingInitialized, storeAccountAddress, wallet } = this.props
+    const current = accounts[0]
+    const previous = wallet.address ? formattedAddress(wallet.address) : null
+    const walletLinkerEnabled = origin.contractService.isActiveWalletLinker()
 
     // on account detection
-    if (curr !== prev) {
-      // start over if changed
-      prev !== null && window.location.reload()
+    if (formattedAddress(current) !== previous) {
+      // TODO: fix this with some route magic!
+      if (
+        !walletLinkerEnabled ||
+        previous || ['/my-listings', '/my-purchases','/my-sales'].includes(this.props.location.pathname) ||
+        !current
+      ) {
+        // reload if changed from a prior account
+        previous !== null && window.location.reload()
+      } else {
+        // load data on account change
+        this.props.fetchProfile()
+        this.props.getEthBalance()
+      }
 
       // set user_id to wallet address in Google Analytics
       const gtag = window.gtag || function(){}
-      gtag('set', { 'user_id': curr })
+
+      gtag('set', { 'user_id': current })
 
       // update global state
-      this.props.storeWeb3Account(curr)
+      storeAccountAddress(current)
+    }
+
+    if (current && !messagingInitialized) {
       // trigger messaging service
-      origin.messaging.onAccount(curr)
+      origin.messaging.onAccount(current)
+    }
+  }
+
+  async handleLinker(role) {
+    try {
+      await clipboard.writeText(`orgw:${this.state.linkerCode}`)
+
+      window.open(`${walletLandingUrl}${role ? `?role=${role}` : ''}`)
+    } catch(e) {
+      console.error(e)
     }
   }
 
   render() {
-    const { onMobile, web3Account, web3Intent, storeWeb3Intent } = this.props
-    const { networkConnected, networkId, currentProvider } = this.state
-    const currentNetwork = getCurrentNetwork(networkId)
-    const currentNetworkName = currentNetwork
-      ? currentNetwork.name
-      : networkId
+    const { mobileDevice, networkId, storeWeb3Intent, wallet, web3Intent } = this.props
+    const { currentProvider, linkerCode, linkerPopUp, networkConnected } = this.state
+    const currentNetwork = getCurrentNetwork(networkId) || {}
+    const currentNetworkName = currentNetwork.name || networkId
     const isProduction = process.env.NODE_ENV === 'production'
     const networkNotSupported = supportedNetworkId !== networkId
     const supportedNetworkName = supportedNetwork && supportedNetwork.name
+    const walletLinkerEnabled = origin.contractService.isActiveWalletLinker() 
 
     return (
       <Fragment>
         {/* currentProvider should always be present */
-          !currentProvider && <Web3Unavailable onMobile={onMobile} />}
+          !currentProvider && <Web3Unavailable mobileDevice={mobileDevice} />}
 
         {/* networkConnected initial state is null */
           currentProvider && networkConnected === false && <UnconnectedNetwork />}
@@ -471,19 +652,20 @@ class Web3Provider extends Component {
           currentProvider &&
           networkId &&
           isProduction &&
-          networkNotSupported && (
-            <UnsupportedNetwork
-              currentNetworkName={currentNetworkName}
-              currentProvider={currentProvider}
-              networkId={networkId}
-              supportedNetworkName={supportedNetworkName}
-            />
-          )}
+          networkNotSupported &&
+          <UnsupportedNetwork
+            currentNetworkName={currentNetworkName}
+            currentProvider={currentProvider}
+            networkId={networkId}
+            supportedNetworkName={supportedNetworkName}
+          />
+        }
 
         {/* attempting to use web3 in unsupported mobile browser */
           web3Intent &&
-          !web3.givenProvider &&
-          onMobile && (
+          !walletLinkerEnabled &&
+          web3.currentProvider.isOrigin &&
+          mobileDevice && (
             <NotWeb3EnabledMobile
               web3Intent={web3Intent}
               storeWeb3Intent={storeWeb3Intent}
@@ -492,18 +674,40 @@ class Web3Provider extends Component {
 
         {/* attempting to use web3 in unsupported desktop browser */
           web3Intent &&
-          !web3.givenProvider &&
-          !onMobile && (
+          !walletLinkerEnabled &&
+          web3.currentProvider.isOrigin &&
+          !mobileDevice && (
             <NotWeb3EnabledDesktop
               web3Intent={web3Intent}
               storeWeb3Intent={storeWeb3Intent}
             />
           )}
 
-        {/* attempting to use web3 without being signed in */
+        { /* attempting to use web3 in unsupported desktop browser */
           web3Intent &&
-          web3.givenProvider &&
-          web3Account === undefined && (
+          walletLinkerEnabled &&
+          web3.currentProvider.isOrigin &&
+          linkerCode &&
+          linkerPopUp && (
+            <LinkerPopUp
+              linkerCode={linkerCode}
+              mobileDevice={mobileDevice}
+              handleCancel={() => {
+                storeWeb3Intent(null)
+
+                origin.contractService.walletLinker.cancelLink()
+              }}
+              handleLinker={this.handleLinker}
+              web3Intent={web3Intent}
+            />
+          )
+        }
+
+
+        { /* attempting to use web3 without being signed in */
+          web3Intent &&
+          !web3.currentProvider.isOrigin &&
+          wallet.address === undefined && (
             <NoWeb3Account
               web3Intent={web3Intent}
               storeWeb3Intent={storeWeb3Intent}
@@ -517,18 +721,22 @@ class Web3Provider extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ activation, app, wallet }) => {
   return {
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent,
-    onMobile: state.app.onMobile
+    messagingInitialized: activation.messaging.initialized,
+    mobileDevice: app.mobileDevice,
+    networkId: app.web3.networkId,
+    wallet,
+    web3Intent: app.web3.intent
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  storeWeb3Account: addr => dispatch(storeWeb3Account(addr)),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
-  storeNetwork: networkId => dispatch(storeNetwork(networkId))
+  fetchProfile: () => dispatch(fetchProfile()),
+  getEthBalance: () => dispatch(getEthBalance()),
+  storeAccountAddress: addr => dispatch(storeAccountAddress(addr)),
+  storeNetwork: networkId => dispatch(storeNetwork(networkId)),
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
 })
 
 export default withRouter(

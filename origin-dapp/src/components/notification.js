@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
 import { updateNotification } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
@@ -10,22 +9,25 @@ import { fetchUser } from 'actions/User'
 import NotificationMessage from 'components/notification-message'
 import UnnamedUser from 'components/unnamed-user'
 
+import { formattedAddress } from 'utils/user'
+
 class Notification extends Component {
   constructor(props) {
     super(props)
 
-    const { notification, web3Account } = this.props
-    const { listing, purchase } = notification.resources
-    const counterpartyAddress = [listing.seller, purchase.buyer].find(
-      addr => addr !== web3Account
+    const { notification, wallet } = this.props
+    const { listing, offer } = notification.resources
+    const counterpartyAddress = [listing.seller, offer.buyer].find(
+      addr => formattedAddress(addr) !== formattedAddress(wallet.address)
     )
 
     this.handleClick = this.handleClick.bind(this)
+    this.listingImageElement = this.listingImageElement.bind(this)
     this.state = {
       counterpartyAddress,
       counterpartyName: '',
       listing,
-      purchase
+      offer
     }
   }
 
@@ -35,7 +37,7 @@ class Notification extends Component {
 
   componentDidUpdate() {
     const user = this.props.users.find(
-      u => u.address === this.state.counterpartyAddress
+      u => formattedAddress(u.address) === formattedAddress(this.state.counterpartyAddress)
     )
     const counterpartyName = user && user.fullName
 
@@ -46,8 +48,35 @@ class Notification extends Component {
 
   handleClick() {
     this.props.updateNotification(this.props.notification.id, 'read')
+    if (this.props.onClick) {
+      this.props.onClick()
+    }
+  }
 
-    $('#notificationsDropdown').dropdown('toggle')
+  listingImageElement(listing) {
+    const listingImageURL =
+      listing.media && listing.media.length && listing.media[0].url
+
+    // Listing has an id and an image to display
+    if (listing.id && listingImageURL) {
+      return (
+        <img
+          src={listingImageURL}
+          className="listing-related"
+          alt={listing.name}
+        />
+      )
+    }
+    // White labelled and has an icon URL set
+    else if (this.isWhiteLabel && this.iconUrl) {
+      return (
+        <img src={this.iconUrl} alt="No listing image" />
+      )
+    }
+    // Origin zero by default
+    return (
+      <img src="images/origin-icon-white.svg" alt="Origin zero" />
+    )
   }
 
   render() {
@@ -56,32 +85,16 @@ class Notification extends Component {
       counterpartyAddress,
       counterpartyName,
       listing,
-      purchase
+      offer
     } = this.state
 
-    const listingImageURL =
-      listing.media && listing.media.length && listing.media[0].url
 
     return (
       <li className="list-group-item notification">
-        <Link to={`/purchases/${purchase.id}`} onClick={this.handleClick}>
+        <Link to={`/purchases/${offer.id}`} onClick={this.handleClick}>
           <div className="d-flex align-items-stretch">
             <div className="image-container d-flex align-items-center justify-content-center">
-              {!listing.id && (
-                <img src="images/origin-icon-white.svg" alt="Origin zero" />
-              )}
-              {listing.id &&
-                !listingImageURL && (
-                <img src="images/origin-icon-white.svg" alt="Origin zero" />
-              )}
-              {listing.id &&
-                listingImageURL && (
-                <img
-                  src={listingImageURL}
-                  className="listing-related"
-                  alt={listing.name}
-                />
-              )}
+              {this.listingImageElement(listing)}
             </div>
             <div className="content-container d-flex flex-column justify-content-between">
               <NotificationMessage
@@ -97,13 +110,14 @@ class Notification extends Component {
                 <div className="counterparty d-flex">
                   <div className="text-truncate">
                     <strong>
-                      {notification.perspective === 'buyer' && (
+                      {/* This approach is naive and won't work once we include "offer withdrawn/rejected" notifications */}
+                      {notification.perspective === 'seller' && (
                         <FormattedMessage
                           id={'notification.buyer'}
                           defaultMessage={'Buyer'}
                         />
                       )}
-                      {notification.perspective === 'seller' && (
+                      {notification.perspective === 'buyer' && (
                         <FormattedMessage
                           id={'notification.seller'}
                           defaultMessage={'Seller'}
@@ -112,18 +126,18 @@ class Notification extends Component {
                     </strong>: &nbsp;
                     {counterpartyName || <UnnamedUser />}
                   </div>
-                  <div className="text-truncate text-muted" title={counterpartyAddress}>
-                    {counterpartyAddress}
+                  <div className="text-truncate text-muted" title={formattedAddress(counterpartyAddress)}>
+                    {formattedAddress(counterpartyAddress)}
                   </div>
                 </div>
               )}
             </div>
             <div className="button-container m-auto">
-              <button className="btn">
+              <button className="btn d-flex justify-content-center">
                 <img
-                  src="images/carat-blue.svg"
-                  className="carat"
-                  alt="right carat"
+                  src="images/caret-blue.svg"
+                  className="caret"
+                  alt="right caret"
                 />
               </button>
             </div>
@@ -134,10 +148,12 @@ class Notification extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ users, wallet, config }) => {
   return {
-    users: state.users,
-    web3Account: state.app.web3.account
+    iconUrl: config.iconUrl,
+    isWhiteLabel: config.isWhiteLabel,
+    users,
+    wallet
   }
 }
 

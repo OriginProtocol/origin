@@ -1,0 +1,13 @@
+controller:
+  service:
+    loadBalancerIP: 35.203.158.97
+    externalTrafficPolicy: "Local"
+  ingressClass: nginx-ingress
+  stats:
+    enabled: true
+  metrics:
+    enabled: true
+  extraArgs:
+    enable-ssl-chain-completion: false
+    enable-dynamic-configuration: true
+    force-namespace-isolation: true

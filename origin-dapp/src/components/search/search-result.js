@@ -4,7 +4,6 @@ import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 import deepEqual from 'deep-equal'
-import $ from 'jquery'
 import 'rc-slider/assets/index.css'
 
 import { showAlert } from 'actions/Alert'
@@ -19,7 +18,7 @@ import {
   FILTER_OPERATOR_EQUALS
 } from 'components/search/constants'
 import { LISTINGS_PER_PAGE } from 'components/constants'
-import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
+import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 
 class SearchResult extends Component {
   constructor(props) {
@@ -27,7 +26,6 @@ class SearchResult extends Component {
 
     this.state = {
       filterSchema: undefined,
-      listingSchema: undefined,
       listingType: undefined,
       listingIds: [],
       totalNumberOfListings: 0,
@@ -65,21 +63,15 @@ class SearchResult extends Component {
     this.setState({ page: page })
   }
 
-  shouldFetchListingSchema() {
-    return this.props.listingType.type !== 'all'
-  }
-
   componentDidMount() {
-    /* this force update is required after component initializes. In cases where user returns to the 
+    /* this force update is required after component initializes. In cases where user returns to the
      * search-result page. Then no props change from previous to current and for that reason search and
      * schema loading do not get triggered.
      */
     this.handleComponentUpdate(undefined)
 
     // Keep dropdown opened when user clicks on any element in the dropdownw
-    $(document).on('click', '#search-filters-bar .dropdown-menu', e => {
-      e.stopPropagation()
-    })
+    // TODO - reimplement now that we no longer use jQuery
   }
 
   componentDidUpdate(previousProps, prevState) {
@@ -113,8 +105,7 @@ class SearchResult extends Component {
     ) {
       this.setState({
         listingType: this.props.listingType,
-        filterSchema: undefined,
-        listingSchema: undefined
+        filterSchema: undefined
       })
 
       const filterSchemaPath = `schemas/searchFilters/${
@@ -134,14 +125,6 @@ class SearchResult extends Component {
           console.error(`Error reading schema ${filterSchemaPath}: ${e}`)
           throw e
         })
-
-      if (this.shouldFetchListingSchema()) {
-        fetch(`schemas/${this.props.listingType.type}.json`)
-          .then(response => response.json())
-          .then(schemaJson => {
-            this.setState({ listingSchema: schemaJson })
-          })
-      }
     }
   }
 
@@ -204,15 +187,15 @@ class SearchResult extends Component {
         }
       }
 
-      const searchResp = await origin.discovery.search(
-        this.props.query || '',
-        LISTINGS_PER_PAGE,
-        (this.state.page - 1) * LISTINGS_PER_PAGE,
-        Object.values(filters).flatMap(arrayOfFilters => arrayOfFilters)
-      )
+      const searchResp = await origin.discovery.search({
+        searchQuery: this.props.query || '',
+        numberOfItems: LISTINGS_PER_PAGE,
+        offset: (this.state.page - 1) * LISTINGS_PER_PAGE,
+        filters: Object.values(filters).flatMap(arrayOfFilters => arrayOfFilters)
+      })
 
       this.setState({
-        listingIds: searchResp.data.listings.nodes.map(listing => listing.id),
+        listingIds: searchResp.data.listings.nodes.map(listing => listing.data.id),
         totalNumberOfListings: searchResp.data.listings.totalNumberOfItems,
         // reset the page whenever a user doesn't click on pagination link
         page: onlyPageChanged ? this.state.page : 1
@@ -224,7 +207,7 @@ class SearchResult extends Component {
         'ETH',
         false
       )
-      
+
       const minPrice = getFiatPrice(searchResp.data.listings.stats.minPrice,
         'USD',
         'ETH',
@@ -262,15 +245,13 @@ class SearchResult extends Component {
           <div className="container d-flex flex-row">
             {this.state.filterSchema &&
             this.state.listingType &&
-            this.state.filterSchema.items.length > 0 &&
-            (this.state.listingSchema || !this.shouldFetchListingSchema()) ? (
+            this.state.filterSchema.items.length > 0 ? (
                 <ul className="navbar-nav collapse navbar-collapse">
                   {this.state.filterSchema.items.map((filterGroup, index) => {
                     return (
                       <FilterGroup
                         filterGroup={filterGroup}
                         key={index}
-                        listingSchema={this.state.listingSchema}
                         listingType={this.state.listingType}
                         maxPrice={this.state.maxPrice}
                         minPrice={this.state.minPrice}

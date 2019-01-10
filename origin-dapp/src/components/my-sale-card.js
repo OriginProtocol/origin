@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { fetchUser } from 'actions/User'
@@ -11,6 +10,7 @@ import PurchaseProgress from 'components/purchase-progress'
 import UnnamedUser from 'components/unnamed-user'
 
 import { offerStatusToStep } from 'utils/offer'
+import { formattedAddress } from 'utils/user'
 
 class MySaleCard extends Component {
   constructor(props) {
@@ -28,23 +28,15 @@ class MySaleCard extends Component {
     this.props.fetchUser(this.props.purchase.buyer)
   }
 
-  componentDidMount() {
-    $('[data-toggle="tooltip"]').tooltip()
-  }
-
   setSoldAtTime(soldAt) {
     this.setState({
       soldAtTime: moment(soldAt).fromNow()
     })
   }
 
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
-  }
-
   render() {
     const { listing, purchase, user } = this.props
-    const { id: purchaseId, createdAt, status } = purchase
+    const { id: purchaseId, createdAt, status, totalPrice } = purchase
 
     if (!listing) {
       console.error(`Listing not found for purchase ${purchaseId}`)
@@ -52,6 +44,7 @@ class MySaleCard extends Component {
     }
 
     const { name, pictures, price } = listing
+    const priceToShow = listing.listingType === 'fractional' ? totalPrice.amount : price
     const buyerName = (user &&
       user.profile &&
       `${user.profile.firstName} ${user.profile.lastName}`) || <UnnamedUser />
@@ -93,13 +86,13 @@ class MySaleCard extends Component {
                   />
                 )}
               </h2>
-              <p className="address text-muted">{user.address}</p>
+              <p className="address text-muted">{formattedAddress(user.address)}</p>
               <div className="d-flex">
                 <p className="price">
                   <FormattedMessage
                     id={'my-sale-card.price'}
                     defaultMessage={'Price'}
-                  />:&nbsp;{Number(price).toLocaleString(undefined, {
+                  />:&nbsp;{Number(priceToShow).toLocaleString(undefined, {
                     minimumFractionDigits: 5,
                     maximumFractionDigits: 5
                   })}
@@ -179,9 +172,9 @@ class MySaleCard extends Component {
                   defaultMessage={'View Details'}
                 />
                 <img
-                  src="images/carat-blue.svg"
-                  className="carat"
-                  alt="right carat"
+                  src="images/caret-blue.svg"
+                  className="caret"
+                  alt="right caret"
                 />
               </Link>
             </p>

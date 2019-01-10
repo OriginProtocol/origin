@@ -1,0 +1,16 @@
+{
+  "name": "origin-validator",
+  "version": "0.1.0",
+  "description": "Origin Schema Validator",
+  "author": "Nick Poulden <nick@poulden.com>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "ajv": "^6.6.1"
+  }
+}

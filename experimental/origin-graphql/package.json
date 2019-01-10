@@ -1,0 +1,72 @@
+{
+  "author": "Nick Poulden",
+  "name": "origin-graphql",
+  "version": "0.1.1",
+  "license": "MIT",
+  "description": "Origin GraphQL server",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/origin-playground"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "node -r @babel/register server"
+  },
+  "dependencies": {
+    "apollo-link-http": "^1.5.9",
+    "origin-eventsource": "^0.1.0",
+    "origin-ipfs": "^0.1.0",
+    "origin-messaging-client": "^0.1.0",
+    "origin-validator": "^0.1.0",
+    "rlp": "^2.2.1"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "bracketSpacing": true
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-export-default-from",
+      "@babel/plugin-transform-runtime",
+      "@babel/plugin-transform-destructuring",
+      "@babel/plugin-transform-object-assign",
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-class-properties"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.2.1",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
+    "@babel/plugin-transform-destructuring": "^7.2.0",
+    "@babel/plugin-transform-object-assign": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
+    "ajv": "^6.6.1",
+    "apollo-cache-inmemory": "^1.3.11",
+    "apollo-client": "^2.4.7",
+    "apollo-link": "^1.2.4",
+    "apollo-link-schema": "^1.1.2",
+    "apollo-server": "^2.2.6",
+    "graphql": "^14.0.2",
+    "graphql-fields": "^1.3.0",
+    "graphql-subscriptions": "^1.0.0",
+    "graphql-tag": "^2.10.0",
+    "graphql-tools": "^4.0.3",
+    "lodash-es": "^4.17.11",
+    "node-fetch": "^2.3.0",
+    "origin-contracts": "^0.8.6",
+    "subscriptions-transport-ws": "^0.9.15",
+    "web3": "1.0.0-beta.34",
+    "webpack": "^4.27.0"
+  }
+}

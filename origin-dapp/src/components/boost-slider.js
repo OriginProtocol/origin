@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 import Slider from 'rc-slider'
-import $ from 'jquery'
+import Tooltip from './tooltip'
+
 // TODO:John - pass a third arg of 'OGN' into getFiatPrice() once OGN prices are available in cryptonator API
 // import { getFiatPrice } from 'utils/priceUtils'
 import {
@@ -16,51 +17,56 @@ class BoostSlider extends Component {
   constructor(props) {
     super(props)
 
-    // this.state = { selectedBoostAmountUsd: 0 }
-
     this.onChange = this.onChange.bind(this)
   }
 
-  async componentDidMount() {
-    $('[data-toggle="tooltip"]').tooltip()
-
+  componentDidMount() {
     this.onChange(this.props.selectedBoostAmount)
-  }
-
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
   async onChange(value) {
     const disableNextBtn = value > this.props.ognBalance
     this.props.onChange(value, getBoostLevel(value), disableNextBtn)
-    // const selectedBoostAmountUsd = await getFiatPrice(value, 'USD')
-    // this.setState({
-    //   selectedBoostAmountUsd
-    // })
   }
 
   render() {
-    const { ognBalance } = this.props
+    const { ognBalance, isMultiUnitListing } = this.props
     const boostLevel = getBoostLevel(this.props.selectedBoostAmount)
 
     return (
       <div className="boost-slider">
         <p>
-          <FormattedMessage
-            id={'boost-slider.boost-level'}
-            defaultMessage={'Boost Level'}
-          />
+          {
+            isMultiUnitListing ?
+              <FormattedMessage
+                id={'boost-slider.boost-level-multi-unit'}
+                defaultMessage={'Boost Level (per unit)'}
+              />
+            :
+              <FormattedMessage
+                id={'boost-slider.boost-level'}
+                defaultMessage={'Boost Level'}
+              />
+          }
         </p>
-        <img
-          className="info-icon"
-          src="images/info-icon-inactive.svg"
-          role="presentation"
-          data-toggle="tooltip"
-          data-html="true"
-          data-trigger="click"
-          title={`<div class="boost-tooltip"><p>Your boost is a bit like a commission. It’s not required, but we recommend a boost level of 50 OGN for listings like yours.</p></div>`}
-        />
+        <Tooltip
+          placement="top"
+          trigger="click"
+          triggerClass="info-icon"
+          content={
+            <div className="boost-tooltip">
+              <p>
+                Your boost is a bit like a commission. It’s not required, but we
+                recommend a boost level of 50 OGN for listings like yours.
+              </p>
+            </div>
+          }
+        >
+          <img
+            src="images/info-icon-inactive.svg"
+            role="presentation"
+          />
+        </Tooltip>
         <div className="level-container">
           <span className={`boosted badge ${boostLevel.toLowerCase()}`}>
             <img src="images/boost-icon-arrow.svg" role="presentation" />
@@ -103,8 +109,7 @@ class BoostSlider extends Component {
             </p>
           </div>
         )}
-        {ognBalance > 0 &&
-          ognBalance < this.props.selectedBoostAmount && (
+        {ognBalance > 0 && ognBalance < this.props.selectedBoostAmount && (
           <div className="info-box warn">
             <p>
               <FormattedMessage
@@ -124,7 +129,8 @@ class BoostSlider extends Component {
             <FormattedMessage
               id={'boost-slider.learn-more'}
               defaultMessage={'Learn More'}
-            />&nbsp;&#x25b8;
+            />
+            &nbsp;&#x25b8;
           </Link>
         </p>
       </div>

@@ -1,28 +1,22 @@
 # NOTE/TODO: origin-discovery doesn't need Origin.js but it shares a
 # package.json with the event listener which does
-#
-# --- Origin.js
 
-FROM node:8 as origin-js-build
+FROM node:10 as build
 
-COPY ./origin-js /app
 WORKDIR /app
 
 ENV NODE_ENV=production
-RUN npm install --quiet --no-progress
-RUN npm run build
 
-# --- GraphQL server
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
+COPY ./origin-discovery ./origin-discovery
+COPY ./scripts ./scripts
 
-FROM node:8
+RUN npm install --unsafe-perm
 
-COPY ./origin-discovery /app
-WORKDIR /app
+# Copy release contracts into build directory overwriting existing built
+COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
 
-ENV NODE_ENV production
-# Link previously built Origin.js
-COPY --from=origin-js-build /app /usr/local/lib/node_modules/origin
-RUN npm link origin
-RUN npm install --quiet --no-progress
-
-CMD ["node", "src/apollo/app.js"]
+CMD npm run start:discovery --prefix origin-discovery

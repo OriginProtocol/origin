@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://schema.originprotocol.com/notification_1.0.0.json",
+  "title": "Notification",
+  "type": "object",
+  "required": ["id", "type", "status"],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "read",
+        "unread"
+      ]
+    }
+  }
+}

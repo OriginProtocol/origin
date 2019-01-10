@@ -3,10 +3,12 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
-import { enableMessaging } from 'actions/App'
+import { enableMessaging } from 'actions/Activation'
 
 import Identicon from 'components/identicon'
 import Modal from 'components/modal'
+
+import { formattedAddress } from 'utils/user'
 
 import origin from '../services/origin'
 
@@ -62,10 +64,10 @@ class MessageNew extends Component {
     )
     const canDeliverMessage = origin.messaging.canConverseWith(recipientAddress)
 
-    return (
+    return messagingEnabled ? (
       <Modal
         isOpen={open}
-        data-modal="message"
+        className="message"
         handleToggle={handleToggle}
         tabIndex="-1"
       >
@@ -74,7 +76,7 @@ class MessageNew extends Component {
           <h2>
             {'ETH Address:'}
             <br />
-            <span className="address">{recipientAddress}</span>
+            <span className="address">{formattedAddress(recipientAddress)}</span>
           </h2>
         </div>
         {/* Recipient needs to enable messaging. */}
@@ -85,44 +87,7 @@ class MessageNew extends Component {
               defaultMessage={'This user has not yet enabled Origin Messaging. Unfortunately, you will not be able to contact them until they do.'}
             />
             <div className="link-container text-center">
-              <a href="#" data-modal="profile" onClick={handleToggle}>
-                <FormattedMessage
-                  id={'MessageNew.cancel'}
-                  defaultMessage={'Cancel'}
-                />
-              </a>
-            </div>
-          </div>
-        )}
-        {/* Current user needs to enable messaging. */}
-        {canReceiveMessages &&
-          !messagingEnabled && (
-          <div className="roadblock">
-            <FormattedMessage
-              id={'MessageNew.cannotSendMessages'}
-              defaultMessage={'Before you can contact this user, you need to enable messaging.'}
-            />
-            <div className="button-container">
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={this.props.enableMessaging}
-                ga-category="messaging"
-                ga-label="message_new_component_enable"
-              >
-                <FormattedMessage
-                  id={'MessageNew.enable'}
-                  defaultMessage={'Start Messaging'}
-                />
-              </button>
-            </div>
-            <div className="link-container text-center">
-              <a
-                href="#"
-                data-modal="profile"
-                onClick={handleToggle}
-                ga-category="messaging"
-                ga-label="message_new_component_cancel"
-              >
+              <a href="#" onClick={handleToggle}>
                 <FormattedMessage
                   id={'MessageNew.cancel'}
                   defaultMessage={'Cancel'}
@@ -183,13 +148,13 @@ class MessageNew extends Component {
           </form>
         )}
       </Modal>
-    )
+    ) : null
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ activation }) => {
   return {
-    messagingEnabled: state.app.messagingEnabled
+    messagingEnabled: activation.messaging.enabled
   }
 }
 

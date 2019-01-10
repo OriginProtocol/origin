@@ -64,14 +64,14 @@ export default class ListingAdapterV1 extends AdapterBase {
 
     const listing = {
       schemaId: ipfsData.schemaId,
+      dappSchemaId: ipfsData.dappSchemaId,
       type: ipfsData.listingType,
       category: ipfsData.category,
       subCategory: ipfsData.subCategory,
       language: ipfsData.language,
       title: ipfsData.title,
       description: ipfsData.description,
-      media: ipfsData.media,
-      expiry: ipfsData.expiry
+      media: ipfsData.media
     }
 
     // Unit data.
@@ -81,10 +81,13 @@ export default class ListingAdapterV1 extends AdapterBase {
       listing.commission = ipfsData.commission
         ? new Money(ipfsData.commission)
         : null
+      listing.commissionPerUnit = ipfsData.commissionPerUnit
+        ? new Money(ipfsData.commissionPerUnit)
+        : null
     } else if (listing.type === 'fractional') {
       listing.slots = ipfsData.slots
-      listing.timeIncrement = ipfsData.timeIncrement
-      listing.calendarStep = ipfsData.calendarStep
+      listing.slotLength = ipfsData.slotLength
+      listing.slotLengthUnit = ipfsData.slotLengthUnit
     } else {
       throw new Error(`Unexpected listing type: ${listing.type}`)
     }

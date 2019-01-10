@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://schema.originprotocol.com/dispute_1.0.0.json",
+  "title": "Origin Protocol offer dispute schema",
+  "type": "object",
+  "properties": {
+    "schemaId": {
+      "type": "string"
+    }
+  },
+  "required": ["schemaId"]
+}

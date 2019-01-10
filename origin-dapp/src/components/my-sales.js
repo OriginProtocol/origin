@@ -6,9 +6,11 @@ import { storeWeb3Intent } from 'actions/App'
 
 import MySaleCard from 'components/my-sale-card'
 
-import { getListing } from 'utils/listing'
+import { transformPurchasesOrSales } from 'utils/listing'
 
 import origin from '../services/origin'
+
+const { web3 } = origin.contractService
 
 class MySales extends Component {
   constructor(props) {
@@ -17,47 +19,31 @@ class MySales extends Component {
   }
 
   componentDidMount() {
-    if (this.props.web3Account) {
+    if (
+      this.props.wallet.address &&
+      (!web3.currentProvider.isOrigin || origin.contractService.walletLinker)
+    ) {
       this.loadPurchases()
-    } else if (!web3.givenProvider) {
+    } else if (web3.currentProvider.isOrigin) {
       this.props.storeWeb3Intent('view your sales')
+      origin.contractService.showLinkPopUp()
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { web3Account } = this.props
+    const { wallet } = this.props
 
     // on account change
-    if (web3Account && web3Account !== prevProps.web3Account) {
+    if (wallet.address && wallet.address !== prevProps.wallet.address) {
       this.loadPurchases()
     }
   }
 
   async loadPurchases() {
-    const listingIds = await origin.marketplace.getListings({
-      idsOnly: true,
-      listingsFor: this.props.web3Account
-    })
-    const listingPromises = listingIds.map(listingId => {
-      return new Promise(async resolve => {
-        const listing = await getListing(listingId)
-        resolve({ listingId, listing })
-      })
-    })
-    const withListings = await Promise.all(listingPromises)
-    const offerPromises = await withListings.map(obj => {
-      return new Promise(async resolve => {
-        const offers = await origin.marketplace.getOffers(obj.listingId)
-        resolve(Object.assign(obj, { offers }))
-      })
-    })
-    const withOffers = await Promise.all(offerPromises)
-    const offersByListing = withOffers.map(obj => {
-      return obj.offers.map(offer => Object.assign({}, obj, { offer }))
-    })
-    const offersFlattened = [].concat(...offersByListing)
-
-    this.setState({ loading: false, purchases: offersFlattened })
+    const { wallet } = this.props
+    const sales = await origin.marketplace.getSales(wallet.address)
+    const transformedSales = await transformPurchasesOrSales(sales)
+    this.setState({ loading: false, purchases: transformedSales })
   }
 
   render() {
@@ -195,10 +181,10 @@ class MySales extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ app, wallet }) => {
   return {
-    web3Account: state.app.web3.account,
-    web3Intent: state.app.web3.intent
+    wallet,
+    web3Intent: app.web3.intent
   }
 }
 

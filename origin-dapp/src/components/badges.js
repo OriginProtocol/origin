@@ -2,7 +2,7 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
 export const BetaBadge = () => (
-  <span className="badge badge-primary">
+  <span className="badge badge-primary mt-1">
     <FormattedMessage
       id={'badges.beta'}
       defaultMessage={'Beta'}
@@ -37,12 +37,18 @@ export const SellerBadge = () => (
   </span>
 )
 
-export const SoldBadge = () => (
+export const SoldBadge = props => (
   <span className="sold badge">
-    <FormattedMessage
+  {props.isMultiUnit && <FormattedMessage
+      id={'badges.soldOut'}
+      defaultMessage={'Sold Out'}
+    />
+  }
+  {(!props.isMultiUnit || props.isMultiUnit === undefined) && <FormattedMessage
       id={'badges.sold'}
       defaultMessage={'Sold'}
     />
+  }
   </span>
 )
 

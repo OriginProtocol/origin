@@ -4,9 +4,13 @@ metadata:
   name: {{ template "ipfs.fullname" . }}
   labels:
     app: {{ template "ipfs.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: ipfs
   annotations:
     kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
     kubernetes.io/tls-acme: "true"
@@ -16,34 +20,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST"
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
-{{- if eq .Release.Namespace "prod" }}
-spec:
-  tls:
-    - secretName: {{ template "ipfs.host" . }}
-      hosts:
-        - {{ template "ipfs.host" . }}
-    # Additional domain that was originally used for the IPFS gateway
-    - secretName: gateway.originprotocol.com
-      hosts:
-        - gateway.originprotocol.com
-  rules:
-    - host: {{ template "ipfs.host" . }}
-      http: &http_rules
-        paths:
-          # Only allow the add API call through to the IPFS API
-          - path: /api/v0/add
-            backend:
-              serviceName: {{ template "ipfs.fullname" . }}
-              servicePort: 5001
-          # IFPS read only gateway
-          - path: /
-            backend:
-              serviceName: {{ template "ipfs.fullname" . }}
-              servicePort: 8080
-    - host: gateway.originprotocol.com
-      http: *http_rules
-{{- else }}
-# Use ipfs-proxy on dev and staging
+    nginx.ingress.kubernetes.io/limit-rps: "50"
 spec:
   tls:
     - secretName: {{ template "ipfs.host" . }}
@@ -56,5 +33,8 @@ spec:
           - path: /
             backend:
               serviceName: {{ template "ipfs.fullname" . }}
-              servicePort: 9999
-{{- end }}
+              servicePort: 9999  # ipfs-proxy
+          - path: /ipns
+            backend:
+              serviceName: {{ template "ipfs.fullname" . }}
+              servicePort: 8080

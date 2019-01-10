@@ -4,15 +4,21 @@ metadata:
   name: {{ template "messaging.fullname" . }}
   labels:
     app: {{ template "messaging.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: origin-messaging
 spec:
   type: NodePort
   selector:
     app: {{ template "messaging.fullname" . }}
   ports:
-  - name: api
+  - name: ipfs-api
     port: 5001
   - name: websocket
     port: 9012
+  - name: api
+    port: 6647

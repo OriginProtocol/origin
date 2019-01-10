@@ -58,7 +58,7 @@ const createDiscordWebhook = async build => {
     case 'staging':
       namespace = '`staging`';
       break;
-    case 'prod':
+    case 'stable':
       namespace = '`prod`';
       break;
   }
@@ -101,7 +101,7 @@ const createDiscordWebhook = async build => {
     message = `Deployment failure for \`${container}\` to \`${namespace}\``;
     options.embeds[0].color = '16724787';
   } else if (build.status === 'TIMEOUT') {
-    message = `Deployment timeout for \`${container} to \`${namespace}\``;
+    message = `Deployment timeout for \`${container}\` to \`${namespace}\``;
     options.embeds[0].color = '16724787';
   }
   return { message: message, options: options };

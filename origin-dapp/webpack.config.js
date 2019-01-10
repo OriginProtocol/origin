@@ -41,7 +41,9 @@ const env = {
   NOTIFICATIONS_URL: 'https://notifications.originprotocol.com',
   PROVIDER_URL: null,
   REDUX_LOGGER: false,
-  RINKEBY_DAPP_BASEURL: 'https://demo.staging.originprotocol.com'
+  RINKEBY_DAPP_BASEURL: 'https://demo.staging.originprotocol.com',
+  WALLET_LANDING_URL: null,
+  WALLET_LINKER_URL: null
 }
 
 var config = {
@@ -97,16 +99,20 @@ var config = {
   },
   devServer: {
     contentBase: './public',
+    host: "0.0.0.0",
     port: 3000,
+    public: 'localhost:3000',
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
+    disableHostCheck: true,
     overlay: {
       warnings: true,
       errors: true
     }
   },
   watchOptions: {
+    poll: 500,
     ignored: [
       // Ignore node_modules in watch except for the origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,
@@ -124,6 +130,7 @@ var config = {
     new CopyWebpackPlugin([
       'public/favicon.ico',
       'public/sw.js',
+      'public/swAnalytics.js',
       { from: 'public/images', to: 'images' },
       { from: 'public/fonts', to: 'fonts' },
       { from: 'public/schemas', to: 'schemas' }
@@ -140,14 +147,14 @@ if (isProduction) {
 } else {
   config.module.rules.push({
     test: /\.js$/,
-    use: "source-map-loader",
+    use: 'source-map-loader',
     exclude: [
       // Don't load source maps from anything in node_modules except for the
       // origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,
       /\origin([\\]+|\/)node_modules/
     ],
-    enforce: "pre"
+    enforce: 'pre'
   })
 }
 

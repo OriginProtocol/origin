@@ -1,5 +1,6 @@
 {
-  "schemaId": "http://schema.originprotocol.com/offer_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/offer_1.0.0.json",
+  "listingId": "999-000-1",
   "listingType": "unit",
   "unitsPurchased": 1,
   "totalPrice": {

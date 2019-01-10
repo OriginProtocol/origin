@@ -3,23 +3,100 @@
 //
 export class Offer {
   /**
-   * An Offer is constructed based on its on-chain and off-chain data.
-   * @param {string} offerId - Unique offer ID.
-   * @param {string} listingId - Unique listing ID.
-   * @param {Object} chainOffer - Offer data from the blockchain.
-   * @param {Object} ipfsOffer - Offer data from IPFS.
+   * Offer object model.
+   *
+   * Notice: when adding a field, be aware that the data in the discovery back-end
+   * is not automatically re-indexed. Therefore old offers will be returned by
+   * the back-end with the new field's value set to 'undefined'.
+   *
+   * @param {Object} args - single object arguments used to construct an Offer
+   *  - {string} id - Offer ID.
+   *  - {string} listingId - Unique listing ID.
+   *  - {string} status - Status of the offer: 'error', 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed', 'withdrawn', 'ruling'
+   *  - {int} createdAt - Time in seconds since epoch
+   *  - {string} buyer - address of the buyer
+   *  - {Array{Object}} events - list of events ( like OfferCreated event)
+   *  - {string} refund - Amount to refund buyer upon finalization
+   *  - {Object} totalPrice - Amount to refund buyer upon finalization, consists of 'amount' and 'currency' properties
+   *  - {int} unitsPurchased - number of units purchased
+   *  - {Object} blockInfo - information of where(when?) offer happened on the blockchain
+   *  - {string} schemaId - schema used to validate the offer
+   *  - {string} listingType - 'unit', 'fractional'
+   *  - {Object} ipfs - ipfs offer data
+   *  - {Array{Object}} - slots - fractional usage time slot data
    */
-  constructor(offerId, listingId, chainOffer, ipfsOffer) {
-    this.id = offerId
-    this.listingId = listingId
-    this.status = chainOffer.status // 'created', 'accepted', 'disputed', 'finalized', 'sellerReviewed'
-    this.createdAt = chainOffer.createdAt // Time in seconds since epoch.
-    this.buyer = chainOffer.buyer
-    this.events = chainOffer.events
-    this.refund = chainOffer.refund
+  constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice, unitsPurchased, blockInfo,
+    schemaId, listingType, ipfs, commission, slots }) {
+      this.id = id
+      this.listingId = listingId
+      this.status = status
+      this.createdAt = createdAt
+      this.buyer = buyer
+      this.events = events
+      this.refund = refund
+      this.totalPrice = totalPrice
+      this.unitsPurchased = unitsPurchased
+      this.blockInfo = blockInfo
+      this.schemaId = schemaId
+      this.listingType = listingType
+      this.ipfs = ipfs
+      this.commission = commission
+      this.slots = slots
+  }
 
-    // See src/schemas/offer.json for fields stored in IPFS offer data.
-    Object.assign(this, ipfsOffer)
+  // creates an Offer using on-chain and off-chain data
+  static init(offerId, listingId, chainData, ipfsData) {
+    return new Offer({
+      id: offerId,
+      listingId: listingId,
+      status: chainData.status,
+      createdAt: chainData.createdAt,
+      buyer: chainData.buyer,
+      events: chainData.events,
+      refund: chainData.refund,
+      totalPrice: ipfsData.totalPrice,
+      unitsPurchased: ipfsData.unitsPurchased,
+      blockInfo: {
+        blockNumber: chainData.blockNumber,
+        logIndex: chainData.logIndex
+      },
+      schemaId: ipfsData.schemaId,
+      listingType: ipfsData.listingType,
+      ipfs: ipfsData.ipfs,
+      commission: ipfsData.commission,
+      slots: ipfsData.slots
+    })
+  }
+
+  // creates an Offer from Discovery's Apollo schema
+  static initFromDiscovery(discoveryNode) {
+    const offerCreatedEvents = discoveryNode.data.events.filter(event => event.event === 'OfferCreated')
+
+    if (offerCreatedEvents.length === 0)
+      throw new Error('Can not find OfferCreated event required to create an Offer object')
+
+    return new Offer({
+      id: discoveryNode.id,
+      listingId: discoveryNode.listing.id,
+      status: discoveryNode.status,
+      createdAt: discoveryNode.data.createdAt,
+      buyer: discoveryNode.buyer.walletAddress,
+      events: discoveryNode.data.events,
+      refund: discoveryNode.data.refund,
+      totalPrice: discoveryNode.data.totalPrice,
+      unitsPurchased: discoveryNode.data.unitsPurchased,
+      blockInfo: {
+        blockNumber: offerCreatedEvents[0].blockNumber,
+        logIndex: offerCreatedEvents[0].logIndex
+      },
+      schemaId: discoveryNode.data.schemaId,
+      listingType: discoveryNode.data.listingType,
+      ipfs: discoveryNode.data.ipfs,
+      // See https://github.com/OriginProtocol/origin/issues/1087
+      // as to why we extract commission from the ipfs data.
+      commission: discoveryNode.data.ipfs.data.commission,
+      slots: discoveryNode.slots
+    })
   }
 
   /**

@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "linking.fullname" . }}
+  labels:
+    app: {{ template "linking.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: origin-linking
+  annotations:
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "ingress"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+    nginx.ingress.kubernetes.io/limit-rps: "20"
+    # Increase timeouts for websockets
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  tls:
+    - secretName: {{ template "linking.host" . }}
+      hosts:
+        - {{ template "linking.host" . }}
+  rules:
+  - host: {{ template "linking.host" . }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "linking.fullname" . }}
+          servicePort: 3008

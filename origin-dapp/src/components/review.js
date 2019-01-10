@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -7,6 +7,8 @@ import { fetchUser } from 'actions/User'
 
 import Avatar from 'components/avatar'
 import UnnamedUser from 'components/unnamed-user'
+
+import { formattedAddress } from 'utils/user'
 
 class Review extends Component {
   componentWillMount() {
@@ -29,7 +31,9 @@ class Review extends Component {
             />
             <div className="identification d-flex flex-column justify-content-center text-truncate">
               <div className="name">{fullName || <UnnamedUser />}</div>
-              <div className="address text-muted text-truncate" title={address}>{address}</div>
+              <div className="address text-muted text-truncate" title={formattedAddress(address)}>
+                {formattedAddress(address)}
+              </div>
             </div>
             <div className="rating d-flex flex-column justify-content-center text-right">
               <div className="stars">
@@ -59,7 +63,9 @@ class Review extends Component {
 
 const mapStateToProps = (state, { review }) => {
   return {
-    user: state.users.find(u => u.address === review.reviewer) || {}
+    user: state.users.find(u => {
+      return formattedAddress(u.address) === formattedAddress(review.reviewer)
+    }) || {}
   }
 }
 

@@ -1,4 +1,5 @@
 import adapterFactory from './adapters/adapter-factory'
+import { generateSchemaId, parseSchemaId } from './schema-id'
 
 export const LISTING_DATA_TYPE = 'listing'
 export const LISTING_WITHDRAW_DATA_TYPE = 'listing-withdraw'
@@ -22,8 +23,6 @@ const DATA_TYPES = [
   PROFILE_DATA_TYPE
 ]
 
-export const BASE_SCHEMA_ID = 'http://schema.originprotocol.com/'
-
 //
 // JSON data store backed by IPFS.
 //
@@ -34,33 +33,6 @@ export class IpfsDataStore {
    */
   constructor(ipfsService) {
     this.ipfsService = ipfsService
-  }
-
-  /**
-   * Formats of a schema ID is BASE_SCHEMA_ID/<dataType>_v<version>
-   * Ex.: http://schema.originprotocol.com/listing_v1.0.0
-   * @param (string} schemaId
-   * @return {{dataType: string, schemaVersion: string}}
-   */
-  static parseSchemaId(schemaId) {
-    const str = schemaId.replace(BASE_SCHEMA_ID, '')
-    const splits = str.split('_v')
-    if (splits.length != 2) {
-      throw new Error(`Invalid schemaId: ${schemaId}`)
-    }
-    return { dataType: splits[0], schemaVersion: splits[1] }
-  }
-
-  /**
-   * Returns the most recent schemaId for a specific data type.
-   * @param {string} dataType
-   * @return {object} - Tuple schemaId, schemaVersion.
-   */
-  static generateSchemaId(dataType) {
-    // TODO: should lookup in a config to get most recent version to use.
-    const schemaVersion = '1.0.0'
-    const schemaId = `${BASE_SCHEMA_ID}${dataType}_v${schemaVersion}`
-    return { schemaId, schemaVersion }
   }
 
   /**
@@ -82,7 +54,7 @@ export class IpfsDataStore {
     if (!ipfsData.schemaId) {
       throw new Error(`Data missing schemaId: ${JSON.stringify(ipfsData)}`)
     }
-    const { dataType, schemaVersion } = IpfsDataStore.parseSchemaId(ipfsData.schemaId)
+    const { dataType, schemaVersion } = parseSchemaId(ipfsData.schemaId)
     if (dataType !== expectedDataType) {
       throw new Error(`Expected ${expectedDataType} vs ${dataType} for IPFS Hash ${ipfsHash}`)
     }
@@ -119,7 +91,7 @@ export class IpfsDataStore {
 
     // Get latest version of the schemaID to use for the data type.
     // Set that schemaID in the data.
-    const { schemaId, schemaVersion } = IpfsDataStore.generateSchemaId(dataType)
+    const { schemaId, schemaVersion } = generateSchemaId(dataType)
     data.schemaId = schemaId
 
     // Get an adapter to handle the data.

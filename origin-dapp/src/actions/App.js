@@ -1,11 +1,9 @@
-import moment from 'moment'
+import moment from 'moment-timezone'
 import store from 'store'
 
 import { unblock } from 'actions/Onboarding'
-import { showAlert } from 'actions/Alert'
 
 import keyMirror from 'utils/keyMirror'
-import { createSubscription } from 'utils/notifications'
 import {
   addLocales,
   getAvailableLanguages,
@@ -14,24 +12,17 @@ import {
   getBestAvailableLanguage
 } from 'utils/translationUtils'
 
-import origin from '../services/origin'
-
 import translations from '../../translations/translated-messages.json'
 
 export const AppConstants = keyMirror(
   {
     BETA_MODAL_DISMISSED: null,
     MESSAGING_DISMISSED: null,
-    MESSAGING_ENABLED: null,
-    MESSAGING_INITIALIZED: null,
     NOTIFICATIONS_DISMISSED: null,
-    NOTIFICATIONS_HARD_PERMISSION: null,
-    NOTIFICATIONS_SOFT_PERMISSION: null,
-    NOTIFICATIONS_SUBSCRIPTION_PROMPT: null,
     ON_MOBILE: null,
-    SAVE_SERVICE_WORKER_REGISTRATION: null,
+    SHOW_MAIN_NAV: null,
+    SHOW_WELCOME: null,
     TRANSLATIONS: null,
-    WEB3_ACCOUNT: null,
     WEB3_INTENT: null,
     WEB3_NETWORK: null
   },
@@ -69,88 +60,20 @@ export function dismissNotifications(ids) {
   }
 }
 
-export function handleNotificationsSubscription(role, props = {}) {
-  return async function(dispatch) {
-    const {
-      notificationsHardPermission,
-      notificationsSoftPermission,
-      pushNotificationsSupported,
-      serviceWorkerRegistration,
-      web3Account
-    } = props
-
-    if (!pushNotificationsSupported) {
-      return
-    }
-
-    if (notificationsHardPermission === 'default') {
-      if ([null, 'warning'].includes(notificationsSoftPermission)) {
-        dispatch(handleNotificationsSubscriptionPrompt(role))
-      }
-    // existing subscription may need to be replicated for current account
-    } else if (notificationsHardPermission === 'granted') {
-      createSubscription(serviceWorkerRegistration, web3Account)
-    }
-  }
-}
-
-export function handleNotificationsSubscriptionPrompt(role) {
-  return {
-    type: AppConstants.NOTIFICATIONS_SUBSCRIPTION_PROMPT,
-    role
-  }
-}
-
-export function setNotificationsHardPermission(result) {
-  return {
-    type: AppConstants.NOTIFICATIONS_HARD_PERMISSION,
-    result
-  }
-}
-
-export function setNotificationsSoftPermission(result) {
-  localStorage.setItem('notificationsPermissionResponse', result)
-
-  return {
-    type: AppConstants.NOTIFICATIONS_SOFT_PERMISSION,
-    result
-  }
-}
-
-export function enableMessaging() {
-  return function(dispatch) {
-    try {
-      origin.messaging.startConversing()
-    } catch (error) {
-      dispatch(showAlert(error.message))
-    }
-  }
-}
-
-export function setMessagingEnabled(messagingEnabled) {
-  return {
-    type: AppConstants.MESSAGING_ENABLED,
-    messagingEnabled
-  }
-}
-
-export function setMessagingInitialized(messagingInitialized) {
-  return {
-    type: AppConstants.MESSAGING_INITIALIZED,
-    messagingInitialized
-  }
-}
-
 export function setMobile(device) {
   return { type: AppConstants.ON_MOBILE, device }
 }
 
-export function storeNetwork(networkId) {
-  return { type: AppConstants.WEB3_NETWORK, networkId }
+export function showMainNav(showNav) {
+  return { type: AppConstants.SHOW_MAIN_NAV, showNav }
 }
 
-export function storeWeb3Account(address) {
-  return { type: AppConstants.WEB3_ACCOUNT, address }
+export function showWelcomeWarning(showWelcome) {
+  return { type: AppConstants.SHOW_WELCOME, showWelcome }
+}
+
+export function storeNetwork(networkId) {
+  return { type: AppConstants.WEB3_NETWORK, networkId }
 }
 
 export function storeWeb3Intent(intent) {
@@ -177,7 +100,7 @@ export function localizeApp() {
       (navigator.languages && navigator.languages[0]) ||
       navigator.language ||
       navigator.userLanguage
-    if (browserDefaultLang && browserDefaultLang !== 'en-US') {
+    if (browserDefaultLang) {
       bestAvailableLanguage = getBestAvailableLanguage(browserDefaultLang)
     }
   }
@@ -206,12 +129,5 @@ export function localizeApp() {
     selectedLanguageFull: getLanguageNativeName(selectedLanguageCode),
     availableLanguages: getAvailableLanguages(),
     messages
-  }
-}
-
-export function saveServiceWorkerRegistration(registration) {
-  return {
-    type: AppConstants.SAVE_SERVICE_WORKER_REGISTRATION,
-    registration
   }
 }

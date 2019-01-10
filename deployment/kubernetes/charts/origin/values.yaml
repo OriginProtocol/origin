@@ -20,7 +20,7 @@ faucetImageTag: latest
 ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master
 
-# ipfs-proxy
+# origin-ipfs-proxy
 ipfsProxyImage: ipfs-proxy
 ipfsProxyImageTag: latest
 
@@ -30,25 +30,4 @@ messagingImageTag: latest
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'latest'
-
-# geth private node bootnode
-bootnodeImage: ethereum/client-go
-bootnodeImageTag: alltools-v1.8.13
-
-# ethstats for geth nodes
-ethstatsImage: ethereumex/eth-stats-dashboard
-ethstatsImageTag: latest
-
-gethImage: ethereum/client-go
-gethImageTag: v1.8.13
-gethTxReplicas: 1
-
-# Origin testnet config
-gethGenesisNetworkId: 2222
-gethGenesisDifficulty: '0x400'
-gethGenesisGasLimit: '0x8000000'
-gethMinerReplicas: 2
-gethMinerCpuLimit: 0.5
-gethAccountAddress: 0xee3b32485b5d9eee1e3ceb1ad2e2ea1493192d2d
-gethAccountPublicKey: f1afaa4f22dedc95df4023300ccd64456809624e70d321542ee0af8756c332b8934c362dc54ea37ec327d08b61faa55d428e86f84cfc1e3d08bfbae15ff37327
+notificationsImageTag: latest

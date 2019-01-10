@@ -1,30 +1,39 @@
 import React, { Component, Fragment } from 'react'
-import { defineMessages, injectIntl } from 'react-intl'
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
 import {
+  enableMessaging,
   handleNotificationsSubscription,
   setMessagingEnabled,
   setMessagingInitialized,
   setNotificationsHardPermission,
   setNotificationsSoftPermission
-} from 'actions/App'
+} from 'actions/Activation'
+import { storeWeb3Intent } from 'actions/App'
 import { addMessage } from 'actions/Message'
 import { fetchNotifications } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
 
 import BetaModal from 'components/modals/beta-modal'
-import { RecommendationModal, WarningModal } from 'components/modals/notifications-modals'
+import Modal from 'components/modal'
+import {
+  RecommendationModal,
+  WarningModal
+} from 'components/modals/notifications-modals'
 import SellingModal from 'components/onboarding-modal'
 
 import getCurrentNetwork from 'utils/currentNetwork'
 import { createSubscription, requestPermission } from 'utils/notifications'
 import scopedDebounce from 'utils/scopedDebounce'
+import { formattedAddress } from 'utils/user'
 
+import analytics from '../services/analytics'
 import origin from '../services/origin'
 
+const { web3 } = origin.contractService
 const ETH_ADDRESS = process.env.MESSAGING_ACCOUNT
 const ONE_SECOND = 1000
 const storeKeys = {
@@ -36,9 +45,14 @@ class Onboarding extends Component {
   constructor(props) {
     super(props)
 
-    this.handleDismissNotificationsPrompt = this.handleDismissNotificationsPrompt.bind(this)
-    this.handleDismissNotificationsWarning = this.handleDismissNotificationsWarning.bind(this)
+    this.handleDismissNotificationsPrompt = this.handleDismissNotificationsPrompt.bind(
+      this
+    )
+    this.handleDismissNotificationsWarning = this.handleDismissNotificationsWarning.bind(
+      this
+    )
     this.handleEnableNotifications = this.handleEnableNotifications.bind(this)
+    this.handleToggle = this.handleToggle.bind(this)
     this.intlMessages = defineMessages({
       congratsMessage: {
         id: 'onboarding.congrats',
@@ -93,10 +107,21 @@ class Onboarding extends Component {
       this.debouncedFetchUser(obj.senderAddress)
     })
 
+    setTimeout(() => this.props.fetchNotifications(), 1000 * 10)
+
     // To Do: handle incoming messages when no Origin Messaging Private Key is available
     origin.messaging.events.on('emsg', obj => {
+      // Commenting this out for now [micah]
+      // This event may be legitimate if a user is missing the key in this browser but is listed in the global registry.
+      // Otherwise, this event may be the result of a race condition that can be resolved with a browser reload.
+      // analytics.event('Notifications', 'ErrorNoDecryption')
       console.error('A message has arrived that could not be decrypted:', obj)
     })
+
+    // Delay notifications retrieval to avoid flickering dropdown menus.
+    setTimeout(() => {
+      this.props.fetchNotifications()
+    }, 10 * ONE_SECOND)
   }
 
   componentDidUpdate(prevProps) {
@@ -104,17 +129,19 @@ class Onboarding extends Component {
       messages,
       messagingEnabled,
       messagingInitialized,
-      web3Account
+      wallet
     } = this.props
 
-    if (web3Account && !this.notificationsInterval) {
-      // poll for notifications
+    if (wallet.address && !this.notificationsInterval) {
+      // Poll for notifications every 60 seconds.
       this.notificationsInterval = setInterval(() => {
         this.props.fetchNotifications()
-      }, 10 * ONE_SECOND)
+      }, 60 * ONE_SECOND)
     }
 
-    const welcomeAccountEnabled = ETH_ADDRESS && ETH_ADDRESS !== web3Account
+    const welcomeAccountEnabled =
+      ETH_ADDRESS &&
+      formattedAddress(ETH_ADDRESS) !== formattedAddress(wallet.address)
 
     if (
       // wait for initialization so that account key is available in origin.js
@@ -125,7 +152,7 @@ class Onboarding extends Component {
       return
     }
 
-    const roomId = origin.messaging.generateRoomId(ETH_ADDRESS, web3Account)
+    const roomId = origin.messaging.generateRoomId(ETH_ADDRESS, wallet.address)
     const recipients = origin.messaging.getRecipients(roomId)
 
     if (!messages.find(({ hash }) => hash === 'origin-welcome-message')) {
@@ -133,7 +160,7 @@ class Onboarding extends Component {
 
       const scopedWelcomeMessageKeyName = `${
         storeKeys.messageWelcomeTimestamp
-      }:${web3Account}`
+      }:${wallet.address}`
       const welcomeTimestampString = localStorage.getItem(
         scopedWelcomeMessageKeyName
       )
@@ -166,7 +193,7 @@ class Onboarding extends Component {
 
       const scopedCongratsMessageKeyName = `${
         storeKeys.messageCongratsTimestamp
-      }:${web3Account}`
+      }:${wallet.address}`
       const congratsTimestampString = localStorage.getItem(
         scopedCongratsMessageKeyName
       )
@@ -197,42 +224,59 @@ class Onboarding extends Component {
 
   handleDismissNotificationsPrompt(e) {
     e.preventDefault()
-
+    analytics.event('Notifications', 'PromptDismissed')
     this.props.handleNotificationsSubscription('warning', this.props)
   }
 
   handleDismissNotificationsWarning(e) {
     e.preventDefault()
-
+    analytics.event('Notifications', 'WarningDismissed')
     this.props.setNotificationsSoftPermission('denied')
     this.props.handleNotificationsSubscription(null, this.props)
   }
 
   async handleEnableNotifications() {
+    analytics.event('Notifications', 'SoftPermissionGranted')
     this.props.setNotificationsSoftPermission('granted')
     this.props.handleNotificationsSubscription(null, this.props)
 
-    const { serviceWorkerRegistration, web3Account } = this.props
+    const { serviceWorkerRegistration, wallet } = this.props
     // need a registration object to subscribe
     if (!serviceWorkerRegistration) {
+      analytics.event('Notifications', 'UnsupportedNoServiceWorker')
       return console.error('No service worker registered')
     }
 
     try {
       // will equal 'granted' or otherwise throw
       await requestPermission()
-
-      createSubscription(serviceWorkerRegistration, web3Account)
+      analytics.event('Notifications', 'PermissionGranted')
+      createSubscription(serviceWorkerRegistration, wallet.address)
     } catch (error) {
       // permission not granted
+      analytics.event('Notifications', 'PermissionNotGranted', error)
       console.error(error)
     }
 
     this.props.setNotificationsHardPermission(Notification.permission)
   }
 
+  handleToggle(e) {
+    e.preventDefault()
+
+    this.props.storeWeb3Intent(null)
+  }
+
   render() {
-    const { children, location, networkId, notificationsSubscriptionPrompt } = this.props
+    const {
+      children,
+      enableMessaging,
+      location,
+      messagingEnabled,
+      networkId,
+      notificationsSubscriptionPrompt,
+      web3Intent
+    } = this.props
     const query = queryString.parse(location.search)
     const currentNetwork = getCurrentNetwork(networkId)
     const networkType = currentNetwork && currentNetwork.type
@@ -242,52 +286,113 @@ class Onboarding extends Component {
         {children}
         {!query['skip-onboarding'] && (
           <Fragment>
-            { networkType === 'Mainnet Beta' && <BetaModal /> }
+            {networkType === 'Mainnet Beta' && <BetaModal />}
             <SellingModal />
           </Fragment>
         )}
-        { ['buyer', 'seller'].includes(notificationsSubscriptionPrompt) &&
+        {['buyer', 'seller'].includes(notificationsSubscriptionPrompt) && (
           <RecommendationModal
             isOpen={true}
             role={notificationsSubscriptionPrompt}
             onCancel={this.handleDismissNotificationsPrompt}
             onSubmit={this.handleEnableNotifications}
           />
-        }
-        {notificationsSubscriptionPrompt === 'warning' &&
+        )}
+        {notificationsSubscriptionPrompt === 'warning' && (
           <WarningModal
             isOpen={true}
             onCancel={this.handleDismissNotificationsWarning}
             onSubmit={this.handleEnableNotifications}
           />
-        }
+        )}
+        {!web3.currentProvider.isOrigin &&
+          web3Intent &&
+          web3Intent !== 'manage your profile' &&
+          !messagingEnabled && (
+            <Modal
+              backdrop="static"
+              className="not-messaging-enabled"
+              isOpen={true}
+            >
+              <FormattedMessage
+                id={'onboarding.intentRequiresMessaging'}
+                defaultMessage={
+                  'Before you can {web3Intent}, you need to enable Origin Messaging.'
+                }
+                values={{ web3Intent }}
+              />
+              <a
+                className="close"
+                aria-label="Close"
+                onClick={this.handleToggle}
+              >
+                <span aria-hidden="true">&times;</span>
+              </a>
+              <br />
+              <div className="roadblock">
+                <div className="button-container">
+                  <button
+                    className="btn btn-sm btn-clear"
+                    onClick={enableMessaging}
+                    ga-category="messaging"
+                    ga-label="required_enable"
+                  >
+                    <FormattedMessage
+                      id={'onboarding.enable'}
+                      defaultMessage={'Enable Messaging'}
+                    />
+                  </button>
+                </div>
+                <div className="link-container text-center">
+                  <a
+                    href="#"
+                    data-modal="profile"
+                    onClick={this.handleToggle}
+                    ga-category="messaging"
+                    ga-label="required_cancel"
+                  >
+                    <FormattedMessage
+                      id={'onboarding.cancel'}
+                      defaultMessage={'Cancel'}
+                    />
+                  </a>
+                </div>
+              </div>
+            </Modal>
+          )}
       </Fragment>
     )
   }
 }
 
-const mapStateToProps = ({ app, messages }) => ({
+const mapStateToProps = ({ activation, app, messages, wallet }) => ({
   messages,
-  messagingEnabled: app.messagingEnabled,
-  messagingInitialized: app.messagingInitialized,
+  messagingEnabled: activation.messaging.enabled,
+  messagingInitialized: activation.messaging.initialized,
   networkId: app.web3.networkId,
-  notificationsHardPermission: app.notificationsHardPermission,
-  notificationsSoftPermission: app.notificationsSoftPermission,
-  notificationsSubscriptionPrompt: app.notificationsSubscriptionPrompt,
-  pushNotificationsSupported: app.pushNotificationsSupported,
-  serviceWorkerRegistration: app.serviceWorkerRegistration,
-  web3Account: app.web3.account
+  notificationsHardPermission: activation.notifications.permissions.hard,
+  notificationsSoftPermission: activation.notifications.permissions.soft,
+  notificationsSubscriptionPrompt: activation.notifications.subscriptionPrompt,
+  pushNotificationsSupported: activation.notifications.pushEnabled,
+  serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
+  wallet,
+  web3Intent: app.web3.intent
 })
 
 const mapDispatchToProps = dispatch => ({
   addMessage: obj => dispatch(addMessage(obj)),
+  enableMessaging: () => dispatch(enableMessaging()),
   fetchNotifications: () => dispatch(fetchNotifications()),
   fetchUser: addr => dispatch(fetchUser(addr)),
-  handleNotificationsSubscription: (role, props) => dispatch(handleNotificationsSubscription(role, props)),
+  handleNotificationsSubscription: (role, props) =>
+    dispatch(handleNotificationsSubscription(role, props)),
   setMessagingEnabled: bool => dispatch(setMessagingEnabled(bool)),
   setMessagingInitialized: bool => dispatch(setMessagingInitialized(bool)),
-  setNotificationsHardPermission: result => dispatch(setNotificationsHardPermission(result)),
-  setNotificationsSoftPermission: result => dispatch(setNotificationsSoftPermission(result))
+  setNotificationsHardPermission: result =>
+    dispatch(setNotificationsHardPermission(result)),
+  setNotificationsSoftPermission: result =>
+    dispatch(setNotificationsSoftPermission(result)),
+  storeWeb3Intent: () => dispatch(storeWeb3Intent())
 })
 
 export default withRouter(

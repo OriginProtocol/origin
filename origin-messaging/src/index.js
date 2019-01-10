@@ -1,8 +1,10 @@
 'use strict'
 
+import '@babel/polyfill'
 import OrbitDB from 'orbit-db'
-import Keystore from 'orbit-db-keystore'
-import url from 'url'
+import express from 'express'
+import { RateLimiterMemory } from 'rate-limiter-flexible'
+import Web3 from 'web3'
 
 const Log = require('ipfs-log')
 const IPFSApi = require('ipfs-api')
@@ -13,7 +15,6 @@ import exchangeHeads from './exchange-heads'
 import logger from './logger'
 import {
   verifyConversationSignature,
-  verifyConversers,
   verifyMessageSignature,
   verifyRegistrySignature
 } from './verify'
@@ -31,7 +32,7 @@ async function startRoom(roomDb, roomId, storeType, writers, shareFunc) {
 
   if(!messagingRoomsMap[key]) {
     messagingRoomsMap[key] = 'pending'
-    const room = await roomDb[storeType](roomId, { write:writers })
+    const room = await roomDb[storeType](roomId, { write: writers })
 
     logger.debug(`Room started: ${room.id}`)
 
@@ -44,10 +45,6 @@ async function startRoom(roomDb, roomId, storeType, writers, shareFunc) {
     //room.load()
     startSnapshotDB(room)
   }
-}
-
-function joinConversationKey(converser1, converser2) {
-  return [converser1, converser2].sort().join('-')
 }
 
 function onConverse(roomDb, conversee, payload) {
@@ -66,26 +63,11 @@ function handleGlobalRegistryWrite(convInitDb, payload) {
 }
 
 function rebroadcastOnReplicate(DB, db){
-  db.events.on('replicated', (dbname) => {
+  db.events.on('replicated', () => {
     // rebroadcast
     DB._pubsub.publish(db.id,  db._oplog.heads)
     snapshotDB(db)
   })
-}
-
-async function pinIPFS(ipfs, entry, signature, key) {
-  if (ipfs.pin && ipfs.pin.add) {
-    const hash = await saveToIpfs(ipfs, entry, signature, key)
-    if (hash) {
-      logger.debug(`Pinning hash ${hash}`)
-
-      try {
-        return await ipfs.pin.add(hash)
-      } catch (err) {
-        logger.error(`Cannot pin verified entry hash: ${hash}`)
-      }
-    }
-  }
 }
 
 async function saveToIpfs(ipfs, entry, signature, key) {
@@ -154,6 +136,7 @@ async function loadSnapshotDB(db) {
     await db._updateIndex()
     db.events.emit('replicated', db.address.toString())
   }
+  db.__snapshot_loaded = true
   db.events.emit('ready', db.address.toString(), db._oplog.heads)
 }
 
@@ -167,7 +150,7 @@ async function _onPeerConnected(address, peer) {
   const onChannelCreated = channel => this._directConnections[channel._receiverID] = channel
   const onMessage = (address, heads) => this._onMessage(address, heads)
 
-  const channel = await exchangeHeads(
+  await exchangeHeads(
     this._ipfs,
     address,
     peer,
@@ -180,6 +163,65 @@ async function _onPeerConnected(address, peer) {
   if (getStore(address)) {
     getStore(address).events.emit('peer', peer)
   }
+}
+
+// supply an endpoint for querying global registry
+const initRESTApp = db => {
+  const app = express()
+  const port = 6647
+  // limit request to one per minute
+  const rateLimiterOptions = {
+    points: 1,
+    duration: 60,
+  }
+  const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
+
+  app.all((req, res, next) => {
+    rateLimiter.consume(req.connection.remoteAddress)
+      .then(() => {
+        next()
+      })
+      .catch(() => {
+        res.status(429).send('<h1>Too Many Requests</h1>')
+      })
+  })
+
+  app.get('/', async (req, res) => {
+    const markup = '<h1>Origin Messaging</h1>' +
+                 '<h2><a href="https://medium.com/originprotocol/introducing-origin-messaging-decentralized-secure-and-auditable-13c16fe0f13e">Learn More</a></h2>'
+
+    res.send(markup)
+  })
+
+  app.get('/accounts', (req, res) => {
+    const kv = db.all()
+
+    res.send({ count: Object.keys(kv).length })
+  })
+
+  app.get('/accounts/:address', (req, res) => {
+    let { address } = req.params
+
+    if (!Web3.utils.isAddress(address)) {
+      res.statusMessage = 'Address is not a valid Ethereum address'
+
+      return res.status(400).end()
+    }
+
+    address = Web3.utils.toChecksumAddress(address)
+
+    const kv = db.all()
+
+    if (!kv.hasOwnProperty(address)) {
+      return res.status(204).end()
+    }
+
+    res.status(200).send(kv[address])
+  })
+
+  app.listen(port, () => {
+    logger.debug(`REST endpoint listening on port ${port}`)
+  })
 }
 
 const startOrbitDbServer = async (ipfs) => {
@@ -206,7 +248,6 @@ const startOrbitDbServer = async (ipfs) => {
     config.GLOBAL_KEYS, { write: ['*'] }
   )
   rebroadcastOnReplicate(orbitGlobal, globalRegistry)
-
   orbitGlobal.keystore.registerSignVerify(
     config.CONV_INIT_PREFIX,
     undefined,
@@ -218,12 +259,14 @@ const startOrbitDbServer = async (ipfs) => {
     }
   )
   orbitGlobal.keystore.registerSignVerify(
-    config.CONV, undefined, verifyMessageSignature(globalRegistry)
+    config.CONV, undefined, verifyMessageSignature(globalRegistry, orbitGlobal)
   )
   logger.debug(`Orbit registry started...: ${globalRegistry.id}`)
 
-  globalRegistry.events.on('ready', (address) => {
+  globalRegistry.events.on('ready', () => {
     logger.info(`Ready...`)
+
+    initRESTApp(globalRegistry)
   })
 
   // testing it's best to drop this for now
@@ -242,6 +285,7 @@ const main = async () => {
       startOrbitDbServer(ipfs)
     }).catch((error) => {
       logger.error(`Connection error ${config.IPFS_ADDRESS}:${config.IPFS_PORT}`)
+      logger.error(error)
       setTimeout(main, 5000)
     })
   } else {

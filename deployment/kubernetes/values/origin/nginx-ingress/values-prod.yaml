@@ -1,0 +1,13 @@
+controller:
+  service:
+    loadBalancerIP: 35.203.166.86
+    externalTrafficPolicy: "Local"
+  ingressClass: prod-ingress
+  stats:
+    enabled: true
+  metrics:
+    enabled: true
+  extraArgs:
+    enable-ssl-chain-completion: false
+    watch-namespace: prod
+    force-namespace-isolation: true

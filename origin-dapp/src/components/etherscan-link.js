@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 
+import origin from '../services/origin'
+
+const { web3 } = origin.contractService
+
 class EtherscanLink extends Component {
   constructor(props) {
     super(props)

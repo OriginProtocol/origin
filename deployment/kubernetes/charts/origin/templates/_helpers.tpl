@@ -41,22 +41,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
-{{- define "database.fullname" -}}
-{{- printf "%s-%s" .Release.Name "database" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "ethereum.fullname" -}}
-{{- printf "%s-%s" .Release.Name "ethereum" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "ethereum.host" -}}
-{{- if ne .Release.Namespace "prod" -}}
-{{- printf "eth.%s.originprotocol.com" .Release.Namespace -}}
-{{- else -}}
-{{- printf "eth.originprotocol.com" -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "faucet.fullname" -}}
 {{- printf "%s-%s" .Release.Name "faucet" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -99,6 +83,19 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
+{{- define "messaging-api.fullname" -}}
+{{- printf "%s-%s" .Release.Name "messaging-api" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "messaging-api.host" -}}
+{{- $prefix := "messaging-api" -}}
+{{- if ne .Release.Namespace "prod" -}}
+{{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
+{{- else -}}
+{{- printf "%s.originprotocol.com" $prefix -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "eventlistener.fullname" -}}
 {{- printf "%s-%s" .Release.Name "eventlistener" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -126,5 +123,43 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
 {{- else -}}
 {{- printf "%s.originprotocol.com" $prefix -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "linking.fullname" -}}
+{{- printf "%s-%s" .Release.Name "linking" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "linking.host" -}}
+{{- $prefix := "linking" -}}
+{{- if ne .Release.Namespace "prod" -}}
+{{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
+{{- else -}}
+{{- printf "%s.originprotocol.com" $prefix -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "creator.fullname" -}}
+{{- printf "%s-%s" .Release.Name "creator" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "creator.host" -}}
+{{- $prefix := "creator" -}}
+{{- if ne .Release.Namespace "prod" -}}
+{{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
+{{- else -}}
+{{- printf "%s.originprotocol.com" $prefix -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "creator-dapp.fullname" -}}
+{{- printf "%s-%s" .Release.Name "creator-dapp" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "creator-dapp.host" -}}
+{{- if ne .Release.Namespace "prod" -}}
+{{- printf "%s.origindapp.com" .Release.Namespace -}}
+{{- else -}}
+{{- printf "origindapp.com" -}}
 {{- end -}}
 {{- end -}}

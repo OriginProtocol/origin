@@ -6,14 +6,15 @@ import ProvisionedChanges from './_ProvisionedChanges'
 
 class ConfirmPublish extends Component {
   render() {
-    const { open, changes, onConfirm, handleToggle } = this.props
+    const { open, changes, onConfirm, handleToggle, mobileDevice } = this.props
+    const dataModal = mobileDevice ? 'mobile-publish' : 'publish'
 
     return (
       <Modal
         isOpen={open}
-        data-modal="publish"
         handleToggle={handleToggle}
         tabIndex="-1"
+        className={dataModal}
       >
         <div className="image-container">
           <img src="images/public-icon.svg" role="presentation" />

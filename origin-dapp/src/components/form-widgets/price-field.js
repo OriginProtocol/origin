@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getFiatPrice } from 'utils/priceUtils'
-import { FormattedMessage } from 'react-intl'
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 
 class PriceField extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      price: props.formData || '',
+      price: props.formData && parseFloat(props.formData) || '',
       currencyCode: props.currencyCode || 'USD'
     }
 
@@ -19,6 +19,30 @@ class PriceField extends Component {
       enumeratedPrice &&
       enumeratedPrice.length === 1 &&
       enumeratedPrice[0] === 0
+
+    this.intlMessages = defineMessages({
+      'singularPrice': {
+        id: 'schema.priceInEth.singular',
+        defaultMessage: 'Price'
+      },
+      'multiUnitPrice': {
+        id: 'schema.priceInEth.multiUnit',
+        defaultMessage: 'Price (per unit)'
+      }
+    })
+  }
+
+  componentDidMount() {
+    // If a price is passed in, we must call the onChange callback
+    // to set the price in the parent form
+    // Unfortunately, the setTimeout is needed to allow the parent
+    // form to render and be ready to handle the onChange event
+    const { price } = this.state
+    if (price) {
+      setTimeout(() => {
+        this.props.onChange(price)
+      })
+    }
   }
 
   onChange() {
@@ -41,16 +65,23 @@ class PriceField extends Component {
   render() {
     const { price, currencyCode } = this.state
     const priceUsd = getFiatPrice(price, currencyCode, 'ETH')
+    const { isMultiUnitListing } = this.props.formContext
 
     return (
       !this.priceHidden && (
         <div className="price-field">
           <label className="control-label" htmlFor="root_price">
-            {this.props.schema.title}
+            {
+              this.props.intl.formatMessage(
+                isMultiUnitListing ?
+                  this.intlMessages.multiUnitPrice :
+                  this.intlMessages.singularPrice
+              )
+            }
             {this.props.required && <span className="required">*</span>}
           </label>
           <div className="row">
-            <div className="col-sm-6">
+            <div className="col-6">
               <div className="price-field-container">
                 <input
                   type="number"
@@ -67,7 +98,7 @@ class PriceField extends Component {
                 </span>
               </div>
             </div>
-            <div className="col-sm-6 no-left-padding">
+            <div className="col-6 no-left-padding">
               <div className="price-field-fiat">
                 {priceUsd}&nbsp;
                 <span className="currency-badge text-grey">
@@ -79,8 +110,8 @@ class PriceField extends Component {
           </div>
           <p className="help-block">
             <FormattedMessage
-              id={'price-field.price-help'}
-              defaultMessage={'The price is always in {currency}. '}
+              id={'price-field.price-help-v1'}
+              defaultMessage={'Listings are always priced in {currency}. '}
               values={{
                 currency: (
                   <a
@@ -111,4 +142,4 @@ const mapStateToProps = ({ exchangeRates }) => ({
   exchangeRates
 })
 
-export default connect(mapStateToProps)(PriceField)
+export default connect(mapStateToProps)(injectIntl(PriceField))

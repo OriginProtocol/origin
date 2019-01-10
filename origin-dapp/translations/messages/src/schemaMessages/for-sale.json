@@ -20,6 +20,10 @@
     "defaultMessage": "Price in ETH"
   },
   {
+    "id": "schema.forSale.unitsTotal",
+    "defaultMessage": "Quantity"
+  },
+  {
     "id": "schema.forSale.selectPhotos",
     "defaultMessage": "Select photos"
   },
@@ -198,10 +202,6 @@
   {
     "id": "schema.forSale.videoGaming",
     "defaultMessage": "Video Gaming"
-  },
-  {
-    "id": "schema.forSale.wanted",
-    "defaultMessage": "Wanted"
   },
   {
     "id": "schema.forSale.deliverProduct",

@@ -1,17 +1,22 @@
 {
-  "schemaId": "http://schema.originprotocol.com/listing_v1.0.0",
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-tickets_1.0.0.json",
   "listingType": "unit",
-  "category": "schema.tickets",
-  "subCategory": "schema.tickets.music",
+  "category": "schema.forSale",
+  "subCategory": "schema.tickets",
   "language": "en-US",
   "title": "Taylor Swift's Reputation Tour",
   "description": "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",
-  "unitsTotal": 1,
+  "unitsTotal": 5,
   "price": {
     "currency": "ETH",
     "amount": "0.3"
   },
   "commission": {
+    "currency": "OGN",
+    "amount": "28"
+  },
+  "commissionPerUnit": {
     "currency": "OGN",
     "amount": "10"
   }

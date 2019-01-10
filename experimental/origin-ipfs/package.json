@@ -1,0 +1,16 @@
+{
+  "name": "origin-ipfs",
+  "version": "0.1.0",
+  "description": "Origin IPFS",
+  "author": "Nick Poulden <nick@poulden.com>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "bs58": "^4.0.1"
+  }
+}

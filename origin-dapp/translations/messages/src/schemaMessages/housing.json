@@ -24,16 +24,8 @@
     "defaultMessage": "Select photos"
   },
   {
-    "id": "schema.housing.aptsWanted",
-    "defaultMessage": "Apts Wanted"
-  },
-  {
     "id": "schema.housing.aptsHousingForRent",
     "defaultMessage": "Apts/Housing for Rent"
-  },
-  {
-    "id": "schema.housing.housingSwap",
-    "defaultMessage": "Housing Swap"
   },
   {
     "id": "schema.housing.officeCommercial",
@@ -52,20 +44,8 @@
     "defaultMessage": "Real Estate"
   },
   {
-    "id": "schema.housing.realEstateWanted",
-    "defaultMessage": "Real Estate Wanted"
-  },
-  {
-    "id": "schema.housing.roomShareWanted",
-    "defaultMessage": "Room/Share Wanted"
-  },
-  {
-    "id": "schema.housing.roomsShares",
-    "defaultMessage": "Rooms & Shares"
-  },
-  {
-    "id": "schema.housing.subletTempWanted",
-    "defaultMessage": "Sublet/Temp Wanted"
+    "id": "schema.housing.roomShares",
+    "defaultMessage": "Room Shares"
   },
   {
     "id": "schema.housing.subletsTemporary",

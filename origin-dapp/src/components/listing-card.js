@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
 import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import ListingCardPrices from 'components/listing-card-prices'
 
-import { getListing } from 'utils/listing'
-import { offerStatusToListingAvailability } from 'utils/offer'
-
-import origin from '../services/origin'
+import { getListing, getDerivedListingData } from 'utils/listing'
 
 class ListingCard extends Component {
   constructor(props) {
@@ -16,36 +12,24 @@ class ListingCard extends Component {
 
     this.state = {
       loading: true,
-      offers: []
+      listing: {
+        display: 'normal',
+        offers: []
+      }
     }
   }
 
   async componentWillMount() {
     await this.loadListing()
-    await this.loadOffers()
-  }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   // init tooltip only when necessary
-  //   if (this.state.boostLevelIsPastSomeThreshold && !prevState.id) {
-  //     $('[data-toggle="tooltip"]').tooltip({
-  //       delay: { hide: 1000 },
-  //       html: true
-  //     })
-  //   }
-  // }
-
-  componentWillUnmount() {
-    $('[data-toggle="tooltip"]').tooltip('dispose')
   }
 
   async loadListing() {
     try {
-      const listing = await getListing(this.props.listingId, true)
+      const listing = await getListing(this.props.listingId, { translate: true, loadOffers: true })
 
       this.setState({
         // boostLevelIsPastSomeThreshold: listing.boostValue > 0,
-        ...listing,
+        listing,
         loading: false
       })
     } catch (error) {
@@ -57,41 +41,29 @@ class ListingCard extends Component {
     }
   }
 
-  async loadOffers() {
-    try {
-      const offers = await origin.marketplace.getOffers(this.props.listingId)
-      this.setState({ offers })
-    } catch (error) {
-      console.error(
-        `Error fetching offers for listing: ${this.props.listingId}`
-      )
-      console.error(error)
-    }
-  }
-
   render() {
     const {
-      // boostLevelIsPastSomeThreshold,
+      listing,
+      loading
+    } = this.state
+
+    const {
       category,
-      loading,
+      subCategory,
       name,
-      offers,
       pictures,
       price,
-      status,
+      isMultiUnit,
       unitsRemaining
-    } = this.state
+    } = listing
+
     const photo = pictures && pictures.length && pictures[0]
-    const isPending = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'pending'
-    )
-    const isSold = offers.find(
-      o => offerStatusToListingAvailability(o.status) === 'sold'
-    )
-    const isWithdrawn = status === 'inactive'
-    const showPendingBadge = isPending && !isWithdrawn
-    const showSoldBadge = isSold || isWithdrawn
-    const showFeaturedBadge = this.props.featured && !showSoldBadge && !showPendingBadge
+
+    const {
+      showPendingBadge,
+      showSoldBadge,
+      showFeaturedBadge
+    } = getDerivedListingData(listing)
 
     return (
       <div
@@ -116,15 +88,14 @@ class ListingCard extends Component {
             </div>
           )}
           <div className="category placehold d-flex justify-content-between">
-            <div>{category}</div>
+            <div>{category}&nbsp;&nbsp;|&nbsp;&nbsp;{subCategory}</div>
             {!loading && showPendingBadge && <PendingBadge />}
-            {!loading && showSoldBadge && <SoldBadge />}
+            {!loading && showSoldBadge && <SoldBadge isMultiUnit={isMultiUnit} />}
             {!loading && showFeaturedBadge && <FeaturedBadge />}
             {/*!loading &&
               boostLevelIsPastSomeThreshold && (
               <span
                 className="boosted badge"
-                data-toggle="tooltip"
                 title="Tell me <a href='https://originprotocol.com' target='_blank'>More</a> about what this means."
               >
                 <img src="images/boost-icon-arrow.svg" role="presentation" />
@@ -133,7 +104,11 @@ class ListingCard extends Component {
           </div>
           <h2 className="title placehold text-truncate" title={name}>{name}</h2>
           {price > 0 && (
-            <ListingCardPrices price={price} unitsRemaining={unitsRemaining} />
+            <ListingCardPrices
+              price={price}
+              unitsRemaining={unitsRemaining}
+              isMultiUnit={isMultiUnit}
+            />
           )}
         </Link>
       </div>

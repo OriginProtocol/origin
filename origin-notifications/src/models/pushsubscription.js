@@ -4,7 +4,9 @@ module.exports = (sequelize, DataTypes) => {
   const PushSubscription = sequelize.define('PushSubscription', {
     endpoint: DataTypes.STRING,
     keys: DataTypes.HSTORE,
+    // Not used. Placeholder for future use.
     expirationTime: DataTypes.DATE,
+    // ETH address, lowercase.
     account: DataTypes.STRING,
     // Creation date.
     createdAt: DataTypes.DATE,
@@ -14,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'push_subscription'
   })
 
-  PushSubscription.associate = function(models) {
+  PushSubscription.associate = function () {
     // associations can be defined here
   }
 

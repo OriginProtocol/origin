@@ -7,29 +7,45 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx babel-node src/index.js --presets es2015"
+    "build": "per-env",
+    "build:production": "babel src/* -d dist --presets @babel/env",
+    "start": "per-env",
+    "start:development": "nodemon --exec 'babel-node' src/index.js --presets @babel/env",
+    "prestart:production": "npm run build",
+    "start:production": "node dist/index.js",
+    "lint": "eslint '**/*.js'",
+    "test": "echo \"Warning: no tests specified\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OriginProtocol/origin.git"
+    "url": "git+https://github.com/OriginProtocol/origin/origin-messaging"
   },
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "bugs": {
-    "url": "git+https://github.com/OriginProtocol/origin.git"
+    "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-polyfill": "^6.26.0",
-    "dotenv": "^6.0.0",
-    "ipfs": "^0.31.4",
-    "logplease": "^1.2.14",
-    "libp2p-switch": "^0.40.4",
-    "lodash": "^4.17.10",
-    "orbit-db": "^0.19.8",
-    "web3": "^1.0.0-beta.34",
-    "websocket": "^1.0.26"
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.2.0",
+    "cross-fetch": "^3.0.0",
+    "dotenv": "^6.2.0",
+    "envkey": "^1.2.4",
+    "ipfs": "^0.33.1",
+    "ipfs-api": "^26.1.2",
+    "ipfs-log": "^4.2.0",
+    "ipfs-pubsub-1on1": "0.0.4",
+    "logplease": "^1.2.15",
+    "orbit-db": "^0.19.9",
+    "per-env": "^1.0.2",
+    "rate-limiter-flexible": "^0.19.4",
+    "web3": "1.0.0-beta.34"
+  },
+  "devDependencies": {
+    "@babel/node": "^7.2.0",
+    "eslint": "^5.9.0",
+    "nodemon": "^1.18.7"
   }
 }

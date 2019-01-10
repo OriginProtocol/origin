@@ -6,6 +6,7 @@ import Marketplace from './resources/marketplace'
 import Discovery from './resources/discovery'
 import Users from './resources/users'
 import Messaging from './resources/messaging'
+import Reflection from './resources/reflection'
 import Token from './resources/token'
 import fetch from 'cross-fetch'
 import store from 'store'
@@ -19,7 +20,7 @@ const defaultIpfsGatewayProtocol = 'https'
 const defaultAttestationServerUrl = `${defaultBridgeServer}/api/attestations`
 const VERSION = require('.././package.json').version
 
-class Origin {
+export default class Origin {
   constructor({
     ipfsDomain = defaultIpfsDomain,
     ipfsApiPort = defaultIpfsApiPort,
@@ -27,6 +28,8 @@ class Origin {
     ipfsGatewayProtocol = defaultIpfsGatewayProtocol,
     attestationServerUrl = defaultAttestationServerUrl,
     discoveryServerUrl = defaultDiscoveryServerUrl,
+    walletLinkerUrl = null,
+    activeWalletLinker = false,
     affiliate,
     arbitrator,
     contractAddresses,
@@ -45,7 +48,8 @@ class Origin {
     //
     // Services (Internal, should not be used directly by the Origin client).
     //
-    this.contractService = new ContractService({ contractAddresses, web3, ethereum })
+    this.contractService = new ContractService({ contractAddresses, web3, ethereum, walletLinkerUrl, 
+      activeWalletLinker, fetch, ecies })
     this.ipfsService = new IpfsService({
       ipfsDomain,
       ipfsApiPort,
@@ -99,7 +103,11 @@ class Origin {
       ipfsService: this.ipfsService,
       marketplace: this.marketplace
     })
+
+    this.reflection = new Reflection({
+      contractService: this.contractService,
+      marketplace: this.marketplace,
+      token: this.token
+    })
   }
 }
-
-module.exports = Origin

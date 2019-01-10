@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import { unblock } from 'actions/Onboarding'
 
 import {
   updateSteps,
@@ -88,7 +89,7 @@ class OnboardingModal extends Component {
       })
       const listings = await Promise.all(
         ids.map(async id => {
-          return getListing(id, true)
+          return getListing(id, { translate: true })
         })
       )
 
@@ -100,10 +101,11 @@ class OnboardingModal extends Component {
 
   userProgress() {
     const {
-      onboarding: { progress, learnMore, stepsCompleted, splitPanel },
+      onboarding: { blocked, progress, learnMore, stepsCompleted, splitPanel },
       toggleLearnMore,
       toggleSplitPanel,
-      wallet: { ognBalance }
+      wallet: { ognBalance },
+      unblock
     } = this.props
     const { dismissed, gettingStarted, listings = [] } = this.state
 
@@ -122,11 +124,13 @@ class OnboardingModal extends Component {
       !splitPanel && toggleSplitPanel(true)
     } else if (!progress && !dismissed) {
       !learnMore && toggleLearnMore(true)
+      blocked && unblock()
     }
   }
 
   render() {
     const {
+      mobileDevice,
       updateSteps,
       selectStep,
       onboarding: { blocked, currentStep, learnMore, splitPanel }
@@ -173,7 +177,7 @@ class OnboardingModal extends Component {
       </Fragment>
     )
 
-    return blocked ? null : (
+    return (blocked || mobileDevice) ? null : (
       <div className="onboarding">
         {learnMore && (
           <Modal
@@ -183,7 +187,7 @@ class OnboardingModal extends Component {
             backdrop={false}
           />
         )}
-        {splitPanel && (
+        {(splitPanel && !mobileDevice) && (
           <div className="split-container d-flex align-items-center justify-content-center">
             <SplitPanel
               isOpen={true}
@@ -201,8 +205,11 @@ class OnboardingModal extends Component {
   }
 }
 
-const mapStateToProps = ({ onboarding, wallet }) => ({ onboarding, wallet })
-
+const mapStateToProps = ({ onboarding, wallet, app: { mobileDevice } }) => ({
+  mobileDevice,
+  onboarding,
+  wallet
+})
 const mapDispatchToProps = dispatch => ({
   fetchSteps: () => dispatch(fetchSteps()),
   getOgnBalance: () => dispatch(getOgnBalance()),
@@ -210,7 +217,8 @@ const mapDispatchToProps = dispatch => ({
   toggleLearnMore: show => dispatch(toggleLearnMore(show)),
   updateSteps: ({ incompleteStep }) =>
     dispatch(updateSteps({ incompleteStep })),
-  selectStep: ({ selectedStep }) => dispatch(selectStep({ selectedStep }))
+  selectStep: ({ selectedStep }) => dispatch(selectStep({ selectedStep })),
+  unblock: () => dispatch(unblock())
 })
 
 export default withRouter(

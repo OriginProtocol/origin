@@ -3,13 +3,15 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
 
-import { dismissMessaging, enableMessaging, storeWeb3Intent } from 'actions/App'
+import { enableMessaging } from 'actions/Activation'
+import { dismissMessaging, storeWeb3Intent } from 'actions/App'
 
 import ConversationListItem from 'components/conversation-list-item'
+import Dropdown from 'components/dropdown'
 
 import groupByArray from 'utils/groupByArray'
+import { formattedAddress } from 'utils/user'
 
 import origin from '../../services/origin'
 
@@ -30,22 +32,8 @@ class MessagesDropdown extends Component {
         defaultMessage: 'view your messages'
       }
     })
-  }
 
-  componentDidMount() {
-    // control hiding of dropdown menu
-    $('.messages.dropdown').on('hide.bs.dropdown', function({ clickEvent }) {
-      // if triggered by data-toggle
-      if (!clickEvent) {
-        return true
-      }
-      // otherwise only if triggered by self or another dropdown
-      const el = $(clickEvent.target)
-
-      return el.hasClass('dropdown') && el.hasClass('nav-item')
-    })
-
-    $('.messages.dropdown').on('hidden.bs.dropdown', this.props.dismissMessaging)
+    this.state = { open: false }
   }
 
   componentDidUpdate() {
@@ -54,43 +42,55 @@ class MessagesDropdown extends Component {
     const hasNewUnreadMessage = messages.find(
       m => m.created > messagingDismissed
     )
-    const dropdownHidden = !$('.messages.dropdown').hasClass('show')
 
-    if (!isOnMessagingRoute && hasNewUnreadMessage && dropdownHidden) {
-      $('#messagesDropdown').dropdown('toggle')
+    if (!isOnMessagingRoute && hasNewUnreadMessage && !this.state.forceOpen) {
+      this.setState({ open: true, forceOpen: true })
     }
   }
 
   handleClick() {
-    const { intl, storeWeb3Intent, web3Account } = this.props
+    const { intl, storeWeb3Intent, wallet } = this.props
 
-    if (!web3Account) {
+    if (!wallet.address) {
       storeWeb3Intent(intl.formatMessage(this.intlMessages.viewMessages))
     }
 
-    $('#messagesDropdown').dropdown('toggle')
+    this.toggle('close')
   }
 
   handleEnable() {
-    const { enableMessaging, intl, storeWeb3Intent, web3Account } = this.props
+    const { enableMessaging, intl, storeWeb3Intent, wallet } = this.props
 
-    if (web3Account) {
+    if (wallet.address) {
       enableMessaging()
     } else {
       storeWeb3Intent(intl.formatMessage(this.intlMessages.enableMessaging))
     }
   }
 
+  toggle(state) {
+    const open = state === 'close' ? false : !this.state.open
+    if (!open) {
+      this.props.dismissMessaging()
+    }
+    this.setState({ open })
+  }
+
   render() {
-    const { conversations, history, messages, messagingEnabled } = this.props
+    const { conversations, history, messages, messagingEnabled, wallet } = this.props
+    const { open } = this.state
 
     return (
-      <div className="nav-item messages dropdown">
+      <Dropdown
+        className="nav-item messages"
+        open={open}
+        onClose={() => this.setState({ open: false })}
+      >
         <a
           className="nav-link active dropdown-toggle"
           id="messagesDropdown"
           role="button"
-          data-toggle="dropdown"
+          onClick={() => this.toggle()}
           aria-haspopup="true"
           aria-expanded="false"
           ga-category="top_nav"
@@ -109,7 +109,7 @@ class MessagesDropdown extends Component {
           />
         </a>
         <div
-          className="dropdown-menu dropdown-menu-right"
+          className={`dropdown-menu dropdown-menu-right${open ? ' show' : ''}`}
           aria-labelledby="messagesDropdown"
         >
           <div className="triangle-container d-flex justify-content-end">
@@ -134,10 +134,15 @@ class MessagesDropdown extends Component {
                   />
                 )}
               </h3>
-              {!messagingEnabled && (
-                <button
-                  className="btn btn-sm btn-primary d-none d-md-block ml-auto"
-                  onClick={this.handleEnable}
+              {!messagingEnabled &&
+                <button className="btn btn-sm btn-primary d-none d-md-block ml-auto" onClick={() => {
+                  this.handleEnable()
+
+                  if (!wallet.address) {
+                    this.props.storeWeb3Intent('Enable messaging.')
+                    origin.contractService.showLinkPopUp()
+                  }
+                }}
                   ga-category="messaging"
                   ga-label="messaging_dropdown_enable"
                 >
@@ -146,7 +151,7 @@ class MessagesDropdown extends Component {
                     defaultMessage={'Enable Messaging'}
                   />
                 </button>
-              )}
+              }
             </header>
             <div className="messages-list">
               {conversations.map(c => (
@@ -156,8 +161,7 @@ class MessagesDropdown extends Component {
                   active={false}
                   handleConversationSelect={() => {
                     history.push(`/messages/${c.key}`)
-
-                    $('#messagesDropdown').dropdown('toggle')
+                    this.toggle('close')
                   }}
                 />
               ))}
@@ -177,21 +181,19 @@ class MessagesDropdown extends Component {
             </Link>
           </div>
         </div>
-      </div>
+      </Dropdown>
     )
   }
 }
 
-const mapStateToProps = ({ app, messages }) => {
-  const { messagingDismissed, messagingEnabled, web3 } = app
-  const web3Account = web3.account
+const mapStateToProps = ({ activation, app, messages, wallet }) => {
   const filteredMessages = messages.filter(
     ({ content, conversationId, senderAddress, status }) => {
       return (
         content &&
         status === 'unread' &&
-        senderAddress !== web3Account &&
-        origin.messaging.getRecipients(conversationId).includes(web3Account)
+        formattedAddress(senderAddress) !== formattedAddress(wallet.address) &&
+        origin.messaging.getRecipients(conversationId).includes(wallet.address)
       )
     }
   )
@@ -210,9 +212,10 @@ const mapStateToProps = ({ app, messages }) => {
   return {
     conversations: sortedConversations,
     messages: filteredMessages,
-    messagingDismissed,
-    messagingEnabled,
-    web3Account
+    messagingDismissed: app.messagingDismissed,
+    messagingEnabled: activation.messaging.enabled,
+    wallet,
+    web3Intent: web3.intent
   }
 }
 

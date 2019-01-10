@@ -58,7 +58,6 @@ This describes a listing for purchase on the Origin marketplace.
 |commissionPerUnit | This is the amount the seller is willing to pay for each unit sold by the DApp that sells the listing user after the sale is complete. The currency must be `OGN`. This money comes out of the deposit amount the seller puts into the listing. Note that the deposit amount may very well be too low to actually pay the commission - this must be checked for before trusting the commission. |
 
 
-
 ## Offer Schema
 
 An Offer is sent by a buyer to make a purchase from a listing.

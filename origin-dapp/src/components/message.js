@@ -1,12 +1,15 @@
-import moment from 'moment'
-import React, { Component } from 'react'
+import moment from 'moment-timezone'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-import { enableMessaging } from 'actions/App'
+import { enableMessaging } from 'actions/Activation'
 import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
+
+import { abbreviateName, formattedAddress, truncateAddress } from 'utils/user'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
 
@@ -25,43 +28,88 @@ class Message extends Component {
       message,
       messagingEnabled,
       user,
-      contentOnly
+      showTime,
+      mobileDevice,
+      web3Account,
+      contentOnly,
+      previousOfferMessage,
+      includeNav
     } = this.props
     const { created, hash } = message
-    const { address, fullName, profile } = user
+    const { address, profile } = user
+    const userName = abbreviateName(user, 'Unnamed User')
+    const currentUser = web3Account === user.address
+    const fullAddress = formattedAddress(address)
+    const userAddress = truncateAddress(fullAddress)
 
-    return contentOnly ? (
-      <div className="d-flex compact-message">{this.renderContent()}</div>
-    ) : (
-      <div className="d-flex message">
-        <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
-        <div className="content-container">
-          <div className="meta-container d-flex">
-            <div className="sender text-truncate">
-              {fullName && <span className="name">{fullName}</span>}
-              <span className="address text-muted">{address}</span>
-            </div>
-            <div className="timestamp text-right ml-auto">
-              {moment(created).format('MMM Do h:mm a')}
-            </div>
+    const smallScreen = window.innerWidth <= 991
+    const smallScreenOrDevice = smallScreen || mobileDevice
+    const chatContent = this.renderContent()
+    const correctSide = currentUser ? 'right' : 'left'
+    const bubbleAlignment = currentUser ? 'justify-content-end' : 'justify-content-start'
+    const bubbleColor = currentUser ? 'user' : ''
+    const bubbleTail = contentOnly ? '' : correctSide
+    const mobileWidth = smallScreenOrDevice ? 'mobile-width' : ''
+    const contentMargin = (!smallScreenOrDevice && contentOnly) ? `content-margin-${correctSide}` : ''
+    const previousOffer = previousOfferMessage ? 'previous-offer' : ''
+
+    const UserInfo = () => (
+      <Fragment>
+        <div className={`name text-truncate align-self-center ${mobileWidth}`}>{userName}</div>
+        <span className="address">{userAddress}</span>
+      </Fragment>
+    )
+
+    return (
+      <div className="message-section">
+        {showTime && (
+          <div className={`timestamp text-center ml-auto ${previousOffer}`}>
+            {moment(created).format('MMM Do h:mm a')}
           </div>
-          <div className="message-content">{this.renderContent()}</div>
-          {!messagingEnabled &&
-            hash === 'origin-welcome-message' && (
-            <div className="button-container">
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={enableMessaging}
-                ga-category="messaging"
-                ga-label="message_component_enable"
-              >
-                <FormattedMessage
-                  id={'message.enable'}
-                  defaultMessage={'Enable Messaging'}
-                />
-              </button>
+        )}
+        <div className={`d-flex message ${contentOnly ? '' : correctSide}`}>
+          <div className={`content-container d-flex ${bubbleAlignment}`}>
+            <div className="align-self-end conversation-avatar">
+              {(!smallScreenOrDevice && correctSide === 'left' && !contentOnly) && (
+                <Link to={`/users/${fullAddress}`}>
+                  <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
+                </Link>
+              )}
             </div>
-          )}
+            <div className={`chat-bubble tail-${bubbleTail} ${bubbleColor} ${contentMargin}`}>
+              <div className="chat-text">
+                <div className="sender d-flex flex-row justify-content-start">
+                  {(currentUser || !includeNav) ? <UserInfo /> : (
+                    <Link to={`/users/${fullAddress}`} className="d-flex flex-row justify-content-start">
+                      <UserInfo />
+                    </Link>
+                  )}
+                </div>
+                <div className="chat-content">{chatContent}</div>
+              </div>
+            </div>
+            <div className="align-self-end conversation-avatar right">
+              {(!smallScreenOrDevice && correctSide === 'right' && !contentOnly) && (
+                <Avatar image={profile && profile.avatar} placeholderStyle="blue" />
+              )}
+            </div>
+            {!messagingEnabled &&
+              hash === 'origin-welcome-message' && (
+              <div className="button-container">
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={enableMessaging}
+                  ga-category="messaging"
+                  ga-label="message_component_enable"
+                >
+                  <FormattedMessage
+                    id={'message.enable'}
+                    defaultMessage={'Enable Messaging'}
+                  />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     )
@@ -105,11 +153,14 @@ class Message extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = ({ activation, app, users, wallet }, ownProps) => {
   return {
-    messagingEnabled: state.app.messagingEnabled,
-    user:
-      state.users.find(u => u.address === ownProps.message.senderAddress) || {}
+    messagingEnabled: activation.messaging.enabled,
+    mobileDevice: app.mobileDevice,
+    user: users.find(u => {
+      return formattedAddress(u.address) === formattedAddress(ownProps.message.senderAddress)
+    }) || {},
+    web3Account: wallet.address
   }
 }
 

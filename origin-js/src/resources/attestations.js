@@ -1,5 +1,5 @@
 import AttestationObject from '../models/attestation'
-import RLP from 'rlp'
+import { encode as rlpEncode } from 'rlp'
 import UsersResolver from '../contractInterface/users/resolver'
 import Web3 from 'web3'
 
@@ -23,9 +23,9 @@ const responseToUrl = (resp = {}) => {
    - the DApp takes signature and other claim info and transforms the base58 encoded
      IPFS hash to base32 hex before submitting the claim to web3.
 */
-const ClaimDataIsIpfsHash = [4, 5] // twitter & airbnb
+export const ClaimDataIsIpfsHash = [4, 5] // twitter & airbnb
 
-class Attestations {
+export class Attestations {
   constructor({ serverUrl, contractService, fetch, blockEpoch }) {
     this.serverUrl = serverUrl
     this.contractService = contractService
@@ -190,13 +190,7 @@ class Attestations {
       })
     })
     const address =
-      '0x' + Web3.utils.sha3(RLP.encode([wallet, nonce])).substring(26, 66)
+      '0x' + Web3.utils.sha3(rlpEncode([wallet, nonce])).substring(26, 66)
     return Web3.utils.toChecksumAddress(address)
   }
-}
-
-module.exports = {
-  AttestationObject,
-  Attestations,
-  ClaimDataIsIpfsHash
 }

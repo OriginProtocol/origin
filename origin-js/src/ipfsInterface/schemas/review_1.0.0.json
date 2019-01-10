@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://schema.originprotocol.com/review_1.0.0.json",
+  "title": "Origin Protocol review schema",
+  "type": "object",
+  "properties": {
+    "schemaId": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "number"
+    },
+    "text": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaId",
+    "rating",
+    "text"
+  ]
+}

@@ -1,12 +1,14 @@
-import ClaimHolderRegistered from './../../contracts/build/contracts/ClaimHolderRegistered.json'
-import ClaimHolderPresigned from './../../contracts/build/contracts/ClaimHolderPresigned.json'
-import ClaimHolderLibrary from './../../contracts/build/contracts/ClaimHolderLibrary.json'
-import KeyHolderLibrary from './../../contracts/build/contracts/KeyHolderLibrary.json'
-import V00_UserRegistry from './../../contracts/build/contracts/V00_UserRegistry.json'
-import OriginIdentity from './../../contracts/build/contracts/OriginIdentity.json'
-import OriginToken from './../../contracts/build/contracts/OriginToken.json'
+import ClaimHolderRegistered from 'origin-contracts/build/contracts/ClaimHolderRegistered.json'
+import ClaimHolderPresigned from 'origin-contracts/build/contracts/ClaimHolderPresigned.json'
+import ClaimHolderLibrary from 'origin-contracts/build/contracts/ClaimHolderLibrary.json'
+import KeyHolderLibrary from 'origin-contracts/build/contracts/KeyHolderLibrary.json'
+import V00_UserRegistry from 'origin-contracts/build/contracts/V00_UserRegistry.json'
+import OriginIdentity from 'origin-contracts/build/contracts/OriginIdentity.json'
+import OriginToken from 'origin-contracts/build/contracts/OriginToken.json'
 
-import V00_Marketplace from './../../contracts/build/contracts/V00_Marketplace.json'
+import V00_Marketplace from 'origin-contracts/build/contracts/V00_Marketplace.json'
+
+import WalletLinker from './../resources/wallet-linker'
 
 import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
@@ -21,8 +23,8 @@ const SUPPORTED_ERC20 = [
 ]
 
 class ContractService {
-  constructor({ web3, contractAddresses, ethereum } = {}) {
-    const externalWeb3 = web3 || window.web3
+  constructor({ web3, contractAddresses, ethereum, walletLinkerUrl, activeWalletLinker, fetch, ecies } = {}) {
+    const externalWeb3 = web3 || ((typeof window !== 'undefined') && window.web3)
     if (!externalWeb3) {
       throw new Error(
         'web3 is required for Origin.js. Please pass in web3 as a config option.'
@@ -30,6 +32,11 @@ class ContractService {
     }
     this.web3 = new Web3(externalWeb3.currentProvider)
     this.ethereum = ethereum
+
+    if (walletLinkerUrl && fetch){
+      this.initWalletLinker(walletLinkerUrl, fetch, ecies)
+    }
+    this.activeWalletLinker = activeWalletLinker
 
     this.marketplaceContracts = { V00_Marketplace }
 
@@ -59,6 +66,72 @@ class ContractService {
       } catch (e) {
         /* Ignore */
       }
+    }
+  }
+
+  updateContractAddresses(contractAddresses) {
+    for (const name in this.contracts) {
+      try {
+        this.contracts[name].networks = Object.assign(
+          {},
+          this.contracts[name].networks,
+          contractAddresses[name]
+        )
+      } catch (e) {
+        /* Ignore */
+      }
+    }
+  }
+
+  getContractAddresses() {
+    const addresses = {}
+    for (const name in this.contracts) {
+      addresses[name] = this.contracts[name].networks
+    }
+    return addresses
+  }
+
+  newWalletNetwork() {
+    this.web3.setProvider(this.walletLinker.getProvider())
+    // Fake it till you make it
+    this.web3.currentProvider.isOrigin = !this.walletLinker.linked
+  }
+
+  isActiveWalletLinker() {
+    return this.walletLinker && (this.walletLinker.linked || this.activeWalletLinker)
+  }
+
+  initWalletLinker(walletLinkerUrl, fetch, ecies) {
+    // if there's no given provider
+    // we do it the funny wallet way
+    if (this.web3.currentProvider.isOrigin && walletLinkerUrl) {
+      if (!this.walletLinker) {
+        this.walletLinker = new WalletLinker({
+          linkerServerUrl: walletLinkerUrl,
+          fetch: fetch,
+          networkChangeCb: this.newWalletNetwork.bind(this),
+          web3: this.web3,
+          ecies
+        })
+        this.walletLinker.initSession()
+      }
+    }
+  }
+
+  hasWalletLinker() {
+    return this.walletLinker
+  }
+
+  showLinkPopUp() {
+    if (this.walletLinker) {
+      this.walletLinker.startLink()
+    }
+  }
+
+  getMobileWalletLink() {
+    if (this.walletLinker)
+    {
+      return this.walletLinker.getLinkCode()
     }
   }
 
@@ -165,6 +238,14 @@ class ContractService {
       const accounts = await this.web3.eth.getAccounts()
       return accounts[0]
     }
+  }
+
+  walletPlaceholderAccount() {
+    return WalletLinker.PLACEHOLDER_ADDRESS
+  }
+
+  placeholderAccount() {
+    return this.walletLinker && this.walletPlaceholderAccount()
   }
 
   // async convenience method for getting block details
@@ -274,7 +355,7 @@ class ContractService {
       }
 
       const currentBlockNumber = await this.web3.eth.getBlockNumber()
-      // Math.max to prevent the -1 confirmation on Rinkeby. 
+      // Math.max to prevent the -1 confirmation on Rinkeby.
       const confirmations = Math.max(0, currentBlockNumber - transactionReceipt.blockNumber)
       if (confirmationCallback !== undefined)
         confirmationCallback(confirmations, transactionReceipt)
@@ -372,6 +453,9 @@ class ContractService {
     // set gas
     opts.gas = (opts.gas || (await method.estimateGas(opts))) + additionalGas
     const transactionReceipt = await new Promise((resolve, reject) => {
+      if (!opts.from && this.isActiveWalletLinker() && !this.walletLinker.linked) {
+        opts.from = this.walletPlaceholderAccount()
+      }
       const sendCallback = method
         .send(opts)
 

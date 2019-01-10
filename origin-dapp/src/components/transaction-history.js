@@ -3,6 +3,9 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 
 import TransactionEvent from 'components/transaction-event'
 
+import { formattedAddress } from 'utils/user'
+import { getOfferEvents } from 'utils/offer'
+
 class TransactionHistory extends Component {
   constructor(props) {
     super(props)
@@ -11,6 +14,10 @@ class TransactionHistory extends Component {
       offerMade: {
         id: 'transaction-history.offerMade',
         defaultMessage: 'Offer Made'
+      },
+      offerRejected: {
+        id: 'transaction-history.offerRejected',
+        defaultMessage: 'Offer Rejected'
       },
       offerWithdrawn: {
         id: 'transaction-history.offerWithdrawn',
@@ -41,14 +48,20 @@ class TransactionHistory extends Component {
 
   render() {
     const { purchase } = this.props
+    const offerEvents = getOfferEvents(purchase)
+    const [
+      offerCreated,
+      offerWithdrawn,
+      offerAccepted,
+      offerDisputed,
+      offerRuling,
+      offerFinalized,
+      offerData
+    ] = offerEvents
 
-    const offerCreated = purchase.event('OfferCreated')
-    const offerWithdrawn = purchase.event('OfferWithdrawn')
-    const offerAccepted = purchase.event('OfferAccepted')
-    const offerDisputed = purchase.event('OfferDisputed')
-    const offerRuling = purchase.event('OfferRuling')
-    const offerFinalized = purchase.event('OfferFinalized')
-    const offerData = purchase.event('OfferData')
+    const withdrawnOrRejected = offerWithdrawn ? (
+      formattedAddress(purchase.buyer) === offerWithdrawn.returnValues.party ? 'withdrawn' : 'rejected'
+    ) : null
 
     return (
       <table className="table table-striped">
@@ -75,12 +88,22 @@ class TransactionHistory extends Component {
             )}
             event={offerCreated}
           />
-          <TransactionEvent
-            eventName={this.props.intl.formatMessage(
-              this.intlMessages.offerWithdrawn
-            )}
-            event={offerWithdrawn}
-          />
+          {offerWithdrawn && withdrawnOrRejected === 'rejected' && (
+            <TransactionEvent
+              eventName={this.props.intl.formatMessage(
+                this.intlMessages.offerRejected
+              )}
+              event={offerWithdrawn}
+            />
+          )}
+          {offerWithdrawn && withdrawnOrRejected === 'withdrawn' && (
+            <TransactionEvent
+              eventName={this.props.intl.formatMessage(
+                this.intlMessages.offerWithdrawn
+              )}
+              event={offerWithdrawn}
+            />
+          )}
           <TransactionEvent
             eventName={this.props.intl.formatMessage(
               this.intlMessages.offerAccepted

@@ -1,0 +1,179 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "title": "Origin Protocol core listing schema",
+  "definitions": {
+    "money": {
+      "type": "object",
+      "title": "An amount of money in a specified currency",
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "currency",
+        "amount"
+      ]
+    },
+    "media": {
+      "type": "object",
+      "title": "Representation of a media asset such as an image or a video",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "dimension": {
+          "type": "object",
+          "properties": {
+            "height": {
+              "type": "integer"
+            },
+            "width": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "height",
+            "width"
+          ]
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "timeSlot": {
+      "type": "object",
+      "required": [
+        "startDate",
+        "endDate",
+        "isAvailable"
+      ],
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "isAvailable": {
+          "type": "boolean"
+        },
+        "price": {
+          "$ref": "#/definitions/money"
+        }
+      },
+      "required": [
+        "startDate",
+        "endDate",
+        "isAvailable",
+        "price"
+      ]
+    },
+    "unitListing": {
+      "type": "object",
+      "properties": {
+        "unitsTotal": {
+          "type": "integer"
+        },
+        "price": {
+          "$ref": "#/definitions/money"
+        }
+      },
+      "required": [
+        "unitsTotal",
+        "price"
+      ]
+    },
+    "fractionalListing": {
+      "type": "object",
+      "properties": {
+        "timeIncrement": {
+          "type": "string"
+        },
+        "calendarStep": {
+          "type": "string"
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/timeSlot"
+          }
+        }
+      },
+      "required": [
+        "calendarStep",
+        "slots"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "schemaId": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "subCategory": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 1024
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/media"
+      }
+    },
+    "commission": {
+      "$ref": "#/definitions/money"
+    }
+  },
+  "listingType": {
+    "enum": [
+      "unit",
+      "fractional"
+    ]
+  },
+  "oneOf": [
+    {
+      "$ref": "#/definitions/unitListing"
+    },
+    {
+      "$ref": "#/definitions/fractionalListing"
+    }
+  ],
+  "required": [
+    "schemaId",
+    "listingType",
+    "category",
+    "subCategory",
+    "language",
+    "title",
+    "description"
+  ]
+}

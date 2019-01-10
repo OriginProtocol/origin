@@ -5,21 +5,21 @@ const startIpfs = require('./helpers/start-ipfs')
 
 const startGanache = require('./helpers/start-ganache')
 
-const runTests = async watch => {
-  return new Promise((resolve, reject) => {
-    const args = ['-r', 'babel-register', '-r', 'babel-polyfill', '-t', '10000']
-    if (watch) {
-      args.push('--watch')
-    } else {
+const runTests = async cmdLineArgs => {
+  return new Promise(() => {
+    const args = [
+      '-r', '@babel/register',
+      '-r', '@babel/polyfill',
+      '-t', '10000'].concat(cmdLineArgs)
+    if (!cmdLineArgs.includes('--watch')) {
       args.push('--exit')
     }
     args.push('test')
     console.log('running mocha with args:', args.join(' '))
 
-    const contractTest = spawn('./node_modules/.bin/mocha', args)
-    contractTest.stdout.pipe(process.stdout)
-    contractTest.stderr.on('data', data => {
-      reject(String(data))
+    const contractTest = spawn('./node_modules/.bin/mocha', args, {
+      stdio: 'inherit',
+      env: process.env
     })
     contractTest.on('exit', code => {
       if (code === 0) {
@@ -41,8 +41,9 @@ const start = async () => {
   console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Deploying Smart Contracts }\n`)
   await deployContracts()
 
-  const watch = process.argv[2] && process.argv[2] == '--watch'
-  await runTests(watch)
+  // Pass to runTests any argument specified on the command line
+  // except argv[0] = <path>/node and argv[1] = <path>/test-js.js
+  await runTests(process.argv.slice(2))
 }
 
 start()

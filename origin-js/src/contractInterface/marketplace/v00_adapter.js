@@ -8,6 +8,20 @@ const OFFER_STATUS = [
   'withdrawn',
   'ruling'
 ]
+const offerStatusToSellerNotificationType = {
+  'created': 'seller_offer_created',
+  'finalized': 'seller_offer_finalized',
+  'disputed': 'seller_offer_disputed',
+  'ruling': 'seller_offer_ruling',
+  'withdrawn': 'seller_offer_withdrawn',
+}
+const offerStatusToBuyerNotificationType = {
+  'accepted': 'buyer_offer_accepted',
+  'disputed': 'buyer_offer_disputed',
+  'ruling': 'buyer_offer_ruling',
+  'sellerReviewed': 'buyer_offer_review',
+  'withdrawn': 'buyer_offer_withdrawn',
+}
 const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
@@ -47,7 +61,7 @@ class V00_MarkeplaceAdapter {
     { deposit = '0', arbitrator, commission = {} },
     confirmationCallback
   ) {
-    const from = await this.contractService.currentAccount()
+    const from = (await this.contractService.currentAccount()) || this.contractService.placeholderAccount()
     const { amount, currency } = commission
 
     if (currency && !SUPPORTED_DEPOSIT_CURRENCIES.includes(currency)) {
@@ -63,7 +77,7 @@ class V00_MarkeplaceAdapter {
         'createListingWithSender',
         ipfsBytes,
         deposit,
-        arbitrator || from
+        arbitrator || from 
       )
 
       // In order to estimate gas correctly, we need to add the call to a create listing since that's called by the token
@@ -102,6 +116,16 @@ class V00_MarkeplaceAdapter {
     }
   }
 
+  async updateListing(listingId, ipfsBytes, additionalDeposit, confirmationCallback) {
+    const from = await this.contractService.currentAccount()
+    const { transactionReceipt, timestamp } = await this.call(
+      'updateListing',
+      [listingId, ipfsBytes, additionalDeposit],
+      { from, confirmationCallback }
+    )
+    return Object.assign({ timestamp }, transactionReceipt)
+  }
+
   async withdrawListing(listingId, ipfsBytes, confirmationCallback) {
     const from = await this.contractService.currentAccount()
     const { transactionReceipt, timestamp } = await this.call(
@@ -119,14 +143,7 @@ class V00_MarkeplaceAdapter {
       commission,
       finalizes,
       totalPrice = {},
-      unitsPurchased
     } = data
-    // For V1, we only support quantity of 1.
-    if (unitsPurchased && unitsPurchased != 1)
-      throw new Error(
-        `Attempted to purchase ${unitsPurchased} - only 1 allowed.`
-      )
-
     const price = await this.contractService.moneyToUnits(totalPrice)
     const commissionUnits = await this.contractService.moneyToUnits(commission)
     const currencies = await this.contractService.currencies()
@@ -226,12 +243,10 @@ class V00_MarkeplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async getListing(listingId) {
+  async getListing(listingId, blockInfo) {
     await this.getContract()
 
     // Get the raw listing data from the contract.
-    // Note: once a listing is withdrawn, it is deleted from the blockchain to save
-    // on gas. In this cases rawListing is returned as an object with all its fields set to zero.
     const rawListing = await this.call('listings', [listingId])
 
     // Find all events related to this listing
@@ -250,7 +265,14 @@ class V00_MarkeplaceAdapter {
       if (event.event === 'ListingCreated') {
         ipfsHash = event.returnValues.ipfsHash
       } else if (event.event === 'ListingUpdated') {
-        ipfsHash = event.returnValues.ipfsHash
+        // If a blockInfo is passed in, ignore updated IPFS data that occurred after.
+        // This is used when we want to see what a listing looked like at the time an offer was made.
+        // Specifically, on myPurchases and mySales requests as well as for arbitration.
+        if (!blockInfo ||
+          (event.blockNumber < blockInfo.blockNumber) ||
+          (event.blockNumber === blockInfo.blockNumber && event.logIndex <= blockInfo.logIndex)) {
+          ipfsHash = event.returnValues.ipfsHash
+        }
       } else if (event.event === 'ListingWithdrawn') {
         status = 'inactive'
       } else if (event.event === 'OfferCreated') {
@@ -263,6 +285,8 @@ class V00_MarkeplaceAdapter {
         offers[event.returnValues.offerID] = { status: 'ruling', event }
       } else if (event.event === 'OfferFinalized') {
         offers[event.returnValues.offerID] = { status: 'finalized', event }
+      } else if (event.event === 'OfferWithdrawn') {
+        offers[event.returnValues.offerID] = { status: 'withdrawn', event }
       } else if (event.event === 'OfferData') {
         offers[event.returnValues.offerID] = { status: 'sellerReviewed', event }
       }
@@ -356,6 +380,13 @@ class V00_MarkeplaceAdapter {
     }
   }
 
+  /**
+   * Returns list of listing Ids. Options:
+   *  - listingsFor: returns only listings created by the specified address (e.g. seller).
+   *  - purchasesFor: returns only listings the specified address (e.g. buyer) made an offer on.
+   * @param opts {Object} Options: purchasesFor, listingsFor
+   * @return {Promise<*>}
+   */
   async getListings(opts) {
     await this.getContract()
 
@@ -367,8 +398,24 @@ class V00_MarkeplaceAdapter {
       const listingIds = []
       events.forEach(e => {
         const listingId = Number(e.returnValues.listingID)
-        if (listingIds.indexOf(listingId) < 0) {
-          listingIds.push(listingId)
+
+        if (opts.withBlockInfo) {
+          const idExists = listingIds.some(obj => obj.listingIndex === listingId)
+
+          if (!idExists) {
+            const { blockNumber, logIndex } = e
+            listingIds.push({
+              listingIndex: listingId,
+              blockInfo: {
+                blockNumber,
+                logIndex
+              }
+            })
+          }
+        } else {
+          if (listingIds.indexOf(listingId) < 0) {
+            listingIds.push(listingId)
+          }
         }
       })
       return listingIds
@@ -384,6 +431,13 @@ class V00_MarkeplaceAdapter {
     }
   }
 
+  /**
+   * Returns list of offer Ids for a given listing. Options:
+   *  - for: returns only offers made by a specific buyer.
+   * @param listingIndex
+   * @param opts { for: buyer address }
+   * @return {Promise<*>}
+   */
   async getOffers(listingIndex, opts) {
     await this.getContract()
 
@@ -418,7 +472,7 @@ class V00_MarkeplaceAdapter {
     })
 
     // Scan through the events to retrieve information of interest.
-    let buyer, ipfsHash, createdAt
+    let buyer, ipfsHash, createdAt, blockNumber, logIndex
     for (const e of events) {
       const timestamp = await this.contractService.getTimestamp(e)
       e.timestamp = timestamp
@@ -428,13 +482,16 @@ class V00_MarkeplaceAdapter {
         buyer = e.returnValues.party
         ipfsHash = e.returnValues.ipfsHash
         createdAt = timestamp
+        blockNumber = e.blockNumber
+        logIndex = e.logIndex
         break
-        // In all cases below, the offer was deleted from the blochain
+        // In all cases below, the offer was deleted from the blockchain and therefore
         // rawOffer fields are set to zero => populate rawOffer.status based on event history.
       case 'OfferFinalized':
         rawOffer.status = 4
         break
-        // TODO: Assumes OfferData event is a seller review
+        // FIXME: This assumes OfferData event is always a seller review whereas it may be
+        // emitted by the marketplace contract in other cases such as a seller initiated refund.
       case 'OfferData':
         rawOffer.status = 5
         break
@@ -453,7 +510,7 @@ class V00_MarkeplaceAdapter {
     rawOffer.status = OFFER_STATUS[rawOffer.status]
 
     // Return the raw listing along with events and IPFS hash
-    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt })
+    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt, blockNumber, logIndex })
   }
 
   async addData(ipfsBytes, listingIndex, offerIndex, confirmationCallback) {
@@ -465,6 +522,14 @@ class V00_MarkeplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
+  /**
+   * Fetches all notifications for a user since inception.
+   * @param {string} party - User's ETH address.
+   * @return {Promise<Array{
+   *     event: web3Event, type:string,
+   *     resources: {listingId: string, offerId: string}}
+   *   >}
+   */
   async getNotifications(party) {
     await this.getContract()
 
@@ -473,11 +538,15 @@ class V00_MarkeplaceAdapter {
     const partyListingIds = []
     const partyOfferIds = []
 
+    // Fetch all marketplace events where user is the party.
     const events = await this.contract.getPastEvents('allEvents', {
       topics: [null, this.padTopic(party)],
       fromBlock: this.blockEpoch
     })
 
+    // Create a list of
+    //  - Ids of listings created by the user as a seller
+    //  - Ids of offers made by the user as a buyer.
     for (const event of events) {
       if (event.event === 'ListingCreated') {
         partyListingIds.push(event.returnValues.listingID)
@@ -490,40 +559,59 @@ class V00_MarkeplaceAdapter {
       }
     }
 
-    // Find pending offers and pending reviews
+    // Find events of interest on offers for listings created by the user as a seller.
     for (const listingId of partyListingIds) {
-      const listing = await this.getListing(listingId)
-      for (const offerId in listing.offers) {
-        const offer = listing.offers[offerId]
-        if (offer.status === 'created') {
-          notifications.push({
-            event: offer.event,
-            type: 'seller_listing_purchased',
-            resources: { listingId, offerId }
-          })
+      try {
+        const listing = await this.getListing(listingId)
+        for (const offerId in listing.offers) {
+          const offer = listing.offers[offerId]
+          // Skip the event if the action was initiated by the user.
+          if (party.toLowerCase() === offer.event.returnValues.party.toLowerCase()) {
+            continue
+          }
+          const type =  offerStatusToSellerNotificationType[offer.status]
+          if (type) {
+            notifications.push({
+              type,
+              event: offer.event,
+              resources: { listingId, offerId }
+            })
+          }
         }
-        if (offer.status === 'finalized') {
-          notifications.push({
-            event: offer.event,
-            type: 'seller_review_received',
-            resources: { listingId, offerId }
-          })
-        }
-      }
-    }
-    // Find pending offers and pending reviews
-    for (const [listingId, offerId] of partyOfferIds) {
-      const listing = await this.getListing(listingId)
-      const offer = listing.offers[offerId]
-      if (offer.status === 'accepted') {
-        notifications.push({
-          event: offer.event,
-          type: 'buyer_listing_shipped',
-          resources: { listingId, offerId }
-        })
+      } catch (e) {
+        // Guard against invalid listing/offer that might be created for example
+        // by exploiting a validation loophole in origin-js listing/offer code
+        // or by writing directly to the blockchain.
+        console.log('getNotifications: skipping invalid listing')
+        console.log(`  contract=${this.contractName} listingId=${listingId} error=${e}`)
       }
     }
 
+    // Find events of interest on offers made by the user as a buyer.
+    for (const [listingId, offerId] of partyOfferIds) {
+      try {
+        const listing = await this.getListing(listingId)
+        const offer = listing.offers[offerId]
+        // Skip the event if the action was initiated by the user.
+        if (party.toLowerCase() === offer.event.returnValues.party.toLowerCase()) {
+          continue
+        }
+        const type = offerStatusToBuyerNotificationType[offer.status]
+        if (type) {
+          notifications.push({
+            type,
+            event: offer.event,
+            resources: { listingId, offerId }
+          })
+        }
+      } catch (e) {
+        // Guard against invalid listing/offer that might be created for example
+        // by exploiting a validation loophole in origin-js listing/offer code
+        // or by writing directly to the blockchain.
+        console.log('getNotifications: skipping invalid offer')
+        console.log(`  contract=${this.contractName} offerId=${offerId} error=${e}`)
+      }
+    }
     return notifications
   }
 

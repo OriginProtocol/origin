@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://schema.originprotocol.com/profile_1.0.0.json",
+  "title": "Origin Protocol user profile schema",
+  "type": "object",
+  "properties": {
+    "schemaId": {
+      "type": "string"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "avatar": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaId",
+    "firstName",
+    "lastName"
+  ]
+}

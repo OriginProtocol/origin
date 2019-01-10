@@ -1,45 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
 import { fetchUser } from 'actions/User'
-import { storeWeb3Intent } from 'actions/App'
 
 import Avatar from 'components/avatar'
+import Contact from 'components/contact'
 import EtherscanLink from 'components/etherscan-link'
 import Identicon from 'components/identicon'
-import MessageNew from 'components/message-new'
 import UnnamedUser from 'components/unnamed-user'
 
+import { formattedAddress } from 'utils/user'
+
 class UserCard extends Component {
-  constructor(props) {
-    super(props)
-
-    this.intlMessages = defineMessages({
-      sendMessages: {
-        id: 'messages-send.sendMessages',
-        defaultMessage: 'send messages'
-      }
-    })
-
-    this.handleToggle = this.handleToggle.bind(this)
-    this.state = { modalOpen: false }
-  }
-
   componentWillMount() {
     this.props.fetchUser(this.props.userAddress)
-  }
-
-  handleToggle(e) {
-    e.preventDefault()
-    const { storeWeb3Intent, intl, web3Account } = this.props
-    const intent = intl.formatMessage(this.intlMessages.sendMessages)
-    storeWeb3Intent(intent)
-
-    if (web3.givenProvider && web3Account) {
-      this.setState({ modalOpen: !this.state.modalOpen })
-    }
   }
 
   render() {
@@ -49,9 +25,10 @@ class UserCard extends Component {
       title,
       user,
       userAddress,
-      web3Account
+      wallet
     } = this.props
     const { fullName, profile, attestations } = user
+    const contactButtonIncluded = userAddress && formattedAddress(userAddress) !== formattedAddress(wallet.address)
 
     return (
       <div className="user-card placehold">
@@ -145,26 +122,14 @@ class UserCard extends Component {
             </div>
           </div>
         </div>
-        {userAddress &&
-          userAddress !== web3Account && (
-          <a
-            href="#"
-            onClick={this.handleToggle}
-            className="btn view-profile placehold top-btn"
-          >
-            {title.toLowerCase() === 'buyer' &&
-              <FormattedMessage
-                id={'user-card.enabledContactBuyer'}
-                defaultMessage={'Contact Buyer'}
-              />
-            }
-            {title.toLowerCase() === 'seller' &&
-              <FormattedMessage
-                id={'user-card.enabledContactSeller'}
-                defaultMessage={'Contact Seller'}
-              />
-            }
-          </a>
+        {contactButtonIncluded && (
+          <Contact
+            listingId={listingId}
+            purchaseId={purchaseId}
+            recipientAddress={userAddress}
+            recipientTitle={title}
+            className="view-profile placehold top-btn"
+          />
         )}
         <Link
           to={`/users/${userAddress}`}
@@ -175,35 +140,25 @@ class UserCard extends Component {
             defaultMessage={'View Profile'}
           />
         </Link>
-        <MessageNew
-          open={this.state.modalOpen}
-          recipientAddress={userAddress}
-          listingId={listingId}
-          purchaseId={purchaseId}
-          handleToggle={this.handleToggle}
-        />
       </div>
     )
   }
 }
 
-const mapStateToProps = (state, { userAddress }) => {
+const mapStateToProps = ({ users, wallet }, { userAddress }) => {
   return {
-    // for reactivity
-    messagingEnabled: state.app.messagingEnabled,
-    // for reactivity
-    messagingInitialized: state.app.messagingInitialized,
-    user: state.users.find(u => u.address === userAddress) || {},
-    web3Account: state.app.web3.account
+    user: users.find(u => {
+      return formattedAddress(u.address) === formattedAddress(userAddress)
+    }) || {},
+    wallet
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: addr => dispatch(fetchUser(addr)),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  fetchUser: addr => dispatch(fetchUser(addr))
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(UserCard))
+)(UserCard)

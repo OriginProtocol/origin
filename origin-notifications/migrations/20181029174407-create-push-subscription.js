@@ -4,7 +4,7 @@ const TableName = 'push_subscription'
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    queryInterface.sequelize
+    return queryInterface.sequelize
       .query('CREATE EXTENSION IF NOT EXISTS hstore;')
       .then(() => {
         return queryInterface
@@ -42,7 +42,7 @@ module.exports = {
           })
       })
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     // Note: we don't remove the hstore extension since it could be used
     // by other tables.
     return queryInterface.dropTable(TableName)

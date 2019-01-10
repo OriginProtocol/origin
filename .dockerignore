@@ -1,5 +1,6 @@
-origin-messaging/node_modules
-origin-dapp/node_modules
+**/node_modules
+
+# build folders
 origin-dapp/build
-origin-js/node_modules
 origin-js/dist
+origin-messaging/dist
