@@ -16,9 +16,7 @@ Clone locally with:
 
     git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-docs
 
-Make sure you have Ruby >=2.3.1 installed or install with Homebrew/rvm:
-
-    brew install ruby
+Make sure you have Ruby >=2.3.1 installed. Ruby 2.50 works great. If you don't have a current ruby on OSX, you can install a newer ruby version with brew or rbenv.
     
 Start serving locally with:
 
@@ -27,8 +25,8 @@ Start serving locally with:
 
 Preview your edits in your browser at: http://127.0.0.1:4000
 
-## Deploying changes (TODO: DVF)
+## Deploying changes
 
-Our docs are currently hosted on Github pages. Deploying changes (if you have access to this repo) will be as easy as running: 
+Our docs are currently hosted on Github pages. Deploying changes (if you have access to the gh-pages branch) is as easy as running: 
 
     ./deploy.sh 
