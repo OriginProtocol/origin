@@ -25,13 +25,12 @@ class Listings extends Component {
                   backgroundImage: `url(${a.media[0].urlExpanded})`
                 }}
               />
-            ) : null}
+            ) : (
+              <div className="main-pic empty" />
+            )}
             <div className="header">
               <div className="category">{a.categoryStr}</div>
-              <ListingBadge
-                status={a.status}
-                featured={a.featured}
-              />
+              <ListingBadge status={a.status} featured={a.featured} />
             </div>
             <h5>{a.title}</h5>
             <div className="price">
@@ -65,6 +64,10 @@ require('react-styl')(`
       background-size: cover
       background-repeat: no-repeat
       background-position: center
+      &.empty
+        background: var(--light) url(images/default-image.svg)
+        background-repeat: no-repeat
+        background-position: center
 
     .header
       display: flex

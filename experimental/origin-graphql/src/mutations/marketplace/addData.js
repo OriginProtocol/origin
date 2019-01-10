@@ -14,7 +14,8 @@ async function addData(_, data) {
     const parsed = parseId(offerId)
     args = [parsed.listingId, parsed.offerId, ipfsHash]
   } else if (listingId) {
-    args = [listingId, ipfsHash]
+    const parsed = parseId(listingId)
+    args = [parsed.listingId, ipfsHash]
   }
 
   const tx = contracts.marketplaceExec.methods.addData(...args).send({

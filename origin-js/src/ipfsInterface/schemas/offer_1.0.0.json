@@ -30,13 +30,20 @@
           "type": "string",
           "format": "date-time"
         },
+        "rrule": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        },
         "price": {
           "$ref": "#/definitions/money"
         }
       },
       "required": [
         "startDate",
-        "endDate"
+        "endDate",
+        "timeZone"
       ]
     },
     "unitOffer": {

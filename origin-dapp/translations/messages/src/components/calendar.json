@@ -1,0 +1,106 @@
+[
+  {
+    "id": "calendar.confirmDeleteEvent",
+    "defaultMessage": "Are you sure you want to delete this event?"
+  },
+  {
+    "id": "calendar.goToToday",
+    "defaultMessage": "Go to today"
+  },
+  {
+    "id": "calendar.showNoEventsEnteredErrorMessage",
+    "defaultMessage": "Please enter availability on the calendar"
+  },
+  {
+    "id": "calendar.back",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "calendar.next",
+    "defaultMessage": "Next"
+  },
+  {
+    "id": "calendar.calendarTipsSeller1",
+    "defaultMessage": "Click the calendar to enter pricing and availability information."
+  },
+  {
+    "id": "calendar.calendarTipsSeller2",
+    "defaultMessage": "To select multiple time slots, click the starting time slot and drag to the ending one."
+  },
+  {
+    "id": "calendar.calendarTipsBuyer1",
+    "defaultMessage": "Click one or more available time slots to make an offer."
+  },
+  {
+    "id": "calendar.calendarTipsBuyer2",
+    "defaultMessage": "To select multiple time slots, click the starting time slot and drag to the ending one."
+  },
+  {
+    "id": "calendar.selectedDates",
+    "defaultMessage": "Selected dates"
+  },
+  {
+    "id": "calendar.selectedTimes",
+    "defaultMessage": "Selected times"
+  },
+  {
+    "id": "calendar.isRepeatingEvent",
+    "defaultMessage": "This is a repeating event"
+  },
+  {
+    "id": "calendar.availability",
+    "defaultMessage": "Availability"
+  },
+  {
+    "id": "calendar.available",
+    "defaultMessage": "Availaible"
+  },
+  {
+    "id": "calendar.unavailable",
+    "defaultMessage": "Unavailable"
+  },
+  {
+    "id": "calendar.pricing",
+    "defaultMessage": "Pricing"
+  },
+  {
+    "id": "calendar.perHour",
+    "defaultMessage": "per hour"
+  },
+  {
+    "id": "calendar.perDay",
+    "defaultMessage": "per day"
+  },
+  {
+    "id": "calendar.editAllEventsInSeries",
+    "defaultMessage": "Edit all events in this series"
+  },
+  {
+    "id": "calendar.editOnlyThisTimeSlot",
+    "defaultMessage": "Edit only this time slot"
+  },
+  {
+    "id": "calendar.cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "calendar.save",
+    "defaultMessage": "Save"
+  },
+  {
+    "id": "calendar.price",
+    "defaultMessage": "Price"
+  },
+  {
+    "id": "calendar.reserve",
+    "defaultMessage": "Reserve"
+  },
+  {
+    "id": "calendar.selectionUnavailable",
+    "defaultMessage": "Your selection contains one or more unavailable time slots."
+  },
+  {
+    "id": "calendar.showPastDateSelectedError",
+    "defaultMessage": "Past dates may not be selected."
+  }
+]

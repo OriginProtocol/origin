@@ -9,6 +9,7 @@ function extractCallParams(web3, abi, functionSig, paramsData, inputOffset = 0) 
       }
     }
   }
+  return {}
 }
 
 module.exports = {
