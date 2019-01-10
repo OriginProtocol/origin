@@ -3,26 +3,31 @@ import { Query } from 'react-apollo'
 import get from 'lodash/get'
 
 import StarRating from 'components/StarRating'
+import Avatar from 'components/Avatar'
 import ReviewsQuery from 'queries/Reviews'
 
 const Reviews = ({ id }) => (
-    <Query query={ReviewsQuery} variables={{ id }}>
-      {({ data, loading, error }) => {
-        if (loading || error) return null
+  <Query query={ReviewsQuery} variables={{ id }}>
+    {({ data, loading, error }) => {
+      if (loading || error) return null
 
-        const reviews = get(data, 'marketplace.user.reviews.nodes', [])
-        const count = get(data, 'marketplace.user.reviews.totalCount', 0)
+      const reviews = get(data, 'marketplace.user.reviews.nodes', [])
+      const count = get(data, 'marketplace.user.reviews.totalCount', 0)
 
-        return (
-          <div className="reviews">
-            <h3>{`Reviews ${count}`}</h3>
-            {reviews.map((review, idx) => (
+      return (
+        <div className="reviews">
+          <h3>{`Reviews ${count}`}</h3>
+          {reviews.map((review, idx) => {
+            const profile = get(review, 'reviewer.account.identity.profile', {})
+            return (
               <div key={idx} className="review">
                 <div className="user-info">
-                  <div className="avatar" />
+                  <Avatar size="4rem" avatar={profile.avatar} />
                   <div className="user">
-                    <div className="name">Unnamed User</div>
-                    <div className="wallet">{review.reviewer.id}</div>
+                    <div className="name">
+                      {profile.fullName || 'Unnamed User'}
+                    </div>
+                    <div className="address">{review.reviewer.id}</div>
                   </div>
                   <div className="info">
                     <StarRating small={true} active={review.rating} />
@@ -31,11 +36,12 @@ const Reviews = ({ id }) => (
                 </div>
                 <div className="text">{review.review}</div>
               </div>
-            ))}
-          </div>
-        )
-      }}
-    </Query>
+            )
+          })}
+        </div>
+      )
+    }}
+  </Query>
 )
 
 export default Reviews
@@ -47,13 +53,7 @@ require('react-styl')(`
       width: 100%;
       justify-content: space-around
       .avatar
-        background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
-        background-size: 2.4rem;
-        width: 4rem;
-        height: 4rem;
-        border-radius: 0.5rem
         margin-right: 1rem
-
       .user
         flex: 1
         display: flex;
@@ -63,7 +63,7 @@ require('react-styl')(`
           font-size: 18px
           font-weight: bold
           color: var(--black)
-        .wallet
+        .address
           color: var(--steel)
       .info
         text-align: right

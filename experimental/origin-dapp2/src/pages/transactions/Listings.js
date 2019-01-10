@@ -145,7 +145,7 @@ const NoListings = () => (
       <h1>You don&apos;t have any listings yet.</h1>
       <p>Follow the steps below to create your first listing!</p>
       <br />
-      <Link to="/create" className="btn btn-lrg btn-primary">
+      <Link to="/create" className="btn btn-lg btn-primary btn-rounded">
         Create Your First Listing
       </Link>
     </div>

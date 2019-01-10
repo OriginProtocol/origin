@@ -25,13 +25,13 @@ export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
       resolve({ id: hash })
 
       contracts.transactions.push({ id: hash })
-      try {
-        window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
-          contracts.transactions
-        )
-      } catch (e) {
-        /* Ignore */
-      }
+      // try {
+      //   window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
+      //     contracts.transactions
+      //   )
+      // } catch (e) {
+      //   /* Ignore */
+      // }
 
       const node = await getTransaction(hash, true)
 

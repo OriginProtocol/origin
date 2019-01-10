@@ -137,7 +137,7 @@ const NoSales = () => (
       <h1>You don&apos;t have any sales yet.</h1>
       <p>Click below to view your listings.</p>
       <br />
-      <Link to="/my-listings" className="btn btn-lrg btn-primary">
+      <Link to="/my-listings" className="btn btn-lg btn-primary btn-rounded">
         My Listings
       </Link>
     </div>
