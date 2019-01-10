@@ -17,6 +17,7 @@ import TransactionModal from 'components/transaction-modal'
 import WalletModal from 'components/wallet-modal'
 
 import currencies from 'utils/currencies'
+import { toOgns } from 'utils/ogn'
 
 import originWallet from '../OriginWallet'
 
@@ -78,7 +79,7 @@ class HomeScreen extends Component {
     const ethBalance = web3.utils.fromWei(eth, 'ether')
     // To Do: convert tokens with decimal counts
     const daiBalance = dai
-    const ognBalance = ogn
+    const ognBalance = toOgns(ogn)
     const eventsCount = pending_events.length + processed_events.length
 
     return (
