@@ -21,7 +21,9 @@ export const ProfileConstants = keyMirror(
     DEPLOY_ERROR: null,
     DEPLOY_RESET: null,
 
-    ADD_ATTESTATION: null
+    ADD_ATTESTATION: null,
+
+    RESET: null
   },
   'PROFILE'
 )
@@ -122,4 +124,9 @@ export function deployProfile() {
 
 export function deployProfileReset() {
   return { type: ProfileConstants.DEPLOY_RESET }
+}
+
+// Identity reset for the purpose of upgrading to a new identity version.
+export function resetIdentity() {
+  return { type: ProfileConstants.RESET }
 }

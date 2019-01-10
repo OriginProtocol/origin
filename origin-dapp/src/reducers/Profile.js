@@ -152,6 +152,34 @@ export default function Profile(state = initialState, action = {}) {
       provisional: { ...state.provisional, ...toAdd }
     })
 
+  case ProfileConstants.RESET:
+    return changes({
+      ...state,
+      user: {
+        ...state.user,
+        attestations: []
+      },
+      provisional: {
+        ...state.provisional,
+        email: false,
+        facebook: false,
+        phone: false,
+        twitter: false,
+        airbnb: false
+      },
+      published: {
+        firstName: '',
+        lastName: '',
+        description: '',
+        pic: '',
+        email: false,
+        facebook: false,
+        phone: false,
+        twitter: false,
+        airbnb: false
+      }
+    })
+
   case ProfileConstants.UPDATE:
     return changes({
       ...state,
