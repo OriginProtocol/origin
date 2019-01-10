@@ -127,7 +127,7 @@ class TransactionItem extends Component {
                 </View>
                 <View style={styles.price}>
                   <Image source={require(`${IMAGES_PATH}eth-icon.png`)} style={styles.currencyIcon} />
-                  <Text style={styles.amount}>{Number(web3.utils.fromWei(totalEth)).toFixed(5)}</Text>
+                  <Text style={styles.amount}>{Number(web3.utils.fromWei(totalEth.toString())).toFixed(5)}</Text>
                   <Text style={styles.abbreviation}>ETH</Text>
                 </View>
               </View>
