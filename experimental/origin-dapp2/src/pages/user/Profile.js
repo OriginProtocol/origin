@@ -8,11 +8,14 @@ import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 
 import ProfileStrength from 'components/ProfileStrength'
+import Avatar from 'components/Avatar'
+import Wallet from 'components/Wallet'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
+import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
 import EditProfile from './_EditModal'
@@ -21,35 +24,38 @@ const AttestationComponents = {
   phone: PhoneAttestation,
   email: EmailAttestation,
   facebook: FacebookAttestation,
-  twitter: TwitterAttestation
+  twitter: TwitterAttestation,
+  airbnb: AirbnbAttestation
 }
 
-class OnboardProfile extends Component {
+const ProfileFields = [
+  'firstName',
+  'lastName',
+  'description',
+  'avatar',
+  'facebookVerified',
+  'twitterVerified',
+  'airbnbVerified',
+  'phoneVerified',
+  'emailVerified'
+]
+
+class UserProfile extends Component {
   constructor(props) {
     super(props)
+    const profile = get(props, 'identity.profile')
     this.state = {
       firstName: '',
       lastName: '',
-      description: ''
+      description: '',
+      ...pick(profile, ProfileFields)
     }
   }
 
   componentDidUpdate(prevProps) {
     const profile = get(this.props, 'identity.profile')
     if (profile && !prevProps.identity) {
-      this.setState(
-        pick(profile, [
-          'firstName',
-          'lastName',
-          'description',
-          'avatar',
-          'facebookVerified',
-          'twitterVerified',
-          'airbnbVerified',
-          'phoneVerified',
-          'emailVerified'
-        ])
-      )
+      this.setState(pick(profile, ProfileFields))
     }
   }
 
@@ -68,8 +74,8 @@ class OnboardProfile extends Component {
       <div className="container profile-edit">
         <div className="row">
           <div className="col-md-8">
-            <div className="profile">
-              <div className="avatar" />
+            <div className="profile d-flex">
+              <Avatar avatar={this.state.avatar} size="10rem" />
               <div className="info">
                 <h1>{name.length ? name.join(' ') : 'Unnamed User'}</h1>
                 <div className="description">
@@ -88,7 +94,7 @@ class OnboardProfile extends Component {
             </div>
             <h3>Verify yourself on Origin</h3>
             <div className="gray-box">
-              <label className="mt-3">
+              <label className="mb-3">
                 Please connect your accounts below to strengthen your identity
                 on Origin.
               </label>
@@ -103,25 +109,35 @@ class OnboardProfile extends Component {
             </div>
 
             <ProfileStrength
+              large={true}
               published={get(this.props, 'identity.profile.strength', 0)}
               unpublished={unpublishedProfileStrength(this)}
             />
 
-            <DeployIdentity
-              className="btn btn-primary"
-              identity={get(this.props, 'identity.id')}
-              profile={pick(this.state, [
-                'firstName',
-                'lastName',
-                'description',
-                'avatar'
-              ])}
-              attestations={attestations}
-              validate={() => this.validate()}
-              children="Publish"
-            />
+            <div className="actions">
+              <DeployIdentity
+                className="btn btn-primary btn-rounded btn-lg"
+                identity={get(this.props, 'identity.id')}
+                profile={pick(this.state, [
+                  'firstName',
+                  'lastName',
+                  'description',
+                  'avatar'
+                ])}
+                attestations={attestations}
+                validate={() => this.validate()}
+                children="Publish Now"
+              />
+            </div>
           </div>
-          <div className="col-md-4" />
+          <div className="col-md-4">
+            <Wallet />
+            <div className="gray-box profile-help">
+              <b>Verifying your profile</b> allows other users to know that you
+              are a real person and increases the chances of successful
+              transactions on Origin.
+            </div>
+          </div>
         </div>
 
         {!this.state.editProfile ? null : (
@@ -149,8 +165,11 @@ class OnboardProfile extends Component {
       status = ' published'
     } else if (this.state[`${type}Attestation`]) {
       status = ' provisional'
-    } else if (soon) {
+    }
+    if (soon) {
       status = ' soon'
+    } else {
+      status += ' interactive'
     }
 
     let AttestationComponent = AttestationComponents[type]
@@ -196,20 +215,26 @@ class OnboardProfile extends Component {
   }
 }
 
-export default withWallet(withIdentity(OnboardProfile))
+export default withWallet(withIdentity(UserProfile))
 
 require('react-styl')(`
   .profile-edit
+    margin-top: 3rem
     .gray-box
       border: 1px solid var(--light)
       border-radius: 5px
-      padding: 0 2rem
+      padding: 1rem
       margin-bottom: 2rem
+    .avatar
+      margin-right: 2rem
+      border-radius: 1rem
+    .actions
+      text-align: center
     .profile
       position: relative
       h1
         margin: 0
-      margin: 3rem 0 2rem 0
+      margin-bottom: 2rem
       a.edit
         background: url(images/edit-icon.svg) no-repeat center
         background-size: cover
@@ -219,5 +244,11 @@ require('react-styl')(`
         position: absolute
         top: 0
         right: 0
+    .profile-help
+      font-size: 14px;
+      background: url(images/identity/identity.svg) no-repeat center 1.5rem;
+      background-size: 5rem;
+      padding-top: 8rem;
+
 
 `)

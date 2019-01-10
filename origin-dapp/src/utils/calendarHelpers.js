@@ -451,3 +451,12 @@ export const slotsToJCal = (events) => {
 
   return jCal
 }
+
+export const getStartEndDatesFromSlots = (slots, slotLengthUnit) => {
+  const timeFormat = slotLengthUnit === 'schema.hours' ? 'l LT' : 'LL'
+
+  return {
+    startDate: moment(slots[0].startDate).format(timeFormat),
+    endDate: moment(slots[slots.length - 1].endDate).format(timeFormat)
+  }
+}

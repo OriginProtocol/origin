@@ -20,7 +20,7 @@ class NotifcationsModal extends Component {
 
   async handlePress() {
     try {
-      const permissions = await originWallet.requestNotifictions()
+      const permissions = await originWallet.requestNotifications()
 
       this.props.storeNotificationsPermissions(permissions)
     } catch(e) {
