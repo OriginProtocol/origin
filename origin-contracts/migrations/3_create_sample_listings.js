@@ -66,4 +66,12 @@ async function deployContracts(deployer) {
     '0x36e909d9b6032f92c2a70058b97d9d49a7af10f70c81ad7e0eabc614449fe92b',
     Seller
   )
+
+  // origin-spaceman
+  // QmarcisvcGs3rFbZvqRBaYNWF92ghb4XDuxzmU1apqjeJ8
+  await createListing(
+    marketplace00,
+    '0xb9f96bc8f0a6ef4ed55d73618ba1e34a9888d7dad0144a71cf5f9cd956e9fd45',
+    Seller
+  )
 }
