@@ -262,6 +262,7 @@ class Linker {
   }
 
   getMessageFromMeta(meta, account) {
+    console.log("meta is:", meta)
     if (meta.subMeta)
     {
       meta = meta.subMeta
@@ -292,7 +293,14 @@ class Linker {
     }
     else
     {
-      return `Pending call to ${meta.contract}.${meta.method}`
+      if (meta.contract && meta.method)
+      {
+        return `Pending call to ${meta.contract}.${meta.method}`
+      }
+      else
+      {
+        return `There is a pending call for your approval`
+      }
     }
   }
 
