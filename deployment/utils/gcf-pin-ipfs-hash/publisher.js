@@ -7,9 +7,14 @@
 	const pubsub = new PubSub();
 
 	const topicName = 'test-topic';
+
 	//for testing purposes, retreive json from file.
 	const listing_data = require('./listing-data.json')
-	const data = JSON.stringify(listing_data);
+	const data = JSON.stringify({
+		"type": "listing",
+		"ipfsHash": "hash",
+		"rawData": listing_data
+	})
 
 	// Publishes the message as a string, e.g. "Hello, world!" or JSON.stringify(someObject)
 	const dataBuffer = Buffer.from(data);
