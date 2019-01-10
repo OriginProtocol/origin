@@ -76,7 +76,6 @@ class FacebookAttestation extends Component {
         mutation={VerifyFacebookMutation}
         onCompleted={res => {
           const result = res.verifyFacebook
-          console.log(result)
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',

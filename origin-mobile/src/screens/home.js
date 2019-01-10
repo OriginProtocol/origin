@@ -36,6 +36,16 @@ class HomeScreen extends Component {
 
   static navigationOptions = {
     title: 'Home',
+    headerRight: (
+      <TouchableOpacity onPress={() => {
+        originWallet.openRoot()
+      }}>
+        <Image
+          source={require(`${IMAGES_PATH}external-icon-dark.png`)}
+          style={{ marginRight: 15 }}
+        />
+      </TouchableOpacity>
+    ),
     headerTitle: () => (
       <Image source={require(`${IMAGES_PATH}origin-logo-dark.png`)} />
     ),
@@ -273,6 +283,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
 const styles = StyleSheet.create({
   expand: {
     marginLeft: 'auto',
+  },
+  external: {
+    marginRight: 10,
   },
   header: {
     backgroundColor: '#f8fafa',

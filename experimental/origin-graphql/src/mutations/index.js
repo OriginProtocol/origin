@@ -41,6 +41,8 @@ import generatePhoneCode from './attestations/generatePhoneCode'
 import verifyPhoneCode from './attestations/verifyPhoneCode'
 import verifyFacebook from './attestations/verifyFacebook'
 import verifyTwitter from './attestations/verifyTwitter'
+import generateAirbnbCode from './attestations/generateAirbnbCode'
+import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 
 export default {
   addAffiliate,
@@ -81,5 +83,7 @@ export default {
   verifyEmailCode,
   verifyFacebook,
   verifyTwitter,
+  generateAirbnbCode,
+  verifyAirbnbCode,
   refetch: () => true
 }

@@ -76,7 +76,6 @@ class TwitterAttestation extends Component {
         mutation={VerifyTwitterMutation}
         onCompleted={res => {
           const result = res.verifyTwitter
-          console.log(result)
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',

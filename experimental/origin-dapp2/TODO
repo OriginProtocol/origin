@@ -1,6 +1,3 @@
-# Create / Edit Profile
-
-
 # Messaging
 
 - Dropdown
@@ -12,19 +9,9 @@
 - 'Pending Listing' state
 
 
-# Create / update listing
-
-- Image management
-
-
 # Transaction Detail
 
 - Arbitration
-
-
-# Reviews
-
-- Identity for name / pic
 
 
 # Notifications dropdown
@@ -46,19 +33,16 @@
 # Listing detail
 
 - 'Pending Listing' state
-- Pending badge
 - Contact seller button
 - Mobile view
 
 
 # Search results
 
-- No image placeholder
 - Sub-category search filters
 - Alter URL when searching
-- 'Load more' button styling
+- 'Load more' button styling / spinner
 - Mobile view
-- Featured / Pending badges
 
 
 # Transaction Detail
@@ -72,23 +56,28 @@
 
 - Active / Inactive filters
 - Order most recent first
-- Empty page button style
+
 
 # Onboarding
 
 - Notifications icon
 - Question mark / checkmark icon
 - Help box copy
-- Coming soon ribbon for Google attestation
 - Visit Browser Settings link on desktop notifications
 - Buy button when MetaMask pointed to non-existant private network
 - Show bell when approved wallet present
 
 
-## Identity Nav
+# User Profile
 
-- Avatar
+- Save provisional attestations / profile changes across page refresh
 
+
+# Create / Edit Profile
+
+# Reviews
+
+# Identity Nav
 
 # Edit Listing
 
@@ -97,7 +86,5 @@
 # Notifications page
 
 # Transaction dropdown
-
-# User Profile
 
 # DApp info page

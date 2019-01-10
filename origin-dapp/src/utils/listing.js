@@ -211,6 +211,7 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     display,
     seller,
     unitsRemaining,
+    isFractional,
     totalBoostValue
   } = listing
 
@@ -263,8 +264,8 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
   const isPending = isMultiUnit ? false : offerWithStatusExists('pending')
   const isSold = isMultiUnit ? multiUnitListingIsSold() : offerWithStatusExists('sold')
   const isAvailable = isMultiUnit ? unitsRemaining > 0 : (!isPending && !isSold && !isWithdrawn)
-  const showPendingBadge = isPending && !isWithdrawn
-  const showSoldBadge = isSold || isWithdrawn
+  const showPendingBadge = isPending && !isWithdrawn && !isFractional
+  const showSoldBadge = (isSold || isWithdrawn) && !isFractional
   const showRemainingBoost = isMultiUnit && totalBoostValue > 0
 
   /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't

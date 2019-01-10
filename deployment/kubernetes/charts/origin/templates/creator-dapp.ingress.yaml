@@ -17,7 +17,7 @@ metadata:
     nginx.ingress.kubernetes.io/limit-rps: "50"
 spec:
   tls:
-    - secretName: {{ .Release.Namespace }}-origindapp-com
+    - secretName: {{ .Release.Namespace }}-creator-dapp
       hosts:
         - "*.{{ template "creator-dapp.host" . }}"
   rules:

@@ -181,7 +181,7 @@ class Messaging {
 
 
   //helper function for use by outside services
-  async preGenKeys(web3Account) {
+  preGenKeys(web3Account) {
     const sig_phrase = PROMPT_MESSAGE
     const signature = web3Account.sign(sig_phrase).signature
     console.log('We got a signature of: ', signature)

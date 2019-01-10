@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment-timezone'
 import uuid from 'uuid/v1'
 
 export function generateCalendarSlots(events) {
@@ -27,7 +27,18 @@ export function generateCalendarSlots(events) {
   return eventsClone
 }
 
-export function checkSlotsForExistingEvent(slotInfo, events) {
+// Generate slots that will be used in the buyer's offer
+export function generateSlotStartEnd(selectionStart, viewType, slotIndex) {
+  const slotLength = viewType === 'hourly' ? 'hour' : 'day'
+  const start = moment(selectionStart).add(slotIndex, slotLength)
+  const end = moment(selectionStart).add(slotIndex, slotLength).add(1, slotLength).subtract(1, 'second')
+  return {
+    start: start.toDate(),
+    end: end.toDate()
+  }
+}
+
+export function checkSlotForExistingEvents(slotInfo, events) {
   return events.filter((event) => {
     let isEventInSlot = false
 
@@ -56,14 +67,11 @@ export function doAllEventsRecur(events) {
   return recurringEvents.length === events.length
 }
 
-// This is a hackky way of showing the price in hourly time slots
+// This is a hackey way of showing the price in hourly time slots
 // since React Big Calendar doesn't give us full control over the content of those slots
 // Possible future optimization would be to create a PR to React Big Calendar to support custom slot content.
-export function renderHourlyPrices(viewType, userType) {
-  if (viewType &&
-      viewType === 'hourly' &&
-      userType &&
-      userType === 'buyer') {
+export function renderHourlyPrices(viewType) {
+  if (viewType && viewType === 'hourly') {
     const slots = document.querySelectorAll('.rbc-time-slot')
 
     for (let i = 0, slotsLen = slots.length; i < slotsLen; i++) {
@@ -72,12 +80,19 @@ export function renderHourlyPrices(viewType, userType) {
       const isAvailable = classes.indexOf('unavailable') === -1
       const priceIdx = classes.indexOf('priceEth-')
 
-      slot.innerHTML = ''
+      // slot.innerHTML = ''
+      const childSpan = slot.querySelector('span')
+      if (childSpan && !childSpan.className.includes('rbc-label')) {
+        childSpan.remove()
+      }
+
 
       if (priceIdx > -1 && isAvailable) {
         const price = classes.substring(priceIdx + 9, classes.length)
-        const priceNode = document.createTextNode(`${price} ETH`)
-        slot.appendChild(priceNode)
+        const priceWrapper = document.createElement('span')
+        const priceText = document.createTextNode(`${price} ETH`)
+        priceWrapper.appendChild(priceText)
+        slot.appendChild(priceWrapper)
       }
     }
   }
@@ -124,16 +139,17 @@ export function getSlotsForDateChange(selectedEvent, whichDropdown, value, viewT
   return slots
 }
 
-export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents) {
+export function getDateDropdownOptions(date, viewType, userType, selectedEvent, allEvents, offers) {
   const numDatesToShow = 10
   const timeToAdd = viewType === 'daily' ? 'days' : 'hours'
   let beforeSelectedConflict
   let afterSelectedConflict
-  const eventsWithoutSelected = allEvents &&
-    allEvents.length &&
-    allEvents.filter((event) => event.id !== selectedEvent.id)
 
   const isSlotAvailable = (date) => {
+    const eventsWithoutSelected = allEvents &&
+      allEvents.length &&
+      allEvents.filter((event) => event.id !== selectedEvent.id)
+
     if (!eventsWithoutSelected || !eventsWithoutSelected.length) {
       return true
     }
@@ -141,7 +157,7 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
       date = moment(date).startOf('day').toDate()
     }
     const slotInfo = { slots: [date] }
-    const existingEventInSlot = checkSlotsForExistingEvent(slotInfo, eventsWithoutSelected)
+    const existingEventInSlot = checkSlotForExistingEvents(slotInfo, eventsWithoutSelected)
     return !existingEventInSlot.length || doAllEventsRecur(existingEventInSlot)
   }
 
@@ -151,7 +167,15 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .map((_, i) => {
       const thisDate = moment(date).subtract(i + 1, timeToAdd).toDate()
       if (!beforeSelectedConflict) {
-        const isAvailable = isSlotAvailable(thisDate)
+        let isAvailable
+
+        if (userType === 'seller') {
+          isAvailable = isSlotAvailable(thisDate)
+        } else {
+          const availData = getDateAvailabilityAndPrice(thisDate, allEvents, offers)
+          isAvailable = availData.isAvailable
+        }
+
         if (isAvailable) {
           return thisDate
         } else {
@@ -166,8 +190,15 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .reverse()
 
   if (viewType === 'hourly') {
-    const isNextSlotAvailable = isSlotAvailable(date)
-    if (!isNextSlotAvailable) {
+    let isAvailable
+
+    if (userType === 'seller') {
+      isAvailable = isSlotAvailable(date)
+    } else {
+      const availData = getDateAvailabilityAndPrice(date, allEvents, offers)
+      isAvailable = availData.isAvailable
+    }
+    if (!isAvailable) {
       afterSelectedConflict = true
     }
   }
@@ -176,7 +207,15 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .map((_, i) => {
       const thisDate = moment(date).add(i + 1, timeToAdd).toDate()
       if (!afterSelectedConflict) {
-        const isAvailable = isSlotAvailable(thisDate)
+        let isAvailable
+
+        if (userType === 'seller') {
+          isAvailable = isSlotAvailable(thisDate)
+        } else {
+          const availData = getDateAvailabilityAndPrice(thisDate, allEvents, offers)
+          isAvailable = availData.isAvailable
+        }
+
         if (isAvailable) {
           return thisDate
         } else {
@@ -293,11 +332,12 @@ export function getSlotsToReserve(buyerSelectedSlotData) {
             const toReturn = {
               startDate: slot.start,
               endDate: slot.end,
+              timeZone: slot.timeZone,
               price: slot.price,
             }
 
             if (slot.isRecurringEvent) {
-              toReturn.recurs = 'weekly'
+              toReturn.rrule = 'FREQ=WEEKLY;'
             }
 
             return toReturn
@@ -315,12 +355,13 @@ export function getCleanEvents(events) {
       const toReturn = {
         startDate: event.start.toISOString(),
         endDate: event.end.toISOString(),
+        timeZone: event.timeZone,
         isAvailable: event.isAvailable,
         price: event.price
       }
 
       if (event.isRecurringEvent) {
-        toReturn.recurs = 'weekly'
+        toReturn.rrule = 'FREQ=WEEKLY;'
       }
       return toReturn
     })
@@ -353,8 +394,10 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
         !moment(date).isBefore(moment().startOf('day'))
       ) {
 
-        event.isAvailable = event.isAvailable ? !isDateBooked(date) : false
-        eventsInSlot.push(event)
+        const eventClone = JSON.parse(JSON.stringify(event))
+
+        eventClone.isAvailable = eventClone.isAvailable ? !isDateBooked(date) : false
+        eventsInSlot.push(eventClone)
       }
     }
   }
@@ -391,4 +434,13 @@ export const prepareSlotsToSave = (slots) => {
 
     return slot
   })
+}
+
+export const getStartEndDatesFromSlots = (slots, slotLengthUnit) => {
+  const timeFormat = slotLengthUnit === 'schema.hours' ? 'l LT' : 'LL'
+
+  return {
+    startDate: moment(slots[0].startDate).format(timeFormat),
+    endDate: moment(slots[slots.length - 1].endDate).format(timeFormat)
+  }
 }
