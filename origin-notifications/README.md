@@ -44,7 +44,16 @@ In origin-dapp...
   - Run `npm start`
   
 In origin-discovery...
-  
+  - Add variables to origin-discovery/.env
+  ```
+  AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
+  ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
+  BLOCK_EPOCH=0
+  DATABASE_URL=postgresql://localhost/discovery
+  NETWORK_ID=999
+  IPFS_URL=http://localhost:8080/
+  WEB3_URL=http://localhost:8545/
+  ```
   - Run `node src/listener/listener.js --continue-file=continue --webhook=http://localhost:3456/events`
   
   (From time to time, you may need to `rm continue` in origin-discovery.)
