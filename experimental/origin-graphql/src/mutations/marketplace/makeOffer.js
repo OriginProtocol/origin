@@ -7,12 +7,13 @@ const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
+  const { listingId } = parseId(data.listingID)
 
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
-    listingId: data.listingID,
+    listingId,
     listingType: 'unit',
-    unitsPurchased: 1,
+    unitsPurchased: Number.parseInt(data.quantity),
     totalPrice: {
       amount: data.value,
       currency: 'ETH'
@@ -30,16 +31,16 @@ async function makeOffer(_, data) {
   const buyer = data.from
   const marketplace = contracts.marketplaceExec
 
-  const affilaiteWhitelistDisabled = await marketplace.methods
+  const affiliateWhitelistDisabled = await marketplace.methods
     .allowedAffiliates(marketplace.options.address)
     .call()
 
-  if (!affilaiteWhitelistDisabled) {
-    const affilaiteAllowed = await marketplace.methods
+  if (!affiliateWhitelistDisabled) {
+    const affiliateAllowed = await marketplace.methods
       .allowedAffiliates(data.affiliate)
       .call()
 
-    if (!affilaiteAllowed) {
+    if (!affiliateAllowed) {
       throw new Error('Affiliate not on whitelist')
     }
   }
@@ -49,7 +50,7 @@ async function makeOffer(_, data) {
   const value = contracts.web3.utils.toWei(data.value, 'ether')
 
   const args = [
-    data.listingID,
+    listingId,
     ipfsHash,
     ipfsData.finalizes,
     data.affiliate || ZeroAddress,

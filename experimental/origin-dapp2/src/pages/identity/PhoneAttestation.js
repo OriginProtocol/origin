@@ -91,14 +91,6 @@ class PhoneAttestation extends Component {
             onClick={() => this.setState({ shouldClose: true })}
             children="Cancel"
           />
-          <button
-            className="btn btn-link"
-            onClick={() => {
-              this.props.onComplete({ success: true })
-              this.setState({ shouldClose: true })
-            }}
-            children="Fake"
-          />
         </div>
       </>
     )
@@ -138,11 +130,11 @@ class PhoneAttestation extends Component {
       <Mutation
         mutation={GeneratePhoneCodeMutation}
         onCompleted={res => {
-          const result = res.attestationsGeneratePhoneCode
+          const result = res.generatePhoneCode
           if (result.success) {
-            this.setState({ stage: 'VerifyCode' })
+            this.setState({ stage: 'VerifyCode', loading: false })
           } else {
-            this.setState({ error: result.reason })
+            this.setState({ error: result.reason, loading: false })
           }
         }}
         onError={errorData => {
@@ -154,12 +146,13 @@ class PhoneAttestation extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => {
-              this.setState({ error: false })
+              if (this.state.loading) return
+              this.setState({ error: false, loading: true })
               generateCode({
                 variables: pick(this.state, ['prefix', 'method', 'phone'])
               })
             }}
-            children="Continue"
+            children={this.state.loading ? 'Loading...' : 'Continue'}
           />
         )}
       </Mutation>
@@ -171,24 +164,31 @@ class PhoneAttestation extends Component {
       <Mutation
         mutation={VerifyPhoneCodeMutation}
         onCompleted={res => {
-          const result = res.attestationsVerifyPhoneCode
-          console.log(result)
+          const result = res.verifyPhoneCode
           if (result.success) {
-            this.setState({ stage: 'VerifiedOK' })
+            this.setState({
+              stage: 'VerifiedOK',
+              topic: result.claimType,
+              issuer: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', //result.issuer,
+              signature: result.signature,
+              data: result.data,
+              loading: false
+            })
           } else {
-            this.setState({ error: result.reason })
+            this.setState({ error: result.reason, loading: false })
           }
         }}
         onError={errorData => {
           console.log('Error', errorData)
-          this.setState({ error: 'Check console' })
+          this.setState({ error: 'Check console', loading: false })
         }}
       >
         {verifyCode => (
           <button
             className="btn btn-outline-light"
             onClick={() => {
-              this.setState({ error: false })
+              if (this.state.loading) return
+              this.setState({ error: false, loading: true })
               verifyCode({
                 variables: {
                   identity: this.props.wallet,
@@ -198,7 +198,7 @@ class PhoneAttestation extends Component {
                 }
               })
             }}
-            children="Continue"
+            children={this.state.loading ? 'Loading...' : 'Continue'}
           />
         )}
       </Mutation>
@@ -219,7 +219,12 @@ class PhoneAttestation extends Component {
         <div className="actions">
           <button
             className="btn btn-outline-light"
-            onClick={() => this.setState({ shouldClose: true })}
+            onClick={() => {
+              this.props.onComplete(
+                pick(this.state, 'topic', 'issuer', 'signature', 'data')
+              )
+              this.setState({ shouldClose: true })
+            }}
             children="Continue"
           />
         </div>
@@ -231,7 +236,7 @@ class PhoneAttestation extends Component {
 export default PhoneAttestation
 
 require('react-styl')(`
-  .attestation-modal.phone
+  .attestation-modal
     overflow: visible !important
     padding-bottom: 1.5rem !important
     > div
@@ -248,8 +253,6 @@ require('react-styl')(`
           left: 0;
           height: 7.5rem;
           right: 0;
-          background-image: url(images/identity/phone-icon-dark.svg);
-          background-size: 2rem;
           background-repeat: no-repeat;
           background-position: center;
       font-size: 18px
@@ -279,6 +282,22 @@ require('react-styl')(`
         .btn-link
           margin-top: 1rem
           text-decoration: none
+
+    &.phone > div h2::before
+      background-image: url(images/identity/phone-icon-dark.svg);
+      background-size: 2rem;
+    &.email > div h2::before
+      background-image: url(images/identity/email-icon-dark.svg);
+      background-size: 3.5rem
+    &.facebook > div h2::before
+      background-image: url(images/identity/facebook-icon-dark.svg);
+      background-size: 2rem
+    &.twitter > div h2::before
+      background-image: url(images/identity/twitter-icon-dark.svg);
+      background-size: 3.5rem
+    &.airbnb > div h2::before
+      background-image: url(images/identity/airbnb-icon-dark.svg);
+      background-size: 4rem
 
     &.success
       > div

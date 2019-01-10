@@ -94,7 +94,7 @@ class ContractService {
   newWalletNetwork() {
     this.web3.setProvider(this.walletLinker.getProvider())
     // Fake it till you make it
-    this.web3.currentProvider.isOrigin = true
+    this.web3.currentProvider.isOrigin = !this.walletLinker.linked
   }
 
   isActiveWalletLinker() {

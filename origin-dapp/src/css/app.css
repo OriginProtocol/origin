@@ -2017,7 +2017,6 @@ textarea:-moz-ui-invalid {
 }
 
 .modal.getting-started {
-  top: auto;
   left: auto;
   right: 20px;
   z-index: 997;
@@ -2684,6 +2683,7 @@ select.form-control:not([size]):not([multiple]) {
   margin-bottom: 20px;
 }
 
+.listing-container .info-box,
 .listing-form .info-box {
   background-color: var(--pale-grey);
   border-radius: var(--default-radius);
@@ -2697,8 +2697,14 @@ select.form-control:not([size]):not([multiple]) {
   font-weight: 400;
 }
 
+.listing-container .info-box p,
 .listing-form .info-box p {
   font-size: 1.05rem;
+}
+
+.listing-container .info-box.warn p,
+.listing-form .info-box.warn p {
+  margin-bottom: 0;
 }
 
 .about-ogn .image-container {
@@ -3097,11 +3103,13 @@ select.form-control:not([size]):not([multiple]) {
   margin: 10px 0 5px;
 }
 
+.listing-container .info-box.warn,
 .listing-form .info-box.warn {
   background-color: var(--orange-red-light);
   border: 1px solid var(--orange-red);
 }
 
+.listing-container .info-box.warn p,
 .listing-form .info-box.warn p {
   color: var(--orange-red);
 }

@@ -34,7 +34,7 @@ import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
 import { formattedAddress } from 'utils/user'
-import { getDataURIsFromImgURLs } from 'utils/fileUtils'
+import { getDataURIsFromImgURLs, picURIsOnly } from 'utils/fileUtils'
 
 import {
   translateSchema,
@@ -182,7 +182,6 @@ class ListingCreate extends Component {
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
         }
-        this.ensureUserIsSeller(listing.seller)
 
         if (listing.pictures.length) {
           const pictures = await getDataURIsFromImgURLs(listing.pictures)
@@ -439,10 +438,6 @@ class ListingCreate extends Component {
   }
 
   onAvailabilityEntered(slots, direction) {
-    if (!slots || !slots.length) {
-      return
-    }
-
     let nextStep
     switch(direction) {
       case 'forward':
@@ -456,7 +451,7 @@ class ListingCreate extends Component {
         break
     }
 
-    slots = prepareSlotsToSave(slots)
+    slots = (slots && slots.length && prepareSlotsToSave(slots)) || []
 
     this.setState({
       formListing: {
@@ -520,13 +515,15 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
+  const pictures = picURIsOnly(formData.pictures)
 
     this.setState({
       formListing: {
         ...this.state.formListing,
         formData: {
           ...this.state.formListing.formData,
-          ...formData
+          ...formData,
+          pictures
         }
       }
     })
@@ -546,7 +543,7 @@ class ListingCreate extends Component {
 
   onBoostLimitChange({ formData }) {
     const boostLimit = formData.boostLimit
-    if (boostLimit && boostLimit !== this.state.formListing.formData.boostLimit
+    if (boostLimit !== undefined && boostLimit !== this.state.formListing.formData.boostLimit
     ) {
       this.setState({
         formListing: {
@@ -726,10 +723,10 @@ class ListingCreate extends Component {
       errorFound = true
       errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.positiveNumber))
     }
-    
+
     if (boostLimit > formData.unitsTotal * formData.boostValue) {
       errorFound = true
-      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.boostLimitTooHigh)) 
+      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.boostLimitTooHigh))
     }
 
     if (!errorFound){
@@ -739,7 +736,7 @@ class ListingCreate extends Component {
     }
     return errors
   }
-  
+
   validateListingForm(data, errors) {
     const {
       isEditMode,
@@ -1074,6 +1071,19 @@ class ListingCreate extends Component {
             )}
             {step === this.STEP.AVAILABILITY &&
               <div className="col-md-12 listing-availability">
+                <label>
+                  <FormattedMessage
+                    id={'listing-create.stepNumberLabel'}
+                    defaultMessage={'STEP {stepNumber}'}
+                    values={{ stepNumber: this.getStepNumber(step) }}
+                  />
+                </label>
+                <h2>
+                  <FormattedMessage
+                    id={'listing-create.availabilityHeading'}
+                    defaultMessage={'Add Availability and Pricing'}
+                  />
+                </h2>
                 <Calendar
                   slots={ formData && formData.slots }
                   userType="seller"

@@ -1,138 +1,254 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import pick from 'lodash/pick'
 import get from 'lodash/get'
 
+import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
+
 import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
 
-import IdentityQuery from 'queries/Identity'
-import Reviews from 'components/Reviews'
+import ProfileStrength from 'components/ProfileStrength'
+import Avatar from 'components/Avatar'
+import Wallet from 'components/Wallet'
 
-const Loading = () => <div className="container user-profile">Loading...</div>
+import PhoneAttestation from 'pages/identity/PhoneAttestation'
+import EmailAttestation from 'pages/identity/EmailAttestation'
+import FacebookAttestation from 'pages/identity/FacebookAttestation'
+import TwitterAttestation from 'pages/identity/TwitterAttestation'
+import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
+import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
-class Profile extends Component {
-  render() {
-    const id = this.props.wallet
-    if (this.props.walletLoading) {
-      return <Loading />
+import EditProfile from './_EditModal'
+
+const AttestationComponents = {
+  phone: PhoneAttestation,
+  email: EmailAttestation,
+  facebook: FacebookAttestation,
+  twitter: TwitterAttestation,
+  airbnb: AirbnbAttestation
+}
+
+const ProfileFields = [
+  'firstName',
+  'lastName',
+  'description',
+  'avatar',
+  'facebookVerified',
+  'twitterVerified',
+  'airbnbVerified',
+  'phoneVerified',
+  'emailVerified'
+]
+
+class UserProfile extends Component {
+  constructor(props) {
+    super(props)
+    const profile = get(props, 'identity.profile')
+    this.state = {
+      firstName: '',
+      lastName: '',
+      description: '',
+      ...pick(profile, ProfileFields)
     }
+  }
+
+  componentDidUpdate(prevProps) {
+    const profile = get(this.props, 'identity.profile')
+    if (profile && !prevProps.identity) {
+      this.setState(pick(profile, ProfileFields))
+    }
+  }
+
+  render() {
+    const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
+      if (this.state[`${key}Attestation`])
+        m.push(this.state[`${key}Attestation`])
+      return m
+    }, [])
+
+    const name = []
+    if (this.state.firstName) name.push(this.state.firstName)
+    if (this.state.lastName) name.push(this.state.lastName)
 
     return (
-      <div className="container user-profile">
-        <Query query={IdentityQuery} variables={{ id }}>
-          {({ data, loading, error }) => {
-            if (loading) return <Loading />
-            if (error) return <div>Error</div>
-
-            const profile = get(data, 'web3.account.identity.profile')
-            if (!profile) {
-              return <div className="container user-profile">No Identity</div>
-            }
-
-            return (
-              <>
-                <div className="row">
-                  <div className="col-lg-2 col-md-3">
-                    {profile.avatar ? (
-                      <div
-                        className="main-avatar"
-                        style={{ backgroundImage: `url(${profile.avatar})` }}
-                      />
-                    ) : (
-                      <div className="main-avatar empty" />
-                    )}
-                    <div className="verified-info">
-                      <h5>Verified Info</h5>
-                      {profile.phoneVerified && (
-                        <div>
-                          <div className="attestation phone" />
-                          Phone
-                        </div>
-                      )}
-                      {profile.emailVerified && (
-                        <div>
-                          <div className="attestation email" />
-                          Email
-                        </div>
-                      )}
-                      {profile.facebookVerified && (
-                        <div>
-                          <div className="attestation facebook" />
-                          Facebook
-                        </div>
-                      )}
-                      {profile.twitterVerified && (
-                        <div>
-                          <div className="attestation twitter" />
-                          Twitter
-                        </div>
-                      )}
-                      {profile.googleVerified && (
-                        <div>
-                          <div className="attestation google" />
-                          Google
-                        </div>
-                      )}
-                      {profile.airbnbVerified && (
-                        <div>
-                          <div className="attestation airbnb" />
-                          AirBnb
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="col-lg-10 col-md-9">
-                    <h1 className="mb-0">{profile.fullName}</h1>
-                    <div className="description">{profile.description}</div>
-
-                    <div className="reviews-container">
-                      <Reviews id={id} />
-                    </div>
-                  </div>
+      <div className="container profile-edit">
+        <div className="row">
+          <div className="col-md-8">
+            <div className="profile d-flex">
+              <Avatar avatar={this.state.avatar} size="10rem" />
+              <div className="info">
+                <h1>{name.length ? name.join(' ') : 'Unnamed User'}</h1>
+                <div className="description">
+                  {this.state.description ||
+                    'An Origin user without a description'}
                 </div>
-              </>
-            )
-          }}
-        </Query>
+              </div>
+              <a
+                className="edit"
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  this.setState({ editProfile: true })
+                }}
+              />
+            </div>
+            <h3>Verify yourself on Origin</h3>
+            <div className="gray-box">
+              <label className="mb-3">
+                Please connect your accounts below to strengthen your identity
+                on Origin.
+              </label>
+              <div className="profile-attestations">
+                {this.renderAtt('phone', 'Phone Number')}
+                {this.renderAtt('email', 'Email')}
+                {this.renderAtt('airbnb', 'Airbnb')}
+                {this.renderAtt('facebook', 'Facebook')}
+                {this.renderAtt('twitter', 'Twitter')}
+                {this.renderAtt('google', 'Google', true)}
+              </div>
+            </div>
+
+            <ProfileStrength
+              large={true}
+              published={get(this.props, 'identity.profile.strength', 0)}
+              unpublished={unpublishedProfileStrength(this)}
+            />
+
+            <div className="actions">
+              <DeployIdentity
+                className="btn btn-primary btn-rounded btn-lg"
+                identity={get(this.props, 'identity.id')}
+                profile={pick(this.state, [
+                  'firstName',
+                  'lastName',
+                  'description',
+                  'avatar'
+                ])}
+                attestations={attestations}
+                validate={() => this.validate()}
+                children="Publish Now"
+              />
+            </div>
+          </div>
+          <div className="col-md-4">
+            <Wallet />
+            <div className="gray-box profile-help">
+              <b>Verifying your profile</b> allows other users to know that you
+              are a real person and increases the chances of successful
+              transactions on Origin.
+            </div>
+          </div>
+        </div>
+
+        {!this.state.editProfile ? null : (
+          <EditProfile
+            {...pick(this.state, [
+              'firstName',
+              'lastName',
+              'description',
+              'avatar'
+            ])}
+            onClose={() => this.setState({ editProfile: false })}
+            onChange={newState => this.setState(newState)}
+          />
+        )}
       </div>
     )
   }
+
+  renderAtt(type, text, soon) {
+    const { wallet } = this.props
+    const profile = get(this.props, 'identity.profile', {})
+
+    let status = ''
+    if (profile[`${type}Verified`]) {
+      status = ' published'
+    } else if (this.state[`${type}Attestation`]) {
+      status = ' provisional'
+    }
+    if (soon) {
+      status = ' soon'
+    } else {
+      status += ' interactive'
+    }
+
+    let AttestationComponent = AttestationComponents[type]
+    if (AttestationComponent) {
+      AttestationComponent = (
+        <AttestationComponent
+          wallet={wallet}
+          open={this.state[type]}
+          onClose={() => this.setState({ [type]: false })}
+          onComplete={att => this.setState({ [`${type}Attestation`]: att })}
+        />
+      )
+    }
+
+    return (
+      <>
+        <div
+          className={`profile-attestation ${type}${status}`}
+          onClick={() => this.setState({ [type]: true })}
+        >
+          <i />
+          {text}
+        </div>
+        {AttestationComponent}
+      </>
+    )
+  }
+
+  validate() {
+    const newState = {}
+
+    if (!this.state.firstName) {
+      newState.firstNameError = 'First Name is required'
+    }
+
+    newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
+
+    if (!newState.valid) {
+      window.scrollTo(0, 0)
+    }
+    this.setState(newState)
+    return newState.valid
+  }
 }
 
-export default withWallet(Profile)
+export default withWallet(withIdentity(UserProfile))
 
 require('react-styl')(`
-  .user-profile
-    padding-top: 3rem
-    .main-avatar
-      width: 100%
-      padding-top: 100%
-      background-size: contain;
-      border-radius: 1rem;
-      background-repeat: no-repeat
-      background-position: center
-      &.empty
-        background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
-        background-size: 63%
-    .verified-info
-      background-color: var(--pale-grey)
+  .profile-edit
+    margin-top: 3rem
+    .gray-box
+      border: 1px solid var(--light)
+      border-radius: 5px
       padding: 1rem
-      margin-top: 2rem
+      margin-bottom: 2rem
+    .avatar
+      margin-right: 2rem
       border-radius: 1rem
-      font-size: 14px
-      h5
-        font-size: 14px
-        margin-bottom: 0.75rem
-      > div
-        display: flex
-        align-items: center
-        margin-bottom: 0.5rem
-        &:last-child
-          margin-bottom: 0
-        .attestation
-          margin-right: 0.5rem
-          width: 1.5rem
-          height: 1.5rem
-    .reviews-container
-      margin-top: 2rem
+    .actions
+      text-align: center
+    .profile
+      position: relative
+      h1
+        margin: 0
+      margin-bottom: 2rem
+      a.edit
+        background: url(images/edit-icon.svg) no-repeat center
+        background-size: cover
+        width: 2rem
+        height: 2rem
+        display: block
+        position: absolute
+        top: 0
+        right: 0
+    .profile-help
+      font-size: 14px;
+      background: url(images/identity/identity.svg) no-repeat center 1.5rem;
+      background-size: 5rem;
+      padding-top: 8rem;
+
 
 `)

@@ -1,25 +1,21 @@
 import contracts from '../../contracts'
 import get from 'lodash/get'
 
-async function attestationsVerifyPhoneCode(
-  _,
-  { identity, prefix, phone, code }
-) {
+async function verifyEmailCode(_, { identity, email, code }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false }
   }
-  const url = `${bridgeServer}/api/attestations/phone/verify`
+  const url = `${bridgeServer}/api/attestations/email/verify`
 
   const response = await fetch(url, {
     headers: { 'content-type': 'application/json' },
     credentials: 'include',
     method: 'POST',
     body: JSON.stringify({
-      country_calling_code: prefix,
       code,
       identity,
-      phone
+      email
     })
   })
 
@@ -33,9 +29,9 @@ async function attestationsVerifyPhoneCode(
   return {
     success: true,
     claimType: data['claim-type'],
-    data: data.data,
+    data: contracts.web3.utils.soliditySha3(data.data),
     signature: data.signature
   }
 }
 
-export default attestationsVerifyPhoneCode
+export default verifyEmailCode

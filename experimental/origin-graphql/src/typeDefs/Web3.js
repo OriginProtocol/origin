@@ -31,6 +31,9 @@ export default `
 
   type Config {
     discovery: String
+    facebookAuthUrl: String
+    ipfsRPC: String
+    ipfsGateway: String
   }
 
   type Mutation {

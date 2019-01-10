@@ -6,28 +6,30 @@ import Step2 from './Step2'
 import Step3 from './Step3'
 import Review from './Review'
 
+import Store from 'utils/store'
+const store = Store('sessionStorage')
+
 class CreateListing extends Component {
-  state = {
-    listing: {
-      title: 'Cool Bike',
-      description: 'A very cool bike',
-      category: 'forSale',
-      subCategory: 'schema.bicycles',
-      quantity: '1',
-      location: '',
-      price: '0.5',
-      boost: '5',
-      media: []
+  constructor() {
+    super()
+    this.state = {
+      listing: store.get('create-listing', {
+        title: '',
+        description: '',
+        category: '',
+        subCategory: '',
+        quantity: '1',
+        location: '',
+        price: '',
+        boost: '0',
+        media: []
+      })
     }
-    // listing: {
-    //   title: '',
-    //   description: '',
-    //   category: '',
-    //   subCategory: '',
-    //   quantity: '1',
-    //   price: '',
-    //   boost: '0'
-    // }
+  }
+
+  setListing(listing) {
+    store.set('create-listing', listing)
+    this.setState({ listing })
   }
 
   render() {
@@ -39,7 +41,7 @@ class CreateListing extends Component {
             render={() => (
               <Step2
                 listing={this.state.listing}
-                onChange={listing => this.setState({ listing })}
+                onChange={listing => this.setListing(listing)}
               />
             )}
           />
@@ -48,7 +50,7 @@ class CreateListing extends Component {
             render={() => (
               <Step3
                 listing={this.state.listing}
-                onChange={listing => this.setState({ listing })}
+                onChange={listing => this.setListing(listing)}
               />
             )}
           />
@@ -60,7 +62,7 @@ class CreateListing extends Component {
             render={() => (
               <Step1
                 listing={this.state.listing}
-                onChange={listing => this.setState({ listing })}
+                onChange={listing => this.setListing(listing)}
               />
             )}
           />
@@ -75,6 +77,11 @@ export default CreateListing
 require('react-styl')(`
   .create-listing
     padding-top: 3rem
+    .gray-box
+      border-radius: 5px
+      padding: 2rem
+      background-color: var(--pale-grey-eight)
+
     .step
       font-family: Lato
       font-size: 14px

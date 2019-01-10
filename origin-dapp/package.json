@@ -36,7 +36,7 @@
     "jquery": "^3.3.1",
     "locale-code": "^2.0.1",
     "mini-css-extract-plugin": "^0.4.5",
-    "moment": "^2.22.2",
+    "moment-timezone": "^0.5.23",
     "myetherwallet-blockies": "^0.1.1",
     "orbit-db": "^0.19.9",
     "origin": "^0.8.6",

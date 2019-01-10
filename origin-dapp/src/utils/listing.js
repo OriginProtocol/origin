@@ -210,7 +210,9 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     offers,
     display,
     seller,
-    unitsRemaining
+    unitsRemaining,
+    isFractional,
+    totalBoostValue
   } = listing
 
   /* Find the most relevant offer where user is a seller. If there is a pending offer choose
@@ -262,8 +264,9 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
   const isPending = isMultiUnit ? false : offerWithStatusExists('pending')
   const isSold = isMultiUnit ? multiUnitListingIsSold() : offerWithStatusExists('sold')
   const isAvailable = isMultiUnit ? unitsRemaining > 0 : (!isPending && !isSold && !isWithdrawn)
-  const showPendingBadge = isPending && !isWithdrawn
-  const showSoldBadge = isSold || isWithdrawn
+  const showPendingBadge = isPending && !isWithdrawn && !isFractional
+  const showSoldBadge = (isSold || isWithdrawn) && !isFractional
+  const showRemainingBoost = isMultiUnit && totalBoostValue > 0
 
   /* When ENABLE_PERFORMANCE_MODE env var is set to false even the search result page won't
    * show listings with the Featured badge, because listings are loaded from web3. We could
@@ -287,7 +290,8 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     userIsBuyerOffers,
     userIsBuyerOffer: userIsBuyerOffers.length > 0 ? userIsBuyerOffers[0] : undefined,
     userIsBuyer: userIsBuyerOffers.length > 0,
-    userIsSeller: usersWalletAddress !== null && formattedAddress(usersWalletAddress) === formattedAddress(seller)
+    userIsSeller: usersWalletAddress !== null && formattedAddress(usersWalletAddress) === formattedAddress(seller),
+    showRemainingBoost
   }
 }
 
