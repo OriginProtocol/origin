@@ -30,8 +30,8 @@ import VerifyEmail from './VerifyEmail'
 import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
 import VerifyAirbnb from './VerifyAirbnb'
-import ConfirmReset from './ConfirmReset'
 import ConfirmPublish from './ConfirmPublish'
+import ConfirmReset from './ConfirmReset'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
 
@@ -86,8 +86,8 @@ class Profile extends Component {
         unload: false,
         imageCropper: false,
         // If it's an old identity version, show the identity reset modal.
-        // Note that the profile may not have been fetched yet.
-        // See
+        // Note that the profile may not have been fetched yet. In such case,
+        // modal may get enabled as part of the logic in componentDidUpdate.
         reset: this.props.profile.user.version === oldIdentityVersion
       },
       // percentage widths for two progress bars
@@ -638,7 +638,7 @@ class Profile extends Component {
           changes={changes}
           handleToggle={this.handleToggle}
           onConfirm={() => {
-            this.setState({modalsOpen: { ...modalsOpen, reset: false }})
+            this.setState({ modalsOpen: { ...modalsOpen, reset: false } })
             this.props.resetIdentity()
           }}
           mobileDevice={mobileDevice}
