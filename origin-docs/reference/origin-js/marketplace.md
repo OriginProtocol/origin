@@ -11,7 +11,7 @@ The marketplace manages listings from creation to sale as well as disputes betwe
 
 ## .getListings
 
-This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
+This will return information about the listings for a given user, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing's schema.
 
 A listing is a published action from a seller to sell something.
 It is active until there are no more units available or its expiration date is reached.
@@ -165,7 +165,6 @@ Each Notification corresponds to the status of an Offer. Notifications are curre
 
 - OfferCreated
 - OfferAccepted
-- OfferFinalized
 - OfferWithdrawn
 - OfferDisputed
 - OfferRuling
@@ -187,7 +186,12 @@ Notifications do not exist on the blockchain nor are they read from a database. 
   "type": "buyer_offer_accepted",
   "status": "unread",
   "event": {...},
-  "resources": { listingId: "1-000-832", offerId: "183", listing: { title: "Whirlpool Microwave" }, offer: {...} }
+  "resources": {
+    listingId: "1-000-832",
+    offerId: "183",
+    listing: { title: "Whirlpool Microwave" },
+    offer: {...}
+  }
 ]}
 ```
 
@@ -216,7 +220,7 @@ const status = "read"
 
 ## .getOffer
 
-This will return a specific offer sent by a buyer for a listing offer.
+This will return a specific offer sent by a buyer for a Listing.
 
 An Offer is a single transaction between a buyer and seller. A single Listing with multiple items for sale could have many Offers related to it, one for each buyer.
 
@@ -256,7 +260,7 @@ const offerId = "2403-234"
 
 ## .getOffers
 
-This will return all offers related to a specific listing.
+This will return all offers related to a specific Listing.
 
 
 > Example: getOffers
