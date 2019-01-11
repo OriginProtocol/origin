@@ -39,6 +39,8 @@ const index = {
         'price.currency': { type: 'text' },
         'commission.amount': { type: 'double' },
         'commission.currency': { type: 'text' },
+        'boostCommission.amount': { type: 'double' },
+        'boostCommission.currency': { type: 'text' },
         'securityDeposit.amount': { type: 'double' },
         'securityDeposit.currency': { type: 'text' },
         unitsTotal: { type: 'integer' },

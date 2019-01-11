@@ -52,20 +52,18 @@ class Listing {
    * @returns The listingId indexed.
    */
   static async index (listingId, buyerAddress, ipfsHash, listing) {
-    // make a copy of the ipfs data
-    const ipfsListing = JSON.parse(JSON.stringify(listing.ipfs.data))
-    ipfsListing.ipfs = listing.ipfs
-    ipfsListing.type = ipfsListing.listingType
-    const originListing = OriginListing.Listing.init(listingId, listing, ipfsListing)
-
-    // boost stays unchanged for the normal listings, but can be used up in multi-unit listings
-    originListing.commission = originListing.boostCommission
+    /* When serialising to JSON getters of an object to not get serialized and indexed. For that reason
+     * we call all the getters and store them before indexing.
+     */
+    const listingToIndex = JSON.parse(JSON.stringify(listing))
+    const gettersToIndex = ['unitsPending', 'unitsSold', 'unitsRemaining', 'commissionRemaining', 'boostCommission']
+    gettersToIndex.forEach(getter => listingToIndex[getter] = listing[getter])
 
     await client.index({
       index: LISTINGS_INDEX,
       id: listingId,
       type: LISTINGS_TYPE,
-      body: originListing
+      body: listingToIndex
     })
     return listingId
   }
@@ -196,7 +194,7 @@ class Listing {
       function_score: {
         query: esQuery,
         field_value_factor: {
-          field: 'commission.amount',
+          field: 'boostCommission.amount',
           factor: 0.05 // the same as delimited by 20
         },
         boost_mode: 'sum'
