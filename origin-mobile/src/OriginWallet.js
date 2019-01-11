@@ -1,4 +1,4 @@
-import {PushNotificationIOS,Linking, Clipboard} from 'react-native'
+import {AppState, PushNotificationIOS,Linking, Clipboard} from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
@@ -300,7 +300,7 @@ class OriginWallet {
 
   async doLink(code, current_rpc, current_accounts) {
     const linkInfo = await this.getLinkInfo(code)
-    if(!linkInfo || linkInfo.linked)
+    if(!linkInfo || !Object.keys(linkInfo).length || linkInfo.linked)
     {
       console.log(code, " already linked.")
       return
@@ -916,6 +916,7 @@ class OriginWallet {
 
   checkIncomingUrl(url) {
     let key = this.checkStripOriginUrl(url)
+    console.log("incoming url:", url, " key is:", key)
     if (key)
     {
       // this.promptForLink(key)
@@ -931,8 +932,19 @@ class OriginWallet {
     }
   }
 
-  getLinkInfo(linkCode){
-    return this.doFetch(this.API_WALLET_LINK_INFO + linkCode, 'GET')
+  async getLinkInfo(linkCode){
+    let tries = 3
+    while (tries > 0)
+    {
+      try {
+        return await this.doFetch(this.API_WALLET_LINK_INFO + linkCode, 'GET')
+      } catch (error) {
+        console.log("link info error:", error)
+      }
+      tries -= 1
+      // wait for half a second
+      await timeout(500)
+    }
   }
 
   promptForLink(linkCode) {
