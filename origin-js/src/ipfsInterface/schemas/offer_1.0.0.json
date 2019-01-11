@@ -31,7 +31,15 @@
       ]
     },
     "fractionalOffer": {
-      "$ref": "#/definitions/jCal"
+      "type": "object",
+      "properties": {
+        "timeSlots": {
+          "$ref": "#/definitions/jCal"
+        }
+      },
+      "required": [
+        "timeSlots"
+      ]
     },
     "jCal":   {
       "description": "Validates an Origin Protocol jCal data set for a listing or offer",
@@ -93,7 +101,7 @@
       ],
       "additionalItems": {
         "type": "array",
-        "minItems": 9,
+        "minItems": 6,
         "items": [
           {
             "type": "string",
@@ -185,27 +193,6 @@
             "items": [
               {
                 "type": "string",
-                "enum": ["rrule"]
-              },
-              {
-                "type": "object"
-              },
-              {
-                "type": "string",
-                "enum": ["text"]
-              },
-              {
-                "type": "string"
-              }
-            ]
-          },
-          {
-            "type": "array",
-            "minItems": 4,
-            "maxItems": 4,
-            "items": [
-              {
-                "type": "string",
                 "enum": ["x-currency"]
               },
               {
@@ -238,48 +225,6 @@
               },
               {
                 "type": "string"
-              }
-            ]
-          },
-          {
-            "type": "array",
-            "minItems": 4,
-            "maxItems": 4,
-            "items": [
-              {
-                "type": "string",
-                "enum": ["x-is-available"]
-              },
-              {
-                "type": "object"
-              },
-              {
-                "type": "string",
-                "enum": ["boolean"]
-              },
-              {
-                "type": "boolean"
-              }
-            ]
-          },
-          {
-            "type": "array",
-            "minItems": 4,
-            "maxItems": 4,
-            "items": [
-              {
-                "type": "string",
-                "enum": ["x-priority"]
-              },
-              {
-                "type": "object"
-              },
-              {
-                "type": "string",
-                "enum": ["integer"]
-              },
-              {
-                "type": "integer"
               }
             ]
           }

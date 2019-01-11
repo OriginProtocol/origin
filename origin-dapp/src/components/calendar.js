@@ -492,7 +492,7 @@ class Calendar extends Component {
     }
 
     const cleanEvents = getCleanEvents(this.state.events)
-    const jCalEvents = slotsToJCal(cleanEvents, this.props.listingId)
+    const jCalEvents = slotsToJCal(cleanEvents, 'listing')
 
     this.props.onComplete && this.props.onComplete(jCalEvents)
   }

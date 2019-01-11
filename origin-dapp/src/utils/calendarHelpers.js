@@ -326,7 +326,7 @@ export function getRecurringEvents(date, existingEvents, viewType) {
 
 // When buyer is ready to reserve slots, prepares data to be saved to IPFS
 export function getSlotsToReserve(buyerSelectedSlotData) {
-  return  buyerSelectedSlotData &&
+  const slots = buyerSelectedSlotData &&
           buyerSelectedSlotData.map((slot) => {
             const toReturn = {
               startDate: slot.start,
@@ -340,7 +340,9 @@ export function getSlotsToReserve(buyerSelectedSlotData) {
             }
 
             return toReturn
-          })
+          }) || []
+
+  return slotsToJCal(slots, 'offer')
 }
 
 // Removes cloned events and prepares data for saving to IPFS
@@ -414,7 +416,7 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
   return toReturn
 }
 
-export const slotsToJCal = (events) => {
+export const slotsToJCal = (events, listingOrOffer) => {
   const jCal = [
     'vcalendar',
       [
@@ -424,41 +426,56 @@ export const slotsToJCal = (events) => {
   ]
 
   events && events.forEach((event) => {
-    jCal.push(
-      [
-        'vevent',
-        ['uid', {}, 'text', uuid()],
-        ['dtstart',  { 'tzid': '/US/Eastern' }, 'date-time', event.startDate],
-        ['dtend',  { 'tzid': '/US/Eastern' }, 'date-time', event.endDate],
-        ['rrule', {}, 'text', (event.rrule || '')],
-        ['x-currency', {}, 'text', 'ETH'], 
-        ['x-price', {}, 'text', event.price.toString()],
-        ['x-is-available', {}, 'boolean', event.isAvailable],
-        ['x-priority', {}, 'integer', event.rrule ? 1 : 2], 
-      ]
-    )
+    const vEvent = [
+      'vevent',
+      ['uid', {}, 'text', uuid()],
+      ['dtstart',  { 'tzid': '/US/Eastern' }, 'date-time', event.startDate.toISOString()],
+      ['dtend',  { 'tzid': '/US/Eastern' }, 'date-time', event.endDate.toISOString()],
+      ['x-currency', {}, 'text', 'ETH'], 
+      ['x-price', {}, 'text', event.price.toString()]
+    ]
+
+    if (listingOrOffer === 'listing') {
+      vEvent.splice(4, 0, ['rrule', {}, 'text', (event.rrule || '')])
+      vEvent.push.apply(
+        vEvent,
+        [
+          ['x-is-available', {}, 'boolean', event.isAvailable],
+          ['x-priority', {}, 'integer', event.rrule ? 1 : 2]
+        ]
+      )
+    }
+
+    jCal.push(vEvent)
   })
 
   return jCal
 }
 
 export const jCalToCalendarSlots = (jCal) => {
-  const vEvents = jCal.filter((item) => item[0] === 'vevent')
-  return vEvents.map((vEvent) => {
+  const vEvents = jCal.filter(item => item[0] === 'vevent')
+  return vEvents.map(vEvent => {
     return {
-      uid: vEvent.find((item) => item[0] === 'uid')[3],
-      startDate: vEvent.find((item) => item[0] === 'dtstart')[3],
-      endDate: vEvent.find((item) => item[0] === 'dtend')[3],
-      timeZone: vEvent.find((item) => item[0] === 'dtstart')[1].tzid,
-      rrule: vEvent.find((item) => item[0] === 'rrule')[3],
+      uid: vEvent.find(item => item[0] === 'uid')[3],
+      startDate: vEvent.find(item => item[0] === 'dtstart')[3],
+      endDate: vEvent.find(item => item[0] === 'dtend')[3],
+      timeZone: vEvent.find(item => item[0] === 'dtstart')[1].tzid,
+      rrule: vEvent.find(item => item[0] === 'rrule')[3],
       price: {
-        amount: vEvent.find((item) => item[0] === 'x-price')[3],
-        currency: vEvent.find((item) => item[0] === 'x-currency')[3]
+        amount: vEvent.find(item => item[0] === 'x-price')[3],
+        currency: vEvent.find(item => item[0] === 'x-currency')[3]
       },
-      isAvailable: vEvent.find((item) => item[0] === 'x-is-available')[3],
-      priority: vEvent.find((item) => item[0] === 'x-priority')[3]
+      isAvailable: vEvent.find(item => item[0] === 'x-is-available')[3],
+      priority: vEvent.find(item => item[0] === 'x-priority')[3]
     }
   })
+}
+
+export const getTotalPriceFromJCal = (jCal) => {
+  const vEvents = jCal.filter(item => item[0] === 'vevent')
+  const prices = vEvents.map(event => event.find(item => item[0] === 'x-price')[3])
+
+  return prices.reduce((totalPrice, nextPrice) => totalPrice + parseFloat(nextPrice), 0).toString()
 }
 
 export const getStartEndDatesFromSlots = (slots, slotLengthUnit) => {
