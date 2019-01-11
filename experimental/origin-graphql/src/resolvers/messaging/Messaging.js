@@ -1,4 +1,4 @@
-import contracts from '../contracts'
+import contracts from '../../contracts'
 
 export default {
   conversations: () =>
@@ -7,6 +7,14 @@ export default {
       resolve(
         Object.keys(convos).map(id => ({ id, timestamp: String(convos[id]) }))
       )
+    }),
+  conversation: (_, args) =>
+    new Promise(async resolve => {
+      const convos = await contracts.messaging.getMyConvs()
+      if (!convos[args.id]) {
+        resolve(null)
+      }
+      resolve({ id: args.id, timestamp: String(convos[args.id]) })
     }),
   enabled: () => {
     return contracts.messaging.pub_sig &&

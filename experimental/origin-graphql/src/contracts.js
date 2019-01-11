@@ -92,8 +92,8 @@ const Configs = {
     automine: 2000,
     messaging: {
       ipfsSwarm:
-        '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
-      messagingNamespace: 'origin:dev'
+        '/ip4/127.0.0.1/tcp/9012/ws/ipfs/Qma1eKbWcLy9EVYv4zVJZSAtXT6TsKXYTQ2JKtU5T7APne',
+      messagingNamespace: 'dev'
     }
   }
 }

@@ -7,7 +7,7 @@ import config from './contracts'
 
 const MessagingStateQuery = gql`
   query GetMessagingState {
-    messaging(id: "defaultAccount") {
+    messaging(id: "currentAccount") {
       id
       enabled
       synced
@@ -87,24 +87,23 @@ export default function messagingSync(client) {
     console.log('Messaging Signed Sig')
     refresh()
   })
+
   // detect existing messaging account
   // msg.events.on('pending_conv', conv => {
   //   console.log('Messaging pending_conv', conv)
   // })
 
   // detect new decrypted messages
-  // msg.events.on('msg', obj => {
-  //   console.log('Messaging msg', obj)
-  //   // if (obj.decryption) {
-  //   //   const { roomId, keys } = obj.decryption
-  //   //
-  //   //   origin.messaging.initRoom(roomId, keys)
-  //   // }
-  //   //
-  //   // this.props.addMessage(obj)
-  //   //
-  //   // this.debouncedFetchUser(obj.senderAddress)
-  // })
+  msg.events.on('msg', obj => {
+    if (obj.decryption) {
+      const { roomId, keys } = obj.decryption
+      origin.messaging.initRoom(roomId, keys)
+    }
+    // console.log('New msg', obj)
+    // this.props.addMessage(obj)
+    //
+    // this.debouncedFetchUser(obj.senderAddress)
+  })
 
   // To Do: handle incoming messages when no Origin Messaging Private Key is available
   // msg.events.on('emsg', obj => {

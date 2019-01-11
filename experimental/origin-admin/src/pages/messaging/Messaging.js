@@ -39,7 +39,13 @@ const SendMessageMutation = gql`
 `
 
 class Messaging extends Component {
-  state = { selected: '', conversation: '', message: '', newConv: '' }
+  state = {
+    selected: '',
+    conversation: '',
+    message: '',
+    newConv: '',
+    newMessage: ''
+  }
   render() {
     return (
       <div className="p-3">
@@ -76,6 +82,7 @@ class Messaging extends Component {
         query={ConversationsQuery}
         variables={{ id: this.state.selected }}
         fetchPolicy="network-only"
+        pollInterval={2000}
       >
         {({ data, loading, error, refetch }) => {
           if (loading || error) {
@@ -127,9 +134,15 @@ class Messaging extends Component {
                   </label>
                 </div>
               ))}
+              {this.renderConversation(data.messaging.conversations)}
+              <hr />
               {!accounts.length ? null : (
                 <div>
-                  <Mutation mutation={SendMessageMutation}>
+                  <h4>Start new conversation:</h4>
+                  <Mutation
+                    mutation={SendMessageMutation}
+                    refetchQueries={['Conversations']}
+                  >
                     {sendMessage => (
                       <ControlGroup className="mt-3">
                         <HTMLSelect
@@ -145,17 +158,17 @@ class Messaging extends Component {
                         <InputGroup
                           placeholder="Message"
                           onChange={e =>
-                            this.setState({ message: e.currentTarget.value })
+                            this.setState({ newMessage: e.currentTarget.value })
                           }
-                          value={this.state.message}
+                          value={this.state.newMessage}
                         />
                         <Button
                           icon="arrow-up"
                           onClick={() => {
-                            this.setState({ message: '' })
+                            this.setState({ newMessage: '' })
                             sendMessage({
                               variables: {
-                                content: this.state.message,
+                                content: this.state.newMessage,
                                 to: this.state.newConv || firstAccount
                               }
                             })
@@ -166,7 +179,6 @@ class Messaging extends Component {
                   </Mutation>
                 </div>
               )}
-              {this.renderConversation(data.messaging.conversations)}
             </div>
           )
         }}

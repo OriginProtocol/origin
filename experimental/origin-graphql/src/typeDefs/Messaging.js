@@ -16,6 +16,7 @@ export default `
     pubKey: String
     pubSig: String
     conversations: [Conversation]
+    conversation(id: String!): Conversation
   }
 
   type Conversation {

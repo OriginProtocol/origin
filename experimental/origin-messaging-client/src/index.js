@@ -8,9 +8,9 @@ export default function Messaging({ ipfsSwarm, messagingNamespace, web3 }) {
   const ipfsCreator = repo_key => {
     const ipfsOptions = {
       repo: 'ipfs' + repo_key,
-      // preload: {
-      //   enabled: false
-      // },
+      preload: {
+        enabled: false
+      },
       EXPERIMENTAL: {
         pubsub: true,
         relay: {
@@ -32,9 +32,7 @@ export default function Messaging({ ipfsSwarm, messagingNamespace, web3 }) {
     const ipfs = new IPFS(ipfsOptions)
 
     if (ipfsSwarm) {
-      ipfs.on('start', async () => {
-        await ipfs.swarm.connect(ipfsSwarm)
-      })
+      ipfs.on('start', async () => await ipfs.swarm.connect(ipfsSwarm))
       ipfs.__reconnect_peers = {}
       ipfs.__reconnect_peers[ipfsSwarm.split('/').pop()] = ipfsSwarm
     }
