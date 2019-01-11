@@ -2,22 +2,7 @@ import moment from 'moment-timezone'
 import uuid from 'utils/uuid'
 
 export function generateCalendarSlots(jCal) {
-  const vEvents = jCal.filter((item) => item[0] === 'vevent')
-  const events = vEvents.map((vEvent) => {
-    return {
-      uid: vEvent.find((item) => item[0] === 'uid')[3],
-      startDate: vEvent.find((item) => item[0] === 'dtstart')[3],
-      endDate: vEvent.find((item) => item[0] === 'dtend')[3],
-      timeZone: vEvent.find((item) => item[0] === 'dtstart')[1].tzid,
-      rrule: vEvent.find((item) => item[0] === 'rrule')[3],
-      price: {
-        amount: vEvent.find((item) => item[0] === 'x-price')[3],
-        currency: vEvent.find((item) => item[0] === 'x-currency')[3]
-      },
-      isAvailable: vEvent.find((item) => item[0] === 'x-is-available')[3],
-      priority: vEvent.find((item) => item[0] === 'x-priority')[3]
-    }
-  })
+  const events = jCalToCalendarSlots(jCal)
 
   for (let i = 0, eventsLen = events.length; i < eventsLen; i++) {
     const event = events[i]
@@ -455,6 +440,25 @@ export const slotsToJCal = (events) => {
   })
 
   return jCal
+}
+
+export const jCalToCalendarSlots = (jCal) => {
+  const vEvents = jCal.filter((item) => item[0] === 'vevent')
+  return vEvents.map((vEvent) => {
+    return {
+      uid: vEvent.find((item) => item[0] === 'uid')[3],
+      startDate: vEvent.find((item) => item[0] === 'dtstart')[3],
+      endDate: vEvent.find((item) => item[0] === 'dtend')[3],
+      timeZone: vEvent.find((item) => item[0] === 'dtstart')[1].tzid,
+      rrule: vEvent.find((item) => item[0] === 'rrule')[3],
+      price: {
+        amount: vEvent.find((item) => item[0] === 'x-price')[3],
+        currency: vEvent.find((item) => item[0] === 'x-currency')[3]
+      },
+      isAvailable: vEvent.find((item) => item[0] === 'x-is-available')[3],
+      priority: vEvent.find((item) => item[0] === 'x-priority')[3]
+    }
+  })
 }
 
 export const getStartEndDatesFromSlots = (slots, slotLengthUnit) => {
