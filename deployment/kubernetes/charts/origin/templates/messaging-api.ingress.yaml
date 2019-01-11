@@ -1,0 +1,52 @@
+# Ingress for the express server exposed by messaging
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "messaging-api.fullname" . }}
+  labels:
+    app: {{ template "messaging-api.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: origin-messaging
+  annotations:
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    {{- if ne .Release.Namespace "prod" }}
+    ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Access-Control-Allow-Origin: $http_origin";
+      more_set_headers "Access-Control-Allow-Credentials: true";
+
+      if ($request_method = 'OPTIONS') {
+          add_header 'Access-Control-Allow-Origin' "$http_origin";
+          add_header 'Access-Control-Allow-Credentials' 'true';
+          add_header 'Access-Control-Allow-Methods' 'GET,POST,PUT,DELETE,OPTIONS';
+          add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
+          add_header 'Access-Control-Max-Age' 1728000;
+          add_header 'Content-Length' 0;
+          add_header 'Content-Type' 'text/plain charset=UTF-8';
+          return 204;
+      }
+    {{- else }}
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://{{ template "dapp.host" . }}"
+    {{- end }}
+spec:
+  tls:
+    - secretName: {{ template "messaging-api.host" . }}
+      hosts:
+        - {{ template "messaging-api.host" . }}
+  rules:
+    - host: {{ template "messaging-api.host" . }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ template "messaging.fullname" . }}
+              servicePort: 6647

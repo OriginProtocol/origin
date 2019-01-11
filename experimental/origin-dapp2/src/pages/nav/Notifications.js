@@ -6,6 +6,7 @@ import NotificationsQuery from 'queries/Notifications'
 import NotificationsSubscription from 'queries/NotificationsSubscription'
 
 import Dropdown from 'components/Dropdown'
+import Avatar from 'components/Avatar'
 
 function subscribeToNewNotifications(subscribeToMore) {
   subscribeToMore({
@@ -64,7 +65,7 @@ class NotificationsDropdown extends Component {
       this.props.onOpen()
     }
   }
-  
+
   render() {
     const { data, loading, error, open, onOpen, onClose } = this.props
 
@@ -110,7 +111,7 @@ const NotificationsContent = ({ totalCount, nodes }) => {
       </div>
       {nodes.map(node => (
         <div key={node.id} className="notification">
-          <div className="avatar" />
+          <Avatar size="2.5rem" />
           <div className="detail">
             <div className="title">
               {node.title}
@@ -153,12 +154,7 @@ require('react-styl')(`
       align-items: center
       border-bottom: 1px solid var(--light)
       .avatar
-        background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
-        background-size: 1.5rem;
-        width: 2.5rem;
-        height: 2.5rem;
         margin-right: 1rem
-        border-radius: 0.5rem
       .detail
         flex: 1
         .title

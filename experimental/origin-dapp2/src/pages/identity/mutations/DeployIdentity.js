@@ -90,7 +90,6 @@ class DeployIdentity extends Component {
         event={update ? 'ClaimAdded' : 'NewUser'}
       >
         {({ client }) => {
-          // console.log(event)
           return (
             <div className="make-offer-modal">
               <div className="success-icon" />

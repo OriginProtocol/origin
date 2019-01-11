@@ -8,9 +8,10 @@ import origin, {providerUrl, web3} from './../services/origin'
 import {sha3_224} from 'js-sha3'
 import apn from 'apn'
 
-
-const MESSAGING_URL = process.env.MESSAGING_URL
-const SELLING_URL = process.env.SELLING_URL
+const DAPP_URL = process.env.DAPP_URL
+const MESSAGING_URL = `${DAPP_URL}/#/messages?no-nav=true&skip-onboarding=true&wallet-container=`
+const PROFILE_URL = `${DAPP_URL}/#/profile`
+const SELLING_URL = `${DAPP_URL}/#/selling`
 const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
 
@@ -242,9 +243,16 @@ class Linker {
   }
 
   getServerInfo() {
-    return {providerUrl:providerUrl, contractAddresses:origin.contractService.getContractAddresses(),
-    ipfsGateway:origin.ipfsService.gateway, ipfsApi:origin.ipfsService.api, messagingUrl:MESSAGING_URL,
-    sellingUrl:SELLING_URL}
+    return {
+      providerUrl:providerUrl,
+      contractAddresses:origin.contractService.getContractAddresses(),
+      ipfsGateway:origin.ipfsService.gateway,
+      ipfsApi:origin.ipfsService.api,
+      messagingUrl:MESSAGING_URL,
+      profileUrl:PROFILE_URL,
+      dappUrl:DAPP_URL,
+      sellingUrl:SELLING_URL
+    }
   }
 
   async getMetaFromCall({call, net_id, params:{txn_object}}){
@@ -254,6 +262,7 @@ class Linker {
   }
 
   getMessageFromMeta(meta, account) {
+    console.log("meta is:", meta)
     if (meta.subMeta)
     {
       meta = meta.subMeta
@@ -284,7 +293,14 @@ class Linker {
     }
     else
     {
-      return `Pending call to ${meta.contract}.${meta.method}`
+      if (meta.contract && meta.method)
+      {
+        return `Pending call to ${meta.contract}.${meta.method}`
+      }
+      else
+      {
+        return `There is a pending call for your approval`
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 
-const ProfileStrength = ({ published = 0, unpublished = 0 }) => (
-  <div className="profile-strength">
+const ProfileStrength = ({ published = 0, unpublished = 0, large }) => (
+  <div className={`profile-strength${large ? ' large' : ''}`}>
     <div className="title">
       Profile Strength
       <div className="pct">{`${published + unpublished}%`}</div>
@@ -25,6 +25,8 @@ require('react-styl')(`
   .profile-strength
     font-size: 18px
     margin-bottom: 2.5rem
+    &.large
+      font-size: 24px
     .title
       display: flex
       justify-content: space-between
