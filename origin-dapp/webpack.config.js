@@ -36,6 +36,7 @@ const env = {
   IPFS_SWARM: 'None',
   MESSAGING_ACCOUNT: null,
   MESSAGING_NAMESPACE: null,
+  MESSAGING_URL: null,
   MAINNET_DAPP_BASEURL: 'https://dapp.originprotocol.com',
   NOTIFICATIONS_KEY: null,
   NOTIFICATIONS_URL: 'https://notifications.originprotocol.com',

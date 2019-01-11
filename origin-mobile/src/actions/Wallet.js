@@ -46,7 +46,7 @@ export function getBalance() {
         console.log("error getting balance. ", error)
       }
       try {
-        const ogns = (await origin.token.balanceOf(account)) / 10 ** origin.token.decimals
+        const ogns = await origin.token.balanceOf(account)
         dispatch({
           type: WalletConstants.OGN_SUCCESS,
           ogns,

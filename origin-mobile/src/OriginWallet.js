@@ -454,7 +454,7 @@ class OriginWallet {
       const meta = await this.extractMetaFromCall(transaction.call) || {}
       const cost = this.extractTransactionCost(transaction.call)
       const gas_cost = this.extractTransactionGasCost(transaction.call)
-      const ogn_cost = meta && meta.originTokenValue
+      const ogn_cost = this.extractOgnCost(meta)
       const listing = this.extractListing(meta)
       const to = this.extractTo(transaction.call)
       const transaction_type = this.extractTransactionActionType(meta)
@@ -474,6 +474,11 @@ class OriginWallet {
     }
     //this is the bare event
     return event_data
+  }
+
+  extractOgnCost(meta)
+  {
+    return (meta && meta.originTokenValue && web3.utils.toBN(meta.originTokenValue)) || web3.utils.toBN("0")
   }
 
   async extractMetaFromCall({net_id, params:{txn_object}}) {
@@ -519,12 +524,12 @@ class OriginWallet {
 
   extractTransactionCost({params:{txn_object}}){
     // might want to format this some how
-    return (txn_object && txn_object.value && web3.utils.toBN(txn_object.value)) || 0
+    return (txn_object && txn_object.value && web3.utils.toBN(txn_object.value)) || web3.utils.toBN("0")
   }
 
   extractTransactionGasCost({params}){
     // might want to format this some how
-    return params && params.txn_object && (web3.utils.toBN(params.txn_object.gas) * web3.utils.toBN(params.txn_object.gasPrice))
+    return params && params.txn_object && (web3.utils.toBN(params.txn_object.gas).mul(web3.utils.toBN(params.txn_object.gasPrice)))
   }
 
  
