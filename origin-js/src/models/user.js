@@ -7,10 +7,11 @@ export default class User {
    * @param {string} identityAddress - User's identity address. For legacy identity it is
    *        different from the user's address. For newer identity it the same.
    */
-  constructor({ address, profile, attestations, identityAddress } = {}) {
+  constructor({ address, profile, attestations, identityAddress, version }) {
     this.address = address
     this.profile = profile
     this.attestations = attestations
     this.identityAddress = identityAddress
+    this.version = version
   }
 }

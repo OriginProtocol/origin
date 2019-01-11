@@ -213,8 +213,12 @@ export default class V01_UsersAdapter {
 
     // Note: we use stringify rather than the default JSON.stringify
     // to produce a deterministic JSON representation of the data that was signed.
+    // Similarly, we make sure to user checksummed eth address.
     const attestationJson = stringify(attestation.data)
-    const message = Web3.utils.soliditySha3(account, Web3.utils.sha3(attestationJson))
+    const message = Web3.utils.soliditySha3(
+      Web3.utils.toChecksumAddress(account),
+      Web3.utils.sha3(attestationJson)
+    )
     const messageHash = this.contractService.web3.eth.accounts.hashMessage(message)
     const signerAddress = this.contractService.web3.eth.accounts.recover(
       messageHash, attestation.signature.bytes, true)

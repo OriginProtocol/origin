@@ -31,16 +31,15 @@ export default class UsersResolver {
    */
   async get(address) {
     let result = false
-    for (let i = this.versions.length - 1; i >= 0; i--) {
-      if (!result) {
-        const version = this.versions[i]
+    let version = null
+    for (let i = this.versions.length - 1; i >= 0 && !result; i--) {
+        version = this.versions[i]
         result = await this.adapters[version].get(address)
-      }
     }
     if (result) {
-      return new UserObject(result)
+      return new UserObject({ ...result, version })
     } else {
-      return new UserObject({ address })
+      return new UserObject({ address, version: null })
     }
   }
 }

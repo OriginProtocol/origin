@@ -74,6 +74,10 @@ class VerificationService:
             PhoneVerificationError: Verification request failed for a reason not
                 related to the arguments
         """
+        if method not in ['sms', 'call']:
+            raise ValidationError('Invalid phone verification method ', method)
+        session['phone_verification_method'] = method
+
         params = {
             'country_code': country_calling_code,
             'phone_number': phone,
@@ -136,6 +140,10 @@ class VerificationService:
             PhoneVerificationError: Verification request failed for a reason not
                 related to the arguments
         """
+        method = session.get('phone_verification_method', None)
+        if method not in ['sms', 'call']:
+            raise ValidationError('Invalid phone verification method ', method)
+
         params = {
             'country_code': country_calling_code,
             'phone_number': phone,
@@ -175,7 +183,7 @@ class VerificationService:
                  'issueDate': current_time(),
                  'attestation': {
                      'verificationMethod': {
-                         'phone': True
+                         method: True
                      },
                      'phone': {
                          'verified': True
@@ -199,6 +207,8 @@ class VerificationService:
             )
             db.session.add(attestation)
             db.session.commit()
+
+            session.pop('phone_verification_method')
 
             return VerificationServiceResponse({
                 'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
