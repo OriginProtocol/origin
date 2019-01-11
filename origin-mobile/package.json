@@ -38,6 +38,7 @@
     "react-navigation": "^2.2.5",
     "react-redux": "^5.0.7",
     "redux": "^4.0.1",
+    "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "sequelize-cli": "^5.4.0",
     "vm-browserify": "^1.1.0",

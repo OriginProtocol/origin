@@ -202,7 +202,7 @@ class OriginWallet {
       remote_ip = remote_ip.replace(/\/$/, "")
     }
     await storeData(REMOTE_LOCALHOST_STORE, remote_ip)
-    this.initWeb3()
+    await this.initWeb3()
   }
 
   getCurrentRemoteLocal() {
@@ -452,15 +452,17 @@ class OriginWallet {
     if (transaction)
     {
       const meta = await this.extractMetaFromCall(transaction.call) || {}
+      // NOTE: this is assuming extractMeta enforces netId matching!
+      const net_id = this.state.netId
       const cost = this.extractTransactionCost(transaction.call)
       const gas_cost = this.extractTransactionGasCost(transaction.call)
-      const ogn_cost = meta && meta.originTokenValue
+      const ogn_cost = this.extractOgnCost(meta)
       const listing = this.extractListing(meta)
       const to = this.extractTo(transaction.call)
       const transaction_type = this.extractTransactionActionType(meta)
       console.log("meta:", meta, " ogn_cost:", ogn_cost)
       const action = "transaction"
-      return {...event_data, meta, action, to, cost, gas_cost, ogn_cost, listing, transaction_type}
+      return {...event_data, meta, net_id, action, to, cost, gas_cost, ogn_cost, listing, transaction_type}
     }
     else if (link)
     {
@@ -474,6 +476,11 @@ class OriginWallet {
     }
     //this is the bare event
     return event_data
+  }
+
+  extractOgnCost(meta)
+  {
+    return (meta && meta.originTokenValue && web3.utils.toBN(meta.originTokenValue)) || web3.utils.toBN("0")
   }
 
   async extractMetaFromCall({net_id, params:{txn_object}}) {
@@ -519,12 +526,12 @@ class OriginWallet {
 
   extractTransactionCost({params:{txn_object}}){
     // might want to format this some how
-    return (txn_object && txn_object.value && web3.utils.toBN(txn_object.value)) || 0
+    return (txn_object && txn_object.value && web3.utils.toBN(txn_object.value)) || web3.utils.toBN("0")
   }
 
   extractTransactionGasCost({params}){
     // might want to format this some how
-    return params && params.txn_object && (web3.utils.toBN(params.txn_object.gas) * web3.utils.toBN(params.txn_object.gasPrice))
+    return params && params.txn_object && (web3.utils.toBN(params.txn_object.gas).mul(web3.utils.toBN(params.txn_object.gasPrice)))
   }
 
  
@@ -1038,7 +1045,7 @@ class OriginWallet {
 
   async initWeb3() {
     this.remote_localhost = await loadData(REMOTE_LOCALHOST_STORE)
-    if (!this.remote_localhost) {
+    if (this.remote_localhost == undefined) {
       this.remote_localhost = defaultLocalRemoteHost
     }
     if (this.remote_localhost.startsWith("http://") || this.remote_localhost.startsWith("https://"))
@@ -1065,10 +1072,13 @@ class OriginWallet {
       console.log("Set network to:", newProviderUrl, contract_addresses)
       console.log("Service urls:", messaging_url, profile_url, root_url, selling_url)
 
+
       if (this.currentProviderUrl != newProviderUrl)
       {
         web3.setProvider(new Web3.providers.HttpProvider(newProviderUrl, 20000))
         this.currentProviderUrl = newProviderUrl
+        // things are probably very different now... we need to reset origin
+        origin.initInstance()
       }
 
       this.messagingUrl = localfy(messaging_url)
@@ -1079,12 +1089,14 @@ class OriginWallet {
       origin.contractService.updateContractAddresses(contract_addresses)
       origin.ipfsService.gateway = localfy(ipfs_gateway)
       origin.ipfsService.api = localfy(ipfs_api)
+
       
       await this.setNetId()
       if (this.state.ethAddress)
       {
         this.checkRegisterNotification()
         this.fireEvent(Events.NEW_ACCOUNT, {address:this.state.ethAddress})
+        this.checkSyncMessages(true)
       }
       this.providerUrl = provider_url
     } catch(error)

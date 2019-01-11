@@ -746,12 +746,17 @@ class ListingCreate extends Component {
     const formData = formListing.formData
     const {
       unitsTotal,
-      unitsLockedInOffers
+      unitsPending,
+      unitsSold
     } = formData
 
-    const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
-
     if (isEditMode) {
+      const unitsLockedInOffers = unitsPending + unitsSold
+      /* considers the case where a user would edit the quantity to 1 on a multi unit listing
+       * that already has offers for more than 1 unit.
+       */
+      const isMultiUnitListing = (!!formData.unitsTotal && formData.unitsTotal) > 1 || unitsLockedInOffers > 1
+
       // do not allow quantity to be edited below the value of units already in offers
       if (isMultiUnitListing && unitsTotal < unitsLockedInOffers) {
         errors.unitsTotal.addError(
