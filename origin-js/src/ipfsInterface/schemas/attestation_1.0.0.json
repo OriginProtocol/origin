@@ -106,12 +106,23 @@
         {
           "type": "object",
           "properties": {
-            "phone": {
+            "sms": {
               "type": "boolean"
             }
           },
           "required": [
-            "phone"
+            "sms"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "call": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "call"
           ]
         },
         {
