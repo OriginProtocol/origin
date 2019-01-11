@@ -4,7 +4,13 @@ import IPFS from 'ipfs'
 
 import OriginMessaging from './Messaging'
 
-export default function Messaging({ ipfsSwarm, messagingNamespace, web3 }) {
+export default function Messaging({
+  ipfsSwarm,
+  messagingNamespace,
+  web3,
+  globalKeyServer,
+  personalSign
+}) {
   const ipfsCreator = repo_key => {
     const ipfsOptions = {
       repo: 'ipfs' + repo_key,
@@ -45,6 +51,8 @@ export default function Messaging({ ipfsSwarm, messagingNamespace, web3 }) {
     ipfsCreator,
     OrbitDB,
     ecies,
-    messagingNamespace
+    messagingNamespace,
+    globalKeyServer,
+    personalSign
   })
 }

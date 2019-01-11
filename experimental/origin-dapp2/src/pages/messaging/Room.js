@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import dayjs from 'dayjs'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -8,24 +10,37 @@ import withIdentity from 'hoc/withIdentity'
 import query from 'queries/Room'
 import SendMessage from './SendMessage'
 import Avatar from 'components/Avatar'
+import QueryError from 'components/QueryError'
 
-class Message extends Component {
-  render() {
-    const { message, them } = this.props
-    const name = get(this.props, 'identity.profile.fullName', '')
-    return (
-      <div className={`message${them ? ' them' : ''}`}>
-        <Avatar avatar={get(this.props, 'identity.profile.avatar')} size={60} />
+dayjs.extend(advancedFormat)
+
+const Message = props => {
+  const message = get(props, 'message', {})
+  const name = get(props, 'identity.profile.fullName', '')
+  let showTime = true
+  if (props.lastMessage) {
+    const timeDiff = message.timestamp - props.lastMessage.timestamp
+    if (timeDiff < 60 * 5) showTime = false
+  }
+  return (
+    <>
+      {showTime && (
+        <div className="timestamp">
+          {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
+        </div>
+      )}
+      <div className={`message${props.them ? ' them' : ''}`}>
+        <Avatar avatar={get(props, 'identity.profile.avatar')} size={60} />
         <div className="bubble">
           <div className="top">
-            <div className="name">{name}</div>
-            <div className="account">{get(message, 'address')}</div>
+            {name && <div className="name">{name}</div>}
+            <div className="account">{message.address}</div>
           </div>
-          <div className="content">{get(message, 'msg.content')}</div>
+          <div className="content">{message.content}</div>
         </div>
       </div>
-    )
-  }
+    </>
+  )
 }
 
 const MessageWithIdentity = withIdentity(Message)
@@ -42,11 +57,13 @@ class AllMessages extends Component {
     }
   }
   render() {
+    const { messages } = this.props
     return (
-      <div className="messages" ref={el => this.el = el}>
-        {this.props.messages.map((message, idx) => (
+      <div className="messages" ref={el => (this.el = el)}>
+        {messages.map((message, idx) => (
           <MessageWithIdentity
             message={message}
+            lastMessage={idx > 0 ? messages[idx - 1] : null}
             key={idx}
             wallet={get(message, 'address')}
             them={this.props.wallet !== get(message, 'address')}
@@ -63,11 +80,11 @@ class Room extends Component {
     return (
       <div className="container">
         <Query query={query} pollInterval={2000} variables={{ id }}>
-          {({ error, data, networkStatus }) => {
-            if (networkStatus === 1) {
+          {({ error, data, loading }) => {
+            if (loading) {
               return <div>Loading...</div>
             } else if (error) {
-              return <div>Error :(</div>
+              return <QueryError query={query} error={error} />
             } else if (!data || !data.messaging) {
               return <p className="p-3">Cannot query messages</p>
             }
@@ -91,11 +108,16 @@ export default withWallet(Room)
 
 require('react-styl')(`
   .messages-page .messages
-    max-height: calc(100vh - 160px)
+    max-height: calc(100vh - 10.25rem)
     overflow: auto
     display: flex
     flex-direction: column
     align-items: start
+    .timestamp
+      color: var(--bluey-grey);
+      font-size: 12px;
+      align-self: center
+      margin-bottom: 1rem
     .message
       display: flex
       align-items: flex-end;

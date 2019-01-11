@@ -18,41 +18,36 @@ class SendMessage extends Component {
   }
 
   render() {
+    const { to } = this.props
     return (
       <Mutation mutation={mutation}>
-        {sendMessage => {
-          return (
-            <form
-              className="send-message d-flex"
-              onSubmit={e => {
-                e.preventDefault()
-                if (this.state.message) {
-                  sendMessage({
-                    variables: {
-                      to: this.props.to,
-                      content: this.state.message
-                    }
-                  })
-                  this.setState({ message: '' })
-                }
-              }}
-            >
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Type something..."
-                ref={input => (this.input = input)}
-                value={this.state.message}
-                onChange={e => this.setState({ message: e.target.value })}
-              />
-              <button
-                className="btn btn-primary btn-rounded"
-                type="submit"
-                children="Send"
-              />
-            </form>
-          )
-        }}
+        {sendMessage => (
+          <form
+            className="send-message d-flex"
+            onSubmit={e => {
+              e.preventDefault()
+              const content = this.state.message
+              if (content) {
+                sendMessage({ variables: { to, content } })
+                this.setState({ message: '' })
+              }
+            }}
+          >
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Type something..."
+              ref={input => (this.input = input)}
+              value={this.state.message}
+              onChange={e => this.setState({ message: e.target.value })}
+            />
+            <button
+              className="btn btn-primary btn-rounded"
+              type="submit"
+              children="Send"
+            />
+          </form>
+        )}
       </Mutation>
     )
   }

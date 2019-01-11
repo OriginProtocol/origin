@@ -90,18 +90,22 @@ const Configs = {
     ipfsRPC: `http://${HOST}:5002`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
-    messaging: {
-      ipfsSwarm:
-        '/ip4/127.0.0.1/tcp/9012/ws/ipfs/Qma1eKbWcLy9EVYv4zVJZSAtXT6TsKXYTQ2JKtU5T7APne',
-      messagingNamespace: 'dev'
-    }
+    // messaging: {
+    //   ipfsSwarm:
+    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/Qma1eKbWcLy9EVYv4zVJZSAtXT6TsKXYTQ2JKtU5T7APne',
+    //   messagingNamespace: 'dev'
+    // }
   }
 }
 
 const DefaultMessagingConfig = {
+  // ipfsSwarm:
+  //   '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
+  // messagingNamespace: 'origin:staging'
   ipfsSwarm:
-    '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
-  messagingNamespace: 'origin:staging'
+    '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/Qma8wRkeXeYtE3RQfqFDGjsKCEqXR5CGxfmRxvus9aULcs',
+  messagingNamespace: 'origin:dev',
+  globalKeyServer: 'https://messaging-api.dev.originprotocol.com'
 }
 
 const context = {}
@@ -157,6 +161,7 @@ export function setNetwork(net) {
 
   if (typeof window !== 'undefined') {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
+    MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
     context.messaging = OriginMessaging({ ...MessagingConfig, web3 })
   }
 

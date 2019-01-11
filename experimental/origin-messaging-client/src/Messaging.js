@@ -133,7 +133,9 @@ class Messaging {
     ipfsCreator,
     OrbitDB,
     ecies,
-    messagingNamespace
+    messagingNamespace,
+    globalKeyServer,
+    personalSign = true
   }) {
     this.contractService = contractService
     this.web3 = this.contractService.web3
@@ -143,6 +145,8 @@ class Messaging {
     this.convs = {}
     this.ecies = ecies
     this.events = new EventEmitter()
+    this.globalKeyServer = globalKeyServer
+    this.personalSign = personalSign
     this.GLOBAL_KEYS = messagingNamespace + PRE_GLOBAL_KEYS
     this.CONV = messagingNamespace + PRE_CONV
     this.CONV_INIT_PREFIX = messagingNamespace + PRE_CONV_INIT_PREFIX
@@ -349,6 +353,7 @@ class Messaging {
       this.verifyConversationSignature.bind(this),
       message => {
         const eth_address = message.id.substr(-42) // hopefully the last 42 is the eth address
+        debug('convInit', eth_address, this.account_key)
         if (eth_address == this.account_key) {
           this.events.emit('pending_conv', message.payload.key)
           const remote_address = message.payload.key
@@ -412,7 +417,8 @@ class Messaging {
           this.events.emit('initRemote')
 
           try {
-            await this.global_keys.load()
+            // await this.global_keys.load()
+            this.global_keys.load()
           } catch (error) {
             console.error(error)
           }
@@ -448,8 +454,22 @@ class Messaging {
     this.events.emit('registered-' + set_key, message.payload.value)
   }
 
+  async getGlobalKey(key) {
+    if (!this.globalKeyServer) {
+      return this.global_keys.get(key)
+    }
+    try {
+      const res = await fetch(`${this.globalKeyServer}/accounts/${key}`, {
+        headers: { 'content-type': 'application/json' }
+      })
+      return await res.json()
+    } catch (e) {
+      return
+    }
+  }
+
   async getRegisteredKey(key) {
-    const entry = this.global_keys.get(key)
+    const entry = await this.getGlobalKey(key)
     if (entry) {
       return entry
     } else {
@@ -512,9 +532,8 @@ class Messaging {
 
   async initMessaging() {
     debug('initMessaging')
-    const entry = this.getRemoteMessagingSig()
+    const entry = await this.getRemoteMessagingSig()
     const account_match = entry && entry.address == this.account.address
-
     if (!(this.pub_sig && this.pub_msg)) {
       if (account_match && entry.sig && entry.msg) {
         this.pub_sig = entry.sig
@@ -529,8 +548,8 @@ class Messaging {
     this.loadMyConvs()
   }
 
-  getRemoteMessagingSig() {
-    const entry = this.global_keys.get(this.account_key)
+  async getRemoteMessagingSig() {
+    const entry = await this.getGlobalKey(this.account_key)
     if (entry && entry.address == this.account.address) {
       return entry
     }
@@ -569,19 +588,23 @@ class Messaging {
   async promptInit() {
     debug('promptInit', this.account_key)
     const sig_phrase = PROMPT_MESSAGE
-    const signature = await this.web3.eth.sign(sig_phrase, this.account_key)
+    const signer = this.personalSign ? this.web3.eth.personal : this.web3.eth
+    const signature = await signer.sign(sig_phrase, this.account_key)
+    debug('signedSig', signature)
     this.events.emit('signedSig')
 
     // 32 bytes in hex + 0x
     const sig_key = signature.substring(0, 66)
 
-    setTimeout(() => this.setAccount(sig_key, sig_phrase), 50)
+    // Delay to prevent hidden MetaMask popup
+    setTimeout(() => this.setAccount(sig_key, sig_phrase), 500)
   }
 
   async promptForSignature() {
     debug('promptForSignature', this.account_key)
     this.pub_msg = PROMPT_PUB_KEY + this.account.address
-    this.pub_sig = await this.web3.eth.sign(this.pub_msg, this.account_key)
+    const signer = this.personalSign ? this.web3.eth.personal : this.web3.eth
+    this.pub_sig = await signer.sign(this.pub_msg, this.account_key)
     const scopedPubSigKeyName = `${PUB_MESSAGING_SIG}:${this.account_key}`
     this.setKeyItem(scopedPubSigKeyName, this.pub_sig)
     const scopedPubMessagingKeyName = `${PUB_MESSAGING}:${this.account_key}`
@@ -618,6 +641,7 @@ class Messaging {
       }
       debug('loadRoom', room_id)
       await r.load()
+      debug('loadedRoom', room_id)
       return r
     }
   }
@@ -901,23 +925,15 @@ class Messaging {
     }
   }
 
-  canConverseWith(remote_eth_address) {
-    const { account_key, global_keys } = this
+  async canConverseWith(remote_eth_address) {
     const address = this.web3.utils.toChecksumAddress(remote_eth_address)
-
-    return (
-      this.canSendMessages() &&
-      account_key !== address &&
-      global_keys &&
-      global_keys.get(address)
-    )
+    const globalKey = await this.getGlobalKey(address)
+    return this.canSendMessages() && this.account_key !== address && globalKey
   }
 
-  canReceiveMessages(remote_eth_address) {
-    const { global_keys } = this
+  async canReceiveMessages(remote_eth_address) {
     const address = this.web3.utils.toChecksumAddress(remote_eth_address)
-
-    return global_keys && global_keys.get(address)
+    return await this.getGlobalKey(address)
   }
 
   canSendMessages() {
@@ -928,10 +944,10 @@ class Messaging {
 
   async startConv(remote_eth_address) {
     debug('startConv', remote_eth_address)
-    const entry = this.global_keys.get(remote_eth_address)
+    const entry = await this.getGlobalKey(remote_eth_address)
 
-    // remote account does not have messaging enabled
     if (!entry) {
+      debug('remote account messaging disabled')
       return
     }
 

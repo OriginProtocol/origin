@@ -16,10 +16,8 @@ const ConversationsQuery = gql`
         timestamp
         messages {
           address
-          msg {
-            content
-            created
-          }
+          content
+          timestamp
         }
       }
     }
@@ -196,10 +194,13 @@ class Messaging extends Component {
         {conv.messages.map((msg, idx) => (
           <div key={idx}>
             <Address address={msg.address} />
-            {`: ${msg.msg.content}`}
+            {`: ${msg.content}`}
           </div>
         ))}
-        <Mutation mutation={SendMessageMutation}>
+        <Mutation
+          mutation={SendMessageMutation}
+          onComplete={() => this.setState({ message: '' })}
+        >
           {sendMessage => (
             <ControlGroup className="mt-3">
               <InputGroup
@@ -211,15 +212,14 @@ class Messaging extends Component {
               />
               <Button
                 icon="arrow-up"
-                onClick={() => {
-                  this.setState({ message: '' })
+                onClick={() =>
                   sendMessage({
                     variables: {
                       content: this.state.message,
                       to: this.state.conversation
                     }
                   })
-                }}
+                }
               />
             </ControlGroup>
           )}

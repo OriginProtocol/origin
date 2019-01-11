@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import MessagingQuery from 'queries/Messaging'
 
 import Dropdown from 'components/Dropdown'
+import Link from 'components/Link'
 
 class MessagesNav extends Component {
   constructor() {
@@ -27,7 +28,12 @@ class MessagesNav extends Component {
               className="nav-item messages"
               open={this.props.open}
               onClose={() => this.props.onClose()}
-              content={<MessagesDropdown data={data} />}
+              content={
+                <MessagesDropdown
+                  onClick={() => this.props.onClose()}
+                  data={data}
+                />
+              }
             >
               <a
                 className="nav-link"
@@ -50,10 +56,12 @@ class MessagesNav extends Component {
   }
 }
 
-const MessagesDropdown = () => {
+const MessagesDropdown = ({ onClick }) => {
   return (
     <div className="dropdown-menu dropdown-menu-right show messages">
-      Messages!
+      <Link to="/messages" onClick={() => onClick()}>
+        View Messages
+      </Link>
     </div>
   )
 }

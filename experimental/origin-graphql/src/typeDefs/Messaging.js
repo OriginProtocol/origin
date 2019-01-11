@@ -21,8 +21,9 @@ export default `
 
   type Conversation {
     id: ID!
-    timestamp: String
+    timestamp: Int
     messages: [Message]
+    lastMessage: Message
   }
 
   type Message {
@@ -30,12 +31,8 @@ export default `
     address: String
     hash: String
     index: Int
-    msg: MessageContent
-  }
-
-  type MessageContent {
     content: String
-    created: String
+    timestamp: Int
   }
 
 `
