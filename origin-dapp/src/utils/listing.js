@@ -151,7 +151,7 @@ export async function originToDAppListing(originListing) {
     isFractional,
     isMultiUnit,
     listingType: originListing.type,
-    slots: originListing.slots,
+    availability: originListing.availability,
     fractionalTimeIncrement: isFractional && slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily',
     offers: originListing.offers,
     events: originListing.events

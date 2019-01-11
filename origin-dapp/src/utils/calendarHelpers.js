@@ -1,12 +1,26 @@
 import moment from 'moment-timezone'
 import uuid from 'utils/uuid'
 
-export function generateCalendarSlots(events) {
+export function generateCalendarSlots(jCal) {
+  const vEvents = jCal.filter((item) => item[0] === 'vevent')
+  const events = vEvents.map((vEvent) => {
+    return {
+      uid: vEvent.find((item) => item[0] === 'uid')[3],
+      startDate: vEvent.find((item) => item[0] === 'dtstart')[3],
+      endDate: vEvent.find((item) => item[0] === 'dtend')[3],
+      timeZone: vEvent.find((item) => item[0] === 'dtstart')[1].tzid,
+      rrule: vEvent.find((item) => item[0] === 'rrule')[3],
+      price: {
+        amount: vEvent.find((item) => item[0] === 'x-price')[3],
+        currency: vEvent.find((item) => item[0] === 'x-currency')[3]
+      },
+      isAvailable: vEvent.find((item) => item[0] === 'x-is-available')[3],
+      priority: vEvent.find((item) => item[0] === 'x-priority')[3]
+    }
+  })
 
-  const eventsClone = JSON.parse(JSON.stringify(events))
-
-  for (let i = 0, eventsLen = eventsClone.length; i < eventsLen; i++) {
-    const event = eventsClone[i]
+  for (let i = 0, eventsLen = events.length; i < eventsLen; i++) {
+    const event = events[i]
     const startDate = new Date(event.startDate)
     const endDate = new Date(event.endDate)
     let eventDate = moment(event.startDate)
@@ -24,7 +38,7 @@ export function generateCalendarSlots(events) {
     event.slots = slots
   }
 
-  return eventsClone
+  return events
 }
 
 // Generate slots that will be used in the buyer's offer
