@@ -48,8 +48,16 @@ export function getListingIds() {
       //     hideList = await response.json()
       //   }
       // }
+      const filters = [{
+        name: 'marketplacePublisher',
+        value: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+        valueType: 'STRING',
+        operator: 'EQUALS'
+      }]
 
-      const ids = await origin.marketplace.getListings({ idsOnly: true })
+      const ids = await origin.marketplace.getListings({
+        idsOnly: true,
+      })
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,

@@ -35,6 +35,7 @@ export class Listing {
    *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
    *  - {string} deposit
    *  - {string} depositManager - address of depositManager
+   *  - {string} marketplacePublisher - address of the publisher of the marketplace that the listing originated from
    *  - {Object} commissionPerUnit - Commission per unit in multi unit listings. Consists of 'amount' and 'currency' properties
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
