@@ -46,7 +46,7 @@ The phone number that will receive the call or SMS is the `countryCallingCode` c
 
 The `method` can either by "call" or "sms".
 
-The `locale` parameter is optional and it defines the language of the call or the SMS. If not provided a sensible default is used based on the country of the phone number. Supported languages are af, ar, ca, zh, zh-CN, zh-HK, hr, cs, da, nl, en, fi, fr, de, el, he, hi, hu, id, it, ja, ko, ms, nb, pl, pt-BR, pt, ro, ru, es, sv, tl, th, tr, vi.
+The `locale` parameter is optional and it defines the language of the call or the SMS. If not provided a sensible default is used based on the country of the phone number. Supported languages are af, ar, ca, cs, da, de, el, en, es, fi, fr, he, hi, hr, hu, id, it, ja, ko, ms, nb, nl, pl, pt, pt-BR, ro, ru, sv, tl, th, tr, vi, zh, zh-CN, zh-HK.
 
 ## .phoneVerify
 
