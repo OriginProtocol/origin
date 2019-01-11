@@ -85,7 +85,7 @@ An Offer is sent by a buyer to make a purchase from a listing.
 
 ## Dispute Schema
 
-A dispute can be started by either party. In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion. It is intended that the parties and the arbitrator will communicate over Origin Messenger after the dispute process is started.
+A dispute can be started by either party. In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion. It is intended that the parties and the arbitrator will communicate over Origin Messenger after the dispute process is started.
 
 ```javascript
 {
@@ -102,7 +102,7 @@ A dispute can be started by either party. In v1.0.0, this schema contains no use
 
 ## Listing-Withdraw Schema
 
-In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion.
+In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion.
 
 ```javascript
 {
@@ -119,7 +119,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 ## Offer-Accept Schema
 
-In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion.
+In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion.
 
 ```javascript
 {
@@ -136,7 +136,7 @@ In v1.0.0, this schema contains no useful required fields, and is placeholder fo
 
 ## Offer-Withdraw Schema
 
-In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion.
+In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion.
 
 ```javascript
 {
@@ -183,7 +183,7 @@ A profile allows a user to let the world know a little more about them.
 
 ## Resolution Schema
 
-In v1.0.0, this schema contains no useful required fields, and is placeholder for future expansion.
+In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion.
 
 ```javascript
 {
