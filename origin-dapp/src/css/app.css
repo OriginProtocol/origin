@@ -6112,6 +6112,16 @@ a:not([href]):not([tabindex]).span-link {
     padding: 1rem;
   }
 
+  .identity .dropdown-menu {
+    top: 57px;
+    margin: 0px;
+    max-width: 100%;
+    width: 100%;
+    left: 0px;
+    right: 0px;
+  }
+
+
   /* Profile */
   .profile-wrapper {
     padding: 0;

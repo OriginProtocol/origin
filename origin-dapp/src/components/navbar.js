@@ -165,7 +165,7 @@ class NavBar extends Component {
     return(
       <Link
         to="/"
-        className="d-none d-lg-block navbar-brand mr-auto mr-lg-3"
+        className="d-block navbar-brand mr-lg-3"
         ga-category="top_nav"
         ga-label="logo"
       >
@@ -198,7 +198,7 @@ class NavBar extends Component {
     return (
       showNav && (
         <NavbarBS variant="dark" expand="lg" className="navigation-bar">
-          <div className="container">
+          <div className="container d-flex justify-content-between">
             {this.renderNavbarToggle()}
             {this.renderOriginBrand()}
             {this.renderNavbarCollapse()}
