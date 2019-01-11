@@ -6,7 +6,7 @@ bridgeImageTag: '55eb8e4'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'e29b9cd'
+dappImageTag: '52a1814'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -30,7 +30,7 @@ discoveryImageTag: 'afe6cf0'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '33b6288'
+messagingImageTag: '212070a'
 
 # origin-notifications
 notificationsImage: origin-notifications
@@ -46,4 +46,4 @@ creatorServerImageTag: 'e53b079'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: '863e0bf'
+linkingImageTag: '52a1814'
