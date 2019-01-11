@@ -21,14 +21,14 @@ class ConfirmReset extends Component {
         <h2>
           <FormattedMessage
             id={'ConfirmReset.resetIdentity'}
-            defaultMessage={'Upgrade your Identity?'}
+            defaultMessage={'Upgrade Your Identity'}
           />
         </h2>
         <p>
           <FormattedMessage
             id={'ConfirmReset.afterResetNotice'}
             defaultMessage={
-              'If you accept, your existing attestation(s) will get cleared and you should go thru the attestation process again before re-publishing.'
+              'OriginID has been updated to make profiles significantly cheaper to publish. We recommend verifying each of your accounts and publishing your profile again. Your existing account verifications will be removed.'
             }
           />
         </p>
@@ -36,7 +36,7 @@ class ConfirmReset extends Component {
           <button type="submit" className="btn btn-clear" onClick={onConfirm}>
             <FormattedMessage
               id={'ConfirmReset.letsDoIt'}
-              defaultMessage={"Let's do it!"}
+              defaultMessage={`Let's do it!`}
             />
           </button>
         </div>

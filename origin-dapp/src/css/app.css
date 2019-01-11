@@ -5395,6 +5395,8 @@ sup {
 
 .publish.modal .button-container,
 .mobile-publish.modal .button-container,
+.reset.modal .button-container,
+.mobile-reset.modal .button-container,
 .unload.modal .button-container {
   margin: 0 0 20px;
   padding: 0;
@@ -5402,12 +5404,16 @@ sup {
 
 .publish.modal .btn-clear,
 .mobile-publish.modal .btn-clear,
+.reset.modal .btn-clear,
+.mobile-reset.modal .btn-clear,
 .unload.modal .btn-clear {
   margin: 0;
 }
 
 .publish.modal a,
 .mobile-publish.modal a,
+.reset.modal a,
+.mobile-reset.modal a,
 .unload.modal a {
   color: var(--clear-blue);
   cursor: pointer;
@@ -5416,6 +5422,8 @@ sup {
 
 .publish.modal p,
 .mobile-publish.modal p,
+.reset.modal p,
+.mobile-reset.modal p,
 .unload.modal p {
   font-size: 1rem;
 }
@@ -5443,11 +5451,15 @@ sup {
 
 .publish.modal a:hover,
 .mobile-publish.modal a:hover,
+.reset.modal a:hover,
+.mobile-reset.modal a:hover,
 .unload.modal a:hover {
   color: var(--dark-clear-blue);
 }
 
 .publish.modal img,
+.mobile-publish.modal img,
+.reset.modal img,
 .mobile-publish.modal img,
 .unload.modal img {
   height: auto;
