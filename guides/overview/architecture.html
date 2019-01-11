@@ -9,98 +9,99 @@
   <link rel="stylesheet" href="/assets/css/site.css"/>
 </head>
 <body>
-    <div class="header">
-        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
-        <nav>
-                <a class="topNav current" href="/">Guides</a>
-                <a class="topNav " href="/reference/">API Reference</a>
-                <a class="topNav " href="/software/">Software</a>
-        </nav>
-    </div>
-
-    <div class="layout">
-        <div class="sidebar">
-            
-            
-
-
-            
-            
-            <ul>
-            
-                
-                    <li class="category"><strong>Getting started</strong>
-                        <ul>
-                                   
-                
-                <li class="normal"> 
-                    <a href="/guides/getting_started/getting-started.html">Getting Started</a> <!-- 3020-->
-                    
-                </li>
-                
-                <li class="normal"> 
-                    <a href="/guides/getting_started/local-development.html">Local Development</a> <!-- 3010-->
-                    
-                </li>
-                
-                <li class="normal"> 
-                    <a href="/guides/getting_started/contributing.html">Contributing</a> <!-- -->
-                    
-                </li>
-                
-                
-                    </ul></li>
-                 
-            
-                
-                    <li class="category"><strong>Overview</strong>
-                        <ul>
-                                   
-                
-                <li class="normal"> 
-                    <a href="/guides/overview/architecture.html">Architecture</a> <!-- 2010-->
-                    
-                </li>
-                
-                
-                    </ul></li>
-                 
-            
-                
-                    <li class="category"><strong>Concepts</strong>
-                        <ul>
-                                   
-                
-                <li class="normal"> 
-                    <a href="/guides/concepts/listing.html">Listing</a> <!-- 1100-->
-                    
-                </li>
-                
-                <li class="normal"> 
-                    <a href="/guides/concepts/offer.html">Offer</a> <!-- 1090-->
-                    
-                </li>
-                
-                <li class="normal"> 
-                    <a href="/guides/concepts/identity.html">Identity</a> <!-- 1-->
-                    
-                </li>
-                
-                <li class="normal"> 
-                    <a href="/guides/concepts/messaging.html">Messaging</a> <!-- 1-->
-                    
-                </li>
-                
-                
-                    </ul></li>
-                 
-            
-            </ul>
+    <div class="wrapper">
+        <div class="header">
+            <div class="logo"><a href="/">Origin Documentation</a></div>
+            <nav>
+                    <a class="topNav current" href="/">Guides</a>
+                    <a class="topNav " href="/reference/">API Reference</a>
+                    <a class="topNav " href="/software/">Software</a>
+            </nav>
         </div>
-        <div class="content">
-            <h1 class="title">Architecture</h1>
 
-            <h1 id="architecture">Architecture</h1>
+        <div class="layout">
+            <div class="sidebar">
+                
+                
+
+
+                
+                
+                <ul>
+                
+                    
+                        <li class="category"><strong>Getting started</strong>
+                            <ul>
+                                       
+                    
+                    <li class="normal"> 
+                        <a href="/guides/getting_started/getting-started.html">Getting Started</a> <!-- 3020-->
+                        
+                    </li>
+                    
+                    <li class="normal"> 
+                        <a href="/guides/getting_started/local-development.html">Local Development</a> <!-- 3010-->
+                        
+                    </li>
+                    
+                    <li class="normal"> 
+                        <a href="/guides/getting_started/contributing.html">Contributing</a> <!-- -->
+                        
+                    </li>
+                    
+                    
+                        </ul></li>
+                     
+                
+                    
+                        <li class="category"><strong>Overview</strong>
+                            <ul>
+                                       
+                    
+                    <li class="normal"> 
+                        <a href="/guides/overview/architecture.html">Architecture</a> <!-- 2010-->
+                        
+                    </li>
+                    
+                    
+                        </ul></li>
+                     
+                
+                    
+                        <li class="category"><strong>Concepts</strong>
+                            <ul>
+                                       
+                    
+                    <li class="normal"> 
+                        <a href="/guides/concepts/listing.html">Listing</a> <!-- 1100-->
+                        
+                    </li>
+                    
+                    <li class="normal"> 
+                        <a href="/guides/concepts/offer.html">Offer</a> <!-- 1090-->
+                        
+                    </li>
+                    
+                    <li class="normal"> 
+                        <a href="/guides/concepts/identity.html">Identity</a> <!-- 1-->
+                        
+                    </li>
+                    
+                    <li class="normal"> 
+                        <a href="/guides/concepts/messaging.html">Messaging</a> <!-- 1-->
+                        
+                    </li>
+                    
+                    
+                        </ul></li>
+                     
+                
+                </ul>
+            </div>
+            <div class="content">
+                <h1 class="title">Architecture</h1>
+
+                <h1 id="architecture">Architecture</h1>
 
 <p>If you’re new to the space, it may be helpful to first familiarize yourself with some of the core technologies that we’re using to build Origin, such as <a href="#jsonschema">JSONSchema</a>, <a href="#ipfs">IPFS</a> and <a href="#ethereum">Ethereum</a>.</p>
 
@@ -195,7 +196,8 @@ to the policies must be handled directly off-chain by the two parties.</p>
 <p>To that end, we will provide default contracts for escrow, arbitration, and insurance that will be inherited by our booking smart contracts. However, developers will be able to specify alternative contracts of their choosing (either their own or approved third-party contracts) in Origin.js function calls to generate custom booking contracts.</p>
 
 
-        </div>    
+            </div>    
+        </div>
     </div>
 
     <footer>
