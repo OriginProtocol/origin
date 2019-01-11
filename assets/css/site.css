@@ -64,37 +64,32 @@ th {
   border-bottom: 1px solid #dedeee;
   display: flex;
   flex-direction: row;
-  padding-top: 7px;
+  padding:20px;
+  background-color:#111d28;
 }
 .header > .logo {
-  width: 288px;
-  float: left;
-  padding-bottom: 2px;
-  padding-left: 22px;
-}
-
-.header > .logo > a {
-  color: black;
+  padding-left:10px;
+  background-image:url('/assets/origin-logo-white.png');
+  background-repeat: no-repeat;
+  text-indent:-999px;
+  width:98px;
+  height:23px;
 }
 
 .header > nav {
   margin-left: 80px;
 }
 
-.header nav {
-  padding-bottom: 2px;
-}
-
 nav > .topNav {
   text-decoration: none;
-  padding-bottom: 1px;
-  padding-right: 6px;
-  padding-left: 6px;
-  color: #000;
+  padding: 5px 20px;
+  color: #fff;
   margin-right: 0px;
+  border-radius:15px;
 }
 nav > .topNav.current {
-  border-bottom: solid 5px grey;
+  /*border-bottom: solid 5px grey;*/
+  background-color:#1a82ff;
 }
 
 footer {
