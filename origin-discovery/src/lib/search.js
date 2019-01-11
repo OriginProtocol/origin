@@ -1,5 +1,4 @@
 const elasticsearch = require('elasticsearch')
-const OriginListing = require('./../../../origin-js/src/models/listing.js')
 
 /*
   Module to interface with ElasticSearch.
