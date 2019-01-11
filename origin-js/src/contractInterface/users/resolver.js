@@ -42,4 +42,12 @@ export default class UsersResolver {
       return new UserObject({ address, version: null })
     }
   }
+
+  /**
+   * Origin-mobile hack that allows to update the config after the UsersResolver
+   * object has already been created.
+   */
+  function updateConfig({ attestationAccount }) {
+    this.adapters['001'].issuerAddress = attestationAccount
+  }
 }

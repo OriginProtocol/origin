@@ -12,6 +12,7 @@ const MESSAGING_URL = process.env.MESSAGING_URL
 const PROFILE_URL = process.env.PROFILE_URL
 const ROOT_URL = process.env.ROOT_URL
 const SELLING_URL = process.env.SELLING_URL
+const ATTESTATION_ACCOUNT = process.env.ATTESTATION_ACCOUNT
 const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
 
@@ -252,6 +253,7 @@ class Linker {
       profileUrl:PROFILE_URL,
       rootUrl:ROOT_URL,
       sellingUrl:SELLING_URL
+      attestationAccount:ATTESTATION_ACCOUNT,
     }
   }
 
