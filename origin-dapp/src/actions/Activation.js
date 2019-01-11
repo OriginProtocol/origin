@@ -5,6 +5,8 @@ import { createSubscription } from 'utils/notifications'
 
 import origin from '../services/origin'
 
+const MESSAGING_API_URL = process.env.MESSAGING_API_URL
+
 export const ActivationConstants = keyMirror(
   {
     MESSAGING_ENABLED: null,
@@ -16,6 +18,22 @@ export const ActivationConstants = keyMirror(
   },
   'ACTIVATION'
 )
+
+export function detectMessagingEnabled(account) {
+  return async function(dispatch) {
+    try {
+      const response = await fetch(`${MESSAGING_API_URL}/accounts/${account}`)
+      const enabled = response.status === 200
+
+      dispatch({
+        type: ActivationConstants.MESSAGING_ENABLED,
+        enabled
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
 
 export function handleNotificationsSubscription(role, props = {}) {
   return async function(dispatch) {
