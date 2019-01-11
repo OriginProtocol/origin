@@ -12,7 +12,8 @@ class PubAuditableUrl(Schema):
 
 class VerificationMethod(Schema):
     oAuth = fields.Boolean()
-    phone = fields.Boolean()
+    sms = fields.Boolean()
+    call = fields.Boolean()
     email = fields.Boolean()
     mail = fields.Boolean()
     human = fields.Boolean()

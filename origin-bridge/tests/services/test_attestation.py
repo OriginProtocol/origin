@@ -50,7 +50,8 @@ def test_send_phone_verification_success():
         'method': 'sms',
         'locale': None
     }
-    response = VerificationService.send_phone_verification(**args)
+    with mock.patch('logic.attestation_service.session', dict()):
+        response = VerificationService.send_phone_verification(**args)
     assert isinstance(response, VerificationServiceResponse)
 
 
@@ -69,8 +70,10 @@ def test_send_phone_verification_invalid_number():
         'method': 'sms',
         'locale': None
     }
-    with pytest.raises(ValidationError) as validation_err:
-        VerificationService.send_phone_verification(**args)
+
+    with mock.patch('logic.attestation_service.session', dict()):
+        with pytest.raises(ValidationError) as validation_err:
+            VerificationService.send_phone_verification(**args)
 
     assert(validation_err.value.messages[0]) == 'Phone number is invalid.'
     assert(validation_err.value.field_names[0]) == 'phone'
@@ -95,8 +98,10 @@ def test_send_phone_verification_cant_sms_landline():
         'method': 'sms',
         'locale': None
     }
-    with pytest.raises(ValidationError) as validation_err:
-        VerificationService.send_phone_verification(**args)
+
+    with mock.patch('logic.attestation_service.session', dict()):
+        with pytest.raises(ValidationError) as validation_err:
+            VerificationService.send_phone_verification(**args)
 
     assert(validation_err.value.messages[0]) == 'Cannot send SMS to landline.'
     assert(validation_err.value.field_names[0]) == 'phone'
@@ -117,8 +122,10 @@ def test_send_phone_verification_twilio_error():
         'method': 'sms',
         'locale': None
     }
-    with pytest.raises(PhoneVerificationError) as service_err:
-        VerificationService.send_phone_verification(**args)
+
+    with mock.patch('logic.attestation_service.session', dict()):
+        with pytest.raises(PhoneVerificationError) as service_err:
+            VerificationService.send_phone_verification(**args)
 
     assert(str(service_err.value)) == \
         'Could not send verification code. Please try again shortly.'
@@ -141,8 +148,11 @@ def test_verify_phone_valid_code(app):
         'phone': '12341234',
         'code': '123456'
     }
-    with app.test_request_context():
-        response = VerificationService.verify_phone(**args)
+
+    with mock.patch('logic.attestation_service.session', dict()) as session:
+        session['phone_verification_method'] = 'sms'
+        with app.test_request_context():
+            response = VerificationService.verify_phone(**args)
     assert isinstance(response, VerificationServiceResponse)
 
     assert response.data['signature']['version'] == '1.0.0'
@@ -150,7 +160,7 @@ def test_verify_phone_valid_code(app):
     assert response.data['schemaId'] == 'https://schema.originprotocol.com/attestation_1.0.0.json'
     validate_issuer(response.data['data']['issuer'])
     assert response.data['data']['issueDate']
-    assert response.data['data']['attestation']['verificationMethod']['phone']
+    assert response.data['data']['attestation']['verificationMethod']['sms']
     assert response.data['data']['attestation']['phone']['verified']
 
     attestations = Attestation.query.all()
@@ -174,8 +184,10 @@ def test_verify_phone_expired_code():
         'phone': '12341234',
         'code': '123456'
     }
-    with pytest.raises(ValidationError) as validation_err:
-        VerificationService.verify_phone(**args)
+    with mock.patch('logic.attestation_service.session', dict()) as session:
+        session['phone_verification_method'] = 'call'
+        with pytest.raises(ValidationError) as validation_err:
+            VerificationService.verify_phone(**args)
 
     assert(validation_err.value.messages[0]
            ) == 'Verification code has expired.'
@@ -197,8 +209,11 @@ def test_verify_phone_invalid_code():
         'phone': '12341234',
         'code': 'garbage'
     }
-    with pytest.raises(ValidationError) as validation_err:
-        VerificationService.verify_phone(**args)
+
+    with mock.patch('logic.attestation_service.session', dict()) as session:
+        session['phone_verification_method'] = 'call'
+        with pytest.raises(ValidationError) as validation_err:
+            VerificationService.verify_phone(**args)
 
     assert(validation_err.value.messages[0]
            ) == 'Verification code is incorrect.'
@@ -220,7 +235,9 @@ def test_send_phone_verification_india_locale(mock_requests):
         'method': 'sms',
         'locale': None
     }
-    response = VerificationService.send_phone_verification(**args)
+
+    with mock.patch('logic.attestation_service.session', dict()):
+        response = VerificationService.send_phone_verification(**args)
 
     assert len(mock_requests.post.call_args_list) == 1
     assert mock_requests.post.call_args_list[0][1]['params']['locale'] == 'en'

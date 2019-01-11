@@ -61,7 +61,9 @@ def test_verify_phone(client):
             'code': '123456',
             'identity': str_eth(sample_eth_address)
         }
-        response = post_json(client, '/api/attestations/phone/verify', args)
+        with mock.patch('logic.attestation_service.session', dict()) as session:
+            session['phone_verification_method'] = 'sms'
+            response = post_json(client, '/api/attestations/phone/verify', args)
 
         assert response.status_code == 200
         response_json = json_of_response(response)
@@ -71,7 +73,7 @@ def test_verify_phone(client):
         validate_issuer(response_json['data']['issuer'])
 
         assert response_json['data']['issueDate']
-        assert response_json['data']['attestation']['verificationMethod']['phone']
+        assert response_json['data']['attestation']['verificationMethod']['sms']
         assert response_json['data']['attestation']['phone']['verified']
 
 

@@ -90,12 +90,8 @@ export const validateOffer = (offer) => {
 export const validateAttestation = (attestation) => {
   expect(attestation).to.have.property('topic').that.is.a('number')
   expect(attestation).to.have.property('service').that.is.a('string')
-  // FIXME: identity v0: data is a string. in v1 it is an object.
-  //expect(attestation).to.have.property('data').that.is.a('string')
-  //expect(attestation).to.have.property('data').to.startWith('0x')
-  // FIXME: identity v0: signature is a string. in v1 it is an object
-  //expect(attestation).to.have.property('signature').that.is.a('object')
-  //expect(attestation).to.have.property('signature').to.startWith('0x')
+  expect(attestation).to.have.property('data')
+  expect(attestation).to.have.property('signature')
 }
 
 export const validateUser = (user) => {
@@ -103,12 +99,7 @@ export const validateUser = (user) => {
   expect(user).to.have.property('profile').that.is.an('object')
   expect(user.profile).to.have.property('firstName').that.is.a('string')
   expect(user.profile).to.have.property('lastName').that.is.a('string')
-
   expect(user.profile).to.have.property('schemaId').that.is.a('string')
-  // FIXME FIXME
-  //expect(user.profile).to.have.property('ipfs').that.is.an('object')
-  //expect(user.profile.ipfs).to.have.property('hash').that.is.a('string')
-  //expect(user.profile.ipfs).to.have.property('data').that.is.an('object')
 
   expect(user.attestations).to.be.an('array')
   if (user.attestations.length) user.attestations.map(validateAttestation)
