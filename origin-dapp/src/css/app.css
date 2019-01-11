@@ -6094,6 +6094,24 @@ a:not([href]):not([tabindex]).span-link {
 
 /* lg - */
 @media (max-width: 991px) {
+  /* Navigation */
+  .navigation-bar {
+    padding: 0px;
+  }
+
+  .nav-link {
+    padding: 1rem;
+  }
+
+  .navigation-bar .identicon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .navigation-bar .navbar-toggler {
+    padding: 1rem;
+  }
+
   /* Profile */
   .profile-wrapper {
     padding: 0;
