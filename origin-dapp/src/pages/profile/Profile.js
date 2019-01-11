@@ -85,10 +85,12 @@ class Profile extends Component {
         twitter: false,
         unload: false,
         imageCropper: false,
-        // If it's an old identity version, show the identity reset modal.
+        // Show the identity reset modal if the following conditions are met:
+        //  1. Old identity
+        //  2. Not a mobile device (since unlikely user can publish a new identity from mobile)
         // Note that the profile may not have been fetched yet. In such case,
         // modal may get enabled as part of the logic in componentDidUpdate.
-        reset: this.props.profile.user.version === oldIdentityVersion
+        reset: this.props.profile.user.version === oldIdentityVersion && !this.props.mobileDevice
       },
       // percentage widths for two progress bars
       progress: {
@@ -153,10 +155,13 @@ class Profile extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Check prevProps to determine if user profile just loaded.
-    // If yes and it's an old identity version, show the identity reset modal.
+    // Show identity reset modal if:
+    //  1. prevProps indicates the user profile just got loaded
+    //  2. It's an old identity version
+    //  3. Not a mobile device (since unlikely user can publish a new identity from mobile)
     if (!prevProps.profile.user.version &&
-      this.props.profile.user.version === oldIdentityVersion) {
+      this.props.profile.user.version === oldIdentityVersion &&
+      !this.props.mobileDevice) {
       this.setState( { modalsOpen: { ...this.state.modalsOpen, reset: true } })
     }
 
