@@ -12,6 +12,7 @@ git worktree add -f _site gh-pages
 # Do the build
 bundle install
 bundle exec jekyll build
+cp CNAME _site/CNAME
 
 # Commit and push the resulting site build
 cd _site
