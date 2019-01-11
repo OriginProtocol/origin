@@ -47,6 +47,7 @@ class SettingsScreen extends Component {
       Alert.alert('Linking server host change failed!')
       console.error(error)
     }
+    
     this.setState({apiHost: originWallet.getCurrentRemoteLocal()})
   }
 
@@ -99,9 +100,9 @@ class SettingsScreen extends Component {
         }
         {isCustom &&
           <Fragment>
-              <View style={styles.header}>
-                <Text style={styles.heading}>SET PRIVATE KEY</Text>
-              </View>
+            <View style={styles.header}>
+              <Text style={styles.heading}>SET PRIVATE KEY</Text>
+            </View>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -114,25 +115,24 @@ class SettingsScreen extends Component {
             />
           </Fragment>
         }
-        {
-          networks.map((n, i) => (
+        {networks.map((n, i) => (
             <Fragment key={n.id}>
-            <TouchableHighlight onPress={() => this.handleNetwork(n)}>
-            <View style={styles.item}>
-            <Text style={styles.text}>{n.name}</Text>
-            <View style={styles.iconContainer}>
-            {n === currentNetwork &&
-              <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
-            }
-            {n !== currentNetwork &&
-                <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
-            }
-            </View>
-            </View>
-            </TouchableHighlight>
-            {(i + 1) < networks.length &&
-              <Separator padded={true} />
-            }
+              <TouchableHighlight onPress={() => this.handleNetwork(n)}>
+                <View style={styles.item}>
+                  <Text style={styles.text}>{n.name}</Text>
+                  <View style={styles.iconContainer}>
+                    {n === currentNetwork &&
+                      <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
+                    }
+                    {n !== currentNetwork &&
+                      <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
+                    }
+                  </View>
+                </View>
+              </TouchableHighlight>
+              {(i + 1) < networks.length &&
+                <Separator padded={true} />
+              }
             </Fragment>
           ))
         }
