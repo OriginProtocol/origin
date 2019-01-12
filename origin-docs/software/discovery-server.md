@@ -9,7 +9,7 @@ The Origin discovery server provides fast access to Origin data using [GraphQL](
 
 Unified [GraphQL](https://graphql.org/) API provides easy access to Listing, Offer and User objects that are stored either in `PostgreSQL` or `elasticsearch`. Api supports simple queries by property (e.g. ID) and when querying listings more advanced searches by `searchQuery` and `searchFilters`. 
 
-## Running Localy
+## Running Locally
 
 ```bash
 docker-compose up origin-discovery
