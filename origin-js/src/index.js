@@ -45,7 +45,6 @@ export default class Origin {
     attestationAccount
   } = {}) {
     this.version = VERSION
-
     //
     // Services (Internal, should not be used directly by the Origin client).
     //
@@ -59,56 +58,59 @@ export default class Origin {
     })
     this.discoveryService = new DiscoveryService({ discoveryServerUrl, fetch })
 
-    //
-    // Resources (External, exposed to the Origin client).
-    //
-    this.attestations = new Attestations({
-      serverUrl: attestationServerUrl,
-      contractService: this.contractService,
-      fetch
-    })
+    this.initInstance = () => {
+      //
+      // Resources (External, exposed to the Origin client).
+      //
+      this.attestations = new Attestations({
+        serverUrl: attestationServerUrl,
+        contractService: this.contractService,
+        fetch
+      })
 
-    this.marketplace = new Marketplace({
-      contractService: this.contractService,
-      discoveryService: this.discoveryService,
-      ipfsService: this.ipfsService,
-      affiliate,
-      arbitrator,
-      store,
-      blockEpoch,
-      perfModeEnabled
-    })
+      this.marketplace = new Marketplace({
+        contractService: this.contractService,
+        discoveryService: this.discoveryService,
+        ipfsService: this.ipfsService,
+        affiliate,
+        arbitrator,
+        store,
+        blockEpoch,
+        perfModeEnabled
+      })
 
-    this.discovery = new Discovery({
-      discoveryService: this.discoveryService
-    })
+      this.discovery = new Discovery({
+        discoveryService: this.discoveryService
+      })
 
-    this.users = new Users({
-      contractService: this.contractService,
-      ipfsService: this.ipfsService,
-      blockEpoch,
-      blockAttestattionV1,
-      attestationAccount
-    })
+      this.users = new Users({
+        contractService: this.contractService,
+        ipfsService: this.ipfsService,
+        blockEpoch,
+        blockAttestattionV1,
+        attestationAccount
+      })
 
-    this.messaging = new Messaging({
-      contractService: this.contractService,
-      ipfsCreator,
-      OrbitDB,
-      ecies,
-      messagingNamespace
-    })
+      this.messaging = new Messaging({
+        contractService: this.contractService,
+        ipfsCreator,
+        OrbitDB,
+        ecies,
+        messagingNamespace
+      })
 
-    this.token = new Token({
-      contractService: this.contractService,
-      ipfsService: this.ipfsService,
-      marketplace: this.marketplace
-    })
+      this.token = new Token({
+        contractService: this.contractService,
+        ipfsService: this.ipfsService,
+        marketplace: this.marketplace
+      })
 
-    this.reflection = new Reflection({
-      contractService: this.contractService,
-      marketplace: this.marketplace,
-      token: this.token
-    })
+      this.reflection = new Reflection({
+        contractService: this.contractService,
+        marketplace: this.marketplace,
+        token: this.token
+      })
+    }
+    this.initInstance()
   }
 }

@@ -35,7 +35,7 @@ class WalletFundingScreen extends Component {
     const { currency, item } = navigation.state.params
     const balance = web3.utils.fromWei(balances[currency], 'ether')
     const fundsRequired = web3.utils.toBN(item.cost).add(web3.utils.toBN(item.gas_cost))
-    const readableRequired = web3.utils.fromWei(fundsRequired)
+    const readableRequired = web3.utils.fromWei(fundsRequired.toString())
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
 
