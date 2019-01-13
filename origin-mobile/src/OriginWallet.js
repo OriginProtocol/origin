@@ -1078,7 +1078,8 @@ class OriginWallet {
         messaging_url,
         profile_url,
         root_url,
-        selling_url
+        selling_url,
+        attestation_account,
       } = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       const newProviderUrl = localfy(provider_url)
       console.log("Set network to:", newProviderUrl, contract_addresses)
@@ -1101,8 +1102,9 @@ class OriginWallet {
       origin.contractService.updateContractAddresses(contract_addresses)
       origin.ipfsService.gateway = localfy(ipfs_gateway)
       origin.ipfsService.api = localfy(ipfs_api)
+      // Update the users config.
+      origin.users.resolver.updateConfig({ attestation_account })
 
-      
       await this.setNetId()
       if (this.state.ethAddress)
       {
