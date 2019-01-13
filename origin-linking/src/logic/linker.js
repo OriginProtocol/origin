@@ -252,7 +252,7 @@ class Linker {
       messagingUrl:MESSAGING_URL,
       profileUrl:PROFILE_URL,
       dappUrl:DAPP_URL,
-      sellingUrl:SELLING_URL
+      sellingUrl:SELLING_URL,
       attestationAccount:ATTESTATION_ACCOUNT,
     }
   }
