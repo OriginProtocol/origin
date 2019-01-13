@@ -14,6 +14,7 @@ import MyListings from './transactions/Listings'
 import User from './user/User'
 import Profile from './user/Profile'
 import CreateListing from './create-listing/CreateListing'
+import Messages from './messaging/Messages'
 
 class App extends Component {
   componentDidMount() {
@@ -42,6 +43,7 @@ class App extends Component {
             <Route path="/create" component={CreateListing} />
             <Route path="/user/:id" component={User} />
             <Route path="/profile" component={Profile} />
+            <Route path="/messages" component={Messages} />
             <Route component={Listings} />
           </Switch>
         </main>

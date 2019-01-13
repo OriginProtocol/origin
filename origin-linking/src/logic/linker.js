@@ -8,6 +8,7 @@ import origin, {providerUrl, web3} from './../services/origin'
 import {sha3_224} from 'js-sha3'
 import apn from 'apn'
 
+const ATTESTATION_ACCOUNT = process.env.ATTESTATION_ACCOUNT
 const DAPP_URL = process.env.DAPP_URL
 const MESSAGING_URL = `${DAPP_URL}/#/messages?no-nav=true&skip-onboarding=true&wallet-container=`
 const PROFILE_URL = `${DAPP_URL}/#/profile`
@@ -252,6 +253,7 @@ class Linker {
       profileUrl:PROFILE_URL,
       dappUrl:DAPP_URL,
       sellingUrl:SELLING_URL
+      attestationAccount:ATTESTATION_ACCOUNT,
     }
   }
 
