@@ -1,6 +1,7 @@
 import adapterFactory from './adapters/adapter-factory'
 import { generateSchemaId, parseSchemaId } from './schema-id'
 
+export const IDENTITY_DATA_TYPE = 'identity'
 export const LISTING_DATA_TYPE = 'listing'
 export const LISTING_WITHDRAW_DATA_TYPE = 'listing-withdraw'
 export const OFFER_DATA_TYPE = 'offer'
@@ -12,6 +13,7 @@ export const PROFILE_DATA_TYPE = 'profile'
 export const REVIEW_DATA_TYPE = 'review'
 
 const DATA_TYPES = [
+  IDENTITY_DATA_TYPE,
   LISTING_DATA_TYPE,
   LISTING_WITHDRAW_DATA_TYPE,
   OFFER_DATA_TYPE,
@@ -38,13 +40,13 @@ export class IpfsDataStore {
   /**
    * Loads and validates data from IPFS.
    * @param {string} expectedDataType - Type of object to load.
-   * @param {bytes} ipfsHash - Base58 encoded IPFS hash.
+   * @param {string} ipfsHash - Base58 encoded IPFS hash.
    * @returns {object} data
    * @throws {Error}
    */
   async load(expectedDataType, ipfsHash) {
     if (!DATA_TYPES.includes(expectedDataType)) {
-      throw new Error('Unsupported data type: ${dataType}')
+      throw new Error(`Unsupported data type: ${dataType}`)
     }
 
     // Fetch the data from storage.
@@ -86,7 +88,7 @@ export class IpfsDataStore {
    */
   async save(dataType, data) {
     if (!DATA_TYPES.includes(dataType)) {
-      throw new Error('Unsupported data type: ${dataType}')
+      throw new Error(`Unsupported data type: ${dataType}`)
     }
 
     // Get latest version of the schemaID to use for the data type.

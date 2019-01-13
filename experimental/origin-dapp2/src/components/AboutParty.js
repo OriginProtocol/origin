@@ -5,6 +5,9 @@ import get from 'lodash/get'
 import Redirect from 'components/Redirect'
 import Identicon from 'components/Identicon'
 import Avatar from 'components/Avatar'
+import SendMessage from 'components/SendMessage'
+import Tooltip from 'components/Tooltip'
+
 import IdentityQuery from 'queries/Identity'
 
 class AboutParty extends Component {
@@ -19,7 +22,7 @@ class AboutParty extends Component {
     return (
       <div
         className="about-party"
-        onClick={() => this.setState({ redirect: true })}
+        // onClick={() => this.setState({ redirect: true })}
       >
         <Query query={IdentityQuery} variables={{ id }}>
           {({ data, loading, error }) => {
@@ -38,22 +41,43 @@ class AboutParty extends Component {
                   <div className="name">{name}</div>
                   <div className="attestations">
                     {profile.twitterVerified && (
-                      <div className="attestation twitter" />
+                      <Tooltip
+                        tooltip="Twitter Account Verified"
+                        placement="bottom"
+                      >
+                        <div className="attestation twitter" />
+                      </Tooltip>
                     )}
                     {profile.googleVerified && (
-                      <div className="attestation google" />
+                      <Tooltip
+                        tooltip="Google Account Verified"
+                        placement="bottom"
+                      >
+                        <div className="attestation google" />
+                      </Tooltip>
                     )}
                     {profile.phoneVerified && (
-                      <div className="attestation phone" />
+                      <Tooltip tooltip="Phone Verified" placement="bottom">
+                        <div className="attestation phone" />
+                      </Tooltip>
                     )}
                     {profile.emailVerified && (
-                      <div className="attestation email" />
+                      <Tooltip tooltip="Email Verified" placement="bottom">
+                        <div className="attestation email" />
+                      </Tooltip>
                     )}
                     {profile.facebookVerified && (
-                      <div className="attestation facebook" />
+                      <Tooltip tooltip="Facebook Verified" placement="bottom">
+                        <div className="attestation facebook" />
+                      </Tooltip>
                     )}
                     {profile.airbnbVerified && (
-                      <div className="attestation airbnb" />
+                      <Tooltip
+                        tooltip="Airbnb Account Verified"
+                        placement="bottom"
+                      >
+                        <div className="attestation airbnb" />
+                      </Tooltip>
                     )}
                   </div>
                 </div>
@@ -67,6 +91,22 @@ class AboutParty extends Component {
             <div>ETH Address:</div>
             <div className="address">{id}</div>
           </div>
+        </div>
+        <div className="mt-3 text-center">
+          <button
+            className="btn btn-primary btn-rounded"
+            onClick={e => {
+              e.stopPropagation()
+              this.setState({ message: true })
+            }}
+            children="Send Message"
+          />
+          {this.state.message && (
+            <SendMessage
+              to={id}
+              onClose={() => this.setState({ message: false })}
+            />
+          )}
         </div>
       </div>
     )

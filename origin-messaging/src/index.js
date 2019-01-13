@@ -176,6 +176,14 @@ const initRESTApp = db => {
   }
   const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
 
+  // should be tightened up for security
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+
+    next()
+  })
+
   app.all((req, res, next) => {
     rateLimiter.consume(req.connection.remoteAddress)
       .then(() => {
