@@ -83,38 +83,9 @@ class SettingsScreen extends Component {
             </View>
           </View>
         </TouchableHighlight>
-        {isCustom &&
-          <Fragment>
-            <View style={styles.header}>
-              <Text style={styles.heading}>LINKING SERVER HOST</Text>
-            </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={this.handleChange}
-              onSubmitEditing={e =>this.handleSubmit(e)}
-              value={this.state.apiHost}
-              style={styles.input}
-            />
-          </Fragment>
-        }
-        {isCustom &&
-          <Fragment>
-            <View style={styles.header}>
-              <Text style={styles.heading}>SET PRIVATE KEY</Text>
-            </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              onSubmitEditing={async (e) => { if (await originWallet.setPrivateKey(e.nativeEvent.text)) {
-                  Alert.alert('A new private key has been set!')
-                }}}
-              onChangeText={(inputPrivateKey) => this.setState({inputPrivateKey})}
-              value={this.state.inputPrivateKey}
-              style={styles.input}
-            />
-          </Fragment>
-        }
+        <View style={styles.header}>
+          <Text style={styles.heading}>NETWORK</Text>
+        </View>
         {networks.map((n, i) => (
             <Fragment key={n.id}>
               <TouchableHighlight onPress={() => this.handleNetwork(n)}>
@@ -135,6 +106,38 @@ class SettingsScreen extends Component {
               }
             </Fragment>
           ))
+        }
+        {isCustom &&
+          <Fragment>
+            <View style={styles.header}>
+              <Text style={styles.heading}>LINKING SERVER HOST</Text>
+            </View>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={this.handleChange}
+              onSubmitEditing={e =>this.handleSubmit(e)}
+              value={this.state.apiHost}
+              style={styles.input}
+            />
+          </Fragment>
+        }
+        {isCustom &&
+          <Fragment>
+            <View style={styles.header}>
+              <Text style={styles.heading}>PRIVATE KEY</Text>
+            </View>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              onSubmitEditing={async (e) => { if (await originWallet.setPrivateKey(e.nativeEvent.text)) {
+                  Alert.alert('A new private key has been set!')
+                }}}
+              onChangeText={(inputPrivateKey) => this.setState({inputPrivateKey})}
+              value={this.state.inputPrivateKey}
+              style={styles.input}
+            />
+          </Fragment>
         }
       </View>
     )
