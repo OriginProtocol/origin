@@ -208,6 +208,7 @@ export default `
     listing: Listing
     events: [Event]
     createdEvent: Event
+    history: [OfferHistory]
 
     # On-Chain
     value: String
@@ -224,6 +225,14 @@ export default `
     # Computed
     withdrawnBy: Account
     statusStr: String
+  }
+
+  type OfferHistory {
+    id: ID!
+    event: Event
+    party: Account
+    ipfsHash: String
+    ipfsUrl: String
   }
 
   input NewListingInput {

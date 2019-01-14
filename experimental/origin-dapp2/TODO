@@ -2,6 +2,8 @@
 
 - Dropdown
 - Conversation page
+- Upload pictures
+- Read / unread
 
 
 # Listing detail
@@ -23,14 +25,18 @@
 
 ---------------------------------
 
+# General
+
+- 'Connected' nav
+- Mainnet Beta modal
+- Mainnet Beta top bar
+
 
 # Search results
 
 - Sub-category search filters
 - Alter URL when searching
 - 'Load more' button styling / spinner
-- Mainnet Beta modal
-- Mainnet Beta top bar
 
 
 # Create listing
@@ -49,7 +55,6 @@
 
 # Transaction Detail
 
-- Tx History: IPFS link
 - Tx History: Hash link
 - Listing detail
 

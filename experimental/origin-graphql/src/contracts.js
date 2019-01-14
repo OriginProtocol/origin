@@ -90,11 +90,12 @@ const Configs = {
     ipfsRPC: `http://${HOST}:5002`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
-    // messaging: {
-    //   ipfsSwarm:
-    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/Qma1eKbWcLy9EVYv4zVJZSAtXT6TsKXYTQ2JKtU5T7APne',
-    //   messagingNamespace: 'dev'
-    // }
+    messaging: {
+      ipfsSwarm:
+        '/ip4/127.0.0.1/tcp/9012/ws/ipfs/QmYsCaLzzso7kYuAZ8b5DwhpwGvgzKyFtvs37bG95GTQGA',
+      messagingNamespace: 'dev',
+      globalKeyServer: 'http://127.0.0.1:6647'
+    }
   },
   test: {
     provider: `http://${HOST}:8545`,
