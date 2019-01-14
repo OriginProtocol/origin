@@ -42,7 +42,7 @@ exports.pinService = async (event) => {
 
 const parseIncomingData = data => {
   let hashesToPin = [];
-  if(data.type == "listing"){
+  if(data.type === "listing"){
     hashesToPin.push(data.ipfsHash);
     if("media" in data.rawData && data.rawData["media"].length > 0) {
       const mediaData = data.rawData["media"];
