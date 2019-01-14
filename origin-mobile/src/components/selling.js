@@ -9,7 +9,7 @@ const IMAGES_PATH = '../../assets/images/'
 
 export default class Selling extends Component {
   handlePress() {
-    originWallet.openSelling()
+    originWallet.open('selling')
   }
 
   render() {
