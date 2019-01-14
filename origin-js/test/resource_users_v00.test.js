@@ -1,6 +1,7 @@
 import chai from 'chai'
 import chaiString from 'chai-string'
 import chaiAsPromised from 'chai-as-promised'
+import { encode as rlpEncode } from 'rlp'
 import Web3 from 'web3'
 
 import Users from '../src/resources/users'
@@ -31,6 +32,28 @@ const generateAttestation = async ({
   return new AttestationObject({ topic, data, signature, ipfsHash })
 }
 
+const predictIdentityAddress = async (web3, wallet) => {
+  const nonce = await new Promise(resolve => {
+    web3.eth.getTransactionCount(wallet, (err, count) => {
+      resolve(count)
+    })
+  })
+  const address =
+    '0x' + Web3.utils.sha3(rlpEncode([wallet, nonce])).substring(26, 66)
+  return Web3.utils.toChecksumAddress(address)
+}
+
+const getIdentityAddress = async (contractService, adapter, wallet) => {
+  const currentAccount = await contractService.currentAccount()
+  wallet = wallet || currentAccount
+  const identityAddress = await adapter.identityAddress(wallet)
+  if (identityAddress) {
+    return Web3.utils.toChecksumAddress(identityAddress)
+  } else {
+    return predictIdentityAddress(contractService.web3, wallet)
+  }
+}
+
 const invalidAttestation = new AttestationObject({
   topic: 123,
   data: Web3.utils.sha3('gibberish'),
@@ -45,7 +68,7 @@ const invalidSignatureAttestation = new AttestationObject({
     '0xabcdeba65cbd88fc246013da8dfb478e880518594d86349f54af9c8d5e2eac2b223222c4c6b93f18bd54fc88f4342f1b02a8ea764a411fc02823a3420574375c1a'
 })
 
-describe('User Resource', function() {
+describe('User Resource v00', function() {
   this.timeout(10000) // default is 2000
   let users
   let phoneAttestation
@@ -67,12 +90,14 @@ describe('User Resource', function() {
       ipfsGatewayPort: '8080',
       ipfsGatewayProtocol: 'http'
     })
-    const attestations = new Attestations({ contractService })
     users = new Users({
       contractService,
       ipfsService,
       blockEpoch: await web3.eth.getBlockNumber()
     })
+
+    // Force resolver to use V00 contract.
+    users.resolver.currentAdapter = users.resolver.adapters['000']
 
     // clear user before each test because blockchain persists between tests
     // sort of a hack to force clean state at beginning of each test
@@ -81,7 +106,8 @@ describe('User Resource', function() {
     )
     await userRegistry.methods.clearUser().send({ from: this.userAddress })
 
-    const identityAddress = await attestations.getIdentityAddress(accounts[0])
+    const identityAddress = await getIdentityAddress(
+      contractService, users.resolver.currentAdapter, accounts[0])
     this.identityAddress = identityAddress
 
     phoneAttestation = await generateAttestation({

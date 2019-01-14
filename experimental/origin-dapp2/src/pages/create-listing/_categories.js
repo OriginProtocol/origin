@@ -1,3 +1,10 @@
+const root = [
+  ['schema.forSale', 'For Sale'],
+  ['schema.forRent', 'For Rent'],
+  ['schema.services', 'Services'],
+  ['schema.announcements', 'Announcements']
+]
+
 const forSale = [
   ['schema.antiques', 'Antiques'],
   ['schema.appliances', 'Appliances'],
@@ -107,7 +114,21 @@ const announcements = [
   ['schema.volunteers', 'Volunteers']
 ]
 
+// Convenience category / sub-category lookup object
+const lookup = [
+  ...root,
+  ...forSale,
+  ...forRent,
+  ...services,
+  ...announcements
+].reduce((m, o) => {
+  m[o[0]] = o[1]
+  return m
+}, {})
+
 export default {
+  root: root,
+  lookup: lookup,
   'schema.forSale': forSale,
   'schema.forRent': forRent,
   'schema.services': services,

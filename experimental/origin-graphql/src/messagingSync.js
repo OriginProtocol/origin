@@ -7,7 +7,7 @@ import config from './contracts'
 
 const MessagingStateQuery = gql`
   query GetMessagingState {
-    messaging(id: "defaultAccount") {
+    messaging(id: "currentAccount") {
       id
       enabled
       synced
@@ -20,13 +20,15 @@ const MessagingStateQuery = gql`
 let syncTimer
 
 export default function messagingSync(client) {
+  const msg = config.messaging
+  if (!msg) {
+    return
+  }
   function refresh() {
     client
       .query({ query: MessagingStateQuery, fetchPolicy: 'network-only' })
       .then(() => {})
   }
-
-  const msg = config.messaging
   msg.events.on('initRemote', () => {
     console.log('Messaging initialized')
 
@@ -38,24 +40,26 @@ export default function messagingSync(client) {
       refresh()
     }, 2000)
 
-    msg.global_keys.events.on(
-      'replicate.progress',
-      (address, hash, entry, progress, have) => {
-        // console.log('replicate.progress', address, hash, entry, progress, have, msg.global_keys._replicationStatus.buffered, msg.global_keys._replicationStatus.queued)
-        console.log('replicate.progress', progress, have)
-        clearTimeout(syncTimer)
-        syncTimer = setTimeout(() => {
-          msg.synced = true
-          msg.syncProgress = '100%'
+    if (msg.global_keys && msg.global_keys.events) {
+      msg.global_keys.events.on(
+        'replicate.progress',
+        (address, hash, entry, progress, have) => {
+          // console.log('replicate.progress', address, hash, entry, progress, have, msg.global_keys._replicationStatus.buffered, msg.global_keys._replicationStatus.queued)
+          console.log('replicate.progress', progress, have)
+          clearTimeout(syncTimer)
+          syncTimer = setTimeout(() => {
+            msg.synced = true
+            msg.syncProgress = '100%'
+            refresh()
+          }, 2000) // If no sync event in 1 second, assume we're synced
+          let pct = Math.round((progress / have) * 1000) / 10
+          if (pct > 99) pct = 99
+          msg.syncProgress = `${pct}%`
+          msg.synced = false
           refresh()
-        }, 2000) // If no sync event in 1 second, assume we're synced
-        let pct = Math.round((progress / have) * 1000) / 10
-        if (pct > 99) pct = 99
-        msg.syncProgress = `${pct}%`
-        msg.synced = false
-        refresh()
-      }
-    )
+        }
+      )
+    }
     // msg.global_keys.events.on(
     //   'load.progress',
     //   (address, hash, entry, progress, have) => {
@@ -87,24 +91,23 @@ export default function messagingSync(client) {
     console.log('Messaging Signed Sig')
     refresh()
   })
+
   // detect existing messaging account
   // msg.events.on('pending_conv', conv => {
   //   console.log('Messaging pending_conv', conv)
   // })
 
   // detect new decrypted messages
-  // msg.events.on('msg', obj => {
-  //   console.log('Messaging msg', obj)
-  //   // if (obj.decryption) {
-  //   //   const { roomId, keys } = obj.decryption
-  //   //
-  //   //   origin.messaging.initRoom(roomId, keys)
-  //   // }
-  //   //
-  //   // this.props.addMessage(obj)
-  //   //
-  //   // this.debouncedFetchUser(obj.senderAddress)
-  // })
+  msg.events.on('msg', obj => {
+    if (obj.decryption) {
+      const { roomId, keys } = obj.decryption
+      origin.messaging.initRoom(roomId, keys)
+    }
+    // console.log('New msg', obj)
+    // this.props.addMessage(obj)
+    //
+    // this.debouncedFetchUser(obj.senderAddress)
+  })
 
   // To Do: handle incoming messages when no Origin Messaging Private Key is available
   // msg.events.on('emsg', obj => {
