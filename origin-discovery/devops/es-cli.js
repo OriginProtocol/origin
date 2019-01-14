@@ -206,7 +206,7 @@ async function validateCliResponse(callback, args, validationPredicate){
   if (validationPredicate(response)){
     return
   }
-  console.error("Unexpected repsonse: ", response)
+  console.error('Unexpected repsonse: ', response)
   process.exit(1)
 }
 
