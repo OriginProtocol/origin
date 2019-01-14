@@ -40,7 +40,7 @@ class ConfirmReset extends Component {
             />
           </button>
         </div>
-        <a data-modal="publish" onClick={handleToggle}>
+        <a data-modal="reset" onClick={handleToggle}>
           <FormattedMessage
             id={'ConfirmReset.oopsNoWait'}
             defaultMessage={'Not now...'}

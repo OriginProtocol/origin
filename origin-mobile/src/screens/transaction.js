@@ -130,7 +130,9 @@ class TransactionScreen extends Component {
               />
             </View>
           }
-      {listing && <Text numberOfLines={1} style={styles.title}>{listing.title}</Text>}
+          {listing &&
+            <Text numberOfLines={1} style={styles.title}>{listing.title}</Text>
+          }
           <View style={styles.accounts}>
             <Avatar
               image={fromUser.profile && fromUser.profile.avatar}
