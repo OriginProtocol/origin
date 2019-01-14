@@ -249,11 +249,11 @@ class Linker {
       contractAddresses:origin.contractService.getContractAddresses(),
       ipfsGateway:origin.ipfsService.gateway,
       ipfsApi:origin.ipfsService.api,
+      dappUrl:DAPP_URL,
       messagingUrl:MESSAGING_URL,
       profileUrl:PROFILE_URL,
-      dappUrl:DAPP_URL,
       sellingUrl:SELLING_URL,
-      attestationAccount:ATTESTATION_ACCOUNT,
+      attestationAccount:ATTESTATION_ACCOUNT
     }
   }
 
