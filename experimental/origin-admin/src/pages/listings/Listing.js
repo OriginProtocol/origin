@@ -112,7 +112,7 @@ class Listing extends Component {
                             <Offers
                               listing={listing}
                               listingId={listingId}
-                              offers={listing.offers}
+                              offers={listing.allOffers}
                             />
 
                             <Button

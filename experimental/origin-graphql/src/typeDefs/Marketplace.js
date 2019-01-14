@@ -166,6 +166,7 @@ export default `
 
     # Connections
     offers: [Offer]
+    allOffers: [Offer]
     offer(id: ID!): Offer
     totalOffers: Int
     events: [Event]
@@ -179,6 +180,8 @@ export default `
     unitsAvailable: Int
     unitsSold: Int
     depositAvailable: String
+    type: String
+    multiUnit: Boolean
 
     # IPFS
     title: String
@@ -224,6 +227,8 @@ export default `
     # Computed
     withdrawnBy: Account
     statusStr: String
+    valid: Boolean
+    validationError: String
   }
 
   input NewListingInput {

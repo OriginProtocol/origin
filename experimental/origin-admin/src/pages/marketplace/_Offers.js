@@ -345,6 +345,10 @@ function price(offer, field = 'value') {
 }
 
 function status(offer) {
+  if (!offer.valid) {
+    return <Tag icon="cross">Invalid</Tag>
+  }
+
   if (offer.status === 0) {
     if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
       return <Tag icon="cross">Declined</Tag>
