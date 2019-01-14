@@ -6121,6 +6121,17 @@ a:not([href]):not([tabindex]).span-link {
     right: 0px;
   }
 
+  .show.navigation.nav-item {
+    background-color: var(--pale-grey);
+  }
+
+  .navigation .dropdown-menu {
+    background-color: var(--pale-grey);
+    border-radius: 0px;
+    border: none;
+    width: 100%;
+    top: 58px;
+  }
 
   /* Profile */
   .profile-wrapper {
