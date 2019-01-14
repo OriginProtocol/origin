@@ -4,6 +4,7 @@ import thunkMiddleware from 'redux-thunk'
 import activation from 'reducers/Activation'
 import devices from 'reducers/Devices'
 import exchangeRates from 'reducers/ExchangeRates'
+import notifications from 'reducers/Notifications'
 import users from 'reducers/Users'
 import wallet from 'reducers/Wallet'
 import wallet_events from 'reducers/WalletEvents'
@@ -13,7 +14,10 @@ import storage from 'redux-persist/lib/storage'
 const persistConfig = {
   key: 'root',
   storage: storage,
-  whitelist: ['wallet_events']
+  whitelist: [
+    'notifications',
+    'wallet_events',
+  ]
 }
 
 const middlewares = [thunkMiddleware]
@@ -24,6 +28,7 @@ const store = createStore(
       activation,
       devices,
       exchangeRates,
+      notifications,
       users,
       wallet,
       wallet_events,
