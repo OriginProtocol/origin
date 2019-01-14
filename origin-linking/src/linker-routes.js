@@ -46,7 +46,8 @@ router.get("/server-info", (req, res) => {
     messagingUrl,
     profileUrl,
     dappUrl,
-    sellingUrl
+    sellingUrl,
+    attestationAccount
   } = linker.getServerInfo()
   res.send({
     provider_url:providerUrl,
@@ -56,7 +57,8 @@ router.get("/server-info", (req, res) => {
     messaging_url:messagingUrl,
     profile_url:profileUrl,
     dapp_url:dappUrl,
-    selling_url:sellingUrl
+    selling_url:sellingUrl,
+    attestation_account:attestationAccount
   })
 })
 
