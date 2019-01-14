@@ -1,5 +1,7 @@
 import datetime
+import json
 import logging
+import pytz
 import requests
 import sendgrid
 import re
@@ -26,7 +28,6 @@ from logic.service_utils import (
 )
 from requests_oauthlib import OAuth1
 from util import attestations, urls
-from util.ipfs import IPFSHelper, base58_to_hex
 from web3 import Web3
 
 signing_key = settings.ATTESTATION_SIGNING_KEY
@@ -35,15 +36,18 @@ twitter_request_token_url = 'https://api.twitter.com/oauth/request_token'
 twitter_authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 twitter_access_token_url = 'https://api.twitter.com/oauth/access_token'
 
-TOPICS = {
-    'phone': 10,
-    'email': 11,
-    'facebook': 3,
-    'twitter': 4,
-    'airbnb': 5
+ISSUER = {
+    'name': 'Origin Protocol',
+    'url': 'https://www.originprotocol.com',
+    'ethAddress': settings.ATTESTATION_ACCOUNT
 }
 
 logger = logging.getLogger(__name__)
+
+
+def current_time():
+    """Returns current time in ISO 8601 format. Ex: 2019-01-04T06:17:37+00:00"""
+    return datetime.datetime.now(tz=pytz.utc).replace(microsecond=0).isoformat()
 
 
 class VerificationServiceResponse():
@@ -70,6 +74,10 @@ class VerificationService:
             PhoneVerificationError: Verification request failed for a reason not
                 related to the arguments
         """
+        if method not in ['sms', 'call']:
+            raise ValidationError('Invalid phone verification method ', method)
+        session['phone_verification_method'] = method
+
         params = {
             'country_code': country_calling_code,
             'phone_number': phone,
@@ -122,7 +130,7 @@ class VerificationService:
             phone (str): Phone number in national format.
             code (int): Verification code for the country_calling_code and phone
                 combination
-            eth_address (str): Address of ERC725 identity token for claim
+            eth_address (str): ETH address of the user
 
         Returns:
             VerificationServiceResponse
@@ -132,6 +140,10 @@ class VerificationService:
             PhoneVerificationError: Verification request failed for a reason not
                 related to the arguments
         """
+        method = session.get('phone_verification_method', None)
+        if method not in ['sms', 'call']:
+            raise ValidationError('Invalid phone verification method ', method)
+
         params = {
             'country_code': country_calling_code,
             'phone_number': phone,
@@ -166,27 +178,42 @@ class VerificationService:
         # but it a good precaution to handle any inconsistency between the
         # success field and the status code
         if response.json()['success'] is True:
-            # TODO: determine what the text should be
-            data = 'phone verified'
-            # TODO: determine claim type integer code for phone verification
-            signature = attestations.generate_signature(
-                signing_key, eth_address, TOPICS['phone'], data
-            )
+            data = {
+                 'issuer': ISSUER,
+                 'issueDate': current_time(),
+                 'attestation': {
+                     'verificationMethod': {
+                         method: True
+                     },
+                     'phone': {
+                         'verified': True
+                     }
+                 }
+            }
+
+            # Note: use sort_keys option to make the output deterministic for hashing purposes.
+            json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
+            signature = {
+                'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+                'version': '1.0.0'
+            }
 
             attestation = Attestation(
                 method=AttestationTypes.PHONE,
                 eth_address=eth_address,
                 value="{} {}".format(country_calling_code, phone),
-                signature=signature,
+                signature=signature['bytes'],
                 remote_ip_address=request.remote_addr
             )
             db.session.add(attestation)
             db.session.commit()
 
+            session.pop('phone_verification_method')
+
             return VerificationServiceResponse({
-                'signature': signature,
-                'claim_type': TOPICS['phone'],
-                'data': data
+                'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
+                'data': data,
+                'signature': signature
             })
 
         raise PhoneVerificationError(
@@ -244,7 +271,7 @@ class VerificationService:
         Args:
             email (str): Email address being verified
             code (int): Verification code for the email address
-            eth_address (str): Address of ERC725 identity token for claim
+            eth_address (str): ETH address of the user
 
         Returns:
             VerificationServiceResponse
@@ -269,27 +296,40 @@ class VerificationService:
 
         session.pop('email_attestation')
 
-        # TODO: determine what the text should be
-        data = 'email verified'
-        # TODO: determine claim type integer code for email verification
-        signature = attestations.generate_signature(
-            signing_key, eth_address, TOPICS['email'], data
-        )
+        data = {
+            'issuer': ISSUER,
+            'issueDate': current_time(),
+            'attestation': {
+                'verificationMethod': {
+                    'email': True
+                },
+                'email': {
+                    'verified': True
+                }
+            }
+        }
+
+        # Note: use sort_keys option to make the output deterministic for hashing purposes.
+        json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
+        signature = {
+            'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+            'version': '1.0.0'
+        }
 
         attestation = Attestation(
             method=AttestationTypes.EMAIL,
             eth_address=eth_address,
             value=email,
-            signature=signature,
+            signature=signature['bytes'],
             remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
         db.session.commit()
 
         return VerificationServiceResponse({
-            'signature': signature,
-            'claim_type': TOPICS['email'],
-            'data': data
+            'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
+            'data': data,
+            'signature': signature
         })
 
     def facebook_auth_url():
@@ -324,27 +364,43 @@ class VerificationService:
             params={"access_token": access_token}
         )
 
-        # TODO: determine what the text should be
-        data = 'facebook verified'
-        # TODO: determine claim type integer code for phone verification
-        signature = attestations.generate_signature(
-            signing_key, eth_address, TOPICS['facebook'], data
-        )
+        data = {
+            'issuer': ISSUER,
+            'issueDate': current_time(),
+            'attestation': {
+                'verificationMethod': {
+                    'oAuth': True
+                },
+                'site': {
+                    'siteName': 'facebook.com',
+                    'userId': {
+                        'verified': True
+                    }
+                 }
+            }
+        }
+
+        # Note: use sort_keys option to make the output deterministic for hashing purposes.
+        json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
+        signature = {
+            'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+            'version': '1.0.0'
+        }
 
         attestation = Attestation(
             method=AttestationTypes.FACEBOOK,
             eth_address=eth_address,
             value=response.json()['name'],
-            signature=signature,
+            signature=signature['bytes'],
             remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
         db.session.commit()
 
         return VerificationServiceResponse({
-            'signature': signature,
-            'claim_type': TOPICS['facebook'],
-            'data': data
+            'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
+            'data': data,
+            'signature': signature
         })
 
     def twitter_auth_url():
@@ -380,7 +436,6 @@ class VerificationService:
         return VerificationServiceResponse({'url': url})
 
     def verify_twitter(oauth_verifier, eth_address):
-        ipfs_helper = IPFSHelper()
         # Verify authenticity of user
         if 'request_token' not in session:
             raise TwitterVerificationError('Session not found.')
@@ -406,29 +461,43 @@ class VerificationService:
         query_string = urllib.parse.parse_qs(response.content)
         screen_name = query_string[b'screen_name'][0].decode('utf-8')
 
-        ipfs_hash = ipfs_helper.add_json({
-            'schemaId': 'https://schema.originprotocol.com/twitter-attestation_1.0.0.json',
-            'screen_name': screen_name
-        })
+        data = {
+            'issuer': ISSUER,
+            'issueDate': current_time(),
+            'attestation': {
+                'verificationMethod': {
+                    'oAuth': True
+                },
+                'site': {
+                    'siteName': 'twitter.com',
+                    'userId': {
+                        'raw': screen_name
+                    }
+                 }
+            }
+        }
 
-        signature = attestations.generate_signature(
-            signing_key, eth_address, TOPICS['twitter'], base58_to_hex(ipfs_hash)
-        )
+        # Note: use sort_keys option to make the output deterministic for hashing purposes.
+        json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
+        signature = {
+            'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+            'version': '1.0.0'
+        }
 
         attestation = Attestation(
             method=AttestationTypes.TWITTER,
             eth_address=eth_address,
             value=screen_name,
-            signature=signature,
+            signature=signature['bytes'],
             remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
         db.session.commit()
 
         return VerificationServiceResponse({
+            'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
+            'data': data,
             'signature': signature,
-            'claim_type': TOPICS['twitter'],
-            'data': ipfs_hash
         })
 
     def generate_airbnb_verification_code(eth_address, airbnbUserId):
@@ -439,7 +508,6 @@ class VerificationService:
         })
 
     def verify_airbnb(eth_address, airbnbUserId):
-        ipfs_helper = IPFSHelper()
         validate_airbnb_user_id(airbnbUserId)
 
         code = get_airbnb_verification_code(eth_address, airbnbUserId)
@@ -468,41 +536,43 @@ class VerificationService:
                 " has not been found in user's Airbnb profile."
             )
 
-        ipfs_hash = ipfs_helper.add_json({
-            'schemaId': 'https://schema.originprotocol.com/airbnb-attestation_1.0.0.json',
-            'airbnb_user_id': airbnbUserId
-        })
+        data = {
+            'issuer': ISSUER,
+            'issueDate': current_time(),
+            'attestation': {
+                'verificationMethod': {
+                    'pubAuditableUrl': {}
+                },
+                'site': {
+                    'siteName': 'airbnb.com',
+                    'userId': {
+                        'raw': airbnbUserId
+                    }
+                 }
+            }
+        }
 
-        """ - IPFS hash is a base58 encoded string
-            - We store IPFS hashes in solidity claims in bytes32 binary format to minimise
-              gas cost.
-            - bytes32 is not string serialisable so it can not be transmitted in that form
-              from bridge to the DApp
-            - bridge needs to transform ipfs hash to bytes32 format (that is how
-              it is going to be stored in the contract) before signing the claim, and then
-              send IPFS hash to the DApp in base58 string encoding.
-            - this way claim has a correct signature if IPFS hash has bytes32 hex encoding
-            - the DApp takes signature and other claim info and transforms the base58 encoded
-              IPFS hash to base32 hex before submitting the claim to web3.
-        """
-        signature = attestations.generate_signature(
-            signing_key, eth_address, TOPICS['airbnb'], base58_to_hex(ipfs_hash)
-        )
+        # Note: use sort_keys option to make the output deterministic for hashing purposes.
+        json_data = json.dumps(data, separators=(',', ':'), sort_keys=True)
+        signature = {
+            'bytes': attestations.generate_signature(signing_key, eth_address, json_data),
+            'version': '1.0.0'
+        }
 
         attestation = Attestation(
             method=AttestationTypes.AIRBNB,
             eth_address=eth_address,
             value=airbnbUserId,
-            signature=signature,
+            signature=signature['bytes'],
             remote_ip_address=request.remote_addr
         )
         db.session.add(attestation)
         db.session.commit()
 
         return VerificationServiceResponse({
-            'signature': signature,
-            'claim_type': TOPICS['airbnb'],
-            'data': ipfs_hash
+            'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
+            'data': data,
+            'signature': signature
         })
 
 

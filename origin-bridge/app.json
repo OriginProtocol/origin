@@ -45,6 +45,10 @@
       "description": "Origin signing key",
       "value": "0x0000000000000000000000000000000000000000000000000000000000000001"
     },
+    "ATTESTATION_ACCOUNT": {
+      "description": "Origin attestation address",
+      "value": "0x0000000000000000000000000000000000000001"
+    },
     "FACEBOOK_CLIENT_ID": {
       "description": "Facebook client ID given to your app",
       "required": false

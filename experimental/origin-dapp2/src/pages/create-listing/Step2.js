@@ -4,6 +4,7 @@ import pick from 'lodash/pick'
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
+import Price from 'components/Price'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
 
@@ -91,13 +92,22 @@ class Step2 extends Component {
                 <div className="form-group">
                   <label>Price</label>
                   <div className="d-flex">
-                    <div style={{ flex: 1 }}>
+                    <div style={{ flex: 1, marginRight: '1rem' }}>
                       <div className="with-symbol">
                         <input {...input('price')} />
                         <span className="eth">ETH</span>
                       </div>
                     </div>
-                    <div style={{ flex: 1 }} />
+                    <div style={{ flex: 1 }}>
+                      <div className="with-symbol corner">
+                        <Price
+                          el="input"
+                          amount={this.state.price}
+                          className="form-control form-control-lg"
+                        />
+                        <span className="usd">USD</span>
+                      </div>
+                    </div>
                   </div>
                   {Feedback('price')}
                   <div className="help-text price">
@@ -131,10 +141,9 @@ class Step2 extends Component {
           <Wallet />
           <div className="gray-box">
             <h5>Add Listing Details</h5>
-            Be sure to give your listing an appropriate
-            title and description to let others know what you&apos;re offering.
-            Adding some photos will increase the chances of selling your
-            listing.
+            Be sure to give your listing an appropriate title and description to
+            let others know what you&apos;re offering. Adding some photos will
+            increase the chances of selling your listing.
           </div>
         </div>
       </div>
@@ -251,16 +260,47 @@ require('react-styl')(`
         font-size: 18px
   .with-symbol
     position: relative
+    &.corner::before
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 9px solid transparent;
+      border-right: 9px solid var(--light);
+      border-bottom: 9px solid transparent;
+    &.corner::after
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 7px solid transparent;
+      border-right: 7px solid var(--white);
+      border-bottom: 7px solid transparent;
     > span
       position: absolute
       right: 10px
       top: 50%
       transform: translateY(-50%)
-      padding: 2px 9px 2px 1.75rem
+      padding: 2px 9px 2px 9px
       border-radius: 12px
-      background: var(--pale-grey) url(/images/eth-icon.svg) no-repeat 6px center
+      background: var(--pale-grey)
+      background-repeat: no-repeat
+      background-position: 6px center
       background-size: 17px
-      color: var(--bluish-purple)
       font-weight: bold
       font-size: 14px
+      &.eth
+        padding-left: 1.75rem
+        color: var(--bluish-purple)
+        background-image: url(/images/eth-icon.svg)
+      &.usd
+        &::before
+          content: "$"
+          margin-right: 0.25rem
 `)

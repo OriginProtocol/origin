@@ -27,7 +27,7 @@ class ProfileScreen extends Component {
   }
 
   handlePress() {
-    originWallet.openProfile()
+    originWallet.open('profile')
   }
 
   render() {

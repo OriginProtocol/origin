@@ -2,7 +2,7 @@ import contracts from '../../contracts'
 
 async function sendMessage(_, { to, content }) {
   await new Promise(async (resolve) => {
-    console.log({ to, content })
+    to = contracts.web3.utils.toChecksumAddress(to)
     await contracts.messaging.sendConvMessage(to, { content })
     resolve(true)
   })
