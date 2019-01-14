@@ -1,18 +1,18 @@
 [
   {
-    "id": "nav-listing-create.title",
-    "defaultMessage": "You have unfinished listing"
+    "id": "draft-listing.title",
+    "defaultMessage": "Listing In Progress"
   },
   {
-    "id": "nav-listing-create.descript",
-    "defaultMessage": "Are you going to continue or create a new one?"
+    "id": "draft-listing.explanation",
+    "defaultMessage": "You have an incomplete listing that has not yet been created. Would you like to remove it and start a new one or continue with your existing draft?"
   },
   {
-    "id": "nav-listing-create.recover",
+    "id": "draft-listing.remove",
+    "defaultMessage": "Remove"
+  },
+  {
+    "id": "draft-listing.continue",
     "defaultMessage": "Continue"
-  },
-  {
-    "id": "nav-listing-create.addNew",
-    "defaultMessage": "Create a new"
   }
 ]

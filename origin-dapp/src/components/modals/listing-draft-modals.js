@@ -3,48 +3,45 @@ import { FormattedMessage } from 'react-intl'
 
 import Modal from 'components/modal'
 
-export const ListingDraftModal = ({ isOpen, onContinue, onAddNew }) => {
+export const ListingDraftModal = ({ isOpen, handleContinue, handleRemove }) => {
   return(
     <Modal backdrop="static" isOpen={isOpen}>
       <div className="image-container">
-        <img
-          src="images/circular-check-button.svg"
-          role="presentation"
-        />
+        <img src="images/flat_cross_icon.svg" role="presentation" />
       </div>
       <h3>
         <FormattedMessage
-          id={'nav-listing-create.title'}
-          defaultMessage={'You have unfinished listing'}
+          id={'draft-listing.title'}
+          defaultMessage={'Listing In Progress'}
         />
       </h3>
       <div className="disclaimer">
         <p>
           <FormattedMessage
-            id={'nav-listing-create.descript'}
+            id={'draft-listing.explanation'}
             defaultMessage={
-              'Are you going to continue or create a new one?'
+              'You have an incomplete listing that has not yet been created. Would you like to remove it and start a new one or continue with your existing draft?'
             }
           />
         </p>
       </div>
       <div className="button-container">
         <button
-          className="btn btn-primary"
-          onClick={onContinue}
+          className="btn btn-clear"
+          onClick={handleRemove}
         >
           <FormattedMessage
-            id={'nav-listing-create.recover'}
-            defaultMessage={'Continue'}
+            id={'draft-listing.remove'}
+            defaultMessage={'Remove'}
           />
         </button>
         <button
-          onClick={onAddNew}
+          onClick={handleContinue}
           className="btn btn-clear"
         >
           <FormattedMessage
-            id={'nav-listing-create.addNew'}
-            defaultMessage={'Create a new'}
+            id={'draft-listing.continue'}
+            defaultMessage={'Continue'}
           />
         </button>
       </div>

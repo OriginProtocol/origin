@@ -78,7 +78,7 @@ class ListingCreate extends Component {
       navigationWarning: {
         id: 'listing-create.navigationWarning',
         defaultMessage:
-          'Are you sure you want to leave? If you leave this page your progress will be lost.'
+          'Are you sure you want to leave? Your listing is not yet created.'
       },
       boostLimit: {
          id: 'schema.boostLimitInOgn',
@@ -136,8 +136,8 @@ class ListingCreate extends Component {
     this.setBoost = this.setBoost.bind(this)
     this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
     this.checkWalletETHBalance = this.checkWalletETHBalance.bind(this)
-    this.onAddNew = this.onAddNew.bind(this)
-    this.onContinue = this.onContinue.bind(this)
+    this.handleContinue = this.handleContinue.bind(this)
+    this.handleRemove = this.handleRemove.bind(this)
     this.showDraftModal = this.showDraftModal.bind(this)
 
     if (this.props.selectedSchemaId) {
@@ -260,17 +260,19 @@ class ListingCreate extends Component {
     })
   }
 
-  onContinue(e) {
+  handleContinue(e) {
     this.setState({
       showDraftModal: false
     })
+
     if (!web3.givenProvider || !this.props.web3Account) {
       e.preventDefault()
     }
   }
 
-  onAddNew(e) {
+  handleRemove(e) {
     e.preventDefault()
+
     this.props.clearState()
     this.setState({
       showDraftModal: false
@@ -1824,8 +1826,8 @@ class ListingCreate extends Component {
             </Modal>
             <ListingDraftModal
               isOpen={this.state.showDraftModal}
-              onContinue={this.onContinue}
-              onAddNew={this.onAddNew}
+              handleContinue={this.handleContinue}
+              handleRemove={this.handleRemove}
             />
           </div>
         </div>

@@ -85,7 +85,7 @@
   "price-field.price-usd-disclaimer": "USD is an estimate.",
   "listing-card-prices.loadingMessage": "Loading...",
   "listing-card-prices.ethereumCurrencyAbbrev": "ETH",
-  "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
+  "listing-create.navigationWarning": "Are you sure you want to leave? Your listing is not yet created.",
   "listing-create.stepNumberLabel": "STEP {stepNumber}",
   "listing-create.whatTypeOfListing": "What type of listing do you want to create?",
   "listing-create.listingsMayInclude": "{schemaName} listings may include:",
