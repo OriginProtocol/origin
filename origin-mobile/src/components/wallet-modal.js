@@ -10,6 +10,7 @@ import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
 
 import originWallet from '../OriginWallet'
+import { toOgns } from 'utils/ogn'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -19,6 +20,7 @@ class WalletModal extends Component {
     const { dai, eth, ogn } = wallet.balances
 
     const ethBalance = web3.utils.fromWei(eth, 'ether')
+    const ognBalance = toOgns(ogn)
     const privateKey = address ? web3.eth.accounts.wallet[0].privateKey : ''
 
     return (
@@ -55,7 +57,7 @@ class WalletModal extends Component {
             />
             <Currency
               abbreviation={'OGN'}
-              balance={ogn}
+              balance={ognBalance}
               labelColor={currencies['ogn'].color}
               name={currencies['ogn'].name}
               imageSource={currencies['ogn'].icon}
