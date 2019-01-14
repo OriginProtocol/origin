@@ -58,19 +58,9 @@ async function createListing(_, input) {
   }
 
   return txHelper({
-    tx: createListingCall.send({
-      gas: 4612388,
-      from: from
-    }),
+    tx: createListingCall.send({ gas: 4612388, from }),
     mutation: 'createListing'
   })
 }
 
 export default createListing
-
-/*
-mutation createListing($deposit: String, $arbitrator: String) {
-  createListing(deposit: $deposit, arbitrator: $arbitrator)
-}
-{ "deposit": "0", "arbitrator": "0xBECf244F615D69AaE9648E4bB3f32161A87caFF1" }
-*/
