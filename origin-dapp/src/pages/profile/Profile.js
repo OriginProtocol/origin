@@ -10,7 +10,8 @@ import {
   deployProfileReset,
   updateProfile,
   addAttestation,
-  resetIdentity
+  resetIdentity,
+  oldIdentityVersion
 } from 'actions/Profile'
 
 import Avatar from 'components/avatar'
@@ -35,7 +36,6 @@ import ConfirmReset from './ConfirmReset'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
 
-const oldIdentityVersion = '000'
 /*
 const etherscanNetworkUrls = {
   1: '',

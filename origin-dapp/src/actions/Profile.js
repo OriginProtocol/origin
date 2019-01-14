@@ -28,6 +28,9 @@ export const ProfileConstants = keyMirror(
   'PROFILE'
 )
 
+export const oldIdentityVersion = '000'
+export const newIdentityVersion = '001'
+
 export function fetchProfile() {
   return async function(dispatch) {
     const user = await origin.users.get()

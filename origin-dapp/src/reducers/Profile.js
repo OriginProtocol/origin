@@ -1,4 +1,7 @@
-import { ProfileConstants } from 'actions/Profile'
+import {
+  ProfileConstants,
+  newIdentityVersion
+} from 'actions/Profile'
 
 const initialState = {
   user: {
@@ -157,7 +160,8 @@ export default function Profile(state = initialState, action = {}) {
       ...state,
       user: {
         ...state.user,
-        attestations: []
+        attestations: [],
+        version: newIdentityVersion
       },
       provisional: {
         ...state.provisional,
