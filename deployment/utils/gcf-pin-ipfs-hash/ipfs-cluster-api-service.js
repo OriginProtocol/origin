@@ -36,6 +36,8 @@ class IpfsClusterApiService {
       return data;
   }
 
+  // Following sends a request to pin and returns true if the request has been succesfully made.
+  // A few more steps are carried out by the ipfs cluster service to actually successfully pin the hash.
   async pin(ipfsHash){
     try {
       const pinned = await this._sendRequest('POST', '/pins/'+ipfsHash)

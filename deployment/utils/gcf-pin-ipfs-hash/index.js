@@ -30,8 +30,27 @@ exports.pinService = async (event) => {
     const hashesToPin = parseIncomingData(data);
     for(let i = 0; i < hashesToPin.length; i++){
       hashToPin = hashesToPin[i];
+
       pinned = await ipfsClusterApiService.pin(hashToPin);
-      pinned ? pinnedHashes.push(hashToPin) : unPinnedHashes.push(hashToPin);
+
+      if (pinned) {
+        pinnedHashes.push(hashToPin);
+      } else {
+        // Retry pinning 5 times with 500ms as initial interval and double the interval every try. Set fields accordingly.
+        let numberOfRetries = 4;
+        let initialRetryInterval = 500;
+        let retryIntervalGrowthRate = 2;
+        let retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval);
+        while (!retryPinned && numberOfRetries > 0) {
+          console.log("Retrying Pinning:\n")
+          console.log("Retry Interval : "+initialRetryInterval+"ms \n")
+          console.log("Number of Retry : "+(5-numberOfRetries)+"\n")
+          numberOfRetries--;
+          initialRetryInterval *= retryIntervalGrowthRate;
+          retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval);
+        }
+        retryPinned ? pinnedHashes.push(hashToPin) : unPinnedHashes.push(hashToPin);
+      }
     }
   } else {
     console.log("Error retreiving listing data");
@@ -39,6 +58,15 @@ exports.pinService = async (event) => {
   console.log("Pinned following hashes: ", pinnedHashes.join(", "), "\n");
   console.log("Could not pin following hashes: ", unPinnedHashes.join(", "), "\n");
 };
+
+const promiseSetTimeout = async (hashToPin, interval) => {
+  return new Promise(resolve => {
+    setTimeout( async () => {
+      const retryPinned = await ipfsClusterApiService.pin(hashToPin);
+      resolve(retryPinned);
+    }, interval);
+  })
+}
 
 const parseIncomingData = data => {
   let hashesToPin = [];
