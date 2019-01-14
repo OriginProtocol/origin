@@ -6,12 +6,8 @@ import Modal from 'components/Modal'
 class ImageCropper extends Component {
   state = {
     src: null,
-    crop: {
-      aspect: 1,
-      x: 10,
-      y: 10,
-      width: 50
-    }
+    didCrop: false,
+    crop: { aspect: 1 }
   }
 
   onSelectFile(e) {
@@ -80,20 +76,23 @@ class ImageCropper extends Component {
                   crop={this.state.crop}
                   onImageLoaded={image => (this.imageRef = image)}
                   onChange={(crop, pixelCrop) =>
-                    this.setState({ crop, pixelCrop })
+                    this.setState({ crop, pixelCrop, didCrop: true })
                   }
                 />
               </div>
               <button
-                className="btn btn-outline-primary"
+                className="btn btn-outline-light"
                 onClick={async () => {
-                  const croppedImageUrl = await this.getCroppedImg()
+                  if (this.state.didCrop) {
+                    const croppedImageUrl = await this.getCroppedImg()
+                    this.props.onChange(croppedImageUrl)
+                  } else {
+                    this.props.onChange(this.state.src)
+                  }
                   this.setState({ shouldClose: true })
-                  this.props.onChange(croppedImageUrl)
                 }}
-              >
-                OK
-              </button>
+                children="OK"
+              />
             </div>
           </Modal>
         )}

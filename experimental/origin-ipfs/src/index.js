@@ -5,6 +5,8 @@
 //   return bytes32Hex;
 // }
 const bs58 = require('bs58')
+const FormData = require('form-data')
+const fetch = require('cross-fetch')
 
 function getBytes32FromIpfsHash(hash) {
   return `0x${bs58
@@ -37,7 +39,13 @@ async function postFile(gateway, file) {
 
 async function post(gateway, json, rawHash) {
   const formData = new FormData()
-  formData.append('file', new Blob([JSON.stringify(json)]))
+  let file
+  if (typeof Blob === 'undefined') {
+    file = Buffer.from(JSON.stringify(json))
+  } else {
+    file = new Blob([JSON.stringify(json)])
+  }
+  formData.append('file', file)
 
   const rawRes = await fetch(`${gateway}/api/v0/add`, {
     method: 'POST',

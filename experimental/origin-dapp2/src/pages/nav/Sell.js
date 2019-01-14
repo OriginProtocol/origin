@@ -38,7 +38,7 @@ class SellNav extends Component {
         }
       >
         <a
-          className="nav-link"
+          className="nav-link text"
           href="#"
           onClick={e => {
             e.preventDefault()
@@ -59,6 +59,9 @@ export default SellNav
 
 require('react-styl')(`
   .nav-item.sell
+    &.show
+      .nav-link.text:hover
+        background-color: #fff
     .dropdown-menu .dropdown-item
       border-bottom: 1px solid var(--pale-grey-two)
       padding: 0.75rem 1rem

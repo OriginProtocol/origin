@@ -13,6 +13,7 @@ export default class TransactionModal extends Component {
     const name = item.listing && item.listing.title
     const pictures = item.listing && item.listing.media && item.listing.media.map( m => m.url)
     const meta = item.meta
+    console.log("modal balance:", balance, " type:", typeof balance)
     const hasSufficientFunds = !cost || web3.utils.toBN(balance).gt(web3.utils.toBN(cost))
     const counterpartyAddress = (item.listing && item.listing.seller) || item.to
 

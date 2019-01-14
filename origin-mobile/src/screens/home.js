@@ -17,6 +17,7 @@ import TransactionModal from 'components/transaction-modal'
 import WalletModal from 'components/wallet-modal'
 
 import currencies from 'utils/currencies'
+import { toOgns } from 'utils/ogn'
 
 import originWallet from '../OriginWallet'
 
@@ -36,6 +37,16 @@ class HomeScreen extends Component {
 
   static navigationOptions = {
     title: 'Home',
+    headerRight: (
+      <TouchableOpacity onPress={() => {
+        originWallet.openRoot()
+      }}>
+        <Image
+          source={require(`${IMAGES_PATH}external-icon-dark.png`)}
+          style={{ marginRight: 15 }}
+        />
+      </TouchableOpacity>
+    ),
     headerTitle: () => (
       <Image source={require(`${IMAGES_PATH}origin-logo-dark.png`)} />
     ),
@@ -68,7 +79,7 @@ class HomeScreen extends Component {
     const ethBalance = web3.utils.fromWei(eth, 'ether')
     // To Do: convert tokens with decimal counts
     const daiBalance = dai
-    const ognBalance = ogn
+    const ognBalance = toOgns(ogn)
     const eventsCount = pending_events.length + processed_events.length
 
     return (
@@ -273,6 +284,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
 const styles = StyleSheet.create({
   expand: {
     marginLeft: 'auto',
+  },
+  external: {
+    marginRight: 10,
   },
   header: {
     backgroundColor: '#f8fafa',

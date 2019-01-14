@@ -200,6 +200,7 @@ class DappInfo extends Component {
               <h1>DApp Info</h1>
               <h3 className="lead">Developer information about this build</h3>
               <table width="100%">
+                <tbody>
                 <tr>
                   <th colSpan="2">origin.js</th>
                 </tr>
@@ -229,6 +230,10 @@ class DappInfo extends Component {
                 <tr>
                   <td>ARBITRATOR_ACCOUNT</td>
                   <td>{process.env.ARBITRATOR_ACCOUNT}</td>
+                </tr>
+                <tr>
+                  <td>ATTESTATION_ACCOUNT</td>
+                  <td>{process.env.ATTESTATION_ACCOUNT}</td>
                 </tr>
                 <tr>
                   <td>BRIDGE_SERVER_DOMAIN</td>
@@ -336,6 +341,14 @@ class DappInfo extends Component {
                   <td>RINKEBY_DAPP_BASEURL</td>
                   <td>{process.env.RINKEBY_DAPP_BASEURL}</td>
                 </tr>
+                <tr>
+                  <td>WALLET_LANDING_URL</td>
+                  <td>{process.env.WALLET_LANDING_URL}</td>
+                </tr>
+                <tr>
+                  <td>WALLET_LINKER_URL</td>
+                  <td>{process.env.WALLET_LINKER_URL}</td>
+                </tr>
 
                 <tr>
                   <th colSpan="2">Marketplace Contracts</th>
@@ -351,6 +364,7 @@ class DappInfo extends Component {
                   <th colSpan="2">ABIs</th>
                 </tr>
                 {this.state.multiSigData}
+                </tbody>
               </table>
               &nbsp;
             </div>

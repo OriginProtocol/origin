@@ -162,7 +162,10 @@ export class Listing {
     if (!Array.isArray(this.offers))
       return undefined
 
-    return Math.max(0, this.unitsTotal - this.unitsPending - this.unitsSold)
+    const unitsRemaining = Math.max(0, this.unitsTotal - this.unitsPending - this.unitsSold)
+
+    // this must not be NaN because it throws an error in react-jsonschema-form
+    return isNaN(unitsRemaining) ? 1 : unitsRemaining
   }
 
   get commissionRemaining() {

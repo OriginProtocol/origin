@@ -4,6 +4,7 @@ import Gallery from 'components/Gallery'
 import Link from 'components/Link'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
+import ListingBadge from 'components/ListingBadge'
 
 import Buy from './mutations/Buy'
 
@@ -16,7 +17,10 @@ class ListingDetail extends Component {
 
     return (
       <div className="listing-detail">
-        <div className="category">{listing.categoryStr}</div>
+        <div className="header">
+          <div className="category">{listing.categoryStr}</div>
+          <ListingBadge status={listing.status} featured={listing.featured} />
+        </div>
         <h2>{listing.title}</h2>
         <div className="row">
           <div className="col-md-8">
@@ -53,18 +57,20 @@ class ListingDetail extends Component {
               {listing.seller.id === from ? (
                 <>
                   <Link
-                    className="btn btn-primary"
-                    to="/my-listings"
-                    children={'My Listings'}
-                  />
-                  <Link
                     className="btn btn-primary mt-2"
                     to={`/listings/${this.props.listing.id}/edit`}
                     children={'Edit Listing'}
                   />
                 </>
               ) : (
-                <Buy listing={listing} from={from} value={amount} />
+                <Buy
+                  listing={listing}
+                  from={from}
+                  value={amount}
+                  quantity={quantity}
+                  className="btn btn-primary"
+                  children="Buy Now"
+                />
               )}
             </div>
             <h5 className="mt-3">About the Seller</h5>
@@ -89,12 +95,20 @@ require('react-styl')(`
       font-style: normal
       color: var(--dark)
 
+    .header
+      display: flex
+      align-items: center
+      justify-content: space-between
+
     .category
       font-family: Lato
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
       text-transform: uppercase
+      margin-top: 0.75rem
+
+    .badge
       margin-top: 0.75rem
 
     .main-pic

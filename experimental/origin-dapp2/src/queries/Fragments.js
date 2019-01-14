@@ -31,16 +31,20 @@ export default {
           id
         }
         deposit
+        depositAvailable
         createdEvent {
           timestamp
         }
 
         category
         categoryStr
+        subCategory
         title
         description
         currencyId
         unitsTotal
+        unitsAvailable
+        unitsSold
         featured
         hidden
         price {

@@ -33,6 +33,16 @@ import updateTokenAllowance from './token/updateTokenAllowance'
 import deployUserRegistry from './identity/deployUserRegistry'
 import deployIdentityContract from './identity/deployIdentityContract'
 import deployIdentity from './identity/deployIdentity'
+import updateIdentity from './identity/updateIdentity'
+
+import generateEmailCode from './attestations/generateEmailCode'
+import verifyEmailCode from './attestations/verifyEmailCode'
+import generatePhoneCode from './attestations/generatePhoneCode'
+import verifyPhoneCode from './attestations/verifyPhoneCode'
+import verifyFacebook from './attestations/verifyFacebook'
+import verifyTwitter from './attestations/verifyTwitter'
+import generateAirbnbCode from './attestations/generateAirbnbCode'
+import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 
 export default {
   addAffiliate,
@@ -66,5 +76,14 @@ export default {
   deployUserRegistry,
   deployIdentityContract,
   deployIdentity,
+  updateIdentity,
+  generatePhoneCode,
+  verifyPhoneCode,
+  generateEmailCode,
+  verifyEmailCode,
+  verifyFacebook,
+  verifyTwitter,
+  generateAirbnbCode,
+  verifyAirbnbCode,
   refetch: () => true
 }

@@ -200,6 +200,7 @@ export default async function populate(NodeAccount, gqlClient) {
             amount: listing.price.amount
           },
           category: listing.category,
+          subCategory: listing.subCategory,
           media: listing.media,
           unitsTotal: listing.unitsTotal
         }

@@ -452,7 +452,6 @@ class Web3Provider extends Component {
         origin.contractService.walletLinker.setLinkCode = this.setLinkerCode.bind(this)
       }
 
-      origin.contractService.walletLinker.getReturnUrl = this.getWalletReturnUrl.bind(this)
       origin.contractService.walletLinker.showNextPage = this.showNextPage.bind(this)
 
       this.updateSearchWalletLinker()

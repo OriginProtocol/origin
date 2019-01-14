@@ -3,6 +3,7 @@ import ClaimHolderPresigned from 'origin-contracts/build/contracts/ClaimHolderPr
 import ClaimHolderLibrary from 'origin-contracts/build/contracts/ClaimHolderLibrary.json'
 import KeyHolderLibrary from 'origin-contracts/build/contracts/KeyHolderLibrary.json'
 import V00_UserRegistry from 'origin-contracts/build/contracts/V00_UserRegistry.json'
+import IdentityEvents from 'origin-contracts/build/contracts/IdentityEvents.json'
 import OriginIdentity from 'origin-contracts/build/contracts/OriginIdentity.json'
 import OriginToken from 'origin-contracts/build/contracts/OriginToken.json'
 
@@ -42,11 +43,12 @@ class ContractService {
 
     const contracts = Object.assign(
       {
-        V00_UserRegistry,
-        ClaimHolderRegistered,
         ClaimHolderPresigned,
+        ClaimHolderRegistered,
+        IdentityEvents,
         OriginIdentity,
-        OriginToken
+        OriginToken,
+        V00_UserRegistry,
       },
       this.marketplaceContracts
     )
@@ -94,7 +96,7 @@ class ContractService {
   newWalletNetwork() {
     this.web3.setProvider(this.walletLinker.getProvider())
     // Fake it till you make it
-    this.web3.currentProvider.isOrigin = true
+    this.web3.currentProvider.isOrigin = !this.walletLinker.linked
   }
 
   isActiveWalletLinker() {

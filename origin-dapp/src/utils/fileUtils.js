@@ -121,9 +121,11 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) =>
     top: y,
     aspectRatio
   }
-  const defaultOptions = {
+  const options = {
     orientation: true,
-    crossOrigin: 'anonymous'
+    crossOrigin: 'anonymous',
+    maxHeight: MAX_IMAGE_HEIGHT,
+    maxWidth: MAX_IMAGE_WIDTH
   }
 
   if (centerCrop) {
@@ -135,12 +137,10 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) =>
     image.onload = function centerCropImage() {
       const config = {
         ...defaultConfig,
-        crop: true,
-        maxHeight: MAX_IMAGE_HEIGHT,
-        maxWidth: MAX_IMAGE_WIDTH
+        crop: true
       }
 
-      scaleAndCropImage({ options: defaultOptions, config, callback, imageFileObj })
+      scaleAndCropImage({ options, config, callback, imageFileObj })
     }
     image.src = dataUri
 
@@ -150,12 +150,6 @@ export const generateCroppedImage = async (imageFileObj, pixelCrop, callback) =>
       ...defaultConfig,
       sourceWidth: width,
       sourceHeight: height,
-    }
-
-    const options = {
-      ...defaultOptions,
-      maxHeight: MAX_IMAGE_HEIGHT,
-      maxWidth: MAX_IMAGE_WIDTH
     }
 
     scaleAndCropImage({ options, imageFileObj, config, callback })
@@ -183,4 +177,8 @@ export const getDataURIsFromImgURLs = async (picUrls) => {
   })
 
   return Promise.all(imagePromises)
+}
+
+export const picURIsOnly = (pictures = []) => {
+  return pictures.map(pic => typeof pic === 'object' ? pic.croppedImageUri : pic)
 }

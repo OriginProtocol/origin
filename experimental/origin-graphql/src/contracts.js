@@ -1,6 +1,7 @@
 import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplace'
 import UserRegistryContract from 'origin-contracts/build/contracts/V00_UserRegistry'
 import ClaimHolderRegisteredContract from 'origin-contracts/build/contracts/ClaimHolderRegistered'
+import ClaimHolderPresignedContract from 'origin-contracts/build/contracts/ClaimHolderPresigned'
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
 import TokenContract from 'origin-contracts/build/contracts/TestToken'
 
@@ -9,10 +10,15 @@ import EventSource from 'origin-eventsource'
 
 import eventCache from './utils/eventCache'
 import pubsub from './utils/pubsub'
-import OriginMessaging from 'origin-messaging-client'
+// import OriginMessaging from 'origin-messaging-client'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3
 const HOST = process.env.HOST || 'localhost'
+
+let OriginMessaging
+if (typeof window !== 'undefined') {
+  OriginMessaging = require('origin-messaging-client').default
+}
 
 const Configs = {
   mainnet: {
@@ -20,7 +26,7 @@ const Configs = {
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
-    ipfsEventCache: 'QmVuNrzZKociLVtJ4AmSHb4XRcq8eRAGfuw3wW1MV9dKP9',
+    ipfsEventCache: 'QmQT7tfMA21xsxRiVKitGSxHqiAqnX3J1mXJEqWjWcPrR9',
     discovery: 'https://discovery.originprotocol.com',
     V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
     OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
@@ -82,14 +88,30 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:9090`,
     ipfsRPC: `http://${HOST}:5002`,
+    bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
+    // messaging: {
+    //   ipfsSwarm:
+    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/Qma1eKbWcLy9EVYv4zVJZSAtXT6TsKXYTQ2JKtU5T7APne',
+    //   messagingNamespace: 'dev'
+    // }
+  },
+  test: {
+    provider: `http://${HOST}:8545`,
+    providerWS: `ws://${HOST}:8545`,
+    ipfsGateway: `http://${HOST}:9090`,
+    ipfsRPC: `http://${HOST}:5002`
   }
 }
 
 const DefaultMessagingConfig = {
+  // ipfsSwarm:
+  //   '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
+  // messagingNamespace: 'origin:staging'
   ipfsSwarm:
-    '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
-  messagingNamespace: 'origin:staging'
+    '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/Qma8wRkeXeYtE3RQfqFDGjsKCEqXR5CGxfmRxvus9aULcs',
+  messagingNamespace: 'origin:dev',
+  globalKeyServer: 'https://messaging-api.dev.originprotocol.com'
 }
 
 const context = {}
@@ -105,12 +127,14 @@ function applyWeb3Hack(web3Instance) {
   return web3Instance
 }
 
-export function setNetwork(net) {
-  const config = JSON.parse(JSON.stringify(Configs[net]))
+export function setNetwork(net, customConfig) {
+  let config = JSON.parse(JSON.stringify(Configs[net]))
   if (!config) {
     return
   }
-  if (net === 'localhost') {
+  if (net === 'test') {
+    config = { ...config, ...customConfig }
+  } else if (net === 'localhost') {
     config.OriginToken = window.localStorage.OGNContract
     config.V00_Marketplace = window.localStorage.marketplaceContract
     config.V00_UserRegistry = window.localStorage.userRegistryContract
@@ -143,11 +167,13 @@ export function setNetwork(net) {
   context.web3 = web3
   context.web3Exec = web3
 
-  const MessagingConfig = config.messaging || DefaultMessagingConfig
-  context.messaging = OriginMessaging({ ...MessagingConfig, web3 })
+  if (typeof window !== 'undefined') {
+    const MessagingConfig = config.messaging || DefaultMessagingConfig
+    MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
+    context.messaging = OriginMessaging({ ...MessagingConfig, web3 })
+  }
 
   context.metaMaskEnabled = metaMaskEnabled
-  web3WS = applyWeb3Hack(new Web3(config.providerWS))
   if (typeof window !== 'undefined' && window.localStorage.privateKeys) {
     JSON.parse(window.localStorage.privateKeys).forEach(key =>
       web3.eth.accounts.wallet.add(key)
@@ -160,6 +186,9 @@ export function setNetwork(net) {
   context.claimHolderRegistered = new web3.eth.Contract(
     ClaimHolderRegisteredContract.abi
   )
+  context.claimHolderPresigned = new web3.eth.Contract(
+    ClaimHolderPresignedContract.abi
+  )
 
   context.userRegistry = new web3.eth.Contract(
     UserRegistryContract.abi,
@@ -168,6 +197,7 @@ export function setNetwork(net) {
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
 
   if (typeof window !== 'undefined') {
+    web3WS = applyWeb3Hack(new Web3(config.providerWS))
     wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
       context.marketplace.eventCache.updateBlock(blockHeaders.number)
       pubsub.publish('NEW_BLOCK', {
@@ -226,7 +256,7 @@ export function setNetwork(net) {
   context.transactions = []
   try {
     context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
-  } catch(e) {
+  } catch (e) {
     /* Ignore */
   }
 
@@ -260,7 +290,9 @@ function setMetaMask() {
     context.ognExec = context.ogn
     context.tokens.forEach(token => (token.contractExec = token.contract))
   }
-  context.messaging.web3 = context.web3Exec
+  if (context.messaging) {
+    context.messaging.web3 = context.web3Exec
+  }
 }
 
 export function toggleMetaMask(enabled) {
@@ -303,7 +335,7 @@ export function setMarketplace(address, epoch) {
   }
 }
 
-if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'CSS') {
+if (typeof window !== 'undefined') {
   if (window.ethereum) {
     metaMask = applyWeb3Hack(new Web3(window.ethereum))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
