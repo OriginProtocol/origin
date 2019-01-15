@@ -7,12 +7,13 @@ const pick = require('lodash/pick')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 class OriginEventSource {
-  constructor({ ipfsGateway, marketplaceContract, web3 }) {
+  constructor({ ipfsGateway, marketplaceContract, web3, arbitrator }) {
     this.ipfsGateway = ipfsGateway
     this.contract = marketplaceContract
     this.web3 = web3
     this.offerCache = {}
     this.listingCache = {}
+    this.arbitrator = arbitrator ? arbitrator.toLowerCase() : ZERO_ADDRESS
   }
 
   async getMarketplace() {
@@ -147,11 +148,14 @@ class OriginEventSource {
         }
       })
     }
+    depositAvailable = !depositAvailable.isNeg()
+      ? depositAvailable.toString()
+      : '0'
     return Object.assign({}, listing, {
       allOffers,
       unitsAvailable,
       unitsSold: listing.unitsTotal - unitsAvailable,
-      depositAvailable: depositAvailable.toString()
+      depositAvailable: depositAvailable
     })
   }
 
@@ -250,33 +254,30 @@ class OriginEventSource {
       throw new Error('Invalid offer: currency does not match listing')
     }
 
-    // TODO: uncomment when we create new listings, including demo listings,
-    //  with affiliates and arbitrators
-    /*
     const offerArbitrator = offer.arbitrator
-      && offer.arbitrator.id
-      && offer.arbitrator.id.toLowerCase()
-    const listingArbitrator = listing.arbitrator
-      && listing.arbitrator.id
-      && listing.arbitrator.id.toLowerCase()
-    if (offerArbitrator !== listingArbitrator) {
+      ? offer.arbitrator.id.toLowerCase()
+      : ZERO_ADDRESS
+    if (offerArbitrator !== this.arbitrator) {
       throw new Error(
-        `Arbitrator: offer ${offerArbitrator} !== listing ${listingArbitrator}`
+        `Arbitrator: offer ${offerArbitrator} !== listing ${this.arbitrator}`
       )
     }
 
+    const affiliateWhitelistDisabled = await this.contract.methods
+      .allowedAffiliates(this.contract._address)
+      .call()
     const offerAffiliate = offer.affiliate
-      && offer.affiliate.id
-      && offer.affiliate.id.toLowerCase()
-    const listingAffiliate = listing.affiliate
-      && listing.affiliate.id
-      && listing.affiliate.id.toLowerCase()
-    if (offerAffiliate !== listingAffiliate) {
+      ? offer.affiliate.id.toLowerCase()
+      : ZERO_ADDRESS
+    const affiliateAlowed = affiliateWhitelistDisabled ||
+      await this.contract.methods
+        .allowedAffiliates(offer.offerAffiliate)
+        .call()
+    if (!affiliateAlowed) {
       throw new Error(
-        `Affiliate: offer ${offerAffiliate} !== listing ${listingAffiliate}`
+        `Offer affiliate ${offerAffiliate} not whitelisted`
       )
     }
-    */
 
     if (listing.type !== 'unit') {
       // TODO: validate fractional offers

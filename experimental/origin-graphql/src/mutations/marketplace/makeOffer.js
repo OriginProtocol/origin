@@ -3,12 +3,13 @@ import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import parseId from '../../utils/parseId'
+import { validateOffer } from './_validation'
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
-  const { listingId } = parseId(data.listingID)
 
+  const { listingId } = parseId(data.listingID)
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
     listingId,
@@ -35,9 +36,12 @@ async function makeOffer(_, data) {
     .allowedAffiliates(marketplace.options.address)
     .call()
 
+  const affiliate = data.affiliate
+    || contracts.config.affiliate
+    || ZeroAddress
   if (!affiliateWhitelistDisabled) {
     const affiliateAllowed = await marketplace.methods
-      .allowedAffiliates(data.affiliate)
+      .allowedAffiliates(affiliate)
       .call()
 
     if (!affiliateAllowed) {
@@ -45,19 +49,24 @@ async function makeOffer(_, data) {
     }
   }
 
+  await validateOffer(data, listingId, null)
+
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
   const commission = contracts.web3.utils.toWei(ipfsData.commission.amount, 'ether')
   const value = contracts.web3.utils.toWei(data.value, 'ether')
+  const arbitrator = data.arbitrator
+    || contracts.config.arbitrator
+    || ZeroAddress
 
   const args = [
     listingId,
     ipfsHash,
     ipfsData.finalizes,
-    data.affiliate || ZeroAddress,
+    affiliate,
     commission,
     value,
     data.currency || ZeroAddress,
-    data.arbitrator || ZeroAddress
+    arbitrator
   ]
   if (data.withdraw) {
     const { offerId } = parseId(data.withdraw)
