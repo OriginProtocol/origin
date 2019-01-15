@@ -1,0 +1,334 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://schema.originprotocol.com/attestation_1.0.0.json",
+  "title": "Origin Protocol attestation schema",
+  "definitions": {
+    "issuer": {
+      "type": "object",
+      "title": "Attestation issuer",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "ethAddress": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "url",
+        "ethAddress"
+      ]
+    },
+    "attribute": {
+      "title": "Attribute",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "raw": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "raw"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "verified"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "hash": {
+              "type": "object",
+              "properties": {
+                "function": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "function",
+                "value"
+              ]
+            }
+          },
+          "required": [
+            "hash"
+          ]
+        }
+      ]
+    },
+    "verificationMethod": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "oAuth": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "oAuth"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "email"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sms": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "sms"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "call": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "call"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mail": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "mail"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "human": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "human"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pubAuditableUrl": {
+              "type": "object",
+              "properties": {
+                "challenge": {
+                  "type": "string"
+                },
+                "proofUrl": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "pubAuditableUrl"
+          ]
+        }
+      ]
+    },
+    "site": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "$ref": "#/definitions/attribute"
+        },
+        "username": {
+          "$ref": "#/definitions/attribute"
+        },
+        "profileUrl": {
+          "$ref": "#/definitions/attribute"
+        }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "siteName": {
+              "const": "facebook.com"
+            },
+            "numFriends": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": [
+            "siteName"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "siteName": {
+              "const": "twitter.com"
+            },
+            "numFollowers": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": [
+            "siteName"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "siteName": {
+              "const": "airbnb.com"
+            },
+            "rating": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": [
+            "siteName"
+          ]
+        }
+      ],
+      "required": [
+        "userId"
+      ]
+    },
+    "attestation": {
+      "type": "object",
+      "title": "Attestation",
+      "properties": {
+        "verificationMethod": {
+          "$ref": "#/definitions/verificationMethod"
+        }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "email": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": [
+            "email"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "phone": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": [
+            "phone"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "site": {
+              "$ref": "#/definitions/site"
+            }
+          },
+          "required": [
+            "site"
+          ]
+        }
+      ],
+      "required": [
+        "verificationMethod"
+      ]
+    },
+    "signature": {
+      "type": "object",
+      "title": "Attestation signature",
+      "properties": {
+        "bytes": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bytes",
+        "version"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "schemaId": {
+      "type": "string"
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "issuer": {
+          "$ref": "#/definitions/issuer"
+        },
+        "issueDate": {
+          "type": "string"
+        },
+        "expiryDate": {
+          "type": "string"
+        },
+        "attestation": {
+          "$ref": "#/definitions/attestation"
+        }
+      },
+      "required": [
+        "issuer",
+        "issueDate"
+      ]
+    },
+    "signature": {
+      "$ref": "#/definitions/signature"
+    },
+    "salt": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaId",
+    "data",
+    "signature"
+  ]
+}

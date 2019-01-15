@@ -35,6 +35,9 @@ export default class Reflection {
     else if (meta.contract == 'OriginToken')
     {
       meta.originToken = true
+      if (meta.params._value) {
+        meta.originTokenValue = meta.params._value
+      }
     }
   }
 
@@ -47,17 +50,18 @@ export default class Reflection {
     const web3 = this.contractService.web3
     const contracts = Object.values(this.contractService.contracts)
     for (const contract of contracts) {
-      if(contract.networks[networkId] && contract.networks[networkId].address == address) {
+      if(contract.networks[networkId] && contract.networks[networkId].address == address.toLowerCase()) {
         // data 0-8 is the first 4 bytes or the function signature...
         const meta = extractCallParams(web3, contract.abi, callData.substr(0, 10), '0x' + callData.substr(10))
         meta.contract = contract.contractName
         await this._addOriginMeta(networkId, address, meta)
 
-        if (meta.name == 'approveAndCallWithSender') {
-          const subAddress = meta.params[1].value
+        if (meta.method == 'approveAndCallWithSender' && meta.params._spender &&
+          meta.params._selector && meta.params._callParams) {
+          const subAddress = meta.params._spender
           for (const subContract of contracts) {
-            if (subContract.networks[networkId] && subContract.networks[networkId].address == subAddress) {
-              const subMeta = extractCallParams(web3, subContract.abi, meta.params[2].value, meta.params[3].value, 1)
+            if (subContract.networks[networkId] && subContract.networks[networkId].address == subAddress.toLowerCase()) {
+              const subMeta = extractCallParams(web3, subContract.abi, meta.params._selector, meta.params._callParams, 1)
               subMeta.contract = subContract.contractName
               await this._addOriginMeta(networkId, subAddress, subMeta)
               meta.subMeta = subMeta

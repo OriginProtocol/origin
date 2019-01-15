@@ -12,6 +12,7 @@
 # Transaction Detail
 
 - Arbitration
+- Fulfillment checklist: https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5be35b6f08d1323cf3a0723b
 
 
 # Notifications dropdown
@@ -23,25 +24,26 @@
 ---------------------------------
 
 
+# Search results
+
+- Sub-category search filters
+- Alter URL when searching
+- 'Load more' button styling / spinner
+- Mainnet Beta modal
+- Mainnet Beta top bar
+
+
 # Create listing
 
 - Boost slider
-- Side bars
 - Success modal
+- Step 3: Boosting
 
 
 # Listing detail
 
 - 'Pending Listing' state
 - Contact seller button
-- Mobile view
-
-
-# Search results
-
-- Sub-category search filters
-- Alter URL when searching
-- 'Load more' button styling / spinner
 - Mobile view
 
 
@@ -86,5 +88,7 @@
 # Notifications page
 
 # Transaction dropdown
+
+# About page
 
 # DApp info page

@@ -26,22 +26,34 @@ export function init(address) {
 
 export function getBalance() {
   return async function(dispatch) {
-    const { web3 } = origin.contractService
-    const account = await origin.contractService.currentAccount()
+    let account
+    try {
+      account = await origin.contractService.currentAccount()
+    } catch(error) {
+      console.log("error getting account for balance. ", error)
+      return
+    }
     if (account)
     {
-      const balance = await web3.eth.getBalance(account)
+      try {
+        const balance = await web3.eth.getBalance(account)
 
-      dispatch({
-        type: WalletConstants.BALANCE_SUCCESS,
-        balance,
-      })
-
-      const ogns = (await origin.token.balanceOf(account)) / 10 ** origin.token.decimals
-      dispatch({
-        type: WalletConstants.OGN_SUCCESS,
-        ogns,
-      })
+        dispatch({
+          type: WalletConstants.BALANCE_SUCCESS,
+          balance,
+        })
+      } catch (error) {
+        console.log("error getting balance. ", error)
+      }
+      try {
+        const ogns = await origin.token.balanceOf(account)
+        dispatch({
+          type: WalletConstants.OGN_SUCCESS,
+          ogns,
+        })
+      } catch (error) {
+        console.log("error getting ogn for balance. ", error)
+      }
     }
   }
 }

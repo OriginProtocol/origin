@@ -21,13 +21,11 @@ metadata:
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
     nginx.ingress.kubernetes.io/limit-rps: "5"
     {{- if ne .Release.Namespace "prod" }}
-    ingress.kubernetes.io/configuration-snippet: |
+    nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "Access-Control-Allow-Origin: $http_origin";
       more_set_headers "Access-Control-Allow-Credentials: true";
 
       if ($request_method = 'OPTIONS') {
-          add_header 'Access-Control-Allow-Origin' "$http_origin";
-          add_header 'Access-Control-Allow-Credentials' 'true';
           add_header 'Access-Control-Allow-Methods' 'GET,POST,PUT,DELETE,OPTIONS';
           add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
           add_header 'Access-Control-Max-Age' 1728000;
