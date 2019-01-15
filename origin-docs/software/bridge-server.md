@@ -11,7 +11,7 @@ Most traditional web APIs, such as those from Facebook and Twitter, can only int
 
 Origin hosts a Bridge Server, but in the true spirit of decentralization, anyone is free to clone our open source code and host their own.
 
-You can connect to and use our hosted Bridge Server at [bridge.originprotocol.com](https://bridge.originprotocol.com). The `develop` branch of this repo is available at [dev.bridge.originprotocol.com](https://dev.bridge.originprotocol.com).
+You can connect to and use our hosted Bridge Server at [bridge.originprotocol.com](https://bridge.originprotocol.com). The `staging` branch of this repo is available at [staging.bridge.originprotocol.com](https://staging.bridge.originprotocol.com) and the `master` branch of this repo is available at [dev.bridge.originprotocol.com](https://dev.bridge.originprotocol.com).
 
 DApps can connect to the Bridge Server of their choosing to handle tasks like issuing identity attestations and decryptying data that is returned from third-party services like Civic. We also need proxies for fetching public data from services like Facebook and Twitter which require authentication keys.
 
@@ -62,9 +62,10 @@ is a perfectly reasonable way to generate a secret key.
 Set up your ```DATABASE_URL``` to point to where you local database is or will be.
 
 #### Identity attestation
-This is optional - only define these environment keys if you want to use your
-bridge server deployment as an endpoint for the DApp identity attestation functionality.
-
+Attestation account used by the bridge server to sign attestation:
+ - ATTESTATION_ACCOUNT: Ethereum address of the account used for signing.
+ - ATTESTATION_SIGNING_KEY: Ethereum private key of the account used for signing.
+Attestation providers configuration:
 - [Facebook](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
   - FACEBOOK_CLIENT_ID
   - FACEBOOK_CLIENT_SECRET
@@ -76,16 +77,6 @@ bridge server deployment as an endpoint for the DApp identity attestation functi
 - [Twitter](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens)
   - TWITTER_CONSUMER_KEY
   - TWITTER_CONSUMER_SECRET
-
-#### Mobile push notification
-If you wish to setup push notification for your mobile apps
-
-- `APNS_CERT_FILE`: Apple notification service certificate(This needs to be .pem file.
-Refer to [this doc](http://www.apptuitions.com/generate-pem-file-for-push-notification/) for how to generate)
-- `APNS_CERT_PASSWORD`: Passphrase for the pem file if you do not strip it out when you exported to pem
-- `APNS_APP_BUNDLE_ID`: The bundle id of your app
-
-FCM support forthcoming.
 
 #### Production configuration
 When deploying to a production system, make sure to set appropriate environment
