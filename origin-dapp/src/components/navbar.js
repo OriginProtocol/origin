@@ -26,131 +26,117 @@ class NavBar extends Component {
     } = this.state
 
     return(
-      <Fragment>
-        <NavbarBS.Toggle
-          className="mr-3"
-          aria-controls="navbarSupportedContent"
-          aria-label="Toggle navigation"
-        >
-          {!isWhiteLabel &&
-            <img src="images/origin-icon-white.svg" alt="Origin menu" />
-          }
-          {isWhiteLabel && iconUrl &&
-            <img src={iconUrl} alt="Origin menu" />
-          }
-        </NavbarBS.Toggle>
-        <NavbarBS.Collapse
-          id="navbarSupportedContent"
-          className="order-2 order-lg-1"
-        >
-          <div className="navbar-nav justify-content-end">
-            <Link
-              to="/"
-              className="d-lg-none nav-item nav-link"
+      <NavbarBS.Collapse
+        id="navbarSupportedContent"
+        className="order-2 order-lg-1"
+      >
+        <div className="navbar-nav justify-content-end">
+          <Link
+            to="/"
+            className="d-lg-none nav-item nav-link"
+            ga-category="top_nav"
+            ga-label="listings"
+          >
+            <FormattedMessage
+              id={'navbar.listings'}
+              defaultMessage={'Listings'}
+            />
+          </Link>
+          <Link
+            to="/my-purchases"
+            className="nav-item nav-link"
+            ga-category="top_nav"
+            ga-label="buying"
+          >
+            <FormattedMessage
+              id={'navbar.buying'}
+              defaultMessage={'Buying'}
+            />
+          </Link>
+          <Dropdown
+            className="sell"
+            open={sellDropdown}
+            onClose={() => this.setState({ sellDropdown: false })}
+          >
+            <a
+              className="dropdown-toggle nav-item nav-link"
+              id="sellDropdown"
+              onClick={() => this.setState({ sellDropdown: true })}
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
               ga-category="top_nav"
-              ga-label="listings"
+              ga-label="sell_dropdown"
             >
               <FormattedMessage
-                id={'navbar.listings'}
-                defaultMessage={'Listings'}
+                id={'navbar.selling'}
+                defaultMessage={'Selling'}
               />
-            </Link>
-            <Link
-              to="/my-purchases"
-              className="nav-item nav-link"
-              ga-category="top_nav"
-              ga-label="buying"
+            </a>
+            <div
+              className={`dropdown-menu dropdown-menu-right${
+                sellDropdown ? ' show' : ''
+              }`}
+              aria-labelledby="sellDropdown"
             >
-              <FormattedMessage
-                id={'navbar.buying'}
-                defaultMessage={'Buying'}
-              />
-            </Link>
-            <Dropdown
-              className="sell"
-              open={sellDropdown}
-              onClose={() => this.setState({ sellDropdown: false })}
-            >
-              <a
-                className="dropdown-toggle nav-item nav-link"
-                id="sellDropdown"
-                onClick={() => this.setState({ sellDropdown: true })}
-                role="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-                ga-category="top_nav"
-                ga-label="sell_dropdown"
-              >
-                <FormattedMessage
-                  id={'navbar.selling'}
-                  defaultMessage={'Selling'}
-                />
-              </a>
-              <div
-                className={`dropdown-menu dropdown-menu-right${
-                  sellDropdown ? ' show' : ''
-                }`}
-                aria-labelledby="sellDropdown"
-              >
-                <div className="triangle-container d-none d-lg-flex justify-content-end">
-                  <div className="triangle" />
-                </div>
-                <div className="actual-menu">
-                  <Link
-                    to="/my-listings"
-                    className="dropdown-item"
-                    ga-category="top_nav"
-                    ga-label="sell_dropdown_my_listings"
-                  >
-                    <FormattedMessage
-                      id={'navbar.myListings'}
-                      defaultMessage={'My Listings'}
-                    />
-                  </Link>
-                  <Link
-                    to="/my-sales"
-                    className="dropdown-item"
-                    ga-category="top_nav"
-                    ga-label="sell_dropdown_my_sales"
-                  >
-                    <FormattedMessage
-                      id={'navbar.mySales'}
-                      defaultMessage={'My Sales'}
-                    />
-                  </Link>
-                  <Link
-                    to="/create"
-                    className="dropdown-item d-none d-lg-block"
-                    ga-category="top_nav"
-                    ga-label="sell_dropdown_add_listing"
-                  >
-                    <FormattedMessage
-                      id={'navbar.addListing'}
-                      defaultMessage={'Add a Listing'}
-                    />
-                  </Link>
-                </div>
+              <div className="triangle-container d-none d-lg-flex justify-content-end">
+                <div className="triangle" />
               </div>
-            </Dropdown>
-            <Link
-              to="/create"
-              className="nav-item nav-link"
-              ga-category="top_nav"
-              ga-label="add_listing"
-            >
-              <img
-                src="images/add-listing-icon.svg"
-                alt="Add Listing"
-                className="add-listing"
-              />
-              <FormattedMessage
-                id={'navbar.addListing'}
-                defaultMessage={'Add a Listing'}
-              />
-            </Link>
-          </div>
-        </NavbarBS.Collapse>
-      </Fragment>
+              <div className="actual-menu">
+                <Link
+                  to="/my-listings"
+                  className="dropdown-item"
+                  ga-category="top_nav"
+                  ga-label="sell_dropdown_my_listings"
+                >
+                  <FormattedMessage
+                    id={'navbar.myListings'}
+                    defaultMessage={'My Listings'}
+                  />
+                </Link>
+                <Link
+                  to="/my-sales"
+                  className="dropdown-item"
+                  ga-category="top_nav"
+                  ga-label="sell_dropdown_my_sales"
+                >
+                  <FormattedMessage
+                    id={'navbar.mySales'}
+                    defaultMessage={'My Sales'}
+                  />
+                </Link>
+                <Link
+                  to="/create"
+                  className="dropdown-item d-none d-lg-block"
+                  ga-category="top_nav"
+                  ga-label="sell_dropdown_add_listing"
+                >
+                  <FormattedMessage
+                    id={'navbar.addListing'}
+                    defaultMessage={'Add a Listing'}
+                  />
+                </Link>
+              </div>
+            </div>
+          </Dropdown>
+          <Link
+            to="/create"
+            className="nav-item nav-link"
+            ga-category="top_nav"
+            ga-label="add_listing"
+          >
+            <img
+              src="images/add-listing-icon.svg"
+              alt="Add Listing"
+              className="add-listing"
+            />
+            <FormattedMessage
+              id={'navbar.addListing'}
+              defaultMessage={'Add a Listing'}
+            />
+          </Link>
+        </div>
+      </NavbarBS.Collapse>
     )
   }
 
@@ -196,7 +182,7 @@ class NavBar extends Component {
       showNav && (
         <NavbarBS variant="dark" expand="lg" className="navigation-bar">
           <div className="container d-flex justify-content-between">
-            {/*this.renderMenuNavigation()*/}
+            {this.renderMenuNavigation()}
             <NavigationDropdown />
             {this.renderOriginBrand()}
             <div className="d-none d-lg-flex static navbar-nav order-1 order-lg-2 flex-row justify-content-end">

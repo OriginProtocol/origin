@@ -6131,6 +6131,44 @@ a:not([href]):not([tabindex]).span-link {
     border: none;
     width: 100%;
     top: 58px;
+    box-shadow: 0 1px 0 0 var(--light);
+    margin-top: 0px;
+  }
+
+  .navigation .nav-menu {
+    height: 58px;
+    width: 58px;
+    cursor: pointer;
+  }
+
+  .navigation .navigation-menu-item {
+    padding: 12px 20px;
+  }
+
+  .navigation .navigation-menu-item .menu-item {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    padding-left: 13px;
+  }
+
+  .navigation .nav-caret {
+    transform: rotate(90deg);
+  }
+
+  .navigation .actual-menu hr {
+    margin: 0px 20px;
+    border-bottom: 1px solid var(--light);
+    padding-top: 1rem;
+  }
+
+  .navigation .dropdown-menu .title {
+    text-transform: uppercase;
+    margin: 0px 20px;
+    font-size: 14px;
+    font-weight: normal;
+    color: var(--dusk);
+    margin-top: 18px;
   }
 
   /* Profile */
