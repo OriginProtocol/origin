@@ -60,6 +60,16 @@ class Step2 extends Component {
 
                 <NoOgn />
 
+                <div className="form-group slider">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={this.state.boost}
+                    onChange={e => this.setState({ boost: e.target.value })}
+                  />
+                </div>
+
                 <div className="form-group">
                   <label>
                     {isEdit ? 'Additional Boost' : 'Boost Level (per unit)'}
@@ -154,6 +164,28 @@ require('react-styl')(`
         margin-bottom: 0.5rem
       > div:nth-child(3)
         font-weight: bold
+
+    .slider input
+      width: 100%
+      -webkit-appearance: none
+      height: 20px
+      border-radius: 10px
+      background: #d3d3d3
+      outline: none
+      overflow: hidden
+      border: 1px solid var(--bluey-grey)
+
+      &::-webkit-slider-thumb
+        -webkit-appearance: none
+        appearance: none
+        width: 18px
+        height: 18px
+        border-radius: 50%
+        background: var(--white)
+        border: 1px solid var(--dusk)
+        cursor: pointer;
+        box-shadow: -1000px 0 0 990px var(--golden-rod)
+
     .actions
       margin-top: 2.5rem
       display: flex

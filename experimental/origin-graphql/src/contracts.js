@@ -90,12 +90,12 @@ const Configs = {
     ipfsRPC: `http://${HOST}:5002`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
-    messaging: {
-      ipfsSwarm:
-        '/ip4/127.0.0.1/tcp/9012/ws/ipfs/QmYsCaLzzso7kYuAZ8b5DwhpwGvgzKyFtvs37bG95GTQGA',
-      messagingNamespace: 'dev',
-      globalKeyServer: 'http://127.0.0.1:6647'
-    }
+    // messaging: {
+    //   ipfsSwarm:
+    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/QmYsCaLzzso7kYuAZ8b5DwhpwGvgzKyFtvs37bG95GTQGA',
+    //   messagingNamespace: 'dev',
+    //   globalKeyServer: 'http://127.0.0.1:6647'
+    // }
   },
   test: {
     provider: `http://${HOST}:8545`,
@@ -321,7 +321,8 @@ export function setMarketplace(address, epoch) {
   }
   context.eventSource = new EventSource({
     marketplaceContract: context.marketplace,
-    ipfsGateway: context.ipfsGateway
+    ipfsGateway: context.ipfsGateway,
+    web3: context.web3
   })
   context.marketplaceExec = context.marketplace
 

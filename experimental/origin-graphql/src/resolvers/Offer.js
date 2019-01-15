@@ -4,8 +4,10 @@ import parseId from '../utils/parseId'
 import { getIpfsHashFromBytes32 } from 'origin-ipfs'
 
 export default {
-  listing: offer =>
-    contracts.eventSource.getListing(offer.listingId, offer.createdBlock),
+  listing: async offer => {
+    const { listingId } = parseId(offer.listingId)
+    return contracts.eventSource.getListing(listingId, offer.createdBlock)
+  },
 
   events: async offer => {
     const { listingId, offerId } = parseId(offer.id)
