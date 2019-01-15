@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import Separator from 'components/separator'
 
-import networks from 'utils/networks'
+import networks, { getCurrentNetwork } from 'utils/networks'
 
 import originWallet from '../OriginWallet'
 
@@ -15,7 +15,7 @@ class SettingsScreen extends Component {
     super(props)
 
     this.handleChange = this.handleChange.bind(this)
-    // this.handleNetwork = this.handleNetwork.bind(this)
+    this.handleNetwork = this.handleNetwork.bind(this)
     this.state = {
       apiHost: originWallet.getCurrentRemoteLocal()
     }
@@ -30,34 +30,36 @@ class SettingsScreen extends Component {
     },
   }
 
-  // handleNetwork({ id, name }) {
-  //   const { networkId = 999 } = this.props
-
-  //   if (id === networkId) {
-  //     return
-  //   }
-
-  //   Alert.alert(`${name} is not yet supported.`)
-  // }
+  handleNetwork(network) {
+    this.setApiHost(network.url)
+  }
 
   handleChange(apiHost) {
     this.setState({ apiHost })
   }
 
-  async handleSubmit(e) {
+  async setApiHost(host) {
     try {
-      await originWallet.setRemoteLocal(e.nativeEvent.text)
+      await originWallet.setRemoteLocal(host)
 
       Alert.alert('Linking server host changed!')
     } catch(error) {
       Alert.alert('Linking server host change failed!')
-
       console.error(error)
     }
+    
+    this.setState({apiHost: originWallet.getCurrentRemoteLocal()})
+  }
+
+  handleSubmit(e) {
+    this.setApiHost(e.nativeEvent.text)
   }
 
   render() {
-    const { networkId = 999, user } = this.props
+    const { user } = this.props
+    const { apiHost } = this.state
+    const currentNetwork = getCurrentNetwork(apiHost)
+    const isCustom = currentNetwork.custom
 
     return (
       <View style={styles.container}>
@@ -81,7 +83,31 @@ class SettingsScreen extends Component {
             </View>
           </View>
         </TouchableHighlight>
-        {originWallet.isLocalApi() &&
+        <View style={styles.header}>
+          <Text style={styles.heading}>NETWORK</Text>
+        </View>
+        {networks.map((n, i) => (
+            <Fragment key={n.id}>
+              <TouchableHighlight onPress={() => this.handleNetwork(n)}>
+                <View style={styles.item}>
+                  <Text style={styles.text}>{n.name}</Text>
+                  <View style={styles.iconContainer}>
+                    {n === currentNetwork &&
+                      <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
+                    }
+                    {n !== currentNetwork &&
+                      <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
+                    }
+                  </View>
+                </View>
+              </TouchableHighlight>
+              {(i + 1) < networks.length &&
+                <Separator padded={true} />
+              }
+            </Fragment>
+          ))
+        }
+        {isCustom &&
           <Fragment>
             <View style={styles.header}>
               <Text style={styles.heading}>LINKING SERVER HOST</Text>
@@ -90,17 +116,17 @@ class SettingsScreen extends Component {
               autoCapitalize="none"
               autoCorrect={false}
               onChangeText={this.handleChange}
-              onSubmitEditing={this.handleSubmit}
+              onSubmitEditing={e =>this.handleSubmit(e)}
               value={this.state.apiHost}
               style={styles.input}
             />
           </Fragment>
         }
-        {originWallet.isLocalApi() &&
+        {isCustom &&
           <Fragment>
-              <View style={styles.header}>
-                <Text style={styles.heading}>SET PRIVATE KEY</Text>
-              </View>
+            <View style={styles.header}>
+              <Text style={styles.heading}>PRIVATE KEY</Text>
+            </View>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -112,30 +138,6 @@ class SettingsScreen extends Component {
               style={styles.input}
             />
           </Fragment>
-          /* Don't offer toggleable networks yet
-
-            networks.map((n, i) => (
-              <Fragment key={n.id}>
-                <TouchableHighlight onPress={() => this.handleNetwork(n)}>
-                  <View style={styles.item}>
-                    <Text style={styles.text}>{n.name}</Text>
-                    <View style={styles.iconContainer}>
-                      {n.id === networkId &&
-                        <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
-                      }
-                      {n.id !== networkId &&
-                        <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
-                      }
-                    </View>
-                  </View>
-                </TouchableHighlight>
-                {(i + 1) < networks.length &&
-                  <Separator padded={true} />
-                }
-              </Fragment>
-            ))
-
-          */
         }
       </View>
     )

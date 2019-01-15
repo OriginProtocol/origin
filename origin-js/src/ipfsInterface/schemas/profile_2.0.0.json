@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://schema.originprotocol.com/profile_2.0.0.json",
+  "title": "Origin Protocol profile schema",
+  "definitions": {
+    "person": {
+      "type": "object",
+      "title": "An individual",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "firstName",
+        "lastName"
+      ]
+    },
+    "organization": {
+      "type": "object",
+      "title": "An organization",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "schemaId": {
+      "type": "string"
+    },
+    "ethAddress": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "avatar": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/definitions/person"
+    },
+    {
+      "$ref": "#/definitions/organization"
+    }
+  ],
+  "required": [
+    "schemaId",
+    "ethAddress"
+  ]
+}

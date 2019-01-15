@@ -2,6 +2,8 @@ import Ajv from 'ajv'
 
 import { generateSchemaId, parseSchemaId } from '../schema-id'
 
+import attestationSchema from '../schemas/attestation_1.0.0.json'
+import identitySchemaV1 from '../schemas/identity_1.0.0'
 import listingSchemaV1 from '../schemas/listing_1.0.0.json'
 import listingWithdrawnSchemaV1 from '../schemas/listing-withdraw_1.0.0.json'
 import offerSchemaV1 from '../schemas/offer_1.0.0.json'
@@ -10,12 +12,15 @@ import offerAcceptedSchemaV1 from '../schemas/offer-accept_1.0.0.json'
 import disputeSchemaV1 from '../schemas/dispute_1.0.0.json'
 import resolutionSchemaV1 from '../schemas/resolution_1.0.0.json'
 import profileSchemaV1 from '../schemas/profile_1.0.0.json'
+import profileSchemaV2 from '../schemas/profile_2.0.0.json'
 import reviewSchemaV1 from '../schemas/review_1.0.0.json'
 
 const ajv = new Ajv({ allErrors: true })
 // To use the draft-06 JSON schema, we need to explicitly add it to ajv.
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
 ajv.addSchema([
+  attestationSchema,
+  identitySchemaV1,
   listingSchemaV1,
   listingWithdrawnSchemaV1,
   offerSchemaV1,
@@ -24,6 +29,7 @@ ajv.addSchema([
   disputeSchemaV1,
   resolutionSchemaV1,
   profileSchemaV1,
+  profileSchemaV2,
   reviewSchemaV1
 ])
 
@@ -31,6 +37,7 @@ export default class AdapterBase {
   constructor(dataType, schemaVersion) {
     this.dataType = dataType
     this.schemaVersion = schemaVersion
+    this.ajv = ajv
   }
 
   /**
