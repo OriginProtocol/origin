@@ -1,6 +1,10 @@
+'use strict'
+
 import React from 'react'
 
-class Resolver extends React.Component {
+import Redirect from 'components/Redirect'
+
+class MetaMaskPrompt extends React.Component {
   constructor(props) {
     super(props)
 
@@ -9,9 +13,13 @@ class Resolver extends React.Component {
     }
   }
 
-  componentDidMount () {
-    await this.props.handlePublish()
-    // TODO: handle rejection
+  async componentDidMount () {
+    try {
+      await this.props.handlePublish()
+    } catch (error) {
+      // TODO: handle rejection
+    }
+    console.log('Signed')
     this.setState({
       redirect: '/success'
     })
@@ -19,12 +27,12 @@ class Resolver extends React.Component {
 
   render () {
     return (
-      <div class="metamask-prompt">
+      <div className="metamask-prompt">
         {this.renderRedirect()}
         <div>
           <img src="images/metamask.svg" />
-          <h1>Waiting for MetaMask</h1>
-          <h4>Please sign the prompt from MetaMask.</h4>
+          <h1>Waiting for you to grant permission</h1>
+          <h4>Please grant Origin permission to access your Metamask account so you can publish your marketplace.</h4>
         </div>
       </div>
     )
@@ -48,4 +56,4 @@ require('react-styl')(`
     margin: 2rem 0
 `)
 
-export default Resolver
+export default MetaMaskPrompt

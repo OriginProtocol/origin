@@ -4,18 +4,26 @@ class Success extends React.Component {
   constructor(props) {
     super(props)
 
-    this.checkDnsPropagation = this.checkDnsPropagation.bind(this)
+    this.openMarketplace = this.openMarketplace.bind(this)
   }
 
-  checkDnsPropagation() {
+  openMarketplace() {
+    window.open(
+      `https://${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`,
+      '_blank'
+    )
   }
 
   render () {
     return (
-      <div class="success">
-        <img src="images/spinner-animation-dark.svg" />
+      <div className="success">
+        <img src="images/celebration-icon.svg" />
         <h1>Congratulations!</h1>
         <h4>You've finished setting up your marketplace.</h4>
+        <button className="btn btn-primary btn-lg"
+            onClick={this.openMarketplace}>
+          Great, thanks!
+        </button>
       </div>
     )
   }
@@ -24,11 +32,11 @@ class Success extends React.Component {
 require('react-styl')(`
   .success
     text-align: center
-    padding: 6rem 0
+    padding: 2rem 0
 
   .success img
-    width: 90px
-    height: 90px
+    width: 180px
+    height: 180px
     margin: 2rem 0
 `)
 

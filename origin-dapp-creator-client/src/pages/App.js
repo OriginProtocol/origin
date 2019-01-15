@@ -9,6 +9,7 @@ import Customize from 'pages/Customize'
 import Configure from 'pages/Configure'
 import MetaMaskPrompt from 'pages/MetaMaskPrompt'
 import Steps from 'components/Steps'
+import Success from 'pages/Success'
 import Store from 'utils/store'
 const store = Store('sessionStorage')
 
@@ -125,6 +126,12 @@ class App extends React.Component {
                   <MetaMaskPrompt
                     handlePublish={this.handlePublish}
                   />
+                )}
+              />
+              <Route
+                path="/success"
+                render={() => (
+                  <Success config={this.state.config} />
                 )}
               />
             </Switch>
