@@ -5,8 +5,7 @@ import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Wallet from 'components/Wallet'
-
-import { formInput, formFeedback } from 'utils/formHelpers'
+import CoinPrice from 'components/CoinPrice'
 
 const NoOgn = () => (
   <div className="no-ogn">
@@ -19,6 +18,19 @@ const NoOgn = () => (
     </div>
   </div>
 )
+
+const BoostLevels = [
+  [76, 'premium', 'Premium', 'Your listing will get the best visibility.'],
+  [51, 'high', 'High', 'Your listing will get above-average visibility.'],
+  [
+    26,
+    'med',
+    'Medium (recommended)',
+    'Your listing will get average visibility.'
+  ],
+  [1, 'low', 'Low', 'Your listing will get below-average visibility.'],
+  [0, 'none', 'None', 'Your listing will get very low visibility.']
+]
 
 class Step2 extends Component {
   constructor(props) {
@@ -34,8 +46,7 @@ class Step2 extends Component {
       return <Redirect to={`${prefix}/review`} push />
     }
 
-    const input = formInput(this.state, state => this.setState(state))
-    const Feedback = formFeedback(this.state)
+    const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
 
     return (
       <div className="row">
@@ -58,28 +69,37 @@ class Step2 extends Component {
                   increases the chances of a fast and successful sale.
                 </div>
 
-                <NoOgn />
+                {this.props.tokenBalance === 0 ? (
+                  <NoOgn />
+                ) : (
+                  <>
+                    <div className="boost-info">
+                      <h5>Boost Level</h5>
+                      <i />
+                    </div>
+                    <div className={`boost-value ${level[1]}`}>
+                      <div className="description">{level[2]}</div>
+                      <CoinPrice price={this.state.boost} coin="ogn" />
+                    </div>
 
-                <div className="form-group slider">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={this.state.boost}
-                    onChange={e => this.setState({ boost: e.target.value })}
-                  />
-                </div>
+                    <div className={`form-group slider ${level[1]}`}>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={this.state.boost}
+                        onChange={e => this.setState({ boost: e.target.value })}
+                      />
+                    </div>
 
-                <div className="form-group">
-                  <label>
-                    {isEdit ? 'Additional Boost' : 'Boost Level (per unit)'}
-                  </label>
-                  <input
-                    {...input('boost')}
-                    placeholder="OGN to Boost your listing"
-                  />
-                  {Feedback('boost')}
-                </div>
+                    <div className="boost-description">{level[3]}</div>
+
+                    <div className="info">
+                      {'Boosts are always calculated and charged in OGN. '}
+                      <Link to="/about-tokens">Learn more</Link>
+                    </div>
+                  </>
+                )}
 
                 <div className="actions">
                   <Link
@@ -95,6 +115,7 @@ class Step2 extends Component {
             </div>
           </div>
         </div>
+
         <div className="col-md-4">
           <Wallet />
           <div className="gray-box">
@@ -146,7 +167,7 @@ require('react-styl')(`
     max-width: 460px
     .help-text
       font-size: 16px
-      margin-bottom: 1rem
+      margin-bottom: 2rem
     .no-ogn
       border: 1px solid var(--golden-rod)
       padding: 7rem 2rem 2rem 2rem
@@ -165,26 +186,85 @@ require('react-styl')(`
       > div:nth-child(3)
         font-weight: bold
 
-    .slider input
-      width: 100%
-      -webkit-appearance: none
-      height: 20px
-      border-radius: 10px
-      background: #d3d3d3
-      outline: none
-      overflow: hidden
-      border: 1px solid var(--bluey-grey)
+    .boost-info
+      h5
+        color: var(--dusk)
+        font-size: 18px
+        margin-bottom: 0.25rem
+      > div
+        color: var(--bluey-grey)
+        font-size: 14px
+        font-weight: normal
+    .boost-value
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: normal
+      .description::before
+        content: ""
+        display: inline-block
+        border: 1px dashed transparent
+        width: 1.25rem
+        height: 1.25rem
+        border-radius: 3px;
+        vertical-align: sub
+        margin-right: 0.5rem
+        background: url(images/boost-icon-arrow.svg) no-repeat center
+      &.none .description::before
+        border: 1px dashed var(--bluey-grey)
+      &.low .description::before
+        background-color: var(--bluey-grey)
+      &.med .description::before
+        background-color: var(--steel)
+      &.high .description::before
+        background-color: var(--dusk)
+      &.premium .description::before
+        background-color: var(--golden-rod)
 
-      &::-webkit-slider-thumb
+    .boost-description
+      text-align: center
+      font-style: italic
+      font-weight: normal
+      margin-bottom: 2rem
+    .info
+      color: var(--bluey-grey);
+      font-weight: normal;
+      font-size: 14px;
+      text-align: center;
+
+    .slider
+      input
+        width: 100%
         -webkit-appearance: none
-        appearance: none
-        width: 18px
-        height: 18px
-        border-radius: 50%
-        background: var(--white)
-        border: 1px solid var(--dusk)
-        cursor: pointer;
-        box-shadow: -1000px 0 0 990px var(--golden-rod)
+        height: 20px
+        border-radius: 10px
+        background: #d3d3d3
+        outline: none
+        overflow: hidden
+        box-shadow: inset 0px 0px 1px var(--dark)
+
+        &::-webkit-slider-thumb
+          -webkit-appearance: none
+          appearance: none
+          width: 20px
+          height: 20px
+          border-radius: 50%
+          background: var(--white)
+          border: 1px solid var(--dusk)
+          cursor: pointer;
+          box-shadow: -1000px 0 0 990px var(--golden-rod)
+
+      &.none input::-webkit-slider-thumb
+        box-shadow: -1000px 0 0 990px var(--boost-low)
+      &.low input::-webkit-slider-thumb
+        box-shadow: -1000px 0 0 990px var(--boost-low)
+      &.med input::-webkit-slider-thumb
+        box-shadow: -1000px 0 0 990px var(--boost-medium)
+      &.high input::-webkit-slider-thumb
+        box-shadow: -1000px 0 0 990px var(--boost-high)
+      &.premium input::-webkit-slider-thumb
+        box-shadow: -1000px 0 0 990px var(--boost-premium)
 
     .actions
       margin-top: 2.5rem
