@@ -6171,6 +6171,12 @@ a:not([href]):not([tabindex]).span-link {
     margin-top: 18px;
   }
 
+  .navigation-bar .navigation .unread-indicator {
+    left: 35px;
+    right: auto;
+    top: auto;
+  }
+
   /* Profile */
   .profile-wrapper {
     padding: 0;

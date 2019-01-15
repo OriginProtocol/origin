@@ -1,5 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { connect } from 'react-redux'
+import { formattedAddress } from 'utils/user'
+import origin from '../../services/origin'
+import groupByArray from 'utils/groupByArray'
 
 import Dropdown from 'components/dropdown'
 
@@ -51,7 +55,7 @@ class NavigationDropdown extends Component {
     this.setState({ open })
   }
 
-  renderMenuButton(iconSrc, labelMessage, displayCaret, link, onClickCallback = null) {
+  renderMenuButton(iconSrc, labelMessage, displayCaret, link, onClickCallback = null, injectedHtml = null) {
     const { intl } = this.props
     return <a
       href={link}
@@ -66,6 +70,7 @@ class NavigationDropdown extends Component {
           onClickCallback()
       }}
     >
+      {injectedHtml !== null && injectedHtml}
       <div className="d-flex">
         <img src={iconSrc} />
         <div className="mr-auto menu-item">{intl.formatMessage(labelMessage)}</div>
@@ -80,6 +85,7 @@ class NavigationDropdown extends Component {
 
   render() {
     const { open } = this.state
+    const { conversations } = this.props
 
     return (
       <Dropdown
@@ -126,7 +132,14 @@ class NavigationDropdown extends Component {
             {this.renderMenuButton('images/listings-icon.svg', this.intlMessages.listings, false, "/#/my-listings")}
             {this.renderMenuButton('images/sales-icon.svg', this.intlMessages.sales, false, "/#/my-sales")}
             <hr/>
-            {this.renderMenuButton('images/chatbubble-icon.svg', this.intlMessages.messages, false, "/#/messages")}
+            {this.renderMenuButton(
+              'images/chatbubble-icon.svg',
+              this.intlMessages.messages,
+              false,
+              "/#/messages",
+              null,
+              conversations.length > 0 ? <div className="unread-indicator" /> : null
+            )}
             {this.renderMenuButton('images/alerts-icon-selected.svg', this.intlMessages.notifications, false, "/#/notifications")}
             {this.renderMenuButton('images/tx-icon.svg', this.intlMessages.transactions, false, "/#/transactions")}
           </div>
@@ -136,4 +149,25 @@ class NavigationDropdown extends Component {
   }
 }
 
-export default injectIntl(NavigationDropdown)
+const mapStateToProps = ({ messages, wallet }) => {
+  const filteredMessages = messages.filter(
+    ({ content, conversationId, senderAddress, status }) => {
+      return (
+        content &&
+        status === 'unread' &&
+        formattedAddress(senderAddress) !== formattedAddress(wallet.address) &&
+        origin.messaging.getRecipients(conversationId).includes(wallet.address)
+      )
+    }
+  )
+
+  return {
+    conversations: groupByArray(filteredMessages, 'conversationId')
+  }
+}
+
+const mapDispatchToProps = dispatch => ({})
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(injectIntl(NavigationDropdown))
