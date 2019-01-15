@@ -80,6 +80,11 @@ class ListingCreate extends Component {
         defaultMessage:
           'Are you sure you want to leave? Your listing is not yet created.'
       },
+      navigationWarningEditing: {
+        id: 'listing-create.navigationWarningEditing',
+        defaultMessage:
+          'Are you sure you want to leave? Your listing is not yet updated.'
+      },
       boostLimit: {
          id: 'schema.boostLimitInOgn',
          defaultMessage: 'Boost Limit'
@@ -135,7 +140,6 @@ class ListingCreate extends Component {
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
     this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
-    this.checkWalletETHBalance = this.checkWalletETHBalance.bind(this)
     this.handleContinue = this.handleContinue.bind(this)
     this.handleRemove = this.handleRemove.bind(this)
     this.showDraftModal = this.showDraftModal.bind(this)
@@ -150,10 +154,7 @@ class ListingCreate extends Component {
     this.validateBoostForm = this.validateBoostForm.bind(this)
     this.validateListingForm = this.validateListingForm.bind(this)
 
-    this.state = {
-      showDraftModal: false,
-      showEthNotEnough: false
-    }
+    this.state = { showDraftModal: false }
   }
 
   async componentDidMount() {
@@ -337,6 +338,7 @@ class ListingCreate extends Component {
     if (event && event.target.value) {
       schemaFileName = event.target.value
     }
+
     return fetch(`schemas/${schemaFileName}`)
       .then(response => response.json())
       .then(schemaJson => {
@@ -446,16 +448,6 @@ class ListingCreate extends Component {
         }
       }
     })
-  }
-
-  checkWalletETHBalance() {
-    if (parseFloat(this.props.wallet.ethBalance) < 0.01){
-      this.setState({
-        showEthNotEnough: true
-      })
-      return false
-    }
-    return true
   }
 
   goToDetailsStep() {
@@ -614,7 +606,7 @@ class ListingCreate extends Component {
    * message can appear for a short time and then dissapear. This workaround prevents
    * that sort of twitching.
    */
-  updateBoostCap(){
+  updateBoostCap() {
     const formData = this.props.formListing.formData
     const boostAmount = formData.boostValue || this.state.selectedBoostAmount
     const requiredBoost = formData.unitsTotal * boostAmount
@@ -649,9 +641,6 @@ class ListingCreate extends Component {
 
   async onSubmitListing(formListing) {
     const { isEditMode } = this.props
-    if (!this.checkWalletETHBalance()) {
-      return
-    }
 
     try {
       this.props.updateState({ step: this.STEP.METAMASK })
@@ -1798,32 +1787,6 @@ class ListingCreate extends Component {
                 </div>
               </Modal>
             )}
-            <Modal backdrop="static" isOpen={this.state.showEthNotEnough}>
-              <div className="image-container">
-                <img src="images/flat_cross_icon.svg" role="presentation" />
-              </div>
-              <FormattedMessage
-                id={'eth-not-enough.error1'}
-                defaultMessage={'You don’t have enough funds to complete this transaction. Please add funds to your wallet.'}
-              />
-              <div className="button-container">
-                <button
-                  className="btn btn-clear"
-                  onClick={()=>{
-                    this.setState({
-                      showEthNotEnough: false
-                    })
-                  }}
-                  ga-category="create_listing"
-                  ga-label="error_dismiss"
-                >
-                  <FormattedMessage
-                    id={'listing-create.OK'}
-                    defaultMessage={'OK'}
-                  />
-                </button>
-              </div>
-            </Modal>
             <ListingDraftModal
               isOpen={this.state.showDraftModal}
               handleContinue={this.handleContinue}
@@ -1832,8 +1795,12 @@ class ListingCreate extends Component {
           </div>
         </div>
         <Prompt
-          when={step !== this.STEP.PICK_CATEGORY && step !== this.STEP.SUCCESS}
+          when={step !== this.STEP.PICK_CATEGORY && step !== this.STEP.SUCCESS && !this.props.listingId}
           message={intl.formatMessage(this.intlMessages.navigationWarning)}
+        />
+        <Prompt
+          when={step !== this.STEP.PICK_CATEGORY && step !== this.STEP.SUCCESS && !!this.props.listingId}
+          message={intl.formatMessage(this.intlMessages.navigationWarningEditing)}
         />
       </div>
     ) : null

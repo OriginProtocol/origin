@@ -4,6 +4,10 @@
     "defaultMessage": "Are you sure you want to leave? Your listing is not yet created."
   },
   {
+    "id": "listing-create.navigationWarningEditing",
+    "defaultMessage": "Are you sure you want to leave? Your listing is not yet updated."
+  },
+  {
     "id": "schema.boostLimitInOgn",
     "defaultMessage": "Boost Limit"
   },
@@ -254,9 +258,5 @@
   {
     "id": "listing-create.OK",
     "defaultMessage": "OK"
-  },
-  {
-    "id": "eth-not-enough.error1",
-    "defaultMessage": "You don’t have enough funds to complete this transaction. Please add funds to your wallet."
   }
 ]
