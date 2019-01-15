@@ -29,7 +29,7 @@ class Steps extends React.Component {
           icon: <SettingsIcon />
         },
         {
-          path: '/resolver',
+          path: '/metmask',
         },
         {
           path: '/success',

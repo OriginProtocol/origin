@@ -7,7 +7,7 @@ import { AppToaster } from '../toaster'
 import Create from 'pages/Create'
 import Customize from 'pages/Customize'
 import Configure from 'pages/Configure'
-import Resolver from 'pages/Resolver'
+import MetaMaskPrompt from 'pages/MetaMaskPrompt'
 import Steps from 'components/Steps'
 import Store from 'utils/store'
 const store = Store('sessionStorage')
@@ -116,15 +116,14 @@ class App extends React.Component {
                   <Configure
                     config={this.state.config}
                     onChange={config => this.setConfig(config)}
-                    handlePublish={this.handlePublish}
                   />
                 )}
               />
               <Route
-                path="/resolver"
+                path="/metamask"
                 render={() => (
-                  <Resolver
-                    config={this.state.config}
+                  <MetaMaskPrompt
+                    handlePublish={this.handlePublish}
                   />
                 )}
               />
