@@ -119,6 +119,7 @@ require('react-styl')(`
 
     .description
       margin-top: 2rem
+      white-space: pre-wrap
 
     .listing-buy
       padding: 1.5rem
