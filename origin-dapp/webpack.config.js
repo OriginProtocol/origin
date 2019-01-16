@@ -112,7 +112,7 @@ var config = {
     }
   },
   watchOptions: {
-    poll: 500,
+    poll: 2000,
     ignored: [
       // Ignore node_modules in watch except for the origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,

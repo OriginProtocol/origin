@@ -114,6 +114,8 @@
   "navigation.messages": "Messages",
   "navigation.notifications": "Notifications",
   "navigation.transactions": "Transactions",
+  "navigation.listingCategories": "Listing Categories",
+  "navigation.pendingTransactions": "Pending Transactions",
   "navigation.myitems": "My Items",
   "notificationsDropdown.notificationHeading": "Unread Notification",
   "notificationsDropdown.notificationsHeading": "Unread Notifications",

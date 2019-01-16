@@ -3,14 +3,29 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { formattedAddress } from 'utils/user'
 import origin from '../../services/origin'
-import groupByArray from 'utils/groupByArray'
 
+import groupByArray from 'utils/groupByArray'
+import Transaction from '../transaction'
 import Dropdown from 'components/dropdown'
+import listingSchemaMetadata from 'utils/listingSchemaMetadata'
+import { getDerivedTransactionData } from 'utils/transaction'
 
 class NavigationDropdown extends Component {
-  constructor() {
+  constructor(props) {
     super()
-    this.state = { open: false }
+    this.state = {
+      open: false,
+      categoriesOpen: false,
+      transactionsOpen: false
+    }
+
+    this.listingTypes = [
+      listingSchemaMetadata.listingTypeAll,
+      ...listingSchemaMetadata.listingTypes
+    ].map(listingType => {
+      listingType.name = props.intl.formatMessage(listingType.translationName)
+      return listingType
+    })
 
     this.intlMessages = defineMessages({
       browseCategories: {
@@ -45,9 +60,19 @@ class NavigationDropdown extends Component {
         id: 'navigation.transactions',
         defaultMessage: 'Transactions'
       },
+      listingCategories: {
+        id: 'navigation.listingCategories',
+        defaultMessage: 'Listing Categories'
+      },
+      pendingTransactions: {
+        id: 'navigation.pendingTransactions',
+        defaultMessage: 'Pending Transactions'
+      },
     })
 
-    this.handleBrowseCategories = this.handleBrowseCategories.bind(this)
+    this.handleNavigateCategories = this.handleNavigateCategories.bind(this)
+    this.handleOverlayBack = this.handleOverlayBack.bind(this)
+    this.handleNavigateTransactions = this.handleNavigateTransactions.bind(this)
   }
 
   toggle() {
@@ -79,77 +104,164 @@ class NavigationDropdown extends Component {
     </a>
   }
 
-  handleBrowseCategories() {
+  handleNavigateCategories() {
+    this.setState({ categoriesOpen: true })
+  }
 
+  handleNavigateTransactions() {
+    this.setState({ transactionsOpen: true })
+  }
+
+  handleOverlayBack() {
+    this.setState({
+      categoriesOpen: false,
+      transactionsOpen: false
+    })
+  }
+
+  renderNavigationOverlay(title, content) {
+    return (
+      <div className="overlay-open">
+        <div className="navigation-bar navbar navbar-dark">
+          <div className="container d-flex justify-content-between">
+            <a
+              onClick={this.handleOverlayBack}
+              className="p-3 col-2"
+            >
+              <img className="nav-caret" src="images/caret-white.svg" />
+            </a>
+            <div className="col-8 title"><center>{title}</center></div>
+            <div className="col-2"/>
+          </div>
+        </div>
+        <div>
+          {content}
+        </div>
+      </div>
+    )
+  }
+
+  renderCategories() {
+    return (<Fragment>
+      {this.listingTypes.map(listingType => {
+        return (<div key={listingType.name}>{listingType.name}</div>)
+      })}
+    </Fragment>)
+  }
+
+  renderPendingTransactions(transactionsNotHidden, confirmationCompletionCount) {
+    return (
+    <div className="transactions-list">
+      <ul className="list-group">
+        {transactionsNotHidden.map(transaction => (
+          <Transaction
+            key={transaction.transactionHash}
+            transaction={transaction}
+            confirmationCompletionCount={confirmationCompletionCount}
+          />
+        ))}
+      </ul>
+    </div>)
   }
 
   render() {
-    const { open } = this.state
-    const { conversations } = this.props
+    const { open, categoriesOpen, transactionsOpen } = this.state
+    const { conversations, intl, transactions } = this.props
+
+    const {
+      transactionsNotHidden,
+      transactionsArePending,
+      CONFIRMATION_COMPLETION_COUNT
+    } = getDerivedTransactionData(transactions, [])
 
     return (
-      <Dropdown
-        className="nav-item navigation d-flex d-lg-none"
-        open={open}
-        onClose={() => this.setState({ open: false })}
-      >
-        <a
-          className="nav-link dropdown-toggle nav-menu"
-          role="button"
-          id="navigationDropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          ga-category="top_nav"
-          ga-label="navigation_dropdown"
-          onClick={() => this.toggle()}
+      <Fragment>
+        {categoriesOpen && this.renderNavigationOverlay(
+          intl.formatMessage(this.intlMessages.listingCategories),
+          this.renderCategories()
+        )}
+        {transactionsOpen && this.renderNavigationOverlay(
+          intl.formatMessage(this.intlMessages.pendingTransactions),
+          this.renderPendingTransactions(transactionsNotHidden, CONFIRMATION_COMPLETION_COUNT)
+        )}
+        <Dropdown
+          className="nav-item navigation d-flex d-lg-none"
+          open={open}
+          onClose={() => this.setState({ open: false })}
         >
-          <img src={open ? 'images/menu-icon-active.svg' : 'images/menu-icon.svg'} alt="Origin menu" />
-        </a>
-        <div
-          className={`dropdown-menu ${open ? ' show' : ''}`}
-          aria-labelledby="navigationDropdown"
-          onClick={e => {
-            if (e.target.nodeName === 'A') this.setState({ open: false })
-          }}
-        >
-          <div className="actual-menu d-flex flex-column">
-            {this.renderMenuButton(
-              'images/categories-icon.svg',
-              this.intlMessages.browseCategories,
-              true,
-              undefined,
-              this.handleBrowseCategories
-            )}
-            {this.renderMenuButton('images/add-listing-icon-dark.svg', this.intlMessages.addListing, false, "/#/create")}
-            <hr/>
-            <div className="title">
-              <FormattedMessage
-                id={'navigation.myitems'}
-                defaultMessage={'My Items'}
-              />
+          <a
+            className="nav-link dropdown-toggle nav-menu"
+            role="button"
+            id="navigationDropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            ga-category="top_nav"
+            ga-label="navigation_dropdown"
+            onClick={() => this.toggle()}
+          >
+            <img src={open ? 'images/menu-icon-active.svg' : 'images/menu-icon.svg'} alt="Origin menu" />
+          </a>
+          <div
+            className={`dropdown-menu ${open ? ' show' : ''}`}
+            aria-labelledby="navigationDropdown"
+            onClick={e => {
+              if (e.target.nodeName === 'A') this.setState({ open: false })
+            }}
+          >
+            <div className="actual-menu d-flex flex-column">
+              {this.renderMenuButton(
+                'images/categories-icon.svg',
+                this.intlMessages.browseCategories,
+                true,
+                undefined,
+                this.handleNavigateCategories
+              )}
+              {this.renderMenuButton('images/add-listing-icon-dark.svg', this.intlMessages.addListing, false, "/#/create")}
+              <hr/>
+              <div className="title">
+                <FormattedMessage
+                  id={'navigation.myitems'}
+                  defaultMessage={'My Items'}
+                />
+              </div>
+              {this.renderMenuButton('images/purchases-icon.svg', this.intlMessages.purchases, false, "/#/my-purchases")}
+              {this.renderMenuButton('images/listings-icon.svg', this.intlMessages.listings, false, "/#/my-listings")}
+              {this.renderMenuButton('images/sales-icon.svg', this.intlMessages.sales, false, "/#/my-sales")}
+              <hr/>
+              {this.renderMenuButton(
+                'images/chatbubble-icon.svg',
+                this.intlMessages.messages,
+                false,
+                "/#/messages",
+                null,
+                conversations.length > 0 ? <div className="unread-indicator" /> : null
+              )}
+              {this.renderMenuButton('images/alerts-icon-selected.svg', this.intlMessages.notifications, false, "/#/notifications")}
+              {this.renderMenuButton(
+                'images/tx-icon.svg',
+                this.intlMessages.transactions,
+                true,
+                undefined,
+                this.handleNavigateTransactions,
+                transactionsArePending ?
+                  <div className="arrows-container">
+                    <img
+                      src="images/blue-circle-arrows.svg"
+                      className="rotating-arrows"
+                      alt="rotating circular arrows"
+                    />
+                  </div> :
+                  null
+              )}
             </div>
-            {this.renderMenuButton('images/purchases-icon.svg', this.intlMessages.purchases, false, "/#/my-purchases")}
-            {this.renderMenuButton('images/listings-icon.svg', this.intlMessages.listings, false, "/#/my-listings")}
-            {this.renderMenuButton('images/sales-icon.svg', this.intlMessages.sales, false, "/#/my-sales")}
-            <hr/>
-            {this.renderMenuButton(
-              'images/chatbubble-icon.svg',
-              this.intlMessages.messages,
-              false,
-              "/#/messages",
-              null,
-              conversations.length > 0 ? <div className="unread-indicator" /> : null
-            )}
-            {this.renderMenuButton('images/alerts-icon-selected.svg', this.intlMessages.notifications, false, "/#/notifications")}
-            {this.renderMenuButton('images/tx-icon.svg', this.intlMessages.transactions, false, "/#/transactions")}
           </div>
-        </div>
-      </Dropdown>
+        </Dropdown>
+      </Fragment>
     )
   }
 }
 
-const mapStateToProps = ({ messages, wallet }) => {
+const mapStateToProps = ({ messages, wallet, transactions }) => {
   const filteredMessages = messages.filter(
     ({ content, conversationId, senderAddress, status }) => {
       return (
@@ -162,7 +274,8 @@ const mapStateToProps = ({ messages, wallet }) => {
   )
 
   return {
-    conversations: groupByArray(filteredMessages, 'conversationId')
+    conversations: groupByArray(filteredMessages, 'conversationId'),
+    transactions: transactions
   }
 }
 

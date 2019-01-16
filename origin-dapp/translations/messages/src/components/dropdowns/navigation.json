@@ -32,6 +32,14 @@
     "defaultMessage": "Transactions"
   },
   {
+    "id": "navigation.listingCategories",
+    "defaultMessage": "Listing Categories"
+  },
+  {
+    "id": "navigation.pendingTransactions",
+    "defaultMessage": "Pending Transactions"
+  },
+  {
     "id": "navigation.myitems",
     "defaultMessage": "My Items"
   }
