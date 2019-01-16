@@ -63,7 +63,7 @@ class SettingsScreen extends Component {
 
     return (
       <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
-        <ScrollView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.content} style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.heading}>GENERAL</Text>
           </View>
@@ -88,26 +88,25 @@ class SettingsScreen extends Component {
             <Text style={styles.heading}>NETWORK</Text>
           </View>
           {networks.map((n, i) => (
-              <Fragment key={n.id}>
-                <TouchableHighlight onPress={() => this.handleNetwork(n)}>
-                  <View style={styles.item}>
-                    <Text style={styles.text}>{n.name}</Text>
-                    <View style={styles.iconContainer}>
-                      {n === currentNetwork &&
-                        <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
-                      }
-                      {n !== currentNetwork &&
-                        <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
-                      }
-                    </View>
+            <Fragment key={n.id}>
+              <TouchableHighlight onPress={() => this.handleNetwork(n)}>
+                <View style={styles.item}>
+                  <Text style={styles.text}>{n.name}</Text>
+                  <View style={styles.iconContainer}>
+                    {n === currentNetwork &&
+                      <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
+                    }
+                    {n !== currentNetwork &&
+                      <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
+                    }
                   </View>
-                </TouchableHighlight>
-                {(i + 1) < networks.length &&
-                  <Separator padded={true} />
-                }
-              </Fragment>
-            ))
-          }
+                </View>
+              </TouchableHighlight>
+              {(i + 1) < networks.length &&
+                <Separator padded={true} />
+              }
+            </Fragment>
+          ))}
           {isCustom &&
             <Fragment>
               <View style={styles.header}>
@@ -158,6 +157,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f7f8f8',
     flex: 1,
+  },
+  content: {
+    paddingBottom: 20,
   },
   header: {
     paddingBottom: 5,
