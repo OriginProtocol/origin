@@ -6183,7 +6183,7 @@ a:not([href]):not([tabindex]).span-link {
     width: 100%;
     height: 100vh;
     top: 0px;
-    z-index: 5;
+    z-index: 12;
   }
 
   .overlay-open .nav-caret {
@@ -6201,6 +6201,19 @@ a:not([href]):not([tabindex]).span-link {
     font-size: 22px;
     font-weight: bold;
     color: white;
+  }
+
+  .overlay-open .category {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    text-transform: none;
+  }
+
+  .overlay-open .category .nav-caret {
+    transform: rotate(90deg);
+    width: 13px;
+    height: 21px;
   }
 
   .dropdown-menu .arrows-container {

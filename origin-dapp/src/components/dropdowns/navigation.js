@@ -73,6 +73,7 @@ class NavigationDropdown extends Component {
     this.handleNavigateCategories = this.handleNavigateCategories.bind(this)
     this.handleOverlayBack = this.handleOverlayBack.bind(this)
     this.handleNavigateTransactions = this.handleNavigateTransactions.bind(this)
+    this.handleCategoryClick = this.handleCategoryClick.bind(this)
   }
 
   toggle() {
@@ -102,6 +103,15 @@ class NavigationDropdown extends Component {
         {displayCaret && <img className="nav-caret" src="images/caret-grey.svg" />}
       </div>
     </a>
+  }
+
+  handleCategoryClick(listingType) {
+    this.setState({
+      categoriesOpen: true,
+      open: false
+    })
+
+    console.log('CATEGORY click: ', listingType)
   }
 
   handleNavigateCategories() {
@@ -144,7 +154,15 @@ class NavigationDropdown extends Component {
   renderCategories() {
     return (<Fragment>
       {this.listingTypes.map(listingType => {
-        return (<div key={listingType.name}>{listingType.name}</div>)
+        return (
+          <div
+            key={listingType.name}
+            className="category d-flex justify-content-between p-3 pr-4 mb-0"
+            onClick={() => this.handleCategoryClick(listingType)}
+          >
+            <div>{listingType.name}</div>
+            <img className="nav-caret" src="images/caret-grey.svg" />
+          </div>)
       })}
     </Fragment>)
   }
@@ -216,7 +234,7 @@ class NavigationDropdown extends Component {
                 undefined,
                 this.handleNavigateCategories
               )}
-              {this.renderMenuButton('images/add-listing-icon-dark.svg', this.intlMessages.addListing, false, "/#/create")}
+              {this.renderMenuButton('images/add-listing-icon-dark.svg', this.intlMessages.addListing, false, '/#/create')}
               <hr/>
               <div className="title">
                 <FormattedMessage
@@ -224,9 +242,9 @@ class NavigationDropdown extends Component {
                   defaultMessage={'My Items'}
                 />
               </div>
-              {this.renderMenuButton('images/purchases-icon.svg', this.intlMessages.purchases, false, "/#/my-purchases")}
-              {this.renderMenuButton('images/listings-icon.svg', this.intlMessages.listings, false, "/#/my-listings")}
-              {this.renderMenuButton('images/sales-icon.svg', this.intlMessages.sales, false, "/#/my-sales")}
+              {this.renderMenuButton('images/purchases-icon.svg', this.intlMessages.purchases, false, '/#/my-purchases')}
+              {this.renderMenuButton('images/listings-icon.svg', this.intlMessages.listings, false, '/#/my-listings')}
+              {this.renderMenuButton('images/sales-icon.svg', this.intlMessages.sales, false, '/#/my-sales')}
               <hr/>
               {this.renderMenuButton(
                 'images/chatbubble-icon.svg',
@@ -279,7 +297,7 @@ const mapStateToProps = ({ messages, wallet, transactions }) => {
   }
 }
 
-const mapDispatchToProps = dispatch => ({})
+const mapDispatchToProps = () => ({})
 export default connect(
     mapStateToProps,
     mapDispatchToProps

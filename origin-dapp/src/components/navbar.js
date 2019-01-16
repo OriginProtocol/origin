@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
@@ -20,9 +20,7 @@ class NavBar extends Component {
 
   renderMenuNavigation() {
     const {
-      sellDropdown,
-      iconUrl,
-      isWhiteLabel
+      sellDropdown
     } = this.state
 
     return(
@@ -204,7 +202,6 @@ class NavBar extends Component {
 
 const mapStateToProps = ({ app, config }) => {
   return {
-    iconUrl: config.iconUrl,
     isWhiteLabel: config.isWhiteLabel,
     logoUrl: config.logoUrl,
     mobileDevice: app.mobileDevice,
