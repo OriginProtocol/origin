@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, FlatList, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import Separator from 'components/separator'
@@ -62,7 +62,7 @@ class SettingsScreen extends Component {
     const isCustom = currentNetwork.custom
 
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.heading}>GENERAL</Text>
         </View>
@@ -139,7 +139,7 @@ class SettingsScreen extends Component {
             />
           </Fragment>
         }
-      </View>
+      </ScrollView>
     )
   }
 }
