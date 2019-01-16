@@ -9,6 +9,7 @@ import ColorPicker from 'components/ColorPicker'
 import ImagePicker from 'components/ImagePicker'
 import Preview from 'components/Preview'
 import Redirect from 'components/Redirect'
+import ThemePicker from 'components/ThemePicker'
 
 class Customize extends React.Component {
   constructor(props, context) {
@@ -20,34 +21,25 @@ class Customize extends React.Component {
       redirect: null,
       themes: [
         {
-          title: 'Matt Dreams of Poultry'
+          title: 'Eco Green',
+          cssVars: {
+            dusk: '#3BA54E'
+          }
         },
         {
-          title: 'Matt Dreams of Chickens'
+          title: 'Royal Purple',
+          cssVars: {
+            dusk: '#833AAB'
+          }
         }
       ],
-      themesExpanded: false,
       themeIndex: 0
     }
 
-    this.handleClick = this.handleClick.bind(this)
     this.handleFileUpload = this.handleFileUpload.bind(this)
     this.handlePreview = this.handlePreview.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.onColorChange = this.onColorChange.bind(this)
-  }
-
-  componentWillMount() {
-    document.addEventListener('mousedown', this.handleClick, false)
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClick, false)
-  }
-
-  handleClick (event) {
-    console.log(event.target)
-    this.setState({ themesExpanded: false })
   }
 
   async handleSubmit (event) {
@@ -129,22 +121,11 @@ class Customize extends React.Component {
 
         <div className="form-group">
           <label>Theme</label>
-          <div className="theme-select form-control form-control-lg"
-              onClick={() => this.setState({ themesExpanded: true })}>
-            {this.state.themes[this.state.themeIndex].title}
-          </div>
-          {this.state.themesExpanded &&
-            <div className="theme-dropdown">
-              <div className="row">
-                {this.state.themes.map((theme) =>
-                  <div className="theme-preview col-6">
-                    <Preview config={this.state.config} />
-                    {theme.title}
-                  </div>
-                )}
-              </div>
-            </div>
-          }
+          <ThemePicker
+            config={this.props.config}
+            themes={this.state.themes}
+            themeIndex={this.state.themeIndex}
+          />
         </div>
 
         {!this.state.themesExpanded &&
