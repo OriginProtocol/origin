@@ -62,10 +62,7 @@ class App extends React.Component {
   }
 
   handleServerErrors (error) {
-    AppToaster.show({
-      intent: Intent.DANGER,
-      message: 'There was an error publishing your DApp configuration'
-    })
+    // TODO
   }
 
   async web3Sign(data, account) {

@@ -1,6 +1,8 @@
 import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
 import React from 'react'
 import pick from 'lodash/pick'
+import superagent from 'superagent'
+import debounce from 'lodash/debounce'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import Redirect from 'components/Redirect'
@@ -9,7 +11,11 @@ class Create extends React.Component {
   constructor(props, context) {
     super(props)
 
-    this.state = { ...props.config, fields: Object.keys(props.config) }
+    this.state = {
+      ...props.config,
+      fields: Object.keys(props.config),
+      subdomainValidationRequest: null
+    }
 
     this.availableLanguages = getAvailableLanguages().map((language) => {
       return {
@@ -24,6 +30,7 @@ class Create extends React.Component {
       return (<option key={x.value} value={x.value}>{x.label}</option>)
     })
 
+    this.handleSubdomainChange = this.handleSubdomainChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
@@ -57,8 +64,47 @@ class Create extends React.Component {
     return newState.valid
   }
 
+  handleSubdomainChange () {
+    if (this.state.subdomainValidationRequest) {
+      this.state.subdomainValidationRequest.cancel()
+    }
+
+    const func = debounce(() => {
+      return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/validate/subdomain`)
+        .send({
+          subdomain: this.state.subdomain,
+          address: web3.eth.accounts[0]
+        })
+        .then((res) => {
+          console.log('Subdomain OK')
+        })
+        .catch((error) => {
+          if (error.status === 400) {
+            this.setState({
+              subdomainError: 'Subdomain is not allowed'
+            })
+          } else {
+            // TODO
+          }
+        })
+    }, 500)
+
+    this.setState({
+      subdomainValidationRequest: func
+    })
+
+    func()
+  }
+
   render () {
     const input = formInput(this.state, state => this.setState(state))
+    const subdomainInput = formInput(
+      this.state,
+      state => {
+        this.setState(state)
+        this.handleSubdomainChange()
+      }
+    )
     const Feedback = formFeedback(this.state)
 
     if (this.state.valid) {
@@ -80,9 +126,11 @@ class Create extends React.Component {
           <div className="form-group">
             <label>Subdomain</label>
             <div className="input-group">
-              <input {...input('subdomain')} />
+              <input {...subdomainInput('subdomain')} />
               <div className="input-group-append">
-                <span className="input-group-text">.{process.env.DAPP_CREATOR_DOMAIN}</span>
+                <span className="input-group-text">
+                  .{process.env.DAPP_CREATOR_DOMAIN}
+                </span>
               </div>
               {Feedback('subdomain')}
             </div>

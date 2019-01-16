@@ -19,6 +19,7 @@ class MetaMaskPrompt extends React.Component {
     } catch (error) {
       // TODO: handle rejection
     }
+    this.props.
     console.log('Signed')
     this.setState({
       redirect: '/success'
