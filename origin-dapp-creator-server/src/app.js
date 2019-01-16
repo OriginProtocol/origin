@@ -15,7 +15,8 @@ import {
   getDnsRecord,
   parseDnsTxtRecord,
   setAllRecords,
-  updateTxtRecord
+  updateTxtRecord,
+  validateSubdomain
 } from './lib/dns'
 import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './lib/ipfs'
 
@@ -23,19 +24,11 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
-app.use((err, req, res, next) => {
-  if (err.httpStatusCode) {
-    res.status(err.httpStatusCode).send(err.message)
-  } else {
-    next(err)
-  }
-})
-
 /* Route for handling creation of configurations. Saves the configuration to
  * IPFS and configures a subdomain if necessary. Subdomains are protected via
  * web3 signatures so it isn't possible to overwrite another users subdomain.
  */
-app.post('/config', async (req, res) => {
+app.post('/config', async (req, res, next) => {
   const { config, signature, address } = req.body
 
   let existingRecord
@@ -51,7 +44,12 @@ app.post('/config', async (req, res) => {
       return res.status(400).send('Signature was invalid')
     }
 
-    validateSubdomain(config.subdomain, address)
+    try {
+      await validateSubdomain(config.subdomain, address)
+    } catch (err) {
+      const statusCode = err.httpStatusCode || 500
+      return res.status(statusCode).send(err.message)
+    }
 
     logger.debug('Validated signature of configuration')
   }
@@ -110,6 +108,18 @@ app.post('/config/preview', async (req, res) => {
   ipfsClient.pin.rm(ipfsHash)
 
   res.send(ipfsHash)
+})
+
+app.post('/validate/subdomain', async (req, res) => {
+  const { subdomain, address } = req.body
+  try {
+    await validateSubdomain(subdomain, address)
+  } catch (err) {
+    const statusCode = err.httpStatusCode || 500
+    return res.status(statusCode).send(err.message)
+  }
+
+  return res.status(200)
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

@@ -121,11 +121,14 @@ export async function updateTxtRecord(subdomain, ipfsHash, oldRecord) {
   return zone.createChange(changes)
 }
 
-/*
+/* Validates a subdomain to determine if its suitable for use, i.e. not in the
+ * list of blacklisted subdomains and not already in use by another ethereum
+ * account.
  *
- *
+ * @param {string} subdomain The subdomain of the DNS record.
+ * @param {string} ethAddress The ethereum address of the user requesting the
+ *  subdomain.
  */
-
 export async function validateSubdomain(subdomain, ethAddress) {
   try {
     existingRecord = await getDnsRecord(subdomain, 'TXT')
@@ -140,7 +143,7 @@ export async function validateSubdomain(subdomain, ethAddress) {
     }
     const existingConfig = await getConfigFromIpfs(existingConfigIpfsHash)
     if (existingConfig.address !== address) {
-      const error = Error('Subdomain is in use by another account')
+      const error = new Error('Subdomain is in use by another account')
       error.httpStatusCode = 400
       throw(error)
     }
