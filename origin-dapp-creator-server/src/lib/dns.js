@@ -1,4 +1,5 @@
 const { DNS } = require('@google-cloud/dns')
+
 const dns = new DNS({ projectId: process.env.GCLOUD_PROJECT })
 const zone = dns.zone(process.env.GCLOUD_DNS_ZONE)
 
@@ -118,4 +119,30 @@ export async function updateTxtRecord(subdomain, ipfsHash, oldRecord) {
     add: _txtRecord(subdomain, ipfsHash)
   }
   return zone.createChange(changes)
+}
+
+/*
+ *
+ *
+ */
+
+export async function validateSubdomain(subdomain, ethAddress) {
+  try {
+    existingRecord = await getDnsRecord(subdomain, 'TXT')
+  } catch (error) {
+    throw new Error('An error occurred retrieving DNS records')
+  }
+
+  if (existingRecord) {
+    existingConfigIpfsHash = parseDnsTxtRecord(existingRecord.data[0])
+    if (!existingConfigIpfsHash) {
+      throw new Error('An error occurred retrieving an existing DApp configuration')
+    }
+    const existingConfig = await getConfigFromIpfs(existingConfigIpfsHash)
+    if (existingConfig.address !== address) {
+      const error = Error('Subdomain is in use by another account')
+      error.httpStatusCode = 400
+      throw(error)
+    }
+  }
 }

@@ -11,12 +11,25 @@ const app = express()
 const port = process.env.PORT || 4321
 const logger = Logger.create('origin-dapp-creator-server')
 
-import { getDnsRecord, parseDnsTxtRecord, setAllRecords, updateTxtRecord } from './dns'
-import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './ipfs'
+import {
+  getDnsRecord,
+  parseDnsTxtRecord,
+  setAllRecords,
+  updateTxtRecord
+} from './lib/dns'
+import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './lib/ipfs'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
+
+app.use((err, req, res, next) => {
+  if (err.httpStatusCode) {
+    res.status(err.httpStatusCode).send(err.message)
+  } else {
+    next(err)
+  }
+})
 
 /* Route for handling creation of configurations. Saves the configuration to
  * IPFS and configures a subdomain if necessary. Subdomains are protected via
@@ -38,26 +51,7 @@ app.post('/config', async (req, res) => {
       return res.status(400).send('Signature was invalid')
     }
 
-    // Check if there is an existing configuration published for this subdomain
-    try {
-      existingRecord = await getDnsRecord(config.subdomain, 'TXT')
-    } catch (error) {
-      logger.error(error)
-      return res.status(500).send('An error occurred retrieving DNS records')
-    }
-
-    if (existingRecord) {
-      existingConfigIpfsHash = parseDnsTxtRecord(existingRecord.data[0])
-      if (!existingConfigIpfsHash) {
-        return res.status(500).send('An error occurred retrieving existing configuration')
-      }
-      const existingConfig = await getConfigFromIpfs(existingConfigIpfsHash)
-      if (existingConfig.address !== address) {
-        return res.status(400).send({
-          subdomain: 'Subdomain in use by another account'
-        })
-      }
-    }
+    validateSubdomain(config.subdomain, address)
 
     logger.debug('Validated signature of configuration')
   }
