@@ -32,7 +32,7 @@ const startGanache = (opts = {}) =>
       default_balance_ether: 100,
       db_path: `${__dirname}/data/db`,
       network_id: 999,
-      seed: 123
+      mnemonic: 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
       // blockTime: 3
     }
     if (opts.inMemory) {
@@ -45,11 +45,12 @@ const startGanache = (opts = {}) =>
       }
     }
     const server = Ganache.server(ganacheOpts)
-    server.listen(8545, err => {
+    const port = 8545
+    server.listen(port, err => {
       if (err) {
         return reject(err)
       }
-      console.log('Ganache listening.')
+      console.log(`Ganache listening on port ${port}.`)
       resolve(server)
     })
   })
