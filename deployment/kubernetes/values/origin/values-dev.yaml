@@ -22,11 +22,11 @@ faucetImageTag: '7fab530'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'f8b03d9'
+eventlistenerImageTag: '3050caf'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: 'afe6cf0'
+discoveryImageTag: '3050caf'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -46,4 +46,4 @@ creatorServerImageTag: 'e53b079'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: '7f4c475'
+linkingImageTag: '3050caf'
