@@ -16,7 +16,6 @@ import {
   parseDnsTxtRecord,
   setAllRecords,
   updateTxtRecord,
-  validateSubdomain
 } from './lib/dns'
 import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './lib/ipfs'
 
@@ -45,10 +44,23 @@ app.post('/config', async (req, res, next) => {
     }
 
     try {
-      await validateSubdomain(config.subdomain, address)
-    } catch (err) {
-      const statusCode = err.httpStatusCode || 500
-      return res.status(statusCode).send(err.message)
+      existingRecord = await getDnsRecord(config.subdomain, 'TXT')
+    } catch (error) {
+      logger.error(error)
+      return res.status(500)
+        .send('An error occurred retrieving DNS records')
+    }
+
+    if (existingRecord) {
+      existingConfigIpfsHash = parseDnsTxtRecord(existingRecord.data[0])
+      if (!existingConfigIpfsHash) {
+        return res.status(500)
+          .send('An error occurred retrieving an existing DApp configuration')
+      }
+      const existingConfig = await getConfigFromIpfs(existingConfigIpfsHash)
+      if (existingConfig.address !== address) {
+        return res.status(400).send('Subdomain is in use by another Ethereum adddress')
+      }
     }
 
     logger.debug('Validated signature of configuration')
@@ -112,14 +124,30 @@ app.post('/config/preview', async (req, res) => {
 
 app.post('/validate/subdomain', async (req, res) => {
   const { subdomain, address } = req.body
+
+  let existingRecord, existingConfigIpfsHash, existingConfig
+
+  // TODO: DRY this up, it is duplicated
   try {
-    await validateSubdomain(subdomain, address)
-  } catch (err) {
-    const statusCode = err.httpStatusCode || 500
-    return res.status(statusCode).send(err.message)
+    existingRecord = await getDnsRecord(subdomain, 'TXT')
+  } catch (error) {
+    return res.status(500)
+      .send('An error occurred retrieving DNS records')
   }
 
-  return res.status(200)
+  if (existingRecord) {
+    existingConfigIpfsHash = parseDnsTxtRecord(existingRecord.data[0])
+    if (!existingConfigIpfsHash) {
+      return res.status(500)
+        .send('An error occurred retrieving an existing DApp configuration')
+    }
+    const existingConfig = await getConfigFromIpfs(existingConfigIpfsHash)
+    if (existingConfig.address !== address) {
+      return res.status(400).send('Subdomain is in use by another Ethereum adddress')
+    }
+  }
+
+  return res.status(200).end()
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

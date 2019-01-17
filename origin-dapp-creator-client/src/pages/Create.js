@@ -75,13 +75,10 @@ class Create extends React.Component {
           subdomain: this.state.subdomain,
           address: web3.eth.accounts[0]
         })
-        .then((res) => {
-          console.log('Subdomain OK')
-        })
         .catch((error) => {
           if (error.status === 400) {
             this.setState({
-              subdomainError: 'Subdomain is not allowed'
+              subdomainError: error.response.text
             })
           } else {
             // TODO
