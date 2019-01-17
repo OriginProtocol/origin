@@ -1143,6 +1143,10 @@ class OriginWallet {
   }
 
   async setPrivateKey(privateKey) {
+    if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey))
+    {
+      privateKey = '0x' + privateKey
+    }
     if (privateKey)
     {
       // try private key first and then clear and add again
