@@ -125,6 +125,7 @@ class Customize extends React.Component {
             config={this.props.config}
             themes={this.state.themes}
             themeIndex={this.state.themeIndex}
+            onThemeClick={(index) => this.setState({ themeIndex: index})}
           />
         </div>
 
@@ -212,8 +213,8 @@ require('react-styl')(`
     border-bottom-right-radius: var(--default-radius)
 
   .theme-preview
-    padding-left: 2rem
-    padding-right: 2rem
+    padding: 1rem
+    margin: 1rem
     text-align: center
 `)
 

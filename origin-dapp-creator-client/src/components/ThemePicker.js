@@ -15,6 +15,7 @@ class ThemePicker extends React.Component {
     this.handleClick = this.handleClick.bind(this)
     this.setWrapperRef = this.setWrapperRef.bind(this)
     this.themeConfig = this.themeConfig.bind(this)
+    this.themePreviewClassName = this.themePreviewClassName.bind(this)
   }
 
   componentWillMount() {
@@ -44,6 +45,14 @@ class ThemePicker extends React.Component {
     }
   }
 
+  themePreviewClassName(index) {
+    let classNames = 'theme-preview col'
+    if (index === this.props.themeIndex) {
+      classNames += ' active'
+    }
+    return classNames
+  }
+
   render () {
     return (
       <div ref={this.setWrapperRef}>
@@ -55,7 +64,9 @@ class ThemePicker extends React.Component {
           <div className="theme-dropdown">
             <div className="row">
               {this.props.themes.map((theme, i) =>
-                <div className="theme-preview col-6" key={i}>
+                <div className={this.themePreviewClassName(i)}
+                    key={i}
+                    onClick={() => this.props.onThemeClick(i)}>
                   <Preview config={this.themeConfig(theme)} />
                   {theme.title}
                 </div>
@@ -71,6 +82,10 @@ class ThemePicker extends React.Component {
 require('react-styl')(`
   .theme-preview
     cursor: pointer
+
+  .theme-preview.active
+    border: 1px solid var(--dark)
+    border-radius: var(--default-radius)
 `)
 
 export default ThemePicker

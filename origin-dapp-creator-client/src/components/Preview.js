@@ -10,14 +10,16 @@ class Preview extends React.Component {
   render () {
     return (
       <div className="preview-box">
-        <div className="navbar"
+        <div className="preview-navbar"
           style={{ background: this.props.config.cssVars.dusk }}>
         </div>
-        <div className="searchbar"
+        <div className="preview-searchbar"
           style={{ background: this.props.config.cssVars.paleGrey }}>
         </div>
         {[...Array(this.props.rows || 2)].map((x, i) =>
-          <div className="listings" key={'listings-' + i}>
+          <div className="listings"
+              key={'listings-' + i}
+              style={{ height: `${70 / (this.props.rows || 2)}%` }}>
             {[...Array(3)].map((x, y) =>
               <div className="listing" key={'listing-' + y}>
                 <div className="listing-image"></div>
@@ -38,7 +40,7 @@ class Preview extends React.Component {
             )}
           </div>
         )}
-        <div className="footer"
+        <div className="preview-footer"
           style={{ background: this.props.config.cssVars.lightFooter }}>
         </div>
       </div>
@@ -51,30 +53,38 @@ require('react-styl')(`
     border: 1px solid var(--light)
     border-radius: var(--default-radius)
     width: 100%
+    height: 100%;
 
-  .navbar
+  .preview-navbar
     width: 100%
-    height: 1.5rem
+    height: calc(5% - 1px)
+    border-top-left-radius: var(--default-radius)
+    border-top-right-radius: var(--default-radius)
 
-  .searchbar
+  .preview-searchbar
     width: 100%
-    height: 1.5rem
+    height: 5%
 
-  .footer
-    height: 3rem
+  .preview-footer
+    margin-top: 10%
+    height: calc(10% - 1px)
+    border-bottom-left-radius: var(--default-radius)
+    border-bottom-right-radius: var(--default-radius)
 
   .listings
     display: flex
     justify-content: space-around
-    padding: 1rem 1rem 1rem 0
+    padding: 1rem 1rem 0 0
+    height: 20%;
 
   .listing
     flex: 0 0 33.333333%
     max-width: 33.333333%
+    height: 100%
     padding-left: 1rem
 
   .listing-image
-    height: 3rem;
+    height: 80%
     background-color: var(--pale-grey-two)
 
   .listing-desc
