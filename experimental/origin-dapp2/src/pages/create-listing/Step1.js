@@ -3,6 +3,7 @@ import pick from 'lodash/pick'
 
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
+import Wallet from 'components/Wallet'
 
 import Categories from './_categories'
 import { formInput, formFeedback } from 'utils/formHelpers'
@@ -33,6 +34,7 @@ class Step1 extends Component {
       const cls = id.split('.')[1]
       return (
         <div
+          key={id}
           className={`category ${cls} ${active ? 'active' : 'inactive'}`}
           onClick={() => this.setState({ category: id, subCategory: '' })}
         >
@@ -55,40 +57,46 @@ class Step1 extends Component {
     }
 
     return (
-      <div className="create-listing-step-1">
-        {isEdit ? (
-          <h2>Let’s update your listing</h2>
-        ) : (
-          <h2>Hi there! Let’s get started creating your listing</h2>
-        )}
-        <div className="wrap">
-          <div className="step">Step 1</div>
-          <div className="step-description">
-            {isEdit
-              ? `Update listing type`
-              : `What type of listing do you want to create?`}
-          </div>
-          <Steps steps={3} step={1} />
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              this.validate()
-            }}
-          >
-            {Category('schema.forSale', 'For Sale')}
-            {Category('schema.forRent', 'For Rent')}
-            {Category('schema.services', 'Services')}
-            {Category('schema.announcements', 'Announcements')}
-            <div className="actions">
-              <button
-                type="submit"
-                className={`btn btn-primary${
-                  this.state.subCategory ? '' : ' disabled'
-                }`}
-                children="Continue"
-              />
+      <div className="row">
+        <div className="col-md-8">
+          <div className="create-listing-step-1">
+            {isEdit ? (
+              <h2>Let’s update your listing</h2>
+            ) : (
+              <h2>Hi there! Let’s get started creating your listing</h2>
+            )}
+            <div className="wrap">
+              <div className="step">Step 1</div>
+              <div className="step-description">
+                {isEdit
+                  ? `Update listing type`
+                  : `What type of listing do you want to create?`}
+              </div>
+              <Steps steps={3} step={1} />
+              <form
+                onSubmit={e => {
+                  e.preventDefault()
+                  this.validate()
+                }}
+              >
+                {Categories.root.map(([schema, title]) =>
+                  Category(schema, title)
+                )}
+                <div className="actions">
+                  <button
+                    type="submit"
+                    className={`btn btn-primary${
+                      this.state.subCategory ? '' : ' disabled'
+                    }`}
+                    children="Continue"
+                  />
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <Wallet />
         </div>
       </div>
     )

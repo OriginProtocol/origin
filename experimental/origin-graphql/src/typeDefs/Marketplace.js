@@ -40,6 +40,7 @@ export default `
       arbitrator: String
       from: String
       withdraw: String
+      quantity: Int
     ): Transaction
 
     executeRuling(
@@ -165,6 +166,7 @@ export default `
 
     # Connections
     offers: [Offer]
+    allOffers: [Offer]
     offer(id: ID!): Offer
     totalOffers: Int
     events: [Event]
@@ -175,6 +177,11 @@ export default `
     status: String
     hidden: Boolean
     featured: Boolean
+    unitsAvailable: Int
+    unitsSold: Int
+    depositAvailable: String
+    type: String
+    multiUnit: Boolean
 
     # IPFS
     title: String
@@ -215,10 +222,13 @@ export default `
     arbitrator: Account
     finalizes: Int
     status: Int
+    quantity: Int
 
     # Computed
     withdrawnBy: Account
     statusStr: String
+    valid: Boolean
+    validationError: String
   }
 
   input NewListingInput {

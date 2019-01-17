@@ -9,6 +9,7 @@ import Store from './Store'
 
 import { storeNotificationsPermissions, updateCarouselStatus } from 'actions/Activation'
 import { setDevices } from 'actions/Devices'
+import { add as addNotification } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
 import { getBalance, init } from 'actions/Wallet'
 import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
@@ -194,7 +195,17 @@ class OriginNavWrapper extends Component {
       NavigationService.navigate('Messaging')
     })
 
+    originWallet.events.on(Events.NOTIFICATION, notification => {
+      this.props.addNotification({
+        id: notification.data.notificationId,
+        message: notification.message.body,
+        url: notification.data.url,
+      })
+    })
+
     originWallet.openWallet()
+    // get the balance every five seconds
+    setInterval(() => this.props.getBalance(), 5000)
   }
 
   componentWillUnmount() {
@@ -292,6 +303,7 @@ const mapStateToProps = ({ activation }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  addNotification: notification => dispatch(addNotification(notification)),
   fetchUser: address => dispatch(fetchUser(address)),
   getBalance: () => dispatch(getBalance()),
   initWallet: address => dispatch(init(address)),

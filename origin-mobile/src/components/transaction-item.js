@@ -6,19 +6,26 @@ import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 
 import { sufficientFunds } from 'utils/transaction'
+import { toOgns } from 'utils/ogn'
 
 const IMAGES_PATH = '../../assets/images/'
 
 class TransactionItem extends Component {
   render() {
     const { activation, item, address = '', handleApprove, handlePress, handleReject, navigation, style, wallet } = this.props
-    const { cost, gas_cost, listing, meta, status, to } = item
+    const { cost, gas_cost, ogn_cost, listing = {}, meta, status, to } = item
     const hasNotificationsEnabled = activation.notifications.permissions.hard.alert
     // To Do: account for possible commission
     const hasSufficientFunds = sufficientFunds(wallet, item)
     const counterpartyAddress = (listing && listing.seller) || to
     const { price = { amount: '', currency: '' } } = listing
     const picture = listing && listing.media && listing.media[0]
+    const costEth = Number(web3.utils.fromWei(cost.toString())).toFixed(5)
+    const gasEth = Number(web3.utils.fromWei(gas_cost.toString())).toFixed(5)
+    const totalEth = Number(web3.utils.fromWei(
+      web3.utils.toBN(cost).add(web3.utils.toBN(gas_cost)).toString()
+    )).toFixed(5)
+    const totalOgn = toOgns(ogn_cost)
     let activitySummary, heading
 
     switch(meta.method) {
@@ -59,8 +66,8 @@ class TransactionItem extends Component {
 
     return ['completed', 'rejected'].find(s => s === status) ? (
       <TouchableHighlight onPress={handlePress}>
-        <View style={[ styles.listItem, style ]}>
-          {!picture && <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />}
+        <View style={[ styles.listItem, styles.completed, style ]}>
+          {!picture && <View style={{ ...styles.thumbnail, ...styles.imageless }} />}
           {picture && <Image source={{ uri: picture.url }} style={styles.thumbnail} />}
           <View style={styles.content}>
             {listing &&
@@ -73,17 +80,17 @@ class TransactionItem extends Component {
                 </View>
               </View>
             }
-            {!listing && meta &&
+            {!listing &&
               <View>
                 <Text style={styles.imperative}>called <Text style={styles.subject}>{meta.contract}.{meta.method}</Text></Text>
                 <View style={styles.counterparties}>
                   <Address address={address} label="From Address" style={styles.address} />
-                  {cost && <Text style={styles.imperative}>Value: {cost} Eth</Text>}
-                  <Text style={styles.imperative}>Gas: {gas_cost}</Text>
-                  <View style={{ flexDirection: 'row' }}>
+                  {costEth > 0 && <Text style={styles.imperative}>Value: {costEth} Eth</Text>}
+                  <Text style={styles.imperative}>Gas: {gasEth} Eth</Text>
+                  { meta && <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.address}>{meta.contract}</Text>
                     <Address address={meta.to} label="To Address" style={styles.address} />
-                  </View>
+                  </View> }
                   {status && <Text style={styles.address}>Status: {status}</Text>}
                 </View>
               </View>
@@ -126,9 +133,15 @@ class TransactionItem extends Component {
                 </View>
                 <View style={styles.price}>
                   <Image source={require(`${IMAGES_PATH}eth-icon.png`)} style={styles.currencyIcon} />
-                  <Text style={styles.amount}>{Number(price.amount).toFixed(5)}</Text>
-                  <Text style={styles.abbreviation}>{price.currency}</Text>
+                  <Text style={styles.amount}>{totalEth} </Text>
+                  <Text style={styles.abbreviation}>ETH</Text>
                 </View>
+                {ogn_cost > 0 &&
+                <View style={styles.price}>
+                  <Image source={require(`${IMAGES_PATH}ogn-icon.png`)} style={styles.currencyIcon} />
+                  <Text style={styles.amount}>{totalOgn} </Text>
+                  <Text style={styles.abbreviation}>OGN</Text>
+                </View>}
               </View>
               <View style={styles.nav}>
                 <Image source={require(`${IMAGES_PATH}nav-arrow.png`)} />
@@ -180,6 +193,7 @@ class TransactionItem extends Component {
         <OriginButton
           size="large"
           type="danger"
+          outline={true}
           style={styles.button}
           textStyle={{ fontSize: 14, fontWeight: '900' }}
           title={'Cancel'}
@@ -225,14 +239,14 @@ const styles = StyleSheet.create({
     marginRight: 10,
     width: 12,
   },
-  avatar: {
-    marginRight: 10,
-  },
   button: {
     borderRadius: 30,
     height: 40,
     marginBottom: 10,
     marginHorizontal: 10,
+  },
+  completed: {
+    maxHeight: 94,
   },
   content: {
     flex: 1,
@@ -260,6 +274,9 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginBottom: 10,
   },
+  imageless: {
+    backgroundColor: '#f7f8f8',
+  },
   imperative: {
     fontSize: 17,
     fontWeight: '300',
@@ -282,6 +299,7 @@ const styles = StyleSheet.create({
   },
   main: {
     flexDirection: 'row',
+    minWidth: 200,
   },
   nav: {
     justifyContent: 'center',

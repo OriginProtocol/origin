@@ -42,11 +42,13 @@
     "node-fetch": "^2.3.0",
     "origin-contracts": "^0.8.6",
     "origin-graphql": "^0.1.0",
+    "origin-services": "^0.1.0",
     "prettier": "^1.15.2",
     "react": "^16.6.3",
     "react-apollo": "^2.3.3",
     "react-dom": "^16.6.3",
     "react-image-crop": "^6.0.10",
+    "react-popper-tooltip": "^2.7.4",
     "react-styl": "^0.0.3",
     "serve-static": "^1.13.2",
     "web3": "1.0.0-beta.37"

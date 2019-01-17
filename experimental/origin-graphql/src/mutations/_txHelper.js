@@ -17,6 +17,10 @@ export async function checkMetaMask(from) {
   }
 }
 
+// Do not listen for confirmations if we're on the server as it causes mocha
+// to hang
+const isServer = typeof window === 'undefined'
+
 export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
   return new Promise((resolve, reject) => {
     let txHash
@@ -25,13 +29,13 @@ export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
       resolve({ id: hash })
 
       contracts.transactions.push({ id: hash })
-      try {
-        window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
-          contracts.transactions
-        )
-      } catch (e) {
-        /* Ignore */
-      }
+      // try {
+      //   window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
+      //     contracts.transactions
+      //   )
+      // } catch (e) {
+      //   /* Ignore */
+      // }
 
       const node = await getTransaction(hash, true)
 
@@ -66,7 +70,7 @@ export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
           }, contracts.automine)
         }
       })
-      .on('confirmation', function(confNumber, receipt) {
+      .on(`confirmation${isServer ? 'X' : ''}`, function(confNumber, receipt) {
         if (confNumber === 1 && onConfirmation) {
           onConfirmation(receipt)
         }

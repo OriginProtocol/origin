@@ -16,6 +16,7 @@ A simple way to see the listener in action:
 
     cd origin-discovery
     npm run install:dev
+    cp src/listener/dev.env src/listener/.env
     node src/listener/listener.js
 
 ## Command line options
@@ -40,7 +41,8 @@ Events:
 
 The listener calls out origin.js to load and validate data from the blockchain. In order to properly configure an origin.js object, the listener uses the following environment variables:
   - ARBITRATOR_ACCOUNT: Ethereum address of the Origin marketplace arbitrator account.
-  - AFFILIATE_ACCOUNT:  Ethereum address of the Origin marketplace affilicate account.
+  - AFFILIATE_ACCOUNT:  Ethereum address of the Origin marketplace affiliate account.
+  - ATTESTATION_ACCOUNT: Ethereum address of the Origin attestation account.
   - BLOCK_EPOCH: Start block to use when scanning the blockchain for Origin events.
 
 Those values can be found via the DApp info page:

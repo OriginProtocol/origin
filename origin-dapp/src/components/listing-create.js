@@ -182,7 +182,6 @@ class ListingCreate extends Component {
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
         }
-        this.ensureUserIsSeller(listing.seller)
 
         if (listing.pictures.length) {
           const pictures = await getDataURIsFromImgURLs(listing.pictures)
@@ -439,10 +438,6 @@ class ListingCreate extends Component {
   }
 
   onAvailabilityEntered(slots, direction) {
-    if (!slots || !slots.length) {
-      return
-    }
-
     let nextStep
     switch(direction) {
       case 'forward':
@@ -456,7 +451,7 @@ class ListingCreate extends Component {
         break
     }
 
-    slots = prepareSlotsToSave(slots)
+    slots = (slots && slots.length && prepareSlotsToSave(slots)) || []
 
     this.setState({
       formListing: {
@@ -748,12 +743,17 @@ class ListingCreate extends Component {
     const formData = formListing.formData
     const {
       unitsTotal,
-      unitsLockedInOffers
+      unitsPending,
+      unitsSold
     } = formData
 
-    const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
-
     if (isEditMode) {
+      const unitsLockedInOffers = unitsPending + unitsSold
+      /* considers the case where a user would edit the quantity to 1 on a multi unit listing
+       * that already has offers for more than 1 unit.
+       */
+      const isMultiUnitListing = (!!formData.unitsTotal && formData.unitsTotal) > 1 || unitsLockedInOffers > 1
+
       // do not allow quantity to be edited below the value of units already in offers
       if (isMultiUnitListing && unitsTotal < unitsLockedInOffers) {
         errors.unitsTotal.addError(
@@ -1073,6 +1073,19 @@ class ListingCreate extends Component {
             )}
             {step === this.STEP.AVAILABILITY &&
               <div className="col-md-12 listing-availability">
+                <label>
+                  <FormattedMessage
+                    id={'listing-create.stepNumberLabel'}
+                    defaultMessage={'STEP {stepNumber}'}
+                    values={{ stepNumber: this.getStepNumber(step) }}
+                  />
+                </label>
+                <h2>
+                  <FormattedMessage
+                    id={'listing-create.availabilityHeading'}
+                    defaultMessage={'Add Availability and Pricing'}
+                  />
+                </h2>
                 <Calendar
                   slots={ formData && formData.slots }
                   userType="seller"

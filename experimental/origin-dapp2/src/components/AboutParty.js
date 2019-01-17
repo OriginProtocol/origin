@@ -4,6 +4,10 @@ import get from 'lodash/get'
 
 import Redirect from 'components/Redirect'
 import Identicon from 'components/Identicon'
+import Avatar from 'components/Avatar'
+import SendMessage from 'components/SendMessage'
+import Tooltip from 'components/Tooltip'
+
 import IdentityQuery from 'queries/Identity'
 
 class AboutParty extends Component {
@@ -18,7 +22,7 @@ class AboutParty extends Component {
     return (
       <div
         className="about-party"
-        onClick={() => this.setState({ redirect: true })}
+        // onClick={() => this.setState({ redirect: true })}
       >
         <Query query={IdentityQuery} variables={{ id }}>
           {({ data, loading, error }) => {
@@ -32,34 +36,48 @@ class AboutParty extends Component {
 
             return (
               <div className="profile">
-                {profile.avatar ? (
-                  <div
-                    className="avatar"
-                    style={{ backgroundImage: `url(${profile.avatar})` }}
-                  />
-                ) : (
-                  <div className="avatar empty" />
-                )}
+                <Avatar avatar={profile.avatar} size={50} />
                 <div>
                   <div className="name">{name}</div>
                   <div className="attestations">
                     {profile.twitterVerified && (
-                      <div className="attestation twitter" />
+                      <Tooltip
+                        tooltip="Twitter Account Verified"
+                        placement="bottom"
+                      >
+                        <div className="attestation twitter" />
+                      </Tooltip>
                     )}
                     {profile.googleVerified && (
-                      <div className="attestation google" />
+                      <Tooltip
+                        tooltip="Google Account Verified"
+                        placement="bottom"
+                      >
+                        <div className="attestation google" />
+                      </Tooltip>
                     )}
                     {profile.phoneVerified && (
-                      <div className="attestation phone" />
+                      <Tooltip tooltip="Phone Verified" placement="bottom">
+                        <div className="attestation phone" />
+                      </Tooltip>
                     )}
                     {profile.emailVerified && (
-                      <div className="attestation email" />
+                      <Tooltip tooltip="Email Verified" placement="bottom">
+                        <div className="attestation email" />
+                      </Tooltip>
                     )}
                     {profile.facebookVerified && (
-                      <div className="attestation facebook" />
+                      <Tooltip tooltip="Facebook Verified" placement="bottom">
+                        <div className="attestation facebook" />
+                      </Tooltip>
                     )}
                     {profile.airbnbVerified && (
-                      <div className="attestation airbnb" />
+                      <Tooltip
+                        tooltip="Airbnb Account Verified"
+                        placement="bottom"
+                      >
+                        <div className="attestation airbnb" />
+                      </Tooltip>
                     )}
                   </div>
                 </div>
@@ -73,6 +91,22 @@ class AboutParty extends Component {
             <div>ETH Address:</div>
             <div className="address">{id}</div>
           </div>
+        </div>
+        <div className="mt-3 text-center">
+          <button
+            className="btn btn-primary btn-rounded"
+            onClick={e => {
+              e.stopPropagation()
+              this.setState({ message: true })
+            }}
+            children="Send Message"
+          />
+          {this.state.message && (
+            <SendMessage
+              to={id}
+              onClose={() => this.setState({ message: false })}
+            />
+          )}
         </div>
       </div>
     )
@@ -93,14 +127,7 @@ require('react-styl')(`
       display: flex
       margin-bottom: 1rem
       .avatar
-        width: 50px;
-        height: 50px;
-        background-size: contain;
-        border-radius: 5px;
         margin-right: 1rem
-        &.empty
-          background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
-          background-size: 1.9rem;
       .name
         font-size: 18px
         font-weight: bold

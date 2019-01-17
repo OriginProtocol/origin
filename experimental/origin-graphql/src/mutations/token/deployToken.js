@@ -44,7 +44,9 @@ async function deployToken(_, args) {
         supply
       }
       tokens.push(tokenDef)
-      localStorage[`${context.net}Tokens`] = JSON.stringify(tokens)
+      if (typeof window !== 'undefined') {
+        window.localStorage[`${context.net}Tokens`] = JSON.stringify(tokens)
+      }
 
       Contract.options.address = receipt.contractAddress
       contracts.tokens.push({
@@ -54,7 +56,10 @@ async function deployToken(_, args) {
       })
 
       if (args.type === 'OriginToken') {
-        window.localStorage[`${args.symbol}Contract`] = receipt.contractAddress
+        if (typeof window !== 'undefined') {
+          window.localStorage[`${args.symbol}Contract`] =
+            receipt.contractAddress
+        }
         contracts.ogn = Contract
         contracts.ognExec = Contract
         contracts[receipt.contractAddress] = contracts.ogn
