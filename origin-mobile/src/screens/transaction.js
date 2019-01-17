@@ -224,6 +224,7 @@ class TransactionScreen extends Component {
           <OriginButton
             size="large"
             type="danger"
+            outline={true}
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Cancel'}
