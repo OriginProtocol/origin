@@ -6175,6 +6175,15 @@ a:not([href]):not([tabindex]).span-link {
     left: 35px;
     right: auto;
     top: auto;
+    border-color: var(--pale-grey);
+  }
+
+  .navigation-bar .navigation .unread-indicator.menu {
+    top: 15px;
+  }
+
+  .navigation-bar .navigation .unread-indicator.dark {
+    border-color: var(--dusk);
   }
 
   .overlay-open {

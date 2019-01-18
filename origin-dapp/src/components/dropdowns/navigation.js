@@ -188,12 +188,14 @@ class NavigationDropdown extends Component {
   render() {
     const { open, categoriesOpen, transactionsOpen } = this.state
     const { conversations, intl, transactions } = this.props
+    const showConversationBubble = conversations.length > 0
 
     const {
       transactionsNotHidden,
       transactionsArePending,
       CONFIRMATION_COMPLETION_COUNT
     } = getDerivedTransactionData(transactions, [])
+
 
     return (
       <Fragment>
@@ -221,6 +223,9 @@ class NavigationDropdown extends Component {
             onClick={() => this.toggle()}
           >
             <img src={open ? 'images/menu-icon-active.svg' : 'images/menu-icon.svg'} alt="Origin menu" />
+            {(transactionsArePending || showConversationBubble)
+              && <div className={ open ? `menu unread-indicator` : `menu unread-indicator dark`} />
+            }
           </a>
           <div
             className={`dropdown-menu ${open ? ' show' : ''}`}
@@ -255,7 +260,7 @@ class NavigationDropdown extends Component {
                 false,
                 '/#/messages',
                 null,
-                conversations.length > 0 ? <div className="unread-indicator" /> : null
+                showConversationBubble > 0 ? <div className="unread-indicator" /> : null
               )}
               {this.renderMenuButton('images/alerts-icon-selected.svg', this.intlMessages.notifications, false, '/#/notifications')}
               {this.renderMenuButton(
