@@ -280,7 +280,7 @@ require('react-styl')(`
       width: 0;
       height: 0;
       border-top: 7px solid transparent;
-      border-right: 7px solid var(--white);
+      border-right: 7px solid #e9ecef;
       border-bottom: 7px solid transparent;
     > span
       position: absolute
