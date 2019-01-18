@@ -5,9 +5,11 @@ import metaMaskSync from './metaMaskSync'
 import messagingSync from './messagingSync'
 
 const client = new ApolloClient({ link, cache: new InMemoryCache() })
-metaMaskSync(client)
-messagingSync(client)
 
-window.gql = client
+if (typeof window !== 'undefined') {
+  metaMaskSync(client)
+  messagingSync(client)
+  window.gql = client
+}
 
 export default client

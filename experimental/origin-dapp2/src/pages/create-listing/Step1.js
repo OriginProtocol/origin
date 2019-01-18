@@ -34,6 +34,7 @@ class Step1 extends Component {
       const cls = id.split('.')[1]
       return (
         <div
+          key={id}
           className={`category ${cls} ${active ? 'active' : 'inactive'}`}
           onClick={() => this.setState({ category: id, subCategory: '' })}
         >
@@ -78,10 +79,9 @@ class Step1 extends Component {
                   this.validate()
                 }}
               >
-                {Category('schema.forSale', 'For Sale')}
-                {Category('schema.forRent', 'For Rent')}
-                {Category('schema.services', 'Services')}
-                {Category('schema.announcements', 'Announcements')}
+                {Categories.root.map(([schema, title]) =>
+                  Category(schema, title)
+                )}
                 <div className="actions">
                   <button
                     type="submit"

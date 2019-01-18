@@ -2,6 +2,7 @@ import graphqlFields from 'graphql-fields'
 
 import contracts from '../contracts'
 import { listingsBySeller } from './marketplace/listings'
+import { getIdsForPage, getConnection } from './_pagination'
 
 function bota(input) {
   return new Buffer(input.toString(), 'binary').toString('base64')
@@ -56,9 +57,9 @@ async function offers(buyer, { first = 10, after }, _, info) {
     buyer.id
   )
 
-  const ids = events.map(
-    e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-  ).reverse()
+  const ids = events
+    .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
+    .reverse()
   const totalCount = ids.length
 
   return await resultsFromIds({ after, ids, first, totalCount, fields })
@@ -79,9 +80,9 @@ async function sales(seller, { first = 10, after }, _, info) {
     'OfferCreated'
   )
 
-  const ids = events.map(
-    e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-  ).reverse()
+  const ids = events
+    .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
+    .reverse()
   const totalCount = ids.length
 
   return await resultsFromIds({ after, ids, first, totalCount, fields })
@@ -126,10 +127,89 @@ async function reviews(user) {
   }
 }
 
+// Sourced from offer events where user is alternate party
+async function notifications(user, { first = 10, after }, _, info) {
+  const fields = graphqlFields(info)
+  const ec = contracts.marketplace.eventCache
+
+  const userSellerListings = await ec.allEvents('ListingCreated', user.id)
+
+  const userSellerListingIds = userSellerListings.map(e =>
+    Number(e.returnValues.listingID)
+  )
+
+  const userSellerListingEvents = await ec.offers(
+    userSellerListingIds,
+    null,
+    [
+      'OfferCreated',
+      'OfferFinalized',
+      'OfferWithdrawn',
+      'OfferFundsAdded',
+      'OfferDisputed',
+      'OfferRuling'
+    ],
+    user.id
+  )
+
+  const userBuyerListings = await ec.allEvents('OfferCreated', user.id)
+
+  const userBuyerListingIds = userBuyerListings.map(e =>
+    Number(e.returnValues.listingID)
+  )
+
+  const userBuyerListingEvents = await ec.offers(
+    userBuyerListingIds,
+    null,
+    ['OfferAccepted', 'OfferRuling'],
+    user.id
+  )
+
+  const allEvents = [
+    ...userSellerListingEvents,
+    ...userBuyerListingEvents
+  ].reverse()
+  const totalCount = allEvents.length
+
+  const { ids, start } = getIdsForPage({
+    after,
+    ids: allEvents.map(e => e.id),
+    first
+  })
+
+  const filteredEvents = allEvents.filter(e => ids.indexOf(e.id) >= 0)
+  let offers = [],
+    nodes = []
+  if (fields.nodes) {
+    offers = await Promise.all(
+      filteredEvents.map(event =>
+        contracts.eventSource.getOffer(
+          event.returnValues.listingID,
+          event.returnValues.offerID,
+          event.blockNumber
+        )
+      )
+    )
+    nodes = filteredEvents.map((event, idx) => {
+      const party = event.returnValues.party
+      return {
+        id: event.id,
+        offer: offers[idx],
+        party: { id: party, account: { id: party } },
+        event,
+        read: false
+      }
+    })
+  }
+
+  return getConnection({ start, first, nodes, ids, totalCount })
+}
+
 export default {
   offers,
   sales,
   reviews,
+  notifications,
   listings: listingsBySeller,
   firstEvent: async user => {
     if (user.firstEvent) return user.firstEvent

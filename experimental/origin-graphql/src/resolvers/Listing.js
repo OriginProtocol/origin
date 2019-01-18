@@ -19,21 +19,8 @@ export default {
     const { listingId, offerId } = parseId(args.id)
     return contracts.eventSource.getOffer(listingId, offerId)
   },
-  offers: async listing => {
-    if (!listing.contract) {
-      return null
-    }
-    const { listingId } = parseId(listing.id)
-    const totalOffers = await listing.contract.methods
-      .totalOffers(listingId)
-      .call()
-
-    const offers = []
-    for (const id of Array.from({ length: Number(totalOffers) }, (v, i) => i)) {
-      offers.push(await contracts.eventSource.getOffer(listingId, id))
-    }
-    return offers
-  },
+  offers: async listing =>
+    listing.allOffers.filter(o => o.valid),
   createdEvent: async listing => {
     const { listingId } = parseId(listing.id)
     const events = await listing.contract.eventCache.listings(

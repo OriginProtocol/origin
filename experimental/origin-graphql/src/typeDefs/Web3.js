@@ -217,6 +217,7 @@ export default `
     offerID: ID
     party: String!
     ipfsHash: String!
+    ipfsUrl: String
   }
 
   type EventReturnValuesArr {

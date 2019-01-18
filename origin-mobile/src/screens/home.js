@@ -7,6 +7,7 @@ import { setActiveEvent } from 'actions/WalletEvents'
 import Currency from 'components/currency'
 import DeviceItem from 'components/device-item'
 import DeviceModal from 'components/device-modal'
+import NotificationItem from 'components/notification-item'
 import NotificationsModal from 'components/notifications-modal'
 import Selling from 'components/selling'
 import Separator from 'components/separator'
@@ -17,6 +18,7 @@ import TransactionModal from 'components/transaction-modal'
 import WalletModal from 'components/wallet-modal'
 
 import currencies from 'utils/currencies'
+import { toOgns } from 'utils/ogn'
 
 import originWallet from '../OriginWallet'
 
@@ -38,7 +40,7 @@ class HomeScreen extends Component {
     title: 'Home',
     headerRight: (
       <TouchableOpacity onPress={() => {
-        originWallet.openRoot()
+        originWallet.open('root')
       }}>
         <Image
           source={require(`${IMAGES_PATH}external-icon-dark.png`)}
@@ -74,12 +76,12 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { active_event, address, balances: { eth, ogn, dai }, navigation, pending_events, processed_events } = this.props
+    const { active_event, address, balances: { eth, ogn/*, dai*/ }, navigation, notifications, pending_events, processed_events } = this.props
     const ethBalance = web3.utils.fromWei(eth, 'ether')
     // To Do: convert tokens with decimal counts
-    const daiBalance = dai
-    const ognBalance = ogn
-    const eventsCount = pending_events.length + processed_events.length
+    // const daiBalance = dai
+    const ognBalance = toOgns(ogn)
+    const eventsCount = pending_events.length + processed_events.length + notifications.length
 
     return (
       <Fragment>
@@ -111,6 +113,7 @@ class HomeScreen extends Component {
               imageSource={currencies['ogn'].icon}
               onPress={this.toggleWallet}
             />
+            {/*
             <Currency
               abbreviation={'DAI'}
               balance={daiBalance}
@@ -119,6 +122,7 @@ class HomeScreen extends Component {
               imageSource={currencies['dai'].icon}
               onPress={this.toggleWallet}
             />
+            */}
           </ScrollView>
           <WalletModal address={address} visible={this.state.walletExpanded} onPress={this.toggleWallet} />
         </View>
@@ -127,7 +131,7 @@ class HomeScreen extends Component {
         }
         {!!eventsCount &&
           <SectionList
-            keyExtractor={({ event_id }) => event_id}
+            keyExtractor={({ event_id, id }) => event_id || id}
             renderItem={({ item, section }) => {
               if (section.title === 'Pending') {
                 switch(item.action) {
@@ -167,6 +171,10 @@ class HomeScreen extends Component {
                   default:
                     return null
                 }
+              } else if (section.title === 'Notifications') {
+                return (
+                  <NotificationItem item={item} />
+                )
               } else {
                 switch(item.action) {
                   case 'transaction':
@@ -202,18 +210,19 @@ class HomeScreen extends Component {
               }
             }}
             renderSectionHeader={({ section: { title }}) => {
-              if (!processed_events.length || title === 'Pending') {
-                return null
+              if (processed_events.length && title === 'Recent Activity') {
+                return (
+                  <View style={styles.header}>
+                    <Text style={styles.headerText}>{title.toUpperCase()}</Text>
+                  </View>
+                )
               }
 
-              return (
-                <View style={styles.header}>
-                  <Text style={styles.headerText}>{title.toUpperCase()}</Text>
-                </View>
-              ) 
+              return null
             }}
             sections={[
               { title: 'Pending', data: pending_events },
+              { title: 'Notifications', data: notifications },
               { title: 'Recent Activity', data: processed_events },
             ]}
             style={styles.list}
@@ -269,6 +278,7 @@ const mapStateToProps = state => {
     active_event: state.wallet_events.active_event,
     address: state.wallet.address,
     balances: state.wallet.balances,
+    notifications: state.notifications,
     pending_events: state.wallet_events.pending_events,
     processed_events: state.wallet_events.processed_events,
   }

@@ -18,7 +18,9 @@ async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
     tx,
     mutation: 'deployMarketplace',
     onReceipt: receipt => {
-      window.localStorage.marketplaceContract = receipt.contractAddress
+      if (typeof window !== 'undefined') {
+        window.localStorage.marketplaceContract = receipt.contractAddress
+      }
 
       let marketplaces = {}
       try {
@@ -27,7 +29,9 @@ async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
         /* Ignore */
       }
       marketplaces[version] = receipt.contractAddress
-      localStorage.marketplaces = JSON.stringify(marketplaces)
+      if (typeof window !== 'undefined') {
+        window.localStorage.marketplaces = JSON.stringify(marketplaces)
+      }
 
       setMarketplace(receipt.contractAddress, receipt.blockNumber)
 

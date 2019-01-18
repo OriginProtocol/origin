@@ -136,24 +136,43 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     })
   }
 
-  async function offers(listingIds, offerId, eventName) {
+  async function offers(listingIds, offerId, eventNames, notParty) {
     await getPastEvents()
     if (!Array.isArray(listingIds)) {
-      listingIds = [listingIds]
+      listingIds = listingIds ? [listingIds] : []
+    }
+    if (!Array.isArray(eventNames)) {
+      eventNames = eventNames ? [eventNames] : []
     }
     const listingTopics = listingIds.map(listingId =>
       web3.utils.padLeft(web3.utils.numberToHex(listingId), 64)
     )
-    const offerTopic = typeof offerId === 'number'
-      ? web3.utils.padLeft(web3.utils.numberToHex(offerId), 64)
-      : null
+
+    const offerTopic =
+      typeof offerId === 'number'
+        ? web3.utils.padLeft(web3.utils.numberToHex(offerId), 64)
+        : null
 
     return events.filter(e => {
       const topics = e.raw.topics
-      const matchesListing = listingTopics.indexOf(topics[2]) >= 0,
+
+      let matchesParty = true
+      if (notParty) {
+        if (
+          topics[1].toLowerCase() ===
+          web3.utils.padLeft(notParty, 64).toLowerCase()
+        )
+          matchesParty = false
+      }
+
+      const matchesListing = listingTopics.length
+          ? listingTopics.indexOf(topics[2]) >= 0
+          : true,
         matchesOffer = offerTopic ? topics[3] === offerTopic : true,
-        matchesEvent = eventName ? e.event === eventName : true
-      return matchesListing && matchesOffer && matchesEvent
+        matchesEvent = eventNames.length
+          ? eventNames.indexOf(e.event) >= 0
+          : true
+      return matchesListing && matchesOffer && matchesEvent && matchesParty
     })
   }
 
