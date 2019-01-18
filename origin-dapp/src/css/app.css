@@ -6187,7 +6187,6 @@ a:not([href]):not([tabindex]).span-link {
   }
 
   .overlay-open .nav-caret {
-    transform: rotate(180deg);
     width: 13px;
     height: 21px;
   }
@@ -6228,6 +6227,24 @@ a:not([href]):not([tabindex]).span-link {
     position: relative;
   }
 
+  .searchbar .search-input {
+    max-width: 992px;
+  }
+
+  .navbar.search-filters {
+    display: none;
+  }
+
+  .navigate-back .caret {
+    transform: rotate(270deg)
+  }
+
+  .navigate-back {
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 0.7rem;
+  }
+
   /* Profile */
   .profile-wrapper {
     padding: 0;
@@ -6261,6 +6278,20 @@ a:not([href]):not([tabindex]).span-link {
     line-height: 1.2rem;
     height: 3.6rem;
     overflow: hidden;
+  }
+
+  /* Listings */
+  .listings-grid {
+    padding: 1.5rem 0;
+  }
+
+  .listings-grid h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .listing-card {
+    margin-bottom: 2.1rem;
   }
 }
 

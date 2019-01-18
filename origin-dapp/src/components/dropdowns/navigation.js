@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { formattedAddress } from 'utils/user'
-import origin from '../../services/origin'
 
+import origin from '../../services/origin'
+import { formattedAddress } from 'utils/user'
 import groupByArray from 'utils/groupByArray'
 import Transaction from '../transaction'
 import Dropdown from 'components/dropdown'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import { getDerivedTransactionData } from 'utils/transaction'
+import { selectListingType } from 'actions/Search'
 
 class NavigationDropdown extends Component {
   constructor(props) {
@@ -107,11 +108,13 @@ class NavigationDropdown extends Component {
 
   handleCategoryClick(listingType) {
     this.setState({
-      categoriesOpen: true,
+      categoriesOpen: false,
       open: false
     })
 
-    console.log('CATEGORY click: ', listingType)
+    document.location.href = `#/search?search_query=&listing_type=${listingType.type}`
+    // select listing type and also trigger general search
+    this.props.selectListingType(listingType)
   }
 
   handleNavigateCategories() {
@@ -138,7 +141,7 @@ class NavigationDropdown extends Component {
               onClick={this.handleOverlayBack}
               className="p-3 col-2"
             >
-              <img className="nav-caret" src="images/caret-white.svg" />
+              <img className="nav-caret" src="images/caret-white-thin.svg" />
             </a>
             <div className="col-8 title"><center>{title}</center></div>
             <div className="col-2"/>
@@ -250,11 +253,11 @@ class NavigationDropdown extends Component {
                 'images/chatbubble-icon.svg',
                 this.intlMessages.messages,
                 false,
-                "/#/messages",
+                '/#/messages',
                 null,
                 conversations.length > 0 ? <div className="unread-indicator" /> : null
               )}
-              {this.renderMenuButton('images/alerts-icon-selected.svg', this.intlMessages.notifications, false, "/#/notifications")}
+              {this.renderMenuButton('images/alerts-icon-selected.svg', this.intlMessages.notifications, false, '/#/notifications')}
               {this.renderMenuButton(
                 'images/tx-icon.svg',
                 this.intlMessages.transactions,
@@ -297,7 +300,10 @@ const mapStateToProps = ({ messages, wallet, transactions }) => {
   }
 }
 
-const mapDispatchToProps = () => ({})
+const mapDispatchToProps = dispatch => ({
+  selectListingType: listingType => dispatch(selectListingType(listingType))
+})
+
 export default connect(
     mapStateToProps,
     mapDispatchToProps
