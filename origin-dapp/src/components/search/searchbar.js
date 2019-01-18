@@ -73,7 +73,7 @@ class SearchBar extends Component {
     )
   }
 
-  componentDidUpdate(previousProps, prevState) {
+  componentDidUpdate(previousProps) {
     // category change on mobile device happened
     if (
       this.props.mobileDevice &&
