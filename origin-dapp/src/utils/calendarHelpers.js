@@ -444,3 +444,29 @@ export const getStartEndDatesFromSlots = (slots, slotLengthUnit) => {
     endDate: moment(slots[slots.length - 1].endDate).format(timeFormat)
   }
 }
+
+export const generateDefaultPricing = (formData) => {
+  const events = []
+
+  for (const key in formData) {
+    if (key === 'weekdayPricing' || key === 'weekendPricing') {
+
+      const startDateDayOffset = key === 'weekdayPricing' ? /* Sunday */ 0 : /* Friday */ 5        
+      const endDateDayOffset = key === 'weekdayPricing' ? /* Thursday */ 4 : /* Saturday */ 6
+
+      events.push({
+        startDate: moment().day(startDateDayOffset).startOf('day').toISOString(),
+        endDate: moment().day(endDateDayOffset).endOf('day').toISOString(),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        rrule: 'FREQ=WEEKLY;',
+        isAvailable: true,
+        price: {
+          amount: formData[key].toString(),
+          currency: 'ETH'
+        }
+      })
+    }
+  }
+
+  return events
+}

@@ -25,7 +25,7 @@ import Modal from 'components/modal'
 import Calendar from './calendar'
 
 import { getListing } from 'utils/listing'
-import { prepareSlotsToSave } from 'utils/calendarHelpers'
+import { prepareSlotsToSave, generateDefaultPricing } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
@@ -344,6 +344,12 @@ class ListingCreate extends Component {
       price: {
         'ui:field': PriceField
       },
+      weekdayPricing: {
+        'ui:field': PriceField
+      },
+      weekendPricing: {
+        'ui:field': PriceField
+      },
       unitsTotal: {
         'ui:field': QuantityField
       },
@@ -493,6 +499,10 @@ class ListingCreate extends Component {
       this.state.isEditMode ?
         [this.STEP.PREVIEW, 'unit'] :
         [this.STEP.BOOST, 'unit']
+
+    if (formListing.formData.weekdayPricing || formListing.formData.weekendPricing) {
+      formListing.formData.slots = generateDefaultPricing(formListing.formData)
+    }
 
     formListing.formData.listingType = listingType
     // multiUnit listings specify unitsTotal, others default to 1
