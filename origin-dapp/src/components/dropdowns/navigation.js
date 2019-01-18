@@ -223,7 +223,7 @@ class NavigationDropdown extends Component {
             onClick={() => this.toggle()}
           >
             <img src={open ? 'images/menu-icon-active.svg' : 'images/menu-icon.svg'} alt="Origin menu" />
-            {(transactionsArePending || showConversationBubble)
+            {(transactionsArePending || showConversationBubble)
               && <div className={ open ? `menu unread-indicator` : `menu unread-indicator dark`} />
             }
           </a>
