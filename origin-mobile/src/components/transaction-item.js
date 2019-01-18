@@ -193,6 +193,7 @@ class TransactionItem extends Component {
         <OriginButton
           size="large"
           type="danger"
+          outline={true}
           style={styles.button}
           textStyle={{ fontSize: 14, fontWeight: '900' }}
           title={'Cancel'}

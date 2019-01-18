@@ -16,34 +16,17 @@ Clone locally with:
 
     git clone https://github.com/OriginProtocol/origin.git && cd origin/origin-docs
 
-Make sure you have Ruby >=2.3.1 installed or install with Homebrew/rvm:
-
-    brew install ruby
+Make sure you have Ruby >=2.3.1 installed. Ruby 2.50 works great. If you don't have a current ruby on OSX, you can install a newer ruby version with brew or rbenv.
     
 Start serving locally with:
 
     bundle install
-    bundle exec middleman server
+    bundle exec jekyll serve
 
-Preview your edits in your browser at: http://127.0.0.1:4567
-
-The Markdown files that our docoumentation is built from are located in [`source/includes`](source/includes).
-   
-Detailed documentation on how to use the Slate documentation system can be found at: [https://github.com/lord/slate](https://github.com/lord/slate)
+Preview your edits in your browser at: http://127.0.0.1:4000
 
 ## Deploying changes
 
-Our docs are currently hosted on Github pages. Deploying changes (if you have access to this repo) is as easy as running: [More information](https://github.com/lord/slate/wiki/deploying-slate)
+Our docs are currently hosted on Github pages. Deploying changes (if you have access to the gh-pages branch) is as easy as running: 
 
-    ./deploy.sh
-
-### One Time Deploy Setup
-
-You'll need to rename your git remote to `gitub`:
-
-    git remote rename origin github
-
-If a deploy fails (e.g. if your git remote name is wrong), you'll have a ton of generated files that git will complain about. You can clear them with:
-
-    git clean -f && git clean -fd
-    
+    ./deploy.sh 
