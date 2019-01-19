@@ -14,8 +14,13 @@ import {
   getSlotsToReserve,
   getCleanEvents,
   getDateAvailabilityAndPrice,
-  generateSlotStartEnd
+  generateSlotStartEnd,
+  doAllEventsRecur,
+  isDateSelected
 } from 'utils/calendarHelpers'
+
+let firstSelectedDateFound = false
+let calendarSelection = {}
 
 class Calendar extends Component {
 
@@ -44,6 +49,7 @@ class Calendar extends Component {
     this.goToToday = this.goToToday.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.renderRecurringEvents = this.renderRecurringEvents.bind(this)
+    this.selectionInProgress = this.selectionInProgress.bind(this)
 
     this.currentDate = new Date()
 
@@ -53,7 +59,6 @@ class Calendar extends Component {
       buyerSelectedSlotData: null,
       calendarDate: this.currentDate,
       showSellerActionBtns: false,
-      hideRecurringEventCheckbox: false,
       editAllEventsInSeries: true,
       existingEventSelected: false,
       clickedSlotInfo: null,
@@ -119,21 +124,21 @@ class Calendar extends Component {
       }
 
       const eventsInSlot = checkSlotForExistingEvents(clickedSlotInfo, this.state.events)
+      const allEventsRecur = doAllEventsRecur(eventsInSlot)
+      let selectedEvent
 
       if (eventsInSlot.length) {
-        let selectedEvent
-
         eventsInSlot.map(event => {
-          // If there's no selectedEvent, select this event
-          if (!selectedEvent) {
-            selectedEvent = event
-            // If there's already a selectedEvent, override it if this is a non-recurring event.
-            // Non-recurring events always override recurring events
+          // If there's no selectedEvent, and this is a not a recurring event, select this event
+          if (!selectedEvent && allEventsRecur) {
+            clickedSlotInfo.price = event.price
           } else if (!event.isRecurringEvent) {
             selectedEvent = event
           }
         })
+      }
 
+      if (selectedEvent) {
         this.selectEvent(selectedEvent)
       } else {
         this.createSellerEvent(clickedSlotInfo)
@@ -144,38 +149,27 @@ class Calendar extends Component {
     } 
   }
 
-  createSellerEvent(eventInfo, isOverrideEvent) {
-    if (isOverrideEvent) {
-      this.setState({
-        events: [
-          ...this.state.events,
-          eventInfo
-        ]
-      })
+  createSellerEvent(eventInfo) {
+    const endDate = this.props.viewType === 'daily' ?
+      moment(eventInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
+      moment(eventInfo.end).subtract(1, 'second').toDate()
 
-      this.selectEvent(eventInfo, false)
-    } else {
-      const endDate = this.props.viewType === 'daily' ?
-        moment(eventInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
-        moment(eventInfo.end).subtract(1, 'second').toDate()
-
-      const newEvent = {
-        ...eventInfo,
-        id: uuid(),
-        end: endDate,
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        allDay: false
-      }
-
-      this.setState({
-        events: [
-          ...this.state.events,
-          newEvent
-        ]
-      })
-
-      this.selectEvent(newEvent, true)
+    const newEvent = {
+      ...eventInfo,
+      id: uuid(),
+      end: endDate,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      allDay: false
     }
+
+    this.setState({
+      events: [
+        ...this.state.events,
+        newEvent
+      ]
+    })
+
+    this.selectEvent(newEvent, true)
   }
 
   handleBuyerSelection(slotInfo) {
@@ -253,17 +247,6 @@ class Calendar extends Component {
       isAvailable: true
     }
 
-    const existingEventInSlot = checkSlotForExistingEvents(selectedEvent, this.state.events)
-    if (existingEventInSlot.length && existingEventInSlot.length > 1) {
-      if (!selectedEvent.isRecurringEvent) {
-        stateToSet.hideRecurringEventCheckbox = true
-      } else {
-        stateToSet.hideRecurringEventCheckbox = false
-      }
-    } else {
-      stateToSet.hideRecurringEventCheckbox = false
-    }
-
     if (shouldSaveEvent) {
       this.saveEvent(event)
       stateToSet.existingEventSelected = false
@@ -272,6 +255,10 @@ class Calendar extends Component {
     }
 
     this.setState(stateToSet)
+  }
+
+  selectionInProgress() {
+    firstSelectedDateFound = false
   }
 
   handlePriceChange(event) {
@@ -287,22 +274,23 @@ class Calendar extends Component {
   saveEvent(selectedEvent) {
     const thisEvent = (selectedEvent && selectedEvent.id) ? selectedEvent : this.state.selectedEvent
 
-    if (thisEvent.isRecurringEvent && !this.state.editAllEventsInSeries) {
-      const { start, end, isAvailable, price } = thisEvent
-      const overrideEvent = {
-        start,
-        end,
-        isAvailable,
-        price,
-        slots: this.state.clickedSlotInfo.slots,
-        isRecurringEvent: false,
-        id: uuid(),
-        allDay: false,
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      }
+    // TODO(John) - this logic will likely be needed in a future feature for creating/editing recurring events
+    // if (thisEvent.isRecurringEvent && !this.state.editAllEventsInSeries) {
+    //   const { start, end, isAvailable, price } = thisEvent
+    //   const overrideEvent = {
+    //     start,
+    //     end,
+    //     isAvailable,
+    //     price,
+    //     slots: this.state.clickedSlotInfo.slots,
+    //     isRecurringEvent: false,
+    //     id: uuid(),
+    //     allDay: false,
+    //     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    //   }
 
-      return this.createSellerEvent(overrideEvent, true)
-    }
+    //   return this.createSellerEvent(overrideEvent, true)
+    // }
 
     const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
     const stateToSet = {
@@ -376,19 +364,38 @@ class Calendar extends Component {
   }
 
   dateCellWrapper(data) {
+    const { selectedEvent, buyerSelectedSlotData, events } = this.state
     const { value } = data
-    const slotData = getDateAvailabilityAndPrice(value, this.state.events, this.props.offers)
+    const selection = selectedEvent || buyerSelectedSlotData
+    const slotData = getDateAvailabilityAndPrice(value, events, this.props.offers)
     const availability = slotData.isAvailable ? 'available' : 'unavailable'
-    const selectedSlotsMatchingDate =
-      this.state.buyerSelectedSlotData &&
-      this.state.buyerSelectedSlotData.filter((slot) =>
-        moment(value).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end).add(1, 'second'))
-      )
-    const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
+    const isSelected = isDateSelected(selection, value) ? ' selected' : ''
     const isPastDate = moment(value).isBefore(moment().startOf('day')) ? ' past-date' : ' future-date'
+    let firstSelectedDate = ''
+    let lastSelectedDate = ''
+
+    if (isSelected &&
+        (selection.start !== calendarSelection.start || selection.end !== calendarSelection.end)) {
+      
+      calendarSelection = selection
+
+      if (!firstSelectedDateFound) {
+        firstSelectedDate = ' first-selected'
+        lastSelectedDate = ' last-selected'
+        firstSelectedDateFound = true
+      } else {
+        const lastSelected = document.querySelector('.last-selected')
+
+        if (lastSelected) {
+          lastSelected.classList.remove('last-selected')
+        }
+
+        lastSelectedDate = ' last-selected'
+      }
+    }
 
     return (
-      <div className={`rbc-day-bg ${availability}${isSelected}${isPastDate}`}>
+      <div className={`rbc-day-bg ${availability}${isSelected}${firstSelectedDate}${lastSelectedDate}${isPastDate}`}>
         {slotData.isAvailable &&
           <span className="slot-price">{slotData.price ? `${slotData.price} ETH` : `0 ETH`}</span>
         }
@@ -525,6 +532,7 @@ class Calendar extends Component {
               events={ [] }
               defaultView={ BigCalendar.Views[this.getViewType().toUpperCase()] }
               onSelectSlot={ this.onSelectSlot }
+              selecting={this.selectionInProgress}
               step={ this.props.step || 60 }
               timeslots={ 1 }
               date={ this.state.calendarDate }

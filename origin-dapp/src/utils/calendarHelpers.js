@@ -67,6 +67,31 @@ export function doAllEventsRecur(events) {
   return recurringEvents.length === events.length
 }
 
+// Used in the dateCellWrapper callback to determine if a particular date is selected
+export function isDateSelected(selection, calendarDate) {
+  if (!selection) {
+    return false
+  }
+
+  let selected = false
+
+  function isSelected(slot) {
+    return moment(calendarDate).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end).add(1, 'second'))
+  }
+
+  if (Array.isArray(selection)) {
+    const selectedDates = selection.filter((slot) =>
+      isSelected(slot)
+    )
+
+    selected = selectedDates && !!selectedDates.length
+  } else {
+    selected = isSelected(selection)
+  }
+
+  return selected
+}
+
 // This is a hackey way of showing the price in hourly time slots
 // since React Big Calendar doesn't give us full control over the content of those slots
 // Possible future optimization would be to create a PR to React Big Calendar to support custom slot content.

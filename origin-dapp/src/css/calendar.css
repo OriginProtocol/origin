@@ -63,10 +63,23 @@
   background: var(--pale-grey);
 }
 
-.calendar-container .rbc-day-bg.selected,
-.calendar-container .rbc-time-slot.selected {
+.calendar-container.buyer-view .rbc-day-bg.selected,
+.calendar-container.buyer-view .rbc-time-slot.selected {
   background: var(--dusk) !important;
   color: white;
+}
+
+.calendar-container.seller-view .rbc-day-bg.selected {
+  border-top: 2px solid var(--dark);
+  border-bottom: 2px solid var(--dark);
+}
+
+.calendar-container.seller-view .rbc-day-bg.first-selected {
+  border-left: 2px solid var(--dark);
+}
+
+.calendar-container.seller-view .rbc-day-bg.last-selected {
+  border-right: 2px solid var(--dark);
 }
 
 .calendar-container .rbc-time-slot {
@@ -105,8 +118,8 @@
   cursor: pointer;
 }
 
-.seller-view .rbc-time-slot.future-date:hover,
-.seller-view .rbc-day-bg.future-date:hover {
+.seller-view .rbc-time-slot.future-date:not(.selected):hover,
+.seller-view .rbc-day-bg.future-date:not(.selected):hover {
   background: var(--pale-grey-eight) !important;
   cursor: pointer;
 }
