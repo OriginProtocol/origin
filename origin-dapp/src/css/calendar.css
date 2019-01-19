@@ -149,23 +149,13 @@
 }
 
 .calendar-cta {
-  color: white;
-  background: var(--dark);
   padding: 1px 15px 15px;
   position: relative;
-}
-
-.calendar-cta .delete-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+  border: 1px solid var(--light);
+  border-radius: 5px;
 }
 
 .calendar-cta p, .calendar-cta label {
-  color: white;
   font-size: 18px;
   margin-bottom: 5px;
 }
@@ -179,31 +169,36 @@
 }
 
 .calendar-cta input[type="number"] {
-  background: var(--dark);
-  border: 1px solid white;
-  color: white;
+  background: var(--pale-grey-four);
+  border: 1px solid var(--light);
   width: 50%;
   padding: 5px;
 }
 
 .calendar-cta input[type="number"]::placeholder,
 .calendar-cta input[type="number"]::-webkit-input-placeholder {
-  color: white;
   font-size: 18px;
 }
 
 .calendar-cta select,
 .calendar-cta select:focus,
 .calendar-cta select:active {
-  background: var(--dark);
-  color: white;
-  border: none;
+  background: var(--pale-grey-four);
+  border: 1px solid var(--light);
   height: 34px;
 }
 
 .calendar-cta .btn {
   display: inline-block;
   width: inherit;
+  border: 1px solid var(--clear-blue);
+  color: var(--clear-blue);
+  background: white;
+}
+
+.calendar-cta .btn:hover {
+  background: var(--clear-blue);
+  color: white;
 }
 
 .calendar-cta .price-label {
@@ -212,9 +207,6 @@
 
 .calendar-cta .cta-btns .col-md-6 {
   padding-top: 20px;
-}
-
-.calendar-cta .cta-btns .col-md-6 {
   text-align: center;
 }
 

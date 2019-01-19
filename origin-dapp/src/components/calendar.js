@@ -778,7 +778,7 @@ class Calendar extends Component {
                     {this.state.showSellerActionBtns &&
                       <div className="cta-btns row">
                         <div className="col-md-6">
-                          <button className="btn btn-dark" onClick={this.cancelEvent}>
+                          <button className="btn" onClick={this.cancelEvent}>
                             <FormattedMessage
                               id={'calendar.cancel'}
                               defaultMessage={
@@ -788,7 +788,7 @@ class Calendar extends Component {
                           </button>
                         </div>
                         <div className="col-md-6">
-                          <button className="btn btn-light" onClick={this.saveEvent}>
+                          <button className="btn" onClick={this.saveEvent}>
                             <FormattedMessage
                               id={'calendar.save'}
                               defaultMessage={
