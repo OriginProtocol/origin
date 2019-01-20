@@ -7,9 +7,10 @@ const pick = require('lodash/pick')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 class OriginEventSource {
-  constructor({ ipfsGateway, marketplaceContract }) {
+  constructor({ ipfsGateway, marketplaceContract, web3 }) {
     this.ipfsGateway = ipfsGateway
     this.contract = marketplaceContract
+    this.web3 = web3
   }
 
   async getMarketplace() {
@@ -109,7 +110,8 @@ class OriginEventSource {
   // offers.
   async withOffers(listingId, listing) {
     const totalOffers = await this.contract.methods
-      .totalOffers(listingId).call()
+      .totalOffers(listingId)
+      .call()
 
     const allOffers = []
     for (const id of Array.from({ length: totalOffers }, (_, i) => i)) {
@@ -117,11 +119,11 @@ class OriginEventSource {
     }
 
     // Compute fields from valid offers.
-    let depositAvailable = web3.utils.toBN(listing.deposit)
+    let depositAvailable = this.web3.utils.toBN(listing.deposit)
     let unitsAvailable = listing.unitsTotal
     if (listing.type === 'unit') {
       allOffers.forEach(offer => {
-        if (!offer.valid || offer.statusStr === 'Withdrawn') {
+        if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
         } else if (offer.quantity > unitsAvailable) {
           offer.valid = false
@@ -129,7 +131,7 @@ class OriginEventSource {
         } else {
           unitsAvailable -= offer.quantity
           if (offer.commission) {
-            const offerCommission = web3.utils.toBN(offer.commission)
+            const offerCommission = this.web3.utils.toBN(offer.commission)
             depositAvailable = depositAvailable.sub(offerCommission)
           }
           // TODO: validate offer commission when dapp2 passes that in
@@ -150,7 +152,10 @@ class OriginEventSource {
 
   async _getOffer(listing, listingId, offerId) {
     let blockNumber, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
-    const events = await this.contract.eventCache.offers(listingId, Number(offerId))
+    const events = await this.contract.eventCache.offers(
+      listingId,
+      Number(offerId)
+    )
 
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
@@ -185,10 +190,7 @@ class OriginEventSource {
     }
 
     let data = await get(this.ipfsGateway, ipfsHash)
-    data = pick(
-      data,
-      'unitsPurchased'
-    )
+    data = pick(data, 'unitsPurchased')
 
     const offerObj = {
       id: `999-1-${listingId}-${offerId}`,
@@ -215,7 +217,7 @@ class OriginEventSource {
       await this.validateOffer(offerObj, listing)
       offerObj.valid = true
       offerObj.validationError = null
-    } catch(e) {
+    } catch (e) {
       offerObj.valid = false
       offerObj.validationError = e.message
     }
@@ -269,11 +271,13 @@ class OriginEventSource {
 
     // Compare offer value with listing price. This assumes listing currency
     // has 18 decimal places like ETH.
-    const listingPriceWei = web3.utils.toBN(
-      web3.utils.toWei(listing.price.amount, 'ether')
+    const listingPriceWei = this.web3.utils.toBN(
+      this.web3.utils.toWei(listing.price.amount, 'ether')
     )
-    const expectedValue = listingPriceWei.mul(web3.utils.toBN(offer.quantity))
-    const offerValue = web3.utils.toBN(offer.value)
+    const expectedValue = listingPriceWei.mul(
+      this.web3.utils.toBN(offer.quantity)
+    )
+    const offerValue = this.web3.utils.toBN(offer.value)
     if (expectedValue.gt(offerValue)) {
       throw new Error('Invalid offer: insufficient offer amount for listing')
     }

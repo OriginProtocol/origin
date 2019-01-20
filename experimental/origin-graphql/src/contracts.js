@@ -92,8 +92,9 @@ const Configs = {
     automine: 2000,
     // messaging: {
     //   ipfsSwarm:
-    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/Qma1eKbWcLy9EVYv4zVJZSAtXT6TsKXYTQ2JKtU5T7APne',
-    //   messagingNamespace: 'dev'
+    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/QmYsCaLzzso7kYuAZ8b5DwhpwGvgzKyFtvs37bG95GTQGA',
+    //   messagingNamespace: 'dev',
+    //   globalKeyServer: 'http://127.0.0.1:6647'
     // }
   },
   test: {
@@ -320,7 +321,8 @@ export function setMarketplace(address, epoch) {
   }
   context.eventSource = new EventSource({
     marketplaceContract: context.marketplace,
-    ipfsGateway: context.ipfsGateway
+    ipfsGateway: context.ipfsGateway,
+    web3: context.web3
   })
   context.marketplaceExec = context.marketplace
 
