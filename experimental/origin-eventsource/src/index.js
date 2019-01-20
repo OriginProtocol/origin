@@ -11,6 +11,8 @@ class OriginEventSource {
     this.ipfsGateway = ipfsGateway
     this.contract = marketplaceContract
     this.web3 = web3
+    this.offerCache = {}
+    this.listingCache = {}
   }
 
   async getMarketplace() {
@@ -20,6 +22,11 @@ class OriginEventSource {
   }
 
   async getListing(listingId, blockNumber) {
+    const id = `${listingId}-${blockNumber}`
+    if (this.listingCache[id]) {
+      return this.listingCache[id]
+    }
+
     let listing,
       seller,
       ipfsHash,
@@ -88,7 +95,7 @@ class OriginEventSource {
     }
 
     const type = 'unit'
-    return this.withOffers(listingId, {
+    this.listingCache[id] = this.withOffers(listingId, {
       id: `999-1-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
@@ -104,6 +111,8 @@ class OriginEventSource {
       commissionPerUnit: listing.commissionPerUnit,
       ...data
     })
+
+    return this.listingCache[id]
   }
 
   // Returns a listing with offers and any fields that are computed from the
@@ -151,6 +160,11 @@ class OriginEventSource {
   }
 
   async _getOffer(listing, listingId, offerId) {
+    const id = `${listingId}-${offerId}`
+    if (this.offerCache[id]) {
+      return this.offerCache[id]
+    }
+
     let blockNumber, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
     const events = await this.contract.eventCache.offers(
       listingId,
@@ -222,6 +236,7 @@ class OriginEventSource {
       offerObj.validationError = e.message
     }
 
+    this.offerCache[id] = offerObj
     return offerObj
   }
 
@@ -293,6 +308,11 @@ class OriginEventSource {
       review: data.text,
       rating: data.rating
     }
+  }
+
+  resetCache() {
+    this.offerCache = {}
+    this.listingCache = {}
   }
 }
 

@@ -201,6 +201,7 @@ export function setNetwork(net, customConfig) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
       context.marketplace.eventCache.updateBlock(blockHeaders.number)
+      context.eventSource.resetCache()
       pubsub.publish('NEW_BLOCK', {
         newBlock: { ...blockHeaders, id: blockHeaders.hash }
       })
@@ -209,6 +210,7 @@ export function setNetwork(net, customConfig) {
       web3.eth.getBlock(block).then(blockHeaders => {
         if (blockHeaders) {
           context.marketplace.eventCache.updateBlock(blockHeaders.number)
+          context.eventSource.resetCache()
           pubsub.publish('NEW_BLOCK', {
             newBlock: { ...blockHeaders, id: blockHeaders.hash }
           })
