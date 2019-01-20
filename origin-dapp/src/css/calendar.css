@@ -70,16 +70,7 @@
 }
 
 .calendar-container.seller-view .rbc-day-bg.selected {
-  border-top: 2px solid var(--dark);
-  border-bottom: 2px solid var(--dark);
-}
-
-.calendar-container.seller-view .rbc-day-bg.first-selected {
-  border-left: 2px solid var(--dark);
-}
-
-.calendar-container.seller-view .rbc-day-bg.last-selected {
-  border-right: 2px solid var(--dark);
+  border: 2px solid var(--dark);
 }
 
 .calendar-container .rbc-time-slot {

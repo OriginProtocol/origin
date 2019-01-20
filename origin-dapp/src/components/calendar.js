@@ -19,9 +19,6 @@ import {
   isDateSelected
 } from 'utils/calendarHelpers'
 
-let firstSelectedDateFound = false
-let calendarSelection = {}
-
 class Calendar extends Component {
 
   constructor(props) {
@@ -49,7 +46,6 @@ class Calendar extends Component {
     this.goToToday = this.goToToday.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.renderRecurringEvents = this.renderRecurringEvents.bind(this)
-    this.selectionInProgress = this.selectionInProgress.bind(this)
 
     this.currentDate = new Date()
 
@@ -257,10 +253,6 @@ class Calendar extends Component {
     this.setState(stateToSet)
   }
 
-  selectionInProgress() {
-    firstSelectedDateFound = false
-  }
-
   handlePriceChange(event) {
     this.setState({
       selectedEvent: {
@@ -366,36 +358,13 @@ class Calendar extends Component {
   dateCellWrapper(data) {
     const { selectedEvent, buyerSelectedSlotData, events } = this.state
     const { value } = data
-    const selection = selectedEvent || buyerSelectedSlotData
     const slotData = getDateAvailabilityAndPrice(value, events, this.props.offers)
     const availability = slotData.isAvailable ? 'available' : 'unavailable'
-    const isSelected = isDateSelected(selection, value) ? ' selected' : ''
+    const isSelected = isDateSelected(selectedEvent || buyerSelectedSlotData, value) ? ' selected' : ''
     const isPastDate = moment(value).isBefore(moment().startOf('day')) ? ' past-date' : ' future-date'
-    let firstSelectedDate = ''
-    let lastSelectedDate = ''
-
-    if (isSelected &&
-        (selection.start !== calendarSelection.start || selection.end !== calendarSelection.end)) {
-      
-      calendarSelection = selection
-
-      if (!firstSelectedDateFound) {
-        firstSelectedDate = ' first-selected'
-        lastSelectedDate = ' last-selected'
-        firstSelectedDateFound = true
-      } else {
-        const lastSelected = document.querySelector('.last-selected')
-
-        if (lastSelected) {
-          lastSelected.classList.remove('last-selected')
-        }
-
-        lastSelectedDate = ' last-selected'
-      }
-    }
 
     return (
-      <div className={`rbc-day-bg ${availability}${isSelected}${firstSelectedDate}${lastSelectedDate}${isPastDate}`}>
+      <div className={`rbc-day-bg ${availability}${isSelected}${isPastDate}`}>
         {slotData.isAvailable &&
           <span className="slot-price">{slotData.price ? `${slotData.price} ETH` : `0 ETH`}</span>
         }
@@ -532,7 +501,6 @@ class Calendar extends Component {
               events={ [] }
               defaultView={ BigCalendar.Views[this.getViewType().toUpperCase()] }
               onSelectSlot={ this.onSelectSlot }
-              selecting={this.selectionInProgress}
               step={ this.props.step || 60 }
               timeslots={ 1 }
               date={ this.state.calendarDate }
