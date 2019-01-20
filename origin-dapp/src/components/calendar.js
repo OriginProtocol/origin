@@ -119,26 +119,7 @@ class Calendar extends Component {
         clickedSlotInfo.slots && clickedSlotInfo.slots.length && clickedSlotInfo.slots.splice(-1)
       }
 
-      const eventsInSlot = checkSlotForExistingEvents(clickedSlotInfo, this.state.events)
-      const allEventsRecur = doAllEventsRecur(eventsInSlot)
-      let selectedEvent
-
-      if (eventsInSlot.length) {
-        eventsInSlot.map(event => {
-          // If there's no selectedEvent, and this is a not a recurring event, select this event
-          if (!selectedEvent && allEventsRecur) {
-            clickedSlotInfo.price = event.price
-          } else if (!event.isRecurringEvent) {
-            selectedEvent = event
-          }
-        })
-      }
-
-      if (selectedEvent) {
-        this.selectEvent(selectedEvent)
-      } else {
-        this.createSellerEvent(clickedSlotInfo)
-      }
+      this.createSellerEvent(clickedSlotInfo)
     } else {
       // user is a buyer
       this.handleBuyerSelection(clickedSlotInfo)
@@ -152,20 +133,11 @@ class Calendar extends Component {
 
     const newEvent = {
       ...eventInfo,
-      id: uuid(),
       end: endDate,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       allDay: false
     }
 
-    this.setState({
-      events: [
-        ...this.state.events,
-        newEvent
-      ]
-    })
-
-    this.selectEvent(newEvent, true)
+    this.selectEvent(newEvent)
   }
 
   handleBuyerSelection(slotInfo) {
@@ -228,7 +200,7 @@ class Calendar extends Component {
     }
   }
 
-  selectEvent(selectedEvent, shouldSaveEvent) {
+  selectEvent(selectedEvent) {
     const event = {
       ...selectedEvent,
       price: selectedEvent.price || '',
@@ -241,13 +213,6 @@ class Calendar extends Component {
       showPastDateSelectedError: false,
       editAllEventsInSeries: true,
       isAvailable: true
-    }
-
-    if (shouldSaveEvent) {
-      this.saveEvent(event)
-      stateToSet.existingEventSelected = false
-    } else {
-      stateToSet.existingEventSelected = true
     }
 
     this.setState(stateToSet)
@@ -266,40 +231,66 @@ class Calendar extends Component {
   saveEvent(selectedEvent) {
     const thisEvent = (selectedEvent && selectedEvent.id) ? selectedEvent : this.state.selectedEvent
 
-    // TODO(John) - this logic will likely be needed in a future feature for creating/editing recurring events
-    // if (thisEvent.isRecurringEvent && !this.state.editAllEventsInSeries) {
-    //   const { start, end, isAvailable, price } = thisEvent
-    //   const overrideEvent = {
-    //     start,
-    //     end,
-    //     isAvailable,
-    //     price,
-    //     slots: this.state.clickedSlotInfo.slots,
-    //     isRecurringEvent: false,
-    //     id: uuid(),
-    //     allDay: false,
-    //     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-    //   }
+    const newEvents = []
+    let slotToTest = moment(thisEvent.start)
+    let slotIndex = 0
 
-    //   return this.createSellerEvent(overrideEvent, true)
+    while (slotToTest.toDate() >= thisEvent.start && slotToTest.toDate() <= thisEvent.end) {
+      const slot = generateSlotStartEnd(thisEvent.start, this.props.viewType, slotIndex)
+
+      newEvents.push({
+        ...slot,
+        id: uuid(),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        allDay: false,
+        isAvailable: thisEvent.isAvailable,
+        price: thisEvent.price,
+        isRecurringEvent: false
+      })
+
+      slotIndex++
+
+      if (this.props.viewType === 'daily') {
+        slotToTest = slotToTest.add(1, 'days')
+      } else {
+        slotToTest = slotToTest.add(this.props.step || 60, 'minutes').add(1, 'second')
+      }
+    }
+
+    const filteredEvents = this.state.events.filter(existingEvent => {
+      const matchingEvent = newEvents.find(newEvent => {
+        return newEvent.start.toString() === existingEvent.start.toString() &&
+          newEvent.end.toString() === existingEvent.end.toString()
+      })
+
+      return !matchingEvent
+    })
+
+    this.setState({
+      events: [
+        ...filteredEvents,
+        ...newEvents
+      ]
+    })
+
+    // const thisEvent = (selectedEvent && selectedEvent.id) ? selectedEvent : this.state.selectedEvent
+
+    // const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
+    // const stateToSet = {
+    //   events: [...allOtherEvents, thisEvent],
+    //   showSellerActionBtns: false
     // }
 
-    const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
-    const stateToSet = {
-      events: [...allOtherEvents, thisEvent],
-      showSellerActionBtns: false
-    }
+    // if (thisEvent.isClonedRecurringEvent) {
+    //   stateToSet.events = updateOriginalEvent(thisEvent, this.state.events)
+    // }
 
-    if (thisEvent.isClonedRecurringEvent) {
-      stateToSet.events = updateOriginalEvent(thisEvent, this.state.events)
-    }
+    // this.setState(stateToSet)
 
-    this.setState(stateToSet)
-
-    // wait for state to update, then render recurring events on monthly calendar if recurring events checkbox is checked
-    setTimeout(() => {
-      this.renderRecurringEvents(this.state.calendarDate)
-    })
+    // // wait for state to update, then render recurring events on monthly calendar if recurring events checkbox is checked
+    // setTimeout(() => {
+    //   this.renderRecurringEvents(this.state.calendarDate)
+    // })
   }
 
   cancelEvent() {

@@ -27,7 +27,7 @@ export function generateCalendarSlots(events) {
   return eventsClone
 }
 
-// Generate slots that will be used in the buyer's offer
+// Generate a slot with start / end dates that are one slotLength long according to the listing schema
 export function generateSlotStartEnd(selectionStart, viewType, slotIndex) {
   const slotLength = viewType === 'hourly' ? 'hour' : 'day'
   const start = moment(selectionStart).add(slotIndex, slotLength)
@@ -44,7 +44,7 @@ export function checkSlotForExistingEvents(slotInfo, events) {
 
     // loop over event's slots and check to see if any of them
     // match any of the selected slot's time periods
-    for (let i = 0, existSlotsLen = event.slots.length; i < existSlotsLen; i++) {
+    for (let i = 0, existSlotsLen = event.slots && event.slots.length; i < existSlotsLen; i++) {
       const existSlot = event.slots[i]
 
       // loop over the time periods included in selected slot
