@@ -127,7 +127,9 @@ async function getText(gateway, hashAsBytes) {
 }
 
 async function get(gateway, hashAsBytes, party) {
-  let text = cache[hashAsBytes] || await getText(gateway, hashAsBytes)
+  if (!hashAsBytes) return null
+
+  let text = cache[hashAsBytes] || (await getText(gateway, hashAsBytes))
   if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
     try {
       text = await decode(text, party.privateKey, party.pgpPass)
