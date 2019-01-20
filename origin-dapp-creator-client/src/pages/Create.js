@@ -131,9 +131,11 @@ class Create extends React.Component {
               </div>
               {Feedback('subdomain')}
             </div>
+            {/*
             <div className="helper-text">
               You can use your own custom domain name. <a href="#">Here's how</a>
             </div>
+            */}
           </div>
 
           <div className="form-group">

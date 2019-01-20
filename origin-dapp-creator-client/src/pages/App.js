@@ -134,6 +134,10 @@ class App extends React.Component {
             </Switch>
           </div>
         </div>
+
+        <div className="copyright">
+          &copy;2017 Origin Protocol LLC
+        </div>
       </>
     )
   }

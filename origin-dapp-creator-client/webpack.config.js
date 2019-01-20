@@ -92,12 +92,12 @@ const config = {
       { from: 'public/images', to: 'images' }
     ]),
     new Dotenv(),
-    new webpack.EnvironmentPlugin([
-      'DAPP_CREATOR_API_URL',
-      'DAPP_CREATOR_DOMAIN',
-      'DAPP_URL',
-      'IPFS_GATEWAY_URL'
-    ])
+    new webpack.EnvironmentPlugin({
+      'DAPP_CREATOR_API_URL': null,
+      'DAPP_CREATOR_DOMAIN': null,
+      'DAPP_URL': null,
+      'IPFS_GATEWAY_URL': null
+    })
   ],
   optimization: {}
 }
