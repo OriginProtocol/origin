@@ -81,7 +81,8 @@ const Configs = {
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     OriginToken: '0xf2D5AeA9057269a1d97A952BAf5E1887462c67b6',
-    V00_Marketplace: '0xCCC4fDB0BfD0BC9E6cede6297534c0e96E3E76DE'
+    V00_Marketplace: '0x66E8c312dC89599c84A93353d6914631ce7857Cc',
+    V00_Marketplace_Epoch: '10135260'
   },
   localhost: {
     provider: `http://${HOST}:8545`,

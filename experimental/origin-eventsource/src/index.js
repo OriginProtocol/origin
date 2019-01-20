@@ -170,7 +170,6 @@ class OriginEventSource {
       listingId,
       Number(offerId)
     )
-
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -188,10 +187,10 @@ class OriginEventSource {
       }
     })
 
-    if (lastEvent.event === 'OfferWithdrawn') {
+    if (lastEvent && lastEvent.event === 'OfferWithdrawn') {
       status = 0
       withdrawnBy = { id: lastEvent.returnValues.party }
-    } else if (lastEvent.event === 'OfferRuling') {
+    } else if (lastEvent && lastEvent.event === 'OfferRuling') {
       status = 5
     }
 
