@@ -35,7 +35,11 @@ class ImagePicker extends React.Component {
         const body = new FormData()
         body.append('file', file)
 
-        const rawRes = await fetch(`${process.env.IPFS_API_URL}/api/v0/add`, { method: 'POST', body })
+        const rawRes = await fetch(
+          `${process.env.IPFS_API_URL}/api/v0/add`,
+          { method: 'POST', body }
+        )
+
         const res = await rawRes.json()
         const hash = res.Hash
 
@@ -104,7 +108,6 @@ class ImagePicker extends React.Component {
 
 require('react-styl')(`
   .upload-wrapper
-    height: 12rem
     position: relative
     background-color: var(--pale-grey-four)
 

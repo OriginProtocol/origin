@@ -2,6 +2,7 @@
 
 import React from 'react'
 import superagent from 'superagent'
+import { baseConfig } from 'origin-dapp/src/config'
 
 import { AppToaster } from '../toaster'
 import { formInput, formFeedback } from 'utils/formHelpers'
@@ -21,6 +22,10 @@ class Customize extends React.Component {
       redirect: null,
       themes: [
         {
+          title: 'Origin',
+          cssVars: baseConfig.cssVars
+        },
+        {
           title: 'Eco Green',
           cssVars: {
             dusk: '#3BA54E'
@@ -33,13 +38,17 @@ class Customize extends React.Component {
           }
         }
       ],
-      themeIndex: 0
+      themeIndex: 0,
+      themePickerExpanded: false
     }
 
     this.handleFileUpload = this.handleFileUpload.bind(this)
     this.handlePreview = this.handlePreview.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.onColorChange = this.onColorChange.bind(this)
+    this.onThemePickerExpand = this.onThemePickerExpand.bind(this)
+    this.onThemePickerCollapse = this.onThemePickerCollapse.bind(this)
+    this.onThemeClick = this.onThemeClick.bind(this)
   }
 
   async handleSubmit (event) {
@@ -90,6 +99,32 @@ class Customize extends React.Component {
     this.setState({ config: newConfig })
   }
 
+  onThemePickerExpand () {
+    this.setState({ themePickerExpanded: true })
+  }
+
+  onThemePickerCollapse () {
+    this.setState({ themePickerExpanded: false })
+  }
+
+  onThemeClick (index) {
+    const newConfig = {
+      ...this.state.config,
+      cssVars: {
+        ...this.state.config.cssVars,
+        ...this.state.themes[index].cssVars
+      }
+    }
+
+    this.props.onChange(newConfig)
+    this.setState({
+      config: newConfig,
+      themeIndex: index
+    })
+
+    this.onThemePickerCollapse()
+  }
+
   render () {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
@@ -125,11 +160,14 @@ class Customize extends React.Component {
             config={this.props.config}
             themes={this.state.themes}
             themeIndex={this.state.themeIndex}
-            onThemeClick={(index) => this.setState({ themeIndex: index})}
+            onThemeClick={this.onThemeClick}
+            onCollapse={this.onThemePickerCollapse}
+            onExpand={this.onThemePickerExpand}
+            expanded={this.state.themePickerExpanded}
           />
         </div>
 
-        {!this.state.themesExpanded &&
+        {!this.state.themePickerExpanded &&
           <div className="form-group">
             <div className="row">
               <div className="col-7">
@@ -204,18 +242,6 @@ require('react-styl')(`
 
   .theme-actions
     cursor: pointer
-
-  .theme-dropdown
-    padding: 1rem
-    border: 1px solid var(--light)
-    margin-top: -1px
-    border-bottom-left-radius: var(--default-radius)
-    border-bottom-right-radius: var(--default-radius)
-
-  .theme-preview
-    padding: 1rem
-    margin: 1rem
-    text-align: center
 `)
 
 export default Customize

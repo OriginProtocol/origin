@@ -8,10 +8,6 @@ class ThemePicker extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      expanded: null
-    }
-
     this.handleClick = this.handleClick.bind(this)
     this.setWrapperRef = this.setWrapperRef.bind(this)
     this.themeConfig = this.themeConfig.bind(this)
@@ -28,7 +24,7 @@ class ThemePicker extends React.Component {
 
   handleClick (event) {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.setState({ expanded: false })
+      this.props.onCollapse()
     }
   }
 
@@ -46,7 +42,7 @@ class ThemePicker extends React.Component {
   }
 
   themePreviewClassName(index) {
-    let classNames = 'theme-preview col'
+    let classNames = 'theme-preview'
     if (index === this.props.themeIndex) {
       classNames += ' active'
     }
@@ -56,20 +52,21 @@ class ThemePicker extends React.Component {
   render () {
     return (
       <div ref={this.setWrapperRef}>
-        <div className="theme-select form-control form-control-lg"
-            onClick={() => this.setState({ expanded: true })}>
+        <div className={`theme-select form-control form-control-lg ${this.props.expanded ? 'expanded' : 'collapsed'}`}
+            onClick={() => this.props.onExpand()}>
           {this.props.themes[this.props.themeIndex].title}
         </div>
-        {this.state.expanded &&
+        {this.props.expanded &&
           <div className="theme-dropdown">
             <div className="row">
               {this.props.themes.map((theme, i) =>
-                <div className={this.themePreviewClassName(i)}
-                    key={i}
-                    onClick={() => this.props.onThemeClick(i)}>
-                  <Preview config={this.themeConfig(theme)} />
-                  {theme.title}
-                </div>
+                <div className="col-6" key={i}>
+                  <div className={this.themePreviewClassName(i)}
+                      onClick={() => this.props.onThemeClick(i)}>
+                    <Preview config={this.themeConfig(theme)} />
+                    {theme.title}
+                  </div>
+              </div>
               )}
             </div>
           </div>
@@ -80,12 +77,29 @@ class ThemePicker extends React.Component {
 }
 
 require('react-styl')(`
+  .theme-dropdown
+    padding: 1rem
+    border: 1px solid var(--light)
+    margin-top: -1px
+    border-bottom-left-radius: var(--default-radius)
+    border-bottom-right-radius: var(--default-radius)
+
   .theme-preview
+    padding: 0.5rem 0
     cursor: pointer
+    text-align: center
+    color: var(--dark)
+
+  .theme-select.expanded
+    border-bottom-left-radius: 0
+    border-bottom-right-radius: 0
 
   .theme-preview.active
     border: 1px solid var(--dark)
     border-radius: var(--default-radius)
+
+  .theme-preview .preview-box
+    margin: 1rem 3rem
 `)
 
 export default ThemePicker

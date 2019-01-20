@@ -17,9 +17,7 @@ class Preview extends React.Component {
           style={{ background: this.props.config.cssVars.paleGrey }}>
         </div>
         {[...Array(this.props.rows || 2)].map((x, i) =>
-          <div className="listings"
-              key={'listings-' + i}
-              style={{ height: `${70 / (this.props.rows || 2)}%` }}>
+          <div className="listings" key={'listings-' + i}>
             {[...Array(3)].map((x, y) =>
               <div className="listing" key={'listing-' + y}>
                 <div className="listing-image"></div>
@@ -52,39 +50,36 @@ require('react-styl')(`
   .preview-box
     border: 1px solid var(--light)
     border-radius: var(--default-radius)
-    width: 100%
-    height: 100%;
+    color: var(--dark)
 
   .preview-navbar
     width: 100%
-    height: calc(5% - 1px)
+    height: 1rem
     border-top-left-radius: var(--default-radius)
     border-top-right-radius: var(--default-radius)
 
   .preview-searchbar
     width: 100%
-    height: 5%
+    height: 1rem
 
   .preview-footer
-    margin-top: 10%
-    height: calc(10% - 1px)
+    margin-top: 1rem
+    height: 2rem
     border-bottom-left-radius: var(--default-radius)
     border-bottom-right-radius: var(--default-radius)
 
   .listings
     display: flex
     justify-content: space-around
-    padding: 1rem 1rem 0 0
-    height: 20%;
+    padding: 0 0 0 5%
 
   .listing
     flex: 0 0 33.333333%
     max-width: 33.333333%
-    height: 100%
-    padding-left: 1rem
+    padding: 4% 5% 0 0
 
   .listing-image
-    height: 80%
+    padding-bottom: 66.6%
     background-color: var(--pale-grey-two)
 
   .listing-desc
