@@ -564,5 +564,13 @@ export default defineMessages({
   'schema.transportation': {
     id: 'schema.transportation',
     defaultMessage: 'Transportation'
+  },
+  'schema.weekdayPricing': {
+    id: 'schema.weekdayPricing',
+    defaultMessage: 'Weekday Pricing (Sunday through Thursday nights)'
+  },
+  'schema.weekendPricing': {
+    id: 'schema.weekendPricing',
+    defaultMessage: 'Weekend Pricing (Friday and Saturday nights)'
   }
 })

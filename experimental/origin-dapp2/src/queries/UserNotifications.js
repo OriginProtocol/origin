@@ -4,6 +4,7 @@ export default gql`
   query UserNotifications($id: ID!, $first: Int, $after: String) {
     marketplace {
       user(id: $id) {
+        id
         notifications(first: $first, after: $after) {
           totalCount
           pageInfo {
