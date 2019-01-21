@@ -138,8 +138,9 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
 
   async function offers(listingIds, offerId, eventNames, notParty) {
     await getPastEvents()
+    const matchListings = typeof listingIds !== 'undefined'
     if (!Array.isArray(listingIds)) {
-      listingIds = listingIds ? [listingIds] : []
+      listingIds = matchListings ? [listingIds] : []
     }
     if (!Array.isArray(eventNames)) {
       eventNames = eventNames ? [eventNames] : []
@@ -165,7 +166,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
           matchesParty = false
       }
 
-      const matchesListing = listingTopics.length
+      const matchesListing = matchListings
           ? listingTopics.indexOf(topics[2]) >= 0
           : true,
         matchesOffer = offerTopic ? topics[3] === offerTopic : true,

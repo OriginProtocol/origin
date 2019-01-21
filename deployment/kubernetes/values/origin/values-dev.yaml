@@ -6,7 +6,7 @@ bridgeImageTag: '12ac36f'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '77c1619'
+dappImageTag: '0b169ee'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -34,7 +34,7 @@ messagingImageTag: '212070a'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'de3cf90'
+notificationsImageTag: '218bcfc'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
