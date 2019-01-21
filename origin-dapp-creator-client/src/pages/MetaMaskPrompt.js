@@ -17,7 +17,9 @@ class MetaMaskPrompt extends React.Component {
     try {
       await this.props.handlePublish()
     } catch (error) {
-      // TODO: handle rejection
+      this.setState({
+        redirect: '/configure'
+      })
     }
     this.setState({
       redirect: '/success'
