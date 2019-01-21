@@ -260,7 +260,7 @@ class OriginWrapper extends Component {
                   />
                 ),
                 title: 'Store & Use Crypto',
-                subtitle: 'The Origin Mobile Wallet will allow you to store cryptocurrency to buy and sell on the Origin Marketplace.',
+                subtitle: 'Origin Wallet allows you to store cryptocurrency to buy and sell on the Origin platform.',
               },
               {
                 image: (
@@ -272,7 +272,7 @@ class OriginWrapper extends Component {
                   />
                 ),
                 title: 'Message Buyers & Sellers',
-                subtitle: 'Use the app to communicate with others on the Origin Marketplace in order to move your transactions.',
+                subtitle: 'You can communicate with other users of the Origin platform in a secure an decentralized way.',
               },
               {
                 image: (
@@ -283,8 +283,8 @@ class OriginWrapper extends Component {
                     style={[styles.image, smallScreen ? { height: '33%' } : {}]}
                   />
                 ),
-                title: 'Stay Up to Date',
-                subtitle: 'The Origin Mobile Wallet will notify you when there are transactions that require your attention.',
+                title: 'Stay Up-To-Date',
+                subtitle: 'Get timely updates about new messages or activity on your listings and purchases.',
               },
             ]}
           />
