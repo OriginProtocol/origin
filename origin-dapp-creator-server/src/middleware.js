@@ -2,12 +2,13 @@
 
 import { getDnsRecord, parseDnsTxtRecord, subdomainBlacklist } from './lib/dns'
 import { getConfigFromIpfs } from './lib/ipfs'
+import logger from './logger'
 
 const Web3 = require('web3')
 const web3 = new Web3()
 
 export async function validateSubdomain (req, res, next) {
-  const { config, address } = req.body
+  const { address, config } = req.body
 
   if (config.subdomain) {
     // Check for subdomain blacklisting
@@ -42,7 +43,8 @@ export async function validateSubdomain (req, res, next) {
 }
 
 export function validateSignature (req, res, next) {
-  const { config, signature } = req.body
+  const { address, config, signature } = req.body
+  console.log(address, config, signature)
   if (config.subdomain) {
     // Validate signature matches
     const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)

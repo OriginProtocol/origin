@@ -10,8 +10,7 @@ class Configure extends React.Component {
 
     this.state = {
       config: props.config,
-      redirect: null,
-      publishing: false
+      redirect: null
     }
 
     this.toggleFilterByOwn = this.toggleFilterByOwn.bind(this)

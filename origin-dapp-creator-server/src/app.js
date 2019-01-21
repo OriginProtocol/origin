@@ -3,15 +3,14 @@ require('@babel/polyfill')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
-const Logger = require('logplease')
 
 const app = express()
 const port = process.env.PORT || 4321
-const logger = Logger.create('origin-dapp-creator-server')
 
 import { setAllRecords, updateTxtRecord } from './lib/dns'
 import { addConfigToIpfs, ipfsClient } from './lib/ipfs'
 import { validateSubdomain, validateSignature } from './middleware'
+import logger from './logger'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))

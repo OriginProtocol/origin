@@ -28,15 +28,18 @@ class Resolver extends React.Component {
   }
 
   async checkDnsPropagation() {
+    const dappHostname = `${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`
     const response = await superagent
-      .get(`http://${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`)
+      .get(`https://cloudflare-dns.com/dns-query`)
+      .set({ 'Accept': 'application/dns-json' })
+      .query({ name: dappHostname })
+      .type('json')
       .then((response) => {
-        this.redirectToSuccess()
-      })
-      .catch((error) => {
-        if (error.crossDomain) {
-          // CORS error means DNS has propagated
+        const json = JSON.parse(response.text)
+        if (json.Status === 0) {
           this.redirectToSuccess()
+        } else if (json.Status === 3) {
+          console.log('Nxdomain')
         } else {
           console.log('DNS propagation incomplete')
         }

@@ -14,15 +14,27 @@ class MetaMaskPrompt extends React.Component {
   }
 
   async componentDidMount () {
+    let signature = null
     try {
-      await this.props.handlePublish()
+      signature = await this.props.signConfig()
     } catch (error) {
+      // Signing was rejected, go back
       this.setState({
         redirect: '/configure'
       })
     }
+
+    try {
+      await this.props.handlePublish(signature)
+    } catch (error) {
+      // An error occurred, go back
+      this.setState({
+        redirect: '/configure'
+      })
+    }
+
     this.setState({
-      redirect: '/success'
+      redirect: '/resolver'
     })
   }
 

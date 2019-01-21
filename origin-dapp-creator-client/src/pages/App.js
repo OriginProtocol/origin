@@ -29,6 +29,7 @@ class App extends React.Component {
     this.handlePublish = this.handlePublish.bind(this)
     this.handleServerErrors = this.handleServerErrors.bind(this)
     this.setConfig = this.setConfig.bind(this)
+    this.signConfig = this.signConfig.bind(this)
   }
 
   setConfig(config) {
@@ -36,34 +37,26 @@ class App extends React.Component {
     this.setState({ config })
   }
 
-  async handlePublish (event) {
-    this.setState({ publishing: true })
-
-    let signature = null
+  signConfig () {
     if (this.state.config.subdomain) {
       // Generate a valid signature if a subdomain is in use
       const dataToSign = JSON.stringify(this.state.config)
-      signature = await this.web3Sign(dataToSign, web3.eth.accounts[0])
+      return this.web3Sign(dataToSign, web3.eth.accounts[0])
     }
+  }
 
+  async handlePublish (signature) {
     return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/config`)
       .send({
         config: this.state.config,
         signature: signature,
         address: web3.eth.accounts[0]
       })
-      .then((res) => {
-        this.setState({
-          ipfsHash: res.text,
-          successDialogIsOpen: true
-        })
-      })
       .catch(this.handleServerErrors)
-      .finally(() => this.setState({ publishing: false }))
   }
 
   handleServerErrors (error) {
-    // TODO
+    console.log('There was an error publishing the configuration: ', error)
   }
 
   async web3Sign(data, account) {
@@ -123,6 +116,7 @@ class App extends React.Component {
                 render={() => (
                   <MetaMaskPrompt
                     handlePublish={this.handlePublish}
+                    signConfig={this.signConfig}
                   />
                 )}
               />
