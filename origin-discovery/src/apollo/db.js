@@ -28,7 +28,7 @@ function _makeListing (row) {
     commission: row.data.commission,
     commissionPerUnit: row.data.commissionPerUnit,
     display: listingMetadata.getDisplay(row.id),
-    marketplacePublisher: row.data.ipfs.marketplacePublisher
+    marketplacePublisher: row.data.marketplacePublisher
   }
 }
 
