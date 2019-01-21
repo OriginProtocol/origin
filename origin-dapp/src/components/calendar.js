@@ -51,7 +51,7 @@ class Calendar extends Component {
       selectedEvent: null,
       buyerSelectedSlotData: null,
       calendarDate: this.currentDate,
-      showSellerActionBtns: false,
+      showSellerActionBtns: true,
       editAllEventsInSeries: true,
       existingEventSelected: false,
       clickedSlotInfo: null,
@@ -276,7 +276,6 @@ class Calendar extends Component {
     const unChangedEvent = this.state.events.filter((event) => event.id === this.state.selectedEvent.id)
     this.setState({
       selectedEvent: unChangedEvent[0],
-      showSellerActionBtns: false,
       editAllEventsInSeries: true,
       isAvailable: true
     })
