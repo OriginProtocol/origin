@@ -3,14 +3,13 @@ import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import parseId from '../../utils/parseId'
+import { validateNewOffer } from './_validation'
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
-  const { from } = data
-  await checkMetaMask(from)
+  await checkMetaMask(data.from)
 
   const { listingId } = parseId(data.listingID)
-
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
     listingId,
@@ -30,15 +29,17 @@ async function makeOffer(_, data) {
 
   validator('https://schema.originprotocol.com/offer_1.0.0.json', ipfsData)
 
+  const buyer = data.from
   const marketplace = contracts.marketplaceExec
 
   const affiliateWhitelistDisabled = await marketplace.methods
     .allowedAffiliates(marketplace.options.address)
     .call()
 
+  const affiliate = data.affiliate || contracts.config.affiliate || ZeroAddress
   if (!affiliateWhitelistDisabled) {
     const affiliateAllowed = await marketplace.methods
-      .allowedAffiliates(data.affiliate)
+      .allowedAffiliates(affiliate)
       .call()
 
     if (!affiliateAllowed) {
@@ -46,22 +47,25 @@ async function makeOffer(_, data) {
     }
   }
 
+  await validateNewOffer(listingId, data)
+
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
   const commission = contracts.web3.utils.toWei(
     ipfsData.commission.amount,
     'ether'
   )
   const value = contracts.web3.utils.toWei(data.value, 'ether')
+  const arbitrator = data.arbitrator || contracts.config.arbitrator
 
   const args = [
     listingId,
     ipfsHash,
     ipfsData.finalizes,
-    data.affiliate || ZeroAddress,
+    affiliate,
     commission,
     value,
     data.currency || ZeroAddress,
-    data.arbitrator || ZeroAddress
+    arbitrator
   ]
   if (data.withdraw) {
     const { offerId } = parseId(data.withdraw)
@@ -70,10 +74,10 @@ async function makeOffer(_, data) {
 
   const tx = marketplace.methods.makeOffer(...args).send({
     gas: 4612388,
-    from,
+    from: buyer,
     value
   })
-  return txHelper({ tx, from, mutation: 'makeOffer' })
+  return txHelper({ tx, from: data.from, mutation: 'makeOffer' })
 }
 
 export default makeOffer
