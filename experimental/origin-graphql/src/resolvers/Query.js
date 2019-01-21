@@ -1,8 +1,7 @@
 import contracts from '../contracts'
 
-let ethPrice
-const marketplaceExists = {},
-  messagingInitialized = {}
+let ethPrice, activeMessaging
+const marketplaceExists = {}
 
 export default {
   config: () => contracts.net,
@@ -67,17 +66,23 @@ export default {
     }),
   messaging: (_, args) =>
     new Promise(async resolve => {
+      return null
       let id = args.id
       if (id === 'defaultAccount') {
         const accounts = await contracts.metaMask.eth.getAccounts()
         if (!accounts || !accounts.length) return null
         id = accounts[0]
+      } else if (id === 'currentAccount') {
+        if (contracts.messaging.account_key) {
+          id = contracts.messaging.account_key
+        }
       }
-      if (messagingInitialized[id]) {
+      id = contracts.web3.utils.toChecksumAddress(id)
+      if (activeMessaging === id) {
         return resolve({ id })
       }
       contracts.messaging.events.once('initRemote', async () => {
-        messagingInitialized[id] = true
+        activeMessaging = id
         setTimeout(() => resolve({ id }), 500)
       })
       await contracts.messaging.init(id)

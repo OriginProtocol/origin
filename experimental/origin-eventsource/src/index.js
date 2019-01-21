@@ -4,11 +4,15 @@ const get = ipfs.get
 // import { get } from 'origin-ipfs'
 const startCase = require('lodash/startCase')
 const pick = require('lodash/pick')
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 class OriginEventSource {
-  constructor({ ipfsGateway, marketplaceContract }) {
+  constructor({ ipfsGateway, marketplaceContract, web3 }) {
     this.ipfsGateway = ipfsGateway
     this.contract = marketplaceContract
+    this.web3 = web3
+    this.offerCache = {}
+    this.listingCache = {}
   }
 
   async getMarketplace() {
@@ -18,6 +22,11 @@ class OriginEventSource {
   }
 
   async getListing(listingId, blockNumber) {
+    const id = `${listingId}-${blockNumber}`
+    if (this.listingCache[id]) {
+      return this.listingCache[id]
+    }
+
     let listing,
       seller,
       ipfsHash,
@@ -37,19 +46,6 @@ class OriginEventSource {
       blockNumber
     )
 
-    // Retrieve the IPFS data for all offers
-    const offerCreationData = {}
-    await Promise.all(
-      events.map(async e => {
-        if (e.event === 'OfferCreated') {
-          const data = await get(this.ipfsGateway, e.returnValues.ipfsHash)
-          offerCreationData[e.returnValues.offerID] = data
-        }
-      })
-    )
-
-    let unitsSold = 0
-    let depositAvailable = web3.utils.toBN(listing.deposit)
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -60,29 +56,6 @@ class OriginEventSource {
       }
       if (e.event === 'ListingWithdrawn') {
         status = 'withdrawn'
-      }
-
-      const offerId = e.returnValues.offerID
-      const offer = offerId && offerCreationData[offerId]
-      const offerCommission = offer &&
-        web3.utils.toBN(web3.utils.toWei(offer.commission.amount, 'ether'))
-      if (e.event === 'OfferCreated') {
-        const unitsPurchased = offer && offer.unitsPurchased
-        if (unitsPurchased) {
-          unitsSold += unitsPurchased
-        }
-        if (offerCommission) {
-          depositAvailable = depositAvailable.sub(offerCommission)
-        }
-      }
-      if (e.event === 'OfferWithdrawn') {
-        const unitsPurchased = offer && offer.unitsPurchased
-        if (unitsPurchased) {
-          unitsSold -= unitsPurchased
-        }
-        if (offerCommission) {
-          depositAvailable = depositAvailable.add(offerCommission)
-        }
       }
       if (e.event === 'OfferFinalized') {
         status = 'sold'
@@ -104,7 +77,8 @@ class OriginEventSource {
         'category',
         'subCategory',
         'media',
-        'unitsTotal'
+        'unitsTotal',
+        'commissionPerUnit'
       )
     } catch (e) {
       return null
@@ -120,15 +94,11 @@ class OriginEventSource {
       }))
     }
 
-    const unitsAvailable = data.unitsTotal >= unitsSold
-      ? data.unitsTotal - unitsSold
-      : 0
-    console.log()
-    return {
+    const type = 'unit'
+    this.listingCache[id] = this.withOffers(listingId, {
       id: `999-1-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
-      depositAvailable: depositAvailable.toString(),
       arbitrator: listing.depositManager
         ? { id: listing.depositManager }
         : null,
@@ -136,16 +106,73 @@ class OriginEventSource {
       contract: this.contract,
       status,
       events,
-      unitsSold,
-      unitsAvailable,
+      type,
+      multiUnit: type === 'unit' && data.unitsTotal > 1,
+      commissionPerUnit: listing.commissionPerUnit,
       ...data
+    })
+
+    return this.listingCache[id]
+  }
+
+  // Returns a listing with offers and any fields that are computed from the
+  // offers.
+  async withOffers(listingId, listing) {
+    const totalOffers = await this.contract.methods
+      .totalOffers(listingId)
+      .call()
+
+    const allOffers = []
+    for (const id of Array.from({ length: totalOffers }, (_, i) => i)) {
+      allOffers.push(await this._getOffer(listing, listingId, id))
     }
+
+    // Compute fields from valid offers.
+    let depositAvailable = this.web3.utils.toBN(listing.deposit)
+    let unitsAvailable = listing.unitsTotal
+    if (listing.type === 'unit') {
+      allOffers.forEach(offer => {
+        if (!offer.valid || offer.status === 0) {
+          // No need to do anything here.
+        } else if (offer.quantity > unitsAvailable) {
+          offer.valid = false
+          offer.validationError = 'units purchased exceeds available'
+        } else {
+          unitsAvailable -= offer.quantity
+          if (offer.commission) {
+            const offerCommission = this.web3.utils.toBN(offer.commission)
+            depositAvailable = depositAvailable.sub(offerCommission)
+          }
+          // TODO: validate offer commission when dapp2 passes that in
+        }
+      })
+    }
+    depositAvailable = !depositAvailable.isNeg()
+      ? depositAvailable.toString()
+      : '0'
+    return Object.assign({}, listing, {
+      allOffers,
+      unitsAvailable,
+      unitsSold: listing.unitsTotal - unitsAvailable,
+      depositAvailable: depositAvailable
+    })
   }
 
   async getOffer(listingId, offerId) {
-    let blockNumber, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
-    const events = await this.contract.eventCache.offers(listingId, Number(offerId))
+    return this._getOffer(await this.getListing(listingId), listingId, offerId)
+  }
 
+  async _getOffer(listing, listingId, offerId) {
+    const id = `${listingId}-${offerId}`
+    if (this.offerCache[id]) {
+      return this.offerCache[id]
+    }
+
+    let blockNumber, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
+    const events = await this.contract.eventCache.offers(
+      listingId,
+      Number(offerId)
+    )
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -163,10 +190,10 @@ class OriginEventSource {
       }
     })
 
-    if (lastEvent.event === 'OfferWithdrawn') {
+    if (lastEvent && lastEvent.event === 'OfferWithdrawn') {
       status = 0
       withdrawnBy = { id: lastEvent.returnValues.party }
-    } else if (lastEvent.event === 'OfferRuling') {
+    } else if (lastEvent && lastEvent.event === 'OfferRuling') {
       status = 5
     }
 
@@ -179,14 +206,11 @@ class OriginEventSource {
     }
 
     let data = await get(this.ipfsGateway, ipfsHash)
-    data = pick(
-      data,
-      'unitsPurchased'
-    )
+    data = pick(data, 'unitsPurchased')
 
     const offerObj = {
       id: `999-1-${listingId}-${offerId}`,
-      listingId: String(listingId),
+      listingId: String(listing.id),
       offerId: String(offerId),
       createdBlock,
       status,
@@ -205,7 +229,68 @@ class OriginEventSource {
     }
     offerObj.statusStr = offerStatus(offerObj)
 
+    try {
+      await this.validateOffer(offerObj, listing)
+      offerObj.valid = true
+      offerObj.validationError = null
+    } catch (e) {
+      offerObj.valid = false
+      offerObj.validationError = e.message
+    }
+
+    this.offerCache[id] = offerObj
     return offerObj
+  }
+
+  // Validates an offer, throwing an error if an issue is found.
+  async validateOffer(offer, listing) {
+    if (offer.status != 1 /* pending */) {
+      return
+    }
+
+    // TODO: make this better by getting the listing price currency address
+    if (listing.price.currency === 'ETH' && offer.currency !== ZERO_ADDRESS) {
+      throw new Error('Invalid offer: currency does not match listing')
+    }
+
+    const offerArbitrator = offer.arbitrator && offer.arbitrator.id.toLowerCase()
+    if (!offerArbitrator || offerArbitrator === ZERO_ADDRESS) {
+      throw new Error('No arbitrator set')
+    }
+
+    const affiliateWhitelistDisabled = await this.contract.methods
+      .allowedAffiliates(this.contract._address)
+      .call()
+    const offerAffiliate = offer.affiliate
+      ? offer.affiliate.id.toLowerCase()
+      : ZERO_ADDRESS
+    const affiliateAlowed = affiliateWhitelistDisabled ||
+      await this.contract.methods
+        .allowedAffiliates(offer.offerAffiliate)
+        .call()
+    if (!affiliateAlowed) {
+      throw new Error(
+        `Offer affiliate ${offerAffiliate} not whitelisted`
+      )
+    }
+
+    if (listing.type !== 'unit') {
+      // TODO: validate fractional offers
+      return
+    }
+
+    // Compare offer value with listing price. This assumes listing currency
+    // has 18 decimal places like ETH.
+    const listingPriceWei = this.web3.utils.toBN(
+      this.web3.utils.toWei(listing.price.amount, 'ether')
+    )
+    const expectedValue = listingPriceWei.mul(
+      this.web3.utils.toBN(offer.quantity)
+    )
+    const offerValue = this.web3.utils.toBN(offer.value)
+    if (expectedValue.gt(offerValue)) {
+      throw new Error('Invalid offer: insufficient offer amount for listing')
+    }
   }
 
   async getReview(listingId, offerId, party, ipfsHash) {
@@ -218,6 +303,11 @@ class OriginEventSource {
       review: data.text,
       rating: data.rating
     }
+  }
+
+  resetCache() {
+    this.offerCache = {}
+    this.listingCache = {}
   }
 }
 

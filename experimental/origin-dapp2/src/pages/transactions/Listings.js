@@ -17,9 +17,8 @@ const nextPage = nextPageFactory('marketplace.user.listings')
 
 class Listings extends Component {
   render() {
-    if (!this.props.wallet) return <div>Loading...</div>
-
     const vars = { first: 15, id: this.props.wallet }
+    if (!this.props.wallet) return null
 
     return (
       <div className="container purchases">

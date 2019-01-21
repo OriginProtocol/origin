@@ -130,7 +130,9 @@ class TransactionScreen extends Component {
               />
             </View>
           }
-      {listing && <Text numberOfLines={1} style={styles.title}>{listing.title}</Text>}
+          {listing &&
+            <Text numberOfLines={1} style={styles.title}>{listing.title}</Text>
+          }
           <View style={styles.accounts}>
             <Avatar
               image={fromUser.profile && fromUser.profile.avatar}
@@ -222,6 +224,7 @@ class TransactionScreen extends Component {
           <OriginButton
             size="large"
             type="danger"
+            outline={true}
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Cancel'}

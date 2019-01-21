@@ -16,6 +16,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 const env = {
   ARBITRATOR_ACCOUNT: null,
   AFFILIATE_ACCOUNT: null,
+  ATTESTATION_ACCOUNT: null,
   BLOCK_EPOCH: 0,
   BRIDGE_SERVER_DOMAIN: 'bridge.originprotocol.com',
   BRIDGE_SERVER_PROTOCOL: 'https',
@@ -113,7 +114,7 @@ var config = {
     }
   },
   watchOptions: {
-    poll: 500,
+    poll: 2000,
     ignored: [
       // Ignore node_modules in watch except for the origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,

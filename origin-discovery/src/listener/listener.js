@@ -112,6 +112,9 @@ function setupOriginJS (config, web3) {
   if (!config.affiliateAccount) {
     throw new Error('AFFILIATE_ACCOUNT not set')
   }
+  if (!config.attestationAccount) {
+    throw new Error('ATTESTATION_ACCOUNT not set')
+  }
 
   // Issue a warning for any recommended env var that is not set.
   if (!config.blockEpoch) {
@@ -126,6 +129,7 @@ function setupOriginJS (config, web3) {
     ipfsGatewayPort: ipfsUrl.port,
     arbitrator: config.arbitratorAccount,
     affiliate: config.affiliateAccount,
+    attestationAccount: config.attestationAccount,
     blockEpoch: config.blockEpoch,
     web3
   })
@@ -281,6 +285,7 @@ const config = {
   // Origin-js configs
   arbitratorAccount: process.env.ARBITRATOR_ACCOUNT,
   affiliateAccount: process.env.AFFILIATE_ACCOUNT,
+  attestationAccount: process.env.ATTESTATION_ACCOUNT,
   blockEpoch: parseInt(process.env.BLOCK_EPOCH || 0),
   // Default continue block.
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)

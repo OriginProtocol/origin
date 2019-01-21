@@ -13,6 +13,7 @@ import {
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import LoadingSpinner from 'components/LoadingSpinner'
+import QueryError from 'components/QueryError'
 import { getDiscovery } from 'utils/config'
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
@@ -45,7 +46,7 @@ class Listings extends Component {
           if (networkStatus === 1) {
             return <LoadingSpinner />
           } else if (error) {
-            return <p className="p-3">Error :(</p>
+            return <QueryError error={error} query={query} />
           } else if (!data || !data.marketplace) {
             return <p className="p-3">No marketplace contract?</p>
           }

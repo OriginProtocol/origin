@@ -33,14 +33,16 @@ export default `
     makeOffer(
       listingID: ID!
       finalizes: Int
-      affiliate: String
       commission: String
       value: String
       currency: String
-      arbitrator: String
       from: String
       withdraw: String
       quantity: Int
+
+      # Optional: normally inherited from listing
+      arbitrator: String
+      affiliate: String
     ): Transaction
 
     executeRuling(
@@ -113,6 +115,7 @@ export default `
     offers(first: Int, after: String): OfferConnection!
     sales(first: Int, after: String): OfferConnection!
     reviews(first: Int, after: String): ReviewConnection!
+    notifications(first: Int, after: String): UserNotificationConnection!
   }
 
   type OfferConnection {
@@ -125,6 +128,20 @@ export default `
     nodes: [Review]
     pageInfo: PageInfo!
     totalCount: Int!
+  }
+
+  type UserNotificationConnection {
+    nodes: [UserNotification]
+    pageInfo: PageInfo!
+    totalCount: Int!
+  }
+
+  type UserNotification {
+    id: ID!
+    offer: Offer!
+    party: User!
+    event: Event!
+    read: Boolean
   }
 
   type Review {
@@ -166,6 +183,7 @@ export default `
 
     # Connections
     offers: [Offer]
+    allOffers: [Offer]
     offer(id: ID!): Offer
     totalOffers: Int
     events: [Event]
@@ -179,6 +197,8 @@ export default `
     unitsAvailable: Int
     unitsSold: Int
     depositAvailable: String
+    type: String
+    multiUnit: Boolean
 
     # IPFS
     title: String
@@ -208,6 +228,7 @@ export default `
     listing: Listing
     events: [Event]
     createdEvent: Event
+    history: [OfferHistory]
 
     # On-Chain
     value: String
@@ -224,6 +245,16 @@ export default `
     # Computed
     withdrawnBy: Account
     statusStr: String
+    valid: Boolean
+    validationError: String
+  }
+
+  type OfferHistory {
+    id: ID!
+    event: Event
+    party: Account
+    ipfsHash: String
+    ipfsUrl: String
   }
 
   input NewListingInput {

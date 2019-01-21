@@ -7,6 +7,14 @@ const MessagingQuery = gql`
         id
       }
     }
+    messaging(id: "defaultAccount") {
+      id
+      pubKey
+      pubSig
+      enabled
+      synced
+      syncProgress
+    }
   }
 `
 

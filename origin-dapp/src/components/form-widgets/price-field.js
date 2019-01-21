@@ -14,7 +14,10 @@ class PriceField extends Component {
     const { options } = props
     const { selectedSchema } = options
     const enumeratedPrice =
-      selectedSchema && selectedSchema.properties['price'].enum
+      selectedSchema &&
+      selectedSchema.properties['price'] &&
+      selectedSchema.properties['price'].enum
+
     this.priceHidden =
       enumeratedPrice &&
       enumeratedPrice.length === 1 &&
@@ -66,17 +69,21 @@ class PriceField extends Component {
     const { price, currencyCode } = this.state
     const priceUsd = getFiatPrice(price, currencyCode, 'ETH')
     const { isMultiUnitListing } = this.props.formContext
+    const fieldTitle = this.props.schema.title
 
     return (
       !this.priceHidden && (
         <div className="price-field">
           <label className="control-label" htmlFor="root_price">
             {
-              this.props.intl.formatMessage(
-                isMultiUnitListing ?
-                  this.intlMessages.multiUnitPrice :
-                  this.intlMessages.singularPrice
-              )
+              fieldTitle === 'price' ?
+                this.props.intl.formatMessage(
+                  isMultiUnitListing ?
+                    this.intlMessages.multiUnitPrice :
+                    this.intlMessages.singularPrice
+                )
+                :
+                fieldTitle
             }
             {this.props.required && <span className="required">*</span>}
           </label>

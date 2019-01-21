@@ -8,10 +8,11 @@ import origin, {providerUrl, web3} from './../services/origin'
 import {sha3_224} from 'js-sha3'
 import apn from 'apn'
 
+const ATTESTATION_ACCOUNT = process.env.ATTESTATION_ACCOUNT
 const DAPP_URL = process.env.DAPP_URL
 const MESSAGING_URL = `${DAPP_URL}/#/messages?no-nav=true&skip-onboarding=true&wallet-container=`
 const PROFILE_URL = `${DAPP_URL}/#/profile`
-const SELLING_URL = `${DAPP_URL}/#/selling`
+const SELLING_URL = `${DAPP_URL}/#/create`
 const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
 
@@ -248,10 +249,11 @@ class Linker {
       contractAddresses:origin.contractService.getContractAddresses(),
       ipfsGateway:origin.ipfsService.gateway,
       ipfsApi:origin.ipfsService.api,
+      dappUrl:DAPP_URL,
       messagingUrl:MESSAGING_URL,
       profileUrl:PROFILE_URL,
-      dappUrl:DAPP_URL,
-      sellingUrl:SELLING_URL
+      sellingUrl:SELLING_URL,
+      attestationAccount:ATTESTATION_ACCOUNT
     }
   }
 

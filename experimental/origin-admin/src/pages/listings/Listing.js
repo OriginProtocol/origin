@@ -81,7 +81,9 @@ class Listing extends Component {
                   {!media.length && !listing.description ? null : (
                     <div style={{ maxWidth: 300, margin: '20px 20px 0 0' }}>
                       {!media.length ? null : <Gallery pics={media} />}
-                      <div className="mt-2">{listing.description}</div>
+                      <div className="mt-2" style={{ whiteSpace: 'pre-wrap' }}>
+                        {listing.description}
+                      </div>
                     </div>
                   )}
                   <div>
@@ -112,7 +114,7 @@ class Listing extends Component {
                             <Offers
                               listing={listing}
                               listingId={listingId}
-                              offers={listing.offers}
+                              offers={listing.allOffers}
                             />
 
                             <Button
