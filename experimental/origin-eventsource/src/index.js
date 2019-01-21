@@ -147,11 +147,14 @@ class OriginEventSource {
         }
       })
     }
+    depositAvailable = !depositAvailable.isNeg()
+      ? depositAvailable.toString()
+      : '0'
     return Object.assign({}, listing, {
       allOffers,
       unitsAvailable,
       unitsSold: listing.unitsTotal - unitsAvailable,
-      depositAvailable: depositAvailable.toString()
+      depositAvailable: depositAvailable
     })
   }
 
@@ -250,33 +253,26 @@ class OriginEventSource {
       throw new Error('Invalid offer: currency does not match listing')
     }
 
-    // TODO: uncomment when we create new listings, including demo listings,
-    //  with affiliates and arbitrators
-    /*
-    const offerArbitrator = offer.arbitrator
-      && offer.arbitrator.id
-      && offer.arbitrator.id.toLowerCase()
-    const listingArbitrator = listing.arbitrator
-      && listing.arbitrator.id
-      && listing.arbitrator.id.toLowerCase()
-    if (offerArbitrator !== listingArbitrator) {
-      throw new Error(
-        `Arbitrator: offer ${offerArbitrator} !== listing ${listingArbitrator}`
-      )
+    const offerArbitrator = offer.arbitrator && offer.arbitrator.id.toLowerCase()
+    if (!offerArbitrator || offerArbitrator === ZERO_ADDRESS) {
+      throw new Error('No arbitrator set')
     }
 
+    const affiliateWhitelistDisabled = await this.contract.methods
+      .allowedAffiliates(this.contract._address)
+      .call()
     const offerAffiliate = offer.affiliate
-      && offer.affiliate.id
-      && offer.affiliate.id.toLowerCase()
-    const listingAffiliate = listing.affiliate
-      && listing.affiliate.id
-      && listing.affiliate.id.toLowerCase()
-    if (offerAffiliate !== listingAffiliate) {
+      ? offer.affiliate.id.toLowerCase()
+      : ZERO_ADDRESS
+    const affiliateAlowed = affiliateWhitelistDisabled ||
+      await this.contract.methods
+        .allowedAffiliates(offer.offerAffiliate)
+        .call()
+    if (!affiliateAlowed) {
       throw new Error(
-        `Affiliate: offer ${offerAffiliate} !== listing ${listingAffiliate}`
+        `Offer affiliate ${offerAffiliate} not whitelisted`
       )
     }
-    */
 
     if (listing.type !== 'unit') {
       // TODO: validate fractional offers
