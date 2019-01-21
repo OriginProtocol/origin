@@ -13,7 +13,8 @@ import {
   getCleanEvents,
   getDateAvailabilityAndPrice,
   generateSlotStartEnd,
-  isDateSelected
+  isDateSelected,
+  highlightCalendarDrag
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -85,6 +86,7 @@ class Calendar extends Component {
   componentDidMount() {
     renderHourlyPrices(this.props.viewType, this.props.userType)
     this.renderRecurringEvents(this.state.calendarDate)
+    highlightCalendarDrag()
   }
 
   componentDidUpdate() {

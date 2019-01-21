@@ -69,7 +69,8 @@
   color: white;
 }
 
-.calendar-container.seller-view .rbc-day-bg.selected {
+.calendar-container.seller-view .rbc-day-bg.selected,
+.calendar-container.seller-view .rbc-day-bg.dragging {
   border: 2px solid var(--dark);
 }
 
@@ -113,6 +114,10 @@
 .seller-view .rbc-day-bg.future-date:not(.selected):hover {
   background: var(--pale-grey-eight) !important;
   cursor: pointer;
+}
+
+.slot-price {
+  pointer-events: none;
 }
 
 .calendar-nav {

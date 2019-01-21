@@ -477,3 +477,37 @@ export const generateDefaultPricing = (formData) => {
 
   return events
 }
+
+export const highlightCalendarDrag = () => {
+  setTimeout(() => {
+    const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
+
+    function addDraggingClass(evt) {
+      evt.target.classList.add('dragging')
+    }
+
+    function mouseUpHandler(evt){
+      calendarDays.map((element) => {
+        evt.target.classList.remove('dragging')
+        element.removeEventListener('mousemove', addDraggingClass)
+      })
+
+      document.removeEventListener('mouseup', mouseUpHandler)
+    }
+
+    function mouseDownHandler(evt) {
+        addDraggingClass(evt)
+
+        calendarDays.map((element) => {
+          element.addEventListener('mousemove', addDraggingClass)
+        })
+
+        document.addEventListener('mouseup', mouseUpHandler)
+      }
+
+    calendarDays.map((element) => {
+      element.removeEventListener('mousedown', mouseDownHandler)
+      element.addEventListener('mousedown', mouseDownHandler)
+    })
+  }, 1000)
+}
