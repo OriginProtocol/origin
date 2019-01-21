@@ -3,7 +3,7 @@ import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import parseId from '../../utils/parseId'
-import { validateOffer } from './_validation'
+import { validateNewOffer } from './_validation'
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
@@ -49,14 +49,13 @@ async function makeOffer(_, data) {
     }
   }
 
-  await validateOffer(data, listingId, null)
+  await validateNewOffer(listingId, data)
 
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
   const commission = contracts.web3.utils.toWei(ipfsData.commission.amount, 'ether')
   const value = contracts.web3.utils.toWei(data.value, 'ether')
   const arbitrator = data.arbitrator
     || contracts.config.arbitrator
-    || ZeroAddress
 
   const args = [
     listingId,

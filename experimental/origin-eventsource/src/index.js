@@ -254,13 +254,9 @@ class OriginEventSource {
       throw new Error('Invalid offer: currency does not match listing')
     }
 
-    const offerArbitrator = offer.arbitrator
-      ? offer.arbitrator.id.toLowerCase()
-      : ZERO_ADDRESS
-    if (offerArbitrator !== this.arbitrator) {
-      throw new Error(
-        `Arbitrator: offer ${offerArbitrator} !== listing ${this.arbitrator}`
-      )
+    const offerArbitrator = offer.arbitrator && offer.arbitrator.id.toLowerCase()
+    if (!offerArbitrator || offerArbitrator === ZERO_ADDRESS) {
+      throw new Error('No arbitrator set')
     }
 
     const affiliateWhitelistDisabled = await this.contract.methods

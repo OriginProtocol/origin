@@ -10,7 +10,7 @@ async function acceptOffer(_, data) {
     schemaId: 'https://schema.originprotocol.com/offer-accept_1.0.0.json'
   })
   const { listingId, offerId } = parseId(data.offerID)
-  await validateOffer(data, listingId, offerId)
+  await validateOffer(listingId, offerId)
 
   const tx = contracts.marketplaceExec.methods
     .acceptOffer(listingId, offerId, ipfsHash)
