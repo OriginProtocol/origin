@@ -7,7 +7,7 @@ const pick = require('lodash/pick')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 class OriginEventSource {
-  constructor({ ipfsGateway, marketplaceContract, web3, arbitrator }) {
+  constructor({ ipfsGateway, marketplaceContract, web3 }) {
     this.ipfsGateway = ipfsGateway
     this.contract = marketplaceContract
     this.web3 = web3
