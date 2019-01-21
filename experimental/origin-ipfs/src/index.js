@@ -5,6 +5,9 @@
 //   return bytes32Hex;
 // }
 const bs58 = require('bs58')
+const FormData = require('form-data')
+const fetch = require('cross-fetch')
+const cache = {}
 
 function getBytes32FromIpfsHash(hash) {
   return `0x${bs58
@@ -37,7 +40,13 @@ async function postFile(gateway, file) {
 
 async function post(gateway, json, rawHash) {
   const formData = new FormData()
-  formData.append('file', new Blob([JSON.stringify(json)]))
+  let file
+  if (typeof Blob === 'undefined') {
+    file = Buffer.from(JSON.stringify(json))
+  } else {
+    file = new Blob([JSON.stringify(json)])
+  }
+  formData.append('file', file)
 
   const rawRes = await fetch(`${gateway}/api/v0/add`, {
     method: 'POST',
@@ -118,7 +127,9 @@ async function getText(gateway, hashAsBytes) {
 }
 
 async function get(gateway, hashAsBytes, party) {
-  let text = await getText(gateway, hashAsBytes)
+  if (!hashAsBytes) return null
+
+  let text = cache[hashAsBytes] || (await getText(gateway, hashAsBytes))
   if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
     try {
       text = await decode(text, party.privateKey, party.pgpPass)
@@ -126,6 +137,7 @@ async function get(gateway, hashAsBytes, party) {
       return { encrypted: true, decryptError: e }
     }
   }
+  cache[hashAsBytes] = text
   return JSON.parse(text)
 }
 

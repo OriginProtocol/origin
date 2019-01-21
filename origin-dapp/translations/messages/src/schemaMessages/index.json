@@ -562,5 +562,13 @@
   {
     "id": "schema.transportation",
     "defaultMessage": "Transportation"
+  },
+  {
+    "id": "schema.weekdayPricing",
+    "defaultMessage": "Weekday Pricing (Sunday through Thursday nights)"
+  },
+  {
+    "id": "schema.weekendPricing",
+    "defaultMessage": "Weekend Pricing (Friday and Saturday nights)"
   }
 ]

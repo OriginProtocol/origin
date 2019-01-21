@@ -3,7 +3,9 @@
   "type": "object",
   "required": [
     "name",
-    "description"
+    "description",
+    "weekdayPricing",
+    "weekendPricing"
   ],
   "properties": {
     "dappSchemaId": {
@@ -51,6 +53,14 @@
         "type": "string",
         "format": "data-url"
       }
+    },
+    "weekdayPricing": {
+      "type": "number",
+      "title": "schema.weekdayPricing"
+    },
+    "weekendPricing": {
+      "type": "number",
+      "title": "schema.weekendPricing"
     },
     "sellerSteps": {
       "type": "string",

@@ -27,7 +27,7 @@ export function generateCalendarSlots(events) {
   return eventsClone
 }
 
-// Generate slots that will be used in the buyer's offer
+// Generate a slot with start / end dates that are one slotLength long according to the listing schema
 export function generateSlotStartEnd(selectionStart, viewType, slotIndex) {
   const slotLength = viewType === 'hourly' ? 'hour' : 'day'
   const start = moment(selectionStart).add(slotIndex, slotLength)
@@ -44,7 +44,7 @@ export function checkSlotForExistingEvents(slotInfo, events) {
 
     // loop over event's slots and check to see if any of them
     // match any of the selected slot's time periods
-    for (let i = 0, existSlotsLen = event.slots.length; i < existSlotsLen; i++) {
+    for (let i = 0, existSlotsLen = event.slots && event.slots.length; i < existSlotsLen; i++) {
       const existSlot = event.slots[i]
 
       // loop over the time periods included in selected slot
@@ -65,6 +65,31 @@ export function checkSlotForExistingEvents(slotInfo, events) {
 export function doAllEventsRecur(events) {
   const recurringEvents = events.filter((event) => event.isRecurringEvent )
   return recurringEvents.length === events.length
+}
+
+// Used in the dateCellWrapper callback to determine if a particular date is selected
+export function isDateSelected(selection, calendarDate) {
+  if (!selection) {
+    return false
+  }
+
+  let selected = false
+
+  function isSelected(slot) {
+    return moment(calendarDate).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end).add(1, 'second'))
+  }
+
+  if (Array.isArray(selection)) {
+    const selectedDates = selection.filter((slot) =>
+      isSelected(slot)
+    )
+
+    selected = selectedDates && !!selectedDates.length
+  } else {
+    selected = isSelected(selection)
+  }
+
+  return selected
 }
 
 // This is a hackey way of showing the price in hourly time slots
@@ -96,24 +121,6 @@ export function renderHourlyPrices(viewType) {
       }
     }
   }
-}
-
-// Moves user's event edits from a cloned recurring event to the original event
-// in preparation to save the original event
-export function updateOriginalEvent(selectedEvent, events) {
-  return events.map((eventObj) => {
-    if (eventObj.id === selectedEvent.originalEventId) {
-      const { start, end, isAvailable, price, isRecurringEvent } = selectedEvent
-      Object.assign(eventObj, {
-        start,
-        end,
-        isAvailable,
-        price,
-        isRecurringEvent
-      })
-    }
-    return eventObj
-  })
 }
 
 // Re-calculates slots after the date is changed via the dropdown menus
@@ -443,4 +450,107 @@ export const getStartEndDatesFromSlots = (slots, slotLengthUnit) => {
     startDate: moment(slots[0].startDate).format(timeFormat),
     endDate: moment(slots[slots.length - 1].endDate).format(timeFormat)
   }
+}
+
+export const generateDefaultPricing = (formData) => {
+  const events = []
+
+  for (const key in formData) {
+    if (key === 'weekdayPricing' || key === 'weekendPricing') {
+
+      const startDateDayOffset = key === 'weekdayPricing' ? /* Sunday */ 0 : /* Friday */ 5        
+      const endDateDayOffset = key === 'weekdayPricing' ? /* Thursday */ 4 : /* Saturday */ 6
+
+      events.push({
+        startDate: moment().day(startDateDayOffset).startOf('day').toISOString(),
+        endDate: moment().day(endDateDayOffset).endOf('day').toISOString(),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        rrule: 'FREQ=WEEKLY;',
+        isAvailable: true,
+        price: {
+          amount: formData[key].toString(),
+          currency: 'ETH'
+        }
+      })
+    }
+  }
+
+  return events
+}
+
+export const highlightCalendarDrag = () => {
+  setTimeout(() => {
+    const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
+
+    function addDraggingClass(evt) {
+      evt.target.classList.add('dragging')
+    }
+
+    function mouseUpHandler(evt){
+      calendarDays.map((element) => {
+        evt.target.classList.remove('dragging')
+        element.removeEventListener('mousemove', addDraggingClass)
+      })
+
+      document.removeEventListener('mouseup', mouseUpHandler)
+    }
+
+    function mouseDownHandler(evt) {
+        addDraggingClass(evt)
+
+        calendarDays.map((element) => {
+          element.addEventListener('mousemove', addDraggingClass)
+        })
+
+        document.addEventListener('mouseup', mouseUpHandler)
+      }
+
+    calendarDays.map((element) => {
+      element.removeEventListener('mousedown', mouseDownHandler)
+      element.addEventListener('mousedown', mouseDownHandler)
+    })
+  }, 1000)
+}
+
+export const doFancyDateSelectionBorders = () => {
+  const calendarDays = [...document.querySelectorAll('.rbc-day-bg.selected, .rbc-day-bg.dragging')]
+
+  calendarDays.map((element, index) => {
+    element.classList.remove('first-selected', 'last-selected', 'middle-selected')
+
+    const prevDate = calendarDays[index - 1]
+    const nextDate = calendarDays[index + 1]
+    let isFirstSelected = true
+    let isLastSelected = true
+
+    if (
+      prevDate &&
+      (
+        prevDate.classList.contains('selected') || 
+        prevDate.classList.contains('dragging')
+      )
+    ) {
+      isFirstSelected = false
+    }
+
+    if (
+      nextDate &&
+      (
+        nextDate.classList.contains('selected') || 
+        nextDate.classList.contains('dragging')
+      )
+    ) {
+      isLastSelected = false
+    }
+
+    if (isFirstSelected && isLastSelected) {
+      return
+    } else if (isFirstSelected) {
+      element.classList.add('first-selected')
+    } else if (isLastSelected) {
+      element.classList.add('last-selected')
+    } else {
+      element.classList.add('middle-selected')
+    }
+  })
 }
