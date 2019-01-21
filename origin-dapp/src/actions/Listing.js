@@ -50,7 +50,7 @@ export function getListingIds() {
       // }
       const config = getState().config
 
-      let filters = []
+      const filters = []
       if (config.filters &&
           config.filters.listings &&
           config.filters.listings.marketplacePublisher) {
