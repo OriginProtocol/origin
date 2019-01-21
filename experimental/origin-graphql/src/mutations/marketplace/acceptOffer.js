@@ -2,6 +2,7 @@ import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import parseId from '../../utils/parseId'
+import { validateOffer } from './_validation'
 
 async function acceptOffer(_, data) {
   await checkMetaMask(data.from)
@@ -9,6 +10,7 @@ async function acceptOffer(_, data) {
     schemaId: 'https://schema.originprotocol.com/offer-accept_1.0.0.json'
   })
   const { listingId, offerId } = parseId(data.offerID)
+  await validateOffer(listingId, offerId)
 
   const tx = contracts.marketplaceExec.methods
     .acceptOffer(listingId, offerId, ipfsHash)
