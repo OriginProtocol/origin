@@ -76,10 +76,10 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { active_event, address, balances: { eth, ogn, dai }, navigation, notifications, pending_events, processed_events } = this.props
+    const { active_event, address, balances: { eth, ogn/*, dai*/ }, navigation, notifications, pending_events, processed_events } = this.props
     const ethBalance = web3.utils.fromWei(eth, 'ether')
     // To Do: convert tokens with decimal counts
-    const daiBalance = dai
+    // const daiBalance = dai
     const ognBalance = toOgns(ogn)
     const eventsCount = pending_events.length + processed_events.length + notifications.length
 
@@ -113,6 +113,7 @@ class HomeScreen extends Component {
               imageSource={currencies['ogn'].icon}
               onPress={this.toggleWallet}
             />
+            {/*
             <Currency
               abbreviation={'DAI'}
               balance={daiBalance}
@@ -121,6 +122,7 @@ class HomeScreen extends Component {
               imageSource={currencies['dai'].icon}
               onPress={this.toggleWallet}
             />
+            */}
           </ScrollView>
           <WalletModal address={address} visible={this.state.walletExpanded} onPress={this.toggleWallet} />
         </View>

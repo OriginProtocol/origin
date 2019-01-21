@@ -14,7 +14,9 @@ const OfferDetails = ({ offer }) => (
     </li> */}
     <li className="total-price">
       <span>Total Price</span>
-      <span><TokenPrice {...offer} /></span>
+      <span>
+        <TokenPrice {...offer} />
+      </span>
     </li>
     <li className="payment-status">
       <span>Payment Status</span>
@@ -22,7 +24,11 @@ const OfferDetails = ({ offer }) => (
     </li>
     <li className="offer-date">
       <span>Offer Date</span>
-      <span>{dayjs.unix(offer.createdEvent.timestamp).format('MMM. D, YYYY')}</span>
+      <span>
+        {offer.createdEvent
+          ? dayjs.unix(offer.createdEvent.timestamp).format('MMM. D, YYYY')
+          : ''}
+      </span>
     </li>
     <li className="offer-number">
       <span>Offer Number</span>
