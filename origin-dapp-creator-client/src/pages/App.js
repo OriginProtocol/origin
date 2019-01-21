@@ -8,6 +8,7 @@ import Create from 'pages/Create'
 import Customize from 'pages/Customize'
 import Configure from 'pages/Configure'
 import MetaMaskPrompt from 'pages/MetaMaskPrompt'
+import Resolver from 'pages/Resolver'
 import Steps from 'components/Steps'
 import Success from 'pages/Success'
 import Store from 'utils/store'
@@ -122,6 +123,14 @@ class App extends React.Component {
                 render={() => (
                   <MetaMaskPrompt
                     handlePublish={this.handlePublish}
+                  />
+                )}
+              />
+              <Route
+                path="/resolver"
+                render={() => (
+                  <Resolver
+                    config={this.state.config}
                   />
                 )}
               />
