@@ -72,7 +72,9 @@ class Create extends React.Component {
     const func = debounce(() => {
       return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/validate/subdomain`)
         .send({
-          subdomain: this.state.subdomain,
+          config: {
+            subdomain: this.state.subdomain,
+          },
           address: web3.eth.accounts[0]
         })
         .catch((error) => {
