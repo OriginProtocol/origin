@@ -74,6 +74,22 @@
   border: 2px solid var(--dark);
 }
 
+.calendar-container.seller-view .rbc-day-bg.selected.first-selected,
+.calendar-container.seller-view .rbc-day-bg.dragging.first-selected {
+  border-right: 1px solid var(--calendar-grey-border);
+}
+
+.calendar-container.seller-view .rbc-day-bg.selected.last-selected,
+.calendar-container.seller-view .rbc-day-bg.dragging.last-selected {
+  border-left: 1px solid var(--calendar-grey-border);
+}
+
+.calendar-container.seller-view .rbc-day-bg.selected.middle-selected,
+.calendar-container.seller-view .rbc-day-bg.dragging.middle-selected {
+  border-left: 1px solid var(--calendar-grey-border);
+  border-right: 1px solid var(--calendar-grey-border);
+}
+
 .calendar-container .rbc-time-slot {
   font-size: 15px;
   display: flex;

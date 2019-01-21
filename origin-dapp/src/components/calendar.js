@@ -14,7 +14,8 @@ import {
   getDateAvailabilityAndPrice,
   generateSlotStartEnd,
   isDateSelected,
-  highlightCalendarDrag
+  highlightCalendarDrag,
+  doFancyDateSelectionBorders
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -199,7 +200,7 @@ class Calendar extends Component {
     }
   }
 
-  selectEvent(selectedEvent) {
+  async selectEvent(selectedEvent) {
     const event = {
       ...selectedEvent,
       price: selectedEvent.price || '',
@@ -214,7 +215,8 @@ class Calendar extends Component {
       isAvailable: true
     }
 
-    this.setState(stateToSet)
+    await this.setState(stateToSet)
+    doFancyDateSelectionBorders()
   }
 
   handlePriceChange(event) {

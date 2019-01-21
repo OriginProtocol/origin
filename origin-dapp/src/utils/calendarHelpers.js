@@ -511,3 +511,46 @@ export const highlightCalendarDrag = () => {
     })
   }, 1000)
 }
+
+export const doFancyDateSelectionBorders = () => {
+  const calendarDays = [...document.querySelectorAll('.rbc-day-bg.selected, .rbc-day-bg.dragging')]
+
+  calendarDays.map((element, index) => {
+    element.classList.remove('first-selected', 'last-selected', 'middle-selected')
+
+    const prevDate = calendarDays[index - 1]
+    const nextDate = calendarDays[index + 1]
+    let isFirstSelected = true
+    let isLastSelected = true
+
+    if (
+      prevDate &&
+      (
+        prevDate.classList.contains('selected') || 
+        prevDate.classList.contains('dragging')
+      )
+    ) {
+      isFirstSelected = false
+    }
+
+    if (
+      nextDate &&
+      (
+        nextDate.classList.contains('selected') || 
+        nextDate.classList.contains('dragging')
+      )
+    ) {
+      isLastSelected = false
+    }
+
+    if (isFirstSelected && isLastSelected) {
+      return
+    } else if (isFirstSelected) {
+      element.classList.add('first-selected')
+    } else if (isLastSelected) {
+      element.classList.add('last-selected')
+    } else {
+      element.classList.add('middle-selected')
+    }
+  })
+}
