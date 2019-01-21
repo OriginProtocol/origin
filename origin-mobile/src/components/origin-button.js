@@ -2,8 +2,15 @@ import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default class OriginButton extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { pressed: false }
+  }
+
   render() {
-    const { disabled, image, outline, size, style, textStyle, title, type, onDisabledPress, onPress } = this.props
+    const { deactivate, disabled, image, outline, size, style, textStyle, title, type, onDisabledPress, onPress } = this.props
+    const { pressed } = this.state
     let backgroundColor, borderColor, color
     
     switch(type) {
@@ -24,7 +31,15 @@ export default class OriginButton extends Component {
     }
 
     return (
-      <TouchableOpacity activeOpacity={disabled ? 1 : 0.5} onPress={() => {
+      <TouchableOpacity activeOpacity={disabled || pressed ? 1 : 0.5} onPress={() => {
+        if (deactivate && pressed) {
+          return
+        }
+
+        if (deactivate) {
+          this.setState({ pressed: true })
+        }
+
         if (disabled && onDisabledPress) {
           onDisabledPress()
         }
@@ -33,7 +48,7 @@ export default class OriginButton extends Component {
           onPress()
         }
       }} style={{ width: size === 'large' ? '100%' : undefined }}>
-        <View style={[ { backgroundColor, borderColor, opacity: disabled ? 0.2 : 1 }, (styles[size] || styles.small), styles.button, style]}>
+        <View style={[ { backgroundColor, borderColor, opacity: disabled || pressed ? 0.2 : 1 }, (styles[size] || styles.small), styles.button, style]}>
           <Text style={[ { color }, styles.buttonText, textStyle ]}>
             {title}
           </Text>

@@ -98,9 +98,9 @@ class TransactionItem extends Component {
             {hasSufficientFunds && handleApprove &&
               <View style={styles.actions}>
                 <View style={{ marginRight: 10 }}>
-                  <OriginButton size="small" type="primary" title="Approve" onPress={handleApprove} />
+                  <OriginButton size="small" type="primary" title="Approve" deactivate={true} onPress={handleApprove} />
                 </View>
-                <OriginButton size="small" type="danger" title="Reject" onPress={handleReject} />
+                <OriginButton size="small" type="danger" title="Reject" deactivate={true} onPress={handleReject} />
               </View>
             }
           </View>
@@ -189,6 +189,7 @@ class TransactionItem extends Component {
               })
             }
           }}
+          deactivate={hasNotificationsEnabled && hasSufficientFunds} 
         />
         <OriginButton
           size="large"
@@ -198,6 +199,7 @@ class TransactionItem extends Component {
           textStyle={{ fontSize: 14, fontWeight: '900' }}
           title={'Cancel'}
           onPress={handleReject}
+          deactivate={true} 
         />
       </View>
     )
