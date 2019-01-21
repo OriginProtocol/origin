@@ -81,7 +81,8 @@ const Configs = {
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     OriginToken: '0xf2D5AeA9057269a1d97A952BAf5E1887462c67b6',
-    V00_Marketplace: '0xCCC4fDB0BfD0BC9E6cede6297534c0e96E3E76DE'
+    V00_Marketplace: '0x66E8c312dC89599c84A93353d6914631ce7857Cc',
+    V00_Marketplace_Epoch: '10135260'
   },
   localhost: {
     provider: `http://${HOST}:8545`,
@@ -92,8 +93,9 @@ const Configs = {
     automine: 2000,
     // messaging: {
     //   ipfsSwarm:
-    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/Qma1eKbWcLy9EVYv4zVJZSAtXT6TsKXYTQ2JKtU5T7APne',
-    //   messagingNamespace: 'dev'
+    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/QmYsCaLzzso7kYuAZ8b5DwhpwGvgzKyFtvs37bG95GTQGA',
+    //   messagingNamespace: 'dev',
+    //   globalKeyServer: 'http://127.0.0.1:6647'
     // }
   },
   test: {
@@ -200,6 +202,7 @@ export function setNetwork(net, customConfig) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
       context.marketplace.eventCache.updateBlock(blockHeaders.number)
+      context.eventSource.resetCache()
       pubsub.publish('NEW_BLOCK', {
         newBlock: { ...blockHeaders, id: blockHeaders.hash }
       })
@@ -208,6 +211,7 @@ export function setNetwork(net, customConfig) {
       web3.eth.getBlock(block).then(blockHeaders => {
         if (blockHeaders) {
           context.marketplace.eventCache.updateBlock(blockHeaders.number)
+          context.eventSource.resetCache()
           pubsub.publish('NEW_BLOCK', {
             newBlock: { ...blockHeaders, id: blockHeaders.hash }
           })
@@ -320,7 +324,8 @@ export function setMarketplace(address, epoch) {
   }
   context.eventSource = new EventSource({
     marketplaceContract: context.marketplace,
-    ipfsGateway: context.ipfsGateway
+    ipfsGateway: context.ipfsGateway,
+    web3: context.web3
   })
   context.marketplaceExec = context.marketplace
 

@@ -4,34 +4,36 @@ import dayjs from 'dayjs'
 
 import withWallet from 'hoc/withWallet'
 
+import QueryError from 'components/QueryError'
 import TokenPrice from 'components/TokenPrice'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 
 import nextPageFactory from 'utils/nextPageFactory'
-import SalesQuery from 'queries/Sales'
+import query from 'queries/Sales'
 
 const nextPage = nextPageFactory('marketplace.user.sales')
 
 class Sales extends Component {
   render() {
     const vars = { first: 15, id: this.props.wallet }
+    if (!this.props.wallet) return null
 
     return (
       <div className="container purchases">
         <Query
-          query={SalesQuery}
+          query={query}
           variables={vars}
           notifyOnNetworkStatusChange={true}
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1 || !this.props.wallet) {
               return <div>Loading...</div>
+            } else if (error) {
+              return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {
               return <p className="p-3">No marketplace contract?</p>
-            } else if (error) {
-              return <p className="p-3">Error :(</p>
             }
 
             const { nodes, pageInfo, totalCount } = data.marketplace.user.sales

@@ -3,9 +3,10 @@ import { Query } from 'react-apollo'
 import { Link } from 'react-router-dom'
 
 import withWallet from 'hoc/withWallet'
-import OfferQuery from 'queries/Offer'
+import query from 'queries/Offer'
 
 import AboutParty from 'components/AboutParty'
+import QueryError from 'components/QueryError'
 
 import TxHistory from './_History'
 import TxProgress from './_Progress'
@@ -14,28 +15,29 @@ import ListingDetail from './_ListingDetail'
 
 const Transaction = props => {
   const offerId = props.match.params.offerId
+  const vars = { offerId }
   return (
-    <Query query={OfferQuery} variables={{ offerId }}>
-      {({ networkStatus, error, data }) => {
-        if (networkStatus === 1) {
-          return <div>Loading...</div>
-        } else if (error) {
-          return <div>Error...</div>
-        } else if (!data || !data.marketplace) {
-          return <div>No marketplace contract?</div>
-        }
+    <div className="container transaction-detail">
+      <Query query={query} variables={vars}>
+        {({ networkStatus, error, data }) => {
+          if (error) {
+            return <QueryError error={error} query={query} vars={vars} />
+          } else if (networkStatus === 1) {
+            return <div>Loading...</div>
+          } else if (!data || !data.marketplace) {
+            return <div>No marketplace contract?</div>
+          }
 
-        const offer = data.marketplace.offer
-        if (!offer) {
-          return <div>Offer not found</div>
-        }
+          const offer = data.marketplace.offer
+          if (!offer) {
+            return <div className="container">Offer not found</div>
+          }
 
-        const isSeller = offer.listing.seller.id === props.wallet
-        const party = isSeller ? offer.buyer.id : offer.listing.seller.id
+          const isSeller = offer.listing.seller.id === props.wallet
+          const party = isSeller ? offer.buyer.id : offer.listing.seller.id
 
-        return (
-          <div className="container">
-            <div className="transaction-detail">
+          return (
+            <>
               {isSeller ? (
                 <Link to="/my-sales">&lsaquo; My Sales</Link>
               ) : (
@@ -64,11 +66,11 @@ const Transaction = props => {
                   <AboutParty id={party} />
                 </div>
               </div>
-            </div>
-          </div>
-        )
-      }}
-    </Query>
+            </>
+          )
+        }}
+      </Query>
+    </div>
   )
 }
 

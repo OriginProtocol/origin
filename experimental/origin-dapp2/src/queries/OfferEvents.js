@@ -5,18 +5,18 @@ export default gql`
     marketplace {
       offer(id: $offerId) {
         id
-        events {
+        history {
           id
-          event
-          transactionHash
-          block {
+          event {
             id
-            timestamp
+            event
+            block {
+              id
+              timestamp
+            }
           }
-          returnValues {
-            ipfsHash
-            party
-          }
+          ipfsHash
+          ipfsUrl
         }
       }
     }

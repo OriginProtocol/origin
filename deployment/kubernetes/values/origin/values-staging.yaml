@@ -24,7 +24,7 @@ ipfsProxyImageTag: '2e15a29'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '1f2f141'
+faucetImageTag: '7292f24'
 
 # event-listener
 eventlistenerImage: event-listener
@@ -32,7 +32,7 @@ eventlistenerImageTag: '7687327'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '3ccf562'
+discoveryImageTag: '7292f24'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -40,7 +40,7 @@ messagingImageTag: 'ebe65cb'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'dbf2de5'
+notificationsImageTag: '7292f24'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
