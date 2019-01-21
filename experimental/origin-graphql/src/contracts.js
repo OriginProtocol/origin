@@ -257,7 +257,7 @@ export function setNetwork(net, customConfig) {
     token.contractExec = contract
   })
 
-  context.transactions = []
+  context.transactions = {}
   try {
     context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
   } catch (e) {

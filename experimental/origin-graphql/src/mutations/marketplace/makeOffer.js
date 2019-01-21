@@ -6,7 +6,9 @@ import parseId from '../../utils/parseId'
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
-  await checkMetaMask(data.from)
+  const { from } = data
+  await checkMetaMask(from)
+
   const { listingId } = parseId(data.listingID)
 
   const ipfsData = {
@@ -28,7 +30,6 @@ async function makeOffer(_, data) {
 
   validator('https://schema.originprotocol.com/offer_1.0.0.json', ipfsData)
 
-  const buyer = data.from
   const marketplace = contracts.marketplaceExec
 
   const affiliateWhitelistDisabled = await marketplace.methods
@@ -46,7 +47,10 @@ async function makeOffer(_, data) {
   }
 
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
-  const commission = contracts.web3.utils.toWei(ipfsData.commission.amount, 'ether')
+  const commission = contracts.web3.utils.toWei(
+    ipfsData.commission.amount,
+    'ether'
+  )
   const value = contracts.web3.utils.toWei(data.value, 'ether')
 
   const args = [
@@ -66,41 +70,10 @@ async function makeOffer(_, data) {
 
   const tx = marketplace.methods.makeOffer(...args).send({
     gas: 4612388,
-    from: buyer,
+    from,
     value
   })
-  return txHelper({ tx, mutation: 'makeOffer' })
+  return txHelper({ tx, from, mutation: 'makeOffer' })
 }
 
 export default makeOffer
-
-/*
-mutation makeOffer(
-  $listingID: String,
-  $finalizes: String,
-  $affiliate: String,
-  $commission: String,
-  $value: String,
-  $currency: String,
-  $arbitrator: String
-) {
-  makeOffer(
-    listingID: $listingID,
-    finalizes: $finalizes,
-    affiliate: $affiliate,
-    commission: $commission,
-    value: $value,
-    currency: $currency,
-    arbitrator: $arbitrator
-  )
-}
-{
-  "listingID": "0",
-  "finalizes": "1536300000",
-  "affiliate": "0x7c38A2934323aAa8dAda876Cfc147C8af40F8D0e",
-  "commission": "0",
-  "value": "100000000000000000",
-  "currency": "0x0000000000000000000000000000000000000000",
-  "arbitrator": "0x7c38A2934323aAa8dAda876Cfc147C8af40F8D0e"
-}
-*/
