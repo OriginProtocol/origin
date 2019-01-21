@@ -1221,6 +1221,10 @@ textarea:-moz-ui-invalid {
   border-right-width: 0;
 }
 
+.transactions .dropdown-menu .transaction:last-of-type {
+  border-radius: 0 0 var(--default-radius) var(--default-radius);
+}
+
 .messages .dropdown-menu .message,
 .notifications .dropdown-menu .notification {
   border-radius: 0;
@@ -3911,6 +3915,7 @@ form .stars img {
   align-items: center;
   background-color: var(--pale-grey-three);
   border-color: var(--light);
+  color: var(--dark);
   padding: 15px;
 }
 
@@ -6234,6 +6239,15 @@ a:not([href]):not([tabindex]).span-link {
     transform: rotate(90deg);
     width: 13px;
     height: 21px;
+  }
+
+  .overlay-open .transactions-list .transaction {
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .overlay-open .transactions-list li:last-of-type {
+    border-radius: 0;
   }
 
   .dropdown-menu .arrows-container {
