@@ -223,6 +223,7 @@ class OriginWrapper extends Component {
   constructor(props) {
     super(props)
 
+    this.handleNotifications = this.handleNotifications.bind(this)
     this.state = { loading: true }
   }
 
@@ -232,6 +233,19 @@ class OriginWrapper extends Component {
     this.props.updateCarouselStatus(!!completed)
 
     this.setState({ loading: false })
+  }
+
+  async handleNotifications() {
+    try {
+      const permissions = await originWallet.requestNotifications()
+
+      this.props.storeNotificationsPermissions(permissions)
+
+      this.props.updateCarouselStatus(true)
+    } catch(e) {
+      console.error(e)
+      throw e
+    }
   }
 
   render() {
@@ -249,6 +263,7 @@ class OriginWrapper extends Component {
         {!carouselCompleted &&
           <Onboarding
             onCompletion={() => this.props.updateCarouselStatus(true)}
+            onEnable={this.handleNotifications}
             pages={[
               {
                 image: (
