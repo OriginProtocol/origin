@@ -809,7 +809,6 @@ class ListingCreate extends Component {
       wallet,
       intl
     } = this.props
-    const totalNumberOfSteps = 4
     const {
       boostCapTooLow,
       formListing,
@@ -829,6 +828,7 @@ class ListingCreate extends Component {
       isFractionalListing,
       isEditMode
     } = this.state
+    const totalNumberOfSteps = isFractionalListing ? 5 : 4
     const { formData } = formListing
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
     const boostAmount = formData.boostValue || selectedBoostAmount
@@ -1082,29 +1082,37 @@ class ListingCreate extends Component {
               </div>
             )}
             {step === this.STEP.AVAILABILITY &&
-              <div className="col-md-12 listing-availability">
-                <label>
-                  <FormattedMessage
-                    id={'listing-create.stepNumberLabel'}
-                    defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+              <Fragment>
+                <div className="col-md-6 col-lg-5">
+                  <label>
+                    <FormattedMessage
+                      id={'listing-create.stepNumberLabel'}
+                      defaultMessage={'STEP {stepNumber}'}
+                      values={{ stepNumber: this.getStepNumber(step) }}
+                    />
+                  </label>
+                  <h2>
+                    <FormattedMessage
+                      id={'listing-create.availabilityHeading'}
+                      defaultMessage={'Add Availability and Pricing'}
+                    />
+                  </h2>
+                  <StepsProgress
+                    stepsTotal={totalNumberOfSteps}
+                    stepCurrent={stepNumber}
                   />
-                </label>
-                <h2>
-                  <FormattedMessage
-                    id={'listing-create.availabilityHeading'}
-                    defaultMessage={'Add Availability and Pricing'}
+                </div>
+                <div className="col-md-12 listing-availability">
+                  <Calendar
+                    slots={ formData && formData.slots }
+                    userType="seller"
+                    viewType={ fractionalTimeIncrement }
+                    step={ 60 }
+                    onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
+                    onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
                   />
-                </h2>
-                <Calendar
-                  slots={ formData && formData.slots }
-                  userType="seller"
-                  viewType={ fractionalTimeIncrement }
-                  step={ 60 }
-                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
-                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
-                />
-              </div>
+                </div>
+              </Fragment>
             }
             {step === this.STEP.BOOST && (
               <div className="col-md-6 col-lg-5 select-boost">
