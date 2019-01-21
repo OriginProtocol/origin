@@ -26,9 +26,14 @@ spec:
     - secretName: {{ template "ipfs.host" . }}
       hosts:
         - {{ template "ipfs.host" . }}
+    {{- if eq .Release.Namespace "prod" }}
+    - secretName: gateway.originprotocol.com
+      hosts:
+        - gateway.originprotocol.com
+    {{- end }}
   rules:
     - host: {{ template "ipfs.host" . }}
-      http:
+      http: &http_rules
         paths:
           - path: /
             backend:
@@ -38,3 +43,7 @@ spec:
             backend:
               serviceName: {{ template "ipfs.fullname" . }}
               servicePort: 8080
+    {{- if eq .Release.Namespace "prod" }}
+    - host: gateway.originprotocol.com
+      http: *http_rules
+    {{- end }}

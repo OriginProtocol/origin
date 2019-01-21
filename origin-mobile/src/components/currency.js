@@ -9,7 +9,7 @@ export default class Currency extends Component {
 
     return vertical ? (
       <View style={{ ...styles.container, ...styles.vertical }}>
-        <View>
+        <View style={{ height: 28 }}>
           <Text style={styles.name}>{name}</Text>
           <View style={styles.colored}>
             <Image source={imageSource} style={styles.iconSmall} />
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   colored: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: 15,
+    height: 28,
   },
   container: {
     backgroundColor: '#293f55',

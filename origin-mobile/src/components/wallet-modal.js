@@ -8,16 +8,65 @@ import Currency from 'components/currency'
 import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
+import { getCurrentNetwork } from 'utils/networks'
+import { toOgns } from 'utils/ogn'
+import { evenlySplitAddress } from 'utils/user'
 
 import originWallet from '../OriginWallet'
-import { toOgns } from 'utils/ogn'
 
 const IMAGES_PATH = '../../assets/images/'
 
 class WalletModal extends Component {
+  constructor(props) {
+    super(props)
+
+    this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
+    this.handleFunding = this.handleFunding.bind(this)
+  }
+
+  handleDangerousCopy(privateKey) {
+    Alert.alert(
+      'Warning!',
+      'Copying your private key to the clipboard is dangerous. It could potentially be read by other malicious programs. Are you sure that you want to do this?',
+      [
+        { text: 'No, cancel!', onPress: () => console.log('Canceled private key copy') },
+        { text: 'Yes, I understand.', onPress: async () => {
+          await Clipboard.setString(privateKey)
+
+          Alert.alert('Copied to clipboard!')
+        }},
+      ],
+    )
+  }
+
+  handleFunding(currency) {
+    const apiHost = originWallet.getCurrentRemoteLocal()
+    const currentNetwork = getCurrentNetwork(apiHost)
+    const { address } = this.props.wallet
+
+    if (currency === 'ETH' && currentNetwork.custom) {
+      originWallet.giveMeEth('1')
+    } else {
+      Alert.alert(
+        'Funding',
+        `For now, you will need to transfer ${currency} into your Orign Wallet from another source.`,
+        [
+          { text: 'Show Address', onPress: () => {
+            Alert.alert('Wallet Address', evenlySplitAddress(address).join('\n'))
+          }},
+          { text: 'Copy Address', onPress: async () => {
+            await Clipboard.setString(address)
+
+            Alert.alert('Copied to clipboard!', evenlySplitAddress(address).join('\n'))
+          }},
+        ],
+      )
+    }
+  }
+
   render() {
     const { address, onPress, visible, wallet } = this.props
-    const { dai, eth, ogn } = wallet.balances
+    const { /*dai, */eth, ogn } = wallet.balances
 
     const ethBalance = web3.utils.fromWei(eth, 'ether')
     const ognBalance = toOgns(ogn)
@@ -53,7 +102,7 @@ class WalletModal extends Component {
               imageSource={currencies['eth'].icon}
               vertical={true}
               withAdd={true}
-              onPress={() => originWallet.giveMeEth('1')}
+              onPress={() => this.handleFunding('ETH')}
             />
             <Currency
               abbreviation={'OGN'}
@@ -62,8 +111,9 @@ class WalletModal extends Component {
               name={currencies['ogn'].name}
               imageSource={currencies['ogn'].icon}
               vertical={true}
-              onPress={() => Alert.alert('OGN can be earned by verifying your profile.')}
+              onPress={() => this.handleFunding('OGN')}
             />
+            {/*
             <Currency
               abbreviation={'DAI'}
               balance={dai}
@@ -71,8 +121,9 @@ class WalletModal extends Component {
               name={currencies['dai'].name}
               imageSource={currencies['dai'].icon}
               vertical={true}
-              onPress={() => Alert.alert('DAI can be purchased on an exchange and transferred into this wallet.')}
+              onPress={() => this.handleFunding('DAI')}
             />
+            */}
           </ScrollView>
           <View style={styles.buttonsContainer}>
             <OriginButton
@@ -89,11 +140,7 @@ class WalletModal extends Component {
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={'Copy Private Key'}
-              onPress={async () => {
-                await Clipboard.setString(privateKey)
-
-                Alert.alert('Copied to clipboard!')
-              }}
+              onPress={() => this.handleDangerousCopy(privateKey)}
             />
           </View>
         </SafeAreaView>

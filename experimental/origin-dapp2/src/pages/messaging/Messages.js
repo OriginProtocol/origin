@@ -10,17 +10,7 @@ import Room from './Room'
 import Avatar from 'components/Avatar'
 import QueryError from 'components/QueryError'
 
-function distanceToNow(timestamp) {
-  const now = new Date().getTime()
-  const diff = now / 1000 - timestamp
-  if (diff < 60) {
-    return '<1m'
-  } else if (diff < 3600) {
-    return `${Math.round(diff / 60)}m`
-  } else if (diff < 86400) {
-    return `${Math.round(diff / 3600)}h`
-  }
-}
+import distanceToNow from 'utils/distanceToNow'
 
 class Subject extends Component {
   render() {
