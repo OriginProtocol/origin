@@ -1,7 +1,14 @@
 const { DNS } = require('@google-cloud/dns')
 
 const dns = new DNS({ projectId: process.env.GCLOUD_PROJECT })
-const zone = dns.zone(process.env.GCLOUD_DNS_ZONE)
+const zone = dns.zone(process.env.GCLOUD_DNS_ZONE || 'test-zone')
+
+export const subdomainBlacklist = [
+  'admin',
+  'login',
+  'system',
+  'account'
+]
 
 /* Generates the DNS name of the CNAME and TXT entries.
  *

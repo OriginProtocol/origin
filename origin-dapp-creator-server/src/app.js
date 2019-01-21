@@ -15,7 +15,8 @@ import {
   getDnsRecord,
   parseDnsTxtRecord,
   setAllRecords,
-  updateTxtRecord,
+  subdomainBlacklist,
+  updateTxtRecord
 } from './lib/dns'
 import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './lib/ipfs'
 
@@ -41,6 +42,10 @@ app.post('/config', async (req, res, next) => {
     // Address from recover is checksummed so lower case it
     if (signer.toLowerCase() !== address.toLowerCase()) {
       return res.status(400).send('Signature was invalid')
+    }
+
+    if (subdomainBlacklist.includes(subdomain)) {
+      return res.status(400).send('Subdomain is not allowed')
     }
 
     try {
@@ -125,6 +130,10 @@ app.post('/config/preview', async (req, res) => {
 app.post('/validate/subdomain', async (req, res) => {
   const { subdomain, address } = req.body
 
+  if (subdomainBlacklist.includes(subdomain)) {
+    return res.status(400).send('Subdomain is not allowed')
+  }
+
   let existingRecord, existingConfigIpfsHash, existingConfig
 
   // TODO: DRY this up, it is duplicated
@@ -151,3 +160,5 @@ app.post('/validate/subdomain', async (req, res) => {
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
+
+module.exports = app
