@@ -65,9 +65,16 @@ class PhotoPicker extends Component {
     // form to render and be ready to handle the onChange event
     const { pictures } = this.state
     if (pictures) {
+      const retrieved = [];
+      const picsToRetrieve = pictures.filter((picture) => {
+        if (picture.match(/^http/)) return true
+        retrieved.push(picture)
+        return false
+      })
+      if (picsToRetrieve.length === 0) return this.props.onChange(retrieved)
       setTimeout(async () => {
-        const picDataURIs = await getDataURIsFromImgURLs(pictures)
-        this.props.onChange(picDataURIs)
+        const picDataURIs = await getDataURIsFromImgURLs(picsToRetrieve)
+        this.props.onChange([ ...picDataURIs, ...retrieved ])
       })
     }
   }
