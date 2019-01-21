@@ -196,10 +196,10 @@ class ListingCreate extends Component {
         this.handleCategorySelection(listing.category)
         this.renderDetailsForm(listing.schema)
         this.setState(prevState => ({
-          // formOriginalData : {
-          //   ...prevState.formListing.formData,
-          //   dappSchemaId : prevState.dappSchemaId.substring(prevState.dappSchemaId.lastIndexOf('/')+1)
-          // },
+          formOriginalData : {
+            ...prevState.formListing.formData,
+            dappSchemaId : prevState.dappSchemaId.substring(prevState.dappSchemaId.lastIndexOf('/')+1)
+          },
           step: this.STEP.DETAILS
         }));
       } catch (error) {
@@ -528,16 +528,63 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
-  const pictures = picURIsOnly(formData.pictures)
+    const localFormData = { ...formData }
 
+    if (this.state.formOriginalData) {
+      const changes = []
+      localFormData.dappSchemaId = localFormData.dappSchemaId.substring(localFormData.dappSchemaId.lastIndexOf('/') + 1)
+      const formOriginalData = this.state.formOriginalData
+      const deepCompare = (val, compare, parentNode = true) => {
+        // if current property is an array of same size, convert array to Object(JSON);
+        if (Array.isArray(val)) {
+          if (val.length !== compare.length) return false;
+          const localValue1 = { ...val }
+          const localValue2 = { ...compare }
+          return deepCompare(localValue1, localValue2, false)
+        }
+        // if current property is an Object,  check if keys length is equal, if not, return false,
+        // iterate over each property and check if val[key] is equal compare[key]
+        // isObject
+        if (typeof val === 'object' && !Array.isArray(val)) {
+          const valKeys = Object.keys(val)
+          let isEqual = true
+          for (let i = 0; i < valKeys.length; i++) {
+            const key = valKeys[i];
+            if (!deepCompare(val[key], compare[key], false)) {
+              isEqual = false
+              // if it is parentNode ( we might want to store only tree's parentNode to ensure we can retrieve that later on review session)
+              if (parentNode) {
+                changes.push({
+                  keyName: key,
+                  currentValue : val[key],
+                  originValue : compare[key]
+                })
+              }
+            }
+          }
+          return isEqual
+        } else {
+          //I'm not applying referenced comparision cause we just receive primitives (isObject side-effect) here and price has different typeof results.
+          return val == compare
+        }
+      }
+      if (!deepCompare(localFormData, formOriginalData)) {
+        this.setState({
+          originalForm : false,
+          formChanges : changes
+        })
+      }
+      else this.setState({ originalForm : true })
+      console.log(changes)
+    }
+
+    localFormData.pictures = picURIsOnly(formData.pictures)
+    //currently comming with domain before actual schema and validating schema.const when next step
+    localFormData.dappSchemaId = formData.dappSchemaId
     this.setState({
       formListing: {
         ...this.state.formListing,
-        formData: {
-          ...this.state.formListing.formData,
-          ...formData,
-          pictures
-        }
+        formData: localFormData
       }
     })
   }
@@ -1074,6 +1121,7 @@ class ListingCreate extends Component {
                       className="float-right btn btn-primary btn-listing-create"
                       ga-category="create_listing"
                       ga-label="details_step_continue"
+                      disabled={this.state.originalForm && this.state.originalForm}
                     >
                       <FormattedMessage
                         id={'continueButtonLabel'}
@@ -1532,6 +1580,7 @@ class ListingCreate extends Component {
                     onClick={() => this.onSubmitListing(formListing)}
                     ga-category="create_listing"
                     ga-label="review_step_done"
+                    disabled={this.state.originalForm && this.state.originalForm}
                   >
                     <FormattedMessage
                       id={'listing-create.doneButtonLabel'}
