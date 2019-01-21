@@ -5,6 +5,8 @@ import FinalizeOffer from './mutations/FinalizeOffer'
 import StarRating from 'components/StarRating'
 import Modal from 'components/Modal'
 
+import { mobileDevice } from 'utils/mobile'
+
 class TransactionProgress extends Component {
   constructor(props) {
     super(props)
@@ -14,6 +16,7 @@ class TransactionProgress extends Component {
 
   render() {
     const { offer, wallet } = this.props
+    const mobile = mobileDevice() ? 'mobile' : ''
 
     if (offer.status === 4) {
       return <Finalized />
@@ -24,19 +27,31 @@ class TransactionProgress extends Component {
           <Fragment>
             <WaitForFinalize offer={offer} openModal={() => this.setState({ open: true })} />
             {this.state.open && (
-              <Modal onClose={() => this.setState({ open: false })}>
-                <div className="d-flex">
-                  <h3>Fulfillment Checklist</h3>
-
-                  <ol type="1">
-                    <li>Verify the variants with the seller</li>
-                    <li>Package the product and send it out</li>
-                    <li>Notify buyer and provice tracking number</li>
-                    <li>Wait for buyer to receive product</li>
-                    <li>Withdraw your funds</li>
-                  </ol>
-                </div>
-                <div>
+              <Modal className={`fulfillment-modal ${mobile}`} onClose={() => this.setState({ open: false })}>
+                <div className="d-flex flex-column content">
+                  <div className="checklist">
+                    <h2>Fulfillment Checklist</h2>
+                    <div>
+                      <span className="number">1</span>
+                      <span>Verify the variants with the seller</span>
+                    </div>
+                    <div>
+                      <span className="number">2</span>
+                      <span>Package the product and send it out</span>
+                    </div>
+                    <div>
+                      <span className="number">3</span>
+                      <span>Notify buyer and provice tracking number</span>
+                    </div>
+                    <div>
+                      <span className="number">4</span>
+                      <span>Wait for buyer to receive product</span>
+                    </div>
+                    <div>
+                      <span className="number">5</span>
+                      <span>Withdraw your funds</span>
+                    </div>
+                  </div>
                   <button className="btn btn-outline-light">Ok</button>
                 </div>
               </Modal>
@@ -253,4 +268,34 @@ require('react-styl')(`
         &.bgl::after
           background-image: linear-gradient(to right, var(--greenblue), var(--greenblue) 50%, var(--pale-grey-two) 50%, var(--pale-grey-two))
 
+  .pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content
+    max-width: 580px
+
+  .fulfillment-modal
+    .content
+      height: 100%
+      text-align: left
+      line-height: 2.5
+      h2
+        text-align: center
+      .number
+        background: var(--dark)
+        color: var(--white)
+        min-width: 1.6rem
+        padding: 0.2rem 0.5rem
+        height: 1.6rem
+        border-radius: 2rem
+        line-height: 1.6rem
+        text-align: center
+        margin-right: 10px
+      .checklist
+        padding-bottom: 40px
+    &.mobile
+      padding: 1rem
+      .content
+        line-height: 1.5
+
+  .btn-outline-light
+    width: 50%
+    align-self: center
 `)
