@@ -13,7 +13,6 @@ class OriginEventSource {
     this.web3 = web3
     this.offerCache = {}
     this.listingCache = {}
-    this.arbitrator = arbitrator ? arbitrator.toLowerCase() : ZERO_ADDRESS
   }
 
   async getMarketplace() {

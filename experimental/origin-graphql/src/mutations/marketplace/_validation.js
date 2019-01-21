@@ -9,6 +9,7 @@ export async function validateNewOffer(listingId, data) {
     throw new Error(`Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`)
   }
 
+  const web3 = contracts.web3
   const depositAvailable = web3.utils.toBN(listing.depositAvailable)
   const offerCommission = data.commission
     ? web3.utils.toBN(data.commission)
