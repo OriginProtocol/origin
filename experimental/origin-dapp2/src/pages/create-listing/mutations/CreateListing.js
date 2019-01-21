@@ -61,9 +61,13 @@ class CreateListing extends Component {
     }
 
     this.setState({ waitFor: 'pending' })
+
     createListing({
       variables: {
-        deposit: listing.boost,
+        deposit:
+          this.props.tokenBalance >= Number(listing.boost)
+            ? listing.boost
+            : '0',
         depositManager: this.props.wallet,
         from: this.props.wallet,
         data: {
@@ -96,7 +100,9 @@ class CreateListing extends Component {
                 client.resetStore()
                 store.set('create-listing', undefined)
                 // TODO: Fix listing ID
-                this.setState({ redirect: `/listings/999-1-${event.returnValues.listingID}` })
+                this.setState({
+                  redirect: `/listings/999-1-${event.returnValues.listingID}`
+                })
               }}
               children="View Listing"
             />

@@ -7,6 +7,7 @@ import NotificationsSubscription from 'queries/NotificationsSubscription'
 
 import Dropdown from 'components/Dropdown'
 import Avatar from 'components/Avatar'
+import Link from 'components/Link'
 
 function subscribeToNewNotifications(subscribeToMore) {
   subscribeToMore({
@@ -81,7 +82,12 @@ class NotificationsDropdown extends Component {
         className="nav-item notifications"
         open={open}
         onClose={() => onClose()}
-        content={<NotificationsContent {...data.notifications} />}
+        content={
+          <NotificationsContent
+            {...data.notifications}
+            onClose={() => onClose()}
+          />
+        }
       >
         <a
           className="nav-link"
@@ -101,7 +107,7 @@ class NotificationsDropdown extends Component {
   }
 }
 
-const NotificationsContent = ({ totalCount, nodes }) => {
+const NotificationsContent = ({ totalCount, nodes, onClose }) => {
   const title = `Notification${totalCount === 1 ? '' : 's'}`
   return (
     <div className="dropdown-menu dropdown-menu-right show">
@@ -121,6 +127,9 @@ const NotificationsContent = ({ totalCount, nodes }) => {
           </div>
         </div>
       ))}
+      <Link to="/notifications" onClick={() => onClose()}>
+        View All
+      </Link>
     </div>
   )
 }
@@ -146,6 +155,14 @@ require('react-styl')(`
         text-align: center;
       .title
         margin-left: 1.1rem
+    .dropdown-menu
+      > a
+        background: var(--pale-grey-two)
+        font-size: 18px
+        text-align: center
+        padding: 0.5rem;
+        display: block;
+        border-radius: 0 0 5px 5px;
     .notification
       width: 540px
       background: var(--pale-grey-three)

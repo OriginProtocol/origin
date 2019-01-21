@@ -70,6 +70,8 @@ export default {
         status
         finalizes
         quantity
+        valid
+        validationError
         arbitrator {
           id
         }

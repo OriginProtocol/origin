@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, FlatList, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import { Alert, FlatList, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import Separator from 'components/separator'
 
-import networks from 'utils/networks'
+import networks, { getCurrentNetwork } from 'utils/networks'
 
 import originWallet from '../OriginWallet'
 
@@ -15,7 +15,7 @@ class SettingsScreen extends Component {
     super(props)
 
     this.handleChange = this.handleChange.bind(this)
-    // this.handleNetwork = this.handleNetwork.bind(this)
+    this.handleNetwork = this.handleNetwork.bind(this)
     this.state = {
       apiHost: originWallet.getCurrentRemoteLocal()
     }
@@ -30,114 +30,117 @@ class SettingsScreen extends Component {
     },
   }
 
-  // handleNetwork({ id, name }) {
-  //   const { networkId = 999 } = this.props
-
-  //   if (id === networkId) {
-  //     return
-  //   }
-
-  //   Alert.alert(`${name} is not yet supported.`)
-  // }
+  handleNetwork(network) {
+    this.setApiHost(network.url)
+  }
 
   handleChange(apiHost) {
     this.setState({ apiHost })
   }
 
-  async handleSubmit(e) {
+  async setApiHost(host) {
     try {
-      await originWallet.setRemoteLocal(e.nativeEvent.text)
+      await originWallet.setRemoteLocal(host)
 
       Alert.alert('Linking server host changed!')
     } catch(error) {
       Alert.alert('Linking server host change failed!')
-
       console.error(error)
     }
+    
+    this.setState({apiHost: originWallet.getCurrentRemoteLocal()})
+  }
+
+  handleSubmit(e) {
+    this.setApiHost(e.nativeEvent.text)
   }
 
   render() {
-    const { networkId = 999, user } = this.props
+    const { user } = this.props
+    const { apiHost } = this.state
+    const currentNetwork = getCurrentNetwork(apiHost)
+    const isCustom = currentNetwork.custom
 
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.heading}>GENERAL</Text>
-        </View>
-        <TouchableHighlight onPress={() => this.props.navigation.navigate('Devices')}>
-          <View style={styles.item}>
-            <Text style={styles.text}>Devices</Text>
-            <View style={styles.iconContainer}>
-              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
-            </View>
+      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
+        <ScrollView contentContainerStyle={styles.content} style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.heading}>GENERAL</Text>
           </View>
-        </TouchableHighlight>
-        <Separator padded={true} />
-        <TouchableHighlight onPress={() => this.props.navigation.navigate('Profile', { user })}>
-          <View style={styles.item}>
-            <Text style={styles.text}>Profile</Text>
-            <View style={styles.iconContainer}>
-              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
-            </View>
-          </View>
-        </TouchableHighlight>
-        {originWallet.isLocalApi() &&
-          <Fragment>
-            <View style={styles.header}>
-              <Text style={styles.heading}>LINKING SERVER HOST</Text>
-            </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={this.handleChange}
-              onSubmitEditing={this.handleSubmit}
-              value={this.state.apiHost}
-              style={styles.input}
-            />
-          </Fragment>
-        }
-        {originWallet.isLocalApi() &&
-          <Fragment>
-              <View style={styles.header}>
-                <Text style={styles.heading}>SET PRIVATE KEY</Text>
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('Devices')}>
+            <View style={styles.item}>
+              <Text style={styles.text}>Devices</Text>
+              <View style={styles.iconContainer}>
+                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
               </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              onSubmitEditing={async (e) => { if (await originWallet.setPrivateKey(e.nativeEvent.text)) {
-                  Alert.alert('A new private key has been set!')
-                }}}
-              onChangeText={(inputPrivateKey) => this.setState({inputPrivateKey})}
-              value={this.state.inputPrivateKey}
-              style={styles.input}
-            />
-          </Fragment>
-          /* Don't offer toggleable networks yet
-
-            networks.map((n, i) => (
-              <Fragment key={n.id}>
-                <TouchableHighlight onPress={() => this.handleNetwork(n)}>
-                  <View style={styles.item}>
-                    <Text style={styles.text}>{n.name}</Text>
-                    <View style={styles.iconContainer}>
-                      {n.id === networkId &&
-                        <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
-                      }
-                      {n.id !== networkId &&
-                        <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
-                      }
-                    </View>
+            </View>
+          </TouchableHighlight>
+          <Separator padded={true} />
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('Profile', { user })}>
+            <View style={styles.item}>
+              <Text style={styles.text}>Profile</Text>
+              <View style={styles.iconContainer}>
+                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+              </View>
+            </View>
+          </TouchableHighlight>
+          <View style={styles.header}>
+            <Text style={styles.heading}>NETWORK</Text>
+          </View>
+          {networks.map((n, i) => (
+            <Fragment key={n.id}>
+              <TouchableHighlight onPress={() => this.handleNetwork(n)}>
+                <View style={styles.item}>
+                  <Text style={styles.text}>{n.name}</Text>
+                  <View style={styles.iconContainer}>
+                    {n === currentNetwork &&
+                      <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.image} />
+                    }
+                    {n !== currentNetwork &&
+                      <Image source={require(`${IMAGES_PATH}deselected.png`)} style={styles.image} />
+                    }
                   </View>
-                </TouchableHighlight>
-                {(i + 1) < networks.length &&
-                  <Separator padded={true} />
-                }
-              </Fragment>
-            ))
-
-          */
-        }
-      </View>
+                </View>
+              </TouchableHighlight>
+              {(i + 1) < networks.length &&
+                <Separator padded={true} />
+              }
+            </Fragment>
+          ))}
+          {isCustom &&
+            <Fragment>
+              <View style={styles.header}>
+                <Text style={styles.heading}>LINKING SERVER HOST</Text>
+              </View>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                onChangeText={this.handleChange}
+                onSubmitEditing={e =>this.handleSubmit(e)}
+                value={this.state.apiHost}
+                style={styles.input}
+              />
+            </Fragment>
+          }
+          {isCustom &&
+            <Fragment>
+              <View style={styles.header}>
+                <Text style={styles.heading}>PRIVATE KEY</Text>
+              </View>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                onSubmitEditing={async (e) => { if (await originWallet.setPrivateKey(e.nativeEvent.text)) {
+                    Alert.alert('A new private key has been set!')
+                  }}}
+                onChangeText={(inputPrivateKey) => this.setState({inputPrivateKey})}
+                value={this.state.inputPrivateKey}
+                style={styles.input}
+              />
+            </Fragment>
+          }
+        </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -154,6 +157,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f7f8f8',
     flex: 1,
+  },
+  content: {
+    paddingBottom: 20,
   },
   header: {
     paddingBottom: 5,
@@ -185,6 +191,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 20,
     paddingVertical: '5%',
+  },
+  keyboardWrapper: {
+    flex: 1,
   },
   text: {
     flex: 1,

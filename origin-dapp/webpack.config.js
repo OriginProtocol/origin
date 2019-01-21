@@ -16,6 +16,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 const env = {
   ARBITRATOR_ACCOUNT: null,
   AFFILIATE_ACCOUNT: null,
+  ATTESTATION_ACCOUNT: null,
   BLOCK_EPOCH: 0,
   BRIDGE_SERVER_DOMAIN: 'bridge.originprotocol.com',
   BRIDGE_SERVER_PROTOCOL: 'https',
@@ -36,6 +37,7 @@ const env = {
   IPFS_SWARM: 'None',
   MESSAGING_ACCOUNT: null,
   MESSAGING_NAMESPACE: null,
+  MESSAGING_API_URL: null,
   MAINNET_DAPP_BASEURL: 'https://dapp.originprotocol.com',
   NOTIFICATIONS_KEY: null,
   NOTIFICATIONS_URL: 'https://notifications.originprotocol.com',

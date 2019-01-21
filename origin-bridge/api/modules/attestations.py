@@ -1,8 +1,65 @@
 from flask import request
 from flask_restful import Resource
-from marshmallow import fields
+from marshmallow import Schema, fields
 from logic.attestation_service import VerificationService
 from api.helpers import StandardRequest, StandardResponse, handle_request
+
+
+class PubAuditableUrl(Schema):
+    challenge = fields.Str()
+    proofUrl = fields.Str()
+
+
+class VerificationMethod(Schema):
+    oAuth = fields.Boolean()
+    sms = fields.Boolean()
+    call = fields.Boolean()
+    email = fields.Boolean()
+    mail = fields.Boolean()
+    human = fields.Boolean()
+    pubAuditableUrl = fields.Nested(PubAuditableUrl)
+
+
+class Hash(Schema):
+    function = fields.Str()
+    value = fields.Str()
+
+
+class Attribute(Schema):
+    raw = fields.Str()
+    verified = fields.Boolean()
+    hash = fields.Nested(Hash)
+
+
+class Site(Schema):
+    siteName = fields.Str()
+    userId = fields.Nested(Attribute)
+    username = fields.Nested(Attribute)
+    profileUrl = fields.Nested(Attribute)
+
+
+class Attestation(Schema):
+    verificationMethod = fields.Nested(VerificationMethod)
+    email = fields.Nested(Attribute)
+    phone = fields.Nested(Attribute)
+    site = fields.Nested(Site)
+
+
+class Issuer(Schema):
+    name = fields.Str()
+    url = fields.Str()
+    ethAddress = fields.Str()
+
+
+class AttestationData(Schema):
+    issuer = fields.Nested(Issuer)
+    issueDate = fields.Str()
+    attestation = fields.Nested(Attestation)
+
+
+class Signature(Schema):
+    bytes = fields.Str()
+    version = fields.Str()
 
 
 class PhoneVerificationCodeRequest(StandardRequest):
@@ -24,9 +81,9 @@ class VerifyPhoneRequest(StandardRequest):
 
 
 class VerifyPhoneResponse(StandardResponse):
-    signature = fields.Str()
-    claim_type = fields.Integer(data_key='claim-type')
-    data = fields.Str(required=True)
+    schemaId = fields.Str(required=True)
+    data = fields.Nested(AttestationData, required=True)
+    signature = fields.Nested(Signature, required=True)
 
 
 class EmailVerificationCodeRequest(StandardRequest):
@@ -44,9 +101,9 @@ class VerifyEmailRequest(StandardRequest):
 
 
 class VerifyEmailResponse(StandardResponse):
-    signature = fields.Str()
-    claim_type = fields.Integer(data_key='claim-type')
-    data = fields.Str()
+    schemaId = fields.Str(required=True)
+    data = fields.Nested(AttestationData, required=True)
+    signature = fields.Nested(Signature, required=True)
 
 
 class FacebookAuthUrlRequest(StandardRequest):
@@ -63,9 +120,9 @@ class VerifyFacebookRequest(StandardRequest):
 
 
 class VerifyFacebookResponse(StandardResponse):
-    signature = fields.Str()
-    claim_type = fields.Integer(data_key='claim-type')
-    data = fields.Str()
+    schemaId = fields.Str(required=True)
+    data = fields.Nested(AttestationData, required=True)
+    signature = fields.Nested(Signature, required=True)
 
 
 class TwitterAuthUrlRequest(StandardRequest):
@@ -82,9 +139,9 @@ class VerifyTwitterRequest(StandardRequest):
 
 
 class VerifyTwitterResponse(StandardResponse):
-    signature = fields.Str()
-    claim_type = fields.Integer(data_key='claim-type')
-    data = fields.Str()
+    schemaId = fields.Str(required=True)
+    data = fields.Nested(AttestationData, required=True)
+    signature = fields.Nested(Signature, required=True)
 
 
 class AirbnbRequest(StandardRequest):
@@ -97,9 +154,9 @@ class AirbnbVerificationCodeResponse(StandardResponse):
 
 
 class VerifyAirbnbResponse(StandardResponse):
-    signature = fields.Str()
-    claim_type = fields.Integer(data_key='claim-type')
-    data = fields.Str()
+    schemaId = fields.Str(required=True)
+    data = fields.Nested(AttestationData, required=True)
+    signature = fields.Nested(Signature, required=True)
 
 
 class PhoneVerificationCode(Resource):
