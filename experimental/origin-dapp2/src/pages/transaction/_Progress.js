@@ -1,35 +1,68 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 import AcceptOffer from './mutations/AcceptOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
 import StarRating from 'components/StarRating'
+import Modal from 'components/Modal'
 
-const TransactionProgress = ({ offer, wallet }) => {
-  if (offer.status === 4) {
-    return <Finalized />
+class TransactionProgress extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { open: false }
   }
-  if (offer.listing.seller.id === wallet) {
-    if (offer.status === 2) {
-      return <WaitForFinalize offer={offer} />
-    } else {
-      return <AcceptOrReject offer={offer} />
+
+  render() {
+    const { offer, wallet } = this.props
+
+    if (offer.status === 4) {
+      return <Finalized />
     }
-  }
-  if (offer.status === 2) {
-    return <ReviewAndFinalize offer={offer} />
-  } else {
-    return <MessageSeller />
+    if (offer.listing.seller.id === wallet) {
+      if (offer.status === 2) {
+        return (
+          <Fragment>
+            <WaitForFinalize offer={offer} openModal={() => this.setState({ open: true })} />
+            {this.state.open && (
+              <Modal onClose={() => this.setState({ open: false })}>
+                <div className="d-flex">
+                  <h3>Fulfillment Checklist</h3>
+
+                  <ol type="1">
+                    <li>Verify the variants with the seller</li>
+                    <li>Package the product and send it out</li>
+                    <li>Notify buyer and provice tracking number</li>
+                    <li>Wait for buyer to receive product</li>
+                    <li>Withdraw your funds</li>
+                  </ol>
+                </div>
+                <div>
+                  <button className="btn btn-outline-light">Ok</button>
+                </div>
+              </Modal>
+            )}
+          </Fragment>
+        )
+      } else {
+        return <AcceptOrReject offer={offer} />
+      }
+    }
+    if (offer.status === 2) {
+      return <ReviewAndFinalize offer={offer} />
+    } else {
+      return <MessageSeller />
+    }
   }
 }
 
-const WaitForFinalize = () => (
+const WaitForFinalize = ({ openModal }) => (
   <div className="transaction-progress">
     <h4>Next Step:</h4>
     <div className="next-step">Wait for buyer to confirm receipt</div>
     <div className="help">
       Make sure you fulfill the order and wait for the buyer’s confirmation
     </div>
-    <button className="btn btn-link">
+    <button className="btn btn-link" onClick={() => openModal(true)}>
       View Fulfillment Checklist &rsaquo;
     </button>
     <div className="stages">
