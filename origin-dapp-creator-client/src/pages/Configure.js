@@ -19,14 +19,19 @@ class Configure extends React.Component {
   }
 
   toggleFilterByOwn (event) {
-    this.setState({
-      config: {
-        ...this.state.config,
-        listingFilters: {
+    const newConfig = {
+      ...this.state.config,
+      filters: {
+        ...this.state.config.filters,
+        listings: {
+          ...this.state.config.filters.listings,
           marketplacePublisher: event.target.checked ? web3.eth.accounts[0] : null
         }
       }
-    })
+    }
+
+    this.setState({ config: newConfig })
+    this.props.onChange(newConfig)
   }
 
   async handleSubmit (event) {

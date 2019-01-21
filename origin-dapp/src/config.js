@@ -54,5 +54,8 @@ export const baseConfig = {
     boostPremium: 'var(--golden-rod',
     // Misc
     defaultRadius: '5px'
+  },
+  filters: {
+    listings: {}
   }
 }
