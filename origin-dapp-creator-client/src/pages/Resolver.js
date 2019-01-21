@@ -1,31 +1,58 @@
+'use strict'
+
 import React from 'react'
 import superagent from 'superagent'
+
+import Redirect from 'components/Redirect'
 
 class Resolver extends React.Component {
   constructor(props) {
     super(props)
 
-    setTimeout(() => {
-      this.checkDnsPropagation()
-    }, 100)
+    this.state = {
+      redirect: null
+    }
 
     this.checkDnsPropagation = this.checkDnsPropagation.bind(this)
+    this.redirectToSuccess = this.redirectToSuccess.bind(this)
+  }
+
+  componentWillMount() {
+    this.timer = setInterval(() => {
+      this.checkDnsPropagation()
+    }, 5000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer)
   }
 
   async checkDnsPropagation() {
     const response = await superagent
-      .get(`https://${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`)
+      .get(`http://${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`)
       .then((response) => {
-        console.log('DNS propagation complete')
+        this.redirectToSuccess()
       })
       .catch((error) => {
-        console.log('DNS propagation incomplete')
+        if (error.crossDomain) {
+          // CORS error means DNS has propagated
+          this.redirectToSuccess()
+        } else {
+          console.log('DNS propagation incomplete')
+        }
       })
+  }
+
+  async redirectToSuccess() {
+    this.setState({
+      redirect: '/success'
+    })
   }
 
   render () {
     return (
       <div className="resolver">
+        {this.renderRedirect()}
         <div>
           <img src="images/spinner-animation-dark.svg" />
           <h1>Setting up your marketplace...</h1>
@@ -33,6 +60,12 @@ class Resolver extends React.Component {
         </div>
       </div>
     )
+  }
+
+  renderRedirect () {
+    if (this.state.redirect !== null) {
+      return <Redirect to={this.state.redirect} />
+    }
   }
 }
 

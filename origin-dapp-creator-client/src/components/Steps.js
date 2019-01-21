@@ -32,6 +32,9 @@ class Steps extends React.Component {
           path: '/metamask',
         },
         {
+          path: '/resolver',
+        },
+        {
           path: '/success',
         }
        ]
