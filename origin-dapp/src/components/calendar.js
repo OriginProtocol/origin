@@ -5,9 +5,7 @@ import moment from 'moment-timezone'
 import uuid from 'uuid/v1'
 import { 
   generateCalendarSlots,
-  checkSlotForExistingEvents,
   renderHourlyPrices,
-  updateOriginalEvent,
   getSlotsForDateChange,
   getDateDropdownOptions,
   getRecurringEvents,
@@ -15,7 +13,6 @@ import {
   getCleanEvents,
   getDateAvailabilityAndPrice,
   generateSlotStartEnd,
-  doAllEventsRecur,
   isDateSelected
 } from 'utils/calendarHelpers'
 

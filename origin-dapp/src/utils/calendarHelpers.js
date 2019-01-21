@@ -123,24 +123,6 @@ export function renderHourlyPrices(viewType) {
   }
 }
 
-// Moves user's event edits from a cloned recurring event to the original event
-// in preparation to save the original event
-export function updateOriginalEvent(selectedEvent, events) {
-  return events.map((eventObj) => {
-    if (eventObj.id === selectedEvent.originalEventId) {
-      const { start, end, isAvailable, price, isRecurringEvent } = selectedEvent
-      Object.assign(eventObj, {
-        start,
-        end,
-        isAvailable,
-        price,
-        isRecurringEvent
-      })
-    }
-    return eventObj
-  })
-}
-
 // Re-calculates slots after the date is changed via the dropdown menus
 export function getSlotsForDateChange(selectedEvent, whichDropdown, value, viewType) {
   const startDate = whichDropdown === 'start' ? new Date(value) : new Date(selectedEvent.start)
