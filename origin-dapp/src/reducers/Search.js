@@ -44,6 +44,24 @@ export default function Transactions(state = initialState, action = {}) {
       filters: {}
     }
 
+  // set a selected listing type and also trigger search
+  case SearchConstants.SELECT_LISTING_TYPE:
+    return {
+      ...state,
+      filters: {},
+      query: '',
+      listingType: action.listingType,
+      generalSearchId: state.generalSearchId + 1
+    }
+
+  case SearchConstants.RESET_SEARCH_STATE:
+    return {
+      ...state,
+      filters: {},
+      query: undefined,
+      listingType: listingSchemaMetadata.listingTypeAll
+    }
+
   default:
     return state
   }
