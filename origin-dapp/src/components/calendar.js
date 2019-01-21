@@ -270,27 +270,9 @@ class Calendar extends Component {
       events: [
         ...filteredEvents,
         ...newEvents
-      ]
+      ],
+      showSellerActionBtns: false
     })
-
-    // const thisEvent = (selectedEvent && selectedEvent.id) ? selectedEvent : this.state.selectedEvent
-
-    // const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
-    // const stateToSet = {
-    //   events: [...allOtherEvents, thisEvent],
-    //   showSellerActionBtns: false
-    // }
-
-    // if (thisEvent.isClonedRecurringEvent) {
-    //   stateToSet.events = updateOriginalEvent(thisEvent, this.state.events)
-    // }
-
-    // this.setState(stateToSet)
-
-    // // wait for state to update, then render recurring events on monthly calendar if recurring events checkbox is checked
-    // setTimeout(() => {
-    //   this.renderRecurringEvents(this.state.calendarDate)
-    // })
   }
 
   cancelEvent() {
@@ -324,12 +306,7 @@ class Calendar extends Component {
 
     this.setState({ selectedEvent })
 
-    if (this.props.userType === 'seller') {
-      setTimeout(() => {
-        this.saveEvent(this.state.selectedEvent)
-      })
-    } else {
-      // user is buyer
+    if (this.props.userType === 'buyer') {
       setTimeout(() => {
         this.onSelectSlot(this.state.selectedEvent)
       })
