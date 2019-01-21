@@ -51,10 +51,12 @@ export function getListingIds() {
       const config = getState().config
 
       let filters = []
-      if (config.listingFilters && config.listingFilters.marketplacePublisher) {
+      if (config.filters &&
+          config.filters.listings &&
+          config.filters.listings.marketplacePublisher) {
         filters.push({
           name: 'marketplacePublisher',
-          value: config.listingFilters.marketplacePublisher,
+          value: config.filters.listings.marketplacePublisher,
           valueType: 'STRING',
           operator: 'EQUALS'
         })
