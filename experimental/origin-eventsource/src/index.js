@@ -11,6 +11,8 @@ class OriginEventSource {
     this.ipfsGateway = ipfsGateway
     this.contract = marketplaceContract
     this.web3 = web3
+    this.offerCache = {}
+    this.listingCache = {}
   }
 
   async getMarketplace() {
@@ -20,6 +22,11 @@ class OriginEventSource {
   }
 
   async getListing(listingId, blockNumber) {
+    const id = `${listingId}-${blockNumber}`
+    if (this.listingCache[id]) {
+      return this.listingCache[id]
+    }
+
     let listing,
       seller,
       ipfsHash,
@@ -88,7 +95,7 @@ class OriginEventSource {
     }
 
     const type = 'unit'
-    return this.withOffers(listingId, {
+    this.listingCache[id] = this.withOffers(listingId, {
       id: `999-1-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
@@ -104,6 +111,8 @@ class OriginEventSource {
       commissionPerUnit: listing.commissionPerUnit,
       ...data
     })
+
+    return this.listingCache[id]
   }
 
   // Returns a listing with offers and any fields that are computed from the
@@ -138,11 +147,14 @@ class OriginEventSource {
         }
       })
     }
+    depositAvailable = !depositAvailable.isNeg()
+      ? depositAvailable.toString()
+      : '0'
     return Object.assign({}, listing, {
       allOffers,
       unitsAvailable,
       unitsSold: listing.unitsTotal - unitsAvailable,
-      depositAvailable: depositAvailable.toString()
+      depositAvailable: depositAvailable
     })
   }
 
@@ -151,12 +163,16 @@ class OriginEventSource {
   }
 
   async _getOffer(listing, listingId, offerId) {
+    const id = `${listingId}-${offerId}`
+    if (this.offerCache[id]) {
+      return this.offerCache[id]
+    }
+
     let blockNumber, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
     const events = await this.contract.eventCache.offers(
       listingId,
       Number(offerId)
     )
-
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -174,10 +190,10 @@ class OriginEventSource {
       }
     })
 
-    if (lastEvent.event === 'OfferWithdrawn') {
+    if (lastEvent && lastEvent.event === 'OfferWithdrawn') {
       status = 0
       withdrawnBy = { id: lastEvent.returnValues.party }
-    } else if (lastEvent.event === 'OfferRuling') {
+    } else if (lastEvent && lastEvent.event === 'OfferRuling') {
       status = 5
     }
 
@@ -222,6 +238,7 @@ class OriginEventSource {
       offerObj.validationError = e.message
     }
 
+    this.offerCache[id] = offerObj
     return offerObj
   }
 
@@ -236,33 +253,26 @@ class OriginEventSource {
       throw new Error('Invalid offer: currency does not match listing')
     }
 
-    // TODO: uncomment when we create new listings, including demo listings,
-    //  with affiliates and arbitrators
-    /*
-    const offerArbitrator = offer.arbitrator
-      && offer.arbitrator.id
-      && offer.arbitrator.id.toLowerCase()
-    const listingArbitrator = listing.arbitrator
-      && listing.arbitrator.id
-      && listing.arbitrator.id.toLowerCase()
-    if (offerArbitrator !== listingArbitrator) {
-      throw new Error(
-        `Arbitrator: offer ${offerArbitrator} !== listing ${listingArbitrator}`
-      )
+    const offerArbitrator = offer.arbitrator && offer.arbitrator.id.toLowerCase()
+    if (!offerArbitrator || offerArbitrator === ZERO_ADDRESS) {
+      throw new Error('No arbitrator set')
     }
 
+    const affiliateWhitelistDisabled = await this.contract.methods
+      .allowedAffiliates(this.contract._address)
+      .call()
     const offerAffiliate = offer.affiliate
-      && offer.affiliate.id
-      && offer.affiliate.id.toLowerCase()
-    const listingAffiliate = listing.affiliate
-      && listing.affiliate.id
-      && listing.affiliate.id.toLowerCase()
-    if (offerAffiliate !== listingAffiliate) {
+      ? offer.affiliate.id.toLowerCase()
+      : ZERO_ADDRESS
+    const affiliateAlowed = affiliateWhitelistDisabled ||
+      await this.contract.methods
+        .allowedAffiliates(offer.offerAffiliate)
+        .call()
+    if (!affiliateAlowed) {
       throw new Error(
-        `Affiliate: offer ${offerAffiliate} !== listing ${listingAffiliate}`
+        `Offer affiliate ${offerAffiliate} not whitelisted`
       )
     }
-    */
 
     if (listing.type !== 'unit') {
       // TODO: validate fractional offers
@@ -293,6 +303,11 @@ class OriginEventSource {
       review: data.text,
       rating: data.rating
     }
+  }
+
+  resetCache() {
+    this.offerCache = {}
+    this.listingCache = {}
   }
 }
 

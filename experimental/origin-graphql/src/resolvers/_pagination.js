@@ -21,7 +21,7 @@ function bota(input) {
 }
 
 function convertCursorToOffset(cursor) {
-  return parseInt(atob(cursor))
+  return atob(cursor)
 }
 
 function atob(input) {
