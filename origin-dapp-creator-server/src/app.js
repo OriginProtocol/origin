@@ -3,6 +3,7 @@ require('@babel/polyfill')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
+const Raven = require('raven')
 
 const app = express()
 const port = process.env.PORT || 4321
@@ -11,6 +12,11 @@ import { setAllRecords, updateTxtRecord } from './lib/dns'
 import { addConfigToIpfs, ipfsClient } from './lib/ipfs'
 import { validateSubdomain, validateSignature } from './middleware'
 import logger from './logger'
+
+// Configure Sentry
+if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN) {
+  Raven.config(process.env.SENTRY_DSN).install()
+}
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
