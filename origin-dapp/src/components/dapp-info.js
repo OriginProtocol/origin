@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import origin from '../services/origin'
 
 class DappInfo extends Component {
@@ -62,7 +62,7 @@ class DappInfo extends Component {
     }
 
     return (
-      <React.Fragment>
+      <Fragment>
         <tr>
           <td>Contract Address</td>
           <td>{token._address}</td>
@@ -95,7 +95,7 @@ class DappInfo extends Component {
           <td>Transactor Whitelist</td>
           <td>{whitelistStatus}</td>
         </tr>
-      </React.Fragment>
+      </Fragment>
     )
   }
 
@@ -340,6 +340,10 @@ class DappInfo extends Component {
                 <tr>
                   <td>RINKEBY_DAPP_BASEURL</td>
                   <td>{process.env.RINKEBY_DAPP_BASEURL}</td>
+                </tr>
+                <tr>
+                  <td>SHOW_WALLET_LINKER</td>
+                  <td>{process.env.SHOW_WALLET_LINKER}</td>
                 </tr>
                 <tr>
                   <td>WALLET_LANDING_URL</td>
