@@ -3,7 +3,6 @@ import { baseConfig } from 'origin-dapp/src/config'
 import React from 'react'
 import superagent from 'superagent'
 
-import { AppToaster } from '../toaster'
 import Create from 'pages/Create'
 import Customize from 'pages/Customize'
 import Configure from 'pages/Configure'

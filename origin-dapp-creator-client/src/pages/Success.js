@@ -19,7 +19,7 @@ class Success extends React.Component {
       <div className="success">
         <img src="images/celebration-icon.svg" />
         <h1>Congratulations!</h1>
-        <h4>You've finished setting up your marketplace.</h4>
+        <h4>You&apos;ve finished setting up your marketplace.</h4>
         <button className="btn btn-primary btn-lg"
             onClick={this.openMarketplace}>
           Great, thanks!

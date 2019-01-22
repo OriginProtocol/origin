@@ -45,7 +45,7 @@ class ImagePicker extends React.Component {
         const body = new FormData()
         body.append('file', file)
 
-        const response = await superagent
+        await superagent
           .post(`${process.env.IPFS_API_URL}/api/v0/add`)
           .send(body)
           .then((response) => {
@@ -102,7 +102,10 @@ class ImagePicker extends React.Component {
             <div className="upload-wrapper">
               <img src="images/upload-icon.svg" />
               <p className="title">{this.props.title}</p>
-              <p>{this.props.description.map((x, i) => <span key={i}>{x}</span>)}</p>
+              <p>
+                Recommended Size: <br/>
+                {this.props.recommendedSize}
+              </p>
             </div>
             <label htmlFor={this.props.name + '-picker'}
                 className="btn btn-outline-primary"

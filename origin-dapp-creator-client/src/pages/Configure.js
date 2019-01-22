@@ -5,7 +5,7 @@ import React from 'react'
 import Redirect from 'components/Redirect'
 
 class Configure extends React.Component {
-  constructor(props, context) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -33,7 +33,7 @@ class Configure extends React.Component {
     this.props.onChange(newConfig)
   }
 
-  async handleSubmit (event) {
+  async handleSubmit () {
     this.setState({
       redirect: '/metamask'
     })

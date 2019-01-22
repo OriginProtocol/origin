@@ -8,7 +8,7 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import Redirect from 'components/Redirect'
 
 class Create extends React.Component {
-  constructor(props, context) {
+  constructor(props) {
     super(props)
 
     this.state = {

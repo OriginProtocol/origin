@@ -4,8 +4,6 @@ import React from 'react'
 import superagent from 'superagent'
 import { baseConfig } from 'origin-dapp/src/config'
 
-import { AppToaster } from '../toaster'
-import { formInput, formFeedback } from 'utils/formHelpers'
 import ColorPicker from 'components/ColorPicker'
 import ImagePicker from 'components/ImagePicker'
 import Preview from 'components/Preview'
@@ -13,7 +11,7 @@ import Redirect from 'components/Redirect'
 import ThemePicker from 'components/ThemePicker'
 
 class Customize extends React.Component {
-  constructor(props, context) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -51,7 +49,7 @@ class Customize extends React.Component {
     this.onThemeClick = this.onThemeClick.bind(this)
   }
 
-  async handleSubmit (event) {
+  async handleSubmit () {
     this.props.onChange(this.state.config)
     this.setState({ redirect: '/configure' })
   }
@@ -126,14 +124,11 @@ class Customize extends React.Component {
   }
 
   render () {
-    const input = formInput(this.state, state => this.setState(state))
-    const Feedback = formFeedback(this.state)
-
     return (
       <form onSubmit={this.handleSubmit}>
         {this.renderRedirect()}
 
-        <h1>Customize your Marketplace's Appearance</h1>
+        <h1>Customize your Marketplace&apos;s Appearance</h1>
         <h4>Choose a logo and colors for your marketplace below.</h4>
 
         <div className="form-group">
@@ -141,14 +136,14 @@ class Customize extends React.Component {
             <div className="col-6">
               <ImagePicker title="Marketplace Logo"
                 name="logoUrl"
-                description={["Recommended Size:", <br/>,  "300px x 100px"]}
+                recommendedSize={'300px x 100px'}
                 onUpload={this.handleFileUpload} />
             </div>
 
             <div className="col-6">
               <ImagePicker title="Marketplace Favicon"
                 name="faviconUrl"
-                description={["Recommended Size:", <br/>,  "16px x 16px"]}
+                recommendedSize={'16px x 16px'}
                 onUpload={this.handleFileUpload} />
             </div>
           </div>
