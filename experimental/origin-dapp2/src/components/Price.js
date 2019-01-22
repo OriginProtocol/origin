@@ -16,7 +16,7 @@ class Price extends Component {
     const { amount, className, el } = this.props
     if (!amount) {
       if (el === 'input') {
-        return <input value="" className={className} />
+        return <input value="" className={className} readOnly />
       }
       return <span>&nbsp;</span>
     }
