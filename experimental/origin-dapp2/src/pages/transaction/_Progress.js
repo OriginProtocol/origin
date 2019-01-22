@@ -5,8 +5,6 @@ import FinalizeOffer from './mutations/FinalizeOffer'
 import StarRating from 'components/StarRating'
 import Modal from 'components/Modal'
 
-import { mobileDevice } from 'utils/mobile'
-
 class TransactionProgress extends Component {
   constructor(props) {
     super(props)
@@ -16,7 +14,6 @@ class TransactionProgress extends Component {
 
   render() {
     const { offer, wallet } = this.props
-    const mobile = mobileDevice() ? 'mobile' : ''
 
     if (offer.status === 4) {
       return <Finalized />
@@ -28,7 +25,7 @@ class TransactionProgress extends Component {
             <WaitForFinalize offer={offer} openModal={() => this.setState({ open: true })}/>
             {this.state.open && (
               <Modal
-                className={`fulfillment-modal ${mobile}`}
+                className="fulfillment-modal"
                 onClose={() => this.setState({ open: false, shouldClose: false })}
                 shouldClose={this.state.shouldClose}
               >
@@ -301,12 +298,14 @@ require('react-styl')(`
           &.text
             display: table-cell
             padding-left: 10px
-    &.mobile
-      padding: 1rem
-      .content
-        line-height: 2
 
   .btn-outline-light
     width: 50%
     align-self: center
+
+    @media (max-width: 576px)
+      .fulfillment-modal
+        padding: 1rem
+        .content
+          line-height: 2
 `)
