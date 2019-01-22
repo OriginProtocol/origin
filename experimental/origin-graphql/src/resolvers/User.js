@@ -4,6 +4,7 @@ import sortBy from 'lodash/sortBy'
 import contracts from '../contracts'
 import { listingsBySeller } from './marketplace/listings'
 import { getIdsForPage, getConnection } from './_pagination'
+import { transactions } from './web3/transactions'
 
 const ec = () => contracts.marketplace.eventCache
 
@@ -160,6 +161,7 @@ export default {
   sales,
   reviews,
   notifications,
+  transactions,
   listings: listingsBySeller,
   firstEvent: async user => {
     if (user.firstEvent) return user.firstEvent
