@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 
 import AcceptOffer from './mutations/AcceptOffer'
+import RejectOffer from './mutations/RejectOffer'
+import WithdrawOffer from './mutations/WithdrawOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
 import StarRating from 'components/StarRating'
 
@@ -13,14 +15,26 @@ const TransactionProgress = ({ offer, wallet }) => {
   if (offer.listing.seller.id === wallet) {
     if (offer.status === 2) {
       return <WaitForFinalize offer={offer} />
+    } else if (offer.status === 0) {
+      if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
+        return <OfferRejected party="seller" />
+      } else {
+        return <OfferWithdrawn party="seller" />
+      }
     } else {
       return <AcceptOrReject offer={offer} />
     }
   }
   if (offer.status === 2) {
     return <ReviewAndFinalize offer={offer} />
+  } else if (offer.status === 0) {
+    if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
+      return <OfferRejected party="buyer" />
+    } else {
+      return <OfferWithdrawn party="buyer" />
+    }
   } else {
-    return <MessageSeller />
+    return <MessageSeller offer={offer} />
   }
 }
 
@@ -30,7 +44,9 @@ const AcceptOrReject = ({ offer }) => (
     <div className="next-step">Accept or Reject Offer</div>
     <div className="help">Click the appropriate button</div>
     <div>
-      <button className="btn btn-outline-danger">Reject Offer</button>
+      <RejectOffer offer={offer} className="btn btn-outline-danger">
+        Reject Offer
+      </RejectOffer>
       <AcceptOffer offer={offer} className="btn btn-primary ml-2">
         Accept Offer
       </AcceptOffer>
@@ -87,16 +103,47 @@ class ReviewAndFinalize extends Component {
   }
 }
 
-const MessageSeller = () => (
+const MessageSeller = ({ offer }) => (
   <div className="transaction-progress">
     <h4>Next Step</h4>
     <div className="next-step">Give your shipping address to seller</div>
     <div className="help">Click the button to open messaging</div>
     <button className="btn btn-link">Message Seller &rsaquo;</button>
+    <WithdrawOffer offer={offer} />
     <div className="stages">
       <div className="active">Offer Placed</div>
       <div>Offer Accepted</div>
       <div>Received by buyer</div>
+    </div>
+  </div>
+)
+
+const OfferWithdrawn = ({ party }) => (
+  <div className="transaction-progress">
+    <h4>Offer Withdrawn</h4>
+    <div className="help mb-0">
+      {party === 'seller'
+        ? 'The buyer withdrew their offer'
+        : 'You withdrew your offer'}
+    </div>
+    <div className="stages">
+      <div className="active bg">Offer Placed</div>
+      <div className="active bg">Offer Withdrawn</div>
+    </div>
+  </div>
+)
+
+const OfferRejected = ({ party }) => (
+  <div className="transaction-progress">
+    <h4>Offer Rejected</h4>
+    <div className="help mb-0">
+      {party === 'seller'
+        ? 'You rejected this offer'
+        : 'Your offer was rejected by the seller'}
+    </div>
+    <div className="stages">
+      <div className="active bg">Offer Placed</div>
+      <div className="active bg">Offer Rejected</div>
     </div>
   </div>
 )
@@ -155,6 +202,10 @@ require('react-styl')(`
       padding: 0.75rem 3rem
       border-radius: 2rem
       font-size: 18px
+      &.withdraw
+        font-size: 12px
+        padding-top: 0
+        font-weight: normal
     .stages
       background-color: var(--pale-grey-eight)
       border-radius: 0 0 5px 5px
