@@ -44,7 +44,6 @@ export async function validateSubdomain (req, res, next) {
 
 export function validateSignature (req, res, next) {
   const { address, config, signature } = req.body
-  console.log(address, config, signature)
   if (config.subdomain) {
     // Validate signature matches
     const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)

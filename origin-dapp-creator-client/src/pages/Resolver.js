@@ -38,8 +38,6 @@ class Resolver extends React.Component {
         const json = JSON.parse(response.text)
         if (json.Status === 0) {
           this.redirectToSuccess()
-        } else if (json.Status === 3) {
-          console.log('Nxdomain')
         } else {
           console.log('DNS propagation incomplete')
         }
