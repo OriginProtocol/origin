@@ -14,6 +14,8 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     toBlock = block
   }
 
+  function getBlockNumber() { return toBlock }
+
   if (!contract.options.address) {
     return { updateBlock }
   }
@@ -177,5 +179,5 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     })
   }
 
-  return { listings, offers, allEvents, updateBlock }
+  return { listings, offers, allEvents, updateBlock, getBlockNumber }
 }

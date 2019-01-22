@@ -57,10 +57,8 @@ async function createListing(_, input) {
     )
   }
 
-  return txHelper({
-    tx: createListingCall.send({ gas: 4612388, from }),
-    mutation: 'createListing'
-  })
+  const tx = createListingCall.send({ gas: 4612388, from })
+  return txHelper({ tx, from, mutation: 'createListing' })
 }
 
 export default createListing

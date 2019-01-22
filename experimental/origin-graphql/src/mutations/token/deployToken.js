@@ -27,6 +27,7 @@ async function deployToken(_, args) {
 
   return txHelper({
     tx,
+    from: args.from,
     mutation: 'deployToken',
     onReceipt: receipt => {
       let tokens = []
