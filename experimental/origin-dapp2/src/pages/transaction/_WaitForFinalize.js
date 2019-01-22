@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Modal from 'components/Modal'
 
+import DisputeOffer from './mutations/DisputeOffer'
+
 class WaitForFinalize extends Component {
   state = {}
 
@@ -19,6 +21,15 @@ class WaitForFinalize extends Component {
         >
           View Fulfillment Checklist &rsaquo;
         </button>
+
+        <DisputeOffer
+          offer={this.props.offer}
+          party="seller"
+          className="btn btn-link withdraw mt-3"
+        >
+          Report a Problem
+        </DisputeOffer>
+
         <div className="stages">
           <div className="active bg">Offer Placed</div>
           <div className="active bgl">Offer Accepted</div>

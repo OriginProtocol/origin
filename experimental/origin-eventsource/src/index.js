@@ -30,21 +30,16 @@ class OriginEventSource {
     let listing,
       seller,
       ipfsHash,
+      oldIpfsHash,
       status = 'active'
 
     try {
-      listing = await this.contract.methods
-        .listings(listingId)
-        .call(undefined, blockNumber)
+      listing = await this.contract.methods.listings(listingId).call()
     } catch (e) {
       return null
     }
 
-    const events = await this.contract.eventCache.listings(
-      listingId,
-      undefined,
-      blockNumber
-    )
+    const events = await this.contract.eventCache.listings(listingId)
 
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
@@ -62,6 +57,9 @@ class OriginEventSource {
       }
       if (e.event === 'OfferRuling') {
         status = 'sold'
+      }
+      if (blockNumber && e.blockNumber <= blockNumber) {
+        oldIpfsHash = ipfsHash
       }
     })
 
@@ -83,6 +81,28 @@ class OriginEventSource {
     } catch (e) {
       return null
     }
+
+    // If a blockNumber has been specified, override certain fields with the
+    // 'old' version of that data.
+    if (blockNumber) {
+      try {
+        const oldData = await get(this.ipfsGateway, oldIpfsHash)
+        data = {
+          ...data,
+          ...pick(
+            oldData,
+            'title',
+            'description',
+            'category',
+            'subCategory',
+            'media'
+          )
+        }
+      } catch (e) {
+        return null
+      }
+    }
+
     if (data.category) {
       data.categoryStr = startCase(data.category.replace(/^schema\./, ''))
     }
@@ -253,7 +273,8 @@ class OriginEventSource {
       throw new Error('Invalid offer: currency does not match listing')
     }
 
-    const offerArbitrator = offer.arbitrator && offer.arbitrator.id.toLowerCase()
+    const offerArbitrator =
+      offer.arbitrator && offer.arbitrator.id.toLowerCase()
     if (!offerArbitrator || offerArbitrator === ZERO_ADDRESS) {
       throw new Error('No arbitrator set')
     }
@@ -264,14 +285,13 @@ class OriginEventSource {
     const offerAffiliate = offer.affiliate
       ? offer.affiliate.id.toLowerCase()
       : ZERO_ADDRESS
-    const affiliateAlowed = affiliateWhitelistDisabled ||
-      await this.contract.methods
+    const affiliateAlowed =
+      affiliateWhitelistDisabled ||
+      (await this.contract.methods
         .allowedAffiliates(offer.offerAffiliate)
-        .call()
+        .call())
     if (!affiliateAlowed) {
-      throw new Error(
-        `Offer affiliate ${offerAffiliate} not whitelisted`
-      )
+      throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
 
     if (listing.type !== 'unit') {
