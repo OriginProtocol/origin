@@ -31,6 +31,13 @@ class ConfirmReset extends Component {
               'OriginID has been updated to make profiles significantly cheaper to publish. We recommend verifying each of your accounts and publishing your profile again. Your existing account verifications will be removed.'
             }
           />
+          &nbsp;
+          <a href="https://medium.com/originprotocol/origin-id-v2-eca7c4e85a70" target="_blank">
+            <FormattedMessage
+              id={'ConfirmReset.learnMore'}
+              defaultMessage={'Learn More.'}
+            />
+          </a>
         </p>
         <div className="button-container">
           <button type="submit" className="btn btn-clear" onClick={onConfirm}>
