@@ -40,6 +40,20 @@ const DeployMarketplace = gql`
   }
 `
 
+const AddAffiliate = gql`
+  mutation AddAffiliate(
+    $from: String!
+    $affiliate: String!
+  ) {
+    addAffiliate(
+      from: $from
+      affiliate: $affiliate
+    ) {
+      id
+    }
+  }
+`
+
 const CreateListing = gql`
   mutation CreateListing(
     $deposit: String
@@ -100,9 +114,33 @@ const AcceptOffer = gql`
   }
 `
 
+const WithdrawOffer = gql`
+  mutation WithdrawOffer($offerID: String!, $from: String) {
+    withdrawOffer(offerID: $offerID, from: $from) {
+      id
+    }
+  }
+`
+
 const FinalizeOffer = gql`
   mutation FinalizeOffer($offerID: String!, $from: String) {
     finalizeOffer(offerID: $offerID, from: $from) {
+      id
+    }
+  }
+`
+
+const UpdateTokenAllowance = gql`
+  mutation UpdateTokenAllowance($token: String!, $from: String!, $to: String!, $value: String!) {
+    updateTokenAllowance(token: $token, from: $from, to: $to, value: $value) {
+      id
+    }
+  }
+`
+
+const TransferToken = gql`
+  mutation TransferToken($token: String!, $from: String!, $to: String!, $value: String!) {
+    transferToken(token: $token, from: $from, to: $to, value: $value) {
       id
     }
   }
@@ -114,5 +152,9 @@ export default {
   CreateListing,
   MakeOffer,
   AcceptOffer,
-  FinalizeOffer
+  FinalizeOffer,
+  UpdateTokenAllowance,
+  TransferToken,
+  AddAffiliate,
+  WithdrawOffer
 }

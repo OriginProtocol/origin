@@ -35,7 +35,40 @@ const GetReceipt = gql`
   }
 `
 
+const GetAllOffers = gql`
+  query GetAllOffers($id: String!) {
+    marketplace {
+      listing(id: $id) {
+        id
+        title
+        allOffers {
+          id
+          status
+          statusStr
+          valid
+          validationError
+          commission
+        }
+      }
+    }
+  }
+`
+
+const GetListing = gql`
+query GetListing($id: String!) {
+  marketplace {
+    listing(id: $id) {
+      id
+      unitsAvailable
+      unitsSold
+    }
+  }
+}
+`
+
 export default {
   GetNodeAccounts,
-  GetReceipt
+  GetReceipt,
+  GetAllOffers,
+  GetListing
 }

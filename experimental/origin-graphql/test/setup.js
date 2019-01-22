@@ -4,6 +4,7 @@
  * (ethereum test node and IPFS) required to run tests.
  */
 
+import client from '../src/index'
 import services from 'origin-services'
 import { setNetwork } from '../src/contracts'
 
@@ -14,6 +15,12 @@ before(async function() {
   // Start Ganache (in-memory) and IPFS
   shutdown = await services({ ganache: { inMemory: true }, ipfs: true })
   setNetwork('test')
+
+  // Disable GraphQL response caching
+  client.defaultOptions = {
+    watchQuery: { fetchPolicy: 'network-only' },
+    query: { fetchPolicy: 'network-only' }
+  }
 })
 
 // Override exit code to prevent error when using Ctrl-c after `npm run test:watch`

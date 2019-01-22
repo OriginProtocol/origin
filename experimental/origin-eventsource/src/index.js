@@ -22,6 +22,9 @@ class OriginEventSource {
   }
 
   async getListing(listingId, blockNumber) {
+    if (blockNumber === undefined) {
+      blockNumber = this.contract.eventCache.getBlockNumber()
+    }
     const id = `${listingId}-${blockNumber}`
     if (this.listingCache[id]) {
       return this.listingCache[id]
@@ -76,6 +79,7 @@ class OriginEventSource {
         'subCategory',
         'media',
         'unitsTotal',
+        'commission',
         'commissionPerUnit'
       )
     } catch (e) {
@@ -115,8 +119,21 @@ class OriginEventSource {
     }
 
     const type = 'unit'
-    this.listingCache[id] = this.withOffers(listingId, {
-      id: `999-1-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
+    let commissionPerUnit = '0', commission = '0'
+    if (type === 'unit') {
+      const commissionPerUnitOgn =
+        (data.commissionPerUnit && data.commissionPerUnit.amount)
+        || (data.commission && data.commission.amount)
+        || '0'
+      commissionPerUnit = this.web3.utils.toWei(commissionPerUnitOgn, 'ether')
+
+      const commissionOgn = (data.commission && data.commission.amount) || '0'
+      commission = this.web3.utils.toWei(commissionOgn, 'ether')
+    }
+
+    this.listingCache[id] = await this.withOffers(listingId, {
+      ...data,
+      id: `999-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
       arbitrator: listing.depositManager
@@ -128,8 +145,8 @@ class OriginEventSource {
       events,
       type,
       multiUnit: type === 'unit' && data.unitsTotal > 1,
-      commissionPerUnit: listing.commissionPerUnit,
-      ...data
+      commissionPerUnit,
+      commission
     })
 
     return this.listingCache[id]
@@ -148,9 +165,10 @@ class OriginEventSource {
     }
 
     // Compute fields from valid offers.
-    let depositAvailable = this.web3.utils.toBN(listing.deposit)
+    let commissionAvailable = this.web3.utils.toBN(listing.commission)
     let unitsAvailable = listing.unitsTotal
     if (listing.type === 'unit') {
+      const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
@@ -159,22 +177,36 @@ class OriginEventSource {
           offer.validationError = 'units purchased exceeds available'
         } else {
           unitsAvailable -= offer.quantity
-          if (offer.commission) {
-            const offerCommission = this.web3.utils.toBN(offer.commission)
-            depositAvailable = depositAvailable.sub(offerCommission)
+
+          // Validate offer commission.
+          const normalCommission = commissionPerUnit.mul(
+            this.web3.utils.toBN(offer.quantity)
+          )
+          const expCommission = normalCommission.lte(commissionAvailable)
+            ? normalCommission
+            : commissionAvailable
+          const offerCommission =
+            (offer.commission && this.web3.utils.toBN(offer.commission))
+            || this.web3.utils.toBN(0)
+          if (!offerCommission.eq(expCommission)) {
+            offer.valid = false
+            offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
+            return
           }
-          // TODO: validate offer commission when dapp2 passes that in
+          if (!offerCommission.isZero()) {
+            commissionAvailable = commissionAvailable.sub(offerCommission)
+          }
         }
       })
     }
-    depositAvailable = !depositAvailable.isNeg()
-      ? depositAvailable.toString()
+    commissionAvailable = !commissionAvailable.isNeg()
+      ? commissionAvailable.toString()
       : '0'
     return Object.assign({}, listing, {
       allOffers,
       unitsAvailable,
       unitsSold: listing.unitsTotal - unitsAvailable,
-      depositAvailable: depositAvailable
+      depositAvailable: commissionAvailable
     })
   }
 
@@ -182,13 +214,16 @@ class OriginEventSource {
     return this._getOffer(await this.getListing(listingId), listingId, offerId)
   }
 
-  async _getOffer(listing, listingId, offerId) {
-    const id = `${listingId}-${offerId}`
+  async _getOffer(listing, listingId, offerId, blockNumber) {
+    if (blockNumber === undefined) {
+      blockNumber = this.contract.eventCache.getBlockNumber()
+    }
+    const id = `${listingId}-${offerId}-${blockNumber}`
     if (this.offerCache[id]) {
       return this.offerCache[id]
     }
 
-    let blockNumber, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
+    let latestBlock, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
     const events = await this.contract.eventCache.offers(
       listingId,
       Number(offerId)
@@ -203,7 +238,7 @@ class OriginEventSource {
       if (
         !e.event.match(/(OfferFinalized|OfferWithdrawn|OfferRuling|OfferData)/)
       ) {
-        blockNumber = e.blockNumber
+        latestBlock = e.blockNumber
       }
       if (e.event !== 'OfferData') {
         lastEvent = e
@@ -219,7 +254,7 @@ class OriginEventSource {
 
     const offer = await this.contract.methods
       .offers(listingId, offerId)
-      .call(undefined, blockNumber)
+      .call(undefined, latestBlock)
 
     if (status === undefined) {
       status = offer.status
@@ -229,7 +264,7 @@ class OriginEventSource {
     data = pick(data, 'unitsPurchased')
 
     const offerObj = {
-      id: `999-1-${listingId}-${offerId}`,
+      id: `999-0-${listingId}-${offerId}`,
       listingId: String(listing.id),
       offerId: String(offerId),
       createdBlock,
