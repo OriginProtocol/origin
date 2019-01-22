@@ -1,7 +1,7 @@
 //
 // Listing is the main object exposed by Origin Protocol to access listing data.
 //
-export class Listing {
+class Listing {
   /**
    * Listing object model.
    *
@@ -178,12 +178,27 @@ export class Listing {
       return undefined
 
     // if not multi unit
-    if (!(this.type === 'unit' && this.unitsTotal > 0))
+    if (!(this.type === 'unit' && this.unitsTotal > 1))
       return undefined
 
-    const commissionRemaining = this.offers
+    const commissionUsedInOffers = this.offers
       .reduce((agg, offer) => agg + parseInt(offer.commission.amount), 0)
 
-    return Math.max(0, this.commission.amount - commissionRemaining)
+    return Math.max(0, this.commission.amount - commissionUsedInOffers)
+  }
+
+  // Commission used to prioritize this listing over the others in search functionality
+  get boostCommission() {
+    // if is multi unit listing
+    if (this.type === 'unit' && this.unitsTotal > 1) {
+      return {
+        currency: this.commissionPerUnit.currency,
+        amount: Math.min(this.commissionRemaining, this.commissionPerUnit.amount) 
+      }
+    } else {
+      return this.commission
+    }
   }
 }
+
+module.exports = { Listing }
