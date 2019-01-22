@@ -6,7 +6,6 @@
     "description",
     "price",
     "dappSchemaId",
-    "category",
     "subCategory",
     "listingType"
   ],

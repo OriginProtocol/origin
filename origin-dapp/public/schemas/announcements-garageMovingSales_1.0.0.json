@@ -4,7 +4,6 @@
   "required": [
     "name",
     "description",
-    "price",
     "dappSchemaId",
     "category",
     "subCategory",
@@ -12,7 +11,7 @@
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "https://dapp.originprotocol.com/schemas/announcements-garageMovingSale_1.0.0.json"
+      "const": "https://dapp.originprotocol.com/schemas/announcements-garageMovingSales_1.0.0.json"
     },
     "listingType": {
       "const": "unit"
