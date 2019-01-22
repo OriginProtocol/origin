@@ -11,11 +11,12 @@ class TransactionProgress extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { open: false }
+    this.state = { open: false,  shouldClose: false }
   }
 
   render() {
     const { offer, wallet } = this.props
+    const { shouldClose, open } = this.state
     const mobile = mobileDevice() ? 'mobile' : ''
 
     if (offer.status === 4) {
@@ -25,34 +26,38 @@ class TransactionProgress extends Component {
       if (offer.status === 2) {
         return (
           <Fragment>
-            <WaitForFinalize offer={offer} openModal={() => this.setState({ open: true })} />
-            {this.state.open && (
-              <Modal className={`fulfillment-modal ${mobile}`} onClose={() => this.setState({ open: false })}>
+            <WaitForFinalize offer={offer} openModal={() => this.setState({ open: true })}/>
+            {open && (
+              <Modal
+                className={`fulfillment-modal ${mobile}`}
+                onClose={() => this.setState({ open: false, shouldClose: false })}
+                shouldClose={shouldClose}
+              >
                 <div className="d-flex flex-column content">
                   <div className="checklist">
                     <h2>Fulfillment Checklist</h2>
                     <div>
-                      <span className="number">1</span>
-                      <span>Verify the variants with the seller</span>
+                      <span className="table-cell"><span className="number">1</span></span>
+                      <span className="text">Verify the variants with the seller</span>
                     </div>
                     <div>
-                      <span className="number">2</span>
-                      <span>Package the product and send it out</span>
+                      <span className="table-cell"><span className="number">2</span></span>
+                      <span className="text">Package the product and send it out</span>
                     </div>
                     <div>
-                      <span className="number">3</span>
-                      <span>Notify buyer and provice tracking number</span>
+                      <span className="table-cell"><span className="number">3</span></span>
+                      <span className="text">Notify buyer and provice tracking number</span>
                     </div>
                     <div>
-                      <span className="number">4</span>
-                      <span>Wait for buyer to receive product</span>
+                      <span className="table-cell"><span className="number">4</span></span>
+                      <span className="text">Wait for buyer to receive product</span>
                     </div>
                     <div>
-                      <span className="number">5</span>
-                      <span>Withdraw your funds</span>
+                      <span className="table-cell"><span className="number">5</span></span>
+                      <span className="text">Withdraw your funds</span>
                     </div>
                   </div>
-                  <button className="btn btn-outline-light">Ok</button>
+                  <button className="btn btn-outline-light" onClick={() => this.setState({ shouldClose: true })}>Ok</button>
                 </div>
               </Modal>
             )}
@@ -271,6 +276,9 @@ require('react-styl')(`
   .pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content
     max-width: 580px
 
+  .table-cell
+    display: table-cell
+
   .fulfillment-modal
     .content
       height: 100%
@@ -290,10 +298,14 @@ require('react-styl')(`
         margin-right: 10px
       .checklist
         padding-bottom: 40px
+        span
+          &.text
+            display: table-cell
+            padding-left: 10px
     &.mobile
       padding: 1rem
       .content
-        line-height: 1.5
+        line-height: 2
 
   .btn-outline-light
     width: 50%
