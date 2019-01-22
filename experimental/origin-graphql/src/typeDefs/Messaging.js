@@ -5,7 +5,7 @@ export default `
 
   extend type Mutation {
     enableMessaging: Boolean
-    sendMessage(to: String!, content: String!): Boolean
+    sendMessage(to: String!, content: String!): Conversation
   }
 
   type Messaging {
