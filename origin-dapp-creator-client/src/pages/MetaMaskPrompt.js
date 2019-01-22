@@ -10,7 +10,8 @@ class MetaMaskPrompt extends React.Component {
 
     this.state = {
       isError: false,
-      redirect: null
+      redirect: null,
+      signature: null
     }
 
     this.requestSignature = this.requestSignature.bind(this)
@@ -23,7 +24,7 @@ class MetaMaskPrompt extends React.Component {
   }
 
   async requestSignature () {
-    let signature = null
+    let signature
     try {
       signature = await this.props.signConfig()
     } catch (error) {
@@ -32,11 +33,15 @@ class MetaMaskPrompt extends React.Component {
         redirect: '/configure'
       })
     }
+
+    this.setState({
+      signature: signature
+    })
   }
 
-  async publish (signature) {
+  async publish () {
     try {
-      await this.props.handlePublish(signature)
+      await this.props.handlePublish(this.state.signature)
     } catch (error) {
       this.setState({
         isError: true
@@ -50,6 +55,7 @@ class MetaMaskPrompt extends React.Component {
   render () {
     return (
       <>
+        {this.renderRedirect()}
         {this.state.isError &&
           <div className="error">
             There was an error publishing your configuration.
@@ -62,7 +68,6 @@ class MetaMaskPrompt extends React.Component {
         }
         {!this.state.isError &&
           <div className="metamask-prompt">
-            {this.renderRedirect()}
             <div>
               <img src="images/metamask.svg" />
               <h1>Waiting for you to grant permission</h1>

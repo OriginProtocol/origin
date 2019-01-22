@@ -31,6 +31,10 @@ class App extends React.Component {
     this.signConfig = this.signConfig.bind(this)
   }
 
+  componentDidCatch(error, errorInfo) {
+    Raven.captureException(error, { extra: errorInfo })
+  }
+
   setConfig(config) {
     store.set('creator-config', config)
     this.setState({ config })
@@ -52,7 +56,6 @@ class App extends React.Component {
         address: web3.eth.accounts[0]
       })
   }
-
 
   async web3Sign(data, account) {
     // Promise wrapper for web3 signing
