@@ -148,7 +148,7 @@ require('react-styl')(`
         height: 100%;
         width: 100%;
         vertical-align: middle;
-        padding: 1rem;
+        padding: 3rem;
         .pl-modal-content
           text-align: center
           position: relative;

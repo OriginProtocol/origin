@@ -1,94 +1,28 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 
 import AcceptOffer from './mutations/AcceptOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
 import StarRating from 'components/StarRating'
-import Modal from 'components/Modal'
 
-class TransactionProgress extends Component {
-  constructor(props) {
-    super(props)
+import WaitForFinalize from './_WaitForFinalize'
 
-    this.state = { open: false,  shouldClose: false }
+const TransactionProgress = ({ offer, wallet }) => {
+  if (offer.status === 4) {
+    return <Finalized />
   }
-
-  render() {
-    const { offer, wallet } = this.props
-
-    if (offer.status === 4) {
-      return <Finalized />
-    }
-    if (offer.listing.seller.id === wallet) {
-      if (offer.status === 2) {
-        return (
-          <Fragment>
-            <WaitForFinalize offer={offer} openModal={() => this.setState({ open: true })}/>
-            {this.state.open && (
-              <Modal
-                className="fulfillment-modal"
-                onClose={() => this.setState({ open: false, shouldClose: false })}
-                shouldClose={this.state.shouldClose}
-              >
-                <div className="d-flex flex-column content">
-                  <div className="checklist">
-                    <h2>Fulfillment Checklist</h2>
-                    <div>
-                      <span className="table-cell"><span className="step">1</span></span>
-                      <span className="text">Verify the variants with the seller</span>
-                    </div>
-                    <div>
-                      <span className="table-cell"><span className="step">2</span></span>
-                      <span className="text">Package the product and send it out</span>
-                    </div>
-                    <div>
-                      <span className="table-cell"><span className="step">3</span></span>
-                      <span className="text">Notify buyer and provice tracking number</span>
-                    </div>
-                    <div>
-                      <span className="table-cell"><span className="step">4</span></span>
-                      <span className="text">Wait for buyer to receive product</span>
-                    </div>
-                    <div>
-                      <span className="table-cell"><span className="step">5</span></span>
-                      <span className="text">Withdraw your funds</span>
-                    </div>
-                  </div>
-                  <button className="btn btn-outline-light" onClick={() => this.setState({ shouldClose: true })}>Ok</button>
-                </div>
-              </Modal>
-            )}
-          </Fragment>
-        )
-      } else {
-        return <AcceptOrReject offer={offer} />
-      }
-    }
+  if (offer.listing.seller.id === wallet) {
     if (offer.status === 2) {
-      return <ReviewAndFinalize offer={offer} />
+      return <WaitForFinalize offer={offer} />
     } else {
-      return <MessageSeller />
+      return <AcceptOrReject offer={offer} />
     }
+  }
+  if (offer.status === 2) {
+    return <ReviewAndFinalize offer={offer} />
+  } else {
+    return <MessageSeller />
   }
 }
-
-const WaitForFinalize = ({ openModal }) => (
-  <div className="transaction-progress">
-    <h4>Next Step:</h4>
-    <div className="next-step">Wait for buyer to confirm receipt</div>
-    <div className="help">
-      Make sure you fulfill the order and wait for the buyer’s confirmation
-    </div>
-    <button className="btn btn-link" onClick={() => openModal(true)}>
-      View Fulfillment Checklist &rsaquo;
-    </button>
-    <div className="stages">
-      <div className="active bg">Offer Placed</div>
-      <div className="active bgl">Offer Accepted</div>
-      <div>Received by buyer</div>
-      <div>Funds withdrawn</div>
-    </div>
-  </div>
-)
 
 const AcceptOrReject = ({ offer }) => (
   <div className="transaction-progress">
@@ -269,43 +203,4 @@ require('react-styl')(`
         &.bgl::after
           background-image: linear-gradient(to right, var(--greenblue), var(--greenblue) 50%, var(--pale-grey-two) 50%, var(--pale-grey-two))
 
-  .pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content
-    max-width: 580px
-
-  .table-cell
-    display: table-cell
-
-  .fulfillment-modal
-    .content
-      height: 100%
-      text-align: left
-      line-height: 2.5
-      h2
-        text-align: center
-      .step
-        background: var(--dark)
-        color: var(--white)
-        min-width: 1.6rem
-        padding: 0.2rem 0.5rem
-        height: 1.6rem
-        border-radius: 2rem
-        line-height: 1.6rem
-        text-align: center
-        margin-right: 10px
-      .checklist
-        padding-bottom: 40px
-        span
-          &.text
-            display: table-cell
-            padding-left: 10px
-
-  .btn-outline-light
-    width: 50%
-    align-self: center
-
-    @media (max-width: 576px)
-      .fulfillment-modal
-        padding: 1rem
-        .content
-          line-height: 2
 `)
