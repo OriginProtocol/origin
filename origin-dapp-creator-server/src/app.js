@@ -23,8 +23,8 @@ app.use(cors())
 app.post('/config', validateSignature)
 app.post('/config', validateSubdomain)
 
-app.post('/config', async (req, res, next) => {
-  const { config, signature, address } = req.body
+app.post('/config', async (req, res) => {
+  const { config } = req.body
 
   // Add the new config to IPFS
   let ipfsHash

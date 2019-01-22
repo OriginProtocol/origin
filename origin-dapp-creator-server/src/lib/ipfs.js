@@ -1,8 +1,8 @@
 const ipfsApi = require('ipfs-api')
 
 export function promiseTimeout(ms, promise) {
-  let timeout = new Promise((resolve, reject) => {
-    let id = setTimeout(() => {
+  const timeout = new Promise((resolve, reject) => {
+    const id = setTimeout(() => {
       clearTimeout(id)
       reject(`IPFS config retrieval timed out in ${ms} ms`)
     }, ms)
