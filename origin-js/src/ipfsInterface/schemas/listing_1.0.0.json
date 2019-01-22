@@ -155,6 +155,10 @@
     },
     "commission": {
       "$ref": "#/definitions/money"
+    },
+    "createDate": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "listingType": {

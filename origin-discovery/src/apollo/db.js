@@ -224,10 +224,34 @@ async function getOffer (offerId) {
   return _makeOffer(row)
 }
 
+/**
+ * Query DB for creating a Listing
+ * @param listingData
+ * @return {Promise<Object|null>}
+ *
+ */
+async function createListing(listingData) {
+  const row = await db.Listing.upsert(listingData)
+  if (!row) {
+    return null
+  }
+  return _makeListing(row)
+}
+
+async function updateListing(listingId, listingData) {
+  const listing = await db.Listing.findById(listingId)
+  if (listing) {
+    await listing.update(listingData)
+    return _makeListing(listing)
+  }
+}
+
 module.exports = {
   getListing,
   getListingsById,
   getListingsBySeller,
   getOffer,
-  getOffers
+  getOffers,
+  createListing,
+  updateListing
 }

@@ -214,6 +214,11 @@ export default class Marketplace {
     if (loadOffers)
       chainListing = await this._addOffersToListing(listingId, chainListing)
 
+    // Create and return a Listing from on-chain and off-chain data.
+    return this._listingFromData(listingId, chainListing)
+  }
+
+  _listingFromData(listingId, chainListing) {
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
       chainListing.ipfsHash

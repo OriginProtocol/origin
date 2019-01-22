@@ -3,7 +3,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Listing = sequelize.define('Listing', {
     // Listing id.
-    id: { type: DataTypes.STRING(32), primaryKey: true },
+    id: { type: DataTypes.STRING(64), primaryKey: true },
     // Block number at which the listing event was recorded.
     blockNumber: { type: DataTypes.INTEGER, primaryKey: true },
     // Index of the listing event within the block.

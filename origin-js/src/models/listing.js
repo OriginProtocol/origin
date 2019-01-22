@@ -99,6 +99,7 @@ export class Listing {
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
       commissionPerUnit: ipfsListing.commissionPerUnit,
+      createDate: ipfsListing.createDate
     })
   }
 

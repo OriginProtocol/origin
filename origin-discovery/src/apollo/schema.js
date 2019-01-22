@@ -97,6 +97,17 @@ const typeDefs = gql`
     display: DisplayType!
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
+
+  // This should come from origin-js/models/listing
+  // It's all the chainlisting inputs 
+  type ListingInput {
+    ipfsHash: ID!
+    deposit: String
+    depositManager: ID
+    seller: ID!
+    status: String
+  }
+
   type Stats {
     maxPrice: Float
     minPrice: Float
@@ -211,6 +222,14 @@ const typeDefs = gql`
     user(walletAddress: ID!): User,
 
     info: JSON!
+  }
+
+  #
+  # The "Mutation" type is the root of all GraphQL mutations
+  #
+  type Mutation {
+    createListing(listinInput: ListingInput, signature: String!): Listing
+    updateListing(id: ID!, listingInput:ListingInput, signature: String!): Listing
   }
 `
 
