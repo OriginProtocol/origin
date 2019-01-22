@@ -308,20 +308,31 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(selectedSchemaId) {
+  async handleSchemaSelection(selectedSchemaId) {
     let schemaFileName = selectedSchemaId
-
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
     if (event.target.value) {
       schemaFileName = event.target.value
     }
-
-    return fetch(`schemas/${schemaFileName}`)
-      .then(response => response.json())
-      .then(schemaJson => {
-        this.setState({ selectedSchemaId: schemaFileName })
-        this.renderDetailsForm(schemaJson)
+    // add validation error onSelect
+    // must try to fetch schema
+    // must freeze user experience once facing an error
+    // must unfreeze user experience when no error
+    try {
+      const schema = await fetch(`schemas/${schemaFileName}`)
+      if (schema.status !== 200) throw Error('Failed to Find SubCategory Schema, Please report this console error.')
+      const schemaJson = await schema.json()
+      this.setState({
+        selectedSchemaId: schemaFileName,
+        showNoSchemaSelectedError: false
       })
+      this.renderDetailsForm(schemaJson)
+    } catch (err) {
+      this.setState({
+        selectedSchemaId: '',
+        showNoSchemaSelectedError: true
+      })
+    }
   }
 
   renderDetailsForm(schemaJson) {
@@ -411,9 +422,22 @@ class ListingCreate extends Component {
       }
     }
 
+    // hardcode price 0 on formData if properties.price.const === 0
+    // we are breaking the price === schema.const when moving forward a service | announcement with price 1
+    // We are setState two times to avoid unaware side-effeccts of 'price'
+    if (properties.price.const === 0){
+      this.setState(prevState => ({
+        formListing : {
+          formData: {
+            ...prevState.formListing.formData,
+            price : 0
+          }
+        }
+      }))
+    }
+    // const price = properties.price.const === 0 ? 0 : this.state.formListing.formData.price
     const translatedSchema = translateSchema(schemaJson)
-
-    this.setState({
+    this.setState(prevState => ({
       schemaFetched: true,
       fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
@@ -422,15 +446,15 @@ class ListingCreate extends Component {
       formListing: {
         formData: {
           ...schemaSetValues,
-          ...this.state.formListing.formData,
+          ...prevState.formListing.formData,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
           slotLength,
-          slotLengthUnit
+          slotLengthUnit,
         }
       }
-    })
+    }))
   }
 
   goToDetailsStep() {
@@ -510,19 +534,19 @@ class ListingCreate extends Component {
     formListing.formData.listingType = listingType
     // multiUnit listings specify unitsTotal, others default to 1
     formListing.formData.unitsTotal = formListing.formData.unitsTotal || 1
-    this.setState({
+    this.setState((prevState) => ({
       formListing: {
-        ...this.state.formListing,
+        ...prevState.formListing,
         ...formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...prevState.formListing.formData,
           ...formListing.formData
         }
       },
       step: nextStep,
       showDetailsFormErrorMsg: false,
       showBoostFormErrorMsg: false
-    })
+    }))
     window.scrollTo(0, 0)
     this.checkOgnBalance()
   }
