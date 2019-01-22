@@ -4,6 +4,8 @@ import AcceptOffer from './mutations/AcceptOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
 import StarRating from 'components/StarRating'
 
+import WaitForFinalize from './_WaitForFinalize'
+
 const TransactionProgress = ({ offer, wallet }) => {
   if (offer.status === 4) {
     return <Finalized />
@@ -21,25 +23,6 @@ const TransactionProgress = ({ offer, wallet }) => {
     return <MessageSeller />
   }
 }
-
-const WaitForFinalize = () => (
-  <div className="transaction-progress">
-    <h4>Next Step:</h4>
-    <div className="next-step">Wait for buyer to confirm receipt</div>
-    <div className="help">
-      Make sure you fulfill the order and wait for the buyer’s confirmation
-    </div>
-    <button className="btn btn-link">
-      View Fulfillment Checklist &rsaquo;
-    </button>
-    <div className="stages">
-      <div className="active bg">Offer Placed</div>
-      <div className="active bgl">Offer Accepted</div>
-      <div>Received by buyer</div>
-      <div>Funds withdrawn</div>
-    </div>
-  </div>
-)
 
 const AcceptOrReject = ({ offer }) => (
   <div className="transaction-progress">
