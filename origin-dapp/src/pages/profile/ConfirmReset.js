@@ -28,7 +28,7 @@ class ConfirmReset extends Component {
           <FormattedMessage
             id={'ConfirmReset.afterResetNotice'}
             defaultMessage={
-              'OriginID has been updated to make profiles significantly cheaper to publish. We recommend verifying each of your accounts and publishing your profile again. Your existing account verifications will be removed.'
+              'OriginID has been updated to make profiles significantly cheaper to publish. We recommend verifying each of your accounts and publishing your profile again. Any previous attestations will need to be reverified.'
             }
           />
           &nbsp;
