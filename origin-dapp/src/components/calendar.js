@@ -109,7 +109,7 @@ class Calendar extends Component {
           moment(clickedSlotInfo.start).isBefore(moment().startOf(timePeriod)) ||
           moment(clickedSlotInfo.end).isBefore(moment().startOf(timePeriod))
         ) {
-        [...document.querySelectorAll('.rbc-day-bg')].map((element) => element.classList.remove('dragging'))
+        [...document.querySelectorAll('.rbc-day-bg')].map((element) => element.classList.remove('selected'))
 
         return this.setState({
           showPastDateSelectedError: true,
@@ -316,6 +316,8 @@ class Calendar extends Component {
         this.onSelectSlot(this.state.selectedEvent)
       })
     }
+
+    doFancyDateSelectionBorders()
   }
 
   onIsRecurringEventChange(event) {
@@ -350,14 +352,10 @@ class Calendar extends Component {
   }
 
   slotPropGetter(date) {
+    const { selectedEvent, buyerSelectedSlotData } = this.state
     const slotData = getDateAvailabilityAndPrice(date, this.state.events)
     const isAvailable = slotData.isAvailable ? 'available' : 'unavailable'
-    const selectedSlotsMatchingDate = 
-      this.state.buyerSelectedSlotData &&
-      this.state.buyerSelectedSlotData.filter((slot) => 
-        moment(date).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end))
-      )
-    const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
+    const isSelected = isDateSelected(selectedEvent || buyerSelectedSlotData, date) ? ' selected' : ''
     const price = slotData.price ? ` priceEth-${slotData.price}` : ' priceEth-0'
     const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
     const isPastDate = moment(date).isBefore(moment().startOf(timePeriod)) ? ' past-date' : ' future-date'

@@ -487,26 +487,26 @@ export const highlightCalendarDrag = () => {
     }
 
     function mouseUpHandler(evt){
+      const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
+
       calendarDays.map((element) => {
         evt.target.classList.remove('dragging')
         element.removeEventListener('mousemove', addDraggingClass)
       })
-
-      document.removeEventListener('mouseup', mouseUpHandler)
     }
 
     function mouseDownHandler(evt) {
-        addDraggingClass(evt)
+      const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
+      addDraggingClass(evt)
 
-        calendarDays.map((element) => {
-          element.addEventListener('mousemove', addDraggingClass)
-        })
+      calendarDays.map((element) => {
+        element.addEventListener('mousemove', addDraggingClass)
+      })
 
-        document.addEventListener('mouseup', mouseUpHandler)
-      }
+      document.addEventListener('mouseup', mouseUpHandler)
+    }
 
     calendarDays.map((element) => {
-      element.removeEventListener('mousedown', mouseDownHandler)
       element.addEventListener('mousedown', mouseDownHandler)
     })
   }, 1000)
