@@ -1,20 +1,21 @@
 import React, { Component, Fragment } from 'react'
 import BigCalendar from 'react-big-calendar'
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment-timezone'
 import uuid from 'uuid/v1'
 import { 
   generateCalendarSlots,
-  checkSlotForExistingEvents,
   renderHourlyPrices,
-  updateOriginalEvent,
   getSlotsForDateChange,
   getDateDropdownOptions,
   getRecurringEvents,
   getSlotsToReserve,
   getCleanEvents,
   getDateAvailabilityAndPrice,
-  generateSlotStartEnd
+  generateSlotStartEnd,
+  isDateSelected,
+  highlightCalendarDrag,
+  doFancyDateSelectionBorders
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -27,10 +28,8 @@ class Calendar extends Component {
     this.createSellerEvent = this.createSellerEvent.bind(this)
     this.handleBuyerSelection = this.handleBuyerSelection.bind(this)
     this.selectEvent = this.selectEvent.bind(this)
-    this.handleEditSeriesRadioChange = this.handleEditSeriesRadioChange.bind(this)
     this.handlePriceChange = this.handlePriceChange.bind(this)
     this.saveEvent = this.saveEvent.bind(this)
-    this.deleteEvent = this.deleteEvent.bind(this)
     this.cancelEvent = this.cancelEvent.bind(this)
     this.onAvailabilityChange = this.onAvailabilityChange.bind(this)
     this.onDateDropdownChange = this.onDateDropdownChange.bind(this)
@@ -46,7 +45,6 @@ class Calendar extends Component {
     this.goToToday = this.goToToday.bind(this)
     this.slotPropGetter = this.slotPropGetter.bind(this)
     this.renderRecurringEvents = this.renderRecurringEvents.bind(this)
-    this.shouldShowRecurringEventCheckbox = this.shouldShowRecurringEventCheckbox.bind(this)
 
     this.currentDate = new Date()
 
@@ -55,8 +53,7 @@ class Calendar extends Component {
       selectedEvent: null,
       buyerSelectedSlotData: null,
       calendarDate: this.currentDate,
-      showSellerActionBtns: false,
-      hideRecurringEventCheckbox: false,
+      showSellerActionBtns: true,
       editAllEventsInSeries: true,
       existingEventSelected: false,
       clickedSlotInfo: null,
@@ -64,14 +61,6 @@ class Calendar extends Component {
     }
 
     this.localizer = BigCalendar.momentLocalizer(moment)
-
-    this.intlMessages = defineMessages({
-      confirmDeleteEvent: {
-        id: 'calendar.confirmDeleteEvent',
-        defaultMessage:
-          'Are you sure you want to delete this event?'
-      }
-    })
   }
 
   componentWillMount() {
@@ -98,6 +87,7 @@ class Calendar extends Component {
   componentDidMount() {
     renderHourlyPrices(this.props.viewType, this.props.userType)
     this.renderRecurringEvents(this.state.calendarDate)
+    highlightCalendarDrag()
   }
 
   componentDidUpdate() {
@@ -129,64 +119,25 @@ class Calendar extends Component {
         clickedSlotInfo.slots && clickedSlotInfo.slots.length && clickedSlotInfo.slots.splice(-1)
       }
 
-      const eventsInSlot = checkSlotForExistingEvents(clickedSlotInfo, this.state.events)
-
-      if (eventsInSlot.length) {
-        let selectedEvent
-
-        eventsInSlot.map(event => {
-          // If there's no selectedEvent, select this event
-          if (!selectedEvent) {
-            selectedEvent = event
-            // If there's already a selectedEvent, override it if this is a non-recurring event.
-            // Non-recurring events always override recurring events
-          } else if (!event.isRecurringEvent) {
-            selectedEvent = event
-          }
-        })
-
-        this.selectEvent(selectedEvent)
-      } else {
-        this.createSellerEvent(clickedSlotInfo)
-      }
+      this.createSellerEvent(clickedSlotInfo)
     } else {
       // user is a buyer
       this.handleBuyerSelection(clickedSlotInfo)
     } 
   }
 
-  createSellerEvent(eventInfo, isOverrideEvent) {
-    if (isOverrideEvent) {
-      this.setState({
-        events: [
-          ...this.state.events,
-          eventInfo
-        ]
-      })
+  createSellerEvent(eventInfo) {
+    const endDate = this.props.viewType === 'daily' ?
+      moment(eventInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
+      moment(eventInfo.end).subtract(1, 'second').toDate()
 
-      this.selectEvent(eventInfo, false)
-    } else {
-      const endDate = this.props.viewType === 'daily' ?
-        moment(eventInfo.end).add(1, 'day').subtract(1, 'second').toDate() :
-        moment(eventInfo.end).subtract(1, 'second').toDate()
-
-      const newEvent = {
-        ...eventInfo,
-        id: uuid(),
-        end: endDate,
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        allDay: false
-      }
-
-      this.setState({
-        events: [
-          ...this.state.events,
-          newEvent
-        ]
-      })
-
-      this.selectEvent(newEvent, true)
+    const newEvent = {
+      ...eventInfo,
+      end: endDate,
+      allDay: false
     }
+
+    this.selectEvent(newEvent)
   }
 
   handleBuyerSelection(slotInfo) {
@@ -249,7 +200,7 @@ class Calendar extends Component {
     }
   }
 
-  selectEvent(selectedEvent, shouldSaveEvent) {
+  async selectEvent(selectedEvent) {
     const event = {
       ...selectedEvent,
       price: selectedEvent.price || '',
@@ -264,46 +215,8 @@ class Calendar extends Component {
       isAvailable: true
     }
 
-    const existingEventInSlot = checkSlotForExistingEvents(selectedEvent, this.state.events)
-    if (existingEventInSlot.length && existingEventInSlot.length > 1) {
-      if (!selectedEvent.isRecurringEvent) {
-        stateToSet.hideRecurringEventCheckbox = true
-      } else {
-        stateToSet.hideRecurringEventCheckbox = false
-      }
-    } else {
-      stateToSet.hideRecurringEventCheckbox = false
-    }
-
-    if (shouldSaveEvent) {
-      this.saveEvent(event)
-      stateToSet.existingEventSelected = false
-    } else {
-      stateToSet.existingEventSelected = true
-    }
-
-    this.setState(stateToSet)
-  }
-
-  handleEditSeriesRadioChange(event) {
-    const editAllEventsInSeries = event.target.value === 'true'
-
-    if (!editAllEventsInSeries) {
-      const { start, end } = generateSlotStartEnd(this.state.clickedSlotInfo.start, this.props.viewType, 0)
-
-      this.setState({
-        selectedEvent: {
-          ...this.state.selectedEvent,
-          start,
-          end
-        },
-        editAllEventsInSeries
-      })
-    } else {
-      this.setState({
-        editAllEventsInSeries
-      })
-    }
+    await this.setState(stateToSet)
+    doFancyDateSelectionBorders()
   }
 
   handlePriceChange(event) {
@@ -319,80 +232,54 @@ class Calendar extends Component {
   saveEvent(selectedEvent) {
     const thisEvent = (selectedEvent && selectedEvent.id) ? selectedEvent : this.state.selectedEvent
 
-    if (thisEvent.isRecurringEvent && !this.state.editAllEventsInSeries) {
-      const { start, end, isAvailable, price } = thisEvent
-      const overrideEvent = {
-        start,
-        end,
-        isAvailable,
-        price,
-        slots: this.state.clickedSlotInfo.slots,
-        isRecurringEvent: false,
+    const newEvents = []
+    let slotToTest = moment(thisEvent.start)
+    let slotIndex = 0
+
+    while (slotToTest.toDate() >= thisEvent.start && slotToTest.toDate() <= thisEvent.end) {
+      const slot = generateSlotStartEnd(thisEvent.start, this.props.viewType, slotIndex)
+
+      newEvents.push({
+        ...slot,
         id: uuid(),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         allDay: false,
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      }
+        isAvailable: thisEvent.isAvailable,
+        price: thisEvent.price,
+        isRecurringEvent: false
+      })
 
-      return this.createSellerEvent(overrideEvent, true)
-    }
+      slotIndex++
 
-    const allOtherEvents = this.state.events.filter((event) => event.id !== thisEvent.id)
-    const stateToSet = {
-      events: [...allOtherEvents, thisEvent],
-      showSellerActionBtns: false
-    }
-
-    if (thisEvent.isClonedRecurringEvent) {
-      stateToSet.events = updateOriginalEvent(thisEvent, this.state.events)
-    }
-
-    this.setState(stateToSet)
-
-    // wait for state to update, then render recurring events on monthly calendar if recurring events checkbox is checked
-    setTimeout(() => {
-      this.renderRecurringEvents(this.state.calendarDate)
-    })
-  }
-
-  // used by seller's calendar only
-  deleteEvent() {
-    const confirmation = confirm(this.props.intl.formatMessage(this.intlMessages.confirmDeleteEvent))
-    const { selectedEvent, events } = this.state
-
-    if (confirmation) {
-      let allOtherEvents
-
-      if (selectedEvent.isRecurringEvent) {
-        allOtherEvents = events.filter((event) => 
-          event.id !== selectedEvent.id &&
-          event.originalEventId !== selectedEvent.id &&
-          event.id !== selectedEvent.originalEventId
-        )
+      if (this.props.viewType === 'daily') {
+        slotToTest = slotToTest.add(1, 'days')
       } else {
-        allOtherEvents = events.filter((event) => event.id !== selectedEvent.id)
+        slotToTest = slotToTest.add(this.props.step || 60, 'minutes').add(1, 'second')
       }
-
-      this.setState({
-        events: [...allOtherEvents],
-        selectedEvent: {
-          price: 0,
-          isAvailable: true,
-          isRecurringEvent: false
-        },
-        showSellerActionBtns: false
-      })
-
-      setTimeout(() => {
-        this.renderRecurringEvents(this.state.calendarDate)
-      })
     }
+
+    const filteredEvents = this.state.events.filter(existingEvent => {
+      const matchingEvent = newEvents.find(newEvent => {
+        return newEvent.start.toString() === existingEvent.start.toString() &&
+          newEvent.end.toString() === existingEvent.end.toString()
+      })
+
+      return !matchingEvent
+    })
+
+    this.setState({
+      events: [
+        ...filteredEvents,
+        ...newEvents
+      ],
+      showSellerActionBtns: false
+    })
   }
 
   cancelEvent() {
     const unChangedEvent = this.state.events.filter((event) => event.id === this.state.selectedEvent.id)
     this.setState({
       selectedEvent: unChangedEvent[0],
-      showSellerActionBtns: false,
       editAllEventsInSeries: true,
       isAvailable: true
     })
@@ -419,12 +306,7 @@ class Calendar extends Component {
 
     this.setState({ selectedEvent })
 
-    if (this.props.userType === 'seller') {
-      setTimeout(() => {
-        this.saveEvent(this.state.selectedEvent)
-      })
-    } else {
-      // user is buyer
+    if (this.props.userType === 'buyer') {
       setTimeout(() => {
         this.onSelectSlot(this.state.selectedEvent)
       })
@@ -442,15 +324,11 @@ class Calendar extends Component {
   }
 
   dateCellWrapper(data) {
+    const { selectedEvent, buyerSelectedSlotData, events } = this.state
     const { value } = data
-    const slotData = getDateAvailabilityAndPrice(value, this.state.events, this.props.offers)
+    const slotData = getDateAvailabilityAndPrice(value, events, this.props.offers)
     const availability = slotData.isAvailable ? 'available' : 'unavailable'
-    const selectedSlotsMatchingDate =
-      this.state.buyerSelectedSlotData &&
-      this.state.buyerSelectedSlotData.filter((slot) =>
-        moment(value).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end).add(1, 'second'))
-      )
-    const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
+    const isSelected = isDateSelected(selectedEvent || buyerSelectedSlotData, value) ? ' selected' : ''
     const isPastDate = moment(value).isBefore(moment().startOf('day')) ? ' past-date' : ' future-date'
 
     return (
@@ -548,26 +426,12 @@ class Calendar extends Component {
     })
   }
 
-  shouldShowRecurringEventCheckbox() {
-    if (this.state.selectedEvent.isRecurringEvent && this.state.existingEventSelected) {
-      return this.state.editAllEventsInSeries
-    } else {
-      if (!this.state.hideRecurringEventCheckbox) {
-        return true
-      } else {
-        return false
-      }
-    }
-  }
-
   render() {
     const selectedEvent = this.state.selectedEvent
     const { viewType, userType, offers } = this.props
     const {
       events,
       calendarDate,
-      editAllEventsInSeries,
-      existingEventSelected,
       showNoEventsEnteredErrorMessage,
       selectionUnavailable,
       showPastDateSelectedError
@@ -690,9 +554,6 @@ class Calendar extends Component {
             }
             {selectedEvent && selectedEvent.start &&
               <div className="calendar-cta">
-                {userType === 'seller' &&
-                  <span className="delete-btn" onClick={this.deleteEvent}>delete</span>
-                }
                 <p className="font-weight-bold">
                   {viewType === 'daily' &&
                     <FormattedMessage
@@ -770,39 +631,21 @@ class Calendar extends Component {
                 </div>
                 {userType === 'seller' &&
                   <Fragment>
-                    {this.shouldShowRecurringEventCheckbox() &&
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="isRecurringEvent"
-                          checked={ selectedEvent.isRecurringEvent }
-                          onChange={ this.onIsRecurringEventChange } />
-                        <label className="form-check-label" htmlFor="isRecurringEvent">
-                          <FormattedMessage
-                            id={'calendar.isRepeatingEvent'}
-                            defaultMessage={
-                              'This is a repeating event'
-                            }
-                          />
-                        </label>
-                      </div>
-                    }
                     <div>
                       <p className="font-weight-bold">
                         <FormattedMessage
-                          id={'calendar.availability'}
+                          id={'calendar.available'}
                           defaultMessage={
-                            'Availability'
+                            'Available'
                           }
                         />
                       </p>
                       <div>
                         <label htmlFor="available">
                           <FormattedMessage
-                            id={'calendar.available'}
+                            id={'calendar.yes'}
                             defaultMessage={
-                              'Availaible'
+                              'Yes'
                             }
                           />
                         </label>
@@ -817,9 +660,9 @@ class Calendar extends Component {
                       <div>
                         <label className="form-check-label" htmlFor="unavailable">
                           <FormattedMessage
-                            id={'calendar.unavailable'}
+                            id={'calendar.no'}
                             defaultMessage={
-                              'Unavailable'
+                              'No'
                             }
                           />
                         </label>
@@ -876,46 +719,10 @@ class Calendar extends Component {
                         </Fragment>
                       }
                     </div>
-                    {selectedEvent.isRecurringEvent && existingEventSelected &&
-                      <div className="edit-series-container">
-                        <label className="form-check-label" htmlFor="editAllEvents">
-                          <FormattedMessage
-                            id={'calendar.editAllEventsInSeries'}
-                            defaultMessage={
-                              'Edit all events in this series'
-                            }
-                          />
-                        </label>
-                        <input
-                          id="editAllEvents"
-                          type="radio"
-                          value={true}
-                          checked={editAllEventsInSeries}
-                          onChange={this.handleEditSeriesRadioChange}
-                          name="editRecurringEventRadio"
-                        />
-                        <label className="form-check-label" htmlFor="editOnlyThisEvent">
-                          <FormattedMessage
-                            id={'calendar.editOnlyThisTimeSlot'}
-                            defaultMessage={
-                              'Edit only this time slot'
-                            }
-                          />
-                        </label>
-                        <input
-                          id="editOnlyThisEvent"
-                          type="radio"
-                          value={false}
-                          checked={!editAllEventsInSeries}
-                          onChange={this.handleEditSeriesRadioChange}
-                          name="editRecurringEventRadio"
-                        />
-                      </div>
-                    }
                     {this.state.showSellerActionBtns &&
                       <div className="cta-btns row">
                         <div className="col-md-6">
-                          <button className="btn btn-dark" onClick={this.cancelEvent}>
+                          <button className="btn" onClick={this.cancelEvent}>
                             <FormattedMessage
                               id={'calendar.cancel'}
                               defaultMessage={
@@ -925,7 +732,7 @@ class Calendar extends Component {
                           </button>
                         </div>
                         <div className="col-md-6">
-                          <button className="btn btn-light" onClick={this.saveEvent}>
+                          <button className="btn" onClick={this.saveEvent}>
                             <FormattedMessage
                               id={'calendar.save'}
                               defaultMessage={

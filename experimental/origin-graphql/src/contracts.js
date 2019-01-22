@@ -91,6 +91,9 @@ const Configs = {
     ipfsRPC: `http://${HOST}:5002`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
+    affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544'
+
     // messaging: {
     //   ipfsSwarm:
     //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/QmYsCaLzzso7kYuAZ8b5DwhpwGvgzKyFtvs37bG95GTQGA',
@@ -257,7 +260,7 @@ export function setNetwork(net, customConfig) {
     token.contractExec = contract
   })
 
-  context.transactions = []
+  context.transactions = {}
   try {
     context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
   } catch (e) {
@@ -325,7 +328,8 @@ export function setMarketplace(address, epoch) {
   context.eventSource = new EventSource({
     marketplaceContract: context.marketplace,
     ipfsGateway: context.ipfsGateway,
-    web3: context.web3
+    web3: context.web3,
+    arbitrator: context.config.arbitrator
   })
   context.marketplaceExec = context.marketplace
 
