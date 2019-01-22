@@ -39,7 +39,7 @@ class WithdrawOffer extends Component {
                 }
                 shouldClose={this.state.sureShouldClose}
               >
-                <h2>Withdraw Offer </h2>
+                <h2>Withdraw Offer</h2>
                 Are you sure you want to withdraw your offer? Your escrowed
                 payment wil be returned to your wallet.
                 <div className="actions">
