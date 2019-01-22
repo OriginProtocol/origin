@@ -32,7 +32,7 @@ class ConfirmReset extends Component {
             }
           />
           &nbsp;
-          <a href="https://medium.com/originprotocol/origin-id-v2-eca7c4e85a70" target="_blank">
+          <a href="https://medium.com/originprotocol/origin-id-v2-eca7c4e85a70" target="_blank" rel="noopener noreferrer">
             <FormattedMessage
               id={'ConfirmReset.learnMore'}
               defaultMessage={'Learn More.'}
