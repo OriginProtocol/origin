@@ -4,6 +4,7 @@ import AcceptOffer from './mutations/AcceptOffer'
 import RejectOffer from './mutations/RejectOffer'
 import WithdrawOffer from './mutations/WithdrawOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
+import DisputeOffer from './mutations/DisputeOffer'
 import StarRating from 'components/StarRating'
 
 import WaitForFinalize from './_WaitForFinalize'
@@ -11,6 +12,12 @@ import WaitForFinalize from './_WaitForFinalize'
 const TransactionProgress = ({ offer, wallet }) => {
   if (offer.status === 4) {
     return <Finalized />
+  }
+  if (offer.status === 3) {
+    return <Disputed />
+  }
+  if (offer.status === 5) {
+    return <DisputeResolved />
   }
   if (offer.listing.seller.id === wallet) {
     if (offer.status === 2) {
@@ -83,7 +90,7 @@ class ReviewAndFinalize extends Component {
             onChange={e => this.setState({ review: e.target.value })}
           />
         </div>
-        <div>
+        <div className="d-flex flex-column">
           <FinalizeOffer
             rating={this.state.rating}
             review={this.state.review}
@@ -92,6 +99,12 @@ class ReviewAndFinalize extends Component {
           >
             Finalize
           </FinalizeOffer>
+          <DisputeOffer
+            offer={this.props.offer}
+            className="btn btn-link withdraw mt-3"
+          >
+            Report a Problem
+          </DisputeOffer>
         </div>
         <div className="stages">
           <div className="active bg">Offer Placed</div>
@@ -144,6 +157,32 @@ const OfferRejected = ({ party }) => (
     <div className="stages">
       <div className="active bg">Offer Placed</div>
       <div className="active bg">Offer Rejected</div>
+    </div>
+  </div>
+)
+
+const Disputed = () => (
+  <div className="transaction-progress">
+    <h4>Offer Disputed</h4>
+    <div className="help mb-0">Wait to be contacted by an Origin team member</div>
+    <div className="stages">
+      <div className="active bg">Offer Placed</div>
+      <div className="active bg">Offer Accepted</div>
+      <div className="danger bgl">Dispute Started</div>
+      <div>Ruling Made</div>
+    </div>
+  </div>
+)
+
+const DisputeResolved = () => (
+  <div className="transaction-progress">
+    <h4>Dispute Resolved</h4>
+    <div className="help mb-0">Origin have resolved this dispute</div>
+    <div className="stages">
+      <div className="active bg">Offer Placed</div>
+      <div className="active bg">Offer Accepted</div>
+      <div className="danger bg">Dispute Started</div>
+      <div className="active bg">Ruling Made</div>
     </div>
   </div>
 )
@@ -245,6 +284,14 @@ require('react-styl')(`
           z-index: 4
         &.active::before
           background: var(--greenblue) url(images/checkmark.svg) center no-repeat
+        &.danger::before
+          background: var(--orange-red)
+          content: "!";
+          font-weight: 900;
+          color: var(--white);
+          text-align: center;
+          font-size: 14px;
+          line-height: 19px;
         &:first-child::after
           left: 50%
         &:last-child::after
