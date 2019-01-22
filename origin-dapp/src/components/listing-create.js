@@ -1145,7 +1145,6 @@ class ListingCreate extends Component {
                       className="float-right btn btn-primary btn-listing-create"
                       ga-category="create_listing"
                       ga-label="details_step_continue"
-                      disabled={this.state.originalForm && this.state.originalForm}
                     >
                       <FormattedMessage
                         id={'continueButtonLabel'}
