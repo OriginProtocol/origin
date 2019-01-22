@@ -173,6 +173,7 @@ class ListingCreate extends Component {
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
         this.ensureUserIsSeller(listing.seller)
+        // dappSchemaId is compared on formDataChange without the domain name, so it turns easier to understand category/subcategory changes
         listing.dappSchemaId = listing.dappSchemaId.substring(listing.dappSchemaId.lastIndexOf('/')+1)
         const localState = {
           formListing: {
