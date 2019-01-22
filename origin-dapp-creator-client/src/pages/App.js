@@ -27,7 +27,6 @@ class App extends React.Component {
     }
 
     this.handlePublish = this.handlePublish.bind(this)
-    this.handleServerErrors = this.handleServerErrors.bind(this)
     this.setConfig = this.setConfig.bind(this)
     this.signConfig = this.signConfig.bind(this)
   }
@@ -52,12 +51,8 @@ class App extends React.Component {
         signature: signature,
         address: web3.eth.accounts[0]
       })
-      .catch(this.handleServerErrors)
   }
 
-  handleServerErrors (error) {
-    console.log('There was an error publishing the configuration: ', error)
-  }
 
   async web3Sign(data, account) {
     // Promise wrapper for web3 signing
