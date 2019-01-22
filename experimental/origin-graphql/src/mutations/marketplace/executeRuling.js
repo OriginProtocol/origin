@@ -4,7 +4,8 @@ import contracts from '../../contracts'
 import parseId from '../../utils/parseId'
 
 async function executeRuling(_, data) {
-  await checkMetaMask(data.from)
+  const { from } = data
+  await checkMetaMask(from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)
   let ruling = 0,
@@ -18,16 +19,12 @@ async function executeRuling(_, data) {
   if (data.commission === 'pay') {
     ruling += 2
   }
+
   const tx = contracts.marketplaceExec.methods
     .executeRuling(listingId, offerId, ipfsHash, ruling, refund)
-    .send({
-      gas: 4612388,
-      from: data.from
-    })
-  return txHelper({
-    tx,
-    mutation: 'executeRuling'
-  })
+    .send({ gas: 4612388, from })
+
+  return txHelper({ tx, from, mutation: 'executeRuling' })
 }
 
 export default executeRuling

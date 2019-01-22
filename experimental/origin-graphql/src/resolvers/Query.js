@@ -66,7 +66,6 @@ export default {
     }),
   messaging: (_, args) =>
     new Promise(async resolve => {
-      return null
       let id = args.id
       if (id === 'defaultAccount') {
         const accounts = await contracts.metaMask.eth.getAccounts()

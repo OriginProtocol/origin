@@ -4,7 +4,8 @@ import parseId from '../../utils/parseId'
 import contracts from '../../contracts'
 
 async function withdrawListing(_, data) {
-  await checkMetaMask(data.from)
+  const { from } = data
+  await checkMetaMask(from)
   const { listingId } = parseId(data.listingID)
   const ipfsHash = await post(contracts.ipfsRPC, {
     schemaId: 'https://schema.originprotocol.com/listing-withdraw_1.0.0.json'
@@ -12,11 +13,9 @@ async function withdrawListing(_, data) {
 
   const tx = contracts.marketplaceExec.methods
     .withdrawListing(listingId, data.target, ipfsHash)
-    .send({
-      gas: 4612388,
-      from: data.from
-    })
-  return txHelper({ tx, mutation: 'withdrawListing' })
+    .send({ gas: 4612388, from })
+
+  return txHelper({ tx, from, mutation: 'withdrawListing' })
 }
 
 export default withdrawListing

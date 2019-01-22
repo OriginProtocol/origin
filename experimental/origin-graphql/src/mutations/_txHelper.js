@@ -21,21 +21,35 @@ export async function checkMetaMask(from) {
 // to hang
 const isServer = typeof window === 'undefined'
 
-export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
+export default function txHelper({
+  tx,
+  mutation,
+  onConfirmation,
+  onReceipt,
+  from
+}) {
   return new Promise((resolve, reject) => {
     let txHash
+
     tx.once('transactionHash', async hash => {
       txHash = hash
       resolve({ id: hash })
 
-      contracts.transactions.push({ id: hash })
-      // try {
-      //   window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
-      //     contracts.transactions
-      //   )
-      // } catch (e) {
-      //   /* Ignore */
-      // }
+      contracts.transactions[from] = contracts.transactions[from] || []
+      contracts.transactions[from].unshift({
+        id: hash,
+        submittedAt: Math.round(+new Date() / 1000)
+      })
+      // Only store last 10 transactions...
+      contracts.transactions[from] = contracts.transactions[from].slice(0, 10)
+
+      try {
+        window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
+          contracts.transactions
+        )
+      } catch (e) {
+        /* Ignore */
+      }
 
       const node = await getTransaction(hash, true)
 

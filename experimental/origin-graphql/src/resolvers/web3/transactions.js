@@ -1,20 +1,18 @@
 import graphqlFields from 'graphql-fields'
+import { getIdsForPage, getConnection } from '../_pagination'
 import contracts from '../../contracts'
 
-function bota(input) {
-  return new Buffer(input.toString(), 'binary').toString('base64')
-}
-
-function convertCursorToOffset(cursor) {
-  return parseInt(atob(cursor))
-}
-
-function atob(input) {
-  return new Buffer(input, 'base64').toString('binary')
-}
+const transactionCache = {},
+  receiptCache = {}
 
 export async function getTransactionReceipt(id) {
-  const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
+  const rawReceipt =
+    receiptCache[id] || (await contracts.web3.eth.getTransactionReceipt(id))
+
+  if (rawReceipt && !receiptCache[id]) {
+    receiptCache[id] = rawReceipt
+  }
+
   if (!rawReceipt) {
     return null
   }
@@ -56,60 +54,47 @@ export async function getTransactionReceipt(id) {
   return { id, ...rawReceipt, events }
 }
 
-export async function getTransaction(id, fields = {}) {
-  const status = 'submitted'
-  const transaction = await contracts.web3.eth.getTransaction(id)
+export async function getTransaction(id, fields = {}, localTransactions = []) {
+  const transaction =
+    transactionCache[id] || (await contracts.web3.eth.getTransaction(id))
+
+  if (transaction && !transactionCache[id]) {
+    transactionCache[id] = transaction
+  }
+
+  const localTx = localTransactions.find(tx => tx.id === id) || {}
+
+  const receipt =
+    fields.status || fields.receipt ? await getTransactionReceipt(id) : null
 
   return {
     id,
-    status,
-    receipt: fields.receipt ? await getTransactionReceipt(id) : null,
+    status: receipt ? 'receipt' : transaction ? 'pending' : 'submitted',
+    submittedAt: localTx.submittedAt,
+    receipt,
     ...transaction
   }
 }
 
-export async function transactions(
-  contract,
-  { first = 10, after },
-  context,
-  info
-) {
-  if (!contract) {
+export async function transactions(user, { first = 10, after }, context, info) {
+  if (!user) {
     return null
   }
 
   const fields = graphqlFields(info)
 
-  const totalCount = contracts.transactions.length
-  let ids = contracts.transactions
+  const userTransactions = contracts.transactions[user.id] || []
+  const totalCount = userTransactions.length
+  const allIds = userTransactions.map(t => t.id)
 
-  let start = 0,
-    nodes = []
-  if (after) {
-    start = ids.indexOf(convertCursorToOffset(after)) + 1
-  }
-  const end = start + first
-  ids = ids.slice(start, end)
+  const { ids, start } = getIdsForPage({ after, ids: allIds, first })
 
+  let nodes = []
   if (!fields || fields.nodes) {
     nodes = await Promise.all(
-      contracts.transactions.map(transaction =>
-        getTransaction(transaction.id, fields.nodes)
-      )
+      ids.map(id => getTransaction(id, fields.nodes, userTransactions))
     )
   }
-  const firstNodeId = ids[0] || 0
-  const lastNodeId = ids[ids.length - 1] || 0
 
-  return {
-    totalCount,
-    nodes,
-    pageInfo: {
-      endCursor: bota(lastNodeId),
-      hasNextPage: end < totalCount,
-      hasPreviousPage: firstNodeId > totalCount,
-      startCursor: bota(firstNodeId)
-    },
-    edges: nodes.map(node => ({ cursor: bota(node.id), node }))
-  }
+  return getConnection({ start, first, nodes, ids, totalCount })
 }

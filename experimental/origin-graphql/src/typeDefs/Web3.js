@@ -64,12 +64,6 @@ export default `
     defaultAccount: Account
     transaction(id: ID!): Transaction
     transactionReceipt(id: ID!): TransactionReceipt
-    transactions(
-      first: Int
-      last: Int
-      before: String
-      after: String
-    ): TransactionConnection!
     useMetaMask: Boolean
     metaMaskAvailable: Boolean
     metaMaskEnabled: Boolean
@@ -137,13 +131,6 @@ export default `
     from: TokenHolder
   }
 
-  type TransactionConnection {
-    nodes: [Transaction]
-    pageInfo: PageInfo!
-    totalCount: Int!
-    hasPending: Boolean
-  }
-
   type Transaction {
     id: ID!
     status: String
@@ -159,6 +146,9 @@ export default `
     value: String
     pct: Float
     receipt: TransactionReceipt
+
+    # Timestamp transaction originally submitted
+    submittedAt: Int
   }
 
   type TransactionReceipt {
