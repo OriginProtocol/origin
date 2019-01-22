@@ -47,6 +47,7 @@ const index = {
         language: { type: 'keyword' },
         listingType: { type: 'keyword' },
         status: { type: 'keyword' },
+        marketplacePublisher: { type: 'keyword' },
         category: { type: 'keyword', copy_to: 'all_text' },
         subCategory: { type: 'keyword', copy_to: 'all_text' },
         description: { type: 'text', copy_to: 'all_text' },

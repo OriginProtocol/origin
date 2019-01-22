@@ -25,13 +25,14 @@ class DiscoveryService {
    * @return {Promise<*>}
    * @private
    */
-  async _query(graphQlQuery) {
+  async _query(graphQlQuery, variables) {
     const resp = await this.fetch(
       this.discoveryServerUrl,
       {
         method: 'POST',
         body: JSON.stringify({
-          query: graphQlQuery
+          query: graphQlQuery,
+          variables: variables
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -131,6 +132,8 @@ class DiscoveryService {
       throw new Error('listingsFor and purchasesFor options are incompatible')
     }
 
+    const filters = opts.filters || []
+
     // Offset should be bigger than 0.
     const offset = Math.max(opts.offset || 0, 0)
 
@@ -140,24 +143,28 @@ class DiscoveryService {
       : -1
 
     let query, listings
+
     if (opts.listingsFor) {
       // Query for all listings created by the specified seller address.
-      query = `{
-        user(walletAddress: "${opts.listingsFor}") {
+      query = `query($listingsFor: ID!) {
+        user(walletAddress: $listingsFor) {
           listings {
             nodes {
               data
               display
             }
           }
-        } 
+        }
       }`
-      const resp = await this._query(query)
+      const resp = await this._query(query, {
+        filters: filters,
+        listingsFor: opts.listingsFor
+      })
       listings = resp.data.user.listings.nodes.map(listing => this._toListingModel(listing))
     } else if (opts.purchasesFor) {
       // Query for all listings the specified buyer address made an offer on.
-      query = `{
-        user(walletAddress: "${opts.purchasesFor}") {
+      query = `query($purchasesFor: ID) {
+        user(walletAddress: $purchasesFor) {
           offers {
             nodes {
               listing {
@@ -168,14 +175,17 @@ class DiscoveryService {
           }
         }
       }`
-      const resp = await this._query(query)
+      const resp = await this._query(query, { purchasesFor: opts.purchasesFor })
       listings = resp.data.user.offers.nodes.map(offer => this._toListingModel(offer.listing))
     } else {
       // General query against all listings. Used for example on Browse and search pages.
-      query = `{
-        listings(
-          filters: []
-          page: { offset: ${offset}, numberOfItems: ${numberOfItems} }
+      query = `query($filters: [ListingFilter!], $offset: Int!, $numberOfItems: Int!) {
+        listings (
+          filters: $filters
+          page: {
+            offset: $offset,
+            numberOfItems: $numberOfItems
+          }
         ) {
           nodes {
             data
@@ -183,7 +193,11 @@ class DiscoveryService {
           }
         }
       }`
-      const resp = await this._query(query)
+      const resp = await this._query(query, {
+        filters: filters,
+        offset: offset,
+        numberOfItems: numberOfItems
+      })
       listings = resp.data.listings.nodes.map(listing => this._toListingModel(listing))
     }
 

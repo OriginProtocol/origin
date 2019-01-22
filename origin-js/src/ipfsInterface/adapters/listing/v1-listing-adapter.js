@@ -71,7 +71,8 @@ export default class ListingAdapterV1 extends AdapterBase {
       language: ipfsData.language,
       title: ipfsData.title,
       description: ipfsData.description,
-      media: ipfsData.media
+      media: ipfsData.media,
+      marketplacePublisher: ipfsData.marketplacePublisher
     }
 
     // Unit data.

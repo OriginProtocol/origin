@@ -35,11 +35,13 @@ class Listing {
    *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
    *  - {string} deposit
    *  - {string} depositManager - address of depositManager
+   *  - {string} marketplacePublisher - address of the publisher of the marketplace that the listing originated from
    *  - {Object} commissionPerUnit - Commission per unit in multi unit listings. Consists of 'amount' and 'currency' properties
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit }) {
+    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager,
+    commissionPerUnit, marketplacePublisher }) {
 
     this.id = id
     this.title = title
@@ -67,6 +69,7 @@ class Listing {
     this.deposit = deposit
     this.depositManager = depositManager
     this.commissionPerUnit = commissionPerUnit
+    this.marketplacePublisher = marketplacePublisher
   }
 
   // creates a Listing using on-chain and off-chain data
@@ -99,6 +102,7 @@ class Listing {
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
       commissionPerUnit: ipfsListing.commissionPerUnit,
+      marketplacePublisher: ipfsListing.marketplacePublisher
     })
   }
 
@@ -130,7 +134,8 @@ class Listing {
       dappSchemaId: discoveryNodeData.dappSchemaId,
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
-      commissionPerUnit: discoveryNodeData.commissionPerUnit
+      commissionPerUnit: discoveryNodeData.commissionPerUnit,
+      marketplacePublisher: discoveryNodeData.marketplacePublisher
     })
   }
 
