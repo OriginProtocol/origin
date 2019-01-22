@@ -36,9 +36,7 @@ async function makeOffer(_, data) {
     .allowedAffiliates(marketplace.options.address)
     .call()
 
-  const affiliate = data.affiliate
-    || contracts.config.affiliate
-    || ZeroAddress
+  const affiliate = data.affiliate || contracts.config.affiliate || ZeroAddress
   if (!affiliateWhitelistDisabled) {
     const affiliateAllowed = await marketplace.methods
       .allowedAffiliates(affiliate)
@@ -52,10 +50,12 @@ async function makeOffer(_, data) {
   await validateNewOffer(listingId, data)
 
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
-  const commission = contracts.web3.utils.toWei(ipfsData.commission.amount, 'ether')
+  const commission = contracts.web3.utils.toWei(
+    ipfsData.commission.amount,
+    'ether'
+  )
   const value = contracts.web3.utils.toWei(data.value, 'ether')
-  const arbitrator = data.arbitrator
-    || contracts.config.arbitrator
+  const arbitrator = data.arbitrator || contracts.config.arbitrator
 
   const args = [
     listingId,
@@ -77,38 +77,7 @@ async function makeOffer(_, data) {
     from: buyer,
     value
   })
-  return txHelper({ tx, mutation: 'makeOffer' })
+  return txHelper({ tx, from: data.from, mutation: 'makeOffer' })
 }
 
 export default makeOffer
-
-/*
-mutation makeOffer(
-  $listingID: String,
-  $finalizes: String,
-  $affiliate: String,
-  $commission: String,
-  $value: String,
-  $currency: String,
-  $arbitrator: String
-) {
-  makeOffer(
-    listingID: $listingID,
-    finalizes: $finalizes,
-    affiliate: $affiliate,
-    commission: $commission,
-    value: $value,
-    currency: $currency,
-    arbitrator: $arbitrator
-  )
-}
-{
-  "listingID": "0",
-  "finalizes": "1536300000",
-  "affiliate": "0x7c38A2934323aAa8dAda876Cfc147C8af40F8D0e",
-  "commission": "0",
-  "value": "100000000000000000",
-  "currency": "0x0000000000000000000000000000000000000000",
-  "arbitrator": "0x7c38A2934323aAa8dAda876Cfc147C8af40F8D0e"
-}
-*/

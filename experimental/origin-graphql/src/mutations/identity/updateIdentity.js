@@ -15,7 +15,7 @@ async function updateIdentity(
   const args = await attestationArgs(profile, attestations)
   const tx = contract.methods.addClaims(...args).send({ gas: 4612388, from })
 
-  return txHelper({ tx, mutation: 'updateIdentity' })
+  return txHelper({ tx, from, mutation: 'updateIdentity' })
 }
 
 export default updateIdentity
