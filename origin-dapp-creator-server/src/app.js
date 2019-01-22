@@ -3,16 +3,14 @@ require('@babel/polyfill')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
-const Logger = require('logplease')
-const Web3 = require('web3')
-const web3 = new Web3()
 
 const app = express()
 const port = process.env.PORT || 4321
-const logger = Logger.create('origin-dapp-creator-server')
 
-import { getDnsRecord, parseDnsTxtRecord, setAllRecords, updateTxtRecord } from './dns'
-import { addConfigToIpfs, ipfsClient, getConfigFromIpfs } from './ipfs'
+import { setAllRecords, updateTxtRecord } from './lib/dns'
+import { addConfigToIpfs, ipfsClient } from './lib/ipfs'
+import { validateSubdomain, validateSignature } from './middleware'
+import logger from './logger'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -22,45 +20,11 @@ app.use(cors())
  * IPFS and configures a subdomain if necessary. Subdomains are protected via
  * web3 signatures so it isn't possible to overwrite another users subdomain.
  */
+app.post('/config', validateSignature)
+app.post('/config', validateSubdomain)
+
 app.post('/config', async (req, res) => {
-  const { config, signature, address } = req.body
-
-  let existingRecord
-  let existingConfigIpfsHash
-
-  if (config.subdomain) {
-    // Validating signing is only necessary if we are configuring for a subdomain
-
-    // Validate signature matches
-    const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)
-    // Address from recover is checksummed so lower case it
-    if (signer.toLowerCase() !== address.toLowerCase()) {
-      return res.status(400).send('Signature was invalid')
-    }
-
-    // Check if there is an existing configuration published for this subdomain
-    try {
-      existingRecord = await getDnsRecord(config.subdomain, 'TXT')
-    } catch (error) {
-      logger.error(error)
-      return res.status(500).send('An error occurred retrieving DNS records')
-    }
-
-    if (existingRecord) {
-      existingConfigIpfsHash = parseDnsTxtRecord(existingRecord.data[0])
-      if (!existingConfigIpfsHash) {
-        return res.status(500).send('An error occurred retrieving existing configuration')
-      }
-      const existingConfig = await getConfigFromIpfs(existingConfigIpfsHash)
-      if (existingConfig.address !== address) {
-        return res.status(400).send({
-          subdomain: 'Subdomain in use by another account'
-        })
-      }
-    }
-
-    logger.debug('Validated signature of configuration')
-  }
+  const { config } = req.body
 
   // Add the new config to IPFS
   let ipfsHash
@@ -77,11 +41,11 @@ app.post('/config', async (req, res) => {
   if (config.subdomain) {
     // Configure DNS settings if we are configuring for a subdomain
     try {
-      if (existingRecord) {
+      if (req.dnsRecord) {
         // Record exists, must be updating an existing configuration
-        await updateTxtRecord(config.subdomain, ipfsHash, existingRecord)
+        await updateTxtRecord(config.subdomain, ipfsHash, req.dnsRecord)
         // Unpin old config
-        ipfsClient.pin.rm(existingConfigIpfsHash)
+        ipfsClient.pin.rm(req.existingConfigIpfsHash)
       } else {
         // No existing record, must be a fresh configuration
         await setAllRecords(config.subdomain, ipfsHash)
@@ -118,4 +82,11 @@ app.post('/config/preview', async (req, res) => {
   res.send(ipfsHash)
 })
 
+app.post('/validate/subdomain', validateSubdomain)
+app.post('/validate/subdomain', async (req, res) => {
+  res.status(200).send()
+})
+
 app.listen(port, () => console.log(`Listening on port ${port}`))
+
+module.exports = app
