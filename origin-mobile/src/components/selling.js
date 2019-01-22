@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 
 import OriginButton from 'components/origin-button'
 
