@@ -52,6 +52,22 @@ const Row = ({ node, identity, onClick }) => {
         {title}
       </>
     )
+  } else if (event === 'OfferDisputed') {
+    description = (
+      <>
+        {nameLink}
+        {` disputed an offer on `}
+        {title}
+      </>
+    )
+  } else if (event === 'OfferRuling') {
+    description = (
+      <>
+        {nameLink}
+        {` resolved a dispute on `}
+        {title}
+      </>
+    )
   }
 
   return (

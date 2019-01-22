@@ -1,5 +1,8 @@
 import { get, post } from 'origin-ipfs'
 import uniqBy from 'lodash/uniqBy'
+import createDebug from 'debug'
+
+const debug = createDebug('event-cache:')
 
 export default function eventCache(contract, fromBlock = 0, web3, config) {
   const queue = []
@@ -10,7 +13,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     triedIpfs = false
 
   function updateBlock(block) {
-    console.log('Update block', block)
+    debug(`Update block ${block}`)
     toBlock = block
   }
 
@@ -40,7 +43,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     }
     processing = true
     if (!triedIpfs && config.ipfsEventCache) {
-      console.log('Try IPFS cache...')
+      debug('Try IPFS cache...')
       let ipfsData
       try {
         ipfsData = await get(config.ipfsGateway, config.ipfsEventCache)
@@ -48,14 +51,14 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
         /* Ignore */
       }
       if (ipfsData && ipfsData.events) {
-        console.log('Got IPFS cache')
+        debug('Got IPFS cache')
         // console.log(ipfsData)
         events = ipfsData.events
         lastLookup = ipfsData.lastLookup
         fromBlock = ipfsData.lastLookup
         // ({ events, lastLookup } = ipfsData)
       } else {
-        console.log('Error getting IPFS cache')
+        debug('Error getting IPFS cache')
       }
       triedIpfs = true
     }
@@ -69,7 +72,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     if (lastLookup === fromBlock) {
       fromBlock += 1
     }
-    console.log(
+    debug(
       `Fetching events from ${fromBlock} to ${toBlock}, last lookup ${lastLookup}`
     )
     lastLookup = toBlock
@@ -87,7 +90,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
       e => e.id
     )
 
-    console.log(`Found ${events.length} events, ${newEvents.length} new`)
+    debug(`Found ${events.length} events, ${newEvents.length} new`)
 
     fromBlock = toBlock + 1
     processing = false

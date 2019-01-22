@@ -1,45 +1,49 @@
 import React, { Component } from 'react'
 
 import AcceptOffer from './mutations/AcceptOffer'
+import RejectOffer from './mutations/RejectOffer'
+import WithdrawOffer from './mutations/WithdrawOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
+import DisputeOffer from './mutations/DisputeOffer'
 import StarRating from 'components/StarRating'
+
+import WaitForFinalize from './_WaitForFinalize'
 
 const TransactionProgress = ({ offer, wallet }) => {
   if (offer.status === 4) {
     return <Finalized />
   }
+  if (offer.status === 3) {
+    return <Disputed />
+  }
+  if (offer.status === 5) {
+    return <DisputeResolved />
+  }
   if (offer.listing.seller.id === wallet) {
     if (offer.status === 2) {
       return <WaitForFinalize offer={offer} />
+    } else if (offer.status === 0) {
+      if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
+        return <OfferRejected party="seller" />
+      } else {
+        return <OfferWithdrawn party="seller" />
+      }
     } else {
       return <AcceptOrReject offer={offer} />
     }
   }
   if (offer.status === 2) {
     return <ReviewAndFinalize offer={offer} />
+  } else if (offer.status === 0) {
+    if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
+      return <OfferRejected party="buyer" />
+    } else {
+      return <OfferWithdrawn party="buyer" />
+    }
   } else {
-    return <MessageSeller />
+    return <MessageSeller offer={offer} />
   }
 }
-
-const WaitForFinalize = () => (
-  <div className="transaction-progress">
-    <h4>Next Step:</h4>
-    <div className="next-step">Wait for buyer to confirm receipt</div>
-    <div className="help">
-      Make sure you fulfill the order and wait for the buyer’s confirmation
-    </div>
-    <button className="btn btn-link">
-      View Fulfillment Checklist &rsaquo;
-    </button>
-    <div className="stages">
-      <div className="active bg">Offer Placed</div>
-      <div className="active bgl">Offer Accepted</div>
-      <div>Received by buyer</div>
-      <div>Funds withdrawn</div>
-    </div>
-  </div>
-)
 
 const AcceptOrReject = ({ offer }) => (
   <div className="transaction-progress">
@@ -47,7 +51,9 @@ const AcceptOrReject = ({ offer }) => (
     <div className="next-step">Accept or Reject Offer</div>
     <div className="help">Click the appropriate button</div>
     <div>
-      <button className="btn btn-outline-danger">Reject Offer</button>
+      <RejectOffer offer={offer} className="btn btn-outline-danger">
+        Reject Offer
+      </RejectOffer>
       <AcceptOffer offer={offer} className="btn btn-primary ml-2">
         Accept Offer
       </AcceptOffer>
@@ -84,7 +90,7 @@ class ReviewAndFinalize extends Component {
             onChange={e => this.setState({ review: e.target.value })}
           />
         </div>
-        <div>
+        <div className="d-flex flex-column">
           <FinalizeOffer
             rating={this.state.rating}
             review={this.state.review}
@@ -93,6 +99,12 @@ class ReviewAndFinalize extends Component {
           >
             Finalize
           </FinalizeOffer>
+          <DisputeOffer
+            offer={this.props.offer}
+            className="btn btn-link withdraw mt-3"
+          >
+            Report a Problem
+          </DisputeOffer>
         </div>
         <div className="stages">
           <div className="active bg">Offer Placed</div>
@@ -104,16 +116,73 @@ class ReviewAndFinalize extends Component {
   }
 }
 
-const MessageSeller = () => (
+const MessageSeller = ({ offer }) => (
   <div className="transaction-progress">
     <h4>Next Step</h4>
     <div className="next-step">Give your shipping address to seller</div>
     <div className="help">Click the button to open messaging</div>
     <button className="btn btn-link">Message Seller &rsaquo;</button>
+    <WithdrawOffer offer={offer} />
     <div className="stages">
       <div className="active">Offer Placed</div>
       <div>Offer Accepted</div>
       <div>Received by buyer</div>
+    </div>
+  </div>
+)
+
+const OfferWithdrawn = ({ party }) => (
+  <div className="transaction-progress">
+    <h4>Offer Withdrawn</h4>
+    <div className="help mb-0">
+      {party === 'seller'
+        ? 'The buyer withdrew their offer'
+        : 'You withdrew your offer'}
+    </div>
+    <div className="stages">
+      <div className="active bg">Offer Placed</div>
+      <div className="active bg">Offer Withdrawn</div>
+    </div>
+  </div>
+)
+
+const OfferRejected = ({ party }) => (
+  <div className="transaction-progress">
+    <h4>Offer Rejected</h4>
+    <div className="help mb-0">
+      {party === 'seller'
+        ? 'You rejected this offer'
+        : 'Your offer was rejected by the seller'}
+    </div>
+    <div className="stages">
+      <div className="active bg">Offer Placed</div>
+      <div className="active bg">Offer Rejected</div>
+    </div>
+  </div>
+)
+
+const Disputed = () => (
+  <div className="transaction-progress">
+    <h4>Offer Disputed</h4>
+    <div className="help mb-0">Wait to be contacted by an Origin team member</div>
+    <div className="stages">
+      <div className="active bg">Offer Placed</div>
+      <div className="active bg">Offer Accepted</div>
+      <div className="danger bgl">Dispute Started</div>
+      <div>Ruling Made</div>
+    </div>
+  </div>
+)
+
+const DisputeResolved = () => (
+  <div className="transaction-progress">
+    <h4>Dispute Resolved</h4>
+    <div className="help mb-0">Origin have resolved this dispute</div>
+    <div className="stages">
+      <div className="active bg">Offer Placed</div>
+      <div className="active bg">Offer Accepted</div>
+      <div className="danger bg">Dispute Started</div>
+      <div className="active bg">Ruling Made</div>
     </div>
   </div>
 )
@@ -172,6 +241,10 @@ require('react-styl')(`
       padding: 0.75rem 3rem
       border-radius: 2rem
       font-size: 18px
+      &.withdraw
+        font-size: 12px
+        padding-top: 0
+        font-weight: normal
     .stages
       background-color: var(--pale-grey-eight)
       border-radius: 0 0 5px 5px
@@ -211,6 +284,14 @@ require('react-styl')(`
           z-index: 4
         &.active::before
           background: var(--greenblue) url(images/checkmark.svg) center no-repeat
+        &.danger::before
+          background: var(--orange-red)
+          content: "!";
+          font-weight: 900;
+          color: var(--white);
+          text-align: center;
+          font-size: 14px;
+          line-height: 19px;
         &:first-child::after
           left: 50%
         &:last-child::after

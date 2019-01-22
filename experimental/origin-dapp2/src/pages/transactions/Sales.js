@@ -110,10 +110,10 @@ class Sales extends Component {
                       ))}
                       {!hasNextPage ? null : (
                         <button
-                          text={
-                            networkStatus === 3 ? 'Loading' : 'Load more...'
+                          children={
+                            networkStatus === 3 ? 'Loading...' : 'Load more'
                           }
-                          className="mt-3"
+                          className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>
                             nextPage(fetchMore, { ...vars, after })
                           }
@@ -130,7 +130,6 @@ class Sales extends Component {
     )
   }
 }
-
 
 const NoSales = () => (
   <div className="row">

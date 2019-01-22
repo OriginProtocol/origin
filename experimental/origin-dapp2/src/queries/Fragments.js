@@ -42,6 +42,7 @@ export default {
         title
         description
         currencyId
+        multiUnit
         unitsTotal
         unitsAvailable
         unitsSold
