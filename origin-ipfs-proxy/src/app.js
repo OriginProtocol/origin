@@ -9,7 +9,17 @@ const zlib = require('zlib')
 const config = require('./config')
 const logger = require('./logger')
 
-const validImageTypes = ['image/jpeg', 'image/gif', 'image/png']
+const validImageTypes = [
+  'image/jpeg',
+  'image/pjpeg',
+  'image/gif',
+  'image/png',
+  'image/vnd.microsoft.icon',
+  'image/x-icon',
+  // Not valid but sometimes used for icons
+  'image/ico',
+  'image/icon'
+]
 
 function isValidFile(buffer) {
   return isValidImage(buffer) || isJSON(buffer.toString())

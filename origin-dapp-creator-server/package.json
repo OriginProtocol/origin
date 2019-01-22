@@ -5,17 +5,17 @@
   "main": "src/app.js",
   "scripts": {
     "build": "per-env",
-    "build:production": "babel src/* -d dist --presets @babel/env",
+    "build:production": "babel -d dist --presets @babel/env src",
     "lint": "eslint 'src/**/*.js'",
     "start": "per-env",
     "start:development": "nodemon --exec 'babel-node' -r src/env.js src/app.js --presets @babel/env",
     "prestart:production": "npm run build",
     "start:production": "node -r ./dist/env.js dist/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -r @babel/register --exit"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OriginProtocol/origin/experimental/origin-dapp-creator"
+    "url": "https://github.com/OriginProtocol/origin/origin-dapp-creator"
   },
   "keywords": [
     "Origin Protocol",
@@ -41,6 +41,14 @@
     "web3": "^1.0.0-beta.37"
   },
   "devDependencies": {
-    "nodemon": "^1.18.7"
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.7",
+    "supertest": "^3.4.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
   }
-}
+ }

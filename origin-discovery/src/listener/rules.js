@@ -231,12 +231,6 @@ async function handleLog (log, rule, contractVersion, context) {
     throw new Error(`ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`)
   }
 
-  // TODO: This kind of verification logic should live in origin.js
-  if (listing.ipfs.data.price === undefined) {
-    console.log(`ERROR: listing ${listingId} has no price. Skipping indexing.`)
-    return
-  }
-
   // On listing or offer event, index the listing.
   // Notes:
   //  - Reason for also re-indexing on offer event is that the listing data includes
