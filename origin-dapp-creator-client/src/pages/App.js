@@ -30,10 +30,6 @@ class App extends React.Component {
     this.signConfig = this.signConfig.bind(this)
   }
 
-  componentDidCatch(error, errorInfo) {
-    Raven.captureException(error, { extra: errorInfo })
-  }
-
   setConfig(config) {
     store.set('creator-config', config)
     this.setState({ config })
