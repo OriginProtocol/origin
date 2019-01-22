@@ -1,3 +1,7 @@
+'use strict'
+
+import superagent from 'superagent'
+
 import React from 'react'
 
 const acceptedFileTypes = [
@@ -17,7 +21,8 @@ class ImagePicker extends React.Component {
 
     this.state = {
       imageUrl: null,
-      loading: false
+      loading: false,
+      uploadError: null
     }
 
     this.handleFileChange = this.handleFileChange.bind(this)
@@ -28,6 +33,11 @@ class ImagePicker extends React.Component {
     const { target } = event
     const { files } = target
 
+    this.setState({
+      loading: true,
+      uploadError: null
+    })
+
     if (files && files[0]) {
       const file = files[0]
 
@@ -35,21 +45,34 @@ class ImagePicker extends React.Component {
         const body = new FormData()
         body.append('file', file)
 
-        const rawRes = await fetch(
-          `${process.env.IPFS_API_URL}/api/v0/add`,
-          { method: 'POST', body }
-        )
-
-        const res = await rawRes.json()
-        const hash = res.Hash
-
-        const imageUrl = `${process.env.IPFS_API_URL}/ipfs/${hash}`
-
-        this.setState({ imageUrl: imageUrl })
-
-        if (this.props.onUpload) {
-          this.props.onUpload(this.props.name, imageUrl)
-        }
+        const response = await superagent
+          .post(`${process.env.IPFS_API_URL}/api/v0/add`)
+          .send(body)
+          .then((response) => {
+            const imageUrl = `${process.env.IPFS_API_URL}/ipfs/${response.body.Hash}`
+            this.setState({ imageUrl: imageUrl })
+            if (this.props.onUpload) {
+              this.props.onUpload(this.props.name, imageUrl)
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 413) {
+              this.setState({
+                uploadError: 'Image is too large, please choose something below 2mb.',
+                loading: false
+              })
+            } else if (error.response.status === 415) {
+              this.setState({
+                uploadError: 'Image is an invalid type.',
+                loading: false
+              })
+            } else {
+              this.setState({
+                uploadError: 'An error occurred uploading your image.',
+                loading: false
+              })
+            }
+          })
       } else {
         console.log('Invalid file type: ', file.type)
       }
@@ -61,10 +84,8 @@ class ImagePicker extends React.Component {
   }
 
   render() {
-    const { data, loading } = this.state
-
     return (
-      <>
+      <div className="image-picker-wrapper">
         <input
           id={this.props.name + '-picker'}
           className="form-control-file"
@@ -83,12 +104,18 @@ class ImagePicker extends React.Component {
               <p className="title">{this.props.title}</p>
               <p>{this.props.description.map((x, i) => <span key={i}>{x}</span>)}</p>
             </div>
-            <label htmlFor={this.props.name + '-picker'} className="btn btn-outline-primary">
+            <label htmlFor={this.props.name + '-picker'}
+                className="btn btn-outline-primary"
+                disabled={this.state.loading}>
               Upload
             </label>
           </div>
         }
-      </>
+
+        {this.state.uploadError &&
+          <div className="invalid-feedback">{this.state.uploadError}</div>
+        }
+      </div>
     )
   }
 
@@ -107,6 +134,9 @@ class ImagePicker extends React.Component {
 }
 
 require('react-styl')(`
+  .image-picker-wrapper .invalid-feedback
+    display: block
+
   .upload-wrapper
     position: relative
     background-color: var(--pale-grey-four)
@@ -128,12 +158,7 @@ require('react-styl')(`
       margin-top: 2rem
     img
       max-width: 100%
-      position: absolute
       margin: auto
-      top: 0
-      bottom: 0
-      left: 0
-      right: 0
 
   .title
     color: var(--dark)
