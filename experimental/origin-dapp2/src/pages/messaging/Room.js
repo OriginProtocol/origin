@@ -13,10 +13,29 @@ import Avatar from 'components/Avatar'
 import QueryError from 'components/QueryError'
 
 dayjs.extend(advancedFormat)
+const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
+
+function renderContent(message) {
+  const { content } = message
+  const contentWithLineBreak = `${content}\n`
+  const contentIsImage = !! content.match(/ipfs/)
+
+  if (!contentIsImage) {
+    return contentWithLineBreak
+  } else {
+    return (
+      <div className="image-container">
+        <img src={content} alt={'fileName'} />
+      </div>
+    )
+  }
+}
 
 const Message = props => {
   const message = get(props, 'message', {})
   const name = get(props, 'identity.profile.fullName', '')
+  const messageContent = renderContent(message)
+
   let showTime = true
   if (props.lastMessage) {
     const timeDiff = message.timestamp - props.lastMessage.timestamp
@@ -36,7 +55,7 @@ const Message = props => {
             {name && <div className="name">{name}</div>}
             <div className="account">{message.address}</div>
           </div>
-          <div className="content">{message.content}</div>
+          <div className="content">{messageContent}</div>
         </div>
       </div>
     </>
