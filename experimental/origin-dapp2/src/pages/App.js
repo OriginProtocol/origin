@@ -44,7 +44,7 @@ class App extends Component {
             <Route path="/create" component={CreateListing} />
             <Route path="/user/:id" component={User} />
             <Route path="/profile" component={Profile} />
-            <Route path="/messages" component={Messages} />
+            <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
             <Route component={Listings} />
           </Switch>

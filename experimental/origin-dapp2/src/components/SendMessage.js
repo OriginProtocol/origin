@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import get from 'lodash/get'
 
 import mutation from 'mutations/SendMessage'
+import withIdentity from 'hoc/withIdentity'
 
 import Modal from 'components/Modal'
 
@@ -21,42 +23,86 @@ class SendMessage extends Component {
 
   render() {
     const { to } = this.props
+    const recipient = get(this.props, 'identity.profile.fullName')
+
     return (
-      <Modal onClose={() => this.props.onClose()}>
-        <Mutation mutation={mutation}>
-          {sendMessage => (
-            <form
-              onSubmit={e => {
-                e.preventDefault()
-                const content = this.state.message
-                if (content) {
-                  sendMessage({ variables: { to, content } })
-                  this.setState({ message: '' })
+      <>
+        <button
+          className={this.props.className}
+          onClick={e => {
+            e.stopPropagation()
+            this.setState({ open: true })
+          }}
+          children={this.props.children}
+        />
+        {!this.state.open ? null : (
+          <Modal
+            shouldClose={this.state.shouldClose}
+            onClose={() => this.setState({ shouldClose: false, open: false })}
+            className="message-modal"
+          >
+            {this.state.sent ? (
+              <>
+                <h5>Message Sent!</h5>
+                <div className="actions">
+                  <button
+                    className="btn btn-outline-light btn-rounded"
+                    children="OK"
+                    onClick={() => this.setState({ shouldClose: true })}
+                  />
+                </div>
+              </>
+            ) : (
+              <Mutation
+                mutation={mutation}
+                onCompleted={({ sendMessage }) =>
+                  this.setState({ sent: true, room: sendMessage.id })
                 }
-              }}
-            >
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Type something..."
-                ref={input => (this.input = input)}
-                value={this.state.message}
-                onChange={e => this.setState({ message: e.target.value })}
-              />
-              <button
-                className="btn btn-primary btn-rounded"
-                type="submit"
-                children="Send"
-              />
-            </form>
-          )}
-        </Mutation>
-      </Modal>
+              >
+                {sendMessage => (
+                  <form
+                    onSubmit={e => {
+                      e.preventDefault()
+                      const content = this.state.message
+                      if (content) {
+                        sendMessage({ variables: { to, content } })
+                        this.setState({ message: '' })
+                      }
+                    }}
+                  >
+                    <h5 className="mb-3">Send Message</h5>
+                    <div className="to mb-2">
+                      {`To: ${recipient ? `${recipient} - ` : ''}${to}`}
+                    </div>
+                    <textarea
+                      className="form-control dark mb-4"
+                      placeholder="Type something..."
+                      ref={input => (this.input = input)}
+                      value={this.state.message}
+                      onChange={e => this.setState({ message: e.target.value })}
+                    />
+                    <button
+                      className="btn btn-primary btn-rounded"
+                      type="submit"
+                      children="Send"
+                    />
+                  </form>
+                )}
+              </Mutation>
+            )}
+          </Modal>
+        )}
+      </>
     )
   }
 }
 
-export default SendMessage
+export default withIdentity(SendMessage, 'to')
 
 require('react-styl')(`
+  .message-modal
+    .to
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
 `)
