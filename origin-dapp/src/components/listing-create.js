@@ -1007,17 +1007,10 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>
-                  {isEditMode ?
-                    <FormattedMessage
-                      id={'listing-create.editListingHeading'}
-                      defaultMessage={'Edit Your Listing'}
-                    />
-                    :
-                    <FormattedMessage
-                      id={'listing-create.createListingHeading'}
-                      defaultMessage={'Create Your Listing'}
-                    />
-                  }
+                  <FormattedMessage
+                    id={'listing-create.createListingHeading'}
+                    defaultMessage={'Provide listing details'}
+                  />
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
@@ -1094,7 +1087,7 @@ class ListingCreate extends Component {
                   <h2>
                     <FormattedMessage
                       id={'listing-create.availabilityHeading'}
-                      defaultMessage={'Add Availability and Pricing'}
+                      defaultMessage={'Edit Availability and Pricing'}
                     />
                   </h2>
                   <StepsProgress
