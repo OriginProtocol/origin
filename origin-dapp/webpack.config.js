@@ -43,7 +43,8 @@ const env = {
   NOTIFICATIONS_URL: 'https://notifications.originprotocol.com',
   PROVIDER_URL: null,
   REDUX_LOGGER: false,
-  RINKEBY_DAPP_BASEURL: 'https://demo.staging.originprotocol.com',
+  RINKEBY_DAPP_BASEURL: 'https://dapp.staging.originprotocol.com',
+  SHOW_WALLET_LINKER: true,
   WALLET_LANDING_URL: null,
   WALLET_LINKER_URL: null
 }

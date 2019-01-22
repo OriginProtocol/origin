@@ -163,7 +163,7 @@ class DiscoveryService {
       listings = resp.data.user.listings.nodes.map(listing => this._toListingModel(listing))
     } else if (opts.purchasesFor) {
       // Query for all listings the specified buyer address made an offer on.
-      query = `query($purchasesFor: ID) {
+      query = `query($purchasesFor: ID!) {
         user(walletAddress: $purchasesFor) {
           offers {
             nodes {

@@ -51,11 +51,18 @@ class Listing {
    * @returns The listingId indexed.
    */
   static async index (listingId, buyerAddress, ipfsHash, listing) {
+    /* When serialising to JSON, getters of an object do not get serialized and indexed. For that reason
+     * we call all the getters and store them before indexing.
+     */
+    const listingToIndex = JSON.parse(JSON.stringify(listing))
+    const gettersToIndex = ['unitsPending', 'unitsSold', 'unitsRemaining', 'commissionRemaining', 'boostCommission']
+    gettersToIndex.forEach(getter => listingToIndex[getter] = listing[getter])
+
     await client.index({
       index: LISTINGS_INDEX,
       id: listingId,
       type: LISTINGS_TYPE,
-      body: listing
+      body: listingToIndex
     })
     return listingId
   }
@@ -179,13 +186,15 @@ class Listing {
 
     /* When users boost their listing using OGN tokens we boost that listing in elasticSearch.
      * For more details see document: https://docs.google.com/spreadsheets/d/1bgBlwWvYL7kgAb8aUH4cwDtTHQuFThQ4BCp870O-zEs/edit#gid=0
+     *
+     * If boost slider's max value (currently 100) on listing-create changes this factor needs tweaking as well. (see referenced document)
      */
     const boostScoreQuery = {
       function_score: {
         query: esQuery,
         field_value_factor: {
-          field: 'commission.amount',
-          factor: 0.005 // the same as delimited by 200
+          field: 'boostCommission.amount',
+          factor: 0.05 // the same as delimited by 20
         },
         boost_mode: 'sum'
       }
