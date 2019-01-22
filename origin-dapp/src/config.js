@@ -57,5 +57,6 @@ export const baseConfig = {
   },
   filters: {
     listings: {}
-  }
+  },
+  marketplacePublisher: ''
 }
