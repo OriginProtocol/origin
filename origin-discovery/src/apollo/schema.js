@@ -95,6 +95,7 @@ const typeDefs = gql`
     commissionPerUnit: Price
     offers(page: Page): OfferConnection
     display: DisplayType!
+    marketplacePublisher: String
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
   type Stats {
@@ -184,7 +185,7 @@ const typeDefs = gql`
   }
   enum FilterOperator {
     EQUALS
-    CONTAINS #for array values where at least one must match E.g. list of categories 
+    CONTAINS #for array values where at least one must match E.g. list of categories
     GREATER
     GREATER_OR_EQUAL
     LESSER
