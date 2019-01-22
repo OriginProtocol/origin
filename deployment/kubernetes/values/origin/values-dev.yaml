@@ -26,7 +26,7 @@ eventlistenerImageTag: '3050caf'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '3050caf'
+discoveryImageTag: '64bc2bc'
 
 # origin-messaging
 messagingImage: origin-messaging
