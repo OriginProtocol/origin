@@ -105,7 +105,12 @@ class Calendar extends Component {
 
       // Check if slot is in the past
       const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
-      if (moment(clickedSlotInfo.end).isBefore(moment().startOf(timePeriod))) {
+      if (
+          moment(clickedSlotInfo.start).isBefore(moment().startOf(timePeriod)) ||
+          moment(clickedSlotInfo.end).isBefore(moment().startOf(timePeriod))
+        ) {
+        [...document.querySelectorAll('.rbc-day-bg')].map((element) => element.classList.remove('dragging'))
+
         return this.setState({
           showPastDateSelectedError: true,
           selectedEvent: null
