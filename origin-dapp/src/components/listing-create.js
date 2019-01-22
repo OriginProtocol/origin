@@ -566,7 +566,6 @@ class ListingCreate extends Component {
           const localValue2 = { ...compare }
           return deepCompare(localValue1, localValue2, false)
         }
-        // if current property is an Object,  check if keys length is equal, if not, return false,
         // iterate over each property and check if val[key] is equal compare[key]
         // isObject
         if (typeof val === 'object' && !Array.isArray(val)) {
@@ -588,7 +587,7 @@ class ListingCreate extends Component {
           }
           return isEqual
         } else {
-          //I'm not applying referenced comparision cause we just receive primitives (isObject side-effect) here and price has different typeof results.
+          //I'm not applying referenced comparision cause we just receive primitives (isObject side-effect) here, price has different typeof results.
           return val == compare
         }
       }
@@ -605,9 +604,9 @@ class ListingCreate extends Component {
     localFormData.pictures = picURIsOnly(formData.pictures)
     //currently comming with domain before actual schema and validating schema.const when next step
     localFormData.dappSchemaId = formData.dappSchemaId
-    this.setState({
+    this.setState((prevState) => {
       formListing: {
-        ...this.state.formListing,
+        ...prevState.formListing,
         formData: localFormData
       }
     })
