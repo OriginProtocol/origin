@@ -16,7 +16,6 @@ class TransactionProgress extends Component {
 
   render() {
     const { offer, wallet } = this.props
-    const { shouldClose, open } = this.state
     const mobile = mobileDevice() ? 'mobile' : ''
 
     if (offer.status === 4) {
@@ -27,33 +26,33 @@ class TransactionProgress extends Component {
         return (
           <Fragment>
             <WaitForFinalize offer={offer} openModal={() => this.setState({ open: true })}/>
-            {open && (
+            {this.state.open && (
               <Modal
                 className={`fulfillment-modal ${mobile}`}
                 onClose={() => this.setState({ open: false, shouldClose: false })}
-                shouldClose={shouldClose}
+                shouldClose={this.state.shouldClose}
               >
                 <div className="d-flex flex-column content">
                   <div className="checklist">
                     <h2>Fulfillment Checklist</h2>
                     <div>
-                      <span className="table-cell"><span className="number">1</span></span>
+                      <span className="table-cell"><span className="step">1</span></span>
                       <span className="text">Verify the variants with the seller</span>
                     </div>
                     <div>
-                      <span className="table-cell"><span className="number">2</span></span>
+                      <span className="table-cell"><span className="step">2</span></span>
                       <span className="text">Package the product and send it out</span>
                     </div>
                     <div>
-                      <span className="table-cell"><span className="number">3</span></span>
+                      <span className="table-cell"><span className="step">3</span></span>
                       <span className="text">Notify buyer and provice tracking number</span>
                     </div>
                     <div>
-                      <span className="table-cell"><span className="number">4</span></span>
+                      <span className="table-cell"><span className="step">4</span></span>
                       <span className="text">Wait for buyer to receive product</span>
                     </div>
                     <div>
-                      <span className="table-cell"><span className="number">5</span></span>
+                      <span className="table-cell"><span className="step">5</span></span>
                       <span className="text">Withdraw your funds</span>
                     </div>
                   </div>
@@ -286,7 +285,7 @@ require('react-styl')(`
       line-height: 2.5
       h2
         text-align: center
-      .number
+      .step
         background: var(--dark)
         color: var(--white)
         min-width: 1.6rem
