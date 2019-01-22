@@ -41,7 +41,7 @@ async function updateListing(_, args) {
   }
 
   const tx = updateListingCall.send({ gas: 4612388, from })
-  return txHelper({ tx, mutation: 'updateListing' })
+  return txHelper({ tx, from, mutation: 'updateListing' })
 }
 
 export default updateListing

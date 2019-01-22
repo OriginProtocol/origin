@@ -33,14 +33,16 @@ export default `
     makeOffer(
       listingID: ID!
       finalizes: Int
-      affiliate: String
       commission: String
       value: String
       currency: String
-      arbitrator: String
       from: String
       withdraw: String
       quantity: Int
+
+      # Optional: normally inherited from listing
+      arbitrator: String
+      affiliate: String
     ): Transaction
 
     executeRuling(
@@ -114,6 +116,7 @@ export default `
     sales(first: Int, after: String): OfferConnection!
     reviews(first: Int, after: String): ReviewConnection!
     notifications(first: Int, after: String): UserNotificationConnection!
+    transactions(first: Int, after: String): UserTransactionConnection!
   }
 
   type OfferConnection {
@@ -140,6 +143,13 @@ export default `
     party: User!
     event: Event!
     read: Boolean
+  }
+
+  type UserTransactionConnection {
+    nodes: [Transaction]
+    pageInfo: PageInfo!
+    totalCount: Int!
+    hasPending: Boolean
   }
 
   type Review {
