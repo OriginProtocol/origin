@@ -10,11 +10,13 @@ class Configure extends React.Component {
 
     this.state = {
       config: props.config,
-      redirect: null
+      redirect: null,
+      filterByTypeEnabled: false
     }
 
-    this.toggleFilterByOwn = this.toggleFilterByOwn.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.toggleFilterByOwn = this.toggleFilterByOwn.bind(this)
+    this.toggleFilterByType = this.toggleFilterByType.bind(this)
   }
 
   toggleFilterByOwn (event) {
@@ -31,6 +33,12 @@ class Configure extends React.Component {
 
     this.setState({ config: newConfig })
     this.props.onChange(newConfig)
+  }
+
+  toggleFilterByType (event) {
+    this.setState({
+      filterByTypeEnabled: event.target.checked
+    })
   }
 
   async handleSubmit () {
@@ -57,10 +65,15 @@ class Configure extends React.Component {
               onClick={this.toggleFilterByOwn} />
           </div>
 
-          <div className="option disabled">
-            Limit by type (coming soon)
-            <input className="form-check-input" type="checkbox" name="" disabled />
+          <div className="option">
+            Limit by type
+            <input className="form-check-input"
+              type="checkbox"
+              onClick={this.toggleFilterByType} />
           </div>
+          {this.state.filterByTypeEnabled &&
+            <div>Category</div>
+          }
         </div>
 
         <div className="form-actions clearfix">
