@@ -171,7 +171,8 @@ class ListingCreate extends Component {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
-        await this.ensureUserIsSeller(listing.seller)
+        console.log('LISTING IS', listing)
+        this.ensureUserIsSeller(listing.seller)
         // dappSchemaId is compared on formDataChange without the domain name, so it turns easier to understand category/subcategory changes
         listing.dappSchemaId = listing.dappSchemaId.substring(listing.dappSchemaId.lastIndexOf('/')+1)
         const localState = {
@@ -214,7 +215,7 @@ class ListingCreate extends Component {
       }
   }
 
-  async ensureUserIsSeller(sellerAccount) {
+  ensureUserIsSeller(sellerAccount) {
     const { wallet } = this.props
 
     if (
@@ -369,7 +370,7 @@ class ListingCreate extends Component {
         'ui:widget': PhotoPicker
       }
     }
-
+    console.log('CURRENT STATE ON RENDER DETIALS FORM', this.state)
     const { properties } = schemaJson
 
     // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
@@ -379,18 +380,22 @@ class ListingCreate extends Component {
       properties.listingType.const === 'fractional'
 
     const slotLength = enableFractional &&
-      this.state.formListing.formData.slotLength ?
-      this.state.formListing.formData.slotLength :
+    //Why we want to trust on formData.unitLength instead of schema.unitLength?
+      // this.state.formListing.formData.slotLength ?
+      // this.state.formListing.formData.slotLength :
         properties &&
         properties.slotLength &&
         properties.slotLength.default
 
     const slotLengthUnit = enableFractional &&
-      this.state.formListing.formData.slotLengthUnit ?
-      this.state.formListing.formData.slotLengthUnit :
+      // this.state.formListing.formData.slotLengthUnit ?
+      // this.state.formListing.formData.slotLengthUnit :
         properties &&
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
+        console.log('CURRENT SLOT LENGTH', slotLength)
+        console.log('CURRENT SLOT LENGTH UNITY', slotLengthUnit)
+
 
     const fractionalTimeIncrement = slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily'
 
@@ -412,6 +417,8 @@ class ListingCreate extends Component {
     }
 
     const translatedSchema = translateSchema(schemaJson)
+    console.log('SCHEMA SET VALUES', schemaSetValues)
+
     this.setState(prevState => ({
       schemaFetched: true,
       fractionalTimeIncrement,
@@ -430,6 +437,7 @@ class ListingCreate extends Component {
         }
       }
     }))
+    console.log('CURRENT STATE AFTER RENDER DETIALS FORM', this.state)
   }
 
   goToDetailsStep() {
@@ -527,19 +535,66 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
-  const pictures = picURIsOnly(formData.pictures)
+    const localFormData = { ...formData }
 
-    this.setState({
-      formListing: {
-        ...this.state.formListing,
-        formData: {
-          ...this.state.formListing.formData,
-          ...formData,
-          pictures
+    const changes = []
+    if (this.state.formOriginalData) {
+      localFormData.dappSchemaId = localFormData.dappSchemaId.substring(localFormData.dappSchemaId.lastIndexOf('/') + 1)
+      const formOriginalData = this.state.formOriginalData
+      const deepCompare = (val, compare, parentNode = true) => {
+        // if current property is an array of same size, convert array to Object(JSON);
+        if (typeof val === 'object' && Array.isArray(val)) {
+          if (val.length !== compare.length) return false
+          const localValue1 = { ...val }
+          const localValue2 = { ...compare }
+          return deepCompare(localValue1, localValue2, false)
+        }
+        // iterate over each property and check if val[key] is equal compare[key]
+        // isObject
+        if (typeof val === 'object' && !Array.isArray(val)) {
+          const valKeys = Object.keys(val)
+          let isEqual = true
+          for (let i = 0; i < valKeys.length; i++) {
+            const key = valKeys[i]
+            if (!deepCompare(val[key], compare[key], false)) {
+              isEqual = false
+              // if it is parentNode ( we might want to store only tree's parentNode to ensure we can retrieve that later on review session)
+              if (parentNode) {
+                changes.push({
+                  keyName: key,
+                  currentValue: val[key],
+                  originValue: compare[key]
+                })
+              }
+            }
+          }
+          return isEqual
+        } else {
+          //I'm not applying referenced comparision cause we just receive primitives (isObject side-effect) here, price has different typeof results.
+          return val == compare
         }
       }
-    })
+      if (!deepCompare(localFormData, formOriginalData)) {
+        this.setState({
+          originalForm: false,
+          formChanges: changes
+        })
+      }
+      else this.setState({ originalForm: true })
+      console.log(changes)
+    }
+console.log(changes)
+    localFormData.pictures = picURIsOnly(formData.pictures)
+    //currently comming with domain before actual schema and validating schema.const when next step
+    localFormData.dappSchemaId = formData.dappSchemaId
+    this.setState((prevState) => ({
+      formListing: {
+        ...prevState.formListing,
+        formData: localFormData
+      }
+    }))
   }
+
 
   checkOgnBalance() {
     if (
@@ -1534,6 +1589,7 @@ class ListingCreate extends Component {
                     onClick={() => this.onSubmitListing(formListing)}
                     ga-category="create_listing"
                     ga-label="review_step_done"
+                    disabled={this.state.originalForm && this.state.originalForm}
                   >
                     <FormattedMessage
                       id={'listing-create.doneButtonLabel'}
