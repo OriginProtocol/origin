@@ -26,17 +26,26 @@ function fileSize(number) {
   }
 }
 
-async function getImage({ ipfsRPC, ipfsGateway }, file) {
-  const hash = await postFile(ipfsRPC, file, file.type)
-  return {
-    contentType: file.type,
-    size: fileSize(file.size),
-    name: file.name,
-    url: `ipfs://${hash}`,
-    urlExpanded: `${ipfsGateway}/ipfs/${hash}`,
-    src: `${ipfsGateway}/ipfs/${hash}`,
-    hash
+async function getImages(config, files) {
+  const { ipfsGateway, ipfsRPC } = config
+
+  let newImages = []
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    const hash = await postFile(ipfsRPC, file)
+    if (acceptedFileTypes.indexOf(file.type) >= 0) {
+      newImages.push({
+        contentType: file.type,
+        size: fileSize(file.size),
+        name: file.name,
+        url: `ipfs://${hash}`,
+        urlExpanded: `${ipfsGateway}/ipfs/${hash}`,
+        src: `${ipfsGateway}/ipfs/${hash}`,
+        hash
+      })
+    }
   }
+  return newImages
 }
 
 class SendMessage extends Component {
@@ -45,7 +54,7 @@ class SendMessage extends Component {
 
     this.fileInput = React.createRef()
     this.handleClick = this.handleClick.bind(this)
-    this.state = { message: '', image: '' }
+    this.state = { message: '', images: '' }
   }
 
   componentDidMount() {
@@ -66,31 +75,60 @@ class SendMessage extends Component {
 
   render() {
     const { to, config } = this.props
+    const { images, message } = this.state
+    // const shouldEnableForm = id &&
+    //   origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
+    //   canDeliverMessage
 
     return (
       <Mutation mutation={mutation}>
         {sendMessage => (
           <>
-            <div style={{ height: '300px' }}>{this.renderPreview()}</div>
+            {!true && (
+              <form className="add-message d-flex">
+                <textarea rows={1} tabIndex="0" disabled />
+                <button type="submit" className="btn btn-sm btn-primary" disabled>
+                  Send
+                </button>
+              </form>
+            )}
             <form
               className="send-message d-flex"
               onSubmit={e => {
                 e.preventDefault()
-                const content = this.state.message || this.state.image.src
+                //need to map over images and send messages...
+                const content = message || images[0].src
                 if (content) {
                   sendMessage({ variables: { to, content } })
                   this.setState({ message: '' })
                 }
               }}
             >
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Type something..."
-                ref={input => (this.input = input)}
-                value={this.state.message}
-                onChange={e => this.setState({ message: e.target.value })}
-              />
+              { images.length ? (
+                <div className="images-preview">
+                  {images.map((image) => (
+                    <div key={image.hash} className="images-container">
+                      <img className="img" src={image.src} />
+                      <a
+                        className="image-overlay-btn"
+                        aria-label="Close"
+                        onClick={() => this.setState({ images: [] })}
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              ) : null }
+              { !images.length && (
+                <textarea
+                  type="text"
+                  placeholder="Type something..."
+                  ref={input => (this.input = input)}
+                  value={this.state.message}
+                  onChange={e => this.setState({ message: e.target.value })}
+                />
+              )}
               <img
                 src="images/add-photo-icon.svg"
                 className="add-photo"
@@ -103,15 +141,15 @@ class SendMessage extends Component {
                 ref={this.fileInput}
                 className="d-none"
                 onChange={async e => {
-                  const newImage = await getImage(
+                  const newImages = await getImages(
                     config,
-                    e.currentTarget.files[0]
+                    e.currentTarget.files
                   )
-                  this.setState({ image: newImage })
+                  this.setState({ images: newImages })
                 }}
               />
               <button
-                className="btn btn-primary btn-rounded"
+                className="btn btn-sm btn-primary btn-rounded"
                 type="submit"
                 children="Send"
               />
@@ -119,26 +157,6 @@ class SendMessage extends Component {
           </>
         )}
       </Mutation>
-    )
-  }
-  renderPreview() {
-    if (!this.state.image) return null
-    const { image } = this.state
-    return (
-      <div key={image.hash} className="preview-row">
-        <div className="img" style={{ backgroundImage: `url(${image.src})` }} />
-        <div className="info">
-          {image.size}
-          <a
-            href="#"
-            onClick={e => {
-              e.preventDefault()
-              this.setState({ image: '' })
-            }}
-            children="×"
-          />
-        </div>
-      </div>
     )
   }
 }
@@ -152,28 +170,42 @@ require('react-styl')(`
     margin-top: 1rem
     .form-control
       margin-right: 1rem
-
-  .preview-row
-    position: relative
-    .info
-      position: absolute
-      top: 0
-      right: 0
-      background: rgba(255, 255, 255, 0.75)
-      line-height: normal
-      border-radius: 0 0 0 2px
-      > a
-        padding: 0 0.375rem
-        font-weight: bold
-        color: var(--dusk)
-      &:hover
-        a
-          color: #000
-        background: rgba(255, 255, 255, 0.85)
-    .img
-      background-position: center
-      width: 100%
-      padding-top: 66%
-      background-size: contain
-      background-repeat: no-repeat
+    textarea
+      background-color: transparent
+      border: 0
+      padding: 10px 0 0
+      flex-grow: 1
+      resize: none
+      outline: none
+    button
+      margin: auto 0
+      width: auto
+    img
+      &.add-photo
+        padding: 0 10px
+    .images-preview
+      flex: 1
+      padding: 10px 0
+      .images-container
+        display: inline-block
+        height: 100%
+        position: relative
+        .img
+          width: 185px
+        .image-overlay-btn
+          position: absolute
+          top: 0
+          right: 0
+          cursor: pointer
+          padding: 0.75rem
+          line-height: 0.5
+          background-color: white
+          font-weight: bold
+          border-bottom: 1px solid var(--light)
+          opacity: 0.5
+      .img
+        background-position: center
+        width: 100%
+        background-size: contain
+        background-repeat: no-repeat
 `)
