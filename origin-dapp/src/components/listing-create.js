@@ -412,8 +412,7 @@ class ListingCreate extends Component {
     }
 
     const translatedSchema = translateSchema(schemaJson)
-
-    this.setState({
+    this.setState(prevState => ({
       schemaFetched: true,
       fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
@@ -421,16 +420,16 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
+          ...prevState.formListing.formData,
           ...schemaSetValues,
-          ...this.state.formListing.formData,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
           slotLength,
-          slotLengthUnit
+          slotLengthUnit,
         }
       }
-    })
+    }))
   }
 
   goToDetailsStep() {
