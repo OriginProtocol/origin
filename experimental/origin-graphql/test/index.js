@@ -2,12 +2,11 @@ import assert from 'assert'
 import get from 'lodash/get'
 
 import client from '../src/index'
-import { setNetwork } from '../src/contracts'
+import contracts, { setNetwork } from '../src/contracts'
 
 import { getOffer, mutate } from './_helpers'
 import queries from './_queries'
 import mutations from './_mutations'
-import contracts from '../src/contracts'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -72,6 +71,30 @@ describe('Marketplace', function() {
         }
       }, true)
       assert(events.ListingCreated)
+    })
+
+    it('should retrieve the listing', async function() {
+      const res = await client.query({
+        query: queries.GetListing,
+        variables: { id: '999-0-0' }
+      })
+
+      const id = get(res, 'data.marketplace.listing.id')
+      assert.strictEqual(id, '999-0-0')
+      // TODO: verify the other listing fields
+    })
+
+    it('should retrieve the listing as of a specfic block', async function() {
+      const blockNumber = contracts.marketplace.eventCache.getBlockNumber()
+      const listingId = `999-0-0-${blockNumber}`
+      const res = await client.query({
+        query: queries.GetListing,
+        variables: { id: listingId }
+      })
+
+      const id = get(res, 'data.marketplace.listing.id')
+      assert.strictEqual(id, listingId)
+      // TODO: verify the other listing fields
     })
 
     it('should allow an offer to be created', async function() {

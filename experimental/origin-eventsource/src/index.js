@@ -22,12 +22,18 @@ class OriginEventSource {
   }
 
   async getListing(listingId, blockNumber) {
-    if (blockNumber === undefined) {
-      blockNumber = this.contract.eventCache.getBlockNumber()
-    }
-    const id = `${listingId}-${blockNumber}`
-    if (this.listingCache[id]) {
-      return this.listingCache[id]
+    const cacheBlockNumber = blockNumber
+      ? blockNumber
+      : this.contract.eventCache.getBlockNumber()
+    const cacheKey = `${listingId}-${cacheBlockNumber}`
+    if (this.listingCache[cacheKey]) {
+      // Return the listing with the an ID that includes the block number, if
+      // one was specified
+      return Object.assign(
+        {},
+        this.listingCache[cacheKey],
+        { id: `999-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}` }
+      )
     }
 
     let listing,
@@ -131,7 +137,8 @@ class OriginEventSource {
       commission = this.web3.utils.toWei(commissionOgn, 'ether')
     }
 
-    this.listingCache[id] = await this.withOffers(listingId, {
+
+    this.listingCache[cacheKey] = await this.withOffers(listingId, {
       ...data,
       id: `999-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
@@ -149,7 +156,7 @@ class OriginEventSource {
       commission
     })
 
-    return this.listingCache[id]
+    return this.listingCache[cacheKey]
   }
 
   // Returns a listing with offers and any fields that are computed from the
@@ -218,9 +225,9 @@ class OriginEventSource {
     if (blockNumber === undefined) {
       blockNumber = this.contract.eventCache.getBlockNumber()
     }
-    const id = `${listingId}-${offerId}-${blockNumber}`
-    if (this.offerCache[id]) {
-      return this.offerCache[id]
+    const cacheKey = `${listingId}-${offerId}-${blockNumber}`
+    if (this.offerCache[cacheKey]) {
+      return this.offerCache[cacheKey]
     }
 
     let latestBlock, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
@@ -293,7 +300,7 @@ class OriginEventSource {
       offerObj.validationError = e.message
     }
 
-    this.offerCache[id] = offerObj
+    this.offerCache[cacheKey] = offerObj
     return offerObj
   }
 

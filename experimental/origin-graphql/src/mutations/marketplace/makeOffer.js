@@ -29,6 +29,9 @@ async function makeOffer(_, data) {
     }
   }
 
+  // TODO: add defaults for currency, affiliate, etc. so that default invocation
+  // is more concise
+
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
   const commission = contracts.web3.utils.toWei(
     ipfsData.commission.amount,
