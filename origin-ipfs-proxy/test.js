@@ -181,7 +181,7 @@ describe('download', () => {
         ipfsd.api.addFromFs('./fixtures/sample.json'),
         ipfsd.api.addFromFs('./fixtures/sample.png'),
         ipfsd.api.addFromFs('./fixtures/sample.html')
-      ]).then((result) => {
+      ]).then(() => {
         done()
       })
     })

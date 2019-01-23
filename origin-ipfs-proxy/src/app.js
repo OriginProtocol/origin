@@ -1,5 +1,5 @@
 const Busboy = require('busboy')
-const fileType = require('file-type');
+const fileType = require('file-type')
 const isJSON = require('is-json')
 const http = require('http')
 const httpProxy = require('http-proxy')
