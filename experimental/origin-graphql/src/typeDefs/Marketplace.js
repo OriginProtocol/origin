@@ -111,9 +111,9 @@ export default `
     account: Account!
     firstEvent: Event
     lastEvent: Event
-    listings(first: Int, after: String): ListingConnection!
-    offers(first: Int, after: String): OfferConnection!
-    sales(first: Int, after: String): OfferConnection!
+    listings(first: Int, after: String, filter: String): ListingConnection!
+    offers(first: Int, after: String, filter: String): OfferConnection!
+    sales(first: Int, after: String, filter: String): OfferConnection!
     reviews(first: Int, after: String): ReviewConnection!
     notifications(first: Int, after: String): UserNotificationConnection!
     transactions(first: Int, after: String): UserTransactionConnection!
