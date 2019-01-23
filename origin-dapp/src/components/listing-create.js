@@ -374,31 +374,30 @@ class ListingCreate extends Component {
     const { properties } = schemaJson
 
     // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
+    // consider anything that has slotLength a fractionalListing
     const isFractionalListing = enableFractional &&
       properties &&
-      properties.listingType &&
-      properties.listingType.const === 'fractional'
+      (properties.listingType &&
+        properties.listingType.const === 'fractional')
+      || (properties.slotLengthUnit &&
+        properties.slotLengthUnit.default !== undefined)
 
     const slotLength = enableFractional &&
-    //Why we want to trust on formData.unitLength instead of schema.unitLength?
-      // this.state.formListing.formData.slotLength ?
-      // this.state.formListing.formData.slotLength :
+      this.state.formListing.formData.slotLength ?
+      this.state.formListing.formData.slotLength :
         properties &&
         properties.slotLength &&
         properties.slotLength.default
 
     const slotLengthUnit = enableFractional &&
-      // this.state.formListing.formData.slotLengthUnit ?
-      // this.state.formListing.formData.slotLengthUnit :
+      this.state.formListing.formData.slotLengthUnit ?
+      this.state.formListing.formData.slotLengthUnit :
         properties &&
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
-        console.log('CURRENT SLOT LENGTH', slotLength)
-        console.log('CURRENT SLOT LENGTH UNITY', slotLengthUnit)
 
 
     const fractionalTimeIncrement = slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily'
-
     if (isFractionalListing) {
       this.uiSchema.price = {
         'ui:widget': 'hidden'
@@ -430,6 +429,7 @@ class ListingCreate extends Component {
           ...prevState.formListing.formData,
           ...schemaSetValues,
           dappSchemaId: properties.dappSchemaId.const,
+          price : prevState.price ? prevState.price : 0,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
           slotLength,
