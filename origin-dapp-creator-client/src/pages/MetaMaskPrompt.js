@@ -71,7 +71,7 @@ class MetaMaskPrompt extends React.Component {
           <div className="metamask-prompt">
             <div>
               <img src="images/metamask.svg" />
-              <h1>Waiting for you to grant permission</h1>
+              <h1>Publish your new DApp with Metamask</h1>
               <h4>Please grant Origin permission to access your Metamask account so you can publish your marketplace.</h4>
             </div>
           </div>

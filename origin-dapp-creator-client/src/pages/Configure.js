@@ -48,7 +48,11 @@ class Configure extends React.Component {
         <h4>Finish setting up your marketplace with the options below.</h4>
 
         <div className="form-group">
-          <label>Filtering</label>
+          <label>Filter Listings (optional)</label>
+
+          <p>
+            <small>You can choose to only show listings created on your marketplace or specific types of listings. Otherwise, your DApp will show listings from all Origin marketplaces.</small>
+          </p>
 
           <div className="option">
             Limit to only my own

@@ -150,7 +150,7 @@ class Customize extends React.Component {
         </div>
 
         <div className="form-group">
-          <label>Theme</label>
+          <label>Select Theme</label>
           <ThemePicker
             config={this.props.config}
             themes={this.state.themes}
@@ -164,6 +164,7 @@ class Customize extends React.Component {
 
         {!this.state.themePickerExpanded &&
           <div className="form-group">
+            <p>You can further customize your colors.</p>
             <div className="row">
               <div className="col-7">
                 <Preview config={this.state.config} rows={3} />

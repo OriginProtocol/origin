@@ -133,7 +133,7 @@ class App extends React.Component {
         </div>
 
         <div className="copyright">
-          &copy;2017 Origin Protocol LLC
+          &copy;2019 Origin Protocol Inc.
         </div>
       </>
     )
