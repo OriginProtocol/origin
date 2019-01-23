@@ -5,9 +5,10 @@ import RejectOffer from './mutations/RejectOffer'
 import WithdrawOffer from './mutations/WithdrawOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
 import DisputeOffer from './mutations/DisputeOffer'
-import StarRating from 'components/StarRating'
-
 import WaitForFinalize from './_WaitForFinalize'
+
+import StarRating from 'components/StarRating'
+import SendMessage from 'components/SendMessage'
 
 const TransactionProgress = ({ offer, wallet }) => {
   if (offer.status === 4) {
@@ -121,7 +122,9 @@ const MessageSeller = ({ offer }) => (
     <h4>Next Step</h4>
     <div className="next-step">Give your shipping address to seller</div>
     <div className="help">Click the button to open messaging</div>
-    <button className="btn btn-link">Message Seller &rsaquo;</button>
+    <SendMessage to={offer.listing.seller.id} className="btn btn-link">
+      Message Seller &rsaquo;
+    </SendMessage>
     <WithdrawOffer offer={offer} />
     <div className="stages">
       <div className="active">Offer Placed</div>
@@ -164,7 +167,9 @@ const OfferRejected = ({ party }) => (
 const Disputed = () => (
   <div className="transaction-progress">
     <h4>Offer Disputed</h4>
-    <div className="help mb-0">Wait to be contacted by an Origin team member</div>
+    <div className="help mb-0">
+      Wait to be contacted by an Origin team member
+    </div>
     <div className="stages">
       <div className="active bg">Offer Placed</div>
       <div className="active bg">Offer Accepted</div>
