@@ -58,3 +58,11 @@ label {
 .btn-right {
   float: right;
 }
+
+.copyright {
+  color: var(--steel);
+  text-align: center;
+  font-size: 12px;
+  margin: 2rem 0 4rem;
+}
+
