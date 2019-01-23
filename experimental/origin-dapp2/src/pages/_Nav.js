@@ -115,6 +115,7 @@ require('react-styl')(`
 
       .dropdown-menu
         padding: 0
+        position: absolute !important
         margin-top: 1rem
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
         border-radius: 5px 0 5px 5px
@@ -144,9 +145,16 @@ require('react-styl')(`
             color: var(--dark)
             text-shadow: none
 
-
   .navbar-brand
     background: url(images/origin-logo.svg) no-repeat center
     width: 90px
     text-indent: -9999px
+
+  @media (max-width: 575.98px)
+    .navbar .nav-item
+      position: initial
+      .dropdown-menu
+        left: 1rem
+        right: 1rem
+
 `)
