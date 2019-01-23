@@ -42,7 +42,7 @@ creatorClientImageTag: 'bd9c630'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: '92cf0d0'
+creatorServerImageTag: 'bd9c630'
 
 # origin-linking
 linkingImage: origin-linking
