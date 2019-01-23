@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
+import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
 
@@ -18,7 +19,10 @@ const nextPage = nextPageFactory('marketplace.user.offers')
 class Purchases extends Component {
   render() {
     const vars = { first: 5, id: this.props.wallet }
-    if (!this.props.wallet) return null
+    const filter = get(this.props, 'match.params.filter', 'pending')
+    if (filter !== 'all') {
+      vars.filter = filter
+    }
 
     return (
       <div className="container purchases">
@@ -26,6 +30,7 @@ class Purchases extends Component {
           query={query}
           variables={vars}
           notifyOnNetworkStatusChange={true}
+          skip={!this.props.wallet}
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1 || !this.props.wallet) {
