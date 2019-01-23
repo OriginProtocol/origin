@@ -109,7 +109,6 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
-
             return (
               <>
                 <AllMessages messages={messages} wallet={wallet} />
@@ -132,6 +131,9 @@ require('react-styl')(`
     display: flex
     flex-direction: column
     align-items: start
+    .image-container
+      img
+        max-height: 200px
     .timestamp
       color: var(--bluey-grey);
       font-size: 12px;
@@ -141,12 +143,19 @@ require('react-styl')(`
       display: flex
       align-items: flex-end;
       margin-bottom: 1rem
+      margin-top: 70px
+      margin-bottom: 40px
+      .avatar
+        height: 60px
+        width: 60px
       .bubble
         margin-left: 1.5rem
         padding: 1rem
         background-color: var(--pale-grey)
         border-radius: 1rem
         position: relative
+        max-width: 70%
+        flex: 1
         .top
           font-size: 14px
           display: flex
