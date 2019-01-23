@@ -1,7 +1,11 @@
 [
   {
     "id": "listing-create.navigationWarning",
-    "defaultMessage": "Are you sure you want to leave? If you leave this page your progress will be lost."
+    "defaultMessage": "Are you sure you want to leave? Your listing is not yet created."
+  },
+  {
+    "id": "listing-create.navigationWarningEditing",
+    "defaultMessage": "Are you sure you want to leave? Your listing is not yet updated."
   },
   {
     "id": "schema.boostLimitInOgn",
