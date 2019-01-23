@@ -73,8 +73,8 @@ class AddData extends Component {
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
+              onClick={async () => {
+                await client.resetStore()
                 this.setState({ waitFor: false })
               }}
               children="OK"

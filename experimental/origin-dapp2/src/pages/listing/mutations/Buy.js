@@ -97,8 +97,8 @@ class Buy extends Component {
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
+              onClick={async () => {
+                await client.resetStore()
                 // TODO: Fix link
                 this.setState({
                   redirect: `/purchases/999-1-${event.returnValues.listingID}-${
@@ -116,7 +116,6 @@ class Buy extends Component {
 }
 
 export default withWallet(withCanTransact(Buy))
-
 
 require('react-styl')(`
   .make-offer-modal

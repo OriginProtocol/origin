@@ -44,10 +44,6 @@ class Purchases extends Component {
             const { nodes, pageInfo, totalCount } = data.marketplace.user.offers
             const { hasNextPage, endCursor: after } = pageInfo
 
-            if (!totalCount) {
-              return <NoPurchases />
-            }
-
             return (
               <BottomScrollListener
                 ready={networkStatus === 7}
@@ -84,6 +80,7 @@ class Purchases extends Component {
                       </ul>
                     </div>
                     <div className="col-md-9">
+                      {totalCount > 0 ? null : <NoPurchases />}
                       {nodes.map(({ listing, ...offer }) => (
                         <div
                           className="purchase"
