@@ -46,6 +46,7 @@ class MetaMaskPrompt extends React.Component {
       this.setState({
         isError: true
       })
+      return
     }
     this.setState({
       redirect: '/resolver'

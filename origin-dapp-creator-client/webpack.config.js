@@ -96,6 +96,7 @@ const config = {
       'DAPP_CREATOR_API_URL': null,
       'DAPP_CREATOR_DOMAIN': null,
       'DAPP_URL': null,
+      'IPFS_API_URL': null,
       'IPFS_GATEWAY_URL': null
     })
   ],
