@@ -483,7 +483,9 @@ export const highlightCalendarDrag = () => {
     const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
 
     function addDraggingClass(evt) {
-      evt.target.classList.add('dragging')
+      if (evt.target.classList.value.includes('available')) {
+        evt.target.classList.add('dragging')
+      }
     }
 
     function mouseUpHandler(evt){
