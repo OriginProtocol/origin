@@ -171,7 +171,6 @@ class ListingCreate extends Component {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
-        console.log('LISTING IS', listing)
         this.ensureUserIsSeller(listing.seller)
         // dappSchemaId is compared on formDataChange without the domain name, so it turns easier to understand category/subcategory changes
         listing.dappSchemaId = listing.dappSchemaId.substring(listing.dappSchemaId.lastIndexOf('/')+1)
@@ -370,28 +369,28 @@ class ListingCreate extends Component {
         'ui:widget': PhotoPicker
       }
     }
-    console.log('CURRENT STATE ON RENDER DETIALS FORM', this.state)
     const { properties } = schemaJson
 
     // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
     // consider anything that has slotLength a fractionalListing
     const isFractionalListing = enableFractional &&
       properties &&
-      (properties.listingType &&
-        properties.listingType.const === 'fractional')
-      || (properties.slotLengthUnit &&
-        properties.slotLengthUnit.default !== undefined)
+      properties.listingType &&
+      properties.listingType.const === 'fractional'
 
     const slotLength = enableFractional &&
-      this.state.formListing.formData.slotLength ?
-      this.state.formListing.formData.slotLength :
+    // as slotLength  tend to be static and based on which SubCategory User selected
+    // this will assign always from the schema, this prevents a bug where
+    // selecting an Service and then a Rent>Housing would set formData.slotLength as the Service Sub Category
+      // this.state.formListing.formData.slotLength ?
+      // this.state.formListing.formData.slotLength :
         properties &&
         properties.slotLength &&
         properties.slotLength.default
 
     const slotLengthUnit = enableFractional &&
-      this.state.formListing.formData.slotLengthUnit ?
-      this.state.formListing.formData.slotLengthUnit :
+      // this.state.formListing.formData.slotLengthUnit ?
+      // this.state.formListing.formData.slotLengthUnit :
         properties &&
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
@@ -416,7 +415,6 @@ class ListingCreate extends Component {
     }
 
     const translatedSchema = translateSchema(schemaJson)
-    console.log('SCHEMA SET VALUES', schemaSetValues)
 
     this.setState(prevState => ({
       schemaFetched: true,
@@ -429,7 +427,7 @@ class ListingCreate extends Component {
           ...prevState.formListing.formData,
           ...schemaSetValues,
           dappSchemaId: properties.dappSchemaId.const,
-          price : prevState.price ? prevState.price : 0,
+          price: prevState.formListing.formData.price ? prevState.formListing.formData.price : 0,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
           slotLength,
@@ -437,7 +435,6 @@ class ListingCreate extends Component {
         }
       }
     }))
-    console.log('CURRENT STATE AFTER RENDER DETIALS FORM', this.state)
   }
 
   goToDetailsStep() {
@@ -537,8 +534,8 @@ class ListingCreate extends Component {
   onFormDataChange({ formData }) {
     const localFormData = { ...formData }
 
-    const changes = []
     if (this.state.formOriginalData) {
+      const changes = []
       localFormData.dappSchemaId = localFormData.dappSchemaId.substring(localFormData.dappSchemaId.lastIndexOf('/') + 1)
       const formOriginalData = this.state.formOriginalData
       const deepCompare = (val, compare, parentNode = true) => {
@@ -581,9 +578,7 @@ class ListingCreate extends Component {
         })
       }
       else this.setState({ originalForm: true })
-      console.log(changes)
     }
-console.log(changes)
     localFormData.pictures = picURIsOnly(formData.pictures)
     //currently comming with domain before actual schema and validating schema.const when next step
     localFormData.dappSchemaId = formData.dappSchemaId
