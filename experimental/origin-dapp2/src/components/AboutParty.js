@@ -93,20 +93,11 @@ class AboutParty extends Component {
           </div>
         </div>
         <div className="mt-3 text-center">
-          <button
+          <SendMessage
+            to={id}
             className="btn btn-primary btn-rounded"
-            onClick={e => {
-              e.stopPropagation()
-              this.setState({ message: true })
-            }}
             children="Send Message"
           />
-          {this.state.message && (
-            <SendMessage
-              to={id}
-              onClose={() => this.setState({ message: false })}
-            />
-          )}
         </div>
       </div>
     )
