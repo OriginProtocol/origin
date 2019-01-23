@@ -167,54 +167,54 @@ class ListingCreate extends Component {
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
     if (this.props.listingId) {
       this.props.storeWeb3Intent('edit a listing')
-
       try {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
-
-        this.ensureUserIsSeller(listing.seller)
-        const state = {
+        await this.ensureUserIsSeller(listing.seller)
+        // dappSchemaId is compared on formDataChange without the domain name, so it turns easier to understand category/subcategory changes
+        listing.dappSchemaId = listing.dappSchemaId.substring(listing.dappSchemaId.lastIndexOf('/')+1)
+        const localState = {
           formListing: {
-            formData: {
-              boostLimit: listing.totalBoostValue,
-              ...listing
-            }
+            formData: listing
           },
           selectedSchemaId: listing.dappSchemaId,
+          dappSchemaId: listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
         }
-
         if (listing.pictures.length) {
           const pictures = await getDataURIsFromImgURLs(listing.pictures)
-          this.setState({
-            ...state,
-            formListing: {
-              formData: { ...listing, pictures }
+          localState.formListing = {
+            formData: {
+              ...listing,
+              pictures,
             }
-          })
-          this.renderDetailsForm(listing.schema)
-          this.setState({ step: this.STEP.DETAILS })
-        } else {
-          this.setState(state)
-          this.renderDetailsForm(listing.schema)
-          this.setState({ step: this.STEP.DETAILS })
+          }
         }
-
+        this.setState(localState)
+        this.handleCategorySelection(listing.category)
+        this.renderDetailsForm(listing.schema)
+        this.setState(prevState => ({
+          formOriginalData: {
+            ...prevState.formListing.formData,
+            dappSchemaId: prevState.dappSchemaId.substring(prevState.dappSchemaId.lastIndexOf('/')+1)
+          },
+          step: this.STEP.DETAILS
+        }))
       } catch (error) {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
-    } else if (web3.currentProvider.isOrigin || !this.props.messagingEnabled) {
+      } else if (web3.currentProvider.isOrigin || !this.props.messagingEnabled) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
       }
       this.props.storeWeb3Intent('create a listing')
-    }
+      }
   }
 
-  ensureUserIsSeller(sellerAccount) {
+  async ensureUserIsSeller(sellerAccount) {
     const { wallet } = this.props
 
     if (
