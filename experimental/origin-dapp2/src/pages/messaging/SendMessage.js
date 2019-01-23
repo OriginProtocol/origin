@@ -5,27 +5,9 @@ import pick from 'lodash/pick'
 import mutation from 'mutations/SendMessage'
 import withConfig from 'hoc/withConfig'
 
+import { fileSize, postFile } from 'utils/fileUtils'
+
 const acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
-
-async function postFile(ipfsRPC, file) {
-  const body = new FormData()
-  body.append('file', file)
-  const rawRes = await fetch(`${ipfsRPC}/api/v0/add`, { method: 'POST', body })
-  const res = await rawRes.json()
-  return res.Hash
-}
-
-function fileSize(number) {
-  if (number < 1024) {
-    return number + 'bytes'
-  } else if (number >= 1024 && number < 100000) {
-    return (number / 1024).toFixed(1) + 'KB'
-  } else if (number >= 100000 && number < 1048576) {
-    return (number / 1024).toFixed() + 'KB'
-  } else if (number >= 1048576) {
-    return (number / 1048576).toFixed(1) + 'MB'
-  }
-}
 
 async function getImages(config, files) {
   const { ipfsGateway, ipfsRPC } = config
@@ -84,83 +66,72 @@ class SendMessage extends Component {
   render() {
     const { to, config } = this.props
     const { images, message } = this.state
-    // const shouldEnableForm = id &&
-    //   origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
-    //   canDeliverMessage
 
     return (
       <Mutation mutation={mutation}>
         {sendMessage => (
-          <>
-            {!true && (
-              <form className="add-message d-flex">
-                <textarea rows={1} tabIndex="0" disabled />
-                <button type="submit" className="btn btn-sm btn-primary" disabled>
-                  Send
-                </button>
-              </form>
+          <form
+            className="send-message d-flex"
+            onSubmit={e => {
+              e.preventDefault()
+              if (message || images) {
+                this.sendContent(sendMessage, to)
+              }
+            }}
+          >
+            { images.length ? (
+              <div className="images-preview">
+                {images.map((image) => (
+                  <div key={image.url} className="images-container">
+                    <img className="img" src={image.url} />
+                    <a
+                      className="image-overlay-btn"
+                      aria-label="Close"
+                      onClick={() => {
+                        this.setState({ images: images.filter((img) => img !== image) })
+                      }}
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            ) : null }
+            { !images.length && (
+              <textarea
+                type="text"
+                placeholder="Type something..."
+                ref={input => (this.input = input)}
+                value={this.state.message}
+                onChange={e => this.setState({ message: e.target.value })}
+              />
             )}
-            <form
-              className="send-message d-flex"
-              onSubmit={e => {
-                e.preventDefault()
-                if (message || images) {
-                  this.sendContent(sendMessage, to)
-                }
+            <img
+              src="images/add-photo-icon.svg"
+              className="add-photo"
+              role="presentation"
+              onClick={this.handleClick}
+            />
+            <input
+              type="file"
+              multiple={true}
+              accept="image/jpeg,image/gif,image/png"
+              ref={this.fileInput}
+              className="d-none"
+              onChange={async e => {
+                const newImages = await getImages(
+                  config,
+                  e.currentTarget.files
+                )
+                this.setState({ images: [...newImages, ...images] })
               }}
-            >
-              { images.length ? (
-                <div className="images-preview">
-                  {images.map((image) => (
-                    <div key={image.hash} className="images-container">
-                      <img className="img" src={image.url} />
-                      <a
-                        className="image-overlay-btn"
-                        aria-label="Close"
-                        onClick={() => this.setState({ images: images.filter((img) => img !== image) })}
-                      >
-                        <span aria-hidden="true">&times;</span>
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              ) : null }
-              { !images.length && (
-                <textarea
-                  type="text"
-                  placeholder="Type something..."
-                  ref={input => (this.input = input)}
-                  value={this.state.message}
-                  onChange={e => this.setState({ message: e.target.value })}
-                />
-              )}
-              <img
-                src="images/add-photo-icon.svg"
-                className="add-photo"
-                role="presentation"
-                onClick={this.handleClick}
-              />
-              <input
-                type="file"
-                multiple={true}
-                accept="image/jpeg,image/gif,image/png"
-                ref={this.fileInput}
-                className="d-none"
-                onChange={async e => {
-                  const newImages = await getImages(
-                    config,
-                    e.currentTarget.files
-                  )
-                  this.setState({ images: [...newImages, ...images] })
-                }}
-              />
-              <button
-                className="btn btn-sm btn-primary btn-rounded"
-                type="submit"
-                children="Send"
-              />
-            </form>
-          </>
+            />
+            <button
+              className="btn btn-sm btn-primary btn-rounded"
+              type="submit"
+              children="Send"
+            />
+          </form>
         )}
       </Mutation>
     )

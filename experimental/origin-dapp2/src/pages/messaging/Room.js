@@ -23,7 +23,7 @@ function renderContent(message) {
     return contentWithLineBreak
   } else {
     return media.map((image) => (
-      <div className="image-container">
+      <div key={image.url} className="image-container">
         <img src={image.url} alt={'fileName'} />
       </div>
     ))
