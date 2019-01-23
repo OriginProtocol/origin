@@ -59,8 +59,41 @@ query GetListing($id: String!) {
   marketplace {
     listing(id: $id) {
       id
+      status
+      totalEvents
+      seller {
+        id
+      }
+      arbitrator {
+        id
+      }
+      deposit
+      depositAvailable
+      createdEvent {
+        timestamp
+      }
+
+      category
+      categoryStr
+      subCategory
+      title
+      description
+      currencyId
+      unitsTotal
       unitsAvailable
       unitsSold
+      featured
+      hidden
+      price {
+        amount
+        currency
+      }
+      media {
+        url
+        contentType
+      }
+      commission
+      commissionPerUnit
     }
   }
 }
