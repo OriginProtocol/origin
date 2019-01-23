@@ -96,8 +96,8 @@ class DeployIdentity extends Component {
               <div>Success!</div>
               <button
                 className="btn btn-outline-light"
-                onClick={() => {
-                  client.resetStore()
+                onClick={async () => {
+                  await client.resetStore()
                   this.setState({ shouldClose: true })
                 }}
                 children="OK"
