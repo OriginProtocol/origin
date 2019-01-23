@@ -166,8 +166,6 @@ require('react-styl')(`
           align-items: center;
           color: white;
           padding: 3rem;
-          display: flex;
-          justify-content: center;
 
   .pl-modal-cell
       position: relative;
@@ -253,5 +251,9 @@ require('react-styl')(`
       font-family: Poppins
       font-size: 22px
       font-weight: normal
+    .actions
+      margin-top: 2rem
+      .btn:not(:first-child)
+        margin-left: 0.5rem
 
 `)

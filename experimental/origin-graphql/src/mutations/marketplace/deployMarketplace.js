@@ -9,14 +9,15 @@ async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
   const Contract = new web3.eth.Contract(Marketplace.abi)
   const tx = Contract.deploy({ data, arguments: [token] }).send({
     gas: 5500000,
-    from: from || web3.eth.defaultAccount
+    from
   })
 
   return txHelper({
     tx,
+    from,
     mutation: 'deployMarketplace',
     onReceipt: receipt => {
-      console.log('Deployed marketplace to', receipt.contractAddress)
+      // console.log('Deployed marketplace to', receipt.contractAddress)
       if (typeof window !== 'undefined') {
         window.localStorage.marketplaceContract = receipt.contractAddress
       }

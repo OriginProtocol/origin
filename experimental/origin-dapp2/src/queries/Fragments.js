@@ -42,6 +42,7 @@ export default {
         title
         description
         currencyId
+        multiUnit
         unitsTotal
         unitsAvailable
         unitsSold
@@ -95,9 +96,12 @@ export default {
       fragment basicTransactionFields on Transaction {
         id
         status
+        submittedAt
+        blockNumber
         receipt {
           id
           events {
+            id
             event
             returnValues {
               listingID

@@ -14,6 +14,7 @@ async function deployUserRegistry(_, { from }) {
 
   return txHelper({
     tx,
+    from,
     mutation: 'deployUserRegistry',
     onReceipt: receipt => {
       Contract.options.address = receipt.contractAddress

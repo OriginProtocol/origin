@@ -17,7 +17,7 @@ const nextPage = nextPageFactory('marketplace.user.offers')
 
 class Purchases extends Component {
   render() {
-    const vars = { first: 15, id: this.props.wallet }
+    const vars = { first: 5, id: this.props.wallet }
     if (!this.props.wallet) return null
 
     return (
@@ -117,10 +117,10 @@ class Purchases extends Component {
                       ))}
                       {!hasNextPage ? null : (
                         <button
-                          text={
-                            networkStatus === 3 ? 'Loading' : 'Load more...'
+                          children={
+                            networkStatus === 3 ? 'Loading...' : 'Load more'
                           }
-                          className="mt-3"
+                          className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>
                             nextPage(fetchMore, { ...vars, after })
                           }

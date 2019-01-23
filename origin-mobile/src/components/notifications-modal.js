@@ -22,7 +22,15 @@ class NotifcationsModal extends Component {
     try {
       const permissions = await originWallet.requestNotifications()
 
-      this.props.storeNotificationsPermissions(permissions)
+      if (!permissions.alert) {
+        Alert.alert(
+          '!',
+          `You've declined our request to turn on push notifications, which we HIGHLY recommend. To fix this, you will need to change the permissions in your iPhone's Settings > Notifications > Origin Wallet.`,
+          [{ text: 'OK', onPress: () => this.props.storeNotificationsPermissions(permissions) }]
+        )
+      } else {
+        this.props.storeNotificationsPermissions(permissions)
+      }
     } catch(e) {
       console.error(e)
       throw e
@@ -141,7 +149,7 @@ class NotifcationsModal extends Component {
               type="success"
             />
             <TouchableOpacity onPress={this.handleSkip}>
-              <Text style={styles.skip}>{`I'll do this later`}</Text>
+              <Text style={styles.skip}>{`I'll do this later.`}</Text>
             </TouchableOpacity>
           </View>
         </View>
