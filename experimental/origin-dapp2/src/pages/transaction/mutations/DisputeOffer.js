@@ -25,7 +25,7 @@ class DisputeOffer extends Component {
           })
         }
       >
-        {disputeOffer => (
+        {(disputeOffer, { client }) => (
           <>
             <button
               className={this.props.className}
@@ -91,7 +91,7 @@ class DisputeOffer extends Component {
                 )}
               </Modal>
             )}
-            {this.renderWaitModal()}
+            {this.renderWaitModal(client)}
             {this.state.error && (
               <TransactionError
                 reason={this.state.error}
@@ -124,12 +124,17 @@ class DisputeOffer extends Component {
     disputeOffer({ variables: { offerID: this.props.offer.id, from } })
   }
 
-  renderWaitModal() {
+  renderWaitModal(client) {
     if (!this.state.waitFor) return null
 
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="OfferDisputed">
-        {({ client }) => (
+      <WaitForTransaction
+        hash={this.state.waitFor}
+        event="OfferDisputed"
+        shouldClose={this.state.waitForShouldClose}
+        onClose={async () => await client.resetStore()}
+      >
+        {() => (
           <>
             <h5>
               You’ve escalated this issue to an Origin team member. You will be
@@ -139,10 +144,7 @@ class DisputeOffer extends Component {
               <button
                 href="#"
                 className="btn btn-outline-light"
-                onClick={() => {
-                  client.resetStore()
-                  this.setState({ waitFor: false })
-                }}
+                onClick={() => this.setState({ waitForShouldClose: true })}
                 children="OK"
               />
             </div>

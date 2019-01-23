@@ -7,6 +7,7 @@ import AboutParty from 'components/AboutParty'
 import ListingBadge from 'components/ListingBadge'
 
 import Buy from './mutations/Buy'
+import category from 'utils/category'
 
 const SelectQuantity = ({ quantity, onChange, available }) => {
   return (
@@ -113,7 +114,7 @@ class ListingDetail extends Component {
     return (
       <div className="listing-detail">
         <div className="header">
-          <div className="category">{listing.categoryStr}</div>
+          <div className="category">{category(listing)}</div>
           <ListingBadge status={listing.status} featured={listing.featured} />
         </div>
         <h2>{listing.title}</h2>
