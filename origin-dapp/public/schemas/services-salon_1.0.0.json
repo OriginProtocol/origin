@@ -4,7 +4,6 @@
   "required": [
     "name",
     "description",
-    "price",
     "dappSchemaId",
     "category",
     "subCategory",
@@ -75,7 +74,7 @@
       }
     },
     "unitsTotal": {
-      "const": -1
+      "const": 1
     }
   }
 }
