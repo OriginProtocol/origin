@@ -117,7 +117,7 @@ Spawn a shell (command line) in a container:
 	docker exec -ti <container_name> /bin/bash
 	docker exec -ti origin-dapp /bin/bash
 
-Follow log output for all containers: 
+Follow log output for all containers:
 
 	docker-compose logs -f
 
@@ -128,6 +128,8 @@ Restart a container. In a new terminal window:
 Rebuild containers (takes some time), in case you update dependencies (including npm). In a new terminal window:
 
 	docker-compose build --no-cache origin
+
+Configure environment variables in `development/envfiles`
 
 ### Troubleshooting
 

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
-import get from 'lodash/get'
 
-import WalletQuery from 'queries/Wallet'
+import withWallet from 'hoc/withWallet'
 
 import Link from 'components/Link'
 import NavLink from 'components/NavLink'
@@ -11,6 +9,21 @@ import Notifications from './nav/Notifications'
 import Messages from './nav/Messages'
 import Confirmations from './nav/Confirmations'
 import Sell from './nav/Sell'
+
+const GetStarted = () => (
+  <ul className="navbar-nav ml-auto">
+    <li className="nav-item">
+      <a className="nav-link" href="#">
+        Get Started
+      </a>
+    </li>
+    <li className="nav-item">
+      <a className="nav-link" href="#">
+        Sell on Origin
+      </a>
+    </li>
+  </ul>
+)
 
 class Nav extends Component {
   state = {}
@@ -28,68 +41,40 @@ class Nav extends Component {
           <Link to="/" className="navbar-brand">
             Origin
           </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-
-          <div className="collapse navbar-collapse">
-            <ul className="navbar-nav ml-auto">
-              <Query query={WalletQuery}>
-                {({ data }) => {
-                  if (!get(data, 'web3.metaMaskAccount.id'))
-                    return (
-                      <>
-                        <li className="nav-item">
-                          <a className="nav-link" href="#">
-                            Get Started
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a className="nav-link" href="#">
-                            Sell on Origin
-                          </a>
-                        </li>
-                      </>
-                    )
-
-                  return (
-                    <>
-                      <li className="nav-item extra-margin">
-                        <NavLink to="/my-purchases" className="nav-link text">
-                          Buy
-                        </NavLink>
-                      </li>
-                      <Sell {...navProps('sell')} />
-                      <li className="nav-item extra-margin">
-                        <NavLink
-                          to="/create"
-                          className="nav-link add-listing text"
-                        >
-                          Add Listing
-                        </NavLink>
-                      </li>
-                      <Confirmations {...navProps('confirmations')} />
-                      <Messages {...navProps('messages')} />
-                      <Notifications {...navProps('notifications')} />
-                      <Profile {...navProps('profile')} />
-                    </>
-                  )
-                }}
-              </Query>
-            </ul>
-          </div>
+          {!this.props.wallet ? (
+            <GetStarted />
+          ) : (
+            <>
+              <div className="collapse navbar-collapse">
+                <ul className="navbar-nav ml-auto">
+                  <li className="nav-item extra-margin">
+                    <NavLink to="/my-purchases" className="nav-link text">
+                      Buy
+                    </NavLink>
+                  </li>
+                  <Sell {...navProps('sell')} />
+                  <li className="nav-item extra-margin">
+                    <NavLink to="/create" className="nav-link add-listing text">
+                      Add Listing
+                    </NavLink>
+                  </li>
+                </ul>
+              </div>
+              <ul className="navbar-nav ml-auto flex-row">
+                <Confirmations {...navProps('confirmations')} />
+                <Messages {...navProps('messages')} />
+                <Notifications {...navProps('notifications')} />
+                <Profile {...navProps('profile')} />
+              </ul>
+            </>
+          )}
         </div>
       </nav>
     )
   }
 }
 
-export default Nav
+export default withWallet(Nav)
 
 require('react-styl')(`
   .navbar
@@ -130,6 +115,7 @@ require('react-styl')(`
 
       .dropdown-menu
         padding: 0
+        position: absolute !important
         margin-top: 1rem
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
         border-radius: 5px 0 5px 5px
@@ -159,9 +145,16 @@ require('react-styl')(`
             color: var(--dark)
             text-shadow: none
 
-
   .navbar-brand
     background: url(images/origin-logo.svg) no-repeat center
     width: 90px
     text-indent: -9999px
+
+  @media (max-width: 575.98px)
+    .navbar .nav-item
+      position: initial
+      .dropdown-menu
+        left: 1rem
+        right: 1rem
+
 `)

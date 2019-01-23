@@ -17,9 +17,8 @@ const nextPage = nextPageFactory('marketplace.user.listings')
 
 class Listings extends Component {
   render() {
-    if (!this.props.wallet) return <div>Loading...</div>
-
     const vars = { first: 15, id: this.props.wallet }
+    if (!this.props.wallet) return null
 
     return (
       <div className="container purchases">
@@ -116,10 +115,10 @@ class Listings extends Component {
                         ))}
                         {!hasNextPage ? null : (
                           <button
-                            text={
-                              networkStatus === 3 ? 'Loading' : 'Load more...'
+                            children={
+                              networkStatus === 3 ? 'Loading...' : 'Load more'
                             }
-                            className="mt-3"
+                            className="btn btn-outline-primary btn-rounded mt-3"
                             onClick={() =>
                               nextPage(fetchMore, { ...vars, after })
                             }

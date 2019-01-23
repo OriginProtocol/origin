@@ -8,30 +8,32 @@ import TokenPrice from 'components/TokenPrice'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
+import QueryError from 'components/QueryError'
 
 import nextPageFactory from 'utils/nextPageFactory'
-import PurchasesQuery from 'queries/Purchases'
+import query from 'queries/Purchases'
 
 const nextPage = nextPageFactory('marketplace.user.offers')
 
 class Purchases extends Component {
   render() {
-    const vars = { first: 15, id: this.props.wallet }
+    const vars = { first: 5, id: this.props.wallet }
+    if (!this.props.wallet) return null
 
     return (
       <div className="container purchases">
         <Query
-          query={PurchasesQuery}
+          query={query}
           variables={vars}
           notifyOnNetworkStatusChange={true}
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1 || !this.props.wallet) {
               return <div>Loading...</div>
+            } else if (error) {
+              return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {
               return <p className="p-3">No marketplace contract?</p>
-            } else if (error) {
-              return <p className="p-3">Error :(</p>
             }
 
             const { nodes, pageInfo, totalCount } = data.marketplace.user.offers
@@ -115,10 +117,10 @@ class Purchases extends Component {
                       ))}
                       {!hasNextPage ? null : (
                         <button
-                          text={
-                            networkStatus === 3 ? 'Loading' : 'Load more...'
+                          children={
+                            networkStatus === 3 ? 'Loading...' : 'Load more'
                           }
-                          className="mt-3"
+                          className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>
                             nextPage(fetchMore, { ...vars, after })
                           }

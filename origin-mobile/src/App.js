@@ -223,6 +223,7 @@ class OriginWrapper extends Component {
   constructor(props) {
     super(props)
 
+    this.handleNotifications = this.handleNotifications.bind(this)
     this.state = { loading: true }
   }
 
@@ -232,6 +233,19 @@ class OriginWrapper extends Component {
     this.props.updateCarouselStatus(!!completed)
 
     this.setState({ loading: false })
+  }
+
+  async handleNotifications() {
+    try {
+      const permissions = await originWallet.requestNotifications()
+
+      this.props.storeNotificationsPermissions(permissions)
+
+      this.props.updateCarouselStatus(true)
+    } catch(e) {
+      console.error(e)
+      throw e
+    }
   }
 
   render() {
@@ -249,6 +263,7 @@ class OriginWrapper extends Component {
         {!carouselCompleted &&
           <Onboarding
             onCompletion={() => this.props.updateCarouselStatus(true)}
+            onEnable={this.handleNotifications}
             pages={[
               {
                 image: (
@@ -260,7 +275,7 @@ class OriginWrapper extends Component {
                   />
                 ),
                 title: 'Store & Use Crypto',
-                subtitle: 'The Origin Mobile Wallet will allow you to store cryptocurrency to buy and sell on the Origin Marketplace.',
+                subtitle: 'Origin Wallet allows you to store cryptocurrency to buy and sell on the Origin platform.',
               },
               {
                 image: (
@@ -272,7 +287,7 @@ class OriginWrapper extends Component {
                   />
                 ),
                 title: 'Message Buyers & Sellers',
-                subtitle: 'Use the app to communicate with others on the Origin Marketplace in order to move your transactions.',
+                subtitle: 'You can communicate with other users of the Origin platform in a secure an decentralized way.',
               },
               {
                 image: (
@@ -283,8 +298,8 @@ class OriginWrapper extends Component {
                     style={[styles.image, smallScreen ? { height: '33%' } : {}]}
                   />
                 ),
-                title: 'Stay Up to Date',
-                subtitle: 'The Origin Mobile Wallet will notify you when there are transactions that require your attention.',
+                title: 'Stay Up-To-Date',
+                subtitle: 'Get timely updates about new messages or activity on your listings and purchases.',
               },
             ]}
           />

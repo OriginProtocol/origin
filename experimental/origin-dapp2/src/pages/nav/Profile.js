@@ -141,7 +141,7 @@ export default ProfileNav
 require('react-styl')(`
   .dropdown-menu.profile
     width: 300px
-    font-size: 14px;
+    font-size: 14px
     > div
       padding: 0.75rem 1.5rem
       border-bottom: 2px solid black;
@@ -232,4 +232,7 @@ require('react-styl')(`
     &.google
       background-image: url(images/identity/google-icon-verified.svg)
 
+  @media (max-width: 575.98px)
+    .dropdown-menu.profile
+      width: auto
 `)

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
+import Categories from 'origin-graphql/src/constants/Categories'
 import pick from 'lodash/pick'
 
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Wallet from 'components/Wallet'
 
-import Categories from './_categories'
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Step1 extends Component {

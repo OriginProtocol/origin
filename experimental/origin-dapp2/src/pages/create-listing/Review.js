@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
+import Categories from 'origin-graphql/src/constants/Categories'
 
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
+import CoinPrice from 'components/CoinPrice'
 
 import CreateListing from './mutations/CreateListing'
 import UpdateListing from './mutations/UpdateListing'
-
-import Categories from './_categories'
 
 function category(listing) {
   const cat = Categories.lookup[listing.category] || listing.category
@@ -28,6 +28,9 @@ class Review extends Component {
     } else if (!listing.title) {
       return <Redirect to={`${prefix}/step-2`} />
     }
+
+    const boost =
+      this.props.tokenBalance >= Number(listing.boost) ? listing.boost : '0'
 
     return (
       <div className="row create-listing-review">
@@ -50,10 +53,7 @@ class Review extends Component {
             <div className="row">
               <div className="col-3 label">Listing Price</div>
               <div className="col-9">
-                <div className="coin-price eth">
-                  {listing.price}
-                  <span>ETH</span>
-                </div>
+                <CoinPrice price={listing.price} coin="eth" />
                 <div className="fiat">
                   ~ <Price amount={listing.price} />
                 </div>
@@ -62,10 +62,7 @@ class Review extends Component {
             <div className="row">
               <div className="col-3 label">Boost Level</div>
               <div className="col-9">
-                <div className="coin-price ogn">
-                  {listing.boost}
-                  <span>OGN</span>
-                </div>
+                <CoinPrice price={boost} coin="ogn" />
               </div>
             </div>
             <div className="row mb-0">
@@ -96,12 +93,14 @@ class Review extends Component {
               <UpdateListing
                 listing={this.props.listing}
                 listingId={this.props.listingId}
+                tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"
               />
             ) : (
               <CreateListing
                 listing={this.props.listing}
+                tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"
               />
@@ -126,32 +125,12 @@ export default Review
 
 require('react-styl')(`
   .create-listing .create-listing-review
-    .coin-price
-      display: inline-block
-      padding-left: 1.75rem
-      background-size: 1.25rem
-      background-repeat: no-repeat
-      background-position: 0px 3px
-      font-weight: bold
-      span
-        margin-left: 0.25rem
-        font-size: 14px
-      &.eth
-        background-image: url(images/eth-icon.svg)
-        span
-          color: var(--dark-purple)
-      &.ogn
-        background-image: url(images/ogn-icon.svg)
-        span
-          color: #007bff
     .fiat
       display: inline-block
       margin-left: 0.75rem
       font-size: 14px
-
     h2
       font-size: 28px
-
     .detail
       border: 1px solid var(--light)
       border-radius: 5px

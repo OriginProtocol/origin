@@ -1,0 +1,41 @@
+{
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-mushrooms_1.0.0.json",
+  "listingType": "unit",
+  "category": "schema.forSale",
+  "subCategory": "schema.mushrooms",
+  "language": "en-US",
+  "title": "my listing",
+  "description": "my description",
+  "media": [
+    {
+      "url": "ipfs://Qmd286K6pohQcTKYqnS1YhWrCiS4gz7Xi34sdwMe9USZ7u",
+      "contentType": "image/png",
+      "dimension": {
+        "height": 300,
+        "width": 600
+      }
+    },
+    {
+      "url": "ipfs://ddfsfsdsdsddf",
+      "contentType": "image/jpeg",
+      "dimension": {
+        "height": 300,
+        "width": 600
+      }
+    }
+  ],
+  "unitsTotal": 1,
+  "price": {
+    "currency": "ETH",
+    "amount": "0.033"
+  },
+  "commission": {
+    "currency": "OGN",
+    "amount": "0"
+  },
+  "commissionPerUnit": {
+    "currency": "OGN",
+    "amount": "0"
+  }
+}

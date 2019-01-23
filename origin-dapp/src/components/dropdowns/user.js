@@ -48,7 +48,7 @@ class UserDropdown extends Component {
             if (e.target.nodeName === 'A') this.setState({ open: false })
           }}
         >
-          <div className="triangle-container d-flex justify-content-end">
+          <div className="triangle-container justify-content-end d-none d-lg-flex">
             <div className="triangle" />
           </div>
           <div className="actual-menu">

@@ -14,7 +14,7 @@ export const ListingConstants = keyMirror(
 )
 
 export function getListingIds() {
-  return async function(dispatch) {
+  return async function(dispatch, getState) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
     // let hideList = []
@@ -48,8 +48,24 @@ export function getListingIds() {
       //     hideList = await response.json()
       //   }
       // }
+      const config = getState().config
 
-      const ids = await origin.marketplace.getListings({ idsOnly: true })
+      const filters = []
+      if (config.filters &&
+          config.filters.listings &&
+          config.filters.listings.marketplacePublisher) {
+        filters.push({
+          name: 'marketplacePublisher',
+          value: config.filters.listings.marketplacePublisher,
+          valueType: 'STRING',
+          operator: 'EQUALS'
+        })
+      }
+
+      const ids = await origin.marketplace.getListings({
+        idsOnly: true,
+        filters: filters
+      })
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,
