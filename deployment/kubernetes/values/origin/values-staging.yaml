@@ -20,7 +20,7 @@ ipfsImageTag: master
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: '2e15a29'
+ipfsProxyImageTag: 'a85031e'
 
 # origin-faucet
 faucetImage: origin-faucet
