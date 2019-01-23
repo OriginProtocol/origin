@@ -1,11 +1,12 @@
 export default `
   extend type Query {
     messaging(id: String!): Messaging
+    media: [Media]
   }
 
   extend type Mutation {
     enableMessaging: Boolean
-    sendMessage(to: String!, content: String!): Boolean
+    sendMessage(to: String!, content: String, media: [MediaInput]): Boolean
   }
 
   type Messaging {
@@ -32,6 +33,7 @@ export default `
     hash: String
     index: Int
     content: String
+    media: [Media]
     timestamp: Int
   }
 

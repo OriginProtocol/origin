@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import pick from 'lodash/pick'
 
 import mutation from 'mutations/SendMessage'
 import withConfig from 'hoc/withConfig'
@@ -36,12 +37,7 @@ async function getImages(config, files) {
     if (acceptedFileTypes.indexOf(file.type) >= 0) {
       newImages.push({
         contentType: file.type,
-        size: fileSize(file.size),
-        name: file.name,
-        url: `ipfs://${hash}`,
-        urlExpanded: `${ipfsGateway}/ipfs/${hash}`,
-        src: `${ipfsGateway}/ipfs/${hash}`,
-        hash
+        url: `${ipfsGateway}/ipfs/${hash}`
       })
     }
   }
@@ -73,6 +69,18 @@ class SendMessage extends Component {
     this.fileInput.current.click()
   }
 
+  async sendContent(sendMessage, to) {
+    const { message, images } = this.state
+
+    if (message.length) {
+      sendMessage({ variables: { to, content: message }})
+    } else {
+      sendMessage({ variables: { to, media: images }})
+    }
+
+    this.setState({ message: '', images: [] })
+  }
+
   render() {
     const { to, config } = this.props
     const { images, message } = this.state
@@ -80,6 +88,7 @@ class SendMessage extends Component {
     //   origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
     //   canDeliverMessage
 
+    console.log("IMAGES", images)
     return (
       <Mutation mutation={mutation}>
         {sendMessage => (
@@ -96,11 +105,8 @@ class SendMessage extends Component {
               className="send-message d-flex"
               onSubmit={e => {
                 e.preventDefault()
-                //need to map over images and send messages...
-                const content = message || images[0].src
-                if (content) {
-                  sendMessage({ variables: { to, content } })
-                  this.setState({ message: '' })
+                if (message || images) {
+                  this.sendContent(sendMessage, to)
                 }
               }}
             >
@@ -108,11 +114,11 @@ class SendMessage extends Component {
                 <div className="images-preview">
                   {images.map((image) => (
                     <div key={image.hash} className="images-container">
-                      <img className="img" src={image.src} />
+                      <img className="img" src={image.url} />
                       <a
                         className="image-overlay-btn"
                         aria-label="Close"
-                        onClick={() => this.setState({ images: [] })}
+                        onClick={() => this.setState({ images: images.filter((img) => img !== image) })}
                       >
                         <span aria-hidden="true">&times;</span>
                       </a>
@@ -137,6 +143,7 @@ class SendMessage extends Component {
               />
               <input
                 type="file"
+                multiple={true}
                 accept="image/jpeg,image/gif,image/png"
                 ref={this.fileInput}
                 className="d-none"
@@ -145,7 +152,7 @@ class SendMessage extends Component {
                     config,
                     e.currentTarget.files
                   )
-                  this.setState({ images: newImages })
+                  this.setState({ images: [...newImages, ...images] })
                 }}
               />
               <button
@@ -190,6 +197,7 @@ require('react-styl')(`
         display: inline-block
         height: 100%
         position: relative
+        max-height: 245px
         .img
           width: 185px
         .image-overlay-btn

@@ -30,6 +30,7 @@ const MESSAGE_FORMAT = {
   required: ['created'],
   properties: {
     content: { type: 'string' },
+    media: { type: 'array' },
     created: { type: 'number' },
     decryption: {
       type: 'object',
@@ -982,8 +983,8 @@ class Messaging {
     return room
   }
 
-  async sendConvMessage(room_id_or_address, message_obj) {
-    debug('sendConvMessage', room_id_or_address, message_obj)
+  async sendConvMessage(room_id_or_address, message_obj, media = []) {
+    debug('sendConvMessage', room_id_or_address, message_obj, media)
     if (this._sending_message) {
       debug('ERR: already sending message')
       return false
@@ -1012,10 +1013,12 @@ class Messaging {
       debug('ERR: no room to send message to')
       return
     }
+    const images = (media && media.length) ? { media } : ''
+
     if (typeof message_obj == 'string') {
       message_obj = { content: message_obj }
     }
-    const message = Object.assign({}, message_obj)
+    const message = Object.assign({}, message_obj, ...images)
     // set timestamp
     message.created = Date.now()
 
