@@ -21,7 +21,8 @@ class App extends React.Component {
 
     this.state = {
       config: store.get('creator-config', {
-        ...baseConfig
+        ...baseConfig,
+        marketplacePublisher: web3.eth.accounts[0]
       })
     }
 
