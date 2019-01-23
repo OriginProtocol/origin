@@ -33,4 +33,13 @@ function generateSixDigitCode() {
   return Math.floor(100000 + Math.random() * 900000)
 }
 
-module.exports = { generateAirbnbCode, generateSixDigitCode }
+function getAbsoluteUrl(relativeUrl) {
+  protocol = process.env.HTTPS ? 'https' : 'http'
+  return protocol + '://' + process.env.HOST + relativeUrl
+}
+
+function mapObjectToQueryParams(obj) {
+  return Object.keys(obj).map(key => key + '=' + obj[key]).join('&');
+}
+
+module.exports = { generateAirbnbCode, generateSixDigitCode, getAbsoluteUrl, mapObjectToQueryParams }
