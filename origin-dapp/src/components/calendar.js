@@ -109,7 +109,9 @@ class Calendar extends Component {
           moment(clickedSlotInfo.start).isBefore(moment().startOf(timePeriod)) ||
           moment(clickedSlotInfo.end).isBefore(moment().startOf(timePeriod))
         ) {
-        [...document.querySelectorAll('.rbc-day-bg')].map((element) => element.classList.remove('selected'))
+        [...document.querySelectorAll('.rbc-day-bg')].map(
+          (element) => element.classList.remove('selected', 'dragging')
+        )
 
         return this.setState({
           showPastDateSelectedError: true,

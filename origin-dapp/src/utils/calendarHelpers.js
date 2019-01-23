@@ -497,18 +497,21 @@ export const highlightCalendarDrag = () => {
 
     function mouseDownHandler(evt) {
       const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
+
       addDraggingClass(evt)
 
       calendarDays.map((element) => {
         element.addEventListener('mousemove', addDraggingClass)
       })
-
-      document.addEventListener('mouseup', mouseUpHandler)
     }
 
     calendarDays.map((element) => {
+      element.removeEventListener('mousedown', mouseDownHandler)
       element.addEventListener('mousedown', mouseDownHandler)
     })
+
+    document.removeEventListener('mouseup', mouseUpHandler)
+    document.addEventListener('mouseup', mouseUpHandler)
   }, 1000)
 }
 
