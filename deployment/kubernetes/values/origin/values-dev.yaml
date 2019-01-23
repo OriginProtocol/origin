@@ -38,11 +38,11 @@ notificationsImageTag: '218bcfc'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: '4992a87'
+creatorClientImageTag: 'd13d988'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: '4992a87'
+creatorServerImageTag: 'd13d988'
 
 # origin-linking
 linkingImage: origin-linking
