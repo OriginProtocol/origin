@@ -18,16 +18,15 @@ const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
 function renderContent(message) {
   const { content, media } = message
   const contentWithLineBreak = `${content}\n`
-  // const contentIsImage = (content !== null) && !! content.match(/ipfs/)
 
   if (!media || !media.length) {
     return contentWithLineBreak
   } else {
-    return media.map((image) => {
+    return media.map((image) => (
       <div className="image-container">
         <img src={image.url} alt={'fileName'} />
       </div>
-    })
+    ))
   }
 }
 

@@ -88,7 +88,6 @@ class SendMessage extends Component {
     //   origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
     //   canDeliverMessage
 
-    console.log("IMAGES", images)
     return (
       <Mutation mutation={mutation}>
         {sendMessage => (

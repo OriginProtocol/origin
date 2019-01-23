@@ -5,6 +5,7 @@ function getMessage(message) {
   return {
     ...message,
     content: message.msg.content,
+    media: message.msg.media,
     timestamp: Math.round(message.msg.created / 1000)
   }
 }

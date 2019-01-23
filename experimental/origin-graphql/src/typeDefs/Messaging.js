@@ -1,7 +1,6 @@
 export default `
   extend type Query {
     messaging(id: String!): Messaging
-    media: [Media]
   }
 
   extend type Mutation {
