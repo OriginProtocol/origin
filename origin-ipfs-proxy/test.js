@@ -14,7 +14,8 @@ const ipfsHashes = {
   'sample.png': 'QmfUkCVtuFr9nVRzbkorrVh3Yrkzsx1m8P43VhqQK5f5VG',
   'sample_1mb.jpg': 'QmcJwbSPxVgpLsnN3ESAeZ7FRSapYKa27pWFhY9orsZat7',
   'sample_5mb.jpg': 'QmSojSdiRtS1uC9T6HEVXjcUim62RZXfER8he9iCm2KTZJ',
-  'sample.json': 'QmPc1WfXnWDxQreha2fr1aXskmjJ7PSiKXs6Er726kGy2R',
+  'sample.ico': 'QmYZMABAjEWpVfA8G68X64FECHDACaqPRqgry87sgFYm9y',
+  'sample.json': 'QmaaAZU3raDoxhejCDDrvijvr9ev5dZ9GRXEDVnzykVxtD',
   'sample.html': 'QmV5yieTXnKmymahfms8Nq9VCBMAEMUL2X3PrNAAn86EYM'
 }
 
@@ -93,6 +94,14 @@ describe('upload', () => {
       .expect(200, done)
   })
 
+  it('should allow ico uploads', (done) => {
+   const image = './fixtures/sample.ico'
+    request(server)
+      .post('/api/v0/add')
+      .attach('image', image)
+      .expect(200, done)
+  })
+
   it('should allow json uploads', (done) => {
     const json = './fixtures/sample.json'
     request(server)
@@ -164,13 +173,17 @@ describe('download', () => {
     }, (err, node) => {
       expect(err).to.be.null
       ipfsd = node
-      ipfsd.api.util.addFromFs('./fixtures/sample_1mb.jpg')
-      ipfsd.api.util.addFromFs('./fixtures/sample_5mb.jpg')
-      ipfsd.api.util.addFromFs('./fixtures/sample.gif')
-      ipfsd.api.util.addFromFs('./fixtures/sample.json')
-      ipfsd.api.util.addFromFs('./fixtures/sample.png')
-      ipfsd.api.util.addFromFs('./fixtures/sample.html')
-      done()
+      Promise.all([
+        ipfsd.api.addFromFs('./fixtures/sample_1mb.jpg'),
+        ipfsd.api.addFromFs('./fixtures/sample_5mb.jpg'),
+        ipfsd.api.addFromFs('./fixtures/sample.gif'),
+        ipfsd.api.addFromFs('./fixtures/sample.ico'),
+        ipfsd.api.addFromFs('./fixtures/sample.json'),
+        ipfsd.api.addFromFs('./fixtures/sample.png'),
+        ipfsd.api.addFromFs('./fixtures/sample.html')
+      ]).then((result) => {
+        done()
+      })
     })
   })
 
