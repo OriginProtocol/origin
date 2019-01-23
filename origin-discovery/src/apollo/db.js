@@ -27,7 +27,9 @@ function _makeListing (row) {
     price: row.data.price,
     commission: row.data.commission,
     commissionPerUnit: row.data.commissionPerUnit,
-    display: listingMetadata.getDisplay(row.id)
+    display: listingMetadata.getDisplay(row.id),
+    marketplacePublisher: row.data.marketplacePublisher,
+    updatedAt: row.updatedAt
   }
 }
 
