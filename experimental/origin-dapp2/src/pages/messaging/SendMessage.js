@@ -1,18 +1,17 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import pick from 'lodash/pick'
 
 import mutation from 'mutations/SendMessage'
 import withConfig from 'hoc/withConfig'
 
-import { fileSize, postFile } from 'utils/fileUtils'
+import { postFile } from 'utils/fileUtils'
 
 const acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
 
 async function getImages(config, files) {
   const { ipfsGateway, ipfsRPC } = config
 
-  let newImages = []
+  const newImages = []
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
     const hash = await postFile(ipfsRPC, file)
@@ -55,9 +54,9 @@ class SendMessage extends Component {
     const { message, images } = this.state
 
     if (message.length) {
-      sendMessage({ variables: { to, content: message }})
+      sendMessage({ variables: { to, content: message } })
     } else {
-      sendMessage({ variables: { to, media: images }})
+      sendMessage({ variables: { to, media: images } })
     }
 
     this.setState({ message: '', images: [] })
