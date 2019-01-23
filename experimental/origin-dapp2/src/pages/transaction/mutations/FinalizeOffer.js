@@ -13,21 +13,21 @@ class FinalizeOffer extends Component {
     return (
       <Mutation
         mutation={FinalizeOfferMutation}
-        onCompleted={({ finalizeOffer }) =>{
+        onCompleted={({ finalizeOffer }) => {
           this.setState({ waitFor: finalizeOffer.id })
         }}
         onError={errorData =>
           this.setState({ waitFor: false, error: 'mutation', errorData })
         }
       >
-        {finalizeOffer => (
+        {(finalizeOffer, { client }) => (
           <>
             <button
               className={this.props.className}
               onClick={() => this.onClick(finalizeOffer)}
               children={this.props.children}
             />
-            {this.renderWaitModal()}
+            {this.renderWaitModal(client)}
             {this.state.error && (
               <TransactionError
                 reason={this.state.error}
@@ -63,22 +63,24 @@ class FinalizeOffer extends Component {
     })
   }
 
-  renderWaitModal() {
+  renderWaitModal(client) {
     if (!this.state.waitFor) return null
 
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="OfferFinalized">
-        {({ client }) => (
+      <WaitForTransaction
+        shouldClose={this.state.waitForShouldClose}
+        onClose={async () => await client.resetStore()}
+        hash={this.state.waitFor}
+        event="OfferFinalized"
+      >
+        {() => (
           <div className="make-offer-modal">
             <div className="success-icon" />
             <div>Success!</div>
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
-                this.setState({ waitFor: false })
-              }}
+              onClick={() => this.setState({ waitForShouldClose: true })}
               children="OK"
             />
           </div>

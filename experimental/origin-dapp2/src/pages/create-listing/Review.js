@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Categories from 'origin-graphql/src/constants/Categories'
 
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
@@ -10,11 +9,7 @@ import CoinPrice from 'components/CoinPrice'
 import CreateListing from './mutations/CreateListing'
 import UpdateListing from './mutations/UpdateListing'
 
-function category(listing) {
-  const cat = Categories.lookup[listing.category] || listing.category
-  const subCat = Categories.lookup[listing.subCategory] || listing.subCategory
-  return `${cat} / ${subCat}`
-}
+import category from 'utils/category'
 
 class Review extends Component {
   state = {}
