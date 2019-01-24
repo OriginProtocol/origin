@@ -123,6 +123,10 @@ class RejectOffer extends Component {
 export default withCanTransact(RejectOffer)
 
 require('react-styl')(`
+  .pl-modal
+    .pl-modal-table
+      .pl-modal-cell
+        padding: 1rem
   .reject-offer-modal
     h2
       padding-top: 7rem
