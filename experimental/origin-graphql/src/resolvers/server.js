@@ -10,7 +10,7 @@ import TokenHolder from './TokenHolder'
 import Event from './Event'
 import Token from './Token'
 import Identity from './Identity'
-import Conversation from './Conversation'
+import Conversation from './messaging/Conversation'
 import UserRegistry from './UserRegistry'
 import Mutation from '../mutations/index'
 
