@@ -21,7 +21,7 @@ describe('Marketplace', function() {
     ;[Admin, Seller, Buyer, Arbitrator, Affiliate] = nodeAccounts
   })
 
-  it('should allow a token to be deployed', async function() {
+  it('should deploy the token contract', async function() {
     const receipt = await mutate(mutations.DeployToken, {
       type: 'OriginToken',
       name: 'Origin Token',
@@ -34,7 +34,7 @@ describe('Marketplace', function() {
     assert(OGN)
   })
 
-  it('should allow marketplace to be deployed', async function() {
+  it('should deploy the marketplace contract', async function() {
     const receipt = await mutate(mutations.DeployMarketplace, {
       token: OGN,
       version: '001',
@@ -45,7 +45,7 @@ describe('Marketplace', function() {
     assert(Marketplace)
   })
 
-  it('should allow an affiliate to be added', async function() {
+  it('should add an affiliate to the marketplace contract', async function() {
     await mutate(mutations.AddAffiliate, {
       from: Admin,
       affiliate: Affiliate
@@ -74,7 +74,7 @@ describe('Marketplace', function() {
       }
     })
 
-    it('should allow a listing to be created', async function() {
+    it('should create a listing', async function() {
       const events = await mutate(mutations.CreateListing, listingData, true)
       assert(events.ListingCreated)
     })
@@ -88,6 +88,7 @@ describe('Marketplace', function() {
       const listing = get(res, 'data.marketplace.listing')
       assert.ok(listing)
 
+      assert.strictEqual(listing.id, '999-0-0')
       assert.strictEqual(listing.deposit, listingData.deposit)
       assert.strictEqual(listing.arbitrator.id, listingData.depositManager)
       assert.strictEqual(listing.seller.id, listingData.from)
@@ -107,17 +108,6 @@ describe('Marketplace', function() {
       assert.strictEqual(listing.hidden, false)
     })
 
-    it('should retrieve the listing', async function() {
-      const res = await client.query({
-        query: queries.GetListing,
-        variables: { id: '999-0-0' }
-      })
-
-      const id = get(res, 'data.marketplace.listing.id')
-      assert.strictEqual(id, '999-0-0')
-      // TODO: verify the other listing fields
-    })
-
     it('should retrieve the listing as of a specfic block', async function() {
       const blockNumber = contracts.marketplace.eventCache.getBlockNumber()
       const listingId = `999-0-0-${blockNumber}`
@@ -131,13 +121,13 @@ describe('Marketplace', function() {
       // TODO: verify the other listing fields
     })
 
-    it('should allow an offer to be created', async function() {
+    it('should create an invalid offer', async function() {
       const events = await mutate(mutations.MakeOffer, {
         listingID: '999-0-0',
         from: Buyer,
         finalizes: 123,
         affiliate: ZeroAddress,
-        value: '0.1',
+        value: '0.005',
         currency: ZeroAddress,
         arbitrator: Arbitrator,
         quantity: 1
@@ -145,17 +135,40 @@ describe('Marketplace', function() {
       assert(events.OfferCreated)
     })
 
-    it('should allow an offer to be accepted', async function() {
+    it('should detect that the offer is invalid', async function() {
+      const offer = await getOffer('999-0-0', 0, false)
+      assert(!offer.valid)
+      assert.strictEqual(
+        offer.validationError,
+        'Invalid offer: insufficient offer amount for listing'
+      )
+    })
+
+    it('should create an offer', async function() {
+      const events = await mutate(mutations.MakeOffer, {
+        listingID: '999-0-0',
+        from: Buyer,
+        finalizes: 123,
+        affiliate: ZeroAddress,
+        value: '0.01',
+        currency: ZeroAddress,
+        arbitrator: Arbitrator,
+        quantity: 1
+      }, true)
+      assert(events.OfferCreated)
+    })
+
+    it('should accept an offer', async function() {
       const events = await mutate(mutations.AcceptOffer, {
-        offerID: '999-0-0-0',
+        offerID: '999-0-0-1',
         from: Seller
       }, true)
       assert(events.OfferAccepted)
     })
 
-    it('should allow an offer to be finalized', async function() {
+    it('should finalize an offer', async function() {
       const events = await mutate(mutations.FinalizeOffer, {
-        offerID: '999-0-0-0',
+        offerID: '999-0-0-1',
         from: Buyer
       }, true)
       assert(events.OfferFinalized)
@@ -194,7 +207,7 @@ describe('Marketplace', function() {
       })
     })
 
-    it('should allow a listing to be created', async function() {
+    it('should create a listing', async function() {
       await mutate(mutations.CreateListing, listingData)
     })
 
@@ -243,7 +256,7 @@ describe('Marketplace', function() {
       // TODO: verify the other listing fields
     })
 
-    it('should allow an offer to be created', async function() {
+    it('should create an offer', async function() {
       const events = await mutate(mutations.MakeOffer, {
         listingID: '999-0-1',
         from: Buyer,
@@ -257,7 +270,7 @@ describe('Marketplace', function() {
       assert(events.OfferCreated)
     })
 
-    it('should allow an offer to be accepted', async function() {
+    it('should accept an offer', async function() {
       const events = await mutate(mutations.AcceptOffer, {
         offerID: '999-0-1-0',
         from: Seller
@@ -265,7 +278,7 @@ describe('Marketplace', function() {
       assert(events.OfferAccepted)
     })
 
-    it('should allow an offer to be finalized', async function() {
+    it('should finalize an offer', async function() {
       await mutate(mutations.FinalizeOffer, {
         offerID: '999-0-1-0',
         from: Buyer
@@ -274,6 +287,8 @@ describe('Marketplace', function() {
   })
 
   describe('Multi-unit listing with commission', async function() {
+    let listingData
+
     before(async function() {
       await mutate(mutations.TransferToken, {
         token: OGN,
@@ -282,10 +297,7 @@ describe('Marketplace', function() {
         value: '3'
       })
       // Setting the 'getEvents' parameter to true causes an error.
-    })
-
-    it('should allow a listing to be created', async function() {
-      await mutate(mutations.CreateListing, {
+      listingData = {
         deposit: '3',
         depositManager: Arbitrator,
         from: Seller,
@@ -303,10 +315,14 @@ describe('Marketplace', function() {
           commission: '3',
           commissionPerUnit: '2'
         }
-      })
+      }
     })
 
-    it('should allow an offer to be created', async function() {
+    it('should create a listing', async function() {
+      await mutate(mutations.CreateListing, listingData)
+    })
+
+    it('should create first offer with full commission', async function() {
       const events = await mutate(mutations.MakeOffer, {
         listingID: '999-0-2',
         from: Buyer,
@@ -324,7 +340,7 @@ describe('Marketplace', function() {
       assert(offer.commission === '2000000000000000000')
     })
 
-    it('should allow an offer with partial commission', async function() {
+    it('should create second offer with partial commission', async function() {
       const events = await mutate(mutations.MakeOffer, {
         listingID: '999-0-2',
         from: Buyer,
@@ -366,7 +382,7 @@ describe('Marketplace', function() {
       assert.strictEqual(unitsAvailable, 2)
     })
 
-    it('should allow a multi-unit offer with no commission', async function() {
+    it('should create third offer with no commission', async function() {
       const events = await mutate(mutations.MakeOffer, {
         listingID: '999-0-2',
         from: Buyer,
@@ -416,6 +432,22 @@ describe('Marketplace', function() {
       assert.strictEqual(unitsAvailable, 1)
     })
 
+    it('should refuse to decrease total units below units sold', async function() {
+      const updatedListingData = Object.assign({}, listingData)
+      updatedListingData.data.unitsTotal = 2
+      await assert.rejects(
+        mutate(mutations.UpdateListing, {
+          listingID: '999-0-2',
+          additionalDeposit: '0',
+          from: Seller,
+          data: updatedListingData.data
+        }, true),
+        {
+          message: 'GraphQL error: New unitsTotal is lower than units already sold'
+        }
+      )
+    })
+
     it('should decline third offer', async function() {
       // "Decline offer" means seller withdraws offer
       const events = await mutate(mutations.WithdrawOffer, {
@@ -457,6 +489,72 @@ describe('Marketplace', function() {
       assert.strictEqual(unitsSold, 1)
       const unitsAvailable = get(res, 'data.marketplace.listing.unitsAvailable')
       assert.strictEqual(unitsAvailable, 3)
+    })
+
+    it('should decrease unitsTotal', async function() {
+      const updatedListingData = Object.assign({}, listingData)
+      updatedListingData.data.unitsTotal = 1
+      const events = await mutate(mutations.UpdateListing, {
+        listingID: '999-0-2',
+        additionalDeposit: '0',
+        from: Seller,
+        data: updatedListingData.data
+      }, true)
+      assert(events.ListingUpdated)
+    })
+
+    it('should count units sold and available', async function() {
+      const res = await client.query({
+        query: queries.GetListing,
+        variables: { id: '999-0-2' }
+      })
+
+      const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
+      assert.strictEqual(unitsSold, 1)
+      const unitsAvailable = get(res, 'data.marketplace.listing.unitsAvailable')
+      assert.strictEqual(unitsAvailable, 0)
+    })
+
+    it('should increase unitsTotal', async function() {
+      const updatedListingData = Object.assign({}, listingData)
+      updatedListingData.data.unitsTotal = 5
+      const events = await mutate(mutations.UpdateListing, {
+        listingID: '999-0-2',
+        additionalDeposit: '0',
+        from: Seller,
+        data: updatedListingData.data
+      }, true)
+      assert(events.ListingUpdated)
+    })
+
+    it('should count units sold and available', async function() {
+      const res = await client.query({
+        query: queries.GetListing,
+        variables: { id: '999-0-2' }
+      })
+
+      const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
+      assert.strictEqual(unitsSold, 1)
+      const unitsAvailable = get(res, 'data.marketplace.listing.unitsAvailable')
+      assert.strictEqual(unitsAvailable, 4)
+    })
+
+    it('should error when purchasing too many units', async function() {
+      await assert.rejects(
+        mutate(mutations.MakeOffer, {
+          listingID: '999-0-2',
+          from: Buyer,
+          finalizes: 123,
+          affiliate: Affiliate,
+          value: '0.05',
+          currency: ZeroAddress,
+          arbitrator: Arbitrator,
+          quantity: 5
+        }, true),
+        {
+          message: 'GraphQL error: Insufficient units available (4) for offer (5)'
+        }
+      )
     })
   })
 })
