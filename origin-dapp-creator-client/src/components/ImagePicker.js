@@ -20,7 +20,7 @@ class ImagePicker extends React.Component {
     super(props)
 
     this.state = {
-      imageUrl: null,
+      imageUrl: this.props.imageUrl,
       loading: false,
       uploadError: null
     }
@@ -99,7 +99,7 @@ class ImagePicker extends React.Component {
           onChange={this.handleFileChange}
         />
 
-        {this.state.imageUrl !== null ? this.renderPreview() :
+        {this.state.imageUrl ? this.renderPreview() :
           <div
             className="image-picker"
             onClick={this.handlePreviewClick}

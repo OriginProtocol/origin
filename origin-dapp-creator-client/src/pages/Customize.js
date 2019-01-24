@@ -137,14 +137,16 @@ class Customize extends React.Component {
               <ImagePicker title="Marketplace Logo"
                 name="logoUrl"
                 recommendedSize={'300px x 100px'}
-                onUpload={this.handleFileUpload} />
+                onUpload={this.handleFileUpload}
+                imageUrl={this.props.config.logoUrl} />
             </div>
 
             <div className="col-6">
               <ImagePicker title="Marketplace Favicon"
                 name="faviconUrl"
                 recommendedSize={'16px x 16px'}
-                onUpload={this.handleFileUpload} />
+                onUpload={this.handleFileUpload}
+                imageUrl={this.props.config.faviconUrl} />
             </div>
           </div>
         </div>
