@@ -30,7 +30,7 @@ export default `
   }
 
   type Config {
-    affilliate: String
+    affiliate: String
     arbitrator: String
     discovery: String
     bridge: String
