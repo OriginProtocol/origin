@@ -79,22 +79,16 @@ async function toIpfsData(data) {
   let commission = { currency: 'OGN', amount: '0' }
   if (data.commission) {
     // Passed in commission takes precedence
-    commission = {
-      currency: 'OGN',
-      amount: web3.utils.fromWei(data.commission, 'ether')
-    }
+    commission.amount = web3.utils.fromWei(data.commission, 'ether')
   } else if (listing.commissionPerUnit) {
     // Default commission to min(depositAvailable, commissionPerUnit)
     const amount = web3.utils.toBN(listing.commissionPerUnit)
       .mul(web3.utils.toBN(data.quantity))
     const depositAvailable = web3.utils.toBN(listing.depositAvailable)
-    const commissionAmount = amount.lt(depositAvailable)
-      ? amount
-      : depositAvailable
-    commission = {
-      amount: web3.utils.fromWei(commissionAmount, 'ether'),
-      currency: 'OGN'
-    }
+    const commissionWei = amount.lt(depositAvailable)
+      ? amount.toString()
+      : depositAvailable.toString()
+    commission.amount = web3.utils.fromWei(commissionWei, 'ether')
   }
 
   const ipfsData = {
