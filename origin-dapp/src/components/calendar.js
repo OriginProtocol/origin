@@ -186,8 +186,9 @@ class Calendar extends Component {
     while (slotToTest.toDate() >= slotInfo.start && slotToTest.toDate() <= slotInfo.end) {
       const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events, this.props.offers)
       const { price, isAvailable, isRecurringEvent, timeZone } = slotAvailData
+      const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
 
-      if (!isAvailable || moment(slotInfo.end).isBefore(moment())){
+      if (!isAvailable || moment(slotInfo.end).isBefore(moment().startOf(timePeriod))){
         hasUnavailableSlot = true
       }
 
