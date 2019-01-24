@@ -5,6 +5,7 @@ import ProfileQuery from 'queries/Profile'
 
 import Identicon from 'components/Identicon'
 import Balances from 'components/Balances'
+import EthAddress from 'components/EthAddress'
 
 const Wallet = () => (
   <Query query={ProfileQuery}>
@@ -22,7 +23,7 @@ const Wallet = () => (
             </div>
             <div>
               <h5>ETH Address</h5>
-              <div className="wallet-address">{checksumAddress}</div>
+              <EthAddress>{checksumAddress}</EthAddress>
             </div>
           </div>
           <Balances balance={balance} account={id} />
@@ -51,9 +52,6 @@ require('react-styl')(`
         margin-right: 0.5rem
         display: flex
         align-items: center
-      .wallet-address
-        word-break: break-all
-        line-height: normal
     h5
       font-size: 14px
     .balances

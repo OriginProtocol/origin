@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import dayjs from 'dayjs'
 
 import OfferEventsQuery from 'queries/OfferEvents'
+import TxHash from './_TxHash'
 
 const date = timestamp => dayjs.unix(timestamp).format('MMM. D, YYYY h:mmA')
 const eventName = name => {
@@ -72,8 +73,7 @@ class TxHistory extends Component {
                             />
                           </div>
                           <div>
-                            Tx Hash:
-                            <a href="#">{item.id}</a>
+                            Tx Hash: <TxHash hash={item.id}></TxHash>
                           </div>
                         </td>
                       </tr>

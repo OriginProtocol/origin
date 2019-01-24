@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import StarRating from 'components/StarRating'
 import Avatar from 'components/Avatar'
 import ReviewsQuery from 'queries/Reviews'
+import EthAddress from './EthAddress';
 
 const Reviews = ({ id }) => (
   <Query query={ReviewsQuery} variables={{ id }}>
@@ -27,7 +28,7 @@ const Reviews = ({ id }) => (
                     <div className="name">
                       {profile.fullName || 'Unnamed User'}
                     </div>
-                    <div className="address">{review.reviewer.id}</div>
+                    <div className="address"><EthAddress address={review.reviewer.id} /></div>
                   </div>
                   <div className="info">
                     <StarRating small={true} active={review.rating} />
@@ -63,8 +64,6 @@ require('react-styl')(`
           font-size: 18px
           font-weight: bold
           color: var(--black)
-        .address
-          color: var(--steel)
       .info
         text-align: right
         color: var(--steel)
