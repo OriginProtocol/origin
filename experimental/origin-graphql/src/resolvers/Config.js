@@ -17,18 +17,5 @@ export default {
   },
   originGraphQLVersion: () => {
     return ORIGIN_GQL_VERSION
-  },
-  affilliate: () => {
-    return contracts.config.affiliate
-  },
-  arbitrator: () => {
-    return contracts.config.arbitrator
-  },
-  discovery: () => {
-    console.log(contracts.config)
-    return contracts.config.discovery
-  },
-  bridge: () => {
-    return contracts.config.bridge
-  },
+  }
 }
