@@ -47,7 +47,9 @@ router.get("/server-info", (req, res) => {
     messagingUrl,
     profileUrl,
     sellingUrl,
-    attestationAccount
+    attestationAccount,
+    perfModeEnabled,
+    discoveryServerUrl
   } = linker.getServerInfo()
   res.send({
     provider_url:providerUrl,
@@ -58,7 +60,9 @@ router.get("/server-info", (req, res) => {
     messaging_url:messagingUrl,
     profile_url:profileUrl,
     selling_url:sellingUrl,
-    attestation_account:attestationAccount
+    attestation_account:attestationAccount,
+    perf_mode_enabled:perfModeEnabled,
+    discovery_server_url:discoveryServerUrl
   })
 })
 

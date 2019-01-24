@@ -1,4 +1,5 @@
 import contracts from '../contracts'
+const ORIGIN_GQL_VERSION = require('../../package.json').version
 
 export default {
   facebookAuthUrl: async () => {
@@ -13,5 +14,8 @@ export default {
 
     const data = await response.json()
     return data.url
+  },
+  originGraphQLVersion: () => {
+    return ORIGIN_GQL_VERSION
   }
 }
