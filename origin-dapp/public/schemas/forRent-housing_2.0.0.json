@@ -46,14 +46,6 @@
       "minLength": 10,
       "maxLength": 1024
     },
-    "pictures": {
-      "type": "array",
-      "title": "schema.selectPhotos",
-      "items": {
-        "type": "string",
-        "format": "data-url"
-      }
-    },
     "weekdayPricing": {
       "type": "number",
       "title": "schema.weekdayPricing"
@@ -61,6 +53,14 @@
     "weekendPricing": {
       "type": "number",
       "title": "schema.weekendPricing"
+    },
+    "pictures": {
+      "type": "array",
+      "title": "schema.selectPhotos",
+      "items": {
+        "type": "string",
+        "format": "data-url"
+      }
     },
     "sellerSteps": {
       "type": "string",
