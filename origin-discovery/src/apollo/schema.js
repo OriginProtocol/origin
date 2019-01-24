@@ -99,9 +99,11 @@ const typeDefs = gql`
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
-  // This should come from origin-js/models/listing
-  // It's all the chainlisting inputs 
-  type ListingInput {
+  #
+  # This should come from origin-js/models/listing
+  # It's all the chainlisting inputs 
+  #
+  input ListingInput {
     ipfsHash: ID!
     deposit: String
     depositManager: ID
@@ -230,8 +232,8 @@ const typeDefs = gql`
   # The "Mutation" type is the root of all GraphQL mutations
   #
   type Mutation {
-    createListing(listinInput: ListingInput, signature: String!): Listing
-    updateListing(id: ID!, listingInput:ListingInput, signature: String!): Listing
+    injectListing(listingInput: ListingInput, signature: String!): Listing
+    updateListing(id: ID!, listingInput: ListingInput, signature: String!): Listing
   }
 `
 

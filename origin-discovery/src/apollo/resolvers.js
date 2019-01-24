@@ -2,7 +2,7 @@ const GraphQLJSON = require('graphql-type-json')
 const listingMetadata = require('./listing-metadata')
 const search = require('../lib/search')
 const { getListing, getListingsById, getListingsBySeller, getOffer, getOffers } = require('./db')
-const { injectListing, updateListing } = require('injector')
+const { injectListing, updateListing } = require('./injector')
 
 /**
  * Gets information on a user based on her wallet address.
@@ -78,7 +78,7 @@ const resolvers = {
     }
   },
 
-  Mutations: {
+  Mutation: {
     async injectListing (node, args)  {
       // verify args.signature checks against args.listingInput
       await injectListing(args.listingInput, args.signature)

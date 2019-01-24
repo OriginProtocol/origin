@@ -218,7 +218,7 @@ export default class Marketplace {
     return this._listingFromData(listingId, chainListing)
   }
 
-  _listingFromData(listingId, chainListing) {
+  async _listingFromData(listingId, chainListing) {
     // Get the off-chain listing data from IPFS.
     const ipfsHash = this.contractService.getIpfsHashFromBytes32(
       chainListing.ipfsHash

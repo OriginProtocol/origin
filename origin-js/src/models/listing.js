@@ -1,4 +1,5 @@
-import base32 from 'base32'
+const base58 = require('bs58')
+const crypto = require('crypto')
 
 //
 // Listing is the main object exposed by Origin Protocol to access listing data.
@@ -104,7 +105,7 @@ class Listing {
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
       commissionPerUnit: ipfsListing.commissionPerUnit,
-      createDate: ipfsListing.createDate
+      createDate: ipfsListing.createDate,
       marketplacePublisher: ipfsListing.marketplacePublisher
     })
   }
@@ -203,8 +204,8 @@ class Listing {
     }
   }
 
-  get uniqueId32() {
-    return base32.sha1(this.seller + "-" + this.createDate)
+  get uniqueId() {
+    return bs58.encode(crypto.createHash('sha1').update(this.seller + "-" + this.createDate).digest())
   }
 }
 
