@@ -103,13 +103,13 @@ class RejectOffer extends Component {
         className="reject-success"
       >
         {() => (
-          <div className='reject-offer-modal'>
+          <div className="reject-offer-modal">
             <div className="d-flex image-container mx-auto justify-content-center">
               <img src="images/reject-icon.svg" className="align-self-center"/>
             </div>
             <h2>This offer has been rejected</h2>
             <span className="mx-auto">
-              You've rejected this buyer's offer,
+              You&#39;ve rejected this buyer&#39;s offer,
               click below to go back to your listings.
             </span>
             <NavLink
