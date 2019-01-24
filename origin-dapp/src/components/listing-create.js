@@ -1015,7 +1015,7 @@ class ListingCreate extends Component {
                 <h2>
                   <FormattedMessage
                     id={'listing-create.createListingHeading'}
-                    defaultMessage={'Provide listing details'}
+                    defaultMessage={'Listing Details'}
                   />
                 </h2>
                 <StepsProgress
@@ -1093,7 +1093,7 @@ class ListingCreate extends Component {
                   <h2>
                     <FormattedMessage
                       id={'listing-create.availabilityHeading'}
-                      defaultMessage={'Edit Availability and Pricing'}
+                      defaultMessage={'Pricing & Availability'}
                     />
                   </h2>
                   <StepsProgress
@@ -1579,6 +1579,14 @@ class ListingCreate extends Component {
                         defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos will increase the chances of selling your listing.`}
                       />
                     </p>
+                    {isFractionalListing && (
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.form-help-details-fractional'}
+                          defaultMessage={`You will be able to customize pricing and availability in the next step.`}
+                        />
+                      </p>
+                    )}
                   </div>
                 )}
                 {step === this.STEP.BOOST && (

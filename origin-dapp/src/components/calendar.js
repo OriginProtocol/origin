@@ -551,11 +551,17 @@ class Calendar extends Component {
           <div className="col-md-4 calendar-right-column">
             {(!selectedEvent || !selectedEvent.start) && userType === 'seller' &&
               <div className="info-box">
+                <h2>
+                  <FormattedMessage
+                    id={'listing-create.calendarCustomize'}
+                    defaultMessage={'Customize Pricing & Availability'}
+                  />
+                </h2>
                 <p>
                   <FormattedMessage
                     id={'calendar.calendarTipsSeller1'}
                     defaultMessage={
-                      'Click the calendar to enter pricing and availability information.'
+                      'Select one or more dates by clicking and dragging on the calendar.'
                     }
                   />
                 </p>
@@ -563,7 +569,7 @@ class Calendar extends Component {
                   <FormattedMessage
                     id={'calendar.calendarTipsSeller2'}
                     defaultMessage={
-                      'To select multiple time slots, click the starting time slot and drag to the ending one.'
+                      'All dates are available by default and are priced according to your weekday and weekend pricing set in the listing details.'
                     }
                   />
                 </p>
@@ -575,7 +581,7 @@ class Calendar extends Component {
                   <FormattedMessage
                     id={'calendar.calendarTipsBuyer1'}
                     defaultMessage={
-                      'Click one or more available time slots to make an offer.'
+                      'Select one or more dates that you would like to reserve by clicking and dragging on the calendar.'
                     }
                   />
                 </p>
@@ -583,7 +589,7 @@ class Calendar extends Component {
                   <FormattedMessage
                     id={'calendar.calendarTipsBuyer2'}
                     defaultMessage={
-                      'To select multiple time slots, click the starting time slot and drag to the ending one.'
+                      'Your reservation will be for the night of each date that you include in your selection. Be sure to review the listing description for any special circumstances.'
                     }
                   />
                 </p>
@@ -596,7 +602,7 @@ class Calendar extends Component {
                     <FormattedMessage
                       id={'calendar.selectedDates'}
                       defaultMessage={
-                        'Selected dates'
+                        'Selected Dates'
                       }
                     />
                   }
@@ -605,7 +611,7 @@ class Calendar extends Component {
                     <FormattedMessage
                       id={'calendar.selectedTimes'}
                       defaultMessage={
-                        'Selected times'
+                        'Selected Times'
                       }
                     />
                   }
@@ -827,7 +833,7 @@ class Calendar extends Component {
                   <FormattedMessage
                     id={'calendar.selectionUnavailable'}
                     defaultMessage={
-                      'Your selection contains one or more unavailable time slots.'
+                      'Your selection contains one or more unavailable dates.'
                     }
                   />
                 </p>
