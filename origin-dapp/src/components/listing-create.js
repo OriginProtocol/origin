@@ -421,8 +421,8 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
-          ...schemaSetValues,
           ...prevState.formListing.formData,
+          ...schemaSetValues,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
