@@ -1,5 +1,6 @@
 import graphqlFields from 'graphql-fields'
 import sortBy from 'lodash/sortBy'
+import uniq from 'lodash/uniq'
 
 import contracts from '../contracts'
 import { listingsBySeller } from './marketplace/listings'
@@ -25,27 +26,65 @@ async function resultsFromIds({ after, allIds, first, fields }) {
   return getConnection({ start, first, nodes, ids, totalCount })
 }
 
-async function offers(buyer, { first = 10, after }, _, info) {
+async function offers(buyer, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
   const events = await ec().allEvents('OfferCreated', buyer.id)
 
-  const allIds = events
+  let allIds = events
     .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
     .reverse()
+
+  if (filter) {
+    const completedEvents = await ec().allEvents(
+      ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
+      undefined,
+      allIds
+    )
+    const completedIds = uniq(
+      completedEvents.map(
+        e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
+      )
+    )
+
+    if (filter === 'complete') {
+      allIds = allIds.filter(id => completedIds.indexOf(id) >= 0)
+    } else if (filter === 'pending') {
+      allIds = allIds.filter(id => completedIds.indexOf(id) < 0)
+    }
+  }
 
   return await resultsFromIds({ after, allIds, first, fields })
 }
 
-async function sales(seller, { first = 10, after }, _, info) {
+async function sales(seller, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
 
   const listings = await ec().allEvents('ListingCreated', seller.id)
   const listingIds = listings.map(e => Number(e.returnValues.listingID))
   const events = await ec().offers(listingIds, null, 'OfferCreated')
 
-  const allIds = events
+  let allIds = events
     .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
     .reverse()
+
+  if (filter) {
+    const completedEvents = await ec().allEvents(
+      ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
+      undefined,
+      allIds
+    )
+    const completedIds = uniq(
+      completedEvents.map(
+        e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
+      )
+    )
+
+    if (filter === 'complete') {
+      allIds = allIds.filter(id => completedIds.indexOf(id) >= 0)
+    } else if (filter === 'pending') {
+      allIds = allIds.filter(id => completedIds.indexOf(id) < 0)
+    }
+  }
 
   return await resultsFromIds({ after, allIds, first, fields })
 }

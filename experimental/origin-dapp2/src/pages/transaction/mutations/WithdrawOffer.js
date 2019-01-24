@@ -25,7 +25,7 @@ class WithdrawOffer extends Component {
           })
         }
       >
-        {withdrawOffer => (
+        {(withdrawOffer, { client }) => (
           <>
             <button
               className="btn btn-link withdraw"
@@ -39,7 +39,7 @@ class WithdrawOffer extends Component {
                 }
                 shouldClose={this.state.sureShouldClose}
               >
-                <h2>Withdraw Offer </h2>
+                <h2>Withdraw Offer</h2>
                 Are you sure you want to withdraw your offer? Your escrowed
                 payment wil be returned to your wallet.
                 <div className="actions">
@@ -56,7 +56,7 @@ class WithdrawOffer extends Component {
                 </div>
               </Modal>
             )}
-            {this.renderWaitModal()}
+            {this.renderWaitModal(client)}
             {this.state.error && (
               <TransactionError
                 reason={this.state.error}
@@ -90,22 +90,24 @@ class WithdrawOffer extends Component {
     })
   }
 
-  renderWaitModal() {
+  renderWaitModal(client) {
     if (!this.state.waitFor) return null
 
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="OfferWithdrawn">
-        {({ client }) => (
+      <WaitForTransaction
+        shouldClose={this.state.waitForShouldClose}
+        onClose={async () => await client.resetStore()}
+        hash={this.state.waitFor}
+        event="OfferWithdrawn"
+      >
+        {() => (
           <div className="make-offer-modal">
             <div className="success-icon" />
             <div>Success!</div>
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
-                this.setState({ waitFor: false })
-              }}
+              onClick={() => this.setState({ waitForShouldClose: true })}
               children="OK"
             />
           </div>

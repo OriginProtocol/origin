@@ -3,6 +3,8 @@ import Redirect from 'components/Redirect'
 import Price from 'components/Price'
 import ListingBadge from 'components/ListingBadge'
 
+import category from 'utils/category'
+
 class Listings extends Component {
   state = {}
   render() {
@@ -29,7 +31,7 @@ class Listings extends Component {
               <div className="main-pic empty" />
             )}
             <div className="header">
-              <div className="category">{a.categoryStr}</div>
+              <div className="category">{category(a)}</div>
               <ListingBadge status={a.status} featured={a.featured} />
             </div>
             <h5>{a.title}</h5>

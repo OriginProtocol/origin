@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
+import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
 
@@ -17,8 +18,11 @@ const nextPage = nextPageFactory('marketplace.user.offers')
 
 class Purchases extends Component {
   render() {
-    const vars = { first: 15, id: this.props.wallet }
-    if (!this.props.wallet) return null
+    const vars = { first: 5, id: this.props.wallet }
+    const filter = get(this.props, 'match.params.filter', 'pending')
+    if (filter !== 'all') {
+      vars.filter = filter
+    }
 
     return (
       <div className="container purchases">
@@ -26,6 +30,7 @@ class Purchases extends Component {
           query={query}
           variables={vars}
           notifyOnNetworkStatusChange={true}
+          skip={!this.props.wallet}
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1 || !this.props.wallet) {
@@ -38,10 +43,6 @@ class Purchases extends Component {
 
             const { nodes, pageInfo, totalCount } = data.marketplace.user.offers
             const { hasNextPage, endCursor: after } = pageInfo
-
-            if (!totalCount) {
-              return <NoPurchases />
-            }
 
             return (
               <BottomScrollListener
@@ -79,6 +80,7 @@ class Purchases extends Component {
                       </ul>
                     </div>
                     <div className="col-md-9">
+                      {totalCount > 0 ? null : <NoPurchases />}
                       {nodes.map(({ listing, ...offer }) => (
                         <div
                           className="purchase"
@@ -117,10 +119,10 @@ class Purchases extends Component {
                       ))}
                       {!hasNextPage ? null : (
                         <button
-                          text={
-                            networkStatus === 3 ? 'Loading' : 'Load more...'
+                          children={
+                            networkStatus === 3 ? 'Loading...' : 'Load more'
                           }
-                          className="mt-3"
+                          className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>
                             nextPage(fetchMore, { ...vars, after })
                           }

@@ -37,6 +37,20 @@ const config = {
         type: 'javascript/auto'
       },
       {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'babel-loader'
+          },
+          {
+            loader: 'react-svg-loader',
+            options: {
+              jsx: true // true outputs JSX tags
+            }
+          }
+        ]
+      },
+      {
         test: /\.css$/,
         use: [
           {
@@ -78,13 +92,13 @@ const config = {
       { from: 'public/images', to: 'images' }
     ]),
     new Dotenv(),
-    new webpack.EnvironmentPlugin([
-      'DAPP_CREATOR_API_URL',
-      'DAPP_CREATOR_DOMAIN',
-      'DAPP_URL',
-      'PROVIDER_URL',
-      'IPFS_GATEWAY_URL'
-    ])
+    new webpack.EnvironmentPlugin({
+      'DAPP_CREATOR_API_URL': null,
+      'DAPP_CREATOR_DOMAIN': null,
+      'DAPP_URL': null,
+      'IPFS_API_URL': null,
+      'IPFS_GATEWAY_URL': null
+    })
   ],
   optimization: {}
 }
@@ -105,4 +119,3 @@ if (isProduction) {
 }
 
 module.exports = config
-

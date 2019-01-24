@@ -55,5 +55,8 @@ export const baseConfig = {
     // Misc
     defaultRadius: '5px'
   },
+  filters: {
+    listings: {}
+  },
   marketplacePublisher: ''
 }

@@ -5,7 +5,7 @@ export default `
 
   extend type Mutation {
     enableMessaging: Boolean
-    sendMessage(to: String!, content: String, media: [MediaInput]): Boolean
+    sendMessage(to: String!, content: String!, media: [MediaInput]): Conversation
   }
 
   type Messaging {
