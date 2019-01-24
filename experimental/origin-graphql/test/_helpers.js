@@ -48,7 +48,7 @@ export async function mutate(mutation, variables, getEvents) {
   return res
 }
 
-export async function getOffer(listingId, offerIdx) {
+export async function getOffer(listingId, offerIdx, checkValid) {
   const offerId = `${listingId}-${offerIdx}`
   // Get the offer through allOffers, so that contextual validation may be
   // performed across all offers for the listing.
@@ -63,8 +63,10 @@ export async function getOffer(listingId, offerIdx) {
   const offer = offers[0]
   assert.ok(offer)
   assert.strictEqual(offer.id, offerId)
-  assert(offer.valid, 'offer validation failed')
-  assert(!offer.validationError)
+  if (checkValid) {
+    assert(offer.valid, 'offer validation failed')
+    assert(!offer.validationError)
+  }
 
   return offer
 }

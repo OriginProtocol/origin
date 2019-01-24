@@ -74,6 +74,26 @@ const CreateListing = gql`
   }
 `
 
+const UpdateListing = gql`
+  mutation UpdateListing(
+    $listingID: ID!
+    $additionalDeposit: String
+    $from: String
+    $data: NewListingInput
+    $autoApprove: Boolean
+  ) {
+    updateListing(
+      listingID: $listingID,
+      additionalDeposit: $additionalDeposit,
+      from: $from,
+      data: $data,
+      autoApprove: $autoApprove
+    ) {
+      id
+    }
+  }
+`
+
 const MakeOffer = gql`
   mutation MakeOffer(
     $listingID: String
@@ -105,6 +125,8 @@ const MakeOffer = gql`
     }
   }
 `
+
+
 
 const AcceptOffer = gql`
   mutation AcceptOffer($offerID: String!, $from: String) {
@@ -156,5 +178,6 @@ export default {
   UpdateTokenAllowance,
   TransferToken,
   AddAffiliate,
-  WithdrawOffer
+  WithdrawOffer,
+  UpdateListing
 }
