@@ -35,7 +35,6 @@ import analytics from '../services/analytics'
 import origin from '../services/origin'
 
 const { web3 } = origin.contractService
-const ETH_ADDRESS = process.env.MESSAGING_ACCOUNT
 const ONE_SECOND = 1000
 const storeKeys = {
   messageCongratsTimestamp: 'message_congrats_timestamp',
@@ -147,9 +146,9 @@ class Onboarding extends Component {
       }, 60 * ONE_SECOND)
     }
 
-    const welcomeAccountEnabled =
-      ETH_ADDRESS &&
-      formattedAddress(ETH_ADDRESS) !== formattedAddress(wallet.address)
+    const supportAccount = this.props.messagingRequired
+    const welcomeAccountEnabled = supportAccount &&
+      formattedAddress(supportAccount) !== formattedAddress(wallet.address)
 
     if (
       // wait for initialization so that account key is available in origin.js
@@ -160,11 +159,11 @@ class Onboarding extends Component {
       return
     }
 
-    const roomId = origin.messaging.generateRoomId(ETH_ADDRESS, wallet.address)
+    const roomId = origin.messaging.generateRoomId(supportAccount, wallet.address)
     const recipients = origin.messaging.getRecipients(roomId)
 
     if (!messages.find(({ hash }) => hash === 'origin-welcome-message')) {
-      this.debouncedFetchUser(ETH_ADDRESS)
+      this.debouncedFetchUser(supportAccount)
 
       const scopedWelcomeMessageKeyName = `${
         storeKeys.messageWelcomeTimestamp
@@ -190,14 +189,14 @@ class Onboarding extends Component {
         index: -2,
         recipients,
         roomId,
-        senderAddress: ETH_ADDRESS
+        senderAddress: supportAccount
       }
       message.status = origin.messaging.getStatus(message)
       this.props.addMessage(message)
     }
     // on messaging enabled
     if (messagingEnabled !== prevProps.messagingEnabled) {
-      this.debouncedFetchUser(ETH_ADDRESS)
+      this.debouncedFetchUser(supportAccount)
 
       const scopedCongratsMessageKeyName = `${
         storeKeys.messageCongratsTimestamp
@@ -223,7 +222,7 @@ class Onboarding extends Component {
         index: -1,
         recipients,
         roomId,
-        senderAddress: ETH_ADDRESS
+        senderAddress: supportAccount
       }
       message.status = origin.messaging.getStatus(message)
       this.props.addMessage(message)
@@ -281,6 +280,7 @@ class Onboarding extends Component {
       enableMessaging,
       location,
       messagingEnabled,
+      messagingRequired,
       networkId,
       notificationsSubscriptionPrompt,
       web3Intent
@@ -316,7 +316,7 @@ class Onboarding extends Component {
         {!web3.currentProvider.isOrigin &&
           web3Intent &&
           web3Intent !== 'manage your profile' &&
-          !messagingEnabled && (
+          messagingRequired && !messagingEnabled && (
             <Modal
               backdrop="static"
               className="not-messaging-enabled"
@@ -376,6 +376,7 @@ class Onboarding extends Component {
 const mapStateToProps = ({ activation, app, messages, wallet }) => ({
   messages,
   messagingEnabled: activation.messaging.enabled,
+  messagingRequired: app.messagingRequired,
   messagingInitialized: activation.messaging.initialized,
   networkId: app.web3.networkId,
   notificationsHardPermission: activation.notifications.permissions.hard,
