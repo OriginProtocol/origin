@@ -113,13 +113,13 @@ class ListingsGrid extends Component {
                 <img src="images/empty-listings-graphic.svg" />
                 <h1>
                   <FormattedMessage
-                    id={'listings.no-listings'}
+                    id={'listings.no-listings-whitelabel'}
                     defaultMessage={"Your marketplace doesn't have any listings yet."}
                   />
                 </h1>
                 <p>
                   <FormattedMessage
-                    id={'listings.no-listings-steps'}
+                    id={'listings.no-listings-whitelabel-message'}
                     defaultMessage={
                       'You can create listings yourself or invite sellers to join your platform!'
                     }
@@ -128,7 +128,7 @@ class ListingsGrid extends Component {
                 <br />
                 <br />
                 <div className="row">
-                  <div className="col text-right">
+                  <div className="col text-center">
                     <a
                       href="#/create"
                       className="btn btn-lrg btn-primary btn-auto-width"
@@ -136,17 +136,6 @@ class ListingsGrid extends Component {
                       <FormattedMessage
                         id={'listings.create-listing'}
                         defaultMessage={'Create a Listing'}
-                      />
-                    </a>
-                  </div>
-                  <div className="col-6 text-left">
-                    <a
-                      href=""
-                      className="btn btn-lrg btn-primary btn-auto-width"
-                    >
-                      <FormattedMessage
-                        id={'listings.invite-sellers'}
-                        defaultMessage={'Invite Sellers'}
                       />
                     </a>
                   </div>
