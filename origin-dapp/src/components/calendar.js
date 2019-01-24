@@ -144,6 +144,37 @@ class Calendar extends Component {
       allDay: false
     }
 
+    const availData = eventInfo.slots && eventInfo.slots.map((date) => {
+      return getDateAvailabilityAndPrice(date, this.state.events, [], true)
+    }) || []
+
+    let isAvailable = null
+    let price = null
+    let selectionHasAvailabilityDifference = false
+    let selectionHasPriceDifference = false
+
+    availData.map((data) => {
+      if (isAvailable === null) {
+        isAvailable = data.isAvailable
+      } else if (data.isAvailable !== isAvailable) {
+        selectionHasAvailabilityDifference = true
+      }
+
+      if (price === null) {
+        price = data.price
+      } else if (price !== null && data.price !== price) {
+        selectionHasPriceDifference = true
+      }
+    })
+
+    if (!selectionHasAvailabilityDifference) {
+      newEvent.isAvailable = isAvailable
+    }
+
+    if (!selectionHasPriceDifference) {
+      newEvent.price = price
+    }
+
     this.selectEvent(newEvent)
   }
 
@@ -319,7 +350,10 @@ class Calendar extends Component {
       })
     }
 
-    doFancyDateSelectionBorders()
+    // let classes render on calendar before trying ot modify borders
+    setTimeout(() => {
+      doFancyDateSelectionBorders()
+    })
   }
 
   onIsRecurringEventChange(event) {
