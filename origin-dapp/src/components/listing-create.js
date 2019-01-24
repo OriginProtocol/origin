@@ -379,15 +379,15 @@ class ListingCreate extends Component {
       properties.listingType.const === 'fractional'
 
     const slotLength = enableFractional &&
-      this.state.formListing.formData.slotLength ?
-      this.state.formListing.formData.slotLength :
+      // this.state.formListing.formData.slotLength ?
+      // this.state.formListing.formData.slotLength :
         properties &&
         properties.slotLength &&
         properties.slotLength.default
 
     const slotLengthUnit = enableFractional &&
-      this.state.formListing.formData.slotLengthUnit ?
-      this.state.formListing.formData.slotLengthUnit :
+      // this.state.formListing.formData.slotLengthUnit ?
+      // this.state.formListing.formData.slotLengthUnit :
         properties &&
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
