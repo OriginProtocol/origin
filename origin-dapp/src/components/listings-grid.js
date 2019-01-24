@@ -151,7 +151,7 @@ class ListingsGrid extends Component {
                 <h1>
                   <FormattedMessage
                     id={'listings.no-search-results'}
-                    defaultMessage={"No search results found."}
+                    defaultMessage={'No search results found.'}
                   />
                 </h1>
               </div>
