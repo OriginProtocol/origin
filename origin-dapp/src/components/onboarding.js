@@ -24,7 +24,6 @@ import {
   RecommendationModal,
   WarningModal
 } from 'components/modals/notifications-modals'
-import SellingModal from 'components/onboarding-modal'
 
 import getCurrentNetwork from 'utils/currentNetwork'
 import { createSubscription, requestPermission } from 'utils/notifications'
@@ -295,7 +294,6 @@ class Onboarding extends Component {
         {!query['skip-onboarding'] && (
           <Fragment>
             {networkType === 'Mainnet Beta' && <BetaModal />}
-            <SellingModal />
           </Fragment>
         )}
         {['buyer', 'seller'].includes(notificationsSubscriptionPrompt) && (
