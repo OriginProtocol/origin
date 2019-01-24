@@ -10,6 +10,8 @@ class Configure extends React.Component {
     super(props)
 
     this.state = {
+      checkedCategory: null,
+      checkedSubcategory: null,
       config: props.config,
       expandedCategories: [],
       filterByTypeEnabled: false,
@@ -19,11 +21,80 @@ class Configure extends React.Component {
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.hasCheckedSubcategory = this.hasCheckedSubcategory.bind(this)
     this.isCheckedCategory = this.isCheckedCategory.bind(this)
+    this.isCheckedSubcategory = this.isCheckedSubcategory.bind(this)
     this.isExpandedCategory = this.isExpandedCategory.bind(this)
+    this.onCategoryCheck = this.onCategoryCheck.bind(this)
+    this.onSubcategoryCheck = this.onSubcategoryCheck.bind(this)
     this.toggleFilterByOwn = this.toggleFilterByOwn.bind(this)
     this.toggleFilterByType = this.toggleFilterByType.bind(this)
     this.toggleCategory = this.toggleCategory.bind(this)
+  }
+
+  async handleSubmit () {
+    this.setState({ redirect: '/metamask' })
+  }
+
+  hasCheckedSubcategory (category) {
+    return this.state.checkedSubcategory !== null &&
+      this.state.listingSchemasByCategory[category.type].includes(this.state.checkedSubcategory)
+  }
+
+  isCheckedCategory (category) {
+    return this.state.checkedCategory === category || this.hasCheckedSubcategory(category)
+  }
+
+  isCheckedSubcategory(category, subcategory) {
+    return this.state.checkedSubcategory === subcategory || this.state.checkedCategory === category
+  }
+
+  isExpandedCategory(category) {
+    return this.state.expandedCategories.includes(category)
+  }
+
+  onCategoryCheck(category) {
+    this.setState({
+      checkedCategory: category,
+      checkedSubcategory: null
+    })
+
+    const newConfig = {
+      ...this.state.config,
+      filters: {
+        ...this.state.config.filters,
+        listings: {
+          ...this.state.config.filters.listings,
+          category: category,
+          subcategory: null
+        }
+      }
+    }
+
+    this.setState({ config: newConfig })
+    this.props.onChange(newConfig)
+  }
+
+  onSubcategoryCheck(subcategory) {
+    this.setState({
+      checkedCategory: null,
+      checkedSubcategory: subcategory
+    })
+
+    const newConfig = {
+      ...this.state.config,
+      filters: {
+        ...this.state.config.filters,
+        listings: {
+          ...this.state.config.filters.listings,
+          category: null,
+          subcategory: subcategory
+        }
+      }
+    }
+
+    this.setState({ config: newConfig })
+    this.props.onChange(newConfig)
   }
 
   toggleFilterByOwn (event) {
@@ -43,41 +114,20 @@ class Configure extends React.Component {
   }
 
   toggleFilterByType (event) {
-    this.setState({
-      filterByTypeEnabled: event.target.checked
-    })
+    this.setState({ filterByTypeEnabled: event.target.checked })
   }
 
-  toggleCategory (type) {
-    if (this.state.expandedCategories.includes(type)) {
+  toggleCategory (event, category) {
+    if (event.target.type === 'checkbox') return
+    if (this.state.expandedCategories.includes(category)) {
       this.setState((prevState) => {
-        return { expandedCategories: prevState.expandedCategories.filter((x) => x !== type) }
+        return { expandedCategories: prevState.expandedCategories.filter((x) => x !== category) }
       })
     } else {
       this.setState((prevState) => {
-        return { expandedCategories: [...prevState.expandedCategories, type] }
+        return { expandedCategories: [...prevState.expandedCategories, category] }
       })
     }
-  }
-
-  isCheckedCategory () {
-    return true
-  }
-
-  isExpandedCategory(type) {
-    return this.state.expandedCategories.includes(type)
-  }
-
-  onCategoryCheck() {
-  }
-
-  onSubCategoryClick() {
-  }
-
-  async handleSubmit () {
-    this.setState({
-      redirect: '/metamask'
-    })
   }
 
   render () {
@@ -108,21 +158,25 @@ class Configure extends React.Component {
           {this.state.filterByTypeEnabled &&
             <div className="category-dropdown">
               {this.state.listingTypes.map((listingType, i) =>
-                <>
-                  <div className={`category ${this.isExpandedCategory(listingType.type) ? 'expanded' : 'collapsed'}`}
-                      onClick={() => this.toggleCategory(listingType.type)}
-                      key={i}>
-                      <input type="checkbox" checked={this.isCheckedCategory()} onChange={this.onCategoryCheck}/>
+                <div key={i}>
+                  <div className={`category ${this.isExpandedCategory(listingType) ? 'expanded' : 'collapsed'}`}
+                    onClick={(event) => this.toggleCategory(event, listingType)}>
+                      <input type="checkbox"
+                        checked={this.isCheckedCategory(listingType)}
+                        onChange={() => this.onCategoryCheck(listingType)} />
                       {listingType.translationName.defaultMessage}
                   </div>
-                  {this.isExpandedCategory(listingType.type) &&
+                  {this.isExpandedCategory(listingType) &&
                     this.state.listingSchemasByCategory[listingType.type].map((listingSchema, y) =>
-                      <div className="subcategory">
-                        <input type="checkbox" />{listingSchema.translationName.defaultMessage}
+                      <div className="subcategory" key={y}>
+                        <input type="checkbox"
+                            checked={this.isCheckedSubcategory(listingType, listingSchema)}
+                            onChange={() => this.onSubcategoryCheck(listingSchema)} />
+                          {listingSchema.translationName.defaultMessage}
                       </div>
                     )
                   }
-                </>
+                </div>
               )}
             </div>
           }
@@ -185,6 +239,7 @@ require('react-styl')(`
     position: relative
     padding-left: 1.2rem
     cursor: pointer
+    margin-bottom: 0.5rem
 
   .category
     input
