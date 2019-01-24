@@ -1085,10 +1085,13 @@ class OriginWallet {
         profile_url,
         selling_url,
         attestation_account,
+        perf_mode_enabled,
+        discovery_server_url
       } = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
       const newProviderUrl = localfy(provider_url)
       console.log("Set network to:", newProviderUrl, contract_addresses)
       console.log("Service urls:", dapp_url, messaging_url, profile_url, selling_url)
+      console.log("Discovery:", perf_mode_enabled, discovery_server_url)
 
 
       if (this.currentProviderUrl != newProviderUrl)
@@ -1107,6 +1110,8 @@ class OriginWallet {
       origin.contractService.updateContractAddresses(contract_addresses)
       origin.ipfsService.gateway = localfy(ipfs_gateway)
       origin.ipfsService.api = localfy(ipfs_api)
+      origin.marketplace.perfModeEnabled = perf_mode_enabled
+      origin.discoveryService.discoveryServerUrl = localfy(discovery_server_url)
       // Update the users config.
       origin.users.resolver.updateConfig({ attestation_account })
 
