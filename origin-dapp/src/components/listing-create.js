@@ -1013,17 +1013,10 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>
-                  {isEditMode ?
-                    <FormattedMessage
-                      id={'listing-create.editListingHeading'}
-                      defaultMessage={'Edit Your Listing'}
-                    />
-                    :
-                    <FormattedMessage
-                      id={'listing-create.createListingHeading'}
-                      defaultMessage={'Create Your Listing'}
-                    />
-                  }
+                  <FormattedMessage
+                    id={'listing-create.createListingHeading'}
+                    defaultMessage={'Listing Details'}
+                  />
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
@@ -1100,7 +1093,7 @@ class ListingCreate extends Component {
                   <h2>
                     <FormattedMessage
                       id={'listing-create.availabilityHeading'}
-                      defaultMessage={'Add Availability and Pricing'}
+                      defaultMessage={'Pricing & Availability'}
                     />
                   </h2>
                   <StepsProgress
@@ -1586,6 +1579,14 @@ class ListingCreate extends Component {
                         defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos will increase the chances of selling your listing.`}
                       />
                     </p>
+                    {isFractionalListing && (
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.form-help-details-fractional'}
+                          defaultMessage={`You will be able to customize pricing and availability in the next step.`}
+                        />
+                      </p>
+                    )}
                   </div>
                 )}
                 {step === this.STEP.BOOST && (
