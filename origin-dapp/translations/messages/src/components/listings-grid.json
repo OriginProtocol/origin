@@ -22,5 +22,9 @@
   {
     "id": "listings.create-listing",
     "defaultMessage": "Create a Listing"
+  },
+  {
+    "id": "listings.no-search-results",
+    "defaultMessage": "No search results found."
   }
 ]

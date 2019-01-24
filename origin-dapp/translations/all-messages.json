@@ -273,6 +273,7 @@
   "listings.no-listings-whitelabel": "Your marketplace doesn't have any listings yet.",
   "listings.no-listings-whitelabel-message": "You can create listings yourself or invite sellers to join your platform!",
   "listings.create-listing": "Create a Listing",
+  "listings.no-search-results": "No search results found.",
   "MessageNew.cannotReceiveMessages": "This user has not yet enabled Origin Messaging. Unfortunately, you will not be able to contact them until they do.",
   "MessageNew.cancel": "Cancel",
   "MessageNew.send": "Send",

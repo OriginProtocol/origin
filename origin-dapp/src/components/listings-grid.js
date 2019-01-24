@@ -107,7 +107,7 @@ class ListingsGrid extends Component {
             </>
           )}
 
-          {resultsCount == 0 && this.props.isWhiteLabel && (
+          {resultsCount == 0 && this.props.renderMode !== 'search' && this.props.isWhiteLabel && (
             <div className="row">
               <div className="col-12 text-center">
                 <img src="images/empty-listings-graphic.svg" />
@@ -143,9 +143,23 @@ class ListingsGrid extends Component {
               </div>
             </div>
           )}
-          </div>
-        )}
-      </div>
+
+          {resultsCount == 0 && this.props.renderMode === 'search' && (
+            <div className="row">
+              <div className="col-12 text-center">
+                <img src="images/empty-listings-graphic.svg" />
+                <h1>
+                  <FormattedMessage
+                    id={'listings.no-search-results'}
+                    defaultMessage={"No search results found."}
+                  />
+                </h1>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
     )
   }
 }
