@@ -100,7 +100,6 @@ class RejectOffer extends Component {
         event="OfferWithdrawn"
         shouldClose={this.state.waitForShouldClose}
         onClose={async () => await client.resetStore()}
-        className="reject-success"
       >
         {() => (
           <div className="reject-offer-modal">
