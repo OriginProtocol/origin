@@ -4,7 +4,7 @@ import uuidv4 from 'uuid/v4'
 import { Op } from 'sequelize'
 import { MessageTypes,EthNotificationTypes } from 'origin/common/enums'
 import MessageQueue from './../utils/message-queue'
-import origin, {providerUrl, web3} from './../services/origin'
+import origin, {providerUrl, perfModeEnabled, discoveryServerUrl, web3} from './../services/origin'
 import {sha3_224} from 'js-sha3'
 import apn from 'apn'
 
@@ -245,7 +245,7 @@ class Linker {
 
   getServerInfo() {
     return {
-      providerUrl:providerUrl,
+      providerUrl,
       contractAddresses:origin.contractService.getContractAddresses(),
       ipfsGateway:origin.ipfsService.gateway,
       ipfsApi:origin.ipfsService.api,
@@ -253,7 +253,9 @@ class Linker {
       messagingUrl:MESSAGING_URL,
       profileUrl:PROFILE_URL,
       sellingUrl:SELLING_URL,
-      attestationAccount:ATTESTATION_ACCOUNT
+      attestationAccount:ATTESTATION_ACCOUNT,
+      perfModeEnabled,
+      discoveryServerUrl
     }
   }
 

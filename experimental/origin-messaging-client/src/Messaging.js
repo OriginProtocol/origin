@@ -30,6 +30,7 @@ const MESSAGE_FORMAT = {
   required: ['created'],
   properties: {
     content: { type: 'string' },
+    media: { type: 'array' },
     created: { type: 'number' },
     decryption: {
       type: 'object',
@@ -1012,6 +1013,7 @@ class Messaging {
       debug('ERR: no room to send message to')
       return
     }
+
     if (typeof message_obj == 'string') {
       message_obj = { content: message_obj }
     }

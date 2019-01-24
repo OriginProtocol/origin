@@ -54,6 +54,8 @@ export default {
           url
           contentType
         }
+        commission
+        commissionPerUnit
       }
     `
   },

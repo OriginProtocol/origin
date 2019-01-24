@@ -185,6 +185,7 @@ export default async function populate(NodeAccount, gqlClient) {
   console.log('Deployed Seller Identity')
 
   for (const listing of demoListings) {
+    const commissionPerUnit = listing.commissionPerUnit || '0'
     hash = (await gqlClient.mutate({
       mutation: CreateListingMutation,
       variables: {
@@ -202,7 +203,8 @@ export default async function populate(NodeAccount, gqlClient) {
           category: listing.category,
           subCategory: listing.subCategory,
           media: listing.media,
-          unitsTotal: listing.unitsTotal
+          unitsTotal: listing.unitsTotal,
+          commissionPerUnit
         }
       }
     })).data.createListing.id

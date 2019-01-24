@@ -6,8 +6,15 @@ import { Route, HashRouter } from 'react-router-dom'
 import Styl from 'react-styl'
 import client from 'origin-graphql'
 
-import './css/app.css'
 import App from './pages/App'
+import './css/app.css'
+if (process.env.NODE_ENV === 'production') {
+  try {
+    require('../public/app.css')
+  } catch (e) {
+    console.log('No built CSS found')
+  }
+}
 
 class AppWrapper extends Component {
   state = { ready: false, client: null }
