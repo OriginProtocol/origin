@@ -559,3 +559,9 @@ export const doFancyDateSelectionBorders = () => {
     }
   })
 }
+
+export const deSelectAllCells = () => {
+  [...document.querySelectorAll('.rbc-day-bg')].map(
+    (element) => element.classList.remove('selected', 'dragging')
+  )
+}

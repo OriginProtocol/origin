@@ -15,7 +15,8 @@ import {
   generateSlotStartEnd,
   isDateSelected,
   highlightCalendarDrag,
-  doFancyDateSelectionBorders
+  doFancyDateSelectionBorders,
+  deSelectAllCells
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -109,9 +110,7 @@ class Calendar extends Component {
           moment(clickedSlotInfo.start).isBefore(moment().startOf(timePeriod)) ||
           moment(clickedSlotInfo.end).isBefore(moment().startOf(timePeriod))
         ) {
-        [...document.querySelectorAll('.rbc-day-bg')].map(
-          (element) => element.classList.remove('selected', 'dragging')
-        )
+        deSelectAllCells()
 
         return this.setState({
           showPastDateSelectedError: true,
@@ -178,14 +177,14 @@ class Calendar extends Component {
     this.selectEvent(newEvent)
   }
 
-  handleBuyerSelection(slotInfo) {
+  async handleBuyerSelection(slotInfo) {
     const selectionData = []
     let slotToTest = moment(slotInfo.start)
     let hasUnavailableSlot = false
     let slotIndex = 0
 
     while (slotToTest.toDate() >= slotInfo.start && slotToTest.toDate() <= slotInfo.end) {
-      const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events)
+      const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events, this.props.offers)
       const { price, isAvailable, isRecurringEvent, timeZone } = slotAvailData
 
       if (!isAvailable || moment(slotInfo.end).isBefore(moment())){
@@ -212,10 +211,12 @@ class Calendar extends Component {
     }
 
     if (hasUnavailableSlot) {
-      this.setState({
+      await this.setState({
         selectionUnavailable: true,
         selectedEvent: {}
       })
+
+      deSelectAllCells()
     } else {
       const price = selectionData.reduce(
         (totalPrice, nextPrice) => totalPrice + nextPrice.price, 0
@@ -225,7 +226,7 @@ class Calendar extends Component {
         maximumFractionDigits: 5
       })}`
 
-      this.setState({
+      await this.setState({
         selectionUnavailable: false,
         selectedEvent: {
           start: slotInfo.start,
@@ -236,6 +237,8 @@ class Calendar extends Component {
         buyerSelectedSlotData: selectionData
       })
     }
+
+    doFancyDateSelectionBorders()
   }
 
   async selectEvent(selectedEvent) {
@@ -333,7 +336,7 @@ class Calendar extends Component {
     })
   }
 
-  onDateDropdownChange(event) {
+  async onDateDropdownChange(event) {
     const whichDropdown = event.target.name
     const value = event.target.value
     const selectedEvent = {
@@ -342,18 +345,13 @@ class Calendar extends Component {
       [whichDropdown]: new Date(value)
     }
 
-    this.setState({ selectedEvent })
+    await this.setState({ selectedEvent })
 
     if (this.props.userType === 'buyer') {
-      setTimeout(() => {
         this.onSelectSlot(this.state.selectedEvent)
-      })
     }
 
-    // let classes render on calendar before trying ot modify borders
-    setTimeout(() => {
-      doFancyDateSelectionBorders()
-    })
+    doFancyDateSelectionBorders()
   }
 
   onIsRecurringEventChange(event) {
