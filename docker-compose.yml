@@ -89,7 +89,6 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
     depends_on:
-      - origin
       - postgres
     ports:
       - "4001:4001"

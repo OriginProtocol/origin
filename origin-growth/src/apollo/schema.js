@@ -30,7 +30,8 @@ const typeDefs = gql`
   }
 
   enum InviteStatus {
-    asdasd
+    pending
+    successful
   }
 
   type Price {
@@ -45,7 +46,7 @@ const typeDefs = gql`
     reward: Price
   }
 
-  interface BasicAction {
+  interface BaseAction {
     type: ActionType!
     status: ActionStatus!
     rewardEarned: Price
@@ -53,7 +54,7 @@ const typeDefs = gql`
     rewardInfo: Price!        # information about reward
   }
 
-  type Action implements BasicAction {
+  type Action implements BaseAction {
     type: ActionType!
     status: ActionStatus!
     rewardEarned: Price
@@ -61,13 +62,13 @@ const typeDefs = gql`
     rewardInfo: Price!        # information about reward
   }
 
-  type ReferralAction implements BasicAction {
+  type ReferralAction implements BaseAction {
     type: ActionType!
     status: ActionStatus!
     rewardEarned: Price
     rewardPending: Price      # applicable for referral action
     rewardInfo: Price!        # information about reward
-    invites: [Invite]
+    invites: [Invite]         # TODO: might we need pagination for invites?
   }
 
   type Campaign {
@@ -77,23 +78,18 @@ const typeDefs = gql`
     endDate: String
     distributionDate: String
     status: CampaignStatus!
-    actions: [BasicAction]
+    actions: [BaseAction]
     reward: Price!            # amount earned all actions combined
   }
 
+  # in case we need any sort of pagination in the future
   type CampaignPage {
     nodes: [Campaign]
   }
 
-  #
-  # The "Query" type is the root of all GraphQL queries.
-  #
   type Query {
     campaigns: CampaignPage
     campaign(id: String): Campaign
-
-    action(id: String, actionType: ActionType): Action
-    info: JSON!
   }
 `
 
