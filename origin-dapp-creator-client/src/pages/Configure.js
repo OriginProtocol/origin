@@ -19,6 +19,7 @@ class Configure extends React.Component {
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.isCheckedCategory = this.isCheckedCategory.bind(this)
     this.isExpandedCategory = this.isExpandedCategory.bind(this)
     this.toggleFilterByOwn = this.toggleFilterByOwn.bind(this)
     this.toggleFilterByType = this.toggleFilterByType.bind(this)
@@ -59,8 +60,18 @@ class Configure extends React.Component {
     }
   }
 
+  isCheckedCategory () {
+    return true
+  }
+
   isExpandedCategory(type) {
     return this.state.expandedCategories.includes(type)
+  }
+
+  onCategoryCheck() {
+  }
+
+  onSubCategoryClick() {
   }
 
   async handleSubmit () {
@@ -101,7 +112,8 @@ class Configure extends React.Component {
                   <div className={`category ${this.isExpandedCategory(listingType.type) ? 'expanded' : 'collapsed'}`}
                       onClick={() => this.toggleCategory(listingType.type)}
                       key={i}>
-                      <input type="checkbox" /> {listingType.translationName.defaultMessage}
+                      <input type="checkbox" checked={this.isCheckedCategory()} onChange={this.onCategoryCheck}/>
+                      {listingType.translationName.defaultMessage}
                   </div>
                   {this.isExpandedCategory(listingType.type) &&
                     this.state.listingSchemasByCategory[listingType.type].map((listingSchema, y) =>
