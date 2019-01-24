@@ -492,8 +492,8 @@ export const highlightCalendarDrag = () => {
       const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
 
       calendarDays.map((element) => {
-        evt.target.classList.remove('dragging')
         element.removeEventListener('mousemove', addDraggingClass)
+        setTimeout(() => { evt.target.classList.remove('dragging') }, 300)
       })
     }
 
