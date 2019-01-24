@@ -70,6 +70,7 @@ function rebroadcastOnReplicate(DB, db){
   })
 }
 
+/*
 async function saveToIpfs(ipfs, entry, signature, key) {
   if (!entry) {
     logger.warn('Warning: Given input entry was null.')
@@ -104,6 +105,7 @@ async function saveToIpfs(ipfs, entry, signature, key) {
       return hash
     })
 }
+*/
 
 async function snapshotDB(db) {
   const unfinished = db._replicator.getQueue()
