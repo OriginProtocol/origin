@@ -28,7 +28,7 @@ const Reviews = ({ id }) => (
                     <div className="name">
                       {profile.fullName || 'Unnamed User'}
                     </div>
-                    <div className="address"><EthAddress address={review.reviewer.id} /></div>
+                    <EthAddress address={review.reviewer.id} />
                   </div>
                   <div className="info">
                     <StarRating small={true} active={review.rating} />
@@ -64,6 +64,8 @@ require('react-styl')(`
           font-size: 18px
           font-weight: bold
           color: var(--black)
+        .eth-address
+          color: var(--steel)
       .info
         text-align: right
         color: var(--steel)
@@ -73,5 +75,5 @@ require('react-styl')(`
     .text
       margin: 0.5rem 0 3rem 0
     &:last-child .text
-        margin-bottom: 0
+      margin-bottom: 0
 `)

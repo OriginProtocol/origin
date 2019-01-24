@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 
 import gql from 'graphql-tag'
@@ -9,35 +9,36 @@ const configQuery = gql`
   }
 `
 
-function urlForNetwork (network){
-  if(network == 'mainnet') {
+function urlForNetwork(network) {
+  if (network === 'mainnet') {
     return 'https://etherscan.io/tx/'
-  } else if(network == 'rinkeby') {
+  } else if (network === 'rinkeby') {
     return 'https://rinkeby.etherscan.io/tx/'
   }
 }
 
-class TxHash extends Component {
-  render() {
-      const hash = this.props.hash
-      if(hash == undefined){
-          return
+const TxHash = ({ hash }) => (
+  <Query query={configQuery} skip={!hash}>
+    {({ error, data, networkStatus }) => {
+      if (networkStatus === 1 || error || !data) {
+        return hash
       }
-      return <Query query={configQuery}>
-        {({ error, data, networkStatus }) => {
-          if (networkStatus === 1) {
-            return <span>{hash}</span>
-          } else if (error) {
-            return <span>{hash}</span>
-          }
-          const prefix = urlForNetwork(data.config)
-          if(prefix == undefined){
-            return <span>{hash}</span>
-          }
-          return <a href={prefix + hash}>{hash}</a>
-        }}
-      </Query>
-  }
-}
+      const prefix = urlForNetwork(data.config)
+      if (!prefix) {
+        return hash
+      }
+      return (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href={prefix + hash}
+          onClick={e => e.stopPropagation()}
+        >
+          {hash}
+        </a>
+      )
+    }}
+  </Query>
+)
 
 export default TxHash

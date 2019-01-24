@@ -23,7 +23,7 @@ const Wallet = () => (
             </div>
             <div>
               <h5>ETH Address</h5>
-              <EthAddress>{checksumAddress}</EthAddress>
+              <EthAddress address={checksumAddress} />
             </div>
           </div>
           <Balances balance={balance} account={id} />

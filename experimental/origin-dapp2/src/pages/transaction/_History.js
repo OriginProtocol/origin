@@ -73,7 +73,7 @@ class TxHistory extends Component {
                             />
                           </div>
                           <div>
-                            Tx Hash: <TxHash hash={item.id}></TxHash>
+                            Tx Hash: <TxHash hash={item.id} />
                           </div>
                         </td>
                       </tr>
