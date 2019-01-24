@@ -31,7 +31,7 @@ const EnableMessagingMutation = gql`
 `
 
 const SendMessageMutation = gql`
-   mutation SendMessage($to: String!, $content: String!) {
+  mutation SendMessage($to: String!, $content: String!) {
     sendMessage(to: $to, content: $content)
   }
 `
