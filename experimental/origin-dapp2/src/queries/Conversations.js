@@ -9,7 +9,10 @@ export default gql`
         id
         timestamp
         lastMessage {
-          media
+          media {
+            url
+            contentType
+          }
           content
           timestamp
         }
