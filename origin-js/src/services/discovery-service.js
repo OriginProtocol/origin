@@ -78,24 +78,13 @@ class DiscoveryService {
     // clamp numberOfItems between 1 and MAX_NUM_RESULTS
     numberOfItems = Math.min(Math.max(numberOfItems, 1), MAX_NUM_RESULTS)
     const query = `
-    {
+    query($searchQuery: String, $filters: [ListingFilter!], $offset: Int!, $numberOfItems: Int!) {
       listings (
-        searchQuery: "${searchQuery}"
-        filters: [${filters
-    .map(filter => {
-      return `
-    {
-      name: "${filter.name}"
-      value: "${String(filter.value)}"
-      valueType: ${filter.valueType}
-      operator: ${filter.operator}
-    }
-    `
-    })
-    .join(',')}]
-        page:{
-          offset: ${offset}
-          numberOfItems: ${numberOfItems}
+        searchQuery: $searchQuery
+        filters: $filters
+        page: {
+          offset: $offset
+          numberOfItems: $numberOfItems
         }
       ) {
         nodes {
@@ -112,7 +101,12 @@ class DiscoveryService {
       }
     }`
 
-    return this._query(query)
+    return this._query(query, {
+      searchQuery: searchQuery,
+      filters: filters,
+      offset: offset,
+      numberOfItems: numberOfItems
+    })
   }
 
   /**
@@ -163,7 +157,7 @@ class DiscoveryService {
       listings = resp.data.user.listings.nodes.map(listing => this._toListingModel(listing))
     } else if (opts.purchasesFor) {
       // Query for all listings the specified buyer address made an offer on.
-      query = `query($purchasesFor: ID) {
+      query = `query($purchasesFor: ID!) {
         user(walletAddress: $purchasesFor) {
           offers {
             nodes {

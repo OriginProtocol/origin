@@ -8,23 +8,12 @@ const BUTTON_SIZE = 40
 const MARGIN_RIGHT = 10
 const MARGIN_LEFT = 10
 
-const TextButton = ({ onPress, textStyle, style, children }) => (
-  <View style={{ backgroundColor: '#1a82ff', borderRadius: 30, flex: 1, padding: 13, marginHorizontal: 40, ...style }}>
-    <TouchableOpacity
-      style={{ flex: 1 }}
-      hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
-      onPress={onPress}
-    >
-      <Text style={{ fontSize: 24, ...textStyle }}>{children}</Text>
-    </TouchableOpacity>
-  </View>
-)
-
 const OnboardingPagination = ({
   currentPage,
   controlStatusBar,
   pagesCount,
   onCompletion,
+  onEnable,
   onNext,
 }) => {
   const isLastPage = currentPage + 1 === pagesCount
@@ -51,11 +40,18 @@ const OnboardingPagination = ({
         {isLastPage &&
           <OriginButton
             size="large"
-            type="primary"
-            title="Get Started"
+            type="success"
+            title="Enable Notifications"
             textStyle={{ fontSize: 18 }}
-            onPress={onCompletion}
+            onPress={onEnable}
           />
+        }
+      </View>
+      <View style={styles.linkContainer}>
+        {isLastPage &&
+          <TouchableOpacity onPress={onCompletion}>
+            <Text style={styles.link}>{`I'll do this later.`}</Text>
+          </TouchableOpacity>
         }
       </View>
     </View>
@@ -73,6 +69,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     paddingHorizontal: 0,
+  },
+  link: {
+    color: 'white',
+  },
+  linkContainer: {
+    height: 40,
+    paddingTop: 20,
   },
 })
 

@@ -1,7 +1,14 @@
 import { get, post } from 'origin-ipfs'
 import uniqBy from 'lodash/uniqBy'
+import createDebug from 'debug'
+
+const debug = createDebug('event-cache:')
 
 export default function eventCache(contract, fromBlock = 0, web3, config) {
+  function padNum(num) {
+    return web3.utils.padLeft(web3.utils.numberToHex(num), 64)
+  }
+
   const queue = []
   let events = [],
     toBlock = 0,
@@ -10,11 +17,13 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     triedIpfs = false
 
   function updateBlock(block) {
-    console.log('Update block', block)
+    debug(`Update block ${block}`)
     toBlock = block
   }
 
-  function getBlockNumber() { return toBlock }
+  function getBlockNumber() {
+    return toBlock
+  }
 
   if (!contract.options.address) {
     return { updateBlock }
@@ -40,7 +49,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     }
     processing = true
     if (!triedIpfs && config.ipfsEventCache) {
-      console.log('Try IPFS cache...')
+      debug('Try IPFS cache...')
       let ipfsData
       try {
         ipfsData = await get(config.ipfsGateway, config.ipfsEventCache)
@@ -48,14 +57,14 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
         /* Ignore */
       }
       if (ipfsData && ipfsData.events) {
-        console.log('Got IPFS cache')
+        debug('Got IPFS cache')
         // console.log(ipfsData)
         events = ipfsData.events
         lastLookup = ipfsData.lastLookup
         fromBlock = ipfsData.lastLookup
         // ({ events, lastLookup } = ipfsData)
       } else {
-        console.log('Error getting IPFS cache')
+        debug('Error getting IPFS cache')
       }
       triedIpfs = true
     }
@@ -69,7 +78,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     if (lastLookup === fromBlock) {
       fromBlock += 1
     }
-    console.log(
+    debug(
       `Fetching events from ${fromBlock} to ${toBlock}, last lookup ${lastLookup}`
     )
     lastLookup = toBlock
@@ -87,7 +96,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
       e => e.id
     )
 
-    console.log(`Found ${events.length} events, ${newEvents.length} new`)
+    debug(`Found ${events.length} events, ${newEvents.length} new`)
 
     fromBlock = toBlock + 1
     processing = false
@@ -106,12 +115,30 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     }
   }
 
-  async function allEvents(eventName, party) {
+  // offerIds an optional array in the format ['0-1', '1-2'] (listingId-offerId)
+  async function allEvents(eventNames, party, offerIds) {
     await getPastEvents()
+    if (!Array.isArray(eventNames)) {
+      eventNames = eventNames ? [eventNames] : []
+    }
     return events.filter(e => {
       const topics = e.raw.topics
       let matches = true
-      if (eventName && e.event !== eventName) matches = false
+      if (eventNames && eventNames.indexOf(e.event) < 0) matches = false
+
+      if (offerIds && offerIds.length) {
+        if (
+          !offerIds.find(id => {
+            const [listingId, offerId] = id.split('-')
+            const listingTopic = padNum(Number(listingId)),
+              offerTopic = padNum(Number(offerId))
+            return topics[2] === listingTopic && topics[3] === offerTopic
+          })
+        ) {
+          matches = false
+        }
+      }
+
       if (party) {
         if (
           topics[1].toLowerCase() !==

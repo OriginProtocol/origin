@@ -93,8 +93,8 @@ class UpdateListing extends Component {
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
+              onClick={async () => {
+                await client.resetStore()
                 // TODO: Fix listing ID
                 this.setState({
                   redirect: `/listings/999-1-${event.returnValues.listingID}`

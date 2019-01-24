@@ -151,7 +151,7 @@ require('react-styl')(`
           border-color: var(--white)
 
       .dropdown-menu.confirmations
-        width: 500px
+        max-width: 500px
         background-color: var(--pale-grey-three)
         .count
           display: flex

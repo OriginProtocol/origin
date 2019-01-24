@@ -22,29 +22,33 @@ class OriginEventSource {
   }
 
   async getListing(listingId, blockNumber) {
-    const id = `${listingId}-${blockNumber}`
-    if (this.listingCache[id]) {
-      return this.listingCache[id]
+    const cacheBlockNumber = blockNumber
+      ? blockNumber
+      : this.contract.eventCache.getBlockNumber()
+    const cacheKey = `${listingId}-${cacheBlockNumber}`
+    if (this.listingCache[cacheKey]) {
+      // Return the listing with the an ID that includes the block number, if
+      // one was specified
+      return Object.assign(
+        {},
+        this.listingCache[cacheKey],
+        { id: `999-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}` }
+      )
     }
 
     let listing,
       seller,
       ipfsHash,
+      oldIpfsHash,
       status = 'active'
 
     try {
-      listing = await this.contract.methods
-        .listings(listingId)
-        .call(undefined, blockNumber)
+      listing = await this.contract.methods.listings(listingId).call()
     } catch (e) {
       return null
     }
 
-    const events = await this.contract.eventCache.listings(
-      listingId,
-      undefined,
-      blockNumber
-    )
+    const events = await this.contract.eventCache.listings(listingId)
 
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
@@ -63,6 +67,9 @@ class OriginEventSource {
       if (e.event === 'OfferRuling') {
         status = 'sold'
       }
+      if (blockNumber && e.blockNumber <= blockNumber) {
+        oldIpfsHash = ipfsHash
+      }
     })
 
     let data
@@ -78,11 +85,34 @@ class OriginEventSource {
         'subCategory',
         'media',
         'unitsTotal',
+        'commission',
         'commissionPerUnit'
       )
     } catch (e) {
       return null
     }
+
+    // If a blockNumber has been specified, override certain fields with the
+    // 'old' version of that data.
+    if (blockNumber) {
+      try {
+        const oldData = await get(this.ipfsGateway, oldIpfsHash)
+        data = {
+          ...data,
+          ...pick(
+            oldData,
+            'title',
+            'description',
+            'category',
+            'subCategory',
+            'media'
+          )
+        }
+      } catch (e) {
+        return null
+      }
+    }
+
     if (data.category) {
       data.categoryStr = startCase(data.category.replace(/^schema\./, ''))
     }
@@ -95,8 +125,21 @@ class OriginEventSource {
     }
 
     const type = 'unit'
-    this.listingCache[id] = this.withOffers(listingId, {
-      id: `999-1-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
+    let commissionPerUnit = '0', commission = '0'
+    if (type === 'unit') {
+      const commissionPerUnitOgn = data.unitsTotal === 1
+        ? (data.commission && data.commission.amount) || '0'
+        : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
+      commissionPerUnit = this.web3.utils.toWei(commissionPerUnitOgn, 'ether')
+
+      const commissionOgn = (data.commission && data.commission.amount) || '0'
+      commission = this.web3.utils.toWei(commissionOgn, 'ether')
+    }
+
+
+    this.listingCache[cacheKey] = await this.withOffers(listingId, {
+      ...data,
+      id: `999-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
       arbitrator: listing.depositManager
@@ -108,11 +151,11 @@ class OriginEventSource {
       events,
       type,
       multiUnit: type === 'unit' && data.unitsTotal > 1,
-      commissionPerUnit: listing.commissionPerUnit,
-      ...data
+      commissionPerUnit,
+      commission
     })
 
-    return this.listingCache[id]
+    return this.listingCache[cacheKey]
   }
 
   // Returns a listing with offers and any fields that are computed from the
@@ -128,9 +171,10 @@ class OriginEventSource {
     }
 
     // Compute fields from valid offers.
-    let depositAvailable = this.web3.utils.toBN(listing.deposit)
+    let commissionAvailable = this.web3.utils.toBN(listing.commission)
     let unitsAvailable = listing.unitsTotal
     if (listing.type === 'unit') {
+      const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
@@ -139,22 +183,36 @@ class OriginEventSource {
           offer.validationError = 'units purchased exceeds available'
         } else {
           unitsAvailable -= offer.quantity
-          if (offer.commission) {
-            const offerCommission = this.web3.utils.toBN(offer.commission)
-            depositAvailable = depositAvailable.sub(offerCommission)
+
+          // Validate offer commission.
+          const normalCommission = commissionPerUnit.mul(
+            this.web3.utils.toBN(offer.quantity)
+          )
+          const expCommission = normalCommission.lte(commissionAvailable)
+            ? normalCommission
+            : commissionAvailable
+          const offerCommission =
+            (offer.commission && this.web3.utils.toBN(offer.commission))
+            || this.web3.utils.toBN(0)
+          if (!offerCommission.eq(expCommission)) {
+            offer.valid = false
+            offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
+            return
           }
-          // TODO: validate offer commission when dapp2 passes that in
+          if (!offerCommission.isZero()) {
+            commissionAvailable = commissionAvailable.sub(offerCommission)
+          }
         }
       })
     }
-    depositAvailable = !depositAvailable.isNeg()
-      ? depositAvailable.toString()
+    commissionAvailable = !commissionAvailable.isNeg()
+      ? commissionAvailable.toString()
       : '0'
     return Object.assign({}, listing, {
       allOffers,
       unitsAvailable,
       unitsSold: listing.unitsTotal - unitsAvailable,
-      depositAvailable: depositAvailable
+      depositAvailable: commissionAvailable
     })
   }
 
@@ -162,13 +220,16 @@ class OriginEventSource {
     return this._getOffer(await this.getListing(listingId), listingId, offerId)
   }
 
-  async _getOffer(listing, listingId, offerId) {
-    const id = `${listingId}-${offerId}`
-    if (this.offerCache[id]) {
-      return this.offerCache[id]
+  async _getOffer(listing, listingId, offerId, blockNumber) {
+    if (blockNumber === undefined) {
+      blockNumber = this.contract.eventCache.getBlockNumber()
+    }
+    const cacheKey = `${listingId}-${offerId}-${blockNumber}`
+    if (this.offerCache[cacheKey]) {
+      return this.offerCache[cacheKey]
     }
 
-    let blockNumber, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
+    let latestBlock, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
     const events = await this.contract.eventCache.offers(
       listingId,
       Number(offerId)
@@ -183,7 +244,7 @@ class OriginEventSource {
       if (
         !e.event.match(/(OfferFinalized|OfferWithdrawn|OfferRuling|OfferData)/)
       ) {
-        blockNumber = e.blockNumber
+        latestBlock = e.blockNumber
       }
       if (e.event !== 'OfferData') {
         lastEvent = e
@@ -199,7 +260,7 @@ class OriginEventSource {
 
     const offer = await this.contract.methods
       .offers(listingId, offerId)
-      .call(undefined, blockNumber)
+      .call(undefined, latestBlock)
 
     if (status === undefined) {
       status = offer.status
@@ -209,7 +270,7 @@ class OriginEventSource {
     data = pick(data, 'unitsPurchased')
 
     const offerObj = {
-      id: `999-1-${listingId}-${offerId}`,
+      id: `999-0-${listingId}-${offerId}`,
       listingId: String(listing.id),
       offerId: String(offerId),
       createdBlock,
@@ -238,7 +299,7 @@ class OriginEventSource {
       offerObj.validationError = e.message
     }
 
-    this.offerCache[id] = offerObj
+    this.offerCache[cacheKey] = offerObj
     return offerObj
   }
 
@@ -253,7 +314,8 @@ class OriginEventSource {
       throw new Error('Invalid offer: currency does not match listing')
     }
 
-    const offerArbitrator = offer.arbitrator && offer.arbitrator.id.toLowerCase()
+    const offerArbitrator =
+      offer.arbitrator && offer.arbitrator.id.toLowerCase()
     if (!offerArbitrator || offerArbitrator === ZERO_ADDRESS) {
       throw new Error('No arbitrator set')
     }
@@ -264,14 +326,13 @@ class OriginEventSource {
     const offerAffiliate = offer.affiliate
       ? offer.affiliate.id.toLowerCase()
       : ZERO_ADDRESS
-    const affiliateAlowed = affiliateWhitelistDisabled ||
-      await this.contract.methods
-        .allowedAffiliates(offer.offerAffiliate)
-        .call()
-    if (!affiliateAlowed) {
-      throw new Error(
-        `Offer affiliate ${offerAffiliate} not whitelisted`
-      )
+    const affiliateAllowed =
+      affiliateWhitelistDisabled ||
+      (await this.contract.methods
+        .allowedAffiliates(offerAffiliate)
+        .call())
+    if (!affiliateAllowed) {
+      throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
 
     if (listing.type !== 'unit') {
