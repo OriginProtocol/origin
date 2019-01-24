@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import Link from 'components/Link'
 
 import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 
@@ -101,15 +102,21 @@ class RejectOffer extends Component {
         onClose={async () => await client.resetStore()}
       >
         {() => (
-          <div className="make-offer-modal">
-            <div className="success-icon" />
-            <div>Success!</div>
-            <button
-              href="#"
-              className="btn btn-outline-light"
+          <div className='reject-offer-modal'>
+            <div className="d-flex image-container mx-auto justify-content-center">
+              <img src="images/reject-icon.svg" className="align-self-center"/>
+            </div>
+            <h2>This offer has been rejected</h2>
+            <span className="mx-auto">
+              You've rejected this buyer's offer,
+              click below to go back to your listings.
+            </span>
+            <Link
+              to="/" className="btn btn-outline-light"
               onClick={() => this.setState({ waitForShouldClose: true })}
-              children="OK"
-            />
+            >
+              Back to your listings
+            </Link>
           </div>
         )}
       </WaitForTransaction>
@@ -118,3 +125,28 @@ class RejectOffer extends Component {
 }
 
 export default withCanTransact(RejectOffer)
+
+require('react-styl')(`
+  .pl-modal
+    .pl-modal-table
+      .pl-modal-cell
+        padding: 1rem
+        .pl-modal-content
+          max-width: 440px
+  .reject-offer-modal
+    .image-container
+      border-radius: 45px
+      width: 92px
+      height: 92px
+      background-color: var(--white)
+      img
+        width: 54px
+        height: 54px
+    span
+      width: 295px
+    h2
+      font-size: 1.375rem
+      margin-top: 0.9375rem
+    a
+      margin: 20px
+`)
