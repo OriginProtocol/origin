@@ -10,7 +10,6 @@ class ThemePicker extends React.Component {
 
     this.handleClick = this.handleClick.bind(this)
     this.setWrapperRef = this.setWrapperRef.bind(this)
-    this.themeConfig = this.themeConfig.bind(this)
     this.themePreviewClassName = this.themePreviewClassName.bind(this)
   }
 
@@ -30,15 +29,6 @@ class ThemePicker extends React.Component {
 
   setWrapperRef(node) {
     this.wrapperRef = node
-  }
-
-  themeConfig(theme) {
-    return {
-      cssVars: {
-        ...this.props.config.cssVars,
-        ...theme.cssVars
-      }
-    }
   }
 
   themePreviewClassName(index) {
@@ -63,7 +53,7 @@ class ThemePicker extends React.Component {
                 <div className="col-6" key={i}>
                   <div className={this.themePreviewClassName(i)}
                       onClick={() => this.props.onThemeClick(i)}>
-                    <Preview config={this.themeConfig(theme)} />
+                    <Preview config={theme} />
                     {theme.title}
                   </div>
               </div>

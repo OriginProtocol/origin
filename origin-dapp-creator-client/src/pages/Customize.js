@@ -26,12 +26,14 @@ class Customize extends React.Component {
         {
           title: 'Eco Green',
           cssVars: {
+            ...baseConfig.cssVars,
             dusk: '#3BA54E'
           }
         },
         {
           title: 'Royal Purple',
           cssVars: {
+            ...baseConfig.cssVars,
             dusk: '#833AAB'
           }
         }
