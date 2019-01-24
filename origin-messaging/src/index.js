@@ -70,6 +70,7 @@ function rebroadcastOnReplicate(DB, db){
   })
 }
 
+/*
 async function saveToIpfs(ipfs, entry, signature, key) {
   if (!entry) {
     logger.warn('Warning: Given input entry was null.')
@@ -104,6 +105,7 @@ async function saveToIpfs(ipfs, entry, signature, key) {
       return hash
     })
 }
+*/
 
 async function snapshotDB(db) {
   const unfinished = db._replicator.getQueue()
@@ -120,9 +122,12 @@ async function loadSnapshotDB(db) {
   db.sync(queue || [])
   const snapshotData = await db._cache.get('raw_snapshot')
   if (snapshotData) {
+    /*
+     * this might be causing locks to stall
     for (const entry of snapshotData.values){
       await saveToIpfs(db._ipfs, entry)
     }
+    */
     const log = new Log(
       db._ipfs,
       snapshotData.id,

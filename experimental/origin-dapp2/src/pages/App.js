@@ -16,6 +16,7 @@ import Profile from './user/Profile'
 import CreateListing from './create-listing/CreateListing'
 import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
+import DappInfo from './about/DappInfo'
 
 class App extends Component {
   componentDidMount() {
@@ -46,6 +47,7 @@ class App extends Component {
             <Route path="/profile" component={Profile} />
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
+            <Route path="/about/dapp-info" component={DappInfo} />
             <Route component={Listings} />
           </Switch>
         </main>

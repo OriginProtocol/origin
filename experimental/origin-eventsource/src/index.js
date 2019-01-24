@@ -326,12 +326,12 @@ class OriginEventSource {
     const offerAffiliate = offer.affiliate
       ? offer.affiliate.id.toLowerCase()
       : ZERO_ADDRESS
-    const affiliateAlowed =
+    const affiliateAllowed =
       affiliateWhitelistDisabled ||
       (await this.contract.methods
-        .allowedAffiliates(offer.offerAffiliate)
+        .allowedAffiliates(offerAffiliate)
         .call())
-    if (!affiliateAlowed) {
+    if (!affiliateAllowed) {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
 
