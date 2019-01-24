@@ -127,10 +127,9 @@ class OriginEventSource {
     const type = 'unit'
     let commissionPerUnit = '0', commission = '0'
     if (type === 'unit') {
-      const commissionPerUnitOgn =
-        (data.commissionPerUnit && data.commissionPerUnit.amount)
-        || (data.commission && data.commission.amount)
-        || '0'
+      const commissionPerUnitOgn = data.unitsTotal === 1
+        ? (data.commission && data.commission.amount) || '0'
+        : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
       commissionPerUnit = this.web3.utils.toWei(commissionPerUnitOgn, 'ether')
 
       const commissionOgn = (data.commission && data.commission.amount) || '0'

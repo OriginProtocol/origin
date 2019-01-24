@@ -41,7 +41,12 @@ const config = {
             loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader'
           },
           {
-            loader: 'css-loader'
+            loader: 'css-loader',
+            options: {
+              url: url => {
+                return url.match(/(svg|png)/)
+              }
+            }
           }
         ]
       },
@@ -50,11 +55,7 @@ const config = {
         use: [
           {
             loader: isProduction ? 'file-loader' : 'url-loader',
-            options: isProduction
-              ? {
-                  name: 'fonts/[name].[ext]'
-                }
-              : {}
+            options: isProduction ? { name: 'fonts/[name].[ext]' } : {}
           }
         ]
       }
@@ -93,18 +94,20 @@ const config = {
 }
 
 if (isProduction) {
-  (config.output.filename = '[name].[hash:8].js'),
-    (config.optimization.minimizer = [
-      new TerserPlugin({ cache: true, parallel: true }),
-      new OptimizeCSSAssetsPlugin({})
-    ])
+  config.output.filename = '[name].[hash:8].js'
+  config.optimization.minimizer = [
+    new TerserPlugin({ cache: true, parallel: true }),
+    new OptimizeCSSAssetsPlugin({})
+  ]
   config.plugins.push(
-    new CleanWebpackPlugin(['public/app.*', 'public/styles.*']),
-    new MiniCssExtractPlugin({
-      filename: '[name].[hash:8].css'
-    })
+    new CleanWebpackPlugin(['public/app.*.css', 'public/app.*.js']),
+    new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
+    new webpack.IgnorePlugin(/redux-logger/)
   )
-  config.plugins.push(new webpack.IgnorePlugin(/redux-logger/))
+  config.resolve.alias = {
+    'react-styl': 'react-styl/prod.js'
+  }
+  config.module.noParse = [/^(react-styl)$/]
   // config.resolve.alias = {
   //   react: 'react/umd/react.production.min.js',
   //   'react-dom': 'react-dom/umd/react-dom.production.min.js',
