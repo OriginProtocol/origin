@@ -34,8 +34,8 @@ class ImagePicker extends React.Component {
     const { files } = target
 
     this.setState({
-      loading: true,
-      uploadError: null
+      uploadError: null,
+      loading: true
     })
 
     if (files && files[0]) {

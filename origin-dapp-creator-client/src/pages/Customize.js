@@ -94,6 +94,7 @@ class Customize extends React.Component {
       [name]: url
     }
 
+    this.props.onChange(newConfig)
     this.setState({ config: newConfig })
   }
 
