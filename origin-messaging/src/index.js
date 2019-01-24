@@ -120,9 +120,12 @@ async function loadSnapshotDB(db) {
   db.sync(queue || [])
   const snapshotData = await db._cache.get('raw_snapshot')
   if (snapshotData) {
+    /*
+     * this might be causing locks to stall
     for (const entry of snapshotData.values){
       await saveToIpfs(db._ipfs, entry)
     }
+    */
     const log = new Log(
       db._ipfs,
       snapshotData.id,
