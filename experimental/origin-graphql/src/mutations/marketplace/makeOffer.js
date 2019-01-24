@@ -3,7 +3,6 @@ import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import parseId from '../../utils/parseId'
-import listings from '../../resolvers/marketplace/listings';
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -71,7 +70,7 @@ async function toIpfsData(data) {
 
   // Validate units purchased vs. available
   const unitsAvailable = Number(listing.unitsAvailable)
-  const offerQuantity = Number(data.quanity)
+  const offerQuantity = Number(data.quantity)
   if (offerQuantity > unitsAvailable) {
     throw new Error(`Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`)
   }
