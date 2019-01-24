@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import trim from 'lodash/trim'
 
 import mutation from 'mutations/SendMessage'
 import withConfig from 'hoc/withConfig'
@@ -73,7 +74,7 @@ class SendMessage extends Component {
             className="send-message d-flex"
             onSubmit={e => {
               e.preventDefault()
-              if (message || images) {
+              if (trim(message) || images) {
                 this.sendContent(sendMessage, to)
               }
             }}
@@ -122,7 +123,9 @@ class SendMessage extends Component {
                   config,
                   e.currentTarget.files
                 )
-                this.setState({ images: [...newImages, ...images] })
+                this.setState((state) => ({
+                  images: [...state.images, ...newImages]
+                }))
               }}
             />
             <button
