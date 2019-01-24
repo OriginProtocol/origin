@@ -35,7 +35,73 @@ const GetReceipt = gql`
   }
 `
 
+const GetAllOffers = gql`
+  query GetAllOffers($id: String!) {
+    marketplace {
+      listing(id: $id) {
+        id
+        title
+        allOffers {
+          id
+          status
+          statusStr
+          valid
+          validationError
+          commission
+        }
+      }
+    }
+  }
+`
+
+const GetListing = gql`
+query GetListing($id: String!) {
+  marketplace {
+    listing(id: $id) {
+      id
+      status
+      totalEvents
+      seller {
+        id
+      }
+      arbitrator {
+        id
+      }
+      deposit
+      depositAvailable
+      createdEvent {
+        timestamp
+      }
+
+      category
+      categoryStr
+      subCategory
+      title
+      description
+      currencyId
+      unitsTotal
+      unitsAvailable
+      unitsSold
+      featured
+      hidden
+      price {
+        amount
+        currency
+      }
+      media {
+        url
+        contentType
+      }
+      commission
+      commissionPerUnit
+    }
+  }
+}
+`
+
 export default {
   GetNodeAccounts,
-  GetReceipt
+  GetReceipt,
+  GetAllOffers,
+  GetListing
 }
