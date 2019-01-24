@@ -85,6 +85,7 @@ require('react-styl')(`
     border-bottom-right-radius: var(--default-radius)
 
   .theme-select
+    cursor: pointer
     position: relative
 
   .theme-select.collapsed:before
