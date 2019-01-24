@@ -346,7 +346,11 @@ function price(offer, field = 'value') {
 
 function status(offer) {
   if (!offer.valid) {
-    return <Tag icon="cross">Invalid</Tag>
+    return (
+      <Tooltip content={offer.validationError}>
+        <Tag icon="cross">Invalid</Tag>
+      </Tooltip>
+    )
   }
 
   if (offer.status === 0) {
