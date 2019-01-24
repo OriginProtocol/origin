@@ -85,10 +85,7 @@ class DisputeOffer extends Component {
                         />
                         <button
                           className="btn btn-outline-light"
-                          onClick={() => {
-                            console.log("THIS STATE", this.props)
-                            this.setState({ describe: true })}
-                          }
+                          onClick={() => this.setState({ describe: true })}
                           children="Yes, please"
                         />
                       </div>
@@ -107,15 +104,13 @@ class DisputeOffer extends Component {
             </>
           )}
         </Mutation>
-        <Mutation
-          mutation={SendMessage}
-        >
+        <Mutation mutation={SendMessage}>
           {sendMessage => {
             const { offer } = this.props
             const { messageArbitrator, problem } = this.state
 
-            if (messageArbitrator && offer.affiliate) {
-              sendMessage({ variables: { to: offer.affiliate.id, content: problem } })
+            if (messageArbitrator && offer.arbitrator) {
+              sendMessage({ variables: { to: offer.arbitrator.id, content: problem } })
               this.setState({ messageArbitrator: false })
             }
             return null
@@ -136,40 +131,13 @@ class DisputeOffer extends Component {
       return
     }
 
-    // this.setState({ waitFor: 'pending' })
+    this.setState({ waitFor: 'pending' })
     let from = this.props.offer.buyer.id
     if (this.props.party === 'seller') {
       from = this.props.offer.listing.seller.id
     }
+    disputeOffer({ variables: { offerID: this.props.offer.id, from } })
     this.setState({ messageArbitrator: true })
-    // disputeOffer({ variables: { offerID: this.props.offer.id, from } })
-
-
-    // const counterpartyAddress = formattedAddress(
-    //   wallet.address === purchase.buyer
-    // )
-    //   ? listing.seller
-    //   : purchase.buyer
-    // const roomId = origin.messaging.generateRoomId(
-    //   wallet.address,
-    //   counterpartyAddress
-    // )
-    // const keys = origin.messaging.getSharedKeys(roomId)
-    //
-    // // disclose shared decryption key with arbitrator if one exists
-    // if (keys.length) {
-    //   await origin.messaging.sendConvMessage(ARBITRATOR_ACCOUNT, {
-    //     decryption: { keys, roomId }
-    //   })
-    // }
-    //
-    // // send a message to arbitrator if form is not blank
-    // issue.length &&
-    //   origin.messaging.sendConvMessage(ARBITRATOR_ACCOUNT, {
-    //     content: issue
-    //   })
-    //
-    // this.setState({ processing: false })
   }
 
   renderWaitModal(client) {
