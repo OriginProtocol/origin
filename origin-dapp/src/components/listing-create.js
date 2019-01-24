@@ -25,7 +25,7 @@ import QuantityField from 'components/form-widgets/quantity-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
 
-import { getListing } from 'utils/listing'
+import { getListing, getRenderDetailsForm } from 'utils/listing'
 import { prepareSlotsToSave, generateDefaultPricing } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import WalletCard from 'components/wallet-card'
@@ -334,7 +334,7 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(selectedSchemaId) {
+  async handleSchemaSelection(selectedSchemaId) {
     let schemaFileName = selectedSchemaId
 
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
@@ -342,12 +342,10 @@ class ListingCreate extends Component {
       schemaFileName = event.target.value
     }
 
-    return fetch(`schemas/${schemaFileName}`)
-      .then(response => response.json())
-      .then(schemaJson => {
-        this.props.updateState({ selectedSchemaId: schemaFileName })
-        this.renderDetailsForm(schemaJson)
-      })
+    const schemaJson = await getRenderDetailsForm(schemaFileName)
+
+    this.props.updateState({ selectedSchemaId: schemaFileName })
+    this.renderDetailsForm(schemaJson)
   }
 
   renderDetailsForm(schemaJson) {
