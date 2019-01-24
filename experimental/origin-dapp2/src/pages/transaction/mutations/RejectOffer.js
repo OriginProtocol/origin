@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import NavLink from 'components/NavLink'
+import Link from 'components/Link'
 
 import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 
@@ -104,21 +104,16 @@ class RejectOffer extends Component {
       >
         {() => (
           <div className="reject-offer-modal">
-            <div className="d-flex image-container mx-auto justify-content-center">
-              <img src="images/reject-icon.svg" className="align-self-center"/>
-            </div>
             <h2>This offer has been rejected</h2>
-            <span className="mx-auto">
-              You&#39;ve rejected this buyer&#39;s offer,
-              click below to go back to your listings.
-            </span>
-            <NavLink
-              to="/my-listings" className="btn btn-outline-light mx-auto"
-              onClick={() => this.setState({ waitForShouldClose: true })}
-              exact
-            >
-              Back to your listings
-            </NavLink>
+            <div>
+              You&#39;ve rejected this buyer&#39;s offer, click below to go back
+              to your listings.
+            </div>
+            <div className="actions">
+              <Link to="/my-sales" className="btn btn-outline-light">
+                Back to your listings
+              </Link>
+            </div>
           </div>
         )}
       </WaitForTransaction>
@@ -129,29 +124,20 @@ class RejectOffer extends Component {
 export default withCanTransact(RejectOffer)
 
 require('react-styl')(`
-  .pl-modal
-    .pl-modal-table
-      .pl-modal-cell
-        padding: 1rem
-        .pl-modal-content
-          &.reject-success
-            max-width: 440px
   .reject-offer-modal
-    .image-container
-      border-radius: 45px
-      width: 92px
-      height: 92px
-      background-color: var(--white)
-      img
-        width: 54px
-        height: 54px
-    span
-      width: 295px
     h2
-      font-size: 1.375rem
-      margin-top: 0.9375rem
-    a
-      margin: 20px
-      margin-top: 30px
-      whitespace: nowrap
+      padding-top: 7rem
+      position: relative
+      &::before,&::after
+        content: ""
+        position: absolute;
+        width: 5.75rem
+        height: 5.75rem
+        top: 0
+        left: calc(50% - 2.5rem)
+      &::before
+        border-radius: 5rem
+        background: var(--white)
+      &::after
+        background: url(images/reject-icon.svg) no-repeat center 60%
 `)

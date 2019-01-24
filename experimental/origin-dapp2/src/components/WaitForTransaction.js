@@ -46,7 +46,7 @@ class WaitForTransaction extends Component {
           return (
             <Modal
               shouldClose={this.props.onClose ? this.props.shouldClose : false}
-              className={this.props.className ? this.props.className : '' }
+              className={this.props.className ? this.props.className : ''}
               onClose={() => {
                 if (this.props.onClose) {
                   this.props.onClose()
