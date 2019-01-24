@@ -80,15 +80,15 @@ class AllMessages extends Component {
 
     return (
       <div className="messages" ref={el => (this.el = el)}>
-        {messages.map((message, idx) => {
-          return <MessageWithIdentity
+        {messages.map((message, idx) => (
+          <MessageWithIdentity
             message={message}
             lastMessage={idx > 0 ? messages[idx - 1] : null}
             key={idx}
             wallet={get(message, 'address')}
             isUser={this.props.wallet === get(message, 'address')}
           />
-        })}
+        ))}
       </div>
     )
   }
