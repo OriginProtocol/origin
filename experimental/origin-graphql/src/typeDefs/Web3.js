@@ -30,7 +30,10 @@ export default `
   }
 
   type Config {
+    affilliate: String
+    arbitrator: String
     discovery: String
+    bridge: String
     facebookAuthUrl: String
     ipfsRPC: String
     ipfsGateway: String
