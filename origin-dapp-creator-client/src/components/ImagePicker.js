@@ -56,16 +56,18 @@ class ImagePicker extends React.Component {
             }
           })
           .catch((error) => {
-            if (error.response.status === 413) {
-              this.setState({
-                uploadError: 'Image is too large, please choose something below 2mb.',
-                loading: false
-              })
-            } else if (error.response.status === 415) {
-              this.setState({
-                uploadError: 'Image is an invalid type.',
-                loading: false
-              })
+            if (error.response) {
+              if (error.response.status === 413) {
+                this.setState({
+                  uploadError: 'Image is too large, please choose something below 2mb.',
+                  loading: false
+                })
+              } else if (error.response.status === 415) {
+                this.setState({
+                  uploadError: 'Image is an invalid type.',
+                  loading: false
+                })
+              }
             } else {
               this.setState({
                 uploadError: 'An error occurred uploading your image.',
