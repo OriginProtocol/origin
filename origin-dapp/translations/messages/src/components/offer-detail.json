@@ -44,12 +44,12 @@
     "defaultMessage": "Unknown"
   },
   {
-    "id": "offer-detail.startDate",
-    "defaultMessage": "Start Date"
+    "id": "offer-detail.reservationStart",
+    "defaultMessage": "Reservation Start"
   },
   {
-    "id": "offer-detail.endDate",
-    "defaultMessage": "End Date"
+    "id": "offer-detail.reservationEnd",
+    "defaultMessage": "Reservation End"
   },
   {
     "id": "offer-detail.offerDetails",
