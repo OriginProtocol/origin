@@ -1,5 +1,5 @@
 const Busboy = require('busboy')
-const imageType = require('image-type')
+const fileType = require('file-type')
 const isJSON = require('is-json')
 const http = require('http')
 const httpProxy = require('http-proxy')
@@ -9,15 +9,25 @@ const zlib = require('zlib')
 const config = require('./config')
 const logger = require('./logger')
 
-const validImageTypes = ['image/jpeg', 'image/gif', 'image/png']
+const validImageTypes = [
+  'image/jpeg',
+  'image/pjpeg',
+  'image/gif',
+  'image/png',
+  'image/vnd.microsoft.icon',
+  'image/x-icon',
+  // Not valid but sometimes used for icons
+  'image/ico',
+  'image/icon'
+]
 
 function isValidFile(buffer) {
   return isValidImage(buffer) || isJSON(buffer.toString())
 }
 
 function isValidImage(buffer) {
-  const image = imageType(buffer)
-  return image && validImageTypes.includes(image.mime)
+  const file  = fileType(buffer)
+  return file && validImageTypes.includes(file.mime)
 }
 
 function handleFileUpload (req, res) {

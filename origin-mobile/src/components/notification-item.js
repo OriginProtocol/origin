@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { remove } from 'actions/Notification'

@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "bs58": "^4.0.1",
-    "cross-fetch": "^2.2.3",
+    "cross-fetch": "^3.0.0",
     "form-data": "^2.3.3"
   }
 }

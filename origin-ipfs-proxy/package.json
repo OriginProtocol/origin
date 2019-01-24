@@ -23,8 +23,8 @@
   "homepage": "https://github.com/OriginProtocol/origin#readme",
   "dependencies": {
     "busboy": "^0.2.14",
+    "file-type": "^10.7.1",
     "http-proxy": "^1.17.0",
-    "image-type": "^3.0.0",
     "ipfs": "^0.33.1",
     "ipfsd-ctl": "^0.40.1",
     "is-json": "^2.0.1",

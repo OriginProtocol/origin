@@ -62,6 +62,7 @@ class Onboarding extends Component {
       controlStatusBar,
       pages,
       onCompletion,
+      onEnable,
     } = this.props
     const { height, width } = Dimensions.get('window')
     const currentPage = pages[this.state.currentPage]
@@ -92,6 +93,7 @@ class Onboarding extends Component {
             controlStatusBar={controlStatusBar}
             pagesCount={pages.length}
             onCompletion={onCompletion}
+            onEnable={onEnable}
             onNext={this.goNext}
           />
         </SafeAreaView>

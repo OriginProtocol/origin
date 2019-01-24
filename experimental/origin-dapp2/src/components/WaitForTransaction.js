@@ -25,9 +25,9 @@ class WaitForTransaction extends Component {
     return (
       <Query query={query} variables={{ id }} pollInterval={3000}>
         {({ data, client }) => {
-          const event = get(data, 'web3.transactionReceipt.events', []).find(
-            e => e.event === this.props.event
-          )
+          const events = get(data, 'web3.transactionReceipt.events', [])
+          const event =
+            events.find(e => e.event === this.props.event) || events[0]
 
           let content
           if (!event) {

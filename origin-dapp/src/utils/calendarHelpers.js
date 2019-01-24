@@ -378,9 +378,12 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
   const isDateBooked = function(date) {
     let bookingsMatchingDate = []
     offers && offers.map((offer) => {
-      const bookingsForThisOffer = offer.slots.filter(slot => 
-        moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
-      )
+      const bookingsForThisOffer = 
+        offer &&
+        offer.slots &&
+        offer.slots.filter(slot => 
+          moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
+        )
       bookingsMatchingDate = [...bookingsMatchingDate, ...bookingsForThisOffer]
     })
 

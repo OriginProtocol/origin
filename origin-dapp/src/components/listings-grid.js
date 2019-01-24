@@ -73,36 +73,123 @@ class ListingsGrid extends Component {
         {contractFound && (
           <div className="listings-grid">
             {resultsCount > 0 && (
-              <h1>
-                <FormattedMessage
-                  id={'listings-grid.listingsCount'}
-                  defaultMessage={'{listingIdsCount} Listings'}
-                  values={{
-                    listingIdsCount: (
-                      <FormattedNumber value={resultsCount} />
-                    )
-                  }}
-                />
-              </h1>
-            )}
+              <>
+                <h1>
+                  <FormattedMessage
+                    id={'listings-grid.listingsCount'}
+                    defaultMessage={'{listingIdsCount} Listings'}
+                    values={{
+                      listingIdsCount: (
+                        <FormattedNumber value={resultsCount} />
+                      )
+                    }}
+                  />
+                </h1>
+              <div className="row">
+                {currentPageListingIds.map(id => (
+                  <ListingCard
+                    listingId={id}
+                    key={id}
+                  />
+                ))}
+              </div>
+              <Pagination
+                activePage={parseInt(activePage)}
+                itemsCountPerPage={LISTINGS_PER_PAGE}
+                totalItemsCount={resultsCount}
+                pageRangeDisplayed={5}
+                onChange={this.handleOnChange}
+                itemClass="page-item"
+                linkClass="page-link"
+                hideDisabled="true"
+              />
+            </>
+          )}
+          {resultsCount == 0 && this.props.isWhiteLabel && (
             <div className="row">
-              {currentPageListingIds.map(id => (
-                <ListingCard
-                  listingId={id}
-                  key={id}
-                />
-              ))}
+              <div className="col-12 text-center">
+                <img src="images/empty-listings-graphic.svg" />
+                <h1>
+                  <FormattedMessage
+                    id={'listings.no-listings'}
+                    defaultMessage={"You don't have any listings yet."}
+                  />
+                </h1>
+                <p>
+                  <FormattedMessage
+                    id={'listings.no-listings-steps'}
+                    defaultMessage={
+                      'Follow the steps below to create your first listing!'
+                    }
+                  />
+                </p>
+                <br />
+                <br />
+                <div className="row">
+                  <div className="col-12 col-sm-4 col-lg-2 offset-lg-3 text-center">
+                    <div className="numberCircle">
+                      <h1 className="circle-text">
+                        1
+                      </h1>
+                    </div>
+                    <p>
+                      <FormattedMessage
+                        id={'listings.step-one'}
+                        defaultMessage={
+                          'Choose the right category for your listing.'
+                        }
+                      />
+                    </p>
+                  </div>
+                  <div className="col-12 col-sm-4 col-lg-2 text-center">
+                    <div className="numberCircle">
+                      <h1 className="circle-text">
+                        2
+                      </h1>
+                    </div>
+                    <p>
+                      <FormattedMessage
+                        id={'listings.step-two'}
+                        defaultMessage={
+                          'Give your listing a name, description, and price.'
+                        }
+                      />
+                    </p>
+                  </div>
+                  <div className="col-12 col-sm-4 col-lg-2 text-center">
+                    <div className="numberCircle">
+                      <h1 className="circle-text">
+                        3
+                      </h1>
+                    </div>
+                    <p>
+                      <FormattedMessage
+                        id={'listings.step-three'}
+                        defaultMessage={
+                          'Preview your listing and publish it to the blockchain.'
+                        }
+                      />
+                    </p>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 text-center">
+                    <br />
+                    <br />
+                    <a
+                      href="#/create"
+                      className="btn btn-lrg btn-primary btn-auto-width"
+                    >
+                      <FormattedMessage
+                        id={'listings.create-listing'}
+                        defaultMessage={'Create Your First Listing'}
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
-            <Pagination
-              activePage={parseInt(activePage)}
-              itemsCountPerPage={LISTINGS_PER_PAGE}
-              totalItemsCount={resultsCount}
-              pageRangeDisplayed={5}
-              onChange={this.handleOnChange}
-              itemClass="page-item"
-              linkClass="page-link"
-              hideDisabled="true"
-            />
+          )}
           </div>
         )}
       </div>
@@ -112,6 +199,7 @@ class ListingsGrid extends Component {
 
 const mapStateToProps = state => ({
   contractFound: state.listings.contractFound,
+  isWhiteLabel: state.config.isWhiteLabel,
   listingIds: state.listings.ids
 })
 
