@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import Link from 'components/Link'
+import NavLink from 'components/NavLink'
 
 import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 
@@ -100,6 +100,7 @@ class RejectOffer extends Component {
         event="OfferWithdrawn"
         shouldClose={this.state.waitForShouldClose}
         onClose={async () => await client.resetStore()}
+        className="reject-success"
       >
         {() => (
           <div className='reject-offer-modal'>
@@ -111,12 +112,13 @@ class RejectOffer extends Component {
               You've rejected this buyer's offer,
               click below to go back to your listings.
             </span>
-            <Link
-              to="/" className="btn btn-outline-light"
+            <NavLink
+              to="/my-listings" className="btn btn-outline-light mx-auto"
               onClick={() => this.setState({ waitForShouldClose: true })}
+              exact
             >
               Back to your listings
-            </Link>
+            </NavLink>
           </div>
         )}
       </WaitForTransaction>
@@ -132,7 +134,8 @@ require('react-styl')(`
       .pl-modal-cell
         padding: 1rem
         .pl-modal-content
-          max-width: 440px
+          &.reject-success
+            max-width: 440px
   .reject-offer-modal
     .image-container
       border-radius: 45px
@@ -149,4 +152,6 @@ require('react-styl')(`
       margin-top: 0.9375rem
     a
       margin: 20px
+      margin-top: 30px
+      whitespace: nowrap
 `)
