@@ -10,10 +10,10 @@ const configQuery = gql`
 `
 
 function urlForNetwork (network){
-  if(network == "mainnet") {
-    return "https://etherscan.io/address/"
-  } else if(network == "rinkeby") {
-    return "https://rinkeby.etherscan.io/address/"
+  if(network == 'mainnet') {
+    return 'https://etherscan.io/address/'
+  } else if(network == 'rinkeby') {
+    return 'https://rinkeby.etherscan.io/address/'
   }
 }
 

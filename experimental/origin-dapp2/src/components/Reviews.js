@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import StarRating from 'components/StarRating'
 import Avatar from 'components/Avatar'
 import ReviewsQuery from 'queries/Reviews'
-import EthAddress from './EthAddress';
+import EthAddress from './EthAddress'
 
 const Reviews = ({ id }) => (
   <Query query={ReviewsQuery} variables={{ id }}>
