@@ -328,8 +328,7 @@ export function setMarketplace(address, epoch) {
   context.eventSource = new EventSource({
     marketplaceContract: context.marketplace,
     ipfsGateway: context.ipfsGateway,
-    web3: context.web3,
-    arbitrator: context.config.arbitrator
+    web3: context.web3
   })
   context.marketplaceExec = context.marketplace
 

@@ -3,7 +3,6 @@ import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import parseId from '../../utils/parseId'
-import listings from '../../resolvers/marketplace/listings';
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -71,7 +70,7 @@ async function toIpfsData(data) {
 
   // Validate units purchased vs. available
   const unitsAvailable = Number(listing.unitsAvailable)
-  const offerQuantity = Number(data.quanity)
+  const offerQuantity = Number(data.quantity)
   if (offerQuantity > unitsAvailable) {
     throw new Error(`Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`)
   }
@@ -79,22 +78,16 @@ async function toIpfsData(data) {
   let commission = { currency: 'OGN', amount: '0' }
   if (data.commission) {
     // Passed in commission takes precedence
-    commission = {
-      currency: 'OGN',
-      amount: web3.utils.fromWei(data.commission, 'ether')
-    }
+    commission.amount = web3.utils.fromWei(data.commission, 'ether')
   } else if (listing.commissionPerUnit) {
     // Default commission to min(depositAvailable, commissionPerUnit)
     const amount = web3.utils.toBN(listing.commissionPerUnit)
       .mul(web3.utils.toBN(data.quantity))
     const depositAvailable = web3.utils.toBN(listing.depositAvailable)
-    const commissionAmount = amount.lt(depositAvailable)
-      ? amount
-      : depositAvailable
-    commission = {
-      amount: web3.utils.fromWei(commissionAmount, 'ether'),
-      currency: 'OGN'
-    }
+    const commissionWei = amount.lt(depositAvailable)
+      ? amount.toString()
+      : depositAvailable.toString()
+    commission.amount = web3.utils.fromWei(commissionWei, 'ether')
   }
 
   const ipfsData = {
