@@ -74,7 +74,10 @@ class ImagePicker extends React.Component {
             }
           })
       } else {
-        console.log('Invalid file type: ', file.type)
+        this.setState({
+          uploadError: 'That file type is not supported, please use JPEG or PNG.',
+          loading: false
+        })
       }
     }
   }
@@ -90,7 +93,7 @@ class ImagePicker extends React.Component {
           id={this.props.name + '-picker'}
           className="form-control-file"
           type="file"
-          accept="image/*"
+          accept={acceptedFileTypes}
           onChange={this.handleFileChange}
         />
 
