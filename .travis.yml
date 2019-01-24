@@ -90,3 +90,12 @@ matrix:
       script:
         - npm run test --prefix origin-token-transfer/server
         - npm run test --prefix origin-token-transfer/client
+
+    - name: "origin-graphql unit tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-graphql
+      script:
+        - npm run test --prefix experimental/origin-graphql
