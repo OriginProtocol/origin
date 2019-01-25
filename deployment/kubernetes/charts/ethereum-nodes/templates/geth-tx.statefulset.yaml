@@ -46,8 +46,9 @@ spec:
             --ethstats=${HOSTNAME}:${ETHSTATS_SECRET}@${ETHSTATS_SERVICE}
             --cache 4096
             --syncmode full
+            --maxpeers 1024
             {{- if eq .Values.network "rinkeby" }}
-            --rinekby
+            --rinkeby
             {{- end }}
             {{ if .Values.bootnodes }}
             --bootnodes {{ .Values.bootnodes }}
