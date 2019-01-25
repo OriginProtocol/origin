@@ -21,21 +21,21 @@ const resolvers = {
   Mutation: {
     async invite () {
       return {
-        code: "418",
+        code: '418',
         success: false,
         message: "I am a teapot"
       }
     },
     async enroll () {
       return {
-        code: "418",
+        code: '418',
         success: false,
         message: "I am a teapot"
       }
     },
     async log () {
       return {
-        code: "418",
+        code: '418',
         success: false,
         message: "I am a teapot"
       }
