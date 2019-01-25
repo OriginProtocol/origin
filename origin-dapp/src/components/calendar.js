@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import BigCalendar from 'react-big-calendar'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment-timezone'
-import uuid from 'uuid/v1'
+import uuid from 'utils/uuid'
 import { 
   generateCalendarSlots,
   renderHourlyPrices,
@@ -13,6 +13,7 @@ import {
   getCleanEvents,
   getDateAvailabilityAndPrice,
   generateSlotStartEnd,
+  slotsToJCal,
   isDateSelected,
   highlightCalendarDrag,
   doFancyDateSelectionBorders,
@@ -407,7 +408,9 @@ class Calendar extends Component {
     }
 
     const cleanEvents = getCleanEvents(this.state.events)
-    this.props.onComplete && this.props.onComplete(cleanEvents)
+    const jCalEvents = slotsToJCal(cleanEvents, 'listing')
+
+    this.props.onComplete && this.props.onComplete(jCalEvents)
   }
 
   goBack() {
