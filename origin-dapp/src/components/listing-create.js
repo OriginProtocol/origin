@@ -324,7 +324,6 @@ class ListingCreate extends Component {
     // must unfreeze user experience when no error
     try {
       const schema = await fetch(`schemas/${schemaFileName}`)
-      console.log('SCHEMA IS', schema)
       if (schema.status !== 200) throw Error('Failed to Find SubCategory Schema, Please report this console error.')
       const schemaJson = await schema.json()
       this.setState({
@@ -333,6 +332,7 @@ class ListingCreate extends Component {
       })
       this.renderDetailsForm(schemaJson)
     } catch (err) {
+      console.error(err)
       this.setState({
         selectedSchemaId: '',
         showNoSchemaSelectedError: true
@@ -419,7 +419,15 @@ class ListingCreate extends Component {
         schemaSetValues[key] = properties[key].default
       }
     }
-
+    if (schemaSetValues.category.const === "schema.announcements") {
+      //hardcode price as 0 on state
+      this.setState(prevState => ({
+        formListing : {
+          ...prevState.formData,
+          price : 0
+        }
+      }))
+    }
     const translatedSchema = translateSchema(schemaJson)
 
     this.setState(prevState => ({
