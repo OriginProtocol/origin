@@ -3,8 +3,7 @@ import parseId from '../utils/parseId'
 
 import { getIpfsHashFromBytes32 } from 'origin-ipfs'
 
-
-const _firstEventByType =  async (offer, eventType) => {
+const _firstEventByType = async (offer, eventType) => {
   const { listingId, offerId } = parseId(offer.id)
   const events = await offer.contract.eventCache.offers(
     listingId,
