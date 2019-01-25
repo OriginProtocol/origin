@@ -135,7 +135,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    invite(email: [String!]!): MutationResponse
+    invite(emails: [String!]!): InviteResponse
     enroll(campaignId: Int!): EnrollResponse
     log(event: JSON!): LogResponse
   }
