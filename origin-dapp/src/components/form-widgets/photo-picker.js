@@ -72,7 +72,7 @@ class PhotoPicker extends Component {
       })
       if (retrieve.length === 0) return this.props.onChange(retrieved)
       setTimeout(async () => {
-        const picDataURIs = await getDataURIsFromImgURLs(picsToRetrieve)
+        const picDataURIs = await getDataURIsFromImgURLs(retrieve)
         this.props.onChange([ ...picDataURIs, ...retrieved ])
       })
     }
