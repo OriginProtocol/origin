@@ -13,109 +13,108 @@ class DisputeOffer extends Component {
   state = { problem: '' }
   render() {
     return (
-      <>
-        <Mutation
-          mutation={DisputeOfferMutation}
-          onCompleted={({ disputeOffer }) =>
-            this.setState({ waitFor: disputeOffer.id })
-          }
-          onError={errorData =>
-            this.setState({
-              waitFor: false,
-              error: 'mutation',
-              errorData
-            })
-          }
-        >
-          {(disputeOffer, { client }) => (
-            <>
-              <button
-                className={this.props.className}
-                onClick={() => this.setState({ sure: true })}
-                children={this.props.children}
-              />
-              {!this.state.sure ? null : (
-                <Modal
-                  onClose={() =>
-                    this.setState({
-                      sure: false,
-                      sureShouldClose: false,
-                      describe: false
-                    })
-                  }
-                  shouldClose={this.state.sureShouldClose}
-                >
-                  {this.state.describe ? (
-                    <>
-                      <h2>Describe your problem</h2>
-                      <div className="form-group mb-3">
-                        <textarea
-                          className="form-control dark"
-                          onChange={e =>
-                            this.setState({ problem: e.target.value })
-                          }
-                          value={this.state.problem}
-                        />
-                      </div>
-                      <div className="actions">
-                        <button
-                          className="btn btn-outline-light"
-                          onClick={() => this.setState({ sureShouldClose: true })}
-                          children="Cancel"
-                        />
-                        <button
-                          className="btn btn-outline-light"
-                          onClick={() => this.onClick(disputeOffer)}
-                          children="Submit"
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <h2>Is there a problem?</h2>
-                      Are you sure you want to report a problem? This will start
-                      the conflict resolution process. Someone from Origin will be
-                      notified, and your chat history will be made public to an
-                      arbitrator.
-                      <div className="actions">
-                        <button
-                          className="btn btn-outline-light"
-                          onClick={() => this.setState({ sureShouldClose: true })}
-                          children="Oops, no wait..."
-                        />
-                        <button
-                          className="btn btn-outline-light"
-                          onClick={() => this.setState({ describe: true })}
-                          children="Yes, please"
-                        />
-                      </div>
-                    </>
-                  )}
-                </Modal>
-              )}
-              {this.renderWaitModal(client)}
-              {this.state.error && (
-                <TransactionError
-                  reason={this.state.error}
-                  data={this.state.errorData}
-                  onClose={() => this.setState({ error: false })}
-                />
-              )}
-            </>
-          )}
-        </Mutation>
-        <Mutation mutation={SendMessage}>
-          {sendMessage => {
-            const { offer } = this.props
-            const { messageArbitrator, problem } = this.state
-
-            if (messageArbitrator && offer.arbitrator) {
-              sendMessage({ variables: { to: offer.arbitrator.id, content: problem } })
-              this.setState({ messageArbitrator: false })
+      <Mutation mutation={SendMessage}>
+        {sendMessage => (
+          <Mutation
+            mutation={DisputeOfferMutation}
+            onCompleted={({ disputeOffer }) => {
+              this.setState({ waitFor: disputeOffer.id })
+              sendMessage({
+                variables: {
+                  to: this.props.offer.arbitrator.id,
+                  content: this.state.problem
+                }
+              })
+            }}
+            onError={errorData =>
+              this.setState({ waitFor: false, error: 'mutation', errorData })
             }
-            return null
-          }}
-        </Mutation>
+          >
+            {(disputeOffer, { client }) => (
+              <>
+                <button
+                  className={this.props.className}
+                  onClick={() => this.setState({ sure: true })}
+                  children={this.props.children}
+                />
+                {!this.state.sure ? null : (
+                  <Modal
+                    onClose={() =>
+                      this.setState({
+                        sure: false,
+                        sureShouldClose: false,
+                        describe: false
+                      })
+                    }
+                    shouldClose={this.state.sureShouldClose}
+                  >
+                    {this.state.describe
+                      ? this.renderDescribe(disputeOffer)
+                      : this.renderIsProblem()}
+                  </Modal>
+                )}
+                {this.renderWaitModal(client)}
+                {this.state.error && (
+                  <TransactionError
+                    reason={this.state.error}
+                    data={this.state.errorData}
+                    onClose={() => this.setState({ error: false })}
+                  />
+                )}
+              </>
+            )}
+          </Mutation>
+        )}
+      </Mutation>
+    )
+  }
+
+  renderIsProblem() {
+    return (
+      <>
+        <h2>Is there a problem?</h2>
+        Are you sure you want to report a problem? This will start the conflict
+        resolution process. Someone from Origin will be notified, and your chat
+        history will be made public to an arbitrator.
+        <div className="actions">
+          <button
+            className="btn btn-outline-light"
+            onClick={() => this.setState({ sureShouldClose: true })}
+            children="Oops, no wait..."
+          />
+          <button
+            className="btn btn-outline-light"
+            onClick={() => this.setState({ describe: true })}
+            children="Yes, please"
+          />
+        </div>
+      </>
+    )
+  }
+
+  renderDescribe(disputeOffer) {
+    return (
+      <>
+        <h2>Describe your problem</h2>
+        <div className="form-group mb-3">
+          <textarea
+            className="form-control dark"
+            onChange={e => this.setState({ problem: e.target.value })}
+            value={this.state.problem}
+          />
+        </div>
+        <div className="actions">
+          <button
+            className="btn btn-outline-light"
+            onClick={() => this.setState({ sureShouldClose: true })}
+            children="Cancel"
+          />
+          <button
+            className="btn btn-outline-light"
+            onClick={() => this.onClick(disputeOffer)}
+            children="Submit"
+          />
+        </div>
       </>
     )
   }
@@ -136,8 +135,8 @@ class DisputeOffer extends Component {
     if (this.props.party === 'seller') {
       from = this.props.offer.listing.seller.id
     }
+
     disputeOffer({ variables: { offerID: this.props.offer.id, from } })
-    this.setState({ messageArbitrator: true })
   }
 
   renderWaitModal(client) {
