@@ -11,10 +11,10 @@ const GitHubLink = 'https://github.com/OriginProtocol/origin-dapp/issues/new'
 
 class BetaBanner extends Component {
   state = {
-    hide: store.get('hide-beta', false)
+    hideBanner: store.get('hide-beta-banner', false)
   }
   render() {
-    if (this.state.hide) {
+    if (this.state.hideBanner) {
       return null
     }
     return (
@@ -42,8 +42,8 @@ class BetaBanner extends Component {
                       href="#"
                       onClick={e => {
                         e.preventDefault()
-                        store.set('hide-beta', true)
-                        this.setState({ hide: true })
+                        store.set('hide-beta-banner', true)
+                        this.setState({ hideBanner: true })
                       }}
                       children="×"
                     />
@@ -77,14 +77,13 @@ require('react-styl')(`
       > div:nth-child(3)
         a
           display: inline-block
-          width: 1.5rem;
-          line-height: 1.5rem;
-          text-align: center;
-          border-radius: 1rem;
-          font-weight: 700;
+          width: 1.5rem
+          line-height: 1.5rem
+          text-align: center
+          border-radius: 1rem
+          font-weight: 700
           color: var(--dark)
           &:hover
-            background: gray;
+            background: gray
             color: white;
-
 `)

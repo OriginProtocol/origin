@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
 
 import BetaBanner from './_BetaBanner'
+import BetaModal from './_BetaModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
@@ -50,6 +51,7 @@ class App extends Component {
     return (
       <>
         <BetaBanner />
+        <BetaModal />
         <Nav />
         <main>
           <Switch>
