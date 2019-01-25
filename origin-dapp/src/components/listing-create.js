@@ -310,20 +310,35 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(e, selectedSchemaId) {
+  async handleSchemaSelection(selectedSchemaId) {
     let schemaFileName = selectedSchemaId
-
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
-    if (!selectedSchemaId) {
-      schemaFileName = e.target.value
+    if (event.target.value) {
+      selectedSchemaId.persist()
+      schemaFileName = event.target.value
     }
 
-    return fetch(`schemas/${schemaFileName}`)
-      .then(response => response.json())
-      .then(schemaJson => {
-        this.setState({ selectedSchemaId: schemaFileName })
-        this.renderDetailsForm(schemaJson)
+    // add validation error onSelect
+    // must try to fetch schema
+    // must freeze user experience once facing an error
+    // must unfreeze user experience when no error
+    try {
+      const schema = await fetch(`schemas/${schemaFileName}`)
+      console.log('SCHEMA IS', schema)
+      if (schema.status !== 200) throw Error('Failed to Find SubCategory Schema, Please report this console error.')
+      const schemaJson = await schema.json()
+      this.setState({
+        selectedSchemaId: schemaFileName,
+        showNoSchemaSelectedError: false
       })
+      this.renderDetailsForm(schemaJson)
+    } catch (err) {
+      this.setState({
+        selectedSchemaId: '',
+        showNoSchemaSelectedError: true
+      })
+    }
+    return
   }
 
   renderDetailsForm(schemaJson) {
