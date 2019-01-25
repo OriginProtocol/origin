@@ -1,10 +1,10 @@
-var price = `
+var Price = `
   type Price {
     currency: String
     amount: String
   }
 `
-var pageInfo = `
+var PageInfo = `
   type PageInfo {
     endCursor: String
     hasNextPage: Boolean!
@@ -13,4 +13,4 @@ var pageInfo = `
   }
 `
 
-module.exports = { pageInfo, price }
+module.exports = { PageInfo, Price }
