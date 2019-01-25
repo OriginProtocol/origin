@@ -61,7 +61,9 @@ const AcceptOrReject = ({ offer }) => (
       </AcceptOffer>
     </div>
     <div className="stages">
-      <EventTick className="active" event={offer.createdEvent}>Offer Placed</EventTick>
+      <EventTick className="active" event={offer.createdEvent}>
+        Offer Placed
+      </EventTick>
       <EventTick>Offer Accepted</EventTick>
       <EventTick>Received by buyer</EventTick>
       <EventTick>Funds withdrawn</EventTick>
@@ -110,8 +112,12 @@ class ReviewAndFinalize extends Component {
           </DisputeOffer>
         </div>
         <div className="stages">
-          <EventTick className="active bg" event={offer.createdEvent}>Offer Placed</EventTick>
-          <EventTick className="active bgl" event={offer.acceptedEvent}>Offer Accepted</EventTick>
+          <EventTick className="active bg" event={offer.createdEvent}>
+            Offer Placed
+          </EventTick>
+          <EventTick className="active bgl" event={offer.acceptedEvent}>
+            Offer Accepted
+          </EventTick>
           <EventTick>Received by buyer</EventTick>
         </div>
       </div>
@@ -129,7 +135,9 @@ const MessageSeller = ({ offer }) => (
     </SendMessage>
     <WithdrawOffer offer={offer} />
     <div className="stages">
-      <EventTick className="active" event={offer.createdEvent}>Offer Placed</EventTick>
+      <EventTick className="active" event={offer.createdEvent}>
+        Offer Placed
+      </EventTick>
       <EventTick>Offer Accepted</EventTick>
       <EventTick>Received by buyer</EventTick>
     </div>
@@ -145,8 +153,12 @@ const OfferWithdrawn = ({ offer, party }) => (
         : 'You withdrew your offer'}
     </div>
     <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>Offer Placed</EventTick>
-      <EventTick className="active bg" event={offer.withdrawnEvent}>Offer Withdrawn</EventTick>
+      <EventTick className="active bg" event={offer.createdEvent}>
+        Offer Placed
+      </EventTick>
+      <EventTick className="active bg" event={offer.withdrawnEvent}>
+        Offer Withdrawn
+      </EventTick>
     </div>
   </div>
 )
@@ -160,8 +172,12 @@ const OfferRejected = ({ offer, party }) => (
         : 'Your offer was rejected by the seller'}
     </div>
     <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>Offer Placed</EventTick>
-      <EventTick className="active bg" event={offer.withdrawnEvent}>Offer Rejected</EventTick>
+      <EventTick className="active bg" event={offer.createdEvent}>
+        Offer Placed
+      </EventTick>
+      <EventTick className="active bg" event={offer.withdrawnEvent}>
+        Offer Rejected
+      </EventTick>
     </div>
   </div>
 )
@@ -173,9 +189,15 @@ const Disputed = ({ offer }) => (
       Wait to be contacted by an Origin team member
     </div>
     <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>Offer Placed</EventTick>
-      <EventTick className="active bg" event={offer.acceptedEvent}>Offer Accepted</EventTick>
-      <EventTick className="danger bgl" event={offer.disputedEvent}>Dispute Started</EventTick>
+      <EventTick className="active bg" event={offer.createdEvent}>
+        Offer Placed
+      </EventTick>
+      <EventTick className="active bg" event={offer.acceptedEvent}>
+        Offer Accepted
+      </EventTick>
+      <EventTick className="danger bgl" event={offer.disputedEvent}>
+        Dispute Started
+      </EventTick>
       <EventTick>Ruling Made</EventTick>
     </div>
   </div>
@@ -186,10 +208,18 @@ const DisputeResolved = ({ offer }) => (
     <h4>Dispute Resolved</h4>
     <div className="help mb-0">Origin have resolved this dispute</div>
     <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>Offer Placed</EventTick>
-      <EventTick className="active bg" event={offer.acceptedEvent}>Offer Accepted</EventTick>
-      <EventTick className="danger bg" event={offer.disputedEvent}>Dispute Started</EventTick>
-      <EventTick className="active bg" event={offer.rulingEvent}>Ruling Made</EventTick>
+      <EventTick className="active bg" event={offer.createdEvent}>
+        Offer Placed
+      </EventTick>
+      <EventTick className="active bg" event={offer.acceptedEvent}>
+        Offer Accepted
+      </EventTick>
+      <EventTick className="danger bg" event={offer.disputedEvent}>
+        Dispute Started
+      </EventTick>
+      <EventTick className="active bg" event={offer.rulingEvent}>
+        Ruling Made
+      </EventTick>
     </div>
   </div>
 )
@@ -202,14 +232,18 @@ const Finalized = ({ offer }) => (
       released to the seller.
     </div>
     <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>Offer Placed</EventTick>
-      <EventTick className="active bg" event={offer.acceptedEvent}>Offer Accepted</EventTick>
-      <EventTick className="active bg" event={offer.finalizedEvent}>Received by buyer</EventTick>
+      <EventTick className="active bg" event={offer.createdEvent}>
+        Offer Placed
+      </EventTick>
+      <EventTick className="active bg" event={offer.acceptedEvent}>
+        Offer Accepted
+      </EventTick>
+      <EventTick className="active bg" event={offer.finalizedEvent}>
+        Received by buyer
+      </EventTick>
     </div>
   </div>
 )
-
-
 
 export default TransactionProgress
 

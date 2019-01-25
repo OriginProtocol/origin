@@ -33,8 +33,12 @@ class WaitForFinalize extends Component {
         </DisputeOffer>
 
         <div className="stages">
-          <EventTick className="active bg" event={offer.createdEvent}>Offer Placed</EventTick>
-          <EventTick className="active bgl" event={offer.acceptedEvent}>Offer Accepted</EventTick>
+          <EventTick className="active bg" event={offer.createdEvent}>
+            Offer Placed
+          </EventTick>
+          <EventTick className="active bgl" event={offer.acceptedEvent}>
+            Offer Accepted
+          </EventTick>
           <EventTick>Received by buyer</EventTick>
           <EventTick>Funds withdrawn</EventTick>
         </div>

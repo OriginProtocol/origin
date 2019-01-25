@@ -90,16 +90,16 @@ export default {
         acceptedEvent {
           timestamp
         }
-        finalizedEvent{
+        finalizedEvent {
           timestamp
         }
-        withdrawnEvent{
+        withdrawnEvent {
           timestamp
         }
-        disputedEvent{
+        disputedEvent {
           timestamp
         }
-        rulingEvent{
+        rulingEvent {
           timestamp
         }
         statusStr
