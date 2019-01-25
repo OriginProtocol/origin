@@ -2,6 +2,10 @@ releases:
   - name: cert-manager
     namespace: kube-system
     chart: stable/cert-manager
+    # TODO
+    # See https://github.com/helm/helm/issues/4697
+    # https://github.com/jetstack/cert-manager/issues/1134
+    version: 0.4.1
     values:
       - ../values/ethereum-nodes/cert-manager/values.yaml
 
