@@ -379,10 +379,8 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
   const isDateBooked = function(date) {
     let bookingsMatchingDate = []
     offers && offers.map((offer) => {
-      const bookingsForThisOffer = 
-        offer &&
-        offer.slots &&
-        offer.slots.filter(slot => 
+      const offerSlots = jCalToCalendarSlots(offer.timeSlots) || []
+      const bookingsForThisOffer = offerSlots.filter(slot => 
           moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
         )
       bookingsMatchingDate = [...bookingsMatchingDate, ...bookingsForThisOffer]
@@ -436,22 +434,33 @@ export const slotsToJCal = (events, listingOrOffer) => {
   ]
 
   events && events.forEach((event) => {
+    const { startDate, endDate, price, rrule, isAvailable } = event
     const vEvent = [
       'vevent',
       ['uid', {}, 'text', uuid()],
-      ['dtstart',  { 'tzid': '/US/Eastern' }, 'date-time', event.startDate.toISOString()],
-      ['dtend',  { 'tzid': '/US/Eastern' }, 'date-time', event.endDate.toISOString()],
+      [
+        'dtstart',
+        { 'tzid': '/US/Eastern' },
+        'date-time',
+        typeof startDate === 'string' ? startDate : startDate.toISOString()
+      ],
+      [
+        'dtend',
+        { 'tzid': '/US/Eastern' },
+        'date-time',
+        typeof endDate === 'string' ? endDate : endDate.toISOString()
+      ],
       ['x-currency', {}, 'text', 'ETH'], 
-      ['x-price', {}, 'text', event.price.toString()]
+      ['x-price', {}, 'text', price.toString()]
     ]
 
     if (listingOrOffer === 'listing') {
-      vEvent.splice(4, 0, ['rrule', {}, 'text', (event.rrule || '')])
+      vEvent.splice(4, 0, ['rrule', {}, 'text', (rrule || '')])
       vEvent.push.apply(
         vEvent,
         [
-          ['x-is-available', {}, 'boolean', event.isAvailable],
-          ['x-priority', {}, 'integer', event.rrule ? 1 : 2]
+          ['x-is-available', {}, 'boolean', isAvailable],
+          ['x-priority', {}, 'integer', rrule ? 1 : 2]
         ]
       )
     }
@@ -465,18 +474,22 @@ export const slotsToJCal = (events, listingOrOffer) => {
 export const jCalToCalendarSlots = (jCal) => {
   const vEvents = jCal.filter(item => item[0] === 'vevent')
   return vEvents.map(vEvent => {
+    const rrule = vEvent.find(item => item[0] === 'rrule')
+    const isAvailable = vEvent.find(item => item[0] === 'x-is-available')
+    const priority = vEvent.find(item => item[0] === 'x-priority')
+
     return {
       uid: vEvent.find(item => item[0] === 'uid')[3],
       startDate: vEvent.find(item => item[0] === 'dtstart')[3],
       endDate: vEvent.find(item => item[0] === 'dtend')[3],
       timeZone: vEvent.find(item => item[0] === 'dtstart')[1].tzid,
-      rrule: vEvent.find(item => item[0] === 'rrule')[3],
+      rrule: rrule ? rrule[3] : '',
       price: {
         amount: vEvent.find(item => item[0] === 'x-price')[3],
         currency: vEvent.find(item => item[0] === 'x-currency')[3]
       },
-      isAvailable: vEvent.find(item => item[0] === 'x-is-available')[3],
-      priority: vEvent.find(item => item[0] === 'x-priority')[3]
+      isAvailable: isAvailable ? isAvailable[3] : '',
+      priority: priority ? priority[3] : ''
     }
   })
 }
@@ -507,20 +520,17 @@ export const generateDefaultPricing = (formData) => {
       const endDateDayOffset = key === 'weekdayPricing' ? /* Thursday */ 4 : /* Saturday */ 6
 
       events.push({
-        startDate: moment().day(startDateDayOffset).startOf('day').toISOString(),
-        endDate: moment().day(endDateDayOffset).endOf('day').toISOString(),
+        startDate: moment().day(startDateDayOffset).startOf('day').toDate(),
+        endDate: moment().day(endDateDayOffset).endOf('day').toDate(),
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         rrule: 'FREQ=WEEKLY;',
         isAvailable: true,
-        price: {
-          amount: formData[key].toString(),
-          currency: 'ETH'
-        }
+        price: formData[key]
       })
     }
   }
 
-  return events
+  return slotsToJCal(events, 'listing')
 }
 
 export const highlightCalendarDrag = () => {

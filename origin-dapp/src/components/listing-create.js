@@ -44,7 +44,6 @@ import {
 import origin from '../services/origin'
 
 const { web3 } = origin.contractService
-const enableFractional = process.env.ENABLE_FRACTIONAL === 'true'
 
 class ListingCreate extends Component {
   constructor(props) {
@@ -375,21 +374,17 @@ class ListingCreate extends Component {
 
     const { properties } = schemaJson
 
-    // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
-    const isFractionalListing = enableFractional &&
-      properties &&
+    const isFractionalListing = properties &&
       properties.listingType &&
       properties.listingType.const === 'fractional'
 
-    const slotLength = enableFractional &&
-      this.state.formListing.formData.slotLength ?
+    const slotLength = this.state.formListing.formData.slotLength ?
       this.state.formListing.formData.slotLength :
         properties &&
         properties.slotLength &&
         properties.slotLength.default
 
-    const slotLengthUnit = enableFractional &&
-      this.state.formListing.formData.slotLengthUnit ?
+    const slotLengthUnit = this.state.formListing.formData.slotLengthUnit ?
       this.state.formListing.formData.slotLengthUnit :
         properties &&
         properties.slotLengthUnit &&
@@ -505,7 +500,7 @@ class ListingCreate extends Component {
         [this.STEP.BOOST, 'unit']
 
     if (formListing.formData.weekdayPricing || formListing.formData.weekendPricing) {
-      formListing.formData.slots = generateDefaultPricing(formListing.formData)
+      formListing.formData.availability = generateDefaultPricing(formListing.formData)
     }
 
     formListing.formData.listingType = listingType
