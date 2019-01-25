@@ -61,9 +61,15 @@ class CreateListing extends Component {
     }
 
     this.setState({ waitFor: 'pending' })
+
+    const unitsTotal = Number(listing.quantity)
+
     createListing({
       variables: {
-        deposit: listing.boost,
+        deposit:
+          this.props.tokenBalance >= Number(listing.boost)
+            ? listing.boost
+            : '0',
         depositManager: this.props.wallet,
         from: this.props.wallet,
         data: {
@@ -73,7 +79,9 @@ class CreateListing extends Component {
           category: listing.category,
           subCategory: listing.subCategory,
           media: listing.media.map(m => pick(m, 'contentType', 'url')),
-          unitsTotal: Number(listing.quantity)
+          unitsTotal,
+          commission: unitsTotal > 1 ? listing.boostLimit : listing.boost,
+          commissionPerUnit: listing.boost
         },
         autoApprove: true
       }
@@ -92,11 +100,13 @@ class CreateListing extends Component {
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
+              onClick={async () => {
+                await client.resetStore()
                 store.set('create-listing', undefined)
                 // TODO: Fix listing ID
-                this.setState({ redirect: `/listings/999-1-${event.returnValues.listingID}` })
+                this.setState({
+                  redirect: `/listings/999-1-${event.returnValues.listingID}`
+                })
               }}
               children="View Listing"
             />

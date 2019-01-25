@@ -5,7 +5,7 @@ const initialState = {
   balances: {
     eth: '0',
     ogn: '0',
-    dai: '0',
+    // dai: '0',
   },
 }
 

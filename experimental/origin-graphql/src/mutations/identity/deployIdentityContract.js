@@ -52,6 +52,7 @@ async function deployIdentityContract(_, { contract, from }) {
 
   return txHelper({
     tx,
+    from,
     mutation: 'deployIdentityContract',
     onReceipt: receipt => {
       Contract.options.address = receipt.contractAddress

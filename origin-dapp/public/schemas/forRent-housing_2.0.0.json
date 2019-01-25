@@ -3,7 +3,9 @@
   "type": "object",
   "required": [
     "name",
-    "description"
+    "description",
+    "weekdayPricing",
+    "weekendPricing"
   ],
   "properties": {
     "dappSchemaId": {
@@ -43,6 +45,14 @@
       "title": "schema.description",
       "minLength": 10,
       "maxLength": 1024
+    },
+    "weekdayPricing": {
+      "type": "number",
+      "title": "schema.weekdayPricing"
+    },
+    "weekendPricing": {
+      "type": "number",
+      "title": "schema.weekendPricing"
     },
     "pictures": {
       "type": "array",

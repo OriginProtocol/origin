@@ -74,9 +74,9 @@ class Buy extends Component {
     return (
       <WaitForTransaction hash={this.state.waitFor} event="OfferCreated">
         {({ event, client }) => (
-          <div className="make-offer-modal">
+          <div className="make-offer-modal success">
             <div className="success-icon" />
-            <div>Success!</div>
+            <h5>Success!</h5>
             <div className="disclaimer">
               You have made an offer on this listing. Your offer will be visible
               within a few seconds. Your ETH payment has been transferred to an
@@ -97,8 +97,8 @@ class Buy extends Component {
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
+              onClick={async () => {
+                await client.resetStore()
                 // TODO: Fix link
                 this.setState({
                   redirect: `/purchases/999-1-${event.returnValues.listingID}-${
@@ -116,7 +116,6 @@ class Buy extends Component {
 }
 
 export default withWallet(withCanTransact(Buy))
-
 
 require('react-styl')(`
   .make-offer-modal
@@ -138,4 +137,11 @@ require('react-styl')(`
     .disclaimer
       font-size: 14px
       margin-top: 1rem
+    &.success
+      ul
+        text-align: left
+        margin-bottom: 0
+        margin-top: 1rem
+        li
+          margin-bottom: 0.5rem
 `)

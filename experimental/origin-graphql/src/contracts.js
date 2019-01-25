@@ -55,7 +55,9 @@ const Configs = {
         symbol: 'GUSD',
         decimals: '2'
       }
-    ]
+    ],
+    affiliate: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8',
+    arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a'
   },
   rinkeby: {
     provider: 'https://rinkeby.infura.io',
@@ -67,7 +69,9 @@ const Configs = {
     OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
     V00_Marketplace: '0xe842831533c4bf4b0f71b4521c4320bdb669324e',
-    V00_Marketplace_Epoch: '3086315'
+    V00_Marketplace_Epoch: '3086315',
+    affiliate: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
+    arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992'
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
@@ -81,7 +85,8 @@ const Configs = {
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     OriginToken: '0xf2D5AeA9057269a1d97A952BAf5E1887462c67b6',
-    V00_Marketplace: '0xCCC4fDB0BfD0BC9E6cede6297534c0e96E3E76DE'
+    V00_Marketplace: '0x66E8c312dC89599c84A93353d6914631ce7857Cc',
+    V00_Marketplace_Epoch: '10135260'
   },
   localhost: {
     provider: `http://${HOST}:8545`,
@@ -90,10 +95,14 @@ const Configs = {
     ipfsRPC: `http://${HOST}:5002`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
+    affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544'
+
     // messaging: {
     //   ipfsSwarm:
-    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/Qma1eKbWcLy9EVYv4zVJZSAtXT6TsKXYTQ2JKtU5T7APne',
-    //   messagingNamespace: 'dev'
+    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/QmYsCaLzzso7kYuAZ8b5DwhpwGvgzKyFtvs37bG95GTQGA',
+    //   messagingNamespace: 'dev',
+    //   globalKeyServer: 'http://127.0.0.1:6647'
     // }
   },
   test: {
@@ -200,6 +209,7 @@ export function setNetwork(net, customConfig) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
       context.marketplace.eventCache.updateBlock(blockHeaders.number)
+      context.eventSource.resetCache()
       pubsub.publish('NEW_BLOCK', {
         newBlock: { ...blockHeaders, id: blockHeaders.hash }
       })
@@ -208,6 +218,7 @@ export function setNetwork(net, customConfig) {
       web3.eth.getBlock(block).then(blockHeaders => {
         if (blockHeaders) {
           context.marketplace.eventCache.updateBlock(blockHeaders.number)
+          context.eventSource.resetCache()
           pubsub.publish('NEW_BLOCK', {
             newBlock: { ...blockHeaders, id: blockHeaders.hash }
           })
@@ -253,7 +264,7 @@ export function setNetwork(net, customConfig) {
     token.contractExec = contract
   })
 
-  context.transactions = []
+  context.transactions = {}
   try {
     context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
   } catch (e) {
@@ -320,7 +331,8 @@ export function setMarketplace(address, epoch) {
   }
   context.eventSource = new EventSource({
     marketplaceContract: context.marketplace,
-    ipfsGateway: context.ipfsGateway
+    ipfsGateway: context.ipfsGateway,
+    web3: context.web3
   })
   context.marketplaceExec = context.marketplace
 

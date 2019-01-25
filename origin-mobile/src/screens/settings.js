@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, FlatList, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import { Alert, FlatList, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import Separator from 'components/separator'
@@ -62,60 +62,32 @@ class SettingsScreen extends Component {
     const isCustom = currentNetwork.custom
 
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.heading}>GENERAL</Text>
-        </View>
-        <TouchableHighlight onPress={() => this.props.navigation.navigate('Devices')}>
-          <View style={styles.item}>
-            <Text style={styles.text}>Devices</Text>
-            <View style={styles.iconContainer}>
-              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
-            </View>
+      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
+        <ScrollView contentContainerStyle={styles.content} style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.heading}>GENERAL</Text>
           </View>
-        </TouchableHighlight>
-        <Separator padded={true} />
-        <TouchableHighlight onPress={() => this.props.navigation.navigate('Profile', { user })}>
-          <View style={styles.item}>
-            <Text style={styles.text}>Profile</Text>
-            <View style={styles.iconContainer}>
-              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('Devices')}>
+            <View style={styles.item}>
+              <Text style={styles.text}>Devices</Text>
+              <View style={styles.iconContainer}>
+                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+              </View>
             </View>
+          </TouchableHighlight>
+          <Separator padded={true} />
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('Profile', { user })}>
+            <View style={styles.item}>
+              <Text style={styles.text}>Profile</Text>
+              <View style={styles.iconContainer}>
+                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+              </View>
+            </View>
+          </TouchableHighlight>
+          <View style={styles.header}>
+            <Text style={styles.heading}>NETWORK</Text>
           </View>
-        </TouchableHighlight>
-        {isCustom &&
-          <Fragment>
-            <View style={styles.header}>
-              <Text style={styles.heading}>LINKING SERVER HOST</Text>
-            </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={this.handleChange}
-              onSubmitEditing={e =>this.handleSubmit(e)}
-              value={this.state.apiHost}
-              style={styles.input}
-            />
-          </Fragment>
-        }
-        {isCustom &&
-          <Fragment>
-            <View style={styles.header}>
-              <Text style={styles.heading}>SET PRIVATE KEY</Text>
-            </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              onSubmitEditing={async (e) => { if (await originWallet.setPrivateKey(e.nativeEvent.text)) {
-                  Alert.alert('A new private key has been set!')
-                }}}
-              onChangeText={(inputPrivateKey) => this.setState({inputPrivateKey})}
-              value={this.state.inputPrivateKey}
-              style={styles.input}
-            />
-          </Fragment>
-        }
-        {networks.map((n, i) => (
+          {networks.map((n, i) => (
             <Fragment key={n.id}>
               <TouchableHighlight onPress={() => this.handleNetwork(n)}>
                 <View style={styles.item}>
@@ -134,9 +106,41 @@ class SettingsScreen extends Component {
                 <Separator padded={true} />
               }
             </Fragment>
-          ))
-        }
-      </View>
+          ))}
+          {isCustom &&
+            <Fragment>
+              <View style={styles.header}>
+                <Text style={styles.heading}>LINKING SERVER HOST</Text>
+              </View>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                onChangeText={this.handleChange}
+                onSubmitEditing={e =>this.handleSubmit(e)}
+                value={this.state.apiHost}
+                style={styles.input}
+              />
+            </Fragment>
+          }
+          {isCustom &&
+            <Fragment>
+              <View style={styles.header}>
+                <Text style={styles.heading}>PRIVATE KEY</Text>
+              </View>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                onSubmitEditing={async (e) => { if (await originWallet.setPrivateKey(e.nativeEvent.text)) {
+                    Alert.alert('A new private key has been set!')
+                  }}}
+                onChangeText={(inputPrivateKey) => this.setState({inputPrivateKey})}
+                value={this.state.inputPrivateKey}
+                style={styles.input}
+              />
+            </Fragment>
+          }
+        </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -153,6 +157,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f7f8f8',
     flex: 1,
+  },
+  content: {
+    paddingBottom: 20,
   },
   header: {
     paddingBottom: 5,
@@ -184,6 +191,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 20,
     paddingVertical: '5%',
+  },
+  keyboardWrapper: {
+    flex: 1,
   },
   text: {
     flex: 1,

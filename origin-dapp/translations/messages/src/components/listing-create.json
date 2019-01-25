@@ -60,12 +60,8 @@
     "defaultMessage": "Continue"
   },
   {
-    "id": "listing-create.editListingHeading",
-    "defaultMessage": "Edit Your Listing"
-  },
-  {
     "id": "listing-create.createListingHeading",
-    "defaultMessage": "Create Your Listing"
+    "defaultMessage": "Listing Details"
   },
   {
     "id": "listing-create.showDetailsFormErrorMsg",
@@ -77,7 +73,7 @@
   },
   {
     "id": "listing-create.availabilityHeading",
-    "defaultMessage": "Add Availability and Pricing"
+    "defaultMessage": "Pricing & Availability"
   },
   {
     "id": "listing-create.boost-your-listing",
@@ -174,6 +170,10 @@
   {
     "id": "listing-create.form-help-details",
     "defaultMessage": "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos will increase the chances of selling your listing."
+  },
+  {
+    "id": "listing-create.form-help-details-fractional",
+    "defaultMessage": "You will be able to customize pricing and availability in the next step."
   },
   {
     "id": "listing-create.about-visibility",

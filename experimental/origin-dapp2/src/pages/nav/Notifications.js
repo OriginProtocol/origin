@@ -2,50 +2,24 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
 
-import NotificationsQuery from 'queries/Notifications'
-import NotificationsSubscription from 'queries/NotificationsSubscription'
+import withWallet from 'hoc/withWallet'
+import query from 'queries/UserNotifications'
 
+import Redirect from 'components/Redirect'
 import Dropdown from 'components/Dropdown'
-import Avatar from 'components/Avatar'
-
-function subscribeToNewNotifications(subscribeToMore) {
-  subscribeToMore({
-    document: NotificationsSubscription,
-    updateQuery: (prev, { subscriptionData }) => {
-      if (!subscriptionData.data) return prev
-
-      const newNotification = subscriptionData.data.newNotification
-      return Object.assign({}, prev, {
-        notifications: {
-          ...prev.notifications,
-          nodes: [newNotification.node, ...prev.notifications.nodes],
-          totalCount: newNotification.totalCount,
-          totalUnread: newNotification.totalUnread
-        }
-      })
-    }
-  })
-}
+import Link from 'components/Link'
+import NotificationRow from 'pages/notifications/NotificationRow'
 
 class NotificationsNav extends Component {
   render() {
+    if (!this.props.wallet) return null
+    const vars = { first: 5, id: this.props.wallet }
     return (
-      <Query query={NotificationsQuery}>
-        {({ subscribeToMore, ...result }) => {
-          if (result.loading || result.error) return null
-          if (!get(result, 'data.web3.metaMaskAccount.id')) {
-            return null
-          }
+      <Query query={query} variables={vars}>
+        {({ loading, error, data }) => {
+          if (loading || error) return null
 
-          return (
-            <NotificationsDropdown
-              {...this.props}
-              {...result}
-              subscribeToNewNotifications={() =>
-                subscribeToNewNotifications(subscribeToMore)
-              }
-            />
-          )
+          return <NotificationsDropdown {...this.props} data={data} />
         }}
       </Query>
     )
@@ -53,10 +27,7 @@ class NotificationsNav extends Component {
 }
 
 class NotificationsDropdown extends Component {
-  componentDidMount() {
-    this.props.subscribeToNewNotifications()
-  }
-
+  state = {}
   componentDidUpdate(prevProps) {
     const unread = get(this.props, 'data.notifications.totalUnread', 0),
       prevUnread = get(prevProps, 'data.notifications.totalUnread', 0)
@@ -64,16 +35,21 @@ class NotificationsDropdown extends Component {
     if (unread > prevUnread && !prevProps.open) {
       this.props.onOpen()
     }
+    if (this.state.redirect) {
+      this.setState({ redirect: false })
+    }
   }
 
   render() {
-    const { data, loading, error, open, onOpen, onClose } = this.props
-
-    if (loading || error) return null
-    if (!data || !data.notifications) {
-      return null
+    if (this.state.redirect) {
+      return <Redirect to={`/purchases/${this.state.redirect.offer.id}`} push />
     }
-    const hasUnread = data.notifications.totalUnread > 0 ? ' active' : ''
+
+    const { data, open, onOpen, onClose } = this.props
+
+    const { nodes, totalCount } = get(data, 'marketplace.user.notifications', {})
+
+    const hasUnread = '' //get(data, .notifications.totalUnread > 0 ? ' active' : ''
 
     return (
       <Dropdown
@@ -81,7 +57,17 @@ class NotificationsDropdown extends Component {
         className="nav-item notifications"
         open={open}
         onClose={() => onClose()}
-        content={<NotificationsContent {...data.notifications} />}
+        content={
+          <NotificationsContent
+            totalCount={totalCount}
+            nodes={nodes}
+            onClose={() => onClose()}
+            onClick={node => {
+              this.setState({ redirect: node })
+              onClose()
+            }}
+          />
+        }
       >
         <a
           className="nav-link"
@@ -101,7 +87,7 @@ class NotificationsDropdown extends Component {
   }
 }
 
-const NotificationsContent = ({ totalCount, nodes }) => {
+const NotificationsContent = ({ totalCount, nodes, onClose, onClick }) => {
   const title = `Notification${totalCount === 1 ? '' : 's'}`
   return (
     <div className="dropdown-menu dropdown-menu-right show">
@@ -110,22 +96,20 @@ const NotificationsContent = ({ totalCount, nodes }) => {
         <div className="title">{title}</div>
       </div>
       {nodes.map(node => (
-        <div key={node.id} className="notification">
-          <Avatar size="2.5rem" />
-          <div className="detail">
-            <div className="title">
-              {node.title}
-              <span>{node.timestamp}</span>
-            </div>
-            <div className="description">{node.content}</div>
-          </div>
-        </div>
+        <NotificationRow
+          key={node.id}
+          node={node}
+          onClick={() => onClick(node)}
+        />
       ))}
+      <Link to="/notifications" onClick={() => onClose()}>
+        View All
+      </Link>
     </div>
   )
 }
 
-export default NotificationsNav
+export default withWallet(NotificationsNav)
 
 require('react-styl')(`
   .notifications
@@ -139,37 +123,24 @@ require('react-styl')(`
       .total
         background: var(--greenblue);
         color: var(--white);
-        width: 1.6rem;
+        min-width: 1.6rem;
+        padding: 0 0.5rem
         height: 1.6rem;
         border-radius: 2rem;
         line-height: 1.6rem;
         text-align: center;
       .title
         margin-left: 1.1rem
-    .notification
-      width: 540px
-      background: var(--pale-grey-three)
-      padding: 0.75rem 1rem
-      display: flex
-      align-items: center
-      border-bottom: 1px solid var(--light)
-      .avatar
-        margin-right: 1rem
-      .detail
-        flex: 1
-        .title
-          display: flex
-          align-items: center;
-          justify-content: space-between;
-          span
-            font-size: 12px
-            color: var(--bluey-grey)
-        .description
-          color: var(--steel)
-          font-size: 12px
-      &:last-child
-        border-radius: 0 0 5px 5px
-        border-bottom: 0
+    .dropdown-menu
+      > a
+        background: var(--pale-grey-two)
+        font-size: 18px
+        text-align: center
+        padding: 0.5rem;
+        display: block;
+        border-radius: 0 0 5px 5px;
+    .notification-row
+      max-width: 540px
 
   .nav-item
     .notifications-icon

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import OriginButton from 'components/origin-button'
 

@@ -43,22 +43,26 @@ router.get("/server-info", (req, res) => {
     contractAddresses,
     ipfsGateway,
     ipfsApi,
+    dappUrl,
     messagingUrl,
     profileUrl,
-    dappUrl,
     sellingUrl,
-    attestationAccount
+    attestationAccount,
+    perfModeEnabled,
+    discoveryServerUrl
   } = linker.getServerInfo()
   res.send({
     provider_url:providerUrl,
     contract_addresses:contractAddresses,
     ipfs_gateway:ipfsGateway,
     ipfs_api:ipfsApi,
+    dapp_url:dappUrl,
     messaging_url:messagingUrl,
     profile_url:profileUrl,
-    dapp_url:dappUrl,
     selling_url:sellingUrl,
-    attestation_account:attestationAccount
+    attestation_account:attestationAccount,
+    perf_mode_enabled:perfModeEnabled,
+    discovery_server_url:discoveryServerUrl
   })
 })
 

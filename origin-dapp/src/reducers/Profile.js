@@ -1,4 +1,7 @@
-import { ProfileConstants } from 'actions/Profile'
+import {
+  ProfileConstants,
+  newIdentityVersion
+} from 'actions/Profile'
 
 const initialState = {
   user: {
@@ -150,6 +153,35 @@ export default function Profile(state = initialState, action = {}) {
     return changes({
       ...state,
       provisional: { ...state.provisional, ...toAdd }
+    })
+
+  case ProfileConstants.RESET:
+    return changes({
+      ...state,
+      user: {
+        ...state.user,
+        attestations: [],
+        version: newIdentityVersion
+      },
+      provisional: {
+        ...state.provisional,
+        email: false,
+        facebook: false,
+        phone: false,
+        twitter: false,
+        airbnb: false
+      },
+      published: {
+        firstName: '',
+        lastName: '',
+        description: '',
+        pic: '',
+        email: false,
+        facebook: false,
+        phone: false,
+        twitter: false,
+        airbnb: false
+      }
     })
 
   case ProfileConstants.UPDATE:

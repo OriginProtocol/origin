@@ -2,6 +2,8 @@
 
 - Dropdown
 - Conversation page
+- Upload pictures
+- Read / unread
 
 
 # Listing detail
@@ -23,11 +25,22 @@
 
 ---------------------------------
 
+# General
+
+- 'Connected' nav
+- Mainnet Beta modal
+- Mainnet Beta top bar
+
+
+# Search results
+
+- Sub-category search filters
+- Alter URL when searching
+- 'Load more' button styling / spinner
+
 
 # Create listing
 
-- Boost slider
-- Side bars
 - Success modal
 
 
@@ -38,17 +51,8 @@
 - Mobile view
 
 
-# Search results
-
-- Sub-category search filters
-- Alter URL when searching
-- 'Load more' button styling / spinner
-- Mobile view
-
-
 # Transaction Detail
 
-- Tx History: IPFS link
 - Tx History: Hash link
 - Listing detail
 
@@ -87,5 +91,7 @@
 # Notifications page
 
 # Transaction dropdown
+
+# About page
 
 # DApp info page

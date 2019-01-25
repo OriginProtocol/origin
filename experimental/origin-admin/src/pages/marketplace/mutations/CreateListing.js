@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
+import get from 'lodash/get'
+import Categories from 'origin-graphql/src/constants/Categories'
 
 import {
   Button,
@@ -11,7 +13,8 @@ import {
   HTMLSelect,
   Slider,
   Checkbox,
-  TextArea
+  TextArea,
+  Tag
 } from '@blueprintjs/core'
 
 import rnd from 'utils/rnd'
@@ -46,6 +49,11 @@ class CreateListing extends Component {
 
     if (props.listing && props.listing.id) {
       const media = props.listing.media || []
+      const category = props.listing.category || 'schema.forSale'
+      const subCategory = get(Categories[category], `0.0`, '')
+      const commissionPerUnit = props.listing.commissionPerUnit
+        ? web3.utils.fromWei(props.listing.commissionPerUnit, 'ether')
+        : '0'
 
       this.state = {
         title: props.listing.title || '',
@@ -53,12 +61,14 @@ class CreateListing extends Component {
         price: props.listing.price ? props.listing.price.amount : '0.1',
         from: seller ? seller.id : '',
         deposit: 0,
-        category: props.listing.category || 'For Sale',
+        category,
+        subCategory,
         description: props.listing.description || '',
         autoApprove: true,
         media,
         initialMedia: media,
-        unitsTotal: props.listing.unitsTotal
+        unitsTotal: props.listing.unitsTotal,
+        commissionPerUnit
       }
     } else {
       this.state = {
@@ -68,12 +78,14 @@ class CreateListing extends Component {
         depositManager: arbitrator ? arbitrator.id : '',
         from: seller ? seller.id : '',
         deposit: 5,
-        category: '',
+        category: 'schema.forSale',
+        subCategory: get(Categories['schema.forSale'], `0.0`, ''),
         description: '',
         autoApprove: true,
         media: [],
         initialMedia: [],
-        unitsTotal: 1
+        unitsTotal: 1,
+        commissionPerUnit: 5
       }
     }
   }
@@ -154,18 +166,25 @@ class CreateListing extends Component {
                     <HTMLSelect
                       fill={true}
                       {...input('category')}
-                      options={[
-                        'For Sale',
-                        'Home Share',
-                        'Car Share',
-                        'Ticket'
-                      ]}
+                      options={Categories.root.map(c => ({
+                        label: c[1],
+                        value: c[0]
+                      }))}
                     />
                   </FormGroup>
                 </div>
                 <div style={{ flex: 2, marginRight: 20 }}>
-                  <FormGroup label="Title">
-                    <InputGroup {...input('title')} />
+                  <FormGroup label="Sub-Category">
+                    <HTMLSelect
+                      fill={true}
+                      {...input('subCategory')}
+                      options={(Categories[this.state.category] || []).map(
+                        c => ({
+                          label: c[1],
+                          value: c[0]
+                        })
+                      )}
+                    />
                   </FormGroup>
                 </div>
                 <div style={{ flex: 1 }}>
@@ -174,6 +193,9 @@ class CreateListing extends Component {
                   </FormGroup>
                 </div>
               </div>
+              <FormGroup>
+                <InputGroup {...input('title')} placeholder="Title" />
+              </FormGroup>
               <FormGroup>
                 <TextArea
                   fill={true}
@@ -222,6 +244,14 @@ class CreateListing extends Component {
                         this.setState({ autoApprove: e.target.checked })
                       }
                     />
+                  </FormGroup>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <FormGroup label="Com/Unit">
+                    <InputGroup
+                      {...input('commissionPerUnit')}
+                      rightElement={<Tag minimal={true}>OGN</Tag>}
+                      />
                   </FormGroup>
                 </div>
               </div>
@@ -274,6 +304,7 @@ class CreateListing extends Component {
         title: '',
         price: '',
         category: '',
+        subCategory: '',
         description: '',
         media: [],
         initialMedia: [],
@@ -286,10 +317,13 @@ class CreateListing extends Component {
       title: egListing.title,
       price: egListing.price.amount,
       category: egListing.category,
+      subCategory: egListing.subCategory,
       description: egListing.description,
       media: egListing.media,
       initialMedia: egListing.media,
-      unitsTotal: egListing.unitsTotal
+      unitsTotal: egListing.unitsTotal,
+      commission: egListing.commission || '2',
+      commissionPerUnit: egListing.commissionPerUnit || '2'
     })
   }
 
@@ -305,6 +339,7 @@ class CreateListing extends Component {
           description: this.state.description,
           price: { currency: this.state.currency, amount: this.state.price },
           category: this.state.category,
+          subCategory: this.state.subCategory,
           media: this.state.media,
           unitsTotal: Number(this.state.unitsTotal)
         }
@@ -324,8 +359,11 @@ class CreateListing extends Component {
           description: this.state.description,
           price: { currency: this.state.currency, amount: this.state.price },
           category: this.state.category,
+          subCategory: this.state.subCategory,
           media: this.state.media.map(m => pick(m, 'contentType', 'url')),
-          unitsTotal: Number(this.state.unitsTotal)
+          unitsTotal: Number(this.state.unitsTotal),
+          commission: String(this.state.deposit) || '0',
+          commissionPerUnit: String(this.state.commissionPerUnit) || '0'
         }
       }
     }

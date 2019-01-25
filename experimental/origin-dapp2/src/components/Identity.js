@@ -12,8 +12,7 @@ const IdentityQuery = gql`
           id
           profile {
             id
-            firstName
-            lastName
+            fullName
           }
         }
       }
@@ -33,12 +32,12 @@ class Identity extends Component {
         {({ loading, error, data }) => {
           if (loading || error) return account.substr(0, 6)
           try {
-            const { firstName, lastName } = data.web3.account.identity.profile
-            if (!firstName && !lastName) {
+            const { fullName } = data.web3.account.identity.profile
+            if (!fullName) {
               return <span>{account.substr(0, 6)}</span>
             }
             return (
-              <span>{`${firstName} ${lastName}`}</span>
+              <span>{`${fullName}`}</span>
             )
           } catch(e) {
             return account.substr(0, 6)

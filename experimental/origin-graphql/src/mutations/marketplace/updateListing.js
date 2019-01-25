@@ -18,6 +18,15 @@ async function updateListing(_, args) {
     'ether'
   )
 
+  // Ensure that the new total units exceeds the sum of units purchased through
+  // all valid offers for this listing. This prevents unitsAvailable from going
+  // negative.
+  const newUnitsTotal = Number(ipfsData.unitsTotal) || 0
+  const listing = await contracts.eventSource.getListing(listingId)
+  if (newUnitsTotal < listing.unitsSold) {
+    throw new Error('New unitsTotal is lower than units already sold')
+  }
+
   if (autoApprove && additionalDeposit > 0) {
     const fnSig = contracts.web3.eth.abi.encodeFunctionSignature(
       'updateListingWithSender(address,uint256,bytes32,uint256)'
@@ -41,7 +50,7 @@ async function updateListing(_, args) {
   }
 
   const tx = updateListingCall.send({ gas: 4612388, from })
-  return txHelper({ tx, mutation: 'updateListing' })
+  return txHelper({ tx, from, mutation: 'updateListing' })
 }
 
 export default updateListing

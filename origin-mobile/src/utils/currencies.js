@@ -1,13 +1,13 @@
 const IMAGES_PATH = '../../assets/images/'
 
 export default currencies = {
-  dai: {
-    color: '#fec100',
-    icon: require(`${IMAGES_PATH}dai-icon.png`),
-    name: 'Maker Dai',
-  },
+  // dai: {
+  //   color: '#fec100',
+  //   icon: require(`${IMAGES_PATH}dai-icon.png`),
+  //   name: 'Maker Dai',
+  // },
   eth: {
-    color: '#7a26f3',
+    color: '#a27cff',
     icon: require(`${IMAGES_PATH}eth-icon.png`),
     name: 'Ethereum',
   },

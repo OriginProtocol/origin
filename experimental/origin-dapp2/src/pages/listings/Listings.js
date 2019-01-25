@@ -70,7 +70,7 @@ class Listings extends Component {
 
                     {!hasNextPage ? null : (
                       <button
-                        className="mt-3"
+                        className="btn btn-primary-outline btn-rounded mt-3"
                         onClick={() => nextPage(fetchMore, { ...vars, after })}
                       >
                         Load more...

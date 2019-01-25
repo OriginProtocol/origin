@@ -61,7 +61,10 @@ class UpdateListing extends Component {
     updateListing({
       variables: {
         listingID: this.props.listingId,
-        additionalDeposit: listing.boost,
+        additionalDeposit:
+          this.props.tokenBalance >= Number(listing.boost)
+            ? listing.boost
+            : '0',
         from: this.props.wallet,
         data: {
           title: listing.title,
@@ -90,10 +93,12 @@ class UpdateListing extends Component {
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
+              onClick={async () => {
+                await client.resetStore()
                 // TODO: Fix listing ID
-                this.setState({ redirect: `/listings/999-1-${event.returnValues.listingID}` })
+                this.setState({
+                  redirect: `/listings/999-1-${event.returnValues.listingID}`
+                })
               }}
               children="View Listing"
             />

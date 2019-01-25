@@ -18,7 +18,11 @@ export function listingInputToIPFS(data) {
     price: data.price,
     commission: {
       currency: 'OGN',
-      amount: '0'
+      amount: data.commission || '0'
+    },
+    commissionPerUnit: {
+      currency: 'OGN',
+      amount: data.commissionPerUnit || '0'
     }
   }
   validator('https://schema.originprotocol.com/listing_1.0.0.json', ipfsData)
@@ -57,20 +61,8 @@ async function createListing(_, input) {
     )
   }
 
-  return txHelper({
-    tx: createListingCall.send({
-      gas: 4612388,
-      from: from
-    }),
-    mutation: 'createListing'
-  })
+  const tx = createListingCall.send({ gas: 4612388, from })
+  return txHelper({ tx, from, mutation: 'createListing' })
 }
 
 export default createListing
-
-/*
-mutation createListing($deposit: String, $arbitrator: String) {
-  createListing(deposit: $deposit, arbitrator: $arbitrator)
-}
-{ "deposit": "0", "arbitrator": "0xBECf244F615D69AaE9648E4bB3f32161A87caFF1" }
-*/

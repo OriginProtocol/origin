@@ -33,14 +33,16 @@ export default `
     makeOffer(
       listingID: ID!
       finalizes: Int
-      affiliate: String
       commission: String
       value: String
       currency: String
-      arbitrator: String
       from: String
       withdraw: String
       quantity: Int
+
+      # Optional: normally inherited from listing
+      arbitrator: String
+      affiliate: String
     ): Transaction
 
     executeRuling(
@@ -109,10 +111,12 @@ export default `
     account: Account!
     firstEvent: Event
     lastEvent: Event
-    listings(first: Int, after: String): ListingConnection!
-    offers(first: Int, after: String): OfferConnection!
-    sales(first: Int, after: String): OfferConnection!
+    listings(first: Int, after: String, filter: String): ListingConnection!
+    offers(first: Int, after: String, filter: String): OfferConnection!
+    sales(first: Int, after: String, filter: String): OfferConnection!
     reviews(first: Int, after: String): ReviewConnection!
+    notifications(first: Int, after: String): UserNotificationConnection!
+    transactions(first: Int, after: String): UserTransactionConnection!
   }
 
   type OfferConnection {
@@ -125,6 +129,27 @@ export default `
     nodes: [Review]
     pageInfo: PageInfo!
     totalCount: Int!
+  }
+
+  type UserNotificationConnection {
+    nodes: [UserNotification]
+    pageInfo: PageInfo!
+    totalCount: Int!
+  }
+
+  type UserNotification {
+    id: ID!
+    offer: Offer!
+    party: User!
+    event: Event!
+    read: Boolean
+  }
+
+  type UserTransactionConnection {
+    nodes: [Transaction]
+    pageInfo: PageInfo!
+    totalCount: Int!
+    hasPending: Boolean
   }
 
   type Review {
@@ -166,6 +191,7 @@ export default `
 
     # Connections
     offers: [Offer]
+    allOffers: [Offer]
     offer(id: ID!): Offer
     totalOffers: Int
     events: [Event]
@@ -179,6 +205,8 @@ export default `
     unitsAvailable: Int
     unitsSold: Int
     depositAvailable: String
+    type: String
+    multiUnit: Boolean
 
     # IPFS
     title: String
@@ -190,6 +218,10 @@ export default `
     categoryStr: String
     unitsTotal: Int
     media: [Media]
+    "IPFS: total commission, in natural units, available across all units"
+    commission: String
+    "IPFS: commission, in natural units, to be paid for each unit sold"
+    commissionPerUnit: String
   }
 
   type Media {
@@ -208,6 +240,7 @@ export default `
     listing: Listing
     events: [Event]
     createdEvent: Event
+    history: [OfferHistory]
 
     # On-Chain
     value: String
@@ -224,6 +257,16 @@ export default `
     # Computed
     withdrawnBy: Account
     statusStr: String
+    valid: Boolean
+    validationError: String
+  }
+
+  type OfferHistory {
+    id: ID!
+    event: Event
+    party: Account
+    ipfsHash: String
+    ipfsUrl: String
   }
 
   input NewListingInput {
@@ -235,6 +278,11 @@ export default `
     price: PriceInput
     unitsTotal: Int
     media: [MediaInput]
+
+    "total commission, in natural units, for all units"
+    commission: String
+    "commission, in natural units, to be paid for each unit sold"
+    commissionPerUnit: String
   }
 
   input MediaInput {

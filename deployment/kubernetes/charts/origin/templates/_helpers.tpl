@@ -35,7 +35,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 
 {{- define "dapp.host" -}}
 {{- if ne .Release.Namespace "prod" -}}
-{{- printf "demo.%s.originprotocol.com" .Release.Namespace -}}
+{{- printf "dapp.%s.originprotocol.com" .Release.Namespace -}}
 {{- else -}}
 {{- printf "dapp.originprotocol.com" -}}
 {{- end -}}

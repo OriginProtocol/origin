@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 
+import withTokenBalance from 'hoc/withTokenBalance'
+import withWallet from 'hoc/withWallet'
+
 import Step1 from './Step1'
 import Step2 from './Step2'
 import Step3 from './Step3'
@@ -13,7 +16,7 @@ class CreateListing extends Component {
   constructor() {
     super()
     this.state = {
-      listing: store.get('create-listing', {
+      listing: {
         title: '',
         description: '',
         category: '',
@@ -21,9 +24,11 @@ class CreateListing extends Component {
         quantity: '1',
         location: '',
         price: '',
-        boost: '0',
-        media: []
-      })
+        boost: '50',
+        boostLimit: '100',
+        media: [],
+        ...store.get('create-listing', {})
+      }
     }
   }
 
@@ -50,13 +55,19 @@ class CreateListing extends Component {
             render={() => (
               <Step3
                 listing={this.state.listing}
+                tokenBalance={this.props.tokenBalance}
                 onChange={listing => this.setListing(listing)}
               />
             )}
           />
           <Route
             path="/create/review"
-            render={() => <Review listing={this.state.listing} />}
+            render={() => (
+              <Review
+                tokenBalance={this.props.tokenBalance}
+                listing={this.state.listing}
+              />
+            )}
           />
           <Route
             render={() => (
@@ -72,7 +83,7 @@ class CreateListing extends Component {
   }
 }
 
-export default CreateListing
+export default withWallet(withTokenBalance(CreateListing))
 
 require('react-styl')(`
   .create-listing

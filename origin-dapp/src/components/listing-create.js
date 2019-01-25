@@ -1,3 +1,4 @@
+import { showAlert } from 'actions/Alert'
 import React, { Component, Fragment } from 'react'
 import { withRouter } from 'react-router'
 import { Link, Prompt } from 'react-router-dom'
@@ -5,7 +6,6 @@ import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
 
-import { showAlert } from 'actions/Alert'
 
 import { handleNotificationsSubscription } from 'actions/Activation'
 import { storeWeb3Intent } from 'actions/App'
@@ -25,6 +25,7 @@ import Modal from 'components/modal'
 import Calendar from './calendar'
 
 import { getListing } from 'utils/listing'
+import { generateDefaultPricing } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
@@ -175,7 +176,10 @@ class ListingCreate extends Component {
         this.ensureUserIsSeller(listing.seller)
         const state = {
           formListing: {
-            formData: listing
+            formData: {
+              boostLimit: listing.totalBoostValue,
+              ...listing
+            }
           },
           selectedSchemaId: listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
@@ -202,7 +206,10 @@ class ListingCreate extends Component {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
-    } else if (web3.currentProvider.isOrigin || !this.props.messagingEnabled) {
+    } else if (
+      web3.currentProvider.isOrigin ||
+      (this.props.messagingRequired && !this.props.messagingEnabled)
+    ) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
       }
@@ -341,6 +348,12 @@ class ListingCreate extends Component {
         'ui:widget': 'hidden'
       },
       price: {
+        'ui:field': PriceField
+      },
+      weekdayPricing: {
+        'ui:field': PriceField
+      },
+      weekendPricing: {
         'ui:field': PriceField
       },
       unitsTotal: {
@@ -491,6 +504,10 @@ class ListingCreate extends Component {
         [this.STEP.PREVIEW, 'unit'] :
         [this.STEP.BOOST, 'unit']
 
+    if (formListing.formData.weekdayPricing || formListing.formData.weekendPricing) {
+      formListing.formData.slots = generateDefaultPricing(formListing.formData)
+    }
+
     formListing.formData.listingType = listingType
     // multiUnit listings specify unitsTotal, others default to 1
     formListing.formData.unitsTotal = formListing.formData.unitsTotal || 1
@@ -616,6 +633,9 @@ class ListingCreate extends Component {
     try {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
+      if (this.props.marketplacePublisher) {
+        listing['marketplacePublisher'] = this.props.marketplacePublisher
+      }
       let transactionReceipt
       if (isEditMode) {
         transactionReceipt = await origin.marketplace.updateListing(
@@ -796,7 +816,6 @@ class ListingCreate extends Component {
       wallet,
       intl
     } = this.props
-    const totalNumberOfSteps = 4
     const {
       boostCapTooLow,
       formListing,
@@ -816,6 +835,7 @@ class ListingCreate extends Component {
       isFractionalListing,
       isEditMode
     } = this.state
+    const totalNumberOfSteps = isFractionalListing ? 5 : 4
     const { formData } = formListing
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
     const boostAmount = formData.boostValue || selectedBoostAmount
@@ -994,17 +1014,10 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>
-                  {isEditMode ?
-                    <FormattedMessage
-                      id={'listing-create.editListingHeading'}
-                      defaultMessage={'Edit Your Listing'}
-                    />
-                    :
-                    <FormattedMessage
-                      id={'listing-create.createListingHeading'}
-                      defaultMessage={'Create Your Listing'}
-                    />
-                  }
+                  <FormattedMessage
+                    id={'listing-create.createListingHeading'}
+                    defaultMessage={'Listing Details'}
+                  />
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
@@ -1069,29 +1082,37 @@ class ListingCreate extends Component {
               </div>
             )}
             {step === this.STEP.AVAILABILITY &&
-              <div className="col-md-12 listing-availability">
-                <label>
-                  <FormattedMessage
-                    id={'listing-create.stepNumberLabel'}
-                    defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+              <Fragment>
+                <div className="col-md-6 col-lg-5">
+                  <label>
+                    <FormattedMessage
+                      id={'listing-create.stepNumberLabel'}
+                      defaultMessage={'STEP {stepNumber}'}
+                      values={{ stepNumber: this.getStepNumber(step) }}
+                    />
+                  </label>
+                  <h2>
+                    <FormattedMessage
+                      id={'listing-create.availabilityHeading'}
+                      defaultMessage={'Pricing & Availability'}
+                    />
+                  </h2>
+                  <StepsProgress
+                    stepsTotal={totalNumberOfSteps}
+                    stepCurrent={stepNumber}
                   />
-                </label>
-                <h2>
-                  <FormattedMessage
-                    id={'listing-create.availabilityHeading'}
-                    defaultMessage={'Add Availability and Pricing'}
+                </div>
+                <div className="col-md-12 listing-availability">
+                  <Calendar
+                    slots={formData && formData.availability}
+                    userType="seller"
+                    viewType={fractionalTimeIncrement}
+                    step={60}
+                    onComplete={(slots) => this.onAvailabilityEntered(slots, 'forward')}
+                    onGoBack={(slots) => this.onAvailabilityEntered(slots, 'back')}
                   />
-                </h2>
-                <Calendar
-                  slots={formData && formData.availability}
-                  userType="seller"
-                  viewType={fractionalTimeIncrement}
-                  step={60}
-                  onComplete={(slots) => this.onAvailabilityEntered(slots, 'forward')}
-                  onGoBack={(slots) => this.onAvailabilityEntered(slots, 'back')}
-                />
-              </div>
+                </div>
+              </Fragment>
             }
             {step === this.STEP.BOOST && (
               <div className="col-md-6 col-lg-5 select-boost">
@@ -1559,6 +1580,14 @@ class ListingCreate extends Component {
                         defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos will increase the chances of selling your listing.`}
                       />
                     </p>
+                    {isFractionalListing && (
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.form-help-details-fractional'}
+                          defaultMessage={`You will be able to customize pricing and availability in the next step.`}
+                        />
+                      </p>
+                    )}
                   </div>
                 )}
                 {step === this.STEP.BOOST && (
@@ -1768,10 +1797,12 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
+const mapStateToProps = ({ activation, app, config, exchangeRates, wallet }) => {
   return {
     exchangeRates,
+    marketplacePublisher: config.marketplacePublisher,
     messagingEnabled: activation.messaging.enabled,
+    messagingRequired: app.messagingRequired,
     notificationsHardPermission: activation.notifications.permissions.hard,
     notificationsSoftPermission: activation.notifications.permissions.soft,
     pushNotificationsSupported: activation.notifications.pushEnabled,

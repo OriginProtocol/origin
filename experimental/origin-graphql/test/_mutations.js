@@ -40,6 +40,20 @@ const DeployMarketplace = gql`
   }
 `
 
+const AddAffiliate = gql`
+  mutation AddAffiliate(
+    $from: String!
+    $affiliate: String!
+  ) {
+    addAffiliate(
+      from: $from
+      affiliate: $affiliate
+    ) {
+      id
+    }
+  }
+`
+
 const CreateListing = gql`
   mutation CreateListing(
     $deposit: String
@@ -53,6 +67,26 @@ const CreateListing = gql`
       depositManager: $depositManager
       from: $from
       data: $data
+      autoApprove: $autoApprove
+    ) {
+      id
+    }
+  }
+`
+
+const UpdateListing = gql`
+  mutation UpdateListing(
+    $listingID: ID!
+    $additionalDeposit: String
+    $from: String
+    $data: NewListingInput
+    $autoApprove: Boolean
+  ) {
+    updateListing(
+      listingID: $listingID,
+      additionalDeposit: $additionalDeposit,
+      from: $from,
+      data: $data,
       autoApprove: $autoApprove
     ) {
       id
@@ -92,9 +126,19 @@ const MakeOffer = gql`
   }
 `
 
+
+
 const AcceptOffer = gql`
   mutation AcceptOffer($offerID: String!, $from: String) {
     acceptOffer(offerID: $offerID, from: $from) {
+      id
+    }
+  }
+`
+
+const WithdrawOffer = gql`
+  mutation WithdrawOffer($offerID: String!, $from: String) {
+    withdrawOffer(offerID: $offerID, from: $from) {
       id
     }
   }
@@ -108,11 +152,32 @@ const FinalizeOffer = gql`
   }
 `
 
+const UpdateTokenAllowance = gql`
+  mutation UpdateTokenAllowance($token: String!, $from: String!, $to: String!, $value: String!) {
+    updateTokenAllowance(token: $token, from: $from, to: $to, value: $value) {
+      id
+    }
+  }
+`
+
+const TransferToken = gql`
+  mutation TransferToken($token: String!, $from: String!, $to: String!, $value: String!) {
+    transferToken(token: $token, from: $from, to: $to, value: $value) {
+      id
+    }
+  }
+`
+
 export default {
   DeployToken,
   DeployMarketplace,
   CreateListing,
   MakeOffer,
   AcceptOffer,
-  FinalizeOffer
+  FinalizeOffer,
+  UpdateTokenAllowance,
+  TransferToken,
+  AddAffiliate,
+  WithdrawOffer,
+  UpdateListing
 }

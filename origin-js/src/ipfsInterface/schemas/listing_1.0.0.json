@@ -382,6 +382,9 @@
     "description": {
       "type": "string"
     },
+    "marketplacePublisher": {
+      "type": "string"
+    },
     "media": {
       "type": "array",
       "items": {

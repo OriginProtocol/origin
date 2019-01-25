@@ -54,6 +54,8 @@ export default {
           url
           contentType
         }
+        commission
+        commissionPerUnit
       }
     `
   },
@@ -70,6 +72,8 @@ export default {
         status
         finalizes
         quantity
+        valid
+        validationError
         arbitrator {
           id
         }

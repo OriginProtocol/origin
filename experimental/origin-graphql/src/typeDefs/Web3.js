@@ -30,10 +30,17 @@ export default `
   }
 
   type Config {
+    affiliate: String
+    arbitrator: String
     discovery: String
+    bridge: String
     facebookAuthUrl: String
     ipfsRPC: String
     ipfsGateway: String
+    ipfsEventCache: String
+    provider: String
+    providerWS: String
+    originGraphQLVersion: String
   }
 
   type Mutation {
@@ -64,12 +71,6 @@ export default `
     defaultAccount: Account
     transaction(id: ID!): Transaction
     transactionReceipt(id: ID!): TransactionReceipt
-    transactions(
-      first: Int
-      last: Int
-      before: String
-      after: String
-    ): TransactionConnection!
     useMetaMask: Boolean
     metaMaskAvailable: Boolean
     metaMaskEnabled: Boolean
@@ -137,13 +138,6 @@ export default `
     from: TokenHolder
   }
 
-  type TransactionConnection {
-    nodes: [Transaction]
-    pageInfo: PageInfo!
-    totalCount: Int!
-    hasPending: Boolean
-  }
-
   type Transaction {
     id: ID!
     status: String
@@ -159,6 +153,9 @@ export default `
     value: String
     pct: Float
     receipt: TransactionReceipt
+
+    # Timestamp transaction originally submitted
+    submittedAt: Int
   }
 
   type TransactionReceipt {
@@ -217,6 +214,7 @@ export default `
     offerID: ID
     party: String!
     ipfsHash: String!
+    ipfsUrl: String
   }
 
   type EventReturnValuesArr {

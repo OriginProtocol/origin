@@ -95,7 +95,7 @@ export class Offer {
       // See https://github.com/OriginProtocol/origin/issues/1087
       // as to why we extract commission from the ipfs data.
       commission: discoveryNode.data.ipfs.data.commission,
-      timeSlots: discoveryNode.timeSlots
+      timeSlots: discoveryNode.data.ipfs.data.timeSlots
     })
   }
 

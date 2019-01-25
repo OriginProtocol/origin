@@ -345,6 +345,14 @@ function price(offer, field = 'value') {
 }
 
 function status(offer) {
+  if (!offer.valid) {
+    return (
+      <Tooltip content={offer.validationError}>
+        <Tag icon="cross">Invalid</Tag>
+      </Tooltip>
+    )
+  }
+
   if (offer.status === 0) {
     if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
       return <Tag icon="cross">Declined</Tag>

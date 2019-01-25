@@ -3,41 +3,24 @@ import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import parseId from '../../utils/parseId'
+
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
-  const { listingId } = parseId(data.listingID)
-
-  const ipfsData = {
-    schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
-    listingId,
-    listingType: 'unit',
-    unitsPurchased: Number.parseInt(data.quantity),
-    totalPrice: {
-      amount: data.value,
-      currency: 'ETH'
-    },
-    commission: {
-      amount: data.commission || '0',
-      currency: 'OGN'
-    },
-    finalizes:
-      data.finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24 * 365
-  }
-
-  validator('https://schema.originprotocol.com/offer_1.0.0.json', ipfsData)
 
   const buyer = data.from
   const marketplace = contracts.marketplaceExec
+  const ipfsData = await toIpfsData(data)
 
   const affiliateWhitelistDisabled = await marketplace.methods
     .allowedAffiliates(marketplace.options.address)
     .call()
 
+  const affiliate = data.affiliate || contracts.config.affiliate || ZeroAddress
   if (!affiliateWhitelistDisabled) {
     const affiliateAllowed = await marketplace.methods
-      .allowedAffiliates(data.affiliate)
+      .allowedAffiliates(affiliate)
       .call()
 
     if (!affiliateAllowed) {
@@ -45,19 +28,27 @@ async function makeOffer(_, data) {
     }
   }
 
-  const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
-  const commission = contracts.web3.utils.toWei(ipfsData.commission.amount, 'ether')
-  const value = contracts.web3.utils.toWei(data.value, 'ether')
+  // TODO: add defaults for currency, affiliate, etc. so that default invocation
+  // is more concise
 
+  const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
+  const commission = contracts.web3.utils.toWei(
+    ipfsData.commission.amount,
+    'ether'
+  )
+  const value = contracts.web3.utils.toWei(data.value, 'ether')
+  const arbitrator = data.arbitrator || contracts.config.arbitrator
+
+  const { listingId } = parseId(data.listingID)
   const args = [
     listingId,
     ipfsHash,
     ipfsData.finalizes,
-    data.affiliate || ZeroAddress,
+    affiliate,
     commission,
     value,
     data.currency || ZeroAddress,
-    data.arbitrator || ZeroAddress
+    arbitrator
   ]
   if (data.withdraw) {
     const { offerId } = parseId(data.withdraw)
@@ -69,38 +60,53 @@ async function makeOffer(_, data) {
     from: buyer,
     value
   })
-  return txHelper({ tx, mutation: 'makeOffer' })
+  return txHelper({ tx, from: data.from, mutation: 'makeOffer' })
+}
+
+async function toIpfsData(data) {
+  const { listingId } = parseId(data.listingID)
+  const listing = await contracts.eventSource.getListing(listingId)
+  const web3 = contracts.web3
+
+  // Validate units purchased vs. available
+  const unitsAvailable = Number(listing.unitsAvailable)
+  const offerQuantity = Number(data.quantity)
+  if (offerQuantity > unitsAvailable) {
+    throw new Error(`Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`)
+  }
+
+  let commission = { currency: 'OGN', amount: '0' }
+  if (data.commission) {
+    // Passed in commission takes precedence
+    commission.amount = web3.utils.fromWei(data.commission, 'ether')
+  } else if (listing.commissionPerUnit) {
+    // Default commission to min(depositAvailable, commissionPerUnit)
+    const amount = web3.utils.toBN(listing.commissionPerUnit)
+      .mul(web3.utils.toBN(data.quantity))
+    const depositAvailable = web3.utils.toBN(listing.depositAvailable)
+    const commissionWei = amount.lt(depositAvailable)
+      ? amount.toString()
+      : depositAvailable.toString()
+    commission.amount = web3.utils.fromWei(commissionWei, 'ether')
+  }
+
+  const ipfsData = {
+    schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
+    listingId,
+    listingType: 'unit',
+    unitsPurchased: Number.parseInt(data.quantity),
+    totalPrice: {
+      amount: data.value,
+      currency: 'ETH'
+    },
+    commission,
+    finalizes:
+      data.finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24 * 365
+  }
+
+  validator('https://schema.originprotocol.com/offer_1.0.0.json', ipfsData)
+
+  return ipfsData
 }
 
 export default makeOffer
-
-/*
-mutation makeOffer(
-  $listingID: String,
-  $finalizes: String,
-  $affiliate: String,
-  $commission: String,
-  $value: String,
-  $currency: String,
-  $arbitrator: String
-) {
-  makeOffer(
-    listingID: $listingID,
-    finalizes: $finalizes,
-    affiliate: $affiliate,
-    commission: $commission,
-    value: $value,
-    currency: $currency,
-    arbitrator: $arbitrator
-  )
-}
-{
-  "listingID": "0",
-  "finalizes": "1536300000",
-  "affiliate": "0x7c38A2934323aAa8dAda876Cfc147C8af40F8D0e",
-  "commission": "0",
-  "value": "100000000000000000",
-  "currency": "0x0000000000000000000000000000000000000000",
-  "arbitrator": "0x7c38A2934323aAa8dAda876Cfc147C8af40F8D0e"
-}
-*/
