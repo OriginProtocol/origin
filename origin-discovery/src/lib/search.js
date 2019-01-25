@@ -194,7 +194,8 @@ class Listing {
         query: esQuery,
         field_value_factor: {
           field: 'boostCommission.amount',
-          factor: 0.05 // the same as delimited by 20
+          factor: 0.05, // the same as delimited by 20
+          missing: 0
         },
         boost_mode: 'sum'
       }
