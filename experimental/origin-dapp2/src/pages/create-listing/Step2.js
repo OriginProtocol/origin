@@ -39,6 +39,7 @@ class Step2 extends Component {
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
+    const isMulti = Number(this.state.quantity || 0) > 1
 
     return (
       <div className="row">
@@ -90,7 +91,7 @@ class Step2 extends Component {
                   {Feedback('quantity')}
                 </div>
                 <div className="form-group">
-                  <label>Price</label>
+                  <label>{`Price${isMulti ? ' (per unit)' : ''}`}</label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
                       <div className="with-symbol">
@@ -299,6 +300,10 @@ require('react-styl')(`
         padding-left: 1.75rem
         color: var(--bluish-purple)
         background-image: url(/images/eth-icon.svg)
+      &.ogn
+        padding-left: 1.75rem
+        color: var(--clear-blue)
+        background-image: url(/images/ogn-icon.svg)
       &.usd
         &::before
           content: "$"
