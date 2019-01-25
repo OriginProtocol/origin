@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import Modal from 'components/Modal'
 
 import DisputeOffer from './mutations/DisputeOffer'
+import EventTick from './_EventTick'
 
 class WaitForFinalize extends Component {
   state = {}
 
   render() {
+    const { offer } = this.props
     return (
       <div className="transaction-progress">
         <h4>Next Step:</h4>
@@ -31,10 +33,10 @@ class WaitForFinalize extends Component {
         </DisputeOffer>
 
         <div className="stages">
-          <div className="active bg">Offer Placed</div>
-          <div className="active bgl">Offer Accepted</div>
-          <div>Received by buyer</div>
-          <div>Funds withdrawn</div>
+          <EventTick className="active bg" event={offer.createdEvent}>Offer Placed</EventTick>
+          <EventTick className="active bgl" event={offer.acceptedEvent}>Offer Accepted</EventTick>
+          <EventTick>Received by buyer</EventTick>
+          <EventTick>Funds withdrawn</EventTick>
         </div>
         {!this.state.open ? null : (
           <Modal

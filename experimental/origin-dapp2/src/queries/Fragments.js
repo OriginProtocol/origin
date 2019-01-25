@@ -87,6 +87,21 @@ export default {
         createdEvent {
           timestamp
         }
+        acceptedEvent {
+          timestamp
+        }
+        finalizedEvent{
+          timestamp
+        }
+        withdrawnEvent{
+          timestamp
+        }
+        disputedEvent{
+          timestamp
+        }
+        rulingEvent{
+          timestamp
+        }
         statusStr
       }
     `
