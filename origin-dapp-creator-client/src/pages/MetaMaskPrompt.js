@@ -70,7 +70,10 @@ class MetaMaskPrompt extends React.Component {
         {!this.state.isError &&
           <div className="metamask-prompt">
             <div>
-              <img src="images/metamask.svg" />
+              <video width="320" height="240" autoPlay loop>
+                <source src="metamask.mp4" type="video/mp4" />
+                {'Your browser does not support the video tag.'}
+              </video>
               <h1>Publish your new DApp with Metamask</h1>
               <h4>Please grant Origin permission to access your Metamask account so you can publish your marketplace.</h4>
             </div>
