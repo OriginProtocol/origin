@@ -724,6 +724,7 @@ class Web3Provider extends Component {
 const mapStateToProps = ({ activation, app, wallet }) => {
   return {
     messagingInitialized: activation.messaging.initialized,
+    messagingRequired: app.messagingRequired,
     mobileDevice: app.mobileDevice,
     networkId: app.web3.networkId,
     wallet,
