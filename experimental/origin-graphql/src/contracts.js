@@ -55,7 +55,9 @@ const Configs = {
         symbol: 'GUSD',
         decimals: '2'
       }
-    ]
+    ],
+    affiliate: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8',
+    arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a'
   },
   rinkeby: {
     provider: 'https://rinkeby.infura.io',
@@ -67,7 +69,9 @@ const Configs = {
     OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
     V00_Marketplace: '0xe842831533c4bf4b0f71b4521c4320bdb669324e',
-    V00_Marketplace_Epoch: '3086315'
+    V00_Marketplace_Epoch: '3086315',
+    affiliate: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
+    arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992'
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
