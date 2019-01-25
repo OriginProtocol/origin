@@ -7,7 +7,7 @@ const dateFormat = timestamp => dayjs.unix(timestamp).format('MMM. D, YYYY')
 const sentenceCase = (str) => (
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 )
-const EventTick = ({className, children, event}) => {
+const EventTick = ({ className, children, event }) => {
   const stageName = children
   const tickEl = <div className={className}>{stageName}</div>
   if(event == undefined) {
