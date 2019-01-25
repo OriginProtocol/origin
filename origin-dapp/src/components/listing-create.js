@@ -25,7 +25,7 @@ import Modal from 'components/modal'
 import Calendar from './calendar'
 
 import { getListing } from 'utils/listing'
-import { prepareSlotsToSave, generateDefaultPricing } from 'utils/calendarHelpers'
+import { generateDefaultPricing } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
@@ -44,7 +44,6 @@ import {
 import origin from '../services/origin'
 
 const { web3 } = origin.contractService
-const enableFractional = process.env.ENABLE_FRACTIONAL === 'true'
 
 class ListingCreate extends Component {
   constructor(props) {
@@ -311,12 +310,12 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(selectedSchemaId) {
+  handleSchemaSelection(e, selectedSchemaId) {
     let schemaFileName = selectedSchemaId
 
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
-    if (event.target.value) {
-      schemaFileName = event.target.value
+    if (!selectedSchemaId) {
+      schemaFileName = e.target.value
     }
 
     return fetch(`schemas/${schemaFileName}`)
@@ -375,23 +374,15 @@ class ListingCreate extends Component {
 
     const { properties } = schemaJson
 
-    // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
-    const isFractionalListing = enableFractional &&
-      properties &&
+    const isFractionalListing = properties &&
       properties.listingType &&
       properties.listingType.const === 'fractional'
 
-    const slotLength = enableFractional &&
-      this.state.formListing.formData.slotLength ?
-      this.state.formListing.formData.slotLength :
-        properties &&
+    const slotLength = properties &&
         properties.slotLength &&
         properties.slotLength.default
 
-    const slotLengthUnit = enableFractional &&
-      this.state.formListing.formData.slotLengthUnit ?
-      this.state.formListing.formData.slotLengthUnit :
-        properties &&
+    const slotLengthUnit = properties &&
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
 
@@ -416,7 +407,7 @@ class ListingCreate extends Component {
 
     const translatedSchema = translateSchema(schemaJson)
 
-    this.setState({
+    this.setState(prevState => ({
       schemaFetched: true,
       fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
@@ -424,16 +415,16 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
+          ...prevState.formListing.formData,
           ...schemaSetValues,
-          ...this.state.formListing.formData,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
           slotLength,
-          slotLengthUnit
+          slotLengthUnit,
         }
       }
-    })
+    }))
   }
 
   goToDetailsStep() {
@@ -463,14 +454,12 @@ class ListingCreate extends Component {
         break
     }
 
-    slots = (slots && slots.length && prepareSlotsToSave(slots)) || []
-
     this.setState({
       formListing: {
         ...this.state.formListing,
         formData: {
           ...this.state.formListing.formData,
-          slots
+          availability: slots
         }
       },
       step: this.STEP[nextStep]
@@ -507,7 +496,7 @@ class ListingCreate extends Component {
         [this.STEP.BOOST, 'unit']
 
     if (formListing.formData.weekdayPricing || formListing.formData.weekendPricing) {
-      formListing.formData.slots = generateDefaultPricing(formListing.formData)
+      formListing.formData.availability = generateDefaultPricing(formListing.formData)
     }
 
     formListing.formData.listingType = listingType
@@ -981,7 +970,7 @@ class ListingCreate extends Component {
                         selectedSchemaId === schemaObj.schema ? ' selected' : ''
                       }`}
                       key={schemaObj.schema}
-                      onClick={() => this.handleSchemaSelection(schemaObj.schema)}
+                      onClick={e => this.handleSchemaSelection(e, schemaObj.schema)}
                       ga-category="create_listing"
                       ga-label={ `select_schema_${schemaObj.schema}`}
                     >
@@ -1106,12 +1095,12 @@ class ListingCreate extends Component {
                 </div>
                 <div className="col-md-12 listing-availability">
                   <Calendar
-                    slots={ formData && formData.slots }
+                    slots={formData && formData.availability}
                     userType="seller"
-                    viewType={ fractionalTimeIncrement }
-                    step={ 60 }
-                    onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
-                    onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
+                    viewType={fractionalTimeIncrement}
+                    step={60}
+                    onComplete={(slots) => this.onAvailabilityEntered(slots, 'forward')}
+                    onGoBack={(slots) => this.onAvailabilityEntered(slots, 'back')}
                   />
                 </div>
               </Fragment>

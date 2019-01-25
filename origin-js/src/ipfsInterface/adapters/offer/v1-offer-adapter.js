@@ -23,7 +23,7 @@ export default class OfferAdapterV1 extends AdapterBase {
     if (offer.listingType === 'unit') {
       offer.unitsPurchased = ipfsData.unitsPurchased
     } else if (offer.listingType === 'fractional') {
-      offer.slots = ipfsData.slots
+      offer.timeSlots = ipfsData.timeSlots
     } else {
       throw new Error(`Unexpected listing type: ${offer.listingType}`)
     }
