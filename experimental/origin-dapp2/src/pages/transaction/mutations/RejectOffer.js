@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import Link from 'components/Link'
 
 import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 
@@ -25,7 +26,7 @@ class RejectOffer extends Component {
           })
         }
       >
-        {withdrawOffer => (
+        {(withdrawOffer, { client }) => (
           <>
             <button
               className={this.props.className}
@@ -56,7 +57,7 @@ class RejectOffer extends Component {
                 </div>
               </Modal>
             )}
-            {this.renderWaitModal()}
+            {this.renderWaitModal(client)}
             {this.state.error && (
               <TransactionError
                 reason={this.state.error}
@@ -90,24 +91,28 @@ class RejectOffer extends Component {
     })
   }
 
-  renderWaitModal() {
+  renderWaitModal(client) {
     if (!this.state.waitFor) return null
 
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="OfferWithdrawn">
-        {({ client }) => (
-          <div className="make-offer-modal">
-            <div className="success-icon" />
-            <div>Success!</div>
-            <button
-              href="#"
-              className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
-                this.setState({ waitFor: false })
-              }}
-              children="OK"
-            />
+      <WaitForTransaction
+        hash={this.state.waitFor}
+        event="OfferWithdrawn"
+        shouldClose={this.state.waitForShouldClose}
+        onClose={async () => await client.resetStore()}
+      >
+        {() => (
+          <div className="reject-offer-modal">
+            <h2>This offer has been rejected</h2>
+            <div>
+              You&#39;ve rejected this buyer&#39;s offer, click below to go back
+              to your listings.
+            </div>
+            <div className="actions">
+              <Link to="/my-sales" className="btn btn-outline-light">
+                Back to your listings
+              </Link>
+            </div>
           </div>
         )}
       </WaitForTransaction>
@@ -116,3 +121,22 @@ class RejectOffer extends Component {
 }
 
 export default withCanTransact(RejectOffer)
+
+require('react-styl')(`
+  .reject-offer-modal
+    h2
+      padding-top: 7rem
+      position: relative
+      &::before,&::after
+        content: ""
+        position: absolute;
+        width: 5.75rem
+        height: 5.75rem
+        top: 0
+        left: calc(50% - 2.5rem)
+      &::before
+        border-radius: 5rem
+        background: var(--white)
+      &::after
+        background: url(images/reject-icon.svg) no-repeat center 60%
+`)

@@ -11,6 +11,10 @@ export default gql`
         messages {
           address
           content
+          media {
+            url
+            contentType
+          }
           timestamp
         }
       }

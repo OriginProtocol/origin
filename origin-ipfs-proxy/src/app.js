@@ -1,5 +1,5 @@
 const Busboy = require('busboy')
-const imageType = require('image-type')
+const fileType = require('file-type')
 const isJSON = require('is-json')
 const http = require('http')
 const httpProxy = require('http-proxy')
@@ -26,8 +26,8 @@ function isValidFile(buffer) {
 }
 
 function isValidImage(buffer) {
-  const image = imageType(buffer)
-  return image && validImageTypes.includes(image.mime)
+  const file  = fileType(buffer)
+  return file && validImageTypes.includes(file.mime)
 }
 
 function handleFileUpload (req, res) {

@@ -96,8 +96,8 @@ class CreateListing extends Component {
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
+              onClick={async () => {
+                await client.resetStore()
                 store.set('create-listing', undefined)
                 // TODO: Fix listing ID
                 this.setState({

@@ -378,9 +378,12 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
   const isDateBooked = function(date) {
     let bookingsMatchingDate = []
     offers && offers.map((offer) => {
-      const bookingsForThisOffer = offer.slots.filter(slot => 
-        moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
-      )
+      const bookingsForThisOffer = 
+        offer &&
+        offer.slots &&
+        offer.slots.filter(slot => 
+          moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
+        )
       bookingsMatchingDate = [...bookingsMatchingDate, ...bookingsForThisOffer]
     })
 
@@ -483,32 +486,37 @@ export const highlightCalendarDrag = () => {
     const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
 
     function addDraggingClass(evt) {
-      evt.target.classList.add('dragging')
+      if (evt.target.classList.value.includes('available')) {
+        evt.target.classList.add('dragging')
+      }
     }
 
     function mouseUpHandler(evt){
-      calendarDays.map((element) => {
-        evt.target.classList.remove('dragging')
-        element.removeEventListener('mousemove', addDraggingClass)
-      })
+      const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
 
-      document.removeEventListener('mouseup', mouseUpHandler)
+      calendarDays.map((element) => {
+        element.removeEventListener('mousemove', addDraggingClass)
+        setTimeout(() => { evt.target.classList.remove('dragging') }, 300)
+      })
     }
 
     function mouseDownHandler(evt) {
-        addDraggingClass(evt)
+      const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
 
-        calendarDays.map((element) => {
-          element.addEventListener('mousemove', addDraggingClass)
-        })
+      addDraggingClass(evt)
 
-        document.addEventListener('mouseup', mouseUpHandler)
-      }
+      calendarDays.map((element) => {
+        element.addEventListener('mousemove', addDraggingClass)
+      })
+    }
 
     calendarDays.map((element) => {
       element.removeEventListener('mousedown', mouseDownHandler)
       element.addEventListener('mousedown', mouseDownHandler)
     })
+
+    document.removeEventListener('mouseup', mouseUpHandler)
+    document.addEventListener('mouseup', mouseUpHandler)
   }, 1000)
 }
 
@@ -553,4 +561,10 @@ export const doFancyDateSelectionBorders = () => {
       element.classList.add('middle-selected')
     }
   })
+}
+
+export const deSelectAllCells = () => {
+  [...document.querySelectorAll('.rbc-day-bg')].map(
+    (element) => element.classList.remove('selected', 'dragging')
+  )
 }
