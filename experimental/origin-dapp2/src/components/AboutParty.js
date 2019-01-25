@@ -90,7 +90,9 @@ class AboutParty extends Component {
           <Identicon size={40} address={id} />
           <div>
             <div>ETH Address:</div>
-            <div><EthAddress address={id} /></div>
+            <div>
+              <EthAddress address={id} />
+            </div>
           </div>
         </div>
         <div className="mt-3 text-center">
