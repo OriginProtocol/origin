@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   extend type Query {
     marketplace: Marketplace
     marketplaces: [Marketplace]
@@ -172,13 +172,6 @@ export default `
   type ListingEdge {
     cursor: String!
     node: Listing
-  }
-
-  type PageInfo {
-    endCursor: String
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
   }
 
   type Listing {

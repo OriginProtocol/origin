@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   type Subscription {
     newBlock: Block
     newTransaction: NewTransaction
@@ -79,11 +79,6 @@ export default `
     metaMaskAccount: Account
     metaMaskNetworkId: Int
     metaMaskNetworkName: String
-  }
-
-  type Price {
-    currency: String
-    amount: String
   }
 
   type Account {
