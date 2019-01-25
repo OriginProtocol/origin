@@ -18,6 +18,7 @@
     "express": "^4.16.4",
     "express-prom-bundle": "^4.2.1",
     "graphql": "^0.13.2",
+    "graphql-type-json": "^0.2.1",
     "http": "0.0.0",
     "origin": "^0.8.6",
     "per-env": "^1.0.2",

@@ -85,7 +85,7 @@ const typeDefs = gql`
   }
 
   type Campaign {
-    id: String!
+    id: Int!
     name: String!
     startDate: String
     endDate: String
@@ -101,11 +101,43 @@ const typeDefs = gql`
     totalCount: Int!
   }
 
+  interface MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+  }
+
+  type InviteResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    invites: [Invite]
+  }
+
+  type EnrollResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    campaign: Campaign
+  }
+
+  type LogResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+  }
+
   type Query {
     # first property specifies the number of items to return
     # after is the cursor
     campaigns(first: Int, after: String): CampaignConnection
     campaign(id: String): Campaign
+  }
+
+  type Mutation {
+    invite(email: [String!]!): MutationResponse
+    enroll(campaignId: Int!): EnrollResponse
+    log(event: JSON!): LogResponse
   }
 `
 
