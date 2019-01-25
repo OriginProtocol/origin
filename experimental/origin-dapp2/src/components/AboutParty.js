@@ -7,6 +7,7 @@ import Identicon from 'components/Identicon'
 import Avatar from 'components/Avatar'
 import SendMessage from 'components/SendMessage'
 import Tooltip from 'components/Tooltip'
+import EthAddress from 'components/EthAddress'
 
 import IdentityQuery from 'queries/Identity'
 
@@ -89,7 +90,7 @@ class AboutParty extends Component {
           <Identicon size={40} address={id} />
           <div>
             <div>ETH Address:</div>
-            <div className="address">{id}</div>
+            <div><EthAddress address={id} /></div>
           </div>
         </div>
         <div className="mt-3 text-center">
@@ -130,6 +131,4 @@ require('react-styl')(`
         margin: 0 5px
       > div
         margin-left: 1rem
-      .address
-        word-break: break-all
 `)
