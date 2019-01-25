@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
 
+import BetaBanner from './_BetaBanner'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
@@ -19,6 +20,8 @@ import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
 
 class App extends Component {
+  state = { hasError: false }
+
   componentDidMount() {
     if (window.ethereum) {
       window.ethereum.enable()
@@ -31,11 +34,24 @@ class App extends Component {
     }
   }
 
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
   render() {
+    if (this.state.hasError) {
+      return (
+        <div className="app-error">
+          <h5>Error!</h5>
+          <div>Please refresh the page</div>
+        </div>
+      )
+    }
     return (
       <>
+        <BetaBanner />
+        <Nav />
         <main>
-          <Nav />
           <Switch>
             <Route path="/listings/:listingID" component={Listing} />
             <Route path="/purchases/:offerId" component={Transaction} />
@@ -58,3 +74,12 @@ class App extends Component {
 }
 
 export default App
+
+require('react-styl')(`
+  .app-error
+    position: fixed
+    top: 50%
+    left: 50%
+    text-align: center
+    transform: translate(-50%, -50%)
+`)
