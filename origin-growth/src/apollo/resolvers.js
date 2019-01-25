@@ -2,6 +2,10 @@
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
+  /* TODO:
+   * Use this pagination helpers when implementing pagination:
+   * https://github.com/OriginProtocol/origin/blob/master/experimental/origin-graphql/src/resolvers/_pagination.js
+   */
   //JSON: GraphQLJSON,
   Query: {
     async campaigns () {
