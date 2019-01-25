@@ -140,9 +140,9 @@ class ListingsDetail extends Component {
     if (
       !web3.currentProvider.isOrigin &&
       !origin.contractService.walletLinker &&
-      !this.props.messagingEnabled
+      (this.props.messagingRequired && !this.props.messagingEnabled)
     ) {
-       return
+      return
     }
 
     if ((!web3.currentProvider.isOrigin && this.props.wallet.address) || origin.contractService.walletLinker) {
@@ -1010,6 +1010,7 @@ class ListingsDetail extends Component {
 const mapStateToProps = ({ activation, app, profile, wallet }) => {
   return {
     messagingEnabled: activation.messaging.enabled,
+    messagingRequired: app.messagingRequired,
     notificationsHardPermission: activation.notifications.permissions.hard,
     notificationsSoftPermission: activation.notifications.permissions.soft,
     profile,
