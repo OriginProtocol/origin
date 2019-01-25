@@ -10,19 +10,18 @@ class Configure extends React.Component {
     super(props)
 
     this.state = {
-      checkedCategory: null,
-      checkedSubcategory: null,
       config: props.config,
       expandedCategories: [],
-      filterByTypeEnabled: false,
+      filterByTypeEnabled: this.getCategoryFromConfig(),
       listingTypes: listingSchemaMetadata.listingTypes,
       listingSchemasByCategory: listingSchemaMetadata.listingSchemasByCategory,
       redirect: null
     }
 
+    this.getCategoryFromConfig = this.getCategoryFromConfig.bind(this)
+    this.getSubcategoryFromConfig = this.getSubcategoryFromConfig.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.hasCheckedSubcategory = this.hasCheckedSubcategory.bind(this)
-    this.isCheckedCategory = this.isCheckedCategory.bind(this)
+    this.isCategoryDropdownDisplayed = this.isCategoryDropdownDisplayed.bind(this)
     this.isCheckedSubcategory = this.isCheckedSubcategory.bind(this)
     this.isExpandedCategory = this.isExpandedCategory.bind(this)
     this.onCategoryCheck = this.onCategoryCheck.bind(this)
@@ -36,85 +35,98 @@ class Configure extends React.Component {
     this.setState({ redirect: '/metamask' })
   }
 
-  hasCheckedSubcategory (category) {
-    return this.state.checkedSubcategory !== null &&
-      this.state.listingSchemasByCategory[category.type].includes(this.state.checkedSubcategory)
+  // Retrieve the category object from the filter value in the config
+  getCategoryFromConfig () {
+    if (!this.props.config.filters.listings.category) return null
+    const translationId = this.props.config.filters.listings.category
+    return listingSchemaMetadata.listingTypes.find((listingType) => {
+      return listingType.translationName.id == translationId
+    })
   }
 
-  isCheckedCategory (category) {
-    return this.state.checkedCategory === category || this.hasCheckedSubcategory(category)
+  // Retrieve the subCategory object from filter value in the config
+  getSubcategoryFromConfig () {
+    if (!this.props.config.filters.listings.subCategory) return false
+
+    const category = this.getCategoryFromConfig()
+    if (!category) {
+      return false
+    }
+
+    const subCategories = listingSchemaMetadata.listingSchemasByCategory[category.type]
+    const translationId = this.props.config.filters.listings.subCategory
+
+    return subCategories.find((subCategory) => {
+      return subCategory.translationName.id == translationId
+    })
   }
 
+  // Determines if the category dropdown should be displayed
+  isCategoryDropdownDisplayed() {
+    return this.isCategoryFiltered() || this.state.filterByTypeEnabled
+  }
+
+  // Determines if there is either category or subcategory filtering applied in configs filters
+  isCategoryFiltered (category) {
+    return this.props.config.filters.listings.category ||
+      this.props.config.filters.listings.subCategory
+  }
+
+  // Determines if a checkbox for a subcategory should be checked
   isCheckedSubcategory(category, subcategory) {
-    return this.state.checkedSubcategory === subcategory || this.state.checkedCategory === category
+    return (
+      (this.getCategoryFromConfig() === category && !this.getSubcategoryFromConfig()) ||
+      this.getSubcategoryFromConfig() === subcategory
+    )
   }
 
+  // Determines if a category should be expanded so that all of its subcategories are displayed
   isExpandedCategory(category) {
     return this.state.expandedCategories.includes(category)
   }
 
+  setListingFilters(obj) {
+    const newConfig = {
+      ...this.state.config,
+      filters: {
+        ...this.state.config.filters,
+        listings: {
+          ...this.state.config.filters.listings,
+          ...obj
+        }
+      }
+    }
+
+    this.setState({ config: newConfig })
+    this.props.onChange(newConfig)
+  }
+
   onCategoryCheck(category) {
-    this.setState({
-      checkedCategory: category,
-      checkedSubcategory: null
-    })
-
-    const newConfig = {
-      ...this.state.config,
-      filters: {
-        ...this.state.config.filters,
-        listings: {
-          ...this.state.config.filters.listings,
-          category: category,
-          subcategory: null
-        }
-      }
+    if (this.getCategoryFromConfig() === category) {
+      this.setListingFilters({
+        category: null,
+        subCategory: null
+      })
+    } else {
+      this.setListingFilters({
+        category: category.translationName.id,
+        subCategory: null
+      })
     }
-
-    this.setState({ config: newConfig })
-    this.props.onChange(newConfig)
   }
 
-  onSubcategoryCheck(subcategory) {
-    this.setState({
-      checkedCategory: null,
-      checkedSubcategory: subcategory
-    })
-
-    const newConfig = {
-      ...this.state.config,
-      filters: {
-        ...this.state.config.filters,
-        listings: {
-          ...this.state.config.filters.listings,
-          category: null,
-          subcategory: subcategory
-        }
-      }
+  onSubcategoryCheck(category, subcategory) {
+    if (this.getSubcategoryFromConfig() === subcategory) {
+      this.setListingFilters({
+        category: null,
+        subCategory: null
+      })
+    } else {
+      this.setListingFilters({
+        category: category.translationName.id,
+        subCategory: subcategory.translationName.id
+      })
     }
-
-    this.setState({ config: newConfig })
-    this.props.onChange(newConfig)
-  }
-
-  toggleFilterByOwn (event) {
-    const newConfig = {
-      ...this.state.config,
-      filters: {
-        ...this.state.config.filters,
-        listings: {
-          ...this.state.config.filters.listings,
-          marketplacePublisher: event.target.checked ? web3.eth.accounts[0] : null
-        }
-      }
-    }
-
-    this.setState({ config: newConfig })
-    this.props.onChange(newConfig)
-  }
-
-  toggleFilterByType (event) {
-    this.setState({ filterByTypeEnabled: event.target.checked })
   }
 
   toggleCategory (event, category) {
@@ -126,6 +138,25 @@ class Configure extends React.Component {
     } else {
       this.setState((prevState) => {
         return { expandedCategories: [...prevState.expandedCategories, category] }
+      })
+    }
+  }
+
+  toggleFilterByOwn (event) {
+    this.setListingFilters({
+      marketplacePublisher: event.target.checked ? web3.eth.accounts[0] : null
+    })
+  }
+
+  toggleFilterByType (event) {
+    this.setState({
+      filterByTypeEnabled: event.target.checked,
+    })
+    if (!event.target.checked) {
+      // Remove any listing filters for categories if the optional is disabled
+      this.setListingFilters({
+        category: null,
+        subCategory: null
       })
     }
   }
@@ -142,27 +173,29 @@ class Configure extends React.Component {
           <label>Filtering</label>
 
           <div className="option">
-            Limit to only my own
             <input className="form-check-input"
               type="checkbox"
-              onClick={this.toggleFilterByOwn} />
+              checked={this.state.config.filters.listings.marketplacePublisher}
+              onChange={this.toggleFilterByOwn} />
+            Limit to only my own
           </div>
 
           <div className={`option category-select ${this.state.filterByTypeEnabled ? 'expanded' : 'collapsed' }`}>
-            Only use listings from specific categories
             <input className="form-check-input"
               type="checkbox"
-              onClick={this.toggleFilterByType} />
+              checked={this.isCategoryDropdownDisplayed()}
+              onChange={this.toggleFilterByType} />
+            Only use listings from specific categories
           </div>
 
-          {this.state.filterByTypeEnabled &&
+          {this.isCategoryDropdownDisplayed() &&
             <div className="category-dropdown">
               {this.state.listingTypes.map((listingType, i) =>
                 <div key={i}>
                   <div className={`category ${this.isExpandedCategory(listingType) ? 'expanded' : 'collapsed'}`}
                     onClick={(event) => this.toggleCategory(event, listingType)}>
                       <input type="checkbox"
-                        checked={this.isCheckedCategory(listingType)}
+                        checked={this.getCategoryFromConfig() === listingType}
                         onChange={() => this.onCategoryCheck(listingType)} />
                       {listingType.translationName.defaultMessage}
                   </div>
@@ -171,7 +204,7 @@ class Configure extends React.Component {
                       <div className="subcategory" key={y}>
                         <input type="checkbox"
                             checked={this.isCheckedSubcategory(listingType, listingSchema)}
-                            onChange={() => this.onSubcategoryCheck(listingSchema)} />
+                            onChange={() => this.onSubcategoryCheck(listingType, listingSchema)} />
                           {listingSchema.translationName.defaultMessage}
                       </div>
                     )
@@ -209,16 +242,13 @@ require('react-styl')(`
   .option
     background-color: var(--pale-grey-four)
     border: 1px solid var(--light)
-    padding: 0.75rem
+    padding: 0.75rem 2rem 0.75rem 2rem
     border-radius: var(--default-radius)
     margin-bottom: 0.25rem
     position: relative
 
   .disabled
     color: var(--light)
-
-  .option .form-check-input
-    right: 1rem
 
   .category-dropdown
     padding: 1rem
