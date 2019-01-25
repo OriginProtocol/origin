@@ -89,6 +89,9 @@ export default class ListingAdapterV1 extends AdapterBase {
       listing.slots = ipfsData.slots
       listing.slotLength = ipfsData.slotLength
       listing.slotLengthUnit = ipfsData.slotLengthUnit
+      listing.commission = ipfsData.commission
+        ? new Money(ipfsData.commission)
+        : null
     } else {
       throw new Error(`Unexpected listing type: ${listing.type}`)
     }

@@ -17,15 +17,16 @@ class Review extends Component {
     const isEdit = this.props.mode === 'edit'
     const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
 
-    const { listing } = this.props
+    const { listing, tokenBalance } = this.props
     if (!listing.subCategory) {
       return <Redirect to={`${prefix}/step-1`} />
     } else if (!listing.title) {
       return <Redirect to={`${prefix}/step-2`} />
     }
 
-    const boost =
-      this.props.tokenBalance >= Number(listing.boost) ? listing.boost : '0'
+    const quantity = Number(listing.quantity || 0)
+    const isMulti = quantity > 1
+    const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
 
     return (
       <div className="row create-listing-review">
@@ -54,12 +55,26 @@ class Review extends Component {
                 </div>
               </div>
             </div>
+            {quantity <= 1 ? null : (
+              <div className="row">
+                <div className="col-3 label">Quantity</div>
+                <div className="col-9">{listing.quantity}</div>
+              </div>
+            )}
             <div className="row">
               <div className="col-3 label">Boost Level</div>
               <div className="col-9">
                 <CoinPrice price={boost} coin="ogn" />
               </div>
             </div>
+            {!isMulti ? null : (
+              <div className="row">
+                <div className="col-3 label">Boost Cap</div>
+                <div className="col-9">
+                  <CoinPrice price={listing.boostLimit} coin="ogn" />
+                </div>
+              </div>
+            )}
             <div className="row mb-0">
               <div className="col-3 label">Photos</div>
               <div className="col-9">

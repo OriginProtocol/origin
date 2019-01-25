@@ -206,7 +206,10 @@ class ListingCreate extends Component {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
-    } else if (web3.currentProvider.isOrigin || !this.props.messagingEnabled) {
+    } else if (
+      web3.currentProvider.isOrigin ||
+      (this.props.messagingRequired && !this.props.messagingEnabled)
+    ) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
       }
@@ -308,12 +311,12 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(selectedSchemaId) {
+  handleSchemaSelection(e, selectedSchemaId) {
     let schemaFileName = selectedSchemaId
 
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
-    if (event.target.value) {
-      schemaFileName = event.target.value
+    if (!selectedSchemaId) {
+      schemaFileName = e.target.value
     }
 
     return fetch(`schemas/${schemaFileName}`)
@@ -379,15 +382,15 @@ class ListingCreate extends Component {
       properties.listingType.const === 'fractional'
 
     const slotLength = enableFractional &&
-      this.state.formListing.formData.slotLength ?
-      this.state.formListing.formData.slotLength :
+      // this.state.formListing.formData.slotLength ?
+      // this.state.formListing.formData.slotLength :
         properties &&
         properties.slotLength &&
         properties.slotLength.default
 
     const slotLengthUnit = enableFractional &&
-      this.state.formListing.formData.slotLengthUnit ?
-      this.state.formListing.formData.slotLengthUnit :
+      // this.state.formListing.formData.slotLengthUnit ?
+      // this.state.formListing.formData.slotLengthUnit :
         properties &&
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
@@ -413,7 +416,7 @@ class ListingCreate extends Component {
 
     const translatedSchema = translateSchema(schemaJson)
 
-    this.setState({
+    this.setState(prevState => ({
       schemaFetched: true,
       fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
@@ -421,16 +424,16 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
+          ...prevState.formListing.formData,
           ...schemaSetValues,
-          ...this.state.formListing.formData,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
           slotLength,
-          slotLengthUnit
+          slotLengthUnit,
         }
       }
-    })
+    }))
   }
 
   goToDetailsStep() {
@@ -978,7 +981,7 @@ class ListingCreate extends Component {
                         selectedSchemaId === schemaObj.schema ? ' selected' : ''
                       }`}
                       key={schemaObj.schema}
-                      onClick={() => this.handleSchemaSelection(schemaObj.schema)}
+                      onClick={e => this.handleSchemaSelection(e, schemaObj.schema)}
                       ga-category="create_listing"
                       ga-label={ `select_schema_${schemaObj.schema}`}
                     >
@@ -1013,17 +1016,10 @@ class ListingCreate extends Component {
                   />
                 </label>
                 <h2>
-                  {isEditMode ?
-                    <FormattedMessage
-                      id={'listing-create.editListingHeading'}
-                      defaultMessage={'Edit Your Listing'}
-                    />
-                    :
-                    <FormattedMessage
-                      id={'listing-create.createListingHeading'}
-                      defaultMessage={'Create Your Listing'}
-                    />
-                  }
+                  <FormattedMessage
+                    id={'listing-create.createListingHeading'}
+                    defaultMessage={'Listing Details'}
+                  />
                 </h2>
                 <StepsProgress
                   stepsTotal={totalNumberOfSteps}
@@ -1100,7 +1096,7 @@ class ListingCreate extends Component {
                   <h2>
                     <FormattedMessage
                       id={'listing-create.availabilityHeading'}
-                      defaultMessage={'Add Availability and Pricing'}
+                      defaultMessage={'Pricing & Availability'}
                     />
                   </h2>
                   <StepsProgress
@@ -1586,6 +1582,14 @@ class ListingCreate extends Component {
                         defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos will increase the chances of selling your listing.`}
                       />
                     </p>
+                    {isFractionalListing && (
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.form-help-details-fractional'}
+                          defaultMessage={`You will be able to customize pricing and availability in the next step.`}
+                        />
+                      </p>
+                    )}
                   </div>
                 )}
                 {step === this.STEP.BOOST && (
@@ -1800,6 +1804,7 @@ const mapStateToProps = ({ activation, app, config, exchangeRates, wallet }) => 
     exchangeRates,
     marketplacePublisher: config.marketplacePublisher,
     messagingEnabled: activation.messaging.enabled,
+    messagingRequired: app.messagingRequired,
     notificationsHardPermission: activation.notifications.permissions.hard,
     notificationsSoftPermission: activation.notifications.permissions.soft,
     pushNotificationsSupported: activation.notifications.pushEnabled,
