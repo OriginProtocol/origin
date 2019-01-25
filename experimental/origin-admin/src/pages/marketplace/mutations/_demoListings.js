@@ -146,6 +146,7 @@ const TaylorSwiftTickets = {
     currency: 'OGN',
     amount: '10'
   },
+  commissionPerUnit: '2',
   media: [
     {
       contentType: 'image/jpeg',

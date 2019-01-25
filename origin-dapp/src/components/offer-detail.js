@@ -58,13 +58,13 @@ class OfferDetail extends Component {
         id: 'offer-detail.paymentStatus.unknown',
         defaultMessage: 'Unknown'
       },
-      startDate: {
-        id: 'offer-detail.startDate',
-        defaultMessage: 'Start Date'
+      reservationStart: {
+        id: 'offer-detail.reservationStart',
+        defaultMessage: 'Reservation Start'
       },
-      endDate: {
-        id: 'offer-detail.endDate',
-        defaultMessage: 'End Date'
+      reservationEnd: {
+        id: 'offer-detail.reservationEnd',
+        defaultMessage: 'Reservation End'
       }
     })
   }
@@ -72,7 +72,7 @@ class OfferDetail extends Component {
   componentDidMount() {
     if (this.props.listing.isFractional) {
       const { offer, listing } = this.props
-      const { startDate, endDate } = getStartEndDatesFromSlots(offer.slots, listing.slotLengthUnit)
+      const { startDate, endDate } = getStartEndDatesFromSlots(offer.timeSlots, listing.slotLengthUnit)
 
       this.setState({
         startDate,
@@ -177,14 +177,14 @@ class OfferDetail extends Component {
       properties = properties.concat([
         {
           icon: 'images/start-date-icon.svg',
-          iconAlt: 'start date icon',
-          labelId: 'startDate',
+          iconAlt: 'reservation start icon',
+          labelId: 'reservationStart',
           value: startDate
         },
         {
           icon: 'images/end-date-icon.svg',
-          iconAlt: 'end date icon',
-          labelId: 'endDate',
+          iconAlt: 'reservation end icon',
+          labelId: 'reservationEnd',
           value: endDate
         }
       ])

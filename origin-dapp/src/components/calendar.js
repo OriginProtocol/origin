@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import BigCalendar from 'react-big-calendar'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment-timezone'
-import uuid from 'uuid/v1'
+import uuid from 'utils/uuid'
 import { 
   generateCalendarSlots,
   renderHourlyPrices,
@@ -13,9 +13,11 @@ import {
   getCleanEvents,
   getDateAvailabilityAndPrice,
   generateSlotStartEnd,
+  slotsToJCal,
   isDateSelected,
   highlightCalendarDrag,
-  doFancyDateSelectionBorders
+  doFancyDateSelectionBorders,
+  deSelectAllCells
 } from 'utils/calendarHelpers'
 
 class Calendar extends Component {
@@ -105,7 +107,12 @@ class Calendar extends Component {
 
       // Check if slot is in the past
       const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
-      if (moment(clickedSlotInfo.end).isBefore(moment().startOf(timePeriod))) {
+      if (
+          moment(clickedSlotInfo.start).isBefore(moment().startOf(timePeriod)) ||
+          moment(clickedSlotInfo.end).isBefore(moment().startOf(timePeriod))
+        ) {
+        deSelectAllCells()
+
         return this.setState({
           showPastDateSelectedError: true,
           selectedEvent: null
@@ -137,20 +144,52 @@ class Calendar extends Component {
       allDay: false
     }
 
+    const availData = eventInfo.slots && eventInfo.slots.map((date) => {
+      return getDateAvailabilityAndPrice(date, this.state.events, [], true)
+    }) || []
+
+    let isAvailable = null
+    let price = null
+    let selectionHasAvailabilityDifference = false
+    let selectionHasPriceDifference = false
+
+    availData.map((data) => {
+      if (isAvailable === null) {
+        isAvailable = data.isAvailable
+      } else if (data.isAvailable !== isAvailable) {
+        selectionHasAvailabilityDifference = true
+      }
+
+      if (price === null) {
+        price = data.price
+      } else if (price !== null && data.price !== price) {
+        selectionHasPriceDifference = true
+      }
+    })
+
+    if (!selectionHasAvailabilityDifference) {
+      newEvent.isAvailable = isAvailable
+    }
+
+    if (!selectionHasPriceDifference) {
+      newEvent.price = price
+    }
+
     this.selectEvent(newEvent)
   }
 
-  handleBuyerSelection(slotInfo) {
+  async handleBuyerSelection(slotInfo) {
     const selectionData = []
     let slotToTest = moment(slotInfo.start)
     let hasUnavailableSlot = false
     let slotIndex = 0
 
     while (slotToTest.toDate() >= slotInfo.start && slotToTest.toDate() <= slotInfo.end) {
-      const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events)
+      const slotAvailData = getDateAvailabilityAndPrice(slotToTest, this.state.events, this.props.offers)
       const { price, isAvailable, isRecurringEvent, timeZone } = slotAvailData
+      const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
 
-      if (!isAvailable || moment(slotInfo.end).isBefore(moment())){
+      if (!isAvailable || moment(slotInfo.end).isBefore(moment().startOf(timePeriod))){
         hasUnavailableSlot = true
       }
 
@@ -174,10 +213,12 @@ class Calendar extends Component {
     }
 
     if (hasUnavailableSlot) {
-      this.setState({
+      await this.setState({
         selectionUnavailable: true,
         selectedEvent: {}
       })
+
+      deSelectAllCells()
     } else {
       const price = selectionData.reduce(
         (totalPrice, nextPrice) => totalPrice + nextPrice.price, 0
@@ -187,7 +228,7 @@ class Calendar extends Component {
         maximumFractionDigits: 5
       })}`
 
-      this.setState({
+      await this.setState({
         selectionUnavailable: false,
         selectedEvent: {
           start: slotInfo.start,
@@ -198,6 +239,8 @@ class Calendar extends Component {
         buyerSelectedSlotData: selectionData
       })
     }
+
+    doFancyDateSelectionBorders()
   }
 
   async selectEvent(selectedEvent) {
@@ -295,7 +338,7 @@ class Calendar extends Component {
     })
   }
 
-  onDateDropdownChange(event) {
+  async onDateDropdownChange(event) {
     const whichDropdown = event.target.name
     const value = event.target.value
     const selectedEvent = {
@@ -304,13 +347,13 @@ class Calendar extends Component {
       [whichDropdown]: new Date(value)
     }
 
-    this.setState({ selectedEvent })
+    await this.setState({ selectedEvent })
 
     if (this.props.userType === 'buyer') {
-      setTimeout(() => {
         this.onSelectSlot(this.state.selectedEvent)
-      })
     }
+
+    doFancyDateSelectionBorders()
   }
 
   onIsRecurringEventChange(event) {
@@ -345,14 +388,10 @@ class Calendar extends Component {
   }
 
   slotPropGetter(date) {
+    const { selectedEvent, buyerSelectedSlotData } = this.state
     const slotData = getDateAvailabilityAndPrice(date, this.state.events)
     const isAvailable = slotData.isAvailable ? 'available' : 'unavailable'
-    const selectedSlotsMatchingDate = 
-      this.state.buyerSelectedSlotData &&
-      this.state.buyerSelectedSlotData.filter((slot) => 
-        moment(date).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end))
-      )
-    const isSelected = (selectedSlotsMatchingDate && selectedSlotsMatchingDate.length) ? ' selected' : ''
+    const isSelected = isDateSelected(selectedEvent || buyerSelectedSlotData, date) ? ' selected' : ''
     const price = slotData.price ? ` priceEth-${slotData.price}` : ' priceEth-0'
     const timePeriod = this.props.viewType === 'hourly' ? 'hour' : 'day'
     const isPastDate = moment(date).isBefore(moment().startOf(timePeriod)) ? ' past-date' : ' future-date'
@@ -369,7 +408,9 @@ class Calendar extends Component {
     }
 
     const cleanEvents = getCleanEvents(this.state.events)
-    this.props.onComplete && this.props.onComplete(cleanEvents)
+    const jCalEvents = slotsToJCal(cleanEvents, 'listing')
+
+    this.props.onComplete && this.props.onComplete(jCalEvents)
   }
 
   goBack() {
@@ -514,11 +555,17 @@ class Calendar extends Component {
           <div className="col-md-4 calendar-right-column">
             {(!selectedEvent || !selectedEvent.start) && userType === 'seller' &&
               <div className="info-box">
+                <h2>
+                  <FormattedMessage
+                    id={'listing-create.calendarCustomize'}
+                    defaultMessage={'Customize Pricing & Availability'}
+                  />
+                </h2>
                 <p>
                   <FormattedMessage
                     id={'calendar.calendarTipsSeller1'}
                     defaultMessage={
-                      'Click the calendar to enter pricing and availability information.'
+                      'Select one or more dates by clicking and dragging on the calendar.'
                     }
                   />
                 </p>
@@ -526,7 +573,7 @@ class Calendar extends Component {
                   <FormattedMessage
                     id={'calendar.calendarTipsSeller2'}
                     defaultMessage={
-                      'To select multiple time slots, click the starting time slot and drag to the ending one.'
+                      'All dates are available by default and are priced according to your weekday and weekend pricing set in the listing details.'
                     }
                   />
                 </p>
@@ -538,7 +585,7 @@ class Calendar extends Component {
                   <FormattedMessage
                     id={'calendar.calendarTipsBuyer1'}
                     defaultMessage={
-                      'Click one or more available time slots to make an offer.'
+                      'Select one or more dates that you would like to reserve by clicking and dragging on the calendar.'
                     }
                   />
                 </p>
@@ -546,7 +593,7 @@ class Calendar extends Component {
                   <FormattedMessage
                     id={'calendar.calendarTipsBuyer2'}
                     defaultMessage={
-                      'To select multiple time slots, click the starting time slot and drag to the ending one.'
+                      'Your reservation will be for the night of each date that you include in your selection. Be sure to review the listing description for any special circumstances.'
                     }
                   />
                 </p>
@@ -559,7 +606,7 @@ class Calendar extends Component {
                     <FormattedMessage
                       id={'calendar.selectedDates'}
                       defaultMessage={
-                        'Selected dates'
+                        'Selected Dates'
                       }
                     />
                   }
@@ -568,7 +615,7 @@ class Calendar extends Component {
                     <FormattedMessage
                       id={'calendar.selectedTimes'}
                       defaultMessage={
-                        'Selected times'
+                        'Selected Times'
                       }
                     />
                   }
@@ -790,7 +837,7 @@ class Calendar extends Component {
                   <FormattedMessage
                     id={'calendar.selectionUnavailable'}
                     defaultMessage={
-                      'Your selection contains one or more unavailable time slots.'
+                      'Your selection contains one or more unavailable dates.'
                     }
                   />
                 </p>

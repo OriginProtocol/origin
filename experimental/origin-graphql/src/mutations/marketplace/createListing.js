@@ -18,7 +18,11 @@ export function listingInputToIPFS(data) {
     price: data.price,
     commission: {
       currency: 'OGN',
-      amount: '0'
+      amount: data.commission || '0'
+    },
+    commissionPerUnit: {
+      currency: 'OGN',
+      amount: data.commissionPerUnit || '0'
     }
   }
   validator('https://schema.originprotocol.com/listing_1.0.0.json', ipfsData)

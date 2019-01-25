@@ -218,6 +218,10 @@ export default `
     categoryStr: String
     unitsTotal: Int
     media: [Media]
+    "IPFS: total commission, in natural units, available across all units"
+    commission: String
+    "IPFS: commission, in natural units, to be paid for each unit sold"
+    commissionPerUnit: String
   }
 
   type Media {
@@ -274,6 +278,11 @@ export default `
     price: PriceInput
     unitsTotal: Int
     media: [MediaInput]
+
+    "total commission, in natural units, for all units"
+    commission: String
+    "commission, in natural units, to be paid for each unit sold"
+    commissionPerUnit: String
   }
 
   input MediaInput {

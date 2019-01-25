@@ -16,7 +16,7 @@ class CreateListing extends Component {
   constructor() {
     super()
     this.state = {
-      listing: store.get('create-listing', {
+      listing: {
         title: '',
         description: '',
         category: '',
@@ -25,8 +25,10 @@ class CreateListing extends Component {
         location: '',
         price: '',
         boost: '50',
-        media: []
-      })
+        boostLimit: '100',
+        media: [],
+        ...store.get('create-listing', {})
+      }
     }
   }
 
