@@ -79,16 +79,18 @@ class SendMessage extends Component {
               }
             }}
           >
-            { images.length ? (
+            {images.length ? (
               <div className="images-preview">
-                {images.map((image) => (
+                {images.map(image => (
                   <div key={image.url} className="images-container">
                     <img className="img" src={image.url} />
                     <a
                       className="image-overlay-btn"
                       aria-label="Close"
                       onClick={() => {
-                        this.setState({ images: images.filter((img) => img !== image) })
+                        this.setState({
+                          images: images.filter(img => img !== image)
+                        })
                       }}
                     >
                       <span aria-hidden="true">&times;</span>
@@ -96,8 +98,8 @@ class SendMessage extends Component {
                   </div>
                 ))}
               </div>
-            ) : null }
-            { !images.length && (
+            ) : null}
+            {!images.length && (
               <textarea
                 type="text"
                 placeholder="Type something..."
@@ -119,11 +121,8 @@ class SendMessage extends Component {
               ref={this.fileInput}
               className="d-none"
               onChange={async e => {
-                const newImages = await getImages(
-                  config,
-                  e.currentTarget.files
-                )
-                this.setState((state) => ({
+                const newImages = await getImages(config, e.currentTarget.files)
+                this.setState(state => ({
                   images: [...state.images, ...newImages]
                 }))
               }}
