@@ -31,7 +31,6 @@
     "@babel/register": "^7.0.0",
     "ajv": "^6.6.1",
     "ethereumjs-abi": "^0.6.5",
-    "graphql-iso-date": "3.6.1",
     "openzeppelin-solidity": "^1.10.0",
     "per-env": "^1.0.2",
     "truffle": "^4.1.14",
