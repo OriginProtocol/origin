@@ -19,8 +19,8 @@ const Step1 = ({ listing }) => (
           <div>
             <h4>Origin Mobile Wallet</h4>
             <div className="description">
-              Origin’s Mobile Wallet will allow you to store crypto currency so you
-              can buy and sell on our DApp.
+              Origin’s Mobile Wallet will allow you to store crypto currency so
+              you can buy and sell on our DApp.
             </div>
             <div className="note">Currently only available for iOS</div>
             <button className="btn btn-outline-primary">

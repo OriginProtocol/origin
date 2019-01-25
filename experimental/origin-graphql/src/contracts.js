@@ -22,7 +22,7 @@ if (typeof window !== 'undefined') {
 
 const Configs = {
   mainnet: {
-    provider: 'https://mainnet.infura.io',
+    provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
