@@ -419,12 +419,12 @@ class ListingCreate extends Component {
         schemaSetValues[key] = properties[key].default
       }
     }
-    if (schemaSetValues.category.const === "schema.announcements") {
+    if (schemaSetValues.category.const === 'schema.announcements') {
       //hardcode price as 0 on state
       this.setState(prevState => ({
-        formListing : {
+        formListing: {
           ...prevState.formData,
-          price : 0
+          price: 0
         }
       }))
     }
