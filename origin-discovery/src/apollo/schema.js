@@ -96,6 +96,8 @@ const typeDefs = gql`
     offers(page: Page): OfferConnection
     display: DisplayType!
     marketplacePublisher: String
+    createDate: String
+    updateVersion: Int
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
@@ -109,7 +111,6 @@ const typeDefs = gql`
     depositManager: ID
     seller: ID!
     status: String
-    updateDate:String
   }
 
   type Stats {

@@ -414,6 +414,18 @@ export default class Marketplace {
     return Offer.init(offerId, listingId, chainOffer, ipfsOffer)
   }
 
+  get injectPossible() {
+    return this.perfModeEnabled
+  }
+
+  async injectListing( ipfsData ) {
+    ipfsData.createDate = (new Date()).toISOString()
+    const account = await this.contractService.currentAccount()
+    const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+    return this.discoveryService.injectListing(ipfsBytes, account, undefined, undefined, 'active', "Some Sign")
+  }
+
   /**
    * Creates a new listing in the system. Data is recorded both on-chain and off-chain in IPFS.
    * @param {object} data - Listing data to store in IPFS

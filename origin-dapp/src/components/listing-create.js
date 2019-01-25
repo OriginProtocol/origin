@@ -646,12 +646,25 @@ class ListingCreate extends Component {
           }
         )
       } else {
-        transactionReceipt = await origin.marketplace.createListing(
-          listing,
-          (confirmationCount, transactionReceipt) => {
-            this.props.updateTransaction(confirmationCount, transactionReceipt)
-          }
-        )
+        const account = await origin.contractService.currentAccount()
+        const balance = await web3.eth.getBalance(account)
+        console.log("creating balance:", balance, " listing: ", listing)
+        if (web3.utils.toBN(balance).lte(web3.utils.toBN(0)))
+        {
+          await origin.marketplace.injectListing(listing)
+          this.setState({ step: this.STEP.SUCCESS })
+          this.props.handleNotificationsSubscription('seller', this.props)
+          return
+        }
+        else
+        {
+          transactionReceipt = await origin.marketplace.createListing(
+            listing,
+            (confirmationCount, transactionReceipt) => {
+              this.props.updateTransaction(confirmationCount, transactionReceipt)
+            }
+          )
+        }
       }
 
       const transactionTypeKey = isEditMode ? 'updateListing' : 'createListing'

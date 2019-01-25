@@ -81,11 +81,11 @@ const resolvers = {
   Mutation: {
     async injectListing (node, args)  {
       // verify args.signature checks against args.listingInput
-      await injectListing(args.listingInput, args.signature)
+      return await injectListing(args.listingInput, args.signature)
     },
     async updateListing (node, args)  {
       // verify args.signature checks against args.listingInput
-      await updateListing(args.id, args.listingInput, args.signature)
+      return await updateListing(args.id, args.listingInput, args.signature)
     }
   },
 

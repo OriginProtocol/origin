@@ -137,7 +137,6 @@ class DiscoveryService {
       : -1
 
     let query, listings
-
     if (opts.listingsFor) {
       // Query for all listings created by the specified seller address.
       query = `query($listingsFor: ID!) {
@@ -298,6 +297,34 @@ class DiscoveryService {
 
     return this._toOfferModel(resp.data.offer)
   }
+
+  /**
+   * Mutates discovery server for an offer
+   * @param listingInput {ListingInput}: listing data structure
+   * @param signature {string}: signature against the data structure
+   * @return {Offer}
+   */
+
+  async injectListing(ipfsHash, seller, deposit, depositManager, status, signature) {
+    const resp = await this._query(`
+      mutation($listing:ListingInput, $signature:String!) {
+        injectListing(listingInput:$listing, signature:$signature){
+          data
+          display
+        }
+      }
+    `, {listing: {ipfsHash, seller, deposit, depositManager, status},
+        signature})
+
+    // Throw an error if no offer found with this id.
+    if (!resp.data) {
+      throw new Error(`Cannot inject listing`)
+    }
+
+    console.log("injected listing:", resp.data)
+    return this._toListingModel(resp.data.injectListing)
+  }
+
 }
 
 export default DiscoveryService

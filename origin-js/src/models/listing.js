@@ -44,7 +44,7 @@ class Listing {
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
     slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager,
-    commissionPerUnit, marketplacePublisher }) {
+    commissionPerUnit, marketplacePublisher, createDate, updateVersion }) {
 
     this.id = id
     this.title = title
@@ -73,6 +73,8 @@ class Listing {
     this.depositManager = depositManager
     this.commissionPerUnit = commissionPerUnit
     this.marketplacePublisher = marketplacePublisher
+    this.createDate = createDate
+    this.updateVersion = updateVersion
   }
 
   // creates a Listing using on-chain and off-chain data
@@ -106,7 +108,8 @@ class Listing {
       depositManager: chainListing.depositManager,
       commissionPerUnit: ipfsListing.commissionPerUnit,
       createDate: ipfsListing.createDate,
-      marketplacePublisher: ipfsListing.marketplacePublisher
+      marketplacePublisher: ipfsListing.marketplacePublisher,
+      updateVersion: ipfsListing.updateVersion
     })
   }
 
@@ -205,7 +208,7 @@ class Listing {
   }
 
   get uniqueId() {
-    return bs58.encode(crypto.createHash('sha1').update(this.seller + "-" + this.createDate).digest())
+    return base58.encode(crypto.createHash('sha1').update(this.seller + "-" + this.createDate).digest())
   }
 }
 

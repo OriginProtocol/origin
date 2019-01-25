@@ -29,7 +29,9 @@ function _makeListing (row) {
     commissionPerUnit: row.data.commissionPerUnit,
     display: listingMetadata.getDisplay(row.id),
     marketplacePublisher: row.data.marketplacePublisher,
-    updatedAt: row.updatedAt
+    updatedAt: row.updatedAt,
+    updateVersion: row.data.updateVersion,
+    createDate: row.data.createDate
   }
 }
 
@@ -237,7 +239,7 @@ async function createListing(listingData) {
   if (!row) {
     return null
   }
-  return _makeListing(row)
+  return getListing(listingData.id)
 }
 
 async function updateListing(listingId, listingData) {

@@ -161,6 +161,9 @@
     "createDate": {
       "type": "string",
       "format": "date-time"
+    },
+    "updateVersion": {
+      "type": "integer"
     }
   },
   "listingType": {
