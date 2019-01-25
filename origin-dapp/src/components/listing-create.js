@@ -311,12 +311,12 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(selectedSchemaId) {
+  handleSchemaSelection(e, selectedSchemaId) {
     let schemaFileName = selectedSchemaId
 
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
-    if (event.target.value) {
-      schemaFileName = event.target.value
+    if (!selectedSchemaId) {
+      schemaFileName = e.target.value
     }
 
     return fetch(`schemas/${schemaFileName}`)
@@ -981,7 +981,7 @@ class ListingCreate extends Component {
                         selectedSchemaId === schemaObj.schema ? ' selected' : ''
                       }`}
                       key={schemaObj.schema}
-                      onClick={() => this.handleSchemaSelection(schemaObj.schema)}
+                      onClick={e => this.handleSchemaSelection(e, schemaObj.schema)}
                       ga-category="create_listing"
                       ga-label={ `select_schema_${schemaObj.schema}`}
                     >
