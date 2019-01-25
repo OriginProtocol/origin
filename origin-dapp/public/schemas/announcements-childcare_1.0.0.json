@@ -4,8 +4,7 @@
   "required": [
     "name",
     "description",
-    "price",
-    "dappSchemaId",
+     "dappSchemaId",
     "category",
     "subCategory",
     "listingType"

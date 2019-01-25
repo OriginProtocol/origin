@@ -4,7 +4,6 @@
   "required": [
     "name",
     "description",
-    "price",
     "dappSchemaId",
     "category",
     "subCategory",

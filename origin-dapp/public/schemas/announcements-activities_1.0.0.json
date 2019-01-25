@@ -11,7 +11,7 @@
   ],
   "properties": {
     "dappSchemaId": {
-      "const": "https://dapp.originprotocol.com/schemas/announcements-lostFound_1.0.0.json"
+      "const": "https://dapp.originprotocol.com/schemas/announcements-activity_1.0.0.json"
     },
     "listingType": {
       "const": "unit"
@@ -32,7 +32,7 @@
       "maxLength": 1024
     },
     "subCategory": {
-      "const": "schema.lostFound"
+      "const": "schema.activity"
     },
     "pictures": {
       "type": "array",
