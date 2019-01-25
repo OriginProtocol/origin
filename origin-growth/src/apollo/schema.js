@@ -9,6 +9,13 @@ const typeDefs = gql`
   #
   ######################
 
+  type PageInfo {
+    endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+  }
+
   enum CampaignStatus {
     pending                   #not yet started
     active
@@ -50,25 +57,31 @@ const typeDefs = gql`
     type: ActionType!
     status: ActionStatus!
     rewardEarned: Price
-    rewardPending: Price      # applicable for referral action
-    rewardInfo: Price!        # information about reward
+    reward: Price!            # information about reward
   }
 
   type Action implements BaseAction {
     type: ActionType!
     status: ActionStatus!
     rewardEarned: Price
-    rewardPending: Price      # applicable for referral action
-    rewardInfo: Price!        # information about reward
+    reward: Price!            # information about reward
+  }
+
+  type InviteConnection {
+    nodes: [Invite]
+    pageInfo: PageInfo!
+    totalCount: Int!
   }
 
   type ReferralAction implements BaseAction {
     type: ActionType!
     status: ActionStatus!
     rewardEarned: Price
-    rewardPending: Price      # applicable for referral action
-    rewardInfo: Price!        # information about reward
-    invites: [Invite]         # TODO: might we need pagination for invites?
+    rewardPending: Price
+    reward: Price!            # information about reward
+    # first property specifies the number of items to return
+    # after is the cursor
+    invites(first: Int, after: String): [InviteConnection]
   }
 
   type Campaign {
@@ -79,16 +92,19 @@ const typeDefs = gql`
     distributionDate: String
     status: CampaignStatus!
     actions: [BaseAction]
-    reward: Price!            # amount earned all actions combined
+    rewardEarned: Price!      # amount earned all actions combined
   }
 
-  # in case we need any sort of pagination in the future
-  type CampaignPage {
+  type CampaignConnection {
     nodes: [Campaign]
+    pageInfo: PageInfo!
+    totalCount: Int!
   }
 
   type Query {
-    campaigns: CampaignPage
+    # first property specifies the number of items to return
+    # after is the cursor
+    campaigns(first: Int, after: String): CampaignConnection
     campaign(id: String): Campaign
   }
 `

@@ -82,7 +82,6 @@ services:
     container_name: origin-growth
     image: origin
     volumes:
-      - ./origin-js/src:/app/origin-js/src
       - ./origin-growth/src:/app/origin-growth/src
       - ./origin-growth/config:/app/origin-growth/config
       - ./origin-growth/package.json:/app/origin-growth/package.json
