@@ -41,7 +41,7 @@ class Listings extends Component {
             variables={vars}
             notifyOnNetworkStatusChange={true}
           >
-            {({ error, data, fetchMore, networkStatus }) => {
+            {({ error, data, fetchMore, networkStatus, loading }) => {
               if (networkStatus === 1) {
                 return <h5 className="listings-count">Loading...</h5>
               } else if (error) {
@@ -58,7 +58,11 @@ class Listings extends Component {
                   offset={200}
                   ready={networkStatus === 7}
                   hasMore={hasNextPage}
-                  onBottom={() => nextPage(fetchMore, { ...vars, after })}
+                  onBottom={() => {
+                    if (!loading) {
+                      nextPage(fetchMore, { ...vars, after })
+                    }
+                  }}
                 >
                   <>
                     <h5 className="listings-count">{`${totalCount} Listings`}</h5>
@@ -70,10 +74,14 @@ class Listings extends Component {
 
                     {!hasNextPage ? null : (
                       <button
-                        className="btn btn-primary-outline btn-rounded mt-3"
-                        onClick={() => nextPage(fetchMore, { ...vars, after })}
+                        className="btn btn-outline-primary btn-rounded mt-3"
+                        onClick={() => {
+                          if (!loading) {
+                            nextPage(fetchMore, { ...vars, after })
+                          }
+                        }}
                       >
-                        Load more...
+                        {loading ? 'Loading...' : 'Load more'}
                       </button>
                     )}
                   </>
