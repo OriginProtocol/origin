@@ -206,7 +206,10 @@ class ListingCreate extends Component {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
-    } else if (web3.currentProvider.isOrigin || !this.props.messagingEnabled) {
+    } else if (
+      web3.currentProvider.isOrigin ||
+      (this.props.messagingRequired && !this.props.messagingEnabled)
+    ) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
       }
@@ -1801,6 +1804,7 @@ const mapStateToProps = ({ activation, app, config, exchangeRates, wallet }) => 
     exchangeRates,
     marketplacePublisher: config.marketplacePublisher,
     messagingEnabled: activation.messaging.enabled,
+    messagingRequired: app.messagingRequired,
     notificationsHardPermission: activation.notifications.permissions.hard,
     notificationsSoftPermission: activation.notifications.permissions.soft,
     pushNotificationsSupported: activation.notifications.pushEnabled,
