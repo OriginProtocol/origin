@@ -4,11 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     id: DataTypes.INTEGER,
     name: DataTypes.STRING,
     rules: DataTypes.JSONB,
-    start_date: DataTypes.DATE,
-    end_date: DataTypes.DATE,
-    distribution_date: DataTypes.DATE,
+    startDate: DataTypes.DATE,
+    endDate: DataTypes.DATE,
+    distributionDate: DataTypes.DATE,
     cap: DataTypes.INTEGER,
-    user_cap: DataTypes.INTEGER
+    capUsed: DataTypes.INTEGER
   }, {});
   growth_campaign.associate = function(models) {
     // associations can be defined here

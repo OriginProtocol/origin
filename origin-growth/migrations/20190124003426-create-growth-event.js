@@ -1,18 +1,20 @@
 'use strict';
+
+const { GrowthEventTypes } = require('../src/enums')
+
+const tableName = 'growth_event';
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('growth_event', {
+    return queryInterface.createTable(tableName, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id: {
-        type: Sequelize.INTEGER
-      },
       type: {
-        type: Sequelize.ENUM
+        type: Sequelize.ENUM(GrowthEventTypes)
       },
       eth_address: {
         type: Sequelize.STRING
@@ -20,17 +22,17 @@ module.exports = {
       data: {
         type: Sequelize.JSONB
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'type']));
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('growth_event');
+    return queryInterface.dropTable(tableName);
   }
 };

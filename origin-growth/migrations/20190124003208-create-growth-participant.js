@@ -1,14 +1,13 @@
 'use strict';
+
+const tableName = 'growth_participant'
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('growth_participant', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+    return queryInterface.createTable(tableName, {
       eth_address: {
+        allowNull: false,
+        primaryKey: true,
         type: Sequelize.STRING
       },
       data: {
@@ -17,17 +16,17 @@ module.exports = {
       agreement_id: {
         type: Sequelize.STRING
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('growth_participant');
+    return queryInterface.dropTable(tableName);
   }
 };

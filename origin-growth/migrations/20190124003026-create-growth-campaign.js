@@ -1,14 +1,14 @@
 'use strict';
+
+const tableName = 'growth_campaign'
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('growth_campaign', {
+    return queryInterface.createTable(tableName, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      id: {
         type: Sequelize.INTEGER
       },
       name: {
@@ -29,20 +29,20 @@ module.exports = {
       cap: {
         type: Sequelize.INTEGER
       },
-      user_cap: {
+      cap_used: {
         type: Sequelize.INTEGER
       },
-      createdAt: {
+      create_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('growth_campaign');
+    return queryInterface.dropTable(tableName);
   }
 };

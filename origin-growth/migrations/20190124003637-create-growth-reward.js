@@ -1,18 +1,20 @@
 'use strict';
+
+const { GrowthRewardStatuses } = require('../src/enums')
+
+const tableName = 'growth_reward'
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('growth_reward', {
+    return queryInterface.createTable(tableName, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id: {
-        type: Sequelize.INTEGER
-      },
       status: {
-        type: Sequelize.ENUM
+        type: Sequelize.ENUM(GrowthRewardStatuses)
       },
       eth_address: {
         type: Sequelize.STRING
@@ -32,17 +34,17 @@ module.exports = {
       currency: {
         type: Sequelize.STRING
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'campaign_id']));
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('growth_reward');
+    return queryInterface.dropTable(tableName);
   }
 };

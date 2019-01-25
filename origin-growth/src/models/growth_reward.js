@@ -3,10 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const growth_reward = sequelize.define('growth_reward', {
     id: DataTypes.INTEGER,
     status: DataTypes.ENUM,
-    eth_address: DataTypes.STRING,
-    campaign_id: DataTypes.INTEGER,
-    campaign_level: DataTypes.INTEGER,
-    campaign_rule: DataTypes.STRING,
+    ethAddress: DataTypes.STRING,
+    campaignId: DataTypes.INTEGER,
+    campaignLevel: DataTypes.INTEGER,
+    campaignRule: DataTypes.STRING,
     amount: DataTypes.INTEGER,
     currency: DataTypes.STRING
   }, {});

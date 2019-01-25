@@ -1,9 +1,9 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const growth_invite = sequelize.define('growth_invite', {
-    referrer_eth_address: DataTypes.STRING,
-    type: DataTypes.ENUM,
-    referrer_contact: DataTypes.STRING,
+    referrerEthAddress: DataTypes.STRING,
+    refereeContactType: DataTypes.ENUM,
+    refereeContact: DataTypes.STRING,
     status: DataTypes.ENUM
   }, {});
   growth_invite.associate = function(models) {

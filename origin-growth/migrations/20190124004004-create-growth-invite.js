@@ -1,7 +1,12 @@
 'use strict';
+
+const { GrowthInviteContactTypes, GrowthInviteStatuses } = require('../src/enums')
+
+const tableName = 'growth_invite'
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('growth_invite', {
+    return queryInterface.createTable(tableName, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,26 +16,26 @@ module.exports = {
       referrer_eth_address: {
         type: Sequelize.STRING
       },
-      type: {
-        type: Sequelize.ENUM
+      referee_contact_type: {
+        type: Sequelize.ENUM(GrowthInviteContactTypes)
       },
-      referrer_contact: {
+      referee_contact: {
         type: Sequelize.STRING
       },
       status: {
-        type: Sequelize.ENUM
+        type: Sequelize.ENUM(GrowthInviteStatuses),
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    }).then(() => queryInterface.addIndex(tableName, ['referrer_eth_address', 'status']));
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('growth_invite');
+    return queryInterface.dropTable(tableName);
   }
 };
