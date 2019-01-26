@@ -41,6 +41,9 @@ class ColorPicker extends React.Component {
         <div className="wrapper">
           <div className="swatch" onClick={this.handleClick}>
             <div className="color" style={this.colorStyle()} />
+            <div className="arrow">
+              <div className={this.state.displayColorPicker ? 'arrow-up' : 'arrow-down' }></div>
+            </div>
           </div>
           <div className="description">{this.props.description}</div>
         </div>
@@ -72,6 +75,37 @@ require('react-styl')(`
     cursor: pointer
     border: 1px solid var(--light)
     border-radius: var(--default-radius)
+    position: relative
+
+  .arrow
+    position: absolute
+    bottom: 0
+    right: 0
+    width: 12px
+    height: 12px
+    background: black
+    border-top-left-radius: var(--default-radius)
+    text-align: center
+    color: white
+    font-size: 0.5rem
+    padding-left: 3px
+    padding-top: 5px
+    border-top: 1px solid var(--light)
+    border-left: 1px solid var(--light)
+
+  .arrow-up
+    width: 0
+    height: 0
+    border-left: 3px solid transparent
+    border-right: 3px solid transparent
+    border-bottom: 3px solid white
+
+  .arrow-down
+    width: 0
+    height: 0
+    border-left: 3px solid transparent
+    border-right: 3px solid transparent
+    border-top: 3px solid white
 
   .cover
     position: fixed
