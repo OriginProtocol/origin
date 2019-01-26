@@ -63,6 +63,11 @@ video {
   float: right;
 }
 
+.metamask-prompt {
+  text-align: center;
+  padding: 4rem 0;
+}
+
 .copyright {
   color: var(--steel);
   text-align: center;

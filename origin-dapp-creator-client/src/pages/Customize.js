@@ -131,7 +131,7 @@ class Customize extends React.Component {
       <form onSubmit={this.handleSubmit}>
         {this.renderRedirect()}
 
-        <h1>Customize your Marketplace&apos;s Appearance</h1>
+        <h1>Customize Your Marketplace&apos;s Appearance</h1>
         <h4>Choose a logo and colors for your marketplace below.</h4>
 
         <div className="form-group">

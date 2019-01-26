@@ -74,8 +74,8 @@ class MetaMaskPrompt extends React.Component {
                 <source src="metamask.mp4" type="video/mp4" />
                 {'Your browser does not support the video tag.'}
               </video>
-              <h1>Publish your new DApp with Metamask</h1>
-              <h4>Please grant Origin permission to access your Metamask account so you can publish your marketplace.</h4>
+              <h1>Publish Your New DApp</h1>
+              <h4>Sign your configuration using MetaMask to complete the marketplace creation process.</h4>
             </div>
           </div>
         }
@@ -96,15 +96,6 @@ require('react-styl')(`
     padding: 6rem 0
     .btn
       margin-top: 2rem
-
-  .metamask-prompt
-    text-align: center
-    padding: 6rem 0
-
-  .metamask-prompt img
-    width: 90px
-    height: 90px
-    margin: 2rem 0
 `)
 
 export default MetaMaskPrompt
