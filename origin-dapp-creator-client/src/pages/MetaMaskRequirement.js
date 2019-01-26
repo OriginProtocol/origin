@@ -2,6 +2,7 @@
 
 import React from 'react'
 
+import MetaMaskCallToAction from 'components/MetaMaskCallToAction'
 import Steps from 'components/Steps'
 
 class MetaMaskRequirement extends React.Component {
@@ -19,10 +20,7 @@ class MetaMaskRequirement extends React.Component {
           <div className="form">
             <div className="metamask-prompt">
               <div>
-                <video width="367" height="277" autoPlay loop>
-                  <source src="metamask.mp4" type="video/mp4" />
-                  {'Your browser does not support the video tag.'}
-                </video>
+                <MetaMaskCallToAction />
                 {!window.web3 &&
                   <>
                     <h1>MetaMask Required</h1>

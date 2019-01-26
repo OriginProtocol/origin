@@ -2,6 +2,7 @@
 
 import React from 'react'
 
+import MetaMaskCallToAction from 'components/MetaMaskCallToAction'
 import Redirect from 'components/Redirect'
 
 class MetaMaskPrompt extends React.Component {
@@ -70,10 +71,7 @@ class MetaMaskPrompt extends React.Component {
         {!this.state.isError &&
           <div className="metamask-prompt">
             <div>
-              <video width="367" height="277" autoPlay loop>
-                <source src="metamask.mp4" type="video/mp4" />
-                {'Your browser does not support the video tag.'}
-              </video>
+              <MetaMaskCallToAction />
               <h1>Publish Your New DApp</h1>
               <h4>Sign your configuration using MetaMask to complete the marketplace creation process.</h4>
             </div>
