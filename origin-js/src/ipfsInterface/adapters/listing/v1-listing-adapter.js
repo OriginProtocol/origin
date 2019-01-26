@@ -86,9 +86,12 @@ export default class ListingAdapterV1 extends AdapterBase {
         ? new Money(ipfsData.commissionPerUnit)
         : null
     } else if (listing.type === 'fractional') {
-      listing.slots = ipfsData.slots
+      listing.availability = ipfsData.availability
       listing.slotLength = ipfsData.slotLength
       listing.slotLengthUnit = ipfsData.slotLengthUnit
+      listing.commission = ipfsData.commission
+        ? new Money(ipfsData.commission)
+        : null
     } else {
       throw new Error(`Unexpected listing type: ${listing.type}`)
     }

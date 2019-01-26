@@ -38,5 +38,6 @@ export default {
     const { listingId } = parseId(listing.id)
     const hiddenIds = await getHidden(contracts.net)
     return hiddenIds.indexOf(listingId) >= 0
-  }
+  },
+  price: listing => listing.price || {}
 }

@@ -22,7 +22,7 @@ if (typeof window !== 'undefined') {
 
 const Configs = {
   mainnet: {
-    provider: 'https://mainnet.infura.io',
+    provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
@@ -55,19 +55,30 @@ const Configs = {
         symbol: 'GUSD',
         decimals: '2'
       }
-    ]
+    ],
+    affiliate: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8',
+    arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a'
   },
   rinkeby: {
     provider: 'https://rinkeby.infura.io',
     providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
+    ipfsEventCache: 'QmdMTYdXtKHzhTHDuUmx4eGG372pwbK4sQptPtoS6q3LsK',
     discovery: 'https://discovery.staging.originprotocol.com',
     V00_UserRegistry: '0x56727c8a51b276aec911afa8d6d80d485c89d5cc',
     OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
     V00_Marketplace: '0xe842831533c4bf4b0f71b4521c4320bdb669324e',
-    V00_Marketplace_Epoch: '3086315'
+    V00_Marketplace_Epoch: '3086315',
+    affiliate: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
+    arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992',
+    messaging: {
+      ipfsSwarm:
+        '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
+      messagingNamespace: 'origin:staging',
+      globalKeyServer: 'https://messaging-api.staging.originprotocol.com'
+    }
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
