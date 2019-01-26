@@ -46,6 +46,10 @@ label {
   margin-top: 0.5rem;
 }
 
+video {
+  margin-bottom: 3rem;
+}
+
 .form-actions {
   text-align: center;
   margin-top: 3rem;
@@ -65,4 +69,3 @@ label {
   font-size: 12px;
   margin: 2rem 0 4rem;
 }
-
