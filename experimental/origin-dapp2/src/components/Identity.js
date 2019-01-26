@@ -4,7 +4,7 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 const IdentityQuery = gql`
-  query IdentityQuery($account: String!){
+  query IdentityQuery($account: String!) {
     web3 {
       account(id: $account) {
         id
@@ -36,10 +36,8 @@ class Identity extends Component {
             if (!fullName) {
               return <span>{account.substr(0, 6)}</span>
             }
-            return (
-              <span>{`${fullName}`}</span>
-            )
-          } catch(e) {
+            return <span>{`${fullName}`}</span>
+          } catch (e) {
             return account.substr(0, 6)
           }
         }}
