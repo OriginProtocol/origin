@@ -8,6 +8,7 @@ import Step1 from './Step1'
 import Step2 from './Step2'
 import Step3 from './Step3'
 import Review from './Review'
+import Availability from './Availability'
 
 import Store from 'utils/store'
 const store = Store('sessionStorage')
@@ -21,12 +22,19 @@ class CreateListing extends Component {
         description: '',
         category: '',
         subCategory: '',
-        quantity: '1',
         location: '',
-        price: '',
         boost: '50',
         boostLimit: '100',
         media: [],
+
+        // Unit fields:
+        quantity: '1',
+        price: '',
+
+        // HomeShare fields:
+        weekdayPrice: '',
+        weekendPrice: '',
+
         ...store.get('create-listing', {})
       }
     }
@@ -64,6 +72,15 @@ class CreateListing extends Component {
             path="/create/review"
             render={() => (
               <Review
+                tokenBalance={this.props.tokenBalance}
+                listing={this.state.listing}
+              />
+            )}
+          />
+          <Route
+            path="/create/availability"
+            render={() => (
+              <Availability
                 tokenBalance={this.props.tokenBalance}
                 listing={this.state.listing}
               />

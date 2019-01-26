@@ -242,7 +242,7 @@ require('react-styl')(`
 
     .no-ogn
       padding-top: 7rem
-      background: url(images/ogn-icon-horiz.svg) no-repeat
+      background: var(--golden-rod-light) url(images/ogn-icon-horiz.svg) no-repeat
       background-position: center 2rem
       margin-bottom: 1rem
       > div:nth-child(1)

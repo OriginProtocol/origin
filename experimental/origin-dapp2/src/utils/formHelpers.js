@@ -15,6 +15,8 @@ export const formInput = (state, setState, className) => field => ({
 export const formFeedback = state =>
   function InvalidFeedback(field) {
     return state[`${field}Error`] ? (
-      <div className="invalid-feedback">{state[`${field}Error`]}</div>
+      <div className="invalid-feedback" style={{ display: 'block' }}>
+        {state[`${field}Error`]}
+      </div>
     ) : null
   }
