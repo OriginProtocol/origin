@@ -8,7 +8,7 @@ import Customize from 'pages/Customize'
 import Configure from 'pages/Configure'
 import MetaMaskPrompt from 'pages/MetaMaskPrompt'
 import Resolver from 'pages/Resolver'
-import Steps from 'components/Steps'
+import StepsContainer from 'components/StepsContainer'
 import Success from 'pages/Success'
 import Store from 'utils/store'
 const store = Store('sessionStorage')
@@ -73,7 +73,7 @@ class App extends React.Component {
         </div>
 
         <div className="main">
-          <Steps  />
+          <StepsContainer  />
 
           <div className="form">
             <Switch>

@@ -44,7 +44,7 @@ class Configure extends React.Component {
       <form onSubmit={this.handleSubmit}>
         {this.renderRedirect()}
 
-        <h1>Configure your Marketplace</h1>
+        <h1>Configure Your Marketplace</h1>
         <h4>Finish setting up your marketplace with the options below.</h4>
 
         <div className="form-group">
