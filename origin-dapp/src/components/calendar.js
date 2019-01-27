@@ -452,6 +452,7 @@ class Calendar extends Component {
 
   goToToday() {
     const date = new Date()
+    this.renderRecurringEvents(date)
     this.setState({ calendarDate: date })
     this.currentDate = date
   }
@@ -467,12 +468,20 @@ class Calendar extends Component {
     })
   }
 
+  isShowingCurrentPeriod() {
+    const { calendarDate } = this.state
+    const period = this.getViewType()
+    const calendarPeriod = moment(calendarDate).get(period)
+    const currentPeriod = moment(this.currentDate).get(period)
+
+    return calendarPeriod === currentPeriod
+  }
+
   render() {
     const selectedEvent = this.state.selectedEvent
     const { viewType, userType, offers } = this.props
     const {
       events,
-      calendarDate,
       showNoEventsEnteredErrorMessage,
       selectionUnavailable,
       showPastDateSelectedError
@@ -487,7 +496,7 @@ class Calendar extends Component {
                            ${viewType === 'daily' ? ' daily-view' : ' hourly-view'}`}>
             <div className="calendar-nav">
               <img onClick={this.prevPeriod} className="prev-period" src="/images/caret-dark.svg" />
-              {calendarDate !== this.currentDate &&
+              {!this.isShowingCurrentPeriod() &&
                 <span className="go-to-today-btn" onClick={this.goToToday}>
                   <FormattedMessage
                     id={'calendar.goToToday'}
