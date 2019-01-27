@@ -6,7 +6,14 @@ class AvailabilityCalculator {
     console.log(opts)
   }
 
-  // update(start, end, available,)
+  /**
+   * @param range         Date range (eg 2019/01/01-2019-02-01)
+   * @param availability  'available', 'unavailable', 'booked'
+   * @param price         '0.1', undefined: leave as is, null: reset to default
+   */
+  update(range, availability, price) {
+
+  }
 
   getAvailability(startStr, endStr) {
     let start = dayjs(startStr)
