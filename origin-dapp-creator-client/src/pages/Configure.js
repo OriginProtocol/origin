@@ -67,7 +67,7 @@ class Configure extends React.Component {
   }
 
   // Determines if there is either category or subcategory filtering applied in configs filters
-  isCategoryFiltered (category) {
+  isCategoryFiltered () {
     return this.props.config.filters.listings.category ||
       this.props.config.filters.listings.subCategory
   }
