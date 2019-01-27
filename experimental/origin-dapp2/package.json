@@ -133,5 +133,9 @@
   "eslintIgnore": [
     "node_modules",
     "public"
-  ]
+  ],
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
 }

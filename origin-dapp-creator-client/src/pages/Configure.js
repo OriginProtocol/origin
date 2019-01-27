@@ -166,11 +166,15 @@ class Configure extends React.Component {
       <form onSubmit={this.handleSubmit}>
         {this.renderRedirect()}
 
-        <h1>Configure your Marketplace</h1>
+        <h1>Configure Your Marketplace</h1>
         <h4>Finish setting up your marketplace with the options below.</h4>
 
         <div className="form-group">
-          <label>Filtering</label>
+          <label>Filter Listings (optional)</label>
+
+          <p>
+            <small>You can choose to only show listings created on your marketplace or specific types of listings. Otherwise, your DApp will show listings from all Origin marketplaces.</small>
+          </p>
 
           <div className="option">
             <input className="form-check-input"

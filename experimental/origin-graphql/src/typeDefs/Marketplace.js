@@ -240,6 +240,12 @@ export default `
     listing: Listing
     events: [Event]
     createdEvent: Event
+    acceptedEvent: Event
+    finalizedEvent: Event
+    withdrawnEvent: Event
+    fundsAddedEvent: Event
+    disputedEvent: Event
+    rulingEvent: Event
     history: [OfferHistory]
 
     # On-Chain

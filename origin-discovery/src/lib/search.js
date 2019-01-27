@@ -58,6 +58,17 @@ class Listing {
     const gettersToIndex = ['unitsPending', 'unitsSold', 'unitsRemaining', 'commissionRemaining', 'boostCommission']
     gettersToIndex.forEach(getter => listingToIndex[getter] = listing[getter])
 
+    // jCal fields are very dynamic and cause issues with ElasticSearch dynamic mappings.
+    // Disabling indexing of those fields for now until we need to support search by availability.
+    delete listingToIndex.ipfs
+    delete listingToIndex.availability
+    if (listingToIndex.offers) {
+      listingToIndex.offers.forEach(offer => {
+        delete offer.ipfs
+        delete offer.timeSlots
+      })
+    }
+
     await client.index({
       index: LISTINGS_INDEX,
       id: listingId,
