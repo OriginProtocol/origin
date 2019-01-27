@@ -181,7 +181,7 @@ class Configure extends React.Component {
               type="checkbox"
               checked={this.state.config.filters.listings.marketplacePublisher}
               onChange={this.toggleFilterByOwn} />
-            Limit to only my own
+            Only use listings from my marketplace
           </div>
 
           <div className={`option category-select ${this.state.filterByTypeEnabled ? 'expanded' : 'collapsed' }`}>
