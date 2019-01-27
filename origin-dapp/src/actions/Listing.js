@@ -59,8 +59,6 @@ export function getListingIds() {
         })
       }
 
-      console.log(filters)
-
       const ids = await origin.marketplace.getListings({
         idsOnly: true,
         filters: filters
