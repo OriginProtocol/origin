@@ -197,11 +197,13 @@ class SearchResult extends Component {
         const listingFilterAttributes = ['marketplacePublisher', 'category', 'subCategory']
 
         listingFilterAttributes.map((listingFilterAttribute) => {
-          filters[listingFilterAttribute] = {
-            name: listingFilterAttribute,
-            value: this.props.config.filters.listings[listingFilterAttribute],
-            valueType: 'STRING',
-            operator: 'EQUALS'
+          if (this.props.config.filters.listings[listingFilterAttribute]) {
+            filters[listingFilterAttribute] = {
+              name: listingFilterAttribute,
+              value: this.props.config.filters.listings[listingFilterAttribute],
+              valueType: 'STRING',
+              operator: 'EQUALS'
+            }
           }
         })
       }
