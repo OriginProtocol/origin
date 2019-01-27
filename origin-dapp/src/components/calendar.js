@@ -430,31 +430,38 @@ class Calendar extends Component {
     })
   }
 
-  prevPeriod() {
+  async prevPeriod() {
     const date = moment(this.state.calendarDate).subtract(1, this.getViewType()).toDate()
 
     this.renderRecurringEvents(date)
 
-    this.setState({
+    await this.setState({
       calendarDate: date
     })
+
+    highlightCalendarDrag()
   }
 
-  nextPeriod() {
+  async nextPeriod() {
     const date = moment(this.state.calendarDate).add(1, this.getViewType()).toDate()
 
     this.renderRecurringEvents(date)
+    highlightCalendarDrag()
 
-    this.setState({
+    await this.setState({
       calendarDate: date
     })
+
+    highlightCalendarDrag()
   }
 
-  goToToday() {
+  async goToToday() {
     const date = new Date()
     this.renderRecurringEvents(date)
-    this.setState({ calendarDate: date })
+    highlightCalendarDrag()
     this.currentDate = date
+    await this.setState({ calendarDate: date })
+    highlightCalendarDrag()
   }
 
   renderRecurringEvents(date) {
