@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   extend type Query {
     marketplace: Marketplace
     marketplaces: [Marketplace]
@@ -174,13 +174,6 @@ export default `
     node: Listing
   }
 
-  type PageInfo {
-    endCursor: String
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-  }
-
   type Listing {
     id: ID!
 
@@ -240,6 +233,12 @@ export default `
     listing: Listing
     events: [Event]
     createdEvent: Event
+    acceptedEvent: Event
+    finalizedEvent: Event
+    withdrawnEvent: Event
+    fundsAddedEvent: Event
+    disputedEvent: Event
+    rulingEvent: Event
     history: [OfferHistory]
 
     # On-Chain

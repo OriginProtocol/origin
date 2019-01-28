@@ -22,7 +22,7 @@ class Success extends React.Component {
         <h4>You&apos;ve finished setting up your marketplace.</h4>
         <button className="btn btn-primary btn-lg"
             onClick={this.openMarketplace}>
-          Great, thanks!
+          Go to my marketplace
         </button>
       </div>
     )

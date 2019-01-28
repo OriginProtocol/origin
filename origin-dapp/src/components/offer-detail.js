@@ -72,7 +72,7 @@ class OfferDetail extends Component {
   componentDidMount() {
     if (this.props.listing.isFractional) {
       const { offer, listing } = this.props
-      const { startDate, endDate } = getStartEndDatesFromSlots(offer.slots, listing.slotLengthUnit)
+      const { startDate, endDate } = getStartEndDatesFromSlots(offer.timeSlots, listing.slotLengthUnit)
 
       this.setState({
         startDate,

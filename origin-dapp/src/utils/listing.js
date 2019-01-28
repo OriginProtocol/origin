@@ -67,7 +67,7 @@ export function dappFormDataToOriginListing(formData) {
         amount: formData.boostValue.toString(),
         currency: 'OGN'
       },
-      slots: formData.slots,
+      availability: formData.availability,
       slotLength: formData.slotLength,
       slotLengthUnit: formData.slotLengthUnit
     }
@@ -151,7 +151,7 @@ export async function originToDAppListing(originListing) {
     isFractional,
     isMultiUnit,
     listingType: originListing.type,
-    slots: originListing.slots,
+    availability: originListing.availability,
     fractionalTimeIncrement: isFractional && slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily',
     offers: originListing.offers,
     events: originListing.events
