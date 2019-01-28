@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   extend type Query {
     notifications: NotificationConnection
   }
