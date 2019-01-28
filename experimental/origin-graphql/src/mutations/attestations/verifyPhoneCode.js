@@ -1,10 +1,7 @@
 import contracts from '../../contracts'
 import get from 'lodash/get'
 
-async function verifyPhoneCode(
-  _,
-  { identity, prefix, phone, code }
-) {
+async function verifyPhoneCode(_, { identity, prefix, phone, code }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false }
