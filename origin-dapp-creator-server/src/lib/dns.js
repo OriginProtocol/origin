@@ -18,7 +18,7 @@ export const subdomainBlacklist = [
  * @param {string} recordType The DNS record type.
  */
 function getDnsName(subdomain, recordType) {
-  const baseName = `${subdomain}.${process.env.DAPP_CREATOR_DOMAIN}.`
+  const baseName = `${subdomain}.${process.env.DAPP_CREATOR_DOMAIN}.`.toLowerCase()
   if (recordType.toLowerCase() === 'cname') {
     return baseName
   } else if (recordType.toLowerCase() === 'txt') {

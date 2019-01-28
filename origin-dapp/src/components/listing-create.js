@@ -405,6 +405,20 @@ class ListingCreate extends Component {
       }
     }
 
+    if (this.state.isEditMode && isFractionalListing) {
+      this.uiSchema = {
+        ...this.uiSchema,
+        ...{
+          weekdayPricing: {
+            'ui:widget': 'hidden'
+          },
+          weekendPricing: {
+            'ui:widget': 'hidden'
+          }
+        }
+      }
+    }
+
     const translatedSchema = translateSchema(schemaJson)
 
     this.setState(prevState => ({

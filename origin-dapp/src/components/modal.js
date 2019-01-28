@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ModalBS from 'react-bootstrap/lib/Modal'
+import ModalBS from 'react-bootstrap/Modal'
 
 class Modal extends Component {
   render() {
