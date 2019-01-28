@@ -39,26 +39,23 @@ export function getListingIds() {
         console.error(message)
       }
 
-      // if (networkId < 10) {
-      //   // Networks > 9 are local development
-      //   const response = await fetch(
-      //     `https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/hidelist_${networkId}.json`
-      //   )
-      //   if (response.status === 200) {
-      //     hideList = await response.json()
-      //   }
-      // }
       const config = getState().config
 
       const filters = []
-      if (config.filters &&
-          config.filters.listings &&
-          config.filters.listings.marketplacePublisher) {
-        filters.push({
-          name: 'marketplacePublisher',
-          value: config.filters.listings.marketplacePublisher,
-          valueType: 'STRING',
-          operator: 'EQUALS'
+
+      // Filters from the marketplace creator
+      if (config.filters && config.filters.listings) {
+        const listingFilterAttributes = ['marketplacePublisher', 'category', 'subCategory']
+
+        listingFilterAttributes.map((listingFilterAttribute) => {
+          if (config.filters.listings[listingFilterAttribute]) {
+            filters.push({
+              name: listingFilterAttribute,
+              value: config.filters.listings[listingFilterAttribute],
+              valueType: 'STRING',
+              operator: 'EQUALS'
+            })
+          }
         })
       }
 
