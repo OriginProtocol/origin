@@ -32,13 +32,15 @@ async function deployIdentityContract(_, { contract, from }) {
     if (!window.localStorage.ClaimHolderLibrary) {
       throw 'Could not link ClaimHolderLibrary'
     }
-    data = data.replace(
-      /__KeyHolderLibrary______________________/g,
-      window.localStorage.KeyHolderLibrary.slice(2)
-    ).replace(
-      /__ClaimHolderLibrary____________________/g,
-      window.localStorage.ClaimHolderLibrary.slice(2)
-    )
+    data = data
+      .replace(
+        /__KeyHolderLibrary______________________/g,
+        window.localStorage.KeyHolderLibrary.slice(2)
+      )
+      .replace(
+        /__ClaimHolderLibrary____________________/g,
+        window.localStorage.ClaimHolderLibrary.slice(2)
+      )
   } else if (contract === 'UserRegistry') {
     ContractDef = UserRegistry
     data = UserRegistry.bytecode

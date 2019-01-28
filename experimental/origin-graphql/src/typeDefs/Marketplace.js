@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   extend type Query {
     marketplace: Marketplace
     marketplaces: [Marketplace]
@@ -174,13 +174,6 @@ export default `
     node: Listing
   }
 
-  type PageInfo {
-    endCursor: String
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-  }
-
   type Listing {
     id: ID!
 
@@ -218,6 +211,10 @@ export default `
     categoryStr: String
     unitsTotal: Int
     media: [Media]
+    "IPFS: total commission, in natural units, available across all units"
+    commission: String
+    "IPFS: commission, in natural units, to be paid for each unit sold"
+    commissionPerUnit: String
   }
 
   type Media {
@@ -236,6 +233,12 @@ export default `
     listing: Listing
     events: [Event]
     createdEvent: Event
+    acceptedEvent: Event
+    finalizedEvent: Event
+    withdrawnEvent: Event
+    fundsAddedEvent: Event
+    disputedEvent: Event
+    rulingEvent: Event
     history: [OfferHistory]
 
     # On-Chain
@@ -274,6 +277,11 @@ export default `
     price: PriceInput
     unitsTotal: Int
     media: [MediaInput]
+
+    "total commission, in natural units, for all units"
+    commission: String
+    "commission, in natural units, to be paid for each unit sold"
+    commissionPerUnit: String
   }
 
   input MediaInput {

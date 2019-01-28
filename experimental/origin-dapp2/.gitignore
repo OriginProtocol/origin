@@ -1,7 +1,6 @@
 node_modules
 .DS_Store
 public/app.*
-public/css/app.css
 public/index.html
 public/fonts
 data/db

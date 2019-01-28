@@ -121,9 +121,9 @@ export default async function listings(
     totalCount = 0
 
   if (search && contracts.discovery) {
-    ({ totalCount, ids } = await searchIds(search))
+    ;({ totalCount, ids } = await searchIds(search))
   } else {
-    ({ totalCount, ids } = await allIds({ contract, sort, hidden }))
+    ;({ totalCount, ids } = await allIds({ contract, sort, hidden }))
   }
 
   return await resultsFromIds({ after, ids, first, totalCount })

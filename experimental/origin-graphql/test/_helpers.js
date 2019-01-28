@@ -1,3 +1,4 @@
+import assert from 'assert'
 import get from 'lodash/get'
 
 import contracts from '../src/contracts'
@@ -45,4 +46,27 @@ export async function mutate(mutation, variables, getEvents) {
   }, {})
 
   return res
+}
+
+export async function getOffer(listingId, offerIdx, checkValid) {
+  const offerId = `${listingId}-${offerIdx}`
+  // Get the offer through allOffers, so that contextual validation may be
+  // performed across all offers for the listing.
+  const res = await client.query({
+    query: queries.GetAllOffers,
+    variables: { id: listingId }
+  })
+
+  const offers = get(res, 'data.marketplace.listing.allOffers')
+    .filter(o => o.id === offerId)
+  assert.strictEqual(offers.length, 1)
+  const offer = offers[0]
+  assert.ok(offer)
+  assert.strictEqual(offer.id, offerId)
+  if (checkValid) {
+    assert(offer.valid, 'offer validation failed')
+    assert(!offer.validationError)
+  }
+
+  return offer
 }
