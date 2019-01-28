@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  origin-dapp2:
+    container_name: origin-dapp2
+    image: origin
+    volumes:
+      # Include origin-contracts build files so the DApp has access to the
+      # address of the contracts on the local blockchain
+      - ./origin-contracts/build:/app/origin-contracts/build
+      - ./experimental:/app/experimental
+    ports:
+      - "3000:3000"
+    # npm run start --prefix experimental/origin-dapp2
+    command:
+      >
+      sleep infinity
