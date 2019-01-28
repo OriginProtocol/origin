@@ -11,7 +11,6 @@ services:
       - ./experimental:/app/experimental
     ports:
       - "3000:3000"
-    # npm run start --prefix experimental/origin-dapp2
     command:
       >
-      sleep infinity
+      npm run start --prefix experimental/origin-dapp2
