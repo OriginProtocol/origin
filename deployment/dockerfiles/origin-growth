@@ -1,0 +1,15 @@
+FROM node:10 as build
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./origin-js ./origin-js
+COPY ./origin-growth ./origin-growth
+COPY ./scripts ./scripts
+
+RUN npm install --unsafe-perm
+
+CMD npm run start:growth --prefix origin-growth
