@@ -19,8 +19,7 @@ export default {
     const { listingId, offerId } = parseId(args.id)
     return contracts.eventSource.getOffer(listingId, offerId)
   },
-  offers: async listing =>
-    listing.allOffers.filter(o => o.valid),
+  offers: async listing => listing.allOffers.filter(o => o.valid),
   createdEvent: async listing => {
     const { listingId } = parseId(listing.id)
     const events = await listing.contract.eventCache.listings(

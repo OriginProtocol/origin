@@ -22,11 +22,11 @@ faucetImageTag: '7fab530'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'b07803c'
+eventlistenerImageTag: '502bf11'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '56baf55'
+discoveryImageTag: '502bf11'
 
 # origin-messaging
 messagingImage: origin-messaging

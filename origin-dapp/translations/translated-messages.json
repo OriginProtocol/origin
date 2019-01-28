@@ -18909,6 +18909,7 @@
     "xxxx.price-usd-disclaimer": "USD is an estimate.",
     "header.title": "Origin Protocol DApp",
     "listing-card-prices.multiUnitListing.each": "each",
+    "listing-card-prices.multiUnitListing.averagePrice": "average price",
     "listing-card-prices.loadingMessage": "Loading...",
     "listing-card.multiUnitListing.each": "each",
     "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",

@@ -3,6 +3,7 @@ import { Query } from 'react-apollo'
 import pick from 'lodash/pick'
 
 import BottomScrollListener from 'components/BottomScrollListener'
+import QueryError from 'components/QueryError'
 
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
@@ -45,7 +46,7 @@ class Listings extends Component {
               if (networkStatus === 1) {
                 return <h5 className="listings-count">Loading...</h5>
               } else if (error) {
-                return <p className="p-3">Error :(</p>
+                return <QueryError error={error} query={query} vars={vars} />
               } else if (!data || !data.marketplace) {
                 return <p className="p-3">No marketplace contract?</p>
               }
