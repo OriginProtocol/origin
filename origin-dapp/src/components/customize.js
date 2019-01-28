@@ -63,6 +63,17 @@ class Customize extends React.Component {
         window.location.reload()
       }
     }
+
+    if (this.props.config.faviconUrl) {
+      let faviconElement = document.querySelector('link[rel="shortcut icon"]')
+      if (!faviconElement) {
+          faviconElement = document.createElement('link')
+          faviconElement.setAttribute('rel', 'shortcut icon')
+          var head = document.querySelector('head')
+          head.appendChild(faviconElement)
+      }
+      faviconElement.setAttribute('href', this.props.config.faviconUrl)
+    }
   }
 
   isWhiteLabelHostname () {
