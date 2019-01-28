@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
 
+import { IntlViewerContext } from 'fbt-runtime'
+
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
 import Nav from './_Nav'
@@ -21,7 +23,7 @@ import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
 
 class App extends Component {
-  state = { hasError: false }
+  state = { hasError: false, locale: 'en_US' }
 
   componentDidMount() {
     if (window.ethereum) {
@@ -69,7 +71,13 @@ class App extends Component {
             <Route component={Listings} />
           </Switch>
         </main>
-        <Footer />
+        <Footer
+          locale={this.state.locale}
+          onLocale={locale => {
+            IntlViewerContext.locale = locale
+            this.setState({ locale })
+          }}
+        />
       </>
     )
   }

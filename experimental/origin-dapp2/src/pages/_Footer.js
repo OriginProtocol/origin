@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Footer = () => (
+const Footer = ({ locale, onLocale }) => (
   <footer>
     <div className="container">
       <div className="logo" />
@@ -11,7 +11,14 @@ const Footer = () => (
         <div className="copyright">© 2018 Origin Protocol, Inc.</div>
       </div>
       <div className="links">
-        <a href="#" onClick={e => e.preventDefault()}>
+        <a
+          href="#"
+          onClick={e => {
+            e.preventDefault()
+            onLocale(locale === 'en_US' ? 'fb_HX' : 'en_US')
+            window.scrollTo(0, 0)
+          }}
+        >
           English
         </a>
         <a href="https://www.originprotocol.com/">Visit our Website</a>
