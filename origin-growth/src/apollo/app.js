@@ -1,5 +1,5 @@
 /*
- * Implementation of the Origin Growth GraphQL server.
+ * Implementation of the Origin GraphQL server.
  * Uses the Apollo framework: https://www.apollographql.com/server
  */
 require('dotenv').config()
@@ -17,7 +17,6 @@ const promBundle = require('express-prom-bundle')
 
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
-const listingMetadata = require('./listing-metadata')
 
 const app = express()
 app.use(cors())
@@ -36,11 +35,6 @@ app.use(bundle)
 const server = new ApolloServer({
   resolvers,
   typeDefs,
-  context: async () => {
-    // Update listing Metadata in a non blocking way
-    listingMetadata.updateHiddenFeaturedListings()
-    return {}
-  },
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,
   playground: true,
@@ -48,10 +42,7 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app })
 
-// Initial fetch of ids at the time of starting the server.
-listingMetadata.updateHiddenFeaturedListings()
-
-const port = process.env.PORT || 4000
+const port = process.env.PORT || 4001
 
 app.listen({ port: port }, () =>
   console.log(`Apollo server ready at http://localhost:${port}${server.graphqlPath}`)
