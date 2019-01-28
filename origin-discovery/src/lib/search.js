@@ -58,6 +58,12 @@ class Listing {
     const gettersToIndex = ['unitsPending', 'unitsSold', 'unitsRemaining', 'commissionRemaining', 'boostCommission']
     gettersToIndex.forEach(getter => listingToIndex[getter] = listing[getter])
 
+    // boostCommission is critical for calculating scoring.
+    // Log a warning if that field is not populated - it is likely a bug.
+    if (!listingToIndex.boostCommission) {
+      console.log(`WARNING: missing field boostCommission on listing ${listingId}`)
+    }
+
     // jCal fields are very dynamic and cause issues with ElasticSearch dynamic mappings.
     // Disabling indexing of those fields for now until we need to support search by availability.
     delete listingToIndex.ipfs
