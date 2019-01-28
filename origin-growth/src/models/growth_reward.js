@@ -1,4 +1,5 @@
-'use strict';
+'use strict'
+
 module.exports = (sequelize, DataTypes) => {
   const growth_reward = sequelize.define('growth_reward', {
     id: DataTypes.INTEGER,
@@ -9,9 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     campaignRule: DataTypes.STRING,
     amount: DataTypes.DECIMAL,
     currency: DataTypes.STRING
-  }, {});
-  growth_reward.associate = function(models) {
-    // associations can be defined here
-  };
-  return growth_reward;
-};
+  }, {})
+
+  return growth_reward
+}

@@ -1,4 +1,5 @@
-'use strict';
+'use strict'
+
 module.exports = (sequelize, DataTypes) => {
   const growth_campaign = sequelize.define('growth_campaign', {
     id: DataTypes.INTEGER,
@@ -9,9 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     distributionDate: DataTypes.DATE,
     cap: DataTypes.DECIMAL,
     capUsed: DataTypes.DECIMAL
-  }, {});
-  growth_campaign.associate = function(models) {
-    // associations can be defined here
-  };
-  return growth_campaign;
-};
+  }, {})
+
+  return growth_campaign
+}
