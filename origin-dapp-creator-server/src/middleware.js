@@ -5,7 +5,7 @@ import { getConfigFromIpfs } from './lib/ipfs'
 import logger from './logger'
 
 const Web3 = require('web3')
-const web3 = new Web3()
+const web3 = new Web3(process.env.PROVIDER_URL)
 
 export async function validateSubdomain (req, res, next) {
   const { address, config } = req.body
