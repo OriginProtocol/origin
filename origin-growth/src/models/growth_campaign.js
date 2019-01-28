@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     endDate: DataTypes.DATE,
     distributionDate: DataTypes.DATE,
     cap: DataTypes.DECIMAL,
-    capUsed: DataTypes.DECIMAL
+    capUsed: DataTypes.DECIMAL,
+    currency: DataTypes.STRING
   }, {})
 
   return growth_campaign

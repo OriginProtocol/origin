@@ -38,8 +38,9 @@ const GrowthInviteContactTypes = new Enum(
 )
 
 const GrowthInviteStatuses = new Enum(
-  'Pending',
-  'Accepted'
+  'Sent',
+  'Visited',
+  'Completed'
 )
 
 module.exports = {

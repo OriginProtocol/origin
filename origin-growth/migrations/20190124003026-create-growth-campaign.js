@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const tableName = 'growth_campaign'
 
@@ -32,6 +32,9 @@ module.exports = {
       cap_used: {
         type: Sequelize.DECIMAL
       },
+      currency: {
+        type: Sequelize.STRING,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -42,7 +45,7 @@ module.exports = {
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(tableName);
+  down: (queryInterface) => {
+    return queryInterface.dropTable(tableName)
   }
-};
+}

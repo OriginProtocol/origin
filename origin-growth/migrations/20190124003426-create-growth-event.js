@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 
-const tableName = 'growth_event';
+const tableName = 'growth_event'
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -33,9 +33,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'type']));
+    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'type']))
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(tableName);
+  down: (queryInterface) => {
+    return queryInterface.dropTable(tableName)
   }
-};
+}

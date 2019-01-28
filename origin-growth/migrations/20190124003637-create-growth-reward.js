@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const { GrowthRewardStatuses } = require('../src/enums')
 
@@ -42,9 +42,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'campaign_id']));
+    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'campaign_id']))
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(tableName);
+  down: (queryInterface) => {
+    return queryInterface.dropTable(tableName)
   }
-};
+}

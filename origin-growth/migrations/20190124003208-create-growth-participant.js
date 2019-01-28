@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const tableName = 'growth_participant'
 
@@ -26,7 +26,7 @@ module.exports = {
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(tableName);
+  down: (queryInterface) => {
+    return queryInterface.dropTable(tableName)
   }
-};
+}

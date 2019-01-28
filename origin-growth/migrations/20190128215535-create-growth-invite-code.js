@@ -1,18 +1,18 @@
 'use strict'
 
-const tableName = 'growth_referral'
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(tableName, {
-      referrer_eth_address: {
+    return queryInterface.createTable('growth_invite_codes', {
+      id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      eth_address: {
         type: Sequelize.STRING
       },
-      referee_eth_address: {
-        allowNull: false,
-        primaryKey: true,
+      code: {
         type: Sequelize.STRING
       },
       created_at: {
@@ -23,9 +23,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => queryInterface.addIndex(tableName, ['referee_eth_address']))
+    });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable(tableName)
+    return queryInterface.dropTable('growth_invite_codes')
   }
 }
