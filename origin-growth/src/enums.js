@@ -34,7 +34,8 @@ const GrowthRewardStatuses = new Enum(
 
 const GrowthInviteContactTypes = new Enum(
   'Email',
-  'Phone'
+  'Phone',
+  'Other'
 )
 
 const GrowthInviteStatuses = new Enum(
