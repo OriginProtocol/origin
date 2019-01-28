@@ -13,7 +13,8 @@ import {
   HTMLSelect,
   Slider,
   Checkbox,
-  TextArea
+  TextArea,
+  Tag
 } from '@blueprintjs/core'
 
 import rnd from 'utils/rnd'
@@ -50,6 +51,9 @@ class CreateListing extends Component {
       const media = props.listing.media || []
       const category = props.listing.category || 'schema.forSale'
       const subCategory = get(Categories[category], `0.0`, '')
+      const commissionPerUnit = props.listing.commissionPerUnit
+        ? web3.utils.fromWei(props.listing.commissionPerUnit, 'ether')
+        : '0'
 
       this.state = {
         title: props.listing.title || '',
@@ -63,7 +67,8 @@ class CreateListing extends Component {
         autoApprove: true,
         media,
         initialMedia: media,
-        unitsTotal: props.listing.unitsTotal
+        unitsTotal: props.listing.unitsTotal,
+        commissionPerUnit
       }
     } else {
       this.state = {
@@ -79,7 +84,8 @@ class CreateListing extends Component {
         autoApprove: true,
         media: [],
         initialMedia: [],
-        unitsTotal: 1
+        unitsTotal: 1,
+        commissionPerUnit: 5
       }
     }
   }
@@ -240,6 +246,14 @@ class CreateListing extends Component {
                     />
                   </FormGroup>
                 </div>
+                <div style={{ flex: 1 }}>
+                  <FormGroup label="Com/Unit">
+                    <InputGroup
+                      {...input('commissionPerUnit')}
+                      rightElement={<Tag minimal={true}>OGN</Tag>}
+                      />
+                  </FormGroup>
+                </div>
               </div>
               {!isCreate ? null : (
                 <div style={{ display: 'flex' }}>
@@ -307,7 +321,9 @@ class CreateListing extends Component {
       description: egListing.description,
       media: egListing.media,
       initialMedia: egListing.media,
-      unitsTotal: egListing.unitsTotal
+      unitsTotal: egListing.unitsTotal,
+      commission: egListing.commission || '2',
+      commissionPerUnit: egListing.commissionPerUnit || '2'
     })
   }
 
@@ -345,7 +361,9 @@ class CreateListing extends Component {
           category: this.state.category,
           subCategory: this.state.subCategory,
           media: this.state.media.map(m => pick(m, 'contentType', 'url')),
-          unitsTotal: Number(this.state.unitsTotal)
+          unitsTotal: Number(this.state.unitsTotal),
+          commission: String(this.state.deposit) || '0',
+          commissionPerUnit: String(this.state.commissionPerUnit) || '0'
         }
       }
     }

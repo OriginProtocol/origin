@@ -188,10 +188,6 @@ class Listing extends Component {
           />
           {`. Deposit managed by `}
           <Identity account={listing.arbitrator} />
-          <span style={{ marginLeft: 10 }}>
-            {currency({ amount: listing.depositAvailable, currency: 'OGN' })}/
-            {currency({ amount: listing.deposit, currency: 'OGN' })}
-          </span>
         </span>
         {this.renderActions(sellerPresent, listing)}
         {listing.status === 'withdrawn' ? (
@@ -201,6 +197,16 @@ class Listing extends Component {
             Active
           </Tag>
         )}
+        <br />
+        <span style={{ marginRight: 10 }}>
+          Commission:{' '}
+          {currency({ amount: listing.depositAvailable, currency: 'OGN' })}/
+          {currency({ amount: listing.commission, currency: 'OGN' })}
+        </span>
+        <span>
+          Per-unit commission:{' '}
+          {currency({ amount: listing.commissionPerUnit, currency: 'OGN' })}
+        </span>
       </div>
     )
   }

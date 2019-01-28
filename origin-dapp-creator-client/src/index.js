@@ -9,6 +9,7 @@ import * as Sentry from '@sentry/browser'
 
 import './css/app.css'
 import App from './pages/App'
+import MetaMaskRequirement from './pages/MetaMaskRequirement'
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -19,7 +20,10 @@ if (process.env.NODE_ENV === 'production') {
 class AppWrapper extends React.Component {
   render () {
     return (
-      <Web3Provider>
+      <Web3Provider
+        accountUnavailableScreen={MetaMaskRequirement}
+        web3UnavailableScreen={MetaMaskRequirement}
+      >
         <HashRouter>
           <Route component={App} />
         </HashRouter>
