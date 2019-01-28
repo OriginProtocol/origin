@@ -1,11 +1,11 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-  const growth_participant = sequelize.define('growth_participant', {
+  const GrowthParticipant = sequelize.define('GrowthParticipant', {
     ethAddress: DataTypes.STRING,
     data: DataTypes.JSONB,
     agreementId: DataTypes.STRING
   }, {})
 
-  return growth_participant
+  return GrowthParticipant
 }

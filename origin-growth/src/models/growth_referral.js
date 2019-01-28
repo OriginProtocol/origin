@@ -1,10 +1,10 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-  const growth_referral = sequelize.define('growth_referral', {
+  const GrowthReferral = sequelize.define('GrowthReferral', {
     referrerEthAddress: DataTypes.STRING,
     refereeEthAddress: DataTypes.STRING
   }, {})
 
-  return growth_referral
+  return GrowthReferral
 }

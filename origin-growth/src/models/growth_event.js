@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-  const growth_event = sequelize.define('growth_event', {
+  const GrowthEvent = sequelize.define('GrowthEvent', {
     id: DataTypes.INTEGER,
     type: DataTypes.ENUM,
     status: DataTypes.ENUM,
@@ -9,5 +9,5 @@ module.exports = (sequelize, DataTypes) => {
     data: DataTypes.JSONB
   }, {})
 
-  return growth_event
+  return GrowthEvent
 }

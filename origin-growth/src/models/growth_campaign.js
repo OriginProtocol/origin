@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-  const growth_campaign = sequelize.define('growth_campaign', {
+  const GrowthCampaign = sequelize.define('GrowthCampaign', {
     id: DataTypes.INTEGER,
     name: DataTypes.STRING,
     rules: DataTypes.JSONB,
@@ -13,5 +13,5 @@ module.exports = (sequelize, DataTypes) => {
     currency: DataTypes.STRING
   }, {})
 
-  return growth_campaign
+  return GrowthCampaign
 }

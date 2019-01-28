@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-  const growth_reward = sequelize.define('growth_reward', {
+  const GrowthReward = sequelize.define('GrowthReward', {
     id: DataTypes.INTEGER,
     status: DataTypes.ENUM,
     ethAddress: DataTypes.STRING,
@@ -12,5 +12,5 @@ module.exports = (sequelize, DataTypes) => {
     currency: DataTypes.STRING
   }, {})
 
-  return growth_reward
+  return GrowthReward
 }
