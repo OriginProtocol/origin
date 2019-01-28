@@ -28,7 +28,11 @@ class DropdownLink extends Component {
         >
           {this.props.content}
         </a>
-        <div className={`dropdown-menu dropdown-menu-right${this.state.open ? ' show' : ''}`}>
+        <div
+          className={`dropdown-menu dropdown-menu-right${
+            this.state.open ? ' show' : ''
+          }`}
+        >
           {this.props.children}
         </div>
       </Dropdown>

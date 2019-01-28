@@ -47,7 +47,11 @@ class NotificationsDropdown extends Component {
 
     const { data, open, onOpen, onClose } = this.props
 
-    const { nodes, totalCount } = get(data, 'marketplace.user.notifications', {})
+    const { nodes, totalCount } = get(
+      data,
+      'marketplace.user.notifications',
+      {}
+    )
 
     const hasUnread = '' //get(data, .notifications.totalUnread > 0 ? ' active' : ''
 

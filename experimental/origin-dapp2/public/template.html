@@ -8,7 +8,7 @@
     <link rel="icon" href="favicon.ico" />
     <% _.forEach(htmlWebpackPlugin.files.css, function(file) { %><link rel="stylesheet" href="<%- file %>" /><% }); %>
   </head>
-  <body><div id="app"><div class="p-3">Please wait...</div></div></body>
+  <body><div id="app"><div class="loading-screen"></div></div></body>
   <!-- <script crossorigin src="vendor/openpgp.min.js"></script>
   <script>
     if (typeof window.openpgp !== 'undefined') {
@@ -18,7 +18,7 @@
     }
   </script> -->
   <script>
-    localStorage.ognNetwork = "mainnet"
+    localStorage.ognNetwork = "rinkeby"
     localStorage.metaMaskEnabled = "true"
   </script>
   <% _.forEach(htmlWebpackPlugin.files.js, function(file) { %><script src="<%- file %>"></script><% }); %>

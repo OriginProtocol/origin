@@ -1,9 +1,7 @@
 import React from 'react'
 
 const ListingDetail = ({ listing }) => (
-  <div className="tx-listing-detail">
-    {listing.title}
-  </div>
+  <div className="tx-listing-detail">{listing.title}</div>
 )
 
 export default ListingDetail

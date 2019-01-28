@@ -11,7 +11,9 @@ const Footer = () => (
         <div className="copyright">© 2018 Origin Protocol, Inc.</div>
       </div>
       <div className="links">
-        <a href="#" onClick={e => e.preventDefault()}>English</a>
+        <a href="#" onClick={e => e.preventDefault()}>
+          English
+        </a>
         <a href="https://www.originprotocol.com/">Visit our Website</a>
         <a href="https://github.com/OriginProtocol">Visit our GitHub</a>
       </div>
