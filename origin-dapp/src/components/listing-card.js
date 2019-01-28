@@ -54,7 +54,8 @@ class ListingCard extends Component {
       pictures,
       price,
       isMultiUnit,
-      unitsRemaining
+      unitsRemaining,
+      isFractional
     } = listing
 
     const photo = pictures && pictures.length && pictures[0]
@@ -62,7 +63,8 @@ class ListingCard extends Component {
     const {
       showPendingBadge,
       showSoldBadge,
-      showFeaturedBadge
+      showFeaturedBadge,
+      averagePrice
     } = getDerivedListingData(listing)
 
     return (
@@ -103,11 +105,12 @@ class ListingCard extends Component {
             )*/}
           </div>
           <h2 className="title placehold text-truncate" title={name}>{name}</h2>
-          {price > 0 && (
+          {(price > 0 || averagePrice > 0) && (
             <ListingCardPrices
-              price={price}
+              price={isFractional ? averagePrice : price}
               unitsRemaining={unitsRemaining}
               isMultiUnit={isMultiUnit}
+              isFractional={isFractional}
             />
           )}
         </Link>

@@ -20,6 +20,7 @@
     "graphql": "^0.13.2",
     "graphql-type-json": "^0.2.1",
     "http": "0.0.0",
+    "origin-graphql": "^0.1.0",
     "per-env": "^1.0.2",
     "pg": "^7.7.1",
     "sequelize": "^5.0.0-beta.14",

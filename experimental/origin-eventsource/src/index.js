@@ -37,11 +37,9 @@ class OriginEventSource {
     if (this.listingCache[cacheKey]) {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
-      return Object.assign(
-        {},
-        this.listingCache[cacheKey],
-        { id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}` }
-      )
+      return Object.assign({}, this.listingCache[cacheKey], {
+        id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`
+      })
     }
 
     let listing,
@@ -133,11 +131,13 @@ class OriginEventSource {
     }
 
     const type = 'unit'
-    let commissionPerUnit = '0', commission = '0'
+    let commissionPerUnit = '0',
+      commission = '0'
     if (type === 'unit') {
-      const commissionPerUnitOgn = data.unitsTotal === 1
-        ? (data.commission && data.commission.amount) || '0'
-        : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
+      const commissionPerUnitOgn =
+        data.unitsTotal === 1
+          ? (data.commission && data.commission.amount) || '0'
+          : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
       commissionPerUnit = this.web3.utils.toWei(commissionPerUnitOgn, 'ether')
 
       const commissionOgn = (data.commission && data.commission.amount) || '0'
@@ -189,25 +189,30 @@ class OriginEventSource {
           offer.valid = false
           offer.validationError = 'units purchased exceeds available'
         } else {
-          unitsAvailable -= offer.quantity
+          try {
+            unitsAvailable -= offer.quantity
 
-          // Validate offer commission.
-          const normalCommission = commissionPerUnit.mul(
-            this.web3.utils.toBN(offer.quantity)
-          )
-          const expCommission = normalCommission.lte(commissionAvailable)
-            ? normalCommission
-            : commissionAvailable
-          const offerCommission =
-            (offer.commission && this.web3.utils.toBN(offer.commission))
-            || this.web3.utils.toBN(0)
-          if (!offerCommission.eq(expCommission)) {
+            // Validate offer commission.
+            const normalCommission = commissionPerUnit.mul(
+              this.web3.utils.toBN(offer.quantity)
+            )
+            const expCommission = normalCommission.lte(commissionAvailable)
+              ? normalCommission
+              : commissionAvailable
+            const offerCommission =
+              (offer.commission && this.web3.utils.toBN(offer.commission)) ||
+              this.web3.utils.toBN(0)
+            if (!offerCommission.eq(expCommission)) {
+              offer.valid = false
+              offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
+              return
+            }
+            if (!offerCommission.isZero()) {
+              commissionAvailable = commissionAvailable.sub(offerCommission)
+            }
+          } catch (e) {
             offer.valid = false
-            offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
-            return
-          }
-          if (!offerCommission.isZero()) {
-            commissionAvailable = commissionAvailable.sub(offerCommission)
+            offer.validationError = 'invalid IPFS data'
           }
         }
       })
@@ -337,9 +342,7 @@ class OriginEventSource {
       : ZERO_ADDRESS
     const affiliateAllowed =
       affiliateWhitelistDisabled ||
-      (await this.contract.methods
-        .allowedAffiliates(offerAffiliate)
-        .call())
+      (await this.contract.methods.allowedAffiliates(offerAffiliate).call())
     if (!affiliateAllowed) {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
