@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     startDate: DataTypes.DATE,
     endDate: DataTypes.DATE,
     distributionDate: DataTypes.DATE,
-    cap: DataTypes.INTEGER,
-    capUsed: DataTypes.INTEGER
+    cap: DataTypes.DECIMAL,
+    capUsed: DataTypes.DECIMAL
   }, {});
   growth_campaign.associate = function(models) {
     // associations can be defined here

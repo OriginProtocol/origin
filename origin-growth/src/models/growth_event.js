@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const growth_event = sequelize.define('growth_event', {
     id: DataTypes.INTEGER,
     type: DataTypes.ENUM,
-    ethAddress: DataTypes.STRING,
+    status: DataTypes.ENUM,
+    eth_address: DataTypes.STRING,
     data: DataTypes.JSONB
   }, {});
   growth_event.associate = function(models) {

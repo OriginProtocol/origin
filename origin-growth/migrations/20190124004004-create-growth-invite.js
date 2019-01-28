@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       status: {
-        type: Sequelize.ENUM(GrowthInviteStatuses),
+        type: Sequelize.ENUM(GrowthInviteStatuses)
       },
       created_at: {
         allowNull: false,

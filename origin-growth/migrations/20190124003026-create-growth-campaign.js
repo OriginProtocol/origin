@@ -27,12 +27,12 @@ module.exports = {
         type: Sequelize.DATE
       },
       cap: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DECIMAL
       },
       cap_used: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DECIMAL
       },
-      create_at: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },

@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     campaignId: DataTypes.INTEGER,
     campaignLevel: DataTypes.INTEGER,
     campaignRule: DataTypes.STRING,
-    amount: DataTypes.INTEGER,
+    amount: DataTypes.DECIMAL,
     currency: DataTypes.STRING
   }, {});
   growth_reward.associate = function(models) {

@@ -29,7 +29,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       amount: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DECIMAL
       },
       currency: {
         type: Sequelize.STRING

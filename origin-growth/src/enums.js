@@ -6,8 +6,13 @@ class Enum extends Array {
       this[k] = k
     }
   }
-
 }
+
+const GrowthEventStatuses = new Enum(
+  'Logged',
+  'Verified',
+  'Fraud'
+)
 
 const GrowthEventTypes = new Enum(
   'ProfilePublished',
@@ -38,6 +43,7 @@ const GrowthInviteStatuses = new Enum(
 )
 
 module.exports = {
+  GrowthEventStatuses,
   GrowthEventTypes,
   GrowthRewardStatuses,
   GrowthInviteContactTypes,
