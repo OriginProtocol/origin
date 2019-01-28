@@ -148,6 +148,7 @@
   "xxxx.price-usd-disclaimer": "USD is an estimate.",
   "header.title": "నివాస ప్రోటోకాల్ DApp",
   "listing-card-prices.multiUnitListing.each": "each",
+  "listing-card-prices.multiUnitListing.averagePrice": "average price",
   "listing-card-prices.loadingMessage": "లోడింగ్...",
   "listing-card.multiUnitListing.each": "each",
   "listing-create.navigationWarning": "మీరు ఖచ్చితంగా వెళ్లాలనుకుంటున్నారా? మీరు ఈ పేజీని వదిలేస్తే, మీ పురోగతిని కోల్పోతారు.",
