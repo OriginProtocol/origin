@@ -15,8 +15,10 @@ import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
 import Web3 from 'web3'
 import { groupBy, mapValues } from './../utils/arrayFunctions'
+import { listingToSignData } from 'origin-contracts/sig_schema'
 
 const emptyAddress = '0x0000000000000000000000000000000000000000'
+const listingSalt = '0x0000000000000000000000000000000000000666'
 // 24 is the number web3 supplies
 const NUMBER_CONFIRMATIONS_TO_REPORT = 24
 const SUPPORTED_ERC20 = [
@@ -496,6 +498,23 @@ class ContractService {
       } else {
         return money.amount
       }
+    }
+  }
+
+  async signListing(listing) {
+    const networkId = await web3.eth.net.getId()
+    const marketAddress = this.marketplaceContracts.V00_Marketplace.networks[networkId]
+    return await this.signTypedDataV3(listingToSignData(networkId, marketAddress, listingSalt, listing))
+  }
+
+  async signTypedDataV3(data) {
+    if (this.web3.currentProvider.sendAsync) {
+      const signer = await this.currentAccount()
+      return this.web3.currentProvider.sendAsync({ 
+        method: "eth_signTypedData_v3",
+        params: [signer, data],
+        from: signer
+      })
     }
   }
 }
