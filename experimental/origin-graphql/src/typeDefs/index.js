@@ -1,3 +1,4 @@
+import Common from './Common'
 import Web3 from './Web3'
 import Marketplace from './Marketplace'
 import Identity from './Identity'
@@ -6,6 +7,7 @@ import Messaging from './Messaging'
 import Notifications from './Notifications'
 
 export default [
+  ...Object.values(Common),
   Web3,
   Marketplace,
   Identity,
