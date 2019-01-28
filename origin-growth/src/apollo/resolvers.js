@@ -23,21 +23,21 @@ const resolvers = {
       return {
         code: '418',
         success: false,
-        message: "I am a teapot"
+        message: 'I am a teapot'
       }
     },
     async enroll () {
       return {
         code: '418',
         success: false,
-        message: "I am a teapot"
+        message: 'I am a teapot'
       }
     },
     async log () {
       return {
         code: '418',
         success: false,
-        message: "I am a teapot"
+        message: 'I am a teapot'
       }
     }
   }
