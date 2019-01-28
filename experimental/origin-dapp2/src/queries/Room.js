@@ -11,6 +11,7 @@ export default gql`
         messages {
           address
           content
+          status
           media {
             url
             contentType

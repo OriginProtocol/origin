@@ -34,6 +34,7 @@ export default `
     content: String
     media: [Media]
     timestamp: Int
+    status: String
   }
 
 `
