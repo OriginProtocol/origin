@@ -57,7 +57,7 @@ class Resolver extends React.Component {
         <div>
           <img src="images/spinner-animation-dark.svg" />
           <h1>Setting up your marketplace...</h1>
-          <h4>Please wait, this will take a few minutes.</h4>
+          <h4>Please wait. This will take a few minutes.</h4>
         </div>
       </div>
     )

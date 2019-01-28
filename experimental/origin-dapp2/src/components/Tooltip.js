@@ -2,7 +2,13 @@ import React from 'react'
 import TooltipTrigger from 'react-popper-tooltip'
 // Docs: https://github.com/mohsinulhaq/react-popper-tooltip#props
 
-const Tooltip = ({ tooltip, children, hideArrow, ...props }) => (
+const Tooltip = ({
+  tooltip,
+  className = '',
+  children,
+  hideArrow,
+  ...props
+}) => (
   <TooltipTrigger
     {...props}
     tooltip={({
@@ -14,7 +20,7 @@ const Tooltip = ({ tooltip, children, hideArrow, ...props }) => (
     }) => {
       const props = getTooltipProps({
         ref: tooltipRef,
-        className: `tooltip bs-tooltip-${placement} fade show`
+        className: `tooltip bs-tooltip-${placement} fade show ${className}`
       })
       const arrowProps = getArrowProps({
         ref: arrowRef,
