@@ -33,7 +33,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
 
   try {
     if (window.localStorage[cacheStr]) {
-      ({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr]))
+      ;({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr]))
       fromBlock = lastLookup
       triedIpfs = true
     }

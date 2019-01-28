@@ -21,7 +21,6 @@ async function generatePhoneCode(_, { email }) {
 
   const data = await response.json()
   return { success: false, reason: get(data, 'errors.email[0]') }
-
 }
 
 export default generatePhoneCode

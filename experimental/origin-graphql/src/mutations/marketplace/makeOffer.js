@@ -72,7 +72,9 @@ async function toIpfsData(data) {
   const unitsAvailable = Number(listing.unitsAvailable)
   const offerQuantity = Number(data.quantity)
   if (offerQuantity > unitsAvailable) {
-    throw new Error(`Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`)
+    throw new Error(
+      `Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`
+    )
   }
 
   let commission = { currency: 'OGN', amount: '0' }
@@ -81,7 +83,8 @@ async function toIpfsData(data) {
     commission.amount = web3.utils.fromWei(data.commission, 'ether')
   } else if (listing.commissionPerUnit) {
     // Default commission to min(depositAvailable, commissionPerUnit)
-    const amount = web3.utils.toBN(listing.commissionPerUnit)
+    const amount = web3.utils
+      .toBN(listing.commissionPerUnit)
       .mul(web3.utils.toBN(data.quantity))
     const depositAvailable = web3.utils.toBN(listing.depositAvailable)
     const commissionWei = amount.lt(depositAvailable)
