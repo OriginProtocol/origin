@@ -192,6 +192,22 @@ class SearchResult extends Component {
         }
       }
 
+      // Filters from the marketplace creator
+      if (this.props.config.filters && this.props.config.filters.listings) {
+        const listingFilterAttributes = ['marketplacePublisher', 'category', 'subCategory']
+
+        listingFilterAttributes.map((listingFilterAttribute) => {
+          if (this.props.config.filters.listings[listingFilterAttribute]) {
+            filters[listingFilterAttribute] = {
+              name: listingFilterAttribute,
+              value: this.props.config.filters.listings[listingFilterAttribute],
+              valueType: 'STRING',
+              operator: 'EQUALS'
+            }
+          }
+        })
+      }
+
       const searchResp = await origin.discovery.search({
         searchQuery: this.props.query || '',
         numberOfItems: LISTINGS_PER_PAGE,
@@ -288,6 +304,7 @@ class SearchResult extends Component {
 
 const mapStateToProps = state => ({
   listingType: state.search.listingType,
+  config: state.config,
   query: state.search.query,
   filters: state.search.filters,
   generalSearchId: state.search.generalSearchId,

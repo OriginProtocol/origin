@@ -12,27 +12,19 @@
     "defaultMessage": "{listingIdsCount} Listings"
   },
   {
-    "id": "listings.no-listings",
-    "defaultMessage": "You don't have any listings yet."
+    "id": "listings.no-listings-whitelabel",
+    "defaultMessage": "Your marketplace doesn't have any listings yet."
   },
   {
-    "id": "listings.no-listings-steps",
-    "defaultMessage": "Follow the steps below to create your first listing!"
-  },
-  {
-    "id": "listings.step-one",
-    "defaultMessage": "Choose the right category for your listing."
-  },
-  {
-    "id": "listings.step-two",
-    "defaultMessage": "Give your listing a name, description, and price."
-  },
-  {
-    "id": "listings.step-three",
-    "defaultMessage": "Preview your listing and publish it to the blockchain."
+    "id": "listings.no-listings-whitelabel-message",
+    "defaultMessage": "You can create listings yourself or invite sellers to join your platform!"
   },
   {
     "id": "listings.create-listing",
-    "defaultMessage": "Create Your First Listing"
+    "defaultMessage": "Create a Listing"
+  },
+  {
+    "id": "listings.no-search-results",
+    "defaultMessage": "No search results found."
   }
 ]

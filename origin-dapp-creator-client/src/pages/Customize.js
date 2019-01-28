@@ -26,12 +26,14 @@ class Customize extends React.Component {
         {
           title: 'Eco Green',
           cssVars: {
+            ...baseConfig.cssVars,
             dusk: '#3BA54E'
           }
         },
         {
           title: 'Royal Purple',
           cssVars: {
+            ...baseConfig.cssVars,
             dusk: '#833AAB'
           }
         }
@@ -94,6 +96,7 @@ class Customize extends React.Component {
       [name]: url
     }
 
+    this.props.onChange(newConfig)
     this.setState({ config: newConfig })
   }
 
@@ -128,7 +131,7 @@ class Customize extends React.Component {
       <form onSubmit={this.handleSubmit}>
         {this.renderRedirect()}
 
-        <h1>Customize your Marketplace&apos;s Appearance</h1>
+        <h1>Customize Your Marketplace&apos;s Appearance</h1>
         <h4>Choose a logo and colors for your marketplace below.</h4>
 
         <div className="form-group">
@@ -137,20 +140,22 @@ class Customize extends React.Component {
               <ImagePicker title="Marketplace Logo"
                 name="logoUrl"
                 recommendedSize={'300px x 100px'}
-                onUpload={this.handleFileUpload} />
+                onUpload={this.handleFileUpload}
+                imageUrl={this.props.config.logoUrl} />
             </div>
 
             <div className="col-6">
               <ImagePicker title="Marketplace Favicon"
                 name="faviconUrl"
                 recommendedSize={'16px x 16px'}
-                onUpload={this.handleFileUpload} />
+                onUpload={this.handleFileUpload}
+                imageUrl={this.props.config.faviconUrl} />
             </div>
           </div>
         </div>
 
         <div className="form-group">
-          <label>Theme</label>
+          <label>Select Theme</label>
           <ThemePicker
             config={this.props.config}
             themes={this.state.themes}
@@ -164,6 +169,7 @@ class Customize extends React.Component {
 
         {!this.state.themePickerExpanded &&
           <div className="form-group">
+            <p>You can further customize your colors.</p>
             <div className="row">
               <div className="col-7">
                 <Preview config={this.state.config} rows={3} />

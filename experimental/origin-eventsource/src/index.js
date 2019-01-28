@@ -15,6 +15,13 @@ class OriginEventSource {
     this.listingCache = {}
   }
 
+  async getNetworkId() {
+    if (!this.networkId) {
+      this.networkId = await this.web3.eth.net.getId()
+    }
+    return this.networkId
+  }
+
   async getMarketplace() {
     return {
       totalListings: ''
@@ -26,13 +33,14 @@ class OriginEventSource {
       ? blockNumber
       : this.contract.eventCache.getBlockNumber()
     const cacheKey = `${listingId}-${cacheBlockNumber}`
+    const networkId = await this.getNetworkId()
     if (this.listingCache[cacheKey]) {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
       return Object.assign(
         {},
         this.listingCache[cacheKey],
-        { id: `999-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}` }
+        { id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}` }
       )
     }
 
@@ -127,20 +135,18 @@ class OriginEventSource {
     const type = 'unit'
     let commissionPerUnit = '0', commission = '0'
     if (type === 'unit') {
-      const commissionPerUnitOgn =
-        (data.commissionPerUnit && data.commissionPerUnit.amount)
-        || (data.commission && data.commission.amount)
-        || '0'
+      const commissionPerUnitOgn = data.unitsTotal === 1
+        ? (data.commission && data.commission.amount) || '0'
+        : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
       commissionPerUnit = this.web3.utils.toWei(commissionPerUnitOgn, 'ether')
 
       const commissionOgn = (data.commission && data.commission.amount) || '0'
       commission = this.web3.utils.toWei(commissionOgn, 'ether')
     }
 
-
     this.listingCache[cacheKey] = await this.withOffers(listingId, {
       ...data,
-      id: `999-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
+      id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
       arbitrator: listing.depositManager
@@ -270,8 +276,10 @@ class OriginEventSource {
     let data = await get(this.ipfsGateway, ipfsHash)
     data = pick(data, 'unitsPurchased')
 
+    const networkId = await this.getNetworkId()
+
     const offerObj = {
-      id: `999-0-${listingId}-${offerId}`,
+      id: `${networkId}-0-${listingId}-${offerId}`,
       listingId: String(listing.id),
       offerId: String(offerId),
       createdBlock,
@@ -327,12 +335,12 @@ class OriginEventSource {
     const offerAffiliate = offer.affiliate
       ? offer.affiliate.id.toLowerCase()
       : ZERO_ADDRESS
-    const affiliateAlowed =
+    const affiliateAllowed =
       affiliateWhitelistDisabled ||
       (await this.contract.methods
-        .allowedAffiliates(offer.offerAffiliate)
+        .allowedAffiliates(offerAffiliate)
         .call())
-    if (!affiliateAlowed) {
+    if (!affiliateAllowed) {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
 
@@ -357,8 +365,9 @@ class OriginEventSource {
 
   async getReview(listingId, offerId, party, ipfsHash) {
     const data = await get(this.ipfsGateway, ipfsHash)
+    const networkId = await this.getNetworkId()
     return {
-      id: `999-1-${listingId}-${offerId}`,
+      id: `${networkId}-0-${listingId}-${offerId}`,
       reviewer: { id: party, account: { id: party } },
       listing: { id: listingId },
       offer: { id: offerId },

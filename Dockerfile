@@ -18,6 +18,7 @@ COPY ./origin-js/package*.json ./origin-js/
 COPY ./origin-messaging/package*.json ./origin-messaging/
 COPY ./origin-notifications/package*.json ./origin-notifications/
 COPY ./origin-tests/package*.json ./origin-tests/
+COPY ./origin-growth/package*.json ./origin-growth/
 
 # Complete contracts source needs to be available so that `truffle compile contracts`
 # which is calleed by the prepare script can succeed
@@ -29,6 +30,7 @@ RUN npm install --unsafe-perm
 # Copy all the source files for the packages
 COPY ./origin-dapp ./origin-dapp
 COPY ./origin-discovery ./origin-discovery
+COPY ./origin-growth ./origin-growth
 COPY ./origin-ipfs-proxy ./origin-ipfs-proxy
 COPY ./origin-js ./origin-js
 COPY ./origin-messaging ./origin-messaging

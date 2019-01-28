@@ -6,7 +6,7 @@ bridgeImageTag: '12ac36f'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '0041cb8'
+dappImageTag: '928f283'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -22,15 +22,15 @@ faucetImageTag: '7fab530'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '0041cb8'
+eventlistenerImageTag: 'b07803c'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '913b981'
+discoveryImageTag: '56baf55'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '212070a'
+messagingImageTag: 'b66c45b'
 
 # origin-notifications
 notificationsImage: origin-notifications
@@ -38,12 +38,12 @@ notificationsImageTag: '218bcfc'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: '39419ad'
+creatorClientImageTag: '928f283'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: 'd13d988'
+creatorServerImageTag: '928f283'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: '3050caf'
+linkingImageTag: 'b66c45b'

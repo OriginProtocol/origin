@@ -7,6 +7,8 @@ import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import CoinPrice from 'components/CoinPrice'
 
+import { formInput, formFeedback } from 'utils/formHelpers'
+
 const NoOgn = () => (
   <div className="no-ogn">
     <div>
@@ -46,8 +48,6 @@ class Step2 extends Component {
       return <Redirect to={`${prefix}/review`} push />
     }
 
-    const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
-
     return (
       <div className="row">
         <div className="col-md-8">
@@ -72,33 +72,7 @@ class Step2 extends Component {
                 {this.props.tokenBalance === 0 ? (
                   <NoOgn />
                 ) : (
-                  <>
-                    <div className="boost-info">
-                      <h5>Boost Level</h5>
-                      <i />
-                    </div>
-                    <div className={`boost-value ${level[1]}`}>
-                      <div className="description">{level[2]}</div>
-                      <CoinPrice price={this.state.boost} coin="ogn" />
-                    </div>
-
-                    <div className={`form-group slider ${level[1]}`}>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={this.state.boost}
-                        onChange={e => this.setState({ boost: e.target.value })}
-                      />
-                    </div>
-
-                    <div className="boost-description">{level[3]}</div>
-
-                    <div className="info">
-                      {'Boosts are always calculated and charged in OGN. '}
-                      <Link to="/about-tokens">Learn more</Link>
-                    </div>
-                  </>
+                  this.renderBoostSlider()
                 )}
 
                 <div className="actions">
@@ -137,6 +111,82 @@ class Step2 extends Component {
     )
   }
 
+  renderBoostSlider() {
+    const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
+    const isMulti = Number(this.state.quantity || 0) > 1
+
+    const input = formInput(this.state, state => this.setState(state))
+    const Feedback = formFeedback(this.state)
+
+    const boostRequired = Number(this.state.quantity) * Number(this.state.boost)
+    const enoughBoost = boostRequired <= Number(this.state.boostLimit)
+
+    return (
+      <>
+        <div className="boost-info">
+          <h5>{`Boost Level${isMulti ? ' (per unit)' : ''}`}</h5>
+          <i />
+        </div>
+        <div className={`boost-value ${level[1]}`}>
+          <div className="description">{level[2]}</div>
+          <CoinPrice price={this.state.boost} coin="ogn" />
+        </div>
+
+        <div className={`form-group slider ${level[1]}`}>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={this.state.boost}
+            onChange={e => this.setState({ boost: e.target.value })}
+          />
+        </div>
+
+        <div className="boost-description">{level[3]}</div>
+
+        <div className="info">
+          {'Boosts are always calculated and charged in OGN. '}
+          <Link to="/about-tokens">Learn more</Link>
+        </div>
+
+        {!isMulti ? null : (
+          <div className="form-group boost-limit">
+            <label>Boost Limit</label>
+            <div className="d-flex">
+              <div style={{ flex: 1, marginRight: '1rem' }}>
+                <div className="with-symbol">
+                  <input {...input('boostLimit')} />
+                  <span className="ogn">OGN</span>
+                </div>
+              </div>
+              <div style={{ flex: 1 }} />
+            </div>
+            {Feedback('price')}
+            <div className="help-text price">
+              Maximum amount that will be spent to boost this listing. Boosts
+              are always in OGN, <b>USD is an estimate.</b>
+            </div>
+          </div>
+        )}
+
+        {enoughBoost || !isMulti ? null : (
+          <div className="boost-totals">
+            <div className="totals">
+              <div>{`Total number of units: ${this.state.quantity}`}</div>
+              <div>{`Total boost required: ${boostRequired}`}</div>
+            </div>
+            <div>
+              Your boost cap is lower than the total amount needed to boost all
+              your units. After the cap is reached, the remaining units will not
+              be boosted.
+            </div>
+            <button className="btn btn-link">Get OGN</button>
+          </div>
+        )}
+      </>
+    )
+  }
+
   validate() {
     const newState = {}
 
@@ -168,12 +218,31 @@ require('react-styl')(`
     .help-text
       font-size: 16px
       margin-bottom: 2rem
-    .no-ogn
+      &.price
+        font-size: 14px
+        color: var(--bluey-grey)
+        font-weight: normal
+        margin-top: 0.5rem
+        max-width: 22rem
+        b
+          color: var(--dark)
+          font-weight: bold
+    .boost-totals,.no-ogn
+      padding: 2rem
       border: 1px solid var(--golden-rod)
-      padding: 7rem 2rem 2rem 2rem
       border-radius: 5px
       text-align: center
-      background: var(--golden-rod-light) url(images/ogn-icon-horiz.svg) no-repeat
+      background-color: var(--golden-rod-light)
+    .boost-totals
+      font-weight: normal
+      > div:first-child
+        font-style: italic
+      > div:nth-child(2)
+        margin: 1rem 0 1rem 0
+
+    .no-ogn
+      padding-top: 7rem
+      background: url(images/ogn-icon-horiz.svg) no-repeat
       background-position: center 2rem
       margin-bottom: 1rem
       > div:nth-child(1)
@@ -226,12 +295,16 @@ require('react-styl')(`
       text-align: center
       font-style: italic
       font-weight: normal
-      margin-bottom: 2rem
+      margin-bottom: 1rem
     .info
       color: var(--bluey-grey);
       font-weight: normal;
       font-size: 14px;
       text-align: center;
+    .boost-limit
+      margin-top: 1rem
+      label
+        font-size: 18px
 
     .slider
       input
