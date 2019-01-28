@@ -12,7 +12,7 @@ export async function validateSubdomain (req, res, next) {
 
   if (config.subdomain) {
     // Check for subdomain blacklisting
-    if (subdomainBlacklist.includes(config.subdomain)) {
+    if (subdomainBlacklist.includes(config.subdomain.toLowerCase())) {
       return res.status(400).send('Subdomain is not allowed')
     }
 
