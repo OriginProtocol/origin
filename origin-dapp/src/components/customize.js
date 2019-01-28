@@ -69,7 +69,7 @@ class Customize extends React.Component {
       if (!faviconElement) {
           faviconElement = document.createElement('link')
           faviconElement.setAttribute('rel', 'shortcut icon')
-          let head = document.querySelector('head')
+          const head = document.querySelector('head')
           head.appendChild(faviconElement)
       }
       faviconElement.setAttribute('href', this.props.config.faviconUrl)
