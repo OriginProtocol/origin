@@ -9,92 +9,95 @@
   <link rel="stylesheet" href="/assets/css/site.css"/>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">
-            <div class="logo"><a href="/">Origin Documentation</a></div>
-            <nav>
-                    <a class="topNav " href="/">Guides</a>
-                    <a class="topNav " href="/reference/">API Reference</a>
-                    <a class="topNav current" href="/software/">Software</a>
-            </nav>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav " href="/reference/">API Reference</a>
+                <a class="topNav current" href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Software</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/software/">Overview</a> <!-- 200-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/dapp.html">DApp</a> <!-- 110-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
         </div>
+        <div class="content">
+            <h1 class="title">Testnet Faucet</h1>
 
-        <div class="layout">
-            <div class="sidebar">
-                
-                
+            <p>Our Origin testnet faucet provides OGN for developers on TestNets. The faucet is deployed at <a href="https://faucet.originprotocol.com">faucet.originprotocol.com</a></p>
 
-
-                
-                
-                <ul>
-                
-                    
-                        <li class="category"><strong>Software</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/software/">Overview</a> <!-- 200-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/dapp.html">DApp</a> <!-- 110-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/messaging.html">Messaging</a> <!-- -->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
-                
-                </ul>
-            </div>
-            <div class="content">
-                <h1 class="title">Testnet Faucet</h1>
-
-                <p>Our Origin testnet faucet provides OGN for developers on TestNets.</p>
+<h2 id="code-structure">Code structure</h2>
 
 <ul>
   <li>faucet: Web application that implements a faucet for Origin tokens.</li>
-  <li>scripts: Scripts and cli tools.</li>
   <li>lib: Common code.</li>
+  <li>test: Unit tests.</li>
 </ul>
+
+<h2 id="using-the-faucet-in-local-environment">Using the faucet in local environment</h2>
 
 <h3 id="prerequisite">Prerequisite</h3>
 
@@ -103,7 +106,7 @@
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  docker-compose up origin-js
 </code></pre></div></div>
 
-<h3 id="to-use-the-faucet">To use the faucet</h3>
+<h3 id="starting-the-server">Starting the server</h3>
 
 <p>Start the server in the origin-js container</p>
 
@@ -112,21 +115,8 @@
 
 <p>The server should start and you can point your browser to http://localhost:5000 to access the faucet web UI.</p>
 
-<h3 id="to-use-the-cli">To use the cli</h3>
 
-<p>Example 1 - get the balance of an account:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  docker exec -w /app/token origin-js node scripts/token_cli.js  --action=balance --wallet=0xf17f52151ebef6c7334fad080c5704d77216b732
-</code></pre></div></div>
-
-<p>Example 2 - credit an account with tokens:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  docker exec -w /app/token origin-js node scripts/token_cli.js --action=credit --wallet=0xf17f52151ebef6c7334fad080c5704d77216b732
-</code></pre></div></div>
-
-
-            </div>    
-        </div>
+        </div>    
     </div>
 
     <footer>

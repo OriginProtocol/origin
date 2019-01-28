@@ -9,92 +9,91 @@
   <link rel="stylesheet" href="/assets/css/site.css"/>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">
-            <div class="logo"><a href="/">Origin Documentation</a></div>
-            <nav>
-                    <a class="topNav " href="/">Guides</a>
-                    <a class="topNav " href="/reference/">API Reference</a>
-                    <a class="topNav current" href="/software/">Software</a>
-            </nav>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav " href="/reference/">API Reference</a>
+                <a class="topNav current" href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Software</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/software/">Overview</a> <!-- 200-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/dapp.html">DApp</a> <!-- 110-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
         </div>
+        <div class="content">
+            <h1 class="title">Bridge Server</h1>
 
-        <div class="layout">
-            <div class="sidebar">
-                
-                
-
-
-                
-                
-                <ul>
-                
-                    
-                        <li class="category"><strong>Software</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/software/">Overview</a> <!-- 200-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/dapp.html">DApp</a> <!-- 110-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/messaging.html">Messaging</a> <!-- -->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
-                
-                </ul>
-            </div>
-            <div class="content">
-                <h1 class="title">Bridge Server</h1>
-
-                <p>The Origin Bridge Server handles the server side of identity attestations.</p>
+            <p>The Origin Bridge Server handles the server side of identity attestations.</p>
 
 <p>Most traditional web APIs, such as those from Facebook and Twitter, can only interact with a centralized server located at a specific domain. A decentralized application, like our Origin Demo DApp, doesn’t need to “live” on a particular server. (In fact, you can load it from any IPFS gateway!) Thus, in order for the DApp to use an “old world” API, it needs a Bridge Server.</p>
 
 <p>Origin hosts a Bridge Server, but in the true spirit of decentralization, anyone is free to clone our open source code and host their own.</p>
 
-<p>You can connect to and use our hosted Bridge Server at <a href="https://bridge.originprotocol.com">bridge.originprotocol.com</a>. The <code class="highlighter-rouge">develop</code> branch of this repo is available at <a href="https://dev.bridge.originprotocol.com">dev.bridge.originprotocol.com</a>.</p>
+<p>You can connect to and use our hosted Bridge Server at <a href="https://bridge.originprotocol.com">bridge.originprotocol.com</a>. The <code class="highlighter-rouge">staging</code> branch of this repo is available at <a href="https://staging.bridge.originprotocol.com">staging.bridge.originprotocol.com</a> and the <code class="highlighter-rouge">master</code> branch of this repo is available at <a href="https://dev.bridge.originprotocol.com">dev.bridge.originprotocol.com</a>.</p>
 
 <p>DApps can connect to the Bridge Server of their choosing to handle tasks like issuing identity attestations and decryptying data that is returned from third-party services like Civic. We also need proxies for fetching public data from services like Facebook and Twitter which require authentication keys.</p>
 
@@ -144,10 +143,11 @@ is a perfectly reasonable way to generate a secret key.</p>
 <p>Set up your <code class="highlighter-rouge">DATABASE_URL</code> to point to where you local database is or will be.</p>
 
 <h4 id="identity-attestation">Identity attestation</h4>
-<p>This is optional - only define these environment keys if you want to use your
-bridge server deployment as an endpoint for the DApp identity attestation functionality.</p>
-
+<p>Attestation account used by the bridge server to sign attestation:</p>
 <ul>
+  <li>ATTESTATION_ACCOUNT: Ethereum address of the account used for signing.</li>
+  <li>ATTESTATION_SIGNING_KEY: Ethereum private key of the account used for signing.
+Attestation providers configuration:</li>
   <li><a href="https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow">Facebook</a>
     <ul>
       <li>FACEBOOK_CLIENT_ID</li>
@@ -172,18 +172,6 @@ bridge server deployment as an endpoint for the DApp identity attestation functi
     </ul>
   </li>
 </ul>
-
-<h4 id="mobile-push-notification">Mobile push notification</h4>
-<p>If you wish to setup push notification for your mobile apps</p>
-
-<ul>
-  <li><code class="highlighter-rouge">APNS_CERT_FILE</code>: Apple notification service certificate(This needs to be .pem file.
-Refer to <a href="http://www.apptuitions.com/generate-pem-file-for-push-notification/">this doc</a> for how to generate)</li>
-  <li><code class="highlighter-rouge">APNS_CERT_PASSWORD</code>: Passphrase for the pem file if you do not strip it out when you exported to pem</li>
-  <li><code class="highlighter-rouge">APNS_APP_BUNDLE_ID</code>: The bundle id of your app</li>
-</ul>
-
-<p>FCM support forthcoming.</p>
 
 <h4 id="production-configuration">Production configuration</h4>
 <p>When deploying to a production system, make sure to set appropriate environment
@@ -329,8 +317,7 @@ python main.py
 <p>heroku buildpacks:set heroku/python</p>
 
 
-            </div>    
-        </div>
+        </div>    
     </div>
 
     <footer>

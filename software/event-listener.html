@@ -9,88 +9,87 @@
   <link rel="stylesheet" href="/assets/css/site.css"/>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">
-            <div class="logo"><a href="/">Origin Documentation</a></div>
-            <nav>
-                    <a class="topNav " href="/">Guides</a>
-                    <a class="topNav " href="/reference/">API Reference</a>
-                    <a class="topNav current" href="/software/">Software</a>
-            </nav>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav " href="/reference/">API Reference</a>
+                <a class="topNav current" href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Software</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/software/">Overview</a> <!-- 200-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/dapp.html">DApp</a> <!-- 110-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
         </div>
+        <div class="content">
+            <h1 class="title">Event Listener</h1>
 
-        <div class="layout">
-            <div class="sidebar">
-                
-                
+            <h1 id="origin-event-listener">Origin Event Listener</h1>
 
-
-                
-                
-                <ul>
-                
-                    
-                        <li class="category"><strong>Software</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/software/">Overview</a> <!-- 200-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/dapp.html">DApp</a> <!-- 110-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/messaging.html">Messaging</a> <!-- -->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
-                
-                </ul>
-            </div>
-            <div class="content">
-                <h1 class="title">Event Listener</h1>
-
-                <h1 id="origin-event-listener">Origin Event Listener</h1>
-
-<p>The Origin Event Listener follows the blockchain, looking for Origin events and passing those events on to whatever systems need that data. These events are annotated with full information about the Origin resources (listings/offers) that fired off these events.</p>
+<p>The Origin Event Listener follows the blockchain, looking for Origin events and passing those events on to whatever systems need that data. These events are annotated with full information about the Origin resources (listings/offers/) that fired off these events.</p>
 
 <p>The data from the listener can be used to build and keep up-to-date an offline index of all Origin Protocol data on the chain.</p>
 
@@ -111,26 +110,42 @@
 
 <p>Output:</p>
 
-<p><code class="highlighter-rouge">--verbose</code> Output json for all event information to stdout</p>
+<p><code class="highlighter-rouge">--verbose</code> Optional. Output json for all event information to stdout.</p>
 
-<p><code class="highlighter-rouge">--webhook=yoururl</code> Post json for each event to the URL</p>
+<p><code class="highlighter-rouge">--webhook=yoururl</code> Optional. Post json for each event to the URL.</p>
 
-<p><code class="highlighter-rouge">--discord-webhook=discordurl</code> Post a short Discord notification for each marketplace event.</p>
+<p><code class="highlighter-rouge">--discord-webhook=discordurl</code> Optional. Post a short Discord notification for each marketplace event.</p>
 
-<p><code class="highlighter-rouge">--elasticsearch</code> Experimental support for recording listings directly into elastic search</p>
+<p><code class="highlighter-rouge">--elasticsearch</code> Optional. Record data into Elasticsearch.</p>
 
-<p><code class="highlighter-rouge">--db</code> Experimental support for recording listings directly into postgres.</p>
+<p><code class="highlighter-rouge">--db</code> Optional. Record data into Postgres.</p>
 
-<p>Events:</p>
+<p>Config:
+<code class="highlighter-rouge">--blockEpoch=blockNumber</code> Optional. Block number corresponding to Origin’s plaform launch date.</p>
 
-<p><code class="highlighter-rouge">--continue-file=path</code> Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format <code class="highlighter-rouge">{"lastLogBlock":222, "version":1}</code>.</p>
+<p><code class="highlighter-rouge">--defaultContinueBlock=blockNumber</code> Optional. Block number value to use if there is no continue data (ex. when listener is started for the first time).</p>
+
+<p><code class="highlighter-rouge">--continue-file=path</code> Optional. Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format <code class="highlighter-rouge">{"lastLogBlock":222, "version":1}</code>. If no continue file is specified, the event listener stores the continue data in the Postgres DB.</p>
+
+<p><code class="highlighter-rouge">--trailBlocks=numBlocks</code> Optional. Number of confirmation blocks before data is indexed</p>
+
+<p><code class="highlighter-rouge">--web3Url=URL</code> Optional. Web3 provider. For example https://mainnet.infura.io/v2/<your key=""></your></p>
+
+<p><code class="highlighter-rouge">--ipfsUrl=URL</code> Optional. IPFS cluster to use for fetching the off-chain data.</p>
+
+<p><code class="highlighter-rouge">--arbitratorAccount=ethereumAddress</code> Optional. Address of the Origin arbitrator account.</p>
+
+<p><code class="highlighter-rouge">--affiliateAccount=ethereumAddress</code> Optional. Address of the Origin affiliate account.</p>
+
+<p><code class="highlighter-rouge">--attestationAccount=ethereumAddress</code> Optional. Address of the Origin attestation account.</p>
 
 <h2 id="env-variables">Env variables</h2>
 
 <p>The listener calls out origin.js to load and validate data from the blockchain. In order to properly configure an origin.js object, the listener uses the following environment variables:</p>
 <ul>
-  <li>ARBITRATOR_ACCOUNT: Ethereum address of the Origin marketplace arbitrator account.</li>
   <li>AFFILIATE_ACCOUNT:  Ethereum address of the Origin marketplace affilicate account.</li>
+  <li>ARBITRATOR_ACCOUNT: Ethereum address of the Origin marketplace arbitrator account.</li>
+  <li>ATTESTATION_ACCOUNT: Ethereum address of the Origin attestation account.</li>
   <li>BLOCK_EPOCH: Start block to use when scanning the blockchain for Origin events.</li>
 </ul>
 
@@ -164,8 +179,7 @@
 </ul>
 
 
-            </div>    
-        </div>
+        </div>    
     </div>
 
     <footer>

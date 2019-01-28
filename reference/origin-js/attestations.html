@@ -9,55 +9,54 @@
   <link rel="stylesheet" href="/assets/css/site.css"/>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">
-            <div class="logo"><a href="/">Origin Documentation</a></div>
-            <nav>
-                    <a class="topNav " href="/">Guides</a>
-                    <a class="topNav current" href="/reference/">API Reference</a>
-                    <a class="topNav " href="/software/">Software</a>
-            </nav>
-        </div>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav current" href="/reference/">API Reference</a>
+                <a class="topNav " href="/software/">Software</a>
+        </nav>
+    </div>
 
-        <div class="layout">
-            <div class="sidebar">
-                
-                
+    <div class="layout">
+        <div class="sidebar">
+            
+            
 
 
+            
+            
+            <ul>
+            
                 
+                    <li class="category"><strong>Origin.js</strong>
+                        <ul>
+                                   
                 
-                <ul>
+                <li class="normal"> 
+                    <a href="/reference/">Using Origin.js</a> <!-- 100-->
+                    
+                </li>
                 
+                <li class="normal"> 
+                    <a href="/reference/origin-js/marketplace.html">Marketplace</a> <!-- 90-->
                     
-                        <li class="category"><strong>Origin.js</strong>
-                            <ul>
-                                       
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/users.html">Users</a> <!-- 50-->
                     
-                    <li class="normal"> 
-                        <a href="/reference/">Using Origin.js</a> <!-- 100-->
-                        
-                    </li>
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/reviews.html">Reviews</a> <!-- 50-->
                     
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/marketplace.html">Marketplace</a> <!-- 90-->
-                        
-                    </li>
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/attestations.html">Attestations</a> <!-- 50-->
                     
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/users.html">Users</a> <!-- 50-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/reviews.html">Reviews</a> <!-- 50-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/attestations.html">Attestations</a> <!-- 50-->
-                        
-                            <ul class="section-nav">
+                        <ul class="section-nav">
 <li class="toc-entry toc-h2"><a href="#phonegeneratecode">.phoneGenerateCode</a></li>
 <li class="toc-entry toc-h2"><a href="#phoneverify">.phoneVerify</a></li>
 <li class="toc-entry toc-h2"><a href="#emailgeneratecode">.emailGenerateCode</a></li>
@@ -69,38 +68,38 @@
 <li class="toc-entry toc-h2"><a href="#airbnbgeneratecode">.airbnbGenerateCode</a></li>
 <li class="toc-entry toc-h2"><a href="#airbnbverify">.airbnbVerify</a></li>
 </ul>
-                        
-                    </li>
                     
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/messaging.html">Messaging</a> <!-- -->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
+                </li>
                 
+                <li class="normal"> 
+                    <a href="/reference/origin-js/messaging.html">Messaging</a> <!-- -->
                     
-                        <li class="category"><strong>The Protocol</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/reference/protocol/schemas.html">IPFS Schemas</a> <!-- -->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
+                </li>
                 
-                </ul>
-            </div>
-            <div class="content">
-                <h1 class="title">Attestations</h1>
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>The Protocol</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/reference/protocol/schemas.html">IPFS Schemas</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">Attestations</h1>
 
-                <p>An <strong>Attestation</strong> is a confirmation that some piece of identity information has been verified by a trusted 3rd party.</p>
+            <p>An <strong>Attestation</strong> is a confirmation that some piece of identity information has been verified by a trusted 3rd party.</p>
 
 <p>Origin provides an attestation service that users can optionally use to add attestations to their profile.</p>
 
@@ -144,7 +143,7 @@ Once an attestation object has been created, it needs to be added to a user obje
 
 <p>The <code class="highlighter-rouge">method</code> can either by “call” or “sms”.</p>
 
-<p>The <code class="highlighter-rouge">locale</code> parameter is optional and it defines the language of the call or the SMS. If not provided a sensible default is used based on the country of the phone number. Supported languages are af, ar, ca, zh, zh-CN, zh-HK, hr, cs, da, nl, en, fi, fr, de, el, he, hi, hu, id, it, ja, ko, ms, nb, pl, pt-BR, pt, ro, ru, es, sv, tl, th, tr, vi.</p>
+<p>The <code class="highlighter-rouge">locale</code> parameter is optional and it defines the language of the call or the SMS. If not provided a sensible default is used based on the country of the phone number. Supported languages are af, ar, ca, cs, da, de, el, en, es, fi, fr, he, hi, hr, hu, id, it, ja, ko, ms, nb, nl, pl, pt, pt-BR, ro, ru, sv, tl, th, tr, vi, zh, zh-CN, zh-HK.</p>
 
 <h2 id="phoneverify">
 <a id="phoneverify" class="anchor" href="#phoneverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.phoneVerify</h2>
@@ -161,7 +160,7 @@ Once an attestation object has been created, it needs to be added to a user obje
 <span class="p">})</span>
 <span class="c1">// Returns (attestation object)</span>
 <span class="p">{</span>
-  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc..."</span><span class="p">,</span>
   <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
   <span class="nx">claimType</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
   <span class="nx">service</span><span class="p">:</span> <span class="s2">"phone"</span>
@@ -200,7 +199,7 @@ Once an attestation object has been created, it needs to be added to a user obje
 <span class="p">})</span>
 <span class="c1">// Returns (attestation object)</span>
 <span class="p">{</span>
-  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc..."</span><span class="p">,</span>
   <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
   <span class="nx">claimType</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
   <span class="nx">service</span><span class="p">:</span> <span class="s2">"email"</span>
@@ -245,7 +244,7 @@ Once permissions have been granted, the popup window will <a href="https://devel
 <span class="p">})</span>
 <span class="c1">// Returns (attestation object)</span>
 <span class="p">{</span>
-  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc..."</span><span class="p">,</span>
   <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
   <span class="nx">claimType</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
   <span class="nx">service</span><span class="p">:</span> <span class="s2">"facebook"</span>
@@ -292,7 +291,7 @@ Once permissions have been granted, the popup window will <a href="https://devel
 <span class="p">})</span>
 <span class="c1">// Returns (attestation object)</span>
 <span class="p">{</span>
-  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc..."</span><span class="p">,</span>
   <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
   <span class="nx">claimType</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
   <span class="nx">service</span><span class="p">:</span> <span class="s2">"twitter"</span>
@@ -335,7 +334,7 @@ Once permissions have been granted, the popup window will <a href="https://devel
 <span class="p">})</span>
 <span class="c1">// Returns (attestation object)</span>
 <span class="p">{</span>
-  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc7e91327f3737559d7a9a90fc88529a6b72b770a612f808ab0ba57a46866e1c"</span><span class="p">,</span>
+  <span class="nl">signature</span><span class="p">:</span> <span class="s2">"0xeb6123e537e17e2c67b67bbc0b93e6b25ea9eae276c4c2ab353bd7e853ebad2446cc..."</span><span class="p">,</span>
   <span class="nx">data</span><span class="p">:</span> <span class="s2">"0x7f5e752d19fee44e13bb0cc820255017c35584caddc055641d6ccadfa3afca01"</span><span class="p">,</span>
   <span class="nx">claimType</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
   <span class="nx">service</span><span class="p">:</span> <span class="s2">"airbnb"</span>
@@ -345,8 +344,7 @@ Once permissions have been granted, the popup window will <a href="https://devel
 <p>If user has inserted the correct <code class="highlighter-rouge">code</code> in his Airbnb profile, an attestation object will be returned.</p>
 
 
-            </div>    
-        </div>
+        </div>    
     </div>
 
     <footer>

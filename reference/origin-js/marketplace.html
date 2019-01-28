@@ -9,40 +9,39 @@
   <link rel="stylesheet" href="/assets/css/site.css"/>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">
-            <div class="logo"><a href="/">Origin Documentation</a></div>
-            <nav>
-                    <a class="topNav " href="/">Guides</a>
-                    <a class="topNav current" href="/reference/">API Reference</a>
-                    <a class="topNav " href="/software/">Software</a>
-            </nav>
-        </div>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav current" href="/reference/">API Reference</a>
+                <a class="topNav " href="/software/">Software</a>
+        </nav>
+    </div>
 
-        <div class="layout">
-            <div class="sidebar">
-                
-                
+    <div class="layout">
+        <div class="sidebar">
+            
+            
 
 
+            
+            
+            <ul>
+            
                 
+                    <li class="category"><strong>Origin.js</strong>
+                        <ul>
+                                   
                 
-                <ul>
+                <li class="normal"> 
+                    <a href="/reference/">Using Origin.js</a> <!-- 100-->
+                    
+                </li>
                 
+                <li class="normal"> 
+                    <a href="/reference/origin-js/marketplace.html">Marketplace</a> <!-- 90-->
                     
-                        <li class="category"><strong>Origin.js</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/reference/">Using Origin.js</a> <!-- 100-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/marketplace.html">Marketplace</a> <!-- 90-->
-                        
-                            <ul class="section-nav">
+                        <ul class="section-nav">
 <li class="toc-entry toc-h2"><a href="#getlistings">.getListings</a></li>
 <li class="toc-entry toc-h2"><a href="#createlisting">.createListing</a></li>
 <li class="toc-entry toc-h2"><a href="#withdrawlisting">.withdrawListing</a></li>
@@ -59,58 +58,58 @@
 <li class="toc-entry toc-h2"><a href="#initiatedispute">.initiateDispute</a></li>
 <li class="toc-entry toc-h2"><a href="#resolvedispute">.resolveDispute</a></li>
 </ul>
-                        
-                    </li>
                     
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/users.html">Users</a> <!-- 50-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/reviews.html">Reviews</a> <!-- 50-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/attestations.html">Attestations</a> <!-- 50-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/reference/origin-js/messaging.html">Messaging</a> <!-- -->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
+                </li>
                 
+                <li class="normal"> 
+                    <a href="/reference/origin-js/users.html">Users</a> <!-- 50-->
                     
-                        <li class="category"><strong>The Protocol</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/reference/protocol/schemas.html">IPFS Schemas</a> <!-- -->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
+                </li>
                 
-                </ul>
-            </div>
-            <div class="content">
-                <h1 class="title">Marketplace</h1>
+                <li class="normal"> 
+                    <a href="/reference/origin-js/reviews.html">Reviews</a> <!-- 50-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/attestations.html">Attestations</a> <!-- 50-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/reference/origin-js/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>The Protocol</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/reference/protocol/schemas.html">IPFS Schemas</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">Marketplace</h1>
 
-                <p>The marketplace manages listings from creation to sale as well as disputes between users.</p>
+            <p>The marketplace manages listings from creation to sale as well as disputes between users.</p>
 
 <h2 id="getlistings">
 <a id="getlistings" class="anchor" href="#getlistings" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getListings</h2>
 
-<p>This will return information about the listing, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing’s schema.</p>
+<p>This will return information about the listings for a given user, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing’s schema.</p>
 
 <p>A listing is a published action from a seller to sell something.
 It is active until there are no more units available or its expiration date is reached.</p>
@@ -360,7 +359,6 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 <ul>
   <li>OfferCreated</li>
   <li>OfferAccepted</li>
-  <li>OfferFinalized</li>
   <li>OfferWithdrawn</li>
   <li>OfferDisputed</li>
   <li>OfferRuling</li>
@@ -384,7 +382,12 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
   <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"buyer_offer_accepted"</span><span class="p">,</span>
   <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"unread"</span><span class="p">,</span>
   <span class="s2">"event"</span><span class="p">:</span> <span class="p">{...},</span>
-  <span class="s2">"resources"</span><span class="p">:</span> <span class="p">{</span> <span class="na">listingId</span><span class="p">:</span> <span class="s2">"1-000-832"</span><span class="p">,</span> <span class="na">offerId</span><span class="p">:</span> <span class="s2">"183"</span><span class="p">,</span> <span class="na">listing</span><span class="p">:</span> <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="s2">"Whirlpool Microwave"</span> <span class="p">},</span> <span class="na">offer</span><span class="p">:</span> <span class="p">{...}</span> <span class="p">}</span>
+  <span class="s2">"resources"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">listingId</span><span class="p">:</span> <span class="s2">"1-000-832"</span><span class="p">,</span>
+    <span class="na">offerId</span><span class="p">:</span> <span class="s2">"183"</span><span class="p">,</span>
+    <span class="na">listing</span><span class="p">:</span> <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="s2">"Whirlpool Microwave"</span> <span class="p">},</span>
+    <span class="na">offer</span><span class="p">:</span> <span class="p">{...}</span>
+  <span class="p">}</span>
 <span class="p">]}</span>
 </code></pre></div></div>
 
@@ -437,7 +440,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 <h2 id="getoffer">
 <a id="getoffer" class="anchor" href="#getoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getOffer</h2>
 
-<p>This will return a specific offer sent by a buyer for a listing offer.</p>
+<p>This will return a specific offer sent by a buyer for a Listing.</p>
 
 <p>An Offer is a single transaction between a buyer and seller. A single Listing with multiple items for sale could have many Offers related to it, one for each buyer.</p>
 
@@ -494,7 +497,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 <h2 id="getoffers">
 <a id="getoffers" class="anchor" href="#getoffers" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getOffers</h2>
 
-<p>This will return all offers related to a specific listing.</p>
+<p>This will return all offers related to a specific Listing.</p>
 
 <blockquote>
   <p>Example: getOffers</p>
@@ -1038,8 +1041,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 
-            </div>    
-        </div>
+        </div>    
     </div>
 
     <footer>

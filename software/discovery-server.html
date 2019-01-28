@@ -9,88 +9,89 @@
   <link rel="stylesheet" href="/assets/css/site.css"/>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">
-            <div class="logo"><a href="/">Origin Documentation</a></div>
-            <nav>
-                    <a class="topNav " href="/">Guides</a>
-                    <a class="topNav " href="/reference/">API Reference</a>
-                    <a class="topNav current" href="/software/">Software</a>
-            </nav>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
+        <nav>
+                <a class="topNav " href="/">Guides</a>
+                <a class="topNav " href="/reference/">API Reference</a>
+                <a class="topNav current" href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Software</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/software/">Overview</a> <!-- 200-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/dapp.html">DApp</a> <!-- 110-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/messaging.html">Messaging</a> <!-- -->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
         </div>
+        <div class="content">
+            <h1 class="title">Discovery Server</h1>
 
-        <div class="layout">
-            <div class="sidebar">
-                
-                
+            <p>The Origin discovery server provides fast access to Origin data using <a href="https://graphql.org/">GraphQL</a>. This allows dapps and other applications to show Origin data quickly.</p>
 
+<p>Unified <a href="https://graphql.org/">GraphQL</a> API provides easy access to Listing, Offer and User objects that are stored either in <code class="highlighter-rouge">PostgreSQL</code> or <code class="highlighter-rouge">elasticsearch</code>. Api supports simple queries by property (e.g. ID) and when querying listings more advanced searches by <code class="highlighter-rouge">searchQuery</code> and <code class="highlighter-rouge">searchFilters</code>.</p>
 
-                
-                
-                <ul>
-                
-                    
-                        <li class="category"><strong>Software</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/software/">Overview</a> <!-- 200-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/dapp.html">DApp</a> <!-- 110-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/messaging.html">Messaging</a> <!-- -->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
-                
-                </ul>
-            </div>
-            <div class="content">
-                <h1 class="title">Discovery Server</h1>
-
-                <p>The Origin discovery server provides fast access to Origin data using <a href="https://graphql.org/">GraphQL</a>. This allows dapps and other applications to show Origin data quickly.</p>
-
-<h2 id="running-localy">Running Localy</h2>
+<h2 id="running-locally">Running Locally</h2>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up origin-discovery
 </code></pre></div></div>
@@ -98,8 +99,7 @@
 <p>The server should start and you can point your browser to <strong>http://localhost:4000</strong> to access the GraphQL playground.</p>
 
 
-            </div>    
-        </div>
+        </div>    
     </div>
 
     <footer>

@@ -9,137 +9,274 @@
   <link rel="stylesheet" href="/assets/css/site.css"/>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">
-            <div class="logo"><a href="/">Origin Documentation</a></div>
-            <nav>
-                    <a class="topNav current" href="/">Guides</a>
-                    <a class="topNav " href="/reference/">API Reference</a>
-                    <a class="topNav " href="/software/">Software</a>
-            </nav>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
+        <nav>
+                <a class="topNav current" href="/">Guides</a>
+                <a class="topNav " href="/reference/">API Reference</a>
+                <a class="topNav " href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            
+            
+
+
+            
+            
+            <ul>
+            
+                
+                    <li class="category"><strong>Getting started</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/getting-started.html">Getting Started</a> <!-- 3020-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/local-development.html">Local Development</a> <!-- 3010-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/contributing.html">Contributing</a> <!-- -->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>Overview</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/overview/architecture.html">Architecture</a> <!-- 2010-->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>Concepts</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/listing.html">Listing</a> <!-- 1100-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/offer.html">Offer</a> <!-- 1090-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/identity.html">Identity</a> <!-- 1-->
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/messaging.html">Messaging</a> <!-- 1-->
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+            </ul>
         </div>
+        <div class="content">
+            <h1 class="title">Local Development</h1>
 
-        <div class="layout">
-            <div class="sidebar">
-                
-                
+            <p>Origin has two development setups. One is the “light” version and consists of only our DApp and a local IPFS server and blockchain. It is intended to be easy to get started with but lacks some of the components of our stack making some of the DApp functionality unavailable.</p>
 
+<p>The more full featured development environment uses Docker Compose to orchestrate several containers and provides access to the full suite of Origin features, include messaging, browser notifications, and attestation services.</p>
 
-                
-                
-                <ul>
-                
-                    
-                        <li class="category"><strong>Getting started</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/guides/getting_started/getting-started.html">Getting Started</a> <!-- 3020-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/guides/getting_started/local-development.html">Local Development</a> <!-- 3010-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/guides/getting_started/contributing.html">Contributing</a> <!-- -->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
-                
-                    
-                        <li class="category"><strong>Overview</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/guides/overview/architecture.html">Architecture</a> <!-- 2010-->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
-                
-                    
-                        <li class="category"><strong>Concepts</strong>
-                            <ul>
-                                       
-                    
-                    <li class="normal"> 
-                        <a href="/guides/concepts/listing.html">Listing</a> <!-- 1100-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/guides/concepts/offer.html">Offer</a> <!-- 1090-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/guides/concepts/identity.html">Identity</a> <!-- 1-->
-                        
-                    </li>
-                    
-                    <li class="normal"> 
-                        <a href="/guides/concepts/messaging.html">Messaging</a> <!-- 1-->
-                        
-                    </li>
-                    
-                    
-                        </ul></li>
-                     
-                
-                </ul>
-            </div>
-            <div class="content">
-                <h1 class="title">Local Development</h1>
+<h2 id="about-the-origin-repository">About the Origin repository</h2>
 
-                <p>Ready to get started developing Origin.js and the Demo DApp? You will need two terminal windows: one for origin.js and one for the DApp.</p>
+<p>Origin uses a monorepo setup that is managed by <code class="highlighter-rouge">lerna</code>. The <code class="highlighter-rouge">--hoist</code> flag of <code class="highlighter-rouge">lerna</code> is used to pull common dependencies to the root of the monorepo on installation.</p>
 
-<p>Origin.js:</p>
+<h2 id="using-npm--lerna">Using NPM &amp; Lerna</h2>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    mkdir <span class="nt">-p</span> origin
-    <span class="nb">cd </span>origin
-    git clone https://github.com/OriginProtocol/origin.git
-    <span class="nb">cd </span>origin/origin-js
-    git checkout develop
-    npm run install:dev
-    npm run start
+<ol>
+  <li>Check out the repository from GitHub and make sure you have installed all the necessary dependencies:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/OriginProtocol/origin
+cd origin &amp;&amp; npm install
 </code></pre></div></div>
 
-<p>And in another window, let’s get the Demo DApp going:</p>
+<ol>
+  <li>Configure the DApp with default environment variables:</li>
+</ol>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nb">cd</span> .. <span class="c"># (or /path/to/origin)</span>
-    git clone https://github.com/OriginProtocol/origin.git
-    <span class="nb">cd </span>origin/origin-dapp
-    git checkout develop
-    npm run install:dev
-    npm run start
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp origin-dapp/dev.env origin-dapp/.env
 </code></pre></div></div>
 
-<p>Your local repos have been setup to use the develop branches, since that’s where all our new work starts from. You have also linked the Demo DApp to use your local copy of the Origin.js library, so that your changes to Origin.js are reflected immediately.</p>
+<ol>
+  <li>You can then start a light development environment by executing:</li>
+</ol>
 
-<p>You will now need to have <a href="https://metamask.io/">MetaMask</a> installed in your browser and connect it to “Localhost 8545”. Then visit http://localhost:3000/ to see the DApp.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm start
+</code></pre></div></div>
 
-<p>If you make changes to the contract code, or want to reset the contracts back to their starting states, you will want to stop (<code class="highlighter-rouge">ctrl-c</code>) your Origin.js development server. Then start it back up again with <code class="highlighter-rouge">npm run start</code>. After doing this, you must clear MetaMask’s caches (or you will be getting old and invalid data). To do this:</p>
+<ol>
+  <li>You will then need to connect to your locally running blockchain in MetaMask. Follow these steps:</li>
+</ol>
 
 <ul>
-  <li>Change the MetaMask network to any testnet</li>
-  <li>Change back to “Localhost 8545”</li>
-  <li>Go to MetaMask “Custom RPC” in the Network menu, and press “Reset Account”</li>
-  <li>Reload http://localhost:3000/ in your browser</li>
+  <li>
+    <p>Log out of MetaMask.</p>
+  </li>
+  <li>
+    <p>Click <code class="highlighter-rouge">Restore from seed phrase</code></p>
+  </li>
+  <li>
+    <p>Enter the following seed phrase (Mnemonic):</p>
+  </li>
 </ul>
 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
+</code></pre></div></div>
 
-            </div>    
-        </div>
+<p>This is the default seed phrase used by <a href="https://github.com/trufflesuite/truffle">Truffle</a> for development.</p>
+
+<p>⚠️  Be careful not to mix up your test wallet with your real one on the Main Network.</p>
+
+<ul>
+  <li>
+    <p>Click where it says “Ethereum Main Network” and select “Localhost 8545”. Click the back arrow to return to your account.</p>
+  </li>
+  <li>
+    <p>You should see your first test account now has 100 ETH and the address <code class="highlighter-rouge">0x627306090abaB3A6e1400e9345bC60c78a8BEf57</code>. Additional generated accounts will also have this amount.</p>
+  </li>
+</ul>
+
+<h3 id="troubleshooting">Troubleshooting</h3>
+<ul>
+  <li>If IPFS fails to start with error “UnhandledPromiseRejectionWarning: Error: Lock file is already being hold”, clean up the IPFS local data:
+<code class="highlighter-rouge">rm -rf ~/.jsipfs/</code></li>
+</ul>
+
+<h2 id="using-docker-compose">Using Docker Compose</h2>
+
+<p>The Origin Docker Compose configuration runs the following packages:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- origin-bridge on http://localhost:5000
+- origin-dapp on http://localhost:3000
+- origin-discovery (event-listener)
+- origin-discovery (apollo server on http://localhost:4000)
+- origin-ipfs-proxy on http://localhost:9999
+- origin-messaging on http://localhost:9012
+- origin-notifications on http://localhost:3456)
+- origin-js (ipfs server)
+- origin-js (ethereum blockchain using ganache on http://localhost:8545)
+- postgresql
+- elasticsearch on http://localhost:9200
+</code></pre></div></div>
+
+<h3 id="system-requirements">System Requirements</h3>
+
+<ul>
+  <li><a href="https://docs.docker.com/install/overview/">Docker</a> <strong>version 18 or greater</strong>:
+<code class="highlighter-rouge">docker --version</code></li>
+  <li><a href="https://docs.docker.com/compose/">Docker Compose</a> <strong>For Mac and Windows docker-compose should be part of desktop Docker installs</strong>:
+<code class="highlighter-rouge">docker-compose --version</code></li>
+  <li><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git</a>:
+<code class="highlighter-rouge">git --version</code></li>
+  <li>Unix-based system (OSX or Linux) needed to run the bash scripts</li>
+</ul>
+
+<h3 id="getting-started">Getting Started</h3>
+
+<p>⚠️  If you have previously used  <code class="highlighter-rouge">docker-compose</code> with Origin, please ensure you clear out old containers by stopping any running containers and executing <code class="highlighter-rouge">docker system prune --volumes --all</code> before completing these steps.</p>
+
+<ol>
+  <li>Clone the repository:</li>
+</ol>
+
+<p><code class="highlighter-rouge">git clone https://github.com/OriginProtocol/origin</code>
+<code class="highlighter-rouge">cd origin</code></p>
+
+<ol>
+  <li>Optional: Pick which version of the code you want to run. The latest code is on the master branch (which is checked out by default), while the code currently deployed in production is on the stable branch. For example, to use the stable branch, run:
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout --track origin/stable
+</code></pre></div>    </div>
+  </li>
+  <li>From the root of the repository run <code class="highlighter-rouge">docker-compose up</code>. The first time this command runs it will take some time to complete due to the initial building of the containers.</li>
+</ol>
+
+<p>Please note this can take some time. If you see an error in the logs please <a href="https://github.com/OriginProtocol/origin/issues">raise an issue</a>. When the containers are running you can access the DApp at <code class="highlighter-rouge">http://localhost:3000</code>.</p>
+
+<h3 id="usage-and-commands">Usage and commands</h3>
+
+<p>Please refer to the <a href="https://docs.docker.com/compose/reference/overview/">docker-compose</a> documentation for usage. Some commands that may be useful are included below.</p>
+
+<p>Start and stop the environment:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up
+docker-compose down
+</code></pre></div></div>
+
+<p>Spawn a shell (command line) in a container:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker exec -ti &lt;container_name&gt; /bin/bash
+docker exec -ti origin-dapp /bin/bash
+</code></pre></div></div>
+
+<p>Follow log output for all containers:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose logs -f
+</code></pre></div></div>
+
+<p>Restart a container. In a new terminal window:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose restart &lt;container_name&gt;
+</code></pre></div></div>
+
+<p>Rebuild containers (takes some time), in case you update dependencies (including npm). In a new terminal window:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose build --no-cache origin
+</code></pre></div></div>
+
+<h3 id="troubleshooting-1">Troubleshooting</h3>
+
+<h4 id="elasticsearch-fails-to-start-with-virtual-memory-error">Elasticsearch fails to start with virtual memory error</h4>
+
+<p>The development stack includes an Elasticsearch container which may require an increase in the mmap counts for your OS. On Linux this can be achieved by running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysctl -w vm.max_map_count=262144
+</code></pre></div></div>
+
+<p>For more information, see this <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html">link.</a></p>
+
+<h4 id="docker-container-exited-with-code-137">Docker Container exited with code 137</h4>
+
+<p>If a container is failing with code 137 it could be that it has encountered Out Of Memory error. To fix this dedicate more memory to Docker <a href="https://www.petefreitag.com/item/848.cfm">see this link</a>.</p>
+
+<h4 id="port-errors">Port errors</h4>
+
+<p>The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn’t available spinning up the development environment may fail.</p>
+
+<h4 id="metamask-errors">Metamask errors</h4>
+
+<p>Sometimes Metamask gets confused on private networks. If you see errors generated by Metamask in your console while developing then clicking <code class="highlighter-rouge">Settings</code>→<code class="highlighter-rouge">Reset Account</code> in Metamask should resolve the issue.</p>
+
+
+
+        </div>    
     </div>
 
     <footer>
