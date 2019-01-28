@@ -13,28 +13,40 @@ export async function validateSubdomain (req, res, next) {
   if (config.subdomain) {
     // Check for subdomain blacklisting
     if (subdomainBlacklist.includes(config.subdomain)) {
-      res.status(400).send('Subdomain is not allowed')
+      return res.status(400).send('Subdomain is not allowed')
     }
 
     try {
       req.dnsRecord = await getDnsRecord(config.subdomain, 'TXT')
     } catch (error) {
       logger.error(error)
-      res.status(500).send('An error occurred retrieving DNS records')
+      return res.status(500).send('An error occurred retrieving DNS records')
     }
 
     if (req.dnsRecord) {
       req.existingConfigIpfsHash = parseDnsTxtRecord(req.dnsRecord.data[0])
       if (!req.existingConfigIpfsHash) {
-        res.status(500)
+        return res.status(500)
           .send('An error occurred retrieving an existing DApp configuration')
       }
 
+      // Fetch the existing configuration for this marketplace to validate the
+      // Etheruem address
       req.existingConfig = await getConfigFromIpfs(req.existingConfigIpfsHash)
 
-      if (req.existingConfig && req.existingConfig.address !== address) {
-        res.status(400)
-          .send('Subdomain is in use by another Ethereum adddress')
+      if (req.existingConfig) {
+        if (req.existingConfig.address !== address) {
+          // Attempting to publish a subdomain where the publisher Ethereum
+          // address is different from the address of the previous
+          // publication
+          return res.status(400)
+            .send('Subdomain is in use by another Ethereum adddress')
+        }
+      } else {
+        // No config was found, but the config should always be available here
+        // because a DNS record exists
+        return res.send(500)
+          .send('An error occurred retrieving configuration from IPFS')
       }
     }
   }
