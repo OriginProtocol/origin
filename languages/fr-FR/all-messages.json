@@ -148,6 +148,7 @@
   "xxxx.price-usd-disclaimer": "USD est une estimation.",
   "header.title": "Protocole Origin DApp",
   "listing-card-prices.multiUnitListing.each": "chaque",
+  "listing-card-prices.multiUnitListing.averagePrice": "average price",
   "listing-card-prices.loadingMessage": "Chargement...",
   "listing-card.multiUnitListing.each": "chaque",
   "listing-create.navigationWarning": "Êtes-vous sûr de vouloir quitter? Si vous quittez cette page, vos progrès seront perdus.",
