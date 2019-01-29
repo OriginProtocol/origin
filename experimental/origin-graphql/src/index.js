@@ -3,7 +3,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import link from './link'
 import metaMaskSync from './metaMaskSync'
 import messagingSync from './messagingSync'
-import fragmentMatcher from './typedefs/fragmentTypes'
+import fragmentMatcher from './typeDefs/fragmentTypes'
 
 const cache = new InMemoryCache({ fragmentMatcher })
 const client = new ApolloClient({ link, cache })
