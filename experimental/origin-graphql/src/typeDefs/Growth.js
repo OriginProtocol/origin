@@ -111,7 +111,7 @@ module.exports =
     campaign: GrowthCampaign
   }
 
-  type LogResponse implements MutationResponse {
+  type SimpleResponse implements MutationResponse {
     code: String!
     success: Boolean!
     message: String!
@@ -127,6 +127,8 @@ module.exports =
   type Mutation {
     invite(emails: [String!]!): InviteResponse
     enroll(campaignId: Int!): EnrollResponse
-    log(event: JSON!): LogResponse
+    gasForIdentity(walletAddress: ID!): SimpleResponse
+    invited(walletAddress: ID!, inviteCode: String!): SimpleResponse
+    log(event: JSON!): SimpleResponse
   }
 `
