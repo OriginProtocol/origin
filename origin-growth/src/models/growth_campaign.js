@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const GrowthCampaign = sequelize.define('GrowthCampaign', {
-    id: DataTypes.INTEGER,
+    id: { type: DataTypes.INTEGER, primaryKey: true },
     name: DataTypes.STRING,
     rules: DataTypes.JSONB,
     startDate: DataTypes.DATE,
@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     cap: DataTypes.DECIMAL,
     capUsed: DataTypes.DECIMAL,
     currency: DataTypes.STRING
-  }, {})
+  }, {
+    tableName: 'growth_campaign'
+  })
 
   return GrowthCampaign
 }
