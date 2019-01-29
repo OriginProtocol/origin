@@ -8,6 +8,10 @@ export default gql`
       conversations {
         id
         timestamp
+        messages {
+          status
+          address
+        }
         lastMessage {
           media {
             url

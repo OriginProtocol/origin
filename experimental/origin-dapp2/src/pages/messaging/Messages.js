@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import gql from 'graphql-tag'
 
 import withIdentity from 'hoc/withIdentity'
+import withWallet from 'hoc/withWallet'
 import query from 'queries/Conversations'
 import roomQuery from 'queries/Room'
 
@@ -59,6 +60,14 @@ const Messages = props => (
         const room = get(props, 'match.params.room')
         const active = room || get(conversations, '0.id')
 
+        const displayUnreadCount = ({ messages }) => {
+          const unreadCount = messages.reduce((result, msg) => {
+            if (msg.status === 'unread' && msg.address !== props.wallet) return [...result, msg]
+            return result
+          }, []).length
+
+          return unreadCount > 0 && unreadCount
+        }
         return (
           <div className="row">
             <div className="col-md-3">
@@ -70,6 +79,10 @@ const Messages = props => (
                   onClick={() => props.history.push(`/messages/${conv.id}`)}
                 >
                   <SubjectWithIdentity conversation={conv} wallet={conv.id} />
+                  <span
+                    className={`align-self-end${displayUnreadCount(conv) ? ' count align-self-end': ''}`}>
+                    {displayUnreadCount(conv)}
+                  </span>
                 </div>
               ))}
             </div>
@@ -89,7 +102,7 @@ const Messages = props => (
   </div>
 )
 
-export default Messages
+export default withWallet(Messages)
 
 require('react-styl')(`
   .messages-page
@@ -107,6 +120,15 @@ require('react-styl')(`
       .avatar
         align-self: flex-start
         flex: 0 0 40px
+      .count
+        border-radius: 44%
+        background-color: var(--clear-blue)
+        width: 28px
+        height: 21px
+        color: white
+        padding-left: 9px;
+        padding-bottom: 23px;
+        font-weight: bold;
       .right
         display: flex
         flex: 1
