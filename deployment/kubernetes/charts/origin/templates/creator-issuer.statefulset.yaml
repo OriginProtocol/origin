@@ -30,7 +30,7 @@ spec:
           - containerPort: 80
         env:
           - name: SERVER_ENDPOINT
-            value: {{ template "dapp.host" . }}
+            value: {{ template "dapp.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
         volumeMounts:
           - name: {{ template "creator-issuer.fullname" . }}-data
             mountPath: /etc/resty-auto-ssl
