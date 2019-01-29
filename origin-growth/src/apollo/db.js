@@ -1,4 +1,3 @@
-const Sequelize = require('sequelize')
 const db = require('../models')
 
 function _makeCampaign(row) {
