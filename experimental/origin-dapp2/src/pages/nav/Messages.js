@@ -10,6 +10,11 @@ import withWallet from 'hoc/withWallet'
 import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
 
+const getUnreadMessage = (count) => {
+  if (count === 1) return "Unread Message"
+  return "Unread Messages"
+}
+
 class MessagesNav extends Component {
   constructor() {
     super()
@@ -78,10 +83,8 @@ const MessagesDropdown = (props) => {
           return (
             <div>
               <div className="row unread-message">
-                <span className={totalUnreadMessages > 0 ? 'count' : 'hide'}>
-                  {totalUnreadMessages}
-                </span>
-                {totalUnreadMessages > 0 ? <span>Unread Message</span> : ''}
+                <span className="count align-self-center">{totalUnreadMessages}</span>
+                <span>{getUnreadMessage(totalUnreadMessages)}</span>
               </div>
               <Link to="/messages" onClick={() => onClick()}>
                 View Messages
@@ -120,6 +123,8 @@ require('react-styl')(`
         background-image: url(images/messages-icon-selected.svg)
       .dropdown-menu.messages
         padding: 1rem
+        padding-top: 0
+        background-color: var(--pale-grey-two)
       &.show
         .count
           border-radius: 44%
@@ -128,15 +133,18 @@ require('react-styl')(`
           height: 21px
           color: white
           padding-left: 9px
-          padding-bottom: 23px
+          padding-bottom: 25px
           font-weight: bold
-        .hide
-          display: none
         .unread-message
           width: 300px
+          font-weight: 600
+          font-size: 18px
+          padding: 1rem 0
+          background-color: var(--white)
           span
             margin-left: 10px
         a
           text-align: center
           display: block
+          padding-top: 15px
 `)
