@@ -20,9 +20,36 @@ metadata:
     nginx.ingress.kubernetes.io/session-cookie-name: "ingress"
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
     nginx.ingress.kubernetes.io/limit-rps: "5"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "https://{{ template "dapp.host" . }}"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = 'GET') {
+          more_set_headers 'Access-Control-Allow-Origin: $http_origin';
+          more_set_headers 'Access-Control-Allow-Credentials: true';
+          more_set_headers 'Access-Control-Allow-Methods: GET, POST, OPTIONS';
+          more_set_headers 'Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+      }
+
+      if ($request_method = 'OPTIONS') {
+          more_set_headers 'Access-Control-Allow-Origin: $http_origin';
+
+          # Cookie support
+          more_set_headers 'Access-Control-Allow-Credentials: true';
+          more_set_headers 'Access-Control-Allow-Methods: GET, POST, OPTIONS';
+
+          more_set_headers 'Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+
+          # Tell client that this pre-flight info is valid for 20 days
+          more_set_headers 'Access-Control-Max-Age: 1728000';
+          more_set_headers 'Content-Type: text/plain charset=UTF-8';
+          more_set_headers 'Content-Length: 0';
+          return 204;
+      }
+
+      if ($request_method = 'POST') {
+          more_set_headers 'Access-Control-Allow-Origin: $http_origin';
+          more_set_headers 'Access-Control-Allow-Credentials: true';
+          more_set_headers 'Access-Control-Allow-Methods: GET, POST, OPTIONS';
+          more_set_headers 'Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+      }
 spec:
   tls:
     - secretName: {{ template "bridge.host" . }}
