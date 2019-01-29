@@ -124,7 +124,7 @@ class Step1 extends Component {
 export default Step1
 
 require('react-styl')(`
-  .create-listing-step-1
+  .create-listing .create-listing-step-1
     max-width: 570px
     > .wrap
       max-width: 460px
@@ -176,13 +176,6 @@ require('react-styl')(`
         padding: 0.5rem 1rem 1rem 1rem
 
     .actions
-      margin-top: 2rem
-      display: flex;
-      justify-content: flex-end;
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
+      justify-content: flex-end
 
 `)
