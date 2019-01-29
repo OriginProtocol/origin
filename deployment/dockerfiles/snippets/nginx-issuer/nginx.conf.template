@@ -26,9 +26,7 @@ http {
   # Initial setup tasks.
   init_by_lua_block {
       auto_ssl = (require "resty.auto-ssl").new()
-      auto_ssl:set("ca", '$LETSENCRYPT_URL')
-
-      auto_ssl:set("dir", "/data")
+      auto_ssl:set("ca", "https://acme-v01.api.letsencrypt.org/directory")
 
       --- Allow all domains
       auto_ssl:set("allow_domain", function(domain)
@@ -84,8 +82,8 @@ http {
     }
 
     # Define a fallback certificate so nginx can start
-    ssl_certificate /data/resty-auto-ssl-fallback.crt;
-    ssl_certificate_key /data/resty-auto-ssl-fallback.key;
+    ssl_certificate /etc/resty-auto-ssl/resty-auto-ssl-fallback.crt;
+    ssl_certificate_key /etc/resty-auto-ssl/resty-auto-ssl-fallback.key;
 
     # certs sent to the client in SERVER HELLO are concatenated in ssl_certificate
     ssl_session_timeout 1d;
