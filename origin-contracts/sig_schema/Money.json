@@ -1,0 +1,4 @@
+[
+  { "name" : "currency", "type" : "string" },
+  { "name" : "amount", "type" : "string" }
+]

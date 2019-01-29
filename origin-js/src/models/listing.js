@@ -1,5 +1,5 @@
 const base58 = require('bs58')
-const crypto = require('crypto')
+const web3 = require('web3')
 
 //
 // Listing is the main object exposed by Origin Protocol to access listing data.
@@ -208,7 +208,8 @@ class Listing {
   }
 
   get uniqueId() {
-    return base58.encode(crypto.createHash('sha1').update(this.seller + "-" + this.createDate).digest())
+    const hash = web3.utils.soliditySha3(this.seller, this.createDate)
+    return base58.encode(Buffer.from(hash.slice(2), "hex"))
   }
 }
 
