@@ -340,7 +340,9 @@ class CreateListing extends Component {
           price: { currency: this.state.currency, amount: this.state.price },
           category: this.state.category,
           subCategory: this.state.subCategory,
-          media: this.state.media,
+          media: this.state.media
+        },
+        unitData: {
           unitsTotal: Number(this.state.unitsTotal)
         }
       }

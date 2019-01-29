@@ -212,6 +212,7 @@ class TransactionScreen extends Component {
             size="large"
             type="primary"
             style={styles.button}
+            deactivate={true}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={hasSufficientFunds ? 'Confirm' : 'Continue'}
             onPress={hasSufficientFunds ? this.handleApprove : () => {
