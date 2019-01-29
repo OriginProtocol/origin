@@ -9,8 +9,6 @@ RUN apk --no-cache add bash openssl \
 
 COPY ./deployment/dockerfiles/snippets/origin-dapp-creator-issuer/nginx.conf.template \
 	/usr/local/openresty/nginx/conf/
-COPY ./deployment/dockerfiles/snippets/origin-dapp-creator-issuer/dehydrated.conf \
-	/data/resty-auto-ssl/letsencrypt/conf.d
 COPY ./deployment/dockerfiles/scripts/origin-dapp-creator-issuer/entrypoint.sh \
 	/entrypoint.sh
 
