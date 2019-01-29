@@ -77,7 +77,7 @@ const MessagesDropdown = (props) => {
 
           return (
             <div>
-              <div className="d-flex row unread-message">
+              <div className="row unread-message">
                 <span className={totalUnreadMessages > 0 ? 'count' : 'hide'}>
                   {totalUnreadMessages}
                 </span>
@@ -123,7 +123,7 @@ require('react-styl')(`
       &.show
         .count
           border-radius: 44%
-          background-color: var(--clear-blue)
+          background-color: var(--greenblue)
           width: 28px
           height: 21px
           color: white
@@ -133,7 +133,10 @@ require('react-styl')(`
         .hide
           display: none
         .unread-message
-          width: 200px
+          width: 300px
           span
             margin-left: 10px
+        a
+          text-align: center
+          display: block
 `)
