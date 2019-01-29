@@ -148,7 +148,7 @@
   "xxxx.price-usd-disclaimer": "USD表示は概算です。",
   "header.title": "Origin Protocol Dapp（Origin Protocol 分散型アプリ）",
   "listing-card-prices.multiUnitListing.each": "各",
-  "listing-card-prices.multiUnitListing.averagePrice": "average price",
+  "listing-card-prices.multiUnitListing.averagePrice": "平均価格",
   "listing-card-prices.loadingMessage": "読込中...",
   "listing-card.multiUnitListing.each": "各",
   "listing-create.navigationWarning": "このままページを離れて良いですか？今このページを離れると、全ての更新内容が失われます。",
