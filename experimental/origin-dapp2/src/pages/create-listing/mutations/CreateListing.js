@@ -79,9 +79,11 @@ class CreateListing extends Component {
           category: listing.category,
           subCategory: listing.subCategory,
           media: listing.media.map(m => pick(m, 'contentType', 'url')),
-          unitsTotal,
           commission: unitsTotal > 1 ? listing.boostLimit : listing.boost,
           commissionPerUnit: listing.boost
+        },
+        unitData: {
+          unitsTotal
         },
         autoApprove: true
       }

@@ -3,6 +3,9 @@ import parseId from '../utils/parseId'
 import { getFeatured, getHidden } from './marketplace/_featuredAndHidden'
 
 export default {
+  __resolveType() {
+    return 'UnitListing'
+  },
   events: async listing => {
     const { listingId } = parseId(listing.id)
     return await listing.contract.eventCache.listings(listingId)

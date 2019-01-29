@@ -34,7 +34,7 @@ const BoostLevels = [
   [0, 'none', 'None', 'Your listing will get very low visibility.']
 ]
 
-class Step2 extends Component {
+class Boost extends Component {
   constructor(props) {
     super(props)
     this.state = { ...props.listing, fields: Object.keys(props.listing) }
@@ -43,6 +43,8 @@ class Step2 extends Component {
   render() {
     const isEdit = this.props.mode === 'edit'
     const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
+    const isFractional = this.props.listingType === 'fractional'
+    const step = isFractional ? 4 : 3
 
     if (this.state.valid) {
       return <Redirect to={`${prefix}/review`} push />
@@ -53,9 +55,9 @@ class Step2 extends Component {
         <div className="col-md-8">
           <div className="create-listing-step-3">
             <div className="wrap">
-              <div className="step">Step 3</div>
+              <div className="step">{`Step ${step}`}</div>
               <div className="step-description">Boost your listing</div>
-              <Steps steps={3} step={3} />
+              <Steps steps={step} step={step} />
 
               <form
                 onSubmit={e => {
@@ -78,7 +80,7 @@ class Step2 extends Component {
                 <div className="actions">
                   <Link
                     className="btn btn-outline-primary"
-                    to={`${prefix}/step-2`}
+                    to={`${prefix}/${isFractional ? 'availability' : 'step-2'}`}
                     children="Back"
                   />
                   <button type="submit" className="btn btn-primary">
@@ -114,6 +116,7 @@ class Step2 extends Component {
   renderBoostSlider() {
     const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
     const isMulti = Number(this.state.quantity || 0) > 1
+    const isFractional = this.props.listingType === 'fractional'
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
@@ -124,7 +127,7 @@ class Step2 extends Component {
     return (
       <>
         <div className="boost-info">
-          <h5>{`Boost Level${isMulti ? ' (per unit)' : ''}`}</h5>
+          <h5>{`Boost Level${isMulti ? ' (per unit)' : ''}${isFractional ? ' (per night)' : ''}`}</h5>
           <i />
         </div>
         <div className={`boost-value ${level[1]}`}>
@@ -149,7 +152,7 @@ class Step2 extends Component {
           <Link to="/about-tokens">Learn more</Link>
         </div>
 
-        {!isMulti ? null : (
+        {!isMulti && !isFractional ? null : (
           <div className="form-group boost-limit">
             <label>Boost Limit</label>
             <div className="d-flex">
@@ -210,7 +213,7 @@ class Step2 extends Component {
   }
 }
 
-export default Step2
+export default Boost
 
 require('react-styl')(`
   .create-listing .create-listing-step-3
@@ -242,7 +245,7 @@ require('react-styl')(`
 
     .no-ogn
       padding-top: 7rem
-      background: url(images/ogn-icon-horiz.svg) no-repeat
+      background: var(--golden-rod-light) url(images/ogn-icon-horiz.svg) no-repeat
       background-position: center 2rem
       margin-bottom: 1rem
       > div:nth-child(1)
