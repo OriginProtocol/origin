@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/part-of: origin-creator
 spec:
   type: LoadBalancer
-  loadBalancerIp: {{ .Values.creatorIssuerIp }}
+  loadBalancerIP: {{ .Values.creatorIssuerIp }}
   selector:
     app: {{ template "creator-issuer.fullname" . }}
   ports:

@@ -46,7 +46,7 @@ creatorServerImageTag: 'af16817'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
-creatorIssuerTag: 'latest'
+creatorIssuerImageTag: 'latest'
 creatorIssuerIp: '35.233.181.44'
 
 # origin-linking
