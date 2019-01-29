@@ -36,7 +36,7 @@ db.GrowthCampaign.upsert({
   name: 'APR 2019',
   rules: JSON.stringify({}),
   startDate: Date.parse("April 1, 2019"),
-  endDate: Date.parse("April 31, 2019"),
+  endDate: Date.parse("April 30, 2019"),
   distributionDate: Date.parse("May 28, 2019"),
   cap: 10000 * Math.pow(10, 18),
   capUsed: 2000 * Math.pow(10, 18),
