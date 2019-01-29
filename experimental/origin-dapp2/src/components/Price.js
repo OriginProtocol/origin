@@ -15,15 +15,12 @@ class Price extends Component {
   render() {
     const { amount, className, el } = this.props
     if (!amount) {
-      if (el === 'input') {
-        return <input value="" className={className} readOnly />
-      }
-      return <span>&nbsp;</span>
+      this.renderEmpty()
     }
     return (
       <Query query={CurrentPrice}>
         {({ loading, error, data }) => {
-          if (loading || error) return <span>&nbsp;</span>
+          if (loading || error) return this.renderEmpty()
           const usdAmount = data.ethUsd * Number(amount || 0)
           let rounded = Math.round(usdAmount * 100) / 100
           if (usdAmount > 0 && rounded === 0) rounded = 0.01
@@ -35,6 +32,13 @@ class Price extends Component {
         }}
       </Query>
     )
+  }
+
+  renderEmpty() {
+    if (this.props.el === 'input') {
+      return <input value="" className={this.props.className} readOnly />
+    }
+    return <span>&nbsp;</span>
   }
 }
 

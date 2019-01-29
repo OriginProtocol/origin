@@ -36,7 +36,7 @@ discoveryImageTag: '21c94ac'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '0ad7a0e'
+messagingImageTag: 'ed715d7'
 
 # origin-notifications
 notificationsImage: origin-notifications
@@ -49,6 +49,11 @@ creatorClientImageTag: '2a40c6e'
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
 creatorServerImageTag: '28ca20e'
+
+# origin-dapp-creator-issuer
+creatorIssuerImage: origin-dapp-creator-issuer
+creatorIssuerImageTag: 'latest'
+creatorIssuerIp: '35.233.135.239'
 
 # origin-linking
 linkingImage: origin-linking
