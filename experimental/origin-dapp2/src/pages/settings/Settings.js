@@ -1,100 +1,156 @@
 import React, { Component } from 'react'
+import { Mutation } from 'react-apollo'
+
+import withConfig from 'hoc/withConfig'
+import UpdateConfig from 'mutations/UpdateConfig'
 
 class Settings extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      config: this.state.config
+    }
+  }
+
   render() {
     return (
       <div className="container settings">
         <h1>Settings</h1>
-        <div class="row">
-          <div class="col settings-box">
-            <div class="form-group">
-              <label for="language">Language</label>
-              <div class="form-text form-text-muted">
+        <div className="row">
+          <div className="col settings-box">
+            <div className="form-group">
+              <label htmlFor="language">Language</label>
+              <div className="form-text form-text-muted">
                 <small>Please make a selection from the list below.</small>
               </div>
-              <select class="form-control form-control-lg">
+              <select className="form-control form-control-lg">
                 English
               </select>
             </div>
-            <div class="form-group">
-              <label for="notifications">Notifications</label>
-              <div class="form-text form-text-muted">
+            <div className="form-group">
+              <label htmlFor="notifications">Notifications</label>
+              <div className="form-text form-text-muted">
                 <small>Set your notifications settings below.</small>
               </div>
-              <div class="form-check">
-                <input class="form-check-input"
+              <div className="form-check">
+                <input className="form-check-input"
                     type="radio"
                     name="notifications"
                     id="notificationsOffRadio"
                     value="true"
                     checked />
-                <label class="form-check-label" for="notifiationsOffRadio">
+                <label className="form-check-label" htmlFor="notifiationsOffRadio">
                   Off
                 </label>
               </div>
-              <div class="form-check">
-                <input class="form-check-input"
+              <div className="form-check">
+                <input className="form-check-input"
                     type="radio"
                     name="notifications"
                     id="notificationsOnRadio"
                     value="true" />
-                <label class="form-check-label" for="notificationsOnRadio">
+                <label className="form-check-label" htmlFor="notificationsOnRadio">
                   All messages
                 </label>
               </div>
             </div>
-            <div class="form-group">
-              <label for="Messaging">Messaging</label>
-              <div class="form-text form-text-muted">
+            <div className="form-group">
+              <label htmlFor="Messaging">Messaging</label>
+              <div className="form-text form-text-muted">
                 <small>Enable/disable messaging by clicking the button below.</small>
               </div>
-              <button class="btn btn-outline-danger">
+              <button className="btn btn-outline-danger">
                 Disable
               </button>
             </div>
-            <div class="form-group">
-              <label for="language">Mobile Wallet</label>
-              <div class="form-text form-text-muted">
+            <div className="form-group">
+              <label htmlFor="language">Mobile Wallet</label>
+              <div className="form-text form-text-muted">
                 <small>Disconnect from your mobile wallet by clicking the button below.</small>
               </div>
-              <button class="btn btn-outline-danger">
+              <button className="btn btn-outline-danger">
                 Disconnect
               </button>
             </div>
           </div>
-          <div class="col settings-box">
-            <div class="form-group">
-              <label for="indexing">Indexing Server</label>
-              <div class="form-text form-text-muted">
+          <div className="col settings-box">
+            <div className="form-group">
+              <label htmlFor="indexing">Indexing Server</label>
+              <div className="form-text form-text-muted">
                 <small>Please select if you'd like to use an indexing server.</small>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="indexing">IPFS Gateway</label>
-              <div class="form-text form-text-muted">
-                <small>Please enter the URL below.</small>
+              <div className="form-check">
+                <input className="form-check-input"
+                    type="radio"
+                    name="indexing"
+                    id="indexingOnRadio"
+                    checked={this.state.config.discovery ? true : false} />
+                <label className="form-check-label" htmlFor="notificationsOnRadio">
+                  Yes
+                </label>
+              </div>
+              <div className="form-check">
+                <input className="form-check-input"
+                    type="radio"
+                    name="indexing"
+                    id="indexingOffRadio"
+                    checked={this.state.config.discovery ? false : true} />
+                <label className="form-check-label" htmlFor="notifiationsOffRadio">
+                  No
+                </label>
               </div>
             </div>
-            <div class="form-group">
-              <label for="indexing">Ethereum Node</label>
-              <div class="form-text form-text-muted">
+            <div className="form-group">
+              <label htmlFor="indexing">IPFS Gateway</label>
+              <div className="form-text form-text-muted">
                 <small>Please enter the URL below.</small>
               </div>
+              <input className="form-control form-control-lg"
+                  type="text"
+                  name="ipfsGateway"
+                  value={this.state.config.ipfsGateway} />
             </div>
-            <div class="form-group">
-              <label for="indexing">Bridge Server</label>
-              <div class="form-text form-text-muted">
+            <div className="form-group">
+              <label htmlFor="indexing">Web3 Provider</label>
+              <div className="form-text form-text-muted">
                 <small>Please enter the URL below.</small>
               </div>
+              <input className="form-control form-control-lg"
+                  type="text"
+                  name="web3Providrer"
+                  value={this.state.config.provider} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="indexing">Bridge Server</label>
+              <div className="form-text form-text-muted">
+                <small>Please enter the URL below.</small>
+              </div>
+              <input className="form-control form-control-lg"
+                  type="text"
+                  name="bridgeServer"
+                  value={this.state.config.bridge} />
             </div>
           </div>
         </div>
+
+        <Mutation mutation={UpdateConfig}>
+          {(updateConfig, { client }) => (
+            <button
+              className="btn btn-lg"
+              onClick={async () => {
+                updateConfig({ variables: {} })
+              }}
+            >
+              Save
+            </button>
+          )}
+        </Mutation>
       </div>
     )
   }
 }
 
-export default Settings
+export default withConfig(Settings)
 
 require('react-styl')(`
   .settings
