@@ -12,6 +12,7 @@ export default gql`
           address
           content
           status
+          hash
           media {
             url
             contentType

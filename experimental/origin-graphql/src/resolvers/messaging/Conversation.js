@@ -1,13 +1,14 @@
 import contracts from '../../contracts'
 
-function getMessage(message) {
+async function getMessage(message) {
   if (!message) return null
+  const status = await contracts.messaging.getStatus(message)
   return {
     ...message,
     content: message.msg.content,
     media: message.msg.media,
     timestamp: Math.round(message.msg.created / 1000),
-    status: contracts.messaging.getStatus(message)
+    status
   }
 }
 

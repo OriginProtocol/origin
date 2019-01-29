@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import filter from 'lodash/filter'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 
@@ -80,7 +81,7 @@ class AllMessages extends Component {
     }
   }
   render() {
-    const { messages } = this.props
+    const { messages, isUser, wallet} = this.props
 
     return (
       <div className="messages" ref={el => (this.el = el)}>
@@ -90,7 +91,7 @@ class AllMessages extends Component {
             lastMessage={idx > 0 ? messages[idx - 1] : null}
             key={idx}
             wallet={get(message, 'address')}
-            isUser={this.props.wallet === get(message, 'address')}
+            isUser={wallet === get(message, 'address')}
           />
         ))}
       </div>
@@ -100,11 +101,12 @@ class AllMessages extends Component {
 
 class Room extends Component {
   render() {
-    const { id, wallet } = this.props
+    const { id, wallet, updateMessage } = this.props
+
     return (
       <div className="container">
         <Query query={query} pollInterval={2000} variables={{ id }}>
-          {({ error, data, loading }) => {
+          {({ error, data, loading, refetch }) => {
             if (loading) {
               return <div>Loading...</div>
             } else if (error) {
@@ -114,6 +116,18 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
+            const unreadMessages = filter(messages, (msg) => {
+              return msg.status === 'unread' && msg.address !== wallet
+            })
+            if (unreadMessages.length) {
+              unreadMessages.map(({ hash, status }) => {
+                updateMessage({ variables: {
+                  status: 'read',
+                  hash
+                }})
+              })
+              refetch()
+            }
             return (
               <>
                 <AllMessages messages={messages} wallet={wallet} />

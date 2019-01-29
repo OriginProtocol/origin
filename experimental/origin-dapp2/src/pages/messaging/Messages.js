@@ -1,10 +1,14 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
+import gql from 'graphql-tag'
 
 import withIdentity from 'hoc/withIdentity'
 import query from 'queries/Conversations'
+import roomQuery from 'queries/Room'
+
 import { OnboardMessaging } from 'pages/onboard/Messaging'
+import UpdateMessage from 'mutations/UpdateMessage'
 
 import Room from './Room'
 import Avatar from 'components/Avatar'
@@ -70,7 +74,13 @@ const Messages = props => (
               ))}
             </div>
             <div className="col-md-9">
-              {active ? <Room id={active} /> : null}
+              {active ? (
+                <Mutation mutation={UpdateMessage}>
+                  {updateMessage => (
+                    <Room id={active} updateMessage={updateMessage}/>
+                  )}
+                </Mutation>
+              ) : null}
             </div>
           </div>
         )

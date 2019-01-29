@@ -25,6 +25,7 @@ import withdrawOffer from './marketplace/withdrawOffer'
 
 import enableMessaging from './messaging/enableMessaging'
 import sendMessage from './messaging/sendMessage'
+import updateMessage from './messaging/updateMessage'
 
 import deployToken from './token/deployToken'
 import transferToken from './token/transferToken'
@@ -73,6 +74,7 @@ export default {
   toggleMetaMask,
   enableMessaging,
   sendMessage,
+  updateMessage,
   deployUserRegistry,
   deployIdentityContract,
   deployIdentity,
