@@ -33,17 +33,19 @@ class Step2 extends Component {
         ? `/listings/${this.props.listingId}/edit`
         : '/create'
 
-    let ListingType = UnitListing
+    let ListingType = UnitListing, listingType = 'UnitListing'
     const { category, subCategory } = this.state
     if (category === 'schema.forRent' && subCategory === 'schema.housing') {
       ListingType = HomeShareListing
+      listingType = 'HomeShareListing'
     }
+    const isFractional = this.props.listingType === 'fractional'
 
     if (this.state.valid) {
-      if (ListingType.name === 'HomeShareListing') {
+      if (isFractional) {
         return <Redirect to={`${prefix}/availability`} push />
       } else {
-        return <Redirect to={`${prefix}/step-3`} push />
+        return <Redirect to={`${prefix}/boost`} push />
       }
     } else if (!this.state.subCategory) {
       return <Redirect to={`${prefix}/step-1`} />
@@ -59,12 +61,12 @@ class Step2 extends Component {
             <div className="wrap">
               <div className="step">Step 2</div>
               <div className="step-description">Provide listing details</div>
-              <Steps steps={3} step={2} />
+              <Steps steps={isFractional ? 4 : 3} step={2} />
 
               <form
                 onSubmit={e => {
                   e.preventDefault()
-                  this.validate(ListingType.name)
+                  this.validate(listingType)
                 }}
               >
                 {this.state.valid !== false ? null : (
@@ -283,11 +285,11 @@ require('react-styl')(`
       &.eth
         padding-left: 1.75rem
         color: var(--bluish-purple)
-        background-image: url(/images/eth-icon.svg)
+        background-image: url(images/eth-icon.svg)
       &.ogn
         padding-left: 1.75rem
         color: var(--clear-blue)
-        background-image: url(/images/ogn-icon.svg)
+        background-image: url(images/ogn-icon.svg)
       &.usd
         &::before
           content: "$"

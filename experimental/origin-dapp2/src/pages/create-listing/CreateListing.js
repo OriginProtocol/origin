@@ -6,9 +6,9 @@ import withWallet from 'hoc/withWallet'
 
 import Step1 from './Step1'
 import Step2 from './Step2'
-import Step3 from './Step3'
-import Review from './Review'
+import Boost from './Boost'
 import Availability from './Availability'
+import Review from './Review'
 
 import Store from 'utils/store'
 const store = Store('sessionStorage')
@@ -68,9 +68,9 @@ class CreateListing extends Component {
             )}
           />
           <Route
-            path="/create/step-3"
+            path="/create/boost"
             render={() => (
-              <Step3
+              <Boost
                 listing={this.state.listing}
                 listingType={listingType}
                 tokenBalance={this.props.tokenBalance}

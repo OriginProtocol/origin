@@ -70,9 +70,11 @@ class Review extends Component {
               <div className="col-3 label">Boost Level</div>
               <div className="col-9">
                 <CoinPrice price={boost} coin="ogn" />
+                {isMulti ? ' / unit' : ''}
+                {isFractional ? ' / night' : ''}
               </div>
             </div>
-            {!isMulti ? null : (
+            {!isMulti && !isFractional ? null : (
               <div className="row">
                 <div className="col-3 label">Boost Cap</div>
                 <div className="col-9">
@@ -121,7 +123,7 @@ class Review extends Component {
           </div>
 
           <div className="actions">
-            <Link className="btn btn-outline-primary" to={`${prefix}/step-3`}>
+            <Link className="btn btn-outline-primary" to={`${prefix}/boost`}>
               Back
             </Link>
             {isEdit ? (

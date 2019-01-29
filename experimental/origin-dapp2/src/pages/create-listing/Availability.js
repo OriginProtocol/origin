@@ -32,7 +32,7 @@ class Availability extends Component {
     const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
 
     if (this.state.valid) {
-      return <Redirect to={`${prefix}/step-3`} push />
+      return <Redirect to={`${prefix}/boost`} push />
     }
 
     return (
@@ -44,7 +44,7 @@ class Availability extends Component {
               <div className="step-description">
                 Edit availability &amp; Pricing
               </div>
-              <Steps steps={3} step={2} />
+              <Steps steps={4} step={3} />
 
               <form
                 onSubmit={e => {

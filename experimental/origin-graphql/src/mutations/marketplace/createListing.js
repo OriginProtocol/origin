@@ -4,7 +4,7 @@ import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 
-export function listingInputToIPFS(data) {
+export function listingInputToIPFS(data, unitData) {
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
     listingType: 'unit',
@@ -14,7 +14,7 @@ export function listingInputToIPFS(data) {
     title: data.title,
     description: data.description,
     media: data.media,
-    unitsTotal: data.unitsTotal,
+    unitsTotal: unitData.unitsTotal,
     price: data.price,
     commission: {
       currency: 'OGN',
@@ -30,10 +30,10 @@ export function listingInputToIPFS(data) {
 }
 
 async function createListing(_, input) {
-  const { depositManager, data, from, autoApprove } = input
+  const { depositManager, data, unitData, fractionalData, from, autoApprove } = input
   await checkMetaMask(from)
 
-  const ipfsData = listingInputToIPFS(data)
+  const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   let createListingCall

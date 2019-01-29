@@ -4,7 +4,8 @@ import pick from 'lodash/pick'
 
 import Step1 from '../create-listing/Step1'
 import Step2 from '../create-listing/Step2'
-import Step3 from '../create-listing/Step3'
+import Boost from '../create-listing/Boost'
+import Availability from '../create-listing/Availability'
 import Review from '../create-listing/Review'
 
 class EditListing extends Component {
@@ -12,11 +13,23 @@ class EditListing extends Component {
     super(props)
     this.state = {
       listing: {
+        // HomeShare fields:
+        weekdayPrice: '',
+        weekendPrice: '',
+        booked: [],
+        customPricing: [],
+        unavailable: [],
+
         ...pick(props.listing, [
           'title',
           'description',
           'category',
-          'subCategory'
+          'subCategory',
+          'weekdayPrice',
+          'weekendPrice',
+          'booked',
+          'customPricing',
+          'unavailable'
         ]),
         quantity: String(props.listing.unitsTotal),
         price: String(props.listing.price.amount),
@@ -27,9 +40,15 @@ class EditListing extends Component {
   }
 
   render() {
+    const { category, subCategory } = this.state.listing
+    let listingType = 'unit'
+    if (category === 'schema.forRent' && subCategory === 'schema.housing') {
+      listingType = 'fractional'
+    }
     const stepProps = {
       listing: this.state.listing,
       listingId: this.props.listing.id,
+      listingType,
       mode: 'edit',
       onChange: listing => this.setState({ listing })
     }
@@ -41,8 +60,12 @@ class EditListing extends Component {
             render={() => <Step2 {...stepProps} />}
           />
           <Route
-            path="/listings/:listingID/edit/step-3"
-            render={() => <Step3 {...stepProps} />}
+            path="/listings/:listingID/edit/boost"
+            render={() => <Boost {...stepProps} />}
+          />
+          <Route
+            path="/listings/:listingID/edit/availability"
+            render={() => <Availability {...stepProps} />}
           />
           <Route
             path="/listings/:listingID/edit/review"
