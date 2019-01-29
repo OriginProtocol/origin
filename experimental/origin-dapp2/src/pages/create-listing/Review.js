@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
+import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
+import Calendar from 'components/Calendar'
 
 import CreateListing from './mutations/CreateListing'
 import UpdateListing from './mutations/UpdateListing'
@@ -26,6 +28,7 @@ class Review extends Component {
 
     const quantity = Number(listing.quantity || 0)
     const isMulti = quantity > 1
+    const isFractional = this.props.listingType === 'fractional'
     const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
 
     return (
@@ -46,15 +49,17 @@ class Review extends Component {
               <div className="col-3 label">Description</div>
               <div className="col-9">{listing.description}</div>
             </div>
-            <div className="row">
-              <div className="col-3 label">Listing Price</div>
-              <div className="col-9">
-                <CoinPrice price={listing.price} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.price} />
+            {isFractional ? null : (
+              <div className="row">
+                <div className="col-3 label">Listing Price</div>
+                <div className="col-9">
+                  <CoinPrice price={listing.price} coin="eth" />
+                  <div className="fiat">
+                    ~ <Price amount={listing.price} />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
             {quantity <= 1 ? null : (
               <div className="row">
                 <div className="col-3 label">Quantity</div>
@@ -75,7 +80,7 @@ class Review extends Component {
                 </div>
               </div>
             )}
-            <div className="row mb-0">
+            <div className="row">
               <div className="col-3 label">Photos</div>
               <div className="col-9">
                 {listing.media.length ? (
@@ -93,6 +98,26 @@ class Review extends Component {
                 )}
               </div>
             </div>
+            {!isFractional ? null : (
+              <div className="row">
+                <div className="col-3 label">Availability</div>
+                <div className="col-9">
+                  <Calendar
+                    interactive={false}
+                    small={true}
+                    availability={
+                      new AvailabilityCalculator({
+                        weekdayPrice: listing.weekdayPrice,
+                        weekendPrice: listing.weekendPrice,
+                        booked: listing.booked,
+                        unavailable: listing.unavailable,
+                        customPricing: listing.customPricing
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="actions">

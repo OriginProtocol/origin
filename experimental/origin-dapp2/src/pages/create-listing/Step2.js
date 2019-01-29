@@ -243,15 +243,6 @@ require('react-styl')(`
       &.price
         color: var(--bluey-grey)
         margin-top: 0.5rem
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
   .with-symbol
     position: relative
     &.corner::before

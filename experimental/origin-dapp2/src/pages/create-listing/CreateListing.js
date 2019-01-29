@@ -34,6 +34,9 @@ class CreateListing extends Component {
         // HomeShare fields:
         weekdayPrice: '',
         weekendPrice: '',
+        booked: [],
+        customPricing: [],
+        unavailable: [],
 
         ...store.get('create-listing', {})
       }
@@ -46,6 +49,11 @@ class CreateListing extends Component {
   }
 
   render() {
+    const { category, subCategory } = this.state.listing
+    let listingType = 'unit'
+    if (category === 'schema.forRent' && subCategory === 'schema.housing') {
+      listingType = 'fractional'
+    }
     return (
       <div className="container create-listing">
         <Switch>
@@ -54,6 +62,7 @@ class CreateListing extends Component {
             render={() => (
               <Step2
                 listing={this.state.listing}
+                listingType={listingType}
                 onChange={listing => this.setListing(listing)}
               />
             )}
@@ -63,6 +72,7 @@ class CreateListing extends Component {
             render={() => (
               <Step3
                 listing={this.state.listing}
+                listingType={listingType}
                 tokenBalance={this.props.tokenBalance}
                 onChange={listing => this.setListing(listing)}
               />
@@ -73,6 +83,7 @@ class CreateListing extends Component {
             render={() => (
               <Review
                 tokenBalance={this.props.tokenBalance}
+                listingType={listingType}
                 listing={this.state.listing}
               />
             )}
@@ -83,6 +94,7 @@ class CreateListing extends Component {
               <Availability
                 tokenBalance={this.props.tokenBalance}
                 listing={this.state.listing}
+                onChange={listing => this.setListing(listing)}
               />
             )}
           />
@@ -122,4 +134,14 @@ require('react-styl')(`
       font-size: 24px
       font-weight: 300
       line-height: normal
+
+    .actions
+      margin-top: 2.5rem
+      display: flex
+      justify-content: space-between
+      .btn
+        min-width: 10rem
+        border-radius: 2rem
+        padding: 0.625rem
+        font-size: 18px
 `)

@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
+import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
 import Steps from 'components/Steps'
 import Link from 'components/Link'
 import Calendar from 'components/Calendar'
 import Price from 'components/Price'
+import Redirect from 'components/Redirect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -14,17 +16,30 @@ class Availability extends Component {
       price: '',
       customPrice: false,
       available: true,
-      rangeSelected: false
+      range: '',
+      calculator: new AvailabilityCalculator({
+        weekdayPrice: props.listing.weekdayPrice,
+        weekendPrice: props.listing.weekendPrice,
+        booked: props.listing.booked,
+        unavailable: props.listing.unavailable,
+        customPricing: props.listing.customPricing
+      })
     }
   }
 
   render() {
-    const { listing } = this.props
+    const isEdit = this.props.mode === 'edit'
+    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
+
+    if (this.state.valid) {
+      return <Redirect to={`${prefix}/step-3`} push />
+    }
+
     return (
       <div className="row">
         <div className="col-md-8">
-          <div className="create-listing">
-            <div className="wrap create-listing-calendar">
+          <div className="create-listing-calendar">
+            <div className="wrap">
               <div className="step">Step 3</div>
               <div className="step-description">
                 Edit availability &amp; Pricing
@@ -34,6 +49,7 @@ class Availability extends Component {
               <form
                 onSubmit={e => {
                   e.preventDefault()
+                  this.setState({ valid: true })
                 }}
               >
                 {this.state.valid !== false ? null : (
@@ -43,8 +59,8 @@ class Availability extends Component {
                 )}
 
                 <Calendar
-                  weekdayPrice={listing.weekdayPrice}
-                  weekendPrice={listing.weekendPrice}
+                  range={this.state.range}
+                  availability={this.state.calculator}
                   onChange={state => this.setState(state)}
                 />
 
@@ -64,7 +80,7 @@ class Availability extends Component {
           </div>
         </div>
         <div className="col-md-4">
-          {this.state.rangeSelected ? (
+          {this.state.range ? (
             this.renderAvailabilty()
           ) : (
             <div className="gray-box">
@@ -84,16 +100,30 @@ class Availability extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
+    const [startRaw, endRaw] = this.state.range.split('-')
+    const start = startRaw.replace(/\//g, '-'),
+      end = endRaw.replace(/\//g, '-')
+
     return (
       <div className="availability-editor">
         <div className="form-group">
           <label>Start Date</label>
-          <input className="form-control" type="date" />
+          <input className="form-control" type="date" value={start} readOnly />
         </div>
         <div className="form-group">
           <label>End Date</label>
-          <input className="form-control" type="date" />
+          <input className="form-control" type="date" value={end} readOnly />
         </div>
+        {/* <div className="form-group">
+          <label>Availability</label>
+          <div className="btn-group w-100">
+            <button className="btn btn-outline-secondary active">
+              Available
+            </button>
+            <button className="btn btn-outline-secondary">Booked</button>
+            <button className="btn btn-outline-secondary">Unavailable</button>
+          </div>
+        </div> */}
         <div className="form-group inline-label">
           <label>Available</label>
           <div>
@@ -159,6 +189,34 @@ class Availability extends Component {
             )}
           </div>
         )}
+        <div className="action-buttons">
+          <button
+            className="btn btn-outline-primary btn-rounded"
+            onClick={() => this.setState({ range: '' })}
+            children="Cancel"
+          />
+          <button
+            className="btn btn-outline-primary btn-rounded"
+            onClick={() => {
+              const calculator = this.state.calculator
+              calculator.update(
+                this.state.range,
+                this.state.available ? 'available' : 'unavailable',
+                this.state.customPrice ? this.state.price : 'reset'
+              )
+              this.setState({ calculator, range: '' })
+
+              const { booked, customPricing, unavailable } = calculator.opts
+              this.props.onChange({
+                ...this.props.listing,
+                booked,
+                customPricing,
+                unavailable
+              })
+            }}
+            children="Save"
+          />
+        </div>
       </div>
     )
   }
@@ -170,14 +228,23 @@ require('react-styl')(`
   .create-listing
     .create-listing-calendar
       border: transparent
-
+      .step-description
+        font-size: 28px
+      .gray-box
+        margin-top: 10.5rem
     .availability-editor
-      margin-top: 8rem
+      margin-top: 10.5rem
       border: 1px solid var(--light)
       border-radius: 5px
       padding: 1rem
       font-size: 18px
       font-weight: normal
+      .action-buttons
+        display: flex
+        > .btn
+          flex: 1
+          &:first-child
+            margin-right: 1rem
       label
         font-weight: bold
         color: #000

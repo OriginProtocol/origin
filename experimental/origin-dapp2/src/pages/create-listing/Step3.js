@@ -48,6 +48,8 @@ class Step2 extends Component {
       return <Redirect to={`${prefix}/review`} push />
     }
 
+    const isFractional = this.props.listingType === 'fractional'
+
     return (
       <div className="row">
         <div className="col-md-8">
@@ -78,7 +80,7 @@ class Step2 extends Component {
                 <div className="actions">
                   <Link
                     className="btn btn-outline-primary"
-                    to={`${prefix}/step-2`}
+                    to={`${prefix}/${isFractional ? 'availability' : 'step-2'}`}
                     children="Back"
                   />
                   <button type="submit" className="btn btn-primary">
