@@ -8,16 +8,23 @@ import store from 'store'
 
 class Customize extends React.Component {
 
-  componentDidMount() {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      loading: true
+    }
+
     this.getConfigUrl = this.getConfigUrl.bind(this)
     this.setConfig = this.setConfig.bind(this)
+  }
 
-    const configUrl = this.getConfigUrl()
-
-    this.props.fetchConfig(configUrl)
+  componentDidMount() {
+    this.props.fetchConfig(this.getConfigUrl())
       .then(this.setConfig)
       .catch((error) => {
         console.log('Could not load custom configuration: ' + error)
+        this.setState({ loading: false })
       })
   }
 
@@ -63,6 +70,21 @@ class Customize extends React.Component {
         window.location.reload()
       }
     }
+
+    if (this.props.config.faviconUrl) {
+      let faviconElement = document.querySelector('link[rel="shortcut icon"]')
+      if (!faviconElement) {
+          faviconElement = document.createElement('link')
+          faviconElement.setAttribute('rel', 'shortcut icon')
+          const head = document.querySelector('head')
+          head.appendChild(faviconElement)
+      }
+      faviconElement.setAttribute('href', this.props.config.faviconUrl)
+    }
+
+    this.setState({
+      loading: false
+    })
   }
 
   isWhiteLabelHostname () {
@@ -77,7 +99,7 @@ class Customize extends React.Component {
   }
 
   render() {
-    return this.props.children
+    return this.state.loading ? '' : this.props.children
   }
 }
 

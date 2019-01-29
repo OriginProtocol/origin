@@ -1,8 +1,6 @@
 import moment from 'moment-timezone'
 import store from 'store'
 
-import { unblock } from 'actions/Onboarding'
-
 import keyMirror from 'utils/keyMirror'
 import {
   addLocales,
@@ -35,14 +33,6 @@ export function dismissBetaModal() {
       type: AppConstants.BETA_MODAL_DISMISSED,
       closedAt: new Date()
     })
-
-    /*
-     * this delay should be moved to the onboarding modal animation
-     * and not depend on a prerequisite beta modal
-    */
-    setTimeout(() => {
-      dispatch(unblock())
-    }, 1000)
   }
 }
 

@@ -14,9 +14,27 @@ import QueryError from 'components/QueryError'
 
 dayjs.extend(advancedFormat)
 
+function renderContent(message) {
+  const { content, media } = message
+  const contentWithLineBreak = `${content}\n`
+
+  if (!media || !media.length) {
+    return contentWithLineBreak
+  } else {
+    return media.map(image => (
+      <div key={image.url} className="image-container mx-auto">
+        <img src={image.url} alt={'fileName'} />
+      </div>
+    ))
+  }
+}
+
 const Message = props => {
   const message = get(props, 'message', {})
   const name = get(props, 'identity.profile.fullName', '')
+  const messageContent = renderContent(message)
+  const isUser = props.isUser ? ' user' : ''
+
   let showTime = true
   if (props.lastMessage) {
     const timeDiff = message.timestamp - props.lastMessage.timestamp
@@ -29,15 +47,20 @@ const Message = props => {
           {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
         </div>
       )}
-      <div className={`message${props.them ? ' them' : ''}`}>
-        <Avatar avatar={get(props, 'identity.profile.avatar')} size={60} />
+      <div className={`message${isUser}`}>
+        {!isUser && (
+          <Avatar avatar={get(props, 'identity.profile.avatar')} size={60} />
+        )}
         <div className="bubble">
           <div className="top">
             {name && <div className="name">{name}</div>}
             <div className="account">{message.address}</div>
           </div>
-          <div className="content">{message.content}</div>
+          <div className="content">{messageContent}</div>
         </div>
+        {isUser && (
+          <Avatar avatar={get(props, 'identity.profile.avatar')} size={60} />
+        )}
       </div>
     </>
   )
@@ -58,6 +81,7 @@ class AllMessages extends Component {
   }
   render() {
     const { messages } = this.props
+
     return (
       <div className="messages" ref={el => (this.el = el)}>
         {messages.map((message, idx) => (
@@ -66,7 +90,7 @@ class AllMessages extends Component {
             lastMessage={idx > 0 ? messages[idx - 1] : null}
             key={idx}
             wallet={get(message, 'address')}
-            them={this.props.wallet !== get(message, 'address')}
+            isUser={this.props.wallet === get(message, 'address')}
           />
         ))}
       </div>
@@ -90,7 +114,6 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
-
             return (
               <>
                 <AllMessages messages={messages} wallet={wallet} />
@@ -113,21 +136,31 @@ require('react-styl')(`
     display: flex
     flex-direction: column
     align-items: start
+    .image-container
+      img
+        max-height: 250px
+        max-width: 165px
     .timestamp
-      color: var(--bluey-grey);
+      color: var(--bluey-grey)
       font-size: 12px;
       align-self: center
       margin-bottom: 1rem
     .message
-      display: flex
-      align-items: flex-end;
-      margin-bottom: 1rem
+      margin: 20px 0
+      .avatar
+        height: 60px
+        width: 60px
+        display: inline-block
+        vertical-align: bottom
       .bubble
+        display: inline-block
         margin-left: 1.5rem
         padding: 1rem
         background-color: var(--pale-grey)
         border-radius: 1rem
         position: relative
+        max-width: 70%
+        flex: 1
         .top
           font-size: 14px
           display: flex
@@ -142,21 +175,21 @@ require('react-styl')(`
           font-weight: normal
           font-size: 16px
         &::after
-          content: '';
-          bottom: 8px;
-          left: -34px;
-          position: absolute;
-          border: 0px solid;
-          display: block;
-          width: 38px;
-          height: 26px;
-          background-color: transparent;
-          border-bottom-left-radius: 50%;
-          border-bottom-right-radius: 50%;
-          box-shadow: 10px 11px 0px -3px var(--pale-grey);
-          transform: rotate(-42deg);
+          content: ''
+          bottom: 8px
+          left: -34px
+          position: absolute
+          border: 0px solid
+          display: block
+          width: 38px
+          height: 26px
+          background-color: transparent
+          border-bottom-left-radius: 50%
+          border-bottom-right-radius: 50%
+          box-shadow: 10px 11px 0px -3px var(--pale-grey)
+          transform: rotate(-42deg)
 
-      &.them
+      &.user
         align-self: flex-end
         flex-direction: row-reverse
         .bubble
@@ -165,9 +198,9 @@ require('react-styl')(`
           margin-right: 1.5rem
           margin-left: 0
           &::after
-            right: -34px;
+            right: -34px
             left: auto
-            box-shadow: -10px 11px 0px -3px var(--clear-blue);
-            transform: rotate(42deg);
+            box-shadow: -10px 11px 0px -3px var(--clear-blue)
+            transform: rotate(42deg)
 
 `)

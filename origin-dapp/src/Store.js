@@ -6,7 +6,6 @@ import exchangeRates from 'reducers/ExchangeRates'
 import transactions from 'reducers/Transactions'
 import listingCreate from 'reducers/ListingCreate'
 import activation from 'reducers/Activation'
-import onboarding from 'reducers/Onboarding'
 import listings from 'reducers/Listings'
 import messages from 'reducers/Messages'
 import profile from 'reducers/Profile'
@@ -31,7 +30,6 @@ const store = createStore(
     exchangeRates,
     transactions,
     activation,
-    onboarding,
     listings,
     messages,
     profile,

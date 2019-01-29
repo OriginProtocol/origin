@@ -15,6 +15,13 @@ class OriginEventSource {
     this.listingCache = {}
   }
 
+  async getNetworkId() {
+    if (!this.networkId) {
+      this.networkId = await this.web3.eth.net.getId()
+    }
+    return this.networkId
+  }
+
   async getMarketplace() {
     return {
       totalListings: ''
@@ -26,14 +33,13 @@ class OriginEventSource {
       ? blockNumber
       : this.contract.eventCache.getBlockNumber()
     const cacheKey = `${listingId}-${cacheBlockNumber}`
+    const networkId = await this.getNetworkId()
     if (this.listingCache[cacheKey]) {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
-      return Object.assign(
-        {},
-        this.listingCache[cacheKey],
-        { id: `999-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}` }
-      )
+      return Object.assign({}, this.listingCache[cacheKey], {
+        id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`
+      })
     }
 
     let listing,
@@ -125,21 +131,22 @@ class OriginEventSource {
     }
 
     const type = 'unit'
-    let commissionPerUnit = '0', commission = '0'
+    let commissionPerUnit = '0',
+      commission = '0'
     if (type === 'unit') {
-      const commissionPerUnitOgn = data.unitsTotal === 1
-        ? (data.commission && data.commission.amount) || '0'
-        : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
+      const commissionPerUnitOgn =
+        data.unitsTotal === 1
+          ? (data.commission && data.commission.amount) || '0'
+          : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
       commissionPerUnit = this.web3.utils.toWei(commissionPerUnitOgn, 'ether')
 
       const commissionOgn = (data.commission && data.commission.amount) || '0'
       commission = this.web3.utils.toWei(commissionOgn, 'ether')
     }
 
-
     this.listingCache[cacheKey] = await this.withOffers(listingId, {
       ...data,
-      id: `999-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
+      id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
       arbitrator: listing.depositManager
@@ -182,25 +189,30 @@ class OriginEventSource {
           offer.valid = false
           offer.validationError = 'units purchased exceeds available'
         } else {
-          unitsAvailable -= offer.quantity
+          try {
+            unitsAvailable -= offer.quantity
 
-          // Validate offer commission.
-          const normalCommission = commissionPerUnit.mul(
-            this.web3.utils.toBN(offer.quantity)
-          )
-          const expCommission = normalCommission.lte(commissionAvailable)
-            ? normalCommission
-            : commissionAvailable
-          const offerCommission =
-            (offer.commission && this.web3.utils.toBN(offer.commission))
-            || this.web3.utils.toBN(0)
-          if (!offerCommission.eq(expCommission)) {
+            // Validate offer commission.
+            const normalCommission = commissionPerUnit.mul(
+              this.web3.utils.toBN(offer.quantity)
+            )
+            const expCommission = normalCommission.lte(commissionAvailable)
+              ? normalCommission
+              : commissionAvailable
+            const offerCommission =
+              (offer.commission && this.web3.utils.toBN(offer.commission)) ||
+              this.web3.utils.toBN(0)
+            if (!offerCommission.eq(expCommission)) {
+              offer.valid = false
+              offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
+              return
+            }
+            if (!offerCommission.isZero()) {
+              commissionAvailable = commissionAvailable.sub(offerCommission)
+            }
+          } catch (e) {
             offer.valid = false
-            offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
-            return
-          }
-          if (!offerCommission.isZero()) {
-            commissionAvailable = commissionAvailable.sub(offerCommission)
+            offer.validationError = 'invalid IPFS data'
           }
         }
       })
@@ -269,8 +281,10 @@ class OriginEventSource {
     let data = await get(this.ipfsGateway, ipfsHash)
     data = pick(data, 'unitsPurchased')
 
+    const networkId = await this.getNetworkId()
+
     const offerObj = {
-      id: `999-0-${listingId}-${offerId}`,
+      id: `${networkId}-0-${listingId}-${offerId}`,
       listingId: String(listing.id),
       offerId: String(offerId),
       createdBlock,
@@ -326,12 +340,10 @@ class OriginEventSource {
     const offerAffiliate = offer.affiliate
       ? offer.affiliate.id.toLowerCase()
       : ZERO_ADDRESS
-    const affiliateAlowed =
+    const affiliateAllowed =
       affiliateWhitelistDisabled ||
-      (await this.contract.methods
-        .allowedAffiliates(offer.offerAffiliate)
-        .call())
-    if (!affiliateAlowed) {
+      (await this.contract.methods.allowedAffiliates(offerAffiliate).call())
+    if (!affiliateAllowed) {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
 
@@ -356,8 +368,9 @@ class OriginEventSource {
 
   async getReview(listingId, offerId, party, ipfsHash) {
     const data = await get(this.ipfsGateway, ipfsHash)
+    const networkId = await this.getNetworkId()
     return {
-      id: `999-1-${listingId}-${offerId}`,
+      id: `${networkId}-0-${listingId}-${offerId}`,
       reviewer: { id: party, account: { id: party } },
       listing: { id: listingId },
       offer: { id: offerId },

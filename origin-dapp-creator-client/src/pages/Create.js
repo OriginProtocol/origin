@@ -112,7 +112,7 @@ class Create extends React.Component {
 
     return (
       <>
-        <h1>Welcome to the Origin Marketplace Creator</h1>
+        <h1>Welcome to the Origin Marketplace Creator!</h1>
         <h4>Please provide the information below to get started.</h4>
 
         <form onSubmit={this.handleSubmit}>

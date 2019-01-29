@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   type Subscription {
     newBlock: Block
     newTransaction: NewTransaction
@@ -30,10 +30,17 @@ export default `
   }
 
   type Config {
+    affiliate: String
+    arbitrator: String
     discovery: String
+    bridge: String
     facebookAuthUrl: String
     ipfsRPC: String
     ipfsGateway: String
+    ipfsEventCache: String
+    provider: String
+    providerWS: String
+    originGraphQLVersion: String
   }
 
   type Mutation {
@@ -72,11 +79,6 @@ export default `
     metaMaskAccount: Account
     metaMaskNetworkId: Int
     metaMaskNetworkName: String
-  }
-
-  type Price {
-    currency: String
-    amount: String
   }
 
   type Account {
