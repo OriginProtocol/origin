@@ -126,9 +126,9 @@ require('react-styl')(`
         width: 28px
         height: 21px
         color: white
-        padding-left: 9px;
-        padding-bottom: 23px;
-        font-weight: bold;
+        padding-left: 9px
+        padding-bottom: 23px
+        font-weight: bold
       .right
         display: flex
         flex: 1
