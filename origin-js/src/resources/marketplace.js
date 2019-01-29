@@ -423,11 +423,12 @@ export default class Marketplace {
     const account = await this.contractService.currentAccount()
     const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+    const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
 
     const listing = Listing.init(undefined, 
       { status:'active',
         ipfsHash:ipfsBytes,
-        seller:account}, ipfsData)
+        seller:account}, ipfsListing)
     const signature =  await this.contractService.signListing(listing)
    
     return this.discoveryService.injectListing(listing.ipfsHash, listing.seller, 

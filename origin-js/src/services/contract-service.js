@@ -501,19 +501,34 @@ class ContractService {
     }
   }
 
-  async signListing(listing) {
+  async getSignListingData(listing) {
     const networkId = await web3.eth.net.getId()
-    const marketAddress = this.marketplaceContracts.V00_Marketplace.networks[networkId]
-    return await this.signTypedDataV3(listingToSignData(networkId, marketAddress, listingSalt, listing))
+    const marketAddress = this.marketplaceContracts.V00_Marketplace.networks[networkId].address
+    return listingToSignData(networkId, marketAddress, listingSalt, listing)
+  }
+
+  async signListing(listing) {
+    const signData = await this.getSignListingData(listing)
+    console.log("signing:", signData)
+    return await this.signTypedDataV3(JSON.stringify(signData))
   }
 
   async signTypedDataV3(data) {
     if (this.web3.currentProvider.sendAsync) {
       const signer = await this.currentAccount()
-      return this.web3.currentProvider.sendAsync({ 
-        method: "eth_signTypedData_v3",
-        params: [signer, data],
-        from: signer
+    
+      return new Promise((resolve, reject) => { 
+        this.web3.currentProvider.sendAsync({ 
+          method: "eth_signTypedData_v3",
+          params: [signer, data],
+          from: signer
+        }, (err, result) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(result.result)
+          }
+        })
       })
     }
   }
