@@ -24,7 +24,7 @@ const messagingRoomsMap = {}
 const snapshotBatchSize = config.SNAPSHOT_BATCH_SIZE
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 async function startRoom(roomDb, roomId, storeType, writers, shareFunc) {
@@ -71,7 +71,7 @@ function rebroadcastOnReplicate(DB, db){
   db.events.on('replicated', (address, length, from) => {
     // rebroadcast
     DB._pubsub.publish(db.id,  db._oplog.heads)
-    if (from != "fromSnapshot")
+    if (from != 'fromSnapshot')
     {
       snapshotDB(db)
     }
@@ -167,7 +167,7 @@ async function loadSnapshotDB(db) {
       }
     }
     await db._updateIndex()
-    db.events.emit('replicated', db.address.toString(), undefined, "fromSnapshot")
+    db.events.emit('replicated', db.address.toString(), undefined, 'fromSnapshot')
   }
   db.__snapshot_loaded = true
   db.events.emit('ready', db.address.toString(), db._oplog.heads)
