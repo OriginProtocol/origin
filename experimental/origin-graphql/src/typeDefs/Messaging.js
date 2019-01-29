@@ -1,11 +1,11 @@
-export default `
+module.exports = `
   extend type Query {
     messaging(id: String!): Messaging
   }
 
   extend type Mutation {
     enableMessaging: Boolean
-    sendMessage(to: String!, content: String!): Conversation
+    sendMessage(to: String!, content: String, media: [MediaInput]): Conversation
   }
 
   type Messaging {
@@ -32,6 +32,7 @@ export default `
     hash: String
     index: Int
     content: String
+    media: [Media]
     timestamp: Int
   }
 

@@ -3,6 +3,7 @@ import { Query } from 'react-apollo'
 import pick from 'lodash/pick'
 
 import BottomScrollListener from 'components/BottomScrollListener'
+import QueryError from 'components/QueryError'
 
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
@@ -41,11 +42,11 @@ class Listings extends Component {
             variables={vars}
             notifyOnNetworkStatusChange={true}
           >
-            {({ error, data, fetchMore, networkStatus }) => {
+            {({ error, data, fetchMore, networkStatus, loading }) => {
               if (networkStatus === 1) {
                 return <h5 className="listings-count">Loading...</h5>
               } else if (error) {
-                return <p className="p-3">Error :(</p>
+                return <QueryError error={error} query={query} vars={vars} />
               } else if (!data || !data.marketplace) {
                 return <p className="p-3">No marketplace contract?</p>
               }
@@ -58,7 +59,11 @@ class Listings extends Component {
                   offset={200}
                   ready={networkStatus === 7}
                   hasMore={hasNextPage}
-                  onBottom={() => nextPage(fetchMore, { ...vars, after })}
+                  onBottom={() => {
+                    if (!loading) {
+                      nextPage(fetchMore, { ...vars, after })
+                    }
+                  }}
                 >
                   <>
                     <h5 className="listings-count">{`${totalCount} Listings`}</h5>
@@ -70,10 +75,14 @@ class Listings extends Component {
 
                     {!hasNextPage ? null : (
                       <button
-                        className="mt-3"
-                        onClick={() => nextPage(fetchMore, { ...vars, after })}
+                        className="btn btn-outline-primary btn-rounded mt-3"
+                        onClick={() => {
+                          if (!loading) {
+                            nextPage(fetchMore, { ...vars, after })
+                          }
+                        }}
                       >
-                        Load more...
+                        {loading ? 'Loading...' : 'Load more'}
                       </button>
                     )}
                   </>

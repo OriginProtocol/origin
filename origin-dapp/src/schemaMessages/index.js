@@ -567,10 +567,10 @@ export default defineMessages({
   },
   'schema.weekdayPricing': {
     id: 'schema.weekdayPricing',
-    defaultMessage: 'Weekday Pricing (Sunday through Thursday nights)'
+    defaultMessage: 'Default Weekday Pricing (Sunday through Thursday nights)'
   },
   'schema.weekendPricing': {
     id: 'schema.weekendPricing',
-    defaultMessage: 'Weekend Pricing (Friday and Saturday nights)'
+    defaultMessage: 'Default Weekend Pricing (Friday and Saturday nights)'
   }
 })

@@ -10,9 +10,7 @@ const QueryError = props => {
     console.log(JSON.stringify(props.vars, null, 4))
   }
 
-  return (
-    <div>Error: See console for details</div>
-  )
+  return <div>Error: See console for details</div>
 }
 
 export default QueryError
