@@ -44,6 +44,11 @@ creatorClientImageTag: '928f283'
 creatorServerImage: origin-dapp-creator-server
 creatorServerImageTag: '928f283'
 
+# origin-dapp-creator-issuer
+creatorIssuerImage: origin-dapp-creator-issuer
+creatorIssuerTag: 'latest'
+creatorIssuerIp: '35.233.181.44'
+
 # origin-linking
 linkingImage: origin-linking
 linkingImageTag: 'b66c45b'

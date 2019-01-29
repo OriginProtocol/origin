@@ -12,8 +12,6 @@ chmod 777 /etc/resty-auto-ssl
 # Check if dhparam.pem has already been generated, otherwise copy it
 if [ ! -f "/etc/resty-auto-ssl/dhparam.pem" ]; then
   openssl dhparam -out /etc/resty-auto-ssl/dhparam.pem 2048
-else
-  cp ${RESTY_CONF_DIR}/dhparam.pem /etc/resty-auto-ssl/dhparam.pem
 fi
 
 if [ ! -f "/etc/resty-auto-ssl/resty-auto-ssl-fallback.key" ]; then
