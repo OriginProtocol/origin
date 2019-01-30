@@ -175,6 +175,9 @@ require('react-styl')(`
           background-color: var(--white)
           border-top: 2px solid var(--pale-grey-two)
           padding: 10px
+          .timestamp
+            color: var(--bluey-grey)
+            font-size: 12px
           .content
             padding-left: 20px
             span
