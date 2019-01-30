@@ -4,6 +4,7 @@ module.exports =
   Object.values(Common).reduce((acc, item) => acc + item) +
   `
   scalar JSON
+  scalar DateTime
 
   ###############################################
   #
@@ -77,9 +78,9 @@ module.exports =
   type GrowthCampaign {
     id: Int!
     name: String!
-    startDate: String
-    endDate: String
-    distributionDate: String
+    startDate: DateTime
+    endDate: DateTime
+    distributionDate: DateTime
     status: GrowthCampaignStatus!
     actions: [GrowthBaseAction]
     rewardEarned: Price!      # amount earned all actions combined
@@ -111,7 +112,7 @@ module.exports =
     campaign: GrowthCampaign
   }
 
-  type LogResponse implements MutationResponse {
+  type SimpleResponse implements MutationResponse {
     code: String!
     success: Boolean!
     message: String!
@@ -127,6 +128,8 @@ module.exports =
   type Mutation {
     invite(emails: [String!]!): InviteResponse
     enroll(campaignId: Int!): EnrollResponse
-    log(event: JSON!): LogResponse
+    gasForIdentity(walletAddress: ID!): SimpleResponse
+    invited(walletAddress: ID!, inviteCode: String!): SimpleResponse
+    log(event: JSON!): SimpleResponse
   }
 `

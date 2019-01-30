@@ -7,6 +7,7 @@ import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 import ListingBadge from 'components/ListingBadge'
 import Calendar from 'components/Calendar'
+import PageTitle from 'components/PageTitle'
 
 import Buy from './mutations/Buy'
 import category from 'utils/category'
@@ -183,6 +184,7 @@ class ListingDetail extends Component {
 
     return (
       <div className="listing-detail">
+        <PageTitle>{listing.title}</PageTitle>
         <div className="header">
           <div className="category">{category(listing)}</div>
           <ListingBadge status={listing.status} featured={listing.featured} />
