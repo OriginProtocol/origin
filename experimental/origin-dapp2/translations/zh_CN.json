@@ -1,0 +1,68 @@
+{
+    "fb-locale": "zh_CN",
+    "translations": {
+        "HIYV/KBfsIx14LvOIIcHwg==": {
+            "translations": [
+                {
+                    "translation": "Origin分散式应用程序允许买家和卖家使用以太坊区块链和IPFS进行交易而无需寻租中间商。"
+                }
+            ]
+        },
+        "bU8BImtReX7JgBGRUUVumg==": {
+            "translations": [
+                {
+                    "translation": "访问我们的网站"
+                }
+            ]
+        },
+        "wmhaVhtYSMdPoIzjEuBFVw==": {
+            "translations": [
+                {
+                    "translation": "访问我们的Github"
+                }
+            ]
+        },
+        "KuNLu1gPpB8/96R5zz8B9Q==": {
+            "translations": [
+                {
+                    "translation": "购买中"
+                }
+            ]
+        },
+        "w/hcQFMC5CWGdGFhaYJXpw==": {
+            "translations": [
+                {
+                    "translation": "添加列表"
+                }
+            ]
+        },
+        "woogmbq4DRXaFtlVLhim8A==": {
+            "translations": [
+                {
+                    "translation": "我的列表，列单"
+                }
+            ]
+        },
+        "0Oc4f1gpOBz24xArpRgELA==": {
+            "translations": [
+                {
+                    "translation": "我的出售"
+                }
+            ]
+        },
+        "bWkBLUVYzUfhMbRmOye0Ww==": {
+            "translations": [
+                {
+                    "translation": "添加列表"
+                }
+            ]
+        },
+        "l2Ry3AjK+2P1DfwR4X+PAA==": {
+            "translations": [
+                {
+                    "translation": "出售中"
+                }
+            ]
+        }
+    }
+}

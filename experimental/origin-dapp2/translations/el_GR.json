@@ -1,0 +1,68 @@
+{
+    "fb-locale": "el_GR",
+    "translations": {
+        "HIYV/KBfsIx14LvOIIcHwg==": {
+            "translations": [
+                {
+                    "translation": "Η εφαρμογή Αποκεντρωμένη προέλευση επιτρέπει στους αγοραστές και τους πωλητές να πραγματοποιούν συναλλαγές χωρίς μεσάζοντες που αναζητούν ενοίκια χρησιμοποιώντας το μπλοκ αλυσίδας Ethereum και το IPFS."
+                }
+            ]
+        },
+        "bU8BImtReX7JgBGRUUVumg==": {
+            "translations": [
+                {
+                    "translation": "Επισκεφτείτε την ιστοσελίδα μας"
+                }
+            ]
+        },
+        "wmhaVhtYSMdPoIzjEuBFVw==": {
+            "translations": [
+                {
+                    "translation": "Επισκεφθείτε το Github μας"
+                }
+            ]
+        },
+        "KuNLu1gPpB8/96R5zz8B9Q==": {
+            "translations": [
+                {
+                    "translation": "Αγοραζόμενα"
+                }
+            ]
+        },
+        "w/hcQFMC5CWGdGFhaYJXpw==": {
+            "translations": [
+                {
+                    "translation": "Προσθέστε μία καταχώρηση"
+                }
+            ]
+        },
+        "woogmbq4DRXaFtlVLhim8A==": {
+            "translations": [
+                {
+                    "translation": "Οι καταχωρήσεις μου"
+                }
+            ]
+        },
+        "0Oc4f1gpOBz24xArpRgELA==": {
+            "translations": [
+                {
+                    "translation": "Οι πωλήσεις μου"
+                }
+            ]
+        },
+        "bWkBLUVYzUfhMbRmOye0Ww==": {
+            "translations": [
+                {
+                    "translation": "Προσθέστε μία καταχώρηση"
+                }
+            ]
+        },
+        "l2Ry3AjK+2P1DfwR4X+PAA==": {
+            "translations": [
+                {
+                    "translation": "Προς Πώληση"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "fb-locale": "ko_KR",
+    "translations": {
+        "HIYV/KBfsIx14LvOIIcHwg==": {
+            "translations": [
+                {
+                    "translation": "Origin 분산 앱을 사용하면 구매자와 판매자가 Ethereum 블록 체인과 IPFS를 사용하여 임대료를 찾는 중개인없이 거래 할 수 있습니다."
+                }
+            ]
+        },
+        "bU8BImtReX7JgBGRUUVumg==": {
+            "translations": [
+                {
+                    "translation": "우리 홈페이지에 방문해주세요"
+                }
+            ]
+        },
+        "wmhaVhtYSMdPoIzjEuBFVw==": {
+            "translations": [
+                {
+                    "translation": "우리 Github 방문"
+                }
+            ]
+        },
+        "KuNLu1gPpB8/96R5zz8B9Q==": {
+            "translations": [
+                {
+                    "translation": "구매"
+                }
+            ]
+        },
+        "w/hcQFMC5CWGdGFhaYJXpw==": {
+            "translations": [
+                {
+                    "translation": "목록 추가"
+                }
+            ]
+        },
+        "woogmbq4DRXaFtlVLhim8A==": {
+            "translations": [
+                {
+                    "translation": "내 목록"
+                }
+            ]
+        },
+        "0Oc4f1gpOBz24xArpRgELA==": {
+            "translations": [
+                {
+                    "translation": "내 판매 현황"
+                }
+            ]
+        },
+        "bWkBLUVYzUfhMbRmOye0Ww==": {
+            "translations": [
+                {
+                    "translation": "목록 추가"
+                }
+            ]
+        },
+        "l2Ry3AjK+2P1DfwR4X+PAA==": {
+            "translations": [
+                {
+                    "translation": "판매"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "fb-locale": "de_DE",
+    "translations": {
+        "HIYV/KBfsIx14LvOIIcHwg==": {
+            "translations": [
+                {
+                    "translation": "Die dezentralisierte App von Origin ermöglicht es Käufern und Verkäufern, mit der Ethereum-Blockchain und IPFS ohne rentennahe Zwischenhändler zu handeln."
+                }
+            ]
+        },
+        "bU8BImtReX7JgBGRUUVumg==": {
+            "translations": [
+                {
+                    "translation": "Besuche unsere Webseite"
+                }
+            ]
+        },
+        "wmhaVhtYSMdPoIzjEuBFVw==": {
+            "translations": [
+                {
+                    "translation": "Besuche unseren Github"
+                }
+            ]
+        },
+        "KuNLu1gPpB8/96R5zz8B9Q==": {
+            "translations": [
+                {
+                    "translation": "Kaufen"
+                }
+            ]
+        },
+        "w/hcQFMC5CWGdGFhaYJXpw==": {
+            "translations": [
+                {
+                    "translation": "Inserat hinzufügen"
+                }
+            ]
+        },
+        "woogmbq4DRXaFtlVLhim8A==": {
+            "translations": [
+                {
+                    "translation": "Meine Inserate"
+                }
+            ]
+        },
+        "0Oc4f1gpOBz24xArpRgELA==": {
+            "translations": [
+                {
+                    "translation": "Meine Verkäufe"
+                }
+            ]
+        },
+        "bWkBLUVYzUfhMbRmOye0Ww==": {
+            "translations": [
+                {
+                    "translation": "Inserat hinzufügen"
+                }
+            ]
+        },
+        "l2Ry3AjK+2P1DfwR4X+PAA==": {
+            "translations": [
+                {
+                    "translation": "Verkaufen"
+                }
+            ]
+        }
+    }
+}

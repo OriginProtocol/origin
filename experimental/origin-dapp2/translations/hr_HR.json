@@ -1,0 +1,68 @@
+{
+    "fb-locale": "hr_HR",
+    "translations": {
+        "HIYV/KBfsIx14LvOIIcHwg==": {
+            "translations": [
+                {
+                    "translation": "Primjena decentraliziranog podrijetla omogućuje kupcima i prodavačima da obavljaju poslove bez posrednika koji traže posudbu pomoću Ethereum blockchaina i IPFS-a."
+                }
+            ]
+        },
+        "bU8BImtReX7JgBGRUUVumg==": {
+            "translations": [
+                {
+                    "translation": "Posjetite našu web stranicu"
+                }
+            ]
+        },
+        "wmhaVhtYSMdPoIzjEuBFVw==": {
+            "translations": [
+                {
+                    "translation": "Posjetite naš Github"
+                }
+            ]
+        },
+        "KuNLu1gPpB8/96R5zz8B9Q==": {
+            "translations": [
+                {
+                    "translation": "kupovina"
+                }
+            ]
+        },
+        "w/hcQFMC5CWGdGFhaYJXpw==": {
+            "translations": [
+                {
+                    "translation": "Dodajte popis"
+                }
+            ]
+        },
+        "woogmbq4DRXaFtlVLhim8A==": {
+            "translations": [
+                {
+                    "translation": "Moji oglasi"
+                }
+            ]
+        },
+        "0Oc4f1gpOBz24xArpRgELA==": {
+            "translations": [
+                {
+                    "translation": "Moja prodaja"
+                }
+            ]
+        },
+        "bWkBLUVYzUfhMbRmOye0Ww==": {
+            "translations": [
+                {
+                    "translation": "Dodajte popis"
+                }
+            ]
+        },
+        "l2Ry3AjK+2P1DfwR4X+PAA==": {
+            "translations": [
+                {
+                    "translation": "Prodaja"
+                }
+            ]
+        }
+    }
+}

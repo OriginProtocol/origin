@@ -1,8 +1,317 @@
 {
+ "de_DE": {
+  "1VUOGf": "Die dezentralisierte App von Origin ermöglicht es Käufern und Verkäufern, mit der Ethereum-Blockchain und IPFS ohne rentennahe Zwischenhändler zu handeln.",
+  "3dlcbL": "Besuche unsere Webseite",
+  "421TH8": "Besuche unseren Github",
+  "1xF0Sp": "Kaufen",
+  "3i2AJC": "Inserat hinzufügen",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Meine Inserate",
+  "3XSqx1": "Meine Verkäufe",
+  "3r7Eno": "Inserat hinzufügen",
+  "1fjQH9": "Verkaufen"
+ },
+ "el_GR": {
+  "1VUOGf": "Η εφαρμογή Αποκεντρωμένη προέλευση επιτρέπει στους αγοραστές και τους πωλητές να πραγματοποιούν συναλλαγές χωρίς μεσάζοντες που αναζητούν ενοίκια χρησιμοποιώντας το μπλοκ αλυσίδας Ethereum και το IPFS.",
+  "3dlcbL": "Επισκεφτείτε την ιστοσελίδα μας",
+  "421TH8": "Επισκεφθείτε το Github μας",
+  "1xF0Sp": "Αγοραζόμενα",
+  "3i2AJC": "Προσθέστε μία καταχώρηση",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Οι καταχωρήσεις μου",
+  "3XSqx1": "Οι πωλήσεις μου",
+  "3r7Eno": "Προσθέστε μία καταχώρηση",
+  "1fjQH9": "Προς Πώληση"
+ },
+ "es_ES": {
+  "1VUOGf": "La aplicación descentralizada de Origin permite a los compradores y vendedores realizar transacciones sin intermediarios que buscan rentas utilizando la cadena de bloques Ethereum e IPFS.",
+  "3dlcbL": "Visita nuestro sitio web",
+  "421TH8": "Visita nuestro Github",
+  "1xF0Sp": "Compra",
+  "3i2AJC": "Añadir un listado",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Mis Anuncios",
+  "3XSqx1": "Mis Ventas",
+  "3r7Eno": "Añadir un listado",
+  "1fjQH9": "Venta"
+ },
  "fb_HX": {
+  "1VUOGf": "The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS.",
+  "3dlcbL": "Visit our Website",
+  "421TH8": "Visit our GitHub",
+  "1xF0Sp": "Buy",
+  "3i2AJC": "Add Listing",
   "1tebgy": {
    "*": "{number} LISTINGS",
    "_1": "1 LISTING"
-  }
+  },
+  "3rmh0I": "My Listings",
+  "3XSqx1": "My Sales",
+  "3r7Eno": "Add a Listing",
+  "1fjQH9": "Sell"
+ },
+ "fil_PH": {
+  "1VUOGf": "Ang Pinagmulan ng desentralisadong app ay nagbibigay-daan sa mga mamimili at nagbebenta na mag-transact nang walang renta-naghahanap ng mga middleman gamit ang Ethereum blockchain at IPFS.",
+  "3dlcbL": "Bisitahin ang aming Website",
+  "421TH8": "Bisitahin ang aming Github",
+  "1xF0Sp": "Bumibili",
+  "3i2AJC": "Magdagdag ng listahan",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Aking listahan",
+  "3XSqx1": "Mga Nabenta ko",
+  "3r7Eno": "Magdagdag ng listahan",
+  "1fjQH9": "Nagbebenta"
+ },
+ "fr_FR": {
+  "1VUOGf": "L'application décentralisée Origin permet aux acheteurs et aux vendeurs d'effectuer des transactions sans intermédiaire en utilisant la blockchain Ethereum et l'IPFS.",
+  "3dlcbL": "Visitez notre site Web",
+  "421TH8": "Visitez notre Github",
+  "1xF0Sp": "Acheter",
+  "3i2AJC": "Ajouter une annonce",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Mes annonces",
+  "3XSqx1": "Mes ventes",
+  "3r7Eno": "Ajouter une annonce",
+  "1fjQH9": "Vendre"
+ },
+ "hr_HR": {
+  "1VUOGf": "Primjena decentraliziranog podrijetla omogućuje kupcima i prodavačima da obavljaju poslove bez posrednika koji traže posudbu pomoću Ethereum blockchaina i IPFS-a.",
+  "3dlcbL": "Posjetite našu web stranicu",
+  "421TH8": "Posjetite naš Github",
+  "1xF0Sp": "kupovina",
+  "3i2AJC": "Dodajte popis",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Moji oglasi",
+  "3XSqx1": "Moja prodaja",
+  "3r7Eno": "Dodajte popis",
+  "1fjQH9": "Prodaja"
+ },
+ "id_ID": {
+  "1VUOGf": "Aplikasi asal desentralisasi memungkinkan pembeli dan penjual bertransaksi tanpa perantara pencari sewa menggunakan Ethereum blockchain dan IPFS.",
+  "3dlcbL": "Kunjungi situs web kami",
+  "421TH8": "Kunjungi Github kami",
+  "1xF0Sp": "Membeli",
+  "3i2AJC": "Tambah listing",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Listing saya",
+  "3XSqx1": "Penjualan saya",
+  "3r7Eno": "Tambah listing",
+  "1fjQH9": "Menjual"
+ },
+ "it_IT": {
+  "1VUOGf": "L'app decentralizzata di Origin consente agli acquirenti e ai venditori di effettuare transazioni senza intermediari utilizzando la blockchain di Ethereum e IPFS.",
+  "3dlcbL": "Visita il nostro sito web",
+  "421TH8": "Visita il nostro Github",
+  "1xF0Sp": "Acquisto",
+  "3i2AJC": "Aggiungi un annuncio",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "I miei annunci",
+  "3XSqx1": "Le mie vendite",
+  "3r7Eno": "Aggiungi un annuncio",
+  "1fjQH9": "Vendita"
+ },
+ "ja_JP": {
+  "1VUOGf": "Originの分散アプリケーションにより、買い手と売り手は、EthereumブロックチェーンとIPFSを使用して、仲介料を必要とする仲介人を介する事無く取引できます。",
+  "3dlcbL": "当社のウェブサイトを見る",
+  "421TH8": "Githubを見る",
+  "1xF0Sp": "購入",
+  "3i2AJC": "掲載を追加する",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "マイリスト",
+  "3XSqx1": "販売履歴",
+  "3r7Eno": "掲載を追加する",
+  "1fjQH9": "販売"
+ },
+ "ko_KR": {
+  "1VUOGf": "Origin 분산 앱을 사용하면 구매자와 판매자가 Ethereum 블록 체인과 IPFS를 사용하여 임대료를 찾는 중개인없이 거래 할 수 있습니다.",
+  "3dlcbL": "우리 홈페이지에 방문해주세요",
+  "421TH8": "우리 Github 방문",
+  "1xF0Sp": "구매",
+  "3i2AJC": "목록 추가",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "내 목록",
+  "3XSqx1": "내 판매 현황",
+  "3r7Eno": "목록 추가",
+  "1fjQH9": "판매"
+ },
+ "nl_NL": {
+  "1VUOGf": "De gedecentraliseerde app Origin laat kopers en verkopers toe om transacties uit te voeren zonder huurzoekende tussenpersonen met behulp van de Ethereum blockchain en IPFS.",
+  "3dlcbL": "Bezoek onze website",
+  "421TH8": "Bezoek onze Github",
+  "1xF0Sp": "Kopen",
+  "3i2AJC": "Advertentie toevoegen",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Mijn advertenties",
+  "3XSqx1": "Mijn verkopen",
+  "3r7Eno": "Advertentie toevoegen",
+  "1fjQH9": "Verkopen"
+ },
+ "pt_PT": {
+  "1VUOGf": "O aplicativo Origin descentralizado permite que compradores e vendedores realizem transações sem intermediários que buscam renda usando o blockchain Ethereum e o IPFS.",
+  "3dlcbL": "Visite o nosso site",
+  "421TH8": "Visite nosso Github",
+  "1xF0Sp": "Compras",
+  "3i2AJC": "Adicionar um anúncio",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Meus anúncios",
+  "3XSqx1": "Minhas vendas",
+  "3r7Eno": "Adicionar um anúncio",
+  "1fjQH9": "Vendas"
+ },
+ "ro_RO": {
+  "1VUOGf": "Aplicația de origine descentralizată permite cumpărătorilor și vânzătorilor să efectueze tranzacții fără intermediari care caută chirie utilizând blocul Ethereum și IPFS.",
+  "3dlcbL": "Vizitați site-ul nostru",
+  "421TH8": "Vizitați Github",
+  "1xF0Sp": "Cumparare",
+  "3i2AJC": "Adaugă un anunț",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Anunțurile mele",
+  "3XSqx1": "Vânzările mele",
+  "3r7Eno": "Adaugă un anunț",
+  "1fjQH9": "Vânzare"
+ },
+ "ru_RU": {
+  "1VUOGf": "Децентрализованное приложение Origin позволяет покупателям и продавцам совершать сделки без посредников, ищущих ренту, используя блок-цепочку Ethereum и IPFS.",
+  "3dlcbL": "Посетите наш сайт",
+  "421TH8": "Посетите наш Github",
+  "1xF0Sp": "Покупка",
+  "3i2AJC": "Добавить объявление",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Мои объявления",
+  "3XSqx1": "Мои продажи",
+  "3r7Eno": "Добавить объявление",
+  "1fjQH9": "Продажа"
+ },
+ "th_TH": {
+  "1VUOGf": "แอ็พพลิเคชันการกระจายข้อมูล Origin ช่วยให้ผู้ซื้อและผู้ขายสามารถทำธุรกรรมได้โดยไม่ต้องหาพ่อค้าคนกลางเช่าโดยใช้ Ethereum blockchain และ IPFS",
+  "3dlcbL": "เยี่ยมชมเว็บไซต์ของเรา",
+  "421TH8": "เยี่ยมชม Github ของเรา",
+  "1xF0Sp": "การซื้อ",
+  "3i2AJC": "เพิ่มรายการ",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "รายชื่อของฉัน",
+  "3XSqx1": "ขายของฉัน",
+  "3r7Eno": "เพิ่มรายการ",
+  "1fjQH9": "ขาย"
+ },
+ "tr_TR": {
+  "1VUOGf": "Kökeni merkezi olmayan uygulama, alıcıların ve satıcıların Ethereum blockchain ve IPFS kullanarak aracı arama yapmadan arama yapabilmelerini sağlar.",
+  "3dlcbL": "İnternet sitemizi ziyaret edin",
+  "421TH8": "Github'umuzu ziyaret edin",
+  "1xF0Sp": "Alış",
+  "3i2AJC": "Bir İlan Ekle",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Listelerim",
+  "3XSqx1": "Satışlarım",
+  "3r7Eno": "Bir İlan Ekle",
+  "1fjQH9": "Satış"
+ },
+ "uk_UA": {
+  "1VUOGf": "Початкова децентралізована програма дозволяє покупцям і продавцям здійснювати транзакції без посередників, які шукають ренту, використовуючи блок-схеми Ethereum та IPFS.",
+  "3dlcbL": "Відвідайте наш веб-сайт",
+  "421TH8": "Відвідайте наш Github",
+  "1xF0Sp": "Купівля",
+  "3i2AJC": "Додати оголошення",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Мої оголошення",
+  "3XSqx1": "Мої продажі",
+  "3r7Eno": "Додати оголошення",
+  "1fjQH9": "Продаж"
+ },
+ "vi_VN": {
+  "1VUOGf": "Ứng dụng phi tập trung nguồn gốc cho phép người mua và người bán giao dịch mà không cần thuê trung gian sử dụng blockchain Ethereum và IPFS.",
+  "3dlcbL": "Truy cập trang web của chúng tôi",
+  "421TH8": "Ghé thăm Github của chúng tôi",
+  "1xF0Sp": "Đang mua",
+  "3i2AJC": "Thêm danh sách",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "Danh sách của tôi",
+  "3XSqx1": "Các lệnh bán của tôi",
+  "3r7Eno": "Thêm danh sách",
+  "1fjQH9": "Đang bán"
+ },
+ "zh_CN": {
+  "1VUOGf": "Origin分散式应用程序允许买家和卖家使用以太坊区块链和IPFS进行交易而无需寻租中间商。",
+  "3dlcbL": "访问我们的网站",
+  "421TH8": "访问我们的Github",
+  "1xF0Sp": "购买中",
+  "3i2AJC": "添加列表",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "我的列表，列单",
+  "3XSqx1": "我的出售",
+  "3r7Eno": "添加列表",
+  "1fjQH9": "出售中"
+ },
+ "zh_TW": {
+  "1VUOGf": "Origin分散式應用程序允許買家和賣家使用以太坊區塊鍊和IPFS進行交易而無需尋租中間商。",
+  "3dlcbL": "訪問我們的網站",
+  "421TH8": "訪問我們的Github",
+  "1xF0Sp": "購買",
+  "3i2AJC": "新增刊登",
+  "1tebgy": {
+   "*": "{number} Listings",
+   "_1": "1 Listing"
+  },
+  "3rmh0I": "我的刊登",
+  "3XSqx1": "我的購買",
+  "3r7Eno": "新增刊登",
+  "1fjQH9": "出售"
  }
 }

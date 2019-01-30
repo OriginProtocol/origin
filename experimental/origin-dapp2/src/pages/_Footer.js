@@ -1,32 +1,102 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
-const Footer = ({ locale, onLocale }) => (
-  <footer>
-    <div className="container">
-      <div className="logo" />
-      <div className="separator" />
-      <div className="about">
-        The Origin decentralized app allows buyers and sellers to transact
-        without rent-seeking middlemen using the Ethereum blockchain and IPFS.
-        <div className="copyright">© 2018 Origin Protocol, Inc.</div>
-      </div>
-      <div className="links">
-        <a
-          href="#"
-          onClick={e => {
-            e.preventDefault()
-            onLocale(locale === 'en_US' ? 'fb_HX' : 'en_US')
-            window.scrollTo(0, 0)
-          }}
-        >
-          English
-        </a>
-        <a href="https://www.originprotocol.com/">Visit our Website</a>
-        <a href="https://github.com/OriginProtocol">Visit our GitHub</a>
-      </div>
-    </div>
-  </footer>
-)
+import Dropdown from 'components/Dropdown'
+
+const Languages = [
+  ['de_DE', 'Deutsch'],
+  ['el_GR', 'ελληνικά'],
+  ['es_ES', 'Español'],
+  ['fil_PH', 'Filipino'],
+  ['fr_FR', 'Français'],
+  ['hr_HR', 'hrvatski jezik'],
+  ['id_ID', 'Indonesian'],
+  ['it_IT', 'Italiano'],
+  ['ja_JP', '日本語'],
+  ['ko_KR', '한국어'],
+  ['nl_NL', 'Nederlands'],
+  ['pt_PT', 'Português'],
+  ['ro_RO', 'limba română'],
+  ['ru_RU', 'Русский'],
+  ['th_TH', 'ไทย'],
+  ['tr_TR', 'Türkçe'],
+  ['uk_UA', 'Українська'],
+  ['vi_VN', 'Tiếng Việt'],
+  ['zh_CN', '简体中文'],
+  ['zh_TW', '繁體中文'],
+  ['en_US', 'English']
+]
+
+const LanguagesByKey = Languages.reduce((m, o) => {
+  m[o[0]] = o[1]
+  return m
+}, {})
+
+class Footer extends Component {
+  state = {}
+  render() {
+    const { locale, onLocale } = this.props
+    return (
+      <footer>
+        <div className="container">
+          <div className="logo" />
+          <div className="separator" />
+          <div className="about">
+            <fbt desc="footer.description">
+              The Origin decentralized app allows buyers and sellers to transact
+              without rent-seeking middlemen using the Ethereum blockchain and
+              IPFS.
+            </fbt>
+            <div className="copyright">© 2018 Origin Protocol, Inc.</div>
+          </div>
+          <div className="links">
+            <Dropdown
+              className="dropup"
+              content={
+                <div className="dropdown-menu show">
+                  {Languages.map(lang => (
+                    <a
+                      className="dropdown-item"
+                      key={lang[0]}
+                      title={lang[0]}
+                      href="#"
+                      onClick={e => {
+                        e.preventDefault()
+                        onLocale(lang[0])
+                        this.setState({ open: false })
+                        window.scrollTo(0, 0)
+                      }}
+                      children={lang[1]}
+                    />
+                  ))}
+                </div>
+              }
+              open={this.state.open}
+              onClose={() => this.setState({ open: false })}
+            >
+              <a
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  this.setState({ open: !this.state.open })
+                }}
+              >
+                {LanguagesByKey[locale]}
+              </a>
+            </Dropdown>
+
+            <a href="https://www.originprotocol.com/">
+              <fbt desc="footer.websiteLink">Visit our Website</fbt>
+            </a>
+            <a href="https://github.com/OriginProtocol">
+              <fbt desc="footer.githubLink">Visit our GitHub</fbt>
+            </a>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+}
 
 export default Footer
 
@@ -68,6 +138,4 @@ require('react-styl')(`
         margin-right: 1rem
     .copyright
       margin-top: 1rem
-
-
 `)
