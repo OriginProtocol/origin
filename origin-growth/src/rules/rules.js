@@ -93,7 +93,7 @@ class Level {
   }
 
   qualifyForNextLevel(ethAddress, events) {
-    for (let i = 0; i <= this.rules.length(); i++) {
+    for (let i = 0; i < this.rules.length; i++) {
       const result = this.rules[i].qualifyForNextLevel(ethAddress, events)
       if (result != null && result === false) {
         return false

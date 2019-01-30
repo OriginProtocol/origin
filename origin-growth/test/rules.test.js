@@ -175,7 +175,6 @@ describe('Growth Engine rules', () => {
                 class: 'MultiEvents',
                 config: {
                   eventTypes: [
-                    'EmailAttestationPublished',
                     'PhoneAttestationPublished',
                     'FacebookAttestationPublished',
                     'AirbnbAttestationPublished',
@@ -217,7 +216,7 @@ describe('Growth Engine rules', () => {
       const events = [
         {
           id: 1,
-          type: GrowthEventTypes.EmailAttestationPublished,
+          type: GrowthEventTypes.TwitterAttestationPublished,
           status: GrowthEventStatuses.Verified,
           ethAddress: this.ethAddress
         },
@@ -259,7 +258,7 @@ describe('Growth Engine rules', () => {
       const events = [
         {
           id: 1,
-          type: GrowthEventTypes.EmailAttestationPublished,
+          type: GrowthEventTypes.TwitterAttestationPublished,
           status: GrowthEventStatuses.Verified,
           ethAddress: this.ethAddress
         }
@@ -279,7 +278,7 @@ describe('Growth Engine rules', () => {
       const events = [
         {
           id: 1,
-          type: GrowthEventTypes.EmailAttestationPublished,
+          type: GrowthEventTypes.TwitterAttestationPublished,
           status: GrowthEventStatuses.Fraud,
           ethAddress: this.ethAddress
         },
@@ -312,7 +311,7 @@ describe('Growth Engine rules', () => {
       const events = [
         {
           id: 1,
-          type: GrowthEventTypes.EmailAttestationPublished,
+          type: GrowthEventTypes.TwitterAttestationPublished,
           status: GrowthEventStatuses.Verified,
           ethAddress: this.ethAddress
         },
@@ -354,6 +353,367 @@ describe('Growth Engine rules', () => {
         }
       }
       expect(rewards).to.deep.equal(expectedRewards)
+    })
+  })
+
+  describe('Multi Levels campaign', () => {
+
+    before(() => {
+      const config = {
+        numLevels: 3,
+        levels: {
+          0: {
+            rules: [
+              {
+                id: 'PreRequisite',
+                class: 'MultiEvents',
+                config: {
+                  eventTypes: [
+                    'ProfilePublished',
+                    'EmailAttestationPublished'
+                  ],
+                  numEventsRequired: 2,
+                  reward: {
+                    amount: 5,
+                    currency: 'OGN'
+                  },
+                  limit: 1,
+                  upgradeCondition: true
+                }
+              }
+            ],
+          },
+          1: {
+            rules: [
+              {
+                id: 'TwoAttestations',
+                class: 'MultiEvents',
+                config: {
+                  eventTypes: [
+                    'EmailAttestationPublished',
+                    'PhoneAttestationPublished',
+                    'FacebookAttestationPublished',
+                    'AirbnbAttestationPublished',
+                    'TwitterAttestationPublished'
+                  ],
+                  numEventsRequired: 2,
+                  reward: {
+                    amount: 10,
+                    currency: 'OGN'
+                  },
+                  limit: 1,
+                  upgradeCondition: true
+                }
+              }
+            ],
+          },
+          2: {
+            rules: [
+              {
+                id: 'Referral',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'RefereeSignedUp',
+                  reward: {
+                    amount: 10,
+                    currency: 'OGN'
+                  },
+                  limit: 2,
+                  upgradeCondition: false
+                }
+              },
+              {
+                id: 'ListingCreation',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'ListingCreated',
+                  reward: {
+                    amount: 5,
+                    currency: 'OGN'
+                  },
+                  limit: 1,
+                  upgradeCondition: false
+                }
+              },
+              {
+                id: 'ListingPurchase',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'ListingPurchased',
+                  reward: {
+                    amount: 100,
+                    currency: 'OGN'
+                  },
+                  limit: 3,
+                  upgradeCondition: false
+                }
+              }
+            ],
+          }
+        }
+      }
+      const row = { id: 1 }
+      this.campaign = new Campaign(row, config)
+      expect(this.campaign).to.be.an('object')
+      expect(this.campaign.numLevels).to.equal(3)
+      expect(this.campaign.levels[0]).to.be.an('object')
+      expect(this.campaign.levels[0].rules.length).to.equal(1)
+      expect(this.campaign.levels[1]).to.be.an('object')
+      expect(this.campaign.levels[1].rules.length).to.equal(1)
+      expect(this.campaign.levels[2]).to.be.an('object')
+      expect(this.campaign.levels[2].rules.length).to.equal(3)
+
+      this.ethAddress = '0x123'
+      this.expectedRewards = {
+        0: {
+          'PreRequisite': []
+        }
+      }
+    })
+
+    it(`Should start at level 0`, () => {
+      const events = []
+      this.campaign.getEvents = () => {
+        return events
+      }
+      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(0)
+    })
+
+    it(`Should graduate to level 1`, () => {
+      this.events = [
+        {
+          id: 1,
+          type: GrowthEventTypes.ProfilePublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        },
+        {
+          id: 2,
+          type: GrowthEventTypes.EmailAttestationPublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        }
+      ]
+      this.campaign.getEvents = () => {
+        return this.events
+      }
+
+      const rewards = this.campaign.getRewards(this.ethAddress)
+      this.expectedRewards[0]['PreRequisite'] = [{
+        campaignId: 1,
+        levelId: 0,
+        ruleId: 'PreRequisite',
+        money: {
+          currency: 'OGN',
+          amount: 5
+        }
+      }]
+      this.expectedRewards[1] = { TwoAttestations: [] }
+      expect(rewards).to.deep.equal(this.expectedRewards)
+
+      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(1)
+    })
+
+    it(`Should graduate to level 2`, () => {
+      this.events.push(
+        {
+          id: 3,
+          type: GrowthEventTypes.TwitterAttestationPublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        },
+        {
+          id: 4,
+          type: GrowthEventTypes.FacebookAttestationPublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        }
+      )
+      this.campaign.getEvents = () => { return this.events }
+
+      const rewards = this.campaign.getRewards(this.ethAddress)
+      this.expectedRewards[1]['TwoAttestations'] = [{
+        campaignId: 1,
+        levelId: 1,
+        ruleId: 'TwoAttestations',
+        money: {
+          currency: 'OGN',
+          amount: 10
+        }
+      }]
+      this.expectedRewards[2] = {
+        'ListingCreation': [],
+        'ListingPurchase': [],
+        'Referral': []
+      }
+      expect(rewards).to.deep.equal(this.expectedRewards)
+
+      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(2)
+    })
+
+    it(`Should remain on level 2 when a listing is created`, () => {
+      this.events.push(
+        {
+          id: 5,
+          type: GrowthEventTypes.ListingCreated,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        }
+      )
+      this.campaign.getEvents = () => { return this.events }
+
+      const rewards = this.campaign.getRewards(this.ethAddress)
+      this.expectedRewards[2]['ListingCreation'].push({
+        campaignId: 1,
+        levelId: 2,
+        ruleId: 'ListingCreation',
+        money: {
+          currency: 'OGN',
+          amount: 5
+        }
+      })
+      expect(rewards).to.deep.equal(this.expectedRewards)
+
+      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(2)
+    })
+
+    it(`Should remain on level 2 when a listing is purchased`, () => {
+      this.events.push(
+        {
+          id: 6,
+          type: GrowthEventTypes.ListingPurchased,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        }
+      )
+      this.campaign.getEvents = () => { return this.events }
+
+      const rewards = this.campaign.getRewards(this.ethAddress)
+      this.expectedRewards[2]['ListingPurchase'].push({
+        campaignId: 1,
+        levelId: 2,
+        ruleId: 'ListingPurchase',
+        money: {
+          currency: 'OGN',
+          amount: 100
+        }
+      })
+      expect(rewards).to.deep.equal(this.expectedRewards)
+
+      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(2)
+    })
+
+    it(`Should remain on level 2 when referees sign up`, () => {
+      this.events.push(
+        {
+          id: 9,
+          type: GrowthEventTypes.RefereeSignedUp,
+          status: GrowthEventStatuses.Verified,
+          ethAddress: this.ethAddress
+        }
+      )
+      this.campaign.getEvents = () => { return this.events }
+
+      const rewards = this.campaign.getRewards(this.ethAddress)
+      this.expectedRewards[2]['Referral'].push({
+        campaignId: 1,
+        levelId: 2,
+        ruleId: 'Referral',
+        money: {
+          currency: 'OGN',
+          amount: 10
+        }
+      })
+      expect(rewards).to.deep.equal(this.expectedRewards)
+
+      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(2)
+    })
+
+    it(`Should honor limits`, () => {
+      this.events.push(
+        {
+          id: 10,
+          type: GrowthEventTypes.RefereeSignedUp,
+          status: GrowthEventStatuses.Verified,
+          ethAddress: this.ethAddress
+        },
+        {
+          id: 11,
+          type: GrowthEventTypes.RefereeSignedUp,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        },
+        {
+          id: 12,
+            type: GrowthEventTypes.ListingCreated,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        },
+        {
+          id: 13,
+            type: GrowthEventTypes.ListingCreated,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        },
+        {
+          id: 14,
+            type: GrowthEventTypes.ListingPurchased,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        },
+        {
+          id: 15,
+            type: GrowthEventTypes.ListingPurchased,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        },
+        {
+          id: 16,
+            type: GrowthEventTypes.ListingPurchased,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        }
+      )
+      this.campaign.getEvents = () => { return this.events }
+
+      const rewards = this.campaign.getRewards(this.ethAddress)
+      this.expectedRewards[2]['Referral'] = Array(2).fill({
+        campaignId: 1,
+        levelId: 2,
+        ruleId: 'Referral',
+        money: {
+          currency: 'OGN',
+          amount: 10
+        }
+      })
+      this.expectedRewards[2]['ListingCreation'] = Array(1).fill({
+        campaignId: 1,
+        levelId: 2,
+        ruleId: 'ListingCreation',
+        money: {
+          currency: 'OGN',
+          amount: 5
+        }
+      })
+      this.expectedRewards[2]['ListingPurchase'] = Array(3).fill({
+        campaignId: 1,
+        levelId: 2,
+        ruleId: 'ListingPurchase',
+        money: {
+          currency: 'OGN',
+          amount: 100
+        }
+      })
+      expect(rewards).to.deep.equal(this.expectedRewards)
+
+      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(2)
     })
   })
 })
