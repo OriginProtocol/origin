@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
+import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
 import Gallery from 'components/Gallery'
 import Link from 'components/Link'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 import ListingBadge from 'components/ListingBadge'
+import Calendar from 'components/Calendar'
 
 import Buy from './mutations/Buy'
 import category from 'utils/category'
@@ -93,6 +95,56 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity }) => {
   )
 }
 
+const Fractional = ({ listing, from, range, availability }) => {
+  let checkIn = 'Check in',
+    checkOut = 'Check out',
+    totalPrice,
+    available = false,
+    showUnavailable = false
+
+  if (range) {
+    const split = range.split('-')
+    checkIn = split[0]
+    checkOut = split[1]
+    const priceEstimate = availability.estimatePrice(range)
+    available = priceEstimate.available
+    if (available) {
+      totalPrice = String(priceEstimate.price)
+    } else {
+      showUnavailable = true
+    }
+  }
+
+  return (
+    <div className="listing-buy fractional">
+      <div className="price">{`${listing.price.amount} ETH / night`}</div>
+      <div className="choose-dates form-control">
+        <div>{checkIn}</div>
+        <div className="arr" />
+        <div>{checkOut}</div>
+      </div>
+      {!showUnavailable ? null : <div className="total">Unavailable</div>}
+      {!totalPrice ? null : (
+        <div className="total">
+          <span>Total Price</span>
+          <span>{`${totalPrice} ETH`}</span>
+        </div>
+      )}
+      <Buy
+        listing={listing}
+        from={from}
+        value={totalPrice}
+        quantity={1}
+        disabled={available ? false : true}
+        startDate={checkIn}
+        endDate={checkOut}
+        className={`btn btn-primary${available ? '' : ' disabled'}`}
+        children="Book"
+      />
+    </div>
+  )
+}
+
 const ForSeller = ({ listing }) => (
   <div className="listing-buy">
     <div className="price">{`${listing.price.amount} ETH`}</div>
@@ -105,9 +157,24 @@ const ForSeller = ({ listing }) => (
 )
 
 class ListingDetail extends Component {
-  state = {}
+  constructor(props) {
+    super(props)
+    this.state = {}
+    if (props.listing.__typename === 'FractionalListing') {
+      this.state.availability = new AvailabilityCalculator({
+        weekdayPrice: props.listing.price.amount,
+        weekendPrice: props.listing.weekendPrice.amount,
+        booked: props.listing.booked,
+        unavailable: props.listing.unavailable,
+        customPricing: props.listing.customPricing
+      })
+    }
+  }
+
   render() {
     const { listing } = this.props
+
+    const isFractional = listing.__typename === 'FractionalListing'
     const sold = listing.unitsSold >= listing.unitsTotal
     const pending = listing.unitsAvailable <= 0
 
@@ -122,6 +189,16 @@ class ListingDetail extends Component {
           <div className="col-md-8">
             <Gallery pics={listing.media} />
             <div className="description">{listing.description}</div>
+            {!isFractional ? null : (
+              <>
+                <hr />
+                <Calendar
+                  small={true}
+                  onChange={state => this.setState(state)}
+                  availability={this.state.availability}
+                />
+              </>
+            )}
             <hr />
             <Reviews id={listing.seller.id} />
           </div>
@@ -132,6 +209,12 @@ class ListingDetail extends Component {
               <Sold />
             ) : pending ? (
               <Pending />
+            ) : isFractional ? (
+              <Fractional
+                {...this.props}
+                range={this.state.range}
+                availability={this.state.availability}
+              />
             ) : listing.multiUnit ? (
               <MultiUnit {...this.props} />
             ) : (
@@ -217,6 +300,29 @@ require('react-styl')(`
           font-weight: normal
       &.multi .price
         border-bottom: 1px solid var(--light)
+      &.fractional
+        .choose-dates
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 1rem
+
+          div:nth-child(1),div:nth-child(3)
+            border-radius: 5px;
+            padding: 0 5px;
+            cursor: pointer
+            &:hover
+              background: var(--pale-grey-seven);
+          div:nth-child(1)
+            margin-left: -5px;
+          div:nth-child(3)
+            margin-right: -5px;
+
+          div:nth-child(2)
+            flex: 1
+            background: url(images/arrow-right.svg) no-repeat center
+            background-size: 1.25rem
+          div:nth-child(3)
+            text-align: right
       &.pending
         text-align: center
         font-weight: normal

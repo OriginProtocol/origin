@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import pick from 'lodash/pick'
 
 import CreateListingMutation from 'mutations/CreateListing'
 
@@ -12,6 +11,8 @@ import withWallet from 'hoc/withWallet'
 
 import Store from 'utils/store'
 const store = Store('sessionStorage')
+
+import applyListingData from './_listingData'
 
 class CreateListing extends Component {
   state = {}
@@ -51,7 +52,6 @@ class CreateListing extends Component {
   }
 
   onClick(createListing) {
-    const { listing } = this.props
     if (this.props.cannotTransact) {
       this.setState({
         error: this.props.cannotTransact,
@@ -62,32 +62,15 @@ class CreateListing extends Component {
 
     this.setState({ waitFor: 'pending' })
 
-    const unitsTotal = Number(listing.quantity)
+    const { listing, tokenBalance, wallet } = this.props
 
-    createListing({
-      variables: {
-        deposit:
-          this.props.tokenBalance >= Number(listing.boost)
-            ? listing.boost
-            : '0',
-        depositManager: this.props.wallet,
-        from: this.props.wallet,
-        data: {
-          title: listing.title,
-          description: listing.description,
-          price: { currency: 'ETH', amount: listing.price },
-          category: listing.category,
-          subCategory: listing.subCategory,
-          media: listing.media.map(m => pick(m, 'contentType', 'url')),
-          commission: unitsTotal > 1 ? listing.boostLimit : listing.boost,
-          commissionPerUnit: listing.boost
-        },
-        unitData: {
-          unitsTotal
-        },
-        autoApprove: true
-      }
+    const variables = applyListingData(this.props, {
+      deposit: tokenBalance >= Number(listing.boost) ? listing.boost : '0',
+      depositManager: wallet,
+      from: wallet
     })
+
+    createListing({ variables })
   }
 
   renderWaitModal() {

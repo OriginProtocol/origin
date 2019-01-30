@@ -1,14 +1,18 @@
 'use strict'
+const enums = require('../enums')
 
 const { GrowthInviteContactTypes, GrowthInviteStatuses } = require('../enums')
 
 module.exports = (sequelize, DataTypes) => {
   const GrowthInvite = sequelize.define('GrowthInvite', {
+    id: { type: DataTypes.INTEGER, primaryKey: true },
     referrerEthAddress: DataTypes.STRING,
-    refereeContactType: DataTypes.ENUM(GrowthInviteContactTypes),
+    refereeContactType: DataTypes.ENUM(enums.GrowthInviteContactTypes),
     refereeContact: DataTypes.STRING,
-    status: DataTypes.ENUM(GrowthInviteStatuses)
-  }, {})
+    status: DataTypes.ENUM(enums.GrowthInviteStatuses)
+  }, {
+    tableName: 'growth_invite'
+  })
 
   return GrowthInvite
 }

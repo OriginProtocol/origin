@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     cap: DataTypes.DECIMAL,
     capUsed: DataTypes.DECIMAL,
     currency: DataTypes.STRING
-  }, {})
+  }, {
+    tableName: 'growth_campaign'
+  })
 
   return GrowthCampaign
 }

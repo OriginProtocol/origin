@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import pick from 'lodash/pick'
 
 import UpdateListingMutation from 'mutations/UpdateListing'
 
@@ -9,6 +8,8 @@ import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
+
+import applyListingData from './_listingData'
 
 class UpdateListing extends Component {
   state = {}
@@ -48,7 +49,6 @@ class UpdateListing extends Component {
   }
 
   onClick(updateListing) {
-    const { listing } = this.props
     if (this.props.cannotTransact) {
       this.setState({
         error: this.props.cannotTransact,
@@ -58,27 +58,16 @@ class UpdateListing extends Component {
     }
 
     this.setState({ waitFor: 'pending' })
+
+    const { listing, tokenBalance, wallet } = this.props
+
     updateListing({
-      variables: {
+      variables: applyListingData(this.props, {
         listingID: this.props.listingId,
         additionalDeposit:
-          this.props.tokenBalance >= Number(listing.boost)
-            ? listing.boost
-            : '0',
-        from: this.props.wallet,
-        data: {
-          title: listing.title,
-          description: listing.description,
-          price: { currency: 'ETH', amount: listing.price },
-          category: listing.category,
-          subCategory: listing.subCategory,
-          media: (listing.media || []).map(m => pick(m, 'contentType', 'url'))
-        },
-        unitData: {
-          unitsTotal: Number(listing.quantity)
-        },
-        autoApprove: true
-      }
+          tokenBalance >= Number(listing.boost) ? listing.boost : '0',
+        from: wallet,
+      })
     })
   }
 

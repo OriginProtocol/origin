@@ -118,11 +118,11 @@ class Calendar extends Component {
     }
 
     let content = `${day.price} ETH`
-    if (day.unavailable) {
-      content = 'Unavailable'
-    } else if (day.booked) {
+    if (day.booked && this.props.showBooked) {
       content = 'Booked'
-    } else if (day.customPrice) {
+    } else if (day.unavailable) {
+      content = 'Unavailable'
+    } else  if (day.customPrice) {
       content = <span style={{ color: 'green' }}>{content}</span>
     }
 
@@ -140,9 +140,14 @@ class Calendar extends Component {
         },
         onMouseUp: () => {
           this.setState({ dragEnd: idx, dragging: false, endDate: day.date })
-          this.props.onChange({
-            range: `${this.state.startDate}-${day.date}`
-          })
+          if (this.props.onChange) {
+            const start = dayjs(this.state.startDate)
+            let range = `${this.state.startDate}-${day.date}`
+            if (start.isAfter(day.date)) {
+              range = `${day.date}-${this.state.startDate}`
+            }
+            this.props.onChange({ range })
+          }
         },
         onMouseOver: () => this.setState({ dragOver: idx })
       }

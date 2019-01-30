@@ -28,8 +28,8 @@ export default {
   UnitListing: Listing,
   FractionalListing: Listing,
   ListingResult: {
-    __resolveType() {
-      return 'UnitListing'
+    __resolveType(obj) {
+      return obj.__typename
     }
   },
   User,
