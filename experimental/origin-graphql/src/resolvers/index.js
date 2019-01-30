@@ -25,6 +25,13 @@ export default {
   Account,
   Marketplace,
   Listing,
+  UnitListing: Listing,
+  FractionalListing: Listing,
+  ListingResult: {
+    __resolveType(obj) {
+      return obj.__typename
+    }
+  },
   User,
   Offer,
   Token,

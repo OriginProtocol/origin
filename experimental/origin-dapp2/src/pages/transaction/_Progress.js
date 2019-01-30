@@ -42,6 +42,8 @@ const TransactionProgress = ({ offer, wallet }) => {
     } else {
       return <OfferWithdrawn party="buyer" offer={offer} />
     }
+  } else if (offer.listing.__typename === 'FractionalListing') {
+    return <WaitForSeller offer={offer} />
   } else {
     return <MessageSeller offer={offer} />
   }
@@ -133,6 +135,22 @@ const MessageSeller = ({ offer }) => (
     <SendMessage to={offer.listing.seller.id} className="btn btn-link">
       Message Seller &rsaquo;
     </SendMessage>
+    <WithdrawOffer offer={offer} />
+    <div className="stages">
+      <EventTick className="active" event={offer.createdEvent}>
+        Offer Placed
+      </EventTick>
+      <EventTick>Offer Accepted</EventTick>
+      <EventTick>Received by buyer</EventTick>
+    </div>
+  </div>
+)
+
+const WaitForSeller = ({ offer }) => (
+  <div className="transaction-progress">
+    <h4>Next Step</h4>
+    <div className="next-step">Wait for seller</div>
+    <div className="help">The seller will review your booking</div>
     <WithdrawOffer offer={offer} />
     <div className="stages">
       <EventTick className="active" event={offer.createdEvent}>

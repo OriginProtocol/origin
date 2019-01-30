@@ -22,6 +22,7 @@
     "@babel/core": "^7.2.2",
     "@babel/register": "^7.0.0",
     "apollo-link-http": "^1.5.9",
+    "dayjs": "^1.8.0",
     "mocha": "^5.2.0",
     "origin-eventsource": "^0.1.0",
     "origin-ipfs": "^0.1.0",
