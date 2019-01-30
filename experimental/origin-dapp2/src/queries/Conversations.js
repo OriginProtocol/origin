@@ -11,6 +11,8 @@ export default gql`
         messages {
           status
           address
+          content
+          timestamp
         }
         lastMessage {
           media {

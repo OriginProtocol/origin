@@ -168,7 +168,7 @@ require('react-styl')(`
         vertical-align: bottom
       .bubble
         display: inline-block
-        margin-left: 1.5rem
+        margin-left: 1.75rem
         padding: 1rem
         background-color: var(--pale-grey)
         border-radius: 1rem
@@ -210,7 +210,6 @@ require('react-styl')(`
           background-color: var(--clear-blue)
           color: var(--white)
           margin-right: 1.5rem
-          margin-left: 0
           &::after
             right: -34px
             left: auto

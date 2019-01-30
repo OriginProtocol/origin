@@ -6,9 +6,13 @@ import MessagingQuery from 'queries/Messaging'
 import ConversationsQuery from 'queries/Conversations'
 
 import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
 
+import Avatar from 'components/Avatar'
 import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
+
+import distanceToNow from 'utils/distanceToNow'
 
 const getUnreadMessage = (count) => {
   if (count === 1) return "Unread Message"
@@ -41,6 +45,7 @@ class MessagesNav extends Component {
                   onClick={() => this.props.onClose()}
                   data={data}
                   wallet={this.props.wallet}
+                  identity={this.props.identity}
                 />
               }
             >
@@ -78,13 +83,32 @@ const MessagesDropdown = (props) => {
           const totalUnreadMessages = messages.flat().reduce((result, msg) => {
             if (msg.status === 'unread' && msg.address !== wallet) return [...result, msg]
             return result
-          }, []).length
+          }, [])
 
+          const { address, content, timestamp } = [...totalUnreadMessages].pop() || []
           return (
             <div>
-              <div className="row unread-message">
-                <span className="count align-self-center">{totalUnreadMessages}</span>
-                <span>{getUnreadMessage(totalUnreadMessages)}</span>
+              <div className="row unread-notifications">
+                <span className="count align-self-center">{totalUnreadMessages.length}</span>
+                <span>{getUnreadMessage(totalUnreadMessages.length)}</span>
+              </div>
+              <div>
+              <div className="row last-message">
+                <div className="column">
+                  <Avatar avatar={get(props, 'identity.profile.avatar')} size={60} />
+                </div>
+                <div className="column content">
+                  <div className="row">
+                    <span>{address}</span>
+                  </div>
+                  <div className="row message">
+                    <span>{content}</span>
+                  </div>
+                </div>
+                <div className="column timestamp ml-auto">
+                  <span>{distanceToNow(timestamp)}</span>
+                </div>
+              </div>
               </div>
               <Link to="/messages" onClick={() => onClick()}>
                 View Messages
@@ -97,7 +121,7 @@ const MessagesDropdown = (props) => {
   )
 }
 
-export default withWallet(MessagesNav)
+export default withWallet(withIdentity(MessagesNav))
 
 require('react-styl')(`
   .navbar
@@ -135,8 +159,8 @@ require('react-styl')(`
           padding-left: 9px
           padding-bottom: 25px
           font-weight: bold
-        .unread-message
-          width: 300px
+        .unread-notifications
+          width: 530px
           font-weight: 600
           font-size: 18px
           padding: 1rem 0
@@ -147,4 +171,27 @@ require('react-styl')(`
           text-align: center
           display: block
           padding-top: 15px
+        .last-message
+          background-color: var(--white)
+          border-top: 2px solid var(--pale-grey-two)
+          padding: 10px
+          .content
+            padding-left: 20px
+            span
+              font-weight: 400
+              -ms-flex: 1
+              -moz-flex: 1
+              -webkit-flex: 1
+              flex: 1
+              width: 150px
+            .message
+              span
+                white-space: nowrap
+                overflow: hidden
+                text-overflow: ellipsis
+                font-weight: bold
+                -ms-flex: 1
+                -moz-flex: 1
+                -webkit-flex: 1
+                flex: 1
 `)
