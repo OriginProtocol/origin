@@ -3,7 +3,9 @@ import { Query } from 'react-apollo'
 import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
 
-import ListingQuery from 'queries/Listing'
+import QueryError from 'components/QueryError'
+
+import query from 'queries/Listing'
 import ListingDetail from './ListingDetail'
 import EditListing from './Edit'
 import Onboard from '../onboard/Onboard'
@@ -13,15 +15,16 @@ class Listing extends Component {
 
   render() {
     const listingId = this.props.match.params.listingID
+    const vars = { listingId }
 
     return (
       <div className="container">
-        <Query query={ListingQuery} variables={{ listingId }}>
+        <Query query={query} variables={vars}>
           {({ networkStatus, error, data }) => {
             if (networkStatus === 1) {
               return <div>Loading...</div>
             } else if (error) {
-              return <div>Error...</div>
+              return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {
               return <div>No marketplace contract?</div>
             }

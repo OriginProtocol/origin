@@ -203,9 +203,11 @@ export default async function populate(NodeAccount, gqlClient) {
           category: listing.category,
           subCategory: listing.subCategory,
           media: listing.media,
-          unitsTotal: listing.unitsTotal,
           commissionPerUnit,
           commission: listing.commission ? listing.commission.amount : '0'
+        },
+        unitData: {
+          unitsTotal: listing.unitsTotal
         }
       }
     })).data.createListing.id
