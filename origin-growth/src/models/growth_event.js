@@ -1,7 +1,6 @@
 'use strict'
-const enums = require('../enums')
 
-const { GrowthEventTypes, GrowthEventStatuses } = require('../enums')
+const enums = require('../enums')
 
 module.exports = (sequelize, DataTypes) => {
   const GrowthEvent = sequelize.define('GrowthEvent', {

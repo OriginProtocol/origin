@@ -15,11 +15,11 @@ const GrowthEventStatuses = new Enum(
 )
 
 const GrowthEventTypes = new Enum(
-  'EmailAttestation',
-  'FacebookAttestation',
-  'AirbnbAttestation',
-  'TwitterAttestation',
-  'PhoneAttestation',
+  'EmailAttestationPublished',
+  'FacebookAttestationPublished',
+  'AirbnbAttestationPublished',
+  'TwitterAttestationPublished',
+  'PhoneAttestationPublished',
   'ProfilePublished',
   'ListingCreated',
   'ListingPurchased'

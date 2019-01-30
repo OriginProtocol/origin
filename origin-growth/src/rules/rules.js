@@ -1,7 +1,7 @@
 const db = require('../models')
 const { GrowthEventTypes, GrowthEventStatuses } = require('../enums')
 
-// Upper cap for number of rewards per rule.
+// System cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
 
 
@@ -31,14 +31,14 @@ class Campaign {
     if (!this.config.numLevels ||
       !Number.isInteger(this.config.numLevels) ||
       this.config.numLevels <= 0) {
-      throw new Error(`Campaign ${campaign.id}: config has invalid or missing numLevels field.`)
+      throw new Error(`Campaign ${campaign.id}: invalid or missing numLevels field.`)
     }
     this.numLevels = this.config.numLevels
 
     this.levels = {}
     for (let i = 0; i < this.config.numLevels; i++) {
       if (!this.config.levels[i]) {
-        throw new Error(`Campaign ${this.campaign.id}: config with missing level ${i}`)
+        throw new Error(`Campaign ${this.campaign.id}: missing level ${i}`)
       }
       this.levels[i] = new Level(this.campaign.id, i, this.config.levels[i])
     }
@@ -71,7 +71,7 @@ class Campaign {
     const events = this.getEvents(ethAddress)
     const currentLevel = this.getCurrentLevel(ethAddress, events)
     for (let i = 0; i <= currentLevel; i++) {
-      rewards[i] = this.level[i].getRewards(ethAddress, events)
+      rewards[i] = this.levels[i].getRewards(ethAddress, events)
     }
     return rewards
   }
@@ -81,7 +81,7 @@ class Campaign {
 class Level {
   constructor(campaignId, levelId, config) {
     this.campaignId = campaignId
-    this.levelId = levelId
+    this.id = levelId
     this.config = config
 
     this.rules =[]
@@ -131,11 +131,11 @@ class BaseRule {
   constructor(campaignId, levelId, config) {
     this.campaignId = campaignId
     this.levelId = levelId
-    this.ruleId = config.id
+    this.id = config.id
     this.config = config.config
 
     if (!this.config.limit) {
-      throw new Error(`Rule ${this.ruleId} at Level ${levelId} is missing limit`)
+      throw new Error(`${this.str()}: missing limit`)
     }
     this.limit = Math.min(this.config.limit, MAX_NUM_REWARDS_PER_RULE)
 
@@ -144,10 +144,14 @@ class BaseRule {
         amount: this.config.reward.amount,
         currency: this.config.reward.currency
       }
-      this.reward = new Reward(this.campaignId, this.levelId, this.ruleId, money)
+      this.reward = new Reward(this.campaignId, this.levelId, this.id, money)
     } else {
       this.reward = null
     }
+  }
+
+  str() {
+    return `Campaign ${this.campaignId} / Rule ${this.ruleId} / Level ${this.levelId}`
   }
 
   qualifyForNextLevel(ethAddress, events) {
@@ -170,14 +174,9 @@ class BaseRule {
           (eventTypes.includes(event.type)))
       })
       .forEach(event => {
-         tally[event.type] = tally.hasOwnProperty(event.type) ? 1 : tally[event.type] + 1
+         tally[event.type] = tally.hasOwnProperty(event.type) ? tally[event.type] + 1 : 1
       })
     return tally
-  }
-
-  evaluate(events) {
-    const tally = this._tallyEvents(events)
-    return (Object.keys(tally).length === this.events.length)
   }
 
   getRewards(ethAddress, events) {
@@ -186,8 +185,7 @@ class BaseRule {
       return []
     }
 
-    const tally = this._tallyEvents(events)
-    const numRewards = Math.min(...Object.values(tally), this.limit)
+    const numRewards = this._numRewards(events)
     const rewards = Array(numRewards).fill(this.reward)
 
     return rewards
@@ -199,31 +197,74 @@ class SingleEventRule extends BaseRule {
   constructor(campaignId, levelId, config) {
     super(campaignId, levelId, config)
 
-    const event = this.config.event
-    if (!event) {
-      throw new Error(`Rule ${this.ruleId} at Level ${levelId} is missing event field`)
-    } else if (!GrowthEventTypes.includes(event)) {
-      throw new Error(`Rule ${this.ruleId} at Level ${levelId} has unknown event ${event}`)
+    const eventType = this.config.eventType
+    if (!eventType) {
+      throw new Error(`${this.str()}: missing eventType field`)
+    } else if (!GrowthEventTypes.includes(eventType)) {
+      throw new Error(`${this.str()}: unknown eventType ${eventType}`)
     }
-    this.events = [event]
+    this.eventTypes = [eventType]
+  }
+
+  _numRewards(events) {
+    const tally = this._tallyEvents(events, this.eventTypes)
+    return Math.min(...Object.values(tally), this.limit)
+  }
+
+  evaluate(events) {
+    const tally = this._tallyEvents(events, this.eventTypes)
+    return (Object.keys(tally).length === 1)
   }
 }
 
-// FIXME: implement numRequired
 class MultiEventsRule extends BaseRule {
   constructor(campaignId, levelId, config) {
     super(campaignId, levelId, config)
 
-    const events = this.config.events
-    if (!this.config.events) {
-      throw new Error(`Rule ${this.ruleId} at Level ${levelId} is missing events field`)
+    if (!this.config.eventTypes) {
+      throw new Error(`${this.str()}: missing eventTypes field`)
     }
-    events.forEach(event => {
-      if (!GrowthEventTypes.includes(event)) {
-        throw new Error(`Rule ${this.ruleId} at Level ${levelId} has unknown event ${event}`)
+    this.config.eventTypes.forEach(eventType => {
+      if (!GrowthEventTypes.includes(eventType)) {
+        throw new Error(`${this.str()}: unknown eventType ${eventType}`)
       }
     })
-    this.events = events
+    this.eventTypes = this.config.eventTypes
+
+    if (!this.config.numEventsRequired ||
+      !Number.isInteger(this.config.numEventsRequired) ||
+      this.config.numLevels <= 0) {
+      throw new Error(`${this.str()}: missing or invalid numEventsRequired`)
+    }
+    this.numEventsRequired = this.config.numEventsRequired
+  }
+
+  _numRewards(events) {
+    function pickN(tally, n) {
+      let numPicked = 0
+      for (const key of Object.keys(tally)) {
+        if (tally[key] > 0) {
+          tally[key]--
+          numPicked++
+        }
+        if (numPicked === n) {
+          break
+        }
+      }
+      return numPicked === n
+    }
+
+    const tally = this._tallyEvents(events, this.eventTypes)
+    let numRewards = 0
+    while (pickN(tally, this.numEventsRequired)) {
+      numRewards++
+    }
+    return numRewards
+  }
+
+  evaluate(events) {
+    const tally = this._tallyEvents(events, this.eventTypes)
+    return (Object.keys(tally).length >= this.numEventsRequired)
   }
 }
 
