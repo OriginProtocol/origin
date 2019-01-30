@@ -1,7 +1,8 @@
+import { withRouter } from 'react-router'
 import React from 'react'
+import queryString from 'query-string'
 
 import camelToDash from 'utils/camelToDash'
-
 
 class Configuration extends React.Component {
   constructor(props) {
@@ -74,39 +75,34 @@ class Configuration extends React.Component {
       loading: true
     }
 
-    this.getConfigUrl = this.getConfigUrl.bind(this)
     this.setConfig = this.setConfig.bind(this)
   }
 
   async componentDidMount() {
-    const configUrl = this.getConfigUrl()
+    let configUrl
+
+    const parsed = queryString.parse(this.props.location.search)
+    if (parsed.config) {
+      // Config URL was passed in the query string
+      configUrl = parsed.config
+    } else if (this.isWhiteLabelHostname()) {
+      // Hostname is something custom, assume config is a config.<hostname>
+      configUrl = `config.${window.location.hostname}`
+    }
 
     if (configUrl) {
-      // Configuration is being loaded from a URL
+      // Retrieve the config
       await fetch(configUrl)
-        .then(response => this.setState({ config: response }))
+        .then(response => response.json())
+        .then(responseJson => this.setState({ config: responseJson.config }))
         .catch((error) => {
           console.log('Could not set custom configuration: ' + error)
         })
     }
 
+    console.log(this.state)
+
     this.setConfig()
-  }
-
-  getConfigUrl () {
-    // Config override specified as URL parameter
-    const configUrl = this.getConfigOverrideUrl()
-    if (configUrl) {
-      return configUrl
-    } else if (this.isWhiteLabelHostname()) {
-      // Retrieve the config from config.hostname via IPNS
-      return
-    }
-  }
-
-  getConfigOverrideUrl () {
-    const configUrlMatch = window.location.search.match(/config=([^#&]*)/)
-    return configUrlMatch ? decodeURIComponent(configUrlMatch[1]) : false
   }
 
   setConfig () {
@@ -167,4 +163,4 @@ class Configuration extends React.Component {
   }
 }
 
-export default Configuration
+export default withRouter(Configuration)
