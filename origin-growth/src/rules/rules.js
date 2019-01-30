@@ -47,6 +47,7 @@ class Campaign {
   getEvents(ethAddress) {
     const whereClause = { ethAddress: ethAddress.toLowerCase() }
     // TODO: filter out events out of the campaign time window.
+    // FIXME: this should await
     const events = db.GrowthEvent.findAll({
         where: whereClause,
         order: [ ['id', 'ASC'] ],
@@ -161,17 +162,18 @@ class BaseRule {
     }
 
     // Evaluate the rule based on events.
-    return this.evaluate(events)
+    return this.evaluate(ethAddress, events)
   }
 
-  _tallyEvents(events, eventTypes) {
+  _tallyEvents(ethAddress, eventTypes, events) {
     const tally = {}
     events
       .filter(event => {
         return (
+          (event.ethAddress === ethAddress) &&
+          eventTypes.includes(event.type) &&
           (event.status === GrowthEventStatuses.Logged ||
-           event.status === GrowthEventStatuses.Verified) &&
-          (eventTypes.includes(event.type)))
+           event.status === GrowthEventStatuses.Verified))
       })
       .forEach(event => {
          tally[event.type] = tally.hasOwnProperty(event.type) ? tally[event.type] + 1 : 1
@@ -185,7 +187,7 @@ class BaseRule {
       return []
     }
 
-    const numRewards = this._numRewards(events)
+    const numRewards = this._numRewards(ethAddress, events)
     const rewards = Array(numRewards).fill(this.reward)
 
     return rewards
@@ -206,13 +208,13 @@ class SingleEventRule extends BaseRule {
     this.eventTypes = [eventType]
   }
 
-  _numRewards(events) {
-    const tally = this._tallyEvents(events, this.eventTypes)
-    return Math.min(...Object.values(tally), this.limit)
+  _numRewards(ethAddress, events) {
+    const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
+    return Object.keys(tally).length ? Math.min(...Object.values(tally), this.limit) : 0
   }
 
-  evaluate(events) {
-    const tally = this._tallyEvents(events, this.eventTypes)
+  evaluate(ethAddress, events) {
+    const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return (Object.keys(tally).length === 1)
   }
 }
@@ -239,7 +241,7 @@ class MultiEventsRule extends BaseRule {
     this.numEventsRequired = this.config.numEventsRequired
   }
 
-  _numRewards(events) {
+  _numRewards(ethAddress, events) {
     function pickN(tally, n) {
       let numPicked = 0
       for (const key of Object.keys(tally)) {
@@ -254,16 +256,16 @@ class MultiEventsRule extends BaseRule {
       return numPicked === n
     }
 
-    const tally = this._tallyEvents(events, this.eventTypes)
+    const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     let numRewards = 0
-    while (pickN(tally, this.numEventsRequired)) {
+    while ((numRewards < this.limit) && pickN(tally, this.numEventsRequired)) {
       numRewards++
     }
     return numRewards
   }
 
-  evaluate(events) {
-    const tally = this._tallyEvents(events, this.eventTypes)
+  evaluate(ethAddress, events) {
+    const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return (Object.keys(tally).length >= this.numEventsRequired)
   }
 }
