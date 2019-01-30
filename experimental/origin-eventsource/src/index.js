@@ -98,7 +98,7 @@ class OriginEventSource {
         'weekendPrice',
         'booked',
         'unavailable',
-        'customPricing',
+        'customPricing'
       )
     } catch (e) {
       return null
@@ -188,7 +188,17 @@ class OriginEventSource {
     // Compute fields from valid offers.
     let commissionAvailable = this.web3.utils.toBN(listing.commission)
     let unitsAvailable = listing.unitsTotal
-    if (listing.type === 'unit') {
+    const booked = []
+
+    if (listing.listingType === 'fractional') {
+      allOffers.forEach(offer => {
+        if (!offer.valid || offer.status === 0) {
+          // No need to do anything here.
+        } else if (offer.startDate && offer.endDate) {
+          booked.push(`${offer.startDate}-${offer.endDate}`)
+        }
+      })
+    } else if (listing.type === 'unit') {
       const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
@@ -230,6 +240,7 @@ class OriginEventSource {
       : '0'
     return Object.assign({}, listing, {
       allOffers,
+      booked,
       unitsAvailable,
       unitsSold: listing.unitsTotal - unitsAvailable,
       depositAvailable: commissionAvailable
@@ -286,8 +297,7 @@ class OriginEventSource {
       status = offer.status
     }
 
-    let data = await get(this.ipfsGateway, ipfsHash)
-    data = pick(data, 'unitsPurchased')
+    const data = await get(this.ipfsGateway, ipfsHash)
 
     const networkId = await this.getNetworkId()
 
@@ -308,7 +318,9 @@ class OriginEventSource {
       buyer: { id: offer.buyer },
       affiliate: { id: offer.affiliate },
       arbitrator: { id: offer.arbitrator },
-      quantity: data.unitsPurchased
+      quantity: data.unitsPurchased,
+      startDate: data.startDate,
+      endDate: data.endDate
     }
     offerObj.statusStr = offerStatus(offerObj)
 

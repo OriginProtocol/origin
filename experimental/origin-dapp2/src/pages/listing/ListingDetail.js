@@ -136,6 +136,8 @@ const Fractional = ({ listing, from, range, availability }) => {
         value={totalPrice}
         quantity={1}
         disabled={available ? false : true}
+        startDate={checkIn}
+        endDate={checkOut}
         className={`btn btn-primary${available ? '' : ' disabled'}`}
         children="Book"
       />

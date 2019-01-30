@@ -62,6 +62,7 @@ class Availability extends Component {
                   range={this.state.range}
                   availability={this.state.calculator}
                   onChange={state => this.setState(state)}
+                  showBooked={true}
                 />
 
                 <div className="actions">

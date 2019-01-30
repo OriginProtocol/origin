@@ -86,6 +86,7 @@ module.exports = `
       # Optional: normally inherited from listing
       arbitrator: String
       affiliate: String
+      fractionalData: FractionalOfferInput
     ): Transaction
 
     executeRuling(
@@ -279,13 +280,17 @@ module.exports = `
     arbitrator: Account
     finalizes: Int
     status: Int
-    quantity: Int
 
     # Computed
     withdrawnBy: Account
     statusStr: String
     valid: Boolean
     validationError: String
+
+    # IPFS
+    quantity: Int
+    startDate: String
+    endDate: String
   }
 
   type OfferHistory {
@@ -329,6 +334,11 @@ module.exports = `
 
   input MakeOfferInput {
     currency: String
+  }
+
+  input FractionalOfferInput {
+    startDate: String
+    endDate: String
   }
 
   input PriceInput {
