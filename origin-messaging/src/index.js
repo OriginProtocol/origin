@@ -21,6 +21,11 @@ import {
 
 //the OrbitDB should be the message one
 const messagingRoomsMap = {}
+const snapshotBatchSize = config.SNAPSHOT_BATCH_SIZE
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 
 async function startRoom(roomDb, roomId, storeType, writers, shareFunc) {
   let key = roomId
@@ -63,10 +68,13 @@ function handleGlobalRegistryWrite(convInitDb, payload) {
 }
 
 function rebroadcastOnReplicate(DB, db){
-  db.events.on('replicated', () => {
+  db.events.on('replicated', (address, length, from) => {
     // rebroadcast
     DB._pubsub.publish(db.id,  db._oplog.heads)
-    snapshotDB(db)
+    if (from != 'fromSnapshot')
+    {
+      snapshotDB(db)
+    }
   })
 }
 
@@ -128,18 +136,38 @@ async function loadSnapshotDB(db) {
       await saveToIpfs(db._ipfs, entry)
     }
     */
-    const log = new Log(
-      db._ipfs,
-      snapshotData.id,
-      snapshotData.values,
-      snapshotData.heads,
-      null,
-      db._key,
-      db.access.write
-    )
-    await db._oplog.join(log)
+    if (snapshotData.values.length < snapshotBatchSize)
+    {
+      const log = new Log(
+        db._ipfs,
+        snapshotData.id,
+        snapshotData.values,
+        snapshotData.heads,
+        null,
+        db._key,
+        db.access.write
+      )
+      await db._oplog.join(log)
+    } else {
+      const values = snapshotData.values
+      while(values.length)
+      {
+        const push_values = values.splice(0, snapshotBatchSize)
+        const log = new Log(
+          db._ipfs,
+          snapshotData.id,
+          push_values,
+          undefined,
+          null,
+          db._key,
+          db.access.write
+        )
+        await db._oplog.join(log)
+        await sleep(100)
+      }
+    }
     await db._updateIndex()
-    db.events.emit('replicated', db.address.toString())
+    db.events.emit('replicated', db.address.toString(), undefined, 'fromSnapshot')
   }
   db.__snapshot_loaded = true
   db.events.emit('ready', db.address.toString(), db._oplog.heads)

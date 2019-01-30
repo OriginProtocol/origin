@@ -10,6 +10,7 @@ import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
+import PageTitle from 'components/PageTitle'
 
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/Purchases'
@@ -51,6 +52,7 @@ class Purchases extends Component {
                 onBottom={() => nextPage(fetchMore, { ...vars, after })}
               >
                 <>
+                  <PageTitle>My Purchases</PageTitle>
                   <h1>My Purchases</h1>
                   <div className="row">
                     <div className="col-md-3">

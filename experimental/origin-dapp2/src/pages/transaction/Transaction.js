@@ -7,6 +7,7 @@ import query from 'queries/Offer'
 
 import AboutParty from 'components/AboutParty'
 import QueryError from 'components/QueryError'
+import PageTitle from 'components/PageTitle'
 
 import TxHistory from './_History'
 import TxProgress from './_Progress'
@@ -38,6 +39,7 @@ const Transaction = props => {
 
           return (
             <>
+              <PageTitle>{offer.listing.title}</PageTitle>
               {isSeller ? (
                 <Link to="/my-sales">&lsaquo; My Sales</Link>
               ) : (

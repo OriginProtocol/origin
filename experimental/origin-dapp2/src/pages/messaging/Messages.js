@@ -12,6 +12,7 @@ import UpdateMessage from 'mutations/UpdateMessage'
 import Room from './Room'
 import Avatar from 'components/Avatar'
 import QueryError from 'components/QueryError'
+import PageTitle from 'components/PageTitle'
 
 import distanceToNow from 'utils/distanceToNow'
 
@@ -40,6 +41,7 @@ const SubjectWithIdentity = withIdentity(Subject)
 
 const Messages = props => (
   <div className="container messages-page">
+    <PageTitle>Messaging</PageTitle>
     <Query query={query} pollInterval={2000}>
       {({ error, data, loading }) => {
         if (error) {
