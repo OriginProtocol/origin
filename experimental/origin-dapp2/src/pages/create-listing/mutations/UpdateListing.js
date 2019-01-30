@@ -72,7 +72,9 @@ class UpdateListing extends Component {
           price: { currency: 'ETH', amount: listing.price },
           category: listing.category,
           subCategory: listing.subCategory,
-          media: (listing.media || []).map(m => pick(m, 'contentType', 'url')),
+          media: (listing.media || []).map(m => pick(m, 'contentType', 'url'))
+        },
+        unitData: {
           unitsTotal: Number(listing.quantity)
         },
         autoApprove: true
