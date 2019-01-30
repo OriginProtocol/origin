@@ -237,7 +237,7 @@ module.exports = `
     ${ListingInterface}
 
     # IPFS
-    weekendPrice: String
+    weekendPrice: Price
     unavailable: [String]
     customPricing: [String]
     booked: [String]

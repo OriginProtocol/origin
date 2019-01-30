@@ -109,7 +109,7 @@ class Review extends Component {
                     small={true}
                     availability={
                       new AvailabilityCalculator({
-                        weekdayPrice: listing.weekdayPrice,
+                        weekdayPrice: listing.price,
                         weekendPrice: listing.weekendPrice,
                         booked: listing.booked,
                         unavailable: listing.unavailable,
@@ -130,6 +130,7 @@ class Review extends Component {
               <UpdateListing
                 listing={this.props.listing}
                 listingId={this.props.listingId}
+                listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"
@@ -137,6 +138,7 @@ class Review extends Component {
             ) : (
               <CreateListing
                 listing={this.props.listing}
+                listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"

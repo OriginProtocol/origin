@@ -47,6 +47,9 @@ class Buy extends Component {
   }
 
   onClick(makeOffer) {
+    if (this.props.disabled) {
+      return
+    }
     if (this.props.cannotTransact) {
       this.setState({
         error: this.props.cannotTransact,

@@ -32,7 +32,6 @@ class CreateListing extends Component {
         price: '',
 
         // HomeShare fields:
-        weekdayPrice: '',
         weekendPrice: '',
         booked: [],
         customPricing: [],

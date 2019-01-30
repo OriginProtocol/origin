@@ -5,11 +5,11 @@ import parseId from '../../utils/parseId'
 import { listingInputToIPFS } from './createListing'
 
 async function updateListing(_, args) {
-  const { data, unitData, from, autoApprove } = args
+  const { data, unitData, fractionalData, from, autoApprove } = args
   const { listingId } = parseId(args.listingID)
   await checkMetaMask(from)
 
-  const ipfsData = listingInputToIPFS(data, unitData)
+  const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   let updateListingCall

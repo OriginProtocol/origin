@@ -18,7 +18,7 @@ class Availability extends Component {
       available: true,
       range: '',
       calculator: new AvailabilityCalculator({
-        weekdayPrice: props.listing.weekdayPrice,
+        weekdayPrice: props.listing.price,
         weekendPrice: props.listing.weekendPrice,
         booked: props.listing.booked,
         unavailable: props.listing.unavailable,
