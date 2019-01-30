@@ -12,6 +12,7 @@ services:
       # address of the contracts on the local blockchain
       - ./origin-contracts/build:/app/origin-contracts/build
       - ./experimental:/app/experimental
+      - ./package.json:/app/package.json
     ports:
       - "3000:3000"
     command:
