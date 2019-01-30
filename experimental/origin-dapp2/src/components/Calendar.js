@@ -118,11 +118,11 @@ class Calendar extends Component {
     }
 
     let content = `${day.price} ETH`
-    if (day.unavailable) {
-      content = 'Unavailable'
-    } else if (day.booked) {
+    if (day.booked && this.props.showBooked) {
       content = 'Booked'
-    } else if (day.customPrice) {
+    } else if (day.unavailable) {
+      content = 'Unavailable'
+    } else  if (day.customPrice) {
       content = <span style={{ color: 'green' }}>{content}</span>
     }
 

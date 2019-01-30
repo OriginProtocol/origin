@@ -79,6 +79,7 @@ export default {
         offerId
         value
         currency
+        quantity
         refund
         commission
         status
@@ -114,6 +115,8 @@ export default {
           timestamp
         }
         statusStr
+        startDate
+        endDate
       }
     `
   },
