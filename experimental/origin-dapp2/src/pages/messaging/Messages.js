@@ -1,12 +1,10 @@
 import React from 'react'
 import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
-import gql from 'graphql-tag'
 
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
 import query from 'queries/Conversations'
-import roomQuery from 'queries/Room'
 
 import { OnboardMessaging } from 'pages/onboard/Messaging'
 import UpdateMessage from 'mutations/UpdateMessage'
@@ -62,7 +60,8 @@ const Messages = props => (
 
         const displayUnreadCount = ({ messages }) => {
           const unreadCount = messages.reduce((result, msg) => {
-            if (msg.status === 'unread' && msg.address !== props.wallet) return [...result, msg]
+            if (msg.status === 'unread' && msg.address !== props.wallet)
+              return [...result, msg]
             return result
           }, []).length
 
@@ -80,7 +79,10 @@ const Messages = props => (
                 >
                   <SubjectWithIdentity conversation={conv} wallet={conv.id} />
                   <span
-                    className={`align-self-end${displayUnreadCount(conv) ? ' count align-self-end': ''}`}>
+                    className={`align-self-end${
+                      displayUnreadCount(conv) ? ' count align-self-end' : ''
+                    }`}
+                  >
                     {displayUnreadCount(conv)}
                   </span>
                 </div>
@@ -90,7 +92,7 @@ const Messages = props => (
               {active ? (
                 <Mutation mutation={UpdateMessage}>
                   {updateMessage => (
-                    <Room id={active} updateMessage={updateMessage}/>
+                    <Room id={active} updateMessage={updateMessage} />
                   )}
                 </Mutation>
               ) : null}

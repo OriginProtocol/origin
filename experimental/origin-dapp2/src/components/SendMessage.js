@@ -8,6 +8,7 @@ import query from 'queries/Conversations'
 
 import { OnboardMessaging } from 'pages/onboard/Messaging'
 import Modal from 'components/Modal'
+import QueryError from 'components/QueryError'
 
 class SendMessage extends Component {
   state = { message: '' }
@@ -54,7 +55,9 @@ class SendMessage extends Component {
               {!this.state.open ? null : (
                 <Modal
                   shouldClose={this.state.shouldClose}
-                  onClose={() => this.setState({ shouldClose: false, open: false })}
+                  onClose={() =>
+                    this.setState({ shouldClose: false, open: false })
+                  }
                   className="message-modal"
                 >
                   {this.state.sent ? (
@@ -95,7 +98,9 @@ class SendMessage extends Component {
                             placeholder="Type something..."
                             ref={input => (this.input = input)}
                             value={this.state.message}
-                            onChange={e => this.setState({ message: e.target.value })}
+                            onChange={e =>
+                              this.setState({ message: e.target.value })
+                            }
                           />
                           <button
                             className="btn btn-primary btn-rounded"

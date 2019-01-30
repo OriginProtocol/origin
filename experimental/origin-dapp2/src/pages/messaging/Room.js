@@ -81,7 +81,7 @@ class AllMessages extends Component {
     }
   }
   render() {
-    const { messages, isUser, wallet} = this.props
+    const { messages, wallet } = this.props
 
     return (
       <div className="messages" ref={el => (this.el = el)}>
@@ -116,15 +116,17 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
-            const unreadMessages = filter(messages, (msg) => {
+            const unreadMessages = filter(messages, msg => {
               return msg.status === 'unread' && msg.address !== wallet
             })
             if (unreadMessages.length) {
-              unreadMessages.map(({ hash, status }) => {
-                updateMessage({ variables: {
-                  status: 'read',
-                  hash
-                }})
+              unreadMessages.map(({ hash }) => {
+                updateMessage({
+                  variables: {
+                    status: 'read',
+                    hash
+                  }
+                })
               })
               refetch()
             }

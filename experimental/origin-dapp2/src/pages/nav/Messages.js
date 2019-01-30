@@ -14,9 +14,9 @@ import Link from 'components/Link'
 
 import distanceToNow from 'utils/distanceToNow'
 
-const getUnreadMessage = (count) => {
-  if (count === 1) return "Unread Message"
-  return "Unread Messages"
+const getUnreadMessage = count => {
+  if (count === 1) return 'Unread Message'
+  return 'Unread Messages'
 }
 
 class MessagesNav extends Component {
@@ -70,7 +70,7 @@ class MessagesNav extends Component {
   }
 }
 
-const MessagesDropdown = (props) => {
+const MessagesDropdown = props => {
   const { onClick, wallet } = props
 
   return (
@@ -81,34 +81,44 @@ const MessagesDropdown = (props) => {
           const conversations = get(data, 'messaging.conversations', [])
           const messages = conversations.map(({ messages }) => messages)
           const totalUnreadMessages = messages.flat().reduce((result, msg) => {
-            if (msg.status === 'unread' && msg.address !== wallet) return [...result, msg]
+            if (msg.status === 'unread' && msg.address !== wallet)
+              return [...result, msg]
             return result
           }, [])
 
-          const { address, content, timestamp } = [...totalUnreadMessages].pop() || []
+          const lastMessage = [...totalUnreadMessages].pop() || {}
+          const { address, content, timestamp } = lastMessage
+          console.log('LAST MESSAGE', lastMessage)
           return (
             <div>
               <div className="row unread-notifications">
-                <span className="count align-self-center">{totalUnreadMessages.length}</span>
+                <span className="count align-self-center">
+                  {totalUnreadMessages.length}
+                </span>
                 <span>{getUnreadMessage(totalUnreadMessages.length)}</span>
               </div>
               <div>
-              <div className="row last-message">
-                <div className="column">
-                  <Avatar avatar={get(props, 'identity.profile.avatar')} size={60} />
-                </div>
-                <div className="column content">
-                  <div className="row">
-                    <span>{address}</span>
+                {Object.keys(lastMessage).length ? (
+                  <div className="row last-message">
+                    <div className="column">
+                      <Avatar
+                        avatar={get(props, 'identity.profile.avatar')}
+                        size={60}
+                      />
+                    </div>
+                    <div className="column content">
+                      <div className="row">
+                        <span>{address}</span>
+                      </div>
+                      <div className="row message">
+                        <span>{content}</span>
+                      </div>
+                    </div>
+                    <div className="column timestamp ml-auto">
+                      <span>{distanceToNow(timestamp)}</span>
+                    </div>
                   </div>
-                  <div className="row message">
-                    <span>{content}</span>
-                  </div>
-                </div>
-                <div className="column timestamp ml-auto">
-                  <span>{distanceToNow(timestamp)}</span>
-                </div>
-              </div>
+                ) : null}
               </div>
               <Link to="/messages" onClick={() => onClick()}>
                 View Messages
