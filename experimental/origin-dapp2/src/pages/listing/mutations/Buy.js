@@ -47,6 +47,9 @@ class Buy extends Component {
   }
 
   onClick(makeOffer) {
+    if (this.props.disabled) {
+      return
+    }
     if (this.props.cannotTransact) {
       this.setState({
         error: this.props.cannotTransact,
@@ -57,15 +60,17 @@ class Buy extends Component {
 
     this.setState({ waitFor: 'pending' })
 
-    const { listing, from, value, quantity } = this.props
-    makeOffer({
-      variables: {
-        listingID: listing.id,
-        value,
-        from,
-        quantity: Number(quantity)
-      }
-    })
+    const { listing, from, value, quantity, startDate, endDate } = this.props
+    const variables = {
+      listingID: listing.id,
+      value,
+      from,
+      quantity: Number(quantity)
+    }
+    if (listing.__typename === 'FractionalListing') {
+      variables.fractionalData = { startDate, endDate }
+    }
+    makeOffer({ variables })
   }
 
   renderWaitModal() {

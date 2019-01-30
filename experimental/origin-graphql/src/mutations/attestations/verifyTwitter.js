@@ -13,7 +13,7 @@ async function verifyTwitter(_, { identity }) {
 
   const authData = await response.json()
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const twWindow = window.open(authData.url, '', 'width=650,height=500')
 
     const finish = async e => {
@@ -55,9 +55,7 @@ async function verifyTwitter(_, { identity }) {
     }
 
     window.addEventListener('message', finish, false)
-
   })
-
 }
 
 export default verifyTwitter

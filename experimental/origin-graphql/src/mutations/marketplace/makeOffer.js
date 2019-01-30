@@ -72,16 +72,19 @@ async function toIpfsData(data) {
   const unitsAvailable = Number(listing.unitsAvailable)
   const offerQuantity = Number(data.quantity)
   if (offerQuantity > unitsAvailable) {
-    throw new Error(`Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`)
+    throw new Error(
+      `Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`
+    )
   }
 
-  let commission = { currency: 'OGN', amount: '0' }
+  const commission = { currency: 'OGN', amount: '0' }
   if (data.commission) {
     // Passed in commission takes precedence
     commission.amount = web3.utils.fromWei(data.commission, 'ether')
   } else if (listing.commissionPerUnit) {
     // Default commission to min(depositAvailable, commissionPerUnit)
-    const amount = web3.utils.toBN(listing.commissionPerUnit)
+    const amount = web3.utils
+      .toBN(listing.commissionPerUnit)
       .mul(web3.utils.toBN(data.quantity))
     const depositAvailable = web3.utils.toBN(listing.depositAvailable)
     const commissionWei = amount.lt(depositAvailable)
@@ -101,7 +104,8 @@ async function toIpfsData(data) {
     },
     commission,
     finalizes:
-      data.finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24 * 365
+      data.finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24 * 365,
+    ...(data.fractionalData || {})
   }
 
   validator('https://schema.originprotocol.com/offer_1.0.0.json', ipfsData)
