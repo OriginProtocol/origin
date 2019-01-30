@@ -62,7 +62,7 @@ class UpdateListing extends Component {
     const { listing, tokenBalance, wallet } = this.props
 
     updateListing({
-      variables: applyListingData({
+      variables: applyListingData(this.props, {
         listingID: this.props.listingId,
         additionalDeposit:
           tokenBalance >= Number(listing.boost) ? listing.boost : '0',
