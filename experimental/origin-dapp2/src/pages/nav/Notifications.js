@@ -12,13 +12,13 @@ import NotificationRow from 'pages/notifications/NotificationRow'
 
 class NotificationsNav extends Component {
   render() {
-    if (!this.props.wallet) return null
     const vars = { first: 5, id: this.props.wallet }
     return (
-      <Query query={query} variables={vars}>
+      <Query query={query} variables={vars} skip={!this.props.wallet}>
         {({ loading, error, data }) => {
-          if (loading || error) return null
-
+          if (loading || error) {
+            return null
+          }
           return <NotificationsDropdown {...this.props} data={data} />
         }}
       </Query>

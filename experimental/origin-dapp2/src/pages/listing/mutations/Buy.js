@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import get from 'lodash/get'
 
 import MakeOfferMutation from 'mutations/MakeOffer'
 
@@ -8,6 +9,7 @@ import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
+import withWeb3 from 'hoc/withWeb3'
 
 class Buy extends Component {
   state = {}
@@ -78,7 +80,7 @@ class Buy extends Component {
 
     return (
       <WaitForTransaction hash={this.state.waitFor} event="OfferCreated">
-        {({ event, client }) => (
+        {({ event }) => (
           <div className="make-offer-modal success">
             <div className="success-icon" />
             <h5>Success!</h5>
@@ -103,15 +105,16 @@ class Buy extends Component {
               href="#"
               className="btn btn-outline-light"
               onClick={async () => {
-                await client.resetStore()
-                // TODO: Fix link
-                this.setState({
-                  redirect: `/purchases/999-1-${event.returnValues.listingID}-${
-                    event.returnValues.offerID
-                  }`
-                })
+                this.setState({ loading: true })
+                if (this.props.refetch) {
+                  await this.props.refetch()
+                }
+                const netId = get(this.props, 'web3.networkId')
+                const { listingID, offerID } = event.returnValues
+                const offerId = `${netId}-0-${listingID}-${offerID}`
+                this.setState({ redirect: `/purchases/${offerId}` })
               }}
-              children="View Purchase"
+              children={this.state.loading ? 'Loading...' : 'View Purchase'}
             />
           </div>
         )}
@@ -120,7 +123,7 @@ class Buy extends Component {
   }
 }
 
-export default withWallet(withCanTransact(Buy))
+export default withWeb3(withWallet(withCanTransact(Buy)))
 
 require('react-styl')(`
   .make-offer-modal

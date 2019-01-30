@@ -20,7 +20,7 @@ const Transaction = props => {
   return (
     <div className="container transaction-detail">
       <Query query={query} variables={vars}>
-        {({ networkStatus, error, data }) => {
+        {({ networkStatus, error, data, refetch }) => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
           } else if (networkStatus === 1) {
@@ -50,7 +50,11 @@ const Transaction = props => {
               <div className="row">
                 <div className="col-md-8">
                   <h3>Transaction Progress</h3>
-                  <TxProgress offer={offer} wallet={props.wallet} />
+                  <TxProgress
+                    offer={offer}
+                    wallet={props.wallet}
+                    refetch={refetch}
+                  />
 
                   <h3>Transaction History</h3>
                   <TxHistory offer={offer} />

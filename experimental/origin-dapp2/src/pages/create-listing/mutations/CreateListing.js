@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import get from 'lodash/get'
 
 import CreateListingMutation from 'mutations/CreateListing'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
+
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
+import withWeb3 from 'hoc/withWeb3'
 
 import Store from 'utils/store'
 const store = Store('sessionStorage')
@@ -75,23 +78,21 @@ class CreateListing extends Component {
 
   renderWaitModal() {
     if (!this.state.waitFor) return null
+    const netId = get(this.props, 'web3.networkId')
 
     return (
       <WaitForTransaction hash={this.state.waitFor} event="ListingCreated">
-        {({ event, client }) => (
+        {({ event }) => (
           <div className="make-offer-modal">
             <div className="success-icon" />
             <div>Success!</div>
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={async () => {
-                await client.resetStore()
+              onClick={() => {
                 store.set('create-listing', undefined)
-                // TODO: Fix listing ID
-                this.setState({
-                  redirect: `/listings/999-1-${event.returnValues.listingID}`
-                })
+                const { listingID } = event.returnValues
+                this.setState({ redirect: `/listings/${netId}-0-${listingID}` })
               }}
               children="View Listing"
             />
@@ -102,4 +103,4 @@ class CreateListing extends Component {
   }
 }
 
-export default withWallet(withCanTransact(CreateListing))
+export default withWeb3(withWallet(withCanTransact(CreateListing)))
