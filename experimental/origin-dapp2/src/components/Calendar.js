@@ -140,9 +140,14 @@ class Calendar extends Component {
         },
         onMouseUp: () => {
           this.setState({ dragEnd: idx, dragging: false, endDate: day.date })
-          this.props.onChange({
-            range: `${this.state.startDate}-${day.date}`
-          })
+          if (this.props.onChange) {
+            const start = dayjs(this.state.startDate)
+            let range = `${this.state.startDate}-${day.date}`
+            if (start.isAfter(day.date)) {
+              range = `${day.date}-${this.state.startDate}`
+            }
+            this.props.onChange({ range })
+          }
         },
         onMouseOver: () => this.setState({ dragOver: idx })
       }

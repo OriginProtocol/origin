@@ -642,4 +642,47 @@ describe('Marketplace', function() {
       )
     })
   })
+
+  describe('Home share listing with commission', async function() {
+    let listingData
+
+    before(async function() {
+      await mutate(mutations.TransferToken, {
+        token: OGN,
+        from: Admin,
+        to: Seller,
+        value: '3'
+      })
+      // Setting the 'getEvents' parameter to true causes an error.
+      listingData = {
+        deposit: '3',
+        depositManager: Arbitrator,
+        from: Seller,
+        autoApprove: true,
+        data: {
+          title: 'Home share listing',
+          description: 'Test description',
+          price: {
+            currency: ZeroAddress,
+            amount: '0.01'
+          },
+          category: 'Test category',
+          subCategory: 'Test sub-category',
+          commission: '3',
+          commissionPerUnit: '1'
+        },
+        fractionalData: {
+          weekendPrice: {
+            currency: ZeroAddress,
+            amount: '0.02'
+          }
+        }
+      }
+    })
+
+    it('should create a listing', async function() {
+      await mutate(mutations.CreateListing, listingData)
+    })
+  })
+
 })

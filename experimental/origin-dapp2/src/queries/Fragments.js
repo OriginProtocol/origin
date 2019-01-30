@@ -42,10 +42,6 @@ export default {
         title
         description
         currencyId
-        multiUnit
-        unitsTotal
-        unitsAvailable
-        unitsSold
         featured
         hidden
         price {
@@ -56,6 +52,21 @@ export default {
           url
           urlExpanded
           contentType
+        }
+        ... on UnitListing {
+          multiUnit
+          unitsTotal
+          unitsAvailable
+          unitsSold
+        }
+        ... on FractionalListing {
+          weekendPrice {
+            amount
+            currency
+          }
+          booked
+          customPricing
+          unavailable
         }
       }
     `

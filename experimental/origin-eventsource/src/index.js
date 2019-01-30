@@ -83,6 +83,7 @@ class OriginEventSource {
       data = await get(this.ipfsGateway, ipfsHash)
       data = pick(
         data,
+        'listingType',
         'title',
         'description',
         'currencyId',
@@ -92,7 +93,12 @@ class OriginEventSource {
         'media',
         'unitsTotal',
         'commission',
-        'commissionPerUnit'
+        'commissionPerUnit',
+
+        'weekendPrice',
+        'booked',
+        'unavailable',
+        'customPricing',
       )
     } catch (e) {
       return null
@@ -146,6 +152,8 @@ class OriginEventSource {
 
     this.listingCache[cacheKey] = await this.withOffers(listingId, {
       ...data,
+      __typename:
+        data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
       id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
