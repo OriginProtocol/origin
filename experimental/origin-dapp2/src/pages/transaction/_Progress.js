@@ -11,7 +11,7 @@ import EventTick from './_EventTick'
 import StarRating from 'components/StarRating'
 import SendMessage from 'components/SendMessage'
 
-const TransactionProgress = ({ offer, wallet }) => {
+const TransactionProgress = ({ offer, wallet, refetch }) => {
   if (offer.status === 4) {
     return <Finalized offer={offer} />
   }
@@ -31,11 +31,11 @@ const TransactionProgress = ({ offer, wallet }) => {
         return <OfferWithdrawn party="seller" offer={offer} />
       }
     } else {
-      return <AcceptOrReject offer={offer} />
+      return <AcceptOrReject offer={offer} refetch={refetch} />
     }
   }
   if (offer.status === 2) {
-    return <ReviewAndFinalize offer={offer} />
+    return <ReviewAndFinalize offer={offer} refetch={refetch} />
   } else if (offer.status === 0) {
     if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
       return <OfferRejected party="buyer" offer={offer} />
@@ -43,22 +43,30 @@ const TransactionProgress = ({ offer, wallet }) => {
       return <OfferWithdrawn party="buyer" offer={offer} />
     }
   } else if (offer.listing.__typename === 'FractionalListing') {
-    return <WaitForSeller offer={offer} />
+    return <WaitForSeller offer={offer} refetch={refetch} />
   } else {
-    return <MessageSeller offer={offer} />
+    return <MessageSeller offer={offer} refetch={refetch} />
   }
 }
 
-const AcceptOrReject = ({ offer }) => (
+const AcceptOrReject = ({ offer, refetch }) => (
   <div className="transaction-progress">
     <h4>Next Step:</h4>
     <div className="next-step">Accept or Reject Offer</div>
     <div className="help">Click the appropriate button</div>
     <div>
-      <RejectOffer offer={offer} className="btn btn-outline-danger">
+      <RejectOffer
+        offer={offer}
+        className="btn btn-outline-danger"
+        refetch={refetch}
+      >
         Reject Offer
       </RejectOffer>
-      <AcceptOffer offer={offer} className="btn btn-primary ml-2">
+      <AcceptOffer
+        offer={offer}
+        className="btn btn-primary ml-2"
+        refetch={refetch}
+      >
         Accept Offer
       </AcceptOffer>
     </div>
@@ -102,6 +110,7 @@ class ReviewAndFinalize extends Component {
             rating={this.state.rating}
             review={this.state.review}
             offer={this.props.offer}
+            refetch={this.props.refetch}
             className="btn btn-primary"
           >
             Finalize
@@ -127,7 +136,7 @@ class ReviewAndFinalize extends Component {
   }
 }
 
-const MessageSeller = ({ offer }) => (
+const MessageSeller = ({ offer, refetch }) => (
   <div className="transaction-progress">
     <h4>Next Step</h4>
     <div className="next-step">Give your shipping address to seller</div>
@@ -135,7 +144,7 @@ const MessageSeller = ({ offer }) => (
     <SendMessage to={offer.listing.seller.id} className="btn btn-link">
       Message Seller &rsaquo;
     </SendMessage>
-    <WithdrawOffer offer={offer} />
+    <WithdrawOffer offer={offer} refetch={refetch} />
     <div className="stages">
       <EventTick className="active" event={offer.createdEvent}>
         Offer Placed
@@ -146,12 +155,12 @@ const MessageSeller = ({ offer }) => (
   </div>
 )
 
-const WaitForSeller = ({ offer }) => (
+const WaitForSeller = ({ offer, refetch }) => (
   <div className="transaction-progress">
     <h4>Next Step</h4>
     <div className="next-step">Wait for seller</div>
     <div className="help">The seller will review your booking</div>
-    <WithdrawOffer offer={offer} />
+    <WithdrawOffer offer={offer} refetch={refetch} />
     <div className="stages">
       <EventTick className="active" event={offer.createdEvent}>
         Offer Placed

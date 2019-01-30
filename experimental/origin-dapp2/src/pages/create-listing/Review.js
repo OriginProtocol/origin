@@ -132,6 +132,7 @@ class Review extends Component {
                 listingId={this.props.listingId}
                 listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
+                refetch={this.props.refetch}
                 className="btn btn-primary"
                 children="Done"
               />
