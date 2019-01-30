@@ -166,14 +166,15 @@ class ListingCreate extends Component {
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
     if (this.props.listingId) {
       this.props.storeWeb3Intent('edit a listing')
-
       try {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
         const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
-
         this.ensureUserIsSeller(listing.seller)
-        const state = {
+        // tail on / to understand what is the actual category | subCategory
+        // dappSchemaId: properties.dappSchemaId.const
+        listing.dappSchemaId = listing.dappSchemaId.substring(listing.dappSchemaId.lastIndexOf('/')+1)
+        const localState = {
           formListing: {
             formData: {
               boostLimit: listing.totalBoostValue,
@@ -181,34 +182,34 @@ class ListingCreate extends Component {
             }
           },
           selectedSchemaId: listing.dappSchemaId,
+          dappSchemaId : listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
-        }
-
+        };
         if (listing.pictures.length) {
           const pictures = await getDataURIsFromImgURLs(listing.pictures)
-          this.setState({
-            ...state,
-            formListing: {
-              formData: { ...listing, pictures }
+          localState.formListing = {
+            formData: {
+              ...listing,
+              pictures,
             }
-          })
-          this.renderDetailsForm(listing.schema)
-          this.setState({ step: this.STEP.DETAILS })
-        } else {
-          this.setState(state)
-          this.renderDetailsForm(listing.schema)
-          this.setState({ step: this.STEP.DETAILS })
+          }
         }
-
+        await this.setState(localState);
+        this.handleCategorySelection(listing.category)
+        this.renderDetailsForm(listing.schema)
+        this.setState(prevState => ({
+          formOriginalData : {
+            ...prevState.formListing.formData,
+            dappSchemaId : prevState.dappSchemaId.substring(prevState.dappSchemaId.lastIndexOf('/')+1)
+          },
+          step: this.STEP.DETAILS
+        }));
       } catch (error) {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
-    } else if (
-      web3.currentProvider.isOrigin ||
-      (this.props.messagingRequired && !this.props.messagingEnabled)
-    ) {
+    } else if (web3.currentProvider.isOrigin || !this.props.messagingEnabled) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
       }
@@ -534,16 +535,65 @@ class ListingCreate extends Component {
   }
 
   onFormDataChange({ formData }) {
-  const pictures = picURIsOnly(formData.pictures)
+    const localFormData = { ...formData }
+    //(currently comming with domain before actual schema and validating schema.const when next step )
+    // console.log(localFormData.price)
+    // console.log(this.state.formOriginalData.price)
+    // delete localFormData.pictures;
+    // delete localFormData.pictures;
+    const changes = []
+    if (this.state.formOriginalData) {
+      localFormData.dappSchemaId = localFormData.dappSchemaId.substring(localFormData.dappSchemaId.lastIndexOf('/') + 1)
+      const formOriginalData = this.state.formOriginalData
+      const deepCompare = (val, compare, parentNode = true) => {
+        // if current property is an array of same size, convert array to Object(JSON);
+        if (Array.isArray(val)) {
+          if (val.length !== compare.length) return false;
+          const localValue1 = { ...val }
+          const localValue2 = { ...compare }
+          return deepCompare(localValue1, localValue2, false)
+        }
+        // if current property is an Object,  check if keys length is equal, if not, return false,
+        // iterate over each property and check if val[key] is equal compare[key]
+        // isObject
+        if (typeof val === 'object' && !Array.isArray(val)) {
+          const valKeys = Object.keys(val)
+          let isEqual = true
+          for (let i = 0; i < valKeys.length; i++) {
+            const key = valKeys[i];
+            if (!deepCompare(val[key], compare[key], false)) {
+              isEqual = false
+              // if it is parentNode ( we might want to store only tree's parentNode to ensure we can retrieve that later on review session)
+              if (parentNode) {
+                changes.push({
+                  keyName: key,
+                  currentValue : val[key],
+                  originValue : compare[key]
+                })
+              }
+            }
+          }
+          return isEqual
+        } else {
+          //I'm not applying referenced comparision cause we just receive primitives (isObject side-effect) here and price has different data Types.
+          return val == compare
+        }
+      }
 
+      if (!deepCompare(localFormData, formOriginalData)) {
+        this.setState({ originalForm : false })
+      }
+      else this.setState({ originalForm : true })
+    }
+    // console.log('STATE ON FORM DATA CHANGE', this.state)
+     console.log('CHANGES', changes)
+    localFormData.pictures = picURIsOnly(formData.pictures)
+    //currently comming with domain before actual schema and validating schema.const when next step
+    localFormData.dappSchemaId = formData.dappSchemaId
     this.setState({
       formListing: {
         ...this.state.formListing,
-        formData: {
-          ...this.state.formListing.formData,
-          ...formData,
-          pictures
-        }
+        formData: localFormData
       }
     })
   }
@@ -1534,6 +1584,7 @@ class ListingCreate extends Component {
                     onClick={() => this.onSubmitListing(formListing)}
                     ga-category="create_listing"
                     ga-label="review_step_done"
+                    disabled={this.state.originalForm && this.state.originalForm}
                   >
                     <FormattedMessage
                       id={'listing-create.doneButtonLabel'}
