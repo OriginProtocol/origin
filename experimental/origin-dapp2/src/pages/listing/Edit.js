@@ -64,7 +64,9 @@ class EditListing extends Component {
           />
           <Route
             path="/listings/:listingID/edit/review"
-            render={() => <Review {...stepProps} />}
+            render={() => (
+              <Review {...stepProps} refetch={this.props.refetch} />
+            )}
           />
           <Route render={() => <Step1 {...stepProps} />} />
         </Switch>
