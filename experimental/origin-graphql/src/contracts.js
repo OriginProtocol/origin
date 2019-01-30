@@ -145,6 +145,13 @@ function applyWeb3Hack(web3Instance) {
 
 export function setNetwork(net, customConfig) {
   let config = JSON.parse(JSON.stringify(Configs[net]))
+  if (window.localStorage.customConfig && window.localStorage.customConfig !== 'undefined') {
+    try {
+      config = { ...config, ...JSON.parse(window.localStorage.customConfig) }
+    } catch (error) {
+      console.log('Could not load custom config: ', error)
+    }
+  }
   if (!config) {
     return
   }

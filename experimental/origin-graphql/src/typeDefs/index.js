@@ -5,7 +5,6 @@ import Identity from './Identity'
 import Attestations from './Attestations'
 import Messaging from './Messaging'
 import Notifications from './Notifications'
-import Config from './Config'
 
 export default [
   ...Object.values(Common),
@@ -14,6 +13,5 @@ export default [
   Identity,
   Messaging,
   Notifications,
-  Attestations,
-  Config
+  Attestations
 ]

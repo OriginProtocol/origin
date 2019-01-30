@@ -44,8 +44,6 @@ import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 
-import updateConfig from './config/updateConfig'
-
 export default {
   addAffiliate,
   acceptOffer,
@@ -87,6 +85,5 @@ export default {
   verifyTwitter,
   generateAirbnbCode,
   verifyAirbnbCode,
-  updateConfig,
   refetch: () => true
 }
