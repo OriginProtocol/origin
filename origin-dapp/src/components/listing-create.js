@@ -182,10 +182,10 @@ class ListingCreate extends Component {
             }
           },
           selectedSchemaId: listing.dappSchemaId,
-          dappSchemaId : listing.dappSchemaId,
+          dappSchemaId: listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
-        };
+        }
         if (listing.pictures.length) {
           const pictures = await getDataURIsFromImgURLs(listing.pictures)
           localState.formListing = {
@@ -195,16 +195,16 @@ class ListingCreate extends Component {
             }
           }
         }
-        await this.setState(localState);
+        await this.setState(localState)
         this.handleCategorySelection(listing.category)
         this.renderDetailsForm(listing.schema)
         this.setState(prevState => ({
-          formOriginalData : {
+          formOriginalData: {
             ...prevState.formListing.formData,
-            dappSchemaId : prevState.dappSchemaId.substring(prevState.dappSchemaId.lastIndexOf('/')+1)
+            dappSchemaId: prevState.dappSchemaId.substring(prevState.dappSchemaId.lastIndexOf('/')+1)
           },
           step: this.STEP.DETAILS
-        }));
+        }))
       } catch (error) {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
@@ -548,7 +548,7 @@ class ListingCreate extends Component {
       const deepCompare = (val, compare, parentNode = true) => {
         // if current property is an array of same size, convert array to Object(JSON);
         if (Array.isArray(val)) {
-          if (val.length !== compare.length) return false;
+          if (val.length !== compare.length) return false
           const localValue1 = { ...val }
           const localValue2 = { ...compare }
           return deepCompare(localValue1, localValue2, false)
@@ -560,15 +560,15 @@ class ListingCreate extends Component {
           const valKeys = Object.keys(val)
           let isEqual = true
           for (let i = 0; i < valKeys.length; i++) {
-            const key = valKeys[i];
+            const key = valKeys[i]
             if (!deepCompare(val[key], compare[key], false)) {
               isEqual = false
               // if it is parentNode ( we might want to store only tree's parentNode to ensure we can retrieve that later on review session)
               if (parentNode) {
                 changes.push({
                   keyName: key,
-                  currentValue : val[key],
-                  originValue : compare[key]
+                  currentValue: val[key],
+                  originValue: compare[key]
                 })
               }
             }
@@ -581,9 +581,9 @@ class ListingCreate extends Component {
       }
 
       if (!deepCompare(localFormData, formOriginalData)) {
-        this.setState({ originalForm : false })
+        this.setState({ originalForm: false })
       }
-      else this.setState({ originalForm : true })
+      else this.setState({ originalForm: true })
     }
     // console.log('STATE ON FORM DATA CHANGE', this.state)
      console.log('CHANGES', changes)
