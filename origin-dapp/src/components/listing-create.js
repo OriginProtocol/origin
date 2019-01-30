@@ -590,12 +590,12 @@ class ListingCreate extends Component {
     localFormData.pictures = picURIsOnly(formData.pictures)
     //currently comming with domain before actual schema and validating schema.const when next step
     localFormData.dappSchemaId = formData.dappSchemaId
-    this.setState({
+    this.setState((prevState) => ({
       formListing: {
-        ...this.state.formListing,
+        ...prevState.formListing,
         formData: localFormData
       }
-    })
+    }))
   }
 
   checkOgnBalance() {
