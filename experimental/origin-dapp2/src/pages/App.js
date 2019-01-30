@@ -19,6 +19,7 @@ import CreateListing from './create-listing/CreateListing'
 import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
+import Configuration from 'components/Configuration'
 
 class App extends Component {
   state = { hasError: false }
@@ -49,7 +50,7 @@ class App extends Component {
       )
     }
     return (
-      <>
+      <Configuration>
         <BetaBanner />
         <BetaModal />
         <Nav />
@@ -70,7 +71,7 @@ class App extends Component {
           </Switch>
         </main>
         <Footer />
-      </>
+      </Configuration>
     )
   }
 }
