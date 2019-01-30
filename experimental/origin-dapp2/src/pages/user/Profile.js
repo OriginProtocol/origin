@@ -10,6 +10,7 @@ import withIdentity from 'hoc/withIdentity'
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
+import PageTitle from 'components/PageTitle'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -72,6 +73,7 @@ class UserProfile extends Component {
 
     return (
       <div className="container profile-edit">
+        <PageTitle>Edit your profile</PageTitle>
         <div className="row">
           <div className="col-md-8">
             <div className="profile d-flex">

@@ -4,6 +4,7 @@ import pick from 'lodash/pick'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
+import PageTitle from 'components/PageTitle'
 
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
@@ -67,6 +68,7 @@ class Listings extends Component {
                 >
                   <>
                     <h5 className="listings-count">{`${totalCount} Listings`}</h5>
+                    <PageTitle>Listings</PageTitle>
 
                     <ListingsGallery
                       listings={nodes}

@@ -18,7 +18,7 @@ class Availability extends Component {
       available: true,
       range: '',
       calculator: new AvailabilityCalculator({
-        weekdayPrice: props.listing.weekdayPrice,
+        weekdayPrice: props.listing.price,
         weekendPrice: props.listing.weekendPrice,
         booked: props.listing.booked,
         unavailable: props.listing.unavailable,
@@ -62,6 +62,7 @@ class Availability extends Component {
                   range={this.state.range}
                   availability={this.state.calculator}
                   onChange={state => this.setState(state)}
+                  showBooked={true}
                 />
 
                 <div className="actions">
