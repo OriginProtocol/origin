@@ -1,5 +1,5 @@
 const db = require('../models')
-const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
+const { GrowthEventTypes, GrowthEventStatuses } = require('../enums')
 
 // Upper cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
@@ -15,15 +15,30 @@ class Reward {
 }
 
 
+/**
+ * TODO: include logic for
+ *  - start_date: Date at which campaign starts
+ *  - end_date: Date at which campaign ends assuming cap not exhausted
+ *  - cap
+ *  - cap_used
+ *
+ */
 class Campaign {
   constructor(campaign, config) {
     this.campaign = campaign
     this.config = config
 
+    if (!this.config.numLevels ||
+      !Number.isInteger(this.config.numLevels) ||
+      this.config.numLevels <= 0) {
+      throw new Error(`Campaign ${campaign.id}: config has invalid or missing numLevels field.`)
+    }
+    this.numLevels = this.config.numLevels
+
     this.levels = {}
     for (let i = 0; i < this.config.numLevels; i++) {
       if (!this.config.levels[i]) {
-        throw new Error(`Campaign ${this.campaign.id} missing level ${i}`)
+        throw new Error(`Campaign ${this.campaign.id}: config with missing level ${i}`)
       }
       this.levels[i] = new Level(this.campaign.id, i, this.config.levels[i])
     }
@@ -31,6 +46,7 @@ class Campaign {
 
   getEvents(ethAddress) {
     const whereClause = { ethAddress: ethAddress.toLowerCase() }
+    // TODO: filter out events out of the campaign time window.
     const events = db.GrowthEvent.findAll({
         where: whereClause,
         order: [ ['id', 'ASC'] ],
@@ -88,7 +104,7 @@ class Level {
   getRewards(ethAddress, events) {
     const rewards = {}
     this.rules.forEach(rule => {
-      rewards[rule.name] = rule.getRewards(ethAddress, events)
+      rewards[rule.id] = rule.getRewards(ethAddress, events)
     })
     return rewards
   }
@@ -105,7 +121,7 @@ function ruleFactory(campaignId, levelId, config) {
       rule = new MultiEventsRule(campaignId, levelId, config)
       break
     default:
-      throw new Error(`Unexpected rule className ${config.class}`)
+      throw new Error(`Unexpected or missing rule class ${config.class}`)
   }
   return rule
 }
@@ -117,11 +133,6 @@ class BaseRule {
     this.levelId = levelId
     this.ruleId = config.id
     this.config = config.config
-
-    if (!this.config.class) {
-      throw new Error(`Rule at Level ${levelId} is missing class name`)
-    }
-    this.class = config.class
 
     if (!this.config.limit) {
       throw new Error(`Rule ${this.ruleId} at Level ${levelId} is missing limit`)
@@ -188,29 +199,31 @@ class SingleEventRule extends BaseRule {
   constructor(campaignId, levelId, config) {
     super(campaignId, levelId, config)
 
-    if (!config.event) {
+    const event = this.config.event
+    if (!event) {
       throw new Error(`Rule ${this.ruleId} at Level ${levelId} is missing event field`)
-    } else if (!GrowthEventTypes.includes(config.event)) {
-      throw new Error(`Rule ${this.ruleId} at Level ${levelId} has unknown event ${config.event}`)
+    } else if (!GrowthEventTypes.includes(event)) {
+      throw new Error(`Rule ${this.ruleId} at Level ${levelId} has unknown event ${event}`)
     }
-    this.events = [config.event]
+    this.events = [event]
   }
 }
 
-
+// FIXME: implement numRequired
 class MultiEventsRule extends BaseRule {
   constructor(campaignId, levelId, config) {
     super(campaignId, levelId, config)
 
-    if (!config.events) {
+    const events = this.config.events
+    if (!this.config.events) {
       throw new Error(`Rule ${this.ruleId} at Level ${levelId} is missing events field`)
     }
-    config.events.forEach(event => {
+    events.forEach(event => {
       if (!GrowthEventTypes.includes(event)) {
         throw new Error(`Rule ${this.ruleId} at Level ${levelId} has unknown event ${event}`)
       }
     })
-    this.events = config.events
+    this.events = events
   }
 }
 

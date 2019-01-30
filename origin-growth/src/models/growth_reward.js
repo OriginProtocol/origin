@@ -1,9 +1,11 @@
 'use strict'
 
+const { GrowthRewardStatuses } = require('../enums')
+
 module.exports = (sequelize, DataTypes) => {
   const GrowthReward = sequelize.define('GrowthReward', {
-    id: DataTypes.INTEGER,
-    status: DataTypes.ENUM,
+    id: { type: DataTypes.INTEGER, primaryKey: true },
+    status: DataTypes.ENUM(GrowthRewardStatuses),
     ethAddress: DataTypes.STRING,
     campaignId: DataTypes.INTEGER,
     campaignLevel: DataTypes.INTEGER,
