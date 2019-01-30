@@ -25,6 +25,8 @@ COPY ./experimental/origin-validator/package*.json ./experimental/origin-validat
 COPY ./experimental/origin-messaging-client/package*.json ./experimental/origin-messaging-client/
 COPY ./experimental/origin-eventsource/package*.json ./experimental/origin-eventsource/
 COPY ./experimental/origin-services/package*.json ./experimental/origin-services/
+COPY ./experimental/origin-admin/package*.json ./experimental/origin-admin/
+COPY ./experimental/origin-dapp2/package*.json ./experimental/origin-dapp2/
 
 # Complete contracts source needs to be available so that `truffle compile contracts`
 # which is calleed by the prepare script can succeed
@@ -42,6 +44,8 @@ COPY ./experimental/origin-validator ./experimental/origin-validator
 COPY ./experimental/origin-eventsource ./experimental/origin-eventsource
 COPY ./experimental/origin-messaging-client ./experimental/origin-messaging-client
 COPY ./experimental/origin-services ./experimental/origin-services
+COPY ./experimental/origin-admin ./experimental/origin-admin
+COPY ./experimental/origin-dapp2 ./experimental/origin-dapp2
 COPY ./origin-growth ./origin-growth
 COPY ./origin-ipfs-proxy ./origin-ipfs-proxy
 COPY ./origin-js ./origin-js

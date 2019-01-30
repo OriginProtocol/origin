@@ -3,7 +3,10 @@ version: "3"
 services:
   origin-dapp2:
     container_name: origin-dapp2
-    image: origin
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    image: origin-depp2
     volumes:
       # Include origin-contracts build files so the DApp has access to the
       # address of the contracts on the local blockchain
