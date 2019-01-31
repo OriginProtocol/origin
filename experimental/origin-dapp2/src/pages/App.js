@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
 
 import BetaBanner from './_BetaBanner'
@@ -71,13 +71,13 @@ class App extends Component {
             <Route component={Listings} />
           </Switch>
         </main>
-        <Footer />
+        <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
       </>
     )
   }
 }
 
-export default App
+export default withRouter(App)
 
 require('react-styl')(`
   .app-error
