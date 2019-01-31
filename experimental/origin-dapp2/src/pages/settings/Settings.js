@@ -5,6 +5,8 @@ import pick from 'lodash/pick'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
+import ConfigQuery from 'queries/Config'
+
 
 const configurableFields = [
   'bridge',
@@ -53,7 +55,11 @@ class Settings extends Component {
     return (
       <Mutation
         mutation={SetNetwork}
-        refetchQueries={this.props.configRefetch}
+        refetchQueries={() => {
+          return [{
+            query: ConfigQuery
+          }]
+        }}
       >
        {setNetwork => (
          <div className="container settings">
