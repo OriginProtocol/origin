@@ -72,21 +72,15 @@ describe('Growth Engine rules', () => {
       expect(level).to.equal(0)
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      const expectedRewards = {
-        0: {
-          'PreRequisite': [
-            {
-              campaignId: 1,
-              levelId: 0,
-              ruleId: 'PreRequisite',
-              money: {
-                currency: 'OGN',
-                amount: 1
-              }
-            }
-          ]
-        }
-      }
+      const expectedRewards = [{
+          campaignId: 1,
+          levelId: 0,
+          ruleId: 'PreRequisite',
+          money: {
+            currency: 'OGN',
+            amount: 1
+          }
+        }]
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
@@ -114,11 +108,7 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      const expectedRewards = {
-        0: {
-          'PreRequisite': []
-        }
-      }
+      const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
@@ -133,30 +123,26 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      const expectedRewards = {
-        0: {
-          'PreRequisite': [
-            {
-              campaignId: 1,
-              levelId: 0,
-              ruleId: 'PreRequisite',
-              money: {
-                currency: 'OGN',
-                amount: 1
-              }
-            },
-            {
-              campaignId: 1,
-              levelId: 0,
-              ruleId: 'PreRequisite',
-              money: {
-                currency: 'OGN',
-                amount: 1
-              }
-            }
-          ]
+      const expectedRewards = [
+        {
+          campaignId: 1,
+          levelId: 0,
+          ruleId: 'PreRequisite',
+          money: {
+            currency: 'OGN',
+            amount: 1
+          }
+        },
+        {
+          campaignId: 1,
+          levelId: 0,
+          ruleId: 'PreRequisite',
+          money: {
+            currency: 'OGN',
+            amount: 1
+          }
         }
-      }
+      ]
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
@@ -236,21 +222,15 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      const expectedRewards = {
-        0: {
-          'TwoAttestations': [
-            {
-              campaignId: 1,
-              levelId: 0,
-              ruleId: 'TwoAttestations',
-              money: {
-                currency: 'OGN',
-                amount: 10
-              }
-            }
-          ]
+      const expectedRewards = [{
+        campaignId: 1,
+        levelId: 0,
+        ruleId: 'TwoAttestations',
+        money: {
+          currency: 'OGN',
+          amount: 10
         }
-      }
+      }]
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
@@ -266,11 +246,7 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      const expectedRewards = {
-        0: {
-          'TwoAttestations': []
-        }
-      }
+      const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
@@ -298,11 +274,7 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      const expectedRewards = {
-        0: {
-          'TwoAttestations': []
-        }
-      }
+      const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
@@ -337,21 +309,15 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      const expectedRewards = {
-        0: {
-          'TwoAttestations': [
-            {
-              campaignId: 1,
-              levelId: 0,
-              ruleId: 'TwoAttestations',
-              money: {
-                currency: 'OGN',
-                amount: 10
-              }
-            }
-          ]
+      const expectedRewards = [{
+        campaignId: 1,
+        levelId: 0,
+        ruleId: 'TwoAttestations',
+        money: {
+          currency: 'OGN',
+          amount: 10
         }
-      }
+      }]
       expect(rewards).to.deep.equal(expectedRewards)
     })
   })
@@ -464,11 +430,7 @@ describe('Growth Engine rules', () => {
       expect(this.campaign.levels[2].rules.length).to.equal(3)
 
       this.ethAddress = '0x123'
-      this.expectedRewards = {
-        0: {
-          'PreRequisite': []
-        }
-      }
+      this.expectedRewards = []
     })
 
     it(`Should start at level 0`, async () => {
@@ -500,7 +462,7 @@ describe('Growth Engine rules', () => {
       }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      this.expectedRewards[0]['PreRequisite'] = [{
+      this.expectedRewards.push({
         campaignId: 1,
         levelId: 0,
         ruleId: 'PreRequisite',
@@ -508,8 +470,7 @@ describe('Growth Engine rules', () => {
           currency: 'OGN',
           amount: 5
         }
-      }]
-      this.expectedRewards[1] = { TwoAttestations: [] }
+      })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
       const level = await this.campaign.getCurrentLevel(this.ethAddress)
@@ -534,7 +495,7 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return this.events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      this.expectedRewards[1]['TwoAttestations'] = [{
+      this.expectedRewards.push({
         campaignId: 1,
         levelId: 1,
         ruleId: 'TwoAttestations',
@@ -542,15 +503,37 @@ describe('Growth Engine rules', () => {
           currency: 'OGN',
           amount: 10
         }
-      }]
-      this.expectedRewards[2] = {
-        'ListingCreation': [],
-        'ListingPurchase': [],
-        'Referral': []
-      }
+      })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
       const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(2)
+    })
+
+    it(`Should remain on level 2 when referees sign up`, async () => {
+      this.events.push(
+        {
+          id: 9,
+          type: GrowthEventTypes.RefereeSignedUp,
+          status: GrowthEventStatuses.Verified,
+          ethAddress: this.ethAddress
+        }
+      )
+      this.campaign.getEvents = () => { return this.events }
+
+      const rewards = await  this.campaign.getRewards(this.ethAddress)
+      this.expectedRewards.push({
+        campaignId: 1,
+        levelId: 2,
+        ruleId: 'Referral',
+        money: {
+          currency: 'OGN',
+          amount: 10
+        }
+      })
+      expect(rewards).to.deep.equal(this.expectedRewards)
+
+      const level = await  this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
@@ -566,7 +549,7 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return this.events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      this.expectedRewards[2]['ListingCreation'].push({
+      this.expectedRewards.push({
         campaignId: 1,
         levelId: 2,
         ruleId: 'ListingCreation',
@@ -593,7 +576,7 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return this.events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      this.expectedRewards[2]['ListingPurchase'].push({
+      this.expectedRewards.push({
         campaignId: 1,
         levelId: 2,
         ruleId: 'ListingPurchase',
@@ -605,33 +588,6 @@ describe('Growth Engine rules', () => {
       expect(rewards).to.deep.equal(this.expectedRewards)
 
       const level = await this.campaign.getCurrentLevel(this.ethAddress)
-      expect(level).to.equal(2)
-    })
-
-    it(`Should remain on level 2 when referees sign up`, async () => {
-      this.events.push(
-        {
-          id: 9,
-          type: GrowthEventTypes.RefereeSignedUp,
-          status: GrowthEventStatuses.Verified,
-          ethAddress: this.ethAddress
-        }
-      )
-      this.campaign.getEvents = () => { return this.events }
-
-      const rewards = await  this.campaign.getRewards(this.ethAddress)
-      this.expectedRewards[2]['Referral'].push({
-        campaignId: 1,
-        levelId: 2,
-        ruleId: 'Referral',
-        money: {
-          currency: 'OGN',
-          amount: 10
-        }
-      })
-      expect(rewards).to.deep.equal(this.expectedRewards)
-
-      const level = await  this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
@@ -683,7 +639,21 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return this.events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      this.expectedRewards[2]['Referral'] = Array(2).fill({
+      this.expectedRewards = [
+        {
+          campaignId: 1,
+          levelId: 0,
+          ruleId: 'PreRequisite',
+          money: { amount: 5, currency: 'OGN' }
+        },
+        {
+          campaignId: 1,
+          levelId: 1,
+          ruleId: 'TwoAttestations',
+          money: { amount: 10, currency: 'OGN' }
+        }
+      ]
+      this.expectedRewards.push(...Array(2).fill({
         campaignId: 1,
         levelId: 2,
         ruleId: 'Referral',
@@ -691,8 +661,8 @@ describe('Growth Engine rules', () => {
           currency: 'OGN',
           amount: 10
         }
-      })
-      this.expectedRewards[2]['ListingCreation'] = Array(1).fill({
+      }))
+      this.expectedRewards.push({
         campaignId: 1,
         levelId: 2,
         ruleId: 'ListingCreation',
@@ -701,7 +671,7 @@ describe('Growth Engine rules', () => {
           amount: 5
         }
       })
-      this.expectedRewards[2]['ListingPurchase'] = Array(3).fill({
+      this.expectedRewards.push(...Array(3).fill({
         campaignId: 1,
         levelId: 2,
         ruleId: 'ListingPurchase',
@@ -709,7 +679,7 @@ describe('Growth Engine rules', () => {
           currency: 'OGN',
           amount: 100
         }
-      })
+      }))
       expect(rewards).to.deep.equal(this.expectedRewards)
 
       const level = await this.campaign.getCurrentLevel(this.ethAddress)
@@ -803,24 +773,15 @@ describe('Growth Engine rules', () => {
 
     it(`Should use events from campaign period for reward calculation`, async () => {
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      const expectedRewards = {
-        0: {
-          'PreRequisite': []
-        },
-        1: {
-          'Referral': [
-            {
-              campaignId: 1,
-              levelId: 1,
-              ruleId: 'Referral',
-              money: {
-                currency: 'OGN',
-                amount: 1
-              }
-            }
-          ]
+      const expectedRewards = [{
+        campaignId: 1,
+        levelId: 1,
+        ruleId: 'Referral',
+        money: {
+          currency: 'OGN',
+          amount: 1
         }
-      }
+      }]
       expect(rewards).to.deep.equal(expectedRewards)
     })
   })

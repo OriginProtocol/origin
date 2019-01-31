@@ -43,7 +43,7 @@ class Campaign {
    * @param {string} ethAddress - User's account.
    * @param {boolean} duringCampaign - Restricts query to events that occurred
    *  during the campaign vs since user signed up.
-   * @returns {Promise<List<models.GrowthEvent>>}
+   * @returns {Promise<Array<models.GrowthEvent>>}
    */
   async getEvents(ethAddress, duringCampaign) {
     const whereClause = {
@@ -86,28 +86,14 @@ class Campaign {
    * Only considers events that occurred during the campaign.
    *
    * @param {string} ethAddress - User's account.
-   * @returns {Promise<Object>} - Dictionary with rewards grouped first by level and second by rule.
-   * Example:
-   *  {
-   *    0: [
-   *      'PreRequesite': [ <List of Reward objects> ]
-   *    ],
-   *    1: [
-   *      'TwoAttestations': [ <List of Reward objects> ]
-   *    ],
-   *    2: [
-   *      'Referral': [ <List of Reward objects> ],
-   *      'ListingCreation': [ <List of Reward objects> ],
-   *      'ListingPurchase': [ <List of Reward objects> ]
-   *    ]
-   *  }
+   * @returns {Promise<Array<Reward>>} - List of rewards.
    */
   async getRewards(ethAddress) {
-    const rewards = {}
+    const rewards = []
     const events = await this.getEvents(ethAddress, true)
     const currentLevel = await this.getCurrentLevel(ethAddress)
     for (let i = 0; i <= currentLevel; i++) {
-      rewards[i] = this.levels[i].getRewards(ethAddress, events)
+      rewards.push(...this.levels[i].getRewards(ethAddress, events))
     }
     return rewards
   }
@@ -120,11 +106,7 @@ class Level {
     this.id = levelId
     this.config = config
 
-    this.rules =[]
-    config.rules.forEach(ruleConfig => {
-      const rule = ruleFactory(campaignId, levelId, ruleConfig)
-      this.rules.push(rule)
-    })
+    this.rules = config.rules.map(ruleConfig => ruleFactory(campaignId, levelId, ruleConfig))
   }
 
   qualifyForNextLevel(ethAddress, events) {
@@ -138,9 +120,9 @@ class Level {
   }
 
   getRewards(ethAddress, events) {
-    const rewards = {}
+    const rewards = []
     this.rules.forEach(rule => {
-      rewards[rule.id] = rule.getRewards(ethAddress, events)
+      rewards.push(...rule.getRewards(ethAddress, events))
     })
     return rewards
   }
@@ -193,7 +175,7 @@ class BaseRule {
   /**
    * Calculates if the user qualifies for the next level.
    * @param {string} ethAddress - User's account.
-   * @param {List<models.GrowthEvent>} events
+   * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
   qualifyForNextLevel(ethAddress, events) {
@@ -209,7 +191,7 @@ class BaseRule {
   /**
    * Counts events, grouped by types.
    * @param {string} ethAddress - User's account.
-   * @param {List<models.GrowthEvent>} events
+   * @param {Array<models.GrowthEvent>} events
    * @returns {Dict{string:number}} - Dict with event type as key and count as value.
    */
   _tallyEvents(ethAddress, eventTypes, events) {
@@ -260,29 +242,38 @@ class SingleEventRule extends BaseRule {
   /**
    * Returns number of rewards user qualifies for, taking into account the rule's limit.
    * @param {string} ethAddress - User's account.
-   * @param {List<models.GrowthEvent>} events
+   * @param {Array<models.GrowthEvent>} events
    * @returns {number}
    * @private
    */
   _numRewards(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-    return Object.keys(tally).length ? Math.min(...Object.values(tally), this.limit) : 0
+    // SingleEventRule has at most 1 event in tally count.
+    return Object.keys(tally).length == 1 ? Math.min(Object.values(tally)[0], this.limit) : 0
   }
 
   /**
    * Calculates if the rule passes.
    * @param {string} ethAddress - User's account.
-   * @param {List<models.GrowthEvent>} events
+   * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
   evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-    return (Object.keys(tally).length === 1)
+    return (Object.keys(tally).length === 1 && Object.values(tally)[0] > 0)
   }
 }
 
 /**
  * A rule that requires N events out of a list of event types.
+ *
+ * Important: Rule evaluation considers events since user joined the platform
+ * but reward calculation only considers events that occurred during the campaign period.
+ * As a result, a rule may pass but no reward be granted. As an example:
+ *   - assume numEventsRequired = 3
+ *   - events E1, E2 occur during campaign C1
+ *   - event E3 occurs during campaign C2
+ *   => rule passes in campaign C2 but NO reward is granted.
  */
 class MultiEventsRule extends BaseRule {
   constructor(campaignId, levelId, config) {
@@ -309,7 +300,7 @@ class MultiEventsRule extends BaseRule {
   /**
    * Returns number of rewards user qualifies for, taking into account the rule's limit.
    * @param {string} ethAddress - User's account.
-   * @param {List<models.GrowthEvent>} events
+   * @param {Array<models.GrowthEvent>} events
    * @returns {number}
    * @private
    */
@@ -342,7 +333,7 @@ class MultiEventsRule extends BaseRule {
   /**
    * Calculates if the rule passes.
    * @param {string} ethAddress - User's account.
-   * @param {List<models.GrowthEvent>} events
+   * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
   evaluate(ethAddress, events) {
