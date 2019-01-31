@@ -25,7 +25,7 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 2,
-                  upgradeCondition: false
+                  nextLevelCondition: false
                 }
               }
             ],
@@ -76,7 +76,7 @@ describe('Growth Engine rules', () => {
           campaignId: 1,
           levelId: 0,
           ruleId: 'PreRequisite',
-          money: {
+          value: {
             currency: 'OGN',
             amount: 1
           }
@@ -128,7 +128,7 @@ describe('Growth Engine rules', () => {
           campaignId: 1,
           levelId: 0,
           ruleId: 'PreRequisite',
-          money: {
+          value: {
             currency: 'OGN',
             amount: 1
           }
@@ -137,7 +137,7 @@ describe('Growth Engine rules', () => {
           campaignId: 1,
           levelId: 0,
           ruleId: 'PreRequisite',
-          money: {
+          value: {
             currency: 'OGN',
             amount: 1
           }
@@ -172,7 +172,7 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 1,
-                  upgradeCondition: true
+                  nextLevelCondition: true
                 }
               }
             ],
@@ -226,7 +226,7 @@ describe('Growth Engine rules', () => {
         campaignId: 1,
         levelId: 0,
         ruleId: 'TwoAttestations',
-        money: {
+        value: {
           currency: 'OGN',
           amount: 10
         }
@@ -313,7 +313,7 @@ describe('Growth Engine rules', () => {
         campaignId: 1,
         levelId: 0,
         ruleId: 'TwoAttestations',
-        money: {
+        value: {
           currency: 'OGN',
           amount: 10
         }
@@ -339,12 +339,8 @@ describe('Growth Engine rules', () => {
                     'EmailAttestationPublished'
                   ],
                   numEventsRequired: 2,
-                  reward: {
-                    amount: 5,
-                    currency: 'OGN'
-                  },
-                  limit: 1,
-                  upgradeCondition: true
+                  reward: null,
+                  nextLevelCondition: true
                 }
               }
             ],
@@ -352,23 +348,70 @@ describe('Growth Engine rules', () => {
           1: {
             rules: [
               {
+                id: 'PhoneAttestation',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'PhoneAttestationPublished',
+                  reward: {
+                    amount: 10,
+                    currency: 'OGN'
+                  },
+                  limit: 1,
+                  nextLevelCondition: false
+                }
+              },
+              {
+                id: 'FacebookAttestation',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'FacebookAttestationPublished',
+                  reward: {
+                    amount: 10,
+                    currency: 'OGN'
+                  },
+                  limit: 1,
+                  nextLevelCondition: false
+                }
+              },
+              {
+                id: 'AirbnbAttestation',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'AirbnbAttestationPublished',
+                  reward: {
+                    amount: 10,
+                    currency: 'OGN'
+                  },
+                  limit: 1,
+                  nextLevelCondition: false
+                }
+              },
+              {
+                id: 'TwitterAttestation',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'TwitterAttestationPublished',
+                  reward: {
+                    amount: 10,
+                    currency: 'OGN'
+                  },
+                  limit: 1,
+                  nextLevelCondition: false
+                }
+              },
+              {
                 id: 'TwoAttestations',
                 class: 'MultiEvents',
                 config: {
                   eventTypes: [
-                    'EmailAttestationPublished',
                     'PhoneAttestationPublished',
                     'FacebookAttestationPublished',
                     'AirbnbAttestationPublished',
                     'TwitterAttestationPublished'
                   ],
                   numEventsRequired: 2,
-                  reward: {
-                    amount: 10,
-                    currency: 'OGN'
-                  },
-                  limit: 1,
-                  upgradeCondition: true
+                  reward: null,
+                  nextLevelCondition: true
                 }
               }
             ],
@@ -384,8 +427,8 @@ describe('Growth Engine rules', () => {
                     amount: 10,
                     currency: 'OGN'
                   },
-                  limit: 2,
-                  upgradeCondition: false
+                  limit: 100,
+                  nextLevelCondition: false
                 }
               },
               {
@@ -397,8 +440,8 @@ describe('Growth Engine rules', () => {
                     amount: 5,
                     currency: 'OGN'
                   },
-                  limit: 1,
-                  upgradeCondition: false
+                  limit: 10,
+                  nextLevelCondition: false
                 }
               },
               {
@@ -407,11 +450,11 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventType: 'ListingPurchased',
                   reward: {
-                    amount: 100,
+                    amount: 5,
                     currency: 'OGN'
                   },
-                  limit: 3,
-                  upgradeCondition: false
+                  limit: 10,
+                  nextLevelCondition: false
                 }
               }
             ],
@@ -425,7 +468,7 @@ describe('Growth Engine rules', () => {
       expect(this.campaign.levels[0]).to.be.an('object')
       expect(this.campaign.levels[0].rules.length).to.equal(1)
       expect(this.campaign.levels[1]).to.be.an('object')
-      expect(this.campaign.levels[1].rules.length).to.equal(1)
+      expect(this.campaign.levels[1].rules.length).to.equal(5)
       expect(this.campaign.levels[2]).to.be.an('object')
       expect(this.campaign.levels[2].rules.length).to.equal(3)
 
@@ -462,16 +505,7 @@ describe('Growth Engine rules', () => {
       }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      this.expectedRewards.push({
-        campaignId: 1,
-        levelId: 0,
-        ruleId: 'PreRequisite',
-        money: {
-          currency: 'OGN',
-          amount: 5
-        }
-      })
-      expect(rewards).to.deep.equal(this.expectedRewards)
+      expect(rewards).to.deep.equal([])
 
       const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(1)
@@ -495,15 +529,26 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => { return this.events }
 
       const rewards = await this.campaign.getRewards(this.ethAddress)
-      this.expectedRewards.push({
-        campaignId: 1,
-        levelId: 1,
-        ruleId: 'TwoAttestations',
-        money: {
-          currency: 'OGN',
-          amount: 10
+      this.expectedRewards.push(
+        {
+          campaignId: 1,
+          levelId: 1,
+          ruleId: 'FacebookAttestation',
+          value: {
+            currency: 'OGN',
+            amount: 10
+          },
+        },
+        {
+          campaignId: 1,
+          levelId: 1,
+          ruleId: 'TwitterAttestation',
+          value: {
+            currency: 'OGN',
+            amount: 10
+          }
         }
-      })
+      )
       expect(rewards).to.deep.equal(this.expectedRewards)
 
       const level = await this.campaign.getCurrentLevel(this.ethAddress)
@@ -526,7 +571,7 @@ describe('Growth Engine rules', () => {
         campaignId: 1,
         levelId: 2,
         ruleId: 'Referral',
-        money: {
+        value: {
           currency: 'OGN',
           amount: 10
         }
@@ -553,7 +598,7 @@ describe('Growth Engine rules', () => {
         campaignId: 1,
         levelId: 2,
         ruleId: 'ListingCreation',
-        money: {
+        value: {
           currency: 'OGN',
           amount: 5
         }
@@ -580,9 +625,9 @@ describe('Growth Engine rules', () => {
         campaignId: 1,
         levelId: 2,
         ruleId: 'ListingPurchase',
-        money: {
+        value: {
           currency: 'OGN',
-          amount: 100
+          amount: 5
         }
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
@@ -593,48 +638,24 @@ describe('Growth Engine rules', () => {
 
     it(`Should honor limits`, async () => {
       this.events.push(
-        {
+        ...Array(200).fill({
           id: 10,
           type: GrowthEventTypes.RefereeSignedUp,
           status: GrowthEventStatuses.Verified,
           ethAddress: this.ethAddress
-        },
-        {
-          id: 11,
-          type: GrowthEventTypes.RefereeSignedUp,
-          status: GrowthEventStatuses.Logged,
-          ethAddress: this.ethAddress
-        },
-        {
+        }),
+        ...Array(200).fill({
           id: 12,
             type: GrowthEventTypes.ListingCreated,
           status: GrowthEventStatuses.Logged,
           ethAddress: this.ethAddress
-        },
-        {
-          id: 13,
-            type: GrowthEventTypes.ListingCreated,
-          status: GrowthEventStatuses.Logged,
-          ethAddress: this.ethAddress
-        },
-        {
-          id: 14,
-            type: GrowthEventTypes.ListingPurchased,
-          status: GrowthEventStatuses.Logged,
-          ethAddress: this.ethAddress
-        },
-        {
-          id: 15,
-            type: GrowthEventTypes.ListingPurchased,
-          status: GrowthEventStatuses.Logged,
-          ethAddress: this.ethAddress
-        },
-        {
+        }),
+        ...Array(200).fill({
           id: 16,
             type: GrowthEventTypes.ListingPurchased,
           status: GrowthEventStatuses.Logged,
           ethAddress: this.ethAddress
-        }
+        })
       )
       this.campaign.getEvents = () => { return this.events }
 
@@ -642,44 +663,44 @@ describe('Growth Engine rules', () => {
       this.expectedRewards = [
         {
           campaignId: 1,
-          levelId: 0,
-          ruleId: 'PreRequisite',
-          money: { amount: 5, currency: 'OGN' }
+          levelId: 1,
+          ruleId: 'FacebookAttestation',
+          value: { amount: 10, currency: 'OGN' }
         },
         {
           campaignId: 1,
           levelId: 1,
-          ruleId: 'TwoAttestations',
-          money: { amount: 10, currency: 'OGN' }
-        }
+          ruleId: 'TwitterAttestation',
+          value: { amount: 10, currency: 'OGN' }
+        },
+        ...Array(100).fill({
+          campaignId: 1,
+          levelId: 2,
+          ruleId: 'Referral',
+          value: {
+            currency: 'OGN',
+            amount: 10
+          }
+        }),
+        ...Array(10).fill({
+          campaignId: 1,
+          levelId: 2,
+          ruleId: 'ListingCreation',
+          value: {
+            currency: 'OGN',
+            amount: 5
+          }
+        }),
+        ...Array(10).fill({
+          campaignId: 1,
+          levelId: 2,
+          ruleId: 'ListingPurchase',
+          value: {
+            currency: 'OGN',
+            amount: 5
+          }
+        })
       ]
-      this.expectedRewards.push(...Array(2).fill({
-        campaignId: 1,
-        levelId: 2,
-        ruleId: 'Referral',
-        money: {
-          currency: 'OGN',
-          amount: 10
-        }
-      }))
-      this.expectedRewards.push({
-        campaignId: 1,
-        levelId: 2,
-        ruleId: 'ListingCreation',
-        money: {
-          currency: 'OGN',
-          amount: 5
-        }
-      })
-      this.expectedRewards.push(...Array(3).fill({
-        campaignId: 1,
-        levelId: 2,
-        ruleId: 'ListingPurchase',
-        money: {
-          currency: 'OGN',
-          amount: 100
-        }
-      }))
       expect(rewards).to.deep.equal(this.expectedRewards)
 
       const level = await this.campaign.getCurrentLevel(this.ethAddress)
@@ -701,7 +722,7 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventType: GrowthEventTypes.RefereeSignedUp,
                   reward: null,
-                  upgradeCondition: true
+                  nextLevelCondition: true
                 }
               }
             ],
@@ -718,7 +739,7 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 10,
-                  upgradeCondition: false
+                  nextLevelCondition: false
                 }
               }
             ],
@@ -777,7 +798,7 @@ describe('Growth Engine rules', () => {
         campaignId: 1,
         levelId: 1,
         ruleId: 'Referral',
-        money: {
+        value: {
           currency: 'OGN',
           amount: 1
         }

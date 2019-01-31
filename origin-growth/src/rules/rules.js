@@ -8,11 +8,11 @@ const MAX_NUM_REWARDS_PER_RULE = 1000
 
 
 class Reward {
-  constructor(campaignId, levelId, ruleId, money) {
+  constructor(campaignId, levelId, ruleId, value) {
     this.campaignId = campaignId
     this.levelId = levelId
     this.ruleId = ruleId
-    this.money = money
+    this.value = value
   }
 }
 
@@ -86,7 +86,7 @@ class Campaign {
    * Only considers events that occurred during the campaign.
    *
    * @param {string} ethAddress - User's account.
-   * @returns {Promise<Array<Reward>>} - List of rewards.
+   * @returns {Promise<Array<Reward>>} - List of rewards, in no specific order.
    */
   async getRewards(ethAddress) {
     const rewards = []
@@ -158,11 +158,11 @@ class BaseRule {
     this.limit = Math.min(this.config.limit, MAX_NUM_REWARDS_PER_RULE)
 
     if (this.config.reward) {
-      const money = {
+      const value = {
         amount: this.config.reward.amount,
         currency: this.config.reward.currency
       }
-      this.reward = new Reward(this.campaignId, this.levelId, this.id, money)
+      this.reward = new Reward(this.campaignId, this.levelId, this.id, value)
     } else {
       this.reward = null
     }
@@ -176,11 +176,12 @@ class BaseRule {
    * Calculates if the user qualifies for the next level.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
-   * @returns {boolean}
+   * @returns {boolean|null} - Null indicates the rule does not participate in
+   *   the condition to qualify for next level.
    */
   qualifyForNextLevel(ethAddress, events) {
-    // If the rule is not part of the upgrade condition, return right away.
-    if (!this.config.upgradeCondition) {
+    // If the rule is not part of the next level condition, return right away.
+    if (!this.config.nextLevelCondition) {
       return null
     }
 
