@@ -75,7 +75,7 @@ class Configuration extends React.Component {
       loading: true
     }
 
-    this.setConfig = this.setConfig.bind(this)
+    this.setConfigFromState = this.setConfigFromState.bind(this)
   }
 
   async componentDidMount() {
@@ -100,14 +100,13 @@ class Configuration extends React.Component {
         })
     }
 
-    console.log(this.state)
-
-    this.setConfig()
+    this.setConfigFromState()
   }
 
-  setConfig () {
-    // CSS vars
+  setConfigFromState () {
+    // Set CSS variables on the body from the config
     for (const [cssVarName, cssVarValue] of Object.entries(this.state.config.cssVars)) {
+      // Don't allow url() CSS variables
       if (cssVarValue.toString().match(/url *\(/)) {
         throw 'url() not allowed in DApp CSS variables'
       }
@@ -118,12 +117,12 @@ class Configuration extends React.Component {
       )
     }
 
-    // Page title
+    // Set the page title
     if (this.state.config.title) {
       document.title = this.state.config.title
     }
 
-    // Locale
+    // Set the language code
     if (this.state.config.languageCode) {
       if (this.state.config.languageCode !== this.state.selectedLanguageCode) {
         store.set('preferredLang', this.state.config.languageCode)
@@ -131,6 +130,7 @@ class Configuration extends React.Component {
       }
     }
 
+    // Set the favicon
     if (this.state.config.faviconUrl) {
       let faviconElement = document.querySelector('link[rel="shortcut icon"]')
       if (!faviconElement) {
@@ -147,6 +147,10 @@ class Configuration extends React.Component {
     })
   }
 
+  /* Determine if the DApp is being white labelled by comparing the current
+   * hostname with a list of non-whitelabel hostnames.
+   *
+   */
   isWhiteLabelHostname () {
     const exceptionNeedles = [
       'originprotocol.com',
