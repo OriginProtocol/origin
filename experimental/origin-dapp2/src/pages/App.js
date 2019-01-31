@@ -22,6 +22,8 @@ import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
 
+import { init } from 'fbt-runtime'
+
 class App extends Component {
   state = { hasError: false, locale: 'en_US' }
 
@@ -73,9 +75,19 @@ class App extends Component {
         </main>
         <Footer
           locale={this.state.locale}
-          onLocale={locale => {
+          onLocale={async locale => {
             IntlViewerContext.locale = locale
+            if (locale !== 'en_US') {
+              const res = await fetch(`translations/${locale}.json`)
+              if (!res.ok) {
+                alert('Could not load translations')
+                return
+              }
+              const json = await res.json()
+              init({ translations: { [locale]: json } })
+            }
             this.setState({ locale })
+            window.scrollTo(0, 0)
           }}
         />
       </>

@@ -64,7 +64,6 @@ class Footer extends Component {
                         e.preventDefault()
                         onLocale(lang[0])
                         this.setState({ open: false })
-                        window.scrollTo(0, 0)
                       }}
                       children={lang[1]}
                     />

@@ -8,13 +8,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-let fbtEnumManifest = {}
-try {
-  fbtEnumManifest = require('./.enum_manifest.json')
-} catch(e) {
-  /* No enum manifest present */
-}
-
 const config = {
   entry: {
     app: './src/index.js'
@@ -40,7 +33,7 @@ const config = {
             [
               'babel-plugin-fbt',
               {
-                fbtEnumManifest: fbtEnumManifest
+                fbtEnumManifest: require('./translations/.enum_manifest.json')
               }
             ],
             'babel-plugin-fbt-runtime'
