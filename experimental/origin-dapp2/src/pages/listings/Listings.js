@@ -30,6 +30,7 @@ class Listings extends Component {
 
     return (
       <>
+        <PageTitle>Listings</PageTitle>
         <Search
           value={this.state.search}
           onSearch={search => {
@@ -68,7 +69,6 @@ class Listings extends Component {
                 >
                   <>
                     <h5 className="listings-count">{`${totalCount} Listings`}</h5>
-                    <PageTitle>Listings</PageTitle>
 
                     <ListingsGallery
                       listings={nodes}
