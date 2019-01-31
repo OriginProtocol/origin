@@ -42,7 +42,7 @@ describe('Growth Engine rules', () => {
       this.ethAddress = '0x123'
     })
 
-    it(`Should return level`, () => {
+    it(`Should return level`, async () => {
       const events = [
         {
           id: 1,
@@ -54,11 +54,11 @@ describe('Growth Engine rules', () => {
       this.campaign.getEvents = () => {
         return events
       }
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
     })
 
-    it(`Should return 1 reward`, () => {
+    it(`Should return 1 reward`, async () => {
       const events = [
         {
           id: 1,
@@ -68,10 +68,10 @@ describe('Growth Engine rules', () => {
         }
       ]
       this.campaign.getEvents = () => { return events }
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       const expectedRewards = {
         0: {
           'PreRequisite': [
@@ -90,7 +90,7 @@ describe('Growth Engine rules', () => {
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
-    it(`Should return no reward if events are invalid`, () => {
+    it(`Should return no reward if events are invalid`, async () => {
       const events = [
         {
           id: 1,
@@ -113,7 +113,7 @@ describe('Growth Engine rules', () => {
       ]
       this.campaign.getEvents = () => { return events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       const expectedRewards = {
         0: {
           'PreRequisite': []
@@ -122,7 +122,7 @@ describe('Growth Engine rules', () => {
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
-    it(`Should honor limit`, () => {
+    it(`Should honor limit`, async () => {
       // 5 events but since limit is 2, only 2 rewards should be granted.
       const events = Array(5).fill({
         id: 1,
@@ -132,7 +132,7 @@ describe('Growth Engine rules', () => {
       })
       this.campaign.getEvents = () => { return events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       const expectedRewards = {
         0: {
           'PreRequisite': [
@@ -203,16 +203,16 @@ describe('Growth Engine rules', () => {
       this.ethAddress = '0x123'
     })
 
-    it(`Should return level`, () => {
+    it(`Should return level`, async () => {
       const events = []
       this.campaign.getEvents = () => {
         return events
       }
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
     })
 
-    it(`Should return 1 reward`, () => {
+    it(`Should return 1 reward`, async () => {
       const events = [
         {
           id: 1,
@@ -235,7 +235,7 @@ describe('Growth Engine rules', () => {
       ]
       this.campaign.getEvents = () => { return events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       const expectedRewards = {
         0: {
           'TwoAttestations': [
@@ -254,7 +254,7 @@ describe('Growth Engine rules', () => {
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
-    it(`Should return no reward when numRequired not met`, () => {
+    it(`Should return no reward when numRequired not met`, async () => {
       const events = [
         {
           id: 1,
@@ -265,7 +265,7 @@ describe('Growth Engine rules', () => {
       ]
       this.campaign.getEvents = () => { return events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       const expectedRewards = {
         0: {
           'TwoAttestations': []
@@ -274,7 +274,7 @@ describe('Growth Engine rules', () => {
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
-    it(`Should return no reward if events are invalid`, () => {
+    it(`Should return no reward if events are invalid`, async () => {
       const events = [
         {
           id: 1,
@@ -297,7 +297,7 @@ describe('Growth Engine rules', () => {
       ]
       this.campaign.getEvents = () => { return events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       const expectedRewards = {
         0: {
           'TwoAttestations': []
@@ -306,7 +306,7 @@ describe('Growth Engine rules', () => {
       expect(rewards).to.deep.equal(expectedRewards)
     })
 
-    it(`Should honor limit`, () => {
+    it(`Should honor limit`, async () => {
       // 2 event tuples meet rules requirement. But limit is 1 -> only 1 reward should be granted.
       const events = [
         {
@@ -336,7 +336,7 @@ describe('Growth Engine rules', () => {
       ]
       this.campaign.getEvents = () => { return events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       const expectedRewards = {
         0: {
           'TwoAttestations': [
@@ -471,16 +471,16 @@ describe('Growth Engine rules', () => {
       }
     })
 
-    it(`Should start at level 0`, () => {
+    it(`Should start at level 0`, async () => {
       const events = []
       this.campaign.getEvents = () => {
         return events
       }
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
     })
 
-    it(`Should graduate to level 1`, () => {
+    it(`Should graduate to level 1`, async () => {
       this.events = [
         {
           id: 1,
@@ -499,7 +499,7 @@ describe('Growth Engine rules', () => {
         return this.events
       }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       this.expectedRewards[0]['PreRequisite'] = [{
         campaignId: 1,
         levelId: 0,
@@ -512,11 +512,11 @@ describe('Growth Engine rules', () => {
       this.expectedRewards[1] = { TwoAttestations: [] }
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(1)
     })
 
-    it(`Should graduate to level 2`, () => {
+    it(`Should graduate to level 2`, async () => {
       this.events.push(
         {
           id: 3,
@@ -533,7 +533,7 @@ describe('Growth Engine rules', () => {
       )
       this.campaign.getEvents = () => { return this.events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       this.expectedRewards[1]['TwoAttestations'] = [{
         campaignId: 1,
         levelId: 1,
@@ -550,11 +550,11 @@ describe('Growth Engine rules', () => {
       }
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
-    it(`Should remain on level 2 when a listing is created`, () => {
+    it(`Should remain on level 2 when a listing is created`, async () => {
       this.events.push(
         {
           id: 5,
@@ -565,7 +565,7 @@ describe('Growth Engine rules', () => {
       )
       this.campaign.getEvents = () => { return this.events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       this.expectedRewards[2]['ListingCreation'].push({
         campaignId: 1,
         levelId: 2,
@@ -577,11 +577,11 @@ describe('Growth Engine rules', () => {
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
-    it(`Should remain on level 2 when a listing is purchased`, () => {
+    it(`Should remain on level 2 when a listing is purchased`, async () => {
       this.events.push(
         {
           id: 6,
@@ -592,7 +592,7 @@ describe('Growth Engine rules', () => {
       )
       this.campaign.getEvents = () => { return this.events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       this.expectedRewards[2]['ListingPurchase'].push({
         campaignId: 1,
         levelId: 2,
@@ -604,11 +604,11 @@ describe('Growth Engine rules', () => {
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
-    it(`Should remain on level 2 when referees sign up`, () => {
+    it(`Should remain on level 2 when referees sign up`, async () => {
       this.events.push(
         {
           id: 9,
@@ -619,7 +619,7 @@ describe('Growth Engine rules', () => {
       )
       this.campaign.getEvents = () => { return this.events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await  this.campaign.getRewards(this.ethAddress)
       this.expectedRewards[2]['Referral'].push({
         campaignId: 1,
         levelId: 2,
@@ -631,11 +631,11 @@ describe('Growth Engine rules', () => {
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await  this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
-    it(`Should honor limits`, () => {
+    it(`Should honor limits`, async () => {
       this.events.push(
         {
           id: 10,
@@ -682,7 +682,7 @@ describe('Growth Engine rules', () => {
       )
       this.campaign.getEvents = () => { return this.events }
 
-      const rewards = this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.campaign.getRewards(this.ethAddress)
       this.expectedRewards[2]['Referral'] = Array(2).fill({
         campaignId: 1,
         levelId: 2,
@@ -712,8 +712,106 @@ describe('Growth Engine rules', () => {
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
+    })
+  })
+
+  describe('Level calculation', () => {
+
+    before(() => {
+      const config = {
+        numLevels: 2,
+        levels: {
+          0: {
+            rules: [
+              {
+                id: 'PreRequisite',
+                class: 'SingleEvent',
+                config: {
+                  eventType: GrowthEventTypes.RefereeSignedUp,
+                  reward: null,
+                  upgradeCondition: true
+                }
+              }
+            ],
+          },
+          1: {
+            rules: [
+              {
+                id: 'Referral',
+                class: 'SingleEvent',
+                config: {
+                  eventType: GrowthEventTypes.RefereeSignedUp,
+                  reward: {
+                    amount: 1,
+                    currency: 'OGN'
+                  },
+                  limit: 1,
+                  upgradeCondition: false
+                }
+              }
+            ],
+          }
+        }
+      }
+      const row = { id: 1, startDate: 10 }
+      this.campaign = new Campaign(row, config)
+      expect(this.campaign).to.be.an('object')
+      expect(this.campaign.numLevels).to.equal(2)
+
+      this.ethAddress = '0x123'
+
+      const events = [
+        {
+          id: 1,
+          type: GrowthEventTypes.RefereeSignedUp,
+          status: GrowthEventStatuses.Verified,
+          ethAddress: this.ethAddress,
+          createdAt: 1 // Occurred prior to campaign start.
+        },
+        {
+          id: 2,
+          type: GrowthEventTypes.RefereeSignedUp,
+          status: GrowthEventStatuses.Verified,
+          ethAddress: this.ethAddress,
+          createdAt: 100 // Occurred after campaign start.
+        }
+      ]
+      this.campaign.getEvents = (ethAddress, duringCampaign) => {
+        return events
+          .filter(event => {
+            return duringCampaign ? event.createdAt > this.campaign.campaign.startDate : true
+          })
+      }
+    })
+
+    it(`Should use events from inception for level calculation`, async () => {
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(1)
+    })
+
+    it(`Should use events from campaign period for reward calculation`, async () => {
+      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const expectedRewards = {
+        0: {
+          'PreRequisite': []
+        },
+        1: {
+          'Referral': [
+            {
+              campaignId: 1,
+              levelId: 1,
+              ruleId: 'Referral',
+              money: {
+                currency: 'OGN',
+                amount: 1
+              }
+            }
+          ]
+        }
+      }
+      expect(rewards).to.deep.equal(expectedRewards)
     })
   })
 })

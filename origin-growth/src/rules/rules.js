@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize')
+
 const db = require('../models')
 const { GrowthEventTypes, GrowthEventStatuses } = require('../enums')
 
@@ -15,14 +17,6 @@ class Reward {
 }
 
 
-/**
- * TODO: include logic for
- *  - start_date: Date at which campaign starts
- *  - end_date: Date at which campaign ends assuming cap not exhausted
- *  - cap
- *  - cap_used
- *
- */
 class Campaign {
   constructor(campaign, config) {
     this.campaign = campaign
@@ -44,11 +38,24 @@ class Campaign {
     }
   }
 
-  getEvents(ethAddress) {
-    const whereClause = { ethAddress: ethAddress.toLowerCase() }
-    // TODO: filter out events out of the campaign time window.
-    // FIXME: this should await
-    const events = db.GrowthEvent.findAll({
+  /**
+   * Reads events related to a user from the DB.
+   * @param {string} ethAddress - User's account.
+   * @param {boolean} duringCampaign - Restricts query to events that occurred
+   *  during the campaign vs since user signed up.
+   * @returns {Promise<List<models.GrowthEvent>>}
+   */
+  async getEvents(ethAddress, duringCampaign) {
+    const whereClause = {
+      ethAddress: ethAddress.toLowerCase()
+    }
+    if (duringCampaign) {
+      whereClause.createdAt = {
+        [Sequelize.Op.gte]: this.campaign.startDate,
+        [Sequelize.Op.lt]: this.campaign.endDate
+      }
+    }
+    const events = await db.GrowthEvent.findAll({
         where: whereClause,
         order: [ ['id', 'ASC'] ],
       }
@@ -56,8 +63,15 @@ class Campaign {
     return events
   }
 
-  getCurrentLevel(ethAddress) {
-    const events = this.getEvents(ethAddress)
+  /**
+   * Calculates the current campaign level the user is at.
+   * Considers events that occurred since user joined the platform.
+   *
+   * @param {string} ethAddress - User's account.
+   * @returns {Promise<number>}
+   */
+  async getCurrentLevel(ethAddress) {
+    const events = await this.getEvents(ethAddress, false)
     let level
     for (level = 0; level < this.config.numLevels - 1; level++) {
       if (!this.levels[level].qualifyForNextLevel(ethAddress, events)) {
@@ -67,10 +81,25 @@ class Campaign {
     return level
   }
 
-  getRewards(ethAddress) {
+  /**
+   * Calculates rewards earned by the user.
+   * Only considers events that occurred during the campaign.
+   *
+   * @param {string} ethAddress - User's account.
+   * @returns {Promise<Object>} - Dictionary with rewards grouped first by level and second by rule.
+   * Example:
+   *  {
+   *    0: [
+   *      'Referral': [ <List of Reward objects> ],
+   *      'ListingPurchase': [ <List of Reward objects> ],
+   *      etc...
+   *    ]
+   *  }
+   */
+  async getRewards(ethAddress) {
     const rewards = {}
-    const events = this.getEvents(ethAddress)
-    const currentLevel = this.getCurrentLevel(ethAddress, events)
+    const events = await this.getEvents(ethAddress, true)
+    const currentLevel = await this.getCurrentLevel(ethAddress)
     for (let i = 0; i <= currentLevel; i++) {
       rewards[i] = this.levels[i].getRewards(ethAddress, events)
     }
@@ -135,7 +164,7 @@ class BaseRule {
     this.id = config.id
     this.config = config.config
 
-    if (!this.config.limit) {
+    if (this.config.reward && !this.config.limit) {
       throw new Error(`${this.str()}: missing limit`)
     }
     this.limit = Math.min(this.config.limit, MAX_NUM_REWARDS_PER_RULE)
@@ -155,6 +184,12 @@ class BaseRule {
     return `Campaign ${this.campaignId} / Rule ${this.ruleId} / Level ${this.levelId}`
   }
 
+  /**
+   * Calculates if the user qualifies for the next level.
+   * @param {string} ethAddress - User's account.
+   * @param {List<models.GrowthEvent>} events
+   * @returns {boolean}
+   */
   qualifyForNextLevel(ethAddress, events) {
     // If the rule is not part of the upgrade condition, return right away.
     if (!this.config.upgradeCondition) {
@@ -165,6 +200,12 @@ class BaseRule {
     return this.evaluate(ethAddress, events)
   }
 
+  /**
+   * Counts events, grouped by types.
+   * @param {string} ethAddress - User's account.
+   * @param {List<models.GrowthEvent>} events
+   * @returns {Dict{string:number}} - Dict with event type as key and count as value.
+   */
   _tallyEvents(ethAddress, eventTypes, events) {
     const tally = {}
     events
@@ -194,7 +235,9 @@ class BaseRule {
   }
 }
 
-
+/**
+ * A rule that requires 1 event.
+ */
 class SingleEventRule extends BaseRule {
   constructor(campaignId, levelId, config) {
     super(campaignId, levelId, config)
@@ -208,17 +251,33 @@ class SingleEventRule extends BaseRule {
     this.eventTypes = [eventType]
   }
 
+  /**
+   * Returns number of rewards user qualifies for, taking into account the rule's limit.
+   * @param {string} ethAddress - User's account.
+   * @param {List<models.GrowthEvent>} events
+   * @returns {number}
+   * @private
+   */
   _numRewards(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length ? Math.min(...Object.values(tally), this.limit) : 0
   }
 
+  /**
+   * Calculates if the rule passes.
+   * @param {string} ethAddress - User's account.
+   * @param {List<models.GrowthEvent>} events
+   * @returns {boolean}
+   */
   evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return (Object.keys(tally).length === 1)
   }
 }
 
+/**
+ * A rule that requires N events out of a list of event types.
+ */
 class MultiEventsRule extends BaseRule {
   constructor(campaignId, levelId, config) {
     super(campaignId, levelId, config)
@@ -235,13 +294,23 @@ class MultiEventsRule extends BaseRule {
 
     if (!this.config.numEventsRequired ||
       !Number.isInteger(this.config.numEventsRequired) ||
-      this.config.numLevels <= 0) {
+      this.config.numEventsRequired > this.eventTypes.length) {
       throw new Error(`${this.str()}: missing or invalid numEventsRequired`)
     }
     this.numEventsRequired = this.config.numEventsRequired
   }
 
+  /**
+   * Returns number of rewards user qualifies for, taking into account the rule's limit.
+   * @param {string} ethAddress - User's account.
+   * @param {List<models.GrowthEvent>} events
+   * @returns {number}
+   * @private
+   */
   _numRewards(ethAddress, events) {
+
+    // Attempts to picks N different events from the tally.
+    // Returns true if success, false otherwise.
     function pickN(tally, n) {
       let numPicked = 0
       for (const key of Object.keys(tally)) {
@@ -264,6 +333,12 @@ class MultiEventsRule extends BaseRule {
     return numRewards
   }
 
+  /**
+   * Calculates if the rule passes.
+   * @param {string} ethAddress - User's account.
+   * @param {List<models.GrowthEvent>} events
+   * @returns {boolean}
+   */
   evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return (Object.keys(tally).length >= this.numEventsRequired)
