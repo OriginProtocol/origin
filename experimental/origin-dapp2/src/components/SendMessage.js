@@ -25,9 +25,6 @@ class SendMessage extends Component {
   }
 
   render() {
-    const { to } = this.props
-    const recipient = get(this.props, 'identity.profile.fullName')
-
     return (
       <Query query={query} pollInterval={2000}>
         {({ error, data, loading }) => {
@@ -42,6 +39,7 @@ class SendMessage extends Component {
           if (!data.messaging.enabled) {
             return <OnboardMessaging />
           }
+
           return (
             <>
               <button
@@ -60,63 +58,71 @@ class SendMessage extends Component {
                   }
                   className="message-modal"
                 >
-                  {this.state.sent ? (
-                    <>
-                      <h5>Message Sent!</h5>
-                      <div className="actions">
-                        <button
-                          className="btn btn-outline-light btn-rounded"
-                          children="OK"
-                          onClick={() => this.setState({ shouldClose: true })}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <Mutation
-                      mutation={mutation}
-                      onCompleted={({ sendMessage }) =>
-                        this.setState({ sent: true, room: sendMessage.id })
-                      }
-                    >
-                      {sendMessage => (
-                        <form
-                          onSubmit={e => {
-                            e.preventDefault()
-                            const content = this.state.message
-                            if (content) {
-                              sendMessage({ variables: { to, content } })
-                              this.setState({ message: '' })
-                            }
-                          }}
-                        >
-                          <h5 className="mb-3">Send Message</h5>
-                          <div className="to mb-2">
-                            {`To: ${recipient ? `${recipient} - ` : ''}${to}`}
-                          </div>
-                          <textarea
-                            className="form-control dark mb-4"
-                            placeholder="Type something..."
-                            ref={input => (this.input = input)}
-                            value={this.state.message}
-                            onChange={e =>
-                              this.setState({ message: e.target.value })
-                            }
-                          />
-                          <button
-                            className="btn btn-primary btn-rounded"
-                            type="submit"
-                            children="Send"
-                          />
-                        </form>
-                      )}
-                    </Mutation>
-                  )}
+                  {this.state.sent ? this.renderSent() : this.renderSend()}
                 </Modal>
               )}
             </>
           )
         }}
       </Query>
+    )
+  }
+
+  renderSend() {
+    const { to } = this.props
+    const recipient = get(this.props, 'identity.profile.fullName')
+    return (
+      <Mutation
+        mutation={mutation}
+        onCompleted={({ sendMessage }) =>
+          this.setState({ sent: true, room: sendMessage.id })
+        }
+      >
+        {sendMessage => (
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              const content = this.state.message
+              if (content) {
+                sendMessage({ variables: { to, content } })
+                this.setState({ message: '' })
+              }
+            }}
+          >
+            <h5 className="mb-3">Send Message</h5>
+            <div className="to mb-2">
+              {`To: ${recipient ? `${recipient} - ` : ''}${to}`}
+            </div>
+            <textarea
+              className="form-control dark mb-4"
+              placeholder="Type something..."
+              ref={input => (this.input = input)}
+              value={this.state.message}
+              onChange={e => this.setState({ message: e.target.value })}
+            />
+            <button
+              className="btn btn-primary btn-rounded"
+              type="submit"
+              children="Send"
+            />
+          </form>
+        )}
+      </Mutation>
+    )
+  }
+
+  renderSent() {
+    return (
+      <>
+        <h5>Message Sent!</h5>
+        <div className="actions">
+          <button
+            className="btn btn-outline-light btn-rounded"
+            children="OK"
+            onClick={() => this.setState({ shouldClose: true })}
+          />
+        </div>
+      </>
     )
   }
 }
