@@ -127,7 +127,9 @@ class Boost extends Component {
     return (
       <>
         <div className="boost-info">
-          <h5>{`Boost Level${isMulti ? ' (per unit)' : ''}${isFractional ? ' (per night)' : ''}`}</h5>
+          <h5>{`Boost Level${isMulti ? ' (per unit)' : ''}${
+            isFractional ? ' (per night)' : ''
+          }`}</h5>
           <i />
         </div>
         <div className={`boost-value ${level[1]}`}>
