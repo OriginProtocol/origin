@@ -111,7 +111,7 @@ const getOnMessage = ({ schema, context, onMessageReceived }) => {
             formatError: undefined,
             callback: undefined
           }
-          let promisedParams = Promise.resolve(baseParams)
+          const promisedParams = Promise.resolve(baseParams)
 
           // set an initial mock subscription to only registering opId
           connectionContext.operations[opId] = createEmptyIterable()
@@ -139,7 +139,7 @@ const getOnMessage = ({ schema, context, onMessageReceived }) => {
                   )
                 )
               } else {
-                let executor = subscribe
+                const executor = subscribe
                 const promiseOrIterable = executor(
                   schema,
                   document,
