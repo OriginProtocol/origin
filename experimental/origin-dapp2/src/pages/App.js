@@ -20,6 +20,7 @@ import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
+import AboutToken from './about/AboutTokens'
 
 class App extends Component {
   state = { hasError: false }
@@ -68,6 +69,7 @@ class App extends Component {
             <Route path="/notifications" component={Notifications} />
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/campaigns" component={GrowthCampaigns} />
+            <Route path="/about/tokens" component={AboutToken} />
             <Route component={Listings} />
           </Switch>
         </main>

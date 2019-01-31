@@ -4,6 +4,7 @@ module.exports =
   Object.values(Common).reduce((acc, item) => acc + item) +
   `
   scalar JSON
+  scalar DateTime
 
   ###############################################
   #
@@ -77,9 +78,9 @@ module.exports =
   type GrowthCampaign {
     id: Int!
     name: String!
-    startDate: String
-    endDate: String
-    distributionDate: String
+    startDate: DateTime
+    endDate: DateTime
+    distributionDate: DateTime
     status: GrowthCampaignStatus!
     actions: [GrowthBaseAction]
     rewardEarned: Price!      # amount earned all actions combined

@@ -6,12 +6,14 @@ export default gql`
     $value: String!
     $from: String!
     $quantity: Int!
+    $fractionalData: FractionalOfferInput
   ) {
     makeOffer(
       listingID: $listingID
       value: $value
       from: $from
       quantity: $quantity
+      fractionalData: $fractionalData
     ) {
       id
     }

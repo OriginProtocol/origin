@@ -10,6 +10,7 @@ import TokenPrice from 'components/TokenPrice'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
+import PageTitle from 'components/PageTitle'
 
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/UserListings'
@@ -54,6 +55,7 @@ class Listings extends Component {
 
             return (
               <>
+                <PageTitle>My Listings</PageTitle>
                 <h1>My Listings</h1>
                 <div className="row">
                   <div className="col-md-3">

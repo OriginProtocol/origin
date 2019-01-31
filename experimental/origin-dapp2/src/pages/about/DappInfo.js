@@ -2,6 +2,7 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import configQuery from 'queries/Config'
 import contractsQuery from 'queries/AllContracts'
+import PageTitle from 'components/PageTitle'
 
 const DAPP_VERSION = require('../../../package.json').version
 
@@ -41,6 +42,7 @@ function totalSupply(supply, decimals) {
 
 const DappInfo = () => (
   <div className="container about-info">
+    <PageTitle>About Dapp</PageTitle>
     <h1>About Dapp</h1>
     <p>
       Developer information about this Dapp&#39;s current build and
