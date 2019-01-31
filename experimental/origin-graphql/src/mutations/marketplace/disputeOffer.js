@@ -5,7 +5,7 @@ import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function disputeOffer(_, data) {
-  const { from } = data
+  const from = data.from || contracts.defaultLinkerAccount
   await checkMetaMask(from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)

@@ -81,6 +81,7 @@ const App = () => (
   </>
 )
 
+window.isOriginAdmin = true
 export default App
 
 require('react-styl')(`
