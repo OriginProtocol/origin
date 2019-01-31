@@ -122,7 +122,7 @@ export default class V01_UsersAdapter {
    * @return {Promise<string|null>}
    * @private
    */
-  async _getIdentityIpfsHash(address) {
+  async _getIdentityIpfsHash(address = '') {
     // TODO: should this be cached like what marketplace does in getContract ???
     const contract = await this.contractService.deployed(
       this.contractService.contracts[this.contractName]
