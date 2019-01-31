@@ -42,7 +42,9 @@ class Review extends Component {
             </div>
             <div className="row">
               <div className="col-3 label">Cagegory</div>
-              <div className="col-9"><Category listing={listing} /></div>
+              <div className="col-9">
+                <Category listing={listing} />
+              </div>
             </div>
             <div className="row">
               <div className="col-3 label">Description</div>

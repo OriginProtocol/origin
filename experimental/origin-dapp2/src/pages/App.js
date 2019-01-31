@@ -71,10 +71,7 @@ class App extends Component {
             <Route component={Listings} />
           </Switch>
         </main>
-        <Footer
-          locale={this.props.locale}
-          onLocale={this.props.onLocale}
-        />
+        <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
       </>
     )
   }
