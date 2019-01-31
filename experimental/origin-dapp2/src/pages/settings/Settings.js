@@ -25,6 +25,8 @@ class Settings extends Component {
       ),
       ...pick(this.props.config, configurableFields)
     }
+
+    this.saveConfig = this.saveConfig.bind(this)
   }
 
   componentDidUpdate (prevProps) {
@@ -35,137 +37,142 @@ class Settings extends Component {
     }
   }
 
+  saveConfig(setNetwork) {
+    window.localStorage.customConfig = JSON.stringify(
+      pick(this.state, configurableFields)
+    )
+    setNetwork({
+      variables: { network: window.localStorage.ognNetwork || 'mainnet' }
+    })
+  }
+
   render() {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     return (
-      <div className="container settings">
-        <h1>Settings</h1>
-        <div className="row">
-          <div className="col-lg-6 col-md-12">
-            <div className="settings-box">
-              <div className="form-group">
-                <label htmlFor="language">Language</label>
-                <div className="form-text form-text-muted">
-                  <small>Please make a selection from the list below.</small>
+      <Mutation
+        mutation={SetNetwork}
+        refetchQueries={this.props.configRefetch}
+      >
+       {setNetwork => (
+         <div className="container settings">
+          <h1>Settings</h1>
+          <div className="row">
+            <div className="col-lg-6 col-md-12">
+              <div className="settings-box">
+                <div className="form-group">
+                  <label htmlFor="language">Language</label>
+                  <div className="form-text form-text-muted">
+                    <small>Please make a selection from the list below.</small>
+                  </div>
+                  <select className="form-control form-control-lg">
+                    English
+                  </select>
                 </div>
-                <select className="form-control form-control-lg">
-                  English
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="notifications">Notifications</label>
-                <div className="form-text form-text-muted">
-                  <small>Set your notifications settings below.</small>
+                <div className="form-group">
+                  <label htmlFor="notifications">Notifications</label>
+                  <div className="form-text form-text-muted">
+                    <small>Set your notifications settings below.</small>
+                  </div>
+                  <div className="form-check">
+                    <input className="form-check-input"
+                        type="radio"
+                        name="notifications"
+                        id="notificationsOffRadio"
+                        value="true"
+                        checked />
+                    <label className="form-check-label" htmlFor="notifiationsOffRadio">
+                      Off
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input className="form-check-input"
+                        type="radio"
+                        name="notifications"
+                        id="notificationsOnRadio"
+                        value="true" />
+                    <label className="form-check-label" htmlFor="notificationsOnRadio">
+                      All messages
+                    </label>
+                  </div>
                 </div>
-                <div className="form-check">
-                  <input className="form-check-input"
-                      type="radio"
-                      name="notifications"
-                      id="notificationsOffRadio"
-                      value="true"
-                      checked />
-                  <label className="form-check-label" htmlFor="notifiationsOffRadio">
-                    Off
-                  </label>
+                <div className="form-group">
+                  <label htmlFor="Messaging">Messaging</label>
+                  <div className="form-text form-text-muted">
+                    <small>Enable/disable messaging by clicking the button below.</small>
+                  </div>
+                  <button className="btn btn-outline-danger">
+                    Disable
+                  </button>
                 </div>
-                <div className="form-check">
-                  <input className="form-check-input"
-                      type="radio"
-                      name="notifications"
-                      id="notificationsOnRadio"
-                      value="true" />
-                  <label className="form-check-label" htmlFor="notificationsOnRadio">
-                    All messages
-                  </label>
+                <div className="form-group">
+                  <label htmlFor="language">Mobile Wallet</label>
+                  <div className="form-text form-text-muted">
+                    <small>Disconnect from your mobile wallet by clicking the button below.</small>
+                  </div>
+                  <button className="btn btn-outline-danger">
+                    Disconnect
+                  </button>
                 </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="Messaging">Messaging</label>
-                <div className="form-text form-text-muted">
-                  <small>Enable/disable messaging by clicking the button below.</small>
-                </div>
-                <button className="btn btn-outline-danger">
-                  Disable
-                </button>
-              </div>
-              <div className="form-group">
-                <label htmlFor="language">Mobile Wallet</label>
-                <div className="form-text form-text-muted">
-                  <small>Disconnect from your mobile wallet by clicking the button below.</small>
-                </div>
-                <button className="btn btn-outline-danger">
-                  Disconnect
-                </button>
               </div>
             </div>
-          </div>
-          <div className="col-lg-6 col-md-12">
-            <div className="settings-box">
-              <div className="form-group">
-                <label htmlFor="indexing">Discovery Server</label>
-                <div className="form-text form-text-muted">
-                  <small>Please enter the URL below. Leave blank to directly query the blockchain. Search functionality will disabled if no discovery server is used.</small>
-                </div>
-                <input className="form-control form-control-lg"
+            <div className="col-lg-6 col-md-12">
+              <div className="settings-box">
+                <div className="form-group">
+                  <label htmlFor="indexing">Discovery Server</label>
+                  <div className="form-text form-text-muted">
+                    <small>Please enter the URL below. Leave blank to directly query the blockchain. Search functionality will disabled if no discovery server is used.</small>
+                  </div>
+                  <input className="form-control form-control-lg"
                     type="text"
                     name="discovery"
-                    {...input('discovery')} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="indexing">IPFS Gateway</label>
-                <div className="form-text form-text-muted">
-                  <small>Please enter the URL below.</small>
+                    {...input('discovery')}
+                    onBlur={() => this.saveConfig(setNetwork)}
+                  />
                 </div>
-                <input className="form-control form-control-lg"
+                <div className="form-group">
+                  <label htmlFor="indexing">IPFS Gateway</label>
+                  <div className="form-text form-text-muted">
+                    <small>Please enter the URL below.</small>
+                  </div>
+                  <input className="form-control form-control-lg"
                     type="text"
                     name="ipfsGateway"
-                    {...input('ipfsGateway')} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="indexing">Web3 Provider</label>
-                <div className="form-text form-text-muted">
-                  <small>Please enter the URL below.</small>
+                    {...input('ipfsGateway')}
+                    onBlur={() => this.saveConfig(setNetwork)}
+                    />
                 </div>
-                <input className="form-control form-control-lg"
+                <div className="form-group">
+                  <label htmlFor="indexing">Web3 Provider</label>
+                  <div className="form-text form-text-muted">
+                    <small>Please enter the URL below.</small>
+                  </div>
+                  <input className="form-control form-control-lg"
                     type="text"
-                    name="web3Providrer"
-                    {...input('provider')} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="indexing">Bridge Server</label>
-                <div className="form-text form-text-muted">
-                  <small>Please enter the URL below.</small>
+                    name="web3Provider"
+                    {...input('provider')}
+                    onBlur={() => this.saveConfig(setNetwork)}
+                  />
                 </div>
-                <input className="form-control form-control-lg"
+                <div className="form-group">
+                  <label htmlFor="indexing">Bridge Server</label>
+                  <div className="form-text form-text-muted">
+                    <small>Please enter the URL below.</small>
+                  </div>
+                  <input className="form-control form-control-lg"
                     type="text"
                     name="bridgeServer"
-                    {...input('bridge')} />
+                    {...input('bridge')}
+                    onBlur={() => this.saveConfig(setNetwork)}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        <Mutation mutation={SetNetwork}>
-          {(setNetwork, { client }) => (
-            <button
-              className="btn btn-lg btn-primary"
-              onClick={async () => {
-                window.localStorage.customConfig = JSON.stringify(
-                  pick(this.state, configurableFields)
-                )
-                setNetwork({
-                  variables: { network: window.localStorage.ognNetwork || 'mainnet' }
-                })
-                this.props.configRefetch()
-              }}
-            >
-              Save
-            </button>
-          )}
-        </Mutation>
-      </div>
+        )}
+      </Mutation>
     )
   }
 }
