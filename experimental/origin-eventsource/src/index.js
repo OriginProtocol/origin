@@ -37,11 +37,9 @@ class OriginEventSource {
     if (this.listingCache[cacheKey]) {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
-      return Object.assign(
-        {},
-        this.listingCache[cacheKey],
-        { id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}` }
-      )
+      return Object.assign({}, this.listingCache[cacheKey], {
+        id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`
+      })
     }
 
     let listing,
@@ -85,6 +83,7 @@ class OriginEventSource {
       data = await get(this.ipfsGateway, ipfsHash)
       data = pick(
         data,
+        'listingType',
         'title',
         'description',
         'currencyId',
@@ -94,7 +93,12 @@ class OriginEventSource {
         'media',
         'unitsTotal',
         'commission',
-        'commissionPerUnit'
+        'commissionPerUnit',
+
+        'weekendPrice',
+        'booked',
+        'unavailable',
+        'customPricing'
       )
     } catch (e) {
       return null
@@ -133,11 +137,13 @@ class OriginEventSource {
     }
 
     const type = 'unit'
-    let commissionPerUnit = '0', commission = '0'
+    let commissionPerUnit = '0',
+      commission = '0'
     if (type === 'unit') {
-      const commissionPerUnitOgn = data.unitsTotal === 1
-        ? (data.commission && data.commission.amount) || '0'
-        : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
+      const commissionPerUnitOgn =
+        data.unitsTotal === 1
+          ? (data.commission && data.commission.amount) || '0'
+          : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
       commissionPerUnit = this.web3.utils.toWei(commissionPerUnitOgn, 'ether')
 
       const commissionOgn = (data.commission && data.commission.amount) || '0'
@@ -146,6 +152,8 @@ class OriginEventSource {
 
     this.listingCache[cacheKey] = await this.withOffers(listingId, {
       ...data,
+      __typename:
+        data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
       id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
@@ -180,7 +188,17 @@ class OriginEventSource {
     // Compute fields from valid offers.
     let commissionAvailable = this.web3.utils.toBN(listing.commission)
     let unitsAvailable = listing.unitsTotal
-    if (listing.type === 'unit') {
+    const booked = []
+
+    if (listing.listingType === 'fractional') {
+      allOffers.forEach(offer => {
+        if (!offer.valid || offer.status === 0) {
+          // No need to do anything here.
+        } else if (offer.startDate && offer.endDate) {
+          booked.push(`${offer.startDate}-${offer.endDate}`)
+        }
+      })
+    } else if (listing.type === 'unit') {
       const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
@@ -189,25 +207,30 @@ class OriginEventSource {
           offer.valid = false
           offer.validationError = 'units purchased exceeds available'
         } else {
-          unitsAvailable -= offer.quantity
+          try {
+            unitsAvailable -= offer.quantity
 
-          // Validate offer commission.
-          const normalCommission = commissionPerUnit.mul(
-            this.web3.utils.toBN(offer.quantity)
-          )
-          const expCommission = normalCommission.lte(commissionAvailable)
-            ? normalCommission
-            : commissionAvailable
-          const offerCommission =
-            (offer.commission && this.web3.utils.toBN(offer.commission))
-            || this.web3.utils.toBN(0)
-          if (!offerCommission.eq(expCommission)) {
+            // Validate offer commission.
+            const normalCommission = commissionPerUnit.mul(
+              this.web3.utils.toBN(offer.quantity)
+            )
+            const expCommission = normalCommission.lte(commissionAvailable)
+              ? normalCommission
+              : commissionAvailable
+            const offerCommission =
+              (offer.commission && this.web3.utils.toBN(offer.commission)) ||
+              this.web3.utils.toBN(0)
+            if (!offerCommission.eq(expCommission)) {
+              offer.valid = false
+              offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
+              return
+            }
+            if (!offerCommission.isZero()) {
+              commissionAvailable = commissionAvailable.sub(offerCommission)
+            }
+          } catch (e) {
             offer.valid = false
-            offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
-            return
-          }
-          if (!offerCommission.isZero()) {
-            commissionAvailable = commissionAvailable.sub(offerCommission)
+            offer.validationError = 'invalid IPFS data'
           }
         }
       })
@@ -217,6 +240,7 @@ class OriginEventSource {
       : '0'
     return Object.assign({}, listing, {
       allOffers,
+      booked,
       unitsAvailable,
       unitsSold: listing.unitsTotal - unitsAvailable,
       depositAvailable: commissionAvailable
@@ -273,8 +297,7 @@ class OriginEventSource {
       status = offer.status
     }
 
-    let data = await get(this.ipfsGateway, ipfsHash)
-    data = pick(data, 'unitsPurchased')
+    const data = await get(this.ipfsGateway, ipfsHash)
 
     const networkId = await this.getNetworkId()
 
@@ -295,7 +318,9 @@ class OriginEventSource {
       buyer: { id: offer.buyer },
       affiliate: { id: offer.affiliate },
       arbitrator: { id: offer.arbitrator },
-      quantity: data.unitsPurchased
+      quantity: data.unitsPurchased,
+      startDate: data.startDate,
+      endDate: data.endDate
     }
     offerObj.statusStr = offerStatus(offerObj)
 
@@ -337,9 +362,7 @@ class OriginEventSource {
       : ZERO_ADDRESS
     const affiliateAllowed =
       affiliateWhitelistDisabled ||
-      (await this.contract.methods
-        .allowedAffiliates(offerAffiliate)
-        .call())
+      (await this.contract.methods.allowedAffiliates(offerAffiliate).call())
     if (!affiliateAllowed) {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }

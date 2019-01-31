@@ -41,14 +41,8 @@ const DeployMarketplace = gql`
 `
 
 const AddAffiliate = gql`
-  mutation AddAffiliate(
-    $from: String!
-    $affiliate: String!
-  ) {
-    addAffiliate(
-      from: $from
-      affiliate: $affiliate
-    ) {
+  mutation AddAffiliate($from: String!, $affiliate: String!) {
+    addAffiliate(from: $from, affiliate: $affiliate) {
       id
     }
   }
@@ -56,18 +50,22 @@ const AddAffiliate = gql`
 
 const CreateListing = gql`
   mutation CreateListing(
+    $from: String!
     $deposit: String
     $depositManager: String
-    $from: String
-    $data: NewListingInput
     $autoApprove: Boolean
+    $data: ListingInput!
+    $unitData: UnitListingInput
+    $fractionalData: FractionalListingInput
   ) {
     createListing(
+      from: $from
       deposit: $deposit
       depositManager: $depositManager
-      from: $from
-      data: $data
       autoApprove: $autoApprove
+      data: $data
+      unitData: $unitData
+      fractionalData: $fractionalData
     ) {
       id
     }
@@ -77,17 +75,21 @@ const CreateListing = gql`
 const UpdateListing = gql`
   mutation UpdateListing(
     $listingID: ID!
+    $from: String!
     $additionalDeposit: String
-    $from: String
-    $data: NewListingInput
     $autoApprove: Boolean
+    $data: ListingInput!
+    $unitData: UnitListingInput
+    $fractionalData: FractionalListingInput
   ) {
     updateListing(
-      listingID: $listingID,
-      additionalDeposit: $additionalDeposit,
-      from: $from,
-      data: $data,
+      listingID: $listingID
+      from: $from
+      additionalDeposit: $additionalDeposit
       autoApprove: $autoApprove
+      data: $data
+      unitData: $unitData
+      fractionalData: $fractionalData
     ) {
       id
     }
@@ -126,8 +128,6 @@ const MakeOffer = gql`
   }
 `
 
-
-
 const AcceptOffer = gql`
   mutation AcceptOffer($offerID: String!, $from: String) {
     acceptOffer(offerID: $offerID, from: $from) {
@@ -153,7 +153,12 @@ const FinalizeOffer = gql`
 `
 
 const UpdateTokenAllowance = gql`
-  mutation UpdateTokenAllowance($token: String!, $from: String!, $to: String!, $value: String!) {
+  mutation UpdateTokenAllowance(
+    $token: String!
+    $from: String!
+    $to: String!
+    $value: String!
+  ) {
     updateTokenAllowance(token: $token, from: $from, to: $to, value: $value) {
       id
     }
@@ -161,7 +166,12 @@ const UpdateTokenAllowance = gql`
 `
 
 const TransferToken = gql`
-  mutation TransferToken($token: String!, $from: String!, $to: String!, $value: String!) {
+  mutation TransferToken(
+    $token: String!
+    $from: String!
+    $to: String!
+    $value: String!
+  ) {
     transferToken(token: $token, from: $from, to: $to, value: $value) {
       id
     }

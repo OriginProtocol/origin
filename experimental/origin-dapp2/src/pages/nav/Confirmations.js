@@ -162,6 +162,7 @@ require('react-styl')(`
           color: #000
           font-weight: bold;
           border-radius: 5px 0 0 0
+          white-space: nowrap
           .total
             background: var(--clear-blue)
             border-radius: 1rem

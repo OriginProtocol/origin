@@ -89,6 +89,7 @@ const config = {
     new HtmlWebpackPlugin({ template: 'public/index.html', inject: false }),
     new CopyWebpackPlugin([
       'public/favicon.ico',
+      'public/metamask.mp4',
       { from: 'public/images', to: 'images' }
     ]),
     new Dotenv(),
