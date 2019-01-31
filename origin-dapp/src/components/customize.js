@@ -89,7 +89,9 @@ class Customize extends React.Component {
 
   isWhiteLabelHostname () {
     const exceptionNeedles = [
-      'originprotocol.com',
+      'dapp.originprotocol.com',
+      'dapp.dev.originprotocol.com',
+      'dapp.staging.originprotocol.com',
       'localhost',
       '127.0.0.1'
     ]
