@@ -747,7 +747,7 @@ describe('Growth Engine rules', () => {
                     amount: 1,
                     currency: 'OGN'
                   },
-                  limit: 1,
+                  limit: 10,
                   upgradeCondition: false
                 }
               }
@@ -755,7 +755,7 @@ describe('Growth Engine rules', () => {
           }
         }
       }
-      const row = { id: 1, startDate: 10 }
+      const row = { id: 1, startDate: 10, endDate: 100 }
       this.campaign = new Campaign(row, config)
       expect(this.campaign).to.be.an('object')
       expect(this.campaign.numLevels).to.equal(2)
@@ -775,13 +775,23 @@ describe('Growth Engine rules', () => {
           type: GrowthEventTypes.RefereeSignedUp,
           status: GrowthEventStatuses.Verified,
           ethAddress: this.ethAddress,
-          createdAt: 100 // Occurred after campaign start.
+          createdAt: 50 // Occurred after campaign start.
+        },
+        {
+          id: 3,
+          type: GrowthEventTypes.RefereeSignedUp,
+          status: GrowthEventStatuses.Verified,
+          ethAddress: this.ethAddress,
+          createdAt: 150 // Occurred after campaign end.
         }
       ]
       this.campaign.getEvents = (ethAddress, duringCampaign) => {
         return events
           .filter(event => {
-            return duringCampaign ? event.createdAt > this.campaign.campaign.startDate : true
+            return duringCampaign
+              ? event.createdAt >= this.campaign.campaign.startDate &&
+              event.createdAt < this.campaign.campaign.endDate
+              : true
           })
       }
     })

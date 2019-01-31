@@ -90,9 +90,15 @@ class Campaign {
    * Example:
    *  {
    *    0: [
+   *      'PreRequesite': [ <List of Reward objects> ]
+   *    ],
+   *    1: [
+   *      'TwoAttestations': [ <List of Reward objects> ]
+   *    ],
+   *    2: [
    *      'Referral': [ <List of Reward objects> ],
-   *      'ListingPurchase': [ <List of Reward objects> ],
-   *      etc...
+   *      'ListingCreation': [ <List of Reward objects> ],
+   *      'ListingPurchase': [ <List of Reward objects> ]
    *    ]
    *  }
    */
