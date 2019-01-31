@@ -2,10 +2,12 @@
 
 module.exports = (sequelize, DataTypes) => {
   const GrowthParticipant = sequelize.define('GrowthParticipant', {
-    ethAddress: DataTypes.STRING,
+    ethAddress: { type: DataTypes.STRING, primaryKey: true },
     data: DataTypes.JSONB,
     agreementId: DataTypes.STRING
-  }, {})
+  }, {
+    tableName: 'growth_participant'
+  })
 
   return GrowthParticipant
 }

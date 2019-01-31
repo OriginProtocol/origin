@@ -1,4 +1,6 @@
 //const GraphQLJSON = require('graphql-type-json')
+const { GraphQLDateTime } = require('graphql-iso-date')
+const db = require('./db')
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -7,11 +9,12 @@ const resolvers = {
    * https://github.com/OriginProtocol/origin/blob/master/experimental/origin-graphql/src/resolvers/_pagination.js
    */
   //JSON: GraphQLJSON,
+  DateTime: GraphQLDateTime,
   Query: {
     async campaigns () {
       // query campaigns from DB
       return {
-        nodes: [],
+        nodes: await db.getCampaigns(),
       }
     },
     async campaign () {

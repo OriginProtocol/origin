@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('growth_invite_codes', {
+    return queryInterface.createTable('growth_invite_code', {
       id: {
         allowNull: false,
         autoIncrement: true,
