@@ -22,7 +22,7 @@ import DappInfo from './about/DappInfo'
 import AboutToken from './about/AboutTokens'
 
 class App extends Component {
-  state = { hasError: false, locale: 'en_US' }
+  state = { hasError: false }
 
   componentDidMount() {
     if (window.ethereum) {
