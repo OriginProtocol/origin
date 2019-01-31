@@ -13,10 +13,35 @@ convert.forEach(lang => {
     `${oldFiles}${lang.replace('_', '-')}/all-messages.json`
   )
   const langMsgs = JSON.parse(rawLang)
+  Object.keys(langMsgs).forEach(msg => {
+    if (msg.indexOf('schema') === 0) {
+      const split = msg.split('.')
+      if (split.length === 3) {
+        const newSchema = `${split[0]}.${split[2]}`
+        langMsgs[newSchema] = langMsgs[newSchema] || langMsgs[msg]
+      }
+    }
+  })
   const translations = {}
 
   phrases.forEach(phrase => {
     const keys = Object.keys(phrase.hashToText)
+    if (phrase.desc === 'category') {
+      const reverseLookup = Object.keys(phrase.jsfbt.t).reduce((m, k) => {
+        m[phrase.jsfbt.t[k]] = k
+        return m
+      }, {})
+      // console.log(reverseLookup)
+
+      keys.forEach(hash => {
+        const value = phrase.hashToText[hash]
+        console.log(langMsgs[reverseLookup[value]])
+        translations[hash] = {
+          translations: [{ translation: langMsgs[reverseLookup[value]] }]
+        }
+      })
+      return
+    }
     if (keys.length > 1) {
       console.log('Too many keys')
       return
@@ -31,6 +56,6 @@ convert.forEach(lang => {
     }
   })
 
-  const output = JSON.stringify({ 'fb-locale': lang, translations }, null, 4)
+  const output = JSON.stringify({ 'fb-locale': lang, translations }, null, 2)
   fs.writeFileSync(`${__dirname}/../translations/${lang}.json`, output)
 })

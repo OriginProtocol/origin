@@ -22,7 +22,7 @@
     "geth": "geth --nodiscover --datadir ./data/geth --maxpeers 0 --dev --rpc --ws --wsorigins=* --rpccorsdomain=* --rpcaddr=0.0.0.0 --wsaddr=0.0.0.0 --rpcvhosts=*",
     "fbt:manifest": "node -r @babel/register ./node_modules/babel-plugin-fbt/bin/manifest --src src",
     "fbt:collect": "node -r @babel/register ./node_modules/babel-plugin-fbt/bin/collectFBT --json-input --pretty < .src_manifest.json > .source_strings.json",
-    "fbt:translate": "node  -r @babel/register ./node_modules//babel-plugin-fbt/bin/translate.js --translations translations/*.json --jenkins --pretty > src/translatedFbts.json",
+    "fbt:translate": "node  -r @babel/register ./node_modules/babel-plugin-fbt/bin/translate.js --translations translations/*.json --jenkins --pretty > src/translatedFbts.json",
     "fbt:clean": "rm .enum_manifest.json .src_manifest.json source_strings.json src/translatedFbts.json 2&> /dev/null || exit 0"
   },
   "dependencies": {
@@ -93,9 +93,7 @@
       "@babel/plugin-transform-destructuring",
       "@babel/plugin-transform-object-assign",
       "@babel/plugin-proposal-object-rest-spread",
-      "@babel/plugin-proposal-class-properties",
-      "babel-plugin-fbt",
-      "babel-plugin-fbt-runtime"
+      "@babel/plugin-proposal-class-properties"
     ]
   },
   "devDependencies": {
