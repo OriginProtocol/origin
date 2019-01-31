@@ -127,5 +127,33 @@ export default {
         }
       }
     `
+  },
+  GrowthCampaign: {
+    basic: gql`
+      fragment basicCampaignFields on GrowthCampaign {
+        id
+        name
+        startDate
+        endDate
+        distributionDate
+        status
+        actions {
+          type
+          status
+          rewardEarned {
+            amount
+            currency
+          }
+          reward {
+            amount
+            currency
+          }
+        }
+        rewardEarned {
+          amount
+          currency
+        }
+      }
+    `
   }
 }
