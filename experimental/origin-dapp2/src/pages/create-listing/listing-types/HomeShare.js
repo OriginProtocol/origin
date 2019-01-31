@@ -15,7 +15,7 @@ const HomeShareListing = ({ listing, onChange }) => {
         <div className="d-flex">
           <div style={{ flex: 1, marginRight: '1rem' }}>
             <div className="with-symbol">
-              <input {...input('weekdayPrice')} />
+              <input {...input('price')} />
               <span className="eth">ETH</span>
             </div>
           </div>
@@ -23,14 +23,14 @@ const HomeShareListing = ({ listing, onChange }) => {
             <div className="with-symbol corner">
               <Price
                 el="input"
-                amount={listing.weekdayPrice}
+                amount={listing.price}
                 className="form-control form-control-lg"
               />
               <span className="usd">USD</span>
             </div>
           </div>
         </div>
-        {Feedback('weekdayPrice')}
+        {Feedback('price')}
         <div className="help-text price">
           Price is always in ETH, USD is an estimate.
         </div>

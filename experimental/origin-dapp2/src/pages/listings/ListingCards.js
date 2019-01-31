@@ -36,7 +36,10 @@ class Listings extends Component {
             </div>
             <h5>{a.title}</h5>
             <div className="price">
-              <div className="eth">{`${a.price.amount} ETH`}</div>
+              <div className="eth">
+                {`${a.price.amount} ETH`}
+                {a.__typename !== 'FractionalListing' ? '' : ' / night'}
+              </div>
               <div className="usd">
                 <Price amount={a.price.amount} />
               </div>

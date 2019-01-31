@@ -77,7 +77,7 @@ async function toIpfsData(data) {
     )
   }
 
-  let commission = { currency: 'OGN', amount: '0' }
+  const commission = { currency: 'OGN', amount: '0' }
   if (data.commission) {
     // Passed in commission takes precedence
     commission.amount = web3.utils.fromWei(data.commission, 'ether')
@@ -104,7 +104,8 @@ async function toIpfsData(data) {
     },
     commission,
     finalizes:
-      data.finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24 * 365
+      data.finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24 * 365,
+    ...(data.fractionalData || {})
   }
 
   validator('https://schema.originprotocol.com/offer_1.0.0.json', ipfsData)

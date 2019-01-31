@@ -4,6 +4,8 @@ import { Switch, Route } from 'react-router-dom'
 import withTokenBalance from 'hoc/withTokenBalance'
 import withWallet from 'hoc/withWallet'
 
+import PageTitle from 'components/PageTitle'
+
 import Step1 from './Step1'
 import Step2 from './Step2'
 import Boost from './Boost'
@@ -32,7 +34,6 @@ class CreateListing extends Component {
         price: '',
 
         // HomeShare fields:
-        weekdayPrice: '',
         weekendPrice: '',
         booked: [],
         customPricing: [],
@@ -56,6 +57,7 @@ class CreateListing extends Component {
     }
     return (
       <div className="container create-listing">
+        <PageTitle>Add a Listing</PageTitle>
         <Switch>
           <Route
             path="/create/step-2"
