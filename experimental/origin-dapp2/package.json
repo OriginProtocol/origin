@@ -16,8 +16,9 @@
     "build:js": "NODE_ENV=production webpack --progress",
     "build:css": "node scripts/getCss > public/app.css",
     "build": "npm run build:css && npm run build:js",
-    "lint": "eslint .",
+    "lint": "eslint . && npm run prettier:check",
     "prettier": "find ./src -iname '*.js' | xargs ./node_modules/.bin/prettier --write",
+    "prettier:check": "find ./src -iname '*.js' | xargs ./node_modules/.bin/prettier -c",
     "clean": "rm -rf data/db && rm -rf data/ipfs && rm -rf data/geth",
     "geth": "geth --nodiscover --datadir ./data/geth --maxpeers 0 --dev --rpc --ws --wsorigins=* --rpccorsdomain=* --rpcaddr=0.0.0.0 --wsaddr=0.0.0.0 --rpcvhosts=*"
   },

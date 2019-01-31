@@ -16,7 +16,8 @@
     "start": "node -r @babel/register server",
     "test": "mocha -r @babel/register --file test/setup test",
     "test:watch": "mocha -r @babel/register --file test/setup test -w",
-    "prettier": "find ./src -iname '*.js' | xargs ./node_modules/.bin/prettier --write"
+    "prettier": "find ./src -iname '*.js' | xargs ./node_modules/.bin/prettier --write",
+    "prettier:check": "find ./src -iname '*.js' | xargs ./node_modules/.bin/prettier -c"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
