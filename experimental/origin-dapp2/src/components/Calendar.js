@@ -122,7 +122,7 @@ class Calendar extends Component {
       content = 'Booked'
     } else if (day.unavailable) {
       content = 'Unavailable'
-    } else  if (day.customPrice) {
+    } else if (day.customPrice) {
       content = <span style={{ color: 'green' }}>{content}</span>
     }
 
