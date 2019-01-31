@@ -20,7 +20,7 @@ class Listing extends Component {
     return (
       <div className="container">
         <Query query={query} variables={vars}>
-          {({ networkStatus, error, data }) => {
+          {({ networkStatus, error, data, refetch }) => {
             if (networkStatus === 1) {
               return <div>Loading...</div>
             } else if (error) {
@@ -45,12 +45,15 @@ class Listing extends Component {
                 />
                 <Route
                   path="/listings/:listingID/edit"
-                  render={() => <EditListing listing={listing} />}
+                  render={() => (
+                    <EditListing listing={listing} refetch={refetch} />
+                  )}
                 />
                 <Route
                   render={() => (
                     <ListingDetail
                       listing={listing}
+                      refetch={refetch}
                       from={from}
                       quantity={this.state.quantity}
                       updateQuantity={quantity => this.setState({ quantity })}

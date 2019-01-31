@@ -3,6 +3,8 @@ import { Switch, Route } from 'react-router-dom'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 
+import PageTitle from 'components/PageTitle'
+
 import Step1 from '../create-listing/Step1'
 import Step2 from '../create-listing/Step2'
 import Boost from '../create-listing/Boost'
@@ -49,6 +51,7 @@ class EditListing extends Component {
     }
     return (
       <div className="container create-listing">
+        <PageTitle>Edit Listing</PageTitle>
         <Switch>
           <Route
             path="/listings/:listingID/edit/step-2"
@@ -64,7 +67,9 @@ class EditListing extends Component {
           />
           <Route
             path="/listings/:listingID/edit/review"
-            render={() => <Review {...stepProps} />}
+            render={() => (
+              <Review {...stepProps} refetch={this.props.refetch} />
+            )}
           />
           <Route render={() => <Step1 {...stepProps} />} />
         </Switch>

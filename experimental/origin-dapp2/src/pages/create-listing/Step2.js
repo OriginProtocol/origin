@@ -33,7 +33,8 @@ class Step2 extends Component {
         ? `/listings/${this.props.listingId}/edit`
         : '/create'
 
-    let ListingType = UnitListing, listingType = 'UnitListing'
+    let ListingType = UnitListing,
+      listingType = 'UnitListing'
     const { category, subCategory } = this.state
     if (category === 'schema.forRent' && subCategory === 'schema.housing') {
       ListingType = HomeShareListing
