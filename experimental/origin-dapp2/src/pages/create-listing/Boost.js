@@ -16,7 +16,7 @@ const NoOgn = () => (
     </div>
     <div>Once you acquire some OGN you will be able to boost your listing.</div>
     <div>
-      <Link to="/">Learn More</Link>
+      <Link to="/about/tokens">Learn More</Link>
     </div>
   </div>
 )
