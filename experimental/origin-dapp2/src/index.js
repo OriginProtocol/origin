@@ -7,6 +7,7 @@ import Styl from 'react-styl'
 import client from 'origin-graphql'
 
 import App from './pages/App'
+import Analytics from './components/Analytics'
 import './css/app.css'
 if (process.env.NODE_ENV === 'production') {
   try {
@@ -33,11 +34,12 @@ class AppWrapper extends Component {
 
   render() {
     if (!this.state.ready) return null
-
     return (
       <ApolloProvider client={client}>
         <HashRouter>
-          <Route component={App} />
+          <Analytics>
+            <Route component={App} />
+          </Analytics>
         </HashRouter>
       </ApolloProvider>
     )
