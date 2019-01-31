@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
-
-import { IntlViewerContext } from 'fbt-runtime'
 
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
@@ -22,8 +20,6 @@ import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
 import AboutToken from './about/AboutTokens'
-
-import { init } from 'fbt-runtime'
 
 class App extends Component {
   state = { hasError: false, locale: 'en_US' }
@@ -76,28 +72,15 @@ class App extends Component {
           </Switch>
         </main>
         <Footer
-          locale={this.state.locale}
-          onLocale={async locale => {
-            IntlViewerContext.locale = locale
-            if (locale !== 'en_US') {
-              const res = await fetch(`translations/${locale}.json`)
-              if (!res.ok) {
-                alert('Could not load translations')
-                return
-              }
-              const json = await res.json()
-              init({ translations: { [locale]: json } })
-            }
-            this.setState({ locale })
-            window.scrollTo(0, 0)
-          }}
+          locale={this.props.locale}
+          onLocale={this.props.onLocale}
         />
       </>
     )
   }
 }
 
-export default App
+export default withRouter(App)
 
 require('react-styl')(`
   .app-error
