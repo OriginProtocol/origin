@@ -28,6 +28,7 @@ const Configs = {
     ipfsRPC: 'https://ipfs.originprotocol.com',
     ipfsEventCache: 'QmQT7tfMA21xsxRiVKitGSxHqiAqnX3J1mXJEqWjWcPrR9',
     discovery: 'https://discovery.originprotocol.com',
+    growth: 'http://growth.originprotocol.com',
     V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
     OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
@@ -66,6 +67,7 @@ const Configs = {
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     ipfsEventCache: 'QmdMTYdXtKHzhTHDuUmx4eGG372pwbK4sQptPtoS6q3LsK',
     discovery: 'https://discovery.staging.originprotocol.com',
+    growth: 'http://growth.staging.originprotocol.com',
     V00_UserRegistry: '0x56727c8a51b276aec911afa8d6d80d485c89d5cc',
     OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
@@ -100,6 +102,7 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:9090`,
     ipfsRPC: `http://${HOST}:5002`,
+    growth: `http://${HOST}:4001`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
@@ -162,6 +165,7 @@ export function setNetwork(net, customConfig) {
   context.ipfsGateway = config.ipfsGateway
   context.ipfsRPC = config.ipfsRPC
   context.discovery = config.discovery
+  context.growth = config.growth
 
   delete context.marketplace
   delete context.marketplaceExec
