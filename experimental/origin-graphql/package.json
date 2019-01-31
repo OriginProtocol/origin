@@ -17,8 +17,8 @@
     "test": "mocha -r @babel/register --file test/setup test",
     "test:watch": "mocha -r @babel/register --file test/setup test -w",
     "lint": "eslint . && npm run prettier:check",
-    "prettier": "./node_modules/.bin/prettier --write *.js \"src/**/*.js\"",
-    "prettier:check": "./node_modules/.bin/prettier -c *.js \"src/**/*.js\""
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
