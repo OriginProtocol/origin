@@ -17,7 +17,11 @@ class DeployToken extends Component {
       decimals: '18',
       supply: '1000000000',
       type: 'OriginToken',
-      from: admin[0] ? admin[0].id : props.accounts[0] ? props.accounts[0].id : null
+      from: admin[0]
+        ? admin[0].id
+        : props.accounts[0]
+        ? props.accounts[0].id
+        : null
     }
   }
 

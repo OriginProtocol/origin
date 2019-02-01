@@ -78,7 +78,7 @@ class AccountButton extends Component {
     const id = typeof account === 'string' ? account : account.id
     try {
       return web3.eth.accounts.wallet[id].privateKey
-    } catch(e) {
+    } catch (e) {
       return ''
     }
   }
