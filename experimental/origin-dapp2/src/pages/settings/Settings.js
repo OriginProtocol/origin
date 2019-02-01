@@ -50,7 +50,6 @@ class Settings extends Component {
 
   render() {
     const input = formInput(this.state, state => this.setState(state))
-    const Feedback = formFeedback(this.state)
 
     return (
       <Mutation
