@@ -7,12 +7,13 @@
  *  - Perhaps send related data as it was at the time of the event, not as of crawl time
  *  - Possible configurable log levels
  */
+const logger = require('./logger')
 
 require('dotenv').config()
 try {
   require('envkey')
 } catch (error) {
-  console.log('EnvKey not configured')
+  logger.warn('EnvKey not configured')
 }
 
 const express = require('express')
@@ -21,7 +22,7 @@ const urllib = require('url')
 const Origin = require('origin').default
 const Web3 = require('web3')
 
-const { handleLog, LISTEN_RULES } = require('./rules')
+const { handleLog, EVENT_TO_HANDLER_MAP } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
 
 const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
@@ -37,26 +38,26 @@ const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
  *           { contractName: 'V00_Marketplace',
  *             eventName: 'ListingCreated',
  *             eventAbi: [Object],
- *             ruleFn: [...] } },
+ *             handler: [...] } },
  *    '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
  *       { V00_Marketplace:
  *           { contractName: 'V00_Marketplace',
  *             eventName: 'ListingUpdated',
  *             eventAbi: [Object],
- *             ruleFn: [...] } }
+ *             handler: [...] } }
  *  }
  */
 function buildSignatureToRules (context) {
   const signatureLookup = {}
-  for (const contractName in LISTEN_RULES) {
-    const eventRules = LISTEN_RULES[contractName]
+  for (const contractName in EVENT_TO_HANDLER_MAP) {
+    const eventHandlers = EVENT_TO_HANDLER_MAP[contractName]
     const contract = context.origin.contractService.contracts[contractName]
     if (contract === undefined) {
       throw Error("Can't find contract " + contractName)
     }
     contract.abi.filter(x => x.type === 'event').forEach(eventAbi => {
-      const ruleFn = eventRules[eventAbi.name]
-      if (ruleFn === undefined) {
+      const handler = eventHandlers[eventAbi.name]
+      if (handler === undefined) {
         return
       }
       const signature = context.web3.eth.abi.encodeEventSignature(eventAbi)
@@ -67,7 +68,7 @@ function buildSignatureToRules (context) {
         contractName: contractName,
         eventName: eventAbi.name,
         eventAbi: eventAbi,
-        ruleFn: ruleFn
+        handler: handler
       }
     })
   }
@@ -75,7 +76,7 @@ function buildSignatureToRules (context) {
 }
 
 /**
- * Builds a lookup object of marketplace contract names and versions
+ * Builds a lookup object of marketplace and identity contract names and versions
  * by ETH contract addresses.
  * @example
  * buildAddressToVersion()
@@ -84,18 +85,32 @@ function buildSignatureToRules (context) {
  *  }
  */
 async function buildAddressToVersion (context) {
-  const versionList = {}
-  const adapters = context.origin.marketplace.resolver.adapters
-  const versionKeys = Object.keys(adapters)
-  for (const versionKey of versionKeys) {
-    const adapter = adapters[versionKey]
-    await adapter.getContract()
-    const contract = adapter.contract
-    versionList[contract._address] = {
-      versionKey: versionKey,
-      contractName: adapter.contractName
+  async function extractVersions(adapters, excludeVersions) {
+    for (const versionKey of Object.keys(adapters)) {
+      if (excludeVersions.includes(versionKey)) {
+        continue
+      }
+      const adapter = adapters[versionKey]
+      await adapter.getContract()
+      const contract = adapter.contract
+      console.log(`ADDING CONTRACT ${adapter.contractName}, ADDR ` + contract._address)
+      versionList[contract._address] = {
+        versionKey: versionKey,
+        contractName: adapter.contractName
+      }
     }
   }
+
+  //console.log("CONTRACT SERVICE=", context.origin.contractService.contracts)
+  //console.log("CONTEXT=", context)
+  console.log("NETWORK ID=", context.networkId)
+
+  const versionList = {}
+  await extractVersions(context.origin.marketplace.resolver.adapters, [])
+  // Note: Ignore identity contract V00 since it is deprecated.
+  await extractVersions(context.origin.users.resolver.adapters, ['000'])
+
+  console.log("VersionList: ", versionList)
   return versionList
 }
 
@@ -118,9 +133,7 @@ function setupOriginJS (config, web3) {
 
   // Issue a warning for any recommended env var that is not set.
   if (!config.blockEpoch) {
-    console.log(
-      'WARNING: For performance reasons it is recommended to set BLOCK_EPOCH'
-    )
+    logger.warn('For performance reasons it is recommended to set BLOCK_EPOCH')
   }
 
   return new Origin({
@@ -153,11 +166,12 @@ class Context {
 
     const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
     this.web3 = new Web3(web3Provider)
+    this.networkId = await this.web3.eth.net.getId()
+
     this.origin = setupOriginJS(config, this.web3)
 
     this.signatureToRules = buildSignatureToRules(this)
     this.addressToVersion = await buildAddressToVersion(this)
-    this.networkId = await this.web3.eth.net.getId()
     return this
   }
 }
@@ -170,9 +184,7 @@ async function runBatch (opts, context) {
   const toBlock = opts.toBlock
   let lastLogBlock
 
-  console.log(
-    'Looking for logs from block ' + fromBlock + ' to ' + (toBlock || 'Latest')
-  )
+  logger.info(`Looking for logs from block ${fromBlock} to ${toBlock || 'Latest'}`)
 
   const eventTopics = Object.keys(context.signatureToRules)
   const logs = await context.web3.eth.getPastLogs({
@@ -182,7 +194,7 @@ async function runBatch (opts, context) {
   })
 
   if (logs.length > 0) {
-    console.log('' + logs.length + ' logs found')
+    logger.info(`${logs.length} logs found`)
   }
 
   for (const log of logs) {
@@ -218,10 +230,10 @@ async function liveTracking (context) {
       start = new Date()
       const currentBlockNumber = await context.web3.eth.getBlockNumber()
       if (currentBlockNumber === lastCheckedBlock) {
-        console.log('No new block.')
+        logger.info('No new block.')
         return scheduleNextCheck()
       }
-      console.log('New block: ' + currentBlockNumber)
+      logger.info(`New block: ${currentBlockNumber}`)
       blockGauge.set(currentBlockNumber)
       const toBlock = Math.min(
         // Pick the smallest of either
@@ -270,8 +282,6 @@ const config = {
   elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
   // Index events in the database.
   db: args['--db'] || (process.env.DATABASE === 'true'),
-  // Verbose mode, includes dumping events on the console.
-  verbose: args['--verbose'] || (process.env.VERBOSE === 'true'),
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
@@ -321,10 +331,10 @@ const blockGauge = new bundle.promClient.Gauge({
 })
 
 app.listen({ port: port }, () => {
-  console.log(`Serving Prometheus metrics on port ${port}`)
+  logger.info(`Serving Prometheus metrics on port ${port}`)
 
   // Start the listener.
-  console.log(`Starting event-listener with config:\n${
-    JSON.stringify(config, (k, v) => v === undefined ? null : v, 2)}`)
+  logger.info(`Starting event-listener with config:\n
+    ${JSON.stringify(config, (k, v) => v === undefined ? null : v, 2)}`)
   main()
 })

@@ -1,3 +1,4 @@
+const logger = require('./logger')
 const db = require('../models')
 const fs = require('fs')
 
@@ -71,14 +72,13 @@ async function withRetrys (fn, exitOnError = true) {
       waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
       // Max out at two minutes
       waitTime = Math.min(waitTime, MAX_RETRY_WAIT_MS)
-      console.log('ERROR', e)
-      console.log(`will retry in ${waitTime / 1000} seconds`)
+      logger.error(e, `will retry in ${waitTime / 1000} seconds`)
       tryCount += 1
       await new Promise(resolve => setTimeout(resolve, waitTime))
     }
     if (tryCount >= MAX_RETRYS) {
       if (exitOnError) {
-        console.log('EXITING: Maximum number of retrys reached')
+        logger.error('EXITING ! Maximum number of retrys reached')
         // Now it's up to our environment to restart us.
         // Hopefully with a clean start, things will work better
         process.exit(1)

@@ -2,7 +2,7 @@ const chai = require('chai')
 
 const expect = chai.expect
 
-const { checkFreshness } = require('../src/listener/rules')
+const { checkFreshness } = require('../src/listener/handler_marketplace')
 
 
 describe('checkFreshness', () => {
