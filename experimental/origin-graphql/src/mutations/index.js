@@ -33,6 +33,7 @@ import updateTokenAllowance from './token/updateTokenAllowance'
 import deployUserRegistry from './identity/deployUserRegistry'
 import deployIdentityContract from './identity/deployIdentityContract'
 import deployIdentity from './identity/deployIdentity'
+import deployIdentityEvents from './identity/deployIdentityEvents'
 import updateIdentity from './identity/updateIdentity'
 
 import generateEmailCode from './attestations/generateEmailCode'
@@ -76,6 +77,7 @@ export default {
   deployUserRegistry,
   deployIdentityContract,
   deployIdentity,
+  deployIdentityEvents,
   updateIdentity,
   generatePhoneCode,
   verifyPhoneCode,

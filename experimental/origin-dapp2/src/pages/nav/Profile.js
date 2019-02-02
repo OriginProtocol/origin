@@ -89,7 +89,7 @@ const Identity = ({ id }) => (
   <Query query={IdentityQuery} variables={{ id }}>
     {({ data, loading, error }) => {
       if (loading || error) return null
-      const profile = get(data, 'web3.account.identity.profile')
+      const profile = get(data, 'web3.account.identity')
       if (!profile) {
         return null
       }

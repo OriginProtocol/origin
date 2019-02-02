@@ -34,6 +34,7 @@ const ProfileFields = [
   'lastName',
   'description',
   'avatar',
+  'attestations',
   'facebookVerified',
   'twitterVerified',
   'airbnbVerified',
@@ -44,7 +45,7 @@ const ProfileFields = [
 class UserProfile extends Component {
   constructor(props) {
     super(props)
-    const profile = get(props, 'identity.profile')
+    const profile = get(props, 'identity')
     this.state = {
       firstName: '',
       lastName: '',
@@ -54,7 +55,7 @@ class UserProfile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const profile = get(this.props, 'identity.profile')
+    const profile = get(this.props, 'identity')
     if (profile && !prevProps.identity) {
       this.setState(pick(profile, ProfileFields))
     }
@@ -62,14 +63,17 @@ class UserProfile extends Component {
 
   render() {
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
-      if (this.state[`${key}Attestation`])
+      if (this.state[`${key}Attestation`]) {
         m.push(this.state[`${key}Attestation`])
+      }
       return m
     }, [])
 
     const name = []
     if (this.state.firstName) name.push(this.state.firstName)
     if (this.state.lastName) name.push(this.state.lastName)
+
+    console.log(this.state)
 
     return (
       <div className="container profile-edit">
@@ -112,7 +116,7 @@ class UserProfile extends Component {
 
             <ProfileStrength
               large={true}
-              published={get(this.props, 'identity.profile.strength', 0)}
+              published={get(this.props, 'identity.strength', 0)}
               unpublished={unpublishedProfileStrength(this)}
             />
 
@@ -120,6 +124,7 @@ class UserProfile extends Component {
               <DeployIdentity
                 className="btn btn-primary btn-rounded btn-lg"
                 identity={get(this.props, 'identity.id')}
+                refetch={this.props.identityRefetch}
                 profile={pick(this.state, [
                   'firstName',
                   'lastName',
@@ -127,6 +132,7 @@ class UserProfile extends Component {
                   'avatar'
                 ])}
                 attestations={attestations}
+                existingAttestations={this.state.attestations}
                 validate={() => this.validate()}
                 children="Publish Now"
               />
@@ -160,7 +166,7 @@ class UserProfile extends Component {
 
   renderAtt(type, text, soon) {
     const { wallet } = this.props
-    const profile = get(this.props, 'identity.profile', {})
+    const profile = get(this.props, 'identity', {})
 
     let status = ''
     if (profile[`${type}Verified`]) {

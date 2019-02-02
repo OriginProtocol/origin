@@ -13,7 +13,7 @@ import withWallet from 'hoc/withWallet'
 class DeployIdentity extends Component {
   state = {}
   render() {
-    const update = this.props.identity ? true : false
+    const update = false //this.props.identity ? true : false
     return (
       <Mutation
         mutation={update ? UpdateIdentityMutation : DeployIdentityMutation}
@@ -77,19 +77,22 @@ class DeployIdentity extends Component {
     upsertIdentity({ variables })
   }
 
-  renderWaitModal(update) {
+  renderWaitModal() {
     if (!this.state.waitFor) return null
 
     return (
       <WaitForTransaction
         shouldClose={this.state.shouldClose}
-        onClose={() =>
+        onClose={() => {
+          if (this.props.refetch) {
+            this.props.refetch()
+          }
           this.setState({ waitFor: false, error: false, shouldClose: false })
-        }
+        }}
         hash={this.state.waitFor}
-        event={update ? 'ClaimAdded' : 'NewUser'}
+        event="IdentityUpdated"
       >
-        {({ client }) => {
+        {() => {
           return (
             <div className="make-offer-modal">
               <div className="success-icon" />
@@ -97,7 +100,6 @@ class DeployIdentity extends Component {
               <button
                 className="btn btn-outline-light"
                 onClick={async () => {
-                  await client.resetStore()
                   this.setState({ shouldClose: true })
                 }}
                 children="OK"

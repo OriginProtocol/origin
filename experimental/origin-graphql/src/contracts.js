@@ -4,6 +4,7 @@ import ClaimHolderRegisteredContract from 'origin-contracts/build/contracts/Clai
 import ClaimHolderPresignedContract from 'origin-contracts/build/contracts/ClaimHolderPresigned'
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
 import TokenContract from 'origin-contracts/build/contracts/TestToken'
+import IdentityEventsContract from 'origin-contracts/build/contracts/IdentityEvents'
 
 import Web3 from 'web3'
 import EventSource from 'origin-eventsource'
@@ -29,6 +30,7 @@ const Configs = {
     ipfsEventCache: 'QmQT7tfMA21xsxRiVKitGSxHqiAqnX3J1mXJEqWjWcPrR9',
     discovery: 'https://discovery.originprotocol.com',
     V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
+    IdentityEvents: '0x8ac16c08105de55a02e2b7462b1eec6085fa4d86',
     OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
     V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
@@ -68,6 +70,7 @@ const Configs = {
     discovery: 'https://discovery.staging.originprotocol.com',
     V00_UserRegistry: '0x56727c8a51b276aec911afa8d6d80d485c89d5cc',
     OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
+    IdentityEvents: '0x160455a06d8e5aa38862afc34e4eca0566ee4e7e',
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
     V00_Marketplace: '0xe842831533c4bf4b0f71b4521c4320bdb669324e',
     V00_Marketplace_Epoch: '3086315',
@@ -154,6 +157,7 @@ export function setNetwork(net, customConfig) {
     config.OriginToken = window.localStorage.OGNContract
     config.V00_Marketplace = window.localStorage.marketplaceContract
     config.V00_UserRegistry = window.localStorage.userRegistryContract
+    config.IdentityEvents = window.localStorage.identityEventsContract
   }
   context.net = net
   context.config = config
@@ -169,6 +173,7 @@ export function setNetwork(net, customConfig) {
   delete context.ognExec
   delete context.marketplaces
   delete context.tokens
+  delete context.identityEvents
   delete context.claimHolderRegistered
   delete context.metaMask
   if (wsSub) {
@@ -205,10 +210,13 @@ export function setNetwork(net, customConfig) {
   context.claimHolderPresigned = new web3.eth.Contract(
     ClaimHolderPresignedContract.abi
   )
-
   context.userRegistry = new web3.eth.Contract(
     UserRegistryContract.abi,
     config.V00_UserRegistry
+  )
+  context.identityEvents = new web3.eth.Contract(
+    IdentityEventsContract.abi,
+    config.IdentityEvents
   )
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
 
@@ -348,8 +356,13 @@ export function setMarketplace(address, epoch) {
       MarketplaceContract.abi,
       address
     )
+    context.identityEventsMM = new metaMask.eth.Contract(
+      IdentityEventsContract.abi,
+      context.identityEvents.options.address
+    )
     if (metaMaskEnabled) {
       context.marketplaceExec = context.marketplaceMM
+      context.identityEventsExec = context.identityEventsMM
     }
   }
 }

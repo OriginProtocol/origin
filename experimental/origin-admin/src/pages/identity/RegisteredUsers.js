@@ -34,11 +34,11 @@ class RegisteredUsers extends Component {
               return <LoadingSpinner />
             } else if (error) {
               return <QueryError error={error} query={IdentitiesQuery} />
-            } else if (!data || !data.userRegistry) {
+            } else if (!data || !data.identityEvents) {
               return 'No user registry contract?'
             }
 
-            const { nodes, pageInfo } = data.userRegistry.identities
+            const { nodes, pageInfo } = data.identityEvents.identities
             const { hasNextPage, endCursor: after } = pageInfo
 
             return (

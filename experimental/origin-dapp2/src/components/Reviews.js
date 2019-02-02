@@ -19,7 +19,7 @@ const Reviews = ({ id }) => (
         <div className="reviews">
           <h3>{`Reviews ${count}`}</h3>
           {reviews.map((review, idx) => {
-            const profile = get(review, 'reviewer.account.identity.profile', {})
+            const profile = get(review, 'reviewer.account.identity', {})
             return (
               <div key={idx} className="review">
                 <div className="user-info">
