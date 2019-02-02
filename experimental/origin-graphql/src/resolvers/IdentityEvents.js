@@ -32,14 +32,19 @@ function getAttestations(account, attestations) {
       if (get(attestation, 'data.attestation.email.verified', false)) {
         result.emailVerified = true
       }
-      if (
-        get(attestation, 'data.attestation.site.siteName') === 'facebook.com'
-      ) {
+      if (get(attestation, 'data.attestation.phone.verified', false)) {
+        result.phoneVerified = true
+      }
+      const siteName = get(attestation, 'data.attestation.site.siteName')
+      if (siteName === 'facebook.com') {
         result.facebookVerified = get(
           attestation,
           'data.attestation.site.userId.verified',
           false
         )
+      }
+      if (siteName === 'airbnb.com') {
+        result.airbnbVerified = true
       }
     }
   })
@@ -117,8 +122,6 @@ export function identity({ id, ipfsHash }) {
       ...getAttestations(id, data.attestations || []),
       strength: 0
     }
-
-    console.log(identity)
 
     Object.keys(progressPct).forEach(key => {
       if (identity[key]) {

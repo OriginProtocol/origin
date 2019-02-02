@@ -28,9 +28,11 @@ async function verifyTwitter(_, { identity }) {
 
       const url = `${bridgeServer}/api/attestations/twitter/verify`
 
+      console.log(iframeData)
+
       const response = await fetch(url, {
-        headers: { 'content-type': 'application/json' },
-        credentials: 'include',
+        headers: { 'content-type': 'application/json', accept: '*/*' },
+        // credentials: 'include',
         method: 'POST',
         body: JSON.stringify({
           identity,

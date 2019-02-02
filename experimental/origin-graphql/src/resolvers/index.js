@@ -9,7 +9,6 @@ import Offer from './Offer'
 import TokenHolder from './TokenHolder'
 import Event from './Event'
 import Token from './Token'
-import Identity from './Identity'
 import Conversation from './messaging/Conversation'
 import Messaging from './messaging/Messaging'
 import UserRegistry from './UserRegistry'
@@ -37,7 +36,6 @@ export default {
   Offer,
   Token,
   TokenHolder,
-  Identity,
   Conversation,
   Messaging,
   UserRegistry,

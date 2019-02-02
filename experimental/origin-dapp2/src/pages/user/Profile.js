@@ -73,8 +73,6 @@ class UserProfile extends Component {
     if (this.state.firstName) name.push(this.state.firstName)
     if (this.state.lastName) name.push(this.state.lastName)
 
-    console.log(this.state)
-
     return (
       <div className="container profile-edit">
         <PageTitle>Edit your profile</PageTitle>
@@ -131,8 +129,10 @@ class UserProfile extends Component {
                   'description',
                   'avatar'
                 ])}
-                attestations={attestations}
-                existingAttestations={this.state.attestations}
+                attestations={[
+                  ...(this.state.attestations || []),
+                  ...attestations
+                ]}
                 validate={() => this.validate()}
                 children="Publish Now"
               />

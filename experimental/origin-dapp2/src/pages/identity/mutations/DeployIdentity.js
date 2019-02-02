@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 
 import DeployIdentityMutation from 'mutations/DeployIdentity'
-import UpdateIdentityMutation from 'mutations/UpdateIdentity'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
@@ -13,14 +12,12 @@ import withWallet from 'hoc/withWallet'
 class DeployIdentity extends Component {
   state = {}
   render() {
-    const update = false //this.props.identity ? true : false
     return (
       <Mutation
-        mutation={update ? UpdateIdentityMutation : DeployIdentityMutation}
-        onCompleted={res => {
-          const resObj = update ? res.updateIdentity : res.deployIdentity
-          this.setState({ waitFor: resObj.id })
-        }}
+        mutation={DeployIdentityMutation}
+        onCompleted={({ deployIdentity }) =>
+          this.setState({ waitFor: deployIdentity.id })
+        }
         onError={errorData =>
           this.setState({ waitFor: false, error: 'mutation', errorData })
         }
@@ -35,12 +32,12 @@ class DeployIdentity extends Component {
                   canDeploy = this.props.validate()
                 }
                 if (canDeploy) {
-                  this.onClick(upsertIdentity, update)
+                  this.onClick(upsertIdentity)
                 }
               }}
               children={this.props.children}
             />
-            {this.renderWaitModal(update)}
+            {this.renderWaitModal()}
             {this.state.error && (
               <TransactionError
                 reason={this.state.error}
@@ -54,7 +51,7 @@ class DeployIdentity extends Component {
     )
   }
 
-  onClick(upsertIdentity, update) {
+  onClick(upsertIdentity) {
     if (this.props.cannotTransact) {
       this.setState({
         error: this.props.cannotTransact,
@@ -68,10 +65,6 @@ class DeployIdentity extends Component {
       from: this.props.wallet,
       attestations: this.props.attestations,
       profile: this.props.profile
-    }
-
-    if (update) {
-      variables.identity = this.props.identity
     }
 
     upsertIdentity({ variables })
