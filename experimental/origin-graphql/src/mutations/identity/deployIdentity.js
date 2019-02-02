@@ -6,13 +6,15 @@ import contracts from '../../contracts'
 async function deployIdentity(_, { from, profile = {}, attestations = [] }) {
   await checkMetaMask(from)
 
-  attestations = attestations.map(a => {
-    try {
-      return JSON.parse(a)
-    } catch(e) {
-      return null
-    }
-  }).filter(a => a)
+  attestations = attestations
+    .map(a => {
+      try {
+        return JSON.parse(a)
+      } catch (e) {
+        return null
+      }
+    })
+    .filter(a => a)
 
   profile.ethAddress = from
   const data = {
