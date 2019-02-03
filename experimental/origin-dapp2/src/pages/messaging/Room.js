@@ -48,9 +48,7 @@ const Message = props => {
         </div>
       )}
       <div className={`message${isUser}`}>
-        {!isUser && (
-          <Avatar avatar={get(props, 'identity.avatar')} size={60} />
-        )}
+        {!isUser && <Avatar avatar={get(props, 'identity.avatar')} size={60} />}
         <div className="bubble">
           <div className="top">
             {name && <div className="name">{name}</div>}
@@ -58,9 +56,7 @@ const Message = props => {
           </div>
           <div className="content">{messageContent}</div>
         </div>
-        {isUser && (
-          <Avatar avatar={get(props, 'identity.avatar')} size={60} />
-        )}
+        {isUser && <Avatar avatar={get(props, 'identity.avatar')} size={60} />}
       </div>
     </>
   )
