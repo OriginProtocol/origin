@@ -561,7 +561,6 @@
   "web3-provider.coinbase": "Portafoglio Coinbase",
   "web3-provider.trust": "Trust Wallet",
   "web3-provider.intentRequiresSignIn": "Per {web3Intent}, è necessario accedere a {currentProvider}.",
-  "web3-provider.connecting": "Collegamento alla rete...",
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} dovrebbe essere impostato su {supportedNetworkName}.",
   "web3-provider.currentlyOnNetwork": "È attualmente su {currentNetworkName}.",
   "web3-provider.redirectMessage": "Se stai cercando {label}, visita {url}.",
