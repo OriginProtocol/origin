@@ -561,7 +561,6 @@
   "web3-provider.coinbase": "crwdns5098:0crwdne5098:0",
   "web3-provider.trust": "crwdns5100:0crwdne5100:0",
   "web3-provider.intentRequiresSignIn": "crwdns5102:0{web3Intent}crwdnd5102:0{currentProvider}crwdne5102:0",
-  "web3-provider.connecting": "crwdns5104:0crwdne5104:0",
   "web3-provider.shouldBeOnRinkeby": "crwdns5106:0{currentProvider}crwdnd5106:0{supportedNetworkName}crwdne5106:0",
   "web3-provider.currentlyOnNetwork": "crwdns5108:0{currentNetworkName}crwdne5108:0",
   "web3-provider.redirectMessage": "crwdns5110:0{label}crwdnd5110:0{url}crwdne5110:0",
