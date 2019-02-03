@@ -561,7 +561,6 @@
   "web3-provider.coinbase": "కాయిన్బేస్ వాలెట్",
   "web3-provider.trust": "ట్రస్ట్ వాలెట్",
   "web3-provider.intentRequiresSignIn": "{web3Intent} చేయడానికి, మీరు {currentProvider} గా సైన్ ఇన్ చేయాలి.",
-  "web3-provider.connecting": "నెట్వర్క్కు కనెక్ట్ చేస్తోంది...",
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} ను {supportedNetworkName} కు అమర్చాలి.",
   "web3-provider.currentlyOnNetwork": "ఇది ప్రస్తుతం {currentNetworkName}.",
   "web3-provider.redirectMessage": "మీరు {label} కోసం వెతుకుతుంటే, {url} సందర్శించండి.",
