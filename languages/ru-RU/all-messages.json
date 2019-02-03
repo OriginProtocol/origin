@@ -561,7 +561,6 @@
   "web3-provider.coinbase": "Кошелек Coinbase",
   "web3-provider.trust": "Кошелек Trust Wallet",
   "web3-provider.intentRequiresSignIn": "Чтобы {web3Intent}, нужно войти в {currentProvider}.",
-  "web3-provider.connecting": "Подключение к сети...",
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} должен быть подключен к {supportedNetworkName}.",
   "web3-provider.currentlyOnNetwork": "Сейчас он подключен к {currentNetworkName}.",
   "web3-provider.redirectMessage": "Если вы ищете {label}, посетите {url}.",
