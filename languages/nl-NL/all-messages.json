@@ -173,7 +173,7 @@
   "listing-create.boost-your-listing": "Boost je aanbieding",
   "listing-create.form-help-boost": "U kunt uw advertentie een boost geven om de zichtbaarheid te verhogen in de Origin DApp. Meer kopers zullen je aanbieding zien, wat de kans op een snelle en succesvolle verkoop vergroot.",
   "listing-create.no-ogn": "U hebt 0 {ogn} in uw portemonnee.",
-  "listing-create.post-acquisition": "Once you acquire some OGN you will be able to boost your listing.",
+  "listing-create.post-acquisition": "Zodra u een minimale hoeveelheid OGN heeft, kunt u uw advertentie boosten.",
   "listing-create.totalNumberOfUnits": "Total number of units: {units}",
   "listing-create.totalBoostRequired": "Total boost required: {boost}",
   "listing-create.boostCapTooLow": "Your boost limit is lower than the total amount needed to boost all your units. After the limit is reached, the remaining units will not be boosted.",
