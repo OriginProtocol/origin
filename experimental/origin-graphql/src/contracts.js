@@ -29,6 +29,7 @@ const Configs = {
     ipfsRPC: 'https://ipfs.originprotocol.com',
     ipfsEventCache: 'QmQT7tfMA21xsxRiVKitGSxHqiAqnX3J1mXJEqWjWcPrR9',
     discovery: 'https://discovery.originprotocol.com',
+    bridge: 'https://bridge.originprotocol.com',
     V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
     IdentityEvents: '0x8ac16c08105de55a02e2b7462b1eec6085fa4d86',
     OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
@@ -68,6 +69,7 @@ const Configs = {
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     ipfsEventCache: 'QmdMTYdXtKHzhTHDuUmx4eGG372pwbK4sQptPtoS6q3LsK',
     discovery: 'https://discovery.staging.originprotocol.com',
+    bridge: 'https://bridge.staging.originprotocol.com',
     V00_UserRegistry: '0x56727c8a51b276aec911afa8d6d80d485c89d5cc',
     OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
     IdentityEvents: '0x160455a06d8e5aa38862afc34e4eca0566ee4e7e',
@@ -87,7 +89,8 @@ const Configs = {
     provider: 'https://rinkeby.infura.io',
     providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
-    ipfsRPC: `https://ipfs.staging.originprotocol.com`
+    ipfsRPC: `https://ipfs.staging.originprotocol.com`,
+    bridge: 'https://bridge.staging.originprotocol.com'
   },
   kovanTst: {
     provider: 'https://kovan.infura.io',

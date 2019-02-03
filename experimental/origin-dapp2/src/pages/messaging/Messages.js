@@ -14,13 +14,13 @@ import PageTitle from 'components/PageTitle'
 import distanceToNow from 'utils/distanceToNow'
 
 const Subject = ({ conversation, ...props }) => {
-  const name = get(props, 'identity.profile.fullName', conversation.id)
+  const name = get(props, 'identity.fullName', conversation.id)
   const timestamp = conversation.lastMessage
     ? conversation.lastMessage.timestamp
     : conversation.timestamp
   return (
     <>
-      <Avatar avatar={get(props, 'identity.profile.avatar')} size={40} />
+      <Avatar avatar={get(props, 'identity.avatar')} size={40} />
       <div className="right">
         <div className="top">
           <div className="name">{name}</div>

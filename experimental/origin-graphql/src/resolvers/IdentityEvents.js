@@ -46,6 +46,9 @@ function getAttestations(account, attestations) {
       if (siteName === 'airbnb.com') {
         result.airbnbVerified = true
       }
+      if (siteName === 'twitter.com') {
+        result.twitterVerified = true
+      }
     }
   })
   return result
@@ -92,6 +95,9 @@ function validateAttestation(account, attestation) {
 
 export function identity({ id, ipfsHash }) {
   return new Promise(async resolve => {
+    if (!contracts.identityEvents.options.address) {
+      return null
+    }
     if (!ipfsHash) {
       const events = await contracts.identityEvents.getPastEvents('allEvents', {
         topics: [null, contracts.web3.utils.padLeft(id.toLowerCase(), 64)],
@@ -122,6 +128,10 @@ export function identity({ id, ipfsHash }) {
       ...getAttestations(id, data.attestations || []),
       strength: 0
     }
+
+    identity.fullName = [identity.firstName, identity.lastName]
+      .filter(n => n)
+      .join(' ')
 
     Object.keys(progressPct).forEach(key => {
       if (identity[key]) {

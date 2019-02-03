@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
@@ -49,8 +50,16 @@ class AirbnbAttestation extends Component {
   renderGenerateCode() {
     return (
       <>
-        <h2>Verify your Airbnb account</h2>
-        <div className="instructions">Enter Airbnb profile URL below</div>
+        <h2>
+          <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
+            Verify your Airbnb account
+          </fbt>
+        </h2>
+        <div className="instructions">
+          <fbt desc="VerifyAirbnb.enterAirbnbProfileUrl">
+            Enter Airbnb profile URL below
+          </fbt>
+        </div>
         <div className="mt-3">
           <input
             ref={ref => (this.inputRef = ref)}
@@ -64,15 +73,17 @@ class AirbnbAttestation extends Component {
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="help">
-          Other users will know that you have a verified Airbnb profile and your
-          user id will be published on the blockchain.
+          <fbt desc="VerifyAirbnb.airbnbProfilePublished">
+            Other users will know that you have a verified Airbnb profile and
+            your user id will be published on the blockchain.
+          </fbt>
         </div>
         <div className="actions">
           {this.renderCodeButton()}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
+            children={fbt('Cancel', 'VerifyAirbnb.cancel')}
           />
         </div>
       </>
@@ -82,10 +93,16 @@ class AirbnbAttestation extends Component {
   renderVerifyCode() {
     return (
       <>
-        <h2>Verify your Airbnb account</h2>
+        <h2>
+          <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
+            Verify your Airbnb account
+          </fbt>
+        </h2>
         <div className="instructions">
-          Go to the Airbnb website, edit your profile and paste the following
-          text into profile description:
+          <fbt desc="VerifyAirbnb.enterCodeIntoAirbnb">
+            Go to the Airbnb website, edit your profile and paste the following
+            text into profile description:
+          </fbt>
         </div>
         <div className="my-3 verification-code">
           <input
@@ -99,14 +116,17 @@ class AirbnbAttestation extends Component {
           )}
         </div>
         <div className="help">
-          Continue once the confirmation code is entered in your Airbnb profile.
+          <fbt desc="VerifyAirbnb.continueToConfirmationCodeCheck">
+            Continue once the confirmation code is entered in your Airbnb
+            profile.
+          </fbt>
         </div>
         <div className="actions">
           {this.renderVerifyButton()}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
+            children={fbt('Cancel', 'VerifyAirbnb.cancel')}
           />
         </div>
       </>

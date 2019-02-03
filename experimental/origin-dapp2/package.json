@@ -24,7 +24,8 @@
     "fbt:manifest": "node -r @babel/register ./node_modules/babel-plugin-fbt/bin/manifest --src src",
     "fbt:collect": "node -r @babel/register ./node_modules/babel-plugin-fbt/bin/collectFBT --json-input --pretty < .src_manifest.json > .source_strings.json",
     "fbt:translate": "node  -r @babel/register ./node_modules/babel-plugin-fbt/bin/translate.js --translations translations/*.json --jenkins --pretty > .translated_fbts.json",
-    "fbt:clean": "rm .enum_manifest.json .src_manifest.json source_strings.json src/translatedFbts.json 2&> /dev/null || exit 0"
+    "fbt:clean": "rm .enum_manifest.json .src_manifest.json source_strings.json src/translatedFbts.json 2&> /dev/null || exit 0",
+    "translate": "npm run fbt:manifest && npm run fbt:collect && node scripts/convertTranslations && npm run fbt:translate && node scripts/splitTranslations"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
@@ -32,8 +33,6 @@
     "@babel/register": "^7.0.0",
     "apollo-cache-persist": "^0.1.1",
     "apollo-link": "^1.2.7",
-    "babel-plugin-fbt": "^0.9.1",
-    "babel-plugin-fbt-runtime": "^0.9.0",
     "babel-plugin-module-resolver": "^3.1.3",
     "bs58": "^4.0.1",
     "date-fns": "^1.30.1",
@@ -109,6 +108,8 @@
     "apollo-client": "^2.4.12",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
+    "babel-plugin-fbt": "^0.9.1",
+    "babel-plugin-fbt-runtime": "^0.9.0",
     "bip39": "^2.5.0",
     "bootstrap": "^4.2.1",
     "clean-webpack-plugin": "^1.0.1",

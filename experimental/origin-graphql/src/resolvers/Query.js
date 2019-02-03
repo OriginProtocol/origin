@@ -73,6 +73,12 @@ export default {
     }),
   messaging: (_, args) =>
     new Promise(async resolve => {
+      if (
+        typeof window !== 'undefined' &&
+        window.localStorage.disabledMessaging
+      ) {
+        return resolve(null)
+      }
       let id = args.id
       if (id === 'defaultAccount') {
         const accounts = await contracts.metaMask.eth.getAccounts()

@@ -20,7 +20,8 @@
   "command": {
     "bootstrap": {
       "nohoist": [
-        "openzeppelin-solidity"
+        "openzeppelin-solidity",
+        "babel-plugin-fbt"
       ]
     }
   },

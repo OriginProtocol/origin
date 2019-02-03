@@ -100,9 +100,7 @@ const Identity = ({ id }) => (
           <div className="info">
             <Avatar avatar={profile.avatar} size="3rem" />
             <div>
-              <div className="name">{`${profile.firstName} ${
-                profile.lastName
-              }`}</div>
+              <div className="name">{profile.fullName}</div>
               <div className="attestations">
                 {profile.twitterVerified && (
                   <div className="attestation twitter" />
