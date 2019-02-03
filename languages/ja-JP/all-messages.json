@@ -561,7 +561,6 @@
   "web3-provider.coinbase": "コインベースウォレット",
   "web3-provider.trust": "Trust ウォレット",
   "web3-provider.intentRequiresSignIn": "{web3Intent} を行うためには{currentProvider} にサインインしてください。",
-  "web3-provider.connecting": "ネットワークに接続中です...",
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} は {supportedNetworkName} に設定してください。",
   "web3-provider.currentlyOnNetwork": "{currentNetworkName} に接続中です。",
   "web3-provider.redirectMessage": "{label} お探しの場合は、 {url} をご覧ください。",
