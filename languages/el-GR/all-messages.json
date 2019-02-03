@@ -561,7 +561,6 @@
   "web3-provider.coinbase": "Πορτοφόλι Coinbase",
   "web3-provider.trust": "Εμπιστέψου αυτό το πορτοφόλι",
   "web3-provider.intentRequiresSignIn": "Προκειμένου να {web3Intent}, πρέπει να εισαχθείτε στο {currentProvider}.",
-  "web3-provider.connecting": "Σύνδεση σε δίκτυο...",
   "web3-provider.shouldBeOnRinkeby": "{currentProvider} θα πρέπει να οριστεί σε {supportedNetworkName}.",
   "web3-provider.currentlyOnNetwork": "Αυτή τη στιγμή βρίσκεται στο {currentNetworkName}.",
   "web3-provider.redirectMessage": "Αν ψάχνετε για {label}, επισκεφθείτε {url}.",
