@@ -73,7 +73,7 @@ class FinalizeOffer extends Component {
           if (this.props.refetch) {
             this.props.refetch()
           }
-          window.scrollTo(0,0)
+          window.scrollTo(0, 0)
         }}
         hash={this.state.waitFor}
         event="OfferFinalized"
