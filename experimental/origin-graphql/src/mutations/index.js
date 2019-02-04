@@ -30,11 +30,11 @@ import deployToken from './token/deployToken'
 import transferToken from './token/transferToken'
 import updateTokenAllowance from './token/updateTokenAllowance'
 
-import deployUserRegistry from './identity/deployUserRegistry'
-import deployIdentityContract from './identity/deployIdentityContract'
+// import deployUserRegistry from './identity/deployUserRegistry'
+// import deployIdentityContract from './identity/deployIdentityContract'
 import deployIdentity from './identity/deployIdentity'
 import deployIdentityEvents from './identity/deployIdentityEvents'
-import updateIdentity from './identity/updateIdentity'
+// import updateIdentity from './identity/updateIdentity'
 
 import generateEmailCode from './attestations/generateEmailCode'
 import verifyEmailCode from './attestations/verifyEmailCode'
@@ -46,46 +46,46 @@ import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 
 export default {
-  addAffiliate,
   acceptOffer,
+  addAffiliate,
+  addData,
   addFunds,
-  updateRefund,
   createListing,
   createWallet,
-  importWallet,
-  importWallets,
+  deployIdentity,
+  // deployIdentityContract,
+  deployIdentityEvents,
   deployMarketplace,
   deployToken,
+  // deployUserRegistry,
+  disputeOffer,
+  enableMessaging,
   executeRuling,
   finalizeOffer,
-  disputeOffer,
+  generateAirbnbCode,
+  generateEmailCode,
+  generatePhoneCode,
+  importWallet,
+  importWallets,
   makeOffer,
   removeWallet,
   sendFromNode,
   sendFromWallet,
+  sendMessage,
   setActiveWallet,
-  transferToken,
-  updateTokenAllowance,
-  withdrawOffer,
-  withdrawListing,
-  addData,
-  updateListing,
   setNetwork,
   toggleMetaMask,
-  enableMessaging,
-  sendMessage,
-  deployUserRegistry,
-  deployIdentityContract,
-  deployIdentity,
-  deployIdentityEvents,
-  updateIdentity,
-  generatePhoneCode,
-  verifyPhoneCode,
-  generateEmailCode,
+  transferToken,
+  // updateIdentity,
+  updateListing,
+  updateRefund,
+  updateTokenAllowance,
+  verifyAirbnbCode,
   verifyEmailCode,
   verifyFacebook,
+  verifyPhoneCode,
   verifyTwitter,
-  generateAirbnbCode,
-  verifyAirbnbCode,
+  withdrawListing,
+  withdrawOffer,
   refetch: () => true
 }

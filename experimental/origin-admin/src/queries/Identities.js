@@ -13,9 +13,6 @@ const IdentitiesQuery = gql`
         }
         nodes {
           id
-          profile {
-            id
-          }
         }
       }
     }

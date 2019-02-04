@@ -34,11 +34,11 @@ export default {
     return contracts
   },
   marketplaces: () => contracts.marketplaces,
-  userRegistry: () => {
-    const address = contracts.userRegistry.options.address
-    if (!address) return null
-    return contracts.userRegistry
-  },
+  // userRegistry: () => {
+  //   const address = contracts.userRegistry.options.address
+  //   if (!address) return null
+  //   return contracts.userRegistry
+  // },
   identityEvents: () => {
     const address = contracts.identityEvents.options.address
     if (!address) return null

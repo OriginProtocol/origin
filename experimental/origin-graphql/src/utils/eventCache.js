@@ -124,7 +124,8 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     return events.filter(e => {
       const topics = e.raw.topics
       let matches = true
-      if (eventNames && eventNames.indexOf(e.event) < 0) matches = false
+      if (eventNames && eventNames.length && eventNames.indexOf(e.event) < 0)
+        matches = false
 
       if (offerIds && offerIds.length) {
         if (
