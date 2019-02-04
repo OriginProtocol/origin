@@ -23,7 +23,7 @@ class SendMessage extends Component {
 
   render() {
     const { to } = this.props
-    const recipient = get(this.props, 'identity.profile.fullName')
+    const recipient = get(this.props, 'identity.fullName')
 
     return (
       <>

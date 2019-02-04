@@ -15,9 +15,7 @@ export default gql`
     ) {
       success
       reason
-      claimType
       data
-      signature
     }
   }
 `

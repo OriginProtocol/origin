@@ -28,18 +28,16 @@ class AboutParty extends Component {
         <Query query={IdentityQuery} variables={{ id }}>
           {({ data, loading, error }) => {
             if (loading || error) return null
-            const profile = get(data, 'web3.account.identity.profile')
+            const profile = get(data, 'web3.account.identity')
             if (!profile) {
               return null
             }
-
-            const name = `${profile.firstName} ${profile.lastName}`
 
             return (
               <div className="profile">
                 <Avatar avatar={profile.avatar} size={50} />
                 <div>
-                  <div className="name">{name}</div>
+                  <div className="name">{profile.fullName}</div>
                   <div className="attestations">
                     {profile.twitterVerified && (
                       <Tooltip

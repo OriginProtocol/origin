@@ -2,13 +2,22 @@ import React from 'react'
 import { fbt } from 'fbt-runtime'
 
 const CategoriesEnum = require('Categories$FbtEnum')
-
 const Category = ({ listing, separator = '|' }) => {
+  const { category, subCategory } = listing
+  const splitSubCat = (subCategory || '').split('.')
   return (
     <>
-      <CategoryName category={listing.category} />
+      {CategoriesEnum[category] ? (
+        <CategoryName category={listing.category} />
+      ) : (
+        category
+      )}
       {` ${separator} `}
-      <CategoryName category={listing.subCategory} />
+      {CategoriesEnum[subCategory] ? (
+        <CategoryName category={listing.subCategory} />
+      ) : (
+        splitSubCat[splitSubCat.length - 1]
+      )}
     </>
   )
 }

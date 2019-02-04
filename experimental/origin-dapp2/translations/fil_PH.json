@@ -528,6 +528,48 @@
         }
       ]
     },
+    "FZM+4dSeaJtxGRqoWyFY7g==": {
+      "translations": [
+        {
+          "translation": "I-verify ang iyong Airbnb account"
+        }
+      ]
+    },
+    "33EPBwLfS9o3lGs62U+89w==": {
+      "translations": [
+        {
+          "translation": "Ilagay ang Airbnb profile Url sa ibaba"
+        }
+      ]
+    },
+    "QfLmm1Y/WUbCRLJtHN4WAg==": {
+      "translations": [
+        {
+          "translation": "Malalaman ng iba pang mga user na mayroon kang isang na-verify na profile ng Airbnb."
+        }
+      ]
+    },
+    "564ZWrRXu95BNouIaSXuYQ==": {
+      "translations": [
+        {
+          "translation": "Kanselahin"
+        }
+      ]
+    },
+    "3SSVIaE/i8UtPArlfLYLow==": {
+      "translations": [
+        {
+          "translation": "Magpunta sa website ng Airbnb, i-edit ang iyong profile at ilagay ang sumusunod na teksto sa profile description."
+        }
+      ]
+    },
+    "VQZu4ySJiecJDDKhwmZvlA==": {
+      "translations": [
+        {
+          "translation": "Magpatuloy kapag nailagay na ang confirmation code sa iyong profile ng Airbnb."
+        }
+      ]
+    },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
@@ -553,6 +595,76 @@
       "translations": [
         {
           "translation": "Nagbebenta"
+        }
+      ]
+    },
+    "VW+rdneKehxRKMdZLVmIVQ==": {
+      "translations": [
+        {
+          "translation": "Isang user ng Origin na walang deskripsyon"
+        }
+      ]
+    },
+    "UIdfC16+vG+mJVKO27x/BQ==": {
+      "translations": [
+        {
+          "translation": "I-verify ang iyong sarili sa Origin"
+        }
+      ]
+    },
+    "HEVHfHEPEpTtceUGDpiIuQ==": {
+      "translations": [
+        {
+          "translation": "Mangyaring ikonekta ang iyong account sa ibaba upang mapalakas ang iyong pagkakakilanlan sa Origin."
+        }
+      ]
+    },
+    "1WvCkB72shgiqmL7zGjDaQ==": {
+      "translations": [
+        {
+          "translation": "Numero ng telepono"
+        }
+      ]
+    },
+    "iAM26VLlFC2eYwvxMiamSw==": {
+      "translations": [
+        {
+          "translation": "Email"
+        }
+      ]
+    },
+    "XO4xeA76zqUFE3pRTcxEkA==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
+    },
+    "ODnFYmb8u9sMKJ4AFiZs9g==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "lZG5rsJQfdkgo3Q+WVNgug==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "Wv2V0lIW3vp91Vdq6gBmEg==": {
+      "translations": [
+        {
+          "translation": "I-publish na ngayon"
+        }
+      ]
+    },
+    "dqAA0K4wHnKPEwSR3HPYfQ==": {
+      "translations": [
+        {
+          "translation": "Ang pag-verify ng iyong profile ay nagbibigay-daan sa ibang mga gumagamit na malaman na ikaw ay isang tunay na tao at pinatataas ang mga pagkakataon ng mga matagumpay na transaksyon sa Pinagmulan."
         }
       ]
     }
