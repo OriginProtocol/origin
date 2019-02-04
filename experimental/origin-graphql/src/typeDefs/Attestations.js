@@ -26,8 +26,6 @@ module.exports = `
   type AttestationVerifyResult {
     success: Boolean
     reason: String
-    claimType: String
     data: String
-    signature: String
   }
 `

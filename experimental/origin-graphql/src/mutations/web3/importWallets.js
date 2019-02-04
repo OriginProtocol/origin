@@ -1,6 +1,8 @@
+import contracts from '../../contracts'
 import storeWallet from './_storeWallet'
 
 export default (_, { accounts }) => {
+  const web3 = contracts.web3
   accounts.forEach(({ name, role, privateKey }) => {
     const existing = Object.keys(web3.eth.accounts.wallet)
       .filter(k => k.match(/^[0-9]$/))

@@ -8,9 +8,9 @@ import AboutParty from 'components/AboutParty'
 import ListingBadge from 'components/ListingBadge'
 import Calendar from 'components/Calendar'
 import PageTitle from 'components/PageTitle'
+import Category from 'components/Category'
 
 import Buy from './mutations/Buy'
-import category from 'utils/category'
 
 const SelectQuantity = ({ quantity, onChange, available }) => {
   return (
@@ -186,7 +186,9 @@ class ListingDetail extends Component {
       <div className="listing-detail">
         <PageTitle>{listing.title}</PageTitle>
         <div className="header">
-          <div className="category">{category(listing)}</div>
+          <div className="category">
+            <Category listing={listing} />
+          </div>
           <ListingBadge status={listing.status} featured={listing.featured} />
         </div>
         <h2>{listing.title}</h2>

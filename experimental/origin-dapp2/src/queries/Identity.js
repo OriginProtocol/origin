@@ -7,21 +7,19 @@ export default gql`
         id
         identity {
           id
-          profile {
-            id
-            firstName
-            lastName
-            fullName
-            description
-            avatar
-            strength
+          firstName
+          lastName
+          fullName
+          description
+          avatar
+          strength
+          attestations
 
-            facebookVerified
-            twitterVerified
-            airbnbVerified
-            phoneVerified
-            emailVerified
-          }
+          facebookVerified
+          twitterVerified
+          airbnbVerified
+          phoneVerified
+          emailVerified
         }
       }
     }

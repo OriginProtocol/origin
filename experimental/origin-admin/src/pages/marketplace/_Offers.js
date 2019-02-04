@@ -380,7 +380,11 @@ function status(offer) {
     )
   }
   if (offer.status === 5) {
-    return <Tag intent="success" icon="tick">Dispute Resolved</Tag>
+    return (
+      <Tag intent="success" icon="tick">
+        Dispute Resolved
+      </Tag>
+    )
   }
   return offer.status
 }

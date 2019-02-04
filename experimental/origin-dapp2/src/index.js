@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { ApolloProvider } from 'react-apollo'
 // import { persistCache } from 'apollo-cache-persist'
-import { Route, HashRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
+
 import Styl from 'react-styl'
 import client from 'origin-graphql'
+
+import setLocale from 'utils/setLocale'
 
 import App from './pages/App'
 import Analytics from './components/Analytics'
@@ -26,7 +29,8 @@ class AppWrapper extends Component {
       //   cache: client.cache,
       //   storage: window.sessionStorage
       // })
-      this.setState({ ready: true, client })
+      const locale = await setLocale()
+      this.setState({ ready: true, client, locale })
     } catch (error) {
       console.error('Error restoring Apollo cache', error)
     }
@@ -38,7 +42,14 @@ class AppWrapper extends Component {
       <ApolloProvider client={client}>
         <HashRouter>
           <Analytics>
-            <Route component={App} />
+            <App
+              locale={this.state.locale}
+              onLocale={async newLocale => {
+                const locale = await setLocale(newLocale)
+                this.setState({ locale })
+                window.scrollTo(0, 0)
+              }}
+            />
           </Analytics>
         </HashRouter>
       </ApolloProvider>

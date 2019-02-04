@@ -21,19 +21,16 @@ const UserQuery = gql`
           id
           identity {
             id
-            profile {
-              id
-              firstName
-              lastName
-              description
-              avatar
+            firstName
+            lastName
+            description
+            avatar
 
-              facebookVerified
-              twitterVerified
-              airbnbVerified
-              phoneVerified
-              emailVerified
-            }
+            facebookVerified
+            twitterVerified
+            airbnbVerified
+            phoneVerified
+            emailVerified
           }
         }
         listings {
@@ -63,22 +60,20 @@ class User extends Component {
           query={UserQuery}
           variables={{ id: userId }}
           notifyOnNetworkStatusChange={true}
+          skip={!userId}
         >
           {({ data, error, networkStatus }) => {
-            if (networkStatus === 1) {
+            if (error) {
+              return <p className="p-3">Error :(</p>
+            } else if (networkStatus === 1) {
               return <LoadingSpinner />
             } else if (!data || !data.marketplace) {
               return <p className="p-3">No marketplace contract?</p>
-            } else if (error) {
-              return <p className="p-3">Error :(</p>
             }
 
             const listings = get(data, 'marketplace.user.listings', [])
             const offers = get(data, 'marketplace.user.offers', [])
-            const profile = get(
-              data,
-              'marketplace.user.account.identity.profile'
-            )
+            const profile = get(data, 'marketplace.user.account.identity')
 
             return (
               <div>
