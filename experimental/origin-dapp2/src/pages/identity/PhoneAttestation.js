@@ -168,9 +168,6 @@ class PhoneAttestation extends Component {
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
-              topic: result.claimType,
-              issuer: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', //result.issuer,
-              signature: result.signature,
               data: result.data,
               loading: false
             })
@@ -220,9 +217,7 @@ class PhoneAttestation extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => {
-              this.props.onComplete(
-                pick(this.state, 'topic', 'issuer', 'signature', 'data')
-              )
+              this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
             children="Continue"

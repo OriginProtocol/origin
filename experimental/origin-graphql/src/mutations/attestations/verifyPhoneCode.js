@@ -23,15 +23,13 @@ async function verifyPhoneCode(_, { identity, prefix, phone, code }) {
   const data = await response.json()
 
   if (!response.ok) {
-    const reason = get(data, 'errors.code[0]', get(data, 'errors[0]'))
+    const reason = get(data, 'errors._schema[0]')
     return { success: false, reason }
   }
 
   return {
     success: true,
-    claimType: data['claim-type'],
-    data: contracts.web3.utils.soliditySha3(data.data),
-    signature: data.signature
+    data: JSON.stringify(data)
   }
 }
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import pick from 'lodash/pick'
 
 import Modal from 'components/Modal'
 
@@ -130,9 +129,7 @@ class FacebookAttestation extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => {
-              this.props.onComplete(
-                pick(this.state, 'topic', 'issuer', 'signature', 'data')
-              )
+              this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
             children="Continue"

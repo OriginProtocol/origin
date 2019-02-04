@@ -13,19 +13,16 @@ const IdentityQuery = gql`
   query Identity($id: ID!) {
     identity(id: $id) {
       id
-      profile {
-        id
-        firstName
-        lastName
-        description
-        avatar
+      firstName
+      lastName
+      description
+      avatar
 
-        facebookVerified
-        twitterVerified
-        airbnbVerified
-        phoneVerified
-        emailVerified
-      }
+      facebookVerified
+      twitterVerified
+      airbnbVerified
+      phoneVerified
+      emailVerified
     }
   }
 `
@@ -50,7 +47,7 @@ class IdentityPage extends Component {
               return <p className="p-3">Error :(</p>
             }
 
-            const profile = get(data, 'identity.profile')
+            const profile = get(data, 'identity')
 
             return (
               <div>

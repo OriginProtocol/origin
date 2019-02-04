@@ -528,6 +528,48 @@
         }
       ]
     },
+    "FZM+4dSeaJtxGRqoWyFY7g==": {
+      "translations": [
+        {
+          "translation": "Vérifier votre compte Airbnb"
+        }
+      ]
+    },
+    "33EPBwLfS9o3lGs62U+89w==": {
+      "translations": [
+        {
+          "translation": "Entrez l’Url du profil Airbnb ci-dessous"
+        }
+      ]
+    },
+    "QfLmm1Y/WUbCRLJtHN4WAg==": {
+      "translations": [
+        {
+          "translation": "Les autres utilisateurs sauront que vous avez un profil Airbnb vérifié."
+        }
+      ]
+    },
+    "564ZWrRXu95BNouIaSXuYQ==": {
+      "translations": [
+        {
+          "translation": "Annuler"
+        }
+      ]
+    },
+    "3SSVIaE/i8UtPArlfLYLow==": {
+      "translations": [
+        {
+          "translation": "Allez au site Airbnb, modifier votre profil et collez le texte suivant dans sa description du profil."
+        }
+      ]
+    },
+    "VQZu4ySJiecJDDKhwmZvlA==": {
+      "translations": [
+        {
+          "translation": "Continuer après avoir entré le code de confirmation dans votre profil d’Airbnb."
+        }
+      ]
+    },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
@@ -553,6 +595,76 @@
       "translations": [
         {
           "translation": "Vendre"
+        }
+      ]
+    },
+    "VW+rdneKehxRKMdZLVmIVQ==": {
+      "translations": [
+        {
+          "translation": "Un utilisateur Origin sans description"
+        }
+      ]
+    },
+    "UIdfC16+vG+mJVKO27x/BQ==": {
+      "translations": [
+        {
+          "translation": "Vérifiez votre identité sur Origin"
+        }
+      ]
+    },
+    "HEVHfHEPEpTtceUGDpiIuQ==": {
+      "translations": [
+        {
+          "translation": "Veuillez connecter vos comptes ci-dessous pour renforcer votre identité sur Origin."
+        }
+      ]
+    },
+    "1WvCkB72shgiqmL7zGjDaQ==": {
+      "translations": [
+        {
+          "translation": "Numéro de téléphone"
+        }
+      ]
+    },
+    "iAM26VLlFC2eYwvxMiamSw==": {
+      "translations": [
+        {
+          "translation": "Email"
+        }
+      ]
+    },
+    "XO4xeA76zqUFE3pRTcxEkA==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
+    },
+    "ODnFYmb8u9sMKJ4AFiZs9g==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "lZG5rsJQfdkgo3Q+WVNgug==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "Wv2V0lIW3vp91Vdq6gBmEg==": {
+      "translations": [
+        {
+          "translation": "Publier maintenant"
+        }
+      ]
+    },
+    "dqAA0K4wHnKPEwSR3HPYfQ==": {
+      "translations": [
+        {
+          "translation": "La vérification de votre profil permet aux autres utilisateurs de savoir que vous êtes une personne réelle et augmente les chances de réussite des transactions sur Origin."
         }
       ]
     }

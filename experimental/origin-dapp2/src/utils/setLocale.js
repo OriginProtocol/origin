@@ -12,8 +12,8 @@ export default async function setLocale(newLocale) {
   const hasLanguage = Languages.find(l => l[0].indexOf(userLocale) === 0)
   let locale = 'en_US'
   if (hasLanguage) {
-    if (userLocale !== 'en_US') {
-      locale = hasLanguage[0]
+    locale = hasLanguage[0]
+    if (locale !== 'en_US') {
       const res = await fetch(`translations/${locale}.json`)
       if (res.ok) {
         const json = await res.json()

@@ -9,9 +9,7 @@ export default gql`
     verifyEmailCode(identity: $identity, email: $email, code: $code) {
       success
       reason
-      claimType
       data
-      signature
     }
   }
 `
