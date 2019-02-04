@@ -28,13 +28,15 @@ class Resolver extends React.Component {
   }
 
   async checkDnsPropagation() {
-    const dappHostname = `${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`
+    const dappHostname = `${this.props.config.subdomain}.${
+      process.env.DAPP_CREATOR_DOMAIN
+    }`
     await superagent
       .get(`https://cloudflare-dns.com/dns-query`)
-      .set({ 'Accept': 'application/dns-json' })
+      .set({ Accept: 'application/dns-json' })
       .query({ name: dappHostname })
       .type('json')
-      .then((response) => {
+      .then(response => {
         const json = JSON.parse(response.text)
         if (json.Status === 0) {
           this.redirectToSuccess()
@@ -50,7 +52,7 @@ class Resolver extends React.Component {
     })
   }
 
-  render () {
+  render() {
     return (
       <div className="resolver">
         {this.renderRedirect()}
@@ -63,7 +65,7 @@ class Resolver extends React.Component {
     )
   }
 
-  renderRedirect () {
+  renderRedirect() {
     if (this.state.redirect !== null) {
       return <Redirect to={this.state.redirect} />
     }

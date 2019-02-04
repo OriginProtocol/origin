@@ -6,7 +6,9 @@
   "scripts": {
     "build": "per-env",
     "build:production": "webpack --loglevel notice",
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "start": "per-env",
     "start:development": "webpack-dev-server --watch --open",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -91,5 +93,9 @@
         }
       ]
     ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

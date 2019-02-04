@@ -9,19 +9,28 @@ class CustomDomainInstructions extends React.Component {
     super(props)
   }
 
-  render () {
+  render() {
     return (
       <>
         <div className="custom-domain">
           <h1>Add a Custom Domain</h1>
-          <h4>You will need to add a couple of DNS records at your domain registrar</h4>
+          <h4>
+            You will need to add a couple of DNS records at your domain
+            registrar
+          </h4>
           <div className="form-group">
             <label>A Record</label>
             <div className="input-group input-group-lg">
-              <input className="form-control" value={process.env.SSL_ISSUER_IP} readOnly />
+              <input
+                className="form-control"
+                value={process.env.SSL_ISSUER_IP}
+                readOnly
+              />
               <div className="input-group-append">
-                <button className="btn btn-outline-secondary"
-                  onClick={() => clipboard.writeText(process.env.SSL_ISSUER_IP)}>
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={() => clipboard.writeText(process.env.SSL_ISSUER_IP)}
+                >
                   Copy
                 </button>
               </div>
@@ -30,12 +39,20 @@ class CustomDomainInstructions extends React.Component {
           <div className="form-group">
             <label>TXT Record</label>
             <div className="input-group input-group-lg">
-              <input className="form-control"
+              <input
+                className="form-control"
                 value={`dnslink=/ipfs/${this.props.publishedIpfsHash}`}
-                readOnly />
+                readOnly
+              />
               <div className="input-group-append">
-                <button className="btn btn-outline-secondary"
-                  onClick={() => clipboard.writeText(`dnslink=/ipfs/${this.props.publishedIpfsHash}`)}>
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={() =>
+                    clipboard.writeText(
+                      `dnslink=/ipfs/${this.props.publishedIpfsHash}`
+                    )
+                  }
+                >
                   Copy
                 </button>
               </div>
@@ -48,10 +65,14 @@ class CustomDomainInstructions extends React.Component {
             <div className="box-title">Need instructions?</div>
 
             <div>
-              <a href="https://www.godaddy.com/help/manage-dns-zone-files-680">Godaddy Instructions</a>
+              <a href="https://www.godaddy.com/help/manage-dns-zone-files-680">
+                Godaddy Instructions
+              </a>
             </div>
             <div>
-              <a href="https://www.namecheap.com/support/knowledgebase/article.aspx/767/10/how-to-change-dns-for-a-domain">Namecheap Instructions</a>
+              <a href="https://www.namecheap.com/support/knowledgebase/article.aspx/767/10/how-to-change-dns-for-a-domain">
+                Namecheap Instructions
+              </a>
             </div>
           </div>
 

@@ -15,7 +15,7 @@ import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 class App extends React.Component {
-  constructor (props, context) {
+  constructor(props, context) {
     super(props)
 
     this.web3Context = context.web3
@@ -38,7 +38,7 @@ class App extends React.Component {
     this.setState({ config })
   }
 
-  signConfig () {
+  signConfig() {
     if (this.state.config.subdomain) {
       // Generate a valid signature if a subdomain is in use
       const dataToSign = JSON.stringify(this.state.config)
@@ -46,14 +46,15 @@ class App extends React.Component {
     }
   }
 
-  async handlePublish (signature) {
-    return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/config`)
+  async handlePublish(signature) {
+    return superagent
+      .post(`${process.env.DAPP_CREATOR_API_URL}/config`)
       .send({
         config: this.state.config,
         signature: signature,
         address: web3.eth.accounts[0]
       })
-      .then((response) => {
+      .then(response => {
         this.setState({ publishedIpfsHash: response.text })
       })
   }
@@ -78,7 +79,7 @@ class App extends React.Component {
         </div>
 
         <div className="main">
-          <StepsContainer  />
+          <StepsContainer />
 
           <div className="form">
             <Switch>
@@ -121,17 +122,11 @@ class App extends React.Component {
               />
               <Route
                 path="/resolver"
-                render={() => (
-                  <Resolver
-                    config={this.state.config}
-                  />
-                )}
+                render={() => <Resolver config={this.state.config} />}
               />
               <Route
                 path="/success"
-                render={() => (
-                  <Success config={this.state.config} />
-                )}
+                render={() => <Success config={this.state.config} />}
               />
               <Route
                 path="/customdomain"
