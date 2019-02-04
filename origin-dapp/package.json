@@ -64,6 +64,7 @@
     "serve": "^10.1.1",
     "store": "^2.0.12",
     "style-loader": "0.23.1",
+    "terser": "3.14.1",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.27.0",
     "webpack-cli": "^3.1.2"
