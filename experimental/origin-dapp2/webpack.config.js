@@ -27,7 +27,18 @@ const config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        query: {
+          plugins: [
+            [
+              'babel-plugin-fbt',
+              {
+                fbtEnumManifest: require('./translations/.enum_manifest.json')
+              }
+            ],
+            'babel-plugin-fbt-runtime'
+          ]
+        }
       },
       {
         test: /\.mjs$/,
@@ -62,7 +73,8 @@ const config = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.json']
+    extensions: ['.js', '.json'],
+    modules: [path.resolve(__dirname, 'src/constants'), './node_modules']
   },
   node: {
     fs: 'empty'
