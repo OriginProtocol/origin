@@ -528,6 +528,48 @@
         }
       ]
     },
+    "FZM+4dSeaJtxGRqoWyFY7g==": {
+      "translations": [
+        {
+          "translation": "ยืนยันบัญชี Airbnb ของคุณ"
+        }
+      ]
+    },
+    "33EPBwLfS9o3lGs62U+89w==": {
+      "translations": [
+        {
+          "translation": "ป้อน Url โปรไฟล์ Airbnb ด้านล่าง"
+        }
+      ]
+    },
+    "QfLmm1Y/WUbCRLJtHN4WAg==": {
+      "translations": [
+        {
+          "translation": "ผู้ใช้รายอื่นจะทราบว่าคุณมีโปรไฟล์ Airbnb ที่ได้รับการยืนยันแล้ว"
+        }
+      ]
+    },
+    "564ZWrRXu95BNouIaSXuYQ==": {
+      "translations": [
+        {
+          "translation": "ยกเลิก"
+        }
+      ]
+    },
+    "3SSVIaE/i8UtPArlfLYLow==": {
+      "translations": [
+        {
+          "translation": "ไปที่เว็บไซต์ Airbnb แก้ไขโปรไฟล์ของคุณและวางข้อความต่อไปนี้ลงในรายละเอียดโปรไฟล์"
+        }
+      ]
+    },
+    "VQZu4ySJiecJDDKhwmZvlA==": {
+      "translations": [
+        {
+          "translation": "ดำเนินการต่อเมื่อป้อนรหัสยืนยันในโปรไฟล์ Airbnb ของคุณแล้ว"
+        }
+      ]
+    },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
@@ -553,6 +595,76 @@
       "translations": [
         {
           "translation": "ขาย"
+        }
+      ]
+    },
+    "VW+rdneKehxRKMdZLVmIVQ==": {
+      "translations": [
+        {
+          "translation": "ผู้ใช้แหล่งที่มาโดยไม่มีคำอธิบาย"
+        }
+      ]
+    },
+    "UIdfC16+vG+mJVKO27x/BQ==": {
+      "translations": [
+        {
+          "translation": "ตรวจสอบตัวเองที่ Origin"
+        }
+      ]
+    },
+    "HEVHfHEPEpTtceUGDpiIuQ==": {
+      "translations": [
+        {
+          "translation": "โปรดเชื่อมต่อบัญชีของคุณด้านล่างเพื่อสร้างความเป็นตัวตนของคุณใน Origin"
+        }
+      ]
+    },
+    "1WvCkB72shgiqmL7zGjDaQ==": {
+      "translations": [
+        {
+          "translation": "หมายเลขโทรศัพท์"
+        }
+      ]
+    },
+    "iAM26VLlFC2eYwvxMiamSw==": {
+      "translations": [
+        {
+          "translation": "อีเมล์"
+        }
+      ]
+    },
+    "XO4xeA76zqUFE3pRTcxEkA==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
+    },
+    "ODnFYmb8u9sMKJ4AFiZs9g==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "lZG5rsJQfdkgo3Q+WVNgug==": {
+      "translations": [
+        {
+          "translation": "พูดเบาและรวดเร็ว"
+        }
+      ]
+    },
+    "Wv2V0lIW3vp91Vdq6gBmEg==": {
+      "translations": [
+        {
+          "translation": "เผยแพร่เลย"
+        }
+      ]
+    },
+    "dqAA0K4wHnKPEwSR3HPYfQ==": {
+      "translations": [
+        {
+          "translation": "การยืนยันโปรไฟล์ช่วยให้ผู้ใช้รายอื่นรู้ว่าคุณเป็นคนจริงและเพิ่มโอกาสในการทำธุรกรรมที่ประสบความสำเร็จใน Origin"
         }
       ]
     }

@@ -89,14 +89,8 @@ const Accounts = props => (
             {`localStorage.marketplaceContract = "${
               localStorage.marketplaceContract
             }"\n`}
-            {`localStorage.userRegistryContract = "${
-              localStorage.userRegistryContract
-            }"\n`}
-            {`localStorage.KeyHolderLibrary = "${
-              localStorage.KeyHolderLibrary
-            }"\n`}
-            {`localStorage.ClaimHolderLibrary = "${
-              localStorage.ClaimHolderLibrary
+            {`localStorage.identityEventsContract = "${
+              localStorage.identityEventsContract
             }"\n`}
             {`location.reload()\n`}
           </pre>

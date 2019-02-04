@@ -295,6 +295,10 @@ class Linker {
           return `${meta.method} pending for ${meta.listing.title}`
       }
     }
+    else if (meta.identity)
+    {
+      return 'Confirm the publishing of your identity'
+    }
     else
     {
       if (meta.contract && meta.method)

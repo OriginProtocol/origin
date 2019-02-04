@@ -1,6 +1,6 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
-# Origin Discovery Servers
+# Origin Discovery
 
 This directory contains code for Origin discovery servers:
 
@@ -8,28 +8,18 @@ This directory contains code for Origin discovery servers:
  - apollo: GraphQL server for indexed data
  - lib: library for indexing data in various backend. Currently Postgres and Elasticsearch are supported.
 
-## To start the listener
+## Discovery server
+Refer to this [README](./src/apollo/README.md)
 
-Start the event-listener container.
-
-    docker-compose up event-listener
-
-You should see messages in the console indicating events are being indexed.
-
-## To start the Apollo GraphQL server
-
-Start the origin-discovery container.
-
-    docker-compose up origin-discovery
-
-The server should start and you can point your browser to http://localhost:4000 to access the GraphQL playground.
+## Listener
+Refer to this [README](./src/listener/README.md)
 
 ## Running tests
 
 For linting run:
 
-`npm run lint`
+`lerna --scope origin-discovery run lint`
 
 For unit tests run:
 
-`npm run test`
+`lerna --scope origin-discovery run test`
