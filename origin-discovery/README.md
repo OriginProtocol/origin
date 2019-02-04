@@ -22,7 +22,7 @@ Start the origin-discovery container.
 
     docker-compose up origin-discovery
 
-The server should start and you can point your browser to http://localhost:4000 to access the GraphQL playground.
+The server should start and you can point your browser to http://localhost:4000/graphql to access the GraphQL playground.
 
 ## Running tests
 
