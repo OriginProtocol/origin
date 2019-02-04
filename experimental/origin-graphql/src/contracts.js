@@ -1,7 +1,4 @@
 import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplace'
-import UserRegistryContract from 'origin-contracts/build/contracts/V00_UserRegistry'
-import ClaimHolderRegisteredContract from 'origin-contracts/build/contracts/ClaimHolderRegistered'
-import ClaimHolderPresignedContract from 'origin-contracts/build/contracts/ClaimHolderPresigned'
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
 import TokenContract from 'origin-contracts/build/contracts/TestToken'
 import IdentityEventsContract from 'origin-contracts/build/contracts/IdentityEvents'
@@ -10,8 +7,8 @@ import Web3 from 'web3'
 import EventSource from 'origin-eventsource'
 
 import eventCache from './utils/eventCache'
+import genericEventCache from './utils/genericEventCache'
 import pubsub from './utils/pubsub'
-// import OriginMessaging from 'origin-messaging-client'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3
 const HOST = process.env.HOST || 'localhost'
@@ -27,12 +24,13 @@ const Configs = {
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
-    ipfsEventCache: 'QmQT7tfMA21xsxRiVKitGSxHqiAqnX3J1mXJEqWjWcPrR9',
+    ipfsEventCache: 'QmbNYwVLSLmaKmuA1R2v7VU9w1z3jxJVbTJNtstRU4TzPr',
     discovery: 'https://discovery.originprotocol.com',
     bridge: 'https://bridge.originprotocol.com',
-    V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
     IdentityEvents: '0x8ac16c08105de55a02e2b7462b1eec6085fa4d86',
-    OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
+    IdentityEvents_Epoch: '7046530',
+    IdentityEvents_EventCache: 'QmWkUzib3YaGBMtrF5Wam7KLPFZ4VhWqS3NrAd5aVS3qeP',
+    attestationIssuer: '0x8EAbA82d8D1046E4F242D4501aeBB1a6d4b5C4Aa',
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
     V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
     V00_Marketplace_Epoch: '6436157',
@@ -70,9 +68,8 @@ const Configs = {
     ipfsEventCache: 'QmdMTYdXtKHzhTHDuUmx4eGG372pwbK4sQptPtoS6q3LsK',
     discovery: 'https://discovery.staging.originprotocol.com',
     bridge: 'https://bridge.staging.originprotocol.com',
-    V00_UserRegistry: '0x56727c8a51b276aec911afa8d6d80d485c89d5cc',
-    OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
     IdentityEvents: '0x160455a06d8e5aa38862afc34e4eca0566ee4e7e',
+    IdentityEvents_Epoch: '3670528',
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
     V00_Marketplace: '0xe842831533c4bf4b0f71b4521c4320bdb669324e',
     V00_Marketplace_Epoch: '3086315',
@@ -127,9 +124,6 @@ const Configs = {
 }
 
 const DefaultMessagingConfig = {
-  // ipfsSwarm:
-  //   '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
-  // messagingNamespace: 'origin:staging'
   ipfsSwarm:
     '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/Qma8wRkeXeYtE3RQfqFDGjsKCEqXR5CGxfmRxvus9aULcs',
   messagingNamespace: 'origin:dev',
@@ -177,7 +171,6 @@ export function setNetwork(net, customConfig) {
   delete context.marketplaces
   delete context.tokens
   delete context.identityEvents
-  delete context.claimHolderRegistered
   delete context.metaMask
   if (wsSub) {
     wsSub.unsubscribe()
@@ -207,19 +200,16 @@ export function setNetwork(net, customConfig) {
 
   context.EventBlock = config.V00_Marketplace_Epoch || 0
 
-  context.claimHolderRegistered = new web3.eth.Contract(
-    ClaimHolderRegisteredContract.abi
-  )
-  context.claimHolderPresigned = new web3.eth.Contract(
-    ClaimHolderPresignedContract.abi
-  )
-  context.userRegistry = new web3.eth.Contract(
-    UserRegistryContract.abi,
-    config.V00_UserRegistry
-  )
   context.identityEvents = new web3.eth.Contract(
     IdentityEventsContract.abi,
     config.IdentityEvents
+  )
+  context.identityEvents.eventCache = genericEventCache(
+    context.identityEvents,
+    config.IdentityEvents_Epoch,
+    context.web3,
+    context.config,
+    config.IdentityEvents_EventCache
   )
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
 
@@ -227,6 +217,7 @@ export function setNetwork(net, customConfig) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
       context.marketplace.eventCache.updateBlock(blockHeaders.number)
+      context.identityEvents.eventCache.updateBlock(blockHeaders.number)
       context.eventSource.resetCache()
       pubsub.publish('NEW_BLOCK', {
         newBlock: { ...blockHeaders, id: blockHeaders.hash }
@@ -236,6 +227,7 @@ export function setNetwork(net, customConfig) {
       web3.eth.getBlock(block).then(blockHeaders => {
         if (blockHeaders) {
           context.marketplace.eventCache.updateBlock(blockHeaders.number)
+          context.identityEvents.eventCache.updateBlock(blockHeaders.number)
           context.eventSource.resetCache()
           pubsub.publish('NEW_BLOCK', {
             newBlock: { ...blockHeaders, id: blockHeaders.hash }

@@ -4,6 +4,7 @@ import { fbt } from 'fbt-runtime'
 const CategoriesEnum = require('Categories$FbtEnum')
 const Category = ({ listing, separator = '|' }) => {
   const { category, subCategory } = listing
+  const splitSubCat = (subCategory || '').split('.')
   return (
     <>
       {CategoriesEnum[category] ? (
@@ -15,7 +16,7 @@ const Category = ({ listing, separator = '|' }) => {
       {CategoriesEnum[subCategory] ? (
         <CategoryName category={listing.subCategory} />
       ) : (
-        subCategory
+        splitSubCat[splitSubCat.length - 1]
       )}
     </>
   )

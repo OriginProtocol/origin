@@ -56,9 +56,10 @@ function getAttestations(account, attestations) {
 
 function validateAttestation(account, attestation) {
   const web3 = contracts.web3
-  const issuer =
-    contracts.attestationIssuer ||
-    '0x5be37555816d258f5e316e0f84D59335DB2400B2'.toLowerCase()
+  const issuer = (
+    contracts.config.attestationIssuer ||
+    '0x5be37555816d258f5e316e0f84D59335DB2400B2'
+  ).toLowerCase()
   if (issuer !== attestation.data.issuer.ethAddress.toLowerCase()) {
     console.log(
       `Attestation issuer address validation failure.
@@ -95,14 +96,14 @@ function validateAttestation(account, attestation) {
 
 export function identity({ id, ipfsHash }) {
   return new Promise(async resolve => {
-    if (!contracts.identityEvents.options.address) {
+    if (!contracts.identityEvents.options.address || !id) {
       return null
     }
     if (!ipfsHash) {
-      const events = await contracts.identityEvents.getPastEvents('allEvents', {
-        topics: [null, contracts.web3.utils.padLeft(id.toLowerCase(), 64)],
-        fromBlock: 0
-      })
+      const events = await contracts.identityEvents.eventCache.allEvents(
+        undefined,
+        [null, contracts.web3.utils.padLeft(id.toLowerCase(), 64)]
+      )
       events.forEach(event => {
         if (event.event === 'IdentityUpdated') {
           ipfsHash = event.returnValues.ipfsHash
@@ -111,13 +112,13 @@ export function identity({ id, ipfsHash }) {
         }
       })
       if (!ipfsHash) {
-        return resolve({ id })
+        return resolve(null)
       }
     }
 
     const data = await originIpfs.get(contracts.ipfsGateway, ipfsHash)
     if (!data) {
-      return resolve({ id })
+      return resolve(null)
     }
     const { profile = {}, attestations = [] } = data
 
@@ -155,16 +156,18 @@ export async function identities(
 
   const fields = graphqlFields(info)
 
-  const events = await contract.getPastEvents({ fromBlock: 0 })
+  const events = await contract.eventCache.allEvents()
 
   const identities = {}
   events.forEach(event => {
     const id = event.returnValues.account
-    identities[id] = identities[id] || { id }
-    if (event.event === 'IdentityUpdated') {
-      identities[id].ipfsHash = event.returnValues.ipfsHash
-    } else if (event.event === 'IdentityDeleted') {
-      identities[id].ipfsHash = null
+    if (id) {
+      identities[id] = identities[id] || { id }
+      if (event.event === 'IdentityUpdated') {
+        identities[id].ipfsHash = event.returnValues.ipfsHash
+      } else if (event.event === 'IdentityDeleted') {
+        identities[id].ipfsHash = null
+      }
     }
   })
 
