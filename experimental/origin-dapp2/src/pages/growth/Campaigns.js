@@ -62,10 +62,10 @@ function ProgressBar(props) {
         style={{ width: '100%' }}
       >
         <div className="background"/>
-        <div
+        { progress > 0 && <div
             className="foreground"
             style={{ width: `${progress}%` }}
-          />
+          />}
       </div>
       <div className="indicators d-flex justify-content-between mt-2">
         <div>0</div>
