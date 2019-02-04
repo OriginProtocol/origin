@@ -3,7 +3,7 @@ import fragments from './Fragments'
 
 const AllGrowthCampaignsQuery = gql`
   query GrowthCampaigns($first: Int, $after: String) {
-    campaigns {
+    campaigns(first: $first, after: $after) {
       totalCount
       pageInfo {
         hasNextPage
