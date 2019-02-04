@@ -1,7 +1,7 @@
 const logger = require('./logger')
 
 const { GrowthEventTypes } = require('origin-growth/src/enums')
-const { insertGrowthEvent } = require('./growth')
+const { AttestationTopicToEventType, GrowthEvent } = require('origin-growth/src/resources/event')
 
 
 class IdentityEventHandler {
@@ -35,7 +35,8 @@ class IdentityEventHandler {
     }
 
     // Record the event.
-    await insertGrowthEvent(
+    await GrowthEvent.insert(
+      logger,
       user.address,
       GrowthEventTypes.ProfilePublished,
       null,
@@ -52,20 +53,19 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthAttestationEvents(user, blockInfo) {
-    const topicToEventType = {
-      'facebook': GrowthEventTypes.FacebookAttestationPublished,
-      'airbnb': GrowthEventTypes.AirbnbAttestationPublished,
-      'twitter': GrowthEventTypes.TwitterAttestationPublished,
-      'phone': GrowthEventTypes.PhoneAttestationPublished
-    }
-
     user.attestations.forEach(async attestation => {
-      const eventType = topicToEventType[attestation.topic]
+      const eventType = AttestationTopicToEventType[attestation.topic]
       if (!eventType) {
         return
       }
 
-      await insertGrowthEvent(user.address, eventType, null, { blockInfo })
+      await GrowthEvent.insert(
+        logger,
+        user.address,
+        eventType,
+        null,
+        { blockInfo }
+      )
     })
   }
 
@@ -96,6 +96,9 @@ class IdentityEventHandler {
 
     if (context.config.db) {
       await this._indexUser(user, blockInfo)
+    }
+
+    if (context.config.growth) {
       await this._recordGrowthProfileEvent(user, blockInfo)
       await this._recordGrowthAttestationEvents(user, blockInfo)
     }

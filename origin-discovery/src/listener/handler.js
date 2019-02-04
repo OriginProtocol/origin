@@ -29,6 +29,7 @@ const EVENT_TO_HANDLER_MAP = {
   },
   IdentityEvents: {
     IdentityUpdated: identityHandler,
+    // TODO(franck): handle IdentityDeleted
   }
 }
 

@@ -277,6 +277,8 @@ const config = {
   elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
   // Index events in the database.
   db: args['--db'] || (process.env.DATABASE === 'true'),
+  // Record events in the growth DB.
+  growth: args['--growth'] || (process.env.GROWTH === 'true'),
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind

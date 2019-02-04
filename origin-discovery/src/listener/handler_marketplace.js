@@ -1,8 +1,7 @@
-
 const logger = require('./logger')
 const search = require('../lib/search')
 const db = require('../models')
-const { insertGrowthEvent } = require('./growth')
+const { GrowthEvent } = require('origin-growth/src/resources/event')
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 const { withRetrys } = require('./utils')
 
@@ -290,7 +289,7 @@ class MarketplaceEventHandler {
     }
 
     // Record the event.
-    await insertGrowthEvent(address, eventType, customId, { blockInfo })
+    await GrowthEvent.insert(logger, address, eventType, customId, { blockInfo })
   }
 
   /**
@@ -321,7 +320,9 @@ class MarketplaceEventHandler {
       await this._indexOffer(log, details, context)
     }
 
-    await this._recordGrowthEvent(log, details, blockInfo)
+    if (context.config.growth) {
+      await this._recordGrowthEvent(log, details, blockInfo)
+    }
 
     return details
   }
