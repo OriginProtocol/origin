@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 
 class Analytics extends Component {
@@ -37,7 +37,7 @@ class Analytics extends Component {
   }
 
   render() {
-    return <Fragment>{this.props.children}</Fragment>
+    return <>{this.props.children}</>
   }
 }
 
