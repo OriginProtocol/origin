@@ -25,5 +25,4 @@ const schema = mergeSchemas({
   ]
 })
 
-
 export default schema
