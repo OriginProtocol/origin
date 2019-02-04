@@ -528,6 +528,48 @@
         }
       ]
     },
+    "FZM+4dSeaJtxGRqoWyFY7g==": {
+      "translations": [
+        {
+          "translation": "Підтвердити акаунт Airbnb"
+        }
+      ]
+    },
+    "33EPBwLfS9o3lGs62U+89w==": {
+      "translations": [
+        {
+          "translation": "Введить посилання на акаунт Airbnb нижче"
+        }
+      ]
+    },
+    "QfLmm1Y/WUbCRLJtHN4WAg==": {
+      "translations": [
+        {
+          "translation": "Інші користувачі дізнаються, що Ви підтвердили свій акаунт Airbnb."
+        }
+      ]
+    },
+    "564ZWrRXu95BNouIaSXuYQ==": {
+      "translations": [
+        {
+          "translation": "Скасувати"
+        }
+      ]
+    },
+    "3SSVIaE/i8UtPArlfLYLow==": {
+      "translations": [
+        {
+          "translation": "Перейдіть на сайт Airbnb, та додайте наступний текст до опису Вашого профілю."
+        }
+      ]
+    },
+    "VQZu4ySJiecJDDKhwmZvlA==": {
+      "translations": [
+        {
+          "translation": "Продовжуйте, як тільки код підтвердження буде введено у Ваш профіль Airbnb."
+        }
+      ]
+    },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
@@ -553,6 +595,76 @@
       "translations": [
         {
           "translation": "Продаж"
+        }
+      ]
+    },
+    "VW+rdneKehxRKMdZLVmIVQ==": {
+      "translations": [
+        {
+          "translation": "Користувач Origin без опису"
+        }
+      ]
+    },
+    "UIdfC16+vG+mJVKO27x/BQ==": {
+      "translations": [
+        {
+          "translation": "Підтвердіть себе на Origin"
+        }
+      ]
+    },
+    "HEVHfHEPEpTtceUGDpiIuQ==": {
+      "translations": [
+        {
+          "translation": "Будь ласка, підключіть свої акаунти нижче, щоб посилити рівень ідентифікації своєї особи в Origin."
+        }
+      ]
+    },
+    "1WvCkB72shgiqmL7zGjDaQ==": {
+      "translations": [
+        {
+          "translation": "Номер телефону"
+        }
+      ]
+    },
+    "iAM26VLlFC2eYwvxMiamSw==": {
+      "translations": [
+        {
+          "translation": "Електронна пошта"
+        }
+      ]
+    },
+    "XO4xeA76zqUFE3pRTcxEkA==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
+    },
+    "ODnFYmb8u9sMKJ4AFiZs9g==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "lZG5rsJQfdkgo3Q+WVNgug==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "Wv2V0lIW3vp91Vdq6gBmEg==": {
+      "translations": [
+        {
+          "translation": "Опубліковати зараз"
+        }
+      ]
+    },
+    "dqAA0K4wHnKPEwSR3HPYfQ==": {
+      "translations": [
+        {
+          "translation": "Підтвердження вашого профілю дозволяє іншим користувачам дізнатись, що ви - справжня особа, і збільшує шанси на успішні транзакції з Origin."
         }
       ]
     }

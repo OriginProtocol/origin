@@ -1,5 +1,6 @@
 import balancesFromWei from '../utils/balancesFromWei'
 import contracts from '../contracts'
+import { identity } from './IdentityEvents'
 
 export default {
   checksumAddress: account =>
@@ -43,13 +44,5 @@ export default {
     }
     return null
   },
-  identity: async account => {
-    const ur = contracts.userRegistry
-    if (!ur || !ur.options.address) return null
-    const id = await ur.methods.users(account.id).call()
-    if (id.indexOf('0x0000') === 0) {
-      return null
-    }
-    return { id }
-  }
+  identity: async account => identity({ id: account.id })
 }

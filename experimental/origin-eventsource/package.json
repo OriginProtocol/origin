@@ -17,7 +17,7 @@
   "devDependencies": {
     "lodash-es": "^4.17.11",
     "prettier": "^1.16.3",
-    "eslint": "^5.12.1"
+    "eslint": "^5.13.0"
   },
   "prettier": {
     "semi": false,
