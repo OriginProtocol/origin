@@ -11,7 +11,6 @@ import {
   DeployMarketplaceMutation,
   UpdateTokenAllowanceMutation,
   AddAffiliateMutation,
-  // DeployIdentityContractMutation,
   DeployIdentityEventsContractMutation,
   DeployIdentityMutation,
   CreateListingMutation
@@ -147,34 +146,6 @@ export default async function populate(NodeAccount, gqlClient) {
   })).data.deployIdentityEvents.id
   await transactionConfirmed(hash, gqlClient)
   console.log('Deployed Identity Events contract')
-
-  // hash = (await gqlClient.mutate({
-  //   mutation: DeployIdentityContractMutation,
-  //   variables: { contract: 'UserRegistry', from: Admin }
-  // })).data.deployIdentityContract.id
-  // await transactionConfirmed(hash, gqlClient)
-  // console.log('Added affiliate to marketplace')
-  //
-  // hash = (await gqlClient.mutate({
-  //   mutation: DeployIdentityContractMutation,
-  //   variables: { contract: 'KeyHolderLibrary', from: Admin }
-  // })).data.deployIdentityContract.id
-  // await transactionConfirmed(hash, gqlClient)
-  // console.log('Deployed KeyHolderLibrary')
-  //
-  // hash = (await gqlClient.mutate({
-  //   mutation: DeployIdentityContractMutation,
-  //   variables: { contract: 'ClaimHolderLibrary', from: Admin }
-  // })).data.deployIdentityContract.id
-  // await transactionConfirmed(hash, gqlClient)
-  // console.log('Deployed ClaimHolderLibrary')
-  //
-  // hash = (await gqlClient.mutate({
-  //   mutation: DeployIdentityContractMutation,
-  //   variables: { contract: 'OriginIdentity', from: Admin }
-  // })).data.deployIdentityContract.id
-  // await transactionConfirmed(hash, gqlClient)
-  // console.log('Deployed OriginIdentity')
 
   hash = (await gqlClient.mutate({
     mutation: DeployIdentityMutation,

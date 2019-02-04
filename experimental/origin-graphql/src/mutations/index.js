@@ -30,11 +30,8 @@ import deployToken from './token/deployToken'
 import transferToken from './token/transferToken'
 import updateTokenAllowance from './token/updateTokenAllowance'
 
-// import deployUserRegistry from './identity/deployUserRegistry'
-// import deployIdentityContract from './identity/deployIdentityContract'
 import deployIdentity from './identity/deployIdentity'
 import deployIdentityEvents from './identity/deployIdentityEvents'
-// import updateIdentity from './identity/updateIdentity'
 
 import generateEmailCode from './attestations/generateEmailCode'
 import verifyEmailCode from './attestations/verifyEmailCode'
@@ -53,11 +50,9 @@ export default {
   createListing,
   createWallet,
   deployIdentity,
-  // deployIdentityContract,
   deployIdentityEvents,
   deployMarketplace,
   deployToken,
-  // deployUserRegistry,
   disputeOffer,
   enableMessaging,
   executeRuling,
@@ -76,7 +71,6 @@ export default {
   setNetwork,
   toggleMetaMask,
   transferToken,
-  // updateIdentity,
   updateListing,
   updateRefund,
   updateTokenAllowance,

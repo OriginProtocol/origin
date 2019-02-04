@@ -100,14 +100,4 @@ const Accounts = props => (
   </Query>
 )
 
-// {`localStorage.userRegistryContract = "${
-//   localStorage.userRegistryContract
-// }"\n`}
-// {`localStorage.KeyHolderLibrary = "${
-//   localStorage.KeyHolderLibrary
-// }"\n`}
-// {`localStorage.ClaimHolderLibrary = "${
-//   localStorage.ClaimHolderLibrary
-// }"\n`}
-
 export default Accounts

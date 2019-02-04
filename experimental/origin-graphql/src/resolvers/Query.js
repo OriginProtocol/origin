@@ -34,11 +34,6 @@ export default {
     return contracts
   },
   marketplaces: () => contracts.marketplaces,
-  // userRegistry: () => {
-  //   const address = contracts.userRegistry.options.address
-  //   if (!address) return null
-  //   return contracts.userRegistry
-  // },
   identityEvents: () => {
     const address = contracts.identityEvents.options.address
     if (!address) return null
@@ -75,7 +70,7 @@ export default {
     new Promise(async resolve => {
       if (
         typeof window !== 'undefined' &&
-        window.localStorage.disabledMessaging
+        window.localStorage.disableMessaging
       ) {
         return resolve(null)
       }
