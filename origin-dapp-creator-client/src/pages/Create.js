@@ -1,3 +1,5 @@
+'use strict'
+
 import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
 import React from 'react'
 import pick from 'lodash/pick'
