@@ -42,7 +42,7 @@ const SubjectWithIdentity = withIdentity(Subject)
 const Messages = props => (
   <div className="container messages-page">
     <PageTitle>Messaging</PageTitle>
-    <Query query={query} pollInterval={2000}>
+    <Query query={query} pollInterval={2000} variables={{ wallet: props.wallet }}>
       {({ error, data, loading }) => {
         if (error) {
           return <QueryError query={query} error={error} />
@@ -60,15 +60,6 @@ const Messages = props => (
         const room = get(props, 'match.params.room')
         const active = room || get(conversations, '0.id')
 
-        const displayUnreadCount = ({ messages }) => {
-          const unreadCount = messages.reduce((result, msg) => {
-            if (msg.status === 'unread' && msg.address !== props.wallet)
-              return [...result, msg]
-            return result
-          }, []).length
-
-          return unreadCount > 0 && unreadCount
-        }
         return (
           <div className="row">
             <div className="col-md-3">
@@ -82,10 +73,10 @@ const Messages = props => (
                   <SubjectWithIdentity conversation={conv} wallet={conv.id} />
                   <span
                     className={`align-self-end${
-                      displayUnreadCount(conv) ? ' count align-self-end' : ''
+                      conv.totalUnread > 0 ? ' count align-self-end' : ''
                     }`}
                   >
-                    {displayUnreadCount(conv)}
+                    {conv.totalUnread > 0 && conv.totalUnread}
                   </span>
                 </div>
               ))}

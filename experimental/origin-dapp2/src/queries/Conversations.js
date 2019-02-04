@@ -1,13 +1,14 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query Conversations {
+  query Conversations($wallet: String) {
     messaging(id: "defaultAccount") {
       id
       enabled
-      conversations {
+      conversations(wallet: $wallet) {
         id
         timestamp
+        totalUnread(wallet: $wallet)
         messages {
           status
           address
