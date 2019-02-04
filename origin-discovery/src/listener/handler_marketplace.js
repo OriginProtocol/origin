@@ -2,7 +2,10 @@
 const logger = require('./logger')
 const search = require('../lib/search')
 const db = require('../models')
+const { insertGrowthEvent } = require('./growth')
+const { GrowthEventTypes } = require('origin-growth/src/enums')
 const { withRetrys } = require('./utils')
+
 
 const LISTING_EVENTS = [
   'ListingCreated',
@@ -21,6 +24,14 @@ const OFFER_EVENTS = [
   'OfferFinalized',
   'OfferData'
 ]
+
+function isListingEvent(eventName) {
+  return LISTING_EVENTS.includes(eventName)
+}
+
+function isOfferEvent(eventName) {
+  return OFFER_EVENTS.includes(eventName)
+}
 
 function generateListingId(log) {
   return [
@@ -60,16 +71,16 @@ function checkEventsFreshness(events, blockInfo) {
 
 
 class MarketplaceEventHandler {
-  async _getListingDetails(log, origin) {
+  async _getListingDetails(log, origin, blockInfo) {
     const listingId = generateListingId(log)
-    const blockInfo = {
-      blockNumber: log.blockNumber,
-      logIndex: log.logIndex
-    }
+
     // Note: Passing blockInfo as an arg to the getListing call ensures that we preserve
     // listings version history if the listener is re-indexing data.
     // Otherwise all the listing version rows in the DB would end up with the same data.
-    const listing = await origin.marketplace.getListing(listingId, { blockInfo: blockInfo, loadOffers: true })
+    const listing = await origin.marketplace.getListing(
+      listingId,
+      { blockInfo: blockInfo, loadOffers: true }
+    )
     checkEventsFreshness(listing.events, blockInfo)
 
     let seller
@@ -85,20 +96,20 @@ class MarketplaceEventHandler {
     }
   }
 
-  async _getOfferDetails(log, origin) {
+  async _getOfferDetails(log, origin, blockInfo) {
     const listingId = generateListingId(log)
     const offerId = generateOfferId(log)
-    const blockInfo = {
-      blockNumber: log.blockNumber,
-      logIndex: log.logIndex
-    }
+
     // Notes:
     //  - Passing blockInfo as an arg to the getListing call ensures that we preserve
     // listings version history if the listener is re-indexing data.
     // Otherwise all the listing versions in the DB would end up with the same data.
     //  - BlockInfo is not needed for the call to getOffer since offer data stored in the DB
     // is not versioned.
-    const listing = await origin.marketplace.getListing(listingId, { blockInfo: blockInfo, loadOffers: true })
+    const listing = await origin.marketplace.getListing(
+      listingId,
+      { blockInfo: blockInfo, loadOffers: true }
+    )
     checkEventsFreshness(listing.events, blockInfo)
 
     const offer = await origin.marketplace.getOffer(offerId)
@@ -126,25 +137,21 @@ class MarketplaceEventHandler {
     }
   }
 
-  async _getDetails(log, origin) {
-    if (LISTING_EVENTS.includes(log.eventName)) {
-      return this._getListingDetails(log, origin)
+  async _getDetails(log, origin, blockInfo) {
+    if (isListingEvent(log.eventName)) {
+      return this._getListingDetails(log, origin, blockInfo)
     }
-    if (OFFER_EVENTS.include(log.eventName)) {
-      return this._getOfferDetails(log, origin)
+    if (isOfferEvent(log.eventName)) {
+      return this._getOfferDetails(log, origin, blockInfo)
     }
     throw new Error(`Unexpected event ${log.eventName}`)
   }
 
-  async process(log, context) {
-    const details = await this._getDetails(log, context.origin)
-
+  async _indexListing(log, details, context) {
     const userAddress = log.decoded.party
     const ipfsHash = log.decoded.ipfsHash
 
-    // TODO: remove binary data from pictures in a proper way.
     const listing = details.listing
-    delete listing.ipfs.data.pictures
     const listingId = listing.id
 
     // Data consistency: check  listingId from the JSON stored in IPFS
@@ -157,15 +164,9 @@ class MarketplaceEventHandler {
       throw new Error(`ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`)
     }
 
-    // On listing or offer event, index the listing.
-    // Notes:
-    //  - Reason for also re-indexing on offer event is that the listing data includes
-    // list of all events relevant to the listing.
-    //  - We index both in DB and ES. DB is the ground truth for data and
-    // ES is used for full-text search use cases.
     if (context.config.db) {
-      logger.info(`Indexing listing in DB:
-      id=${listingId} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
+      logger.info(`Indexing listing in DB: \
+        id=${listingId} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
       const listingData = {
         id: listingId,
         blockNumber: log.blockNumber,
@@ -179,6 +180,7 @@ class MarketplaceEventHandler {
       } else {
         listingData.updatedAt = log.date
       }
+
       await withRetrys(async () => {
         return db.Listing.upsert(listingData)
       })
@@ -191,30 +193,77 @@ class MarketplaceEventHandler {
         return search.Listing.index(listingId, userAddress, ipfsHash, listing)
       })
     }
+  }
+
+  async _indexOffer(log, details, context) {
+    if (!context.config.db) {
+      return
+    }
+
+    const listing = details.listing
+    const offer = details.offer
+    logger.info(`Indexing offer in DB: id=${offer.id}`)
+    const offerData = {
+      id: offer.id,
+      listingId: listing.id,
+      status: offer.status,
+      sellerAddress: listing.seller.toLowerCase(),
+      buyerAddress: offer.buyer.toLowerCase(),
+      data: offer
+    }
+    if (log.eventName === 'OfferCreated') {
+      offerData.createdAt = log.date
+    } else {
+      offerData.updatedAt = log.date
+    }
+
+    await withRetrys(async () => {
+      return db.Offer.upsert(offerData)
+    })
+  }
+
+  async _recordGrowthEvent(log, details, blockInfo) {
+    let address, eventType, customId
+    switch (log.eventName) {
+      case 'ListingCreated':
+        address = details.listing.seller
+        eventType = GrowthEventTypes.ListingCreated
+        customId = details.listing.id
+        break
+      case 'OfferFinalized':
+        address = details.offer.buyer
+        eventType = GrowthEventTypes.ListingPurchase
+        customId = details.offer.id
+        break
+      default:
+        return
+    }
+
+    // Record the event.
+    await insertGrowthEvent(address, eventType, customId, { blockInfo })
+  }
+
+  async process(log, context) {
+    const blockInfo = {
+      blockNumber: log.blockNumber,
+      logIndex: log.logIndex
+    }
+    const details = await this._getDetails(log, context.origin, blockInfo)
+
+    // On both listing and offer event, index the listing.
+    // Notes:
+    //  - Reason for also re-indexing on offer event is that the listing data includes
+    // list of all events relevant to the listing.
+    //  - We index both in DB and ES. DB is the ground truth for data and
+    // ES is used for full-text search use cases.
+    await this._indexListing(log, details, context)
 
     // On offer event, index the offer in the DB.
-    if (OFFER_EVENTS.includes(log.eventName)) {
-      if (context.config.db) {
-        const offer = details.offer
-        logger.info(`Indexing offer in DB: id=${offer.id}`)
-        const offerData = {
-          id: offer.id,
-          listingId: listingId,
-          status: offer.status,
-          sellerAddress: listing.seller.toLowerCase(),
-          buyerAddress: offer.buyer.toLowerCase(),
-          data: offer
-        }
-        if (log.eventName === 'OfferCreated') {
-          offerData.createdAt = log.date
-        } else {
-          offerData.updatedAt = log.date
-        }
-        await withRetrys(async () => {
-          return db.Offer.upsert(offerData)
-        })
-      }
+    if (isOfferEvent(log.eventName)) {
+      await this._indexOffer(log, details, context)
     }
+
+    await this._recordGrowthEvent(log, details, blockInfo)
 
     return details
   }

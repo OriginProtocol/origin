@@ -1,19 +1,31 @@
 const logger = require('./logger')
 
-class IdentityEventHandler {
-  async _getUserDetails(log, origin) {
-    const account = log.decoded.account
-    const user = await origin.users.get(account)
-    return user
-  }
+const { GrowthEventTypes } = require('origin-growth/src/enums')
+const { insertGrowthEvent } = require('./growth')
 
-  // TODO(franck): implement.
-  async _indexUser(user) {
+
+class IdentityEventHandler {
+  /**
+   * Indexes a user in the DB.
+   * @param {Object} user - Origin js user model object.
+   * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _indexUser(user, blockInfo) {
+    // TODO(franck): implement me
+    logger.debug(`Indexing user ${user.address} blockInfo ${blockInfo}`)
     return
   }
 
-  // If profile is populated, record a ProfilePublished event in the growth_event table.
-  async _recordGrowthProfileEvent(user) {
+  /**
+   * Records a ProfilePublished event in the growth_event table.
+   * @param {Object} user - Origin js user model object.
+   * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _recordGrowthProfileEvent(user, blockInfo) {
     // Check profile is populated.
     const profile = user.profile
     const validProfile = (profile.firstName.length > 0 || profile.lastName.length > 0) &&
@@ -22,41 +34,71 @@ class IdentityEventHandler {
       return
     }
 
-    // Check there wasn't already a ProfilePublished event recorded.
+    // Record the event.
+    await insertGrowthEvent(
+      user.address,
+      GrowthEventTypes.ProfilePublished,
+      null,
+      { blockInfo }
+    )
 
-    // Record event.
   }
 
-  async _recordGrowthAttestationEvents(user) {
+  /**
+   * Records AttestationPublished events in the growth_event table.
+   * @param {Object} user - Origin js user model object.
+   * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _recordGrowthAttestationEvents(user, blockInfo) {
     const topicToEventType = {
-      //'facebook': GrowthEventTypes.FacebookAttestationPublished,
-      //'airbnb': GrowthEventTypes.AirbnbAttestationPublished,
-      //'twitter': GrowthEventTypes.TwitterAttestationPublished,
-      //'phone': GrowthEventTypes.PhoneAttestationPublished
+      'facebook': GrowthEventTypes.FacebookAttestationPublished,
+      'airbnb': GrowthEventTypes.AirbnbAttestationPublished,
+      'twitter': GrowthEventTypes.TwitterAttestationPublished,
+      'phone': GrowthEventTypes.PhoneAttestationPublished
     }
-    user.attestations.forEach(attestation => {
+
+    user.attestations.forEach(async attestation => {
       const eventType = topicToEventType[attestation.topic]
       if (!eventType) {
         return
       }
 
-      // Check there wasn't already an event of same type already recorded.
-
-      // Record event.
-
+      await insertGrowthEvent(user.address, eventType, null, { blockInfo })
     })
   }
 
+  /**
+   * Main entry point for the identity event handler.
+   * @param {Object} log
+   * @param {Object} context
+   * @returns {Promise<{user: Object}>}
+   */
   async process(log, context) {
-    logger.debug('Processing Identity event')
-    const user = await this._getUserDetails(log, context.origin)
+    const account = log.decoded.account
+    logger.info(`Processing Identity event for account ${account}`)
+
+    const user = await context.origin.users.get(account)
     if (!user) {
+      logger.error(`Failed loading identity data for account ${account} - skipping indexing`)
       return
     }
-    logger.debug('User: ', user)
-    await this._indexUser(user)
-    await this._recordGrowthProfileEvent(user)
-    await this._recordGrowthAttestationEvents(user)
+    // Avatar can be large binary data. Clip it for logging purposes.
+    if (user.profile.avatar) {
+      user.profile.avatar = user.profile.avatar.slice(0, 32) + '...'
+    }
+
+    const blockInfo = {
+      blockNumber: log.blockNumber,
+      logIndex: log.logIndex
+    }
+
+    if (context.config.db) {
+      await this._indexUser(user, blockInfo)
+      await this._recordGrowthProfileEvent(user, blockInfo)
+      await this._recordGrowthAttestationEvents(user, blockInfo)
+    }
 
     return { user }
   }

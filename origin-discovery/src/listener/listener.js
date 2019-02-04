@@ -93,7 +93,6 @@ async function buildAddressToVersion (context) {
       const adapter = adapters[versionKey]
       await adapter.getContract()
       const contract = adapter.contract
-      console.log(`ADDING CONTRACT ${adapter.contractName}, ADDR ` + contract._address)
       versionList[contract._address] = {
         versionKey: versionKey,
         contractName: adapter.contractName
@@ -101,16 +100,12 @@ async function buildAddressToVersion (context) {
     }
   }
 
-  //console.log("CONTRACT SERVICE=", context.origin.contractService.contracts)
-  //console.log("CONTEXT=", context)
-  console.log("NETWORK ID=", context.networkId)
-
   const versionList = {}
   await extractVersions(context.origin.marketplace.resolver.adapters, [])
   // Note: Ignore identity contract V00 since it is deprecated.
   await extractVersions(context.origin.users.resolver.adapters, ['000'])
 
-  console.log("VersionList: ", versionList)
+  logger.debug('Contracts version list:', versionList)
   return versionList
 }
 

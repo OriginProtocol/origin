@@ -13,6 +13,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      custom_id: {
+        type: Sequelize.STRING
+      },
       type: {
         type: Sequelize.ENUM(GrowthEventTypes)
       },
@@ -33,7 +36,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'type']))
+    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'type']
+    )).then(() => queryInterface.addIndex(tableName, ['custom_id']))
+
   },
   down: (queryInterface) => {
     return queryInterface.dropTable(tableName)
