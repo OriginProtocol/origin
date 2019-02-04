@@ -20,6 +20,7 @@ import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
+import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
 
 class App extends Component {
@@ -50,11 +51,19 @@ class App extends Component {
         </div>
       )
     }
+    
+    const shouldRenderNavbar = () => {
+      if (this.props.location.pathname === '/welcome') {
+        return false
+      }
+      return true
+    }
+
     return (
       <>
         <BetaBanner />
         <BetaModal />
-        <Nav />
+        {shouldRenderNavbar() && <Nav />}
         <main>
           <Switch>
             <Route path="/listings/:listingID" component={Listing} />
@@ -69,6 +78,7 @@ class App extends Component {
             <Route path="/notifications" component={Notifications} />
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/campaigns" component={GrowthCampaigns} />
+            <Route path="/welcome" component={GrowthWelcome} />
             <Route path="/about/tokens" component={AboutToken} />
             <Route component={Listings} />
           </Switch>
