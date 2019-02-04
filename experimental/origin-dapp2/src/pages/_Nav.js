@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
@@ -49,13 +50,13 @@ class Nav extends Component {
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item extra-margin">
                     <NavLink to="/my-purchases" className="nav-link text">
-                      Buy
+                      <fbt desc="navbar.buying">Buy</fbt>
                     </NavLink>
                   </li>
                   <Sell {...navProps('sell')} />
                   <li className="nav-item extra-margin">
                     <NavLink to="/create" className="nav-link add-listing text">
-                      Add Listing
+                      <fbt desc="navbar.addListing">Add Listing</fbt>
                     </NavLink>
                   </li>
                 </ul>

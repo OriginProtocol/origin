@@ -32,7 +32,8 @@ const startGanache = (opts = {}) =>
       default_balance_ether: 100,
       db_path: `${__dirname}/data/db`,
       network_id: 999,
-      mnemonic: 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
+      mnemonic:
+        'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
       // blockTime: 3
     }
     if (opts.inMemory) {

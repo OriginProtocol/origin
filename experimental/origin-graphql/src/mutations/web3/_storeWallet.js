@@ -1,3 +1,5 @@
+import contracts from '../../contracts'
+
 function storeWallet({ id, name, role, privateKey }) {
   let privateKeys = [],
     roles = {},
@@ -26,7 +28,7 @@ function storeWallet({ id, name, role, privateKey }) {
     ...names,
     [id]: name
   })
-  web3.eth.defaultAccount = window.localStorage.defaultAccount = id
+  contracts.web3.eth.defaultAccount = window.localStorage.defaultAccount = id
 }
 
 export default storeWallet
