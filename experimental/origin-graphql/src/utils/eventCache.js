@@ -1,4 +1,4 @@
-import { get, post } from 'origin-ipfs'
+import { get } from 'origin-ipfs'
 import uniqBy from 'lodash/uniqBy'
 import createDebug from 'debug'
 
@@ -33,7 +33,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
 
   try {
     if (window.localStorage[cacheStr]) {
-      ;({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr]))
+      ;({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr])) // eslint-disable-line
       fromBlock = lastLookup
       triedIpfs = true
     }
