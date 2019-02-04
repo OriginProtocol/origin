@@ -71,6 +71,14 @@ function checkEventsFreshness(events, blockInfo) {
 
 
 class MarketplaceEventHandler {
+  /**
+   * Gets details about a listing by calling Origin-js.
+   * @param {Object} log
+   * @param {Object} origin - Instance of origin-js.
+   * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @returns {Promise<{listing: Listing, seller: User}>}
+   * @private
+   */
   async _getListingDetails(log, origin, blockInfo) {
     const listingId = generateListingId(log)
 
@@ -96,6 +104,14 @@ class MarketplaceEventHandler {
     }
   }
 
+  /**
+   * Gets details about an offer by calling Origin-js.
+   * @param {Object} log
+   * @param {Object} origin - Instance of origin-js.
+   * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @returns {Promise<{listing: Listing, offer: Offer, seller: User, buyer: User}>}
+   * @private
+   */
   async _getOfferDetails(log, origin, blockInfo) {
     const listingId = generateListingId(log)
     const offerId = generateOfferId(log)
@@ -137,6 +153,16 @@ class MarketplaceEventHandler {
     }
   }
 
+  /**
+   * Gets details about a listing or an offer by calling Origin-js.
+   * @param {Object} log
+   * @param {Object} origin - Instance of origin-js.
+   * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @returns {Promise<
+   *    {listing: Listing, seller: User}|
+   *    {listing: Listing, offer: Offer, seller: User, buyer: User}>}
+   * @private
+   */
   async _getDetails(log, origin, blockInfo) {
     if (isListingEvent(log.eventName)) {
       return this._getListingDetails(log, origin, blockInfo)
@@ -147,6 +173,14 @@ class MarketplaceEventHandler {
     throw new Error(`Unexpected event ${log.eventName}`)
   }
 
+  /**
+   * Indexes a listing in the DB and in ElasticSearch.
+   * @param {Object} log
+   * @param {Object} details
+   * @param {Object} context
+   * @returns {Promise<void>}
+   * @private
+   */
   async _indexListing(log, details, context) {
     const userAddress = log.decoded.party
     const ipfsHash = log.decoded.ipfsHash
@@ -195,6 +229,14 @@ class MarketplaceEventHandler {
     }
   }
 
+  /**
+   * Indexes an offer in the DB and in ElasticSearch.
+   * @param {Object} log
+   * @param {Object} details
+   * @param {Object} context
+   * @returns {Promise<void>}
+   * @private
+   */
   async _indexOffer(log, details, context) {
     if (!context.config.db) {
       return
@@ -222,6 +264,14 @@ class MarketplaceEventHandler {
     })
   }
 
+  /**
+   * Records ListingCreated and ListingPurchase events in the growth DB.
+   * @param log
+   * @param details
+   * @param blockInfo
+   * @returns {Promise<void>}
+   * @private
+   */
   async _recordGrowthEvent(log, details, blockInfo) {
     let address, eventType, customId
     switch (log.eventName) {
@@ -243,6 +293,14 @@ class MarketplaceEventHandler {
     await insertGrowthEvent(address, eventType, customId, { blockInfo })
   }
 
+  /**
+   * Main entry point for the MarketplaceHandler.
+   * @param log
+   * @param context
+   * @returns {Promise<
+   *    {listing: Listing, seller: User}|
+   *    {listing: Listing, offer: Offer, seller: User, buyer: User}>}
+   */
   async process(log, context) {
     const blockInfo = {
       blockNumber: log.blockNumber,

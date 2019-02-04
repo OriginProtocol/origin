@@ -73,7 +73,7 @@ class IdentityEventHandler {
    * Main entry point for the identity event handler.
    * @param {Object} log
    * @param {Object} context
-   * @returns {Promise<{user: Object}>}
+   * @returns {Promise<{user: User}>}
    */
   async process(log, context) {
     const account = log.decoded.account
