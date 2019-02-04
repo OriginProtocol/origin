@@ -54,7 +54,7 @@ class App extends React.Component {
         address: web3.eth.accounts[0]
       })
       .then((response) => {
-        this.setState({ publishedIpfsHash: response.content })
+        this.setState({ publishedIpfsHash: response.text })
       })
   }
 

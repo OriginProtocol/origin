@@ -34,6 +34,7 @@
     "babel-loader": "^8.0.4",
     "babel-plugin-module-resolver": "^3.1.1",
     "clean-webpack-plugin": "^1.0.0",
+    "clipboard-polyfill": "^2.7.0",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^1.0.1",
     "dotenv-webpack": "^1.5.7",

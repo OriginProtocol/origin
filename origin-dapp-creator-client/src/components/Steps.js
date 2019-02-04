@@ -35,6 +35,9 @@ class Steps extends React.Component {
         },
         {
           path: '/success',
+        },
+        {
+          path: '/customdomain'
         }
        ]
     }
