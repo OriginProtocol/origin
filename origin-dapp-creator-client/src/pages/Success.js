@@ -37,10 +37,10 @@ class Success extends React.Component {
         <div className="success-actions">
           <button className="btn btn-primary btn-lg"
               onClick={this.openMarketplace}>
-            No thanks, I'm done
+            No thanks, I&apos;m done
           </button>
           <button className="btn btn-primary btn-lg"
-            onClick={() => this.setState({ setCustomDomain: true})}>
+            onClick={() => this.setState({ setCustomDomain: true })}>
             Yes, Please
           </button>
         </div>
