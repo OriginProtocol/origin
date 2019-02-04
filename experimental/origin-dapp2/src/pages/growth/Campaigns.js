@@ -54,7 +54,27 @@ function CampaignNavList(props) {
 }
 
 function ProgressBar(props) {
-  
+  const { progress } = props
+
+  return (<Fragment>
+      <div
+        className="campaign-progress mt-3"
+        style={{ width: '100%' }}
+      >
+        <div className="background"/>
+        <div
+            className="foreground"
+            style={{ width: `${progress}%` }}
+          />
+      </div>
+      <div className="indicators d-flex justify-content-between mt-2">
+        <div>0</div>
+        <div>25</div>
+        <div>50</div>
+        <div>75</div>
+        <div>100</div>
+      </div>
+    </Fragment>)
 }
 
 function Campaign(props) {
@@ -71,6 +91,8 @@ function Campaign(props) {
   if (timeLeftMinutes > 0)
     timeLeftLabel += ` ${timeLeftMinutes}m`
 
+  const tokensEarned = campaign.rewardEarned.amount
+  const tokenEarnProgress = Math.min(100, tokensEarned)
   return (
     <Fragment>
       <div className="d-flex justify-content-between">
@@ -84,12 +106,15 @@ function Campaign(props) {
         <div>
           <span className="font-weight-bold">Tokens earned</span>
           <img className="ogn-icon pl-2 pr-1" src="images/ogn-icon.svg"/>
-          <span className="ogn-amount font-weight-bold">{campaign.rewardEarned.amount}</span>
+          <span className="ogn-amount font-weight-bold">{tokensEarned}</span>
         </div>
         <div className="font-weight-bold">
           Time left:{timeLeftLabel}
         </div>
       </div>
+      <ProgressBar
+        progress={tokenEarnProgress}
+      />
     </Fragment>)
 }
 
@@ -152,6 +177,30 @@ require('react-styl')(`
   .campaigns.container
     max-width: 760px;
   .campaigns
+    .indicators
+      font-size: 10px;
+      color: #455d75;
+    .campaign-progress
+      .background
+        background-color: var(--pale-grey-two);
+        border-radius: 5px;
+        border: 1px solid #c2cbd3;
+        height: 10px;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      .foreground
+        background-color: var(--clear-blue);
+        border: 1px solid var(--greenblue);
+        border-radius: 5px;
+        height: 100%;
+        z-index: 2;
+        position: relative;
+      height: 10px;
+      position: relative;
     .ogn-amount
       color: var(--clear-blue);
     .ogn-icon
