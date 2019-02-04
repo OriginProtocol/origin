@@ -131,7 +131,7 @@ class GrowthCampaigns extends Component {
     let selectedCampaignId = this.state.selectedCampaignId
 
     return (
-      <div className="container campaigns">
+      <div className="container growth-campaigns">
         <Query
           query={query}
           variables={vars}
@@ -178,9 +178,9 @@ class GrowthCampaigns extends Component {
 export default GrowthCampaigns
 
 require('react-styl')(`
-  .campaigns.container
+  .growth-campaigns.container
     max-width: 760px;
-  .campaigns
+  .growth-campaigns
     .indicators
       font-size: 10px;
       color: #455d75;
