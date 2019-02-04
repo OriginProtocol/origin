@@ -17,6 +17,15 @@ You can either start the listener via docker compose or via lerna.
     docker-compose up event-listener
 
 ## Lerna
+### Prerequisite
+ - Setup Postgres locally.
+ - Create DB schema:
+```
+cd origin-growth
+./node_modules/.bin/sequelize db:migrate
+```
+
+### Start the listener
 ```
 export DATABASE_URL=postgres://origin:origin@localhost/origin
 export ELASTICSEARCH=localhost:9200
