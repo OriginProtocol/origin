@@ -10,6 +10,7 @@ import MetaMaskPrompt from 'pages/MetaMaskPrompt'
 import Resolver from 'pages/Resolver'
 import StepsContainer from 'components/StepsContainer'
 import Success from 'pages/Success'
+import CustomDomainInstructions from 'pages/CustomDomainInstructions'
 import Store from 'utils/store'
 const store = Store('sessionStorage')
 
@@ -23,7 +24,8 @@ class App extends React.Component {
       config: store.get('creator-config', {
         ...baseConfig,
         marketplacePublisher: web3.eth.accounts[0]
-      })
+      }),
+      publishedIpfsHash: null
     }
 
     this.handlePublish = this.handlePublish.bind(this)
@@ -50,6 +52,9 @@ class App extends React.Component {
         config: this.state.config,
         signature: signature,
         address: web3.eth.accounts[0]
+      })
+      .then((response) => {
+        this.setState({ publishedIpfsHash: response.content })
       })
   }
 
@@ -128,12 +133,20 @@ class App extends React.Component {
                   <Success config={this.state.config} />
                 )}
               />
+              <Route
+                path="/customdomain"
+                render={() => (
+                  <CustomDomainInstructions
+                    publishedIpfsHash={this.state.publishedIpfsHash}
+                  />
+                )}
+              />
             </Switch>
           </div>
         </div>
 
         <div className="copyright">
-          &copy;2019 Origin Protocol Inc.
+          &copy;{new Date().getFullYear()} Origin Protocol Inc.
         </div>
       </>
     )

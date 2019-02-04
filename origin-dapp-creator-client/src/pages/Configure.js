@@ -97,10 +97,13 @@ class Configure extends React.Component {
       }
     }
 
+    // Update config for this component
     this.setState({ config: newConfig })
+    // Propagate to parent
     this.props.onChange(newConfig)
   }
 
+  // Handles filter updates when a category is checked
   onCategoryCheck(category) {
     if (this.getCategoryFromConfig() === category) {
       this.setListingFilters({
@@ -115,6 +118,7 @@ class Configure extends React.Component {
     }
   }
 
+  // Handles filter updates when a subcategory is checked
   onSubcategoryCheck(category, subcategory) {
     if (this.getSubcategoryFromConfig() === subcategory) {
       this.setListingFilters({
