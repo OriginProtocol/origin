@@ -40,8 +40,6 @@ class Resolver extends React.Component {
         const json = JSON.parse(response.text)
         if (json.Status === 0) {
           this.redirectToSuccess()
-        } else {
-          console.log('DNS propagation incomplete')
         }
       })
   }
