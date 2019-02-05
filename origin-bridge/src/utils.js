@@ -1,4 +1,5 @@
 const web3 = require('web3')
+const eth = require('web3-eth')
 
 // 128 words to map character codes to words
 const words = ["surprise", "now", "mimic", "hood", "say", "glance", "there",
@@ -21,6 +22,19 @@ const words = ["surprise", "now", "mimic", "hood", "say", "glance", "there",
   "vehicle", "crystal"
 ]
 
+function asyncMiddleware (fn) {
+  return (req, res, next) => {
+    Promise.resolve(fn(req, res, next))
+      .catch( (err) => {
+          if (err.status && err.response && err.response.text) {
+            res.send({'status': err.status, 'data': JSON.parse(err.response.text)})
+          }
+          console.log(err)
+          res.send('Error Occured While Trying to Fetch Third Party API')
+        })
+      }
+}
+
 function generateAirbnbCode(ethAddress, userId) {
   const hashCode = web3.utils.sha3(ethAddress + userId).substr(-7)
   console.log(hashCode)
@@ -42,4 +56,21 @@ function mapObjectToQueryParams(obj) {
   return Object.keys(obj).map(key => key + '=' + obj[key]).join('&');
 }
 
-module.exports = { generateAirbnbCode, generateSixDigitCode, getAbsoluteUrl, mapObjectToQueryParams }
+function generateAttestationSignature(privateKey, subject, data) {
+  if (!web3.utils.isHexStrict(privateKey)) {
+    //TODO - Throw Error!
+  }
+  const hashToSign = web3.utils.soliditySha3(
+                    {
+                      t: 'address',
+                      v: web3.utils.toChecksumAddress(subject)
+                    },
+                    {
+                      t: 'bytes32',
+                      v: web3.utils.sha3(data)
+                    })
+  const signedMessage = new eth().accounts.sign(hashToSign, privateKey)
+  return signedMessage.signature
+}
+
+module.exports = { generateAirbnbCode, generateSixDigitCode, getAbsoluteUrl, mapObjectToQueryParams, asyncMiddleware, generateAttestationSignature }
