@@ -36,20 +36,14 @@ contract TokenMigration is Ownable {
     // the transaction is under the gas limit.
     function migrateAccounts(address[] _holders) public onlyOwner notFinished {
         for (uint i = 0; i < _holders.length; i++) {
-            migrateAccount(_holders[i]);
+            _migrateAccount(_holders[i]);
         }
     }
 
     // @dev Migrates the balance for a single address by minting the same number
     // of new tokens the address had with the old token.
     function migrateAccount(address _holder) public onlyOwner notFinished {
-        require(!migrated[_holder], "holder already migrated");
-        uint256 balance = fromToken.balanceOf(_holder);
-        if (balance > 0) {
-            toToken.mint(_holder, balance);
-            migrated[_holder] = true;
-            emit Migrated(_holder, balance);
-        }
+        _migrateAccount(_holder);
     }
 
     // @dev Finishes migration and transfers token ownership to new owner.
@@ -65,6 +59,20 @@ contract TokenMigration is Ownable {
         finished = true;
         toToken.transferOwnership(_newTokenOwner);
         emit MigrationFinished();
+    }
+
+    // @dev Internal account migration function.
+    function _migrateAccount(address _holder) internal {
+        require(!migrated[_holder], "holder already migrated");
+        require(fromToken.paused(), "fromToken should be paused during migration");
+        require(toToken.paused(), "toToken should be paused during migration");
+        
+        uint256 balance = fromToken.balanceOf(_holder);
+        if (balance > 0) {
+            toToken.mint(_holder, balance);
+            migrated[_holder] = true;
+            emit Migrated(_holder, balance);
+        }
     }
 
     // TODO: revisit whether we want to migrate approvals
