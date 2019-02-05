@@ -42,7 +42,11 @@ const SubjectWithIdentity = withIdentity(Subject)
 const Messages = props => (
   <div className="container messages-page">
     <PageTitle>Messaging</PageTitle>
-    <Query query={query} pollInterval={2000} variables={{ wallet: props.wallet }}>
+    <Query
+      query={query}
+      pollInterval={2000}
+      variables={{ wallet: props.wallet }}
+    >
       {({ error, data, loading }) => {
         if (error) {
           return <QueryError query={query} error={error} />
@@ -64,9 +68,8 @@ const Messages = props => (
           <div className="row">
             <div className="col-md-3">
               {conversations.length ? null : <div>No conversations!</div>}
-              {conversations.map((conv, idx) => {
-                console.log("A SINGLE CONFVO", conv)
-                return <div
+              {conversations.map((conv, idx) => (
+                <div
                   className={`room${active === conv.id ? ' active' : ''}`}
                   key={idx}
                   onClick={() => props.history.push(`/messages/${conv.id}`)}
@@ -80,7 +83,7 @@ const Messages = props => (
                     {conv.totalUnread > 0 && conv.totalUnread}
                   </span>
                 </div>
-              })}
+              ))}
             </div>
             <div className="col-md-9">
               {active ? (

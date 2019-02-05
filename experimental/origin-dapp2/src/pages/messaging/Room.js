@@ -116,9 +116,12 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
-            const totalUnread = get(data, 'messaging.conversation.totalUnread', 0)
+            const totalUnread = get(
+              data,
+              'messaging.conversation.totalUnread',
+              0
+            )
             if (totalUnread > 0) {
-
               const id = get(data, 'messaging.conversation.id', '')
               updateMessages({ variables: { id, wallet } })
               refetch()

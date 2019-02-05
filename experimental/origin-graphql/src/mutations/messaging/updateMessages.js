@@ -8,8 +8,8 @@ async function filterMessages(messages, wallet) {
   })
 }
 
-async function updateMessageStatus(messages, wallet) {
-  return messages.map(async ({ hash, status, address }) => {
+async function updateMessageStatus(messages) {
+  return messages.map(async ({ hash }) => {
     return await contracts.messaging.set({ hash, status: 'read' })
   })
 }
@@ -20,7 +20,7 @@ export default async function updateMessages(_, { id, wallet }) {
     const unreadMessages = await filterMessages(messages, wallet)
 
     if (unreadMessages.length) {
-      await updateMessageStatus(unreadMessages, wallet)
+      await updateMessageStatus(unreadMessages)
     }
     resolve()
   })

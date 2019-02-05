@@ -75,7 +75,11 @@ const MessagesDropdown = props => {
 
   return (
     <div className="dropdown-menu dropdown-menu-right show messages">
-      <Query query={ConversationsQuery} pollInterval={2000} variables={{ wallet }}>
+      <Query
+        query={ConversationsQuery}
+        pollInterval={2000}
+        variables={{ wallet }}
+      >
         {({ data, error, loading }) => {
           if (loading || error) return null
           const conversations = get(data, 'messaging.conversations', [])
