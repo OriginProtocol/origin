@@ -28,7 +28,9 @@ const BASE_SCHEMA_ID = 'https://schema.originprotocol.com/'
 
 // Regex for extracting data type and version from schemaId.
 // eslint-disable-next-line no-useless-escape
-const schemaIdRegex = new RegExp('^/([a-zA-Z\\-]*)_v?(\\d+\\.\\d+\\.\\d+)(?:\\.json)?$')
+const schemaIdRegex = new RegExp(
+  '^/([a-zA-Z\\-]*)_v?(\\d+\\.\\d+\\.\\d+)(?:\\.json)?$'
+)
 
 function parseSchemaId(schemaId) {
   const url = new URL(schemaId)
@@ -38,7 +40,6 @@ function parseSchemaId(schemaId) {
   }
   return { dataType: splits[1], schemaVersion: splits[2] }
 }
-
 
 function validate(schemaId, data) {
   const { dataType, schemaVersion } = parseSchemaId(schemaId)

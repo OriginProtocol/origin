@@ -83,14 +83,16 @@ const Accounts = props => (
           <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
           Paste into dapp console:
           <pre>
-          {`localStorage.clear()\n`}
-          {`sessionStorage.clear()\n`}
-          {`localStorage.OGNContract = "${localStorage.OGNContract}"\n`}
-          {`localStorage.marketplaceContract = "${localStorage.marketplaceContract}"\n`}
-          {`localStorage.userRegistryContract = "${localStorage.userRegistryContract}"\n`}
-          {`localStorage.KeyHolderLibrary = "${localStorage.KeyHolderLibrary}"\n`}
-          {`localStorage.ClaimHolderLibrary = "${localStorage.ClaimHolderLibrary}"\n`}
-          {`location.reload()\n`}
+            {`localStorage.clear()\n`}
+            {`sessionStorage.clear()\n`}
+            {`localStorage.OGNContract = "${localStorage.OGNContract}"\n`}
+            {`localStorage.marketplaceContract = "${
+              localStorage.marketplaceContract
+            }"\n`}
+            {`localStorage.identityEventsContract = "${
+              localStorage.identityEventsContract
+            }"\n`}
+            {`location.reload()\n`}
           </pre>
         </div>
       )

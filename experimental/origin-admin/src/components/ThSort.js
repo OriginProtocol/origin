@@ -14,8 +14,16 @@ class ThSort extends Component {
               onClosing={() => this.setState({ open: false })}
               content={
                 <Menu>
-                  <Menu.Item onClick={() => this.props.onSort()} icon="sort-asc" text="Sort Ascending" />
-                  <Menu.Item onClick={() => this.props.onSort()} icon="sort-desc" text="Sort Descending" />
+                  <Menu.Item
+                    onClick={() => this.props.onSort()}
+                    icon="sort-asc"
+                    text="Sort Ascending"
+                  />
+                  <Menu.Item
+                    onClick={() => this.props.onSort()}
+                    icon="sort-desc"
+                    text="Sort Descending"
+                  />
                 </Menu>
               }
             >

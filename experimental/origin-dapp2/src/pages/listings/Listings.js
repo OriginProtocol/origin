@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import pick from 'lodash/pick'
+import { fbt } from 'fbt-runtime'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
@@ -30,6 +31,7 @@ class Listings extends Component {
 
     return (
       <>
+        <PageTitle>Listings</PageTitle>
         <Search
           value={this.state.search}
           onSearch={search => {
@@ -67,14 +69,17 @@ class Listings extends Component {
                   }}
                 >
                   <>
-                    <h5 className="listings-count">{`${totalCount} Listings`}</h5>
-                    <PageTitle>Listings</PageTitle>
-
+                    <h5 className="listings-count">
+                      <fbt desc="Num Listings">
+                        <fbt:plural count={totalCount} showCount="yes">
+                          Listing
+                        </fbt:plural>
+                      </fbt>
+                    </h5>
                     <ListingsGallery
                       listings={nodes}
                       hasNextPage={hasNextPage}
                     />
-
                     {!hasNextPage ? null : (
                       <button
                         className="btn btn-outline-primary btn-rounded mt-3"

@@ -4,7 +4,7 @@ export default gql`
   mutation DeployIdentity(
     $from: String!
     $profile: ProfileInput
-    $attestations: [AttestationInput]
+    $attestations: [String]
   ) {
     deployIdentity(
       from: $from

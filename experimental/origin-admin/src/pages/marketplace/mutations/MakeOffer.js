@@ -80,10 +80,10 @@ class MakeOffer extends Component {
                     />
                   </FormGroup>
                 </div>
-                <div style={{ flex: 1, marginRight: 20 }} >
-                      <FormGroup label="Quantity">
-                      <InputGroup {...input('quantity')} />
-                      </FormGroup>
+                <div style={{ flex: 1, marginRight: 20 }}>
+                  <FormGroup label="Quantity">
+                    <InputGroup {...input('quantity')} />
+                  </FormGroup>
                 </div>
                 <div style={{ flex: 1, marginRight: 20 }}>
                   <FormGroup label="Finalizes">
@@ -175,9 +175,10 @@ class MakeOffer extends Component {
 
   getVars() {
     const { affiliate } = this.state
-    const commission = affiliate === ZeroAddress
-      ? '0'
-      : web3.utils.toWei(this.state.commission, 'ether')
+    const commission =
+      affiliate === ZeroAddress
+        ? '0'
+        : web3.utils.toWei(this.state.commission, 'ether')
     const variables = {
       listingID: String(this.props.listing.id),
       from: this.state.from,
