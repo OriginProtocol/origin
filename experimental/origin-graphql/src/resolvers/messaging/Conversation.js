@@ -29,23 +29,28 @@ export default {
     }),
   totalUnread: (conversation, { wallet }) =>
     new Promise(async resolve => {
-      if (wallet) {
-        const messages = await contracts.messaging.getAllMessages(
-          conversation.id
-        ) || []
+      const messages = await contracts.messaging.getAllMessages(
+        conversation.id
+      ) || []
 
-        const totalUnread = messages.reduce(async (result, msg) => {
-          const message = await getMessage(msg)
+      const totalUnread = messages.reduce(async (result, msg) => {
+        const message = getMessage(msg)
+        await result
+        await message
 
-          if ((message.status === 'unread') && (message.address !== wallet)) {
-            return [...result, message]
-          }
-          return result
-        }, [])
+        return Promise.all([result, message])
+          .then(([result = [], message]) => {
+            const { status, address } = message
 
-        return resolve(totalUnread.length)
-      } else {
-        resolve()
-      }
+            if ((status === 'unread') && (address !== wallet)) {
+              return [...result, message]
+            }
+            return result
+          })
+      }, Promise.resolve([]))
+
+      return totalUnread.then((unread) => {
+        return resolve(unread.length)
+      })
     })
 }
