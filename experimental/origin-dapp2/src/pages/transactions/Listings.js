@@ -27,6 +27,7 @@ class Listings extends Component {
 
     return (
       <div className="container purchases">
+        <PageTitle>My Listings</PageTitle>
         <Query
           query={query}
           variables={vars}
@@ -55,7 +56,6 @@ class Listings extends Component {
 
             return (
               <>
-                <PageTitle>My Listings</PageTitle>
                 <h1>My Listings</h1>
                 <div className="row">
                   <div className="col-md-3">
