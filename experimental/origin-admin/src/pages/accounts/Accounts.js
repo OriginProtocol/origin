@@ -7,6 +7,7 @@ import { Button } from '@blueprintjs/core'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import NodeAccounts from './_NodeAccounts'
+import Toaster from '../Toaster'
 import CreateWallet from './mutations/CreateWallet'
 
 import Contracts from '../contracts/Contracts'
@@ -21,6 +22,24 @@ const SetNetworkMutation = gql`
     setNetwork(network: $network)
   }
 `
+
+function updateTruffle() {
+  fetch('/update-truffle', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      marketplace: localStorage.marketplaceContract,
+      token: localStorage.OGNContract
+    })
+  }).then(() => {
+    Toaster.show({
+      icon: 'tick',
+      intent: 'success',
+      message: 'Truffle contracts updated',
+      timeout: 2000
+    })
+  })
+}
 
 const Accounts = props => (
   <Query query={query} notifyOnNetworkStatusChange={true}>
@@ -72,6 +91,11 @@ const Accounts = props => (
               populate(maxNodeAccount ? maxNodeAccount.id : null, client)
             }
             text="Populate"
+          />
+          <Button
+            style={{ marginTop: '1rem', marginLeft: '0.5rem' }}
+            onClick={() => updateTruffle()}
+            text="Update Truffle"
           />
           <Button
             style={{ marginTop: '1rem', marginLeft: '0.5rem' }}
