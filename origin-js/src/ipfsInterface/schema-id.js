@@ -1,3 +1,5 @@
+const { URL } = require('url')
+
 /*
   Utilities for manipulating schemaIds.
 
