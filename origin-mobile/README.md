@@ -136,14 +136,14 @@ In the origin-linking and origin-notifications `.env` files, two of the values w
 
 If you want to test with mobile Safari on the same device as the application, find your computer's [internal WiFi network IP address](https://www.wikihow.com/Find-Your-IP-Address-on-a-Mac#Finding_Your_Internal_IP_.28OS_X_10.4.29_sub) and add it to the `MOBILE_LOCALHOST_IP` value for origin-dapp.
 
-**Setup Steps**
+### Setup
 - Start PostgreSQL
 - Start Redis: `redis-server`
 - `createdb origin`
 - origin $ `npm run install:mobile` 👈 instead of `npm install` at the Origin monorepo root
 - origin/origin-linking $ `npm run migrate`
 
-**Startup Steps**
+### Startup
 - origin/origin-js $ `npm run start`
 - origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
 - origin/origin-linking $ `npm run start`
@@ -152,7 +152,7 @@ If you want to test with mobile Safari on the same device as the application, fi
 - origin/origin-mobile $ `npm run start -- --reset-cache`
 - Open Xcode and build for your desired device
 
-**Troubleshooting**
+### Troubleshooting
 
 > Linker command failed with exit code…
 
@@ -161,10 +161,16 @@ If you want to test with mobile Safari on the same device as the application, fi
 - In Xcode, Project > Clean Build Folder
 - Try again
 
+-----------
+
 > error: bundling failed: Error: Unable to resolve module origin/common/enums...
 
 This can be caused by not running `npm run install-local` or not _rerunning_ it after doing a root-level `npm install` (which deletes various things from origin/origin-mobile/node_modules).
 
+-----------
+
 Check [the React Native docs](https://facebook.github.io/react-native/docs/troubleshooting).
+
+-----------
 
 📲 Don't forget to have WiFi enabled on your both of your devices and connected.
