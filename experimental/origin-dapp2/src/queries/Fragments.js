@@ -53,8 +53,9 @@ export default {
           urlExpanded
           contentType
         }
+        commission
+        commissionPerUnit
         ... on UnitListing {
-          multiUnit
           unitsTotal
           unitsAvailable
           unitsSold
