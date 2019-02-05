@@ -98,6 +98,7 @@ export DATABASE_URL=postgres://origin:origin@localhost/origin
 export DATABASE=true
 export ELASTICSEARCH=true
 export ELASTICSEARCH_HOST=localhost:9200
+export GROWTH=true
 export LOG_LEVEL=INFO
 lerna run start:listener:development --scope origin-discovery --stream
 ```

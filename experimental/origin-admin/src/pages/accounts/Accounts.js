@@ -105,19 +105,30 @@ const Accounts = props => (
           <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
           <Contracts />
           <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
-          Paste into dapp console:
-          <pre>
-            {`localStorage.clear()\n`}
-            {`sessionStorage.clear()\n`}
-            {`localStorage.OGNContract = "${localStorage.OGNContract}"\n`}
-            {`localStorage.marketplaceContract = "${
-              localStorage.marketplaceContract
-            }"\n`}
-            {`localStorage.identityEventsContract = "${
-              localStorage.identityEventsContract
-            }"\n`}
-            {`location.reload()\n`}
-          </pre>
+          <div>Paste into dapp console:</div>
+          <textarea
+            readOnly
+            style={{
+              height: '100px',
+              width: '100%',
+              fontFamily: 'Roboto, monospace',
+              display: 'table-caption',
+              overflowY: 'scroll'
+            }}
+            onClick={e => e.target.select()}
+            value={
+              `localStorage.clear()\n` +
+              `sessionStorage.clear()\n` +
+              `localStorage.OGNContract = "${localStorage.OGNContract}"\n` +
+              `localStorage.marketplaceContract = "${
+                localStorage.marketplaceContract
+              }"\n` +
+              `localStorage.identityEventsContract = "${
+                localStorage.identityEventsContract
+              }"\n` +
+              `location.reload()\n`
+            }
+          />
         </div>
       )
     }}
