@@ -35,6 +35,9 @@ contract TokenMigration is Ownable {
     // @dev Migrates a set of accounts, which should be limited in size so that
     // the transaction is under the gas limit.
     function migrateAccounts(address[] _holders) public onlyOwner notFinished {
+        require(fromToken.paused(), "fromToken should be paused during migration");
+        require(toToken.paused(), "toToken should be paused during migration");
+        
         for (uint i = 0; i < _holders.length; i++) {
             _migrateAccount(_holders[i]);
         }
@@ -43,6 +46,9 @@ contract TokenMigration is Ownable {
     // @dev Migrates the balance for a single address by minting the same number
     // of new tokens the address had with the old token.
     function migrateAccount(address _holder) public onlyOwner notFinished {
+        require(fromToken.paused(), "fromToken should be paused during migration");
+        require(toToken.paused(), "toToken should be paused during migration");
+
         _migrateAccount(_holder);
     }
 
@@ -64,9 +70,7 @@ contract TokenMigration is Ownable {
     // @dev Internal account migration function.
     function _migrateAccount(address _holder) internal {
         require(!migrated[_holder], "holder already migrated");
-        require(fromToken.paused(), "fromToken should be paused during migration");
-        require(toToken.paused(), "toToken should be paused during migration");
-        
+
         uint256 balance = fromToken.balanceOf(_holder);
         if (balance > 0) {
             toToken.mint(_holder, balance);
