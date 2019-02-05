@@ -81,6 +81,9 @@ export default class V01_UsersAdapter {
   async get(address) {
     const account = await this.contractService.currentAccount()
     address = address || account
+    if (!address) {
+      return false
+    }
 
     // Scan blockchain for identity events to get latest IPFS hash of identity, if any.
     const ipfsHash = await this._getIdentityIpfsHash(address)
@@ -123,6 +126,10 @@ export default class V01_UsersAdapter {
    * @private
    */
   async _getIdentityIpfsHash(address) {
+    if (!address) {
+      return null
+    }
+
     // TODO: should this be cached like what marketplace does in getContract ???
     const contract = await this.contractService.deployed(
       this.contractService.contracts[this.contractName]

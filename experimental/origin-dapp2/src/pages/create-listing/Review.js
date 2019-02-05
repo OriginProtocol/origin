@@ -7,11 +7,10 @@ import Wallet from 'components/Wallet'
 import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
 import Calendar from 'components/Calendar'
+import Category from 'components/Category'
 
 import CreateListing from './mutations/CreateListing'
 import UpdateListing from './mutations/UpdateListing'
-
-import category from 'utils/category'
 
 class Review extends Component {
   state = {}
@@ -43,7 +42,9 @@ class Review extends Component {
             </div>
             <div className="row">
               <div className="col-3 label">Cagegory</div>
-              <div className="col-9">{category(listing)}</div>
+              <div className="col-9">
+                <Category listing={listing} />
+              </div>
             </div>
             <div className="row">
               <div className="col-3 label">Description</div>
@@ -132,6 +133,7 @@ class Review extends Component {
                 listingId={this.props.listingId}
                 listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
+                refetch={this.props.refetch}
                 className="btn btn-primary"
                 children="Done"
               />

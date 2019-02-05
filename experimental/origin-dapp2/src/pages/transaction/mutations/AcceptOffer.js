@@ -59,14 +59,19 @@ class AcceptOffer extends Component {
     })
   }
 
-  renderWaitModal(client) {
+  renderWaitModal() {
     if (!this.state.waitFor) return null
 
     return (
       <WaitForTransaction
         hash={this.state.waitFor}
         event="OfferAccepted"
-        onClose={async () => await client.resetStore()}
+        onClose={async () => {
+          if (this.props.refetch) {
+            this.props.refetch()
+          }
+          window.scrollTo(0, 0)
+        }}
         shouldClose={this.state.waitForShouldClose}
       >
         {() => (

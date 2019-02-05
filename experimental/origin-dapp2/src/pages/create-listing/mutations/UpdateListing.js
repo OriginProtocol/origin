@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import get from 'lodash/get'
 
 import UpdateListingMutation from 'mutations/UpdateListing'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
+
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
+import withWeb3 from 'hoc/withWeb3'
 
 import applyListingData from './_listingData'
 
@@ -66,32 +69,33 @@ class UpdateListing extends Component {
         listingID: this.props.listingId,
         additionalDeposit:
           tokenBalance >= Number(listing.boost) ? listing.boost : '0',
-        from: wallet,
+        from: wallet
       })
     })
   }
 
   renderWaitModal() {
     if (!this.state.waitFor) return null
+    const netId = get(this.props, 'web3.networkId')
 
     return (
       <WaitForTransaction hash={this.state.waitFor} event="ListingUpdated">
-        {({ event, client }) => (
+        {({ event }) => (
           <div className="make-offer-modal">
             <div className="success-icon" />
             <div>Success!</div>
-
             <button
               href="#"
               className="btn btn-outline-light"
               onClick={async () => {
-                await client.resetStore()
-                // TODO: Fix listing ID
-                this.setState({
-                  redirect: `/listings/999-1-${event.returnValues.listingID}`
-                })
+                this.setState({ loading: true })
+                if (this.props.refetch) {
+                  await this.props.refetch()
+                }
+                const { listingID } = event.returnValues
+                this.setState({ redirect: `/listings/${netId}-0-${listingID}` })
               }}
-              children="View Listing"
+              children={this.state.loading ? 'Loading' : 'View Listing'}
             />
           </div>
         )}
@@ -100,4 +104,4 @@ class UpdateListing extends Component {
   }
 }
 
-export default withWallet(withCanTransact(UpdateListing))
+export default withWeb3(withWallet(withCanTransact(UpdateListing)))

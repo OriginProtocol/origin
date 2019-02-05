@@ -1,10 +1,10 @@
-var Price = `
+const Price = `
   type Price {
     currency: String
     amount: String
   }
 `
-var PageInfo = `
+const PageInfo = `
   type PageInfo {
     endCursor: String
     hasNextPage: Boolean!

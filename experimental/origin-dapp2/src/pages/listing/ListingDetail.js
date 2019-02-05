@@ -8,9 +8,9 @@ import AboutParty from 'components/AboutParty'
 import ListingBadge from 'components/ListingBadge'
 import Calendar from 'components/Calendar'
 import PageTitle from 'components/PageTitle'
+import Category from 'components/Category'
 
 import Buy from './mutations/Buy'
-import category from 'utils/category'
 
 const SelectQuantity = ({ quantity, onChange, available }) => {
   return (
@@ -53,10 +53,11 @@ const Pending = () => (
   </div>
 )
 
-const SingleUnit = ({ listing, from }) => (
+const SingleUnit = ({ listing, from, refetch }) => (
   <div className="listing-buy">
     <div className="price">{`${listing.price.amount} ETH`}</div>
     <Buy
+      refetch={refetch}
       listing={listing}
       from={from}
       value={listing.price.amount}
@@ -67,7 +68,7 @@ const SingleUnit = ({ listing, from }) => (
   </div>
 )
 
-const MultiUnit = ({ listing, from, quantity, updateQuantity }) => {
+const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
   const amount = String(Number(listing.price.amount) * Number(quantity))
   return (
     <div className="listing-buy multi">
@@ -85,6 +86,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity }) => {
         <span>{`${amount} ETH`}</span>
       </div>
       <Buy
+        refetch={refetch}
         listing={listing}
         from={from}
         value={amount}
@@ -96,7 +98,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity }) => {
   )
 }
 
-const Fractional = ({ listing, from, range, availability }) => {
+const Fractional = ({ listing, from, range, availability, refetch }) => {
   let checkIn = 'Check in',
     checkOut = 'Check out',
     totalPrice,
@@ -132,6 +134,7 @@ const Fractional = ({ listing, from, range, availability }) => {
         </div>
       )}
       <Buy
+        refetch={refetch}
         listing={listing}
         from={from}
         value={totalPrice}
@@ -183,7 +186,9 @@ class ListingDetail extends Component {
       <div className="listing-detail">
         <PageTitle>{listing.title}</PageTitle>
         <div className="header">
-          <div className="category">{category(listing)}</div>
+          <div className="category">
+            <Category listing={listing} />
+          </div>
           <ListingBadge status={listing.status} featured={listing.featured} />
         </div>
         <h2>{listing.title}</h2>
