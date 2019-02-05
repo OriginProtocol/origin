@@ -56,6 +56,7 @@ class IdentityEventHandler {
     user.attestations.forEach(async attestation => {
       const eventType = AttestationTopicToEventType[attestation.topic]
       if (!eventType) {
+        logger.error(`Unrecognized attestation topic received: ${attestation.topic}. Skipping.`)
         return
       }
 
@@ -106,7 +107,7 @@ class IdentityEventHandler {
     return { user }
   }
 
-  // Do not call webhook for identity events.
+  // Do not call the notification webhook for identity events.
   webhookEnabled() {
     return false
   }

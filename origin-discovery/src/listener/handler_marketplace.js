@@ -308,12 +308,14 @@ class MarketplaceEventHandler {
     return details
   }
 
+  // Call the notification webhook for marketplace events.
   webhookEnabled() {
-    return false
+    return true
   }
 
+  // Call the discord webhook for marketplace events.
   discordWebhookEnabled() {
-    return false
+    return true
   }
 }
 
