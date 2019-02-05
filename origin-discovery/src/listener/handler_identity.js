@@ -1,7 +1,7 @@
 const logger = require('./logger')
 
 const { GrowthEventTypes } = require('origin-growth/src/enums')
-const { AttestationTopicToEventType, GrowthEvent } = require('origin-growth/src/resources/event')
+const { AttestationServiceToEventType, GrowthEvent } = require('origin-growth/src/resources/event')
 
 
 class IdentityEventHandler {
@@ -54,9 +54,9 @@ class IdentityEventHandler {
    */
   async _recordGrowthAttestationEvents(user, blockInfo) {
     user.attestations.forEach(async attestation => {
-      const eventType = AttestationTopicToEventType[attestation.topic]
+      const eventType = AttestationServiceToEventType[attestation.service]
       if (!eventType) {
-        logger.error(`Unrecognized attestation topic received: ${attestation.topic}. Skipping.`)
+        logger.error(`Unrecognized attestation service received: ${attestation.service}. Skipping.`)
         return
       }
 

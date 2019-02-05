@@ -15,32 +15,32 @@ const IdentityEventHandler = require('../src/listener/handler_identity')
 describe('Listener Handlers', () => {
 
   class MockWeb3Eth {
-    constructor() {
+    constructor(decoded) {
       this.getBlock = () => { return { timestamp: 1 } }
       this.abi = {}
-      this.abi.decodeLog = () => { return {} }
+      this.abi.decodeLog = () => { return decoded }
     }
   }
 
   class MockOrigin {
-    constructor() {
+    constructor(seller, buyer, listingId, offerId) {
       this.marketplace = {}
       this.marketplace.getListing = sinon.fake.returns({
-        id: '123',
+        id: listingId,
         status: 'active',
-        seller: '0xABC',
+        seller: seller,
         events: [ { blockNumber: 1, logIndex: 1 } ]
       })
       this.marketplace.getOffer = sinon.fake.returns({
-        id: '123-1',
+        id: offerId,
         status: 'finalized',
-        buyer: '0xDEF',
+        buyer: buyer,
         events: [{ blockNumber: 2, logIndex: 2 }]
       })
       const fakeUser = {
-        address: '0x789',
+        address: seller,
         profile: { firstName: 'foo', lastName: 'bar', avatar: '0xABCDEF' },
-        attestations: [ { topic: 'email' }, { topic: 'phone' } ]
+        attestations: [ { service: 'email' }, { service: 'phone' } ]
       }
       this.users = {}
       this.users.get = sinon.fake.returns(fakeUser)
@@ -56,6 +56,11 @@ describe('Listener Handlers', () => {
   }
 
   before(() => {
+    this.seller = '0x2ae595eddb54f4234b10cd31fc00790e379fc6b1'
+    this.buyer = '0x6c6e93874216112ef12a0d04e2679ecc6c3625cc'
+    this.listingId = '999-000-240'
+    this.offerId = '999-000-240-1'
+
     this.config = {
       db: true,
       growth: true
@@ -64,10 +69,10 @@ describe('Listener Handlers', () => {
     this.context = {
       web3: {},
       networkId: 999,
-      origin: new MockOrigin(),
+      origin: new MockOrigin(this.seller, this.buyer, this.listingId, this.offerId),
       config: this.config
     }
-    this.context.web3.eth = new MockWeb3Eth()
+    this.context.web3.eth = new MockWeb3Eth( { listingID: this.listingId.split('-')[2] })
 
     // Marketplace test fixtures.
     this.marketplaceRule = {
@@ -109,8 +114,8 @@ describe('Listener Handlers', () => {
     }
 
     this.identityLog = {
-      address: '0x123',
-      decoded: { account: '0xAAA' },
+      address: this.seller,
+      decoded: { account: this.seller },
       contractName: this.identityContractVersion.contractName,
       eventName: this.identityRule.eventName,
       contractVersionKey: this.identityContractVersion.versionKey,
@@ -141,16 +146,20 @@ describe('Listener Handlers', () => {
 
     // Check output.
     expect(result.listing).to.be.an('object')
-    expect(result.listing.id).to.equal('123')
+    expect(result.listing.id).to.equal(this.listingId)
     expect(result.offer).to.be.an('object')
-    expect(result.offer.id).to.equal('123-1')
+    expect(result.offer.id).to.equal(this.offerId)
 
     // Check expected rows were inserted in the DB.
-    const listing = await db.Listing.findAll({ where: { id: '123', blockNumber: 1, logIndex: 1, sellerAddress: '0xabc' } })
+    const listing = await db.Listing.findAll({
+      where: { id: this.listingId, blockNumber: 1, logIndex: 1, sellerAddress: this.seller } })
     expect(listing.length).to.equal(1)
-    const offer = await db.Offer.findAll({ where: { id: '123-1', listingId: '123', status: 'finalized', sellerAddress: '0xabc', buyerAddress: '0xdef' } })
+    const offer = await db.Offer.findAll({
+      where: {
+        id: this.offerId, listingId: this.listingId, status: 'finalized',
+        sellerAddress: this.seller, buyerAddress: this.buyer } })
     expect(offer.length).to.equal(1)
-    const listingEvent = await GrowthEvent.findAll(null, '0xdef', GrowthEventTypes.ListingPurchased, '123-1')
+    const listingEvent = await GrowthEvent.findAll(null, this.buyer, GrowthEventTypes.ListingPurchased, this.offerId)
     expect(listingEvent.length).to.equal(1)
   })
 
@@ -160,14 +169,14 @@ describe('Listener Handlers', () => {
 
     // Check output.
     expect(result.user).to.be.an('object')
-    expect(result.user.address).to.equal('0x789')
+    expect(result.user.address).to.equal(this.seller)
 
     // Check expected rows were inserted in the DB.
-    const profileEvents = await GrowthEvent.findAll(null, '0x789', GrowthEventTypes.ProfilePublished, null)
+    const profileEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.ProfilePublished, null)
     expect(profileEvents.length).to.equal(1)
-    const emailEvents = await GrowthEvent.findAll(null, '0x789', GrowthEventTypes.EmailAttestationPublished, null)
+    const emailEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.EmailAttestationPublished, null)
     expect(emailEvents.length).to.equal(1)
-    const phoneEvents = await GrowthEvent.findAll(null, '0x789', GrowthEventTypes.PhoneAttestationPublished, null)
+    const phoneEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.PhoneAttestationPublished, null)
     expect(phoneEvents.length).to.equal(1)
   })
 })

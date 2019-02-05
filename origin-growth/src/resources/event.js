@@ -1,7 +1,8 @@
+const Web3 = require('web3')
 const db = require('../models')
 const { GrowthEventStatuses, GrowthEventTypes } = require('../enums')
 
-const AttestationTopicToEventType = {
+const AttestationServiceToEventType = {
   'airbnb': GrowthEventTypes.AirbnbAttestationPublished,
   'email': GrowthEventTypes.EmailAttestationPublished,
   'facebook': GrowthEventTypes.FacebookAttestationPublished,
@@ -33,6 +34,11 @@ class GrowthEvent {
    * @returns {Promise<void>}
    */
    static async insert(logger, ethAddress, eventType, customId, data) {
+    // Check input.
+    if (!Web3.utils.isAddress(ethAddress)) {
+      throw new Error(`Invalid eth address ${ethAddress}`)
+    }
+
     // Check there isn't already an event of the same type.
     const pastEvents = await GrowthEvent._findAll(ethAddress, eventType, customId)
     if (pastEvents.length > 0) {
@@ -65,4 +71,4 @@ class GrowthEvent {
   }
 }
 
-module.exports = { AttestationTopicToEventType, GrowthEvent }
+module.exports = { AttestationServiceToEventType, GrowthEvent }

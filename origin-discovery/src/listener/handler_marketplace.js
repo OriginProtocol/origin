@@ -173,9 +173,9 @@ class MarketplaceEventHandler {
     // TODO: use method utils/id.js:parseListingId
     // DVF: this should really be handled in origin js - origin.js should throw
     // an error if this happens.
-    const ipfsListingId = listingId.split('-')[2]
-    if (ipfsListingId !== log.decoded.listingID) {
-      throw new Error(`ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`)
+    const contractListingId = listingId.split('-')[2]
+    if (contractListingId !== log.decoded.listingID) {
+      throw new Error(`ListingId mismatch: ${contractListingId} !== ${log.decoded.listingID}`)
     }
 
     if (context.config.db) {
