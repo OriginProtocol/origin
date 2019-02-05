@@ -47,28 +47,29 @@ const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
  *             handler: [...] } }
  *  }
  */
-function buildSignatureToRules (context) {
+function buildSignatureToRules (config, origin, web3) {
   const signatureLookup = {}
   for (const contractName in EVENT_TO_HANDLER_MAP) {
     const eventHandlers = EVENT_TO_HANDLER_MAP[contractName]
-    const contract = context.origin.contractService.contracts[contractName]
+    const contract = origin.contractService.contracts[contractName]
     if (contract === undefined) {
       throw Error("Can't find contract " + contractName)
     }
     contract.abi.filter(x => x.type === 'event').forEach(eventAbi => {
-      const handler = eventHandlers[eventAbi.name]
-      if (handler === undefined) {
+      const handlerClass = eventHandlers[eventAbi.name]
+      if (handlerClass === undefined) {
         return
       }
-      const signature = context.web3.eth.abi.encodeEventSignature(eventAbi)
+      const handler = new handlerClass(config, origin)
+      const signature = web3.eth.abi.encodeEventSignature(eventAbi)
       if (signatureLookup[signature] === undefined) {
         signatureLookup[signature] = {}
       }
       signatureLookup[signature][contractName] = {
-        contractName: contractName,
+        contractName,
         eventName: eventAbi.name,
-        eventAbi: eventAbi,
-        handler: handler
+        eventAbi,
+        handler
       }
     })
   }
@@ -84,7 +85,7 @@ function buildSignatureToRules (context) {
  *      { versionKey: '000', contractName: 'V00_Marketplace' }
  *  }
  */
-async function buildAddressToVersion (context) {
+async function buildAddressToVersion (origin) {
   async function extractVersions(adapters, excludeVersions) {
     for (const versionKey of Object.keys(adapters)) {
       if (excludeVersions.includes(versionKey)) {
@@ -101,9 +102,9 @@ async function buildAddressToVersion (context) {
   }
 
   const versionList = {}
-  await extractVersions(context.origin.marketplace.resolver.adapters, [])
+  await extractVersions(origin.marketplace.resolver.adapters, [])
   // Note: Ignore identity contract V00 since it is deprecated.
-  await extractVersions(context.origin.users.resolver.adapters, ['000'])
+  await extractVersions(origin.users.resolver.adapters, ['000'])
 
   logger.debug('Contracts version list:', versionList)
   return versionList
@@ -165,8 +166,8 @@ class Context {
 
     this.origin = setupOriginJS(config, this.web3)
 
-    this.signatureToRules = buildSignatureToRules(this)
-    this.addressToVersion = await buildAddressToVersion(this)
+    this.signatureToRules = buildSignatureToRules(config, this.origin, this.web3)
+    this.addressToVersion = await buildAddressToVersion(this.origin)
     return this
   }
 }
@@ -275,10 +276,12 @@ const config = {
   discordWebhook: args['--discord-webhook'] || process.env.DISCORD_WEBHOOK,
   // Index events in the search index.
   elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
-  // Index events in the database.
-  db: args['--db'] || (process.env.DATABASE === 'true'),
-  // Record events in the growth DB.
-  growth: args['--growth'] || (process.env.GROWTH === 'true'),
+  // Index marketplace events.
+  marketplace: args['--marketplace'] || (process.env.INDEX_MARKETPLACE === 'true'),
+  // Index identity events.
+  identity: args['--identity'] || (process.env.INDEX_IDENTITY === 'true'),
+  // Index growth events.
+  growth: args['--growth'] || (process.env.INDEX_GROWTH === 'true'),
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind

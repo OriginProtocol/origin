@@ -5,6 +5,11 @@ const { AttestationServiceToEventType, GrowthEvent } = require('origin-growth/sr
 
 
 class IdentityEventHandler {
+  constructor(config, origin) {
+    this.config = config
+    this.origin = origin
+  }
+
   /**
    * Indexes a user in the DB.
    * @param {Object} user - Origin js user model object.
@@ -73,14 +78,17 @@ class IdentityEventHandler {
   /**
    * Main entry point for the identity event handler.
    * @param {Object} log
-   * @param {Object} context
    * @returns {Promise<{user: User}>}
    */
-  async process(log, context) {
+  async process(log) {
+    if (!this.config.identity) {
+      return null
+    }
+
     const account = log.decoded.account
     logger.info(`Processing Identity event for account ${account}`)
 
-    const user = await context.origin.users.get(account)
+    const user = await this.origin.users.get(account)
     if (!user) {
       logger.error(`Failed loading identity data for account ${account} - skipping indexing`)
       return
@@ -95,11 +103,9 @@ class IdentityEventHandler {
       logIndex: log.logIndex
     }
 
-    if (context.config.db) {
-      await this._indexUser(user, blockInfo)
-    }
+    await this._indexUser(user, blockInfo)
 
-    if (context.config.growth) {
+    if (this.config.growth) {
       await this._recordGrowthProfileEvent(user, blockInfo)
       await this._recordGrowthAttestationEvents(user, blockInfo)
     }

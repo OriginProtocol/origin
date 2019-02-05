@@ -51,6 +51,11 @@ function generateOfferId(log) {
 
 
 class MarketplaceEventHandler {
+  constructor(config, origin) {
+    this.config = config
+    this.origin = origin
+  }
+
   /**
    * Gets details about a listing by calling Origin-js.
    * @param {Object} log
@@ -157,11 +162,10 @@ class MarketplaceEventHandler {
    * Indexes a listing in the DB and in ElasticSearch.
    * @param {Object} log
    * @param {Object} details
-   * @param {Object} context
    * @returns {Promise<void>}
    * @private
    */
-  async _indexListing(log, details, context) {
+  async _indexListing(log, details) {
     const userAddress = log.decoded.party
     const ipfsHash = log.decoded.ipfsHash
 
@@ -178,30 +182,27 @@ class MarketplaceEventHandler {
       throw new Error(`ListingId mismatch: ${contractListingId} !== ${log.decoded.listingID}`)
     }
 
-    if (context.config.db) {
-      logger.info(`Indexing listing in DB: \
-        id=${listingId} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
-      const listingData = {
-        id: listingId,
-        blockNumber: log.blockNumber,
-        logIndex: log.logIndex,
-        status: listing.status,
-        sellerAddress: listing.seller.toLowerCase(),
-        data: listing
-      }
-      if (log.eventName === 'ListingCreated') {
-        listingData.createdAt = log.date
-      } else {
-        listingData.updatedAt = log.date
-      }
-
-      await withRetrys(async () => {
-        return db.Listing.upsert(listingData)
-      })
-
+    logger.info(`Indexing listing in DB: \
+      id=${listingId} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
+    const listingData = {
+      id: listingId,
+      blockNumber: log.blockNumber,
+      logIndex: log.logIndex,
+      status: listing.status,
+      sellerAddress: listing.seller.toLowerCase(),
+      data: listing
+    }
+    if (log.eventName === 'ListingCreated') {
+      listingData.createdAt = log.date
+    } else {
+      listingData.updatedAt = log.date
     }
 
-    if (context.config.elasticsearch) {
+    await withRetrys(async () => {
+      return db.Listing.upsert(listingData)
+    })
+
+    if (this.config.elasticsearch) {
       logger.info(`Indexing listing in Elastic: id=${listingId}`)
       await withRetrys(async () => {
         return search.Listing.index(listingId, userAddress, ipfsHash, listing)
@@ -213,15 +214,10 @@ class MarketplaceEventHandler {
    * Indexes an offer in the DB and in ElasticSearch.
    * @param {Object} log
    * @param {Object} details
-   * @param {Object} context
    * @returns {Promise<void>}
    * @private
    */
-  async _indexOffer(log, details, context) {
-    if (!context.config.db) {
-      return
-    }
-
+  async _indexOffer(log, details) {
     const listing = details.listing
     const offer = details.offer
     logger.info(`Indexing offer in DB: id=${offer.id}`)
@@ -276,17 +272,20 @@ class MarketplaceEventHandler {
   /**
    * Main entry point for the MarketplaceHandler.
    * @param log
-   * @param context
    * @returns {Promise<
    *    {listing: Listing, seller: User}|
    *    {listing: Listing, offer: Offer, seller: User, buyer: User}>}
    */
-  async process(log, context) {
+  async process(log) {
+    if (!this.config.marketplace) {
+      return null
+    }
+
     const blockInfo = {
       blockNumber: log.blockNumber,
       logIndex: log.logIndex
     }
-    const details = await this._getDetails(log, context.origin, blockInfo)
+    const details = await this._getDetails(log, this.origin, blockInfo)
 
     // On both listing and offer event, index the listing.
     // Notes:
@@ -294,28 +293,26 @@ class MarketplaceEventHandler {
     // list of all events relevant to the listing.
     //  - We index both in DB and ES. DB is the ground truth for data and
     // ES is used for full-text search use cases.
-    await this._indexListing(log, details, context)
+    await this._indexListing(log, details)
 
     // On offer event, index the offer in the DB.
     if (isOfferEvent(log.eventName)) {
-      await this._indexOffer(log, details, context)
+      await this._indexOffer(log, details)
     }
 
-    if (context.config.growth) {
+    if (this.config.growth) {
       await this._recordGrowthEvent(log, details, blockInfo)
     }
 
     return details
   }
 
-  // Call the notification webhook for marketplace events.
   webhookEnabled() {
-    return true
+    return this.config.marketplace
   }
 
-  // Call the discord webhook for marketplace events.
   discordWebhookEnabled() {
-    return true
+    return this.config.marketplace
   }
 }
 

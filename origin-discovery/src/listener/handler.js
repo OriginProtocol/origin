@@ -6,29 +6,25 @@ const IdentityEventHandler = require('./handler_identity')
 
 const { postToDiscordWebhook, postToWebhook } = require('./webhooks')
 
-
-const marketplaceHandler = new MarketplaceEventHandler()
-const identityHandler = new IdentityEventHandler()
-
 // Adding a mapping here makes the listener listen for the event
 // and call the associated handler when the event is received.
 const EVENT_TO_HANDLER_MAP = {
   V00_Marketplace: {
-    ListingCreated: marketplaceHandler,
-    ListingUpdated: marketplaceHandler,
-    ListingWithdrawn: marketplaceHandler,
-    ListingData: marketplaceHandler,
-    ListingArbitrated: marketplaceHandler,
-    OfferCreated: marketplaceHandler,
-    OfferWithdrawn: marketplaceHandler,
-    OfferAccepted: marketplaceHandler,
-    OfferDisputed: marketplaceHandler,
-    OfferRuling: marketplaceHandler,
-    OfferFinalized: marketplaceHandler,
-    OfferData: marketplaceHandler
+    ListingCreated: MarketplaceEventHandler,
+    ListingUpdated: MarketplaceEventHandler,
+    ListingWithdrawn: MarketplaceEventHandler,
+    ListingData: MarketplaceEventHandler,
+    ListingArbitrated: MarketplaceEventHandler,
+    OfferCreated: MarketplaceEventHandler,
+    OfferWithdrawn: MarketplaceEventHandler,
+    OfferAccepted: MarketplaceEventHandler,
+    OfferDisputed: MarketplaceEventHandler,
+    OfferRuling: MarketplaceEventHandler,
+    OfferFinalized: MarketplaceEventHandler,
+    OfferData: MarketplaceEventHandler
   },
   IdentityEvents: {
-    IdentityUpdated: identityHandler,
+    IdentityUpdated: IdentityEventHandler,
     // TODO(franck): handle IdentityDeleted
   }
 }
@@ -66,22 +62,20 @@ async function handleLog (log, rule, contractVersion, context) {
   logger.info(`Processing log: ${logDetails}`)
 
   // Record the event in the DB.
-  if (context.config.db) {
-    await withRetrys(async () => {
-      return db.Event.upsert({
-        blockNumber: log.blockNumber,
-        logIndex: log.logIndex,
-        contractAddress: log.address,
-        transactionHash: log.transactionHash,
-        topic0: log.topics[0],
-        topic1: log.topics[1],
-        topic2: log.topics[2],
-        topic3: log.topics[3],
-        data: log,
-        createdAt: log.date
-      })
+  await withRetrys(async () => {
+    return db.Event.upsert({
+      blockNumber: log.blockNumber,
+      logIndex: log.logIndex,
+      contractAddress: log.address,
+      transactionHash: log.transactionHash,
+      topic0: log.topics[0],
+      topic1: log.topics[1],
+      topic2: log.topics[2],
+      topic3: log.topics[3],
+      data: log,
+      createdAt: log.date
     })
-  }
+  })
 
   // Call the event handler.
   //

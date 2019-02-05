@@ -62,15 +62,16 @@ describe('Listener Handlers', () => {
     this.offerId = '999-000-240-1'
 
     this.config = {
-      db: true,
+      marketplace: true,
+      identity: true,
       growth: true
     }
 
     this.context = {
       web3: {},
       networkId: 999,
+      config: this.config,
       origin: new MockOrigin(this.seller, this.buyer, this.listingId, this.offerId),
-      config: this.config
     }
     this.context.web3.eth = new MockWeb3Eth( { listingID: this.listingId.split('-')[2] })
 
@@ -141,8 +142,8 @@ describe('Listener Handlers', () => {
   })
 
   it(`Marketplace`, async () => {
-    const handler = new MarketplaceEventHandler()
-    const result = await handler.process(this.marketplaceLog, this.context)
+    const handler = new MarketplaceEventHandler(this.config, this.context.origin)
+    const result = await handler.process(this.marketplaceLog)
 
     // Check output.
     expect(result.listing).to.be.an('object')
@@ -164,8 +165,8 @@ describe('Listener Handlers', () => {
   })
 
   it(`Identity`, async () => {
-    const handler = new IdentityEventHandler()
-    const result = await handler.process(this.identityLog, this.context)
+    const handler = new IdentityEventHandler(this.config, this.context.origin)
+    const result = await handler.process(this.identityLog)
 
     // Check output.
     expect(result.user).to.be.an('object')
