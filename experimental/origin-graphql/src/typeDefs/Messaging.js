@@ -6,7 +6,7 @@ module.exports = `
   extend type Mutation {
     enableMessaging: Boolean
     sendMessage(to: String!, content: String, media: [MediaInput]): Conversation
-    updateMessage(status: String!, hash: String!): Message
+    updateMessages(id: String!, wallet: String!): Conversation
   }
 
   type Messaging {

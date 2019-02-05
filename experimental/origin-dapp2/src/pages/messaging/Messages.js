@@ -7,7 +7,7 @@ import withWallet from 'hoc/withWallet'
 import query from 'queries/Conversations'
 
 import { OnboardMessaging } from 'pages/onboard/Messaging'
-import UpdateMessage from 'mutations/UpdateMessage'
+import UpdateMessages from 'mutations/UpdateMessages'
 
 import Room from './Room'
 import Avatar from 'components/Avatar'
@@ -83,9 +83,9 @@ const Messages = props => (
             </div>
             <div className="col-md-9">
               {active ? (
-                <Mutation mutation={UpdateMessage}>
-                  {updateMessage => (
-                    <Room id={active} updateMessage={updateMessage} />
+                <Mutation mutation={UpdateMessages}>
+                  {updateMessages => (
+                    <Room id={active} updateMessages={updateMessages} />
                   )}
                 </Mutation>
               ) : null}

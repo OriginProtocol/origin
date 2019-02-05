@@ -75,7 +75,7 @@ const MessagesDropdown = props => {
 
   return (
     <div className="dropdown-menu dropdown-menu-right show messages">
-      <Query query={ConversationsQuery} pollInterval={2000}>
+      <Query query={ConversationsQuery} pollInterval={2000} variables={{ wallet }}>
         {({ data, error, loading }) => {
           if (loading || error) return null
           const conversations = get(data, 'messaging.conversations', [])
@@ -88,7 +88,7 @@ const MessagesDropdown = props => {
 
           const lastMessage = [...totalUnreadMessages].pop() || {}
           const { address, content, timestamp } = lastMessage
-          console.log('LAST MESSAGE', lastMessage)
+
           return (
             <div>
               <div className="row unread-notifications">

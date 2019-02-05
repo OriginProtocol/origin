@@ -101,11 +101,11 @@ class AllMessages extends Component {
 
 class Room extends Component {
   render() {
-    const { id, wallet, updateMessage } = this.props
+    const { id, wallet, updateMessages } = this.props
 
     return (
       <div className="container">
-        <Query query={query} pollInterval={2000} variables={{ id }}>
+        <Query query={query} pollInterval={2000} variables={{ id, wallet }}>
           {({ error, data, loading, refetch }) => {
             if (loading) {
               return <div>Loading...</div>
@@ -116,18 +116,11 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
-            const unreadMessages = filter(messages, msg => {
-              return msg.status === 'unread' && msg.address !== wallet
-            })
-            if (unreadMessages.length) {
-              unreadMessages.map(({ hash }) => {
-                updateMessage({
-                  variables: {
-                    status: 'read',
-                    hash
-                  }
-                })
-              })
+            const totalUnread = get(data, 'messaging.conversation.totalUnread', 0)
+            if (totalUnread > 0) {
+
+              const id = get(data, 'messaging.conversation.id', '')
+              updateMessages({ variables: { id, wallet } })
               refetch()
             }
             return (
