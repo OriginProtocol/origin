@@ -21,8 +21,7 @@ You can either start the listener via docker compose or via lerna.
  - Setup Postgres locally.
  - Create DB schema:
 ```
-cd origin-growth
-./node_modules/.bin/sequelize db:migrate
+lerna run migrate --scope origin-growth
 ```
 
 ### Start the listener
