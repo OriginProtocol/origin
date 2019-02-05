@@ -165,4 +165,6 @@ If you want to test with mobile Safari on the same device as the application, fi
 
 This can be caused by not running `npm run install-local` or not _rerunning_ it after doing a root-level `npm install` (which deletes various things from origin/origin-mobile/node_modules).
 
+Check [the React Native docs](https://facebook.github.io/react-native/docs/troubleshooting).
+
 📲 Don't forget to have WiFi enabled on your both of your devices and connected.
