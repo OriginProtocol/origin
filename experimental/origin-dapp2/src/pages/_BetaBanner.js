@@ -28,8 +28,8 @@ class BetaBanner extends Component {
                 Welcome to the Origin Beta!
                 <a href="#" onClick={e => this.onHide(e)} children="×" />
               </div>
-              <div className="beta-banner d-none d-sm-flex">
-                <div className="container align-items-center">
+              <div className="beta-banner d-none d-sm-block">
+                <div className="container align-items-center d-flex">
                   <div className="badge badge-primary">Beta</div>
                   <div>
                     <div>
