@@ -121,11 +121,11 @@ const Accounts = props => (
               `sessionStorage.clear()\n` +
               `localStorage.OGNContract = "${localStorage.OGNContract}"\n` +
               `localStorage.marketplaceContract = "${
-                              localStorage.marketplaceContract
-                            }"\n` +
+                localStorage.marketplaceContract
+              }"\n` +
               `localStorage.identityEventsContract = "${
-                              localStorage.identityEventsContract
-                            }"\n` +
+                localStorage.identityEventsContract
+              }"\n` +
               `location.reload()\n`
             }
           />
