@@ -51,7 +51,7 @@ class App extends Component {
         </div>
       )
     }
-    
+
     const shouldRenderNavbar = () => {
       if (this.props.location.pathname === '/welcome') {
         return false
