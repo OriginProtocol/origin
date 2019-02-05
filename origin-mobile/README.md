@@ -28,6 +28,10 @@ Install the following:
 
 - Xcode Command Line Tools: `xcode-select --install`
 
+- [Redis](https://redis.io/): `brew install redis`
+
+- [PostgreSQL](https://www.postgresql.org/)
+
 ### Environment Variables
 
 You will need to create four `.env` files to hold the environment variables that are required by [origin-dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp), [origin-discovery](https://github.com/OriginProtocol/origin/tree/master/origin-discovery), [origin-linking](https://github.com/OriginProtocol/origin/tree/master/origin-linking), [origin-mobile](https://github.com/OriginProtocol/origin/tree/master/origin-mobile), and [origin-notifications](https://github.com/OriginProtocol/origin/tree/master/origin-notifications). Here are examples with suggested values:
@@ -130,4 +134,35 @@ VAPID_PUBLIC_KEY=
 
 In the origin-linking and origin-notifications `.env` files, two of the values will need to match. Add any string of your choice to both the `NOTIFY_TOKEN` and `LINKING_NOTIFY_TOKEN` values.
 
-Find your computer's [internal WiFi network IP address](https://www.wikihow.com/Find-Your-IP-Address-on-a-Mac#Finding_Your_Internal_IP_.28OS_X_10.4.29_sub) and add it to the `MOBILE_LOCALHOST_IP` value for origin-dapp.
+If you want to test with mobile Safari on the same device as the application, find your computer's [internal WiFi network IP address](https://www.wikihow.com/Find-Your-IP-Address-on-a-Mac#Finding_Your_Internal_IP_.28OS_X_10.4.29_sub) and add it to the `MOBILE_LOCALHOST_IP` value for origin-dapp.
+
+**Setup Steps**
+- Start PostgreSQL
+- Start Redis: `redis-server`
+- `createdb origin`
+- origin $ `npm run install:mobile` 👈 instead of `npm install` at the Origin monorepo root
+- origin/origin-linking $ `npm run migrate`
+
+**Startup Steps**
+- origin/origin-js $ `npm run start`
+- origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
+- origin/origin-linking $ `npm run start`
+- origin/origin-dapp $ `npm run start`
+- origin/origin-mobile $ `npm run install-local`
+- origin/origin-mobile $ `npm run start -- --reset-cache`
+- Open Xcode and build for your desired device
+
+**Troubleshooting**
+
+> Linker command failed with exit code…
+
+- origin/origin-mobile $ `npm run ios`
+- Close simulator
+- In Xcode, Project > Clean Build Folder
+- Try again
+
+> error: bundling failed: Error: Unable to resolve module origin/common/enums...
+
+This can be caused by not running `npm run install-local` or not _rerunning_ it after doing a root-level `npm install` (which deletes various things from origin/origin-mobile/node_modules).
+
+📲 Don't forget to have WiFi enabled on your both of your devices and connected.
