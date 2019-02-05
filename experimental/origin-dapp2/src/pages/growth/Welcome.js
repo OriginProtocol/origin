@@ -48,7 +48,7 @@ class GrowthWelcome extends Component {
             </div>
           </div>
         </div>
-        <div className="row">
+        <div className="row mt-3">
           <InfographicsBox
             image="images/ogn-icon-horiz.svg"
             title="Placeholder title"
