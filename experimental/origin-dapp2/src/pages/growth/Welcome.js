@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import Link from 'components/Link'
 
 function InfographicsBox(props) {
   const { image, title, text } = props
@@ -22,7 +23,9 @@ class GrowthWelcome extends Component {
       <div className="container growth-welcome">
         <div className="row">
           <div className="col-6 d-flex flex-column">
-            <img className="logo" src="/images/origin-logo-footer.svg" />
+            <Link to="/">
+              <img className="logo" src="/images/origin-logo-footer.svg" />
+            </Link>
             <div className="title-text">
               Your friend Aure has invited you to earn <b>FREE Origin Tokens</b>
             </div>
