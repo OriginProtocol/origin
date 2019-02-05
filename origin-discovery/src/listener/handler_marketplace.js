@@ -3,7 +3,7 @@ const search = require('../lib/search')
 const db = require('../models')
 const { GrowthEvent } = require('origin-growth/src/resources/event')
 const { GrowthEventTypes } = require('origin-growth/src/enums')
-const { withRetrys } = require('./utils')
+const { withRetrys, checkEventsFreshness } = require('./utils')
 
 
 const LISTING_EVENTS = [
@@ -47,25 +47,6 @@ function generateOfferId(log) {
     log.decoded.listingID,
     log.decoded.offerID
   ].join('-')
-}
-
-/**
- * Ensures data fetched from the blockchain meets the freshness criteria
- * specified in blockInfo. This is to catch the case where data is fetched from
- * an out of sync node that returns stale data.
- * @param {List(Event)} events
- * @param {blockNumber: number, logIndex: number} blockInfo
- * @throws {Error} If freshness check fails
- */
-function checkEventsFreshness(events, blockInfo) {
-  // Find at least 1 event that is as fresh as blockInfo.
-  const fresh = events.some(event => {
-    return (event.blockNumber > blockInfo.blockNumber) ||
-      (event.blockNumber === blockInfo.blockNumber && event.logIndex >= blockInfo.logIndex)
-  })
-  if (!fresh) {
-    throw new Error('Freshness check failed')
-  }
 }
 
 
@@ -281,7 +262,7 @@ class MarketplaceEventHandler {
         break
       case 'OfferFinalized':
         address = details.offer.buyer
-        eventType = GrowthEventTypes.ListingPurchase
+        eventType = GrowthEventTypes.ListingPurchased
         customId = details.offer.id
         break
       default:

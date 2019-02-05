@@ -4,6 +4,7 @@ const enums = require('../enums')
 
 module.exports = (sequelize, DataTypes) => {
   const GrowthEvent = sequelize.define('GrowthEvent', {
+    customId: DataTypes.STRING,
     type: DataTypes.ENUM(enums.GrowthEventTypes),
     status: DataTypes.ENUM(enums.GrowthEventStatuses),
     ethAddress: DataTypes.STRING,

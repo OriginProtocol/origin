@@ -54,6 +54,25 @@ async function setLastBlock (config, blockNumber) {
 }
 
 /**
+ * Ensures data fetched from the blockchain meets the freshness criteria
+ * specified in blockInfo. This is to catch the case where data is fetched from
+ * an out of sync node that returns stale data.
+ * @param {Array<Event>} events
+ * @param {{blockNumber: number, logIndex: number}} blockInfo
+ * @throws {Error} If freshness check fails
+ */
+function checkEventsFreshness(events, blockInfo) {
+  // Find at least 1 event that is as fresh as blockInfo.
+  const fresh = events.some(event => {
+    return (event.blockNumber > blockInfo.blockNumber) ||
+      (event.blockNumber === blockInfo.blockNumber && event.logIndex >= blockInfo.logIndex)
+  })
+  if (!fresh) {
+    throw new Error('Freshness check failed')
+  }
+}
+
+/**
  * Retries up to N times, with exponential backoff.
  * @param {async function} fn - Async function to call
  * @param {boolean} exitOnError - Whether or not to exit the process when
@@ -89,4 +108,9 @@ async function withRetrys (fn, exitOnError = true) {
   }
 }
 
-module.exports = { getLastBlock, setLastBlock, withRetrys }
+module.exports = {
+  getLastBlock,
+  setLastBlock,
+  checkEventsFreshness,
+  withRetrys
+}
