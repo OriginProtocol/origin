@@ -22,39 +22,44 @@ class BetaBanner extends Component {
         {({ data }) => {
           const networkName = get(data, 'web3.networkName', '')
           return (
-            <div className="beta-banner">
-              <div className="container d-flex align-items-center">
+            <>
+              <div className="beta-banner sm align-items-center d-flex d-sm-none">
                 <div className="badge badge-primary">Beta</div>
-                <div>
+                Welcome to the Origin Beta!
+                <a href="#" onClick={e => this.onHide(e)} children="×" />
+              </div>
+              <div className="beta-banner d-none d-sm-block">
+                <div className="container align-items-center d-flex">
+                  <div className="badge badge-primary">Beta</div>
                   <div>
-                    You&apos;re currently using the Origin {networkName} Beta.
+                    <div>
+                      You&apos;re currently using the Origin {networkName} Beta.
+                    </div>
+                    <div>
+                      {'Found a bug? Open an issue on '}
+                      <a href={GitHubLink}>GitHub</a>
+                      {' or report it in our #bug-reports channel on '}
+                      <a href="https://discord.gg/jyxpUSe">Discord</a>.
+                    </div>
                   </div>
                   <div>
-                    {'Found a bug? Open an issue on '}
-                    <a href={GitHubLink}>GitHub</a>
-                    {' or report it in our #bug-reports channel on '}
-                    <a href="https://discord.gg/jyxpUSe">Discord</a>.
+                    <Tooltip tooltip="Hide" placement="left" delayShow={500}>
+                      <a href="#" onClick={e => this.onHide(e)} children="×" />
+                    </Tooltip>
                   </div>
-                </div>
-                <div>
-                  <Tooltip tooltip="Hide" placement="left" delayShow={500}>
-                    <a
-                      href="#"
-                      onClick={e => {
-                        e.preventDefault()
-                        store.set('hide-beta-banner', true)
-                        this.setState({ hideBanner: true })
-                      }}
-                      children="×"
-                    />
-                  </Tooltip>
                 </div>
               </div>
-            </div>
+            </>
           )
         }}
       </Query>
     )
+  }
+
+  onHide(e) {
+    e.preventDefault()
+    store.set('hide-beta-banner', true)
+    this.setState({ hideBanner: true })
   }
 }
 
@@ -65,6 +70,18 @@ require('react-styl')(`
     background: #fff8de
     font-size: 18px
     font-weight: normal
+    &.sm
+      padding: 0.375rem 0.5rem
+      font-size: 14px
+      font-weight: bold
+      .badge
+        margin-right: 0.5rem
+        padding: 0.2rem 0.25rem
+      > a
+        padding: 0 0.25rem
+        color: #000
+        display: block
+        margin-left: auto
     .container
       padding-top: 0.75rem
       padding-bottom: 0.75rem
