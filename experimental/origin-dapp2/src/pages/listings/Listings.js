@@ -76,12 +76,10 @@ class Listings extends Component {
                         </fbt:plural>
                       </fbt>
                     </h5>
-
                     <ListingsGallery
                       listings={nodes}
                       hasNextPage={hasNextPage}
                     />
-
                     {!hasNextPage ? null : (
                       <button
                         className="btn btn-outline-primary btn-rounded mt-3"

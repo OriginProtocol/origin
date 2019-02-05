@@ -27,6 +27,7 @@ class Sales extends Component {
 
     return (
       <div className="container purchases">
+        <PageTitle>My Sales</PageTitle>
         <Query
           query={query}
           variables={vars}
@@ -56,7 +57,6 @@ class Sales extends Component {
                 onBottom={() => nextPage(fetchMore, { ...vars, after })}
               >
                 <>
-                  <PageTitle>My Sales</PageTitle>
                   <h1>My Sales</h1>
                   <div className="row">
                     <div className="col-md-3">
