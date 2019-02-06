@@ -1,6 +1,6 @@
 const Web3 = require('web3')
 
-const { withRetries } = require('../faucet/util.js')
+const { withRetries } = require('./util')
 
 class ContractHelper {
   constructor(config) {

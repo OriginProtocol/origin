@@ -1,9 +1,10 @@
 const BigNumber = require('bignumber.js')
 
 const TokenContract = require('origin-contracts/build/contracts/OriginToken.json')
-const { withRetries } = require('../faucet/util.js')
 
-const ContractHelper = require('./_contractHelper.js')
+const { withRetries } = require('./util')
+const ContractHelper = require('./contractHelper')
+
 
 // Token helper class.
 class Token extends ContractHelper {

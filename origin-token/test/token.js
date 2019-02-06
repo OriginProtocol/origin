@@ -1,6 +1,7 @@
 import assert from 'assert'
+
 import helper from './_helper'
-import Token from '../lib/token'
+import Token from '../src/token'
 
 // These tests are for the token library that the token faucet uses. We don't
 // validate the effects of various basic OriginToken operations. That is left
