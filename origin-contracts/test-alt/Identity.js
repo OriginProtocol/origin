@@ -85,8 +85,10 @@ describe('Identity', async function() {
     })
 
     it('should allow a key to have multiple purposes', async function() {
-      const res = await UserIdentity.methods.addKey(acctSha3, 2, 1).send()
-      assert(res.events.KeyAdded)
+      const res1 = await UserIdentity.methods.addKey(acctSha3, 2, 1).send()
+      assert(res1.events.KeyAdded)
+      const res2 = await UserIdentity.methods.addKey(acctSha3, 4, 1).send()
+      assert(res2.events.KeyAdded)
     })
 
     it('should not allow sender without MANAGEMENT_KEY to addKey', async function() {
