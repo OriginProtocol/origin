@@ -58,7 +58,7 @@ class NotificationsDropdown extends Component {
     return (
       <Dropdown
         el="li"
-        className="nav-item notifications"
+        className="nav-item notifications d-none d-md-flex"
         open={open}
         onClose={() => onClose()}
         content={

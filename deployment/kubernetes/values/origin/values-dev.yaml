@@ -22,15 +22,15 @@ faucetImageTag: '30de4cf'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'f1cafd6'
+eventlistenerImageTag: '42edb49'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '671d354'
+discoveryImageTag: '4a84b93'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '30de4cf'
+messagingImageTag: 'f5e9f62'
 
 # origin-notifications
 notificationsImage: origin-notifications
