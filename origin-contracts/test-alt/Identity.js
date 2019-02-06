@@ -84,6 +84,11 @@ describe('Identity', async function() {
       }
     })
 
+    it('should allow a key to have multiple purposes', async function() {
+      const res = await UserIdentity.methods.addKey(acctSha3, 2, 1).send()
+      assert(res.events.KeyAdded)
+    })
+
     it('should not allow sender without MANAGEMENT_KEY to addKey', async function() {
       try {
         await UserIdentity.methods.addKey(web3.utils.randomHex(32), 1, 1).send({

@@ -73,9 +73,11 @@ library KeyHolderLibrary {
         public
         returns (bool success)
     {
-        require(_keyHolderData.keys[_key].key != _key, "Key already exists"); // Key should not already exist
+        // Check key purpose not established.
+        require(_hasNoMatchingPurpose(_keyHolderData.keys[_key], _purpose), "Key already has that purpose"); 
         if (msg.sender != address(this)) {
-            require(keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 1), "Sender does not have management key"); // Sender has MANAGEMENT_KEY
+          require(keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 1),
+                  "Sender does not have management key"); // Sender has MANAGEMENT_KEY
         }
 
         _keyHolderData.keys[_key].key = _key;
@@ -136,7 +138,8 @@ library KeyHolderLibrary {
 
         emit ExecutionRequested(_keyHolderData.executionNonce, _to, _value, _data);
 
-        if (keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)),1) || keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)),2)) {
+        if (keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)),1)
+            || keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)),2)) {
             approve(_keyHolderData, _keyHolderData.executionNonce, true);
         }
 
@@ -148,9 +151,10 @@ library KeyHolderLibrary {
         public
         returns (bool success)
     {
-        if (msg.sender != address(this)) {
-            require(keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 1), "Sender does not have management key"); // Sender has MANAGEMENT_KEY
-        }
+      if (msg.sender != address(this)) {
+        require(keyHasPurpose(_keyHolderData, keccak256(abi.encodePacked(msg.sender)), 1),
+                "Sender does not have management key"); // Sender has MANAGEMENT_KEY
+      }
 
         require(_keyHolderData.keys[_key].key == _key, "No such key");
         emit KeyRemoved(_key, _purpose, _keyHolderData.keys[_key].keyType);
@@ -203,5 +207,14 @@ library KeyHolderLibrary {
             }
         }
         return isThere;
+    }
+
+    function _hasNoMatchingPurpose(Key storage key, uint purpose) public view returns (bool hasPurpose) {
+      for (uint i = 0; i < key.purposes.length; i++) {
+        if(key.purposes[i] == purpose) {
+          return false;
+        }
+      }
+      return true;
     }
 }
