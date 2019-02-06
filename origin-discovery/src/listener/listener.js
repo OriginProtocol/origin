@@ -226,7 +226,7 @@ async function liveTracking (context) {
       start = new Date()
       const currentBlockNumber = await context.web3.eth.getBlockNumber()
       if (currentBlockNumber === lastCheckedBlock) {
-        logger.info('No new block.')
+        logger.debug('No new block.')
         return scheduleNextCheck()
       }
       logger.info(`New block: ${currentBlockNumber}`)
