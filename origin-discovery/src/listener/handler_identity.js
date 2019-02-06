@@ -13,6 +13,13 @@ class IdentityEventHandler {
     this.origin = origin
   }
 
+  /**
+   * Loads attestation data such as email, phone, etc... from the attestation table.
+   * @param {string} ethAddress
+   * @param {string} method - 'EMAIL', 'PHONE', etc...
+   * @returns {Promise<string|null>}
+   * @private
+   */
   async _loadValueFromAttestation(ethAddress, method) {
     // Notes:
     //  - Use a raw query since attestation model not ported yet to JS.
@@ -27,16 +34,12 @@ class IdentityEventHandler {
         type: db.sequelize.QueryTypes.SELECT
       }
     )
-    if (attestations.length === 1) {
-      return attestations[0].value
-    } else {
-      return null
-    }
+    return (attestations.length === 1) ? attestations[0].value : null
   }
 
   /**
    * Decorates a user object with attestation data.
-   * @param user
+   * @param {models.User} user - Origin js user model object.
    * @returns {Promise<void>}
    * @private
    */
@@ -90,7 +93,7 @@ class IdentityEventHandler {
       phone: user.phone,
       airbnb: user.airbnb,
       twitter: user.twitter,
-      facebookVerified: user.facebookVerified,
+      facebookVerified: user.facebookVerified || false,
       data: { blockInfo }
     }
 
