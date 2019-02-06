@@ -42,10 +42,12 @@ services:
       # Package.json
       - ./experimental/origin-dapp2/package.json:/app/experimental/origin-dapp2/package.json
     ports:
-      - "8083:8083"
       - "3001:3001"
+      - "8083:8083" # Webpack
+      - "8545:8545"
     environment:
       - DEPLOY_CONTRACTS=true
+      - DOCKER=true
     command: npm run start --prefix experimental/origin-dapp2
 
   origin-ipfs-proxy:
@@ -73,6 +75,11 @@ services:
       - ./origin-discovery/migrations:/app/origin-discovery/migrations
       - ./origin-discovery/config:/app/origin-discovery/config
       - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - IPFS_URL=http://origin-ipfs-proxy:9999
+      - WEB3_URL=http://origin-dapp2:8545
     depends_on:
       - postgres
       - elasticsearch
@@ -109,6 +116,8 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
+      - IPFS_URL=http://origin-ipfs-proxy:9999
+      - WEB3_URL=http://origin-dapp2:8545
     depends_on:
       - postgres
       - elasticsearch
@@ -117,4 +126,4 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 &&
-      npm run start:discovery --prefix origin-discovery
+      npm run start:discovery --prefix origin-discovery"

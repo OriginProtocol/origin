@@ -44,6 +44,7 @@
     "graphql-tag": "^2.10.1",
     "identicon.js": "^2.3.3",
     "ipfs-api": "^26.1.2",
+    "jest-docblock": "^22.2.0",
     "node-fetch": "^2.3.0",
     "origin-contracts": "^0.8.6",
     "origin-graphql": "^0.1.0",
