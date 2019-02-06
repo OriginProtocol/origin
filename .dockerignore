@@ -1,6 +1,1 @@
 **/node_modules
-
-# build folders
-origin-dapp/build
-origin-js/dist
-origin-messaging/dist

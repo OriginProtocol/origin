@@ -1,0 +1,120 @@
+version: "3"
+
+services:
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:10.0
+    environment:
+      - POSTGRES_USER=origin
+      - POSTGRES_PASSWORD=origin
+      - POSTGRES_DB=origin
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch
+    build:
+      context: .
+      dockerfile: development/dockerfiles/elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      network.bind_host: 0
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    logging:
+      driver: none
+
+  origin-dapp2:
+    container_name: origin-dapp2
+    image: origin-experimental
+    build:
+      context: .
+      dockerfile: Dockerfile-experimental
+    volumes:
+      # Origin-contracts build directory, the DApp will run a contract deploy
+      # and the contract addres
+      - ./origin-contracts/build:/app/origin-contracts/build
+      - ./experimental/origin-dapp2/src:/app/experimental/origin-dapp2/src
+      # Translations
+      - ./experimental/origin-dapp2/translations:/app/experimental/origin-dapp2/translations
+      # Webpack config
+      - ./experimental/origin-dapp2/webpack.config.js:/app/experimental/origin-dapp2/webpack.config.js
+      # Package.json
+      - ./experimental/origin-dapp2/package.json:/app/experimental/origin-dapp2/package.json
+    ports:
+      - "8083:8083"
+      - "3001:3001"
+    environment:
+      - DEPLOY_CONTRACTS=true
+    command: npm run start --prefix experimental/origin-dapp2
+
+  origin-ipfs-proxy:
+    container_name: origin-ipfs-proxy
+    image: origin-experimental
+    ports:
+      - "9999:9999"
+    environment:
+      - IPFS_API_URL=http://origin-dapp2:5002
+      - IPFS_GATEWAY_URL=http://origin-dapp2:9090
+    volumes:
+      - ./origin-ipfs-proxy/src:/app/origin-ipfs-proxy/src
+      - ./origin-ipfs-proxy/package.json:/app/origin-ipfs-proxy/package.json
+    command: npm run start --prefix origin-ipfs-proxy
+
+  event-listener:
+    container_name: event-listener
+    image: origin-experimental
+    volumes:
+      # Origin-contracts build directory is required so event-listener can
+      # access deployed contract addresses
+      - ./origin-contracts/build:/app/origin-contracts/build
+      - ./origin-js/src:/app/origin-js/src
+      - ./origin-discovery/src:/app/origin-discovery/src
+      - ./origin-discovery/migrations:/app/origin-discovery/migrations
+      - ./origin-discovery/config:/app/origin-discovery/config
+      - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
+    depends_on:
+      - postgres
+      - elasticsearch
+      - origin-dapp2
+      - origin-ipfs-proxy
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 --
+      wait-for.sh -t 0 -q elasticsearch:9200 --
+      npm run migrate --prefix origin-discovery &&
+      npm run start:listener --prefix origin-discovery"
+
+  origin-messaging:
+    container_name: origin-messaging
+    image: origin-experimental
+    ports:
+      - "9012:9012"
+    volumes:
+      - ./origin-messaging/src:/app/origin-messaging/src
+      - ./origin-messaging/package.json:/app/origin-messaging/package.json
+    environment:
+      - MESSAGING_NAMESPACE=dev
+      - IPFS_REPO_PATH=/app/ipfs
+    command: npm run start --prefix origin-messaging
+
+  origin-discovery:
+    container_name: origin-discovery
+    image: origin-experimental
+    volumes:
+      - ./origin-js/src:/app/origin-js/src
+      - ./origin-discovery/src:/app/origin-discovery/src
+      - ./origin-discovery/config:/app/origin-discovery/config
+      - ./origin-discovery/package.json:/app/origin-discovery/package.json
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+    depends_on:
+      - postgres
+      - elasticsearch
+    ports:
+      - "4000:4000"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 &&
+      npm run start:discovery --prefix origin-discovery
