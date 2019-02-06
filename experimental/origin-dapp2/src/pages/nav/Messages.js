@@ -45,7 +45,6 @@ class MessagesNav extends Component {
                   onClick={() => this.props.onClose()}
                   data={data}
                   wallet={this.props.wallet}
-                  identity={this.props.identity}
                 />
               }
             >
@@ -70,6 +69,49 @@ class MessagesNav extends Component {
   }
 }
 
+const DropDownContent = props => {
+  const { totalUnreadMessages, lastMessage, onClick } = props
+
+  return (
+    <div>
+      <div className="row unread-notifications">
+        <span className="count align-self-center">
+          {totalUnreadMessages.length}
+        </span>
+        <span>{getUnreadMessage(totalUnreadMessages.length)}</span>
+      </div>
+      <div>
+        {Object.keys(lastMessage).length ? (
+          <div className="row last-message">
+            <div className="column">
+              <Avatar
+                avatar={get(props, 'identity.profile.avatar')}
+                size={60}
+              />
+            </div>
+            <div className="column content">
+              <div className="row">
+                <span>{lastMessage.address}</span>
+              </div>
+              <div className="row message">
+                <span>{lastMessage.content}</span>
+              </div>
+            </div>
+            <div className="column timestamp ml-auto">
+              <span>{distanceToNow(lastMessage.timestamp)}</span>
+            </div>
+          </div>
+        ) : null}
+      </div>
+      <Link to="/messages" onClick={() => onClick()}>
+        View Messages
+      </Link>
+    </div>
+  )
+}
+
+const DropdownWithIdentity = withIdentity(DropDownContent)
+
 const MessagesDropdown = props => {
   const { onClick, wallet } = props
 
@@ -91,43 +133,16 @@ const MessagesDropdown = props => {
           }, [])
 
           const lastMessage = [...totalUnreadMessages].pop() || {}
-          const { address, content, timestamp } = lastMessage
+          const messageAddress = get(lastMessage, 'address')
+          const walletProp = wallet === messageAddress ? wallet : messageAddress
 
           return (
-            <div>
-              <div className="row unread-notifications">
-                <span className="count align-self-center">
-                  {totalUnreadMessages.length}
-                </span>
-                <span>{getUnreadMessage(totalUnreadMessages.length)}</span>
-              </div>
-              <div>
-                {Object.keys(lastMessage).length ? (
-                  <div className="row last-message">
-                    <div className="column">
-                      <Avatar
-                        avatar={get(props, 'identity.profile.avatar')}
-                        size={60}
-                      />
-                    </div>
-                    <div className="column content">
-                      <div className="row">
-                        <span>{address}</span>
-                      </div>
-                      <div className="row message">
-                        <span>{content}</span>
-                      </div>
-                    </div>
-                    <div className="column timestamp ml-auto">
-                      <span>{distanceToNow(timestamp)}</span>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-              <Link to="/messages" onClick={() => onClick()}>
-                View Messages
-              </Link>
-            </div>
+            <DropdownWithIdentity
+              wallet={walletProp}
+              totalUnreadMessages={totalUnreadMessages}
+              lastMessage={lastMessage}
+              onClick={onClick}
+            />
           )
         }}
       </Query>
@@ -135,7 +150,7 @@ const MessagesDropdown = props => {
   )
 }
 
-export default withWallet(withIdentity(MessagesNav))
+export default withWallet(MessagesNav)
 
 require('react-styl')(`
   .navbar

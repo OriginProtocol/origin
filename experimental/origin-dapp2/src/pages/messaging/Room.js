@@ -84,15 +84,21 @@ class AllMessages extends Component {
 
     return (
       <div className="messages" ref={el => (this.el = el)}>
-        {messages.map((message, idx) => (
-          <MessageWithIdentity
-            message={message}
-            lastMessage={idx > 0 ? messages[idx - 1] : null}
-            key={idx}
-            wallet={get(message, 'address')}
-            isUser={wallet === get(message, 'address')}
-          />
-        ))}
+        {messages.map((message, idx) => {
+          const messageAddress = get(message, 'address')
+          const isUser = wallet === messageAddress
+          const walletProp = isUser ? wallet : messageAddress
+
+          return (
+            <MessageWithIdentity
+              message={message}
+              lastMessage={idx > 0 ? messages[idx - 1] : null}
+              key={idx}
+              wallet={walletProp}
+              isUser={isUser}
+            />
+          )
+        })}
       </div>
     )
   }
