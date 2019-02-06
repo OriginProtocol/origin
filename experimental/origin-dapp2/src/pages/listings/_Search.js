@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router'
 import get from 'lodash/get'
 import queryString from 'query-string'
 
@@ -17,8 +18,8 @@ class Search extends Component {
     ]
 
     const getParams = queryString.parse(get(this.props, 'location.search', ''))
-
     let listingType = listingSchemaMetadata.listingTypeAll
+
     if (getParams.listing_type !== undefined) {
       listingType =
         this.listingTypes.find(
@@ -27,9 +28,8 @@ class Search extends Component {
     }
 
     this.state = {
-      category: 'All',
-      selectedListingType: listingType,
-      searchInput: props.value || getParams.search_query || ''
+      category: listingType,
+      searchInput: getParams.search_query || ''
     }
   }
 
@@ -46,6 +46,7 @@ class Search extends Component {
                   onChange={category =>
                     this.setState({ category, open: false })
                   }
+                  listingTypes={this.listingTypes}
                 />
               }
               open={this.state.open}
@@ -56,7 +57,7 @@ class Search extends Component {
                 onClick={() =>
                   this.setState({ open: this.state.open ? false : true })
                 }
-                children={this.state.category}
+                children={this.state.category.type}
               />
             </Dropdown>
             <input
@@ -84,7 +85,7 @@ class Search extends Component {
   doSearch() {
     document.location.href = `#/search?search_query=${
       this.state.searchInput
-    }&listing_type=${this.state.selectedListingType.type}`
+    }&listing_type=${this.state.category.type}`
 
     if (this.props.onSearch) {
       this.props.onSearch(this.state.searchInput)
@@ -92,23 +93,22 @@ class Search extends Component {
   }
 }
 
-const categories = ['All', 'For Sale', 'For Rent', 'Services', 'Announcements']
-const SearchDropdown = ({ onChange }) => (
+const SearchDropdown = ({ onChange, listingTypes }) => (
   <div className="dropdown-menu show">
-    {categories.map((cat, idx) => (
+    {listingTypes.map((cat, idx) => (
       <a
         key={idx}
         className="dropdown-item"
         href="#"
         onClick={() => onChange(cat)}
       >
-        {cat}
+        {cat.type}
       </a>
     ))}
   </div>
 )
 
-export default withConfig(Search)
+export default withConfig(withRouter(Search))
 
 require('react-styl')(`
   .search-bar
