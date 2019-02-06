@@ -3,28 +3,44 @@ import { withRouter } from 'react-router'
 import get from 'lodash/get'
 import queryString from 'query-string'
 
-import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
-
 import withConfig from 'hoc/withConfig'
 import Dropdown from 'components/Dropdown'
+
+const defaultCategory = {
+  type: 'all',
+  name: 'All'
+}
+const categories = [
+  {
+    type: 'forSale',
+    name: 'For Sale'
+  },
+  {
+    type: 'forRent',
+    name: 'For Rent'
+  },
+  {
+    type: 'services',
+    name: 'Services'
+  },
+  {
+    type: 'announcements',
+    name: 'Announcements'
+  }
+]
 
 class Search extends Component {
   constructor(props) {
     super(props)
 
-    this.listingTypes = [
-      listingSchemaMetadata.listingTypeAll,
-      ...listingSchemaMetadata.listingTypes
-    ]
-
     const getParams = queryString.parse(get(this.props, 'location.search', ''))
-    let listingType = listingSchemaMetadata.listingTypeAll
+    let listingType = categories[0]
 
     if (getParams.listing_type !== undefined) {
       listingType =
-        this.listingTypes.find(
+        [defaultCategory, ...categories].find(
           listingTypeItem => listingTypeItem.type === getParams.listing_type
-        ) || listingType
+        ) || defaultCategory
     }
 
     this.state = {
@@ -46,7 +62,6 @@ class Search extends Component {
                   onChange={category =>
                     this.setState({ category, open: false })
                   }
-                  listingTypes={this.listingTypes}
                 />
               }
               open={this.state.open}
@@ -57,7 +72,7 @@ class Search extends Component {
                 onClick={() =>
                   this.setState({ open: this.state.open ? false : true })
                 }
-                children={this.state.category.type}
+                children={this.state.category.name}
               />
             </Dropdown>
             <input
@@ -93,16 +108,16 @@ class Search extends Component {
   }
 }
 
-const SearchDropdown = ({ onChange, listingTypes }) => (
+const SearchDropdown = ({ onChange }) => (
   <div className="dropdown-menu show">
-    {listingTypes.map((cat, idx) => (
+    {categories.map((cat, idx) => (
       <a
         key={idx}
         className="dropdown-item"
         href="#"
         onClick={() => onChange(cat)}
       >
-        {cat.type}
+        {cat.name}
       </a>
     ))}
   </div>
