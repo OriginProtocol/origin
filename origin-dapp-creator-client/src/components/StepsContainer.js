@@ -6,10 +6,8 @@ import React from 'react'
 import Steps from 'components/Steps'
 
 class StepsContainer extends React.Component {
-  render () {
-    return (
-      <Steps {...this.props} />
-    )
+  render() {
+    return <Steps {...this.props} />
   }
 }
 
