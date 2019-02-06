@@ -8,7 +8,15 @@ export default gql`
       conversations {
         id
         timestamp
+        totalUnread
+        messages {
+          status
+          address
+          content
+          timestamp
+        }
         lastMessage {
+          address
           media {
             url
             contentType
