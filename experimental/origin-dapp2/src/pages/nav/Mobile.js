@@ -17,7 +17,7 @@ class MobileNav extends Component {
             <Link
               onClick={() => onClose()}
               to="/"
-              className="dropdown-item add"
+              className="dropdown-item browse"
               children="Browse Categories"
             />
             <Link
