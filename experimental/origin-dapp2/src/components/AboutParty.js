@@ -21,10 +21,7 @@ class AboutParty extends Component {
     }
 
     return (
-      <div
-        className="about-party"
-        // onClick={() => this.setState({ redirect: true })}
-      >
+      <div className="about-party">
         <Query query={IdentityQuery} variables={{ id }}>
           {({ data, loading, error }) => {
             if (loading || error) return null
@@ -34,7 +31,10 @@ class AboutParty extends Component {
             }
 
             return (
-              <div className="profile">
+              <div
+                className="profile"
+                onClick={() => this.setState({ redirect: true })}
+              >
                 <Avatar avatar={profile.avatar} size={50} />
                 <div>
                   <div className="name">{profile.fullName}</div>

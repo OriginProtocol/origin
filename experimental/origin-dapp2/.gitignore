@@ -2,6 +2,7 @@ node_modules
 .DS_Store
 public/app.*
 public/index.html
+public/mainnet.html
 public/fonts
 data/db
 data/ipfs

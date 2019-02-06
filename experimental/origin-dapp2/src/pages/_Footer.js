@@ -24,7 +24,7 @@ class Footer extends Component {
               without rent-seeking middlemen using the Ethereum blockchain and
               IPFS.
             </fbt>
-            <div className="copyright">© 2018 Origin Protocol, Inc.</div>
+            <div className="copyright">© 2019 Origin Protocol, Inc.</div>
           </div>
           <div className="links">
             <Dropdown

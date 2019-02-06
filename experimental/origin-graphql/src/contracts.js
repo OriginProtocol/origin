@@ -212,18 +212,8 @@ export function setNetwork(net, customConfig) {
 
   context.EventBlock = config.V00_Marketplace_Epoch || 0
 
-  context.identityEvents = new web3.eth.Contract(
-    IdentityEventsContract.abi,
-    config.IdentityEvents
-  )
-  context.identityEvents.eventCache = genericEventCache(
-    context.identityEvents,
-    config.IdentityEvents_Epoch,
-    context.web3,
-    context.config,
-    config.IdentityEvents_EventCache
-  )
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
+  setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
   if (typeof window !== 'undefined') {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
@@ -363,12 +353,32 @@ export function setMarketplace(address, epoch) {
       MarketplaceContract.abi,
       address
     )
+    if (metaMaskEnabled) {
+      context.marketplaceExec = context.marketplaceMM
+    }
+  }
+}
+
+export function setIdentityEvents(address, epoch) {
+  context.identityEvents = new web3.eth.Contract(
+    IdentityEventsContract.abi,
+    address
+  )
+  context.identityEvents.eventCache = genericEventCache(
+    context.identityEvents,
+    epoch,
+    context.web3,
+    context.config,
+    context.config.IdentityEvents_EventCache
+  )
+  context.identityEventsExec = context.identityEvents
+
+  if (metaMask) {
     context.identityEventsMM = new metaMask.eth.Contract(
       IdentityEventsContract.abi,
       context.identityEvents.options.address
     )
     if (metaMaskEnabled) {
-      context.marketplaceExec = context.marketplaceMM
       context.identityEventsExec = context.identityEventsMM
     }
   }
