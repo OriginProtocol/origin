@@ -93,6 +93,6 @@ app.post('/validate/subdomain', async (req, res) => {
   res.status(200).send()
 })
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+app.listen(port, () => logger.info(`Listening on port ${port}`))
 
 module.exports = app

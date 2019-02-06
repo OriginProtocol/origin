@@ -11,12 +11,6 @@ export function promiseTimeout(ms, promise) {
   return Promise.race([promise, timeout])
 }
 
-console.log({
-  host: process.env.IPFS_API_HOST || 'localhost',
-  port: process.env.IPFS_API_PORT || 5002,
-  protocol: process.env.IPFS_API_PROTOCOL || 'http'
-})
-
 export const ipfsClient = IpfsClient({
   host: process.env.IPFS_API_HOST || 'localhost',
   port: process.env.IPFS_API_PORT || 5002,
