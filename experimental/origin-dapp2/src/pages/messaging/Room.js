@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
-import filter from 'lodash/filter'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 
@@ -85,15 +84,21 @@ class AllMessages extends Component {
 
     return (
       <div className="messages" ref={el => (this.el = el)}>
-        {messages.map((message, idx) => (
-          <MessageWithIdentity
-            message={message}
-            lastMessage={idx > 0 ? messages[idx - 1] : null}
-            key={idx}
-            wallet={get(message, 'address')}
-            isUser={wallet === get(message, 'address')}
-          />
-        ))}
+        {messages.map((message, idx) => {
+          const messageAddress = get(message, 'address')
+          const isUser = wallet === messageAddress
+          const walletProp = isUser ? wallet : messageAddress
+
+          return (
+            <MessageWithIdentity
+              message={message}
+              lastMessage={idx > 0 ? messages[idx - 1] : null}
+              key={idx}
+              wallet={walletProp}
+              isUser={isUser}
+            />
+          )
+        })}
       </div>
     )
   }
@@ -101,11 +106,11 @@ class AllMessages extends Component {
 
 class Room extends Component {
   render() {
-    const { id, wallet, updateMessage } = this.props
+    const { id, wallet, updateMessages } = this.props
 
     return (
       <div className="container">
-        <Query query={query} pollInterval={2000} variables={{ id }}>
+        <Query query={query} pollInterval={2000} variables={{ id, wallet }}>
           {({ error, data, loading, refetch }) => {
             if (loading) {
               return <div>Loading...</div>
@@ -116,18 +121,14 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
-            const unreadMessages = filter(messages, msg => {
-              return msg.status === 'unread' && msg.address !== wallet
-            })
-            if (unreadMessages.length) {
-              unreadMessages.map(({ hash }) => {
-                updateMessage({
-                  variables: {
-                    status: 'read',
-                    hash
-                  }
-                })
-              })
+            const totalUnread = get(
+              data,
+              'messaging.conversation.totalUnread',
+              0
+            )
+            if (totalUnread > 0) {
+              const id = get(data, 'messaging.conversation.id', '')
+              updateMessages({ variables: { id, wallet } })
               refetch()
             }
             return (

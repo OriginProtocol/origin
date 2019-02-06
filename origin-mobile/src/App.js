@@ -287,7 +287,7 @@ class OriginWrapper extends Component {
                   />
                 ),
                 title: 'Message Buyers & Sellers',
-                subtitle: 'You can communicate with other users of the Origin platform in a secure an decentralized way.',
+                subtitle: 'You can communicate with other users of the Origin platform in a secure and decentralized way.',
               },
               {
                 image: (

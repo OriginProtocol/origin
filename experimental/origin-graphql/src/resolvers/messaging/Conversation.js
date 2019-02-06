@@ -26,5 +26,29 @@ export default {
       const messages = rawMessages || []
       const lastMessage = messages[messages.length - 1]
       resolve(getMessage(lastMessage))
+    }),
+  totalUnread: (conversation, { wallet }) =>
+    new Promise(async resolve => {
+      const messages =
+        (await contracts.messaging.getAllMessages(conversation.id)) || []
+
+      const totalUnread = messages.reduce(async (result, msg) => {
+        const message = getMessage(msg)
+        await result
+        await message
+
+        return Promise.all([result, message]).then(([result = [], message]) => {
+          const { status, address } = message
+
+          if (status === 'unread' && address !== wallet) {
+            return [...result, message]
+          }
+          return result
+        })
+      }, Promise.resolve([]))
+
+      return totalUnread.then(unread => {
+        return resolve(unread.length)
+      })
     })
 }

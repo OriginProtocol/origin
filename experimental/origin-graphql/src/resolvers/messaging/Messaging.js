@@ -26,6 +26,16 @@ export default {
       ? true
       : false
   },
+  totalUnread: () => {
+    new Promise(async resolve => {
+      const convos = await contracts.messaging.getMyConvs()
+      const ids = Object.keys(convos).map(id => id)
+      const messages = await contracts.messaging.getAllMessages(ids[0])
+
+      console.log('ARE THERE MESSAGES IN THE RESOLVER?', messages)
+      resolve(0)
+    })
+  },
   synced: () => {
     if (contracts.messaging.globalKeyServer) return true
     return contracts.messaging.synced
