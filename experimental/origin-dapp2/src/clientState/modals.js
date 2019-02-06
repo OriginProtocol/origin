@@ -6,14 +6,14 @@ export default {
           modal: {
             __typename: 'ModalData',
             openedModal: modalName
-          },
+          }
         }
-        cache.writeData({ data });
-        return null;
-      },
-    },
+        cache.writeData({ data })
+        return null
+      }
+    }
   },
-  defaults:{
+  defaults: {
     modal: {
       __typename: 'ModalData',
       openedModal: null

@@ -39,11 +39,7 @@ class AppWrapper extends Component {
   }
 
   render() {
-    const {
-      ready,
-      client,
-      locale
-    } = this.state
+    const { ready, client, locale } = this.state
 
     if (!ready) return null
     return (

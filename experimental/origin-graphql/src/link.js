@@ -16,13 +16,14 @@ export function getLink(stateLinkOpts = null, cache = null) {
     SchemaLink
   )
 
-  if (stateLinkOpts === null || cache === null)
+  if (stateLinkOpts === null || cache === null) {
     return link
+  }
 
   const stateLink = withClientState({
     cache,
     resolvers: stateLinkOpts.resolvers,
-    defaults: stateLinkOpts.defaults || {}
+    defaults: stateLinkOpts.defaults || {}
   })
 
   return ApolloLink.from([stateLink, link])

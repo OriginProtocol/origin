@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from 'react'
-import Link from 'components/Link'
+import React, { Component } from 'react'
 import Modal from 'components/Modal'
 
 class EnrollmentModal extends Component {
@@ -8,9 +7,7 @@ class EnrollmentModal extends Component {
   }
 
   renderEligibilityCheck() {
-    return (
-      <div>TODO: implement modal contents</div>
-    )
+    return <div>TODO: implement modal contents</div>
   }
 
   render() {
@@ -25,7 +22,7 @@ class EnrollmentModal extends Component {
           })
         }}
       >
-          {this[`render${this.state.stage}`]()}
+        {this[`render${this.state.stage}`]()}
       </Modal>
     )
   }

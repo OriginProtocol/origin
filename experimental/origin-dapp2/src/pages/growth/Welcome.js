@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
 import Link from 'components/Link'
-import EnrollmentModal from './EnrollmentModal'
 import { Mutation } from 'react-apollo'
 import SetOpenedModalMutation from 'mutations/SetOpenedModal'
 
@@ -36,9 +35,7 @@ class GrowthWelcome extends Component {
     //     onError={}
     //   >
     return (
-      <Mutation
-        mutation={SetOpenedModalMutation}
-      >
+      <Mutation mutation={SetOpenedModalMutation}>
         {setOpenedModal => (
           <div className="container growth-welcome">
             <div className="row">
@@ -47,12 +44,13 @@ class GrowthWelcome extends Component {
                   <img className="logo" src="/images/origin-logo-footer.svg" />
                 </Link>
                 <div className="title-text">
-                  Your friend Aure has invited you to earn <b>FREE Origin Tokens</b>
+                  Your friend Aure has invited you to earn
+                  <b>FREE Origin Tokens</b>
                 </div>
                 <div className="sub-title-text">
-                  Create an account on Origin today and start completing tasks for
-                  the chance to will up to 2000 OGN currently valued at 2000 USD.
-                  Don’t miss this amazing opportunity
+                  Create an account on Origin today and start completing tasks
+                  for the chance to will up to 2000 OGN currently valued at 2000
+                  USD. Don’t miss this amazing opportunity
                 </div>
                 <button
                   className="btn btn-primary btn-rounded"
@@ -66,8 +64,8 @@ class GrowthWelcome extends Component {
               <div className="col-12 d-flex flex-column mt-5">
                 <div className="info-title">What are Origin Tokens?</div>
                 <div className="text-center">
-                  Origin Tokens are a unique cryptocurrency that can be used in the
-                  Origin Marketplace.
+                  Origin Tokens are a unique cryptocurrency that can be used in
+                  the Origin Marketplace.
                 </div>
               </div>
             </div>
