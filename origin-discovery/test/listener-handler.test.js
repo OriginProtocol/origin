@@ -52,6 +52,7 @@ describe('Listener Handlers', () => {
       this.process = sinon.fake.returns({})
       this.webhookEnabled = sinon.fake.returns(false)
       this.discordWebhookEnabled = sinon.fake.returns(false)
+      this.emailWebhookEnabled = sinon.fake.returns(false)
     }
   }
 
@@ -139,6 +140,7 @@ describe('Listener Handlers', () => {
     expect(this.marketplaceRule.handler.process.calledOnce).to.equal(true)
     expect(this.marketplaceRule.handler.webhookEnabled.calledOnce).to.equal(true)
     expect(this.marketplaceRule.handler.discordWebhookEnabled.calledOnce).to.equal(true)
+    expect(this.marketplaceRule.handler.emailWebhookEnabled.calledOnce).to.equal(true)
   })
 
   it(`Marketplace`, async () => {
@@ -166,13 +168,29 @@ describe('Listener Handlers', () => {
 
   it(`Identity`, async () => {
     const handler = new IdentityEventHandler(this.config, this.context.origin)
+    handler._loadValueFromAttestation = (ethAddress, method) => {
+      if (method === 'EMAIL') {
+        return 'toto@spirou.com'
+      } else if (method === 'PHONE') {
+        return '+33 0555875838'
+      } else {
+        return null
+      }
+    }
+
     const result = await handler.process(this.identityLog)
 
     // Check output.
     expect(result.user).to.be.an('object')
     expect(result.user.address).to.equal(this.seller)
 
-    // Check expected rows were inserted in the DB.
+    // Check expected entry was added into user DB table.
+    const user = await db.Identity.findAll({
+      where: {
+        ethAddress: this.seller, firstName: 'foo', lastName: 'bar', email: 'toto@spirou.com', phone: '+33 0555875838' } })
+    expect(user.length).to.equal(1)
+
+    // Check expected growth rows were inserted in the DB.
     const profileEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.ProfilePublished, null)
     expect(profileEvents.length).to.equal(1)
     const emailEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.EmailAttestationPublished, null)
