@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import StarRating from 'components/StarRating'
 import Avatar from 'components/Avatar'
@@ -48,7 +49,7 @@ export default class Reviews extends Component {
                       <Avatar size="4rem" avatar={profile.avatar} />
                       <div className="user">
                         <div className="name">
-                          {profile.fullName || 'Unnamed User'}
+                          {profile.fullName || <fbt desc="reviews.unamedUser">Unnamed User</fbt>}
                         </div>
                         <EthAddress address={review.reviewer.id} />
                       </div>
@@ -62,8 +63,10 @@ export default class Reviews extends Component {
                 )
               })}
               {this.state.lastReviewShown < count ? (
-                <div className="read-more" onClick={this.readMore}>
-                  Read More
+                <div className="read-more btn" onClick={this.readMore}>
+                  <fbt desc="reviews.readMore">
+                    Read More
+                  </fbt>
                   <img className="read-more-caret" />
                 </div>
               ) : null}
@@ -120,8 +123,9 @@ require('react-styl')(`
     height: 0;
     width: 0;
   .reviews .read-more 
-    width: 109px;
+    width: 112px;
     height: 27px;
+    padding: 0px;
     font-family: Lato;
     font-size: 18px;
     font-weight: normal;
