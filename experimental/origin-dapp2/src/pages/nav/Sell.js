@@ -9,7 +9,7 @@ class SellNav extends Component {
     return (
       <Dropdown
         el="li"
-        className="nav-item sell"
+        className="nav-item sell d-none d-md-flex"
         open={this.props.open}
         onClose={() => this.props.onClose()}
         content={

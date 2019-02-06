@@ -23,12 +23,19 @@ class BetaBanner extends Component {
           const networkName = get(data, 'web3.networkName', '')
           return (
             <>
-              <div className="beta-banner sm align-items-center d-flex d-sm-none">
-                <div className="badge badge-primary">Beta</div>
-                Welcome to the Origin Beta!
-                <a href="#" onClick={e => this.onHide(e)} children="×" />
+              <div className="beta-banner sm align-items-center d-block d-md-none">
+                <div className="container align-items-center d-flex">
+                  <div className="badge badge-primary">Beta</div>
+                  Welcome to the Origin Beta!
+                  <a
+                    className="close-banner"
+                    href="#"
+                    onClick={e => this.onHide(e)}
+                    children="×"
+                  />
+                </div>
               </div>
-              <div className="beta-banner d-none d-sm-block">
+              <div className="beta-banner lg d-none d-md-block">
                 <div className="container align-items-center d-flex">
                   <div className="badge badge-primary">Beta</div>
                   <div>
@@ -44,7 +51,12 @@ class BetaBanner extends Component {
                   </div>
                   <div>
                     <Tooltip tooltip="Hide" placement="left" delayShow={500}>
-                      <a href="#" onClick={e => this.onHide(e)} children="×" />
+                      <a
+                        className="close-banner"
+                        href="#"
+                        onClick={e => this.onHide(e)}
+                        children="×"
+                      />
                     </Tooltip>
                   </div>
                 </div>
@@ -70,10 +82,13 @@ require('react-styl')(`
     background: #fff8de
     font-size: 18px
     font-weight: normal
+    border-bottom: 1px solid var(--dusk)
     &.sm
       padding: 0.375rem 0.5rem
       font-size: 14px
       font-weight: bold
+      .container
+        padding-right: 0
       .badge
         margin-right: 0.5rem
         padding: 0.2rem 0.25rem
@@ -82,25 +97,26 @@ require('react-styl')(`
         color: #000
         display: block
         margin-left: auto
-    .container
+    &.lg .container
       padding-top: 0.75rem
       padding-bottom: 0.75rem
+    .container
       > div:nth-child(1)
         margin-right: 1rem
       > div:nth-child(2)
         flex: 1
         > div:nth-child(1)
           font-weight: 700
-      > div:nth-child(3)
-        a
-          display: inline-block
-          width: 1.5rem
-          line-height: 1.5rem
-          text-align: center
-          border-radius: 1rem
-          font-weight: 700
-          color: var(--dark)
-          &:hover
-            background: gray
-            color: white;
+      a.close-banner
+        display: inline-block
+        margin-left: auto
+        width: 1.5rem
+        line-height: 1.5rem
+        text-align: center
+        border-radius: 1rem
+        font-weight: 700
+        color: var(--dark)
+        &:hover
+          background: gray
+          color: white;
 `)
