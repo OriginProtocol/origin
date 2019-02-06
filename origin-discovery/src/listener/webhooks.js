@@ -28,7 +28,7 @@ async function postToDiscordWebhook (discordWebhookUrl, data) {
   const personDisp = p => {
     let str = ''
     if (p.profile && (p.profile.firstName || p.profile.lastName)) {
-      str += `${p.profile.firstName | ''} ${p.profile.lastName || ''} - `
+      str += `${p.profile.firstName || ''} ${p.profile.lastName || ''} - `
     }
     str += p.address
     return str
