@@ -4,9 +4,18 @@ import logger from './logger'
 
 const Channel = require('ipfs-pubsub-1on1')
 
-const getHeadsForDatabase = store => (store && store._oplog) ? store._oplog.heads : []
+const getHeadsForDatabase = store =>
+  store && store._oplog ? store._oplog.heads : []
 
-const exchangeHeads = async (ipfs, address, peer, getStore, getDirectConnection, onMessage, onChannelCreated) => {
+const exchangeHeads = async (
+  ipfs,
+  address,
+  peer,
+  getStore,
+  getDirectConnection,
+  onMessage,
+  onChannelCreated
+) => {
   const _handleMessage = message => {
     const msg = JSON.parse(message.data)
     const { address, heads } = msg
