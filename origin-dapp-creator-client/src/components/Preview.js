@@ -7,40 +7,46 @@ class Preview extends React.Component {
     super(props)
   }
 
-  render () {
+  render() {
     return (
       <div className="preview-box">
-        <div className="preview-navbar"
-          style={{ background: this.props.config.cssVars.dusk }}>
-        </div>
-        <div className="preview-searchbar"
-          style={{ background: this.props.config.cssVars.paleGrey }}>
-        </div>
-        {[...Array(this.props.rows || 2)].map((x, i) =>
+        <div
+          className="preview-navbar"
+          style={{ background: this.props.config.cssVars.dusk }}
+        />
+        <div
+          className="preview-searchbar"
+          style={{ background: this.props.config.cssVars.paleGrey }}
+        />
+        {[...Array(this.props.rows || 2)].map((x, i) => (
           <div className="listings" key={'listings-' + i}>
-            {[...Array(3)].map((x, y) =>
+            {[...Array(3)].map((x, y) => (
               <div className="listing" key={'listing-' + y}>
-                <div className="listing-image"></div>
+                <div className="listing-image" />
                 <div className="listing-desc">
                   <div className="listing-text">
-                    <div className="listing-text-line"
-                      style={{  background: this.props.config.cssVars.dark }}>
-                    </div>
-                    <div className="listing-text-line"
-                      style={{  background: this.props.config.cssVars.dark }}>
-                    </div>
+                    <div
+                      className="listing-text-line"
+                      style={{ background: this.props.config.cssVars.dark }}
+                    />
+                    <div
+                      className="listing-text-line"
+                      style={{ background: this.props.config.cssVars.dark }}
+                    />
                   </div>
-                  <div className="listing-featured-tag"
-                    style={{ background: this.props.config.cssVars.goldenRod }}>
-                  </div>
+                  <div
+                    className="listing-featured-tag"
+                    style={{ background: this.props.config.cssVars.goldenRod }}
+                  />
                 </div>
               </div>
-            )}
+            ))}
           </div>
-        )}
-        <div className="preview-footer"
-          style={{ background: this.props.config.cssVars.lightFooter }}>
-        </div>
+        ))}
+        <div
+          className="preview-footer"
+          style={{ background: this.props.config.cssVars.lightFooter }}
+        />
       </div>
     )
   }

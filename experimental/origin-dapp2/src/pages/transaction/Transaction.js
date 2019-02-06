@@ -20,6 +20,7 @@ const Transaction = props => {
   const vars = { offerId }
   return (
     <div className="container transaction-detail">
+      <PageTitle>Offer {offerId}</PageTitle>
       <Query query={query} variables={vars}>
         {({ networkStatus, error, data, refetch }) => {
           if (error) {

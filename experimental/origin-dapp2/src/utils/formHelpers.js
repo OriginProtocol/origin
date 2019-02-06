@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const formInput = (state, setState, className) => field => ({
-  value: state[field],
+  value: state[field] || '',
   className: `form-control form-control-lg${
     state[`${field}Error`] ? ' is-invalid' : ''
   }${className ? ` ${className}` : ''}`,

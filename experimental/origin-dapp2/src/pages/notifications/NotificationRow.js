@@ -9,11 +9,7 @@ import Avatar from 'components/Avatar'
 import distanceToNow from 'utils/distanceToNow'
 
 const Row = ({ node, identity, onClick }) => {
-  const name = get(
-    identity,
-    'profile.fullName',
-    get(node, 'party.id').substr(0, 6)
-  )
+  const name = get(identity, 'fullName', get(node, 'party.id').substr(0, 6))
   const title = <b>{get(node, 'offer.listing.title')}</b>
   const event = get(node, 'event.event')
   let description = `${name} ${event} ${title}`

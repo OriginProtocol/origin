@@ -70,7 +70,8 @@ class SendMessage extends Component {
 
   renderSend() {
     const { to } = this.props
-    const recipient = get(this.props, 'identity.profile.fullName')
+    const recipient = get(this.props, 'identity.fullName')
+
     return (
       <Mutation
         mutation={mutation}

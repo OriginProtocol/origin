@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 const IdentitiesQuery = gql`
   query Identities($first: Int, $after: String, $sort: String) {
-    userRegistry {
+    identityEvents {
       id
       identities(first: $first, after: $after, sort: $sort) {
         totalCount
@@ -13,9 +13,7 @@ const IdentitiesQuery = gql`
         }
         nodes {
           id
-          profile {
-            id
-          }
+          fullName
         }
       }
     }

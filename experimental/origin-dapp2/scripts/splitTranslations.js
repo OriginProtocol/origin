@@ -1,6 +1,6 @@
 const fs = require('fs')
 const rawTranslations = fs.readFileSync(
-  `${__dirname}/../src/translatedFbts.json`
+  `${__dirname}/../.translated_fbts.json`
 )
 const translations = JSON.parse(rawTranslations)
 
