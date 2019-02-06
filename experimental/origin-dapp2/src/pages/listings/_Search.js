@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import get from 'lodash/get'
+import queryString from 'query-string'
+
+import listingSchemaMetadata from 'utils/listingSchemaMetadata.js'
 
 import withConfig from 'hoc/withConfig'
 import Dropdown from 'components/Dropdown'
@@ -7,11 +10,30 @@ import Dropdown from 'components/Dropdown'
 class Search extends Component {
   constructor(props) {
     super(props)
+
+    this.listingTypes = [
+      listingSchemaMetadata.listingTypeAll,
+      ...listingSchemaMetadata.listingTypes
+    ]
+
+    const getParams = queryString.parse(get(this.props, 'location.search', ''))
+
+    let listingType = listingSchemaMetadata.listingTypeAll
+    if (getParams.listing_type !== undefined) {
+      listingType =
+        this.listingTypes.find(
+          listingTypeItem => listingTypeItem.type === getParams.listing_type
+        ) || listingType
+    }
+
     this.state = {
       searchInput: props.value || '',
-      category: 'All'
+      category: 'All',
+      selectedListingType: listingType,
+      searchInput: getParams.search_query || ''
     }
   }
+
 
   render() {
     const enabled = get(this.props, 'config.discovery', false)
@@ -62,6 +84,10 @@ class Search extends Component {
   }
 
   doSearch() {
+    document.location.href = `#/search?search_query=${
+      this.state.searchInput
+    }&listing_type=${this.state.selectedListingType.type}`
+
     if (this.props.onSearch) {
       this.props.onSearch(this.state.searchInput)
     }
