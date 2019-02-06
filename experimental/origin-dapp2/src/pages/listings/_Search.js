@@ -27,13 +27,11 @@ class Search extends Component {
     }
 
     this.state = {
-      searchInput: props.value || '',
       category: 'All',
       selectedListingType: listingType,
-      searchInput: getParams.search_query || ''
+      searchInput: props.value || getParams.search_query || ''
     }
   }
-
 
   render() {
     const enabled = get(this.props, 'config.discovery', false)
