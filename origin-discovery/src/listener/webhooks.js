@@ -2,6 +2,8 @@ const http = require('http')
 const https = require('https')
 const urllib = require('url')
 
+const logger = require('./logger')
+
 /**
  * Posts a to discord channel via webhook.
  * This functionality should move out of the listener
@@ -26,7 +28,7 @@ async function postToDiscordWebhook (discordWebhookUrl, data) {
   const personDisp = p => {
     let str = ''
     if (p.profile && (p.profile.firstName || p.profile.lastName)) {
-      str += `${p.profile.firstName | ''} ${p.profile.lastName || ''} - `
+      str += `${p.profile.firstName || ''} ${p.profile.lastName || ''} - `
     }
     str += p.address
     return str
@@ -97,7 +99,7 @@ async function postToWebhook (urlString, json) {
   return new Promise((resolve, reject) => {
     const client = url.protocol === 'https:' ? https : http
     const req = client.request(postOptions, res => {
-      console.log(res.statusCode)
+      logger.debug(`Webhook response status code=${res.statusCode}`)
       if (res.statusCode === 200 || res.statusCode === 204) {
         resolve()
       } else {

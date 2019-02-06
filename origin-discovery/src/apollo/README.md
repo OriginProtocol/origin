@@ -12,8 +12,7 @@ Start the origin-discovery container.
  - Setup Postgres locally.
  - Run migration scripts to create the schema
  ```
- cd origin/src/origin-discovery
- ./node_modules/.bin/sequelize db:migrate
+lerna run migrate --scope origin-discovery
 ```
  - Install Elasticsearch locally.
  - Create the Elasticsearch schema

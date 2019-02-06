@@ -46,5 +46,7 @@ module.exports = {
   },
   down: (queryInterface) => {
     return queryInterface.dropTable(tableName)
+      .then(queryInterface.sequelize.query('DROP TYPE enum_growth_reward_status;'))
+
   }
 }
