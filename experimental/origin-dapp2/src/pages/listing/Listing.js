@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
 
 import QueryError from 'components/QueryError'
+import PageTitle from 'components/PageTitle'
 
 import query from 'queries/Listing'
 import ListingDetail from './ListingDetail'
@@ -19,6 +20,7 @@ class Listing extends Component {
 
     return (
       <div className="container">
+        <PageTitle>Listing {listingId}</PageTitle>
         <Query query={query} variables={vars}>
           {({ networkStatus, error, data, refetch }) => {
             if (networkStatus === 1) {

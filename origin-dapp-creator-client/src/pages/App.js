@@ -10,11 +10,12 @@ import MetaMaskPrompt from 'pages/MetaMaskPrompt'
 import Resolver from 'pages/Resolver'
 import StepsContainer from 'components/StepsContainer'
 import Success from 'pages/Success'
+import CustomDomainInstructions from 'pages/CustomDomainInstructions'
 import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 class App extends React.Component {
-  constructor (props, context) {
+  constructor(props, context) {
     super(props)
 
     this.web3Context = context.web3
@@ -23,7 +24,8 @@ class App extends React.Component {
       config: store.get('creator-config', {
         ...baseConfig,
         marketplacePublisher: web3.eth.accounts[0]
-      })
+      }),
+      publishedIpfsHash: null
     }
 
     this.handlePublish = this.handlePublish.bind(this)
@@ -36,7 +38,7 @@ class App extends React.Component {
     this.setState({ config })
   }
 
-  signConfig () {
+  signConfig() {
     if (this.state.config.subdomain) {
       // Generate a valid signature if a subdomain is in use
       const dataToSign = JSON.stringify(this.state.config)
@@ -44,12 +46,16 @@ class App extends React.Component {
     }
   }
 
-  async handlePublish (signature) {
-    return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/config`)
+  async handlePublish(signature) {
+    return superagent
+      .post(`${process.env.DAPP_CREATOR_API_URL}/config`)
       .send({
         config: this.state.config,
         signature: signature,
         address: web3.eth.accounts[0]
+      })
+      .then(response => {
+        this.setState({ publishedIpfsHash: response.text })
       })
   }
 
@@ -73,7 +79,7 @@ class App extends React.Component {
         </div>
 
         <div className="main">
-          <StepsContainer  />
+          <StepsContainer />
 
           <div className="form">
             <Switch>
@@ -116,16 +122,18 @@ class App extends React.Component {
               />
               <Route
                 path="/resolver"
-                render={() => (
-                  <Resolver
-                    config={this.state.config}
-                  />
-                )}
+                render={() => <Resolver config={this.state.config} />}
               />
               <Route
                 path="/success"
+                render={() => <Success config={this.state.config} />}
+              />
+              <Route
+                path="/customdomain"
                 render={() => (
-                  <Success config={this.state.config} />
+                  <CustomDomainInstructions
+                    publishedIpfsHash={this.state.publishedIpfsHash}
+                  />
                 )}
               />
             </Switch>
@@ -133,7 +141,7 @@ class App extends React.Component {
         </div>
 
         <div className="copyright">
-          &copy;2019 Origin Protocol Inc.
+          &copy;{new Date().getFullYear()} Origin Protocol Inc.
         </div>
       </>
     )

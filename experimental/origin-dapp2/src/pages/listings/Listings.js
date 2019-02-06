@@ -76,12 +76,10 @@ class Listings extends Component {
                         </fbt:plural>
                       </fbt>
                     </h5>
-
                     <ListingsGallery
                       listings={nodes}
                       hasNextPage={hasNextPage}
                     />
-
                     {!hasNextPage ? null : (
                       <button
                         className="btn btn-outline-primary btn-rounded mt-3"
@@ -119,4 +117,8 @@ require('react-styl')(`
     font-weight: 200;
     color: var(--dark);
     margin-top: 3rem
+  @media (max-width: 575.98px)
+    .listings-count
+      margin: 1rem 0 0 0
+      font-size: 32px
 `)

@@ -5,9 +5,7 @@ export default gql`
     verifyAirbnbCode(identity: $identity, airbnbUserId: $airbnbUserId) {
       success
       reason
-      claimType
       data
-      signature
     }
   }
 `
