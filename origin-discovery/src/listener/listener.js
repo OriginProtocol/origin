@@ -226,7 +226,7 @@ async function liveTracking (context) {
       start = new Date()
       const currentBlockNumber = await context.web3.eth.getBlockNumber()
       if (currentBlockNumber === lastCheckedBlock) {
-        logger.info('No new block.')
+        logger.debug('No new block.')
         return scheduleNextCheck()
       }
       logger.info(`New block: ${currentBlockNumber}`)
@@ -270,10 +270,12 @@ const config = {
   // Unique id. Used to differentiate between the several listeners instances
   // that may run concurrently (ex: main vs webhook vs re-indexing).
   listenerId: args['--listener-id'] || process.env.LISTENER_ID || 'main',
-  // Call webhook to process event.
+  // Notification web hook URL.
   webhook: args['--webhook'] || process.env.WEBHOOK,
-  // Call post to discord webhook to process event.
+  // Discord webhook URL.
   discordWebhook: args['--discord-webhook'] || process.env.DISCORD_WEBHOOK,
+  // Mailing list webhook URL.
+  emailWebhook: args['--email-webhook'] || process.env.EMAIL_WEBHOOK,
   // Index events in the search index.
   elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
   // Index marketplace events.
