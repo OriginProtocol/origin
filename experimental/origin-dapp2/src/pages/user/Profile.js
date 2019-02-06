@@ -193,7 +193,7 @@ class UserProfile extends Component {
 
   renderAtt(type, text, soon) {
     const { wallet } = this.props
-    const profile = get(this.props, 'identity', {})
+    const profile = get(this.props, 'identity') || {}
 
     let status = ''
     if (profile[`${type}Verified`]) {
