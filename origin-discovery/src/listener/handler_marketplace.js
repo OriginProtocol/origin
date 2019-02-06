@@ -197,7 +197,7 @@ class MarketplaceEventHandler {
     } else {
       listingData.updatedAt = log.date
     }
-    db.Listing.upsert(listingData)
+    await db.Listing.upsert(listingData)
 
     if (this.config.elasticsearch) {
       logger.info(`Indexing listing in Elastic: id=${listingId}`)
@@ -229,7 +229,7 @@ class MarketplaceEventHandler {
     } else {
       offerData.updatedAt = log.date
     }
-    db.Offer.upsert(offerData)
+    await db.Offer.upsert(offerData)
   }
 
   /**

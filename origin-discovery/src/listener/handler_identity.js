@@ -1,3 +1,4 @@
+const Web3 = require('web3')
 const logger = require('./logger')
 
 const db = require('../models')
@@ -12,6 +13,27 @@ class IdentityEventHandler {
     this.origin = origin
   }
 
+  async _loadValueFromAttestation(ethAddress, method) {
+    // Notes:
+    //  - Use a raw query since attestation model not ported yet to JS.
+    //  - The attestation table stores eth addresses checksummed.
+    const attestations = await db.sequelize.query(
+      'SELECT * FROM attestation WHERE eth_address=(:ethAddress) AND method=(:method) ORDER BY ID DESC LIMIT 1',
+      {
+        replacements: {
+            ethAddress: Web3.utils.toChecksumAddress(ethAddress),
+            method
+        },
+        type: db.sequelize.QueryTypes.SELECT
+      }
+    )
+    if (attestations.length === 1) {
+      return attestations[0].value
+    } else {
+      return null
+    }
+  }
+
   /**
    * Indexes a user in the DB.
    * @param {models.User} user - Origin js user model object.
@@ -19,22 +41,47 @@ class IdentityEventHandler {
    * @returns {Promise<void>}
    * @private
    */
-  async _indexUser(user, blockInfo) {
-    logger.info(`Indexing user ${user.address} in DB.`)
-    const userData = {
-      ethAddress: user.address.toLowerCase(),
+  async _indexIdentity(user, blockInfo) {
+    logger.info(`Indexing identity ${user.address} in DB.`)
+
+    // Check input.
+    const ethAddress = user.address
+    if (!Web3.utils.isAddress(ethAddress)) {
+      throw new Error(`Invalid eth address ${ethAddress}`)
+    }
+
+    // Construct an identity object based on the user's profile
+    // and data loaded from the attestation table.
+    const identity = {
+      ethAddress: ethAddress.toLowerCase(),
       firstName: user.profile.firstName,
       lastName: user.profile.lastName,
       data: { blockInfo }
     }
-    user.attestations.forEach(attestation => {
-      if (attestation.service === 'email') {
-        userData.email = attestation.data.attestation.email
-      } else if (attestation.service === 'phone') {
-        userData.phone = attestation.data.attestation.phone
+    await Promise.all(user.attestations.map(async attestation => {
+      switch (attestation.service) {
+        case 'email':
+          identity.email = await this._loadValueFromAttestation(ethAddress, 'EMAIL')
+          break
+        case 'phone':
+          identity.phone = await this._loadValueFromAttestation(ethAddress, 'PHONE')
+          break
+        case 'twitter':
+          identity.twitter = await this._loadValueFromAttestation(ethAddress, 'TWITTER')
+          break
+        case 'airbnb':
+          identity.airbnb = await this._loadValueFromAttestation(ethAddress, 'AIRBNB')
+          break
+        case 'facebook':
+          // Note: we don't have access to the user's fbook id,
+          // only whether the account was verified or not.
+          identity.facebookVerified = true
+          break
       }
-    })
-    db.User.upsert(userData)
+    }))
+
+    logger.debug('Identity=', identity)
+    await db.Identity.upsert(identity)
   }
 
   /**
@@ -72,21 +119,21 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthAttestationEvents(user, blockInfo) {
-    user.attestations.forEach(async attestation => {
+    await Promise.all(user.attestations.map(attestation => {
       const eventType = AttestationServiceToEventType[attestation.service]
       if (!eventType) {
         logger.error(`Unrecognized attestation service received: ${attestation.service}. Skipping.`)
         return
       }
 
-      await GrowthEvent.insert(
+      return GrowthEvent.insert(
         logger,
         user.address,
         eventType,
         null,
         { blockInfo }
       )
-    })
+    }))
   }
 
   /**
@@ -117,7 +164,7 @@ class IdentityEventHandler {
       logIndex: log.logIndex
     }
 
-    await this._indexUser(user, blockInfo)
+    await this._indexIdentity(user, blockInfo)
 
     if (this.config.growth) {
       await this._recordGrowthProfileEvent(user, blockInfo)

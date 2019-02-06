@@ -1,6 +1,6 @@
 'use strict'
 
-const tableName = 'user'
+const tableName = 'identity'
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -20,6 +20,15 @@ module.exports = {
       },
       phone: {
         type: Sequelize.STRING
+      },
+      twitter: {
+        type: Sequelize.STRING
+      },
+      airbnb: {
+        type: Sequelize.STRING
+      },
+      facebook_verified: {
+        type: Sequelize.BOOLEAN
       },
       data: {
         type: Sequelize.JSONB

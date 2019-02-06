@@ -4,7 +4,7 @@ const { withRetrys } = require('./utils')
 const MarketplaceEventHandler = require('./handler_marketplace')
 const IdentityEventHandler = require('./handler_identity')
 
-const { postToEmaildWebhook, postToDiscordWebhook, postToWebhook } = require('./webhooks')
+const { postToEmailWebhook, postToDiscordWebhook, postToWebhook } = require('./webhooks')
 
 // Adding a mapping here makes the listener listen for the event
 // and call the associated handler when the event is received.
@@ -113,7 +113,7 @@ async function handleLog (log, rule, contractVersion, context) {
     logger.info(`Mailing list webhook to ${context.config.emailWebhook}`)
     try {
       await withRetrys(async () => {
-        return postToEmaildWebhook(context.config.emailWebhook, output)
+        return postToEmailWebhook(context.config.emailWebhook, output)
       }, false)
     } catch (e) {
       logger.error(`Skipping email webhook for ${logDetails}`)

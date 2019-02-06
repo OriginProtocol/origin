@@ -99,8 +99,8 @@ async function postToEmailWebhook(url, data) {
     return
   }
 
-  const emailData = `email=${email}&dapp_user=1`
-  await postToWebhook(url, emailData)
+  const emailData = `email=${encodeURIComponent(email)}&dapp_user=1`
+  await postToWebhook(url, emailData, 'application/x-www-form-urlencoded')
 }
 
 /**

@@ -40,10 +40,7 @@ describe('Listener Handlers', () => {
       const fakeUser = {
         address: seller,
         profile: { firstName: 'foo', lastName: 'bar', avatar: '0xABCDEF' },
-        attestations: [
-          { service: 'email', data: { attestation: { email: 'toto@spirou.com' } } },
-          { service: 'phone', data: { attestation: { phone: '+33 0555875838' } } }
-        ]
+        attestations: [ { service: 'email' }, { service: 'phone' } ]
       }
       this.users = {}
       this.users.get = sinon.fake.returns(fakeUser)
@@ -171,6 +168,16 @@ describe('Listener Handlers', () => {
 
   it(`Identity`, async () => {
     const handler = new IdentityEventHandler(this.config, this.context.origin)
+    handler._loadValueFromAttestation = (ethAddress, method) => {
+      if (method === 'EMAIL') {
+        return 'toto@spirou.com'
+      } else if (method === 'PHONE') {
+        return '+33 0555875838'
+      } else {
+        return null
+      }
+    }
+
     const result = await handler.process(this.identityLog)
 
     // Check output.
@@ -178,7 +185,7 @@ describe('Listener Handlers', () => {
     expect(result.user.address).to.equal(this.seller)
 
     // Check expected entry was added into user DB table.
-    const user = await db.User.findAll({
+    const user = await db.Identity.findAll({
       where: {
         ethAddress: this.seller, firstName: 'foo', lastName: 'bar', email: 'toto@spirou.com', phone: '+33 0555875838' } })
     expect(user.length).to.equal(1)
