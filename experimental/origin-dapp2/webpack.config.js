@@ -87,7 +87,11 @@ const config = {
   },
   mode: isProduction ? 'production' : 'development',
   plugins: [
-    new HtmlWebpackPlugin({ template: 'public/template.html', inject: false }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      network: 'rinkeby'
+    }),
     new webpack.EnvironmentPlugin({ HOST: 'localhost' })
   ],
 
@@ -114,7 +118,13 @@ if (isProduction) {
   config.plugins.push(
     new CleanWebpackPlugin(['public/app.*.css', 'public/app.*.js']),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
-    new webpack.IgnorePlugin(/redux-logger/)
+    new webpack.IgnorePlugin(/redux-logger/),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'mainnet.html',
+      network: 'mainnet'
+    })
   )
   config.resolve.alias = {
     'react-styl': 'react-styl/prod.js'
