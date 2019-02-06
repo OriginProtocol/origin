@@ -36,7 +36,7 @@ discoveryImageTag: '21c94ac'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'fe43875'
+messagingImageTag: 'f2d7e63'
 
 # origin-notifications
 notificationsImage: origin-notifications
