@@ -86,20 +86,13 @@ async function postToDiscordWebhook(url, data) {
  * our global Origin mailing list.
  */
 async function postToEmailWebhook(url, data) {
-  // Extract the email, if any, out of the user's identity data.
   const user = data.related.user
-  let email = null
-  user.attestations.forEach(attestation => {
-    if (attestation.service === 'email') {
-      email = attestation.data.attestation.email
-    }
-  })
-  if (!email) {
-    logger.debug('No email found in identity, skipping email webhook.')
+  if (!user.email) {
+    logger.debug('No email present in identity, skipping email webhook.')
     return
   }
 
-  const emailData = `email=${encodeURIComponent(email)}&dapp_user=1`
+  const emailData = `email=${encodeURIComponent(user.email)}&dapp_user=1`
   await postToWebhook(url, emailData, 'application/x-www-form-urlencoded')
 }
 

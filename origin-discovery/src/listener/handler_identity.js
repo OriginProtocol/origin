@@ -35,6 +35,36 @@ class IdentityEventHandler {
   }
 
   /**
+   * Decorates a user object with attestation data.
+   * @param user
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _decorateUser(user) {
+    await Promise.all(user.attestations.map(async attestation => {
+      switch (attestation.service) {
+        case 'email':
+          user.email = await this._loadValueFromAttestation(user.address, 'EMAIL')
+          break
+        case 'phone':
+          user.phone = await this._loadValueFromAttestation(user.address, 'PHONE')
+          break
+        case 'twitter':
+          user.twitter = await this._loadValueFromAttestation(user.address, 'TWITTER')
+          break
+        case 'airbnb':
+          user.airbnb = await this._loadValueFromAttestation(user.address, 'AIRBNB')
+          break
+        case 'facebook':
+          // Note: we don't have access to the user's fbook id,
+          // only whether the account was verified or not.
+          user.facebookVerified = true
+          break
+      }
+    }))
+  }
+
+  /**
    * Indexes a user in the DB.
    * @param {models.User} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
@@ -56,29 +86,13 @@ class IdentityEventHandler {
       ethAddress: ethAddress.toLowerCase(),
       firstName: user.profile.firstName,
       lastName: user.profile.lastName,
+      email: user.email,
+      phone: user.phone,
+      airbnb: user.airbnb,
+      twitter: user.twitter,
+      facebookVerified: user.facebookVerified,
       data: { blockInfo }
     }
-    await Promise.all(user.attestations.map(async attestation => {
-      switch (attestation.service) {
-        case 'email':
-          identity.email = await this._loadValueFromAttestation(ethAddress, 'EMAIL')
-          break
-        case 'phone':
-          identity.phone = await this._loadValueFromAttestation(ethAddress, 'PHONE')
-          break
-        case 'twitter':
-          identity.twitter = await this._loadValueFromAttestation(ethAddress, 'TWITTER')
-          break
-        case 'airbnb':
-          identity.airbnb = await this._loadValueFromAttestation(ethAddress, 'AIRBNB')
-          break
-        case 'facebook':
-          // Note: we don't have access to the user's fbook id,
-          // only whether the account was verified or not.
-          identity.facebookVerified = true
-          break
-      }
-    }))
 
     logger.debug('Identity=', identity)
     await db.Identity.upsert(identity)
@@ -158,6 +172,9 @@ class IdentityEventHandler {
     if (user.profile.avatar) {
       user.profile.avatar = user.profile.avatar.slice(0, 32) + '...'
     }
+
+    // Decorate the user object with extra attestation related info.
+    await this._decorateUser(user)
 
     const blockInfo = {
       blockNumber: log.blockNumber,
