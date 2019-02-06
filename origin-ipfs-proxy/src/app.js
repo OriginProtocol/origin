@@ -26,11 +26,11 @@ function isValidFile(buffer) {
 }
 
 function isValidImage(buffer) {
-  const file  = fileType(buffer)
+  const file = fileType(buffer)
   return file && validImageTypes.includes(file.mime)
 }
 
-function handleFileUpload (req, res) {
+function handleFileUpload(req, res) {
   const busboy = new Busboy({
     headers: req.headers,
     limits: {
@@ -47,7 +47,7 @@ function handleFileUpload (req, res) {
 
     file.on('limit', function() {
       logger.warn(`File upload too large`)
-      res.writeHead(413, { 'Connection': 'close' })
+      res.writeHead(413, { Connection: 'close' })
       res.end()
       req.unpipe(req.busboy)
     })
@@ -57,30 +57,34 @@ function handleFileUpload (req, res) {
 
       if (!isValidFile(buffer)) {
         logger.warn(`Upload of invalid file type attempted`)
-        res.writeHead(415, { 'Connection': 'close' })
+        res.writeHead(415, { Connection: 'close' })
         res.end()
         req.unpipe(req.busboy)
       } else {
         const url = config.IPFS_API_URL + req.url
-        request.post(url)
+        request
+          .post(url)
           .set(req.headers)
           .attach('file', buffer)
-          .then((response) => {
-            let responseData = response.text
-            if (response.headers['content-encoding'] === 'gzip') {
-              // Compress the response so the header is correct if necessary
-              responseData = zlib.gzipSync(response.text)
-            } else if (response.headers['content-encoding'] === 'deflate') {
-              responseData = zlib.deflateSync(response.text)
+          .then(
+            response => {
+              let responseData = response.text
+              if (response.headers['content-encoding'] === 'gzip') {
+                // Compress the response so the header is correct if necessary
+                responseData = zlib.gzipSync(response.text)
+              } else if (response.headers['content-encoding'] === 'deflate') {
+                responseData = zlib.deflateSync(response.text)
+              }
+              res.writeHead(response.status, response.headers)
+              res.end(responseData)
+            },
+            error => {
+              logger.error(`An error occurred proxying request to IPFS`)
+              logger.error(error)
+              res.writeHead(500, { Connection: 'close' })
+              res.end()
             }
-            res.writeHead(response.status, response.headers)
-            res.end(responseData)
-          }, (error) => {
-            logger.error(`An error occurred proxying request to IPFS`)
-            logger.error(error)
-            res.writeHead(500, { 'Connection': 'close' })
-            res.end()
-          })
+          )
       }
     })
   })
@@ -104,7 +108,7 @@ const proxy = httpProxy.createProxyServer({})
 proxy.on('proxyRes', (proxyResponse, req, res) => {
   let buffer = []
 
-  proxyResponse.on('data', (data) => {
+  proxyResponse.on('data', data => {
     buffer.push(data)
   })
 
@@ -115,26 +119,28 @@ proxy.on('proxyRes', (proxyResponse, req, res) => {
       res.writeHead(proxyResponse.statusCode, proxyResponse.headers)
       res.end(buffer)
     } else {
-      res.writeHead(415, { 'Connection': 'close' })
+      res.writeHead(415, { Connection: 'close' })
       res.end()
     }
   })
 })
 
-proxy.on('error', (err) => {
+proxy.on('error', err => {
   logger.error(err)
 })
 
-const server = http.createServer((req, res) => {
-  if (req.url.startsWith('/api/v0/add')) {
-    handleFileUpload(req, res)
-  } else if (req.url.startsWith('/ipfs')) {
-    handleFileDownload(req, res)
-  } else {
-    res.writeHead(404, { 'Connection': 'close' })
-    res.end()
-  }
-}).listen(config.IPFS_PROXY_PORT, config.IPFS_PROXY_ADDRESS)
+const server = http
+  .createServer((req, res) => {
+    if (req.url.startsWith('/api/v0/add')) {
+      handleFileUpload(req, res)
+    } else if (req.url.startsWith('/ipfs')) {
+      handleFileDownload(req, res)
+    } else {
+      res.writeHead(404, { Connection: 'close' })
+      res.end()
+    }
+  })
+  .listen(config.IPFS_PROXY_PORT, config.IPFS_PROXY_ADDRESS)
 
 logger.debug(`Listening on ${config.IPFS_PROXY_PORT}`)
 logger.debug(`Proxying to IPFS gateway ${config.IPFS_GATEWAY_URL}`)
