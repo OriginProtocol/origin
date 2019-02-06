@@ -14,6 +14,7 @@ const MessagingQuery = gql`
       enabled
       synced
       syncProgress
+      totalUnread
     }
   }
 `

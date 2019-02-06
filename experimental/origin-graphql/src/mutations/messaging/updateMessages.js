@@ -2,7 +2,7 @@ import contracts from '../../contracts'
 import filter from 'lodash/filter'
 
 async function filterMessages(messages, wallet) {
-  return filter(messages, async (msg) => {
+  return filter(messages, async msg => {
     const status = await contracts.messaging.getStatus(msg)
     return status === 'unread' && msg.address !== wallet
   })
@@ -16,7 +16,7 @@ async function updateMessageStatus(messages) {
 
 export default async function updateMessages(_, { id, wallet }) {
   await new Promise(async resolve => {
-    const messages = await contracts.messaging.getAllMessages(id) || []
+    const messages = (await contracts.messaging.getAllMessages(id)) || []
     const unreadMessages = await filterMessages(messages, wallet)
 
     if (unreadMessages.length) {
