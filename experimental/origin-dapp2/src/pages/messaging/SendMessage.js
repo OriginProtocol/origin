@@ -99,9 +99,10 @@ class SendMessage extends Component {
                 ))}
               </div>
             ) : null}
-            {!images.length && (
-              <textarea
+            {images.length ? null : (
+              <input
                 type="text"
+                className="form-control"
                 placeholder="Type something..."
                 ref={input => (this.input = input)}
                 value={this.state.message}
@@ -148,19 +149,13 @@ require('react-styl')(`
     margin-top: 1rem
     .form-control
       margin-right: 1rem
-    textarea
-      background-color: transparent
       border: 0
-      padding: 10px 0 0
-      flex-grow: 1
-      resize: none
       outline: none
     button
       margin: auto 0
       width: auto
-    img
-      &.add-photo
-        padding: 0 10px
+    img.add-photo
+      padding: 0 10px
     .images-preview
       flex: 1
       padding: 10px 0
