@@ -124,6 +124,12 @@ const Configs = {
   }
 }
 
+if (process.env.DOCKER) {
+  Configs['localhost'].ipfsGateway = `http://${HOST}:9999`
+  Configs['localhost'].ipfsRPC = `http://${HOST}:9999`
+  Configs['localhost'].bridge = `http://${HOST}:5000`
+}
+
 const DefaultMessagingConfig = {
   ipfsSwarm:
     '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/Qma8wRkeXeYtE3RQfqFDGjsKCEqXR5CGxfmRxvus9aULcs',
