@@ -27,7 +27,12 @@ class BetaBanner extends Component {
                 <div className="container align-items-center d-flex">
                   <div className="badge badge-primary">Beta</div>
                   Welcome to the Origin Beta!
-                  <a className="close-banner" href="#" onClick={e => this.onHide(e)} children="×" />
+                  <a
+                    className="close-banner"
+                    href="#"
+                    onClick={e => this.onHide(e)}
+                    children="×"
+                  />
                 </div>
               </div>
               <div className="beta-banner lg d-none d-md-block">
@@ -46,7 +51,12 @@ class BetaBanner extends Component {
                   </div>
                   <div>
                     <Tooltip tooltip="Hide" placement="left" delayShow={500}>
-                      <a className="close-banner" href="#" onClick={e => this.onHide(e)} children="×" />
+                      <a
+                        className="close-banner"
+                        href="#"
+                        onClick={e => this.onHide(e)}
+                        children="×"
+                      />
                     </Tooltip>
                   </div>
                 </div>
