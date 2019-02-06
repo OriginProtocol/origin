@@ -2,6 +2,8 @@ FROM node:10
 
 WORKDIR /app
 
+ENV NODE_ENV=development
+
 # Copy utility scripts
 COPY ./development/scripts/* /usr/local/bin/
 
