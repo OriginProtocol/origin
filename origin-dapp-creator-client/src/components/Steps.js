@@ -28,20 +28,22 @@ class Steps extends React.Component {
           icon: <SettingsIcon />
         },
         {
-          path: '/metamask',
+          path: '/metamask'
         },
         {
-          path: '/resolver',
+          path: '/resolver'
         },
         {
-          path: '/success',
+          path: '/success'
+        },
+        {
+          path: '/customdomain'
         }
-       ]
+      ]
     }
   }
 
-
-  stepClassNames (step, i) {
+  stepClassNames(step, i) {
     let classNames = `step step-${i}`
     if (!this.props.location) {
       return classNames
@@ -59,25 +61,28 @@ class Steps extends React.Component {
     if (!this.props.location) {
       return -1
     }
-    const currentStep = this.state.steps.find((step) => {
+    const currentStep = this.state.steps.find(step => {
       return this.props.location.pathname === step.path
     })
     return this.state.steps.indexOf(currentStep)
   }
 
-  render () {
+  render() {
     return (
       <div className="steps">
-        {this.state.steps.map((step, i) => step.title &&
-          <div className={this.stepClassNames(step, i)} key={i}>
-            <div className="svg-wrapper">
-              {step.icon}
-              {this.currentStepIndex() > i &&
-                  <img src="images/checkmark-icon.svg" />
-              }
-            </div>
-            {step.title}
-          </div>
+        {this.state.steps.map(
+          (step, i) =>
+            step.title && (
+              <div className={this.stepClassNames(step, i)} key={i}>
+                <div className="svg-wrapper">
+                  {step.icon}
+                  {this.currentStepIndex() > i && (
+                    <img src="images/checkmark-icon.svg" />
+                  )}
+                </div>
+                {step.title}
+              </div>
+            )
         )}
       </div>
     )
@@ -133,4 +138,3 @@ require('react-styl')(`
     &:after
       left: 54%
 `)
-

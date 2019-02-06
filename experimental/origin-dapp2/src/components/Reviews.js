@@ -9,13 +9,7 @@ import ReviewsQuery from 'queries/Reviews'
 import EthAddress from './EthAddress'
 
 export default class Reviews extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      lastReviewShown: 3
-    }
-    this.readMore = this.readMore.bind(this)
-  }
+  state = { lastReviewShown: 3 }
 
   readMore() {
     this.setState({ lastReviewShown: this.state.lastReviewShown + 1 })
@@ -48,7 +42,7 @@ export default class Reviews extends Component {
                     className={
                       idx < this.state.lastReviewShown
                         ? 'review review-ease-in'
-                        : 'hidden-review'
+                        : 'd-none'
                     }
                   >
                     <div className="user-info">
@@ -71,9 +65,9 @@ export default class Reviews extends Component {
                 )
               })}
               {this.state.lastReviewShown < count ? (
-                <div className="read-more btn" onClick={this.readMore}>
+                <div className="read-more btn" onClick={() => this.readMore()}>
                   <fbt desc="reviews.readMore">Read More</fbt>
-                  <img className="read-more-caret" />
+                  <i className="read-more-caret" />
                 </div>
               ) : null}
             </div>
@@ -85,68 +79,57 @@ export default class Reviews extends Component {
 }
 
 require('react-styl')(`
-  .reviews .review
-    .user-info
-      display: flex;
-      width: 100%;
-      justify-content: space-around
-      .avatar
-        margin-right: 1rem
-      .user
-        flex: 1
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        .name
-          font-size: 18px
-          font-weight: bold
-          color: var(--black)
-        .eth-address
+  .reviews
+    .review
+      .user-info
+        display: flex
+        width: 100%;
+        justify-content: space-around
+        .avatar
+          margin-right: 1rem
+        .user
+          flex: 1
+          display: flex
+          flex-direction: column
+          justify-content: center
+          .name
+            font-size: 18px
+            font-weight: bold
+            color: var(--black)
+          .eth-address
+            color: var(--steel)
+        .info
+          text-align: right
           color: var(--steel)
-      .info
-        text-align: right
-        color: var(--steel)
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-    .text
-      margin: 0.5rem 0 3rem 0
-    &:last-child .text
-      margin-bottom: 0
-  .review-ease-in
-    animation-name: fadeIn;
-    animation-duration: .3s;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s
+          display: flex
+          flex-direction: column
+          justify-content: space-around
+      .text
+        margin: 0.5rem 0 3rem 0
+      &:last-child .text
+        margin-bottom: 0
+      &.review-ease-in
+        animation-name: fadeIn
+        animation-duration: .3s
+        transition-duration: .3s
+
+    .read-more
+      font-size: 18px
+      font-weight: normal
+      color: var(--clear-blue)
+
+    .read-more-caret
+      display: inline-block
+      width: 12px
+      height: 12px
+      margin-left: 10px
+      transform: rotate(180deg)
+      background: url(images/caret-blue.svg) no-repeat right
+      background-size: 12px
+
   @keyframes fadeIn
     from
-      height: 0px;
-      opacity: 0;
+      opacity: 0
     to
-      opacity: 1;
-  .hidden-review
-    visibility: hidden;
-    height: 0;
-    width: 0;
-  .reviews .read-more 
-    width: 112px;
-    height: 27px;
-    padding: 0px;
-    font-family: Lato;
-    font-size: 18px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.44;
-    letter-spacing: normal;
-    text-align: left;
-    color: var(--clear-blue);
-    margin-rigt: 10px;
-  .read-more-caret
-    width: 12px;
-    height: 12px;
-    margin-left: 10px;
-    transform: rotate(180deg);
-    background: url(images/caret-blue.svg) no-repeat right;
-    background-size: 12px;
+      opacity: 1
 `)
