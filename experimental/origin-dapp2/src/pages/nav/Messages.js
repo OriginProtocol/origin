@@ -25,7 +25,7 @@ class MessagesNav extends Component {
           return (
             <Dropdown
               el="li"
-              className="nav-item messages"
+              className="nav-item messages d-none d-md-flex"
               open={this.props.open}
               onClose={() => this.props.onClose()}
               content={
