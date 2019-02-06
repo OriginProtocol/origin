@@ -19,15 +19,13 @@ export const ipfsClient = IpfsClient({
 
 export async function addConfigToIpfs(config) {
   const configBuffer = Buffer.from(JSON.stringify(config))
-  return promiseTimeout(5000, ipfsClient.add(configBuffer))
-    .then((response) => {
-      return response[0].hash
-    })
+  return promiseTimeout(5000, ipfsClient.add(configBuffer)).then(response => {
+    return response[0].hash
+  })
 }
 
 export async function getConfigFromIpfs(hash) {
-  return promiseTimeout(5000, ipfsClient.cat(hash))
-    .then((response) => {
-      return JSON.parse(response)
-    })
+  return promiseTimeout(5000, ipfsClient.cat(hash)).then(response => {
+    return JSON.parse(response)
+  })
 }
