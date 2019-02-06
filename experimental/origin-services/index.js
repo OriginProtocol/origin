@@ -1,3 +1,4 @@
+const { spawn } = require('child_process')
 const Ganache = require('ganache-core')
 const HttpIPFS = require('ipfs/src/http')
 const ipfsAPI = require('ipfs-api')
@@ -92,6 +93,29 @@ const populateIpfs = () =>
     )
   })
 
+const deployContracts = () =>
+  new Promise((resolve, reject) => {
+    const originContractsPath = '../../origin-contracts/'
+    const truffleMigrate = spawn(
+      `./node_modules/.bin/truffle`,
+      ['migrate', '--reset'],
+      {
+        cwd: originContractsPath,
+        stdio: 'inherit',
+        env: process.env
+      }
+    )
+    truffleMigrate.on('exit', code => {
+      if (code === 0) {
+        console.log('Truffle migrate finished OK.')
+        resolve()
+      } else {
+        reject('Truffle migrate failed.')
+        reject()
+      }
+    })
+  })
+
 const started = {}
 
 module.exports = async function start(opts = {}) {
@@ -103,6 +127,11 @@ module.exports = async function start(opts = {}) {
       started.ganache = await startGanache(ganacheOpts)
     }
   }
+
+  if (opts.deployContracts) {
+    await deployContracts()
+  }
+
   if (opts.ipfs && !started.ipfs) {
     if (await portInUse(5002)) {
       console.log('IPFS already started')
