@@ -33,7 +33,13 @@ export default class Reviews extends Component {
 
           return (
             <div className="reviews">
-              <h3>{`Reviews ${count}`}</h3>
+              <h3>
+                <fbt desc="reviews.heading">
+                  <fbt:plural count={count} showCount="yes">
+                    Review
+                  </fbt:plural>
+                </fbt>
+              </h3>
               {reviews.map((review, idx) => {
                 const profile = get(review, 'reviewer.account.identity') || {}
                 return (
@@ -49,7 +55,9 @@ export default class Reviews extends Component {
                       <Avatar size="4rem" avatar={profile.avatar} />
                       <div className="user">
                         <div className="name">
-                          {profile.fullName || <fbt desc="reviews.unamedUser">Unnamed User</fbt>}
+                          {profile.fullName || (
+                            <fbt desc="reviews.unamedUser">Unnamed User</fbt>
+                          )}
                         </div>
                         <EthAddress address={review.reviewer.id} />
                       </div>
@@ -64,9 +72,7 @@ export default class Reviews extends Component {
               })}
               {this.state.lastReviewShown < count ? (
                 <div className="read-more btn" onClick={this.readMore}>
-                  <fbt desc="reviews.readMore">
-                    Read More
-                  </fbt>
+                  <fbt desc="reviews.readMore">Read More</fbt>
                   <img className="read-more-caret" />
                 </div>
               ) : null}
