@@ -10,9 +10,6 @@ export default gql`
     }
     marketplace {
       listing(id: $listingId) {
-        # START workaround
-        # graphql-tools' mergeSchemas doesn't merge without errors, so this
-        # workaround is required
         ...basicListingFields
         ... on Listing {
           events {
@@ -31,7 +28,6 @@ export default gql`
             }
           }
         }
-        # START workaround
       }
     }
   }

@@ -5,9 +5,6 @@ export default gql`
   query Listing($listingId: ID!) {
     marketplace {
       listing(id: $listingId) {
-        # START workaround
-        # graphql-tools' mergeSchemas doesn't merge without errors, so this
-        # workaround is required
         ...basicListingFields
         ... on Listing {
           allOffers {
@@ -29,7 +26,6 @@ export default gql`
             }
           }
         }
-        # END workaround
       }
     }
   }
