@@ -2,10 +2,10 @@ import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplac
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
 import TokenContract from 'origin-contracts/build/contracts/TestToken'
 import IdentityEventsContract from 'origin-contracts/build/contracts/IdentityEvents'
-import UserRegistryContract from 'origin-contracts/build/contracts/V00_UserRegistry'
 
 import Web3 from 'web3'
 import EventSource from 'origin-eventsource'
+import get from 'lodash/get'
 
 import eventCache from './utils/eventCache'
 import genericEventCache from './utils/genericEventCache'
@@ -154,19 +154,13 @@ export function setNetwork(net, customConfig) {
   } else if (net === 'localhost') {
     config.OriginToken =
       window.localStorage.OGNContract ||
-      OriginTokenContract.networks['999'].address
+      get(OriginTokenContract, 'networks.999.address')
     config.V00_Marketplace =
       window.localStorage.marketplaceContract ||
-      MarketplaceContract.networks['999'].address
-    config.V00_UserRegistry =
-      window.localStorage.userRegistryContract ||
-      UserRegistryContract.networks['999'].address
+      get(MarketplaceContract, 'networks.999.address')
     config.IdentityEvents =
       window.localStorage.identityEventsContract ||
-      IdentityEventsContract.networks['999'].address
-
-    console.log(MarketplaceContract.networks['999'].address)
-    console.log(config)
+      get(IdentityEventsContract, 'networks.999.address')
   }
   context.net = net
   context.config = config
