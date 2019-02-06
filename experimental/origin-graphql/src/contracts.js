@@ -5,6 +5,7 @@ import IdentityEventsContract from 'origin-contracts/build/contracts/IdentityEve
 
 import Web3 from 'web3'
 import EventSource from 'origin-eventsource'
+import get from 'lodash/get'
 
 import eventCache from './utils/eventCache'
 import genericEventCache from './utils/genericEventCache'
@@ -151,10 +152,15 @@ export function setNetwork(net, customConfig) {
   if (net === 'test') {
     config = { ...config, ...customConfig }
   } else if (net === 'localhost') {
-    config.OriginToken = window.localStorage.OGNContract
-    config.V00_Marketplace = window.localStorage.marketplaceContract
-    config.V00_UserRegistry = window.localStorage.userRegistryContract
-    config.IdentityEvents = window.localStorage.identityEventsContract
+    config.OriginToken =
+      window.localStorage.OGNContract ||
+      get(OriginTokenContract, 'networks.999.address')
+    config.V00_Marketplace =
+      window.localStorage.marketplaceContract ||
+      get(MarketplaceContract, 'networks.999.address')
+    config.IdentityEvents =
+      window.localStorage.identityEventsContract ||
+      get(IdentityEventsContract, 'networks.999.address')
   }
   context.net = net
   context.config = config
@@ -200,18 +206,8 @@ export function setNetwork(net, customConfig) {
 
   context.EventBlock = config.V00_Marketplace_Epoch || 0
 
-  context.identityEvents = new web3.eth.Contract(
-    IdentityEventsContract.abi,
-    config.IdentityEvents
-  )
-  context.identityEvents.eventCache = genericEventCache(
-    context.identityEvents,
-    config.IdentityEvents_Epoch,
-    context.web3,
-    context.config,
-    config.IdentityEvents_EventCache
-  )
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
+  setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
   if (typeof window !== 'undefined') {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
@@ -351,12 +347,32 @@ export function setMarketplace(address, epoch) {
       MarketplaceContract.abi,
       address
     )
+    if (metaMaskEnabled) {
+      context.marketplaceExec = context.marketplaceMM
+    }
+  }
+}
+
+export function setIdentityEvents(address, epoch) {
+  context.identityEvents = new web3.eth.Contract(
+    IdentityEventsContract.abi,
+    address
+  )
+  context.identityEvents.eventCache = genericEventCache(
+    context.identityEvents,
+    epoch,
+    context.web3,
+    context.config,
+    context.config.IdentityEvents_EventCache
+  )
+  context.identityEventsExec = context.identityEvents
+
+  if (metaMask) {
     context.identityEventsMM = new metaMask.eth.Contract(
       IdentityEventsContract.abi,
       context.identityEvents.options.address
     )
     if (metaMaskEnabled) {
-      context.marketplaceExec = context.marketplaceMM
       context.identityEventsExec = context.identityEventsMM
     }
   }
