@@ -1,14 +1,14 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query Room($id: String!, $wallet: String) {
+  query Room($id: String!) {
     messaging(id: "defaultAccount") {
       id
       enabled
-      conversation(id: $id, wallet: $wallet) {
+      conversation(id: $id) {
         id
         timestamp
-        totalUnread(wallet: $wallet)
+        totalUnread
         messages {
           address
           content

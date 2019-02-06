@@ -19,22 +19,4 @@ const MessagingQuery = gql`
   }
 `
 
-// const MessagingQuery = gql`
-//   query WalletStatus {
-//     web3 {
-//       metaMaskAccount {
-//         id
-//       }
-//     }
-//     messaging(id: "defaultAccount") {
-//       id
-//       pubKey
-//       pubSig
-//       enabled
-//       synced
-//       syncProgress
-//     }
-//   }
-// `
-
 export default MessagingQuery

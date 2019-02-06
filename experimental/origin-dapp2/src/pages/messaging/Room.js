@@ -69,32 +69,35 @@ class AllMessages extends Component {
     if (this.el) {
       this.el.scrollTop = this.el.scrollHeight
     }
+    if (this.props.markRead) {
+      this.props.markRead()
+    }
   }
   componentDidUpdate(prevProps) {
-    if (this.props.messages.length > prevProps.messages.length) {
+    if (this.props.messages.length !== prevProps.messages.length) {
       this.el.scrollTop = this.el.scrollHeight
+      if (this.props.markRead) {
+        this.props.markRead()
+      }
+    }
+    if (this.props.markRead && this.props.convId !== prevProps.convId) {
+      this.props.markRead()
     }
   }
   render() {
-    const { messages, wallet } = this.props
+    const { messages } = this.props
 
     return (
       <div className="messages" ref={el => (this.el = el)}>
-        {messages.map((message, idx) => {
-          const messageAddress = get(message, 'address')
-          const isUser = wallet === messageAddress
-          const walletProp = isUser ? wallet : messageAddress
-
-          return (
-            <MessageWithIdentity
-              message={message}
-              lastMessage={idx > 0 ? messages[idx - 1] : null}
-              key={idx}
-              wallet={walletProp}
-              isUser={isUser}
-            />
-          )
-        })}
+        {messages.map((message, idx) => (
+          <MessageWithIdentity
+            message={message}
+            lastMessage={idx > 0 ? messages[idx - 1] : null}
+            key={idx}
+            wallet={get(message, 'address')}
+            isUser={this.props.wallet === get(message, 'address')}
+          />
+        ))}
       </div>
     )
   }
@@ -102,13 +105,18 @@ class AllMessages extends Component {
 
 class Room extends Component {
   render() {
-    const { id, wallet, updateMessages } = this.props
-
+    const { id, wallet, markRead } = this.props
     return (
       <div className="container">
-        <Query query={query} pollInterval={2000} variables={{ id, wallet }}>
-          {({ error, data, loading, refetch }) => {
-            if (loading) {
+        <Query
+          query={query}
+          pollInterval={2000}
+          variables={{ id }}
+          skip={!id}
+          notifyOnNetworkStatusChange={true}
+        >
+          {({ error, data, networkStatus }) => {
+            if (networkStatus === 1) {
               return <div>Loading...</div>
             } else if (error) {
               return <QueryError query={query} error={error} />
@@ -117,19 +125,14 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
-            const totalUnread = get(
-              data,
-              'messaging.conversation.totalUnread',
-              0
-            )
-            if (totalUnread > 0) {
-              const id = get(data, 'messaging.conversation.id', '')
-              updateMessages({ variables: { id, wallet } })
-              refetch()
-            }
             return (
               <>
-                <AllMessages messages={messages} wallet={wallet} />
+                <AllMessages
+                  messages={messages}
+                  wallet={wallet}
+                  convId={id}
+                  markRead={() => markRead({ variables: { id } })}
+                />
                 <SendMessage to={this.props.id} />
               </>
             )

@@ -1069,8 +1069,6 @@ class Messaging {
     )
     messageStatuses[hash] = status
     localStorage.setItem(scopedStatusesKeyName, JSON.stringify(messageStatuses))
-
-    return { hash, status }
   }
 }
 

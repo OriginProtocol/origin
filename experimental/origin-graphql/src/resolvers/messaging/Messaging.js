@@ -1,5 +1,7 @@
 import contracts from '../../contracts'
 
+import { totalUnread } from './Conversation'
+
 export default {
   conversations: () =>
     new Promise(async resolve => {
@@ -26,15 +28,11 @@ export default {
       ? true
       : false
   },
-  totalUnread: () => {
-    new Promise(async resolve => {
-      const convos = await contracts.messaging.getMyConvs()
-      const ids = Object.keys(convos).map(id => id)
-      const messages = await contracts.messaging.getAllMessages(ids[0])
-
-      console.log('ARE THERE MESSAGES IN THE RESOLVER?', messages)
-      resolve(0)
-    })
+  totalUnread: async () => {
+    const convos = await contracts.messaging.getMyConvs()
+    const ids = Object.keys(convos)
+    const allUnreads = await Promise.all(ids.map(c => totalUnread(c)))
+    return allUnreads.reduce((m, o) => m + o, 0)
   },
   synced: () => {
     if (contracts.messaging.globalKeyServer) return true
