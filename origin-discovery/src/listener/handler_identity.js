@@ -1,5 +1,7 @@
 const logger = require('./logger')
 
+const db = require('../models')
+
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 const { AttestationServiceToEventType, GrowthEvent } = require('origin-growth/src/resources/event')
 
@@ -12,15 +14,27 @@ class IdentityEventHandler {
 
   /**
    * Indexes a user in the DB.
-   * @param {Object} user - Origin js user model object.
+   * @param {models.User} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<void>}
    * @private
    */
   async _indexUser(user, blockInfo) {
-    // TODO(franck): implement me
-    logger.debug(`Indexing user ${user.address} blockInfo ${blockInfo}`)
-    return
+    logger.info(`Indexing user ${user.address} in DB.`)
+    const userData = {
+      ethAddress: user.address.toLowerCase(),
+      firstName: user.profile.firstName,
+      lastName: user.profile.lastName,
+      data: { blockInfo }
+    }
+    user.attestations.forEach(attestation => {
+      if (attestation.service === 'email') {
+        userData.email = attestation.data.attestation.email
+      } else if (attestation.service === 'phone') {
+        userData.phone = attestation.data.attestation.phone
+      }
+    })
+    db.User.upsert(userData)
   }
 
   /**
@@ -121,6 +135,11 @@ class IdentityEventHandler {
   // Do not call discord webhook for identity events.
   discordWebhookEnabled() {
     return false
+  }
+
+  // Call the webhook to add the user's email to Origin's mailing list.
+  emailWebhookEnabled() {
+    return true
   }
 }
 

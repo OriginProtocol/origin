@@ -24,17 +24,17 @@ module.exports = {
       data: {
         type: Sequelize.JSONB
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable(tableName)
   }
-};
+}

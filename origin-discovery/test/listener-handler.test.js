@@ -40,7 +40,10 @@ describe('Listener Handlers', () => {
       const fakeUser = {
         address: seller,
         profile: { firstName: 'foo', lastName: 'bar', avatar: '0xABCDEF' },
-        attestations: [ { service: 'email' }, { service: 'phone' } ]
+        attestations: [
+          { service: 'email', data: { attestation: { email: 'toto@spirou.com' } } },
+          { service: 'phone', data: { attestation: { phone: '+33 0555875838' } } }
+        ]
       }
       this.users = {}
       this.users.get = sinon.fake.returns(fakeUser)
@@ -52,6 +55,7 @@ describe('Listener Handlers', () => {
       this.process = sinon.fake.returns({})
       this.webhookEnabled = sinon.fake.returns(false)
       this.discordWebhookEnabled = sinon.fake.returns(false)
+      this.emailWebhookEnabled = sinon.fake.returns(false)
     }
   }
 
@@ -139,6 +143,7 @@ describe('Listener Handlers', () => {
     expect(this.marketplaceRule.handler.process.calledOnce).to.equal(true)
     expect(this.marketplaceRule.handler.webhookEnabled.calledOnce).to.equal(true)
     expect(this.marketplaceRule.handler.discordWebhookEnabled.calledOnce).to.equal(true)
+    expect(this.marketplaceRule.handler.emailWebhookEnabled.calledOnce).to.equal(true)
   })
 
   it(`Marketplace`, async () => {
@@ -172,7 +177,13 @@ describe('Listener Handlers', () => {
     expect(result.user).to.be.an('object')
     expect(result.user.address).to.equal(this.seller)
 
-    // Check expected rows were inserted in the DB.
+    // Check expected entry was added into user DB table.
+    const user = await db.User.findAll({
+      where: {
+        ethAddress: this.seller, firstName: 'foo', lastName: 'bar', email: 'toto@spirou.com', phone: '+33 0555875838' } })
+    expect(user.length).to.equal(1)
+
+    // Check expected growth rows were inserted in the DB.
     const profileEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.ProfilePublished, null)
     expect(profileEvents.length).to.equal(1)
     const emailEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.EmailAttestationPublished, null)
