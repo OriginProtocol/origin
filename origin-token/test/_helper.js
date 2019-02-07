@@ -1,4 +1,3 @@
-const assert = require('assert')
 const fs = require('fs')
 const solc = require('solc')
 const linker = require('solc/linker')
@@ -22,9 +21,6 @@ const solidityCoverage = process.env['SOLIDITY_COVERAGE'] !== undefined
 const defaultProvider = solidityCoverage
   ? 'ws://localhost:8555'
   : 'ws://localhost:7545'
-const contractPath = solidityCoverage
-  ? `${__dirname}/../../coverageEnv/contracts`
-  : `${__dirname}/../origin-contracts/contracts`
 
 // Instantiate a web3 instance. Start a node if one is not already running.
 async function web3Helper(provider = defaultProvider) {
@@ -263,34 +259,5 @@ async function server(web3, provider) {
   return server
 }
 
-// Asserts unless the given promise leads to an EVM revert.
-// Ported from OpenZeppelin.
-async function assertRevert(promise) {
-  try {
-    await promise
-  } catch (error) {
-    const revertFound = error.message.search('revert') >= 0
-    assert(revertFound, `Expected "revert", got ${error} instead`)
-    return
-  }
-  assert.fail('Expected revert not received')
-}
-
-/**
- * Asserts that the given promise throws an error with the given message.
- * @param {message} message - Message we expect to find in the exception.
- * @param {promise} promise - A promise that we expect to be rejected.
- */
-async function assertRevertWithMessage(message, promise) {
-  try {
-    await promise
-  } catch (error) {
-    const revertFound = error.message.search('revert') >= 0
-    assert(revertFound, `Expected "revert", got ${error} instead`)
-    assert(error.message.match(message))
-    return
-  }
-  assert.fail('Expected revert not received')
-}
 
 module.exports = testHelper
