@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import pick from 'lodash/pick'
+import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
@@ -44,21 +45,26 @@ const ProfileFields = [
   'emailVerified'
 ]
 
+function getState(profile) {
+  return {
+    firstName: '',
+    lastName: '',
+    description: '',
+    avatar: '',
+    ...pickBy(pick(profile, ProfileFields), k => k)
+  }
+}
+
 class UserProfile extends Component {
   constructor(props) {
     super(props)
     const profile = get(props, 'identity')
-    this.state = {
-      firstName: '',
-      lastName: '',
-      description: '',
-      ...pick(profile, ProfileFields)
-    }
+    this.state = getState(profile)
   }
 
   componentDidUpdate(prevProps) {
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
-      this.setState(pick(get(this.props, 'identity'), ProfileFields))
+      this.setState(getState(get(this.props, 'identity')))
     }
   }
 
