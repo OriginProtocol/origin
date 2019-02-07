@@ -17,40 +17,49 @@ class ColorPicker extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
-  handleClick () {
+  handleClick() {
     this.setState({ displayColorPicker: !this.state.displayColorPicker })
   }
 
-  handleClose () {
+  handleClose() {
     this.setState({ displayColorPicker: false })
   }
 
-  handleChange (color) {
+  handleChange(color) {
     this.props.onChange(this.props.name, color)
   }
 
-  colorStyle () {
+  colorStyle() {
     return {
       background: this.props.config[this.props.name]
     }
   }
 
-  render () {
+  render() {
     return (
       <div>
         <div className="wrapper">
           <div className="swatch" onClick={this.handleClick}>
             <div className="color" style={this.colorStyle()} />
             <div className="arrow">
-              <div className={this.state.displayColorPicker ? 'arrow-up' : 'arrow-down' }></div>
+              <div
+                className={
+                  this.state.displayColorPicker ? 'arrow-up' : 'arrow-down'
+                }
+              />
             </div>
           </div>
           <div className="description">{this.props.description}</div>
         </div>
-        { this.state.displayColorPicker ? <div className="popover">
-          <div className="cover" onClick={this.handleClose} />
-          <SketchPicker color={this.props.config[this.props.name]} onChange={this.handleChange} />
-        </div> : null }
+        {this.state.displayColorPicker ? (
+          <div className="popover">
+            <div className="cover" onClick={this.handleClose} />
+            <SketchPicker
+              color={this.props.config[this.props.name]}
+              onChange={this.handleChange}
+            />
+          </div>
+        ) : null}
       </div>
     )
   }

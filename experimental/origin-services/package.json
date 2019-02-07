@@ -17,13 +17,13 @@
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
   "dependencies": {
-    "ganache-core": "2.2.0",
+    "ganache-core": "2.4.0",
     "ipfs-api": "^26.1.2",
-    "ipfs": "^0.33.1",
+    "ipfs": "^0.34.4",
     "memdown": "^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.12.1",
+    "eslint": "^5.13.0",
     "prettier": "^1.16.3"
   },
   "prettier": {

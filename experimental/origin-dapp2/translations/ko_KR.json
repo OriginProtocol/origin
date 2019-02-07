@@ -493,6 +493,13 @@
         }
       ]
     },
+    "sE0eEFlR5m3fPUre2lWWIQ==": {
+      "translations": [
+        {
+          "translation": "리뷰"
+        }
+      ]
+    },
     "HIYV/KBfsIx14LvOIIcHwg==": {
       "translations": [
         {
@@ -528,6 +535,48 @@
         }
       ]
     },
+    "FZM+4dSeaJtxGRqoWyFY7g==": {
+      "translations": [
+        {
+          "translation": "Airbnb 계정을 확인합니다"
+        }
+      ]
+    },
+    "33EPBwLfS9o3lGs62U+89w==": {
+      "translations": [
+        {
+          "translation": "아래에 Airbnb 프로필 Url을 입력하세요."
+        }
+      ]
+    },
+    "QfLmm1Y/WUbCRLJtHN4WAg==": {
+      "translations": [
+        {
+          "translation": "다른 사용자가 당신이 확인된 Airbnb 프로필을 가지고 있음을 알 수 있습니다."
+        }
+      ]
+    },
+    "564ZWrRXu95BNouIaSXuYQ==": {
+      "translations": [
+        {
+          "translation": "취소"
+        }
+      ]
+    },
+    "3SSVIaE/i8UtPArlfLYLow==": {
+      "translations": [
+        {
+          "translation": "Airbnb 웹사이트로 이동하여 프로필 수정하기에서 다음의 문구를 프로필 설명란에 붙여넣기 하십시오."
+        }
+      ]
+    },
+    "VQZu4ySJiecJDDKhwmZvlA==": {
+      "translations": [
+        {
+          "translation": "당신의 Airbnb 프로필에 확인 코드를 입력한 후 계속합니다."
+        }
+      ]
+    },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
@@ -553,6 +602,76 @@
       "translations": [
         {
           "translation": "판매"
+        }
+      ]
+    },
+    "VW+rdneKehxRKMdZLVmIVQ==": {
+      "translations": [
+        {
+          "translation": "상세내용이 없는 Origin 사용자"
+        }
+      ]
+    },
+    "UIdfC16+vG+mJVKO27x/BQ==": {
+      "translations": [
+        {
+          "translation": "Origin 에 자신을 입증하기"
+        }
+      ]
+    },
+    "HEVHfHEPEpTtceUGDpiIuQ==": {
+      "translations": [
+        {
+          "translation": "Origin 에 당신의 신원을 강화하기 위해 아래에 계정을 연결하시기 바랍니다."
+        }
+      ]
+    },
+    "1WvCkB72shgiqmL7zGjDaQ==": {
+      "translations": [
+        {
+          "translation": "전화 번호"
+        }
+      ]
+    },
+    "iAM26VLlFC2eYwvxMiamSw==": {
+      "translations": [
+        {
+          "translation": "이메일"
+        }
+      ]
+    },
+    "XO4xeA76zqUFE3pRTcxEkA==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
+    },
+    "ODnFYmb8u9sMKJ4AFiZs9g==": {
+      "translations": [
+        {
+          "translation": "페이스북"
+        }
+      ]
+    },
+    "lZG5rsJQfdkgo3Q+WVNgug==": {
+      "translations": [
+        {
+          "translation": "트위터"
+        }
+      ]
+    },
+    "Wv2V0lIW3vp91Vdq6gBmEg==": {
+      "translations": [
+        {
+          "translation": "지금 게시"
+        }
+      ]
+    },
+    "dqAA0K4wHnKPEwSR3HPYfQ==": {
+      "translations": [
+        {
+          "translation": "프로필을 확인하면 다른 사용자가 귀하가 진짜 사람이라는 것을 알게되고 Origin에서 성공적인 거래 기회가 증가합니다."
         }
       ]
     }

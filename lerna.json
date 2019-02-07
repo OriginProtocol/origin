@@ -15,12 +15,14 @@
     "origin-mobile",
     "origin-notifications",
     "origin-tests",
+    "origin-token",
     "origin-token-transfer/*"
   ],
   "command": {
     "bootstrap": {
       "nohoist": [
-        "openzeppelin-solidity"
+        "openzeppelin-solidity",
+        "babel-plugin-fbt"
       ]
     }
   },

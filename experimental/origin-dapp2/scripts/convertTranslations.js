@@ -31,11 +31,9 @@ convert.forEach(lang => {
         m[phrase.jsfbt.t[k]] = k
         return m
       }, {})
-      // console.log(reverseLookup)
 
       keys.forEach(hash => {
         const value = phrase.hashToText[hash]
-        console.log(langMsgs[reverseLookup[value]])
         translations[hash] = {
           translations: [{ translation: langMsgs[reverseLookup[value]] }]
         }

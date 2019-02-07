@@ -75,11 +75,20 @@
     "schema.resumes": "Mga resume",
     "schema.volunteers": "Mga nagboluntaryo"
   },
+  "odYsB": "Mga Review",
+  "3tmHza": "Unnamed User",
+  "48NbPX": "Read More",
   "1VUOGf": "Ang Pinagmulan ng desentralisadong app ay nagbibigay-daan sa mga mamimili at nagbebenta na mag-transact nang walang renta-naghahanap ng mga middleman gamit ang Ethereum blockchain at IPFS.",
   "3dlcbL": "Bisitahin ang aming Website",
   "421TH8": "Bisitahin ang aming Github",
   "1xF0Sp": "Bumibili",
   "3i2AJC": "Magdagdag ng listahan",
+  "1r15SU": "I-verify ang iyong Airbnb account",
+  "4iptAy": "Ilagay ang Airbnb profile Url sa ibaba",
+  "1jSLWC": "Malalaman ng iba pang mga user na mayroon kang isang na-verify na profile ng Airbnb.",
+  "561FZ": "Kanselahin",
+  "47VMoo": "Magpunta sa website ng Airbnb, i-edit ang iyong profile at ilagay ang sumusunod na teksto sa profile description.",
+  "4ppTCb": "Magpatuloy kapag nailagay na ang confirmation code sa iyong profile ng Airbnb.",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -87,5 +96,16 @@
   "3rmh0I": "Aking listahan",
   "3XSqx1": "Mga Nabenta ko",
   "3r7Eno": "Magdagdag ng listahan",
-  "1fjQH9": "Nagbebenta"
+  "1fjQH9": "Nagbebenta",
+  "lJvsj": "Isang user ng Origin na walang deskripsyon",
+  "VNGm0": "I-verify ang iyong sarili sa Origin",
+  "16SFVz": "Mangyaring ikonekta ang iyong account sa ibaba upang mapalakas ang iyong pagkakakilanlan sa Origin.",
+  "22Zo9i": "Numero ng telepono",
+  "EveNT": "Email",
+  "3d9Oik": "Airbnb",
+  "3i99JU": "Facebook",
+  "JDc0Z": "Twitter",
+  "3blg9A": "I-publish na ngayon",
+  "edtCZ": "Ang pag-verify ng iyong profile ay nagbibigay-daan sa ibang mga gumagamit na malaman na ikaw ay isang tunay na tao at pinatataas ang mga pagkakataon ng mga matagumpay na transaksyon sa Pinagmulan.",
+  "3xBWtA": "Verifying your profile"
 }

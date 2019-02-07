@@ -23,8 +23,9 @@
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@babel/register": "^7.0.0",
-    "apollo-link-http": "^1.5.9",
+    "apollo-link-http": "^1.5.10",
     "dayjs": "^1.8.0",
+    "json-stable-stringify-without-jsonify": "^1.0.1",
     "mocha": "^5.2.0",
     "origin-eventsource": "^0.1.0",
     "origin-ipfs": "^0.1.0",
@@ -65,8 +66,8 @@
     "ajv": "^6.7.0",
     "apollo-cache-inmemory": "^1.4.2",
     "apollo-client": "^2.4.12",
-    "apollo-link": "^1.2.6",
-    "apollo-link-schema": "^1.1.4",
+    "apollo-link": "^1.2.7",
+    "apollo-link-schema": "^1.1.5",
     "apollo-server": "^2.3.3",
     "debug": "^4.1.1",
     "graphql": "^14.1.1",
@@ -78,7 +79,7 @@
     "node-fetch": "^2.3.0",
     "origin-contracts": "^0.8.6",
     "subscriptions-transport-ws": "^0.9.15",
-    "web3": "1.0.0-beta.37",
+    "web3": "1.0.0-beta.34",
     "webpack": "^4.29.0"
   }
 }

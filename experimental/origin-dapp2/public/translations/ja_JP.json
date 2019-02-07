@@ -75,11 +75,20 @@
     "schema.resumes": "履歴書",
     "schema.volunteers": "ボランティア"
   },
+  "odYsB": "レビュー",
+  "3tmHza": "Unnamed User",
+  "48NbPX": "Read More",
   "1VUOGf": "Originの分散アプリケーションにより、買い手と売り手は、EthereumブロックチェーンとIPFSを使用して、仲介料を必要とする仲介人を介する事無く取引できます。",
   "3dlcbL": "当社のウェブサイトを見る",
   "421TH8": "Githubを見る",
   "1xF0Sp": "購入",
   "3i2AJC": "掲載を追加する",
+  "1r15SU": "Airbnb アカウントを認証してください。",
+  "4iptAy": "Airbnbの プロフィールURLを入力してください",
+  "1jSLWC": "他のユーザーは、あなたが認証されたAirbnbプロフィールを持っている事がわかるようになります。",
+  "561FZ": "キャンセル",
+  "47VMoo": "Airbnbのプロフィールを編集から、下記のテキストをプロフィールの説明に貼り付けてください。",
+  "4ppTCb": "Airbnb プロフィールに確認コードを入力してから続けます。",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -87,5 +96,16 @@
   "3rmh0I": "マイリスト",
   "3XSqx1": "販売履歴",
   "3r7Eno": "掲載を追加する",
-  "1fjQH9": "販売"
+  "1fjQH9": "販売",
+  "lJvsj": "Originユーザー（備考の記載なし）",
+  "VNGm0": "あなたの情報をOrigin上で認証してください",
+  "16SFVz": "Origin上のあなたのアイデンティティを強化するため、下記のアカウントに接続してください。",
+  "22Zo9i": "電話番号",
+  "EveNT": "Eメール",
+  "3d9Oik": "Airbnb",
+  "3i99JU": "Facebook",
+  "JDc0Z": "Twitter",
+  "3blg9A": "今すぐ公開",
+  "edtCZ": "貴方のプロフィールがOriginに承認されると、他のユーザーがあなたが実在する人物であることを知る助けになります。また、Origin上での取引の増加にも寄与します。",
+  "3xBWtA": "Verifying your profile"
 }

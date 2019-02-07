@@ -75,11 +75,20 @@
     "schema.resumes": "Özgeçmişler",
     "schema.volunteers": "Gönüllüler"
   },
+  "odYsB": "yorumlar",
+  "3tmHza": "Unnamed User",
+  "48NbPX": "Read More",
   "1VUOGf": "Kökeni merkezi olmayan uygulama, alıcıların ve satıcıların Ethereum blockchain ve IPFS kullanarak aracı arama yapmadan arama yapabilmelerini sağlar.",
   "3dlcbL": "İnternet sitemizi ziyaret edin",
   "421TH8": "Github'umuzu ziyaret edin",
   "1xF0Sp": "Alış",
   "3i2AJC": "Bir İlan Ekle",
+  "1r15SU": "Airbnb hesabınızı doğrulayın",
+  "4iptAy": "Aşağıdan Airbnb profili Url girin",
+  "1jSLWC": "Diğer kullanıcılar doğrulanmış bir Airbnb profiline sahip olduğunuzu bileceklerdir.",
+  "561FZ": "İptal etmek",
+  "47VMoo": "Airbnb web sitesine gidin, profilinizi düzenleyin ve aşağıdaki metni profil açıklamasına yapıştırın.",
+  "4ppTCb": "Airbnb profilinize onay kodu girildiğinde devam edin.",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -87,5 +96,16 @@
   "3rmh0I": "Listelerim",
   "3XSqx1": "Satışlarım",
   "3r7Eno": "Bir İlan Ekle",
-  "1fjQH9": "Satış"
+  "1fjQH9": "Satış",
+  "lJvsj": "Açıklama içermeyen bir Origin kullanıcısı",
+  "VNGm0": "Kendinizi Origin'de doğrulayın",
+  "16SFVz": "Kökeninizi kimliğinizi güçlendirmek için lütfen aşağıdaki hesaplarınızı bağlayın.",
+  "22Zo9i": "Telefon numarası",
+  "EveNT": "E-posta",
+  "3d9Oik": "Airbnb",
+  "3i99JU": "Facebook",
+  "JDc0Z": "heyecan",
+  "3blg9A": "Şimdi yayınla",
+  "edtCZ": "Profilinizi doğrulamak, diğer kullanıcıların gerçek bir kişi olduğunuzu bilmesine ve Kökeni başarılı işlem yapma şansını artırmasına izin verir.",
+  "3xBWtA": "Verifying your profile"
 }

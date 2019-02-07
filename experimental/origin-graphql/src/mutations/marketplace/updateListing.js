@@ -1,6 +1,7 @@
 import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 import { listingInputToIPFS } from './createListing'
 
@@ -49,7 +50,7 @@ async function updateListing(_, args) {
     )
   }
 
-  const tx = updateListingCall.send({ gas: 4612388, from })
+  const tx = updateListingCall.send({ gas: cost.updateListing, from })
   return txHelper({ tx, from, mutation: 'updateListing' })
 }
 

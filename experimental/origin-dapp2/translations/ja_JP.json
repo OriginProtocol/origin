@@ -493,6 +493,13 @@
         }
       ]
     },
+    "sE0eEFlR5m3fPUre2lWWIQ==": {
+      "translations": [
+        {
+          "translation": "レビュー"
+        }
+      ]
+    },
     "HIYV/KBfsIx14LvOIIcHwg==": {
       "translations": [
         {
@@ -528,6 +535,48 @@
         }
       ]
     },
+    "FZM+4dSeaJtxGRqoWyFY7g==": {
+      "translations": [
+        {
+          "translation": "Airbnb アカウントを認証してください。"
+        }
+      ]
+    },
+    "33EPBwLfS9o3lGs62U+89w==": {
+      "translations": [
+        {
+          "translation": "Airbnbの プロフィールURLを入力してください"
+        }
+      ]
+    },
+    "QfLmm1Y/WUbCRLJtHN4WAg==": {
+      "translations": [
+        {
+          "translation": "他のユーザーは、あなたが認証されたAirbnbプロフィールを持っている事がわかるようになります。"
+        }
+      ]
+    },
+    "564ZWrRXu95BNouIaSXuYQ==": {
+      "translations": [
+        {
+          "translation": "キャンセル"
+        }
+      ]
+    },
+    "3SSVIaE/i8UtPArlfLYLow==": {
+      "translations": [
+        {
+          "translation": "Airbnbのプロフィールを編集から、下記のテキストをプロフィールの説明に貼り付けてください。"
+        }
+      ]
+    },
+    "VQZu4ySJiecJDDKhwmZvlA==": {
+      "translations": [
+        {
+          "translation": "Airbnb プロフィールに確認コードを入力してから続けます。"
+        }
+      ]
+    },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
@@ -553,6 +602,76 @@
       "translations": [
         {
           "translation": "販売"
+        }
+      ]
+    },
+    "VW+rdneKehxRKMdZLVmIVQ==": {
+      "translations": [
+        {
+          "translation": "Originユーザー（備考の記載なし）"
+        }
+      ]
+    },
+    "UIdfC16+vG+mJVKO27x/BQ==": {
+      "translations": [
+        {
+          "translation": "あなたの情報をOrigin上で認証してください"
+        }
+      ]
+    },
+    "HEVHfHEPEpTtceUGDpiIuQ==": {
+      "translations": [
+        {
+          "translation": "Origin上のあなたのアイデンティティを強化するため、下記のアカウントに接続してください。"
+        }
+      ]
+    },
+    "1WvCkB72shgiqmL7zGjDaQ==": {
+      "translations": [
+        {
+          "translation": "電話番号"
+        }
+      ]
+    },
+    "iAM26VLlFC2eYwvxMiamSw==": {
+      "translations": [
+        {
+          "translation": "Eメール"
+        }
+      ]
+    },
+    "XO4xeA76zqUFE3pRTcxEkA==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
+    },
+    "ODnFYmb8u9sMKJ4AFiZs9g==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "lZG5rsJQfdkgo3Q+WVNgug==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "Wv2V0lIW3vp91Vdq6gBmEg==": {
+      "translations": [
+        {
+          "translation": "今すぐ公開"
+        }
+      ]
+    },
+    "dqAA0K4wHnKPEwSR3HPYfQ==": {
+      "translations": [
+        {
+          "translation": "貴方のプロフィールがOriginに承認されると、他のユーザーがあなたが実在する人物であることを知る助けになります。また、Origin上での取引の増加にも寄与します。"
         }
       ]
     }

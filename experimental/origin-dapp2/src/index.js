@@ -10,6 +10,7 @@ import client from 'origin-graphql'
 import setLocale from 'utils/setLocale'
 
 import App from './pages/App'
+import Analytics from './components/Analytics'
 import './css/app.css'
 if (process.env.NODE_ENV === 'production') {
   try {
@@ -37,18 +38,19 @@ class AppWrapper extends Component {
 
   render() {
     if (!this.state.ready) return null
-
     return (
       <ApolloProvider client={client}>
         <HashRouter>
-          <App
-            locale={this.state.locale}
-            onLocale={async newLocale => {
-              const locale = await setLocale(newLocale)
-              this.setState({ locale })
-              window.scrollTo(0, 0)
-            }}
-          />
+          <Analytics>
+            <App
+              locale={this.state.locale}
+              onLocale={async newLocale => {
+                const locale = await setLocale(newLocale)
+                this.setState({ locale })
+                window.scrollTo(0, 0)
+              }}
+            />
+          </Analytics>
         </HashRouter>
       </ApolloProvider>
     )

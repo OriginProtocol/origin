@@ -493,6 +493,13 @@
         }
       ]
     },
+    "sE0eEFlR5m3fPUre2lWWIQ==": {
+      "translations": [
+        {
+          "translation": "Ulasan"
+        }
+      ]
+    },
     "HIYV/KBfsIx14LvOIIcHwg==": {
       "translations": [
         {
@@ -528,6 +535,48 @@
         }
       ]
     },
+    "FZM+4dSeaJtxGRqoWyFY7g==": {
+      "translations": [
+        {
+          "translation": "Verifikasi Akun Airbnb Anda"
+        }
+      ]
+    },
+    "33EPBwLfS9o3lGs62U+89w==": {
+      "translations": [
+        {
+          "translation": "Masukkan Url profil Airbnb di bawah ini"
+        }
+      ]
+    },
+    "QfLmm1Y/WUbCRLJtHN4WAg==": {
+      "translations": [
+        {
+          "translation": "Pengguna lain akan mengetahui bahwa Anda mempunyai profil Airbnb terverifikasi."
+        }
+      ]
+    },
+    "564ZWrRXu95BNouIaSXuYQ==": {
+      "translations": [
+        {
+          "translation": "Batalkan"
+        }
+      ]
+    },
+    "3SSVIaE/i8UtPArlfLYLow==": {
+      "translations": [
+        {
+          "translation": "Pergi ke website Airbnb, suting profil Anda dan tempel teks berikut ini ke deskripsi profil."
+        }
+      ]
+    },
+    "VQZu4ySJiecJDDKhwmZvlA==": {
+      "translations": [
+        {
+          "translation": "Lanjutkan setelah kode konfirmasi Anda dimasukkan dalam profil Airbnb Anda."
+        }
+      ]
+    },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
@@ -553,6 +602,76 @@
       "translations": [
         {
           "translation": "Menjual"
+        }
+      ]
+    },
+    "VW+rdneKehxRKMdZLVmIVQ==": {
+      "translations": [
+        {
+          "translation": "Pengguna Origin tanpa deskripsi"
+        }
+      ]
+    },
+    "UIdfC16+vG+mJVKO27x/BQ==": {
+      "translations": [
+        {
+          "translation": "Verifikasi diri Anda di Origin"
+        }
+      ]
+    },
+    "HEVHfHEPEpTtceUGDpiIuQ==": {
+      "translations": [
+        {
+          "translation": "Silakan sambungkan akun Anda di bawah ini untuk memperkuat identitas Anda di Origin."
+        }
+      ]
+    },
+    "1WvCkB72shgiqmL7zGjDaQ==": {
+      "translations": [
+        {
+          "translation": "Nomor Telepon"
+        }
+      ]
+    },
+    "iAM26VLlFC2eYwvxMiamSw==": {
+      "translations": [
+        {
+          "translation": "Email"
+        }
+      ]
+    },
+    "XO4xeA76zqUFE3pRTcxEkA==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
+    },
+    "ODnFYmb8u9sMKJ4AFiZs9g==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "lZG5rsJQfdkgo3Q+WVNgug==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "Wv2V0lIW3vp91Vdq6gBmEg==": {
+      "translations": [
+        {
+          "translation": "Publikasi Sekarang"
+        }
+      ]
+    },
+    "dqAA0K4wHnKPEwSR3HPYfQ==": {
+      "translations": [
+        {
+          "translation": "Memverifikasi profil Anda memungkinkan pengguna lain untuk mengetahui bahwa Anda adalah orang yang nyata dan meningkatkan peluang keberhasilan transaksi pada Origin."
         }
       ]
     }

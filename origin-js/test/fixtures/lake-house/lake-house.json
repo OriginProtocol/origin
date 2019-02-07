@@ -15,5 +15,31 @@
   "commission": {
     "currency": "OGN",
     "amount": "10"
-  }
+  },
+  "media": [
+    {
+      "url": "ipfs://QmTTNxNNQYUupKpbxRu5yUruSCasadBAeyNsw2RrRtG83S",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmTouE2NfAKB2AeVHf1u58181Uqb24Tj2zntrqjVz8BJL6",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmfBczWEtgkSAiq1LQ7cgYSxbw96fVbos2fB21qgjdhuPY",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmcDrQANRcL4pUpGxiaAVi36MpJ22QMCNKr4wAHSgYyTiF",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmZEdyf8mqmSQX6ty3u7APMoSQJVi1xjKMHNx5JefTdtpp",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmZ4SEkww3sDshWFRhvX239fUJXCwQ3GxqFkjWbii2LLK2",
+      "contentType": "image/jpeg"
+    }
+  ]
 }

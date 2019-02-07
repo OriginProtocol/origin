@@ -493,6 +493,13 @@
         }
       ]
     },
+    "sE0eEFlR5m3fPUre2lWWIQ==": {
+      "translations": [
+        {
+          "translation": "yorumlar"
+        }
+      ]
+    },
     "HIYV/KBfsIx14LvOIIcHwg==": {
       "translations": [
         {
@@ -528,6 +535,48 @@
         }
       ]
     },
+    "FZM+4dSeaJtxGRqoWyFY7g==": {
+      "translations": [
+        {
+          "translation": "Airbnb hesabınızı doğrulayın"
+        }
+      ]
+    },
+    "33EPBwLfS9o3lGs62U+89w==": {
+      "translations": [
+        {
+          "translation": "Aşağıdan Airbnb profili Url girin"
+        }
+      ]
+    },
+    "QfLmm1Y/WUbCRLJtHN4WAg==": {
+      "translations": [
+        {
+          "translation": "Diğer kullanıcılar doğrulanmış bir Airbnb profiline sahip olduğunuzu bileceklerdir."
+        }
+      ]
+    },
+    "564ZWrRXu95BNouIaSXuYQ==": {
+      "translations": [
+        {
+          "translation": "İptal etmek"
+        }
+      ]
+    },
+    "3SSVIaE/i8UtPArlfLYLow==": {
+      "translations": [
+        {
+          "translation": "Airbnb web sitesine gidin, profilinizi düzenleyin ve aşağıdaki metni profil açıklamasına yapıştırın."
+        }
+      ]
+    },
+    "VQZu4ySJiecJDDKhwmZvlA==": {
+      "translations": [
+        {
+          "translation": "Airbnb profilinize onay kodu girildiğinde devam edin."
+        }
+      ]
+    },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
@@ -553,6 +602,76 @@
       "translations": [
         {
           "translation": "Satış"
+        }
+      ]
+    },
+    "VW+rdneKehxRKMdZLVmIVQ==": {
+      "translations": [
+        {
+          "translation": "Açıklama içermeyen bir Origin kullanıcısı"
+        }
+      ]
+    },
+    "UIdfC16+vG+mJVKO27x/BQ==": {
+      "translations": [
+        {
+          "translation": "Kendinizi Origin'de doğrulayın"
+        }
+      ]
+    },
+    "HEVHfHEPEpTtceUGDpiIuQ==": {
+      "translations": [
+        {
+          "translation": "Kökeninizi kimliğinizi güçlendirmek için lütfen aşağıdaki hesaplarınızı bağlayın."
+        }
+      ]
+    },
+    "1WvCkB72shgiqmL7zGjDaQ==": {
+      "translations": [
+        {
+          "translation": "Telefon numarası"
+        }
+      ]
+    },
+    "iAM26VLlFC2eYwvxMiamSw==": {
+      "translations": [
+        {
+          "translation": "E-posta"
+        }
+      ]
+    },
+    "XO4xeA76zqUFE3pRTcxEkA==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
+    },
+    "ODnFYmb8u9sMKJ4AFiZs9g==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "lZG5rsJQfdkgo3Q+WVNgug==": {
+      "translations": [
+        {
+          "translation": "heyecan"
+        }
+      ]
+    },
+    "Wv2V0lIW3vp91Vdq6gBmEg==": {
+      "translations": [
+        {
+          "translation": "Şimdi yayınla"
+        }
+      ]
+    },
+    "dqAA0K4wHnKPEwSR3HPYfQ==": {
+      "translations": [
+        {
+          "translation": "Profilinizi doğrulamak, diğer kullanıcıların gerçek bir kişi olduğunuzu bilmesine ve Kökeni başarılı işlem yapma şansını artırmasına izin verir."
         }
       ]
     }

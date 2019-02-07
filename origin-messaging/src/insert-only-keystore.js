@@ -11,7 +11,7 @@ class InsertOnlyKeystore {
 
   getSignVerify(id) {
     const parts = id.split('/')
-    const end = parts[parts.length-1]
+    const end = parts[parts.length - 1]
 
     const obj = this._signVerifyRegistry[end]
     if (obj) return obj
@@ -51,7 +51,7 @@ class InsertOnlyKeystore {
       if (obj && obj.verifyFunc) {
         if (message.payload.op == 'PUT' || message.payload.op == 'ADD') {
           //verify all for now
-          if(obj.verifyFunc(signature, key, message, data)) {
+          if (obj.verifyFunc(signature, key, message, data)) {
             if (obj.postFunc) {
               obj.postFunc(message)
             }
@@ -59,7 +59,7 @@ class InsertOnlyKeystore {
           }
         }
       }
-    } catch(error) {
+    } catch (error) {
       console.log(error)
     }
 
