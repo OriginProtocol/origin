@@ -2,6 +2,7 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import configQuery from 'queries/Config'
 import contractsQuery from 'queries/AllContracts'
+import PageTitle from 'components/PageTitle'
 
 const DAPP_VERSION = require('../../../package.json').version
 
@@ -41,15 +42,16 @@ function totalSupply(supply, decimals) {
 
 const DappInfo = () => (
   <div className="container about-info">
-    <h1>About Dapp</h1>
+    <PageTitle>About DApp</PageTitle>
+    <h1>About DApp</h1>
     <p>
-      Developer information about this Dapp&#39;s current build and
+      Developer information about this DApp&#39;s current build and
       configuration.
     </p>
     <div className="row">
       <section className="col-lg-6">
         <table className="config-table">
-          {sectionThead({ title: 'Dapp' })}
+          {sectionThead({ title: 'DApp' })}
           <tbody>{dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}</tbody>
         </table>
 

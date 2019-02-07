@@ -33,7 +33,7 @@ class TransactionsNav extends Component {
           return (
             <Dropdown
               el="li"
-              className="nav-item confirmations"
+              className="nav-item confirmations d-none d-md-flex"
               open={this.props.open}
               onClose={() => this.props.onClose()}
               content={
@@ -162,6 +162,7 @@ require('react-styl')(`
           color: #000
           font-weight: bold;
           border-radius: 5px 0 0 0
+          white-space: nowrap
           .total
             background: var(--clear-blue)
             border-radius: 1rem

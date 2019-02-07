@@ -10,6 +10,7 @@ import TokenPrice from 'components/TokenPrice'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
+import PageTitle from 'components/PageTitle'
 
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/UserListings'
@@ -26,6 +27,7 @@ class Listings extends Component {
 
     return (
       <div className="container purchases">
+        <PageTitle>My Listings</PageTitle>
         <Query
           query={query}
           variables={vars}

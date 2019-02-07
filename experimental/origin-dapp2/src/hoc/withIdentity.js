@@ -12,13 +12,14 @@ function withIdentity(WrappedComponent, walletProp = 'wallet') {
     }
     return (
       <Query query={IdentityQuery} variables={{ id }}>
-        {({ data, networkStatus }) => {
+        {({ data, networkStatus, refetch }) => {
           const identity = get(data, 'web3.account.identity')
           return (
             <WrappedComponent
               {...props}
               identity={identity}
               identityLoading={networkStatus === 1}
+              identityRefetch={refetch}
             />
           )
         }}

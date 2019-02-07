@@ -19,12 +19,12 @@ class MetaMaskPrompt extends React.Component {
     this.publish = this.publish.bind(this)
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     const signature = await this.requestSignature()
     await this.publish(signature)
   }
 
-  async requestSignature () {
+  async requestSignature() {
     let signature
     try {
       signature = await this.props.signConfig()
@@ -40,7 +40,7 @@ class MetaMaskPrompt extends React.Component {
     })
   }
 
-  async publish () {
+  async publish() {
     try {
       await this.props.handlePublish(this.state.signature)
     } catch (error) {
@@ -54,34 +54,41 @@ class MetaMaskPrompt extends React.Component {
     })
   }
 
-  render () {
+  render() {
     return (
       <>
         {this.renderRedirect()}
-        {this.state.isError &&
+        {this.state.isError && (
           <div className="error">
             There was an error publishing your configuration.
             <div>
-              <button type="submit" className="btn btn-primary btn-lg" onClick={this.publish}>
+              <button
+                type="submit"
+                className="btn btn-primary btn-lg"
+                onClick={this.publish}
+              >
                 Retry
               </button>
             </div>
           </div>
-        }
-        {!this.state.isError &&
+        )}
+        {!this.state.isError && (
           <div className="metamask-prompt">
             <div>
               <MetaMaskCallToAction />
               <h1>Publish Your New DApp</h1>
-              <h4>Sign your configuration using MetaMask to complete the marketplace creation process.</h4>
+              <h4>
+                Sign your configuration using MetaMask to complete the
+                marketplace creation process.
+              </h4>
             </div>
           </div>
-        }
+        )}
       </>
     )
   }
 
-  renderRedirect () {
+  renderRedirect() {
     if (this.state.redirect !== null) {
       return <Redirect to={this.state.redirect} />
     }

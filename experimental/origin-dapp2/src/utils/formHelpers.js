@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const formInput = (state, setState, className) => field => ({
-  value: state[field],
+  value: state[field] || '',
   className: `form-control form-control-lg${
     state[`${field}Error`] ? ' is-invalid' : ''
   }${className ? ` ${className}` : ''}`,
@@ -15,6 +15,8 @@ export const formInput = (state, setState, className) => field => ({
 export const formFeedback = state =>
   function InvalidFeedback(field) {
     return state[`${field}Error`] ? (
-      <div className="invalid-feedback">{state[`${field}Error`]}</div>
+      <div className="invalid-feedback" style={{ display: 'block' }}>
+        {state[`${field}Error`]}
+      </div>
     ) : null
   }

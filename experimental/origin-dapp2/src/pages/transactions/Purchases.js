@@ -10,6 +10,7 @@ import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
+import PageTitle from 'components/PageTitle'
 
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/Purchases'
@@ -26,6 +27,7 @@ class Purchases extends Component {
 
     return (
       <div className="container purchases">
+        <PageTitle>My Purchases</PageTitle>
         <Query
           query={query}
           variables={vars}

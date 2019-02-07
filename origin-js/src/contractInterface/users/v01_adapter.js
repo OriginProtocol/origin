@@ -16,6 +16,16 @@ export default class V01_UsersAdapter {
     //   - attestation server key rotation
     //   - 3rd party attestation servers
     this.issuerAddress = attestationAccount
+    this.contract = null
+  }
+
+  async getContract() {
+    if (!this.contract) {
+      this.contract = await this.contractService.deployed(
+        this.contractService.contracts[this.contractName]
+      )
+    }
+    return this.contract
   }
 
   /**
@@ -81,6 +91,9 @@ export default class V01_UsersAdapter {
   async get(address) {
     const account = await this.contractService.currentAccount()
     address = address || account
+    if (!address) {
+      return false
+    }
 
     // Scan blockchain for identity events to get latest IPFS hash of identity, if any.
     const ipfsHash = await this._getIdentityIpfsHash(address)
@@ -123,14 +136,15 @@ export default class V01_UsersAdapter {
    * @private
    */
   async _getIdentityIpfsHash(address) {
-    // TODO: should this be cached like what marketplace does in getContract ???
-    const contract = await this.contractService.deployed(
-      this.contractService.contracts[this.contractName]
-    )
+    if (!address) {
+      return null
+    }
+
+    await this.getContract()
     // Note: filtering using 'topics' rather than 'filter' due to
     // web3 bugs where 'filter' does not work with 'allEvents'.
     // See https://github.com/ethereum/web3.js/issues/1219
-    const events = await contract.getPastEvents('allEvents', {
+    const events = await this.contract.getPastEvents('allEvents', {
       topics: [null, Web3.utils.padLeft(address.toLowerCase(), 64)],
       fromBlock: this.blockEpoch
     })

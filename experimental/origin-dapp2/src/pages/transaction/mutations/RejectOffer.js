@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import Link from 'components/Link'
+import Redirect from 'components/Redirect'
 
 import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 
@@ -12,6 +12,9 @@ import withCanTransact from 'hoc/withCanTransact'
 class RejectOffer extends Component {
   state = {}
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} push />
+    }
     return (
       <Mutation
         mutation={WithdrawOfferMutation}
@@ -91,7 +94,7 @@ class RejectOffer extends Component {
     })
   }
 
-  renderWaitModal(client) {
+  renderWaitModal() {
     if (!this.state.waitFor) return null
 
     return (
@@ -99,19 +102,22 @@ class RejectOffer extends Component {
         hash={this.state.waitFor}
         event="OfferWithdrawn"
         shouldClose={this.state.waitForShouldClose}
-        onClose={async () => await client.resetStore()}
+        onClose={async () => {
+          if (this.props.refetch) {
+            await this.props.refetch()
+          }
+        }}
       >
         {() => (
           <div className="reject-offer-modal">
             <h2>This offer has been rejected</h2>
-            <div>
-              You&#39;ve rejected this buyer&#39;s offer, click below to go back
-              to your listings.
-            </div>
+            <div>You&#39;ve rejected this buyer&#39;s offer.</div>
             <div className="actions">
-              <Link to="/my-sales" className="btn btn-outline-light">
-                Back to your listings
-              </Link>
+              <button
+                className="btn btn-outline-light"
+                onClick={() => this.setState({ waitForShouldClose: true })}
+                children="OK"
+              />
             </div>
           </div>
         )}

@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 class AppWrapper extends React.Component {
-  render () {
+  render() {
     return (
       <Web3Provider
         accountUnavailableScreen={MetaMaskRequirement}

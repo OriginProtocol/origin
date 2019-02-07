@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
@@ -8,7 +9,7 @@ class SellNav extends Component {
     return (
       <Dropdown
         el="li"
-        className="nav-item sell"
+        className="nav-item sell d-none d-md-flex"
         open={this.props.open}
         onClose={() => this.props.onClose()}
         content={
@@ -18,21 +19,21 @@ class SellNav extends Component {
               className="dropdown-item"
               to="/my-listings"
             >
-              My Listings
+              <fbt desc="navbar.myListings">My Listings</fbt>
             </Link>
             <Link
               onClick={() => this.props.onClose()}
               className="dropdown-item"
               to="/my-sales"
             >
-              My Sales
+              <fbt desc="navbar.mySales">My Sales</fbt>
             </Link>
             <Link
               onClick={() => this.props.onClose()}
               className="dropdown-item"
               to="/create"
             >
-              Add a Listing
+              <fbt desc="navbar.addListing">Add a Listing</fbt>
             </Link>
           </div>
         }
@@ -48,7 +49,7 @@ class SellNav extends Component {
           aria-haspopup="true"
           aria-expanded="false"
         >
-          Sell
+          <fbt desc="navbar.selling">Sell</fbt>
         </a>
       </Dropdown>
     )

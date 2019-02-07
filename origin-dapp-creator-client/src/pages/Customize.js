@@ -51,12 +51,12 @@ class Customize extends React.Component {
     this.onThemeClick = this.onThemeClick.bind(this)
   }
 
-  async handleSubmit () {
+  async handleSubmit() {
     this.props.onChange(this.state.config)
     this.setState({ redirect: '/configure' })
   }
 
-  async handlePreview (event) {
+  async handlePreview(event) {
     event.preventDefault()
 
     this.setState({ previewing: true })
@@ -66,7 +66,7 @@ class Customize extends React.Component {
       response = await superagent
         .post(`${process.env.DAPP_CREATOR_API_URL}/config/preview`)
         .send({ config: this.state.config })
-    } catch(error) {
+    } catch (error) {
       console.log('An error occurred generating preview: ' + error)
       return
     } finally {
@@ -77,7 +77,7 @@ class Customize extends React.Component {
     window.open(`${process.env.DAPP_URL}/?config=${ipfsPath}`, '_blank')
   }
 
-  onColorChange (name, color) {
+  onColorChange(name, color) {
     const newConfig = {
       ...this.state.config,
       cssVars: {
@@ -90,7 +90,7 @@ class Customize extends React.Component {
     this.setState({ config: newConfig })
   }
 
-  handleFileUpload (name, url) {
+  handleFileUpload(name, url) {
     const newConfig = {
       ...this.state.config,
       [name]: url
@@ -100,15 +100,15 @@ class Customize extends React.Component {
     this.setState({ config: newConfig })
   }
 
-  onThemePickerExpand () {
+  onThemePickerExpand() {
     this.setState({ themePickerExpanded: true })
   }
 
-  onThemePickerCollapse () {
+  onThemePickerCollapse() {
     this.setState({ themePickerExpanded: false })
   }
 
-  onThemeClick (index) {
+  onThemeClick(index) {
     const newConfig = {
       ...this.state.config,
       cssVars: {
@@ -126,7 +126,7 @@ class Customize extends React.Component {
     this.onThemePickerCollapse()
   }
 
-  render () {
+  render() {
     return (
       <form onSubmit={this.handleSubmit}>
         {this.renderRedirect()}
@@ -137,19 +137,23 @@ class Customize extends React.Component {
         <div className="form-group">
           <div className="row">
             <div className="col-6">
-              <ImagePicker title="Marketplace Logo"
+              <ImagePicker
+                title="Marketplace Logo"
                 name="logoUrl"
                 recommendedSize={'300px x 100px'}
                 onUpload={this.handleFileUpload}
-                imageUrl={this.props.config.logoUrl} />
+                imageUrl={this.props.config.logoUrl}
+              />
             </div>
 
             <div className="col-6">
-              <ImagePicker title="Marketplace Favicon"
+              <ImagePicker
+                title="Marketplace Favicon"
                 name="faviconUrl"
                 recommendedSize={'16px x 16px'}
                 onUpload={this.handleFileUpload}
-                imageUrl={this.props.config.faviconUrl} />
+                imageUrl={this.props.config.faviconUrl}
+              />
             </div>
           </div>
         </div>
@@ -167,7 +171,7 @@ class Customize extends React.Component {
           />
         </div>
 
-        {!this.state.themePickerExpanded &&
+        {!this.state.themePickerExpanded && (
           <div className="form-group">
             <p>You can further customize your colors.</p>
             <div className="row">
@@ -177,30 +181,40 @@ class Customize extends React.Component {
 
               <div className="col-5">
                 <label className="colors-label">Colors</label>
-                <ColorPicker description="Navbar Background"
+                <ColorPicker
+                  description="Navbar Background"
                   name="dusk"
                   config={this.state.config.cssVars}
-                  onChange={this.onColorChange} />
-                <ColorPicker description="Search Background"
+                  onChange={this.onColorChange}
+                />
+                <ColorPicker
+                  description="Search Background"
                   name="paleGrey"
                   config={this.state.config.cssVars}
-                  onChange={this.onColorChange} />
-                <ColorPicker description="Featured Tag"
+                  onChange={this.onColorChange}
+                />
+                <ColorPicker
+                  description="Featured Tag"
                   name="goldenRod"
                   config={this.state.config.cssVars}
-                  onChange={this.onColorChange} />
-                <ColorPicker description="Footer Color"
+                  onChange={this.onColorChange}
+                />
+                <ColorPicker
+                  description="Footer Color"
                   name="lightFooter"
                   config={this.state.config.cssVars}
-                  onChange={this.onColorChange} />
-                <ColorPicker description="Font Color"
+                  onChange={this.onColorChange}
+                />
+                <ColorPicker
+                  description="Font Color"
                   name="dark"
                   config={this.state.config.cssVars}
-                  onChange={this.onColorChange} />
+                  onChange={this.onColorChange}
+                />
               </div>
             </div>
           </div>
-        }
+        )}
 
         <div className="form-group">
           <div className="actions">
@@ -211,8 +225,10 @@ class Customize extends React.Component {
         </div>
 
         <div className="form-actions clearfix">
-          <button onClick={() => this.setState({ redirect: '/' })}
-              className="btn btn-outline-primary btn-lg btn-left">
+          <button
+            onClick={() => this.setState({ redirect: '/' })}
+            className="btn btn-outline-primary btn-lg btn-left"
+          >
             Back
           </button>
 
@@ -224,7 +240,7 @@ class Customize extends React.Component {
     )
   }
 
-  renderRedirect () {
+  renderRedirect() {
     if (this.state.redirect !== null) {
       return <Redirect to={this.state.redirect} />
     }
