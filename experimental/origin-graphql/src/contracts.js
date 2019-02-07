@@ -128,6 +128,7 @@ if (process.env.DOCKER) {
   Configs['localhost'].ipfsGateway = `http://${HOST}:9999`
   Configs['localhost'].ipfsRPC = `http://${HOST}:9999`
   Configs['localhost'].bridge = `http://${HOST}:5000`
+  Configs['localhost'].discovery = `http://${HOST}:4000/graphql`
 }
 
 const DefaultMessagingConfig = {
