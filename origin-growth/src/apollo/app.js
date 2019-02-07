@@ -38,6 +38,21 @@ const server = new ApolloServer({
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,
   playground: true,
+  context: context => {
+    let userIp = null
+    const headers = context.req.headers
+    /* TODO: this needs to be tested on production. On localhost x-forwarded-for headers are not set
+     * - mark this as a Pull Request check list item and then delete it
+     */
+    if (headers) {
+      userIp = headers['x-forwarded-for'] || null
+    }
+
+    return {
+      ...context,
+      userIp
+    }
+  },
 })
 
 server.applyMiddleware({ app })

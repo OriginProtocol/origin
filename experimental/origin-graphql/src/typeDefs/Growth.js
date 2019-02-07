@@ -37,6 +37,12 @@ module.exports =
     successful
   }
 
+  enum Eligibility {
+    Eligible
+    Restricted
+    Forbidden
+  }
+
   type Invite {
     status: GrowthInviteStatus!
     walletAddress: ID!
@@ -118,16 +124,26 @@ module.exports =
     message: String!
   }
 
+  type EligibilityResponse {
+    code: String!
+    success: Boolean!
+    message: String
+    eligibility: Eligibility
+    countryName: String
+    countryCode: String
+  }
+
   type Query {
     # first property specifies the number of items to return
     # after is the cursor
     campaigns(first: Int, after: String): GrowthCampaignConnection
     campaign(id: String): GrowthCampaign
+    isEligible: EligibilityResponse
   }
 
   type Mutation {
     invite(emails: [String!]!): InviteResponse
-    enroll(campaignId: Int!): EnrollResponse
+    enroll(campaignId: Int!, notResidentCertification: Boolean): EnrollResponse
     gasForIdentity(walletAddress: ID!): SimpleResponse
     invited(walletAddress: ID!, inviteCode: String!): SimpleResponse
     log(event: JSON!): SimpleResponse
