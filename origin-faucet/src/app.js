@@ -9,7 +9,7 @@ const express = require('express')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 const Web3 = require('web3')
 
-const Config = require('./config')
+const Config = require('origin-token/src/config')
 const Token = require('origin-token/src/token')
 
 const DEFAULT_SERVER_PORT = 5000
