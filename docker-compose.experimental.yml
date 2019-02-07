@@ -30,17 +30,47 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-experimental
-    volumes:
-      # Origin-contracts build directory, the DApp will run a contract deploy
-      # and the contract addres
+    depends_on:
+      - origin-messaging
+    volumes: &volumes
+      # origin-contracts build directory, the DApp will run a contract deploy
+      # and the contract address here, and other services will then parse these
+      # build files to extract contract addresses
       - ./origin-contracts/build:/app/origin-contracts/build
+      - ./origin-contracts/package.json:/app/origin-contracts/package.json
+      # origin-dapp2
       - ./experimental/origin-dapp2/src:/app/experimental/origin-dapp2/src
-      # Translations
       - ./experimental/origin-dapp2/translations:/app/experimental/origin-dapp2/translations
-      # Webpack config
       - ./experimental/origin-dapp2/webpack.config.js:/app/experimental/origin-dapp2/webpack.config.js
-      # Package.json
       - ./experimental/origin-dapp2/package.json:/app/experimental/origin-dapp2/package.json
+      # origin-services
+      - ./experimental/origin-services/index.js:/app/experimental/origin-services/index.js
+      # orogin-graphql
+      - ./experimental/origin-graphql/src:/app/experimental/origin-graphql/src
+      - ./experimental/origin-graphql/package.json:/app/experimental/origin-graphql/package.json
+      # origin-eventsource
+      - ./experimental/origin-eventsource/src:/app/experimental/origin-eventsource/src
+      - ./experimental/origin-eventsource/package.json:/app/experimental/origin-eventsource/package.json
+      # origin-ipfs
+      - ./experimental/origin-ipfs/src:/app/experimental/origin-ipfs/src
+      - ./experimental/origin-ipfs/package.json:/app/experimental/origin-ipfs/package.json
+      # origin-messaging-client
+      - ./experimental/origin-messaging-client/src:/app/experimental/origin-messaging-client/src
+      - ./experimental/origin-messaging-client/package.json:/app/experimental/origin-messaging-client/package.json
+      # origin-validator
+      - ./experimental/origin-validator/src:/app/experimental/origin-validator/src
+      - ./experimental/origin-validator/package.json:/app/experimental/origin-validator/package.json
+      # origin-discovery
+      - ./origin-discovery/src:/app/origin-discovery/src
+      - ./origin-discovery/migrations:/app/origin-discovery/migrations
+      - ./origin-discovery/config:/app/origin-discovery/config
+      - ./origin-discovery/package.json:/app/origin-discovery/package.json
+      # origin-ipfs-proxy
+      - ./origin-ipfs-proxy/src:/app/origin-ipfs-proxy/src
+      - ./origin-ipfs-proxy/package.json:/app/origin-ipfs-proxy/package.json
+      # origin-messaging
+      - ./origin-messaging/src:/app/origin-messaging/src
+      - ./origin-messaging/package.json:/app/origin-messaging/package.json
     ports:
       - "3001:3001"
       - "8083:8083" # Webpack
@@ -50,31 +80,32 @@ services:
       - DOCKER=true
     command: npm run start --prefix experimental/origin-dapp2
 
+  origin-messaging:
+    container_name: origin-messaging
+    image: origin-experimental
+    volumes: *volumes
+    environment:
+      - MESSAGING_NAMESPACE=dev
+      - IPFS_REPO_PATH=/app/ipfs
+    ports:
+      - "9012:9012"
+    command: npm run start --prefix origin-messaging
+
   origin-ipfs-proxy:
     container_name: origin-ipfs-proxy
     image: origin-experimental
+    volumes: *volumes
     ports:
       - "9999:9999"
     environment:
       - IPFS_API_URL=http://origin-dapp2:5002
       - IPFS_GATEWAY_URL=http://origin-dapp2:9090
-    volumes:
-      - ./origin-ipfs-proxy/src:/app/origin-ipfs-proxy/src
-      - ./origin-ipfs-proxy/package.json:/app/origin-ipfs-proxy/package.json
     command: npm run start --prefix origin-ipfs-proxy
 
-  event-listener:
-    container_name: event-listener
+  origin-event-listener:
+    container_name: origin-event-listener
     image: origin-experimental
-    volumes:
-      # Origin-contracts build directory is required so event-listener can
-      # access deployed contract addresses
-      - ./origin-contracts/build:/app/origin-contracts/build
-      - ./origin-js/src:/app/origin-js/src
-      - ./origin-discovery/src:/app/origin-discovery/src
-      - ./origin-discovery/migrations:/app/origin-discovery/migrations
-      - ./origin-discovery/config:/app/origin-discovery/config
-      - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
+    volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
@@ -92,27 +123,10 @@ services:
       npm run migrate --prefix origin-discovery &&
       npm run start:listener --prefix origin-discovery"
 
-  origin-messaging:
-    container_name: origin-messaging
-    image: origin-experimental
-    ports:
-      - "9012:9012"
-    volumes:
-      - ./origin-messaging/src:/app/origin-messaging/src
-      - ./origin-messaging/package.json:/app/origin-messaging/package.json
-    environment:
-      - MESSAGING_NAMESPACE=dev
-      - IPFS_REPO_PATH=/app/ipfs
-    command: npm run start --prefix origin-messaging
-
   origin-discovery:
     container_name: origin-discovery
     image: origin-experimental
-    volumes:
-      - ./origin-js/src:/app/origin-js/src
-      - ./origin-discovery/src:/app/origin-discovery/src
-      - ./origin-discovery/config:/app/origin-discovery/config
-      - ./origin-discovery/package.json:/app/origin-discovery/package.json
+    volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
