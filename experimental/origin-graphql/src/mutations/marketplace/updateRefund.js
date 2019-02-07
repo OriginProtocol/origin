@@ -1,6 +1,7 @@
 import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function updateRefund(_, data) {
@@ -11,7 +12,7 @@ async function updateRefund(_, data) {
 
   const tx = contracts.marketplaceExec.methods
     .updateRefund(listingId, offerId, data.amount, ipfsHash)
-    .send({ gas: 4612388, from })
+    .send({ gas: cost.updateRefund, from })
 
   return txHelper({ tx, from, mutation: 'updateRefund' })
 }
