@@ -15,8 +15,10 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "scripts": {
-    "lint": "eslint '**/*.js'",
-    "test": "mocha --timeout 10000 --exit"
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "test": "mocha -r @babel/register --timeout 10000 --exit"
   },
   "dependencies": {
     "bignumber.js": "^8.0.1",
@@ -24,9 +26,22 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/register": "^7.0.0",
     "chai": "^4.2.0",
     "ganache-core": "2.4.0",
     "mocha": "^5.2.0",
+    "openzeppelin-solidity": "^1.10.0",
     "solc": "^0.4.25"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-runtime"
+    ]
   }
 }
