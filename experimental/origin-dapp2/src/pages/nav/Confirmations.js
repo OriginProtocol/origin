@@ -33,7 +33,7 @@ class TransactionsNav extends Component {
           return (
             <Dropdown
               el="li"
-              className="nav-item confirmations"
+              className="nav-item confirmations d-none d-md-flex"
               open={this.props.open}
               onClose={() => this.props.onClose()}
               content={

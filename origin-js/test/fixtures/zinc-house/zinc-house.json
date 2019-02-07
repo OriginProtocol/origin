@@ -15,5 +15,43 @@
   "commission": {
     "currency": "OGN",
     "amount": "10"
-  }
+  },
+  "media": [
+    {
+      "url": "ipfs://QmQyKBQtqH5yDd4nrksUANyrBDFJdcF8TdAcaY6cNnSNu1",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmfBmhBN1CXkbJ6Fp5ZFnwV5G7DgasaXaxmqrtjiaLJVb9",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmaD8rxktZRTt9pLyRbrprd5V7Xj1nZA4HVriREoGFCgbk",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmWPa92BRqyPuJf3c6SzSkFNUkjQEdPsasxzLddbjq6ZfW",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmPkHiyUHmdbjaew895fKXirrh5LckH3yMwQ33ehgoRm7F",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmRqE53MUnhHyVE7MNMwf7nuxwcAKAiMgLQ3QXu34EExSm",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmSZ9MQMfqS4oPeCAhZCtYch8hpjHnbvtbVXtYju6WtPh3",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmTxqZmLCEeAeEAzoVjBdYtSxAvBwbtUFDPGxSMVNVRQFV",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmPwHv9RfvFy6ZyqTv5zoAGeGzmk6emXbhoY2Bpob2yDKY",
+      "contentType": "image/jpeg"
+    }
+  ]
 }

@@ -57,6 +57,7 @@ module.exports = `
     emailVerified: Boolean
 
     name: String
+    ipfsHash: String
     attestations: [String]
   }
 `

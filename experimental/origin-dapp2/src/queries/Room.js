@@ -8,9 +8,12 @@ export default gql`
       conversation(id: $id) {
         id
         timestamp
+        totalUnread
         messages {
           address
           content
+          status
+          hash
           media {
             url
             contentType
