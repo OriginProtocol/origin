@@ -127,7 +127,8 @@ export function identity({ id, ipfsHash }) {
       attestations: attestations.map(a => JSON.stringify(a)),
       ...pick(profile, ['firstName', 'lastName', 'avatar', 'description']),
       ...getAttestations(id, data.attestations || []),
-      strength: 0
+      strength: 0,
+      ipfsHash
     }
 
     identity.fullName = [identity.firstName, identity.lastName]
