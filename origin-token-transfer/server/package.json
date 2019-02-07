@@ -34,7 +34,7 @@
     "moment": "^2.22.2",
     "momentjs": "^2.0.0",
     "origin-contracts": "^0.8.6",
-    "origin-faucet": "^0.1.0",
+    "origin-token": "^0.1.0",
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",
     "per-env": "^1.0.2",
