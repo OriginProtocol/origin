@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
+import QRCode from 'qrcode.react'
 
-import { Button, ContextMenuTarget, Menu, MenuItem } from '@blueprintjs/core'
+import {
+  Button,
+  ContextMenuTarget,
+  Menu,
+  MenuItem,
+  Dialog
+} from '@blueprintjs/core'
 
 import SendFromWallet from './mutations/SendFromWallet'
 import SendToken from './mutations/SendToken'
@@ -58,6 +65,16 @@ class AccountButton extends Component {
           from={accountId}
           onCompleted={() => this.setState({ sendEth: false })}
         />
+        <Dialog
+          isOpen={this.state.privateKeyQR}
+          lazy={true}
+          from={accountId}
+          onClose={() => this.setState({ privateKeyQR: false })}
+        >
+          <div className="bp3-dialog-body">
+            <QRCode value={this.getPrivateKey()} />
+          </div>
+        </Dialog>
         <SendToken
           isOpen={this.state.sendToken}
           lazy={true}
@@ -110,6 +127,12 @@ class AccountButton extends Component {
                 /* failure */
               }
             )
+          }}
+        />
+        <MenuItem
+          text="Private Key QR Code"
+          onClick={() => {
+            this.setState({ privateKeyQR: true })
           }}
         />
         <MenuItem

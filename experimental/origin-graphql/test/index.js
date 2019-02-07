@@ -105,7 +105,10 @@ describe('Marketplace', function() {
       assert.strictEqual(listing.category, listingData.data.category)
       assert.strictEqual(listing.subCategory, listingData.data.subCategory)
       assert.strictEqual(listing.unitsTotal, listingData.unitData.unitsTotal)
-      assert.strictEqual(listing.unitsAvailable, listingData.unitData.unitsTotal)
+      assert.strictEqual(
+        listing.unitsAvailable,
+        listingData.unitData.unitsTotal
+      )
       assert.strictEqual(listing.unitsSold, 0)
       assert.strictEqual(listing.commission, '0')
       assert.strictEqual(listing.commissionPerUnit, '0')
@@ -169,6 +172,19 @@ describe('Marketplace', function() {
         true
       )
       assert(events.OfferCreated)
+    })
+
+    it('should add data to an offer', async function() {
+      const events = await mutate(
+        mutations.AddData,
+        {
+          offerID: '999-0-0-1',
+          from: Seller,
+          data: 'Testing'
+        },
+        true
+      )
+      assert(events.OfferData)
     })
 
     it('should accept an offer', async function() {
@@ -263,7 +279,10 @@ describe('Marketplace', function() {
       assert.strictEqual(listing.category, listingData.data.category)
       assert.strictEqual(listing.subCategory, listingData.data.subCategory)
       assert.strictEqual(listing.unitsTotal, listingData.unitData.unitsTotal)
-      assert.strictEqual(listing.unitsAvailable, listingData.unitData.unitsTotal)
+      assert.strictEqual(
+        listing.unitsAvailable,
+        listingData.unitData.unitsTotal
+      )
       assert.strictEqual(listing.unitsSold, 0)
       assert.strictEqual(listing.commission, '1500000000000000000')
       assert.strictEqual(listing.commissionPerUnit, '1500000000000000000')
@@ -684,5 +703,4 @@ describe('Marketplace', function() {
       await mutate(mutations.CreateListing, listingData)
     })
   })
-
 })
