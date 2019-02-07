@@ -1,4 +1,7 @@
+const Web3 = require('web3')
 const logger = require('./logger')
+
+const db = require('../models')
 
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 const { AttestationServiceToEventType, GrowthEvent } = require('origin-growth/src/resources/event')
@@ -11,16 +14,91 @@ class IdentityEventHandler {
   }
 
   /**
+   * Loads attestation data such as email, phone, etc... from the attestation table.
+   * @param {string} ethAddress
+   * @param {string} method - 'EMAIL', 'PHONE', etc...
+   * @returns {Promise<string|null>}
+   * @private
+   */
+  async _loadValueFromAttestation(ethAddress, method) {
+    // Notes:
+    //  - Use a raw query since attestation model not ported yet to JS.
+    //  - The attestation table stores eth addresses checksummed.
+    const attestations = await db.sequelize.query(
+      'SELECT * FROM attestation WHERE eth_address=(:ethAddress) AND method=(:method) ORDER BY ID DESC LIMIT 1',
+      {
+        replacements: {
+            ethAddress: Web3.utils.toChecksumAddress(ethAddress),
+            method
+        },
+        type: db.sequelize.QueryTypes.SELECT
+      }
+    )
+    return (attestations.length === 1) ? attestations[0].value : null
+  }
+
+  /**
+   * Decorates a user object with attestation data.
+   * @param {models.User} user - Origin js user model object.
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _decorateUser(user) {
+    await Promise.all(user.attestations.map(async attestation => {
+      switch (attestation.service) {
+        case 'email':
+          user.email = await this._loadValueFromAttestation(user.address, 'EMAIL')
+          break
+        case 'phone':
+          user.phone = await this._loadValueFromAttestation(user.address, 'PHONE')
+          break
+        case 'twitter':
+          user.twitter = await this._loadValueFromAttestation(user.address, 'TWITTER')
+          break
+        case 'airbnb':
+          user.airbnb = await this._loadValueFromAttestation(user.address, 'AIRBNB')
+          break
+        case 'facebook':
+          // Note: we don't have access to the user's fbook id,
+          // only whether the account was verified or not.
+          user.facebookVerified = true
+          break
+      }
+    }))
+  }
+
+  /**
    * Indexes a user in the DB.
-   * @param {Object} user - Origin js user model object.
+   * @param {models.User} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<void>}
    * @private
    */
-  async _indexUser(user, blockInfo) {
-    // TODO(franck): implement me
-    logger.debug(`Indexing user ${user.address} blockInfo ${blockInfo}`)
-    return
+  async _indexIdentity(user, blockInfo) {
+    logger.info(`Indexing identity ${user.address} in DB.`)
+
+    // Check input.
+    const ethAddress = user.address
+    if (!Web3.utils.isAddress(ethAddress)) {
+      throw new Error(`Invalid eth address ${ethAddress}`)
+    }
+
+    // Construct an identity object based on the user's profile
+    // and data loaded from the attestation table.
+    const identity = {
+      ethAddress: ethAddress.toLowerCase(),
+      firstName: user.profile.firstName,
+      lastName: user.profile.lastName,
+      email: user.email,
+      phone: user.phone,
+      airbnb: user.airbnb,
+      twitter: user.twitter,
+      facebookVerified: user.facebookVerified || false,
+      data: { blockInfo }
+    }
+
+    logger.debug('Identity=', identity)
+    await db.Identity.upsert(identity)
   }
 
   /**
@@ -58,21 +136,21 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthAttestationEvents(user, blockInfo) {
-    user.attestations.forEach(async attestation => {
+    await Promise.all(user.attestations.map(attestation => {
       const eventType = AttestationServiceToEventType[attestation.service]
       if (!eventType) {
         logger.error(`Unrecognized attestation service received: ${attestation.service}. Skipping.`)
         return
       }
 
-      await GrowthEvent.insert(
+      return GrowthEvent.insert(
         logger,
         user.address,
         eventType,
         null,
         { blockInfo }
       )
-    })
+    }))
   }
 
   /**
@@ -98,12 +176,15 @@ class IdentityEventHandler {
       user.profile.avatar = user.profile.avatar.slice(0, 32) + '...'
     }
 
+    // Decorate the user object with extra attestation related info.
+    await this._decorateUser(user)
+
     const blockInfo = {
       blockNumber: log.blockNumber,
       logIndex: log.logIndex
     }
 
-    await this._indexUser(user, blockInfo)
+    await this._indexIdentity(user, blockInfo)
 
     if (this.config.growth) {
       await this._recordGrowthProfileEvent(user, blockInfo)
@@ -121,6 +202,11 @@ class IdentityEventHandler {
   // Do not call discord webhook for identity events.
   discordWebhookEnabled() {
     return false
+  }
+
+  // Call the webhook to add the user's email to Origin's mailing list.
+  emailWebhookEnabled() {
+    return true
   }
 }
 

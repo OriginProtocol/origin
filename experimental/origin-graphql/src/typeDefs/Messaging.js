@@ -6,6 +6,7 @@ module.exports = `
   extend type Mutation {
     enableMessaging: Boolean
     sendMessage(to: String!, content: String, media: [MediaInput]): Conversation
+    markConversationRead(id: String!): Boolean
   }
 
   type Messaging {
@@ -17,6 +18,7 @@ module.exports = `
     pubSig: String
     conversations: [Conversation]
     conversation(id: String!): Conversation
+    totalUnread: Int
   }
 
   type Conversation {
@@ -24,6 +26,7 @@ module.exports = `
     timestamp: Int
     messages: [Message]
     lastMessage: Message
+    totalUnread: Int
   }
 
   type Message {
@@ -34,6 +37,7 @@ module.exports = `
     content: String
     media: [Media]
     timestamp: Int
+    status: String
   }
 
 `
