@@ -9,6 +9,7 @@ COPY lerna.json ./
 COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-faucet ./origin-faucet
+COPY ./origin-token ./origin-token
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm

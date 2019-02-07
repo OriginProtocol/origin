@@ -21,6 +21,7 @@ You can either start the listener via docker compose or via lerna.
  - Setup Postgres locally.
  - Create DB schema:
 ```
+lerna run migrate --scope origin-discovery
 lerna run migrate --scope origin-growth
 ```
 
