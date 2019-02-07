@@ -171,6 +171,19 @@ describe('Marketplace', function() {
       assert(events.OfferCreated)
     })
 
+    it('should add data to an offer', async function(){
+      const events = await mutate(
+        mutations.AddData,
+        {
+          offerID: '999-0-0-1',
+          from: Seller,
+          data: "Testing"
+        },
+        true
+      )
+      assert(events.OfferData)
+    })
+
     it('should accept an offer', async function() {
       const events = await mutate(
         mutations.AcceptOffer,

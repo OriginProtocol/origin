@@ -1,6 +1,7 @@
 import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function addFunds(_, data) {
@@ -11,7 +12,7 @@ async function addFunds(_, data) {
 
   const tx = contracts.marketplaceExec.methods
     .addFunds(listingId, offerId, ipfsHash, data.amount)
-    .send({ gas: 4612388, from, value: data.amount })
+    .send({ gas: cost.addFunds, from, value: data.amount })
 
   return txHelper({ tx, from, mutation: 'addFunds' })
 }
