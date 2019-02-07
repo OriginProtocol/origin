@@ -3,6 +3,7 @@ import validator from 'origin-validator'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import validateAttestation from '../../utils/validateAttestation'
 import costs from '../_gasCost.js'
 
 async function deployIdentity(_, { from, profile = {}, attestations = [] }) {
@@ -20,7 +21,7 @@ async function deployIdentity(_, { from, profile = {}, attestations = [] }) {
         return null
       }
     })
-    .filter(a => a)
+    .filter(a => validateAttestation(from, a))
 
   profile.schemaId = 'https://schema.originprotocol.com/profile_2.0.0.json'
   profile.ethAddress = from
