@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
+import { Query } from 'react-apollo'
 
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
@@ -22,6 +23,9 @@ import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
+import getOpenedModalQuery from 'queries/OpenedModal'
+import GrowthEnrollmentModal from './growth/EnrollmentModal'
+import QueryError from 'components/QueryError'
 
 class App extends Component {
   state = { hasError: false }
@@ -83,6 +87,17 @@ class App extends Component {
             <Route component={Listings} />
           </Switch>
         </main>
+        <Query query={getOpenedModalQuery}>
+          {({ networkStatus, error, data }) => {
+            if (networkStatus === 1) return ''
+            else if (error)
+              return <QueryError error={error} query={getOpenedModalQuery} />
+
+            if (data.modal.openedModal === 'GrowthEnroll')
+              return <GrowthEnrollmentModal />
+            else return ''
+          }}
+        </Query>
         <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
       </>
     )
