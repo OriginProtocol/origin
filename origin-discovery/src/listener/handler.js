@@ -84,9 +84,15 @@ async function handleLog (log, rule, contractVersion, context) {
   // across ethereum nodes and if some nodes are lagging. For example the node we end up
   // connecting to for reading the data may lag compared to the node we received the event from.
   let result
-  await withRetrys(async () => {
-    result = await rule.handler.process(log, context)
-  })
+  try {
+    await withRetrys(async () => {
+      result = await rule.handler.process(log, context)
+    }, false)
+  } catch(e) {
+    logger.error(`Handler failed. Skipping log.`)
+    context.errorCounter.inc()
+    return
+  }
 
   const output = {
     log: log,
