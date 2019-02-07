@@ -13,6 +13,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      custom_id: {
+        type: Sequelize.STRING
+      },
       type: {
         type: Sequelize.ENUM(GrowthEventTypes)
       },
@@ -33,9 +36,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'type']))
+    }).then(() => queryInterface.addIndex(tableName, ['eth_address', 'type', 'custom_id']))
+
   },
   down: (queryInterface) => {
     return queryInterface.dropTable(tableName)
+      .then(queryInterface.sequelize.query('DROP TYPE enum_growth_event_type;'))
+      .then(queryInterface.sequelize.query('DROP TYPE enum_growth_event_status;'))
   }
 }

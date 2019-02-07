@@ -1,7 +1,7 @@
 import IdentityEvents from 'origin-contracts/build/contracts/IdentityEvents'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
-import contracts from '../../contracts'
+import contracts, { setIdentityEvents } from '../../contracts'
 
 async function deployIdentityEvents(_, { from }) {
   const web3 = contracts.web3Exec
@@ -19,8 +19,7 @@ async function deployIdentityEvents(_, { from }) {
     onReceipt: receipt => {
       Contract.options.address = receipt.contractAddress
       window.localStorage.identityEventsContract = receipt.contractAddress
-      contracts.identityEvents = Contract
-      contracts.identityEventsExec = Contract
+      setIdentityEvents(receipt.contractAddress, receipt.blockNumber)
     }
   })
 }
