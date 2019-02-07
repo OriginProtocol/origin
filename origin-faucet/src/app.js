@@ -52,7 +52,7 @@ function runApp(config) {
   app.use(rateLimiterMiddleware)
 
   // Configure directory for public assets.
-  app.use(express.static(__dirname + '../public'))
+  app.use(express.static(__dirname + '/../public'))
 
   // Register the /tokens route for crediting tokens.
   app.get('/tokens', async function(req, res, next) {

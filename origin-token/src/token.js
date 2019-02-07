@@ -1,12 +1,12 @@
-import BigNumber from 'bignumber.js'
+const BigNumber = require('bignumber.js')
 
-import TokenContract from 'origin-contracts/build/contracts/OriginToken.json'
+const TokenContract = require('origin-contracts/build/contracts/OriginToken.json')
 
-import { withRetries } from './util'
-import ContractHelper from './contractHelper'
+const { withRetries } = require('./util')
+const ContractHelper = require('./contractHelper')
 
 // Token helper class.
-export default class Token extends ContractHelper {
+class Token extends ContractHelper {
   /*
    * @params {object} config - Configuration dict.
    */
@@ -223,3 +223,5 @@ export default class Token extends ContractHelper {
     console.log(`transactor whitelist:    ${whitelistStatus}`)
   }
 }
+
+module.exports = Token

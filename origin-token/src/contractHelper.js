@@ -1,9 +1,8 @@
-import Web3 from 'web3'
+const Web3 = require('web3')
 
-import { withRetries } from './util'
+const { withRetries } = require('./util')
 
-
-export default class ContractHelper {
+class ContractHelper {
   constructor(config) {
     this.config = config
     this.retries = 7
@@ -103,3 +102,5 @@ export default class ContractHelper {
     return accounts[0]
   }
 }
+
+module.exports = ContractHelper
