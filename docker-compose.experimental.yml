@@ -40,10 +40,13 @@ services:
       - ./origin-contracts/package.json:/app/origin-contracts/package.json
       # origin-dapp2
       - ./experimental/origin-dapp2/src:/app/experimental/origin-dapp2/src
+      - ./experimental/origin-dapp2/public:/app/experimental/origin-dapp2/public
       - ./experimental/origin-dapp2/translations:/app/experimental/origin-dapp2/translations
       - ./experimental/origin-dapp2/webpack.config.js:/app/experimental/origin-dapp2/webpack.config.js
       - ./experimental/origin-dapp2/package.json:/app/experimental/origin-dapp2/package.json
+      - ./experimental/origin-dapp2/index.js:/app/experimental/origin-dapp2/index.js
       # origin-services
+      - ./experimental/origin-services/data:/app/experimental/origin-services/data
       - ./experimental/origin-services/index.js:/app/experimental/origin-services/index.js
       # orogin-graphql
       - ./experimental/origin-graphql/src:/app/experimental/origin-graphql/src
@@ -71,6 +74,9 @@ services:
       # origin-messaging
       - ./origin-messaging/src:/app/origin-messaging/src
       - ./origin-messaging/package.json:/app/origin-messaging/package.json
+      # origin-growth
+      - ./origin-growth/src:/app/origin-growth/src
+      - ./origin-growth/package.json:/app/origin-growth/package.json
     ports:
       - "3001:3001"
       - "8083:8083" # Webpack
