@@ -8,7 +8,7 @@ function InfographicsBox(props) {
   return (
     <Fragment>
       <div className="col infographics d-flex flex-column m-3">
-        <img className="p-4 mt-auto" src={image} />
+        <img className="pt-4 mt-auto" src={image} />
         <div className="text-center title pt-3 pl-3 pr-3">{title}</div>
         <div className="text-center text p-3 pb-4">{text}</div>
       </div>
@@ -41,13 +41,13 @@ class GrowthWelcome extends Component {
               <img className="logo" src="/images/origin-logo-footer.svg" />
             </Link>
             <div className="title-text">
-              Your friend Aure has invited you to earn
+              Your friend Aure has invited you to earn{' '}
               <b>FREE Origin Tokens</b>
             </div>
             <div className="sub-title-text">
               Create an account on Origin today and start completing tasks
               for the chance to will up to 2000 OGN currently valued at 2000
-              USD. Don’t miss this amazing opportunity
+              USD. Don’t miss this amazing opportunity!
             </div>
             <this.EnrollButton
               className="btn btn-primary btn-rounded"
@@ -55,7 +55,10 @@ class GrowthWelcome extends Component {
               children="Sign up for Origin"
             />
           </div>
-          <div className="col-6"> Here be very nice graphic someday.</div>
+          <div className="col-6 token-stack-holder">
+            <img className="m-4 token-stack" src='images/growth/token-stack.svg' />
+            <img className="free-badge" src='images/growth/free-badge.svg' />
+          </div>
         </div>
         <div className="row">
           <div className="col-12 d-flex flex-column mt-5">
@@ -68,17 +71,17 @@ class GrowthWelcome extends Component {
         </div>
         <div className="row mt-3">
           <InfographicsBox
-            image="images/ogn-icon-horiz.svg"
+            image="images/growth/wallet-graphic.svg"
             title="Placeholder title"
             text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
           />
           <InfographicsBox
-            image="images/ogn-icon-horiz.svg"
+            image="images/growth/messaging-graphic.svg"
             title="Placeholder title"
             text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
           />
           <InfographicsBox
-            image="images/ogn-icon-horiz.svg"
+            image="images/growth/alerts-graphic.svg"
             title="Placeholder title"
             text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
           />
@@ -113,6 +116,15 @@ require('react-styl')(`
       font-family: Poppins;
       font-weight: bold;
       text-align: center;
+    .token-stack-holder
+      position: relative
+    .token-stack
+      width: 440px;
+    .free-badge
+      position: absolute;
+      width: 168px;
+      right: 15px;
+      bottom: 35px;
     .infographics
       background-color: #f1f6f9;
       border-radius: 5px;

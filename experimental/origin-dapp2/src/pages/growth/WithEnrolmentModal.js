@@ -40,13 +40,21 @@ function withEnrolmentModal(WrappedComponent) {
 
           const { country, eligibility } = data.isEligible
           if (eligibility === 'Eligible') {
-
+            return (
+              <div>
+                TODO: show agreement signing
+              </div>
+            )
           } else if (eligibility === 'Restricted') {
-
+            return (
+              <div>
+                TODO: show allowed country graphic
+              </div>
+            )
           } else if (eligibility === 'Forbidden') {
             return (
               <div>
-                YOU ARE NOT ALLOWED TO USE THIS
+                TODO: show forbidden country graphic
               </div>
             )
           }
