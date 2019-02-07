@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
+import withEnrolmentModal from './WithEnrolmentModal'
 import Link from 'components/Link'
-import { Mutation } from 'react-apollo'
-import SetOpenedModalMutation from 'mutations/SetOpenedModal'
 
 function InfographicsBox(props) {
   const { image, title, text } = props
@@ -18,7 +17,12 @@ function InfographicsBox(props) {
 }
 
 class GrowthWelcome extends Component {
-  state = {}
+  constructor(props) {
+    super(props)
+    this.state = {}
+
+    this.EnrollButton = withEnrolmentModal('button')
+  }
 
   onSignUp(setOpenedModal) {
     setOpenedModal({
@@ -29,66 +33,57 @@ class GrowthWelcome extends Component {
   }
 
   render() {
-    // <Mutation
-    //     mutation={SetOpenedModalMutation}
-    //     onCompleted={}
-    //     onError={}
-    //   >
     return (
-      <Mutation mutation={SetOpenedModalMutation}>
-        {setOpenedModal => (
-          <div className="container growth-welcome">
-            <div className="row">
-              <div className="col-6 d-flex flex-column">
-                <Link to="/">
-                  <img className="logo" src="/images/origin-logo-footer.svg" />
-                </Link>
-                <div className="title-text">
-                  Your friend Aure has invited you to earn
-                  <b>FREE Origin Tokens</b>
-                </div>
-                <div className="sub-title-text">
-                  Create an account on Origin today and start completing tasks
-                  for the chance to will up to 2000 OGN currently valued at 2000
-                  USD. Don’t miss this amazing opportunity
-                </div>
-                <button
-                  className="btn btn-primary btn-rounded"
-                  children="Sign up for Origin"
-                  onClick={() => this.onSignUp(setOpenedModal)}
-                />
-              </div>
-              <div className="col-6"> Here be very nice graphic someday.</div>
+      <div className="container growth-welcome">
+        <div className="row">
+          <div className="col-6 d-flex flex-column">
+            <Link to="/">
+              <img className="logo" src="/images/origin-logo-footer.svg" />
+            </Link>
+            <div className="title-text">
+              Your friend Aure has invited you to earn
+              <b>FREE Origin Tokens</b>
             </div>
-            <div className="row">
-              <div className="col-12 d-flex flex-column mt-5">
-                <div className="info-title">What are Origin Tokens?</div>
-                <div className="text-center">
-                  Origin Tokens are a unique cryptocurrency that can be used in
-                  the Origin Marketplace.
-                </div>
-              </div>
+            <div className="sub-title-text">
+              Create an account on Origin today and start completing tasks
+              for the chance to will up to 2000 OGN currently valued at 2000
+              USD. Don’t miss this amazing opportunity
             </div>
-            <div className="row mt-3">
-              <InfographicsBox
-                image="images/ogn-icon-horiz.svg"
-                title="Placeholder title"
-                text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
-              />
-              <InfographicsBox
-                image="images/ogn-icon-horiz.svg"
-                title="Placeholder title"
-                text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
-              />
-              <InfographicsBox
-                image="images/ogn-icon-horiz.svg"
-                title="Placeholder title"
-                text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
-              />
+            <this.EnrollButton
+              className="btn btn-primary btn-rounded"
+              type="submit"
+              children="Sign up for Origin"
+            />
+          </div>
+          <div className="col-6"> Here be very nice graphic someday.</div>
+        </div>
+        <div className="row">
+          <div className="col-12 d-flex flex-column mt-5">
+            <div className="info-title">What are Origin Tokens?</div>
+            <div className="text-center">
+              Origin Tokens are a unique cryptocurrency that can be used in
+              the Origin Marketplace.
             </div>
           </div>
-        )}
-      </Mutation>
+        </div>
+        <div className="row mt-3">
+          <InfographicsBox
+            image="images/ogn-icon-horiz.svg"
+            title="Placeholder title"
+            text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
+          />
+          <InfographicsBox
+            image="images/ogn-icon-horiz.svg"
+            title="Placeholder title"
+            text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
+          />
+          <InfographicsBox
+            image="images/ogn-icon-horiz.svg"
+            title="Placeholder title"
+            text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
+          />
+        </div>
+      </div>
     )
   }
 }
