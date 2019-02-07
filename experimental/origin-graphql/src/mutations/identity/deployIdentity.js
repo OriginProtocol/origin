@@ -32,21 +32,12 @@ async function deployIdentity(_, { from, profile = {}, attestations = [] }) {
   }
 
   validator('https://schema.originprotocol.com/identity_1.0.0.json', data)
-
-  validator(
-    'https://schema.originprotocol.com/profile_2.0.0.json',
-    data.profile
-  )
-
-  data.attestations.forEach(attestation => {
-    validator(
-      'https://schema.originprotocol.com/attestation_1.0.0.json',
-      attestation
-    )
+  validator('https://schema.originprotocol.com/profile_2.0.0.json', profile)
+  attestations.forEach(a => {
+    validator('https://schema.originprotocol.com/attestation_1.0.0.json', a)
   })
 
   const ipfsHash = await post(contracts.ipfsRPC, data)
-
   const tx = contracts.identityEventsExec.methods
     .emitIdentityUpdated(ipfsHash)
     .send({ gas: costs.emitIdentityUpdated, from })
