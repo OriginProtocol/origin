@@ -14,7 +14,7 @@ ipfsImageTag: master
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'bd9c630'
+ipfsProxyImageTag: '5479766'
 
 # origin-faucet
 faucetImage: origin-faucet
