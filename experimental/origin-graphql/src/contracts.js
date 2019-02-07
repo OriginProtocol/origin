@@ -382,6 +382,9 @@ if (typeof window !== 'undefined') {
   if (window.ethereum) {
     metaMask = applyWeb3Hack(new Web3(window.ethereum))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
+  } else if (window.web3) {
+    metaMask = applyWeb3Hack(new Web3(window.web3.currentProvider))
+    metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
   }
 
   setNetwork(window.localStorage.ognNetwork || 'mainnet')
