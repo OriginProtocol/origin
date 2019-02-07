@@ -1,13 +1,12 @@
-const BigNumber = require('bignumber.js')
+import BigNumber from 'bignumber.js'
 
-const TokenContract = require('origin-contracts/build/contracts/OriginToken.json')
+import TokenContract from 'origin-contracts/build/contracts/OriginToken.json'
 
-const { withRetries } = require('./util')
-const ContractHelper = require('./contractHelper')
-
+import { withRetries } from './util'
+import ContractHelper from './contractHelper'
 
 // Token helper class.
-class Token extends ContractHelper {
+export default class Token extends ContractHelper {
   /*
    * @params {object} config - Configuration dict.
    */
@@ -19,11 +18,11 @@ class Token extends ContractHelper {
   }
 
   /*
-  * Converts from token unit to "natural unit" aka fixed-point representation.
-  * The token contract only manipulates natural units.
-  * @param {int|BigNumber} - Value in token unit.
-  * @return {BigNumber} - Value in natural unit.
-  */
+   * Converts from token unit to "natural unit" aka fixed-point representation.
+   * The token contract only manipulates natural units.
+   * @param {int|BigNumber} - Value in token unit.
+   * @return {BigNumber} - Value in natural unit.
+   */
   toNaturalUnit(value) {
     return BigNumber(value).multipliedBy(this.scaling)
   }
@@ -45,7 +44,8 @@ class Token extends ContractHelper {
   contractAddress(networkId) {
     return (
       this.config.contractAddress ||
-      (TokenContract.networks[networkId] && TokenContract.networks[networkId].address)
+      (TokenContract.networks[networkId] &&
+        TokenContract.networks[networkId].address)
     )
   }
 
@@ -61,7 +61,9 @@ class Token extends ContractHelper {
     // Create a token contract objects based on its ABI and address on the network.
     const contractAddress = this.contractAddress(networkId)
     if (!contractAddress) {
-      throw new Error(`Could not get address of OriginToken contract for networkId ${networkId}`)
+      throw new Error(
+        `Could not get address of OriginToken contract for networkId ${networkId}`
+      )
     }
     return new web3.eth.Contract(TokenContract.abi, contractAddress)
   }
@@ -82,7 +84,9 @@ class Token extends ContractHelper {
     const tokenSupplier = await this.defaultAccount(networkId)
 
     // Transfer numTokens from the supplier to the target address.
-    const supplierBalance = await contract.methods.balanceOf(tokenSupplier).call()
+    const supplierBalance = await contract.methods
+      .balanceOf(tokenSupplier)
+      .call()
     if (value > supplierBalance) {
       throw new Error('insufficient funds for token transfer')
     }
@@ -91,7 +95,9 @@ class Token extends ContractHelper {
       throw new Error('token transfers are paused')
     }
     const transaction = contract.methods.transfer(address, value)
-    return await this.sendTransaction(networkId, transaction, { from: tokenSupplier })
+    return await this.sendTransaction(networkId, transaction, {
+      from: tokenSupplier
+    })
   }
 
   /*
@@ -128,7 +134,7 @@ class Token extends ContractHelper {
     await withRetries({ verbose: this.config.verbose }, async () => {
       if (
         !this.config.multisig &&
-        await contract.methods.paused().call() !== true
+        (await contract.methods.paused().call()) !== true
       ) {
         throw new Error('Still waiting for token to be paused')
       }
@@ -155,7 +161,7 @@ class Token extends ContractHelper {
     await withRetries({ verbose: this.config.verbose }, async () => {
       if (
         !this.config.multisig &&
-        await contract.methods.paused().call() !== false
+        (await contract.methods.paused().call()) !== false
       ) {
         throw new Error('Still waiting for token to be unpaused')
       }
@@ -217,5 +223,3 @@ class Token extends ContractHelper {
     console.log(`transactor whitelist:    ${whitelistStatus}`)
   }
 }
-
-module.exports = Token

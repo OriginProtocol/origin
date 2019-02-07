@@ -6,7 +6,7 @@ const MAX_RETRY_WAIT_MS = 2 * 60 * 1000
  * @param {function} fn - Async function to retry.
  * @returns - Return value of 'fn' if it succeeded.
  */
-async function withRetries(opts, fn) {
+export async function withRetries(opts, fn) {
   const maxRetries = opts.maxRetries || 7
   const verbose = opts.verbose || false
 
@@ -16,7 +16,7 @@ async function withRetries(opts, fn) {
       return await fn() // Do our action.
     } catch (e) {
       // Double wait time each failure
-      let waitTime = 1000 * 2**(tryCount - 1)
+      let waitTime = 1000 * 2 ** (tryCount - 1)
       // Randomly jiggle wait time by 20% either way. No thundering herd.
       waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
       // Max out at two minutes
@@ -31,5 +31,3 @@ async function withRetries(opts, fn) {
   }
   throw new Error('number of retries exceeded')
 }
-
-module.exports = { withRetries }
