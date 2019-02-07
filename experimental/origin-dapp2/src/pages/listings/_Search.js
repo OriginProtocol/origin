@@ -2,55 +2,44 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import get from 'lodash/get'
 import queryString from 'query-string'
+import { fbt } from 'fbt-runtime'
+import Categories from 'origin-graphql/src/constants/Categories'
+
+const CategoriesEnum = require('Categories$FbtEnum')
 
 import withConfig from 'hoc/withConfig'
 import Dropdown from 'components/Dropdown'
 
-const defaultCategory = {
-  type: 'all',
-  name: 'All'
-}
-const categories = [
-  {
-    type: 'forSale',
-    name: 'For Sale'
-  },
-  {
-    type: 'forRent',
-    name: 'For Rent'
-  },
-  {
-    type: 'services',
-    name: 'Services'
-  },
-  {
-    type: 'announcements',
-    name: 'Announcements'
+const categories = Categories.root.map(c => ({
+  id: c[0],
+  type: c[0].split('.').slice(-1)[0]
+}))
+categories.unshift({ id: '', type: '' })
+
+function getStateFromQuery(props) {
+  const getParams = queryString.parse(props.location.search)
+  return {
+    category: categories.find(c => c.type === getParams.type) || {},
+    searchInput: getParams.q || '',
+    open: false
   }
-]
+}
 
 class Search extends Component {
   constructor(props) {
     super(props)
+    this.state = getStateFromQuery(props)
+  }
 
-    const getParams = queryString.parse(get(this.props, 'location.search', ''))
-    let listingType = categories[0]
-
-    if (getParams.listing_type !== undefined) {
-      listingType =
-        [defaultCategory, ...categories].find(
-          listingTypeItem => listingTypeItem.type === getParams.listing_type
-        ) || defaultCategory
-    }
-
-    this.state = {
-      category: listingType,
-      searchInput: getParams.search_query || ''
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      this.setState(getStateFromQuery(this.props))
     }
   }
 
   render() {
     const enabled = get(this.props, 'config.discovery', false)
+    const category = this.state.category || {}
     return (
       <div className="search-bar">
         <div className="container">
@@ -72,8 +61,15 @@ class Search extends Component {
                 onClick={() =>
                   this.setState({ open: this.state.open ? false : true })
                 }
-                children={this.state.category.name}
-              />
+              >
+                {CategoriesEnum[category.id] ? (
+                  <fbt desc="category">
+                    <fbt:enum enum-range={CategoriesEnum} value={category.id} />
+                  </fbt>
+                ) : (
+                  fbt('All', 'listingType.all')
+                )}
+              </button>
             </Dropdown>
             <input
               type="text"
@@ -98,9 +94,13 @@ class Search extends Component {
   }
 
   doSearch() {
-    document.location.href = `#/search?search_query=${
-      this.state.searchInput
-    }&listing_type=${this.state.category.type}`
+    this.props.history.replace({
+      to: '/search',
+      search: queryString.stringify({
+        q: this.state.searchInput || undefined,
+        type: this.state.category.type || undefined
+      })
+    })
 
     if (this.props.onSearch) {
       this.props.onSearch(this.state.searchInput)
@@ -110,14 +110,23 @@ class Search extends Component {
 
 const SearchDropdown = ({ onChange }) => (
   <div className="dropdown-menu show">
-    {categories.map((cat, idx) => (
+    {categories.map((category, idx) => (
       <a
         key={idx}
         className="dropdown-item"
         href="#"
-        onClick={() => onChange(cat)}
+        onClick={e => {
+          e.preventDefault()
+          onChange(category)
+        }}
       >
-        {cat.name}
+        {CategoriesEnum[category.id] ? (
+          <fbt desc="category">
+            <fbt:enum enum-range={CategoriesEnum} value={category.id} />
+          </fbt>
+        ) : (
+          fbt('All', 'listingType.all')
+        )}
       </a>
     ))}
   </div>
