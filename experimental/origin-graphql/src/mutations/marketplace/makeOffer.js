@@ -2,6 +2,7 @@ import { post } from 'origin-ipfs'
 import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
@@ -56,7 +57,7 @@ async function makeOffer(_, data) {
   }
 
   const tx = marketplace.methods.makeOffer(...args).send({
-    gas: 4612388,
+    gas: cost.makeOffer,
     from: buyer,
     value
   })
