@@ -256,4 +256,11 @@ require('react-styl')(`
       .btn:not(:first-child)
         margin-left: 0.5rem
 
+  @media (max-width: 575.98px)
+    .pl-modal
+      .pl-modal-table
+        .pl-modal-cell
+          .pl-modal-content
+            padding: 1rem
+
 `)

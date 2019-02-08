@@ -334,6 +334,7 @@ require('react-styl')(`
         flex-direction: column
         align-items: center
         position: relative
+        text-align: center
         &::before
           content: ""
           background-color: var(--pale-grey-two)

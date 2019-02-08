@@ -152,4 +152,12 @@ require('react-styl')(`
         margin-top: 1rem
         li
           margin-bottom: 0.5rem
+
+  @media (max-width: 575.98px)
+    .make-offer-modal
+      .btn
+        margin-top: 1rem
+      .spinner,.error-icon
+        margin-bottom: 1rem
+
 `)

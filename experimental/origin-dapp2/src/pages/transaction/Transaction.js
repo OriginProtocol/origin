@@ -108,4 +108,10 @@ require('react-styl')(`
       font-size: 18px
       &.mt-4
         margin-top: 1.5rem
+
+  @media (max-width: 575.98px)
+    .transaction-detail
+      padding-top: 1rem
+      > h2
+        font-size: 32px
 `)

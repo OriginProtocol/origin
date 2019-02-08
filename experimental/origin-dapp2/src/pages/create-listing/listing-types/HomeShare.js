@@ -15,7 +15,7 @@ const HomeShareListing = ({ listing, onChange }) => {
         <div className="d-flex">
           <div style={{ flex: 1, marginRight: '1rem' }}>
             <div className="with-symbol">
-              <input {...input('price')} />
+              <input {...input('price')} type="number" />
               <span className="eth">ETH</span>
             </div>
           </div>
@@ -40,7 +40,7 @@ const HomeShareListing = ({ listing, onChange }) => {
         <div className="d-flex">
           <div style={{ flex: 1, marginRight: '1rem' }}>
             <div className="with-symbol">
-              <input {...input('weekendPrice')} />
+              <input {...input('weekendPrice')} type="number" />
               <span className="eth">ETH</span>
             </div>
           </div>

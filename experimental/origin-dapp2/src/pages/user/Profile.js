@@ -86,7 +86,9 @@ class UserProfile extends Component {
         <div className="row">
           <div className="col-md-8">
             <div className="profile d-flex">
-              <Avatar avatar={this.state.avatar} size="10rem" />
+              <div className="avatar-wrap">
+                <Avatar avatar={this.state.avatar} />
+              </div>
               <div className="info">
                 <h1>{name.length ? name.join(' ') : 'Unnamed User'}</h1>
                 <div className="description">
@@ -266,9 +268,11 @@ require('react-styl')(`
       border-radius: 5px
       padding: 1rem
       margin-bottom: 2rem
-    .avatar
+    .avatar-wrap
       margin-right: 2rem
-      border-radius: 1rem
+      width: 10rem
+      .avatar
+        border-radius: 1rem
     .actions
       text-align: center
     .profile
@@ -291,5 +295,16 @@ require('react-styl')(`
       background-size: 5rem;
       padding-top: 8rem;
 
+  @media (max-width: 575.98px)
+    .profile-edit
+      margin-top: 1rem
+      .avatar-wrap
+        margin-right: 1rem
+      .profile
+        margin-bottom: 1rem
+      .profile-strength
+        margin-bottom: 1rem
+      .actions
+        margin-bottom: 2rem
 
 `)

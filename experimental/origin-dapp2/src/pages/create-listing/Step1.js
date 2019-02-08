@@ -178,4 +178,18 @@ require('react-styl')(`
     .actions
       justify-content: flex-end
 
+
+
+  @media (max-width: 575.98px)
+    .create-listing .create-listing-step-1
+      h2
+        font-size: 32px
+        line-height: 1.25
+      .category .title::before
+        width: 7rem
+        height: 4rem
+
+      .actions
+        justify-content: center
+        margin-bottom: 2.5rem
 `)

@@ -339,4 +339,12 @@ require('react-styl')(`
         > div:nth-child(3)
           margin-bottom: 1rem
 
+  @media (max-width: 575.98px)
+    .listing-detail
+      margin-top: 0.5rem
+      h2
+        font-size: 32px
+      .description
+        margin-top: 1rem
+
 `)
