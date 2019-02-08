@@ -2,6 +2,7 @@ import { post } from 'origin-ipfs'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import costs from '../_gasCost.js'
 
 async function deployIdentity(_, { from, profile = {}, attestations = [] }) {
   await checkMetaMask(from)
@@ -26,7 +27,7 @@ async function deployIdentity(_, { from, profile = {}, attestations = [] }) {
 
   const tx = contracts.identityEventsExec.methods
     .emitIdentityUpdated(ipfsHash)
-    .send({ gas: 4612388, from })
+    .send({ gas: costs.emitIdentityUpdated, from })
   return txHelper({ tx, from, mutation: 'deployIdentity' })
 }
 

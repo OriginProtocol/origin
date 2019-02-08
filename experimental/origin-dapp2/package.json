@@ -57,7 +57,7 @@
     "react-popper-tooltip": "^2.8.0",
     "react-styl": "^0.0.3",
     "serve-static": "^1.13.2",
-    "web3": "1.0.0-beta.37"
+    "web3": "1.0.0-beta.34"
   },
   "babel": {
     "presets": [
