@@ -15,7 +15,8 @@ class Create extends React.Component {
 
     this.state = {
       ...props.config,
-      fields: Object.keys(props.config), subdomainValidationRequest: null
+      fields: Object.keys(props.config),
+      subdomainValidationRequest: null
     }
 
     this.availableLanguages = getAvailableLanguages().map(language => {
