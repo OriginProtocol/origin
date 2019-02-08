@@ -15,8 +15,7 @@ class Create extends React.Component {
 
     this.state = {
       ...props.config,
-      fields: Object.keys(props.config),
-      subdomainValidationRequest: null
+      fields: Object.keys(props.config), subdomainValidationRequest: null
     }
 
     this.availableLanguages = getAvailableLanguages().map(language => {
@@ -137,11 +136,11 @@ class Create extends React.Component {
               </div>
               {Feedback('subdomain')}
             </div>
-            {/*
+            {
             <div className="helper-text">
-              You can use your own custom domain name. <a href="#">Here's how</a>
+              You can set up your own custom domain name after you create your marketplace.
             </div>
-            */}
+            }
           </div>
 
           <div className="form-group">

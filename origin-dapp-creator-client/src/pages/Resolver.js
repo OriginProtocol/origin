@@ -1,8 +1,7 @@
 'use strict'
 
 import React from 'react'
-import superagent from 'superagent'
-
+import superagent from 'superagent' 
 import Redirect from 'components/Redirect'
 
 class Resolver extends React.Component {
@@ -58,6 +57,7 @@ class Resolver extends React.Component {
           <img src="images/spinner-animation-dark.svg" />
           <h1>Setting up your marketplace...</h1>
           <h4>Please wait. This will take a few minutes.</h4>
+          <p>If you ever need to edit your marketplace, you can repeat this process. Make sure you use the same subdomain and Ethereum wallet.</p>
         </div>
       </div>
     )
