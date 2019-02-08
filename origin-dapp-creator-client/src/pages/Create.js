@@ -138,9 +138,10 @@ class Create extends React.Component {
               {Feedback('subdomain')}
             </div>
             {
-            <div className="helper-text">
-              You can set up your own custom domain name after you create your marketplace.
-            </div>
+              <div className="helper-text">
+                You can set up your own custom domain name after you create your
+                marketplace.
+              </div>
             }
           </div>
 
