@@ -75,7 +75,10 @@
     "schema.resumes": "CV",
     "schema.volunteers": "Bénévolat"
   },
-  "odYsB": "Commentaires",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "L'application décentralisée Origin permet aux acheteurs et aux vendeurs d'effectuer des transactions sans intermédiaire en utilisant la blockchain Ethereum et l'IPFS.",
@@ -89,6 +92,7 @@
   "561FZ": "Annuler",
   "47VMoo": "Allez au site Airbnb, modifier votre profil et collez le texte suivant dans sa description du profil.",
   "4ppTCb": "Continuer après avoir entré le code de confirmation dans votre profil d’Airbnb.",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"

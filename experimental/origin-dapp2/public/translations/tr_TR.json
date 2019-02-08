@@ -75,7 +75,10 @@
     "schema.resumes": "Özgeçmişler",
     "schema.volunteers": "Gönüllüler"
   },
-  "odYsB": "yorumlar",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Kökeni merkezi olmayan uygulama, alıcıların ve satıcıların Ethereum blockchain ve IPFS kullanarak aracı arama yapmadan arama yapabilmelerini sağlar.",
@@ -89,6 +92,7 @@
   "561FZ": "İptal etmek",
   "47VMoo": "Airbnb web sitesine gidin, profilinizi düzenleyin ve aşağıdaki metni profil açıklamasına yapıştırın.",
   "4ppTCb": "Airbnb profilinize onay kodu girildiğinde devam edin.",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"

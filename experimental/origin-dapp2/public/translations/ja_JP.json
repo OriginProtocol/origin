@@ -75,7 +75,10 @@
     "schema.resumes": "履歴書",
     "schema.volunteers": "ボランティア"
   },
-  "odYsB": "レビュー",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Originの分散アプリケーションにより、買い手と売り手は、EthereumブロックチェーンとIPFSを使用して、仲介料を必要とする仲介人を介する事無く取引できます。",
@@ -89,6 +92,7 @@
   "561FZ": "キャンセル",
   "47VMoo": "Airbnbのプロフィールを編集から、下記のテキストをプロフィールの説明に貼り付けてください。",
   "4ppTCb": "Airbnb プロフィールに確認コードを入力してから続けます。",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"

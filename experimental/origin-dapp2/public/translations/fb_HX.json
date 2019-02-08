@@ -75,7 +75,10 @@
     "schema.resumes": "Resumes",
     "schema.volunteers": "Volunteers"
   },
-  "odYsB": "Reviews",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS.",
@@ -89,6 +92,7 @@
   "561FZ": "Cancel",
   "47VMoo": "Go to the Airbnb website, edit your profile and paste the following text into profile description:",
   "4ppTCb": "Continue once the confirmation code is entered in your Airbnb profile.",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} LISTINGS",
     "_1": "1 LISTING"

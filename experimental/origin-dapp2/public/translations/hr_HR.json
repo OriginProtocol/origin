@@ -75,7 +75,10 @@
     "schema.resumes": "biografije",
     "schema.volunteers": "volonteri"
   },
-  "odYsB": "Recenzije",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Primjena decentraliziranog podrijetla omogućuje kupcima i prodavačima da obavljaju poslove bez posrednika koji traže posudbu pomoću Ethereum blockchaina i IPFS-a.",
@@ -89,6 +92,7 @@
   "561FZ": "Otkazati",
   "47VMoo": "Idite na Airbnb web stranicu, uredite svoj profil i zalijepite sljedeći tekst u opis profila.",
   "4ppTCb": "Nastavite s unosom koda za potvrdu u svoj Airbnb profil.",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
