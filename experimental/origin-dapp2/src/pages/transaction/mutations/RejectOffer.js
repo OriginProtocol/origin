@@ -111,9 +111,7 @@ class RejectOffer extends Component {
         {() => (
           <div className="reject-offer-modal">
             <h2>This offer has been rejected</h2>
-            <div>
-              You&#39;ve rejected this buyer&#39;s offer.
-            </div>
+            <div>You&#39;ve rejected this buyer&#39;s offer.</div>
             <div className="actions">
               <button
                 className="btn btn-outline-light"

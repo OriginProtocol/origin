@@ -15,6 +15,7 @@
     "origin-mobile",
     "origin-notifications",
     "origin-tests",
+    "origin-token",
     "origin-token-transfer/*"
   ],
   "command": {

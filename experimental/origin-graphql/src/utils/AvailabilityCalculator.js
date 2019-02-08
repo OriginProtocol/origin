@@ -115,8 +115,7 @@ class AvailabilityCalculator {
 
   getAvailability(startStr, endStr) {
     let start = typeof startStr === 'string' ? dayjs(startStr) : startStr
-    let end =
-        typeof endStr === 'string' ? dayjs(endStr).add(1, 'day') : endStr
+    let end = typeof endStr === 'string' ? dayjs(endStr).add(1, 'day') : endStr
     const days = []
 
     if (end.isBefore(start)) {

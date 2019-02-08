@@ -21,7 +21,7 @@ class ThemePicker extends React.Component {
     document.removeEventListener('mousedown', this.handleClick, false)
   }
 
-  handleClick (event) {
+  handleClick(event) {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       this.props.onCollapse()
     }
@@ -39,28 +39,38 @@ class ThemePicker extends React.Component {
     return classNames
   }
 
-  render () {
+  render() {
     return (
       <div ref={this.setWrapperRef}>
-        <div className={`theme-select form-control form-control-lg ${this.props.expanded ? 'expanded' : 'collapsed'}`}
-            onClick={() => this.props.expanded ? this.props.onCollapse() : this.props.onExpand()}>
+        <div
+          className={`theme-select form-control form-control-lg ${
+            this.props.expanded ? 'expanded' : 'collapsed'
+          }`}
+          onClick={() =>
+            this.props.expanded
+              ? this.props.onCollapse()
+              : this.props.onExpand()
+          }
+        >
           {this.props.themes[this.props.themeIndex].title}
         </div>
-        {this.props.expanded &&
+        {this.props.expanded && (
           <div className="theme-dropdown">
             <div className="row">
-              {this.props.themes.map((theme, i) =>
+              {this.props.themes.map((theme, i) => (
                 <div className="col-6" key={i}>
-                  <div className={this.themePreviewClassName(i)}
-                      onClick={() => this.props.onThemeClick(i)}>
+                  <div
+                    className={this.themePreviewClassName(i)}
+                    onClick={() => this.props.onThemeClick(i)}
+                  >
                     <Preview config={theme} />
                     {theme.title}
                   </div>
-              </div>
-              )}
+                </div>
+              ))}
             </div>
           </div>
-        }
+        )}
       </div>
     )
   }

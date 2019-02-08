@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
 
 import BetaBanner from './_BetaBanner'
@@ -19,7 +19,11 @@ import CreateListing from './create-listing/CreateListing'
 import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
+<<<<<<< HEAD
 import Configuration from 'components/Configuration'
+=======
+import AboutToken from './about/AboutTokens'
+>>>>>>> tomlinton/dapp2-docker-support
 
 class App extends Component {
   state = { hasError: false }
@@ -67,16 +71,17 @@ class App extends Component {
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
             <Route path="/about/dapp-info" component={DappInfo} />
+            <Route path="/about/tokens" component={AboutToken} />
             <Route component={Listings} />
           </Switch>
         </main>
-        <Footer />
+        <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
       </Configuration>
     )
   }
 }
 
-export default App
+export default withRouter(App)
 
 require('react-styl')(`
   .app-error

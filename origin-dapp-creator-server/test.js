@@ -14,10 +14,10 @@ describe('publish', () => {
     request(server)
       .post('/validate/subdomain')
       .send({
-        'subdomain': 'admin',
-        'address': '0x123'
+        subdomain: 'admin',
+        address: '0x123'
       })
-      .then((response) => {
+      .then(response => {
         expect(response.status).to.equal(400)
       })
   })
