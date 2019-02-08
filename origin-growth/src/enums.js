@@ -13,6 +13,12 @@ class Enum extends Array {
   }
 }
 
+const GrowthCampaignRewardStatuses = new Enum(
+  'Undefined',
+  'Calculated',
+  'Distributed'
+)
+
 const GrowthEventStatuses = new Enum(
   'Logged',
   'Verified',
@@ -51,6 +57,7 @@ const GrowthInviteStatuses = new Enum(
 )
 
 module.exports = {
+  GrowthCampaignRewardStatuses,
   GrowthEventStatuses,
   GrowthEventTypes,
   GrowthRewardStatuses,

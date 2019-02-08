@@ -32,6 +32,9 @@ module.exports = {
       cap_used: {
         type: Sequelize.DECIMAL
       },
+      cap_reached_date: {
+        type: Sequelize.DATE
+      },
       currency: {
         type: Sequelize.STRING,
       },

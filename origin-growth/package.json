@@ -20,6 +20,7 @@
     "graphql": "^0.13.2",
     "graphql-type-json": "^0.2.1",
     "http": "0.0.0",
+    "logplease": "^1.2.15",
     "origin-graphql": "^0.1.0",
     "per-env": "^1.0.2",
     "pg": "^7.7.1",
@@ -37,7 +38,9 @@
     "rewire": "^4.0.1"
   },
   "scripts": {
-    "lint": "eslint 'src/*.js' 'src/**/*.js'",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "migrate": "sequelize db:migrate",
     "start": "npm run start:growth",
     "start:growth": "per-env",

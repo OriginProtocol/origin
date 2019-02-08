@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     distributionDate: DataTypes.DATE,
     cap: DataTypes.DECIMAL,
     capUsed: DataTypes.DECIMAL,
+    capReachedDate: DataTypes.DATE,
     currency: DataTypes.STRING
   }, {
     tableName: 'growth_campaign'

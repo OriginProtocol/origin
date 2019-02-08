@@ -50,9 +50,12 @@ class Campaign {
       ethAddress: ethAddress.toLowerCase()
     }
     if (duringCampaign) {
+      // Note: restrict the query by using the capReachedDate (that's the case where the
+      // campaign was exhausted before its end date) or the campaign end date.
+      const endDate = this.campaign.capReachedDate || this.campaign.endDate
       whereClause.createdAt = {
         [Sequelize.Op.gte]: this.campaign.startDate,
-        [Sequelize.Op.lt]: this.campaign.endDate
+        [Sequelize.Op.lt]: endDate
       }
     }
     const events = await db.GrowthEvent.findAll({

@@ -22,10 +22,10 @@ module.exports = {
       campaign_id: {
         type: Sequelize.INTEGER
       },
-      campaign_level: {
+      level_id: {
         type: Sequelize.INTEGER
       },
-      campaign_rule: {
+      rule_id: {
         type: Sequelize.STRING
       },
       amount: {

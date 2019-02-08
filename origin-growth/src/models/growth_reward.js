@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.ENUM(enums.GrowthRewardStatuses),
     ethAddress: DataTypes.STRING,
     campaignId: DataTypes.INTEGER,
-    campaignLevel: DataTypes.INTEGER,
-    campaignRule: DataTypes.STRING,
+    levelId: DataTypes.INTEGER,
+    ruleId: DataTypes.STRING,
     amount: DataTypes.DECIMAL,
     currency: DataTypes.STRING
   }, {
