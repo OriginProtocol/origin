@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
+import queryString from 'query-string'
 
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
@@ -19,19 +20,47 @@ import CreateListing from './create-listing/CreateListing'
 import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
-<<<<<<< HEAD
-import Configuration from 'components/Configuration'
-=======
 import AboutToken from './about/AboutTokens'
->>>>>>> tomlinton/dapp2-docker-support
+import baseConfig from 'constants/config'
+import {
+  applyConfiguration,
+  isWhiteLabelHostname
+} from 'utils/marketplaceCreator'
 
 class App extends Component {
-  state = { hasError: false }
+  state = {
+    hasError: false,
+    loading: true,
+    config: baseConfig
+  }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (window.ethereum) {
       window.ethereum.enable()
     }
+
+    let configUrl
+
+    const parsed = queryString.parse(this.props.location.search)
+    if (parsed.config) {
+      // Config URL was passed in the query string
+      configUrl = parsed.config
+    } else if (isWhiteLabelHostname()) {
+      // Hostname is something custom, assume config is at config.<hostname>
+      configUrl = `config.${window.location.hostname}`
+    }
+
+    if (configUrl) {
+      // Retrieve the config
+      await fetch(configUrl)
+        .then(response => response.json())
+        .then(responseJson => this.setState({ config: responseJson.config }))
+        .catch(error => {
+          console.log('Could not set custom configuration: ' + error)
+        })
+    }
+
+    applyConfiguration(this.state.config)
   }
 
   componentDidUpdate() {
@@ -54,10 +83,13 @@ class App extends Component {
       )
     }
     return (
-      <Configuration>
+      <>
         <BetaBanner />
         <BetaModal />
-        <Nav />
+        <Nav
+          logoUrl={this.state.config.logoUrl}
+          title={this.state.config.title}
+        />
         <main>
           <Switch>
             <Route path="/listings/:listingID" component={Listing} />
@@ -76,7 +108,7 @@ class App extends Component {
           </Switch>
         </main>
         <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
-      </Configuration>
+      </>
     )
   }
 }
