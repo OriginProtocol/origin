@@ -33,7 +33,15 @@ const GrowthEventTypes = new Enum(
   'ListingPurchased'
 )
 
-const GrowthRewardStatuses = new Enum('Pending', 'Fraud,', 'Blocked', 'Paid')
+const GrowthParticipantStatuses = new Enum('Active', 'Banned')
+
+const GrowthRewardStatuses = new Enum(
+  'Pending',
+  'Fraud,',
+  'Blocked',
+  'InPayment',
+  'Paid'
+)
 
 const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
 
@@ -43,6 +51,7 @@ module.exports = {
   GrowthCampaignRewardStatuses,
   GrowthEventStatuses,
   GrowthEventTypes,
+  GrowthParticipantStatuses,
   GrowthRewardStatuses,
   GrowthInviteContactTypes,
   GrowthInviteStatuses
