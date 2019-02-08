@@ -11,32 +11,32 @@ const resolvers = {
   //JSON: GraphQLJSON,
   DateTime: GraphQLDateTime,
   Query: {
-    async campaigns () {
+    async campaigns() {
       // query campaigns from DB
       return {
-        nodes: await db.getCampaigns(),
+        nodes: await db.getCampaigns()
       }
     },
-    async campaign () {
+    async campaign() {
       return null
     }
   },
   Mutation: {
-    async invite () {
+    async invite() {
       return {
         code: '418',
         success: false,
         message: 'I am a teapot'
       }
     },
-    async enroll () {
+    async enroll() {
       return {
         code: '418',
         success: false,
         message: 'I am a teapot'
       }
     },
-    async log () {
+    async log() {
       return {
         code: '418',
         success: false,

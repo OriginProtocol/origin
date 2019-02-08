@@ -3,15 +3,14 @@ const db = require('../models')
 const { GrowthEventStatuses, GrowthEventTypes } = require('../enums')
 
 const AttestationServiceToEventType = {
-  'airbnb': GrowthEventTypes.AirbnbAttestationPublished,
-  'email': GrowthEventTypes.EmailAttestationPublished,
-  'facebook': GrowthEventTypes.FacebookAttestationPublished,
-  'phone': GrowthEventTypes.PhoneAttestationPublished,
-  'twitter': GrowthEventTypes.TwitterAttestationPublished
+  airbnb: GrowthEventTypes.AirbnbAttestationPublished,
+  email: GrowthEventTypes.EmailAttestationPublished,
+  facebook: GrowthEventTypes.FacebookAttestationPublished,
+  phone: GrowthEventTypes.PhoneAttestationPublished,
+  twitter: GrowthEventTypes.TwitterAttestationPublished
 }
 
 class GrowthEvent {
-
   static async _findAll(ethAddress, eventType, customId) {
     const where = {
       ethAddress: ethAddress.toLowerCase(),
@@ -33,16 +32,22 @@ class GrowthEvent {
    * @param {Object} data - Optional data to record along with the event.
    * @returns {Promise<void>}
    */
-   static async insert(logger, ethAddress, eventType, customId, data) {
+  static async insert(logger, ethAddress, eventType, customId, data) {
     // Check input.
     if (!Web3.utils.isAddress(ethAddress)) {
       throw new Error(`Invalid eth address ${ethAddress}`)
     }
 
     // Check there isn't already an event of the same type.
-    const pastEvents = await GrowthEvent._findAll(ethAddress, eventType, customId)
+    const pastEvents = await GrowthEvent._findAll(
+      ethAddress,
+      eventType,
+      customId
+    )
     if (pastEvents.length > 0) {
-      logger.debug(`Skipped insert: found past growth event ${eventType} for account  ${ethAddress}`)
+      logger.debug(
+        `Skipped insert: found past growth event ${eventType} for account  ${ethAddress}`
+      )
       return
     }
 
@@ -55,7 +60,9 @@ class GrowthEvent {
       data
     }
     await db.GrowthEvent.create(eventData)
-    logger.debug(`Inserted growth event ${eventType} for account  ${ethAddress}`)
+    logger.debug(
+      `Inserted growth event ${eventType} for account  ${ethAddress}`
+    )
   }
 
   /**
@@ -67,7 +74,7 @@ class GrowthEvent {
    * @returns {Promise<Array<Object>>}
    */
   static async findAll(logger, ethAddress, eventType, customId) {
-     return GrowthEvent._findAll(ethAddress, eventType, customId)
+    return GrowthEvent._findAll(ethAddress, eventType, customId)
   }
 }
 
