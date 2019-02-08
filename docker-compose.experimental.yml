@@ -86,6 +86,9 @@ services:
   origin-messaging:
     container_name: origin-messaging
     image: origin-experimental
+    build:
+      context: .
+      dockerfile: Dockerfile-experimental
     volumes: *volumes
     environment:
       - MESSAGING_NAMESPACE=dev
