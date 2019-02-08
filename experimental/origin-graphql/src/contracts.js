@@ -118,7 +118,12 @@ const Configs = {
     discovery: 'http://localhost:4000/graphql',
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
-    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544'
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
+    messaging: {
+      ipfsSwarm: process.env.IPFS_SWARM,
+      messagingNamespace: 'origin:docker',
+      globalKeyServer: 'http://localhost:6647'
+    }
   },
   test: {
     provider: `http://${HOST}:8545`,
