@@ -14,7 +14,8 @@ class Enum extends Array {
 }
 
 const GrowthCampaignRewardStatuses = new Enum(
-  'Undefined',
+  'NotReady',
+  'ReadyForCalculation',
   'Calculated',
   'Distributed'
 )
@@ -40,7 +41,8 @@ const GrowthRewardStatuses = new Enum(
   'Fraud,',
   'Blocked',
   'InPayment',
-  'Paid'
+  'Paid',
+  'PaidConfirmed'
 )
 
 const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
