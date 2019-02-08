@@ -1,7 +1,8 @@
 'use strict'
 
 import React from 'react'
-import superagent from 'superagent' 
+import superagent from 'superagent'
+
 import Redirect from 'components/Redirect'
 
 class Resolver extends React.Component {
