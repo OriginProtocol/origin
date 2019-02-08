@@ -41,13 +41,12 @@ class GrowthWelcome extends Component {
               <img className="logo" src="/images/origin-logo-footer.svg" />
             </Link>
             <div className="title-text">
-              Your friend Aure has invited you to earn{' '}
-              <b>FREE Origin Tokens</b>
+              Your friend Aure has invited you to earn <b>FREE Origin Tokens</b>
             </div>
             <div className="sub-title-text">
-              Create an account on Origin today and start completing tasks
-              for the chance to will up to 2000 OGN currently valued at 2000
-              USD. Don’t miss this amazing opportunity!
+              Create an account on Origin today and start completing tasks for
+              the chance to will up to 2000 OGN currently valued at 2000 USD.
+              Don’t miss this amazing opportunity!
             </div>
             <this.EnrollButton
               className="btn btn-primary btn-rounded"
@@ -56,16 +55,19 @@ class GrowthWelcome extends Component {
             />
           </div>
           <div className="col-6 token-stack-holder">
-            <img className="m-4 token-stack" src='images/growth/token-stack.svg' />
-            <img className="free-badge" src='images/growth/free-badge.svg' />
+            <img
+              className="m-4 token-stack"
+              src="images/growth/token-stack.svg"
+            />
+            <img className="free-badge" src="images/growth/free-badge.svg" />
           </div>
         </div>
         <div className="row">
           <div className="col-12 d-flex flex-column mt-5">
             <div className="info-title">What are Origin Tokens?</div>
             <div className="text-center">
-              Origin Tokens are a unique cryptocurrency that can be used in
-              the Origin Marketplace.
+              Origin Tokens are a unique cryptocurrency that can be used in the
+              Origin Marketplace.
             </div>
           </div>
         </div>
