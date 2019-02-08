@@ -16,10 +16,8 @@ const { Campaign } = require('../rules/rules')
 // rather periodically via a cron job.
 const CampaignMaxOverCapFactor = 1.1
 
-
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('calcRewards', { showTimestamp: false })
-
 
 async function _getParticipatingAccounts(campaign) {
   // Get list of growth engine program participants that signed up
@@ -56,14 +54,14 @@ async function _insertRewards(ethAddress, campaign, rewards) {
         currency: reward.currency
       })
     }
-  } catch(e) {
+  } catch (e) {
     await txn.rollback()
-    throw(e)
+    throw e
   }
 }
 
 async function main() {
-  const now = (new Date()).toISOString()
+  const now = new Date().toISOString()
 
   // Look for finished campaigns with rewards_status undefined.
   const campaignRows = await db.findall({
@@ -75,7 +73,9 @@ async function main() {
 
   for (const campaignRow of campaignRows) {
     const campaign = new Campaign(campaignRow, campaignRow.rules)
-    logger.info(`Calculating rewards for campaign ${campaign.id} (${campaign.name})`)
+    logger.info(
+      `Calculating rewards for campaign ${campaign.id} (${campaign.name})`
+    )
     let campaignTotal = 0
 
     const participants = await _getParticipatingAccounts(campaign)
@@ -85,7 +85,11 @@ async function main() {
       // Check if any reward was already created for that user.
       // This could happen if this job got interrupted.
       if (await _checkForExistingReward(participant.ethAddress, campaign.id)) {
-        logger.info(`Reward already calculated for account ${participant.ethAddress} - Skipping.`)
+        logger.info(
+          `Reward already calculated for account ${
+            participant.ethAddress
+          } - Skipping.`
+        )
         continue
       }
 
@@ -94,14 +98,24 @@ async function main() {
 
       // Insert rewards in the growth_reward table.
       // TODO: use BN
-      const total = rewards.map(reward => reward.value).reduce((v1, v2) => v1 + v2)
-      logger.info(`Recording ${rewards.length} awards for a total of ${total} ${campaign.currency}`)
+      const total = rewards
+        .map(reward => reward.value)
+        .reduce((v1, v2) => v1 + v2)
+      logger.info(
+        `Recording ${rewards.length} awards for a total of ${total} ${
+          campaign.currency
+        }`
+      )
       await _insertRewards(participant.ethAddress, campaign, rewards)
       campaignTotal += total
     }
 
     // Done calculating rewards for this campaign.
-    logger.info(`Campaign calculation done. Total reward of ${campaignTotal} ${campaign.currency}`)
+    logger.info(
+      `Campaign calculation done. Total reward of ${campaignTotal} ${
+        campaign.currency
+      }`
+    )
 
     // Some sanity checks before we record the rewards.
     if (campaignTotal > campaign.cap * CampaignMaxOverCapFactor) {
@@ -113,9 +127,7 @@ async function main() {
       rewardStatus: enums.GrowthCampaignRewardStatuses.Calculated
     })
   }
-
 }
 
 logger.info('Starting rewards calculation job.')
-main()
-  .then(logger.info('Finished.'))
+main().then(logger.info('Finished.'))

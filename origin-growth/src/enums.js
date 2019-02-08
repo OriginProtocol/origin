@@ -7,7 +7,7 @@ class Enum extends Array {
   constructor(...args) {
     super(...args)
 
-    for(const k of args) {
+    for (const k of args) {
       this[k] = k
     }
   }
@@ -19,11 +19,7 @@ const GrowthCampaignRewardStatuses = new Enum(
   'Distributed'
 )
 
-const GrowthEventStatuses = new Enum(
-  'Logged',
-  'Verified',
-  'Fraud'
-)
+const GrowthEventStatuses = new Enum('Logged', 'Verified', 'Fraud')
 
 const GrowthEventTypes = new Enum(
   'ProfilePublished',
@@ -37,24 +33,11 @@ const GrowthEventTypes = new Enum(
   'ListingPurchased'
 )
 
-const GrowthRewardStatuses = new Enum(
-  'Pending',
-  'Fraud,',
-  'Blocked',
-  'Paid'
-)
+const GrowthRewardStatuses = new Enum('Pending', 'Fraud,', 'Blocked', 'Paid')
 
-const GrowthInviteContactTypes = new Enum(
-  'Email',
-  'Phone',
-  'Other'
-)
+const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
 
-const GrowthInviteStatuses = new Enum(
-  'Sent',
-  'Visited',
-  'Completed'
-)
+const GrowthInviteStatuses = new Enum('Sent', 'Visited', 'Completed')
 
 module.exports = {
   GrowthCampaignRewardStatuses,

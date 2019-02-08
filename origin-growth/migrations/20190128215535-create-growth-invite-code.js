@@ -23,7 +23,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface) => {
     return queryInterface.dropTable('growth_invite_codes')

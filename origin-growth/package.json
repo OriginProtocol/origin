@@ -47,5 +47,9 @@
     "start:growth:development": "nodemon src/apollo/app.js",
     "start:growth:production": "node src/apollo/app.js",
     "test": "mocha --timeout 10000 --exit"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }
