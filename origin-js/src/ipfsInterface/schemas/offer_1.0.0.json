@@ -264,6 +264,9 @@
     },
     "commission": {
       "$ref": "#/definitions/money"
+    },
+    "verifyTerms": {
+      "type" : "object"
     }
   },
   "oneOf": [

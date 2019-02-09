@@ -321,7 +321,6 @@ class DiscoveryService {
       throw new Error(`Cannot inject listing`)
     }
 
-    console.log("injected listing:", resp.data)
     return this._toListingModel(resp.data.injectListing)
   }
 

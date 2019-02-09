@@ -5,6 +5,8 @@ import { Review } from '../models/review'
 import { Notification } from '../models/notification'
 import { notificationStatuses, storeKeys } from '../models/notification'
 import { generateListingId, generateOfferId } from '../utils/id'
+import stringify from 'json-stable-stringify'
+import { recoverTypedSignature } from 'eth-sig-util'
 import {
   LISTING_DATA_TYPE,
   LISTING_WITHDRAW_DATA_TYPE,
@@ -23,11 +25,13 @@ export default class Marketplace {
     contractService,
     ipfsService,
     discoveryService,
+    hotService,
     store,
     affiliate,
     arbitrator,
     perfModeEnabled })
   {
+    this.hotService = hotService
     this.contractService = contractService
     this.ipfsService = ipfsService
     this.discoveryService = discoveryService
@@ -255,7 +259,7 @@ export default class Marketplace {
           } catch (e) {
             // TODO(John) - handle this error better. It's tricky b/c it happens in a map
             // and we want to throw the error, but we don't want the whole getOffers() call to fail.
-            // We want it to return the offers that it was able to get but still let us know something failed.
+        listingId,    // We want it to return the offers that it was able to get but still let us know something failed.
             console.error(
               `Error getting offer data for offer ${
                 offerId
@@ -373,7 +377,16 @@ export default class Marketplace {
 
     // validate offers awaiting approval
     if (chainOffer.status === 'created') {
-      const listing = await this.getListing(listingId)
+      let listing
+
+      if (chainOffer.listingIpfsHash)
+      {
+        listing = this._listingFromData(listingId, {ipfsHash:chainOffer.listingIpfsHash})
+      }
+      else
+      {
+        listing = await this.getListing(listingId)
+      }
 
       if (listing.type === 'unit') {
         // TODO(John) - there is currently no way to know the currency of a fractional listing.
@@ -418,20 +431,107 @@ export default class Marketplace {
     return this.perfModeEnabled
   }
 
-  async injectListing( ipfsData ) {
-    ipfsData.createDate = (new Date()).toISOString()
+  async generateListingId(listing)
+  {
+    return [await this.contractService.web3.eth.net.getId(), 'A', listing.uniqueId].join('-')
+  }
+
+  async offerListing( ipfsData, offerCreateFunc ) {
     const account = await this.contractService.currentAccount()
+    ipfsData.creator = account
+    ipfsData.createDate = (new Date()).toISOString()
+
+    if (ipfsData.unitsTotal !== undefined)
+    {
+      ipfsData.unitsTotal = 1
+    }
     const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
 
+    const seller = "0x0000000000000000000000000000000000000000"
+
     const listing = Listing.init(undefined, 
       { status:'active',
         ipfsHash:ipfsBytes,
-        seller:account}, ipfsListing)
-    const signature =  await this.contractService.signListing(listing)
+        seller}, ipfsListing)
+
+    const listingID = await this.generateListingId(listing)
+    listing.id = listingID
+
+    const listingIpfsHash = listing.ipfsHash
+    const verifier = process.env.DEFAULT_VERIFIER_ACCOUNT
+    const price = await this.contractService.moneyToUnits(listing.price)
+
+    const offerData = await offerCreateFunc(listing)
+
+    // TODO: nest offerData.affiliate, offerData.arbitrator, offerData.finalizes under an "_untrustworthy" key
+    // Validate and save the data to IPFS.
+    const offerIpfsHash = await this.ipfsDataStore.save(OFFER_DATA_TYPE, offerData)
+    const offerIpfsBytes = this.contractService.getBytes32FromIpfsHash(offerIpfsHash)
+    const affiliate = this.affiliate
+    const arbitrator = this.arbitrator
+
+    return await this.resolver.makeOffer(
+      listingID,
+      offerIpfsBytes,
+      Object.assign({ affiliate, arbitrator, seller, listingIpfsHash:ipfsBytes, verifier }, offerData)
+    )
+  }
+
+
+  async verifyFinalizeOffer(offerId, params ={}) {
+    const {signature, ipfsBytes, payout, verifyFee} = await this.hotService.verifyOffer(offerId, params)
+
+    if (signature) {
+        await this.resolver.verifiedFinalizeOffer(offerId, ipfsBytes, verifyFee, payout, signature)
+        return true
+    } else {
+      return false
+    }
+  }
+
+  async verifyListingSignature(listing, signer) {
+    // grab the raw ipfs hash
+    const ipfs_response = await this.ipfsService.loadFile(listing.ipfs.hash)
+    const ipfs_data = await ipfs_response.json()
+    const signature = ipfs_data.signature
+    delete ipfs_data.signature
+    listing.raw_ipfs_hash = this.contractService.web3.utils.sha3(stringify(ipfs_data))
+    const signData = await this.contractService.getSignListingData(listing)
+    const recoveredAddress =  recoverTypedSignature({data:signData, sig:signature})
+    delete listing.raw_ipfs_hash
+
+    if (recoveredAddress == signer.toLowerCase()) {
+      return true
+    }
+    console.log("Signature verification failed:", signData, " recovered address:", recoveredAddress, " signer:", signer)
+  }
+
+  async injectListing( ipfsData ) {
+    const account = await this.contractService.currentAccount()
+    ipfsData.creator = account
+    ipfsData.createDate = (new Date()).toISOString()
+
+    const encodedData = await this.ipfsDataStore.encodeData(LISTING_DATA_TYPE, JSON.parse(JSON.stringify(ipfsData)))
+    const listingData = await this.ipfsDataStore.processData(LISTING_DATA_TYPE, JSON.parse(JSON.stringify(encodedData)))
+
+    const listing = Listing.init(undefined, 
+      { status:'active',
+        seller:account}, listingData)
+
+    // Here's where we encode the raw data to a signature
+    listing.raw_ipfs = encodedData
+    listing.raw_ipfs_hash = web3.utils.sha3(stringify(encodedData))
+
+    listing.id = await this.generateListingId(listing)
+    const signature = await this.contractService.signListing(listing)
+    ipfsData.signature = signature
+
+    const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
    
-    return this.discoveryService.injectListing(listing.ipfsHash, listing.seller, 
+    return this.discoveryService.injectListing(ipfsBytes, listing.seller, 
       listing.deposit, listing.depositManager, listing.status, signature)
   }
 
@@ -512,8 +612,12 @@ export default class Marketplace {
    * @return {Promise<{listingId, offerId, ...transactionReceipt}>}
    */
   async makeOffer(listingId, offerData = {}, confirmationCallback) {
+    const listing = await this.getListing(listingId)
+    const seller = listing.seller
+    const listingIpfsHash = listing.ipfsHash
+    const verifier = await this.contractService.currentAccount()
+    const ipfsVerifyTerms = "0x00"
     if (offerData.listingType && offerData.listingType === 'unit') {
-      const listing = await this.getListing(listingId)
       const offers = await this.getOffers(listingId, { listing })
       const unitsPurchased = Number.parseInt(offerData.unitsPurchased)
       const unitsAvailable = this.unitsAvailable(listing, offers)
@@ -529,10 +633,11 @@ export default class Marketplace {
     const affiliate = this.affiliate
     const arbitrator = this.arbitrator
 
+
     return await this.resolver.makeOffer(
       listingId,
       ipfsBytes,
-      Object.assign({ affiliate, arbitrator }, offerData),
+      Object.assign({ affiliate, arbitrator, seller, listingIpfsHash, verifier, ipfsVerifyTerms }, offerData),
       confirmationCallback
     )
   }
@@ -555,6 +660,14 @@ export default class Marketplace {
     return await this.resolver.withdrawOffer(id, ipfsBytes, confirmationCallback)
   }
 
+  async signAcceptOffer(id) {
+    const ipfsHash = await this.ipfsDataStore.save(OFFER_ACCEPT_DATA_TYPE, {})
+    const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
+    const signature = await this.resolver.signAcceptOffer(id, ipfsBytes)
+
+    return {offerId:id, ipfsHash:ipfsBytes, signature}
+  }
+
   /**
    * Accepts an offer.
    * @param {string} id - Offer unique ID.
@@ -568,7 +681,8 @@ export default class Marketplace {
 
     // Throw an error if the offer is invalid. We detect this through
     // getOffers(), which filters out invalid offers.
-    const { listingId } = await this.resolver.getOffer(id)
+    const offer = await this.resolver.getOffer(id)
+    const { listingId } = offer
     const listing = await this.getListing(listingId)
     if (listing.type === 'unit') {
       const offers = await this.getOffers(listingId, { listing })
@@ -578,7 +692,8 @@ export default class Marketplace {
       }
     }
 
-    return await this.resolver.acceptOffer(id, ipfsBytes, confirmationCallback)
+    // do no gas here
+    return await this.resolver.acceptOffer(id, ipfsBytes, confirmationCallback, offer, listing)
   }
 
   /**

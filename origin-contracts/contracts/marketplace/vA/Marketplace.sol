@@ -29,7 +29,7 @@ contract VA_Marketplace is Ownable {
     event ListingWithdrawn (address indexed party, uint indexed listingID, bytes32 ipfsHash);
     event ListingArbitrated(address indexed party, uint indexed listingID, bytes32 ipfsHash);
     event ListingData      (address indexed party, uint indexed listingID, bytes32 ipfsHash);
-    event OfferCreated     (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
+    event OfferCreated     (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash, bytes32 listingIpfsHash);
     event OfferAccepted    (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
     event OfferFinalized   (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
     event OfferWithdrawn   (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
@@ -37,12 +37,6 @@ contract VA_Marketplace is Ownable {
     event OfferDisputed    (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
     event OfferRuling      (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash, uint ruling);
     event OfferData        (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
-
-    struct Listing {
-        address seller;     // Seller wallet / identity contract / other contract
-        uint deposit;       // Deposit in Origin Token
-        address depositManager; // Address that decides token distribution
-    }
 
     struct Offer {
         uint value;         // Amount in Eth or ERC20 buyer is offering
@@ -54,23 +48,33 @@ contract VA_Marketplace is Ownable {
         address arbitrator; // Address that settles disputes
         uint finalizes;     // Timestamp offer finalizes
         uint8 status;       // 0: Undefined, 1: Created, 2: Accepted, 3: Disputed
+        address seller;            // the address of the seller
+        address verifier;          // Address whose signature can verify the terms
     }
 
-    mapping(uint => Listing) public listings;
     mapping(uint => Offer[]) public offers; // listingID => Offers
     mapping(address => bool) public allowedAffiliates;
 
+    uint chainId;
+
     ERC20 public tokenAddr; // Origin Token address
 
-    constructor(address _tokenAddr) public {
+
+    bytes32 private constant salt = 0x0000000000000000000000000000000000000000000000000000000000000666;
+
+    string private constant EIP712_DOMAIN  = "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract,bytes32 salt)";
+    string private constant ACCEPT_OFFER_TYPE = "AcceptOffer(uint256 listingID,uint256 offerID,bytes32 ipfsHash,uint256 behalfFee)";
+    string private constant FINALIZE_TYPE = "Finalize(uint256 listingID,uint256 offerID,bytes32 ipfsHash,uint256 payOut,uint256 behalfFee)";
+
+    bytes32 private constant EIP712_DOMAIN_TYPEHASH = keccak256(abi.encodePacked(EIP712_DOMAIN));
+    bytes32 private constant ACCEPT_OFFER_TYPEHASH = keccak256(abi.encodePacked(ACCEPT_OFFER_TYPE));
+    bytes32 private constant FINALIZE_TYPEHASH = keccak256(abi.encodePacked(FINALIZE_TYPE));
+
+    constructor(address _tokenAddr, uint _chainId) public {
         owner = msg.sender;
         setTokenAddr(_tokenAddr); // Origin Token contract
         allowedAffiliates[0x0] = true; // Allow null affiliate by default
-    }
-
-    // @dev Return the total number of listings
-    function totalListings() public view returns (uint) {
-        return listings.length;
+        chainId = _chainId;
     }
 
     // @dev Return the total number of offers
@@ -78,116 +82,25 @@ contract VA_Marketplace is Ownable {
         return offers[listingID].length;
     }
 
-    // @dev Seller creates listing
-    function createListing(bytes32 _ipfsHash, uint _deposit, address _depositManager)
-        public
-    {
-        _createListing(msg.sender, _ipfsHash, _deposit, _depositManager);
-    }
-
-    // @dev Can only be called by token
-    function createListingWithSender(
-        address _seller,
-        bytes32 _ipfsHash,
-        uint _deposit,
-        address _depositManager
-    )
-        public returns (bool)
-    {
-        require(msg.sender == address(tokenAddr), "Token must call");
-        _createListing(_seller, _ipfsHash, _deposit, _depositManager);
-        return true;
-    }
-
-    // Private
-    function _createListing(
-        address _seller,
-        bytes32 _ipfsHash,  // IPFS JSON with details, pricing, availability
-        uint _deposit,      // Deposit in Origin Token
-        address _depositManager // Address of listing depositManager
-    )
-        private
-    {
-        /* require(_deposit > 0); // Listings must deposit some amount of Origin Token */
-        require(_depositManager != 0x0, "Must specify depositManager");
-
-        listings.push(Listing({
-            seller: _seller,
-            deposit: _deposit,
-            depositManager: _depositManager
-        }));
-
-        if (_deposit > 0) {
-            tokenAddr.transferFrom(_seller, this, _deposit); // Transfer Origin Token
-        }
-        emit ListingCreated(_seller, listings.length - 1, _ipfsHash);
-    }
-
-    // @dev Seller updates listing
-    function updateListing(
-        uint listingID,
-        bytes32 _ipfsHash,
-        uint _additionalDeposit
-    ) public {
-        _updateListing(msg.sender, listingID, _ipfsHash, _additionalDeposit);
-    }
-
-    function updateListingWithSender(
-        address _seller,
-        uint listingID,
-        bytes32 _ipfsHash,
-        uint _additionalDeposit
-    )
-        public returns (bool)
-    {
-        require(msg.sender == address(tokenAddr), "Token must call");
-        _updateListing(_seller, listingID, _ipfsHash, _additionalDeposit);
-        return true;
-    }
-
-    function _updateListing(
-        address _seller,
-        uint listingID,
-        bytes32 _ipfsHash,      // Updated IPFS hash
-        uint _additionalDeposit // Additional deposit to add
-    ) private {
-        Listing storage listing = listings[listingID];
-        require(listing.seller == _seller, "Seller must call");
-
-        if (_additionalDeposit > 0) {
-            tokenAddr.transferFrom(_seller, this, _additionalDeposit);
-            listing.deposit += _additionalDeposit;
-        }
-
-        emit ListingUpdated(listing.seller, listingID, _ipfsHash);
-    }
-
-    // @dev Listing depositManager withdraws listing. IPFS hash contains reason for withdrawl.
-    function withdrawListing(uint listingID, address _target, bytes32 _ipfsHash) public {
-        Listing storage listing = listings[listingID];
-        require(msg.sender == listing.depositManager, "Must be depositManager");
-        require(_target != 0x0, "No target");
-        tokenAddr.transfer(_target, listing.deposit); // Send deposit to target
-        emit ListingWithdrawn(_target, listingID, _ipfsHash);
-    }
-
     // @dev Buyer makes offer.
     function makeOffer(
         uint listingID,
-        bytes31 _ipfsHash,   // IPFS hash containing offer data
+        bytes32 _listingIpfsHash, // listing IPFS hash that we're making an offer on
+        bytes32 _ipfsHash,   // IPFS hash containing offer data
         uint _finalizes,     // Timestamp an accepted offer will finalize
         address _affiliate,  // Address to send any required commission to
         uint256 _commission, // Amount of commission to send in Origin Token if offer finalizes
         uint _value,         // Offer amount in ERC20 or Eth
         ERC20 _currency,     // ERC20 token address or 0x0 for Eth
-        address _arbitrator  // Escrow arbitrator
+        address _arbitrator,  // Escrow arbitrator
+        address _seller,
+        address _verifier
     )
         public
         payable
     {
-        bool affiliateWhitelistDisabled = allowedAffiliates[address(this)];
         require(
-            affiliateWhitelistDisabled || allowedAffiliates[_affiliate],
+            allowedAffiliates[address(this)] || allowedAffiliates[_affiliate],
             "Affiliate not allowed"
         );
 
@@ -205,7 +118,9 @@ contract VA_Marketplace is Ownable {
             currency: _currency,
             value: _value,
             arbitrator: _arbitrator,
-            refund: 0
+            refund: 0,
+            seller: _seller,
+            verifier: _verifier
         }));
 
         if (address(_currency) == 0x0) { // Listing is in ETH
@@ -218,12 +133,13 @@ contract VA_Marketplace is Ownable {
             );
         }
 
-        emit OfferCreated(msg.sender, listingID, offers[listingID].length-1, _ipfsHash);
+        emit OfferCreated(msg.sender, listingID, offers[listingID].length-1, _ipfsHash, _listingIpfsHash);
     }
 
-    // @dev Make new offer after withdrawl
+    // @dev Make new offer after withdraw
     function makeOffer(
         uint listingID,
+        bytes32 _listingIpfsHash,
         bytes32 _ipfsHash,
         uint _finalizes,
         address _affiliate,
@@ -231,40 +147,97 @@ contract VA_Marketplace is Ownable {
         uint _value,
         ERC20 _currency,
         address _arbitrator,
+        address _seller,
+        address _verifier,
         uint _withdrawOfferID
     )
         public
         payable
     {
         withdrawOffer(listingID, _withdrawOfferID, _ipfsHash);
-        makeOffer(listingID, _ipfsHash, _finalizes, _affiliate, _commission, _value, _currency, _arbitrator);
+        makeOffer(listingID, _listingIpfsHash, _ipfsHash, _finalizes, _affiliate, _commission, _value, _currency, _arbitrator, _seller, _verifier);
     }
 
-    // @dev Seller accepts offer
-    function acceptOffer(uint listingID, uint offerID, bytes32 _ipfsHash) public {
-        Listing storage listing = listings[listingID];
+
+    function hashDomain() internal view returns (bytes32)
+    {
+      return keccak256(
+        abi.encode(EIP712_DOMAIN_TYPEHASH,
+        keccak256("Origin Protocol"),
+        keccak256("1"),
+        chainId,
+        address(this),
+        salt));
+    }
+
+    function hashAcceptOffer(uint listingID, uint offerID, bytes32 ipfsHash, uint behalfFee) internal view returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(
+            "\x19\x01",
+            hashDomain(),
+            keccak256(abi.encode(
+              ACCEPT_OFFER_TYPEHASH,
+              listingID,
+              offerID,
+              ipfsHash,
+              behalfFee))
+        ));
+    }
+
+    function hashFinalize(uint listingID, uint offerID, bytes32 ipfsHash, uint payOut, uint behalfFee) internal view returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(
+            "\x19\x01",
+            hashDomain(),
+            keccak256(abi.encode(
+              FINALIZE_TYPEHASH,
+              listingID,
+              offerID,
+              ipfsHash,
+              payOut,
+              behalfFee))
+        ));
+    }
+
+    function acceptOfferOnBehalf(uint listingID, uint offerID, bytes32 _ipfsHash,
+                                 uint _behalfFee, address seller, uint8 v, bytes32 r, bytes32 s) public {
+        // Either the seller or a buyer generated offer must accept
+        require(ecrecover(hashAcceptOffer(listingID, offerID, _ipfsHash, _behalfFee), v, r, s) == seller, "The offer acceptance signature does not match the seller");
         Offer storage offer = offers[listingID][offerID];
-        require(msg.sender == listing.seller, "Seller must accept");
+        require(offer.seller == seller || (offer.seller == address(0) && offer.buyer == msg.sender), "The listing must belong to either the sender or the behalf of sender.");
+        require(offer.value > _behalfFee, "There is not enough value to pay off the behalf fee");
+        offer.value -= _behalfFee;
+        require(msg.sender.send(_behalfFee), "Cannot send fee to sender");
+        if (offer.seller != seller) {
+          offer.seller = seller;
+        }
         require(offer.status == 1, "status != created");
-        require(
-            listing.deposit >= offer.commission,
-            "deposit must cover commission"
-        );
         if (offer.finalizes < 1000000000) { // Relative finalization window
             offer.finalizes = now + offer.finalizes;
         }
-        listing.deposit -= offer.commission; // Accepting an offer puts Origin Token into escrow
+        offer.status = 2; // Set offer to 'Accepted'
+        emit OfferAccepted(seller, listingID, offerID, _ipfsHash);
+    }
+
+
+    // @dev Seller accepts offer
+    function acceptOffer(uint listingID, uint offerID, bytes32 _ipfsHash) public {
+        Offer storage offer = offers[listingID][offerID];
+        require(offer.seller == msg.sender, "The listing must belong to the sender.");
+        require(offer.status == 1, "status != created");
+        if (offer.finalizes < 1000000000) { // Relative finalization window
+            offer.finalizes = now + offer.finalizes;
+        }
         offer.status = 2; // Set offer to 'Accepted'
         emit OfferAccepted(msg.sender, listingID, offerID, _ipfsHash);
     }
 
     // @dev Buyer withdraws offer. IPFS hash contains reason for withdrawl.
     function withdrawOffer(uint listingID, uint offerID, bytes32 _ipfsHash) public {
-        Listing storage listing = listings[listingID];
         Offer storage offer = offers[listingID][offerID];
         require(
-            msg.sender == offer.buyer || msg.sender == listing.seller,
-            "Restricted to buyer or seller"
+            msg.sender == offer.buyer,
+            "Restricted to buyer"
         );
         require(offer.status == 1, "status != created");
         refundBuyer(listingID, offerID);
@@ -293,9 +266,52 @@ contract VA_Marketplace is Ownable {
         emit OfferFundsAdded(msg.sender, listingID, offerID, _ipfsHash);
     }
 
+    // @dev verifier finalize transaction to receive commission
+    function _verifiedFinalize(uint listingID, uint offerID, bytes32 _ipfsHash,
+                              uint _behalfFee, uint _verifyFee, uint payOut, uint8 v, bytes32 r, bytes32 s) internal {
+
+        Offer storage offer = offers[listingID][offerID];
+        // Verifier will not take into account behalfFee
+        require(ecrecover(hashFinalize(listingID, offerID, _ipfsHash, payOut, _verifyFee), v, r, s) == offer.verifier, "The finalize signature does not match the verifier");
+
+        require(offer.status == 2, "status != accepted");
+        require((offer.value - offer.refund) >= payOut, "Offer cannot make payout");
+        require(payOut > (_behalfFee + _verifyFee), "Cannot pay off fees");
+        if (_behalfFee > 0)
+        {
+          offer.value -= _behalfFee;
+          payOut -= _behalfFee;
+          require(msg.sender.send(_behalfFee), "Cannot send behalf fee to sender");
+        }
+        if (_verifyFee > 0)
+        {
+          offer.value -= _verifyFee;
+          payOut -= _verifyFee;
+          require(offer.verifier.send(_verifyFee), "Cannot send verify fee to verifier");
+        }
+        offer.refund = offer.value - payOut;
+        paySeller(listingID, offerID); // Pay seller
+        emit OfferFinalized(offer.verifier, listingID, offerID, _ipfsHash);
+        delete offers[listingID][offerID];
+    }
+
+    function verifiedFinalize(uint listingID, uint offerID, bytes32 _ipfsHash,
+                              uint verifyFee, uint payOut, uint8 v, bytes32 r, bytes32 s) public {
+        require(offers[listingID][offerID].seller == msg.sender);
+        _verifiedFinalize(listingID, offerID, _ipfsHash, 0, verifyFee, payOut, v, r, s);
+    }
+
+    function verifiedOnBehalfFinalize(uint listingID, uint offerID, bytes32 _ipfsHash,
+                              uint behalfFee, uint verifyFee, uint payOut, uint8 v_seller, bytes32 r_seller, bytes32 s_seller,
+                              uint8 v, bytes32 r, bytes32 s) public {
+        require(payOut > behalfFee, "Payout must be more than the behalf fee");
+        require(ecrecover(hashFinalize(listingID, offerID, _ipfsHash, payOut, behalfFee),
+                          v_seller, r_seller, s_seller) == offers[listingID][offerID].seller, "The behalf finalize signature does not match the seller");
+        _verifiedFinalize(listingID, offerID, _ipfsHash, behalfFee, verifyFee, payOut, v, r, s);
+    }
+
     // @dev Buyer must finalize transaction to receive commission
     function finalize(uint listingID, uint offerID, bytes32 _ipfsHash) public {
-        Listing storage listing = listings[listingID];
         Offer storage offer = offers[listingID][offerID];
         if (now <= offer.finalizes) { // Only buyer can finalize before finalization window
             require(
@@ -304,25 +320,21 @@ contract VA_Marketplace is Ownable {
             );
         } else { // Allow both seller and buyer to finalize if finalization window has passed
             require(
-                msg.sender == offer.buyer || msg.sender == listing.seller,
+                msg.sender == offer.buyer || msg.sender == offer.seller,
                 "Seller or buyer must finalize"
             );
         }
         require(offer.status == 2, "status != accepted");
         paySeller(listingID, offerID); // Pay seller
-        if (msg.sender == offer.buyer) { // Only pay commission if buyer is finalizing
-            payCommission(listingID, offerID);
-        }
         emit OfferFinalized(msg.sender, listingID, offerID, _ipfsHash);
         delete offers[listingID][offerID];
     }
 
     // @dev Buyer or seller can dispute transaction during finalization window
     function dispute(uint listingID, uint offerID, bytes32 _ipfsHash) public {
-        Listing storage listing = listings[listingID];
         Offer storage offer = offers[listingID][offerID];
         require(
-            msg.sender == offer.buyer || msg.sender == listing.seller,
+            msg.sender == offer.buyer || msg.sender == offer.seller,
             "Must be seller or buyer"
         );
         require(offer.status == 2, "status != accepted");
@@ -349,11 +361,6 @@ contract VA_Marketplace is Ownable {
         } else  {
             paySeller(listingID, offerID);
         }
-        if (_ruling & 2 == 2) {
-            payCommission(listingID, offerID);
-        } else  { // Refund commission to seller
-            listings[listingID].deposit += offer.commission;
-        }
         emit OfferRuling(offer.arbitrator, listingID, offerID, _ipfsHash, _ruling);
         delete offers[listingID][offerID];
     }
@@ -361,8 +368,7 @@ contract VA_Marketplace is Ownable {
     // @dev Sets the amount that a seller wants to refund to a buyer.
     function updateRefund(uint listingID, uint offerID, uint _refund, bytes32 _ipfsHash) public {
         Offer storage offer = offers[listingID][offerID];
-        Listing storage listing = listings[listingID];
-        require(msg.sender == listing.seller, "Seller must call");
+        require(msg.sender == offer.seller, "Seller must call");
         require(offer.status == 2, "status != accepted");
         require(_refund <= offer.value, "Excessive refund");
         offer.refund = _refund;
@@ -384,35 +390,24 @@ contract VA_Marketplace is Ownable {
 
     // @dev Pay seller in ETH or ERC20
     function paySeller(uint listingID, uint offerID) private {
-        Listing storage listing = listings[listingID];
         Offer storage offer = offers[listingID][offerID];
         uint value = offer.value - offer.refund;
 
         if (address(offer.currency) == 0x0) {
             require(offer.buyer.send(offer.refund), "ETH refund failed");
-            require(listing.seller.send(value), "ETH send failed");
+            require(offer.seller.send(value), "ETH send failed");
         } else {
             require(
                 offer.currency.transfer(offer.buyer, offer.refund),
                 "Refund failed"
             );
             require(
-                offer.currency.transfer(listing.seller, value),
+                offer.currency.transfer(offer.seller, value),
                 "Transfer failed"
             );
         }
     }
 
-    // @dev Pay commission to affiliate
-    function payCommission(uint listingID, uint offerID) private {
-        Offer storage offer = offers[listingID][offerID];
-        if (offer.affiliate != 0x0) {
-            require(
-                tokenAddr.transfer(offer.affiliate, offer.commission),
-                "Commission transfer failed"
-            );
-        }
-    }
 
     // @dev Associate ipfs data with the marketplace
     function addData(bytes32 ipfsHash) public {
@@ -427,16 +422,6 @@ contract VA_Marketplace is Ownable {
     // @dev Associate ipfs data with an offer
     function addData(uint listingID, uint offerID, bytes32 ipfsHash) public {
         emit OfferData(msg.sender, listingID, offerID, ipfsHash);
-    }
-
-    // @dev Allow listing depositManager to send deposit
-    function sendDeposit(uint listingID, address target, uint value, bytes32 ipfsHash) public {
-        Listing storage listing = listings[listingID];
-        require(listing.depositManager == msg.sender, "depositManager must call");
-        require(listing.deposit >= value, "Value too high");
-        listing.deposit -= value;
-        require(tokenAddr.transfer(target, value), "Transfer failed");
-        emit ListingArbitrated(target, listingID, ipfsHash);
     }
 
     // @dev Set the address of the Origin token contract

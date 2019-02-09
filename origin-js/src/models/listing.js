@@ -44,7 +44,7 @@ class Listing {
   constructor({ id, title, display, description, category, subCategory, status, type, media,
     unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, availability,
     slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit,
-    marketplacePublisher, createDate, updateVersion }) {
+    marketplacePublisher, createDate, updateVersion, creator }) {
 
     this.id = id
     this.title = title
@@ -75,6 +75,7 @@ class Listing {
     this.marketplacePublisher = marketplacePublisher
     this.createDate = createDate
     this.updateVersion = updateVersion
+    this.creator = creator
   }
 
   // creates a Listing using on-chain and off-chain data
@@ -109,7 +110,8 @@ class Listing {
       commissionPerUnit: ipfsListing.commissionPerUnit,
       createDate: ipfsListing.createDate,
       marketplacePublisher: ipfsListing.marketplacePublisher,
-      updateVersion: ipfsListing.updateVersion
+      updateVersion: ipfsListing.updateVersion,
+      creator: ipfsListing.creator
     })
   }
 
@@ -208,8 +210,13 @@ class Listing {
   }
 
   get uniqueId() {
-    const hash = web3.utils.soliditySha3(this.seller, this.createDate)
+    const hash = web3.utils.soliditySha3({t:"address", v:this.creator},
+      {t:"bytes32", v:web3.utils.fromAscii(this.createDate)})
     return base58.encode(Buffer.from(hash.slice(2), "hex"))
+  }
+
+  get isEmptySeller() {
+    return this.seller == "0x0000000000000000000000000000000000000000"
   }
 }
 

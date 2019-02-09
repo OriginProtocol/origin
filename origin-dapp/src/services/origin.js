@@ -88,7 +88,7 @@ const config = {
   ipfsApiPort: process.env.IPFS_API_PORT,
   ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT,
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL,
-  discoveryServerUrl: process.env.DISCOVERY_SERVER_URL,
+  discoveryServerUrl: mobilize(process.env.DISCOVERY_SERVER_URL),
   messagingNamespace: process.env.MESSAGING_NAMESPACE,
   arbitrator: process.env.ARBITRATOR_ACCOUNT,
   affiliate: process.env.AFFILIATE_ACCOUNT,

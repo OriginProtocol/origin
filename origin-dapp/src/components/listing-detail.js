@@ -392,6 +392,7 @@ class ListingsDetail extends Component {
       userIsSeller,
       showRemainingBoost
     } = getDerivedListingData(listing, wallet.address)
+    const isOfferListing = !isSold && (listing.seller && web3.utils.toBN(listing.seller) == 0)
 
     // only expose where user is a buyer or a seller
     let offerToExpose = undefined
@@ -858,7 +859,20 @@ class ListingsDetail extends Component {
                           />
                         )}
                       </div>
-                      <Link
+                      {isOfferListing && <button
+                        onClick={async ()=> { 
+                          const offer = listing.offers[0]
+
+                          const acceptance = await origin.marketplace.signAcceptOffer(offer.id)
+                          const buyer = web3.utils.toChecksumAddress(offer.buyer)
+                          console.log("sending message to:", buyer)
+                          await origin.messaging.sendConvMessage(buyer, {content:"Hey I want to do this!", acceptance,
+                            listingId:offer.listingId })}
+                      }
+                      >
+                        Send Signed Offer
+                      </button> }
+                      {!isOfferListing && <Link
                         to="/"
                         ga-category="listing"
                         ga-label="view_listings"
@@ -867,7 +881,7 @@ class ListingsDetail extends Component {
                           id={'listing-detail.viewListings'}
                           defaultMessage={'View Listings'}
                         />
-                      </Link>
+                      </Link> }
                     </Fragment>
                   )}
                   {userIsBuyerOffer !== undefined && (

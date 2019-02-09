@@ -3,12 +3,13 @@
   { "name" : "title", "type" : "string" },
   { "name" : "price", "type" : "Money" },
   { "name" : "commision", "type" : "Money" },
-  { "name" : "status", "type" : "string" },
   { "name" : "category", "type" : "string" },
   { "name" : "type", "type" : "string" },
   { "name" : "unitsTotal", "type" : "uint256" },
   { "name" : "createDate", "type" : "string" },
   { "name" : "deposit", "type": "string" },
   { "name" : "depositManager", "type": "address" },
-  { "name" : "updateVersion", "type" : "uint256" }
+  { "name" : "updateVersion", "type" : "uint256" },
+  { "name" : "withdrawn", "type": "bool"},
+  { "name" : "raw_ipfs_hash", "type" : "bytes32" }
 ]

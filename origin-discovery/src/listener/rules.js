@@ -1,8 +1,17 @@
 const db = require('../models')
 const search = require('../lib/search.js')
+const base58 = require('bs58')
+const web3 = require('web3')
 const { withRetrys } = require('./utils')
 
 const { postToDiscordWebhook, postToWebhook } = require('./webhooks.js')
+
+const generateListingIdFromUnique = ({network, version, uniqueId}) => {
+  return [network, version, uniqueId].join(
+    '-'
+  )
+}
+
 
 // Helper functions
 const generateListingId = log => {
@@ -19,6 +28,26 @@ function generateOfferId(log) {
     log.decoded.offerID
   ].join('-')
 }
+
+const toNoGasListingID = (listingID) => {
+  return base58.encode(web3.utils.toBN(listingID).toBuffer())
+}
+
+const generateNoGasListingId = log => {
+  return [log.networkId, log.contractVersionKey, toNoGasListingID(log.decoded.listingID)].join(
+    '-'
+  )
+}
+
+function generateNoGasOfferId(log) {
+  return [
+    log.networkId,
+    log.contractVersionKey,
+    toNoGasListingID(log.decoded.listingID),
+    log.decoded.offerID
+  ].join('-')
+}
+
 
 /**
  * Ensures data fetched from the blockchain meets the freshness criteria
@@ -105,6 +134,74 @@ async function getOfferDetails(log, origin) {
   }
 }
 
+async function getNoGasOfferDetails(log, origin) {
+  const listingId = generateNoGasListingId(log)
+  const offerId = generateNoGasOfferId(log)
+  const blockInfo = {
+    blockNumber: log.blockNumber,
+    logIndex: log.logIndex
+  }
+  // Notes:
+  //  - Passing blockInfo as an arg to the getListing call ensures that we preserve
+  // listings version history if the listener is re-indexing data.
+  // Otherwise all the listing versions in the DB would end up with the same data.
+  //  - BlockInfo is not needed for the call to getOffer since offer data stored in the DB
+  // is not versioned.
+  const offer = await origin.marketplace.getOffer(offerId)
+
+  console.log("offer details", offer)
+  checkFreshness(offer.events, blockInfo)
+
+  // TODO: need to load from db to verify that the listingIpfs haven't already been set!!!
+  //const status = web3.utils.toBN(offer.seller) != 0 ? 'pending': 'active'
+  const network = await origin.contractService.web3.eth.net.getId()
+
+  const listing = await origin.marketplace._listingFromData(listingId, {status:"active", seller:offer.seller, ipfsHash:offer.listingIpfsHash})
+
+  if (generateListingIdFromUnique({version:'A', network, uniqueId:listing.uniqueId }) != listingId)
+  {
+    throw new Error(`ListingIpfs and Id mismatch: ${listingId} !== ${listing.creator.listing.createDate}`)
+  }
+
+  if(listing.creator != offer.buyer) 
+  {
+    if(listing.creator != offer.seller)
+    {
+      throw new Error(`listing creator ${listing.creator} does not match buyer(${offer.buyer}) or seller(${offer.seller})`)
+    }
+
+    if (!(await origin.marketplace.verifyListingSignature(listing, listing.seller)))
+    {
+      throw new Error(`listing signature does not match seller ${listing.seller}.`)
+    }
+  }
+
+  let seller
+  let buyer
+  if (web3.utils.toBN(offer.seller) != 0)
+  {
+    try {
+      seller = await origin.users.get(offer.seller)
+    } catch (e) {
+      // If fetching the seller fails, we still want to index the listing/offer
+      console.log('Failed to fetch seller', e)
+    }
+  }
+  try {
+    buyer = await origin.users.get(offer.buyer)
+  } catch (e) {
+    // If fetching the buyer fails, we still want to index the listing/offer
+    console.log('Failed to fetch buyer', e)
+  }
+  return {
+    listing,
+    offer: offer,
+    seller: seller,
+    buyer: buyer
+  }
+}
+
+
 // Rules for acting on events
 // Adding a rule here makes the listener listen for the event.
 const LISTEN_RULES = {
@@ -121,7 +218,17 @@ const LISTEN_RULES = {
     OfferRuling: getOfferDetails,
     OfferFinalized: getOfferDetails,
     OfferData: getOfferDetails
+  },
+  VA_Marketplace: {
+    OfferCreated: getNoGasOfferDetails,
+    OfferWithdrawn: getNoGasOfferDetails,
+    OfferAccepted: getNoGasOfferDetails,
+    OfferDisputed: getNoGasOfferDetails,
+    OfferRuling: getNoGasOfferDetails,
+    OfferFinalized: getNoGasOfferDetails,
+    OfferData: getNoGasOfferDetails
   }
+
 }
 
 const LISTING_EVENTS = [
@@ -227,7 +334,7 @@ async function handleLog (log, rule, contractVersion, context) {
   // DVF: this should really be handled in origin js - origin.js should throw
   // an error if this happens.
   const ipfsListingId = listingId.split('-')[2]
-  if (ipfsListingId !== log.decoded.listingID) {
+  if (ipfsListingId !== log.decoded.listingID && ipfsListingId != toNoGasListingID(log.decoded.listingID)) {
     throw new Error(`ListingId mismatch: ${ipfsListingId} !== ${log.decoded.listingID}`)
   }
 
@@ -246,7 +353,7 @@ async function handleLog (log, rule, contractVersion, context) {
         blockNumber: log.blockNumber,
         logIndex: log.logIndex,
         status: listing.status,
-        sellerAddress: listing.seller.toLowerCase(),
+        sellerAddress: listing.seller && listing.seller.toLowerCase(),
         data: listing
       }
       if (rule.eventName === 'ListingCreated') {

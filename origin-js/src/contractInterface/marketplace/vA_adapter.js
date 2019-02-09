@@ -1,3 +1,4 @@
+const base58 = require('bs58')
 const OFFER_STATUS = [
   'error',
   'created',
@@ -16,7 +17,7 @@ const offerStatusToSellerNotificationType = {
   'withdrawn': 'seller_offer_withdrawn',
 }
 const offerStatusToBuyerNotificationType = {
-  'accepted': 'buyer_offer_accepted',
+  'toListingIDaccepted': 'buyer_offer_accepted',
   'disputed': 'buyer_offer_disputed',
   'ruling': 'buyer_offer_ruling',
   'sellerReviewed': 'buyer_offer_review',
@@ -25,13 +26,19 @@ const offerStatusToBuyerNotificationType = {
 const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
-class V00_MarketplaceAdapter {
-  constructor({ contractService, blockEpoch }) {
+
+class VA_MarketplaceAdapter {
+  constructor({ contractService, blockEpoch, hotService }) {
     this.web3 = contractService.web3
     this.contractService = contractService
-    this.contractName = 'V00_Marketplace'
+    this.contractName = 'VA_Marketplace'
     this.tokenContractName = 'OriginToken'
     this.blockEpoch = blockEpoch || 0
+    this.hotService = hotService
+  }
+
+  toListingID(listingIndex) {
+     return "0x" + base58.decode(listingIndex).toString("hex")
   }
 
   async getContract() {
@@ -43,6 +50,7 @@ class V00_MarketplaceAdapter {
   }
 
   async call(methodName, args, opts) {
+    console.log("Calling:", this.contractName, methodName, args, opts)
     return await this.contractService.call(
       this.contractName,
       methodName,
@@ -52,111 +60,38 @@ class V00_MarketplaceAdapter {
   }
 
   async getListingsCount() {
-    const total = await this.call('totalListings')
-    return Number(total)
+    return Number(0)
   }
 
-  async createListing(
-    ipfsBytes,
-    { deposit = '0', arbitrator, commission = {} },
-    confirmationCallback
-  ) {
-    const from = (await this.contractService.currentAccount()) || this.contractService.placeholderAccount()
-    const { amount, currency } = commission
+  
 
-    if (currency && !SUPPORTED_DEPOSIT_CURRENCIES.includes(currency)) {
-      throw `${currency} is not a supported deposit currency`
-    }
-    if (amount > 0) {
-      deposit = await this.contractService.moneyToUnits(commission)
-      const {
-        market_address,
-        selector,
-        call_params
-      } = await this._getTokenAndCallWithSenderParams(
-        'createListingWithSender',
-        ipfsBytes,
-        deposit,
-        arbitrator || from 
-      )
-
-      // In order to estimate gas correctly, we need to add the call to a create listing since that's called by the token
-      const extra_estimated_gas = await this.contract.methods['createListing'](
-        ipfsBytes,
-        0,
-        arbitrator || from
-      ).estimateGas({ from })
-
-      const { transactionReceipt, timestamp } = await this.contractService.call(
-        this.tokenContractName,
-        'approveAndCallWithSender',
-        [market_address, deposit, selector, call_params],
-        { from, confirmationCallback, additionalGas: extra_estimated_gas }
-      )
-      const events = await this.contract.getPastEvents('ListingCreated', {
-        fromBlock: transactionReceipt.blockNumber,
-        toBlock: transactionReceipt.blockNumber
-      })
-
-      for (const e of events) {
-        if (e.transactionHash == transactionReceipt.transactionHash) {
-          const listingIndex = e.returnValues.listingID
-          return Object.assign({ timestamp, listingIndex }, transactionReceipt)
-        }
-      }
-    } else {
-      const { transactionReceipt, timestamp } = await this.call(
-        'createListing',
-        [ipfsBytes, deposit, arbitrator || from],
-        { from, confirmationCallback }
-      )
-      const listingIndex =
-        transactionReceipt.events['ListingCreated'].returnValues.listingID
-      return Object.assign({ timestamp, listingIndex }, transactionReceipt)
-    }
-  }
-
-  async updateListing(listingId, ipfsBytes, additionalDeposit, confirmationCallback) {
-    const from = await this.contractService.currentAccount()
-    const { transactionReceipt, timestamp } = await this.call(
-      'updateListing',
-      [listingId, ipfsBytes, additionalDeposit],
-      { from, confirmationCallback }
-    )
-    return Object.assign({ timestamp }, transactionReceipt)
-  }
-
-  async withdrawListing(listingId, ipfsBytes, confirmationCallback) {
-    const from = await this.contractService.currentAccount()
-    const { transactionReceipt, timestamp } = await this.call(
-      'withdrawListing',
-      [listingId, from, ipfsBytes],
-      { from, confirmationCallback }
-    )
-    return Object.assign({ timestamp }, transactionReceipt)
-  }
-
-  async makeOffer(listingId, ipfsBytes, data, confirmationCallback) {
+  async makeOffer(listingIndex, ipfsBytes, data, confirmationCallback) {
     const {
       affiliate,
       arbitrator,
       commission,
       finalizes,
       totalPrice = {},
+      listingIpfsHash,
+      seller,
+      verifier
     } = data
     const price = await this.contractService.moneyToUnits(totalPrice)
     const commissionUnits = await this.contractService.moneyToUnits(commission)
     const currencies = await this.contractService.currencies()
 
     const args = [
-      listingId,
+      this.toListingID(listingIndex),
+      listingIpfsHash,
       ipfsBytes,
       finalizes || 30 * 24 * 60 * 60, // 30 days from offer acceptance
       affiliate || emptyAddress,
       commissionUnits,
       price,
       currencies[totalPrice.currency].address,
-      arbitrator || emptyAddress
+      arbitrator || emptyAddress,
+      seller,
+      verifier
     ]
 
     const opts = { confirmationCallback }
@@ -191,13 +126,90 @@ class V00_MarketplaceAdapter {
   }
 
   async acceptOffer(listingIndex, offerIndex, ipfsBytes, confirmationCallback) {
-    const { transactionReceipt, timestamp } = await this.call(
-      'acceptOffer',
-      [listingIndex, offerIndex, ipfsBytes],
-      { confirmationCallback }
-    )
-    return Object.assign({ timestamp }, transactionReceipt)
+    const currentAccount = await this.contractService.currentAccount()
+    const balance = await web3.eth.getBalance(currentAccount)
+
+    if (web3.utils.toBN(balance).gt(web3.utils.toBN(0)))
+    {
+      const { transactionReceipt, timestamp } = await this.call(
+        'acceptOffer',
+        [this.toListingID(listingIndex), offerIndex, ipfsBytes],
+        { confirmationCallback }
+      )
+      return Object.assign({ timestamp }, transactionReceipt)
+    }
+    else
+    {
+      const listingID = this.toListingID(listingIndex)
+      const offerID = offerIndex
+      // I need enough to accept and finalize
+      const behalfFee = web3.utils.toBN("400000000000000")
+      const sig = this.contractService.breakdownSig(
+        await this.contractService.signAcceptOfferData(listingID, offerID, ipfsBytes, behalfFee.toString()) )
+      const {transactionReceipt, timestamp } = await this.hotService.submitMarketplaceBehalf(
+        'acceptOfferOnBehalf',
+        [listingID, offerID, ipfsBytes, behalfFee.toString(), currentAccount, sig.v, sig.r, sig.s])
+      return Object.assign({ timestamp }, transactionReceipt)
+    }
   }
+  
+  async signAcceptOffer(listingIndex, offerIndex, ipfsBytes) {
+      const listingID = this.toListingID(listingIndex)
+      const offerID = offerIndex
+
+      return this.contractService.signAcceptOfferData(listingID, offerID, ipfsBytes, "0")
+  }
+
+  async acceptSignedOffer(listingIndex, offerIndex, ipfsBytes, seller, signature) {
+      const listingID = this.toListingID(listingIndex)
+      const offerID = offerIndex
+      // I need enough to accept and finalize
+      const behalfFee = web3.utils.toBN("0")
+      const sig = this.contractService.breakdownSig(
+        signature )
+      const {transactionReceipt, timestamp } = await this.call(
+        'acceptOfferOnBehalf',
+        [listingID, offerID, ipfsBytes, behalfFee.toString(), seller, sig.v, sig.r, sig.s])
+      return Object.assign({ timestamp }, transactionReceipt)
+  }
+
+  async verifyFinalizeOffer(
+    listingIndex,
+    offerIndex,
+    ipfsBytes,
+    verifyFee,
+    payout,
+    verifySignature,
+    confirmationCallback
+  ) {
+    const currentAccount = await this.contractService.currentAccount()
+    const balance = await web3.eth.getBalance(currentAccount)
+    const sig = this.contractService.breakdownSig( verifySignature )
+    const listingID = this.toListingID(listingIndex)
+
+    if (web3.utils.toBN(balance).gt(web3.utils.toBN(0)))
+    {
+      const { transactionReceipt, timestamp } = await this.call(
+        'verifiedFinalize',
+        [listingId, offerIndex, ipfsBytes, verifyFee, payout, sig.v, sig.r, sig.s],
+        { confirmationCallback }
+      )
+      return Object.assign({ timestamp }, transactionReceipt)
+    } else {
+      const behalfFee = web3.utils.toBN("400000000000000").toString()
+      const sellerSig = this.contractService.breakdownSig(
+        await this.contractService.signFinalizeData(listingID, offerIndex, ipfsBytes, payout, behalfFee ) )
+
+      console.log("submit parameters is:", [listingID, offerIndex, ipfsBytes, behalfFee, verifyFee, payout, sellerSig.v, sellerSig.r, sellerSig.s, sig.v, sig.r, sig.s])
+      const { transactionReceipt, timestamp } = await this.hotService.submitMarketplaceBehalf(
+        'verifiedOnBehalfFinalize',
+        [listingID, offerIndex, ipfsBytes, behalfFee, verifyFee,  payout, sellerSig.v, sellerSig.r, sellerSig.s, sig.v, sig.r, sig.s],
+        { confirmationCallback }
+      )
+      return Object.assign({ timestamp }, transactionReceipt)
+    }
+  }
+
 
   async finalizeOffer(
     listingIndex,
@@ -205,9 +217,10 @@ class V00_MarketplaceAdapter {
     ipfsBytes,
     confirmationCallback
   ) {
+    const listingID = this.toListingID(listingIndex)
     const { transactionReceipt, timestamp } = await this.call(
       'finalize',
-      [listingIndex, offerIndex, ipfsBytes],
+      [listingID, offerIndex, ipfsBytes],
       { confirmationCallback }
     )
     return Object.assign({ timestamp }, transactionReceipt)
@@ -243,11 +256,8 @@ class V00_MarketplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async getListing(listingId, blockInfo) {
+  async getListing(listingId, blockInfo, ipfsHash) {
     await this.getContract()
-
-    // Get the raw listing data from the contract.
-    const rawListing = await this.call('listings', [listingId])
 
     // Find all events related to this listing
     const listingTopic = this.padTopic(listingId)
@@ -259,7 +269,6 @@ class V00_MarketplaceAdapter {
     let status = 'active'
 
     // Loop through the events looking and update the IPFS hash and offers appropriately.
-    let ipfsHash
     const offers = {}
     events.forEach(event => {
       if (event.event === 'ListingCreated') {
@@ -297,7 +306,7 @@ class V00_MarketplaceAdapter {
     }
 
     // Return the raw listing along with events and IPFS hash
-    return Object.assign({}, rawListing, { ipfsHash, events, offers, status })
+    return Object.assign({}, { ipfsHash, events, offers, status })
   }
 
   // Logs a listing and its associated events and offers to the browser's JS
@@ -440,10 +449,11 @@ class V00_MarketplaceAdapter {
    */
   async getOffers(listingIndex, opts) {
     await this.getContract()
+    const listingID = this.toListingID(listingIndex)
 
     let filter = {}
     if (listingIndex) {
-      filter = Object.assign(filter, { listingID: listingIndex })
+      filter = Object.assign(filter, { listingID })
     }
     if (opts.for) {
       filter = Object.assign(filter, { party: opts.for })
@@ -457,14 +467,15 @@ class V00_MarketplaceAdapter {
 
   async getOffer(listingIndex, offerIndex) {
     await this.getContract()
+    const listingID = this.toListingID(listingIndex)
 
     // Get the raw listing data from the contract
     // Note: once an offer is finalized|ruled|withdrawn, it is deleted from the blockchain to save
     // on gas. In those cases rawOffer is returned as an object with all its fields set to zero.
-    const rawOffer = await this.call('offers', [listingIndex, offerIndex])
+    const rawOffer = await this.call('offers', [listingID, offerIndex])
 
     // Find all events related to this offer
-    const listingTopic = this.padTopic(listingIndex)
+    const listingTopic = this.padTopic(listingID)
     const offerTopic = this.padTopic(offerIndex)
     const events = await this.contract.getPastEvents('allEvents', {
       topics: [null, null, listingTopic, offerTopic],
@@ -472,7 +483,7 @@ class V00_MarketplaceAdapter {
     })
 
     // Scan through the events to retrieve information of interest.
-    let buyer, ipfsHash, createdAt, blockNumber, logIndex
+    let buyer, ipfsHash, createdAt, blockNumber, logIndex, listingIpfsHash, acceptIpfsHash
     for (const e of events) {
       const timestamp = await this.contractService.getTimestamp(e)
       e.timestamp = timestamp
@@ -481,12 +492,16 @@ class V00_MarketplaceAdapter {
       case 'OfferCreated':
         buyer = e.returnValues.party
         ipfsHash = e.returnValues.ipfsHash
+        listingIpfsHash = e.returnValues.listingIpfsHash
         createdAt = timestamp
         blockNumber = e.blockNumber
         logIndex = e.logIndex
         break
         // In all cases below, the offer was deleted from the blockchain and therefore
         // rawOffer fields are set to zero => populate rawOffer.status based on event history.
+      case 'OfferAccepted':
+        acceptIpfsHash = e.returnValues.ipfsHash
+        break
       case 'OfferFinalized':
         rawOffer.status = 4
         break
@@ -510,7 +525,8 @@ class V00_MarketplaceAdapter {
     rawOffer.status = OFFER_STATUS[rawOffer.status]
 
     // Return the raw listing along with events and IPFS hash
-    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt, blockNumber, logIndex })
+    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt, blockNumber, logIndex, listingIpfsHash,
+      acceptIpfsHash })
   }
 
   async addData(ipfsBytes, listingIndex, offerIndex, confirmationCallback) {
@@ -554,7 +570,8 @@ class V00_MarketplaceAdapter {
       if (event.event === 'OfferCreated') {
         partyOfferIds.push([
           event.returnValues.listingID,
-          event.returnValues.offerID
+          event.returnValues.offerID,
+          event.returnValues.listingIpfsHash
         ])
       }
     }
@@ -588,9 +605,9 @@ class V00_MarketplaceAdapter {
     }
 
     // Find events of interest on offers made by the user as a buyer.
-    for (const [listingId, offerId] of partyOfferIds) {
+    for (const [listingId, offerId, listingIpfsHash] of partyOfferIds) {
       try {
-        const listing = await this.getListing(listingId)
+        const listing = await this.getListing(listingId, undefined, listingIpfsHash)
         const offer = listing.offers[offerId]
         // Skip the event if the action was initiated by the user.
         if (party.toLowerCase() === offer.event.returnValues.party.toLowerCase()) {
@@ -608,6 +625,7 @@ class V00_MarketplaceAdapter {
         // Guard against invalid listing/offer that might be created for example
         // by exploiting a validation loophole in origin-js listing/offer code
         // or by writing directly to the blockchain.
+        console.error(e)
         console.log('getNotifications: skipping invalid offer')
         console.log(`  contract=${this.contractName} offerId=${offerId} error=${e}`)
       }
@@ -650,4 +668,4 @@ class V00_MarketplaceAdapter {
   }
 }
 
-export default V00_MarketplaceAdapter
+export default VA_MarketplaceAdapter

@@ -42,7 +42,7 @@ export default class CompactMessages extends Component {
       get the next index from recursion or set the
       index based on the current message
     */
-    const index = previousIdx || idx - 1
+    const index = (previousIdx === undefined) ? idx - 1 : previousIdx
     const previousMessage = sortedMessages[index]
 
     if (previousMessage.timestamp) {
