@@ -1,6 +1,6 @@
 // Script to distribute Growth Engine rewards.
 //  - Scans growth_reward table for rows with status Pending, grouped by account.
-//  - For each row, distribute tokens to account
+//  - For each row, distribute tokens to acco
 
 'use strict'
 
@@ -24,7 +24,6 @@ const logger = Logger.create('distRewards', { showTimestamp: false })
 // a reward distributed.
 const MinBlockConfirmation = 8
 const BlockMiningTimeMsec = 15000 // 15sec
-
 
 class TokenDistributor {
   // Note: we can't use a constructor due to the async call to defaultAccount.
@@ -113,7 +112,7 @@ class DistributeRewards {
     return total
   }
 
-  async _verifyRewardConfirmation(ethAddress, rewards, currentBlockNumber) {
+  async _confirmTransaction(ethAddress, rewards, currentBlockNumber) {
     let txnHash = null
     rewards.forEach(async reward => {
       // Reload the reward to get the txnHash.
@@ -139,7 +138,7 @@ class DistributeRewards {
     // Make sure we've waited long enough to verify the confirmation.
     const numConfirmations = currentBlockNumber - txnReceipt.blockNumber
     if (numConfirmations < MinBlockConfirmation) {
-      throw new Error('_verifyRewardConfirmation called too early.')
+      throw new Error('_confirmTransaction called too early.')
     }
 
     if (!txnReceipt.status) {
@@ -163,7 +162,9 @@ class DistributeRewards {
         await txn.rollback()
         throw e
       }
+      return false
     }
+    return true
   }
 
   async process() {
@@ -218,15 +219,30 @@ class DistributeRewards {
       await new Promise(resolve => setTimeout(resolve, waitMsec))
 
       // Verify the reward transactions were confirmed on the blockchain.
+      let allConfirmed = true
       const blockNumber = await this.web3.eth.getBlockNumber()
       for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
-        await this._confirmTransaction(ethAddress, rewards, blockNumber)
+        const confirmed = await this._confirmTransaction(
+          ethAddress,
+          rewards,
+          blockNumber
+        )
+        allConfirmed = allConfirmed && confirmed
       }
 
       // Update the campaign reward status to indicate it was distributed.
-      await campaignRow.update({
-        rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
-      })
+      if (allConfirmed) {
+        await campaignRow.update({
+          rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
+        })
+        logger.info(`Updated campaign ${campaign.id} status to Distributed.`)
+      } else {
+        logger.info(
+          `One or more transactions not confirmed. Leaving campaign ${
+            campaign.id
+          } status as Calculated.`
+        )
+      }
 
       this.stats.numCampaigns++
       this.stats.distGrandTotal += campaignDistTotal

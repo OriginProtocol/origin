@@ -1,6 +1,6 @@
 /*
  * Parse command line arguments into a dict.
- * @returns {dict} - Parsed arguments.
+ * @returns {Object} - Parsed arguments.
  */
 export default function parseArgv() {
   const args = {}

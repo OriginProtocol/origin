@@ -15,8 +15,8 @@ const enums = require('../enums')
 
 const { Campaign } = require('../rules/rules')
 
-// We allow a campaign to got a bit over cap since the cap used is not updated realtime but
-// rather periodically via a cron job.
+// We allow a campaign to go a bit over budget since the capUsed field
+// is not updated realtime but rather periodically via a cron job.
 const CampaignMaxOverCapFactor = BigNumber(1.1)
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
@@ -51,7 +51,7 @@ class CalculateRewards {
     return false
   }
 
-  // TODO: should we also flag the user in the identity table ?
+  // TODO: Consider flagging the user in the identity table.
   async _banParticipant(participant, reason) {
     await participant.update({
       status: enums.GrowthParticipantStatus.Banned,
@@ -91,7 +91,7 @@ class CalculateRewards {
   }
 
   async process() {
-    const now = new Date().toISOString()
+    const now = new Date()
 
     // Look for finished campaigns with rewards_status ready for calculation.
     const campaignRows = await db.findall({
@@ -106,8 +106,29 @@ class CalculateRewards {
       logger.info(
         `Calculating rewards for campaign ${campaign.id} (${campaign.name})`
       )
-      const campaignTotal = BigNumber(0)
 
+      // Consistency checks.
+      if (campaign.currency !== 'OGN') {
+        throw new Error(
+          `Campaign ${campaign.id} - Currency ${
+            campaign.currency
+          } not supported.`
+        )
+      }
+      if (campaign.endDate > now) {
+        throw new Error(
+          `Campaign ${campaign.id} - Does not end before ${campaign.endDate}`
+        )
+      }
+      if (campaign.distributionDate > now) {
+        throw new Error(
+          `Campaign ${campaign.id} - Not ready for distribution before ${
+            campaign.distributionDate
+          }.`
+        )
+      }
+
+      const campaignTotal = BigNumber(0)
       const participants = await this._getParticipants(campaign)
       for (const participant of participants) {
         const ethAddress = participant.ethAddress
