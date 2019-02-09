@@ -89,7 +89,7 @@ const Identity = ({ id }) => (
   <Query query={IdentityQuery} variables={{ id }}>
     {({ data, loading, error }) => {
       if (loading || error) return null
-      const profile = get(data, 'web3.account.identity.profile')
+      const profile = get(data, 'web3.account.identity')
       if (!profile) {
         return null
       }
@@ -100,9 +100,7 @@ const Identity = ({ id }) => (
           <div className="info">
             <Avatar avatar={profile.avatar} size="3rem" />
             <div>
-              <div className="name">{`${profile.firstName} ${
-                profile.lastName
-              }`}</div>
+              <div className="name">{profile.fullName}</div>
               <div className="attestations">
                 {profile.twitterVerified && (
                   <div className="attestation twitter" />

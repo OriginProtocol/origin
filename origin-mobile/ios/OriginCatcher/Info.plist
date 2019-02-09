@@ -54,6 +54,8 @@
 	<string>We would like to use your camera to scan in the QR link address</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We will not be using the location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We will not be using microphone</string>
 	<key>NSMotionUsageDescription</key>
 	<string>We will not be using Motion</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

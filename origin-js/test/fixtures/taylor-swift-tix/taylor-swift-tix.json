@@ -19,5 +19,27 @@
   "commissionPerUnit": {
     "currency": "OGN",
     "amount": "10"
-  }
+  },
+  "media": [
+    {
+      "url": "ipfs://QmU2NeZjiJZ7TyFCwqHp2bd7MH1bSyZbSAgGxNSR2iUQ3M",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmSXucmB6BHgFUW6wZyXknD3HrAtXvAy2t7JHMgXXNU79n",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmZLxmJBPY3ae9PNqKZhWZX6oF764sxXAQw3y3fJu2xgw1",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmQJymkfuCCPFnRDvi6jJALhBTqBRToJ5gGay2sPBEHFtY",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmRPJzi5wDVkrwqGVDqVoYsJr6AonysisjszuMbEbJAD8w",
+      "contentType": "image/jpeg"
+    }
+  ]
 }

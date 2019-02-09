@@ -92,11 +92,11 @@ const config = {
 }
 
 if (isProduction) {
-  (config.output.filename = '[name].[hash:8].js'),
-    (config.optimization.minimizer = [
-      new TerserPlugin({ cache: true, parallel: true }),
-      new OptimizeCSSAssetsPlugin({})
-    ])
+  config.output.filename = '[name].[hash:8].js'
+  config.optimization.minimizer = [
+    new TerserPlugin({ cache: true, parallel: true }),
+    new OptimizeCSSAssetsPlugin({})
+  ]
   config.plugins.push(
     new CleanWebpackPlugin(['public/app.*', 'public/styles.*']),
     new MiniCssExtractPlugin({

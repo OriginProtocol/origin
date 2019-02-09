@@ -9,6 +9,7 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
 import Redirect from 'components/Redirect'
+import PageTitle from 'components/PageTitle'
 
 import NotificationRow from './NotificationRow'
 
@@ -50,6 +51,7 @@ class Notifications extends Component {
 
     return (
       <div className="container purchases">
+        <PageTitle>Notifications</PageTitle>
         <Query
           query={query}
           variables={vars}

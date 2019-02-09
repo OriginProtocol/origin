@@ -835,6 +835,11 @@ export default class Marketplace {
   async getNotifications() {
     // Fetch all notifications.
     const party = await this.contractService.currentAccount()
+
+    if (!party) {
+      return []
+    }
+
     const notifications = await this.resolver.getNotifications(party)
 
     // Decorate each notification with listing and offer data.

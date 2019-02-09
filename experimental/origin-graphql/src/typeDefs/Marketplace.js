@@ -1,3 +1,42 @@
+const ListingInterface = `
+  id: ID!
+
+  # On-chain:
+  seller: Account
+  deposit: String
+  arbitrator: Account
+
+  # Connections
+  offers: [Offer]
+  allOffers: [Offer]
+  offer(id: ID!): Offer
+  totalOffers: Int
+  events: [Event]
+  totalEvents: Int
+  createdEvent: Event
+
+  # Computed
+  status: String
+  hidden: Boolean
+  featured: Boolean
+  depositAvailable: String
+  type: String
+
+  # IPFS
+  title: String
+  description: String
+  currencyId: String
+  price: Price
+  category: String
+  subCategory: String
+  categoryStr: String
+  media: [Media]
+  "IPFS: total commission, in natural units, available across all units"
+  commission: String
+  "IPFS: commission, in natural units, to be paid for each unit sold"
+  commissionPerUnit: String
+`
+
 module.exports = `
   extend type Query {
     marketplace: Marketplace
@@ -8,19 +47,23 @@ module.exports = `
     deployMarketplace(token: String!, version: String, from: String, autoWhitelist: Boolean): Transaction
 
     createListing(
-      deposit: String!
+      from: String!
+      deposit: String
       depositManager: String
-      from: String
-      data: NewListingInput
       autoApprove: Boolean
+      data: ListingInput!
+      unitData: UnitListingInput
+      fractionalData: FractionalListingInput
     ): Transaction
 
     updateListing(
       listingID: ID!
+      from: String!
       additionalDeposit: String
-      from: String,
-      data: NewListingInput
       autoApprove: Boolean
+      data: ListingInput!
+      unitData: UnitListingInput
+      fractionalData: FractionalListingInput
     ): Transaction
 
     withdrawListing(
@@ -43,6 +86,7 @@ module.exports = `
       # Optional: normally inherited from listing
       arbitrator: String
       affiliate: String
+      fractionalData: FractionalOfferInput
     ): Transaction
 
     executeRuling(
@@ -74,7 +118,7 @@ module.exports = `
     account: Account
     totalListings: Int
 
-    listing(id: ID!): Listing
+    listing(id: ID!): ListingResult
     listings(
       first: Int
       last: Int
@@ -156,7 +200,7 @@ module.exports = `
     id: ID!
     reviewer: User
     target: User
-    listing: Listing
+    listing: ListingResult
     offer: Offer
     review: String
     rating: Int
@@ -164,58 +208,43 @@ module.exports = `
 
   type ListingConnection {
     edges: [ListingEdge]
-    nodes: [Listing]
+    nodes: [ListingResult]
     pageInfo: PageInfo!
     totalCount: Int!
   }
 
   type ListingEdge {
     cursor: String!
-    node: Listing
+    node: ListingResult
   }
 
-  type Listing {
-    id: ID!
+  interface Listing {
+    ${ListingInterface}
+  }
 
-    # On-chain:
-    seller: Account
-    deposit: String
-    arbitrator: Account
-
-    # Connections
-    offers: [Offer]
-    allOffers: [Offer]
-    offer(id: ID!): Offer
-    totalOffers: Int
-    events: [Event]
-    totalEvents: Int
-    createdEvent: Event
+  type UnitListing implements Listing {
+    ${ListingInterface}
 
     # Computed
-    status: String
-    hidden: Boolean
-    featured: Boolean
     unitsAvailable: Int
     unitsSold: Int
-    depositAvailable: String
-    type: String
     multiUnit: Boolean
 
     # IPFS
-    title: String
-    description: String
-    currencyId: String
-    price: Price
-    category: String
-    subCategory: String
-    categoryStr: String
     unitsTotal: Int
-    media: [Media]
-    "IPFS: total commission, in natural units, available across all units"
-    commission: String
-    "IPFS: commission, in natural units, to be paid for each unit sold"
-    commissionPerUnit: String
   }
+
+  type FractionalListing implements Listing {
+    ${ListingInterface}
+
+    # IPFS
+    weekendPrice: Price
+    unavailable: [String]
+    customPricing: [String]
+    booked: [String]
+  }
+
+  union ListingResult = UnitListing | FractionalListing
 
   type Media {
     url: String
@@ -230,7 +259,7 @@ module.exports = `
     createdBlock: Int
 
     # Connections
-    listing: Listing
+    listing: ListingResult
     events: [Event]
     createdEvent: Event
     acceptedEvent: Event
@@ -251,13 +280,17 @@ module.exports = `
     arbitrator: Account
     finalizes: Int
     status: Int
-    quantity: Int
 
     # Computed
     withdrawnBy: Account
     statusStr: String
     valid: Boolean
     validationError: String
+
+    # IPFS
+    quantity: Int
+    startDate: String
+    endDate: String
   }
 
   type OfferHistory {
@@ -268,20 +301,30 @@ module.exports = `
     ipfsUrl: String
   }
 
-  input NewListingInput {
+  input ListingInput {
     title: String!
     description: String
     category: String
     subCategory: String
     currency: String
-    price: PriceInput
-    unitsTotal: Int
     media: [MediaInput]
+    price: PriceInput
 
     "total commission, in natural units, for all units"
     commission: String
     "commission, in natural units, to be paid for each unit sold"
     commissionPerUnit: String
+  }
+
+  input UnitListingInput {
+    unitsTotal: Int
+  }
+
+  input FractionalListingInput {
+    weekendPrice: PriceInput
+    unavailable: [String]
+    customPricing: [String]
+    booked: [String]
   }
 
   input MediaInput {
@@ -291,6 +334,11 @@ module.exports = `
 
   input MakeOfferInput {
     currency: String
+  }
+
+  input FractionalOfferInput {
+    startDate: String
+    endDate: String
   }
 
   input PriceInput {

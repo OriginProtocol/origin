@@ -2,7 +2,7 @@ import get from 'lodash/get'
 
 export default function unpublishedStrength({ props, state }) {
   // TODO: Retrieve stregths from GraphQL?
-  const profile = get(props, 'identity.profile', {})
+  const profile = get(props, 'identity') || {}
   let strength = 0
   if (!profile.firstName && state.firstName) strength += 10
   if (!profile.lastName && state.lastName) strength += 10

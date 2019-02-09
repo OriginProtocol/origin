@@ -25,6 +25,7 @@ export default class ScanScreen extends Component {
           onRead={originWallet.onQRScanned}
           showMarker={true}
           customMarker={<ScanMarker />}
+          cameraProps={{ captureAudio: false }}
           cameraStyle={{ height: '100%' }}
         />
       </View>

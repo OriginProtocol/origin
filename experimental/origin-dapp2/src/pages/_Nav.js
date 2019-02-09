@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
@@ -8,6 +9,7 @@ import Profile from './nav/Profile'
 import Notifications from './nav/Notifications'
 import Messages from './nav/Messages'
 import Confirmations from './nav/Confirmations'
+import Mobile from './nav/Mobile'
 import Sell from './nav/Sell'
 
 const GetStarted = () => (
@@ -38,6 +40,7 @@ class Nav extends Component {
     return (
       <nav className="navbar navbar-expand-md">
         <div className="container">
+          <Mobile {...navProps('mobile')} />
           <Link to="/" className="navbar-brand">
             Origin
           </Link>
@@ -45,22 +48,18 @@ class Nav extends Component {
             <GetStarted />
           ) : (
             <>
-              <div className="collapse navbar-collapse">
-                <ul className="navbar-nav ml-auto">
-                  <li className="nav-item extra-margin">
-                    <NavLink to="/my-purchases" className="nav-link text">
-                      Buy
-                    </NavLink>
-                  </li>
-                  <Sell {...navProps('sell')} />
-                  <li className="nav-item extra-margin">
-                    <NavLink to="/create" className="nav-link add-listing text">
-                      Add Listing
-                    </NavLink>
-                  </li>
-                </ul>
-              </div>
-              <ul className="navbar-nav ml-auto flex-row">
+              <ul className="navbar-nav">
+                <li className="nav-item extra-margin d-none d-md-flex">
+                  <NavLink to="/my-purchases" className="nav-link text">
+                    <fbt desc="navbar.buying">Buy</fbt>
+                  </NavLink>
+                </li>
+                <Sell {...navProps('sell')} />
+                <li className="nav-item extra-margin d-none d-md-flex">
+                  <NavLink to="/create" className="nav-link add-listing text">
+                    <fbt desc="navbar.addListing">Add Listing</fbt>
+                  </NavLink>
+                </li>
                 <Confirmations {...navProps('confirmations')} />
                 <Messages {...navProps('messages')} />
                 <Notifications {...navProps('notifications')} />
@@ -151,10 +150,12 @@ require('react-styl')(`
     text-indent: -9999px
 
   @media (max-width: 575.98px)
-    .navbar .nav-item
-      position: initial
-      .dropdown-menu
-        left: 1rem
-        right: 1rem
+    .navbar
+      padding: 0
+      .nav-item
+        position: initial
+        .dropdown-menu
+          left: 1rem
+          right: 1rem
 
 `)

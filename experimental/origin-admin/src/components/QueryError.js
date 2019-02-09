@@ -6,9 +6,7 @@ const QueryError = props => {
     console.log(props.query.loc.source.body)
   }
 
-  return (
-    <div>Error :(</div>
-  )
+  return <div>Error :(</div>
 }
 
 export default QueryError

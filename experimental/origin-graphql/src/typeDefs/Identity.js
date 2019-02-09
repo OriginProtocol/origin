@@ -1,25 +1,18 @@
 module.exports = `
   extend type Query {
-    userRegistry: UserRegistry
+    identityEvents: IdentityEvents
     identity(id: ID!): Identity
+    identities(id: ID!): Identity
   }
 
   extend type Mutation {
-    deployUserRegistry(from: String): Transaction
-    deployIdentityContract(from: String!, contract: String!): Transaction
-
     deployIdentity(
       from: String!
       profile: ProfileInput
-      attestations: [AttestationInput]
+      attestations: [String]
     ): Transaction
 
-    updateIdentity(
-      from: String!
-      identity: String!
-      profile: ProfileInput
-      attestations: [AttestationInput]
-    ): Transaction
+    deployIdentityEvents(from: String!): Transaction
   }
 
   input ProfileInput {
@@ -29,14 +22,7 @@ module.exports = `
     avatar: String
   }
 
-  input AttestationInput {
-    topic: String!
-    issuer: String!
-    signature: String!
-    data: String!
-  }
-
-  type UserRegistry {
+  type IdentityEvents {
     id: ID
     identities(
       first: Int
@@ -56,13 +42,7 @@ module.exports = `
   type Identity {
     id: ID!
     owner: Account
-    name: String
-    claims: [Claim]
-    profile: ProfileData
-  }
 
-  type ProfileData {
-    id: ID!
     firstName: String
     lastName: String
     fullName: String
@@ -75,15 +55,9 @@ module.exports = `
     airbnbVerified: Boolean
     phoneVerified: Boolean
     emailVerified: Boolean
-  }
 
-  type Claim {
-    id: ID!
-    topic: String
-    scheme: String
-    issuer: String
-    signature: String
-    data: String
-    uri: String
+    name: String
+    ipfsHash: String
+    attestations: [String]
   }
 `

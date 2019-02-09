@@ -30,7 +30,7 @@ export default class Selling extends Component {
           size="large"
           image={<Image source={require(`${IMAGES_PATH}external-icon-light.png`)} />}
           type="primary"
-          title="Open DApp"
+          title="Open Marketplace"
           textStyle={styles.buttonText}
           onPress={this.handlePress}
         />

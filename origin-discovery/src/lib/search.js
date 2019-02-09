@@ -15,10 +15,7 @@ const client = new elasticsearch.Client({
 // (and forbids it unless you enable a special flag)
 const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
-const OFFER_INDEX = 'offers'
-const OFFER_TYPE = 'offer'
-const USER_INDEX = 'users'
-const USER_TYPE = 'user'
+
 
 class Cluster {
   /**
@@ -279,96 +276,8 @@ class Listing {
   }
 }
 
-class Offer {
-  /**
-   * Indexes an Offer
-   * @param {object} offer - JSON offer data from origin.js
-   * @throws Throws an error if indexing operation failed.
-   */
-  static async index (offer, listing) {
-    await client.index({
-      index: OFFER_INDEX,
-      type: OFFER_TYPE,
-      id: offer.id,
-      body: {
-        id: offer.id,
-        listingId: offer.listingId,
-        buyer: offer.buyer,
-        seller: listing.seller,
-        affiliate: offer.affiliate,
-        priceEth: offer.priceEth,
-        status: offer.status
-      }
-    })
-  }
-
-  static async get (id) {
-    const resp = await client.get({ id: id, index: OFFER_INDEX, type: OFFER_TYPE })
-    if (!resp.found) {
-      throw Error('Offer not found')
-    }
-    return resp._source
-  }
-
-  static async search (opts) {
-    const mustQueries = []
-    if (opts.buyerAddress !== undefined) {
-      mustQueries.push({ term: { 'buyer.keyword': opts.buyerAddress } })
-    }
-    if (opts.listingId !== undefined) {
-      mustQueries.push({ term: { 'listingId.keyword': opts.listingId } })
-    }
-    let query
-    if (mustQueries.length > 0) {
-      query = { bool: { must: mustQueries } }
-    } else {
-      query = { match_all: {} }
-    }
-
-    const resp = await client.search({
-      index: OFFER_INDEX,
-      type: OFFER_TYPE,
-      body: {
-        query
-      }
-    })
-    return resp.hits.hits.map(x => x._source)
-  }
-}
-
-class User {
-  /**
-   * Indexes a user
-   * @param {object} user - JSON user data from origin.js
-   */
-  static async index (user) {
-    const profile = user.profile || {}
-    await client.index({
-      index: USER_INDEX,
-      type: USER_TYPE,
-      id: user.address,
-      body: {
-        walletAddress: user.address,
-        identityAddress: user.identityAddress,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        description: profile.description
-      }
-    })
-  }
-
-  static async get (walletAddress) {
-    const resp = await client.get({ id: walletAddress, index: USER_INDEX, type: USER_TYPE })
-    if (!resp.found) {
-      throw Error('User not found')
-    }
-    return resp._source
-  }
-}
 
 module.exports = {
   Cluster,
   Listing,
-  Offer,
-  User
 }

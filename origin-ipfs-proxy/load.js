@@ -8,20 +8,25 @@ const logger = require('./src/logger')
 
 const imageHash = 'QmcJwbSPxVgpLsnN3ESAeZ7FRSapYKa27pWFhY9orsZat7'
 const ipfsFactory = ipfsdCtl.create({
-  type: 'js',
+  type: 'js'
 })
 require('./src/app')
 
 async function spawnIpfs() {
   return new Promise((resolve, reject) => {
-    ipfsFactory.spawn({
-      disposable: true,
-      defaultAddrs: true
-    }, (err, node) => {
-      if (err) { reject(err) }
-      node.api.util.addFromFs('./fixtures/sample_1mb.jpg')
-      resolve(node)
-    })
+    ipfsFactory.spawn(
+      {
+        disposable: true,
+        defaultAddrs: true
+      },
+      (err, node) => {
+        if (err) {
+          reject(err)
+        }
+        node.api.util.addFromFs('./fixtures/sample_1mb.jpg')
+        resolve(node)
+      }
+    )
   })
 }
 
@@ -30,20 +35,23 @@ async function loadTest(url, requests = []) {
   let autocannonInstance
 
   return new Promise((resolve, reject) => {
-    autocannonInstance = autocannon({
-      url: url,
-      connections: 10,
-      pipelining: 1,
-      duration: 30,
-      requests: requests
-    }, (err, res) => {
-      if (err) {
-        logger.error(err)
-        reject(err)
+    autocannonInstance = autocannon(
+      {
+        url: url,
+        connections: 10,
+        pipelining: 1,
+        duration: 30,
+        requests: requests
+      },
+      (err, res) => {
+        if (err) {
+          logger.error(err)
+          reject(err)
+        }
+        ipfsNode.stop()
+        resolve(res)
       }
-      ipfsNode.stop()
-      resolve(res)
-    })
+    )
 
     autocannon.track(autocannonInstance, {
       renderLatencyTable: true

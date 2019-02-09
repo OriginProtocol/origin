@@ -1,4 +1,5 @@
-import { get, post } from 'origin-ipfs'
+import { get } from 'origin-ipfs'
+// import { post } from 'origin-ipfs'
 import uniqBy from 'lodash/uniqBy'
 import createDebug from 'debug'
 
@@ -33,7 +34,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
 
   try {
     if (window.localStorage[cacheStr]) {
-      ;({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr]))
+      ;({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr])) // eslint-disable-line
       fromBlock = lastLookup
       triedIpfs = true
     }
@@ -124,7 +125,8 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     return events.filter(e => {
       const topics = e.raw.topics
       let matches = true
-      if (eventNames && eventNames.indexOf(e.event) < 0) matches = false
+      if (eventNames && eventNames.length && eventNames.indexOf(e.event) < 0)
+        matches = false
 
       if (offerIds && offerIds.length) {
         if (

@@ -1,12 +1,14 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import { Link } from 'react-router-dom'
+import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
 import query from 'queries/Offer'
 
 import AboutParty from 'components/AboutParty'
 import QueryError from 'components/QueryError'
+import PageTitle from 'components/PageTitle'
 
 import TxHistory from './_History'
 import TxProgress from './_Progress'
@@ -18,8 +20,9 @@ const Transaction = props => {
   const vars = { offerId }
   return (
     <div className="container transaction-detail">
+      <PageTitle>Offer {offerId}</PageTitle>
       <Query query={query} variables={vars}>
-        {({ networkStatus, error, data }) => {
+        {({ networkStatus, error, data, refetch }) => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
           } else if (networkStatus === 1) {
@@ -33,11 +36,12 @@ const Transaction = props => {
             return <div className="container">Offer not found</div>
           }
 
-          const isSeller = offer.listing.seller.id === props.wallet
+          const isSeller = get(offer, 'listing.seller.id', '') === props.wallet
           const party = isSeller ? offer.buyer.id : offer.listing.seller.id
 
           return (
             <>
+              <PageTitle>{offer.listing.title}</PageTitle>
               {isSeller ? (
                 <Link to="/my-sales">&lsaquo; My Sales</Link>
               ) : (
@@ -48,7 +52,11 @@ const Transaction = props => {
               <div className="row">
                 <div className="col-md-8">
                   <h3>Transaction Progress</h3>
-                  <TxProgress offer={offer} wallet={props.wallet} />
+                  <TxProgress
+                    offer={offer}
+                    wallet={props.wallet}
+                    refetch={refetch}
+                  />
 
                   <h3>Transaction History</h3>
                   <TxHistory offer={offer} />

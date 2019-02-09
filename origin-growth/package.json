@@ -1,6 +1,6 @@
 {
   "name": "origin-growth",
-  "description": "Origin growth engine server",
+  "description": "Origin growth engine",
   "version": "0.1.0",
   "engines": {
     "node": "10.x"
@@ -21,7 +21,6 @@
     "graphql-type-json": "^0.2.1",
     "http": "0.0.0",
     "origin-graphql": "^0.1.0",
-    "origin": "^0.8.6",
     "per-env": "^1.0.2",
     "pg": "^7.7.1",
     "sequelize": "^5.0.0-beta.14",
@@ -38,12 +37,18 @@
     "rewire": "^4.0.1"
   },
   "scripts": {
-    "lint": "eslint 'src/**/*.js' 'config/**/*.js'",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "migrate": "sequelize db:migrate",
     "start": "npm run start:growth",
     "start:growth": "per-env",
     "start:growth:development": "nodemon src/apollo/app.js",
     "start:growth:production": "node src/apollo/app.js",
     "test": "mocha --timeout 10000 --exit"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

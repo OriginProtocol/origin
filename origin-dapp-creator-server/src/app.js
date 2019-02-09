@@ -39,7 +39,9 @@ app.post('/config', async (req, res) => {
     ipfsHash = await addConfigToIpfs(req.body)
   } catch (error) {
     logger.error(error)
-    return res.status(500).send('An error occurred publishing configuration to IPFS')
+    return res
+      .status(500)
+      .send('An error occurred publishing configuration to IPFS')
   }
 
   logger.debug(`Uploaded configuration to IPFS: ${ipfsHash}`)
@@ -56,7 +58,7 @@ app.post('/config', async (req, res) => {
         // No existing record, must be a fresh configuration
         await setAllRecords(config.subdomain, ipfsHash)
       }
-    } catch(error) {
+    } catch (error) {
       logger.error(error)
       res.status(500).send('Failed to configure DNS records')
     }
@@ -76,7 +78,7 @@ app.post('/config/preview', async (req, res) => {
   let ipfsHash
   try {
     ipfsHash = await addConfigToIpfs(req.body)
-  } catch(error) {
+  } catch (error) {
     logger.error(error)
     res.status(500).send('An error occurred saving configuration to IPFS')
     return
@@ -93,6 +95,6 @@ app.post('/validate/subdomain', async (req, res) => {
   res.status(200).send()
 })
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+app.listen(port, () => logger.info(`Listening on port ${port}`))
 
 module.exports = app

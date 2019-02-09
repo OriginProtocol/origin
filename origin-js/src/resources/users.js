@@ -1,4 +1,5 @@
 import UsersResolver from '../contractInterface/users/resolver'
+import { IpfsDataStore } from '../ipfsInterface/store'
 
 export default class Users {
   constructor(
@@ -8,6 +9,7 @@ export default class Users {
       blockAttestattionV1,
       attestationAccount
     }) {
+    this.ipfsDataStore = new IpfsDataStore(ipfsService)
     this.resolver = new UsersResolver({
       contractService,
       ipfsService,

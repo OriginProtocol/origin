@@ -3,6 +3,8 @@ import contracts from '../contracts'
 let ethPrice, activeMessaging
 const marketplaceExists = {}
 
+import { identity } from './IdentityEvents'
+
 export default {
   config: () => contracts.net,
   configObj: () => contracts.config,
@@ -32,12 +34,12 @@ export default {
     return contracts
   },
   marketplaces: () => contracts.marketplaces,
-  userRegistry: () => {
-    const address = contracts.userRegistry.options.address
+  identityEvents: () => {
+    const address = contracts.identityEvents.options.address
     if (!address) return null
-    return contracts.userRegistry
+    return contracts.identityEvents
   },
-  identity: (_, args) => ({ id: args.id }),
+  identity: (_, args) => identity({ id: args.id }),
   tokens: () => contracts.tokens,
   token: (_, args) => {
     if (args.id === '0x0000000000000000000000000000000000000000') {
@@ -66,6 +68,12 @@ export default {
     }),
   messaging: (_, args) =>
     new Promise(async resolve => {
+      if (
+        typeof window !== 'undefined' &&
+        window.localStorage.disableMessaging
+      ) {
+        return resolve(null)
+      }
       let id = args.id
       if (id === 'defaultAccount') {
         const accounts = await contracts.metaMask.eth.getAccounts()

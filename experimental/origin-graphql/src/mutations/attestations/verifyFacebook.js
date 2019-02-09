@@ -47,9 +47,7 @@ async function verifyFacebook(_, { identity }) {
 
       resolve({
         success: true,
-        claimType: data['claim-type'],
-        data: contracts.web3.utils.soliditySha3(data.data),
-        signature: data.signature
+        data: JSON.stringify(data)
       })
     }
 
