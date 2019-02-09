@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import Store from 'utils/store'
@@ -30,7 +29,6 @@ class TranslationModal extends Component {
           <a
             className="btn btn-primary btn-lg active"
             href="https://goo.gl/forms/qooAg36lpN07GCVJ2"
-            target="_blank"
             rol="button"
           >
             <fbt desc="modal.translationRequestButton">Help Translate</fbt>
