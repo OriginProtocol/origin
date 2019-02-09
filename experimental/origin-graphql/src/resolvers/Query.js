@@ -9,7 +9,26 @@ import { identity } from './IdentityEvents'
 export default {
   config: () => contracts.net,
   configObj: () => contracts.config,
-  creatorConfig: () => creatorConfig,
+  creatorConfig: async (_, args) => {
+    console.log('hi')
+    if (creatorConfigUrl) {
+      // Retrieve the config
+      await fetch(creatorConfigUrl)
+        .then(response => response.json())
+        .then(responseJson => {
+          this.setState({
+            config: {
+              isWhiteLabelled: true,
+              ...responseJson.config
+            }
+          })
+        })
+        .catch(error => {
+          console.log('Could not set custom configuration: ' + error)
+        })
+    }
+    return creatorConfig
+  },
   web3: () => ({}),
   marketplace: async () => {
     const address = contracts.marketplace.options.address

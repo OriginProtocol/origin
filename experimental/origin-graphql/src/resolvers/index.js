@@ -40,4 +40,5 @@ export default {
   Messaging,
   IdentityEvents,
   Config,
+  CreatorConfig
 }

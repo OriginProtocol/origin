@@ -1,4 +1,8 @@
 module.exports = `
+  extend type Query {
+    creatorConfig(configUrl: String!): CreatorConfig
+  }
+
   type CreatorConfig {
     title: String
     about: String

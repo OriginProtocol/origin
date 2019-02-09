@@ -27,7 +27,6 @@ query Search($search: String, $filters: [ListingFilter!]) {
 }`
 
 async function searchIds(search, filters) {
-  console.log(filters)
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {
       headers: { 'content-type': 'application/json' },

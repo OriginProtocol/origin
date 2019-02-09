@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import { Query } from 'react-apollo'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
+import queryString from 'query-string'
 
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
@@ -24,7 +26,7 @@ import {
   applyConfiguration,
   isWhiteLabelHostname
 } from 'utils/marketplaceCreator'
-import withCreatorConfig from 'hoc/withCreatorConfig'
+import CreatorConfigQuery from 'queries/CreatorConfig'
 
 class App extends Component {
   state = { hasError: false }
@@ -46,6 +48,16 @@ class App extends Component {
   }
 
   render() {
+    let creatorConfigUrl
+    const parsed = queryString.parse(this.props.location.search)
+    if (parsed.config) {
+      // Config URL was passed in the query string
+      creatorConfigUrl = parsed.config
+    } else if (isWhiteLabelHostname()) {
+      // Hostname is something custom, assume config is at config.<hostname>
+      creatorConfigUrl = `config.${window.location.hostname}`
+    }
+
     if (this.state.hasError) {
       return (
         <div className="app-error">
@@ -54,55 +66,65 @@ class App extends Component {
         </div>
       )
     }
-    if (this.state.loading) {
-      return (
-        <div className="app-loading">
-          <h5>Loading</h5>
-          <div>Please wait</div>
-        </div>
-      )
-    }
     return (
-      <>
-        <BetaBanner />
-        <BetaModal />
-        <Nav />
-        <main>
-          <Switch>
-            <Route path="/listings/:listingID" component={Listing} />
-            <Route path="/purchases/:offerId" component={Transaction} />
-            <Route
-              path="/my-purchases/:filter?"
-              component={MyPurchases}
+      <Query query={CreatorConfigQuery} variables={{creatorConfigUrl: creatorConfigUrl}}>
+       {({ data, networkStatus }) => {
+        if (networkStatus === 1) {
+          return (
+            <div className="app-loading">
+              <h5>Loading</h5>
+              <div>Please wait</div>
+            </div>
+          )
+        }
+        const creatorConfig = get(data, 'creatorConfig', {})
+        console.log(data)
+         // applyConfiguration(creatorConfig)
+        return (
+          <>
+            <BetaBanner />
+            <BetaModal />
+            <Nav />
+            <main>
+              <Switch>
+                <Route path="/listings/:listingID" component={Listing} />
+                <Route path="/purchases/:offerId" component={Transaction} />
+                <Route
+                  path="/my-purchases/:filter?"
+                  component={MyPurchases}
+                />
+                <Route
+                  path="/my-sales/:filter?"
+                  component={MySales}
+                />
+                <Route
+                  path="/my-listings/:filter?"
+                  component={MyListings}
+                />
+                <Route path="/create" component={CreateListing} />
+                <Route path="/user/:id" component={User} />
+                <Route path="/profile" component={Profile} />
+                <Route path="/messages/:room?" component={Messages} />
+                <Route path="/notifications" component={Notifications} />
+                <Route path="/about/dapp-info" component={DappInfo} />
+                <Route path="/about/tokens" component={AboutToken} />
+                <Route component={Listings} />
+              </Switch>
+            </main>
+            <Footer
+              locale={this.props.locale}
+              onLocale={this.props.onLocale}
+              creatorConfig={creatorConfig}
             />
-            <Route
-              path="/my-sales/:filter?"
-              component={MySales}
-            />
-            <Route
-              path="/my-listings/:filter?"
-              component={MyListings}
-            />
-            <Route path="/create" component={CreateListing} />
-            <Route path="/user/:id" component={User} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/messages/:room?" component={Messages} />
-            <Route path="/notifications" component={Notifications} />
-            <Route path="/about/dapp-info" component={DappInfo} />
-            <Route path="/about/tokens" component={AboutToken} />
-            <Route component={Listings} />
-          </Switch>
-        </main>
-        <Footer
-          locale={this.props.locale}
-          onLocale={this.props.onLocale}
-        />
-      </>
+          </>
+        )
+       }}
+     </Query>
     )
   }
 }
 
-export default withRouter(withCreatorConfig(App))
+export default withRouter(App)
 
 require('react-styl')(`
   .app-error, .app-loading

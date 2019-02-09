@@ -3,7 +3,6 @@ import { fbt } from 'fbt-runtime'
 
 import Dropdown from 'components/Dropdown'
 import Languages from '../constants/Languages'
-import withCreatorConfig from 'hoc/withCreatorConfig'
 
 const LanguagesByKey = Languages.reduce((m, o) => {
   m[o[0]] = o[1]
@@ -85,7 +84,7 @@ class Footer extends Component {
   }
 }
 
-export default withCreatorConfig(Footer)
+export default Footer
 
 require('react-styl')(`
   footer

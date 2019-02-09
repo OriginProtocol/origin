@@ -32,8 +32,6 @@ class Listings extends Component {
       filters: this.props.filters || []
     }
 
-    console.log(vars)
-
     return (
       <>
         <PageTitle>Listings</PageTitle>
