@@ -18,10 +18,7 @@ class TranslationModal extends Component {
       // Return the JSX to display the tranlation modal
       <div className="translation-modal">
         {/* when clicking we call the onHide method */}
-        <a
-          className="translation-modal-close"
-          onClick={e => this.onHide(e)}
-        />
+        <a className="translation-modal-close" onClick={e => this.onHide(e)} />
         <article className="translation-article">
           <fbt desc="modal.translationRequest">
             This page has been machine translated, see any errors?
