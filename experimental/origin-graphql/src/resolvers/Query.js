@@ -1,4 +1,5 @@
 import contracts from '../contracts'
+import creatorConfig from '../constants/CreatorConfig'
 
 let ethPrice, activeMessaging
 const marketplaceExists = {}
@@ -8,6 +9,7 @@ import { identity } from './IdentityEvents'
 export default {
   config: () => contracts.net,
   configObj: () => contracts.config,
+  creatorConfig: () => creatorConfig,
   web3: () => ({}),
   marketplace: async () => {
     const address = contracts.marketplace.options.address

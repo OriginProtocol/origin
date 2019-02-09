@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
-import queryString from 'query-string'
 
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
@@ -21,46 +20,19 @@ import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
 import AboutToken from './about/AboutTokens'
-import baseConfig from 'constants/config'
 import {
   applyConfiguration,
   isWhiteLabelHostname
 } from 'utils/marketplaceCreator'
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 class App extends Component {
-  state = {
-    hasError: false,
-    loading: true,
-    config: baseConfig
-  }
+  state = { hasError: false }
 
   async componentDidMount() {
     if (window.ethereum) {
       window.ethereum.enable()
     }
-
-    let configUrl
-
-    const parsed = queryString.parse(this.props.location.search)
-    if (parsed.config) {
-      // Config URL was passed in the query string
-      configUrl = parsed.config
-    } else if (isWhiteLabelHostname()) {
-      // Hostname is something custom, assume config is at config.<hostname>
-      configUrl = `config.${window.location.hostname}`
-    }
-
-    if (configUrl) {
-      // Retrieve the config
-      await fetch(configUrl)
-        .then(response => response.json())
-        .then(responseJson => this.setState({ config: responseJson.config }))
-        .catch(error => {
-          console.log('Could not set custom configuration: ' + error)
-        })
-    }
-
-    applyConfiguration(this.state.config)
   }
 
   componentDidUpdate() {
@@ -82,21 +54,35 @@ class App extends Component {
         </div>
       )
     }
+    if (this.state.loading) {
+      return (
+        <div className="app-loading">
+          <h5>Loading</h5>
+          <div>Please wait</div>
+        </div>
+      )
+    }
     return (
       <>
         <BetaBanner />
         <BetaModal />
-        <Nav
-          logoUrl={this.state.config.logoUrl}
-          title={this.state.config.title}
-        />
+        <Nav />
         <main>
           <Switch>
             <Route path="/listings/:listingID" component={Listing} />
             <Route path="/purchases/:offerId" component={Transaction} />
-            <Route path="/my-purchases/:filter?" component={MyPurchases} />
-            <Route path="/my-sales/:filter?" component={MySales} />
-            <Route path="/my-listings/:filter?" component={MyListings} />
+            <Route
+              path="/my-purchases/:filter?"
+              component={MyPurchases}
+            />
+            <Route
+              path="/my-sales/:filter?"
+              component={MySales}
+            />
+            <Route
+              path="/my-listings/:filter?"
+              component={MyListings}
+            />
             <Route path="/create" component={CreateListing} />
             <Route path="/user/:id" component={User} />
             <Route path="/profile" component={Profile} />
@@ -107,16 +93,19 @@ class App extends Component {
             <Route component={Listings} />
           </Switch>
         </main>
-        <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
+        <Footer
+          locale={this.props.locale}
+          onLocale={this.props.onLocale}
+        />
       </>
     )
   }
 }
 
-export default withRouter(App)
+export default withRouter(withCreatorConfig(App))
 
 require('react-styl')(`
-  .app-error
+  .app-error, .app-loading
     position: fixed
     top: 50%
     left: 50%

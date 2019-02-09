@@ -27,7 +27,12 @@ class Listings extends Component {
   }
 
   render() {
-    const vars = pick(this.state, 'first', 'sort', 'hidden', 'search')
+    const vars = {
+      ...pick(this.state, 'first', 'sort', 'hidden', 'search'),
+      filters: this.props.filters || []
+    }
+
+    console.log(vars)
 
     return (
       <>

@@ -19,7 +19,6 @@ function isWhiteLabelHostname() {
 }
 
 function applyConfiguration(config) {
-  console.log(config)
   // Set CSS variables on the body from the config
   for (const [cssVarName, cssVarValue] of Object.entries(config.cssVars)) {
     // Don't allow url() CSS variables

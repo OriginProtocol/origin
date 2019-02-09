@@ -15,10 +15,10 @@ function atob(input) {
 }
 
 const discoveryQuery = `
-query Search($search: String) {
+query Search($search: String, $filters: [ListingFilter!]) {
   listings(
     searchQuery: $search
-    filters: []
+    filters: $filters
     page: { offset: 0, numberOfItems: 1000 }
   ) {
     numberOfItems
@@ -26,14 +26,15 @@ query Search($search: String) {
   }
 }`
 
-async function searchIds(search) {
+async function searchIds(search, filters) {
+  console.log(filters)
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
         query: discoveryQuery,
-        variables: { search }
+        variables: { search, filters}
       })
     })
       .then(response => response.json())
@@ -111,7 +112,7 @@ export async function listingsBySeller(
 
 export default async function listings(
   contract,
-  { first = 10, after, sort, hidden = true, search }
+  { first = 10, after, sort, hidden = true, search, filters }
 ) {
   if (!contract) {
     return null
@@ -120,8 +121,8 @@ export default async function listings(
   let ids = [],
     totalCount = 0
 
-  if (search && contracts.discovery) {
-    ;({ totalCount, ids } = await searchIds(search)) // eslint-disable-line
+  if ((search || filters.length > 0) && contracts.discovery) {
+    ;({ totalCount, ids } = await searchIds(search, filters)) // eslint-disable-line
   } else {
     ;({ totalCount, ids } = await allIds({ contract, sort, hidden })) // eslint-disable-line
   }

@@ -3,6 +3,7 @@ import { fbt } from 'fbt-runtime'
 
 import Dropdown from 'components/Dropdown'
 import Languages from '../constants/Languages'
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 const LanguagesByKey = Languages.reduce((m, o) => {
   m[o[0]] = o[1]
@@ -19,12 +20,18 @@ class Footer extends Component {
           <div className="logo" />
           <div className="separator" />
           <div className="about">
-            <fbt desc="footer.description">
-              The Origin decentralized app allows buyers and sellers to transact
-              without rent-seeking middlemen using the Ethereum blockchain and
-              IPFS.
-            </fbt>
-            <div className="copyright">© 2019 Origin Protocol, Inc.</div>
+            {this.props.creatorConfig.isWhiteLabelled ? (
+              this.props.aboutText
+            ) : (
+              <>
+                <fbt desc="footer.description">
+                  The Origin decentralized app allows buyers and sellers to
+                  transact without rent-seeking middlemen using the Ethereum
+                  blockchain and IPFS.
+                </fbt>
+                <div className="copyright">© 2019 Origin Protocol, Inc.</div>
+              </>
+            )}
           </div>
           <div className="links">
             <Dropdown
@@ -61,12 +68,16 @@ class Footer extends Component {
               </a>
             </Dropdown>
 
-            <a href="https://www.originprotocol.com/">
-              <fbt desc="footer.websiteLink">Visit our Website</fbt>
-            </a>
-            <a href="https://github.com/OriginProtocol">
-              <fbt desc="footer.githubLink">Visit our GitHub</fbt>
-            </a>
+            {!this.props.creatorConfig.isWhiteLabelled && (
+              <>
+                <a href="https://www.originprotocol.com/">
+                  <fbt desc="footer.websiteLink">Visit our Website</fbt>
+                </a>
+                <a href="https://github.com/OriginProtocol">
+                  <fbt desc="footer.githubLink">Visit our GitHub</fbt>
+                </a>
+              </>
+            )}
           </div>
         </div>
       </footer>
@@ -74,7 +85,7 @@ class Footer extends Component {
   }
 }
 
-export default Footer
+export default withCreatorConfig(Footer)
 
 require('react-styl')(`
   footer

@@ -125,6 +125,7 @@ module.exports = `
       before: String
       after: String
       search: String
+      filters: [ListingFilter!]
       sort: String
       hidden: Boolean
     ): ListingConnection!
@@ -301,6 +302,29 @@ module.exports = `
     ipfsUrl: String
   }
 
+  enum ValueType {
+    STRING
+    FLOAT
+    DATE
+    ARRAY_STRING
+  }
+
+  enum FilterOperator {
+    EQUALS
+    CONTAINS
+    GREATER
+    GREATER_OR_EQUAL
+    LESSER
+    LESSER_OR_EQUAL
+  }
+
+  input ListingFilter {
+    name: String!
+    value: String!
+    valueType: ValueType!
+    operator: FilterOperator!
+  }
+
   input ListingInput {
     title: String!
     description: String
@@ -345,5 +369,4 @@ module.exports = `
     amount: String
     currency: String
   }
-
 `

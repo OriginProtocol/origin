@@ -1,4 +1,4 @@
-const baseConfig = {
+const creatorConfig = {
   title: '',
   about: '',
   logoUrl: '',
@@ -60,4 +60,4 @@ const baseConfig = {
   marketplacePublisher: ''
 }
 
-export default baseConfig
+export default creatorConfig

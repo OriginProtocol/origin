@@ -85,6 +85,14 @@ const config = {
       'Access-Control-Allow-Origin': '*'
     }
   },
+  watchOptions: {
+    poll: 2000,
+    ignored: [
+      // Ignore node_modules in watch except for the origin-js directory
+      /node_modules([\\]+|\/)+(?!origin)/,
+      /\origin([\\]+|\/)node_modules/
+    ]
+  },
   mode: isProduction ? 'production' : 'development',
   plugins: [
     new HtmlWebpackPlugin({
