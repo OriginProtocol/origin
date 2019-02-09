@@ -52,7 +52,7 @@ class App extends Component {
     }
     return (
       <>
-        <BetaBanner locale={this.props.locale}/>
+        <BetaBanner locale={this.props.locale} />
         <BetaModal />
         <Nav />
         <main>
@@ -72,7 +72,7 @@ class App extends Component {
             <Route component={Listings} />
           </Switch>
         </main>
-        <TranslationModal locale={this.props.locale}/>
+        <TranslationModal locale={this.props.locale} />
         <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
       </>
     )
