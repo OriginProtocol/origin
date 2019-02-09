@@ -5,6 +5,7 @@ import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
+import queryString from 'query-string'
 
 
 import { originToDAppListing } from 'utils/listing'
@@ -169,6 +170,16 @@ class ListingCreate extends Component {
   }
 
   async componentDidMount() {
+
+    const { location } = this.props
+    const query = queryString.parse(location.search)
+    const showRequestListing = query['showRequestListing']
+
+    if (showRequestListing)
+    {
+      sessionStorage.setItem("showRequestListing", showRequestListing)
+    }
+
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
     if (this.props.listingId) {
       this.props.storeWeb3Intent('edit a listing')
@@ -1630,7 +1641,7 @@ class ListingCreate extends Component {
                   </button>
 
                 </div>
-                <div className="d-block">
+              {sessionStorage.getItem("showRequestListing") && <div className="d-block">
                 <textarea style={{width:'100%'}} value={this.state.verifyObj} onChange={ (e) => {this.setState({verifyObj:e.target.value});}  }/>
                   <button
                     className="btn btn-primary float-right btn-listing-create"
@@ -1643,7 +1654,7 @@ class ListingCreate extends Component {
                       defaultMessage={'I want this'}
                     />
                   </button>
-                </div>
+                </div>}
               </div>
             )}
             {step !== this.STEP.AVAILABILITY &&
