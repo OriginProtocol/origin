@@ -14,6 +14,12 @@ class Step1 extends Component {
     this.state = { ...props.listing, fields: Object.keys(props.listing) }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.category !== this.state.category && this.catRef) {
+      this.catRef.focus()
+    }
+  }
+
   render() {
     const isEdit = this.props.mode === 'edit'
     if (this.state.valid) {
@@ -41,7 +47,7 @@ class Step1 extends Component {
           <div className="title">{title}</div>
           {!active ? null : (
             <div className="sub-cat">
-              <select {...input('subCategory')}>
+              <select {...input('subCategory')} ref={r => (this.catRef = r)}>
                 <option value="">Select</option>
                 {Categories[id].map(([id, title]) => (
                   <option key={id} value={id}>
