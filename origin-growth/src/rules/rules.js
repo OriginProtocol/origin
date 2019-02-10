@@ -6,7 +6,6 @@ const { GrowthEventTypes, GrowthEventStatuses } = require('../enums')
 // System cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
 
-
 class Reward {
   constructor(campaignId, levelId, ruleId, value) {
     this.campaignId = campaignId
@@ -16,16 +15,19 @@ class Reward {
   }
 }
 
-
 class Campaign {
   constructor(campaign, config) {
     this.campaign = campaign
     this.config = config
 
-    if (!this.config.numLevels ||
+    if (
+      !this.config.numLevels ||
       !Number.isInteger(this.config.numLevels) ||
-      this.config.numLevels <= 0) {
-      throw new Error(`Campaign ${campaign.id}: invalid or missing numLevels field.`)
+      this.config.numLevels <= 0
+    ) {
+      throw new Error(
+        `Campaign ${campaign.id}: invalid or missing numLevels field.`
+      )
     }
     this.numLevels = this.config.numLevels
 
@@ -56,10 +58,9 @@ class Campaign {
       }
     }
     const events = await db.GrowthEvent.findAll({
-        where: whereClause,
-        order: [ ['id', 'ASC'] ],
-      }
-    )
+      where: whereClause,
+      order: [['id', 'ASC']]
+    })
     return events
   }
 
@@ -99,14 +100,15 @@ class Campaign {
   }
 }
 
-
 class Level {
   constructor(campaignId, levelId, config) {
     this.campaignId = campaignId
     this.id = levelId
     this.config = config
 
-    this.rules = config.rules.map(ruleConfig => ruleFactory(campaignId, levelId, ruleConfig))
+    this.rules = config.rules.map(ruleConfig =>
+      ruleFactory(campaignId, levelId, ruleConfig)
+    )
   }
 
   qualifyForNextLevel(ethAddress, events) {
@@ -128,7 +130,6 @@ class Level {
   }
 }
 
-
 function ruleFactory(campaignId, levelId, config) {
   let rule
   switch (config.class) {
@@ -143,7 +144,6 @@ function ruleFactory(campaignId, levelId, config) {
   }
   return rule
 }
-
 
 class BaseRule {
   constructor(campaignId, levelId, config) {
@@ -169,7 +169,9 @@ class BaseRule {
   }
 
   str() {
-    return `Campaign ${this.campaignId} / Rule ${this.ruleId} / Level ${this.levelId}`
+    return `Campaign ${this.campaignId} / Rule ${this.ruleId} / Level ${
+      this.levelId
+    }`
   }
 
   /**
@@ -200,13 +202,16 @@ class BaseRule {
     events
       .filter(event => {
         return (
-          (event.ethAddress === ethAddress) &&
+          event.ethAddress === ethAddress &&
           eventTypes.includes(event.type) &&
           (event.status === GrowthEventStatuses.Logged ||
-           event.status === GrowthEventStatuses.Verified))
+            event.status === GrowthEventStatuses.Verified)
+        )
       })
       .forEach(event => {
-         tally[event.type] = tally.hasOwnProperty(event.type) ? tally[event.type] + 1 : 1
+        tally[event.type] = tally.hasOwnProperty(event.type)
+          ? tally[event.type] + 1
+          : 1
       })
     return tally
   }
@@ -250,7 +255,9 @@ class SingleEventRule extends BaseRule {
   _numRewards(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     // SingleEventRule has at most 1 event in tally count.
-    return Object.keys(tally).length == 1 ? Math.min(Object.values(tally)[0], this.limit) : 0
+    return Object.keys(tally).length == 1
+      ? Math.min(Object.values(tally)[0], this.limit)
+      : 0
   }
 
   /**
@@ -261,7 +268,7 @@ class SingleEventRule extends BaseRule {
    */
   evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-    return (Object.keys(tally).length === 1 && Object.values(tally)[0] > 0)
+    return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
   }
 }
 
@@ -290,9 +297,11 @@ class MultiEventsRule extends BaseRule {
     })
     this.eventTypes = this.config.eventTypes
 
-    if (!this.config.numEventsRequired ||
+    if (
+      !this.config.numEventsRequired ||
       !Number.isInteger(this.config.numEventsRequired) ||
-      this.config.numEventsRequired > this.eventTypes.length) {
+      this.config.numEventsRequired > this.eventTypes.length
+    ) {
       throw new Error(`${this.str()}: missing or invalid numEventsRequired`)
     }
     this.numEventsRequired = this.config.numEventsRequired
@@ -306,7 +315,6 @@ class MultiEventsRule extends BaseRule {
    * @private
    */
   _numRewards(ethAddress, events) {
-
     // Attempts to picks N different events from the tally.
     // Returns true if success, false otherwise.
     function pickN(tally, n) {
@@ -325,7 +333,7 @@ class MultiEventsRule extends BaseRule {
 
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     let numRewards = 0
-    while ((numRewards < this.limit) && pickN(tally, this.numEventsRequired)) {
+    while (numRewards < this.limit && pickN(tally, this.numEventsRequired)) {
       numRewards++
     }
     return numRewards
@@ -339,7 +347,7 @@ class MultiEventsRule extends BaseRule {
    */
   evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-    return (Object.keys(tally).length >= this.numEventsRequired)
+    return Object.keys(tally).length >= this.numEventsRequired
   }
 }
 
