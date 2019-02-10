@@ -14,11 +14,7 @@ const UnitListing = ({ listing, onChange }) => {
     <>
       <div className="form-group">
         <label>Quantity</label>
-        <input
-          {...input('quantity')}
-          placeholder="How many are you selling?"
-          type="number"
-        />
+        <input {...input('quantity')} placeholder="How many are you selling?" />
         {Feedback('quantity')}
       </div>
       <div className="form-group">
@@ -26,7 +22,7 @@ const UnitListing = ({ listing, onChange }) => {
         <div className="d-flex">
           <div style={{ flex: 1, marginRight: '1rem' }}>
             <div className="with-symbol">
-              <input {...input('price')} type="number" />
+              <input {...input('price')} />
               <span className="eth">ETH</span>
             </div>
           </div>

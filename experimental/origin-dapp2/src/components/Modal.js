@@ -138,6 +138,22 @@ require('react-styl')(`
     left: 0
     overflow-y: auto
     -webkit-transform: translate3d(0, 0, 0)
+
+    .btn
+      border-radius: 2rem
+      padding: 0.5rem 2rem
+      min-width: 10rem
+      font-size: 18px
+
+    .btn-success
+      border-width: 0
+
+    .btn-link
+      font-size: 14px
+      font-weight: normal
+      text-decoration: underline
+      color: var(--white)
+
     .pl-modal-table
       display: table;
       table-layout: fixed;
@@ -168,83 +184,78 @@ require('react-styl')(`
           padding: 3rem;
 
   .pl-modal-cell
-      position: relative;
-      -webkit-transition-property: opacity,-webkit-transform;
-      transition-property: opacity,-webkit-transform;
-      transition-property: opacity,transform;
-      transition-property: opacity,transform,-webkit-transform
+    position: relative;
+    -webkit-transition-property: opacity,-webkit-transform;
+    transition-property: opacity,-webkit-transform;
+    transition-property: opacity,transform;
+    transition-property: opacity,transform,-webkit-transform
 
   .pl-modal-cell.is-entering>.pl-modal-content
-      opacity: 0;
-      -webkit-transform: translateY(50px) scale(.95);
-      transform: translateY(50px) scale(.95)
+    opacity: 0;
+    -webkit-transform: translateY(50px) scale(.95);
+    transform: translateY(50px) scale(.95)
 
   .pl-modal-cell.is-active.is-entering>.pl-modal-content
-      opacity: 1;
-      -webkit-transform: translateY(0) scale(1);
-      transform: translateY(0) scale(1);
-      -webkit-transition-timing-function: cubic-bezier(.15,1.45,.55,1);
-      transition-timing-function: cubic-bezier(.15,1.45,.55,1);
-      -webkit-transition-duration: .4s;
-      transition-duration: .4s
+    opacity: 1;
+    -webkit-transform: translateY(0) scale(1);
+    transform: translateY(0) scale(1);
+    -webkit-transition-timing-function: cubic-bezier(.15,1.45,.55,1);
+    transition-timing-function: cubic-bezier(.15,1.45,.55,1);
+    -webkit-transition-duration: .4s;
+    transition-duration: .4s
 
   .pl-modal-cell.is-leaving.is-closed>.pl-modal-content
-      opacity: 0;
-      -webkit-transform: translateY(50px) scale(.95);
-      transform: translateY(50px) scale(.95);
-      -webkit-transition-timing-function: ease-in-out;
-      transition-timing-function: ease-in-out;
-      -webkit-transition-duration: .2s;
-      transition-duration: .2s
+    opacity: 0;
+    -webkit-transform: translateY(50px) scale(.95);
+    transform: translateY(50px) scale(.95);
+    -webkit-transition-timing-function: ease-in-out;
+    transition-timing-function: ease-in-out;
+    -webkit-transition-duration: .2s;
+    transition-duration: .2s
 
   .pl-modal-cell.is-leaving.is-submitted>.pl-modal-content
-      opacity: 0;
-      -webkit-transform: translateY(-300px) translateZ(-70px) rotateX(10deg);
-      transform: translateY(-300px) translateZ(-70px) rotateX(10deg);
-      -webkit-transition-property: opacity,-webkit-transform;
-      transition-property: opacity,-webkit-transform;
-      transition-property: opacity,transform;
-      transition-property: opacity,transform,-webkit-transform;
-      -webkit-transition-timing-function: cubic-bezier(.5,-.33,1,1);
-      transition-timing-function: cubic-bezier(.5,-.33,1,1);
-      -webkit-transition-duration: .2s;
-      transition-duration: .2s
+    opacity: 0;
+    -webkit-transform: translateY(-300px) translateZ(-70px) rotateX(10deg);
+    transform: translateY(-300px) translateZ(-70px) rotateX(10deg);
+    -webkit-transition-property: opacity,-webkit-transform;
+    transition-property: opacity,-webkit-transform;
+    transition-property: opacity,transform;
+    transition-property: opacity,transform,-webkit-transform;
+    -webkit-transition-timing-function: cubic-bezier(.5,-.33,1,1);
+    transition-timing-function: cubic-bezier(.5,-.33,1,1);
+    -webkit-transition-duration: .2s;
+    transition-duration: .2s
 
   .pl-modal
-      -webkit-transition-property: opacity;
-      transition-property: opacity
+    -webkit-transition-property: opacity;
+    transition-property: opacity
 
   .pl-modal-bg
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0
-      touch-action: none
-      z-index: 1999
-      background: rgba(235, 240, 243, .6);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0
+    touch-action: none
+    z-index: 1999
+    background: rgba(235, 240, 243, .6);
 
   .pl-modal-bg.is-entering
-      opacity: 0;
-      -webkit-transition-duration: .2s;
-      transition-duration: .2s;
-      -webkit-transition-timing-function: ease;
-      transition-timing-function: ease
+    opacity: 0;
+    transition-duration: .2s;
+    transition-timing-function: ease
 
   .pl-modal-bg.is-active.is-entering
-      opacity: 1
+    opacity: 1
 
   .pl-modal-bg.is-leaving
-      opacity: 1;
-      -webkit-transition-delay: .2s;
-      transition-delay: .2s;
-      -webkit-transition-duration: .2s;
-      transition-duration: .2s;
-      -webkit-transition-timing-function: ease-in-out;
-      transition-timing-function: ease-in-out
+    opacity: 1;
+    transition-delay: .2s;
+    transition-duration: .2s;
+    transition-timing-function: ease-in-out
 
   .pl-modal-bg.is-active.is-leaving
-      opacity: 0
+    opacity: 0
 
   .pl-modal-content
     h5
@@ -253,8 +264,8 @@ require('react-styl')(`
       font-weight: normal
     .actions
       margin-top: 2rem
-      .btn:not(:first-child)
-        margin-left: 0.5rem
+      .btn
+        margin: 0 0.5rem 1rem 0.5rem
 
   @media (max-width: 575.98px)
     .pl-modal
@@ -262,5 +273,9 @@ require('react-styl')(`
         .pl-modal-cell
           .pl-modal-content
             padding: 1rem
+            .actions
+              display: flex
+              flex-direction: column-reverse
+              align-items: center
 
 `)

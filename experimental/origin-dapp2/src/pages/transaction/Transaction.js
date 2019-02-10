@@ -50,7 +50,7 @@ const Transaction = props => {
               <h2>{offer.listing.title}</h2>
 
               <div className="row">
-                <div className="col-md-8">
+                <div className="col-md-7 col-lg-8">
                   <h3>Transaction Progress</h3>
                   <TxProgress
                     offer={offer}
@@ -64,7 +64,7 @@ const Transaction = props => {
                   <h3>Listing Details</h3>
                   <ListingDetail listing={offer.listing} />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-5 col-lg-4">
                   <h4 className="side-bar">Offer Details</h4>
                   <OfferDetails offer={offer} />
 

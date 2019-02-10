@@ -4,6 +4,7 @@ const get = ipfs.get
 // import { get } from 'origin-ipfs'
 const startCase = require('lodash/startCase')
 const pick = require('lodash/pick')
+const _get = require('lodash/get')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 class OriginEventSource {
@@ -318,19 +319,24 @@ class OriginEventSource {
       buyer: { id: offer.buyer },
       affiliate: { id: offer.affiliate },
       arbitrator: { id: offer.arbitrator },
-      quantity: data.unitsPurchased,
-      startDate: data.startDate,
-      endDate: data.endDate
+      quantity: _get(data, 'unitsPurchased'),
+      startDate: _get(data, 'startDate'),
+      endDate: _get(data, 'endDate')
     }
     offerObj.statusStr = offerStatus(offerObj)
 
-    try {
-      await this.validateOffer(offerObj, listing)
-      offerObj.valid = true
-      offerObj.validationError = null
-    } catch (e) {
+    if (!data) {
       offerObj.valid = false
-      offerObj.validationError = e.message
+      offerObj.validationError = 'IPFS data not found'
+    } else {
+      try {
+        await this.validateOffer(offerObj, listing)
+        offerObj.valid = true
+        offerObj.validationError = null
+      } catch (e) {
+        offerObj.valid = false
+        offerObj.validationError = e.message
+      }
     }
 
     this.offerCache[cacheKey] = offerObj

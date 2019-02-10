@@ -19,6 +19,7 @@ export default {
     return networkName(netId)
   },
   blockNumber: () => contracts.marketplace.eventCache.getBlockNumber(),
+  // blockNumber: () => contracts.web3.eth.getBlockNumber(),
   nodeAccounts: () =>
     new Promise(resolve => {
       contracts.web3.eth
