@@ -35,6 +35,11 @@ class V00_MarketplaceAdapter {
     this.contract = null
   }
 
+
+  toListingIndex(listingID) {
+    return listingID
+  }
+
   async getContract() {
     if (!this.contract) {
       this.contract = await this.contractService.deployed(

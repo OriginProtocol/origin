@@ -58,6 +58,7 @@ class DiscoveryService {
     const jsonResp = await resp.json()
     // Throw an exception if the GraphQL response includes any error.
     if (jsonResp.errors && jsonResp.errors.length > 0) {
+      console.log("Discovery server errors:", jsonResp.errors)
       throw new Error(
         `Discovery server internal error: ${jsonResp.errors[0].message}`)
     }
@@ -323,6 +324,27 @@ class DiscoveryService {
 
     return this._toListingModel(resp.data.injectListing)
   }
+
+  async updateListing(listingId, ipfsHash, seller, deposit, depositManager, status, signature) {
+    const resp = await this._query(`
+      mutation($id:ID!, $listing:ListingInput, $signature:String!) {
+        updateListing(id:$id, listingInput:$listing, signature:$signature){
+          data
+          display
+        }
+      }
+    `, {id: listingId,
+        listing: {ipfsHash, seller, deposit, depositManager, status},
+        signature})
+
+    // Throw an error if no offer found with this id.
+    if (!resp.data) {
+      throw new Error(`Cannot update listing`)
+    }
+
+    return this._toListingModel(resp.data.updateListing)
+  }
+
 
 }
 

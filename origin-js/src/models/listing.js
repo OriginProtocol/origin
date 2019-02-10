@@ -144,7 +144,10 @@ class Listing {
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
       commissionPerUnit: discoveryNodeData.commissionPerUnit,
-      marketplacePublisher: discoveryNodeData.marketplacePublisher
+      marketplacePublisher: discoveryNodeData.marketplacePublisher,
+      creator: discoveryNodeData.creator,
+      updateVersion: discoveryNodeData.updateVersion,
+      createDate: discoveryNodeData.createDate
     })
   }
 

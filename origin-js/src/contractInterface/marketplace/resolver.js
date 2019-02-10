@@ -361,6 +361,11 @@ export default class MarketplaceResolver {
     return await this.currentAdapter.getTokenAddress()
   }
 
+  isNoGas(listingId) {
+    const { version, network, listingIndex } = parseListingId(listingId)
+    return version == 'A'
+  }
+
   parseListingId(listingId) {
     const { version, network, listingIndex } = parseListingId(listingId)
     // use appropriate adapter for version
@@ -381,11 +386,11 @@ export default class MarketplaceResolver {
     return { adapter, listingIndex, offerIndex, version, network }
   }
 
-  makeListingId(network, contractName, listingIndex) {
+  makeListingId(network, contractName, listingId) {
     for (const version of this.versions) {
       if (this.adapters[version].contractName == contractName)
       {
-        return generateListingId({ version, network, listingIndex })
+        return generateListingId({ version, network, listingIndex:this.adapters[version].toListingIndex(listingId) })
       }
     }
   }

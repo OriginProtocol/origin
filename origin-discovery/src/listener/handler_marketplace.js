@@ -2,6 +2,7 @@ const logger = require('./logger')
 const search = require('../lib/search')
 const db = require('../models')
 const base58 = require('bs58')
+const web3 = require('web3')
 const { GrowthEvent } = require('origin-growth/src/resources/event')
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 const { checkEventsFreshness } = require('./utils')
@@ -354,7 +355,7 @@ class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
     const offer = await origin.marketplace.getOffer(offerId)
 
     console.log("offer details", offer)
-    checkFreshness(offer.events, blockInfo)
+    checkEventsFreshness(offer.events, blockInfo)
 
     // TODO: need to load from db to verify that the listingIpfs haven't already been set!!!
     //const status = web3.utils.toBN(offer.seller) != 0 ? 'pending': 'active'
@@ -379,6 +380,31 @@ class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
         throw new Error(`listing signature does not match seller ${listing.seller}.`)
       }
     }
+    
+    let seller
+    let buyer
+    if (web3.utils.toBN(offer.seller) != 0)
+    {
+      try {
+        seller = await origin.users.get(offer.seller)
+      } catch (e) {
+        // If fetching the seller fails, we still want to index the listing/offer
+        console.log('Failed to fetch seller', e)
+      }
+    }
+    try {
+      buyer = await origin.users.get(offer.buyer)
+    } catch (e) {
+      // If fetching the buyer fails, we still want to index the listing/offer
+      console.log('Failed to fetch buyer', e)
+    }
+    return {
+      listing,
+      offer: offer,
+      seller: seller,
+      buyer: buyer
+    }
+
   }
 }
 

@@ -10,6 +10,6 @@
   { "name" : "deposit", "type": "string" },
   { "name" : "depositManager", "type": "address" },
   { "name" : "updateVersion", "type" : "uint256" },
-  { "name" : "withdrawn", "type": "bool"},
+  { "name" : "status", "type": "string"},
   { "name" : "raw_ipfs_hash", "type" : "bytes32" }
 ]

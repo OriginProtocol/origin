@@ -235,10 +235,7 @@ async function getOffer (offerId) {
  *
  */
 async function createListing(listingData) {
-  const row = await db.Listing.upsert(listingData)
-  if (!row) {
-    return null
-  }
+  await db.Listing.upsert(listingData)
   return getListing(listingData.id)
 }
 

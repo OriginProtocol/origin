@@ -10,7 +10,6 @@ const search = require('../lib/search.js')
 const urllib = require('url')
 const Origin = require('origin').default
 const Web3 = require('web3')
-const { TypedDataUtils, recoverTypedSignature } = require('eth-sig-util')
 
 const generateListingId = ({network, version, uniqueId}) => {
   return [network, version, uniqueId].join(
@@ -73,26 +72,13 @@ async function updateSearch(listingId, listing) {
       const seller = await origin.users.get(listing.seller)
       console.log(`Indexing listing in Elastic: id=${listingId}`)
       await search.Listing.index(listingId, seller.address, listing.ipfsHash, listing)
-      await search.User.index(seller)
+      //await search.User.index(seller)
       return true
     }
 }
 
-async function injectListing(injectedListingInput, signature) {
-  //
-  // please very signature first
-  //
-  console.log("verifying:", injectedListingInput, " against ", signature)
-  // schema ListingInput in graphql
-  const listing = await origin.marketplace._listingFromData(undefined, injectedListingInput)
 
-  // set the listing id for the current network
-  const network = await origin.contractService.web3.eth.net.getId()
-  const listingId = generateListingId({version:'A', network, uniqueId:listing.uniqueId })
-
-  listing.id = listingId
-
-  console.log("retrieved listing:", listing)
+async function _verifyListing(listing, signature) {
   if (!listing.createDate)
   {
     throw("CreateDate required to inject this listing")
@@ -114,16 +100,34 @@ async function injectListing(injectedListingInput, signature) {
   {
     throw("Signature does not match that of the seller")
   }
+}
+
+async function injectListing(injectedListingInput, signature) {
+  //
+  // please very signature first
+  //
+  console.log("verifying:", injectedListingInput, " against ", signature)
+  // schema ListingInput in graphql
+  const listing = await origin.marketplace._listingFromData(undefined, injectedListingInput)
+
+  // set the listing id for the current network
+  const network = await origin.contractService.web3.eth.net.getId()
+  const listingId = generateListingId({version:'A', network, uniqueId:listing.uniqueId })
+
+  listing.id = listingId
+
+  await _verifyListing(listing, signature)
 
   const existingRow = await db.getListing(listingId)
 
   if (existingRow) {
     throw("Row already created, update instead")
   }
+  const blockNumber = await web3.eth.getBlockNumber()
 
   const listingData = {
     id: listingId,
-    blockNumber: 0,
+    blockNumber,
     logIndex: 0,
     status: listing.status,
     sellerAddress: listing.seller.toLowerCase(),
@@ -145,30 +149,25 @@ async function updateListing(listingId, injectedListingInput, signature) {
   const existingRow = await db.getListing(listingId)
   const listing = await origin.marketplace._listingFromData(listingId, injectedListingInput)
 
-  if ((existingRow.updateVersion || 0) >= (listing.updateVersion || 0)) {
+  if (((existingRow.updateVersion && Number(existingRow.updateVersion)) || 0) 
+    >= ((listing.updateVersion && Number(listing.updateVersion)) || 0)) {
     throw("Update date is earlier than the existing date")
   }
 
-  if (!listing.createDate)
-  {
-    throw("CreateDate required to inject this listing")
-  }
-  const network = await origin.contractService.web3.eth.net.getId()
-
-  // set the listing id for the current network
-  if (listingId != generateListingId({version:'A', network, uniqueId:listing.uniqueId }))
-  {
-    throw("The listingId does not match the update from ipfs")
-  }
+  await _verifyListing(listing, signature)
 
   // cannot change seller address for now
-  const listingData = {
-    status: listing.status,
-    data: listing,
-    updatedAt: updateDate
-  }
+  const blockNumber = await web3.eth.getBlockNumber()
 
-  const updatedListing = await db.updateListing(listingId, listingData)
+  const listingData = {
+    id: listingId,
+    blockNumber,
+    logIndex: 0,
+    status: listing.status,
+    sellerAddress: listing.seller.toLowerCase(),
+    data: listing
+  }
+  const updatedListing = await db.createListing(listingData)
   await updateSearch(listingId, listing)
   return updatedListing
 }

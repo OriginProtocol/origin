@@ -508,16 +508,23 @@ export default class Marketplace {
     console.log("Signature verification failed:", signData, " recovered address:", recoveredAddress, " signer:", signer)
   }
 
-  async injectListing( ipfsData ) {
+  async _signNoGasListing(status, ipfsData, createDate) {
     const account = await this.contractService.currentAccount()
     ipfsData.creator = account
-    ipfsData.createDate = (new Date()).toISOString()
+    if (createDate)
+    {
+      ipfsData.createDate = createDate
+    }
+    else
+    {
+      ipfsData.createDate = (new Date()).toISOString()
+    }
 
     const encodedData = await this.ipfsDataStore.encodeData(LISTING_DATA_TYPE, JSON.parse(JSON.stringify(ipfsData)))
     const listingData = await this.ipfsDataStore.processData(LISTING_DATA_TYPE, JSON.parse(JSON.stringify(encodedData)))
 
     const listing = Listing.init(undefined, 
-      { status:'active',
+      { status,
         seller:account}, listingData)
 
     // Here's where we encode the raw data to a signature
@@ -530,8 +537,13 @@ export default class Marketplace {
 
     const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
-   
-    return this.discoveryService.injectListing(ipfsBytes, listing.seller, 
+    listing.ipfsHash = ipfsBytes
+    return {listing, signature}
+  }
+
+  async injectListing( ipfsData ) {
+    const {listing, signature} = await this._signNoGasListing('active', ipfsData)
+    return this.discoveryService.injectListing(listing.ipfsHash, listing.seller, 
       listing.deposit, listing.depositManager, listing.status, signature)
   }
 
@@ -563,6 +575,19 @@ export default class Marketplace {
    */
   async updateListing(listingId, ipfsData, additionalDeposit = 0, confirmationCallback) {
     const oldListing = await this.getListing(listingId)
+
+    if (this.resolver.isNoGas(listingId) && oldListing.creator)
+    {
+      if (!oldListing.updateVersion) {
+        ipfsData.updateVersion = 1
+      } else {
+        ipfsData.updateVersion = Number(oldListing.updateVersion) + 1
+      }
+      const {listing, signature} = await this._signNoGasListing('active', ipfsData, oldListing.createDate)
+      return this.discoveryService.updateListing(listing.id, listing.ipfsHash, listing.seller, 
+        listing.deposit, listing.depositManager, listing.status, signature)
+    }
+
     if (
       oldListing.type === 'unit' &&
       ipfsData.unitsTotal !== oldListing.unitsTotal
@@ -594,6 +619,23 @@ export default class Marketplace {
    * @return {Promise<{timestamp, ...transactionReceipt}>}
    */
   async withdrawListing(listingId, ipfsData = {}, confirmationCallback) {
+    if (this.resolver.isNoGas(listingId))
+    {
+      const oldListing = await this.getListing(listingId)
+      const ipfs_response = await this.ipfsService.loadFile(oldListing.ipfs.hash)
+      const oldData = await ipfs_response.json()
+
+      if (!oldListing.updateVersion) {
+        oldData.updateVersion = 1
+      } else {
+        oldData.updateVersion = Number(oldListing.updateVersion) + 1
+      }
+      delete oldData.signature
+      const {listing, signature} = await this._signNoGasListing('inactive', oldData, oldListing.createDate)
+      return this.discoveryService.updateListing(listing.id, listing.ipfsHash, listing.seller, 
+        listing.deposit, listing.depositManager, listing.status, signature)
+    }
+
     const ipfsHash = await this.ipfsDataStore.save(LISTING_WITHDRAW_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
 

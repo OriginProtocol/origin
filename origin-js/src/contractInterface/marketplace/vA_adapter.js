@@ -41,6 +41,10 @@ class VA_MarketplaceAdapter {
      return "0x" + base58.decode(listingIndex).toString("hex")
   }
 
+  toListingIndex(listingID) {
+    return base58.encode(this.web3.utils.toBN(listingID).toBuffer())
+  }
+
   async getContract() {
     if (!this.contract) {
       this.contract = await this.contractService.deployed(
@@ -50,7 +54,6 @@ class VA_MarketplaceAdapter {
   }
 
   async call(methodName, args, opts) {
-    console.log("Calling:", this.contractName, methodName, args, opts)
     return await this.contractService.call(
       this.contractName,
       methodName,
@@ -200,7 +203,6 @@ class VA_MarketplaceAdapter {
       const sellerSig = this.contractService.breakdownSig(
         await this.contractService.signFinalizeData(listingID, offerIndex, ipfsBytes, payout, behalfFee ) )
 
-      console.log("submit parameters is:", [listingID, offerIndex, ipfsBytes, behalfFee, verifyFee, payout, sellerSig.v, sellerSig.r, sellerSig.s, sig.v, sig.r, sig.s])
       const { transactionReceipt, timestamp } = await this.hotService.submitMarketplaceBehalf(
         'verifiedOnBehalfFinalize',
         [listingID, offerIndex, ipfsBytes, behalfFee, verifyFee,  payout, sellerSig.v, sellerSig.r, sellerSig.s, sig.v, sig.r, sig.s],
@@ -484,6 +486,7 @@ class VA_MarketplaceAdapter {
 
     // Scan through the events to retrieve information of interest.
     let buyer, ipfsHash, createdAt, blockNumber, logIndex, listingIpfsHash, acceptIpfsHash
+    let seller = rawOffer.seller
     for (const e of events) {
       const timestamp = await this.contractService.getTimestamp(e)
       e.timestamp = timestamp
@@ -500,6 +503,7 @@ class VA_MarketplaceAdapter {
         // In all cases below, the offer was deleted from the blockchain and therefore
         // rawOffer fields are set to zero => populate rawOffer.status based on event history.
       case 'OfferAccepted':
+        seller = e.returnValues.party
         acceptIpfsHash = e.returnValues.ipfsHash
         break
       case 'OfferFinalized':
@@ -525,7 +529,7 @@ class VA_MarketplaceAdapter {
     rawOffer.status = OFFER_STATUS[rawOffer.status]
 
     // Return the raw listing along with events and IPFS hash
-    return Object.assign({}, rawOffer, { buyer, ipfsHash, events, createdAt, blockNumber, logIndex, listingIpfsHash,
+    return Object.assign({}, rawOffer, {seller, buyer, ipfsHash, events, createdAt, blockNumber, logIndex, listingIpfsHash,
       acceptIpfsHash })
   }
 
