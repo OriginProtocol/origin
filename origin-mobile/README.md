@@ -42,12 +42,13 @@ Install the following:
 
 ### Backend Services
 
+Either follow the guide for Origin Box **OR** Manual Setup to get your backend services running.
 
 #### Origin Box
 
 You can use [Origin Box](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md) for development, however, there are a couple of additional steps you must perform for it to work for origin-mobile.
 
-- Manually run [origin-linking](#Startup) following the instructions under "Manual Setup" below
+- Manually run [origin-linking](#Startup) following the instructions under "Manual Setup" below since it is not included in the Box
 
 - Expose PostgreSQL's port 5432 in `docker-compose.yml`
 
