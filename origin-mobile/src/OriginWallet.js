@@ -783,7 +783,6 @@ class OriginWallet {
   }
 
   async getPrivateLink() {
-    // TODO: someone fix this
     if (Platform.OS === 'ios') {
       await PushNotificationIOS.requestPermissions()
     }
