@@ -23,12 +23,7 @@ class WaitForTransaction extends Component {
     }
 
     return (
-      <Query
-        query={query}
-        variables={{ id }}
-        pollInterval={3000}
-        fetchPolicy="network-only"
-      >
+      <Query query={query} variables={{ id }} pollInterval={3000}>
         {({ data, client }) => {
           const events = get(data, 'web3.transactionReceipt.events', [])
           const currentBlock = get(data, 'web3.blockNumber')

@@ -129,9 +129,10 @@ require('react-styl')(`
     > .wrap
       max-width: 460px
     h2
-      font-family: Poppins;
-      font-size: 40px;
-      font-weight: 200;
+      font-family: Poppins
+      font-size: 40px
+      font-weight: 200
+      line-height: 1.25
     .category
       border: 1px solid var(--light)
       font-size: 24px

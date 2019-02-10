@@ -49,7 +49,9 @@ class SellNav extends Component {
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <fbt desc="navbar.selling">Sell</fbt>
+          <span>
+            <fbt desc="navbar.selling">Sell</fbt>
+          </span>
         </a>
       </Dropdown>
     )
