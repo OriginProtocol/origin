@@ -2,11 +2,16 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "27.0.3"
-        minSdkVersion = 16
-        compileSdkVersion = 27
-        targetSdkVersion = 26
+        buildToolsVersion = "26.1.1"
+        minSdkVersion = 21
+        compileSdkVersion = 26
+        targetSdkVersion = 27
         supportLibVersion = "27.1.1"
+
+        // Necessary for notifications to play nicely
+        // Ref: https://github.com/zo0r/react-native-push-notification#android-manual-installation
+        googlePlayServicesVersion = "11.8.0"
+        firebaseVersion = "11.8.0"
     }
     repositories {
         google()
