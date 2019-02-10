@@ -234,8 +234,8 @@ Check [the React Native docs](https://facebook.github.io/react-native/docs/troub
 -----------
 
 > unable to load script from assets index.android.bundle
-
-This is likely a network error because your tunnels are not setup.  See (Android Device Configuration)[#android-device-configuration].
+https://github.com/OriginProtocol/origin/tree/mikeshultz/android/origin-mobile
+This is likely a network error because your tunnels are not setup.  See [Android Device Configuration](#android-device-configuration).
 
 -----------
 
