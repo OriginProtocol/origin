@@ -76,6 +76,7 @@ class WalletModal extends Component {
       <Modal
         animationType="slide"
         visible={visible}
+        onRequestClose={() => { console.log('Wallet modal closed') } }
       >
         <SafeAreaView style={styles.container}>
           <View style={styles.nav}>

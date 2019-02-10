@@ -1,4 +1,4 @@
-import {AppState, PushNotificationIOS,Linking, Clipboard} from 'react-native'
+import {AppState, Platform, PushNotificationIOS, Linking, Clipboard} from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
@@ -127,7 +127,9 @@ class OriginWallet {
         this.onNotification(notification)
 
         // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
-        notification.finish(PushNotificationIOS.FetchResult.NoData)
+        if (Platform.OS === 'ios') {
+          notification.finish(PushNotificationIOS.FetchResult.NoData)
+        }
       }.bind(this),
 
       // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
@@ -154,7 +156,9 @@ class OriginWallet {
   }
 
   requestNotifications() {
-    return PushNotificationIOS.requestPermissions()
+    if (Platform.OS === 'ios') {
+      return PushNotificationIOS.requestPermissions()
+    }
   }
 
   initUrls() {
@@ -780,7 +784,9 @@ class OriginWallet {
 
   async getPrivateLink() {
     // TODO: someone fix this
-    await PushNotificationIOS.requestPermissions()
+    if (Platform.OS === 'ios') {
+      await PushNotificationIOS.requestPermissions()
+    }
     const stored_link_id = await loadData(WALLET_LINK)
 
     if (stored_link_id) 
