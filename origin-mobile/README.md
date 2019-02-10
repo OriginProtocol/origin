@@ -179,9 +179,10 @@ If you want to test with mobile Safari on the same device as the application, fi
 If you intend to develop using a physical device rather than a VM, make sure you complete the following.  You can use [the Android developer's guide](https://developer.android.com/studio/run/device) for reference.
 
 - Connect your phone to your machine with a USB cable
-- Make sure JAVA_HOME points to Android's java (for me, at: `/opt/android-studio/jre/`)
+- Make sure `JAVA_HOME` points to Android's java (for me, at: `/opt/android-studio/jre/`)
 - Run `sdkmanager --licenses` and accept license agreements
-- Enable developer mode on your device by tapping "Build number" in settings 7 times. Also, turn on "USB Debugging" in "Developer options"
+- Enable developer mode on your device by tapping "Build number" in settings 7 times.
+- Turn on "USB Debugging" in "Developer options"
 - Start the adb server `adb start-server`
 - Verify your device is recognized with `adb devices`
 - Setup TCP tunnels to your device by running `./setup_android_tunnels.sh`. This allows the mobile app to access backend services at `localhost`
@@ -230,9 +231,13 @@ Check [the React Native docs](https://facebook.github.io/react-native/docs/troub
 
 📲 Don't forget to have WiFi enabled on your both of your devices and connected.
 
+-----------
+
 > unable to load script from assets index.android.bundle
 
 This is likely a network error because your tunnels are not setup.  See (Android Device Configuration)[#android-device-configuration].
+
+-----------
 
 > FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
 
