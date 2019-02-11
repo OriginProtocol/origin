@@ -16,11 +16,9 @@ export default gql`
               account {
                 id
                 identity {
-                  profile {
-                    id
-                    fullName
-                    avatar
-                  }
+                  id
+                  fullName
+                  avatar
                 }
               }
             }

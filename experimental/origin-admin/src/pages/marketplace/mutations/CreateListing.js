@@ -173,7 +173,7 @@ class CreateListing extends Component {
                     />
                   </FormGroup>
                 </div>
-                <div style={{ flex: 2, marginRight: 20 }}>
+                <div style={{ flex: 2 }}>
                   <FormGroup label="Sub-Category">
                     <HTMLSelect
                       fill={true}
@@ -185,11 +185,6 @@ class CreateListing extends Component {
                         })
                       )}
                     />
-                  </FormGroup>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <FormGroup label="Units">
-                    <InputGroup {...input('unitsTotal')} />
                   </FormGroup>
                 </div>
               </div>
@@ -210,7 +205,7 @@ class CreateListing extends Component {
                 />
               </FormGroup>
               <div style={{ display: 'flex' }}>
-                <div style={{ flex: 1.5, marginRight: 20 }}>
+                <div style={{ flex: 1, marginRight: 20 }}>
                   <FormGroup label="Price">
                     <ControlGroup fill={true}>
                       <InputGroup {...input('price')} />
@@ -222,7 +217,14 @@ class CreateListing extends Component {
                     </ControlGroup>
                   </FormGroup>
                 </div>
-
+                <div style={{ flex: 1 }}>
+                  <FormGroup label="Units">
+                    <InputGroup {...input('unitsTotal')} />
+                  </FormGroup>
+                </div>
+                <div style={{ flex: 1 }} />
+              </div>
+              <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1, marginRight: 30, padding: '0 5px' }}>
                   <FormGroup label="Deposit" labelInfo="(OGN)">
                     <Slider
@@ -236,6 +238,14 @@ class CreateListing extends Component {
                     />
                   </FormGroup>
                 </div>
+                <div style={{ flex: 1, marginRight: 20 }}>
+                  <FormGroup label="Com/Unit">
+                    <InputGroup
+                      {...input('commissionPerUnit')}
+                      rightElement={<Tag minimal={true}>OGN</Tag>}
+                    />
+                  </FormGroup>
+                </div>
                 <div style={{ flex: 1 }}>
                   <FormGroup label="Auto-Approve">
                     <Checkbox
@@ -244,14 +254,6 @@ class CreateListing extends Component {
                         this.setState({ autoApprove: e.target.checked })
                       }
                     />
-                  </FormGroup>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <FormGroup label="Com/Unit">
-                    <InputGroup
-                      {...input('commissionPerUnit')}
-                      rightElement={<Tag minimal={true}>OGN</Tag>}
-                      />
                   </FormGroup>
                 </div>
               </div>
@@ -340,7 +342,9 @@ class CreateListing extends Component {
           price: { currency: this.state.currency, amount: this.state.price },
           category: this.state.category,
           subCategory: this.state.subCategory,
-          media: this.state.media,
+          media: this.state.media
+        },
+        unitData: {
           unitsTotal: Number(this.state.unitsTotal)
         }
       }

@@ -265,12 +265,15 @@ async function server(web3, provider) {
 
 // Asserts unless the given promise leads to an EVM revert.
 // Ported from OpenZeppelin.
-export async function assertRevert(promise) {
+export async function assertRevert(promise, expectedErrorMsg = '') {
   try {
     await promise
   } catch (error) {
-    const revertFound = error.message.search('revert') >= 0
-    assert(revertFound, `Expected "revert", got ${error} instead`)
+    const revertFound = error.message.search('revert') >= 0 && error.message.search(expectedErrorMsg) >= 0
+    assert(
+      revertFound,
+      `Expected "revert" ${expectedErrorMsg ? `with error message: ${expectedErrorMsg}`: ''}, got ${error} instead`
+    )
     return
   }
   assert.fail('Expected revert not received')

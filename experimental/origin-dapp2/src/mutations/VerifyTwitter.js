@@ -5,9 +5,7 @@ export default gql`
     verifyTwitter(identity: $identity) {
       success
       reason
-      claimType
       data
-      signature
     }
   }
 `

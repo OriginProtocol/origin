@@ -11,7 +11,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import Address from 'components/Address'
 import QueryError from 'components/QueryError'
 
-const nextPage = nextPageFactory('userRegistry.identities')
+const nextPage = nextPageFactory('identityEvents.identities')
 
 import DeployIdentity from './DeployIdentity'
 
@@ -34,11 +34,15 @@ class RegisteredUsers extends Component {
               return <LoadingSpinner />
             } else if (error) {
               return <QueryError error={error} query={IdentitiesQuery} />
-            } else if (!data || !data.userRegistry) {
+            } else if (!data || !data.identityEvents) {
               return 'No user registry contract?'
             }
 
-            const { nodes, pageInfo } = data.userRegistry.identities
+            const {
+              nodes,
+              pageInfo,
+              totalCount
+            } = data.identityEvents.identities
             const { hasNextPage, endCursor: after } = pageInfo
 
             return (
@@ -48,7 +52,11 @@ class RegisteredUsers extends Component {
                 onBottom={() => nextPage(fetchMore, { ...vars, after })}
               >
                 <>
-                  <div className="mb-3">
+                  <div
+                    style={{ display: 'flex', alignItems: 'center' }}
+                    className="mb-3"
+                  >
+                    <h5 className="bp3-heading mb-0 mr-3">{`${totalCount} Identities`}</h5>
                     <Button
                       text="Create Identity"
                       intent="primary"
@@ -59,7 +67,9 @@ class RegisteredUsers extends Component {
                     <thead>
                       <tr>
                         <th>Identity</th>
-                        <th>Deploy Date</th>
+                        <th>Name</th>
+                        <th>Created</th>
+                        <th>Updated</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -74,7 +84,9 @@ class RegisteredUsers extends Component {
                             <td>
                               <Address address={user.id} />
                             </td>
-                            <td />
+                            <td>{user.fullName}</td>
+                            <td>{user.createdAt}</td>
+                            <td>{user.updatedAt}</td>
                           </tr>
                         )
                       })}

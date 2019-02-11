@@ -36,6 +36,10 @@ import ConfirmReset from './ConfirmReset'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
 
+import origin from '../../services/origin'
+
+const { web3 } = origin.contractService
+
 /*
 const etherscanNetworkUrls = {
   1: '',
@@ -301,6 +305,15 @@ class Profile extends Component {
 
     window.addEventListener('resize', this.updateProfileMobileLayout)
     this.updateProfileMobileLayout()
+
+    if (
+      !this.props.wallet.address &&
+      web3.currentProvider.isOrigin &&
+      origin.contractService.walletLinker
+    ) {
+      this.props.storeWeb3Intent('edit your profile')
+      origin.contractService.showLinkPopUp()
+    }
   }
 
   updateProfileMobileLayout() {

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "creator-issuer.fullname" . }}
+  labels:
+    app: {{ template "creator-issuer.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: origin-creator
+spec:
+  type: LoadBalancer
+  loadBalancerIP: {{ .Values.creatorIssuerIp }}
+  selector:
+    app: {{ template "creator-issuer.fullname" . }}
+  ports:
+  - name: http
+    port: 80
+  - name: https
+    port: 443

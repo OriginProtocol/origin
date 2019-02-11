@@ -1,0 +1,679 @@
+{
+  "fb-locale": "ko_KR",
+  "translations": {
+    "lnRohWpsGR7uMhMbL9Uc4A==": {
+      "translations": [
+        {}
+      ]
+    },
+    "IXnxuAx0PfImJ3UuUrtKNA==": {
+      "translations": [
+        {}
+      ]
+    },
+    "ghfbnF7r/INujbWiriguzg==": {
+      "translations": [
+        {}
+      ]
+    },
+    "66fBzTgLcxkHZ8hhNa6kkQ==": {
+      "translations": [
+        {}
+      ]
+    },
+    "KFFRQn6ksmQTRyTzCz65sg==": {
+      "translations": [
+        {
+          "translation": "골동품"
+        }
+      ]
+    },
+    "rR5EdGNccI6VljakAkQidA==": {
+      "translations": [
+        {
+          "translation": "가전 제품"
+        }
+      ]
+    },
+    "YIvbQUezwdnmysfM43g0Vw==": {
+      "translations": [
+        {
+          "translation": "예술 및 공예"
+        }
+      ]
+    },
+    "y1wrUJKn06syj0F/jkjGrg==": {
+      "translations": [
+        {
+          "translation": "Atvs, UTVs, 스노모빌"
+        }
+      ]
+    },
+    "zCfUcxdwucct0I1H9k0f7Q==": {
+      "translations": [
+        {
+          "translation": "자동차 부품"
+        }
+      ]
+    },
+    "snA5cNuJlgyAdvZDbZpJrA==": {
+      "translations": [
+        {
+          "translation": "자동 바퀴 및 타이어"
+        }
+      ]
+    },
+    "7DafxQ244zr3EY7cS62NYQ==": {
+      "translations": [
+        {
+          "translation": "아기 및 아이 관련"
+        }
+      ]
+    },
+    "txwjkTMBvg4JpdD6K8uMXA==": {
+      "translations": [
+        {
+          "translation": "자전거 부품"
+        }
+      ]
+    },
+    "GwmhxIZENDEUPnPznFlbtw==": {
+      "translations": [
+        {
+          "translation": "자전거"
+        }
+      ]
+    },
+    "RNUT6gy5oiwEr7Ahqp8ztg==": {
+      "translations": [
+        {
+          "translation": "보트 부품 및 액세서리"
+        }
+      ]
+    },
+    "5alflNLLzkUaupu+RrTT2Q==": {
+      "translations": [
+        {
+          "translation": "보트"
+        }
+      ]
+    },
+    "x6cb21nXupvVRhnwo/9FYg==": {
+      "translations": [
+        {
+          "translation": "도서 및 잡지"
+        }
+      ]
+    },
+    "1Q0Vv4XgRSWOzYW+aVBrxA==": {
+      "translations": [
+        {}
+      ]
+    },
+    "VEqNKcV23dj1AEzdWpB5HQ==": {
+      "translations": [
+        {
+          "translation": "자동차 및 트럭"
+        }
+      ]
+    },
+    "o3QtDvLaCsB7dvSR0fLs9g==": {
+      "translations": [
+        {
+          "translation": "CDs / DVDs / VHS"
+        }
+      ]
+    },
+    "qJgCSQeidefK9pEl8wOoNw==": {
+      "translations": [
+        {
+          "translation": "휴대 전화"
+        }
+      ]
+    },
+    "EAyfEU0bAiMEsoBJOoJVsQ==": {
+      "translations": [
+        {
+          "translation": "의류 및 액세서리"
+        }
+      ]
+    },
+    "2wlJsir3YFOvopTR9TaAhQ==": {
+      "translations": [
+        {
+          "translation": "수집품"
+        }
+      ]
+    },
+    "Kakvhx2/ey3GfCW9rVdpEQ==": {
+      "translations": [
+        {
+          "translation": "컴퓨터 부품"
+        }
+      ]
+    },
+    "72T8Xo79stHw0jkH5TsSwg==": {
+      "translations": [
+        {
+          "translation": "컴퓨터"
+        }
+      ]
+    },
+    "bwIJvUXvP3j5aJZicl9c2w==": {
+      "translations": [
+        {
+          "translation": "전자 제품"
+        }
+      ]
+    },
+    "s6gPsxVYO315sO2pzS9gzg==": {
+      "translations": [
+        {
+          "translation": "농장 및 정원"
+        }
+      ]
+    },
+    "hc4os+QbVfmE72t34+f3ew==": {
+      "translations": [
+        {
+          "translation": "가구"
+        }
+      ]
+    },
+    "AAgZuF9GK7AzEzHDCYO+DA==": {
+      "translations": [
+        {
+          "translation": "건강 및 미용"
+        }
+      ]
+    },
+    "D03RRTZWAmKsWEnr24R/dg==": {
+      "translations": [
+        {
+          "translation": "중장비"
+        }
+      ]
+    },
+    "K4pGQAuIr2IaJl7OBH5tFQ==": {
+      "translations": [
+        {
+          "translation": "가정 용품"
+        }
+      ]
+    },
+    "5KtxdzqQ4TQ4D4PGfZBRqw==": {
+      "translations": [
+        {
+          "translation": "보석"
+        }
+      ]
+    },
+    "q+KKes2wqNHWDk4cZNUTLw==": {
+      "translations": [
+        {
+          "translation": "재료"
+        }
+      ]
+    },
+    "UfzMzPnHFKRY+YA2YYCiMw==": {
+      "translations": [
+        {
+          "translation": "오토바이 부품 및 액세서리"
+        }
+      ]
+    },
+    "SRXzG3SHl2IsrVr0swey+Q==": {
+      "translations": [
+        {
+          "translation": "오토바이 및 스쿠터"
+        }
+      ]
+    },
+    "EjacncAiFCDQiFRr6Skz7Q==": {
+      "translations": [
+        {
+          "translation": "악기"
+        }
+      ]
+    },
+    "VMAAj6v7wavEpuDu/4ujEg==": {
+      "translations": [
+        {
+          "translation": "기타"
+        }
+      ]
+    },
+    "zy7YOcOXbkmeJ1amxDx1Yw==": {
+      "translations": [
+        {
+          "translation": "사진 및 비디오"
+        }
+      ]
+    },
+    "UfpnaB0k3hKruVNx/Dk5zw==": {
+      "translations": [
+        {
+          "translation": "부동산"
+        }
+      ]
+    },
+    "4ZaaZzyo5idIaAHowBKrEA==": {
+      "translations": [
+        {
+          "translation": "여가용 차량"
+        }
+      ]
+    },
+    "SQ49zf6Z8+FO0cu0rM8FMg==": {
+      "translations": [
+        {
+          "translation": "스포츠용품"
+        }
+      ]
+    },
+    "/LqFyal6k5y9fmP486N0eg==": {
+      "translations": [
+        {
+          "translation": "티켓"
+        }
+      ]
+    },
+    "lWeVTj5BTgBrmHyChUW3BQ==": {
+      "translations": [
+        {
+          "translation": "공구류"
+        }
+      ]
+    },
+    "PNDB5G/uGJRtnFstTnLRFw==": {
+      "translations": [
+        {
+          "translation": "장난감 및 게임"
+        }
+      ]
+    },
+    "P26DsC715lfO8HJffDPHcw==": {
+      "translations": [
+        {
+          "translation": "트레일러"
+        }
+      ]
+    },
+    "ySVwNQTsweQ/3lIONL7Vdw==": {
+      "translations": [
+        {
+          "translation": "비디오 게임"
+        }
+      ]
+    },
+    "c4W8KxvjoNvkLaPQiXcBeQ==": {
+      "translations": [
+        {}
+      ]
+    },
+    "IGExQ86vwIZJBBngF5KxCg==": {
+      "translations": [
+        {}
+      ]
+    },
+    "zBI2vhzGm3YUFkzAgxhrOw==": {
+      "translations": [
+        {}
+      ]
+    },
+    "dbmMy1BMoOPmEjBIgZNQkw==": {
+      "translations": [
+        {
+          "translation": "상담"
+        }
+      ]
+    },
+    "KBslCOpxNyf2/f02u4AC9A==": {
+      "translations": [
+        {}
+      ]
+    },
+    "9ok6+SExmxGnwGSndfBihw==": {
+      "translations": [
+        {
+          "translation": "개 산책"
+        }
+      ]
+    },
+    "fLJGWS5/2zZm6lrVMgFdjw==": {
+      "translations": [
+        {
+          "translation": "Music Lessons"
+        }
+      ]
+    },
+    "V/dRg1DOa8LTAkHzCnHHzg==": {
+      "translations": [
+        {
+          "translation": "사진"
+        }
+      ]
+    },
+    "kO8sPOni/jolamEZLA8Xrw==": {
+      "translations": [
+        {}
+      ]
+    },
+    "10HkhoJ+l5kgv0Xp9a5caw==": {
+      "translations": [
+        {}
+      ]
+    },
+    "KEVzlIlEiThvVr4DsUDjFA==": {
+      "translations": [
+        {}
+      ]
+    },
+    "6d3Zf+bS0fophdS2BVpZ1A==": {
+      "translations": [
+        {
+          "translation": "활동"
+        }
+      ]
+    },
+    "lbdDAEjsg2YdMVsaEx+G6w==": {
+      "translations": [
+        {
+          "translation": "아티스트"
+        }
+      ]
+    },
+    "HRUZSprbZ8JrtBaK6wX8GQ==": {
+      "translations": [
+        {
+          "translation": "물물 교환"
+        }
+      ]
+    },
+    "i6yoP0JB4YgoYVDLsLYM1A==": {
+      "translations": [
+        {
+          "translation": "육아"
+        }
+      ]
+    },
+    "k1AGObz3bCBIDgIFBfKtSg==": {
+      "translations": [
+        {
+          "translation": "클래스"
+        }
+      ]
+    },
+    "E0GYkehaIT3z+NsHoTWeqg==": {
+      "translations": [
+        {
+          "translation": "목재"
+        }
+      ]
+    },
+    "S1+qQlACydCmaq1HSnUw4g==": {
+      "translations": [
+        {
+          "translation": "이사 판매"
+        }
+      ]
+    },
+    "kKzeFPdL4hcduhSkzHhlsA==": {
+      "translations": [
+        {
+          "translation": "일반"
+        }
+      ]
+    },
+    "xhFRHtp6pjsIWLQEIQCXdQ==": {
+      "translations": [
+        {
+          "translation": "그룹"
+        }
+      ]
+    },
+    "DJQzON1uiipGbe1ZSRJHOQ==": {
+      "translations": [
+        {
+          "translation": "지역 뉴스"
+        }
+      ]
+    },
+    "j0yAi4eGyUt2LSsXQr92ew==": {
+      "translations": [
+        {
+          "translation": "분실물 찾기"
+        }
+      ]
+    },
+    "8MgZoixrwmWP6Jsfak1UyA==": {
+      "translations": [
+        {}
+      ]
+    },
+    "3WqpHbrwOloRd96TRFYEbA==": {
+      "translations": [
+        {
+          "translation": "음악가"
+        }
+      ]
+    },
+    "IA0QtE87pn5CMbWpJhaHJA==": {
+      "translations": [
+        {
+          "translation": "개인사항"
+        }
+      ]
+    },
+    "AbvcR9ZAJPNULoqSqebYrw==": {
+      "translations": [
+        {
+          "translation": "애완 동물"
+        }
+      ]
+    },
+    "pPtzY6/fE+eSGkWPSoP09A==": {
+      "translations": [
+        {
+          "translation": "정치"
+        }
+      ]
+    },
+    "Vh5GN0dq3+dx7j/+e2dlOg==": {
+      "translations": [
+        {
+          "translation": "이력서"
+        }
+      ]
+    },
+    "bWqxHhm0W5LrLAzHgkbaPQ==": {
+      "translations": [
+        {
+          "translation": "자원 봉사자"
+        }
+      ]
+    },
+    "sE0eEFlR5m3fPUre2lWWIQ==": {
+      "translations": [
+        {
+          "translation": "리뷰"
+        }
+      ]
+    },
+    "HIYV/KBfsIx14LvOIIcHwg==": {
+      "translations": [
+        {
+          "translation": "Origin 분산 앱을 사용하면 구매자와 판매자가 Ethereum 블록 체인과 IPFS를 사용하여 임대료를 찾는 중개인없이 거래 할 수 있습니다."
+        }
+      ]
+    },
+    "bU8BImtReX7JgBGRUUVumg==": {
+      "translations": [
+        {
+          "translation": "우리 홈페이지에 방문해주세요"
+        }
+      ]
+    },
+    "wmhaVhtYSMdPoIzjEuBFVw==": {
+      "translations": [
+        {
+          "translation": "우리 Github 방문"
+        }
+      ]
+    },
+    "KuNLu1gPpB8/96R5zz8B9Q==": {
+      "translations": [
+        {
+          "translation": "구매"
+        }
+      ]
+    },
+    "w/hcQFMC5CWGdGFhaYJXpw==": {
+      "translations": [
+        {
+          "translation": "목록 추가"
+        }
+      ]
+    },
+    "FZM+4dSeaJtxGRqoWyFY7g==": {
+      "translations": [
+        {
+          "translation": "Airbnb 계정을 확인합니다"
+        }
+      ]
+    },
+    "33EPBwLfS9o3lGs62U+89w==": {
+      "translations": [
+        {
+          "translation": "아래에 Airbnb 프로필 Url을 입력하세요."
+        }
+      ]
+    },
+    "QfLmm1Y/WUbCRLJtHN4WAg==": {
+      "translations": [
+        {
+          "translation": "다른 사용자가 당신이 확인된 Airbnb 프로필을 가지고 있음을 알 수 있습니다."
+        }
+      ]
+    },
+    "564ZWrRXu95BNouIaSXuYQ==": {
+      "translations": [
+        {
+          "translation": "취소"
+        }
+      ]
+    },
+    "3SSVIaE/i8UtPArlfLYLow==": {
+      "translations": [
+        {
+          "translation": "Airbnb 웹사이트로 이동하여 프로필 수정하기에서 다음의 문구를 프로필 설명란에 붙여넣기 하십시오."
+        }
+      ]
+    },
+    "VQZu4ySJiecJDDKhwmZvlA==": {
+      "translations": [
+        {
+          "translation": "당신의 Airbnb 프로필에 확인 코드를 입력한 후 계속합니다."
+        }
+      ]
+    },
+    "woogmbq4DRXaFtlVLhim8A==": {
+      "translations": [
+        {
+          "translation": "내 목록"
+        }
+      ]
+    },
+    "0Oc4f1gpOBz24xArpRgELA==": {
+      "translations": [
+        {
+          "translation": "내 판매 현황"
+        }
+      ]
+    },
+    "bWkBLUVYzUfhMbRmOye0Ww==": {
+      "translations": [
+        {
+          "translation": "목록 추가"
+        }
+      ]
+    },
+    "l2Ry3AjK+2P1DfwR4X+PAA==": {
+      "translations": [
+        {
+          "translation": "판매"
+        }
+      ]
+    },
+    "VW+rdneKehxRKMdZLVmIVQ==": {
+      "translations": [
+        {
+          "translation": "상세내용이 없는 Origin 사용자"
+        }
+      ]
+    },
+    "UIdfC16+vG+mJVKO27x/BQ==": {
+      "translations": [
+        {
+          "translation": "Origin 에 자신을 입증하기"
+        }
+      ]
+    },
+    "HEVHfHEPEpTtceUGDpiIuQ==": {
+      "translations": [
+        {
+          "translation": "Origin 에 당신의 신원을 강화하기 위해 아래에 계정을 연결하시기 바랍니다."
+        }
+      ]
+    },
+    "1WvCkB72shgiqmL7zGjDaQ==": {
+      "translations": [
+        {
+          "translation": "전화 번호"
+        }
+      ]
+    },
+    "iAM26VLlFC2eYwvxMiamSw==": {
+      "translations": [
+        {
+          "translation": "이메일"
+        }
+      ]
+    },
+    "XO4xeA76zqUFE3pRTcxEkA==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
+    },
+    "ODnFYmb8u9sMKJ4AFiZs9g==": {
+      "translations": [
+        {
+          "translation": "페이스북"
+        }
+      ]
+    },
+    "lZG5rsJQfdkgo3Q+WVNgug==": {
+      "translations": [
+        {
+          "translation": "트위터"
+        }
+      ]
+    },
+    "Wv2V0lIW3vp91Vdq6gBmEg==": {
+      "translations": [
+        {
+          "translation": "지금 게시"
+        }
+      ]
+    },
+    "dqAA0K4wHnKPEwSR3HPYfQ==": {
+      "translations": [
+        {
+          "translation": "프로필을 확인하면 다른 사용자가 귀하가 진짜 사람이라는 것을 알게되고 Origin에서 성공적인 거래 기회가 증가합니다."
+        }
+      ]
+    }
+  }
+}

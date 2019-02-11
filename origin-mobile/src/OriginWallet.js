@@ -457,12 +457,13 @@ class OriginWallet {
       const cost = this.extractTransactionCost(transaction.call)
       const gas_cost = this.extractTransactionGasCost(transaction.call)
       const ogn_cost = this.extractOgnCost(meta)
+      const identity = this.extractIdentity(meta)
       const listing = this.extractListing(meta)
       const to = this.extractTo(transaction.call)
       const transaction_type = this.extractTransactionActionType(meta)
       console.log("meta:", meta, " ogn_cost:", ogn_cost)
       const action = "transaction"
-      return {...event_data, meta, net_id, action, to, cost, gas_cost, ogn_cost, listing, transaction_type}
+      return {...event_data, meta, net_id, action, to, cost, gas_cost, ogn_cost, identity, listing, transaction_type}
     }
     else if (link)
     {
@@ -519,6 +520,9 @@ class OriginWallet {
     return params && params.txn_object && params.txn_object.to
   }
 
+  extractIdentity({identity, subMeta}) {
+    return identity || (subMeta && subMeta.identity)
+  }
 
   extractListing({listing, subMeta}) {
     return listing || (subMeta && subMeta.listing)

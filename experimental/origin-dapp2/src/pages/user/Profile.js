@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import pick from 'lodash/pick'
+import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
 
@@ -10,6 +12,7 @@ import withIdentity from 'hoc/withIdentity'
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
+import PageTitle from 'components/PageTitle'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -33,6 +36,8 @@ const ProfileFields = [
   'lastName',
   'description',
   'avatar',
+  'strength',
+  'attestations',
   'facebookVerified',
   'twitterVerified',
   'airbnbVerified',
@@ -40,29 +45,34 @@ const ProfileFields = [
   'emailVerified'
 ]
 
+function getState(profile) {
+  return {
+    firstName: '',
+    lastName: '',
+    description: '',
+    avatar: '',
+    ...pickBy(pick(profile, ProfileFields), k => k)
+  }
+}
+
 class UserProfile extends Component {
   constructor(props) {
     super(props)
-    const profile = get(props, 'identity.profile')
-    this.state = {
-      firstName: '',
-      lastName: '',
-      description: '',
-      ...pick(profile, ProfileFields)
-    }
+    const profile = get(props, 'identity')
+    this.state = getState(profile)
   }
 
   componentDidUpdate(prevProps) {
-    const profile = get(this.props, 'identity.profile')
-    if (profile && !prevProps.identity) {
-      this.setState(pick(profile, ProfileFields))
+    if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
+      this.setState(getState(get(this.props, 'identity')))
     }
   }
 
   render() {
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
-      if (this.state[`${key}Attestation`])
+      if (this.state[`${key}Attestation`]) {
         m.push(this.state[`${key}Attestation`])
+      }
       return m
     }, [])
 
@@ -72,6 +82,7 @@ class UserProfile extends Component {
 
     return (
       <div className="container profile-edit">
+        <PageTitle>Edit your profile</PageTitle>
         <div className="row">
           <div className="col-md-8">
             <div className="profile d-flex">
@@ -80,7 +91,10 @@ class UserProfile extends Component {
                 <h1>{name.length ? name.join(' ') : 'Unnamed User'}</h1>
                 <div className="description">
                   {this.state.description ||
-                    'An Origin user without a description'}
+                    fbt(
+                      'An Origin user without a description',
+                      'Profile.noDescriptionUser'
+                    )}
                 </div>
               </div>
               <a
@@ -92,25 +106,46 @@ class UserProfile extends Component {
                 }}
               />
             </div>
-            <h3>Verify yourself on Origin</h3>
+            <h3>
+              <fbt desc="Profile.verifyYourselfHeading">
+                Verify yourself on Origin
+              </fbt>
+            </h3>
             <div className="gray-box">
               <label className="mb-3">
-                Please connect your accounts below to strengthen your identity
-                on Origin.
+                <fbt desc="_Services.pleaseConnectAccounts">
+                  Please connect your accounts below to strengthen your identity
+                  on Origin.
+                </fbt>
               </label>
               <div className="profile-attestations">
-                {this.renderAtt('phone', 'Phone Number')}
-                {this.renderAtt('email', 'Email')}
-                {this.renderAtt('airbnb', 'Airbnb')}
-                {this.renderAtt('facebook', 'Facebook')}
-                {this.renderAtt('twitter', 'Twitter')}
+                {this.renderAtt(
+                  'phone',
+                  fbt('Phone Number', '_ProvisionedChanges.phoneNumber')
+                )}
+                {this.renderAtt(
+                  'email',
+                  fbt('Email', '_ProvisionedChanges.email')
+                )}
+                {this.renderAtt(
+                  'airbnb',
+                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
+                )}
+                {this.renderAtt(
+                  'facebook',
+                  fbt('Facebook', '_ProvisionedChanges.facebook')
+                )}
+                {this.renderAtt(
+                  'twitter',
+                  fbt('Twitter', '_ProvisionedChanges.twitter')
+                )}
                 {this.renderAtt('google', 'Google', true)}
               </div>
             </div>
 
             <ProfileStrength
               large={true}
-              published={get(this.props, 'identity.profile.strength', 0)}
+              published={get(this.props, 'identity.strength') || 0}
               unpublished={unpublishedProfileStrength(this)}
             />
 
@@ -118,24 +153,30 @@ class UserProfile extends Component {
               <DeployIdentity
                 className="btn btn-primary btn-rounded btn-lg"
                 identity={get(this.props, 'identity.id')}
+                refetch={this.props.identityRefetch}
                 profile={pick(this.state, [
                   'firstName',
                   'lastName',
                   'description',
                   'avatar'
                 ])}
-                attestations={attestations}
+                attestations={[
+                  ...(this.state.attestations || []),
+                  ...attestations
+                ]}
                 validate={() => this.validate()}
-                children="Publish Now"
+                children={fbt('Publish Now', 'Profile.publishNow')}
               />
             </div>
           </div>
           <div className="col-md-4">
             <Wallet />
             <div className="gray-box profile-help">
-              <b>Verifying your profile</b> allows other users to know that you
-              are a real person and increases the chances of successful
-              transactions on Origin.
+              <fbt desc="onboarding-steps.stepTwoContent">
+                <b>Verifying your profile</b> allows other users to know that
+                you are a real person and increases the chances of successful
+                transactions on Origin.
+              </fbt>
             </div>
           </div>
         </div>
@@ -158,7 +199,7 @@ class UserProfile extends Component {
 
   renderAtt(type, text, soon) {
     const { wallet } = this.props
-    const profile = get(this.props, 'identity.profile', {})
+    const profile = get(this.props, 'identity') || {}
 
     let status = ''
     if (profile[`${type}Verified`]) {

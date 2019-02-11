@@ -32,6 +32,7 @@ class V00_MarkeplaceAdapter {
     this.contractName = 'V00_Marketplace'
     this.tokenContractName = 'OriginToken'
     this.blockEpoch = blockEpoch || 0
+    this.contract = null
   }
 
   async getContract() {
@@ -40,6 +41,7 @@ class V00_MarkeplaceAdapter {
         this.contractService.contracts[this.contractName]
       )
     }
+    return this.contract
   }
 
   async call(methodName, args, opts) {

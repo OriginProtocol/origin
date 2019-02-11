@@ -21,7 +21,9 @@ class Configure extends React.Component {
     this.getCategoryFromConfig = this.getCategoryFromConfig.bind(this)
     this.getSubcategoryFromConfig = this.getSubcategoryFromConfig.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.isCategoryDropdownDisplayed = this.isCategoryDropdownDisplayed.bind(this)
+    this.isCategoryDropdownDisplayed = this.isCategoryDropdownDisplayed.bind(
+      this
+    )
     this.isCheckedSubcategory = this.isCheckedSubcategory.bind(this)
     this.isExpandedCategory = this.isExpandedCategory.bind(this)
     this.onCategoryCheck = this.onCategoryCheck.bind(this)
@@ -31,21 +33,21 @@ class Configure extends React.Component {
     this.toggleCategory = this.toggleCategory.bind(this)
   }
 
-  async handleSubmit () {
+  async handleSubmit() {
     this.setState({ redirect: '/metamask' })
   }
 
   // Retrieve the category object from the filter value in the config
-  getCategoryFromConfig () {
+  getCategoryFromConfig() {
     if (!this.props.config.filters.listings.category) return null
     const translationId = this.props.config.filters.listings.category
-    return listingSchemaMetadata.listingTypes.find((listingType) => {
+    return listingSchemaMetadata.listingTypes.find(listingType => {
       return listingType.translationName.id == translationId
     })
   }
 
   // Retrieve the subCategory object from filter value in the config
-  getSubcategoryFromConfig () {
+  getSubcategoryFromConfig() {
     if (!this.props.config.filters.listings.subCategory) return false
 
     const category = this.getCategoryFromConfig()
@@ -53,10 +55,11 @@ class Configure extends React.Component {
       return false
     }
 
-    const subCategories = listingSchemaMetadata.listingSchemasByCategory[category.type]
+    const subCategories =
+      listingSchemaMetadata.listingSchemasByCategory[category.type]
     const translationId = this.props.config.filters.listings.subCategory
 
-    return subCategories.find((subCategory) => {
+    return subCategories.find(subCategory => {
       return subCategory.translationName.id == translationId
     })
   }
@@ -67,15 +70,18 @@ class Configure extends React.Component {
   }
 
   // Determines if there is either category or subcategory filtering applied in configs filters
-  isCategoryFiltered () {
-    return this.props.config.filters.listings.category ||
+  isCategoryFiltered() {
+    return (
+      this.props.config.filters.listings.category ||
       this.props.config.filters.listings.subCategory
+    )
   }
 
   // Determines if a checkbox for a subcategory should be checked
   isCheckedSubcategory(category, subcategory) {
     return (
-      (this.getCategoryFromConfig() === category && !this.getSubcategoryFromConfig()) ||
+      (this.getCategoryFromConfig() === category &&
+        !this.getSubcategoryFromConfig()) ||
       this.getSubcategoryFromConfig() === subcategory
     )
   }
@@ -97,10 +103,13 @@ class Configure extends React.Component {
       }
     }
 
+    // Update config for this component
     this.setState({ config: newConfig })
+    // Propagate to parent
     this.props.onChange(newConfig)
   }
 
+  // Handles filter updates when a category is checked
   onCategoryCheck(category) {
     if (this.getCategoryFromConfig() === category) {
       this.setListingFilters({
@@ -115,6 +124,7 @@ class Configure extends React.Component {
     }
   }
 
+  // Handles filter updates when a subcategory is checked
   onSubcategoryCheck(category, subcategory) {
     if (this.getSubcategoryFromConfig() === subcategory) {
       this.setListingFilters({
@@ -129,28 +139,34 @@ class Configure extends React.Component {
     }
   }
 
-  toggleCategory (event, category) {
+  toggleCategory(event, category) {
     if (event.target.type === 'checkbox') return
     if (this.state.expandedCategories.includes(category)) {
-      this.setState((prevState) => {
-        return { expandedCategories: prevState.expandedCategories.filter((x) => x !== category) }
+      this.setState(prevState => {
+        return {
+          expandedCategories: prevState.expandedCategories.filter(
+            x => x !== category
+          )
+        }
       })
     } else {
-      this.setState((prevState) => {
-        return { expandedCategories: [...prevState.expandedCategories, category] }
+      this.setState(prevState => {
+        return {
+          expandedCategories: [...prevState.expandedCategories, category]
+        }
       })
     }
   }
 
-  toggleFilterByOwn (event) {
+  toggleFilterByOwn(event) {
     this.setListingFilters({
       marketplacePublisher: event.target.checked ? web3.eth.accounts[0] : null
     })
   }
 
-  toggleFilterByType (event) {
+  toggleFilterByType(event) {
     this.setState({
-      filterByTypeEnabled: event.target.checked,
+      filterByTypeEnabled: event.target.checked
     })
     if (!event.target.checked) {
       // Remove any listing filters for categories if the optional is disabled
@@ -161,7 +177,7 @@ class Configure extends React.Component {
     }
   }
 
-  render () {
+  render() {
     return (
       <form onSubmit={this.handleSubmit}>
         {this.renderRedirect()}
@@ -173,61 +189,96 @@ class Configure extends React.Component {
           <label>Filter Listings (optional)</label>
 
           <p>
-            <small>You can choose to only show listings created on your marketplace or specific types of listings. Otherwise, your DApp will show listings from all Origin marketplaces.</small>
+            <small>
+              You can choose to only show listings created on your marketplace
+              or specific types of listings. Otherwise, your DApp will show
+              listings from all Origin marketplaces.
+            </small>
           </p>
 
           <div className="option">
-            <input className="form-check-input"
+            <input
+              className="form-check-input"
               type="checkbox"
               checked={this.state.config.filters.listings.marketplacePublisher}
-              onChange={this.toggleFilterByOwn} />
+              onChange={this.toggleFilterByOwn}
+            />
             Only use listings from my marketplace
           </div>
 
-          <div className={`option category-select ${this.state.filterByTypeEnabled ? 'expanded' : 'collapsed' }`}>
-            <input className="form-check-input"
+          <div
+            className={`option category-select ${
+              this.state.filterByTypeEnabled ? 'expanded' : 'collapsed'
+            }`}
+          >
+            <input
+              className="form-check-input"
               type="checkbox"
               checked={this.isCategoryDropdownDisplayed()}
-              onChange={this.toggleFilterByType} />
+              onChange={this.toggleFilterByType}
+            />
             Only use listings from specific categories
           </div>
 
-          {this.isCategoryDropdownDisplayed() &&
+          {this.isCategoryDropdownDisplayed() && (
             <div className="category-dropdown">
-              {this.state.listingTypes.map((listingType, i) =>
+              {this.state.listingTypes.map((listingType, i) => (
                 <div key={i}>
-                  <div className={`category ${this.isExpandedCategory(listingType) ? 'expanded' : 'collapsed'}`}
-                    onClick={(event) => this.toggleCategory(event, listingType)}>
-                      <input type="checkbox"
-                        checked={this.getCategoryFromConfig() === listingType}
-                        onChange={() => this.onCategoryCheck(listingType)} />
-                      {listingType.translationName.defaultMessage}
+                  <div
+                    className={`category ${
+                      this.isExpandedCategory(listingType)
+                        ? 'expanded'
+                        : 'collapsed'
+                    }`}
+                    onClick={event => this.toggleCategory(event, listingType)}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={this.getCategoryFromConfig() === listingType}
+                      onChange={() => this.onCategoryCheck(listingType)}
+                    />
+                    {listingType.translationName.defaultMessage}
                   </div>
                   {this.isExpandedCategory(listingType) &&
-                    this.state.listingSchemasByCategory[listingType.type].map((listingSchema, y) =>
-                      <div className="subcategory" key={y}>
-                        <input type="checkbox"
-                            checked={this.isCheckedSubcategory(listingType, listingSchema)}
-                            onChange={() => this.onSubcategoryCheck(listingType, listingSchema)} />
+                    this.state.listingSchemasByCategory[listingType.type].map(
+                      (listingSchema, y) => (
+                        <div className="subcategory" key={y}>
+                          <input
+                            type="checkbox"
+                            checked={this.isCheckedSubcategory(
+                              listingType,
+                              listingSchema
+                            )}
+                            onChange={() =>
+                              this.onSubcategoryCheck(
+                                listingType,
+                                listingSchema
+                              )
+                            }
+                          />
                           {listingSchema.translationName.defaultMessage}
-                      </div>
-                    )
-                  }
+                        </div>
+                      )
+                    )}
                 </div>
-              )}
+              ))}
             </div>
-          }
+          )}
         </div>
 
         <div className="form-actions clearfix">
-          <button onClick={() => this.setState({ redirect: '/customize' })}
-              className="btn btn-outline-primary btn-lg btn-left">
+          <button
+            onClick={() => this.setState({ redirect: '/customize' })}
+            className="btn btn-outline-primary btn-lg btn-left"
+          >
             Back
           </button>
 
-          <button type="submit"
-              className="btn btn-primary btn-lg btn-right"
-              onClick={this.handleSubmit}>
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg btn-right"
+            onClick={this.handleSubmit}
+          >
             Done
           </button>
         </div>
@@ -235,7 +286,7 @@ class Configure extends React.Component {
     )
   }
 
-  renderRedirect () {
+  renderRedirect() {
     if (this.state.redirect !== null) {
       return <Redirect to={this.state.redirect} />
     }

@@ -41,7 +41,7 @@ class OnboardProfile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const profile = get(this.props, 'identity.profile')
+    const profile = get(this.props, 'identity')
     if (!prevProps.identity && profile) {
       this.setState(
         pick(profile, [
@@ -137,7 +137,7 @@ class OnboardProfile extends Component {
                 </div>
 
                 <ProfileStrength
-                  published={get(this.props, 'identity.profile.strength', 0)}
+                  published={get(this.props, 'identity.strength', 0)}
                   unpublished={unpublishedProfileStrength(this)}
                 />
 
@@ -174,7 +174,7 @@ class OnboardProfile extends Component {
 
   renderAtt(type, text, soon) {
     const { wallet } = this.props
-    const profile = get(this.props, 'identity.profile', {})
+    const profile = get(this.props, 'identity', {})
 
     let status = ''
     if (profile[`${type}Verified`]) {

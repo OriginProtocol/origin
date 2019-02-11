@@ -21,7 +21,7 @@ export default gql`
       decimals
       totalSupply
     }
-    userRegistry {
+    identityEvents {
       id
     }
   }

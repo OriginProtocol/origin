@@ -79,9 +79,6 @@ query GetListing($id: String!) {
       title
       description
       currencyId
-      unitsTotal
-      unitsAvailable
-      unitsSold
       featured
       hidden
       price {
@@ -94,6 +91,11 @@ query GetListing($id: String!) {
       }
       commission
       commissionPerUnit
+      ... on UnitListing {
+        unitsTotal
+        unitsAvailable
+        unitsSold
+      }
     }
   }
 }

@@ -37,5 +37,7 @@ module.exports = {
   },
   down: (queryInterface) => {
     return queryInterface.dropTable(tableName)
+      .then(queryInterface.sequelize.query('DROP TYPE enum_growth_invite_referee_contact_type;'))
+      .then(queryInterface.sequelize.query('DROP TYPE enum_growth_invite_status;'))
   }
 }

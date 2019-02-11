@@ -108,7 +108,8 @@ export default class Origin {
       this.reflection = new Reflection({
         contractService: this.contractService,
         marketplace: this.marketplace,
-        token: this.token
+        token: this.token,
+        users: this.users
       })
     }
     this.initInstance()

@@ -23,8 +23,17 @@ export function detectMessagingEnabled(account) {
   return async function(dispatch) {
     if (MESSAGING_API_URL) {
       try {
-        const response = await fetch(`${MESSAGING_API_URL}/accounts/${account}`)
-        const enabled = response.status === 200
+        const clientResponse = origin.messaging.canSendMessages()
+
+        if (!clientResponse) {
+          return dispatch({
+            type: ActivationConstants.MESSAGING_ENABLED,
+            enabled: false
+          })
+        }
+
+        const serverResponse = await fetch(`${MESSAGING_API_URL}/accounts/${account}`)
+        const enabled = serverResponse.status === 200
 
         dispatch({
           type: ActivationConstants.MESSAGING_ENABLED,

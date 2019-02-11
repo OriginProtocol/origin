@@ -5,9 +5,7 @@ export default gql`
     verifyFacebook(identity: $identity) {
       success
       reason
-      claimType
       data
-      signature
     }
   }
 `
