@@ -70,7 +70,7 @@ async function resultsFromIds({
   first,
   totalCount,
   fields,
-  subCategory = 'For Sale'
+  subCategory
 }) {
   let start = 0,
     unfilteredNodes = []
@@ -129,7 +129,7 @@ export async function listingsBySeller(
 
 export default async function listings(
   contract,
-  { first = 10, after, sort, hidden = true, search }
+  { first = 10, after, sort, hidden = true, search, subCategory }
 ) {
   if (!contract) {
     return null
@@ -144,5 +144,5 @@ export default async function listings(
     ;({ totalCount, ids } = await allIds({ contract, sort, hidden })) // eslint-disable-line
   }
 
-  return await resultsFromIds({ after, ids, first, totalCount })
+  return await resultsFromIds({ after, ids, first, totalCount, subCategory })
 }
