@@ -199,7 +199,7 @@ class Conversation extends Component {
         this.setState({ listing })
         this.loadPurchase()
       } catch ( error ) {
-        console.log("Cannot get listing: ", listingId, error)
+        console.log('Cannot get listing: ', listingId, error)
       }
     }
   }

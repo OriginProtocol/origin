@@ -330,7 +330,7 @@ class PurchaseDetail extends Component {
         return console.error(`Purchase ${offerId} not found`)
       }
       
-      const listing = await getListing(purchase.listingId, { translate: true, blockInfo:origin.marketplace.perfModeEnabled?undefined:blockInfo})
+      const listing = await getListing(purchase.listingId, { translate: true, blockInfo: origin.marketplace.perfModeEnabled?undefined:blockInfo })
 
       this.setState({
         listing,
@@ -1037,7 +1037,7 @@ class PurchaseDetail extends Component {
                                 />
                               )}
                              </p>
-                              { purchase.status == "accepted" && perspective == "seller" && verifiable && <button onClick={ e=> {
+                              { purchase.status == 'accepted' && perspective == 'seller' && verifiable && <button onClick={ () => {
                                 origin.marketplace.verifyFinalizeOffer(purchase.id)
                               }} > Verify This Transaction </button> } 
                           </div>

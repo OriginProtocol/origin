@@ -865,9 +865,9 @@ class ListingsDetail extends Component {
 
                           const acceptance = await origin.marketplace.signAcceptOffer(offer.id)
                           const buyer = web3.utils.toChecksumAddress(offer.buyer)
-                          console.log("sending message to:", buyer)
-                          await origin.messaging.sendConvMessage(buyer, {content:"Hey I want to do this!", acceptance,
-                            listingId:offer.listingId })}
+                          console.log('sending message to:', buyer)
+                          await origin.messaging.sendConvMessage(buyer, { content: 'Hey I want to do this!', acceptance,
+                            listingId: offer.listingId })}
                       }
                       >
                         Send Signed Offer

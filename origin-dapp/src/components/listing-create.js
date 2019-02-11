@@ -94,10 +94,10 @@ class ListingCreate extends Component {
       showDetailsFormErrorMsg: false,
       showBoostFormErrorMsg: false,
       showBoostTutorial: false,
-      verifyObj:JSON.stringify({verifyURL:'https://api.github.com/repos/OriginProtocol/origin/issues/<put issue number here>',
-        checkArg:'state',
-        matchValue:'closed',
-        verifyFee:'100'})
+      verifyObj: JSON.stringify({ verifyURL: 'https://api.github.com/repos/OriginProtocol/origin/issues/<put issue number here>',
+        checkArg: 'state',
+        matchValue: 'closed',
+        verifyFee: '100' })
     }
 
     this.state = { ...this.defaultState }
@@ -177,7 +177,7 @@ class ListingCreate extends Component {
 
     if (showRequestListing)
     {
-      sessionStorage.setItem("showRequestListing", showRequestListing)
+      sessionStorage.setItem('showRequestListing', showRequestListing)
     }
 
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
@@ -656,9 +656,8 @@ class ListingCreate extends Component {
     if (this.props.marketplacePublisher) {
       listing['marketplacePublisher'] = this.props.marketplacePublisher
     }
-    let transactionReceipt
     if (!isEditMode) {
-      console.log("creating offer listing:", listing, " verifyData: ", verifyData)
+      console.log('creating offer listing:', listing, ' verifyData: ', verifyData)
 
       await origin.marketplace.offerListing(listing, 
         async (createdListing) => {
@@ -671,16 +670,8 @@ class ListingCreate extends Component {
             boostRemaining
           } = await originToDAppListing(createdListing)
 
-          let listingPrice = price
-          if (isFractional) {
-            const rawPrice = getTotalPriceFromJCal(jCal)
-            listingPrice = `${Number(rawPrice).toLocaleString(undefined, {
-              minimumFractionDigits: 5,
-              maximumFractionDigits: 5
-            })}`
-          } else if (isMultiUnit) {
-            listingPrice = new BigNumber(price).multipliedBy(quantity).toString()
-          }
+          const listingPrice = price
+          const quantity = 1
           const offerData = {
             listingId: createdListing.id,
             listingType: listingType,
@@ -740,7 +731,7 @@ class ListingCreate extends Component {
       } else {
         const account = await origin.contractService.currentAccount()
         const balance = await web3.eth.getBalance(account)
-        console.log("creating balance:", balance, " listing: ", listing)
+        console.log('creating balance:', balance, ' listing: ', listing)
         if (origin.marketplace.injectPossible && web3.utils.toBN(balance).lte(web3.utils.toBN(0)))
         {
           await origin.marketplace.injectListing(listing)
@@ -1641,8 +1632,8 @@ class ListingCreate extends Component {
                   </button>
 
                 </div>
-              {sessionStorage.getItem("showRequestListing") && <div className="d-block">
-                <textarea style={{width:'100%'}} value={this.state.verifyObj} onChange={ (e) => {this.setState({verifyObj:e.target.value});}  }/>
+              {sessionStorage.getItem('showRequestListing') && <div className="d-block">
+                <textarea style={{ width: '100%' }} value={this.state.verifyObj} onChange={ (e) => {this.setState({ verifyObj: e.target.value })}  }/>
                   <button
                     className="btn btn-primary float-right btn-listing-create"
                     onClick={() => this.onOfferListing(formListing, JSON.parse(this.state.verifyObj))}
