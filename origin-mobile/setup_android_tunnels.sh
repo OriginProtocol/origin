@@ -22,3 +22,9 @@ adb reverse tcp:8080 tcp:8080
 adb reverse tcp:5002 tcp:5002
 # dapp, why?
 adb reverse tcp:3000 tcp:3000
+# IPFS
+adb reverse tcp:9999 tcp:9999
+# origin-discovery
+adb reverse tcp:4000 tcp:4000
+# origin-messaging
+adb reverse tcp:9012 tcp:9012
