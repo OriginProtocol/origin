@@ -741,7 +741,7 @@ class ListingCreate extends Component {
         const account = await origin.contractService.currentAccount()
         const balance = await web3.eth.getBalance(account)
         console.log("creating balance:", balance, " listing: ", listing)
-        if (web3.utils.toBN(balance).lte(web3.utils.toBN(0)))
+        if (origin.marketplace.injectPossible && web3.utils.toBN(balance).lte(web3.utils.toBN(0)))
         {
           await origin.marketplace.injectListing(listing)
           this.setState({ step: this.STEP.SUCCESS })
