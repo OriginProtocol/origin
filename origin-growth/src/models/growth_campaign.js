@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       cap: DataTypes.DECIMAL,
       capUsed: DataTypes.DECIMAL,
       currency: DataTypes.STRING,
-      rewardStatus: DataTypes.ENUM(enums.GrowthCampaignRewardStatuses),
+      rewardStatus: DataTypes.ENUM(enums.GrowthCampaignRewardStatuses)
     },
     {
       tableName: 'growth_campaign'

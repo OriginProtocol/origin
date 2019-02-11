@@ -12,10 +12,8 @@ const enums = require('../enums')
 const db = require('../models')
 const parseArgv = require('../util/args')
 
-
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('verifyEvents', { showTimestamp: false })
-
 
 class VerifyEvents {
   constructor(config) {
@@ -39,7 +37,7 @@ class VerifyEvents {
         createdAt: { [Sequelize.Op.lt]: cutoffDate }
       }
     })
-    return (events.length === 0)
+    return events.length === 0
   }
 
   async process() {
@@ -61,14 +59,18 @@ class VerifyEvents {
       // Conditions:
       //  a) Campaign over
       //  b) All events for the campaign's period have been verified.
-      const readyForCalculation = (campaign.endDate < now) && (await this._allEventsVerified(campaign.endDate))
+      const readyForCalculation =
+        campaign.endDate < now &&
+        (await this._allEventsVerified(campaign.endDate))
       if (readyForCalculation) {
         if (this.config.doIt) {
           await campaign.update({
             rewardStatus: enums.GrowthCampaignRewardStatuses.ReadyForCalculation
           })
         } else {
-          logger.info(`Would mark campaign ${campaign.id} as ReadyForCalculation`)
+          logger.info(
+            `Would mark campaign ${campaign.id} as ReadyForCalculation`
+          )
         }
         this.stats.numStatusReady++
       }

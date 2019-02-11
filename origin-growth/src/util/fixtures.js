@@ -15,16 +15,13 @@ const rule = {
           id: 'PreRequisite',
           class: 'MultiEvents',
           config: {
-            eventTypes: [
-              'ProfilePublished',
-              'EmailAttestationPublished'
-            ],
+            eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true
           }
         }
-      ],
+      ]
     },
     1: {
       rules: [
@@ -95,7 +92,7 @@ const rule = {
             nextLevelCondition: true
           }
         }
-      ],
+      ]
     },
     2: {
       rules: [
@@ -138,7 +135,7 @@ const rule = {
             nextLevelCondition: false
           }
         }
-      ],
+      ]
     }
   }
 }
@@ -206,7 +203,6 @@ async function createTestData() {
     rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
   })
 
-
   //
   // Participants
   //
@@ -223,7 +219,10 @@ async function createTestData() {
     data: null,
     agreementId: 'Test agreement'
   })
-  await db.GrowthParticipant.update({ createdAt: Date.parse('January 1, 2019') }, { where: { id: 1 } })
+  await db.GrowthParticipant.update(
+    { createdAt: Date.parse('January 1, 2019') },
+    { where: { id: 1 } }
+  )
 
   await db.GrowthParticipant.upsert({
     ethAddress: account2,
@@ -231,7 +230,10 @@ async function createTestData() {
     data: null,
     agreementId: 'Test agreement'
   })
-  await db.GrowthParticipant.update({ createdAt: Date.parse('January 1, 2019') }, { where: { id: 2 } })
+  await db.GrowthParticipant.update(
+    { createdAt: Date.parse('January 1, 2019') },
+    { where: { id: 2 } }
+  )
 
   //
   // Events
@@ -251,7 +253,10 @@ async function createTestData() {
     ethAddress: account1,
     data: null
   })
-  await db.GrowthEvent.update({ createdAt: Date.parse('January 2, 2019') }, { where: { id: 1 } })
+  await db.GrowthEvent.update(
+    { createdAt: Date.parse('January 2, 2019') },
+    { where: { id: 1 } }
+  )
 
   await db.GrowthEvent.upsert({
     id: 2,
@@ -261,7 +266,10 @@ async function createTestData() {
     ethAddress: account1,
     data: null
   })
-  await db.GrowthEvent.update({ createdAt: Date.parse('January 2, 2019') }, { where: { id: 2 } })
+  await db.GrowthEvent.update(
+    { createdAt: Date.parse('January 2, 2019') },
+    { where: { id: 2 } }
+  )
 
   await db.GrowthEvent.upsert({
     id: 3,
@@ -271,7 +279,10 @@ async function createTestData() {
     ethAddress: account1,
     data: null
   })
-  await db.GrowthEvent.update({ createdAt: Date.parse('January 3, 2019') }, { where: { id: 3 } })
+  await db.GrowthEvent.update(
+    { createdAt: Date.parse('January 3, 2019') },
+    { where: { id: 3 } }
+  )
 
   await db.GrowthEvent.upsert({
     id: 4,
@@ -281,7 +292,10 @@ async function createTestData() {
     ethAddress: account1,
     data: null
   })
-  await db.GrowthEvent.update({ createdAt: Date.parse('January 3, 2019') }, { where: { id: 4 } })
+  await db.GrowthEvent.update(
+    { createdAt: Date.parse('January 3, 2019') },
+    { where: { id: 4 } }
+  )
 
   await db.GrowthEvent.upsert({
     id: 5,
@@ -291,7 +305,10 @@ async function createTestData() {
     ethAddress: account1,
     data: null
   })
-  await db.GrowthEvent.update({ createdAt: Date.parse('January 4, 2019') }, { where: { id: 5 } })
+  await db.GrowthEvent.update(
+    { createdAt: Date.parse('January 4, 2019') },
+    { where: { id: 5 } }
+  )
 
   await db.GrowthEvent.upsert({
     id: 6,
@@ -301,7 +318,10 @@ async function createTestData() {
     ethAddress: account1,
     data: null
   })
-  await db.GrowthEvent.update({ createdAt: Date.parse('January 5, 2019') }, { where: { id: 6 } })
+  await db.GrowthEvent.update(
+    { createdAt: Date.parse('January 5, 2019') },
+    { where: { id: 6 } }
+  )
 
   await db.GrowthEvent.upsert({
     id: 7,
@@ -311,11 +331,13 @@ async function createTestData() {
     ethAddress: account1,
     data: null
   })
-  await db.GrowthEvent.update({ createdAt: Date.parse('January 6, 2019') }, { where: { id: 7 } })
+  await db.GrowthEvent.update(
+    { createdAt: Date.parse('January 6, 2019') },
+    { where: { id: 7 } }
+  )
 }
 
 createTestData().then(() => {
   console.log('Done')
   process.exit()
 })
-

@@ -15,7 +15,6 @@ const db = require('../models')
 const { Campaign } = require('../rules/rules')
 const parseArgv = require('../util/args')
 
-
 // We allow a campaign to go a bit over budget since the capUsed field
 // is not updated realtime but rather periodically via a cron job.
 const CampaignMaxOverCapFactor = BigNumber(1.1)
@@ -161,7 +160,7 @@ class CalculateRewards {
         // Calculate rewards for this user.
         // Note that we set the onlyVerifiedEvents param of getRewards to true.
         const rewards = await campaignRule.getRewards(ethAddress, true)
-        if (!rewards.length ) {
+        if (!rewards.length) {
           continue
         }
 
@@ -223,7 +222,10 @@ const job = new CalculateRewards(config, token)
 job.process().then(() => {
   logger.info('Rewards calculation stats:')
   logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
-  logger.info('  Grand total distributed (natural): ', job.stats.calcGrandTotal.toFixed())
+  logger.info(
+    '  Grand total distributed (natural): ',
+    job.stats.calcGrandTotal.toFixed()
+  )
   logger.info(
     '  Grand total distributed (tokens):  ',
     job.token.toTokenUnit(job.stats.calcGrandTotal)

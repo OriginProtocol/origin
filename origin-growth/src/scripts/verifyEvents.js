@@ -10,10 +10,8 @@ const enums = require('../enums')
 const db = require('../models')
 const parseArgv = require('../util/args')
 
-
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('verifyEvents', { showTimestamp: false })
-
 
 class VerifyEvents {
   constructor(config) {
@@ -36,9 +34,8 @@ class VerifyEvents {
     // Look for events with status 'Logged'
     const events = await db.GrowthEvent.findAll({
       where: {
-          status: enums.GrowthEventStatuses.Logged,
-          createdAt: { [Sequelize.Op.lt]: now
-        }
+        status: enums.GrowthEventStatuses.Logged,
+        createdAt: { [Sequelize.Op.lt]: now }
       }
     })
 

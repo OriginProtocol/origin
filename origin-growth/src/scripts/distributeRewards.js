@@ -15,7 +15,6 @@ const db = require('../models')
 const enums = require('../enums')
 const parseArgv = require('../util/args')
 
-
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('distRewards', { showTimestamp: false })
 
@@ -227,7 +226,7 @@ class DistributeRewards {
         if (ethAddressToRewards[reward.ethAddress]) {
           ethAddressToRewards[reward.ethAddress].push(reward)
         } else {
-          ethAddressToRewards[reward.ethAddress] = [ reward ]
+          ethAddressToRewards[reward.ethAddress] = [reward]
         }
       })
 
@@ -248,7 +247,9 @@ class DistributeRewards {
           })
           logger.info(`Updated campaign ${campaign.id} status to Distributed.`)
         } else {
-          logger.info(`Would update campaign ${campaign.id} status to Distributed.`)
+          logger.info(
+            `Would update campaign ${campaign.id} status to Distributed.`
+          )
         }
       } else {
         logger.info(
@@ -259,7 +260,9 @@ class DistributeRewards {
       }
 
       this.stats.numCampaigns++
-      this.stats.distGrandTotal = this.stats.distGrandTotal.plus(campaignDistTotal)
+      this.stats.distGrandTotal = this.stats.distGrandTotal.plus(
+        campaignDistTotal
+      )
       logger.info(
         `Finished distribution for campaign ${campaign.id} / ${campaign.name}`
       )
@@ -296,7 +299,10 @@ distributor.init(config.networkId).then(() => {
     logger.info('Distribution job stats:')
     logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
     logger.info('  Number of transactions:            ', job.stats.numTxns)
-    logger.info('  Grand total distributed (natural): ', job.stats.distGrandTotal)
+    logger.info(
+      '  Grand total distributed (natural): ',
+      job.stats.distGrandTotal
+    )
     logger.info(
       '  Grand total distributed (tokens):  ',
       job.distributor.token.toTokenUnit(job.stats.distGrandTotal)
