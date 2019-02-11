@@ -10,15 +10,17 @@ function withEnrolmentModal(WrappedComponent) {
       super(props)
       this.handleClick = this.handleClick.bind(this)
       this.handleNotCitizenClick = this.handleNotCitizenClick.bind(this)
-      this.renderEligibilityCheck = this.renderEligibilityCheck.bind(this)
+      this.renderTermsAndEligibilityCheck = this.renderTermsAndEligibilityCheck.bind(this)
       this.handleEligibilityDone = this.handleEligibilityDone.bind(this)
       this.handleEligibilityContinue = this.handleEligibilityContinue.bind(this)
+      this.renderRestrictedModal = this.renderRestrictedModal.bind(this)
     }
 
     state = {
       open: false,
-      stage: 'EligibilityCheck',
-      notCitizenConfirmed: false
+      stage: 'TermsAndEligibilityCheck',
+      notCitizenChecked: false,
+      notCitizenConfirmed: false,
     }
 
     handleClick(e) {
@@ -29,7 +31,7 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     handleNotCitizenClick(e) {
-      this.setState({ notCitizenConfirmed: e.target.checked })
+      this.setState({ notCitizenChecked: e.target.checked })
     }
 
     handleEligibilityDone(e) {
@@ -39,39 +41,40 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     handleEligibilityContinue(e) {
-      //TODO: go to terms screen
+      if (this.state.notCitizenChecked) {
+        this.setState({
+          notCitizenConfirmed: true
+        })
+      }
     }
 
-    renderEligibilityCheck() {
-      const { notCitizenConfirmed } = this.state
-      const renderRestrictedModal = (country, eligibility) => {
-        const isRestricted = eligibility === 'Restricted'
-        const isForbidden = eligibility === 'Forbidden'
+    renderRestrictedModal(country, eligibility, notCitizenChecked) {
+      const isRestricted = eligibility === 'Restricted'
+      const isForbidden = eligibility === 'Forbidden'
 
-        return (
-          <div>
-            <div className="image-holder">
-              <img className="" src="images/growth/earth-graphic.svg" />
-              <img
-                className="red-x-image"
-                src="images/growth/red-x-graphic.svg"
-              />
+      return (
+        <div>
+          <div className="image-holder">
+            <img className="" src="images/growth/earth-graphic.svg" />
+            <img
+              className="red-x-image"
+              src="images/growth/red-x-graphic.svg"
+            />
+          </div>
+            <div className="title mt-4">
+              Oops, {country} is not eligible
             </div>
-            {isRestricted && (
-              <Fragment>
-                <div className="title mt-4">
-                  Oops, {country} is not eligible
-                </div>
-                <div className="mt-3">
-                  Unfortunately, it looks like you’re currently in a country
-                  where government regulations do not allow you to participate
-                  in Origin Campaigns.
-                </div>
+            <div className="mt-3">
+              Unfortunately, it looks like you’re currently in a country
+              where government regulations do not allow you to participate
+              in Origin Campaigns.
+            </div>
+            { isRestricted && <Fragment>
                 <div className="mt-4 pt-2">
                   Did we detect your your country incorrectly?
                 </div>
                 <div className="mt-1 d-flex country-check-label">
-                  <label className="pb-1 checkbox-holder">
+                  <label className="checkbox-holder">
                     <input
                       type="checkbox"
                       className="country-check"
@@ -83,25 +86,32 @@ function withEnrolmentModal(WrappedComponent) {
                   </label>
                   I certify I am not a citizen or resident of {country}
                 </div>
-                {!notCitizenConfirmed && (
-                  <button
-                    className="gray button: btn btn-outline-light"
-                    onClick={this.handleEligibilityDone}
-                    children="Done"
-                  />
-                )}
-                {notCitizenConfirmed && (
-                  <button
-                    className="blue button: btn btn-primary btn-rounded btn-lg"
-                    onClick={this.handleEligibilityContinue}
-                    children="Continue"
-                  />
-                )}
               </Fragment>
+            }
+            {(isForbidden || (isRestricted && !notCitizenChecked)) && (
+              <button
+                className="btn btn-outline-light"
+                onClick={this.handleEligibilityDone}
+                children="Done"
+              />
             )}
-          </div>
-        )
-      }
+            {isRestricted && notCitizenChecked && (
+              <button
+                className="btn btn-primary btn-rounded btn-lg"
+                onClick={this.handleEligibilityContinue}
+                children="Continue"
+              />
+            )}
+        </div>
+      )
+    }
+
+    renderTermsAndEligibilityCheck() {
+      const {
+        notCitizenChecked,
+        notCitizenConfirmed
+      } = this.state
+
       return (
         <Query query={query}>
           {({ networkStatus, error, loading, data, refetch }) => {
@@ -110,16 +120,18 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={query} />
             }
 
-            const { country, eligibility } = data.isEligible
-            // const country = 'Canada'
-            // const eligibility = 'Restricted'
+            //const { country, eligibility } = data.isEligible
+            const country = 'Canada'
+            const eligibility = 'Restricted'
+            // const country = 'Saudi Arabia'
+            // const eligibility = 'Forbidden'
 
-            if (eligibility === 'Eligible') {
+            if (eligibility === 'Eligible' ||
+              (eligibility === 'Restricted' && notCitizenConfirmed)
+              ) {
               return <div>TODO: show agreement signing</div>
-            } else if (eligibility === 'Restricted') {
-              return renderRestrictedModal(country, eligibility)
-            } else if (eligibility === 'Forbidden') {
-              return <div>TODO: show forbidden country graphic</div>
+            } else if (eligibility === 'Restricted' || eligibility === 'Forbidden') {
+              return this.renderRestrictedModal(country, eligibility, notCitizenChecked)
             }
           }}
         </Query>
@@ -169,11 +181,14 @@ require('react-styl')(`
       bottom: 10px;
     .checkbox-holder input:checked ~ .checkmark:after
       display: block;
+    .btn
+      margin-top: 30px;
+      width: 156px;
     .checkbox-holder
       display: block;
       position: relative;
       padding-left: 28px;
-      margin-bottom: 12px;
+      margin-bottom: 0px;
       cursor: pointer;
       font-size: 22px;
       -webkit-user-select: none;
