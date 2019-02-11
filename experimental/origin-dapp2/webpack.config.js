@@ -92,7 +92,11 @@ const config = {
       inject: false,
       network: 'rinkeby'
     }),
-    new webpack.EnvironmentPlugin({ HOST: 'localhost' })
+    new webpack.EnvironmentPlugin({
+      HOST: 'localhost',
+      DOCKER: false,
+      IPFS_SWARM: ''
+    })
   ],
 
   optimization: {
