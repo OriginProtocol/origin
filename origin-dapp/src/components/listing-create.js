@@ -94,7 +94,7 @@ class ListingCreate extends Component {
       showDetailsFormErrorMsg: false,
       showBoostFormErrorMsg: false,
       showBoostTutorial: false,
-      verifyObj:JSON.stringify({verifyURL:'https://api.github.com/repos/OriginProtocol/origin/issues/1392',
+      verifyObj:JSON.stringify({verifyURL:'https://api.github.com/repos/OriginProtocol/origin/issues/<put issue number here>',
         checkArg:'state',
         matchValue:'closed',
         verifyFee:'100'})
