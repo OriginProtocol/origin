@@ -1,5 +1,7 @@
 'use strict'
 
+const enums = require('../enums')
+
 module.exports = (sequelize, DataTypes) => {
   const GrowthCampaign = sequelize.define(
     'GrowthCampaign',
@@ -12,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       distributionDate: DataTypes.DATE,
       cap: DataTypes.DECIMAL,
       capUsed: DataTypes.DECIMAL,
-      currency: DataTypes.STRING
+      currency: DataTypes.STRING,
+      rewardStatus: DataTypes.ENUM(enums.GrowthCampaignRewardStatuses),
     },
     {
       tableName: 'growth_campaign'

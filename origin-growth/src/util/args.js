@@ -2,7 +2,7 @@
  * Parse command line arguments into a dict.
  * @returns {Object} - Parsed arguments.
  */
-export default function parseArgv() {
+function parseArgv() {
   const args = {}
   for (const arg of process.argv) {
     const elems = arg.split('=')
@@ -12,3 +12,5 @@ export default function parseArgv() {
   }
   return args
 }
+
+module.exports = parseArgv

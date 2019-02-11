@@ -27,13 +27,9 @@ const BlockMiningTimeMsec = 15000 // 15sec
 
 class TokenDistributor {
   // Note: we can't use a constructor due to the async call to defaultAccount.
-  async init(networkId, tokenClass) {
-    // Setup token library
-    const config = {
-      providers: createProviders([networkId])
-    }
+  async init(networkId) {
     this.networkId = networkId
-    this.token = new tokenClass(config)
+    this.token = new Token({ providers: createProviders([config.networkId]) })
     this.supplier = await this.token.defaultAccount(networkId)
     this.web3 = this.token.web3(networkId)
   }
@@ -71,6 +67,11 @@ class DistributeRewards {
     const total = rewards
       .map(reward => reward.amount)
       .reduce((a1, a2) => BigNumber(a1).plus(a2))
+
+    if (!this.config.doIt) {
+      logger.info(`Would distribute reward of ${total} to ${ethAddress}`)
+      return
+    }
     logger.info(`Distributing reward of ${total} to ${ethAddress}`)
 
     // Mark the reward row(s) as InPayment.
@@ -113,6 +114,10 @@ class DistributeRewards {
   }
 
   async _confirmTransaction(ethAddress, rewards, currentBlockNumber) {
+    if (!this.config.doIt) {
+      return true
+    }
+
     let txnHash = null
     rewards.forEach(async reward => {
       // Reload the reward to get the txnHash.
@@ -143,7 +148,8 @@ class DistributeRewards {
 
     if (!txnReceipt.status) {
       // The transaction did not get confirmed.
-      // Rollback the rewards status to Pending.
+      // Rollback the rewards status to Pending so that the transaction
+      // gets attempted again next time the job runs.
       const ids = rewards.map(reward => reward.id)
       logger.error(`Rewards with ids ${ids}`)
       logger.error('  Transaction hash ${txnHash} failed confirmation.')
@@ -167,19 +173,40 @@ class DistributeRewards {
     return true
   }
 
+  async _confirmAllTransactions(ethAddressToRewards) {
+    // Wait a bit for the last transaction to settle.
+    const waitMsec = MinBlockConfirmation * BlockMiningTimeMsec
+    logger.info(
+      `Waiting ${waitMsec / 1000} seconds to allow transactions to settle...`
+    )
+    await new Promise(resolve => setTimeout(resolve, waitMsec))
+
+    // Verify the reward transactions were confirmed on the blockchain.
+    let allConfirmed = true
+    const blockNumber = await this.web3.eth.getBlockNumber()
+    for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
+      const confirmed = await this._confirmTransaction(
+        ethAddress,
+        rewards,
+        blockNumber
+      )
+      allConfirmed = allConfirmed && confirmed
+    }
+    return allConfirmed
+  }
+
   async process() {
     const now = new Date().toISOString()
 
     // Look for campaigns with rewards_status Calculated and distribution date past now.
-    const campaignRows = await db.findall({
+    const campaigns = await db.GrowthCampaign.findAll({
       where: {
         distributionDate: { [Sequelize.Op.lt]: now },
         rewardStatus: enums.GrowthCampaignRewardStatuses.Calculated
       }
     })
 
-    for (const campaignRow of campaignRows) {
-      const campaign = new Campaign(campaignRow, campaignRow.rules)
+    for (const campaign of campaigns) {
       logger.info(
         `Calculating rewards for campaign ${campaign.id} (${campaign.name})`
       )
@@ -211,31 +238,19 @@ class DistributeRewards {
         campaignDistTotal.plus(distAmount)
       }
 
-      // Wait a bit for the last transaction to settle.
-      const waitMsec = MinBlockConfirmation * BlockMiningTimeMsec
-      logger.info(
-        `Waiting ${waitMsec / 1000} seconds to allow transactions to settle...`
-      )
-      await new Promise(resolve => setTimeout(resolve, waitMsec))
-
-      // Verify the reward transactions were confirmed on the blockchain.
-      let allConfirmed = true
-      const blockNumber = await this.web3.eth.getBlockNumber()
-      for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
-        const confirmed = await this._confirmTransaction(
-          ethAddress,
-          rewards,
-          blockNumber
-        )
-        allConfirmed = allConfirmed && confirmed
-      }
+      // Confirm the transactions.
+      const allConfirmed = this._confirmAllTransactions(ethAddressToRewards)
 
       // Update the campaign reward status to indicate it was distributed.
       if (allConfirmed) {
-        await campaignRow.update({
-          rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
-        })
-        logger.info(`Updated campaign ${campaign.id} status to Distributed.`)
+        if (this.config.doIt) {
+          await campaign.update({
+            rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
+          })
+          logger.info(`Updated campaign ${campaign.id} status to Distributed.`)
+        } else {
+          logger.info(`Would update campaign ${campaign.id} status to Distributed.`)
+        }
       } else {
         logger.info(
           `One or more transactions not confirmed. Leaving campaign ${
@@ -258,25 +273,36 @@ class DistributeRewards {
  * MAIN
  */
 logger.info('Starting rewards distribution job.')
+
+// Parse config.
 const args = parseArgv()
 const config = {
-  networkId: args['--networkId'] || process.env.NETWORK_ID,
-  // By default run in dry-run mode unless explicitly specified
-  dryRun: args['--dryRun'] || true
+  // 1=Mainnet, 4=Rinkeby, 999=Local.
+  networkId: parseInt(args['--networkId'] || process.env.NETWORK_ID || 0),
+  // By default run in dry-run mode unless explicitly specified using doIt.
+  doIt: args['--doIt'] ? args['--doIt'] : false
 }
 logger.info('Config:')
 logger.info(config)
 
-const distributor = new TokenDistributor().init(config.networkId, Token)
-const job = new DistributeRewards(config, distributor)
+if (!config.networkId) {
+  throw new Error('--networkId is a mandatory argument.')
+}
 
-job.process().then(() => {
-  logger.info('Distribution job finished.')
-  logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
-  logger.info('  Number of transactions:            ', job.stats.numTxns)
-  logger.info('  Grand total distributed (natural): ', job.stats.distGrandTotal)
-  logger.info(
-    '  Grand total distributed (tokens):  ',
-    job.token.toTokenUnit(job.stats.distGrandTotal)
-  )
+// Initialize the job and start it.
+const distributor = new TokenDistributor()
+distributor.init(config.networkId).then(() => {
+  const job = new DistributeRewards(config, distributor)
+  job.process().then(() => {
+    logger.info('Distribution job stats:')
+    logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
+    logger.info('  Number of transactions:            ', job.stats.numTxns)
+    logger.info('  Grand total distributed (natural): ', job.stats.distGrandTotal)
+    logger.info(
+      '  Grand total distributed (tokens):  ',
+      job.distributor.token.toTokenUnit(job.stats.distGrandTotal)
+    )
+    logger.info('Finished')
+    process.exit()
+  })
 })

@@ -10,10 +10,11 @@ const Sequelize = require('sequelize')
 
 const Token = require('origin-token/src/token')
 
-const db = require('../models')
 const enums = require('../enums')
-
+const db = require('../models')
 const { Campaign } = require('../rules/rules')
+const parseArgv = require('../util/args')
+
 
 // We allow a campaign to go a bit over budget since the capUsed field
 // is not updated realtime but rather periodically via a cron job.
@@ -23,7 +24,8 @@ Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('calcRewards', { showTimestamp: false })
 
 class CalculateRewards {
-  constructor(token) {
+  constructor(config, token) {
+    this.config = config
     this.token = token
     this.stats = {
       numCampaigns: 0,
@@ -73,7 +75,7 @@ class CalculateRewards {
     const txn = await Sequelize.transaction()
     try {
       for (const reward of rewards) {
-        await db.GrowthReward.create({
+        const row = db.GrowthReward.build({
           status: enums.GrowthRewardStatuses.Pending,
           ethAddress,
           campaignId: reward.campaignId,
@@ -82,6 +84,11 @@ class CalculateRewards {
           amount: reward.value,
           currency: reward.currency
         })
+        if (this.config.doIt) {
+          await row.save()
+        } else {
+          logger.info(`Would insert row in GrowthReward:`, row)
+        }
       }
       await txn.commit()
     } catch (e) {
@@ -94,7 +101,7 @@ class CalculateRewards {
     const now = new Date()
 
     // Look for finished campaigns with rewards_status ready for calculation.
-    const campaignRows = await db.findall({
+    const campaignRows = await db.GrowthCampaign.findAll({
       where: {
         endDate: { [Sequelize.Op.lt]: now },
         rewardStatus: enums.GrowthCampaignRewardStatuses.ReadyForCalculation
@@ -193,14 +200,24 @@ class CalculateRewards {
  * MAIN
  */
 logger.info('Starting rewards calculation job.')
+
+const args = parseArgv()
+const config = {
+  // By default run in dry-run mode unless explicitly specified using doIt.
+  doIt: args['--doIt'] ? args['--doIt'] : false
+}
+
 const token = new Token({})
-const job = new CalculateRewards(token)
+const job = new CalculateRewards(config, token)
+
 job.process().then(() => {
-  logger.info('Rewards calculation job finished.')
+  logger.info('Rewards calculation stats:')
   logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
   logger.info('  Grand total distributed (natural): ', job.stats.calcGrandTotal)
   logger.info(
     '  Grand total distributed (tokens):  ',
     job.token.toTokenUnit(job.stats.calcGrandTotal)
   )
+  logger.info('Finished')
+  process.exit()
 })
