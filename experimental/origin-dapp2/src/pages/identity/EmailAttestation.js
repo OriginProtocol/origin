@@ -56,6 +56,7 @@ class EmailAttestation extends Component {
         </div>
         <div className="mt-3">
           <input
+            type="email"
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg text-center"
             placeholder="Verify email address"

@@ -69,6 +69,7 @@ class PhoneAttestation extends Component {
           />
           <div className="form-control-wrap">
             <input
+              type="tel"
               ref={ref => (this.inputRef = ref)}
               className="form-control form-control-lg"
               placeholder="Area code and phone number"
