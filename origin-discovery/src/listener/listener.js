@@ -157,8 +157,9 @@ class Context {
     this.networkId = undefined
   }
 
-  async init (config) {
+  async init (config, errorCounter) {
     this.config = config
+    this.errorCounter = errorCounter
 
     const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
     this.web3 = new Web3(web3Provider)
@@ -305,16 +306,6 @@ const config = {
 
 const port = 9499
 
-/**
- * Creates runtime context and starts the live tracking engine.
- * @return {Promise<void>}
- */
-async function main() {
-  const context = await new Context().init(config)
-  liveTracking(context)
-}
-
-
 // Create an express server for Prometheus to scrape metrics
 const app = express()
 const bundle = promBundle({
@@ -327,10 +318,25 @@ const bundle = promBundle({
 })
 app.use(bundle)
 
+// Create metrics.
 const blockGauge = new bundle.promClient.Gauge({
   name: 'event_listener_last_block',
   help: 'The last block processed by the event listener'
 })
+
+const errorCounter = new bundle.promClient.Counter({
+  name: 'event_listener_handler_error',
+  help: 'Number of errors from the event listener handler '
+})
+
+/**
+ * Creates runtime context and starts the live tracking engine.
+ * @return {Promise<void>}
+ */
+async function main() {
+  const context = await new Context().init(config, errorCounter)
+  liveTracking(context)
+}
 
 app.listen({ port: port }, () => {
   logger.info(`Serving Prometheus metrics on port ${port}`)

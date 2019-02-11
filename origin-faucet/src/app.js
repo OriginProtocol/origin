@@ -9,15 +9,14 @@ const express = require('express')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 const Web3 = require('web3')
 
-const Config = require('../lib/config.js')
-const Token = require('../lib/token.js')
+const Config = require('origin-token/src/config')
+const Token = require('origin-token/src/token')
 
 const DEFAULT_SERVER_PORT = 5000
 const DEFAULT_NETWORK_ID = '999' // Local blockchain.
 
 // Credit 100 tokens per request.
 const NUM_TOKENS = 100
-
 
 // Starts the Express server.
 function runApp(config) {
@@ -26,14 +25,15 @@ function runApp(config) {
 
   // Configure rate limiting. Allow at most 1 request per IP every 60 sec.
   const opts = {
-    points: 1,   // Point budget.
-    duration: 60, // Reset points consumption every 60 sec.
+    points: 1, // Point budget.
+    duration: 60 // Reset points consumption every 60 sec.
   }
   const rateLimiter = new RateLimiterMemory(opts)
   const rateLimiterMiddleware = (req, res, next) => {
     // Rate limiting only applies to the /tokens route.
     if (req.url.startsWith('/tokens')) {
-      rateLimiter.consume(req.connection.remoteAddress)
+      rateLimiter
+        .consume(req.connection.remoteAddress)
         .then(() => {
           // Allow request and consume 1 point.
           next()
@@ -52,10 +52,10 @@ function runApp(config) {
   app.use(rateLimiterMiddleware)
 
   // Configure directory for public assets.
-  app.use(express.static(__dirname + '/public'))
+  app.use(express.static(__dirname + '/../public'))
 
   // Register the /tokens route for crediting tokens.
-  app.get('/tokens', async function (req, res, next) {
+  app.get('/tokens', async function(req, res, next) {
     const networkId = req.query.network_id
     const wallet = req.query.wallet
     if (!req.query.wallet) {
@@ -74,9 +74,10 @@ function runApp(config) {
       console.log(`${NUM_TOKENS} OGN -> ${wallet} TxHash=${txHash}`)
 
       // Send response back to client.
-      const resp = `Credited ${NUM_TOKENS} OGN tokens to wallet ${wallet}<br>` +
-                  `TxHash = ${txHash}<br>` +
-                  `OGN token contract address = ${contractAddress}`
+      const resp =
+        `Credited ${NUM_TOKENS} OGN tokens to wallet ${wallet}<br>` +
+        `TxHash = ${txHash}<br>` +
+        `OGN token contract address = ${contractAddress}`
       res.send(resp)
     } catch (err) {
       next(err) // Errors will be passed to Express.
@@ -84,9 +85,9 @@ function runApp(config) {
   })
 
   // Start the server.
-  app.listen(
-    config.port || DEFAULT_SERVER_PORT,
-    () => console.log(`Origin faucet app listening on port ${config.port}!`))
+  app.listen(config.port || DEFAULT_SERVER_PORT, () =>
+    console.log(`Origin faucet app listening on port ${config.port}!`)
+  )
 }
 
 //
@@ -102,7 +103,9 @@ const config = {
     args['--network_ids'] ||
     process.env.NETWORK_IDS ||
     DEFAULT_NETWORK_ID
-  ).split(',').map(parseInt),
+  )
+    .split(',')
+    .map(parseInt)
 }
 
 try {

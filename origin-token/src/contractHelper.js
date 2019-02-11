@@ -1,6 +1,6 @@
 const Web3 = require('web3')
 
-const { withRetries } = require('../faucet/util.js')
+const { withRetries } = require('./util')
 
 class ContractHelper {
   constructor(config) {
@@ -40,11 +40,10 @@ class ContractHelper {
     // Send the transaction and grab the transaction hash when it's available.
     this.vlog('sending transaction')
     let transactionHash
-    transaction.send(opts)
-      .once('transactionHash', (hash) => {
-        transactionHash = hash
-        this.vlog('transaction hash:', transactionHash)
-      })
+    transaction.send(opts).once('transactionHash', hash => {
+      transactionHash = hash
+      this.vlog('transaction hash:', transactionHash)
+    })
     this.vlog('waiting for transaction receipt')
 
     // Poll for the transaction receipt, with an exponential backoff. This works
@@ -67,7 +66,9 @@ class ContractHelper {
             throw new Error('transaction failed')
           }
           if (this.config.multisig) {
-            this.vlog('multi-sig transaction submitted: it may require more signatures')
+            this.vlog(
+              'multi-sig transaction submitted: it may require more signatures'
+            )
           } else {
             this.vlog('transaction successful')
           }

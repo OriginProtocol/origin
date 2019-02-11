@@ -108,13 +108,22 @@ const Configs = {
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544'
-
-    // messaging: {
-    //   ipfsSwarm:
-    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/QmYsCaLzzso7kYuAZ8b5DwhpwGvgzKyFtvs37bG95GTQGA',
-    //   messagingNamespace: 'dev',
-    //   globalKeyServer: 'http://127.0.0.1:6647'
-    // }
+  },
+  docker: {
+    provider: `http://localhost:8545`,
+    providerWS: `ws://localhost:8545`,
+    ipfsGateway: `http://localhost:9999`,
+    ipfsRPC: `http://localhost:9999`,
+    bridge: 'http://localhost:5000',
+    discovery: 'http://localhost:4000/graphql',
+    automine: 2000,
+    affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
+    messaging: {
+      ipfsSwarm: process.env.IPFS_SWARM,
+      messagingNamespace: 'origin:docker',
+      globalKeyServer: 'http://localhost:6647'
+    }
   },
   test: {
     provider: `http://${HOST}:8545`,
@@ -145,13 +154,16 @@ function applyWeb3Hack(web3Instance) {
 }
 
 export function setNetwork(net, customConfig) {
+  if (process.env.DOCKER) {
+    net = 'docker'
+  }
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (!config) {
     return
   }
   if (net === 'test') {
     config = { ...config, ...customConfig }
-  } else if (net === 'localhost') {
+  } else if (net === 'localhost' || net === 'docker') {
     config.OriginToken =
       window.localStorage.OGNContract ||
       get(OriginTokenContract, 'networks.999.address')

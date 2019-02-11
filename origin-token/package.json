@@ -1,15 +1,15 @@
 {
-  "name": "origin-faucet",
-  "description": "Origin TestNet faucet",
-  "version": "0.1.0",
+  "name": "origin-token",
+  "description": "Origin Token library",
   "author": "Origin Protocol Inc",
   "license": "MIT",
+  "version": "0.1.0",
   "engines": {
     "node": "10.x"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OriginProtocol/origin/origin-faucet"
+    "url": "https://github.com/OriginProtocol/origin/origin-token"
   },
   "bugs": {
     "url": "https://github.com/OriginProtocol/origin/issues"
@@ -18,23 +18,21 @@
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"src/**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\"",
-    "start": "per-env",
-    "start:development": "nodemon src/app.js",
-    "start:production": "node src/app.js"
+    "test": "mocha --timeout 10000 --exit test"
   },
   "dependencies": {
-    "dotenv": "^6.2.0",
-    "envkey": "^1.2.4",
-    "express": "^4.16.4",
-    "origin-token": "^0.1.0",
-    "per-env": "^1.0.2",
-    "rate-limiter-flexible": "^0.19.4",
+    "bignumber.js": "^8.0.1",
+    "origin-contracts": "^0.8.6",
+    "truffle-hdwallet-provider": "0.0.6",
+    "truffle-privatekey-provider": "^0.1.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "ganache-core": "2.4.0",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.7"
+    "openzeppelin-solidity": "^1.10.0",
+    "solc": "^0.4.25"
   },
   "prettier": {
     "semi": false,

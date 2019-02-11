@@ -1,9 +1,8 @@
-import assert from 'assert'
-import fs from 'fs'
-import solc from 'solc'
-import linker from 'solc/linker'
-import Ganache from 'ganache-core'
-import Web3 from 'web3'
+const fs = require('fs')
+const solc = require('solc')
+const linker = require('solc/linker')
+const Ganache = require('ganache-core')
+const Web3 = require('web3')
 
 const solcOpts = {
   language: 'Solidity',
@@ -22,12 +21,9 @@ const solidityCoverage = process.env['SOLIDITY_COVERAGE'] !== undefined
 const defaultProvider = solidityCoverage
   ? 'ws://localhost:8555'
   : 'ws://localhost:7545'
-export const contractPath = solidityCoverage
-  ? `${__dirname}/../../coverageEnv/contracts`
-  : `${__dirname}/../origin-contracts/contracts`
 
 // Instantiate a web3 instance. Start a node if one is not already running.
-export async function web3Helper(provider = defaultProvider) {
+async function web3Helper(provider = defaultProvider) {
   const web3 = new Web3(provider)
   const instance = await server(web3, provider)
   return { web3, server: instance }
@@ -50,7 +46,7 @@ function findImportsPath(prefix) {
   }
 }
 
-export default async function testHelper(contracts, provider) {
+async function testHelper(contracts, provider) {
   const { web3, server } = await web3Helper(provider)
   const accounts = await web3.eth.getAccounts()
 
@@ -263,32 +259,5 @@ async function server(web3, provider) {
   return server
 }
 
-// Asserts unless the given promise leads to an EVM revert.
-// Ported from OpenZeppelin.
-export async function assertRevert(promise) {
-  try {
-    await promise
-  } catch (error) {
-    const revertFound = error.message.search('revert') >= 0
-    assert(revertFound, `Expected "revert", got ${error} instead`)
-    return
-  }
-  assert.fail('Expected revert not received')
-}
 
-/**
- * Asserts that the given promise throws an error with the given message.
- * @param {message} message - Message we expect to find in the exception.
- * @param {promise} promise - A promise that we expect to be rejected.
- */
-export async function assertRevertWithMessage(message, promise) {
-  try {
-    await promise
-  } catch (error) {
-    const revertFound = error.message.search('revert') >= 0
-    assert(revertFound, `Expected "revert", got ${error} instead`)
-    assert(error.message.match(message))
-    return
-  }
-  assert.fail('Expected revert not received')
-}
+module.exports = testHelper
