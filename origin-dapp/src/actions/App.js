@@ -28,11 +28,16 @@ export const AppConstants = keyMirror(
 )
 
 export function dismissBetaModal() {
-  return async function(dispatch) {
-    dispatch({
-      type: AppConstants.BETA_MODAL_DISMISSED,
-      closedAt: new Date()
-    })
+  return {
+    type: AppConstants.BETA_MODAL_DISMISSED,
+    closedAt: new Date()
+  }
+}
+
+export function openBetaModal() {
+  return {
+    type: AppConstants.BETA_MODAL_DISMISSED,
+    closedAt: false
   }
 }
 
