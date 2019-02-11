@@ -49,6 +49,7 @@ class CalculateRewards {
     //  - load user's profile
     //  - load SDN list
     //  - check user's lastname/firstname against list
+    logger.debug(`Checked ${ethAddress} against blacklist.`)
     return false
   }
 

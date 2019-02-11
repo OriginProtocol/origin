@@ -4,7 +4,6 @@
 'use strict'
 
 const Logger = require('logplease')
-const Sequelize = require('sequelize')
 
 const enums = require('../enums')
 const db = require('../models')
@@ -25,6 +24,7 @@ class VerifyEvents {
 
   // TODO(franck): IMPLEMENT ME
   _isFraud(event) {
+    logger.debug(`Checking fraud for event ${event.id}`)
     return false
   }
 

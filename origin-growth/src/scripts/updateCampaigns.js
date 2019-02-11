@@ -27,6 +27,7 @@ class UpdateCampaigns {
 
   // TODO(franck): IMPLEMENT ME
   async _updateCapUsed(campaign) {
+    logger.debug(`Checking capUsed for campaign ${campaign.id}`)
     return 0
   }
 
