@@ -40,11 +40,9 @@ contract VA_Marketplace is Ownable {
 
     struct Offer {
         uint value;         // Amount in Eth or ERC20 buyer is offering
-        uint commission;    // Amount of commission earned if offer is finalized
         uint refund;        // Amount to refund buyer upon finalization
         ERC20 currency;     // Currency of listing
         address buyer;      // Buyer wallet / identity contract / other contract
-        address affiliate;  // Address to send any commission
         address arbitrator; // Address that settles disputes
         uint finalizes;     // Timestamp offer finalizes
         uint8 status;       // 0: Undefined, 1: Created, 2: Accepted, 3: Disputed
@@ -88,8 +86,6 @@ contract VA_Marketplace is Ownable {
         bytes32 _listingIpfsHash, // listing IPFS hash that we're making an offer on
         bytes32 _ipfsHash,   // IPFS hash containing offer data
         uint _finalizes,     // Timestamp an accepted offer will finalize
-        address _affiliate,  // Address to send any required commission to
-        uint256 _commission, // Amount of commission to send in Origin Token if offer finalizes
         uint _value,         // Offer amount in ERC20 or Eth
         ERC20 _currency,     // ERC20 token address or 0x0 for Eth
         address _arbitrator,  // Escrow arbitrator
@@ -99,22 +95,10 @@ contract VA_Marketplace is Ownable {
         public
         payable
     {
-        require(
-            allowedAffiliates[address(this)] || allowedAffiliates[_affiliate],
-            "Affiliate not allowed"
-        );
-
-        if (_affiliate == 0x0) {
-            // Avoid commission tokens being trapped in marketplace contract.
-            require(_commission == 0, "commission requires affiliate");
-        }
-
         offers[listingID].push(Offer({
             status: 1,
             buyer: msg.sender,
             finalizes: _finalizes,
-            affiliate: _affiliate,
-            commission: _commission,
             currency: _currency,
             value: _value,
             arbitrator: _arbitrator,
@@ -142,8 +126,6 @@ contract VA_Marketplace is Ownable {
         bytes32 _listingIpfsHash,
         bytes32 _ipfsHash,
         uint _finalizes,
-        address _affiliate,
-        uint256 _commission,
         uint _value,
         ERC20 _currency,
         address _arbitrator,
@@ -155,7 +137,7 @@ contract VA_Marketplace is Ownable {
         payable
     {
         withdrawOffer(listingID, _withdrawOfferID, _ipfsHash);
-        makeOffer(listingID, _listingIpfsHash, _ipfsHash, _finalizes, _affiliate, _commission, _value, _currency, _arbitrator, _seller, _verifier);
+        makeOffer(listingID, _listingIpfsHash, _ipfsHash, _finalizes, _value, _currency, _arbitrator, _seller, _verifier);
     }
 
 
@@ -439,5 +421,53 @@ contract VA_Marketplace is Ownable {
     function removeAffiliate(address _affiliate, bytes32 ipfsHash) public onlyOwner {
         delete allowedAffiliates[_affiliate];
         emit AffiliateRemoved(_affiliate, ipfsHash);
+    }
+
+    function createListings(address[] sellers, uint[] listingIds, bytes32[] ipfsHashes)
+        public
+    {
+        bool affiliateWhitelistDisabled = allowedAffiliates[address(this)];
+        require(
+            affiliateWhitelistDisabled || allowedAffiliates[msg.sender],
+            "Affiliate not allowed"
+        );
+        require(sellers.length == listingIds.length, "Listings length and sellers length does not match");
+        require(sellers.length == ipfsHashes.length, "Hashes length and sellers length does not match");
+
+        for (uint i =0; i < sellers.length; i++) {
+          emit ListingCreated(sellers[i], listingIds[i], ipfsHashes[i]);
+        }
+    }
+
+    function updateListings(address[] sellers, uint[] listingIds, bytes32[] ipfsHashes)
+      public
+    {
+        bool affiliateWhitelistDisabled = allowedAffiliates[address(this)];
+        require(
+            affiliateWhitelistDisabled || allowedAffiliates[msg.sender],
+            "Affiliate not allowed"
+        );
+        require(sellers.length == listingIds.length, "Listings length and sellers length does not match");
+        require(sellers.length == ipfsHashes.length, "Hashes length and sellers length does not match");
+
+        for (uint i =0; i < sellers.length; i++) {
+          emit ListingUpdated(sellers[i], listingIds[i], ipfsHashes[i]);
+        }
+    }
+
+    function withdrawListings(address[] sellers, uint[] listingIds, bytes32[] ipfsHashes)
+      public
+    {
+        bool affiliateWhitelistDisabled = allowedAffiliates[address(this)];
+        require(
+            affiliateWhitelistDisabled || allowedAffiliates[msg.sender],
+            "Affiliate not allowed"
+        );
+        require(sellers.length == listingIds.length, "Listings length and sellers length does not match");
+        require(sellers.length == ipfsHashes.length, "Hashes length and sellers length does not match");
+
+        for (uint i =0; i < sellers.length; i++) {
+          emit ListingWithdrawn(sellers[i], listingIds[i], ipfsHashes[i]);
+        }
     }
 }

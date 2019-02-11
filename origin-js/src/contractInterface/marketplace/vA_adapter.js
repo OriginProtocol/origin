@@ -72,7 +72,6 @@ class VA_MarketplaceAdapter {
     const {
       affiliate,
       arbitrator,
-      commission,
       finalizes,
       totalPrice = {},
       listingIpfsHash,
@@ -80,7 +79,6 @@ class VA_MarketplaceAdapter {
       verifier
     } = data
     const price = await this.contractService.moneyToUnits(totalPrice)
-    const commissionUnits = await this.contractService.moneyToUnits(commission)
     const currencies = await this.contractService.currencies()
 
     const args = [
@@ -89,7 +87,6 @@ class VA_MarketplaceAdapter {
       ipfsBytes,
       finalizes || 30 * 24 * 60 * 60, // 30 days from offer acceptance
       affiliate || emptyAddress,
-      commissionUnits,
       price,
       currencies[totalPrice.currency].address,
       arbitrator || emptyAddress,
