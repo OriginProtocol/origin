@@ -33,7 +33,10 @@ async function start() {
   const webpackDevServer = spawn(
     './node_modules/.bin/webpack-dev-server',
     ['--info=false', '--port=8083', '--host=0.0.0.0'],
-    { stdio: 'inherit' }
+    {
+      stdio: 'inherit',
+      env: process.env
+    }
   )
   process.on('exit', () => webpackDevServer.kill())
 

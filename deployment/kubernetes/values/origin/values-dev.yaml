@@ -22,7 +22,7 @@ faucetImageTag: '8efc326'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '23750c4'
+eventlistenerImageTag: 'a4f999b'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -38,7 +38,7 @@ notificationsImageTag: '30de4cf'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: '8efc326'
+creatorClientImageTag: 'c235b98'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server

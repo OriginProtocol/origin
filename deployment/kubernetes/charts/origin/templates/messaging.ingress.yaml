@@ -24,7 +24,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
     nginx.ingress.kubernetes.io/server-snippet: |
       large_client_header_buffers 8 32k;
-    nginx.ingress.kubernetes.io/limit-connections: "5"
+    nginx.ingress.kubernetes.io/limit-connections: "20"
 spec:
   tls:
     - secretName: {{ template "messaging.host" . }}
