@@ -11,7 +11,7 @@ class Reward {
     this.campaignId = campaignId
     this.levelId = levelId
     this.ruleId = ruleId
-    this.value = value
+    this.value = value // <{amount: string, currency: string}>
   }
 }
 

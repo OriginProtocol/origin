@@ -71,6 +71,8 @@ const config = {
   // By default run in dry-run mode unless explicitly specified using doIt.
   doIt: args['--doIt'] ? args['--doIt'] : false
 }
+logger.info('Config:')
+logger.info(config)
 
 const job = new VerifyEvents(config)
 

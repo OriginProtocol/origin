@@ -38,7 +38,7 @@ class CalculateRewards {
     // before campaign ended and that are in active status.
     const participants = await db.GrowthParticipant.findAll({
       where: {
-        status: enums.GrowthParticipantStatus.Active,
+        status: enums.GrowthParticipantStatuses.Active,
         createdAt: { [Sequelize.Op.lt]: campaign.endDate }
       }
     })
@@ -72,22 +72,23 @@ class CalculateRewards {
   }
 
   async _insertRewards(ethAddress, campaign, rewards) {
-    const txn = await Sequelize.transaction()
+    const txn = await db.sequelize.transaction()
     try {
       for (const reward of rewards) {
-        const row = db.GrowthReward.build({
+        const data = {
           status: enums.GrowthRewardStatuses.Pending,
           ethAddress,
           campaignId: reward.campaignId,
           levelId: reward.levelId,
           ruleId: reward.ruleId,
-          amount: reward.value,
-          currency: reward.currency
-        })
+          amount: reward.value.amount,
+          currency: reward.value.currency
+        }
         if (this.config.doIt) {
-          await row.save()
+          logger.error('INSERTING ', data)
+          await db.GrowthReward.create(data)
         } else {
-          logger.info(`Would insert row in GrowthReward:`, row)
+          logger.info(`Would insert row in GrowthReward:`, data)
         }
       }
       await txn.commit()
@@ -101,18 +102,18 @@ class CalculateRewards {
     const now = new Date()
 
     // Look for finished campaigns with rewards_status ready for calculation.
-    const campaignRows = await db.GrowthCampaign.findAll({
+    const campaigns = await db.GrowthCampaign.findAll({
       where: {
         endDate: { [Sequelize.Op.lt]: now },
         rewardStatus: enums.GrowthCampaignRewardStatuses.ReadyForCalculation
       }
     })
 
-    for (const campaignRow of campaignRows) {
-      const campaign = new Campaign(campaignRow, campaignRow.rules)
+    for (const campaign of campaigns) {
       logger.info(
         `Calculating rewards for campaign ${campaign.id} (${campaign.name})`
       )
+      const campaignRule = new Campaign(campaign, JSON.parse(campaign.rules))
 
       // Consistency checks.
       if (campaign.currency !== 'OGN') {
@@ -135,7 +136,7 @@ class CalculateRewards {
         )
       }
 
-      const campaignTotal = BigNumber(0)
+      let campaignTotal = BigNumber(0)
       const participants = await this._getParticipants(campaign)
       for (const participant of participants) {
         const ethAddress = participant.ethAddress
@@ -159,20 +160,23 @@ class CalculateRewards {
 
         // Calculate rewards for this user.
         // Note that we set the onlyVerifiedEvents param of getRewards to true.
-        const rewards = await campaign.getRewards(ethAddress, true)
+        const rewards = await campaignRule.getRewards(ethAddress, true)
+        if (!rewards.length ) {
+          continue
+        }
 
         // Insert rewards in the growth_reward table.
         const total = rewards
-          .map(reward => reward.value)
+          .map(reward => reward.value.amount)
           .reduce((v1, v2) => BigNumber(v1).plus(v2))
         await this._insertRewards(ethAddress, campaign, rewards)
 
         // Log and update stats.
         logger.info(`Participant ${ethAddress} - Calculation result:`)
         logger.info('  Num reward:      ', rewards.length)
-        logger.info('  Total (natural): ', total)
+        logger.info('  Total (natural): ', total.toFixed())
         logger.info('  Total (token):   ', this.token.toTokenUnit(total))
-        campaignTotal.plus(total)
+        campaignTotal = campaignTotal.plus(total)
       }
 
       // Done calculating rewards for this campaign.
@@ -187,11 +191,15 @@ class CalculateRewards {
       }
 
       // Update the campaign's rewardStatus to 'Calculated'.
-      await campaignRow.update({
-        rewardStatus: enums.GrowthCampaignRewardStatuses.Calculated
-      })
+      if (this.config.doIt) {
+        await campaign.update({
+          rewardStatus: enums.GrowthCampaignRewardStatuses.Calculated
+        })
+      } else {
+        logger.info(`Would update campaign ${campaign.id} to status Calculated`)
+      }
 
-      this.stats.calcGrandTotal.plus(campaignTotal)
+      this.stats.calcGrandTotal = this.stats.calcGrandTotal.plus(campaignTotal)
     }
   }
 }
@@ -206,6 +214,8 @@ const config = {
   // By default run in dry-run mode unless explicitly specified using doIt.
   doIt: args['--doIt'] ? args['--doIt'] : false
 }
+logger.info('Config:')
+logger.info(config)
 
 const token = new Token({})
 const job = new CalculateRewards(config, token)
@@ -213,7 +223,7 @@ const job = new CalculateRewards(config, token)
 job.process().then(() => {
   logger.info('Rewards calculation stats:')
   logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
-  logger.info('  Grand total distributed (natural): ', job.stats.calcGrandTotal)
+  logger.info('  Grand total distributed (natural): ', job.stats.calcGrandTotal.toFixed())
   logger.info(
     '  Grand total distributed (tokens):  ',
     job.token.toTokenUnit(job.stats.calcGrandTotal)

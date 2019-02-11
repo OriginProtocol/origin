@@ -15,7 +15,6 @@ const db = require('../models')
 const enums = require('../enums')
 const parseArgv = require('../util/args')
 
-const { Campaign } = require('../rules/rules')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('distRewards', { showTimestamp: false })
@@ -70,12 +69,13 @@ class DistributeRewards {
 
     if (!this.config.doIt) {
       logger.info(`Would distribute reward of ${total} to ${ethAddress}`)
-      return
+      return total
     }
+
     logger.info(`Distributing reward of ${total} to ${ethAddress}`)
 
     // Mark the reward row(s) as InPayment.
-    let txn = await Sequelize.transaction()
+    let txn = await db.sequelize.transaction()
     try {
       rewards.forEach(reward => {
         reward.update({ status: enums.GrowthRewardStatuses.InPayment })
@@ -93,7 +93,7 @@ class DistributeRewards {
     }
 
     // Mark the rewards as Paid.
-    txn = await Sequelize.transaction()
+    txn = await db.sequelize.transaction()
     try {
       rewards.forEach(reward => {
         reward.update({
@@ -154,7 +154,7 @@ class DistributeRewards {
       logger.error(`Rewards with ids ${ids}`)
       logger.error('  Transaction hash ${txnHash} failed confirmation.')
       logger.error('  Rolling back status to Pending.')
-      const txn = await Sequelize.transaction()
+      const txn = await db.sequelize.transaction()
       try {
         rewards.forEach(reward => {
           delete reward.data.txnHash
@@ -210,12 +210,12 @@ class DistributeRewards {
       logger.info(
         `Calculating rewards for campaign ${campaign.id} (${campaign.name})`
       )
-      const campaignDistTotal = BigNumber(0)
+      let campaignDistTotal = BigNumber(0)
 
       // Load rewards rows for this campaign that are in status Pending.
-      const rewardRows = await db.GrowthRewards.findAll({
+      const rewardRows = await db.GrowthReward.findAll({
         where: {
-          campaignId: campaign.Id,
+          campaignId: campaign.id,
           status: enums.GrowthRewardStatuses.Pending
         }
       })
@@ -223,19 +223,18 @@ class DistributeRewards {
       // TODO: If this data set becomes too large to hold in memory,
       // handle the grouping in the SQL query above and process in chunks.
       const ethAddressToRewards = {}
-      rewardRows.forEach(
-        reward =>
-          (ethAddressToRewards[reward.ethAddress] = ethAddressToRewards[
-            reward.ethAddress
-          ]
-            ? ethAddressToRewards[reward.ethAddress].push(reward)
-            : [])
-      )
+      rewardRows.forEach(reward => {
+        if (ethAddressToRewards[reward.ethAddress]) {
+          ethAddressToRewards[reward.ethAddress].push(reward)
+        } else {
+          ethAddressToRewards[reward.ethAddress] = [ reward ]
+        }
+      })
 
       // Distribute the rewards to each account.
       for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
         const distAmount = await this._distributeRewards(ethAddress, rewards)
-        campaignDistTotal.plus(distAmount)
+        campaignDistTotal = campaignDistTotal.plus(distAmount)
       }
 
       // Confirm the transactions.
@@ -260,7 +259,7 @@ class DistributeRewards {
       }
 
       this.stats.numCampaigns++
-      this.stats.distGrandTotal += campaignDistTotal
+      this.stats.distGrandTotal = this.stats.distGrandTotal.plus(campaignDistTotal)
       logger.info(
         `Finished distribution for campaign ${campaign.id} / ${campaign.name}`
       )
