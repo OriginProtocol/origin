@@ -11,7 +11,7 @@ const urllib = require('url')
 const Origin = require('origin').default
 const Web3 = require('web3')
 
-const generateListingId = ({network, version, uniqueId}) => {
+const generateListingId = ({ network, version, uniqueId }) => {
   return [network, version, uniqueId].join(
     '-'
   )
@@ -64,7 +64,8 @@ const config = {
 }
 
 const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
-global.web3 = new Web3(web3Provider)
+const web3 = new Web3(web3Provider)
+global.web3 = web3
 const origin = setupOriginJS(config, web3)
 
 async function updateSearch(listingId, listing) {
@@ -81,24 +82,24 @@ async function updateSearch(listingId, listing) {
 async function _verifyListing(listing, signature) {
   if (!listing.createDate)
   {
-    throw("CreateDate required to inject this listing")
+    throw('CreateDate required to inject this listing')
   }
 
   if (listing.ipfs.data.signature != signature)
   {
-    throw("signature not encoded into ipfs blob")
+    throw('signature not encoded into ipfs blob')
   }
 
-  console.log("creator vs seller:", listing.creator, listing.seller)
+  console.log('creator vs seller:', listing.creator, listing.seller)
   if (listing.creator != listing.seller)
   {
-    throw("Creator must be same as the seller!")
+    throw('Creator must be same as the seller!')
   }
   //looks like I need a raw response to verify this hash else it hashes the processed one
 
   if (!(await origin.marketplace.verifyListingSignature(listing, listing.seller)))
   {
-    throw("Signature does not match that of the seller")
+    throw('Signature does not match that of the seller')
   }
 }
 
@@ -106,13 +107,13 @@ async function injectListing(injectedListingInput, signature) {
   //
   // please very signature first
   //
-  console.log("verifying:", injectedListingInput, " against ", signature)
+  console.log('verifying:', injectedListingInput, ' against ', signature)
   // schema ListingInput in graphql
   const listing = await origin.marketplace._listingFromData(undefined, injectedListingInput)
 
   // set the listing id for the current network
   const network = await origin.contractService.web3.eth.net.getId()
-  const listingId = generateListingId({version:'A', network, uniqueId:listing.uniqueId })
+  const listingId = generateListingId({ version: 'A', network, uniqueId: listing.uniqueId })
 
   listing.id = listingId
 
@@ -121,9 +122,9 @@ async function injectListing(injectedListingInput, signature) {
   const existingRow = await db.getListing(listingId)
 
   if (existingRow) {
-    throw("Row already created, update instead")
+    throw('Row already created, update instead')
   }
-  const blockNumber = await web3.eth.getBlockNumber()
+  const blockNumber = await origin.contractService.web3.eth.getBlockNumber()
 
   const listingData = {
     id: listingId,
@@ -134,7 +135,7 @@ async function injectListing(injectedListingInput, signature) {
     data: listing
   }
   const newListing = await db.createListing(listingData)
-  console.log("indexing:", listingId)
+  console.log('indexing:', listingId)
   await updateSearch(listingId, listing)
   return newListing
 }
@@ -145,19 +146,19 @@ async function updateListing(listingId, injectedListingInput, signature) {
   //
   // schema ListingInput in graphql
   //
-  console.log("verifying:", injectedListingInput, " against ", signature)
+  console.log('verifying:', injectedListingInput, ' against ', signature)
   const existingRow = await db.getListing(listingId)
   const listing = await origin.marketplace._listingFromData(listingId, injectedListingInput)
 
   if (((existingRow.updateVersion && Number(existingRow.updateVersion)) || 0) 
     >= ((listing.updateVersion && Number(listing.updateVersion)) || 0)) {
-    throw("Update date is earlier than the existing date")
+    throw('Update date is earlier than the existing date')
   }
 
   await _verifyListing(listing, signature)
 
   // cannot change seller address for now
-  const blockNumber = await web3.eth.getBlockNumber()
+  const blockNumber = await origin.contractService.web3.eth.getBlockNumber()
 
   const listingData = {
     id: listingId,

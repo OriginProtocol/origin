@@ -1,7 +1,7 @@
 const logger = require('./logger')
 const db = require('../models')
 const { withRetrys } = require('./utils')
-const {MarketplaceEventHandler, NoGasMarketplaceEventHandler} = require('./handler_marketplace')
+const { MarketplaceEventHandler, NoGasMarketplaceEventHandler } = require('./handler_marketplace')
 const IdentityEventHandler = require('./handler_identity')
 
 const { postToEmailWebhook, postToDiscordWebhook, postToWebhook } = require('./webhooks')

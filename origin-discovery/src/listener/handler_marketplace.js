@@ -51,7 +51,7 @@ function generateOfferId(log) {
   ].join('-')
 }
 
-const generateListingIdFromUnique = ({network, version, uniqueId}) => {
+const generateListingIdFromUnique = ({ network, version, uniqueId }) => {
   return [network, version, uniqueId].join(
     '-'
   )
@@ -354,16 +354,16 @@ class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
 
     const offer = await origin.marketplace.getOffer(offerId)
 
-    console.log("offer details", offer)
+    console.log('offer details', offer)
     checkEventsFreshness(offer.events, blockInfo)
 
     // TODO: need to load from db to verify that the listingIpfs haven't already been set!!!
     //const status = web3.utils.toBN(offer.seller) != 0 ? 'pending': 'active'
     const network = await origin.contractService.web3.eth.net.getId()
 
-    const listing = await origin.marketplace._listingFromData(listingId, {status:"active", seller:offer.seller, ipfsHash:offer.listingIpfsHash})
+    const listing = await origin.marketplace._listingFromData(listingId, { status: 'active', seller: offer.seller, ipfsHash: offer.listingIpfsHash })
 
-    if (generateListingIdFromUnique({version:'A', network, uniqueId:listing.uniqueId }) != listingId)
+    if (generateListingIdFromUnique({ version: 'A', network, uniqueId: listing.uniqueId }) != listingId)
     {
       throw new Error(`ListingIpfs and Id mismatch: ${listingId} !== ${listing.creator.listing.createDate}`)
     }
@@ -408,4 +408,4 @@ class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
   }
 }
 
-module.exports = {MarketplaceEventHandler, NoGasMarketplaceEventHandler}
+module.exports = { MarketplaceEventHandler, NoGasMarketplaceEventHandler }
