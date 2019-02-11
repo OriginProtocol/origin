@@ -4,6 +4,7 @@ import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
+import Store from 'utils/store'
 import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
 
 import withWallet from 'hoc/withWallet'
@@ -22,6 +23,8 @@ import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
 import EditProfile from './_EditModal'
+
+const store = Store('sessionStorage')
 
 const AttestationComponents = {
   phone: PhoneAttestation,
@@ -59,7 +62,8 @@ class UserProfile extends Component {
   constructor(props) {
     super(props)
     const profile = get(props, 'identity')
-    this.state = getState(profile)
+    const storedAttestations = store.get('attestations', {})
+    this.state = { ...getState(profile), ...storedAttestations }
   }
 
   componentDidUpdate(prevProps) {
@@ -167,6 +171,7 @@ class UserProfile extends Component {
                   ...attestations
                 ]}
                 validate={() => this.validate()}
+                onComplete={() => store.set('attestations', undefined)}
                 children={fbt('Publish Now', 'Profile.publishNow')}
               />
             </div>
@@ -222,7 +227,11 @@ class UserProfile extends Component {
           wallet={wallet}
           open={this.state[type]}
           onClose={() => this.setState({ [type]: false })}
-          onComplete={att => this.setState({ [`${type}Attestation`]: att })}
+          onComplete={att => {
+            this.setState({ [`${type}Attestation`]: att }, () => {
+              this.storeAttestations()
+            })
+          }}
         />
       )
     }
@@ -255,6 +264,16 @@ class UserProfile extends Component {
     }
     this.setState(newState)
     return newState.valid
+  }
+
+  storeAttestations() {
+    const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
+      if (this.state[`${key}Attestation`]) {
+        m[`${key}Attestation`] = this.state[`${key}Attestation`]
+      }
+      return m
+    }, {})
+    store.set('attestations', attestations)
   }
 }
 
