@@ -7,7 +7,7 @@ bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'a876fb1'
+dappImageTag: 'c34f9ee'
 dappReplicas: 2
 
 # Rinkeby network configuration
@@ -20,23 +20,23 @@ ipfsImageTag: master
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'adc33d3'
+ipfsProxyImageTag: 'f2d7e63'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: 'fe43875'
+faucetImageTag: 'c00f0ee'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'a876fb1'
+eventlistenerImageTag: 'c00f0ee'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '21c94ac'
+discoveryImageTag: 'f2d7e63'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'fe43875'
+messagingImageTag: 'f2d7e63'
 
 # origin-notifications
 notificationsImage: origin-notifications
@@ -44,11 +44,11 @@ notificationsImageTag: 'fe43875'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: '2a40c6e'
+creatorClientImageTag: 'c34f9ee'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: '28ca20e'
+creatorServerImageTag: '56ffced'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
@@ -57,4 +57,4 @@ creatorIssuerIp: '35.233.135.239'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: 'a876fb1'
+linkingImageTag: 'f2d7e63'
