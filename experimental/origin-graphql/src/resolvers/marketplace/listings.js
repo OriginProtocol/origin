@@ -1,5 +1,8 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
+import includes from 'lodash/includes'
+import filter from 'lodash/filter'
+
 import { getFeatured, getHidden } from './_featuredAndHidden'
 
 function bota(input) {
@@ -61,9 +64,16 @@ async function allIds({ contract, sort, hidden }) {
   return { totalCount: ids.length, ids }
 }
 
-async function resultsFromIds({ after, ids, first, totalCount, fields }) {
+async function resultsFromIds({
+  after,
+  ids,
+  first,
+  totalCount,
+  fields,
+  subCategory = 'For Sale'
+}) {
   let start = 0,
-    nodes = []
+    unfilteredNodes = []
   if (after) {
     start = ids.indexOf(convertCursorToOffset(after)) + 1
   }
@@ -71,12 +81,20 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
   ids = ids.slice(start, end)
 
   if (!fields || fields.nodes) {
-    nodes = await Promise.all(
+    unfilteredNodes = await Promise.all(
       ids.map(id => contracts.eventSource.getListing(id))
     )
   }
   const firstNodeId = ids[0] || 0
   const lastNodeId = ids[ids.length - 1] || 0
+
+  //have to updated totalCount and ids
+  const nodes = filter(unfilteredNodes, node => {
+    const matchedSubCategory =
+      node.categoryStr && includes(node.categoryStr, subCategory)
+    if (!subCategory) return node
+    if (matchedSubCategory) return node
+  })
 
   return {
     totalCount,
