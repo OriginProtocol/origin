@@ -18,6 +18,12 @@ class CustomDomainInstructions extends React.Component {
             You will need to add a couple of DNS records at your domain
             registrar
           </h4>
+          <p>
+            The A record should be for the custom domain or subdomain you want
+            to use, for example <i>dapp.yourdomain.com</i>. The TXT record
+            should then be that hostname prefixed with <i>config.</i>, for
+            example <i>config.dapp.yourdomain.com.</i>
+          </p>
           <div className="form-group">
             <label>A Record</label>
             <div className="input-group input-group-lg">
