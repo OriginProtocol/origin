@@ -381,7 +381,7 @@ export default class Marketplace {
 
       if (chainOffer.listingIpfsHash)
       {
-        listing = this._listingFromData(listingId, {ipfsHash:chainOffer.listingIpfsHash})
+        listing = this._listingFromData(listingId, { ipfsHash: chainOffer.listingIpfsHash })
       }
       else
       {
@@ -449,19 +449,17 @@ export default class Marketplace {
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     const ipfsListing = await this.ipfsDataStore.load(LISTING_DATA_TYPE, ipfsHash)
 
-    const seller = "0x0000000000000000000000000000000000000000"
+    const seller = '0x0000000000000000000000000000000000000000'
 
     const listing = Listing.init(undefined, 
-      { status:'active',
-        ipfsHash:ipfsBytes,
-        seller}, ipfsListing)
+      { status: 'active',
+        ipfsHash: ipfsBytes,
+        seller }, ipfsListing)
 
     const listingID = await this.generateListingId(listing)
     listing.id = listingID
 
-    const listingIpfsHash = listing.ipfsHash
     const verifier = process.env.DEFAULT_VERIFIER_ACCOUNT
-    const price = await this.contractService.moneyToUnits(listing.price)
 
     const offerData = await offerCreateFunc(listing)
 
@@ -475,13 +473,13 @@ export default class Marketplace {
     return await this.resolver.makeOffer(
       listingID,
       offerIpfsBytes,
-      Object.assign({ affiliate, arbitrator, seller, listingIpfsHash:ipfsBytes, verifier }, offerData)
+      Object.assign({ affiliate, arbitrator, seller, listingIpfsHash: ipfsBytes, verifier }, offerData)
     )
   }
 
 
   async verifyFinalizeOffer(offerId, params ={}) {
-    const {signature, ipfsBytes, payout, verifyFee} = await this.hotService.verifyOffer(offerId, params)
+    const { signature, ipfsBytes, payout, verifyFee } = await this.hotService.verifyOffer(offerId, params)
 
     if (signature) {
         await this.resolver.verifiedFinalizeOffer(offerId, ipfsBytes, verifyFee, payout, signature)
@@ -499,13 +497,13 @@ export default class Marketplace {
     delete ipfs_data.signature
     listing.raw_ipfs_hash = this.contractService.web3.utils.sha3(stringify(ipfs_data))
     const signData = await this.contractService.getSignListingData(listing)
-    const recoveredAddress =  recoverTypedSignature({data:signData, sig:signature})
+    const recoveredAddress =  recoverTypedSignature({ data: signData, sig: signature })
     delete listing.raw_ipfs_hash
 
     if (recoveredAddress == signer.toLowerCase()) {
       return true
     }
-    console.log("Signature verification failed:", signData, " recovered address:", recoveredAddress, " signer:", signer)
+    console.log('Signature verification failed:', signData, ' recovered address:', recoveredAddress, ' signer:', signer)
   }
 
   async _signNoGasListing(status, ipfsData, createDate) {
@@ -525,7 +523,7 @@ export default class Marketplace {
 
     const listing = Listing.init(undefined, 
       { status,
-        seller:account}, listingData)
+        seller: account }, listingData)
 
     // Here's where we encode the raw data to a signature
     listing.raw_ipfs = encodedData
@@ -538,11 +536,11 @@ export default class Marketplace {
     const ipfsHash = await this.ipfsDataStore.save(LISTING_DATA_TYPE, ipfsData)
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     listing.ipfsHash = ipfsBytes
-    return {listing, signature}
+    return { listing, signature }
   }
 
   async injectListing( ipfsData ) {
-    const {listing, signature} = await this._signNoGasListing('active', ipfsData)
+    const { listing, signature } = await this._signNoGasListing('active', ipfsData)
     return this.discoveryService.injectListing(listing.ipfsHash, listing.seller, 
       listing.deposit, listing.depositManager, listing.status, signature)
   }
@@ -583,7 +581,7 @@ export default class Marketplace {
       } else {
         ipfsData.updateVersion = Number(oldListing.updateVersion) + 1
       }
-      const {listing, signature} = await this._signNoGasListing('active', ipfsData, oldListing.createDate)
+      const { listing, signature } = await this._signNoGasListing('active', ipfsData, oldListing.createDate)
       return this.discoveryService.updateListing(listing.id, listing.ipfsHash, listing.seller, 
         listing.deposit, listing.depositManager, listing.status, signature)
     }
@@ -631,7 +629,7 @@ export default class Marketplace {
         oldData.updateVersion = Number(oldListing.updateVersion) + 1
       }
       delete oldData.signature
-      const {listing, signature} = await this._signNoGasListing('inactive', oldData, oldListing.createDate)
+      const { listing, signature } = await this._signNoGasListing('inactive', oldData, oldListing.createDate)
       return this.discoveryService.updateListing(listing.id, listing.ipfsHash, listing.seller, 
         listing.deposit, listing.depositManager, listing.status, signature)
     }
@@ -658,7 +656,7 @@ export default class Marketplace {
     const seller = listing.seller
     const listingIpfsHash = listing.ipfsHash
     const verifier = await this.contractService.currentAccount()
-    const ipfsVerifyTerms = "0x00"
+    const ipfsVerifyTerms = '0x00'
     if (offerData.listingType && offerData.listingType === 'unit') {
       const offers = await this.getOffers(listingId, { listing })
       const unitsPurchased = Number.parseInt(offerData.unitsPurchased)
@@ -707,7 +705,7 @@ export default class Marketplace {
     const ipfsBytes = this.contractService.getBytes32FromIpfsHash(ipfsHash)
     const signature = await this.resolver.signAcceptOffer(id, ipfsBytes)
 
-    return {offerId:id, ipfsHash:ipfsBytes, signature}
+    return { offerId: id, ipfsHash: ipfsBytes, signature }
   }
 
   /**

@@ -143,46 +143,52 @@ contract VA_Marketplace is Ownable {
 
     function hashDomain() internal view returns (bytes32)
     {
-      return keccak256(
-        abi.encode(EIP712_DOMAIN_TYPEHASH,
-        keccak256("Origin Protocol"),
-        keccak256("1"),
-        chainId,
-        address(this),
-        salt));
+        return keccak256(
+            abi.encode(
+                EIP712_DOMAIN_TYPEHASH,
+                keccak256("Origin Protocol"),
+                keccak256("1"),
+                chainId,
+                address(this),
+                salt
+        ));
     }
 
     function hashAcceptOffer(uint listingID, uint offerID, bytes32 ipfsHash, uint behalfFee) internal view returns (bytes32)
     {
-        return keccak256(abi.encodePacked(
-            "\x19\x01",
-            hashDomain(),
-            keccak256(abi.encode(
-              ACCEPT_OFFER_TYPEHASH,
-              listingID,
-              offerID,
-              ipfsHash,
-              behalfFee))
+        return keccak256(
+            abi.encodePacked(
+                "\x19\x01",
+                hashDomain(),
+                keccak256(
+                    abi.encode(
+                        ACCEPT_OFFER_TYPEHASH,
+                        listingID,
+                        offerID,
+                        ipfsHash,
+                        behalfFee))
         ));
     }
 
     function hashFinalize(uint listingID, uint offerID, bytes32 ipfsHash, uint payOut, uint behalfFee) internal view returns (bytes32)
     {
-        return keccak256(abi.encodePacked(
-            "\x19\x01",
-            hashDomain(),
-            keccak256(abi.encode(
-              FINALIZE_TYPEHASH,
-              listingID,
-              offerID,
-              ipfsHash,
-              payOut,
-              behalfFee))
+        return keccak256(
+            abi.encodePacked(
+                "\x19\x01",
+                hashDomain(),
+                keccak256(
+                    abi.encode(
+                        FINALIZE_TYPEHASH,
+                        listingID,
+                        offerID,
+                        ipfsHash,
+                        payOut,
+                        behalfFee))
         ));
     }
 
-    function acceptOfferOnBehalf(uint listingID, uint offerID, bytes32 _ipfsHash,
-                                 uint _behalfFee, address seller, uint8 v, bytes32 r, bytes32 s) public {
+    function acceptOfferOnBehalf(uint listingID, uint offerID, bytes32 _ipfsHash, uint _behalfFee, address seller, uint8 v, bytes32 r, bytes32 s) public 
+    {
         // Either the seller or a buyer generated offer must accept
         require(ecrecover(hashAcceptOffer(listingID, offerID, _ipfsHash, _behalfFee), v, r, s) == seller, "The offer acceptance signature does not match the seller");
         Offer storage offer = offers[listingID][offerID];
@@ -191,7 +197,7 @@ contract VA_Marketplace is Ownable {
         offer.value -= _behalfFee;
         require(msg.sender.send(_behalfFee), "Cannot send fee to sender");
         if (offer.seller != seller) {
-          offer.seller = seller;
+            offer.seller = seller;
         }
         require(offer.status == 1, "status != created");
         if (offer.finalizes < 1000000000) { // Relative finalization window
@@ -203,7 +209,8 @@ contract VA_Marketplace is Ownable {
 
 
     // @dev Seller accepts offer
-    function acceptOffer(uint listingID, uint offerID, bytes32 _ipfsHash) public {
+    function acceptOffer(uint listingID, uint offerID, bytes32 _ipfsHash) public 
+    {
         Offer storage offer = offers[listingID][offerID];
         require(offer.seller == msg.sender, "The listing must belong to the sender.");
         require(offer.status == 1, "status != created");
@@ -249,8 +256,8 @@ contract VA_Marketplace is Ownable {
     }
 
     // @dev verifier finalize transaction to receive commission
-    function _verifiedFinalize(uint listingID, uint offerID, bytes32 _ipfsHash,
-                              uint _behalfFee, uint _verifyFee, uint payOut, uint8 v, bytes32 r, bytes32 s) internal {
+    function _verifiedFinalize(uint listingID, uint offerID, bytes32 _ipfsHash, uint _behalfFee, uint _verifyFee, uint payOut, uint8 v, bytes32 r, bytes32 s) internal 
+    {
 
         Offer storage offer = offers[listingID][offerID];
         // Verifier will not take into account behalfFee
@@ -259,36 +266,33 @@ contract VA_Marketplace is Ownable {
         require(offer.status == 2, "status != accepted");
         require((offer.value - offer.refund) >= payOut, "Offer cannot make payout");
         require(payOut > (_behalfFee + _verifyFee), "Cannot pay off fees");
-        if (_behalfFee > 0)
-        {
-          offer.value -= _behalfFee;
-          payOut -= _behalfFee;
-          require(msg.sender.send(_behalfFee), "Cannot send behalf fee to sender");
+        uint actualPayOut = payOut;
+        if (_behalfFee > 0) {
+            offer.value -= _behalfFee;
+            actualPayOut -= _behalfFee;
+            require(msg.sender.send(_behalfFee), "Cannot send behalf fee to sender");
         }
-        if (_verifyFee > 0)
-        {
-          offer.value -= _verifyFee;
-          payOut -= _verifyFee;
-          require(offer.verifier.send(_verifyFee), "Cannot send verify fee to verifier");
+        if (_verifyFee > 0) {
+            offer.value -= _verifyFee;
+            actualPayOut -= _verifyFee;
+            require(offer.verifier.send(_verifyFee), "Cannot send verify fee to verifier");
         }
-        offer.refund = offer.value - payOut;
+        offer.refund = offer.value - actualPayOut;
         paySeller(listingID, offerID); // Pay seller
         emit OfferFinalized(offer.verifier, listingID, offerID, _ipfsHash);
         delete offers[listingID][offerID];
     }
 
-    function verifiedFinalize(uint listingID, uint offerID, bytes32 _ipfsHash,
-                              uint verifyFee, uint payOut, uint8 v, bytes32 r, bytes32 s) public {
-        require(offers[listingID][offerID].seller == msg.sender);
+    function verifiedFinalize(uint listingID, uint offerID, bytes32 _ipfsHash, uint verifyFee, uint payOut, uint8 v, bytes32 r, bytes32 s) public 
+    {
+        require(offers[listingID][offerID].seller == msg.sender, "Only the seller can verify finalize this transaction.");
         _verifiedFinalize(listingID, offerID, _ipfsHash, 0, verifyFee, payOut, v, r, s);
     }
 
-    function verifiedOnBehalfFinalize(uint listingID, uint offerID, bytes32 _ipfsHash,
-                              uint behalfFee, uint verifyFee, uint payOut, uint8 v_seller, bytes32 r_seller, bytes32 s_seller,
-                              uint8 v, bytes32 r, bytes32 s) public {
+    function verifiedOnBehalfFinalize(uint listingID, uint offerID, bytes32 _ipfsHash, uint behalfFee, uint verifyFee, uint payOut, uint8 v_seller, bytes32 r_seller, bytes32 s_seller, uint8 v, bytes32 r, bytes32 s) public 
+    {
         require(payOut > behalfFee, "Payout must be more than the behalf fee");
-        require(ecrecover(hashFinalize(listingID, offerID, _ipfsHash, payOut, behalfFee),
-                          v_seller, r_seller, s_seller) == offers[listingID][offerID].seller, "The behalf finalize signature does not match the seller");
+        require(ecrecover(hashFinalize(listingID, offerID, _ipfsHash, payOut, behalfFee), v_seller, r_seller, s_seller) == offers[listingID][offerID].seller, "The behalf finalize signature does not match the seller");
         _verifiedFinalize(listingID, offerID, _ipfsHash, behalfFee, verifyFee, payOut, v, r, s);
     }
 
@@ -424,7 +428,7 @@ contract VA_Marketplace is Ownable {
     }
 
     function createListings(address[] sellers, uint[] listingIds, bytes32[] ipfsHashes)
-        public
+    public
     {
         bool affiliateWhitelistDisabled = allowedAffiliates[address(this)];
         require(
@@ -434,13 +438,13 @@ contract VA_Marketplace is Ownable {
         require(sellers.length == listingIds.length, "Listings length and sellers length does not match");
         require(sellers.length == ipfsHashes.length, "Hashes length and sellers length does not match");
 
-        for (uint i =0; i < sellers.length; i++) {
-          emit ListingCreated(sellers[i], listingIds[i], ipfsHashes[i]);
+        for (uint i = 0; i < sellers.length; i++) {
+            emit ListingCreated(sellers[i], listingIds[i], ipfsHashes[i]);
         }
     }
 
     function updateListings(address[] sellers, uint[] listingIds, bytes32[] ipfsHashes)
-      public
+    public
     {
         bool affiliateWhitelistDisabled = allowedAffiliates[address(this)];
         require(
@@ -450,13 +454,13 @@ contract VA_Marketplace is Ownable {
         require(sellers.length == listingIds.length, "Listings length and sellers length does not match");
         require(sellers.length == ipfsHashes.length, "Hashes length and sellers length does not match");
 
-        for (uint i =0; i < sellers.length; i++) {
-          emit ListingUpdated(sellers[i], listingIds[i], ipfsHashes[i]);
+        for (uint i = 0; i < sellers.length; i++) {
+            emit ListingUpdated(sellers[i], listingIds[i], ipfsHashes[i]);
         }
     }
 
     function withdrawListings(address[] sellers, uint[] listingIds, bytes32[] ipfsHashes)
-      public
+    public
     {
         bool affiliateWhitelistDisabled = allowedAffiliates[address(this)];
         require(
@@ -466,8 +470,8 @@ contract VA_Marketplace is Ownable {
         require(sellers.length == listingIds.length, "Listings length and sellers length does not match");
         require(sellers.length == ipfsHashes.length, "Hashes length and sellers length does not match");
 
-        for (uint i =0; i < sellers.length; i++) {
-          emit ListingWithdrawn(sellers[i], listingIds[i], ipfsHashes[i]);
+        for (uint i = 0; i < sellers.length; i++) {
+            emit ListingWithdrawn(sellers[i], listingIds[i], ipfsHashes[i]);
         }
     }
 }

@@ -23,7 +23,7 @@ const offerStatusToBuyerNotificationType = {
   'sellerReviewed': 'buyer_offer_review',
   'withdrawn': 'buyer_offer_withdrawn',
 }
-const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
+//const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 
@@ -38,7 +38,7 @@ class VA_MarketplaceAdapter {
   }
 
   toListingID(listingIndex) {
-     return "0x" + base58.decode(listingIndex).toString("hex")
+     return '0x' + base58.decode(listingIndex).toString('hex')
   }
 
   toListingIndex(listingID) {
@@ -143,10 +143,10 @@ class VA_MarketplaceAdapter {
       const listingID = this.toListingID(listingIndex)
       const offerID = offerIndex
       // I need enough to accept and finalize
-      const behalfFee = web3.utils.toBN("400000000000000")
+      const behalfFee = web3.utils.toBN('400000000000000')
       const sig = this.contractService.breakdownSig(
         await this.contractService.signAcceptOfferData(listingID, offerID, ipfsBytes, behalfFee.toString()) )
-      const {transactionReceipt, timestamp } = await this.hotService.submitMarketplaceBehalf(
+      const { transactionReceipt, timestamp } = await this.hotService.submitMarketplaceBehalf(
         'acceptOfferOnBehalf',
         [listingID, offerID, ipfsBytes, behalfFee.toString(), currentAccount, sig.v, sig.r, sig.s])
       return Object.assign({ timestamp }, transactionReceipt)
@@ -157,17 +157,17 @@ class VA_MarketplaceAdapter {
       const listingID = this.toListingID(listingIndex)
       const offerID = offerIndex
 
-      return this.contractService.signAcceptOfferData(listingID, offerID, ipfsBytes, "0")
+      return this.contractService.signAcceptOfferData(listingID, offerID, ipfsBytes, '0')
   }
 
   async acceptSignedOffer(listingIndex, offerIndex, ipfsBytes, seller, signature) {
       const listingID = this.toListingID(listingIndex)
       const offerID = offerIndex
       // I need enough to accept and finalize
-      const behalfFee = web3.utils.toBN("0")
+      const behalfFee = web3.utils.toBN('0')
       const sig = this.contractService.breakdownSig(
         signature )
-      const {transactionReceipt, timestamp } = await this.call(
+      const { transactionReceipt, timestamp } = await this.call(
         'acceptOfferOnBehalf',
         [listingID, offerID, ipfsBytes, behalfFee.toString(), seller, sig.v, sig.r, sig.s])
       return Object.assign({ timestamp }, transactionReceipt)
@@ -191,12 +191,12 @@ class VA_MarketplaceAdapter {
     {
       const { transactionReceipt, timestamp } = await this.call(
         'verifiedFinalize',
-        [listingId, offerIndex, ipfsBytes, verifyFee, payout, sig.v, sig.r, sig.s],
+        [listingID, offerIndex, ipfsBytes, verifyFee, payout, sig.v, sig.r, sig.s],
         { confirmationCallback }
       )
       return Object.assign({ timestamp }, transactionReceipt)
     } else {
-      const behalfFee = web3.utils.toBN("400000000000000").toString()
+      const behalfFee = web3.utils.toBN('400000000000000').toString()
       const sellerSig = this.contractService.breakdownSig(
         await this.contractService.signFinalizeData(listingID, offerIndex, ipfsBytes, payout, behalfFee ) )
 
@@ -395,7 +395,7 @@ class VA_MarketplaceAdapter {
    * @param opts {Object} Options: purchasesFor, listingsFor
    * @return {Promise<*>}
    */
-  async getListings(opts) {
+  async getListings() {
     // TODO actually process the listing correctly without discovery(dapp2)
     return []
   }
@@ -487,7 +487,7 @@ class VA_MarketplaceAdapter {
     rawOffer.status = OFFER_STATUS[rawOffer.status]
 
     // Return the raw listing along with events and IPFS hash
-    return Object.assign({}, rawOffer, {seller, buyer, ipfsHash, events, createdAt, blockNumber, logIndex, listingIpfsHash,
+    return Object.assign({}, rawOffer, { seller, buyer, ipfsHash, events, createdAt, blockNumber, logIndex, listingIpfsHash,
       acceptIpfsHash })
   }
 

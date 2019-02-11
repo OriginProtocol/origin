@@ -58,7 +58,7 @@ class DiscoveryService {
     const jsonResp = await resp.json()
     // Throw an exception if the GraphQL response includes any error.
     if (jsonResp.errors && jsonResp.errors.length > 0) {
-      console.log("Discovery server errors:", jsonResp.errors)
+      console.log('Discovery server errors:', jsonResp.errors)
       throw new Error(
         `Discovery server internal error: ${jsonResp.errors[0].message}`)
     }
@@ -314,8 +314,8 @@ class DiscoveryService {
           display
         }
       }
-    `, {listing: {ipfsHash, seller, deposit, depositManager, status},
-        signature})
+    `, { listing: { ipfsHash, seller, deposit, depositManager, status },
+        signature })
 
     // Throw an error if no offer found with this id.
     if (!resp.data) {
@@ -333,9 +333,9 @@ class DiscoveryService {
           display
         }
       }
-    `, {id: listingId,
-        listing: {ipfsHash, seller, deposit, depositManager, status},
-        signature})
+    `, { id: listingId,
+        listing: { ipfsHash, seller, deposit, depositManager, status },
+        signature })
 
     // Throw an error if no offer found with this id.
     if (!resp.data) {

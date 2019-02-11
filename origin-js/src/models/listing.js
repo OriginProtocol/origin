@@ -213,13 +213,13 @@ class Listing {
   }
 
   get uniqueId() {
-    const hash = web3.utils.soliditySha3({t:"address", v:this.creator},
-      {t:"bytes32", v:web3.utils.fromAscii(this.createDate)})
-    return base58.encode(Buffer.from(hash.slice(2), "hex"))
+    const hash = web3.utils.soliditySha3({ t: 'address', v: this.creator },
+      { t: 'bytes32', v: web3.utils.fromAscii(this.createDate) })
+    return base58.encode(Buffer.from(hash.slice(2), 'hex'))
   }
 
   get isEmptySeller() {
-    return this.seller == "0x0000000000000000000000000000000000000000"
+    return this.seller == '0x0000000000000000000000000000000000000000'
   }
 }
 

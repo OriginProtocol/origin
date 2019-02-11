@@ -137,7 +137,7 @@ export default class WalletLinker {
   }
 
   testSignMessage() {
-    console.log("signMessage fired..", arguments)
+    console.log('signMessage fired..', arguments)
   }
 
   getAccounts(callback) {
@@ -151,19 +151,19 @@ export default class WalletLinker {
   }
 
   // NOTE this is emulate metamask's sendAsync for eth_signTypedData_v3
-  sendAsync({method, params, from}, callback) {
+  sendAsync({ method, params, from }, callback) {
     console.log('sendAsync:', method, params, from)
 
-    if (method == "eth_signTypedData_v3")
+    if (method == 'eth_signTypedData_v3')
     {
       const call_id = uuidv1()
       //translate gas to gasLimit
       this.callbacks[call_id] = async data => {
         callback(undefined, data)
       }
-      const call = this.createCall('signMessage', {method, data:params[1], signer:params[0] })
+      const call = this.createCall('signMessage', { method, data: params[1], signer: params[0] })
       if (!this.linked) {
-        throw new Error("Cannot sign from an unlinked wallet")
+        throw new Error('Cannot sign from an unlinked wallet')
       } else {
         const result = this.post('call-wallet/'+ this.session_token, {
           call_id,

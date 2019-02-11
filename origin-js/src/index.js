@@ -52,7 +52,7 @@ export default class Origin {
     this.contractService = new ContractService({ contractAddresses, web3, ethereum, walletLinkerUrl, 
       activeWalletLinker, fetch, ecies })
 
-    this.hotService = new HotService({serverUrl:walletLinkerUrl})
+    this.hotService = new HotService({ serverUrl: walletLinkerUrl })
     this.ipfsService = new IpfsService({
       ipfsDomain,
       ipfsApiPort,

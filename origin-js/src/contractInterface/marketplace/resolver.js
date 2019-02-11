@@ -362,7 +362,7 @@ export default class MarketplaceResolver {
   }
 
   isNoGas(listingId) {
-    const { version, network, listingIndex } = parseListingId(listingId)
+    const { version } = parseListingId(listingId)
     return version == 'A'
   }
 
@@ -390,7 +390,7 @@ export default class MarketplaceResolver {
     for (const version of this.versions) {
       if (this.adapters[version].contractName == contractName)
       {
-        return generateListingId({ version, network, listingIndex:this.adapters[version].toListingIndex(listingId) })
+        return generateListingId({ version, network, listingIndex: this.adapters[version].toListingIndex(listingId) })
       }
     }
   }

@@ -529,16 +529,16 @@ class ContractService {
 
   async signFinalizeData(listingID, offerID, ipfsHash, payout, fee) {
     const signData = await this.getSignData(finalizeToSignData, listingID, offerID, ipfsHash, payout, fee)
-    console.log("signFinalize:", signData)
+    console.log('signFinalize:', signData)
     return await this.signTypedDataV3(JSON.stringify(signData))
   }
   
   breakdownSig(raw_sig) {
-    const signature = raw_sig.substring(2);
-    const r = "0x" + signature.substring(0, 64);
-    const s = "0x" + signature.substring(64, 128);
-    const v = parseInt(signature.substring(128, 130), 16);
-    return {r,s,v}
+    const signature = raw_sig.substring(2)
+    const r = '0x' + signature.substring(0, 64)
+    const s = '0x' + signature.substring(64, 128)
+    const v = parseInt(signature.substring(128, 130), 16)
+    return { r,s,v }
   }
 
   async signTypedDataV3(data) {
@@ -547,7 +547,7 @@ class ContractService {
     
       return new Promise((resolve, reject) => { 
         const call = { 
-          method: "eth_signTypedData_v3",
+          method: 'eth_signTypedData_v3',
           params: [signer, data],
           from: signer
         }

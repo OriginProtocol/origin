@@ -106,10 +106,10 @@ export class Offer {
       // as to why we extract commission from the ipfs data.
       commission: discoveryNode.data.ipfs.data.commission,
       timeSlots: discoveryNode.data.ipfs.data.timeSlots,
-      verifier:  discoveryNode.data.verifier,
-      verifyTerms:  discoveryNode.data.verifyTerms,
+      verifier: discoveryNode.data.verifier,
+      verifyTerms: discoveryNode.data.verifyTerms,
       acceptIpfsHash: discoveryNode.data.acceptIpfsHash,
-      listingIpfsHash:  discoveryNode.data.listingIpfsHash
+      listingIpfsHash: discoveryNode.data.listingIpfsHash
     })
   }
 

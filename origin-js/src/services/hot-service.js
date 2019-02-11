@@ -35,11 +35,11 @@ class HotService {
   }
 
   async submitMarketplaceBehalf(cmd, params) {
-    return this.post("submit-marketplace-onbehalf", {cmd, params})
+    return this.post('submit-marketplace-onbehalf', { cmd, params })
   }
 
   async verifyOffer(offerId, params) {
-    return this.post("verify-offer", {offerId, params})
+    return this.post('verify-offer', { offerId, params })
   }
 }
 
