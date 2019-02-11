@@ -396,47 +396,8 @@ class VA_MarketplaceAdapter {
    * @return {Promise<*>}
    */
   async getListings(opts) {
-    await this.getContract()
-
-    if (opts.purchasesFor) {
-      const events = await this.contract.getPastEvents('OfferCreated', {
-        filter: { party: opts.purchasesFor },
-        fromBlock: this.blockEpoch
-      })
-      const listingIds = []
-      events.forEach(e => {
-        const listingId = Number(e.returnValues.listingID)
-
-        if (opts.withBlockInfo) {
-          const idExists = listingIds.some(obj => obj.listingIndex === listingId)
-
-          if (!idExists) {
-            const { blockNumber, logIndex } = e
-            listingIds.push({
-              listingIndex: listingId,
-              blockInfo: {
-                blockNumber,
-                logIndex
-              }
-            })
-          }
-        } else {
-          if (listingIds.indexOf(listingId) < 0) {
-            listingIds.push(listingId)
-          }
-        }
-      })
-      return listingIds
-    } else if (opts.listingsFor) {
-      const events = await this.contract.getPastEvents('ListingCreated', {
-        filter: { party: opts.listingsFor },
-        fromBlock: this.blockEpoch
-      })
-      return events.map(e => Number(e.returnValues.listingID))
-    } else {
-      const total = await this.call('totalListings')
-      return [...Array(Number(total)).keys()]
-    }
+    // TODO actually process the listing correctly without discovery(dapp2)
+    return []
   }
 
   /**
