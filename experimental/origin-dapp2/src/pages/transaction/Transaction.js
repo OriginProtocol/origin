@@ -9,6 +9,7 @@ import query from 'queries/Offer'
 import AboutParty from 'components/AboutParty'
 import QueryError from 'components/QueryError'
 import PageTitle from 'components/PageTitle'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import TxHistory from './_History'
 import TxProgress from './_Progress'
@@ -26,7 +27,7 @@ const Transaction = props => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
           } else if (networkStatus === 1) {
-            return <div>Loading...</div>
+            return <LoadingSpinner />
           } else if (!data || !data.marketplace) {
             return <div>No marketplace contract?</div>
           }
