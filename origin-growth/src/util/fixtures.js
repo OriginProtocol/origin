@@ -1,10 +1,17 @@
 // Insert data in the DB for testing purposes.
+const BigNumber = require('bignumber.js')
 
 const db = require('../models')
 const enums = require('../enums')
 
 const account1 = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'.toLowerCase()
 const account2 = '0xf17f52151EbEF6C7334FAD080c5704D77216b732'.toLowerCase()
+
+function tokenNaturalUnits(x) {
+  return BigNumber(x)
+    .times(BigNumber(10).pow(18))
+    .toFixed()
+}
 
 const rule = {
   numLevels: 3,
@@ -31,7 +38,7 @@ const rule = {
           config: {
             eventType: 'PhoneAttestationPublished',
             reward: {
-              amount: 10,
+              amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -44,7 +51,7 @@ const rule = {
           config: {
             eventType: 'FacebookAttestationPublished',
             reward: {
-              amount: 10,
+              amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -57,7 +64,7 @@ const rule = {
           config: {
             eventType: 'AirbnbAttestationPublished',
             reward: {
-              amount: 10,
+              amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -70,7 +77,7 @@ const rule = {
           config: {
             eventType: 'TwitterAttestationPublished',
             reward: {
-              amount: 10,
+              amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -102,7 +109,7 @@ const rule = {
           config: {
             eventType: 'RefereeSignedUp',
             reward: {
-              amount: 10,
+              amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 100,
@@ -115,7 +122,7 @@ const rule = {
           config: {
             eventType: 'ListingCreated',
             reward: {
-              amount: 5,
+              amount: tokenNaturalUnits(5),
               currency: 'OGN'
             },
             limit: 10,
@@ -128,7 +135,7 @@ const rule = {
           config: {
             eventType: 'ListingPurchased',
             reward: {
-              amount: 5,
+              amount: tokenNaturalUnits(5),
               currency: 'OGN'
             },
             limit: 10,
@@ -221,7 +228,7 @@ async function createTestData() {
   })
   await db.GrowthParticipant.update(
     { createdAt: Date.parse('January 1, 2019') },
-    { where: { id: 1 } }
+    { where: { ethAddress: account1 } }
   )
 
   await db.GrowthParticipant.upsert({
@@ -232,7 +239,7 @@ async function createTestData() {
   })
   await db.GrowthParticipant.update(
     { createdAt: Date.parse('January 1, 2019') },
-    { where: { id: 2 } }
+    { where: { ethAddress: account2 } }
   )
 
   //
@@ -335,6 +342,12 @@ async function createTestData() {
     { createdAt: Date.parse('January 6, 2019') },
     { where: { id: 7 } }
   )
+
+  // Wipe out any previous rewards.
+  await db.GrowthReward.destroy({
+    where: {},
+    truncate: true
+  })
 }
 
 createTestData().then(() => {

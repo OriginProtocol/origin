@@ -15,7 +15,7 @@ const parseArgv = require('../util/args')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('verifyEvents', { showTimestamp: false })
 
-class VerifyEvents {
+class UpdateCampaigns {
   constructor(config) {
     this.config = config
     this.stats = {
@@ -63,7 +63,7 @@ class VerifyEvents {
         campaign.endDate < now &&
         (await this._allEventsVerified(campaign.endDate))
       if (readyForCalculation) {
-        if (this.config.doIt) {
+        if (this.config.persist) {
           await campaign.update({
             rewardStatus: enums.GrowthCampaignRewardStatuses.ReadyForCalculation
           })
@@ -86,13 +86,13 @@ logger.info('Starting campaigns update job.')
 
 const args = parseArgv()
 const config = {
-  // By default run in dry-run mode unless explicitly specified using doIt.
-  doIt: args['--doIt'] ? args['--doIt'] : false
+  // By default run in dry-run mode unless explicitly specified using persist.
+  persist: args['--persist'] ? args['--persist'] : false
 }
 logger.info('Config:')
 logger.info(config)
 
-const job = new VerifyEvents(config)
+const job = new UpdateCampaigns(config)
 
 job.process().then(() => {
   logger.info('Campaigns update stats:')

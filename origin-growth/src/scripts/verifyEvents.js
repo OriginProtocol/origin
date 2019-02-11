@@ -29,14 +29,11 @@ class VerifyEvents {
   }
 
   async process() {
-    const now = new Date()
-
-    // Look for events with status 'Logged'
+    // Look for events with status 'Logged'.
+    // TODO(franck): consider some delay before processing events to allow
+    // for more efficient fraud detection ?
     const events = await db.GrowthEvent.findAll({
-      where: {
-        status: enums.GrowthEventStatuses.Logged,
-        createdAt: { [Sequelize.Op.lt]: now }
-      }
+      where: { status: enums.GrowthEventStatuses.Logged }
     })
 
     for (const event of events) {
@@ -48,7 +45,7 @@ class VerifyEvents {
         status = enums.GrowthEventStatuses.Verified
         this.stats.numVerified++
       }
-      if (this.config.doIt) {
+      if (this.config.persist) {
         await event.update({ status })
       } else {
         logger.info(`Would mark event ${event.id} as ${status}`)
@@ -65,8 +62,8 @@ logger.info('Starting events verification job.')
 
 const args = parseArgv()
 const config = {
-  // By default run in dry-run mode unless explicitly specified using doIt.
-  doIt: args['--doIt'] ? args['--doIt'] : false
+  // By default run in dry-run mode unless explicitly specified using persist.
+  persist: args['--persist'] ? args['--persist'] : false
 }
 logger.info('Config:')
 logger.info(config)

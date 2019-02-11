@@ -83,8 +83,7 @@ class CalculateRewards {
           amount: reward.value.amount,
           currency: reward.value.currency
         }
-        if (this.config.doIt) {
-          logger.error('INSERTING ', data)
+        if (this.config.persist) {
           await db.GrowthReward.create(data)
         } else {
           logger.info(`Would insert row in GrowthReward:`, data)
@@ -190,7 +189,7 @@ class CalculateRewards {
       }
 
       // Update the campaign's rewardStatus to 'Calculated'.
-      if (this.config.doIt) {
+      if (this.config.persist) {
         await campaign.update({
           rewardStatus: enums.GrowthCampaignRewardStatuses.Calculated
         })
@@ -210,8 +209,8 @@ logger.info('Starting rewards calculation job.')
 
 const args = parseArgv()
 const config = {
-  // By default run in dry-run mode unless explicitly specified using doIt.
-  doIt: args['--doIt'] ? args['--doIt'] : false
+  // By default run in dry-run mode unless explicitly specified using persist.
+  persist: args['--persist'] ? args['--persist'] : false
 }
 logger.info('Config:')
 logger.info(config)

@@ -66,7 +66,7 @@ class DistributeRewards {
       .map(reward => reward.amount)
       .reduce((a1, a2) => BigNumber(a1).plus(a2))
 
-    if (!this.config.doIt) {
+    if (!this.config.persist) {
       logger.info(`Would distribute reward of ${total} to ${ethAddress}`)
       return total
     }
@@ -86,9 +86,15 @@ class DistributeRewards {
     }
 
     // Send a transaction for the total amount.
-    const txnReceipt = this.distributor.credit(ethAddress, total)
-    if (!txnReceipt.status) {
-      throw new Error('EVM reverted transaction')
+    let status, txnHash
+    const txnReceipt = await this.distributor.credit(ethAddress, total)
+    if (txnReceipt.status) {
+      status = enums.GrowthRewardStatuses.Paid
+      txnHash = txnReceipt.transactionHash
+    } else {
+      logger.error(`EVM reverted transaction - Marking rewards as Failed`)
+      status = enums.GrowthRewardStatuses.PaymentFailed
+      txnHash = null
     }
 
     // Mark the rewards as Paid.
@@ -96,14 +102,14 @@ class DistributeRewards {
     try {
       rewards.forEach(reward => {
         reward.update({
-          status: enums.GrowthRewardStatuses.Paid,
-          data: Object.assign({}, reward.data, {
-            txnHash: txnReceipt.transactionHash
-          })
+          status: status,
+          data: Object.assign({}, reward.data, { txnHash })
         })
       })
       await txn.commit()
     } catch (e) {
+      logger.error(`IMPORTANT: failed updating reward status to Paid.`)
+      logger.error(`Leaving status as InPayment. Needs manual intervention.`)
       await txn.rollback()
       throw e
     }
@@ -113,7 +119,7 @@ class DistributeRewards {
   }
 
   async _confirmTransaction(ethAddress, rewards, currentBlockNumber) {
-    if (!this.config.doIt) {
+    if (!this.config.persist) {
       return true
     }
 
@@ -152,13 +158,13 @@ class DistributeRewards {
       const ids = rewards.map(reward => reward.id)
       logger.error(`Rewards with ids ${ids}`)
       logger.error('  Transaction hash ${txnHash} failed confirmation.')
-      logger.error('  Rolling back status to Pending.')
+      logger.error('  Setting status to PaymentFailed.')
       const txn = await db.sequelize.transaction()
       try {
         rewards.forEach(reward => {
           delete reward.data.txnHash
           reward.update({
-            status: enums.GrowthRewardStatuses.Pending,
+            status: enums.GrowthRewardStatuses.PaymentFailed,
             data: reward.data
           })
         })
@@ -176,22 +182,17 @@ class DistributeRewards {
     // Wait a bit for the last transaction to settle.
     const waitMsec = MinBlockConfirmation * BlockMiningTimeMsec
     logger.info(
-      `Waiting ${waitMsec / 1000} seconds to allow transactions to settle...`
+      `Waiting ${waitMsec * 1000} seconds to allow transactions to settle...`
     )
     await new Promise(resolve => setTimeout(resolve, waitMsec))
 
     // Verify the reward transactions were confirmed on the blockchain.
-    let allConfirmed = true
     const blockNumber = await this.web3.eth.getBlockNumber()
-    for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
-      const confirmed = await this._confirmTransaction(
-        ethAddress,
-        rewards,
-        blockNumber
-      )
-      allConfirmed = allConfirmed && confirmed
-    }
-    return allConfirmed
+    return Object.entries(ethAddressToRewards).every(
+      async ([ethAddress, rewards]) => {
+        return await this._confirmTransaction(ethAddress, rewards, blockNumber)
+      }
+    )
   }
 
   async process() {
@@ -211,11 +212,16 @@ class DistributeRewards {
       )
       let campaignDistTotal = BigNumber(0)
 
-      // Load rewards rows for this campaign that are in status Pending.
+      // Load rewards rows for this campaign that are in status Pending or Failed.
       const rewardRows = await db.GrowthReward.findAll({
         where: {
           campaignId: campaign.id,
-          status: enums.GrowthRewardStatuses.Pending
+          status: {
+            [Sequelize.Op.lt]: [
+              enums.GrowthRewardStatuses.Pending,
+              enums.GrowthRewardStatuses.PaymentFailed
+            ]
+          }
         }
       })
 
@@ -241,7 +247,7 @@ class DistributeRewards {
 
       // Update the campaign reward status to indicate it was distributed.
       if (allConfirmed) {
-        if (this.config.doIt) {
+        if (this.config.persist) {
           await campaign.update({
             rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
           })
@@ -281,8 +287,8 @@ const args = parseArgv()
 const config = {
   // 1=Mainnet, 4=Rinkeby, 999=Local.
   networkId: parseInt(args['--networkId'] || process.env.NETWORK_ID || 0),
-  // By default run in dry-run mode unless explicitly specified using doIt.
-  doIt: args['--doIt'] ? args['--doIt'] : false
+  // By default run in dry-run mode unless explicitly specified using persist.
+  persist: args['--persist'] ? args['--persist'] : false
 }
 logger.info('Config:')
 logger.info(config)

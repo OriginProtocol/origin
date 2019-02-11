@@ -42,6 +42,7 @@ const GrowthRewardStatuses = new Enum(
   'Blocked',
   'InPayment',
   'Paid',
+  'PaymentFailed',
   'PaidConfirmed'
 )
 
