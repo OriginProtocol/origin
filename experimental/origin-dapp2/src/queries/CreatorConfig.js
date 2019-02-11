@@ -56,6 +56,12 @@ export default gql`
         boostPremium
         defaultRadius
       }
+      listingFilters {
+        name
+        value
+        operator
+        valueType
+      }
     }
   }
 `

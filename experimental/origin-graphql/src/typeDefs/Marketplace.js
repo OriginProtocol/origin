@@ -125,7 +125,7 @@ module.exports = `
       before: String
       after: String
       search: String
-      filters: [ListingFilter!]
+      filters: [ListingFilterInput!]
       sort: String
       hidden: Boolean
     ): ListingConnection!
@@ -318,7 +318,7 @@ module.exports = `
     LESSER_OR_EQUAL
   }
 
-  input ListingFilter {
+  input ListingFilterInput {
     name: String!
     value: String!
     valueType: ValueType!

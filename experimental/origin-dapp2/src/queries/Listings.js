@@ -8,7 +8,7 @@ export default gql`
     $sort: String
     $hidden: Boolean
     $search: String
-    $filters: [ListingFilter!]
+    $filters: [ListingFilterInput!]
   ) {
     marketplace {
       listings(

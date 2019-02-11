@@ -14,6 +14,7 @@ import Messaging from './messaging/Messaging'
 import IdentityEvents from './IdentityEvents'
 import Config from './Config'
 import Mutation from '../mutations/index'
+import CreatorConfig from './CreatorConfig'
 
 export default {
   Query,
@@ -38,5 +39,6 @@ export default {
   Conversation,
   Messaging,
   IdentityEvents,
-  Config
+  Config,
+  CreatorConfig
 }

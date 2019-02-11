@@ -3,6 +3,13 @@ module.exports = `
     creatorConfig(creatorConfigUrl: String): CreatorConfig
   }
 
+  type ListingFilter {
+    name: String!
+    value: String!
+    valueType: ValueType!
+    operator: FilterOperator!
+  }
+
   type CreatorConfig {
     title: String
     about: String
@@ -10,7 +17,7 @@ module.exports = `
     faviconUrl: String
     cssVars: CssVars
     marketplacePublisher: String
-    listingFilters: [String]
+    listingFilters: [ListingFilter!]
   }
 
   type CssVars {
