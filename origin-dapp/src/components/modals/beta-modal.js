@@ -8,6 +8,12 @@ import Modal from 'components/modal'
 
 class BetaModal extends Component {
   render() {
+    let { title } = this.props.config
+
+    if (!title) {
+      title = 'Origin'
+    }
+
     return (
       <Modal backdrop="static" className="beta" isOpen={this.props.showModal} data-modal="beta">
         <div className="image-container">
@@ -17,7 +23,8 @@ class BetaModal extends Component {
           <h3>
             <FormattedMessage
               id={'beta-modal.message1'}
-              defaultMessage={`Welcome to Origin's decentralized app! Please use at your own risk while we fix bugs and get our contracts audited.`}
+              defaultMessage={`Welcome to {title} Beta! {title} is a decentralized marketplace that works a little differently than most apps.`}
+              values={{ title }}
             />
           </h3>
           <div className="d-flex flex-column text-left">
@@ -25,36 +32,50 @@ class BetaModal extends Component {
               <img src="images/warning-icon.svg" role="presentation" />
               <FormattedMessage
                 id={'beta-modal.message2'}
-                defaultMessage={`Transactions use real ETH. Take offers to buy/sell seriously.`}
+                defaultMessage={`We're in Beta mode, but all transactions are real and use ETH.`}
               />
             </div>
             <div className="item d-flex align-items-center">
               <img src="images/warning-icon.svg" role="presentation" />
-              <FormattedMessage
-                id={'beta-modal.message3'}
-                defaultMessage={`Use caution with counterparties you don't know. Please verify your own identity.`}
-              />
+              <div>
+                <FormattedMessage
+                  id={'beta-modal.message3'}
+                  defaultMessage={`Please {link} so other buyers and sellers know who you are.`}
+                  values={{
+                    link: (
+                      <a href="#/profile" target="_blank" rel="noopener noreferrer">verify your identity</a>
+                    )
+                  }}
+                />
+              </div>
             </div>
             <div className="item d-flex align-items-center">
               <img src="images/warning-icon.svg" role="presentation" />
-              <FormattedMessage
-                id={'beta-modal.message4'}
-                defaultMessage={`Check back often for status updates. There are currently no push/email notifications.`}
-              />
+              <div>
+                <FormattedMessage
+                  id={'beta-modal.message4'}
+                  defaultMessage={`Don't forget to {link} so you can communicate with other users. It's free.`}
+                  values={{
+                    link: (
+                      <a href="#/messages" target="_blank" rel="noopener noreferrer">enable Origin Messaging</a>
+                    )
+                  }}
+                />
+              </div>
             </div>
             <div className="item d-flex align-items-center">
               <img src="images/warning-icon.svg" role="presentation" />
-              <FormattedMessage
-                id={'beta-modal.message5'}
-                defaultMessage={`Disputes for escrowed funds are resolved by Origin's arbitration team.`}
-              />
-            </div>
-            <div className="item d-flex align-items-center">
-              <img src="images/warning-icon.svg" role="presentation" />
-              <FormattedMessage
-                id={'beta-modal.message6'}
-                defaultMessage={`No insurance is currently offered on any listings.`}
-              />
+              <div>
+                <FormattedMessage
+                  id={'beta-modal.message5'}
+                  defaultMessage={`If you have any questions or need to dispute a transaction, {link}.`}
+                  values={{
+                    link: (
+                      <a href="mailto:support@originprotocol.com" target="_blank" rel="noopener noreferrer">let us know</a>
+                    )
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -67,7 +88,7 @@ class BetaModal extends Component {
           >
             <FormattedMessage
               id={'beta-modal.proceed'}
-              defaultMessage={'Proceed'}
+              defaultMessage={'I got it.'}
             />
           </button>
         </div>
@@ -77,6 +98,7 @@ class BetaModal extends Component {
 }
 
 const mapStateToProps = state => ({
+  config: state.config,
   showModal: !state.app.betaModalDismissed
 })
 
