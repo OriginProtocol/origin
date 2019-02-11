@@ -1,6 +1,6 @@
 module.exports = `
   extend type Query {
-    creatorConfig(configUrl: String!): CreatorConfig
+    creatorConfig(creatorConfigUrl: String): CreatorConfig
   }
 
   type CreatorConfig {

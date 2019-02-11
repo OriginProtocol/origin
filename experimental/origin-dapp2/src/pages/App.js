@@ -68,8 +68,8 @@ class App extends Component {
     }
     return (
       <Query query={CreatorConfigQuery} variables={{creatorConfigUrl: creatorConfigUrl}}>
-       {({ data, networkStatus }) => {
-        if (networkStatus === 1) {
+       {({ loading, error, data, networkStatus }) => {
+         if (networkStatus === 1) {
           return (
             <div className="app-loading">
               <h5>Loading</h5>
@@ -78,8 +78,7 @@ class App extends Component {
           )
         }
         const creatorConfig = get(data, 'creatorConfig', {})
-        console.log(data)
-         // applyConfiguration(creatorConfig)
+        applyConfiguration(creatorConfig)
         return (
           <>
             <BetaBanner />
