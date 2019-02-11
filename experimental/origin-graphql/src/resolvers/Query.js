@@ -9,8 +9,7 @@ import { identity } from './IdentityEvents'
 export default {
   config: () => contracts.net,
   configObj: () => contracts.config,
-  creatorConfig: async (_, args) => {
-    console.log('hi')
+  creatorConfig: async creatorConfigUrl => {
     if (creatorConfigUrl) {
       // Retrieve the config
       await fetch(creatorConfigUrl)

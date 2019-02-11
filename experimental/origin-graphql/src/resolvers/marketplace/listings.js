@@ -33,7 +33,7 @@ async function searchIds(search, filters) {
       method: 'POST',
       body: JSON.stringify({
         query: discoveryQuery,
-        variables: { search, filters}
+        variables: { search, filters }
       })
     })
       .then(response => response.json())
