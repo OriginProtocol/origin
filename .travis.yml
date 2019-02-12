@@ -71,6 +71,7 @@ matrix:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts --scope origin --scope origin-contracts --scope origin-eventsource --scope origin-ipfs --scope origin-messaging-client --scope origin-services --scope origin-validator --scope origin-graphql --scope origin-growth --scope origin-discovery
         - lerna run build --scope origin
+        - node scripts/symlink-packages.js
       script:
         - npm run test --prefix origin-discovery
 
