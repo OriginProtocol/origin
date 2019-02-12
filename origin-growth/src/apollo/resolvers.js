@@ -18,10 +18,10 @@ const resolvers = {
         totalCount: campaigns.length,
         nodes: await db.getCampaigns(),
         pageInfo: {
-          endCursor: "TODO implement",
+          endCursor: 'TODO implement',
           hasNextPage: false,
           hasPreviousPage: false,
-          startCursor: "TODO implement"
+          startCursor: 'TODO implement'
         }
       }
     },
