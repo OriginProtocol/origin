@@ -418,7 +418,7 @@ export default class Marketplace {
         throw new Error('Invalid offer: arbitrator is invalid')
       }
 
-      if (chainOffer.affiliate.toLowerCase() !== this.affiliate.toLowerCase()) {
+      if (chainOffer.affiliate && (chainOffer.affiliate.toLowerCase() !== this.affiliate.toLowerCase())) {
         throw new Error('Invalid offer: affiliate is invalid')
       }
     }

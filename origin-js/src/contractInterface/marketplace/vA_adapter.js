@@ -86,7 +86,6 @@ class VA_MarketplaceAdapter {
       listingIpfsHash,
       ipfsBytes,
       finalizes || 30 * 24 * 60 * 60, // 30 days from offer acceptance
-      affiliate || emptyAddress,
       price,
       currencies[totalPrice.currency].address,
       arbitrator || emptyAddress,
