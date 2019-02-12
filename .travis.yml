@@ -68,8 +68,7 @@ matrix:
         - lerna run migrate --scope origin-discovery
         - lerna run migrate --scope origin-growth
       install:
-        - npm install --ignore-scripts
-        - lerna bootstrap -- --scope origin-contracts --scope origin --scope origin-contracts --scope origin-eventsource --scope origin-ipfs --scope origin-messaging-client --scope origin-services --scope origin-validator --scope origin-graphql --scope origin-growth --scope origin-discovery
+        - npm install
         - lerna run build --scope origin
       script:
         - npm run test --prefix origin-discovery
