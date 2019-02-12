@@ -1,6 +1,7 @@
 import express from 'express'
 import expressWs from 'express-ws'
 import Linker from './logic/linker'
+import Hot from './logic/hot'
 
 const router = express.Router()
 //doing this is a hack for detached routers...
@@ -20,6 +21,7 @@ const clientTokenHandler = (res, clientToken) => {
 }
 
 const linker = new Linker()
+const hot = new Hot()
 
 router.post("/generate-code", async (req, res) => {
   const _clientToken = getClientToken(req)
@@ -204,5 +206,20 @@ router.ws("/wallet-messages/:walletToken/:readId", (ws, req) => {
     closeHandler()
   })
 })
+
+
+router.post("/submit-marketplace-onbehalf", async (req, res) => {
+  const {cmd, params} = req.body
+
+  const result = hot.submitMarketplace(cmd, params)
+  res.send(result)
+})
+
+router.post("/verify-offer", async (req, res) => {
+  const {offerId, params} = req.body
+  const result = await hot.verifyOffer(offerId, params)
+  res.send(result)
+})
+
 
 export default router

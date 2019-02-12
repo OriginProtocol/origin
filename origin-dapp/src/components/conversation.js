@@ -194,9 +194,13 @@ class Conversation extends Component {
 
     // If listingId does not match state, store and check for a purchase.
     if (listingId !== this.state.listing.id) {
-      const listing = listingId ? await getListing(listingId, { translate: true }) : {}
-      this.setState({ listing })
-      this.loadPurchase()
+      try {
+        const listing = listingId ? await getListing(listingId, { translate: true }) : {}
+        this.setState({ listing })
+        this.loadPurchase()
+      } catch ( error ) {
+        console.log('Cannot get listing: ', listingId, error)
+      }
     }
   }
 

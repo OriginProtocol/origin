@@ -26,7 +26,7 @@ export class Offer {
    *  - {Array{Object}} - timeSlots - fractional usage time slot data
    */
   constructor({ id, listingId, status, createdAt, buyer, events, refund, totalPrice, unitsPurchased, blockInfo,
-    schemaId, listingType, ipfs, commission, timeSlots }) {
+    schemaId, listingType, ipfs, commission, timeSlots, seller, verifier, listingIpfsHash, verifyTerms, acceptIpfsHash }) {
       this.id = id
       this.listingId = listingId
       this.status = status
@@ -42,6 +42,11 @@ export class Offer {
       this.ipfs = ipfs
       this.commission = commission
       this.timeSlots = timeSlots
+      this.seller = seller
+      this.verifier = verifier
+      this.listingIpfsHash = listingIpfsHash
+      this.verifyTerms = verifyTerms
+      this.acceptIpfsHash = acceptIpfsHash
   }
 
   // creates an Offer using on-chain and off-chain data
@@ -64,7 +69,12 @@ export class Offer {
       listingType: ipfsData.listingType,
       ipfs: ipfsData.ipfs,
       commission: ipfsData.commission,
-      timeSlots: ipfsData.timeSlots
+      timeSlots: ipfsData.timeSlots,
+      seller: chainData.seller,
+      listingIpfsHash: chainData.listingIpfsHash,
+      verifyTerms: ipfsData.verifyTerms,
+      acceptIpfsHash: chainData.acceptIpfsHash,
+      verifier: chainData.verifier
     })
   }
 
@@ -95,7 +105,11 @@ export class Offer {
       // See https://github.com/OriginProtocol/origin/issues/1087
       // as to why we extract commission from the ipfs data.
       commission: discoveryNode.data.ipfs.data.commission,
-      timeSlots: discoveryNode.data.ipfs.data.timeSlots
+      timeSlots: discoveryNode.data.ipfs.data.timeSlots,
+      verifier: discoveryNode.data.verifier,
+      verifyTerms: discoveryNode.data.verifyTerms,
+      acceptIpfsHash: discoveryNode.data.acceptIpfsHash,
+      listingIpfsHash: discoveryNode.data.listingIpfsHash
     })
   }
 

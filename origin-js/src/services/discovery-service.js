@@ -58,6 +58,7 @@ class DiscoveryService {
     const jsonResp = await resp.json()
     // Throw an exception if the GraphQL response includes any error.
     if (jsonResp.errors && jsonResp.errors.length > 0) {
+      console.log('Discovery server errors:', jsonResp.errors)
       throw new Error(
         `Discovery server internal error: ${jsonResp.errors[0].message}`)
     }
@@ -137,7 +138,6 @@ class DiscoveryService {
       : -1
 
     let query, listings
-
     if (opts.listingsFor) {
       // Query for all listings created by the specified seller address.
       query = `query($listingsFor: ID!) {
@@ -298,6 +298,54 @@ class DiscoveryService {
 
     return this._toOfferModel(resp.data.offer)
   }
+
+  /**
+   * Mutates discovery server for an offer
+   * @param listingInput {ListingInput}: listing data structure
+   * @param signature {string}: signature against the data structure
+   * @return {Offer}
+   */
+
+  async injectListing(ipfsHash, seller, deposit, depositManager, status, signature) {
+    const resp = await this._query(`
+      mutation($listing:ListingInput, $signature:String!) {
+        injectListing(listingInput:$listing, signature:$signature){
+          data
+          display
+        }
+      }
+    `, { listing: { ipfsHash, seller, deposit, depositManager, status },
+        signature })
+
+    // Throw an error if no offer found with this id.
+    if (!resp.data) {
+      throw new Error(`Cannot inject listing`)
+    }
+
+    return this._toListingModel(resp.data.injectListing)
+  }
+
+  async updateListing(listingId, ipfsHash, seller, deposit, depositManager, status, signature) {
+    const resp = await this._query(`
+      mutation($id:ID!, $listing:ListingInput, $signature:String!) {
+        updateListing(id:$id, listingInput:$listing, signature:$signature){
+          data
+          display
+        }
+      }
+    `, { id: listingId,
+        listing: { ipfsHash, seller, deposit, depositManager, status },
+        signature })
+
+    // Throw an error if no offer found with this id.
+    if (!resp.data) {
+      throw new Error(`Cannot update listing`)
+    }
+
+    return this._toListingModel(resp.data.updateListing)
+  }
+
+
 }
 
 export default DiscoveryService

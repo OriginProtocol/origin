@@ -1,6 +1,7 @@
 'use strict'
 
 const tableName = 'growth_participant'
+const { GrowthParticipantStatuses } = require('../src/enums')
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -9,6 +10,9 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING
+      },
+      status: {
+        type: Sequelize.ENUM(GrowthParticipantStatuses)
       },
       data: {
         type: Sequelize.JSONB

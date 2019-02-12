@@ -8,6 +8,7 @@ import OriginIdentity from 'origin-contracts/build/contracts/OriginIdentity.json
 import OriginToken from 'origin-contracts/build/contracts/OriginToken.json'
 
 import V00_Marketplace from 'origin-contracts/build/contracts/V00_Marketplace.json'
+import VA_Marketplace from 'origin-contracts/build/contracts/VA_Marketplace.json'
 
 import WalletLinker from './../resources/wallet-linker'
 
@@ -15,8 +16,10 @@ import BigNumber from 'bignumber.js'
 import bs58 from 'bs58'
 import Web3 from 'web3'
 import { groupBy, mapValues } from './../utils/arrayFunctions'
+import { listingToSignData, acceptOfferToSignData, finalizeToSignData } from 'origin-contracts/sig_schema'
 
 const emptyAddress = '0x0000000000000000000000000000000000000000'
+const signSalt = '0x0000000000000000000000000000000000000000000000000000000000000666'
 // 24 is the number web3 supplies
 const NUMBER_CONFIRMATIONS_TO_REPORT = 24
 const SUPPORTED_ERC20 = [
@@ -39,7 +42,7 @@ class ContractService {
     }
     this.activeWalletLinker = activeWalletLinker
 
-    this.marketplaceContracts = { V00_Marketplace }
+    this.marketplaceContracts = { V00_Marketplace, VA_Marketplace }
 
     const contracts = Object.assign(
       {
@@ -453,6 +456,7 @@ class ContractService {
       return await method.call(opts)
     }
     // set gas
+    //opts.gas = "5000000"
     opts.gas = (opts.gas || (await method.estimateGas(opts))) + additionalGas
     const transactionReceipt = await new Promise((resolve, reject) => {
       if (!opts.from && this.isActiveWalletLinker() && !this.walletLinker.linked) {
@@ -496,6 +500,73 @@ class ContractService {
       } else {
         return money.amount
       }
+    }
+  }
+
+  async getSignData(signFunc, ...args) {
+    const networkId = await this.web3.eth.net.getId()
+    const marketAddress = this.web3.utils.toChecksumAddress(this.marketplaceContracts.VA_Marketplace.networks[networkId].address)
+    return signFunc(networkId, marketAddress, signSalt, ...args)
+  }
+
+  async getSignListingData(listing) {
+    return this.getSignData(listingToSignData, listing)
+  }
+
+  async getSignFinalizeData(listingID, offerID, ipfsBytes, payout, verifyFee) {
+    return await this.getSignData(finalizeToSignData, listingID, offerID, ipfsBytes, payout, verifyFee)
+  }
+
+  async signListing(listing) {
+    const signData = await this.getSignListingData(listing)
+    return await this.signTypedDataV3(JSON.stringify(signData))
+  }
+
+  async signAcceptOfferData(listingID, offerID, ipfsHash, behalfFee) {
+    const signData = await this.getSignData(acceptOfferToSignData, listingID, offerID, ipfsHash, behalfFee)
+    return await this.signTypedDataV3(JSON.stringify(signData))
+  }
+
+  async signFinalizeData(listingID, offerID, ipfsHash, payout, fee) {
+    const signData = await this.getSignData(finalizeToSignData, listingID, offerID, ipfsHash, payout, fee)
+    console.log('signFinalize:', signData)
+    return await this.signTypedDataV3(JSON.stringify(signData))
+  }
+  
+  breakdownSig(raw_sig) {
+    const signature = raw_sig.substring(2)
+    const r = '0x' + signature.substring(0, 64)
+    const s = '0x' + signature.substring(64, 128)
+    const v = parseInt(signature.substring(128, 130), 16)
+    return { r,s,v }
+  }
+
+  async signTypedDataV3(data) {
+    if (this.isActiveWalletLinker() || this.web3.currentProvider.sendAsync) {
+      const signer = await this.currentAccount()
+    
+      return new Promise((resolve, reject) => { 
+        const call = { 
+          method: 'eth_signTypedData_v3',
+          params: [signer, data],
+          from: signer
+        }
+        const cb = (err, result) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(result.result)
+          }
+        }
+        if (this.isActiveWalletLinker()) 
+        {
+          this.walletLinker.sendAsync(call, cb)
+        }
+        else
+        {
+          this.web3.currentProvider.sendAsync(call, cb)
+        }
+      })
     }
   }
 }

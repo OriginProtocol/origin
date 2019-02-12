@@ -14,11 +14,11 @@ ipfsImageTag: master
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'ab346df'
+ipfsProxyImageTag: '899b2e7'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '8efc326'
+faucetImageTag: '14de9d3'
 
 # event-listener
 eventlistenerImage: event-listener

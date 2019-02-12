@@ -18,6 +18,7 @@ COPY ./origin-js/package*.json ./origin-js/
 COPY ./origin-messaging/package*.json ./origin-messaging/
 COPY ./origin-notifications/package*.json ./origin-notifications/
 COPY ./origin-tests/package*.json ./origin-tests/
+COPY ./origin-token/package*.json ./origin-token/
 COPY ./origin-growth/package*.json ./origin-growth/
 COPY ./experimental/origin-graphql/package*.json ./experimental/origin-graphql/
 COPY ./experimental/origin-ipfs/package*.json ./experimental/origin-ipfs/
@@ -48,6 +49,8 @@ COPY ./origin-js ./origin-js
 COPY ./origin-messaging ./origin-messaging
 COPY ./origin-notifications ./origin-notifications
 COPY ./origin-tests ./origin-tests
+COPY ./origin-token ./origin-token
+
 
 # Build origin-js for event-listener
 RUN npm run build --prefix origin-js
