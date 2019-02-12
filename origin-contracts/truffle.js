@@ -104,7 +104,7 @@ if (process.env.ORIGIN_MNEMONIC) {
         numAddressesToUnlock
       ))
     },
-    gas: 3712388,
+    gas: 4712388,
     network_id: 2222
   }
 }
