@@ -29,7 +29,7 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./origin-contracts/releases/0.8.5/build/ ./origin-contracts/build/
+COPY ./origin-contracts/releases/0.8.6/build/ ./origin-contracts/build/
 
 # Build origin-js so it is available for the event-listener to import
 RUN npm run build --prefix origin-js
