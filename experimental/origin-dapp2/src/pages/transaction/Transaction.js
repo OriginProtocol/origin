@@ -9,6 +9,7 @@ import query from 'queries/Offer'
 import AboutParty from 'components/AboutParty'
 import QueryError from 'components/QueryError'
 import PageTitle from 'components/PageTitle'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import TxHistory from './_History'
 import TxProgress from './_Progress'
@@ -26,7 +27,7 @@ const Transaction = props => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
           } else if (networkStatus === 1) {
-            return <div>Loading...</div>
+            return <LoadingSpinner />
           } else if (!data || !data.marketplace) {
             return <div>No marketplace contract?</div>
           }
@@ -50,7 +51,7 @@ const Transaction = props => {
               <h2>{offer.listing.title}</h2>
 
               <div className="row">
-                <div className="col-md-8">
+                <div className="col-md-7 col-lg-8">
                   <h3>Transaction Progress</h3>
                   <TxProgress
                     offer={offer}
@@ -64,7 +65,7 @@ const Transaction = props => {
                   <h3>Listing Details</h3>
                   <ListingDetail listing={offer.listing} />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-5 col-lg-4">
                   <h4 className="side-bar">Offer Details</h4>
                   <OfferDetails offer={offer} />
 
@@ -108,4 +109,10 @@ require('react-styl')(`
       font-size: 18px
       &.mt-4
         margin-top: 1.5rem
+
+  @media (max-width: 575.98px)
+    .transaction-detail
+      padding-top: 1rem
+      > h2
+        font-size: 32px
 `)

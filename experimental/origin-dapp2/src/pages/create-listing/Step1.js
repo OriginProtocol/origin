@@ -14,6 +14,12 @@ class Step1 extends Component {
     this.state = { ...props.listing, fields: Object.keys(props.listing) }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.category !== this.state.category && this.catRef) {
+      this.catRef.focus()
+    }
+  }
+
   render() {
     const isEdit = this.props.mode === 'edit'
     if (this.state.valid) {
@@ -41,7 +47,7 @@ class Step1 extends Component {
           <div className="title">{title}</div>
           {!active ? null : (
             <div className="sub-cat">
-              <select {...input('subCategory')}>
+              <select {...input('subCategory')} ref={r => (this.catRef = r)}>
                 <option value="">Select</option>
                 {Categories[id].map(([id, title]) => (
                   <option key={id} value={id}>
@@ -129,9 +135,10 @@ require('react-styl')(`
     > .wrap
       max-width: 460px
     h2
-      font-family: Poppins;
-      font-size: 40px;
-      font-weight: 200;
+      font-family: Poppins
+      font-size: 40px
+      font-weight: 200
+      line-height: 1.25
     .category
       border: 1px solid var(--light)
       font-size: 24px
@@ -178,4 +185,18 @@ require('react-styl')(`
     .actions
       justify-content: flex-end
 
+
+
+  @media (max-width: 575.98px)
+    .create-listing .create-listing-step-1
+      h2
+        font-size: 32px
+        line-height: 1.25
+      .category .title::before
+        width: 7rem
+        height: 4rem
+
+      .actions
+        justify-content: center
+        margin-bottom: 2.5rem
 `)
