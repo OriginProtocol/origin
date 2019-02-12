@@ -5,6 +5,7 @@ import get from 'lodash/get'
 
 import QueryError from 'components/QueryError'
 import PageTitle from 'components/PageTitle'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import query from 'queries/Listing'
 import ListingDetail from './ListingDetail'
@@ -24,7 +25,7 @@ class Listing extends Component {
         <Query query={query} variables={vars}>
           {({ networkStatus, error, data, refetch }) => {
             if (networkStatus === 1) {
-              return <div>Loading...</div>
+              return <LoadingSpinner />
             } else if (error) {
               return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {

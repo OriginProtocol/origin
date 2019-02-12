@@ -14,7 +14,12 @@ const UnitListing = ({ listing, onChange }) => {
     <>
       <div className="form-group">
         <label>Quantity</label>
-        <input {...input('quantity')} placeholder="How many are you selling?" />
+        <input
+          {...input('quantity')}
+          placeholder="How many are you selling?"
+          type="number"
+          pattern="\d*"
+        />
         {Feedback('quantity')}
       </div>
       <div className="form-group">
