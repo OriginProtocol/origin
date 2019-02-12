@@ -1,7 +1,7 @@
 const logger = require('./logger')
 const db = require('../models')
 const { withRetrys } = require('./utils')
-const MarketplaceEventHandler = require('./handler_marketplace')
+const { MarketplaceEventHandler, NoGasMarketplaceEventHandler } = require('./handler_marketplace')
 const IdentityEventHandler = require('./handler_identity')
 
 const { postToEmailWebhook, postToDiscordWebhook, postToWebhook } = require('./webhooks')
@@ -22,6 +22,20 @@ const EVENT_TO_HANDLER_MAP = {
     OfferRuling: MarketplaceEventHandler,
     OfferFinalized: MarketplaceEventHandler,
     OfferData: MarketplaceEventHandler
+  },
+  VA_Marketplace: {
+    ListingCreated: NoGasMarketplaceEventHandler,
+    ListingUpdated: NoGasMarketplaceEventHandler,
+    ListingWithdrawn: NoGasMarketplaceEventHandler,
+    ListingData: NoGasMarketplaceEventHandler,
+    ListingArbitrated: NoGasMarketplaceEventHandler,
+    OfferCreated: NoGasMarketplaceEventHandler,
+    OfferWithdrawn: NoGasMarketplaceEventHandler,
+    OfferAccepted: NoGasMarketplaceEventHandler,
+    OfferDisputed: NoGasMarketplaceEventHandler,
+    OfferRuling: NoGasMarketplaceEventHandler,
+    OfferFinalized: NoGasMarketplaceEventHandler,
+    OfferData: NoGasMarketplaceEventHandler
   },
   IdentityEvents: {
     IdentityUpdated: IdentityEventHandler,
