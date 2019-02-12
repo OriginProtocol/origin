@@ -190,6 +190,7 @@
   "listing-create.boost-level": "Livello di Boost",
   "listing-create.boostLimit": "Limite di Potenziamento",
   "listing-create.doneButtonLabel": "Fatto",
+  "listing-create.offerButtonLabel": "I want this",
   "listing-create.create-a-listing": "Crea un annuncio su Origin DApp",
   "listing-create.form-help-schema": "Inizia selezionando il tipo di annuncio che desideri creare. Sarai quindi in grado di impostare un prezzo e i dettagli dell'inserzione.",
   "listing-create.add-details": "Aggiungi dettagli all'inserzione",
