@@ -330,7 +330,7 @@ class PurchaseDetail extends Component {
         return console.error(`Purchase ${offerId} not found`)
       }
       
-      const listing = await getListing(purchase.listingId, { translate: true, blockInfo })
+      const listing = await getListing(purchase.listingId, { translate: true, blockInfo: origin.marketplace.perfModeEnabled?undefined:blockInfo })
 
       this.setState({
         listing,
@@ -719,6 +719,8 @@ class PurchaseDetail extends Component {
       return null
     }
 
+    const verifiable = purchase.verifyTerms
+
     let perspective
     // may potentially be neither buyer nor seller
     if (formattedAddress(wallet.address) === formattedAddress(purchase.buyer)) {
@@ -1034,7 +1036,10 @@ class PurchaseDetail extends Component {
                                   defaultMessage={'Show Fulfillment Checklist'}
                                 />
                               )}
-                            </p>
+                             </p>
+                              { purchase.status == 'accepted' && perspective == 'seller' && verifiable && <button onClick={ () => {
+                                origin.marketplace.verifyFinalizeOffer(purchase.id)
+                              }} > Verify This Transaction </button> } 
                           </div>
                           {areSellerStepsOpen && (
                             <div className="list-container text-left">
@@ -1080,6 +1085,7 @@ class PurchaseDetail extends Component {
                   </div>
                 )}
               </div>
+              
               <h2>
                 <FormattedMessage
                   id={'purchase-detail.transactionHistoryHeading'}

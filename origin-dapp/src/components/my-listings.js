@@ -62,7 +62,7 @@ class MyListings extends Component {
 
       this.setState({ listings, loading: false })
     } catch (error) {
-      console.error('Error fetching listing ids')
+      console.error('Error fetching listing ids', error)
     }
   }
 

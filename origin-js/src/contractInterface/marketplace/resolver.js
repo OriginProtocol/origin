@@ -1,4 +1,5 @@
-import V00_MarkeplaceAdapter from './v00_adapter'
+import V00_MarketplaceAdapter from './v00_adapter'
+import VA_MarketplaceAdapter from './vA_adapter'
 import {
   parseListingId,
   parseOfferId,
@@ -13,11 +14,12 @@ import {
 } from '../../models/notification'
 
 export default class MarketplaceResolver {
-  constructor({ contractService, store, blockEpoch }) {
+  constructor({ contractService, store, blockEpoch, hotService }) {
     this.adapters = {
-      '000': new V00_MarkeplaceAdapter({ contractService, store, blockEpoch })
+      '000': new V00_MarketplaceAdapter({ contractService, store, blockEpoch }),
+      'A': new VA_MarketplaceAdapter({ contractService, store, blockEpoch, hotService })
     }
-    this.versions = ['000']
+    this.versions = ['A', '000']
     this.currentVersion = this.versions[this.versions.length - 1]
     this.currentAdapter = this.adapters[this.currentVersion]
     this.contractService = contractService
@@ -165,6 +167,42 @@ export default class MarketplaceResolver {
       offerIndex,
       ipfsBytes,
       confirmationCallback
+    )
+  }
+
+  async signAcceptOffer(id, ipfsBytes) {
+    const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
+
+    return await adapter.signAcceptOffer(
+        listingIndex,
+        offerIndex,
+        ipfsBytes
+    )
+  }
+
+  async acceptSignedOffer(id, ipfsBytes, seller, signature) {
+    const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
+
+    return await adapter.acceptSignedOffer(
+        listingIndex,
+        offerIndex,
+        ipfsBytes,
+        seller,
+        signature
+    )
+  }
+
+  async verifiedFinalizeOffer(id, ipfsBytes, verifyFee, payout, signature, confirmationCallback) {
+    const { adapter, listingIndex, offerIndex } = this.parseOfferId(id)
+
+    return await adapter.verifyFinalizeOffer(
+        listingIndex,
+        offerIndex,
+        ipfsBytes,
+        verifyFee,
+        payout,
+        signature,
+        confirmationCallback
     )
   }
 
@@ -323,6 +361,11 @@ export default class MarketplaceResolver {
     return await this.currentAdapter.getTokenAddress()
   }
 
+  isNoGas(listingId) {
+    const { version } = parseListingId(listingId)
+    return version == 'A'
+  }
+
   parseListingId(listingId) {
     const { version, network, listingIndex } = parseListingId(listingId)
     // use appropriate adapter for version
@@ -343,11 +386,11 @@ export default class MarketplaceResolver {
     return { adapter, listingIndex, offerIndex, version, network }
   }
 
-  makeListingId(network, contractName, listingIndex) {
+  makeListingId(network, contractName, listingId) {
     for (const version of this.versions) {
       if (this.adapters[version].contractName == contractName)
       {
-        return generateListingId({ version, network, listingIndex })
+        return generateListingId({ version, network, listingIndex: this.adapters[version].toListingIndex(listingId) })
       }
     }
   }

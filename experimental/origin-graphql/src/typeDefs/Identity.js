@@ -31,6 +31,7 @@ module.exports = `
       after: String
       sort: String
     ): IdentityConnection
+    facebookAuthUrl: String
   }
 
   type IdentityConnection {

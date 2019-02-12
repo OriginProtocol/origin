@@ -146,4 +146,20 @@ require('react-styl')(`
         border-radius: 2rem
         padding: 0.625rem
         font-size: 18px
+
+  @media (max-width: 575.98px)
+    .create-listing
+      padding-top: 1rem
+      .actions
+        margin-top: 2rem
+        .btn
+          min-width: auto
+          flex: 1
+          margin: 0 0.5rem
+          &:first-child
+            margin-left: 0
+          &:last-child
+            margin-right: 0
+        margin-bottom: 2rem
+
 `)

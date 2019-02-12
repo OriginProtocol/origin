@@ -10,7 +10,7 @@ export default class SignItem extends Component {
   render() {
     const { item, handleApprove, handlePress, handleReject, style } = this.props
     // placeholders
-    const msg = item.sign && item.sign.params.msg
+    const msg = item.msg && JSON.stringify(item.msg).substring(0, 40)
     const status = item.status
 
     return (

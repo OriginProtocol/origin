@@ -49,15 +49,19 @@ class Nav extends Component {
           ) : (
             <>
               <ul className="navbar-nav">
-                <li className="nav-item extra-margin d-none d-md-flex">
+                <li className="nav-item d-none d-md-flex">
                   <NavLink to="/my-purchases" className="nav-link text">
-                    <fbt desc="navbar.buying">Buy</fbt>
+                    <span>
+                      <fbt desc="navbar.buying">Buy</fbt>
+                    </span>
                   </NavLink>
                 </li>
                 <Sell {...navProps('sell')} />
-                <li className="nav-item extra-margin d-none d-md-flex">
+                <li className="nav-item d-none d-md-flex">
                   <NavLink to="/create" className="nav-link add-listing text">
-                    <fbt desc="navbar.addListing">Add Listing</fbt>
+                    <span>
+                      <fbt desc="navbar.addListing">Add Listing</fbt>
+                    </span>
                   </NavLink>
                 </li>
                 <Confirmations {...navProps('confirmations')} />
@@ -79,6 +83,8 @@ require('react-styl')(`
   .navbar
     padding: 0 1rem
     background-color: var(--dusk) !important
+    > .container
+      align-items: stretch
 
     .nav-item
       display: flex
@@ -89,24 +95,39 @@ require('react-styl')(`
       font-weight: bold
       font-style: normal
       color: var(--pale-grey)
-      &.extra-margin
-        margin: 0 0.5rem
       &.show
         background-color: var(--white)
         .nav-link
           color: var(--dark)
+          &:hover
+            background-color: initial
+            &.text span
+              background-color: initial
+
       &.dark
         &.show
           background-color: var(--dark)
       .nav-link
         padding: 0 0.75rem
         color: var(--pale-grey)
+        height: 100%
+        display: flex
+        align-items: center
+        &:hover
+          background-color: var(--dark-grey-blue)
+          &.text span
+            background-color: var(--dark-grey-blue)
         &.text
-          padding: 0.25rem 0.75rem;
-          border-radius: 1rem;
-          &:hover,&.active
-            background-color: var(--dark-grey-blue);
-        &.add-listing
+          background-color: initial
+          padding: 0 0.5rem
+          span
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            &:hover,&.active
+              background-color: var(--dark-grey-blue)
+          &.active span
+            background-color: var(--dark-grey-blue)
+        &.add-listing span
           display: inline-block
           padding-left: 2rem
           background: url(images/add-listing-icon.svg) no-repeat 0.5rem center

@@ -26,6 +26,11 @@ class WaitForTransaction extends Component {
       <Query query={query} variables={{ id }} pollInterval={3000}>
         {({ data, client }) => {
           const events = get(data, 'web3.transactionReceipt.events', [])
+          const currentBlock = get(data, 'web3.blockNumber')
+          const confirmedBlock = get(
+            data,
+            'web3.transactionReceipt.blockNumber'
+          )
           const event =
             events.find(e => e.event === this.props.event) || events[0]
 
@@ -36,6 +41,15 @@ class WaitForTransaction extends Component {
                 <div className="spinner light" />
                 <div>
                   <b>Mining...</b>
+                </div>
+              </div>
+            )
+          } else if (currentBlock <= confirmedBlock) {
+            content = (
+              <div className="make-offer-modal">
+                <div className="spinner light" />
+                <div>
+                  <b>Waiting for confirmation...</b>
                 </div>
               </div>
             )

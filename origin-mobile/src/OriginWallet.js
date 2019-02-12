@@ -10,6 +10,9 @@ import ecies from 'eth-ecies'
 import CryptoJS from 'crypto-js'
 import UUIDGenerator from 'react-native-uuid-generator'
 import { randomBytes } from 'react-native-randombytes'
+import { TypedDataUtils, concatSig } from 'eth-sig-util'
+import ethUtil from 'ethereumjs-util'
+
 
 import {setRemoteLocal, localfy, storeData, loadData} from './tools'
 
@@ -473,7 +476,20 @@ class OriginWallet {
     else if (event_data.sign)
     {
       const action = "sign"
-      return {...event_data, action}
+      let msg = ""
+      let domiain = ""
+
+      if (event_data.sign.call.params.msg)
+      {
+        msg = event_data.sign.call.params.msg
+      }
+      else if(event_data.sign.call.params.method == "eth_signTypedData_v3")
+      {
+        const data = JSON.parse(event_data.sign.call.params.data)
+        domain = data.domain
+        msg = data.message
+      }
+      return {...event_data, msg, domain, action}
     }
     //this is the bare event
     return event_data
@@ -635,13 +651,20 @@ class OriginWallet {
     const method = call.method
     const params = call.params
     return new Promise((resolve, reject) => {
-      if (call_name == "signMessage")
+      let ret
+      if (params.method == "eth_signTypedData_v3")
       {
+        const data = JSON.parse(params.data)
+        const pkey = this.getCurrentWeb3Account().privateKey
+        const sig = ethUtil.ecsign(TypedDataUtils.sign(data), ethUtil.toBuffer(pkey))
+        const result = ethUtil.bufferToHex(concatSig(sig.v, sig.r, sig.s))
+        ret = {result}
+      } else {
         const msg = params.msg
         const post_phrase_prefix = params.post_phrase_prefix
         console.log("signing message:", msg)
         const signature = this.getCurrentWeb3Account().sign(msg).signature
-        const ret = {msg, signature, account:this.state.ethAddress}
+        ret = {msg, signature, account:this.state.ethAddress}
 
         if (post_phrase_prefix)
         {
@@ -653,18 +676,18 @@ class OriginWallet {
           ret.post_phrase = post_phrase
           ret.post_signature = post_signature
         }
-        console.log("Signing result:", ret)
-
-        this.returnCall(event_id, call_id, session_token, link_id, ret, Events.TRANSACTED).then(
-            (success) => {
-              if (return_url)
-              {
-                console.log("transaction approved returning to:", return_url)
-                Linking.openURL(return_url)
-              }
-              resolve(success)
-            })
       }
+      console.log("Signing result:", ret)
+
+      this.returnCall(event_id, call_id, session_token, link_id, ret, Events.TRANSACTED).then(
+          (success) => {
+            if (return_url)
+            {
+              console.log("transaction approved returning to:", return_url)
+              Linking.openURL(return_url)
+            }
+            resolve(success)
+          })
     })
   }
 

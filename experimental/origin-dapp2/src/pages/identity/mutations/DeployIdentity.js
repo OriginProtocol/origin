@@ -80,6 +80,9 @@ class DeployIdentity extends Component {
           if (this.props.refetch) {
             this.props.refetch()
           }
+          if (this.props.onComplete) {
+            this.props.onComplete()
+          }
           this.setState({ waitFor: false, error: false, shouldClose: false })
         }}
         hash={this.state.waitFor}
