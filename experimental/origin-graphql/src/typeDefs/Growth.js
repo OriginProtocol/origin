@@ -124,13 +124,16 @@ module.exports =
     message: String!
   }
 
-  type EligibilityResponse {
-    code: String!
-    success: Boolean!
-    message: String
+  type EligibilityInfo {
     eligibility: Eligibility
     countryName: String
     countryCode: String
+  }
+
+  type InviteInformation {
+    inviteToken: String!
+    walletAddress: String!
+    userName: String!
   }
 
   type Query {
@@ -138,7 +141,8 @@ module.exports =
     # after is the cursor
     campaigns(first: Int, after: String): GrowthCampaignConnection
     campaign(id: String): GrowthCampaign
-    isEligible: EligibilityResponse
+    isEligible: EligibilityInfo
+    InviteInformation(inviteCode: String!): InviteInformation
   }
 
   type Mutation {
