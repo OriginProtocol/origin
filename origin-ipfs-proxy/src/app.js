@@ -40,8 +40,7 @@ function handleFileUpload(req, res) {
         fileSize: 2 * 1024 * 1024
       }
     })
-  }
-  catch (error) {
+  } catch (error) {
     // Busboy failed to parse request, missing headers?
     logger.error(`Malformed request: ${error}`)
     res.writeHead(400, { Connection: 'close' })
