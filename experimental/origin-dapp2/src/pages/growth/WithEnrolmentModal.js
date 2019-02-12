@@ -80,6 +80,11 @@ function withEnrolmentModal(WrappedComponent) {
 
       const account_id = data.web3.metaMaskAccount.id
 
+      //TODO: delete this. Is just for demonstration purposes
+      const delay = ms => new Promise(res => setTimeout(res, ms))
+      await delay(3000)
+      //TODO: end delete
+
       const result = await this.props.client.mutate({
         mutation: signMessageMutation,
         variables: {
@@ -145,7 +150,7 @@ function withEnrolmentModal(WrappedComponent) {
               <span className="checkmark" />
               &nbsp;
             </label>
-            <div>I certify I am not a citizen or resident of U.S.</div>
+            <div>I accept terms and conditions</div>
           </div>
           <div className="d-flex justify-content-center">
             <button
