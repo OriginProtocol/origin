@@ -124,4 +124,25 @@ require('react-styl')(`
         margin-right: 1rem
     .copyright
       margin-top: 1rem
+
+
+  @media (max-width: 575.98px)
+    footer
+      margin-top: 2rem
+      padding-top: 2rem
+      padding-bottom: 2rem
+      .container
+        flex-direction: column
+        align-items: center
+        text-align: center
+        .about
+          margin-right: 0
+        .logo
+          margin-bottom: 1rem
+        .links
+          flex-direction: column
+          align-items: center
+          margin-top: 1rem
+          a
+            margin: 0
 `)

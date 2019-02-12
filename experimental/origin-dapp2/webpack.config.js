@@ -136,6 +136,12 @@ if (isProduction) {
       inject: false,
       filename: 'mainnet.html',
       network: 'mainnet'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'kovan.html',
+      network: 'kovanTst'
     })
   )
   config.resolve.alias = {
