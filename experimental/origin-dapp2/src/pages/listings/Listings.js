@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
+import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import { fbt } from 'fbt-runtime'
 
@@ -29,7 +30,9 @@ class Listings extends Component {
   render() {
     const vars = {
       ...pick(this.state, 'first', 'sort', 'hidden', 'search'),
-      filters: this.props.filters || []
+      filters: this.props.filters.map((filter) => {
+        return omit(filter, '__typename')
+      }) || []
     }
 
     return (
