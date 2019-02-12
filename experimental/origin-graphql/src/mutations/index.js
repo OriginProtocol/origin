@@ -6,6 +6,7 @@ import sendFromWallet from './web3/sendFromWallet'
 import sendFromNode from './web3/sendFromNode'
 import setActiveWallet from './web3/setActiveWallet'
 import setNetwork from './web3/setNetwork'
+import signMessage from './web3/signMessage'
 import toggleMetaMask from './web3/toggleMetaMask'
 
 import acceptOffer from './marketplace/acceptOffer'
@@ -69,6 +70,7 @@ export default {
   sendMessage,
   setActiveWallet,
   setNetwork,
+  signMessage,
   toggleMetaMask,
   transferToken,
   updateListing,
