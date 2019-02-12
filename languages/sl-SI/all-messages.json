@@ -190,6 +190,7 @@
   "listing-create.boost-level": "Boost Level",
   "listing-create.boostLimit": "Boost Limit",
   "listing-create.doneButtonLabel": "Končano",
+  "listing-create.offerButtonLabel": "I want this",
   "listing-create.create-a-listing": "Create A Listing On The Origin DApp",
   "listing-create.form-help-schema": "Get started by selecting the type of listing you want to create. You will then be able to set a price and listing details.",
   "listing-create.add-details": "Add Listing Details",
