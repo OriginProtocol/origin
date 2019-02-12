@@ -5,13 +5,12 @@ import { ApolloProvider } from 'react-apollo'
 import { HashRouter } from 'react-router-dom'
 
 import Styl from 'react-styl'
-import { createClient } from 'origin-graphql'
+import client from 'origin-graphql'
 
 import setLocale from 'utils/setLocale'
 
 import App from './pages/App'
 import Analytics from './components/Analytics'
-import ClientState from './clientState/index'
 import './css/app.css'
 if (process.env.NODE_ENV === 'production') {
   try {
@@ -31,7 +30,6 @@ class AppWrapper extends Component {
       //   storage: window.sessionStorage
       // })
       const locale = await setLocale()
-      const client = createClient({ stateLinkOpts: ClientState })
       this.setState({ ready: true, client, locale })
     } catch (error) {
       console.error('Error restoring Apollo cache', error)
@@ -39,7 +37,7 @@ class AppWrapper extends Component {
   }
 
   render() {
-    const { ready, client, locale } = this.state
+    const { ready, locale } = this.state
 
     if (!ready) return null
     return (
