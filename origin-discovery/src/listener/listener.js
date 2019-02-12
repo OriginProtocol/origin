@@ -279,6 +279,8 @@ const config = {
   emailWebhook: args['--email-webhook'] || process.env.EMAIL_WEBHOOK,
   // Index events in the search index.
   elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
+  // Google Cloud pub/sub topic
+  gcloudPubsubTopic: args['--gcloud-pubsub-topic'] || (process.env.GCLOUD_PUBSUB_TOPIC),
   // Index marketplace events.
   marketplace: args['--marketplace'] || (process.env.INDEX_MARKETPLACE === 'true'),
   // Index identity events.

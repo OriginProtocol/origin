@@ -4,7 +4,12 @@ const { withRetrys } = require('./utils')
 const { MarketplaceEventHandler, NoGasMarketplaceEventHandler } = require('./handler_marketplace')
 const IdentityEventHandler = require('./handler_identity')
 
-const { postToEmailWebhook, postToDiscordWebhook, postToWebhook } = require('./webhooks')
+const {
+  postToEmailWebhook,
+  postToDiscordWebhook,
+  postToWebhook,
+  publishToGcloudPubsub
+} = require('./webhooks')
 
 // Adding a mapping here makes the listener listen for the event
 // and call the associated handler when the event is received.
@@ -148,6 +153,17 @@ async function handleLog (log, rule, contractVersion, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping discord webhook for ${logDetails}`)
+    }
+  }
+
+  if (rule.handler.gcloudPubsubEnabled() && context.config.gcloudPubsubTopic) {
+    logger.info(`Google Cloud Pub/Sub publish to ${context.config.gcloudPubsubTopic}`)
+    try {
+      await withRetrys(async () => {
+        return publishToGcloudPubsub(context.config.gcloudPubsubTopic, output)
+      }, false)
+    } catch (e) {
+      logger.error(`Skipping Google Cloud Pub/Sub for ${logDetails}`)
     }
   }
 }

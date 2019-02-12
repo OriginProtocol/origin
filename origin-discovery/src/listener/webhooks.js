@@ -1,6 +1,7 @@
 const http = require('http')
 const https = require('https')
 const urllib = require('url')
+const { PubSub } = require ('@google-cloud/pubsub')
 
 const logger = require('./logger')
 
@@ -130,4 +131,20 @@ async function postToWebhook(urlString, data, contentType='application/json') {
   })
 }
 
-module.exports = { postToEmailWebhook, postToDiscordWebhook, postToWebhook }
+/**
+ * Sends a blob of data to a Google Cloud pubsub topic.
+ */
+async function publishToGcloudPubsub(topic, data) {
+  const pubsub = new PubSub()
+
+  return await pubsub
+    .topic(topic)
+    .publish(JSON.stringify(data))
+}
+
+module.exports = {
+  postToEmailWebhook,
+  postToDiscordWebhook,
+  postToWebhook,
+  publishToGcloudPubsub
+}
