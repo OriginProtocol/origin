@@ -52,6 +52,7 @@ class OriginEventSource {
     try {
       listing = await this.contract.methods.listings(listingId).call()
     } catch (e) {
+      console.log(`No such listing on contract ${listingId}`)
       return null
     }
 
@@ -102,6 +103,7 @@ class OriginEventSource {
         'customPricing'
       )
     } catch (e) {
+      console.log(`Error retrieving IPFS data for ${ipfsHash}`)
       return null
     }
 
@@ -122,6 +124,7 @@ class OriginEventSource {
           )
         }
       } catch (e) {
+        console.log(`Error retrieving old IPFS data for ${ipfsHash}`)
         return null
       }
     }
@@ -151,7 +154,7 @@ class OriginEventSource {
       commission = this.web3.utils.toWei(commissionOgn, 'ether')
     }
 
-    this.listingCache[cacheKey] = await this.withOffers(listingId, {
+    const listingWithOffers = await this.withOffers(listingId, {
       ...data,
       __typename:
         data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
@@ -171,6 +174,8 @@ class OriginEventSource {
       commission
     })
 
+    this.listingCache[cacheKey] = listingWithOffers
+
     return this.listingCache[cacheKey]
   }
 
@@ -181,10 +186,11 @@ class OriginEventSource {
       .totalOffers(listingId)
       .call()
 
-    const allOffers = []
-    for (const id of Array.from({ length: totalOffers }, (_, i) => i)) {
-      allOffers.push(await this._getOffer(listing, listingId, id))
-    }
+    const allOffers = await Promise.all(
+      Array.from({ length: totalOffers }, (_, i) => i).map(id =>
+        this._getOffer(listing, listingId, id)
+      )
+    )
 
     // Compute fields from valid offers.
     let commissionAvailable = this.web3.utils.toBN(listing.commission)
