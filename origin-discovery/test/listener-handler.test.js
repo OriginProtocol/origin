@@ -8,7 +8,7 @@ const { GrowthEventTypes } = require('origin-growth/src/enums')
 
 const db = require('../src/models')
 const { handleLog } = require('../src/listener/handler')
-const MarketplaceEventHandler = require('../src/listener/handler_marketplace')
+const  { MarketplaceEventHandler } = require('../src/listener/handler_marketplace')
 const IdentityEventHandler = require('../src/listener/handler_identity')
 
 
