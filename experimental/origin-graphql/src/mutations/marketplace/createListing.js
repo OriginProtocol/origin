@@ -3,6 +3,7 @@ import validator from 'origin-validator'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 
 export function listingInputToIPFS(data, unitData, fractionalData) {
   const listingType = fractionalData ? 'fractional' : 'unit'
@@ -77,7 +78,7 @@ async function createListing(_, input) {
     )
   }
 
-  const tx = createListingCall.send({ gas: 4612388, from })
+  const tx = createListingCall.send({ gas: cost.createListing, from })
   return txHelper({ tx, from, mutation: 'createListing' })
 }
 

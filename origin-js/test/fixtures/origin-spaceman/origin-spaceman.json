@@ -16,5 +16,11 @@
     "currency": "OGN",
     "amount": "10"
   },
-  "marketplacePublisher": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57"
+  "marketplacePublisher": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+  "media": [
+    {
+      "url": "ipfs://QmdjjwsF7bbejYJ7CecAmMpGB9RMNtFN1Gbs79KmKSGdHD",
+      "contentType": "image/jpeg"
+    }
+  ]
 }

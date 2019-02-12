@@ -25,7 +25,7 @@ const resolvers = {
         }
       }
     },
-    async campaign () {
+    async campaign() {
       return null
     },
     async isEligible (obj, args, context) {
@@ -63,21 +63,21 @@ const resolvers = {
     }
   },
   Mutation: {
-    async invite () {
+    async invite() {
       return {
         code: '418',
         success: false,
         message: 'I am a teapot'
       }
     },
-    async enroll () {
+    async enroll() {
       return {
         code: '418',
         success: false,
         message: 'I am a teapot'
       }
     },
-    async log () {
+    async log() {
       return {
         code: '418',
         success: false,

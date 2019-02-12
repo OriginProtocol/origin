@@ -23,7 +23,7 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --no-ci --progress --hoist \"**\" --ignore origin-mobile",
-    "bootstrap:mobile": "lerna bootstrap --progress --scope origin-linking --scope origin-mobile --scope origin --scope origin-contracts --scope origin-dapp --scope origin-messaging --scope origin-discovery --scope origin-notifications",
+    "bootstrap:mobile": "lerna bootstrap --progress",
     "build": "lerna run build",
     "clean": "git clean -fdX .",
     "start": "lerna run start --stream --parallel --scope origin --scope origin-dapp",

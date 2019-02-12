@@ -38,12 +38,18 @@
     "rewire": "^4.0.1"
   },
   "scripts": {
-    "lint": "eslint 'src/*.js' 'src/**/*.js'",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "migrate": "sequelize db:migrate",
     "start": "npm run start:growth",
     "start:growth": "per-env",
     "start:growth:development": "nodemon src/apollo/app.js",
     "start:growth:production": "node src/apollo/app.js",
     "test": "mocha --timeout 10000 --exit"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

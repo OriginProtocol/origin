@@ -1,6 +1,7 @@
 import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function executeRuling(_, data) {
@@ -22,7 +23,7 @@ async function executeRuling(_, data) {
 
   const tx = contracts.marketplaceExec.methods
     .executeRuling(listingId, offerId, ipfsHash, ruling, refund)
-    .send({ gas: 4612388, from })
+    .send({ gas: cost.executeRuling, from })
 
   return txHelper({ tx, from, mutation: 'executeRuling' })
 }

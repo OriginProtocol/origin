@@ -1,26 +1,30 @@
 const Ajv = require('ajv')
 
+const attestationSchema = require('./schemas/attestation_1.0.0.json')
+const disputeSchema = require('./schemas/dispute.json')
+const identitySchema = require('./schemas/identity_1.0.0.json')
 const listingSchema = require('./schemas/listing.json')
 const listingWithdrawnSchema = require('./schemas/listing-withdraw.json')
+const offerAcceptedSchema = require('./schemas/offer-accept.json')
 const offerSchema = require('./schemas/offer.json')
 const offerWithdrawnSchema = require('./schemas/offer-withdraw.json')
-const offerAcceptedSchema = require('./schemas/offer-accept.json')
-const disputeSchema = require('./schemas/dispute.json')
+const profileSchema = require('./schemas/profile_2.0.0.json')
 const resolutionSchema = require('./schemas/resolution.json')
-const profileSchema = require('./schemas/profile.json')
 const reviewSchema = require('./schemas/review.json')
 
 const ajv = new Ajv({ allErrors: true })
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
 ajv.addSchema([
+  attestationSchema,
+  disputeSchema,
+  identitySchema,
   listingSchema,
   listingWithdrawnSchema,
+  offerAcceptedSchema,
   offerSchema,
   offerWithdrawnSchema,
-  offerAcceptedSchema,
-  disputeSchema,
-  resolutionSchema,
   profileSchema,
+  resolutionSchema,
   reviewSchema
 ])
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import { Link } from 'react-router-dom'
+import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
 import query from 'queries/Offer'
@@ -35,7 +36,7 @@ const Transaction = props => {
             return <div className="container">Offer not found</div>
           }
 
-          const isSeller = offer.listing.seller.id === props.wallet
+          const isSeller = get(offer, 'listing.seller.id', '') === props.wallet
           const party = isSeller ? offer.buyer.id : offer.listing.seller.id
 
           return (

@@ -3,7 +3,7 @@ const search = require('../lib/search')
 const db = require('../models')
 const { GrowthEvent } = require('origin-growth/src/resources/event')
 const { GrowthEventTypes } = require('origin-growth/src/enums')
-const { withRetrys, checkEventsFreshness } = require('./utils')
+const { checkEventsFreshness } = require('./utils')
 
 
 const LISTING_EVENTS = [
@@ -197,16 +197,11 @@ class MarketplaceEventHandler {
     } else {
       listingData.updatedAt = log.date
     }
-
-    await withRetrys(async () => {
-      return db.Listing.upsert(listingData)
-    })
+    await db.Listing.upsert(listingData)
 
     if (this.config.elasticsearch) {
       logger.info(`Indexing listing in Elastic: id=${listingId}`)
-      await withRetrys(async () => {
-        return search.Listing.index(listingId, userAddress, ipfsHash, listing)
-      })
+      search.Listing.index(listingId, userAddress, ipfsHash, listing)
     }
   }
 
@@ -234,10 +229,7 @@ class MarketplaceEventHandler {
     } else {
       offerData.updatedAt = log.date
     }
-
-    await withRetrys(async () => {
-      return db.Offer.upsert(offerData)
-    })
+    await db.Offer.upsert(offerData)
   }
 
   /**
@@ -313,6 +305,10 @@ class MarketplaceEventHandler {
 
   discordWebhookEnabled() {
     return this.config.marketplace
+  }
+
+  emailWebhookEnabled() {
+    return false
   }
 }
 

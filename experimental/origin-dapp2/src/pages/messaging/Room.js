@@ -69,10 +69,19 @@ class AllMessages extends Component {
     if (this.el) {
       this.el.scrollTop = this.el.scrollHeight
     }
+    if (this.props.markRead) {
+      this.props.markRead()
+    }
   }
   componentDidUpdate(prevProps) {
-    if (this.props.messages.length > prevProps.messages.length) {
+    if (this.props.messages.length !== prevProps.messages.length) {
       this.el.scrollTop = this.el.scrollHeight
+      if (this.props.markRead) {
+        this.props.markRead()
+      }
+    }
+    if (this.props.markRead && this.props.convId !== prevProps.convId) {
+      this.props.markRead()
     }
   }
   render() {
@@ -96,12 +105,18 @@ class AllMessages extends Component {
 
 class Room extends Component {
   render() {
-    const { id, wallet } = this.props
+    const { id, wallet, markRead } = this.props
     return (
       <div className="container">
-        <Query query={query} pollInterval={2000} variables={{ id }}>
-          {({ error, data, loading }) => {
-            if (loading) {
+        <Query
+          query={query}
+          pollInterval={2000}
+          variables={{ id }}
+          skip={!id}
+          notifyOnNetworkStatusChange={true}
+        >
+          {({ error, data, networkStatus }) => {
+            if (networkStatus === 1) {
               return <div>Loading...</div>
             } else if (error) {
               return <QueryError query={query} error={error} />
@@ -112,7 +127,12 @@ class Room extends Component {
             const messages = get(data, 'messaging.conversation.messages', [])
             return (
               <>
-                <AllMessages messages={messages} wallet={wallet} />
+                <AllMessages
+                  messages={messages}
+                  wallet={wallet}
+                  convId={id}
+                  markRead={() => markRead({ variables: { id } })}
+                />
                 <SendMessage to={this.props.id} />
               </>
             )
@@ -150,7 +170,7 @@ require('react-styl')(`
         vertical-align: bottom
       .bubble
         display: inline-block
-        margin-left: 1.5rem
+        margin-left: 1.75rem
         padding: 1rem
         background-color: var(--pale-grey)
         border-radius: 1rem
@@ -192,7 +212,6 @@ require('react-styl')(`
           background-color: var(--clear-blue)
           color: var(--white)
           margin-right: 1.5rem
-          margin-left: 0
           &::after
             right: -34px
             left: auto

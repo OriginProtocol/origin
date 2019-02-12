@@ -26,6 +26,7 @@ import withdrawOffer from './marketplace/withdrawOffer'
 
 import enableMessaging from './messaging/enableMessaging'
 import sendMessage from './messaging/sendMessage'
+import markConversationRead from './messaging/markConversationRead'
 
 import deployToken from './token/deployToken'
 import transferToken from './token/transferToken'
@@ -64,6 +65,7 @@ export default {
   importWallet,
   importWallets,
   makeOffer,
+  markConversationRead,
   removeWallet,
   sendFromNode,
   sendFromWallet,

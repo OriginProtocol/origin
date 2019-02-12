@@ -98,7 +98,8 @@ const config = {
       DAPP_CREATOR_DOMAIN: null,
       DAPP_URL: null,
       IPFS_API_URL: null,
-      IPFS_GATEWAY_URL: null
+      IPFS_GATEWAY_URL: null,
+      SSL_ISSUER_IP: null
     })
   ],
   optimization: {}

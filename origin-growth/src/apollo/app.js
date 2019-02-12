@@ -52,7 +52,7 @@ const server = new ApolloServer({
       ...context,
       userIp
     }
-  },
+  }
 })
 
 server.applyMiddleware({ app })
@@ -60,5 +60,7 @@ server.applyMiddleware({ app })
 const port = process.env.PORT || 4001
 
 app.listen({ port: port }, () =>
-  console.log(`Apollo server ready at http://localhost:${port}${server.graphqlPath}`)
+  console.log(
+    `Apollo server ready at http://localhost:${port}${server.graphqlPath}`
+  )
 )
