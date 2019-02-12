@@ -17,6 +17,7 @@ module.exports = `
     faviconUrl: String
     cssVars: CssVars
     marketplacePublisher: String
+    isCreatedMarketplace: Boolean
     listingFilters: [ListingFilter!]
   }
 

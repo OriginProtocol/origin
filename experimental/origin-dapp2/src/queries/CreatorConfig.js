@@ -10,6 +10,7 @@ export default gql`
       logoUrl
       faviconUrl
       marketplacePublisher
+      isCreatedMarketplace
       cssVars {
         lightFooter
         background

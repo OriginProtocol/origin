@@ -18,7 +18,7 @@ export default {
         .then(responseJson => {
           config = Object.assign(config, {
             ...responseJson.config,
-            isWhiteLabelled: true
+            isCreatedMarketplace: true
           })
         })
     }

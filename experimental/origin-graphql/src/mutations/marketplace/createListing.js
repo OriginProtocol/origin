@@ -24,7 +24,8 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     commissionPerUnit: {
       currency: 'OGN',
       amount: data.commissionPerUnit || '0'
-    }
+    },
+    marketplacePublisher: data.marketplacePublisher
   }
   if (listingType === 'unit') {
     ipfsData.unitsTotal = unitData.unitsTotal

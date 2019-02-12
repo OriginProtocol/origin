@@ -19,8 +19,8 @@ class Footer extends Component {
           <div className="logo" />
           <div className="separator" />
           <div className="about">
-            {this.props.creatorConfig.isWhiteLabelled ? (
-              this.props.aboutText
+            {this.props.creatorConfig.isCreatedMarketplace ? (
+              this.props.creatorConfig.aboutText
             ) : (
               <>
                 <fbt desc="footer.description">
@@ -67,7 +67,7 @@ class Footer extends Component {
               </a>
             </Dropdown>
 
-            {!this.props.creatorConfig.isWhiteLabelled && (
+            {!this.props.creatorConfig.isCreatedMarketplace && (
               <>
                 <a href="https://www.originprotocol.com/">
                   <fbt desc="footer.websiteLink">Visit our Website</fbt>
