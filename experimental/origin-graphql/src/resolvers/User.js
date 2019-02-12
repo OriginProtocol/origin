@@ -100,12 +100,13 @@ async function reviews(user) {
         event.returnValues.listingID,
         event.returnValues.offerID,
         event.returnValues.party,
-        event.returnValues.ipfsHash
+        event.returnValues.ipfsHash,
+        event
       )
     )
   )
 
-  nodes = nodes.filter(n => n.rating)
+  nodes = sortBy(nodes.filter(n => n.rating), n => -n.event.blockNumber)
 
   return {
     totalCount: nodes.length,

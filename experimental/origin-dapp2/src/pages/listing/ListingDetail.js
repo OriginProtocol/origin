@@ -193,7 +193,7 @@ class ListingDetail extends Component {
         </div>
         <h2>{listing.title}</h2>
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-8 pb-3">
             <Gallery pics={listing.media} />
             <div className="description">{listing.description}</div>
             {!isFractional ? null : (
@@ -206,8 +206,6 @@ class ListingDetail extends Component {
                 />
               </>
             )}
-            <hr />
-            <Reviews id={listing.seller.id} />
           </div>
           <div className="col-md-4">
             {listing.seller.id === this.props.from ? (
@@ -232,6 +230,8 @@ class ListingDetail extends Component {
             <AboutParty id={listing.seller.id} />
           </div>
         </div>
+        <hr />
+        <Reviews id={listing.seller.id} />
       </div>
     )
   }

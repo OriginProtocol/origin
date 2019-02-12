@@ -22,6 +22,16 @@ export default gql`
                 }
               }
             }
+            listing {
+              ... on Listing {
+                id
+                title
+              }
+            }
+            event {
+              id
+              timestamp
+            }
           }
         }
       }

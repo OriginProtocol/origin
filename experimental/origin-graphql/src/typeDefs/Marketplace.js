@@ -204,6 +204,7 @@ module.exports = `
     offer: Offer
     review: String
     rating: Int
+    event: Event
   }
 
   type ListingConnection {
