@@ -92,7 +92,11 @@ const config = {
       inject: false,
       network: 'rinkeby'
     }),
-    new webpack.EnvironmentPlugin({ HOST: 'localhost' })
+    new webpack.EnvironmentPlugin({
+      HOST: 'localhost',
+      DOCKER: false,
+      IPFS_SWARM: ''
+    })
   ],
 
   optimization: {
@@ -124,6 +128,12 @@ if (isProduction) {
       inject: false,
       filename: 'mainnet.html',
       network: 'mainnet'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'kovan.html',
+      network: 'kovanTst'
     })
   )
   config.resolve.alias = {

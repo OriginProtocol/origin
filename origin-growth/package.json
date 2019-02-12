@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "apollo-server-express": "^2.2.6",
+    "bignumber.js": "^8.0.1",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
@@ -20,7 +21,9 @@
     "graphql": "^0.13.2",
     "graphql-type-json": "^0.2.1",
     "http": "0.0.0",
+    "logplease": "^1.2.15",
     "origin-graphql": "^0.1.0",
+    "origin-token": "^0.1.0",
     "per-env": "^1.0.2",
     "pg": "^7.7.1",
     "sequelize": "^5.0.0-beta.14",

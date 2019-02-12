@@ -13,6 +13,13 @@ class Enum extends Array {
   }
 }
 
+const GrowthCampaignRewardStatuses = new Enum(
+  'NotReady',
+  'ReadyForCalculation',
+  'Calculated',
+  'Distributed'
+)
+
 const GrowthEventStatuses = new Enum('Logged', 'Verified', 'Fraud')
 
 const GrowthEventTypes = new Enum(
@@ -27,15 +34,27 @@ const GrowthEventTypes = new Enum(
   'ListingPurchased'
 )
 
-const GrowthRewardStatuses = new Enum('Pending', 'Fraud,', 'Blocked', 'Paid')
+const GrowthParticipantStatuses = new Enum('Active', 'Banned')
+
+const GrowthRewardStatuses = new Enum(
+  'Pending',
+  'Fraud,',
+  'Blocked',
+  'InPayment',
+  'Paid',
+  'PaymentFailed',
+  'PaidConfirmed'
+)
 
 const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
 
 const GrowthInviteStatuses = new Enum('Sent', 'Visited', 'Completed')
 
 module.exports = {
+  GrowthCampaignRewardStatuses,
   GrowthEventStatuses,
   GrowthEventTypes,
+  GrowthParticipantStatuses,
   GrowthRewardStatuses,
   GrowthInviteContactTypes,
   GrowthInviteStatuses

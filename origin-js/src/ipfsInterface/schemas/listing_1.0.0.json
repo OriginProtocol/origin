@@ -393,6 +393,19 @@
     },
     "commission": {
       "$ref": "#/definitions/money"
+    },
+    "createDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "creator": {
+      "type": "string"
+    },
+    "updateVersion": {
+      "type": "integer"
+    },
+    "signature": {
+      "type": "string"
     }
   },
   "listingType": {

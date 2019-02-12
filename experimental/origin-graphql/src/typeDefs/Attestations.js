@@ -10,8 +10,8 @@ module.exports = `
     generateEmailCode(email: String!): AttestationCodeResult!
     verifyEmailCode(email: String!, identity: String, code: String!): AttestationVerifyResult!
 
-    verifyFacebook(identity: String): AttestationVerifyResult!
-    verifyTwitter(identity: String): AttestationVerifyResult!
+    verifyFacebook(identity: String!, authUrl: String): AttestationVerifyResult!
+    verifyTwitter(identity: String!, authUrl: String): AttestationVerifyResult!
 
     generateAirbnbCode(identity: String!, airbnbUserId: String!): AttestationCodeResult!
     verifyAirbnbCode(identity: String!, airbnbUserId: String!): AttestationVerifyResult!

@@ -1,0 +1,197 @@
+version: "3"
+
+volumes:
+  ipfs:
+
+services:
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:10.0
+    environment:
+      - POSTGRES_USER=origin
+      - POSTGRES_PASSWORD=origin
+      - POSTGRES_DB=origin
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch
+    build:
+      context: .
+      dockerfile: development/dockerfiles/elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      network.bind_host: 0
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    logging:
+      driver: none
+
+  origin-dapp2:
+    container_name: origin-dapp2
+    image: origin-experimental
+    build:
+      context: .
+      dockerfile: Dockerfile-experimental
+    depends_on:
+      - origin-messaging
+    volumes: &volumes
+      # origin-contracts build directory, the DApp will run a contract deploy
+      # and the contract address here, and other services will then parse these
+      # build files to extract contract addresses
+      - ./origin-contracts/build:/app/origin-contracts/build
+      # Mount source code for all packages from host
+      - ./experimental/origin-dapp2/:/app/experimental/origin-dapp2/
+      - ./experimental/origin-services/:/app/experimental/origin-services/
+      - ./experimental/origin-graphql/:/app/experimental/origin-graphql/
+      - ./experimental/origin-eventsource/:/app/experimental/origin-eventsource/
+      - ./experimental/origin-ipfs/:/app/experimental/origin-ipfs/
+      - ./experimental/origin-messaging-client/:/app/experimental/origin-messaging-client/
+      - ./experimental/origin-validator/src:/app/experimental/origin-validator/
+      - ./origin-discovery/:/app/origin-discovery/
+      - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
+      - ./origin-messaging/:/app/origin-messaging/
+      - ./origin-notifications/:/app/origin-notifications/
+      - ./origin-growth/:/app/origin-growth/
+      - ./origin-token/:/app/origin-token/
+    # Exclude all node_modules
+      - /app/experimental/origin-dapp2/node_modules/
+      - /app/experimental/origin-services/node_modules/
+      - /app/experimental/origin-graphql/node_modules/
+      - /app/experimental/origin-eventsource/node_modules/
+      - /app/experimental/origin-ipfs/node_modules/
+      - /app/experimental/origin-messaging-client/node_modules/
+      - /app/experimental/origin-validator/node_modules/
+      - /app/origin-discovery/node_modules/
+      - /app/origin-ipfs-proxy/node_modules/
+      - /app/origin-messaging/node_modules/
+      - /app/origin-notifications/node_modules/
+      - /app/origin-growth/node_modules/
+      - /app/origin-token/node_modules/
+      # IPFS data
+      - ipfs:/app/ipfs
+    ports:
+      - "3001:3001"
+      - "8083:8083" # Webpack
+      - "8545:8545"
+      - "9090:9090"
+    environment:
+      - DEPLOY_CONTRACTS=true
+      - DOCKER=true
+    command:
+      # Waits for origin-messaging to start then uses a script to read the
+      # origin-messaging IPFS peer id and export the IPFS_SWARM variable
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 &&
+      . set-ipfs-swarm.sh /app/ipfs/config &&
+      npm run start --prefix experimental/origin-dapp2"
+
+  origin-messaging:
+    container_name: origin-messaging
+    image: origin-experimental
+    build:
+      context: .
+      dockerfile: Dockerfile-experimental
+    volumes: *volumes
+    environment:
+      - MESSAGING_NAMESPACE=dev
+      - IPFS_REPO_PATH=/app/ipfs
+    ports:
+      - "9012:9012"
+      - "6647:6647"
+    command: npm run start --prefix origin-messaging
+
+  origin-ipfs-proxy:
+    container_name: origin-ipfs-proxy
+    image: origin-experimental
+    volumes: *volumes
+    ports:
+      - "9999:9999"
+    environment:
+      - IPFS_API_URL=http://origin-dapp2:5002
+      - IPFS_GATEWAY_URL=http://origin-dapp2:9090
+    command: npm run start --prefix origin-ipfs-proxy
+
+  origin-event-listener:
+    container_name: origin-event-listener
+    image: origin-experimental
+    volumes: *volumes
+    environment:
+      - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
+      - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
+      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
+      - INDEX_MARKETPLACE=true
+      - INDEX_IDENTITY=true
+      - INDEX_GROWTH=true
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ELASTICSEARCH=true
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - IPFS_URL=http://origin-ipfs-proxy:9999
+      - WEB3_URL=http://origin-dapp2:8545
+    depends_on:
+      - postgres
+      - elasticsearch
+      - origin-dapp2
+      - origin-ipfs-proxy
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 --
+      wait-for.sh -t 0 -q elasticsearch:9200 --
+      npm run migrate --prefix origin-discovery &&
+      npm run migrate --prefix origin-growth &&
+      npm run start:listener --prefix origin-discovery"
+
+  origin-discovery:
+    container_name: origin-discovery
+    image: origin-experimental
+    volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - IPFS_URL=http://origin-ipfs-proxy:9999
+      - WEB3_URL=http://origin-dapp2:8545
+    depends_on:
+      - postgres
+      - elasticsearch
+    ports:
+      - "4000:4000"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 &&
+      npm run start:discovery --prefix origin-discovery"
+
+  origin-notifications:
+    container_name: origin-notifications
+    image: origin-experimental
+    volumes: *volumes
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+    ports:
+      - "3456:3456"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
+      npm run migrate --prefix origin-notifications &&
+      npm run start --prefix origin-notifications"
+
+  origin-bridge:
+    container_name: origin-bridge
+    image: origin-bridge
+    build:
+      context: .
+      dockerfile: development/dockerfiles/origin-bridge
+    volumes:
+      - ./origin-bridge:/app
+      # Set the envfile from the local envfile
+      - ./development/envfiles/origin-bridge.env:/app/.env
+    depends_on:
+      - postgres
+    environment:
+      - FLASK_APP=/app/main.py
+      - FLASK_DEBUG=True
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "5000:5000"
+    command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"

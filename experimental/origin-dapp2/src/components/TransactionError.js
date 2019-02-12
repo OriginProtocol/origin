@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
+import get from 'lodash/get'
 
 import Modal from 'components/Modal'
+
+const UserDenied = /denied transaction signature/
 
 class CannotTransact extends Component {
   state = {}
@@ -24,8 +27,12 @@ class CannotTransact extends Component {
     } else if (reason === 'wrong-network') {
       reason = `Please switch MetaMask to ${this.props.data}`
     } else if (reason === 'mutation') {
-      console.log(this.props.data)
-      reason = `Error with transaction. Please see console for details.`
+      if (get(this.props, 'data.message', '').match(UserDenied)) {
+        reason = 'You declined to sign the transaction'
+      } else {
+        reason = 'Error with transaction. Please see console for details.'
+        console.log(this.props.data)
+      }
     }
 
     return (

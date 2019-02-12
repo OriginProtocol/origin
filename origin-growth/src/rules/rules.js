@@ -11,7 +11,7 @@ class Reward {
     this.campaignId = campaignId
     this.levelId = levelId
     this.ruleId = ruleId
-    this.value = value
+    this.value = value // <{amount: string, currency: string}>
   }
 }
 
@@ -45,18 +45,36 @@ class Campaign {
    * @param {string} ethAddress - User's account.
    * @param {boolean} duringCampaign - Restricts query to events that occurred
    *  during the campaign vs since user signed up.
+   * @param {boolean} onlyVerified - Only returns events with status
+   *   Verified. Otherwise returns events with status Verified or Logged.
    * @returns {Promise<Array<models.GrowthEvent>>}
    */
-  async getEvents(ethAddress, duringCampaign) {
+  async getEvents(ethAddress, duringCampaign, onlyVerified) {
     const whereClause = {
       ethAddress: ethAddress.toLowerCase()
     }
+
     if (duringCampaign) {
+      // Note: restrict the query by using the capReachedDate (that's the case where the
+      // campaign was exhausted before its end date) or the campaign end date.
+      const endDate = this.campaign.capReachedDate || this.campaign.endDate
       whereClause.createdAt = {
         [Sequelize.Op.gte]: this.campaign.startDate,
-        [Sequelize.Op.lt]: this.campaign.endDate
+        [Sequelize.Op.lt]: endDate
       }
     }
+
+    if (onlyVerified) {
+      whereClause.status = GrowthEventStatuses.Verified
+    } else {
+      whereClause.status = {
+        [Sequelize.Op.in]: [
+          GrowthEventStatuses.Logged,
+          GrowthEventStatuses.Verified
+        ]
+      }
+    }
+
     const events = await db.GrowthEvent.findAll({
       where: whereClause,
       order: [['id', 'ASC']]
@@ -69,10 +87,12 @@ class Campaign {
    * Considers events that occurred since user joined the platform.
    *
    * @param {string} ethAddress - User's account.
+   * @param {boolean} onlyVerifiedEvents - Only use events with status Verified
+   *   for the calculation. Otherwise uses events with status Verified or Logged.
    * @returns {Promise<number>}
    */
-  async getCurrentLevel(ethAddress) {
-    const events = await this.getEvents(ethAddress, false)
+  async getCurrentLevel(ethAddress, onlyVerifiedEvents) {
+    const events = await this.getEvents(ethAddress, false, onlyVerifiedEvents)
     let level
     for (level = 0; level < this.config.numLevels - 1; level++) {
       if (!this.levels[level].qualifyForNextLevel(ethAddress, events)) {
@@ -87,12 +107,17 @@ class Campaign {
    * Only considers events that occurred during the campaign.
    *
    * @param {string} ethAddress - User's account.
+   * @param {boolean} onlyVerifiedEvents - Only use events with status Verified
+   *   for the calculation. Otherwise uses events with status Verified or Logged.
    * @returns {Promise<Array<Reward>>} - List of rewards, in no specific order.
    */
-  async getRewards(ethAddress) {
+  async getRewards(ethAddress, onlyVerifiedEvents) {
     const rewards = []
-    const events = await this.getEvents(ethAddress, true)
-    const currentLevel = await this.getCurrentLevel(ethAddress)
+    const events = await this.getEvents(ethAddress, true, onlyVerifiedEvents)
+    const currentLevel = await this.getCurrentLevel(
+      ethAddress,
+      onlyVerifiedEvents
+    )
     for (let i = 0; i <= currentLevel; i++) {
       rewards.push(...this.levels[i].getRewards(ethAddress, events))
     }

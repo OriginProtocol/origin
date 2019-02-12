@@ -6,6 +6,9 @@
   "properties": {
     "schemaId": {
       "type": "string"
+    },
+    "verifyParams" : {
+      "type" : "object"
     }
   },
   "required": ["schemaId"]
