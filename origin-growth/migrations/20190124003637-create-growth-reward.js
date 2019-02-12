@@ -34,6 +34,9 @@ module.exports = {
       currency: {
         type: Sequelize.STRING
       },
+      txn_hash: {
+        type: Sequelize.STRING
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

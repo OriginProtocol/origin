@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
       levelId: DataTypes.INTEGER,
       ruleId: DataTypes.STRING,
       amount: DataTypes.DECIMAL,
-      currency: DataTypes.STRING
+      currency: DataTypes.STRING,
+      txnHash: DataTypes.STRING
     },
     {
       tableName: 'growth_reward'

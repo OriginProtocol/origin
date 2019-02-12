@@ -4,7 +4,12 @@ const BigNumber = require('bignumber.js')
 const db = require('../models')
 const enums = require('../enums')
 
+// Accounts generated using Truffle default mnemonic:
+// "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+// Token supplier. Account 1.
 const account1 = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'.toLowerCase()
+
+// User. Account 2.
 const account2 = '0xf17f52151EbEF6C7334FAD080c5704D77216b732'.toLowerCase()
 
 function tokenNaturalUnits(x) {
@@ -221,14 +226,14 @@ async function createTestData() {
   })
 
   await db.GrowthParticipant.upsert({
-    ethAddress: account1,
+    ethAddress: account2,
     status: enums.GrowthParticipantStatuses.Active,
     data: null,
     agreementId: 'Test agreement'
   })
   await db.GrowthParticipant.update(
     { createdAt: Date.parse('January 1, 2019') },
-    { where: { ethAddress: account1 } }
+    { where: { ethAddress: account2 } }
   )
 
   await db.GrowthParticipant.upsert({
@@ -257,7 +262,7 @@ async function createTestData() {
     customId: null,
     type: enums.GrowthEventTypes.ProfilePublished,
     status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account1,
+    ethAddress: account2,
     data: null
   })
   await db.GrowthEvent.update(
@@ -270,7 +275,7 @@ async function createTestData() {
     customId: null,
     type: enums.GrowthEventTypes.EmailAttestationPublished,
     status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account1,
+    ethAddress: account2,
     data: null
   })
   await db.GrowthEvent.update(
@@ -283,7 +288,7 @@ async function createTestData() {
     customId: null,
     type: enums.GrowthEventTypes.AirbnbAttestationPublished,
     status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account1,
+    ethAddress: account2,
     data: null
   })
   await db.GrowthEvent.update(
@@ -296,7 +301,7 @@ async function createTestData() {
     customId: null,
     type: enums.GrowthEventTypes.TwitterAttestationPublished,
     status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account1,
+    ethAddress: account2,
     data: null
   })
   await db.GrowthEvent.update(
@@ -309,7 +314,7 @@ async function createTestData() {
     customId: null,
     type: enums.GrowthEventTypes.RefereeSignedUp,
     status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account1,
+    ethAddress: account2,
     data: null
   })
   await db.GrowthEvent.update(
@@ -322,7 +327,7 @@ async function createTestData() {
     customId: '1-000-456',
     type: enums.GrowthEventTypes.ListingCreated,
     status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account1,
+    ethAddress: account2,
     data: null
   })
   await db.GrowthEvent.update(
@@ -335,7 +340,7 @@ async function createTestData() {
     customId: '1-000-789-1',
     type: enums.GrowthEventTypes.ListingPurchased,
     status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account1,
+    ethAddress: account2,
     data: null
   })
   await db.GrowthEvent.update(

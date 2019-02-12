@@ -44,7 +44,8 @@ class TokenDistributor {
     logger.info('  Amount (tokens):  ', this.token.toTokenUnit(amount))
     logger.info('  From:             ', this.supplier)
     logger.info('  To:               ', ethAddress)
-    logger.info('  TxnReceipt:       ', txnReceipt)
+    logger.info('  TxnHash:          ', txnReceipt.transactionHash)
+    logger.info('  BlockNumber:      ', txnReceipt.blockNumber)
     return txnReceipt
   }
 }
@@ -53,6 +54,7 @@ class DistributeRewards {
   constructor(config, distributor) {
     this.config = config
     this.distributor = distributor
+    this.web3 = distributor.web3
     this.stats = {
       numCampaigns: 0,
       numTxns: 0,
@@ -62,12 +64,12 @@ class DistributeRewards {
 
   async _distributeRewards(ethAddress, rewards) {
     // Sum up the reward amount.
-    const total = rewards
+    let total = rewards
       .map(reward => reward.amount)
       .reduce((a1, a2) => BigNumber(a1).plus(a2))
 
     if (!this.config.persist) {
-      logger.info(`Would distribute reward of ${total} to ${ethAddress}`)
+      logger.info(`Would distribute reward of ${total} from to ${ethAddress}`)
       return total
     }
 
@@ -76,9 +78,9 @@ class DistributeRewards {
     // Mark the reward row(s) as InPayment.
     let txn = await db.sequelize.transaction()
     try {
-      rewards.forEach(reward => {
-        reward.update({ status: enums.GrowthRewardStatuses.InPayment })
-      })
+      for (const reward of rewards) {
+        await reward.update({ status: enums.GrowthRewardStatuses.InPayment })
+      }
       await txn.commit()
     } catch (e) {
       await txn.rollback()
@@ -86,26 +88,28 @@ class DistributeRewards {
     }
 
     // Send a transaction for the total amount.
-    let status, txnHash
-    const txnReceipt = await this.distributor.credit(ethAddress, total)
-    if (txnReceipt.status) {
+    let status, txnHash, txnReceipt
+    try {
+      txnReceipt = await this.distributor.credit(ethAddress, total)
+    } catch(e) {
+      logger.error('Credit failed: ', e)
+    }
+    if (txnReceipt && txnReceipt.status) {
       status = enums.GrowthRewardStatuses.Paid
       txnHash = txnReceipt.transactionHash
     } else {
       logger.error(`EVM reverted transaction - Marking rewards as Failed`)
       status = enums.GrowthRewardStatuses.PaymentFailed
       txnHash = null
+      total = 0
     }
 
     // Mark the rewards as Paid.
     txn = await db.sequelize.transaction()
     try {
-      rewards.forEach(reward => {
-        reward.update({
-          status: status,
-          data: Object.assign({}, reward.data, { txnHash })
-        })
-      })
+      for (const reward of rewards) {
+        await reward.update({ status, txnHash })
+      }
       await txn.commit()
     } catch (e) {
       logger.error(`IMPORTANT: failed updating reward status to Paid.`)
@@ -123,24 +127,19 @@ class DistributeRewards {
       return true
     }
 
-    let txnHash = null
-    rewards.forEach(async reward => {
-      // Reload the reward to get the txnHash.
+    // Reload the reward to get the txnHash and run some consistency checks.
+    for (const reward of rewards) {
       await reward.reload()
-      if (!txnHash) {
-        txnHash = reward.data.txnHash
-      } else {
-        // Paranoia check: make sure all the rewards point to same txnHash.
-        if (reward.data.txnHash !== txnHash) {
-          logger.error(
-            `Reward $(reward.id} - Expected txnHash ${txnHash}, got ${
-              reward.data.txnHash
-            }`
-          )
-          throw new Error(`Consistency check failure for reward ${reward.id}`)
-        }
+      if (!reward.txnHash) {
+        // Make sure all rewards have a txnHash.
+        throw new Error(`Null txnHash for reward ${reward.id}`)
       }
-    })
+      if (reward.txnHash !== rewards[0].txnHash) {
+        // Make sure all rewards point to same txnHash.
+        throw new Error(`Inconsistent txnHash reward ${reward.id}`)
+      }
+    }
+    const txnHash = rewards[0].txnHash
 
     // Load the transaction receipt.
     const txnReceipt = await this.web3.eth.getTransactionReceipt(txnHash)
@@ -161,13 +160,13 @@ class DistributeRewards {
       logger.error('  Setting status to PaymentFailed.')
       const txn = await db.sequelize.transaction()
       try {
-        rewards.forEach(reward => {
+        for (const reward of rewards) {
           delete reward.data.txnHash
-          reward.update({
+          await reward.update({
             status: enums.GrowthRewardStatuses.PaymentFailed,
             data: reward.data
           })
-        })
+        }
         await txn.commit()
       } catch (e) {
         await txn.rollback()
@@ -182,21 +181,28 @@ class DistributeRewards {
     // Wait a bit for the last transaction to settle.
     const waitMsec = MinBlockConfirmation * BlockMiningTimeMsec
     logger.info(
-      `Waiting ${waitMsec * 1000} seconds to allow transactions to settle...`
+      `Waiting ${waitMsec / 1000} seconds to allow transactions to settle...`
     )
     await new Promise(resolve => setTimeout(resolve, waitMsec))
 
     // Verify the reward transactions were confirmed on the blockchain.
     const blockNumber = await this.web3.eth.getBlockNumber()
-    return Object.entries(ethAddressToRewards).every(
-      async ([ethAddress, rewards]) => {
-        return await this._confirmTransaction(ethAddress, rewards, blockNumber)
+
+    let allConfirmed = true
+    for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
+      try {
+        const confirmed = await this._confirmTransaction(ethAddress, rewards, blockNumber)
+        allConfirmed = allConfirmed && confirmed
+      } catch(e) {
+        logger.error('Failed verifying transaction:', e)
+        allConfirmed = false
       }
-    )
+    }
+    return allConfirmed
   }
 
   async process() {
-    const now = new Date().toISOString()
+    const now = new Date()
 
     // Look for campaigns with rewards_status Calculated and distribution date past now.
     const campaigns = await db.GrowthCampaign.findAll({
@@ -217,7 +223,7 @@ class DistributeRewards {
         where: {
           campaignId: campaign.id,
           status: {
-            [Sequelize.Op.lt]: [
+            [Sequelize.Op.in]: [
               enums.GrowthRewardStatuses.Pending,
               enums.GrowthRewardStatuses.PaymentFailed
             ]
@@ -243,7 +249,7 @@ class DistributeRewards {
       }
 
       // Confirm the transactions.
-      const allConfirmed = this._confirmAllTransactions(ethAddressToRewards)
+      const allConfirmed = await this._confirmAllTransactions(ethAddressToRewards)
 
       // Update the campaign reward status to indicate it was distributed.
       if (allConfirmed) {
@@ -301,19 +307,25 @@ if (!config.networkId) {
 const distributor = new TokenDistributor()
 distributor.init(config.networkId).then(() => {
   const job = new DistributeRewards(config, distributor)
-  job.process().then(() => {
-    logger.info('Distribution job stats:')
-    logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
-    logger.info('  Number of transactions:            ', job.stats.numTxns)
-    logger.info(
-      '  Grand total distributed (natural): ',
-      job.stats.distGrandTotal
-    )
-    logger.info(
-      '  Grand total distributed (tokens):  ',
-      job.distributor.token.toTokenUnit(job.stats.distGrandTotal)
-    )
-    logger.info('Finished')
-    process.exit()
-  })
+  job.process()
+    .then(() => {
+      logger.info('Distribution job stats:')
+      logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
+      logger.info('  Number of transactions:            ', job.stats.numTxns)
+      logger.info(
+        '  Grand total distributed (natural): ',
+        job.stats.distGrandTotal
+      )
+      logger.info(
+        '  Grand total distributed (tokens):  ',
+        job.distributor.token.toTokenUnit(job.stats.distGrandTotal)
+      )
+      logger.info('Finished')
+      process.exit()
+    })
+    .catch(err => {
+      logger.error('Job failed: ', err)
+      logger.error('Exiting')
+      process.exit(-1)
+    })
 })

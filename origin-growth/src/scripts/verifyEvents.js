@@ -70,11 +70,17 @@ logger.info(config)
 
 const job = new VerifyEvents(config)
 
-job.process().then(() => {
-  logger.info('Events verification stats:')
-  logger.info('  Number of events processed:          ', job.stats.numProcessed)
-  logger.info('  Number of events marked as verified :', job.stats.numVerified)
-  logger.info('  Number of events marked as fraud    :', job.stats.numFraud)
-  logger.info('Finished')
-  process.exit()
-})
+job.process()
+  .then(() => {
+    logger.info('Events verification stats:')
+    logger.info('  Number of events processed:          ', job.stats.numProcessed)
+    logger.info('  Number of events marked as verified :', job.stats.numVerified)
+    logger.info('  Number of events marked as fraud    :', job.stats.numFraud)
+    logger.info('Finished')
+    process.exit()
+  })
+  .catch(err => {
+    logger.error('Job failed: ', err)
+    logger.error('Exiting')
+    process.exit(-1)
+  })

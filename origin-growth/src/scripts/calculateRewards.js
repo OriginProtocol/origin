@@ -219,17 +219,23 @@ logger.info(config)
 const token = new Token({})
 const job = new CalculateRewards(config, token)
 
-job.process().then(() => {
-  logger.info('Rewards calculation stats:')
-  logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
-  logger.info(
-    '  Grand total distributed (natural): ',
-    job.stats.calcGrandTotal.toFixed()
-  )
-  logger.info(
-    '  Grand total distributed (tokens):  ',
-    job.token.toTokenUnit(job.stats.calcGrandTotal)
-  )
-  logger.info('Finished')
-  process.exit()
-})
+job.process()
+  .then(() => {
+    logger.info('Rewards calculation stats:')
+    logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
+    logger.info(
+      '  Grand total distributed (natural): ',
+      job.stats.calcGrandTotal.toFixed()
+    )
+    logger.info(
+      '  Grand total distributed (tokens):  ',
+      job.token.toTokenUnit(job.stats.calcGrandTotal)
+    )
+    logger.info('Finished')
+    process.exit()
+  })
+  .catch(err => {
+    logger.error('Job failed: ', err)
+    logger.error('Exiting')
+    process.exit(-1)
+  })

@@ -95,11 +95,17 @@ logger.info(config)
 
 const job = new UpdateCampaigns(config)
 
-job.process().then(() => {
-  logger.info('Campaigns update stats:')
-  logger.info('  Num processed:            ', job.stats.numProcessed)
-  logger.info('  Num marked as calc. ready:', job.stats.numStatusReady)
-  logger.info('  Num usedCap updated:      ', job.stats.numUsedCapUpdated)
-  logger.info('Finished')
-  process.exit()
-})
+job.process()
+  .then(() => {
+    logger.info('Campaigns update stats:')
+    logger.info('  Num processed:            ', job.stats.numProcessed)
+    logger.info('  Num marked as calc. ready:', job.stats.numStatusReady)
+    logger.info('  Num usedCap updated:      ', job.stats.numUsedCapUpdated)
+    logger.info('Finished')
+    process.exit()
+  })
+  .catch(err => {
+    logger.error('Job failed: ', err)
+    logger.error('Exiting')
+    process.exit(-1)
+  })
