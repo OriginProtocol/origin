@@ -109,6 +109,28 @@ module.exports = `
     updateRefund(offerID: ID!, amount: String!, from: String): Transaction
   }
 
+  enum ValueType {
+    STRING
+    FLOAT
+    DATE
+    ARRAY_STRING
+  }
+  enum FilterOperator {
+    EQUALS
+    CONTAINS #for array values where at least one must match E.g. list of categories
+    GREATER
+    GREATER_OR_EQUAL
+    LESSER
+    LESSER_OR_EQUAL
+  }
+  # A generic listing filter
+  input ListingFilter {
+    name: String!
+    value: String!
+    valueType: ValueType!
+    operator: FilterOperator!
+  }
+
   type Marketplace {
     id: ID
     address: String
@@ -127,6 +149,7 @@ module.exports = `
       search: String
       sort: String
       hidden: Boolean
+      filters: [ListingFilter]
     ): ListingConnection!
 
     offer(id: ID!): Offer

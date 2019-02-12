@@ -1,7 +1,8 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
-import includes from 'lodash/includes'
-import filter from 'lodash/filter'
+import isNull from 'lodash/isNull'
+import pick from 'lodash/pick'
+import identity from 'lodash/identity'
 
 import { getFeatured, getHidden } from './_featuredAndHidden'
 
@@ -18,10 +19,10 @@ function atob(input) {
 }
 
 const discoveryQuery = `
-query Search($search: String) {
+query Search($search: String, $filters: [ListingFilter!]) {
   listings(
     searchQuery: $search
-    filters: []
+    filters: $filters
     page: { offset: 0, numberOfItems: 1000 }
   ) {
     numberOfItems
@@ -29,14 +30,14 @@ query Search($search: String) {
   }
 }`
 
-async function searchIds(search) {
+async function searchIds(props) {
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
         query: discoveryQuery,
-        variables: { search }
+        variables: pick(props, identity)
       })
     })
       .then(response => response.json())
@@ -64,16 +65,9 @@ async function allIds({ contract, sort, hidden }) {
   return { totalCount: ids.length, ids }
 }
 
-async function resultsFromIds({
-  after,
-  ids,
-  first,
-  totalCount,
-  fields,
-  subCategory
-}) {
+async function resultsFromIds({ after, ids, first, totalCount, fields }) {
   let start = 0,
-    unfilteredNodes = []
+    nodes = []
   if (after) {
     start = ids.indexOf(convertCursorToOffset(after)) + 1
   }
@@ -81,20 +75,12 @@ async function resultsFromIds({
   ids = ids.slice(start, end)
 
   if (!fields || fields.nodes) {
-    unfilteredNodes = await Promise.all(
+    nodes = await Promise.all(
       ids.map(id => contracts.eventSource.getListing(id))
     )
   }
   const firstNodeId = ids[0] || 0
   const lastNodeId = ids[ids.length - 1] || 0
-
-  //have to updated totalCount and ids
-  const nodes = filter(unfilteredNodes, node => {
-    const matchedSubCategory =
-      node.categoryStr && includes(node.categoryStr, subCategory)
-    if (!subCategory) return node
-    if (matchedSubCategory) return node
-  })
 
   return {
     totalCount,
@@ -129,7 +115,7 @@ export async function listingsBySeller(
 
 export default async function listings(
   contract,
-  { first = 10, after, sort, hidden = true, search, subCategory }
+  { first = 10, after, sort, hidden = true, search, filters }
 ) {
   if (!contract) {
     return null
@@ -138,11 +124,11 @@ export default async function listings(
   let ids = [],
     totalCount = 0
 
-  if (search && contracts.discovery) {
-    ;({ totalCount, ids } = await searchIds(search)) // eslint-disable-line
+  if ((!isNull(search) || filters.length) && contracts.discovery) {
+    ;({ totalCount, ids } = await searchIds({ search, filters })) // eslint-disable-line
   } else {
     ;({ totalCount, ids } = await allIds({ contract, sort, hidden })) // eslint-disable-line
   }
 
-  return await resultsFromIds({ after, ids, first, totalCount, subCategory })
+  return await resultsFromIds({ after, ids, first, totalCount })
 }

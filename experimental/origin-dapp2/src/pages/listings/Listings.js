@@ -19,33 +19,56 @@ const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
 
 class Listings extends Component {
-  state = {
-    first: 15,
-    search: memStore.get('listingsPage.search'),
-    sort: 'featured',
-    hidden: true
+  constructor(props) {
+    super(props)
+
+    this.saveFilters = this.saveFilters.bind(this)
+    this.state = {
+      first: 15,
+      search: memStore.get('listingsPage.search'),
+      sort: 'featured',
+      hidden: true,
+      filters: []
+    }
+  }
+
+  saveFilters() {
+    this.setState(state => {
+      return {
+        ...state,
+        filters: [
+          ...state.filters,
+          {
+            name: 'category',
+            operator: 'EQUALS',
+            value: 'schema.forSale',
+            valueType: 'STRING'
+          }
+        ]
+      }
+    })
   }
 
   render() {
-    const vars = pick(this.state, 'first', 'sort', 'hidden', 'search')
-
+    const vars = pick(
+      this.state,
+      'first',
+      'sort',
+      'hidden',
+      'search',
+      'filters'
+    )
+    console.log('VARS', vars)
     return (
       <>
         <PageTitle>Listings</PageTitle>
-        <Search
-          value={this.state.search}
-          onSearch={search => {
-            this.setState({ search })
-            memStore.set('listingsPage.search', search)
-          }}
-        />
         <div className="container">
           <Query
             query={query}
             variables={vars}
             notifyOnNetworkStatusChange={true}
           >
-            {({ error, data, fetchMore, networkStatus, loading }) => {
+            {({ error, data, fetchMore, networkStatus, loading, refetch }) => {
               if (networkStatus === 1) {
                 return <h5 className="listings-count">Loading...</h5>
               } else if (error) {
@@ -58,42 +81,53 @@ class Listings extends Component {
               const { hasNextPage, endCursor: after } = pageInfo
 
               return (
-                <BottomScrollListener
-                  offset={200}
-                  ready={networkStatus === 7}
-                  hasMore={hasNextPage}
-                  onBottom={() => {
-                    if (!loading) {
-                      nextPage(fetchMore, { ...vars, after })
-                    }
-                  }}
-                >
-                  <>
-                    <h5 className="listings-count">
-                      <fbt desc="Num Listings">
-                        <fbt:plural count={totalCount} showCount="yes">
-                          Listing
-                        </fbt:plural>
-                      </fbt>
-                    </h5>
-                    <ListingsGallery
-                      listings={nodes}
-                      hasNextPage={hasNextPage}
-                    />
-                    {!hasNextPage ? null : (
-                      <button
-                        className="btn btn-outline-primary btn-rounded mt-3"
-                        onClick={() => {
-                          if (!loading) {
-                            nextPage(fetchMore, { ...vars, after })
-                          }
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Load more'}
-                      </button>
-                    )}
-                  </>
-                </BottomScrollListener>
+                <>
+                  <Search
+                    value={this.state.search}
+                    saveFilters={this.saveFilters}
+                    refetch={refetch}
+                    onSearch={search => {
+                      this.setState({ search })
+                      memStore.set('listingsPage.search', search)
+                    }}
+                  />
+                  <BottomScrollListener
+                    offset={200}
+                    ready={networkStatus === 7}
+                    hasMore={hasNextPage}
+                    onBottom={() => {
+                      if (!loading) {
+                        nextPage(fetchMore, { ...vars, after })
+                      }
+                    }}
+                  >
+                    <>
+                      <h5 className="listings-count">
+                        <fbt desc="Num Listings">
+                          <fbt:plural count={totalCount} showCount="yes">
+                            Listing
+                          </fbt:plural>
+                        </fbt>
+                      </h5>
+                      <ListingsGallery
+                        listings={nodes}
+                        hasNextPage={hasNextPage}
+                      />
+                      {!hasNextPage ? null : (
+                        <button
+                          className="btn btn-outline-primary btn-rounded mt-3"
+                          onClick={() => {
+                            if (!loading) {
+                              nextPage(fetchMore, { ...vars, after })
+                            }
+                          }}
+                        >
+                          {loading ? 'Loading...' : 'Load more'}
+                        </button>
+                      )}
+                    </>
+                  </BottomScrollListener>
+                </>
               )
             }}
           </Query>

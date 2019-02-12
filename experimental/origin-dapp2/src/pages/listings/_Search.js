@@ -40,6 +40,7 @@ class Search extends Component {
   render() {
     const enabled = get(this.props, 'config.discovery', false)
     const category = this.state.category || {}
+
     return (
       <div className="search-bar">
         <div className="container">
@@ -49,7 +50,10 @@ class Search extends Component {
               content={
                 <SearchDropdown
                   onChange={category =>
-                    this.setState({ category, open: false })
+                    this.setState({ category, open: false }, () => {
+                      this.props.saveFilters(CategoriesEnum[category.id])
+                      this.props.refetch()
+                    })
                   }
                 />
               }
