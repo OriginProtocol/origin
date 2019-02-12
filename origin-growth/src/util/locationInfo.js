@@ -3,18 +3,22 @@ const ipCache = {}
 const restrictedCountryCodes = ['US', 'CA']
 const forbiddenCountryCodes = []
 
-const getLocationInfo = async (ip) => {
+const getLocationInfo = async ip => {
   const apiKey = process.env.IPDATA_API_KEY
   if (!apiKey) {
-    console.warn(`IPDATA_API_KEY environmental variable not set. Can not fetch location information`)
+    console.warn(
+      `IPDATA_API_KEY environmental variable not set. Can not fetch location information`
+    )
     return false
   }
   // if api response found in cache just return that
-  if (ipCache[ip]){
+  if (ipCache[ip]) {
     return ipCache[ip]
   }
 
-  const ipdataResponse = await fetch(`https://api.ipdata.co/${ip}?api-key=${process.env.IPDATA_API_KEY}`)
+  const ipdataResponse = await fetch(
+    `https://api.ipdata.co/${ip}?api-key=${process.env.IPDATA_API_KEY}`
+  )
   if (ipdataResponse.status === 200) {
     const responseBody = await ipdataResponse.json()
     const response = {
@@ -27,11 +31,14 @@ const getLocationInfo = async (ip) => {
     return response
   } else {
     const responseBody = await ipdataResponse.json()
-    console.log('Unexpected response received from Ipdata: ', JSON.stringify(responseBody))
+    console.log(
+      'Unexpected response received from Ipdata: ',
+      JSON.stringify(responseBody)
+    )
     return false
   }
 }
 
-module.exports = { 
+module.exports = {
   getLocationInfo
 }

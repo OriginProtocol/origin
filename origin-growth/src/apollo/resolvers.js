@@ -12,7 +12,7 @@ const resolvers = {
   //JSON: GraphQLJSON,
   DateTime: GraphQLDateTime,
   Query: {
-    async campaigns () {
+    async campaigns() {
       const campaigns = await db.getCampaigns()
       return {
         totalCount: campaigns.length,
@@ -28,7 +28,7 @@ const resolvers = {
     async campaign() {
       return null
     },
-    async isEligible (obj, args, context) {
+    async isEligible(obj, args, context) {
       if (process.env.NODE_ENV !== 'production') {
         return {
           code: 200,
@@ -48,10 +48,8 @@ const resolvers = {
         }
       }
       let eligibility = 'Eligible'
-      if (locationInfo.isForbidden)
-        eligibility = 'Forbidden'
-      else if (locationInfo.isRestricted)
-        eligibility = 'Restricted'
+      if (locationInfo.isForbidden) eligibility = 'Forbidden'
+      else if (locationInfo.isRestricted) eligibility = 'Restricted'
 
       return {
         code: 200,

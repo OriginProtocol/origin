@@ -12,7 +12,9 @@ function withEnrolmentModal(WrappedComponent) {
       super(props)
       this.handleClick = this.handleClick.bind(this)
       this.handleNotCitizenClick = this.handleNotCitizenClick.bind(this)
-      this.renderTermsAndEligibilityCheck = this.renderTermsAndEligibilityCheck.bind(this)
+      this.renderTermsAndEligibilityCheck = this.renderTermsAndEligibilityCheck.bind(
+        this
+      )
       this.handleCloseModal = this.handleCloseModal.bind(this)
       this.handleEligibilityContinue = this.handleEligibilityContinue.bind(this)
       this.renderRestrictedModal = this.renderRestrictedModal.bind(this)
@@ -35,15 +37,13 @@ function withEnrolmentModal(WrappedComponent) {
       //TODO: check if user already enrolled
       //this.setState({ userAlreadyEnrolled: e.target.checked })
       //
-      
       //TODO: remove this later
-      const gql = require ('graphql-tag')
-      const ToggleMetaMaskMutation = gql`
-        mutation ToggleMetaMask($enabled: Boolean) {
-          toggleMetaMask(enabled: $enabled)
-        }
-      `
-
+      // const gql = require('graphql-tag')
+      // const ToggleMetaMaskMutation = gql`
+      //   mutation ToggleMetaMask($enabled: Boolean) {
+      //     toggleMetaMask(enabled: $enabled)
+      //   }
+      // `
       // console.log("METAMASK TOGGLE MUTATION", await this.props.client.mutate({
       //   mutation: ToggleMetaMaskMutation,
       //   variables: {
@@ -75,11 +75,11 @@ function withEnrolmentModal(WrappedComponent) {
       this.setState({ stage: 'MetamaskSignature' })
 
       const { data } = await this.props.client.query({
-        query: profileQuery,
+        query: profileQuery
       })
 
       const account_id = data.web3.metaMaskAccount.id
-      
+
       const result = await this.props.client.mutate({
         mutation: signMessageMutation,
         variables: {
@@ -89,16 +89,16 @@ function withEnrolmentModal(WrappedComponent) {
         }
       })
 
-      console.log("MUTATION RESULT", result)
+      console.log('MUTATION RESULT', result)
     }
 
-    handleCloseModal(e) {
+    handleCloseModal() {
       this.setState({
         open: false
       })
     }
 
-    handleEligibilityContinue(e) {
+    handleEligibilityContinue() {
       if (this.state.notCitizenChecked) {
         this.setState({
           notCitizenConfirmed: true
@@ -110,26 +110,29 @@ function withEnrolmentModal(WrappedComponent) {
       const { termsAccepted } = this.state
       return (
         <div>
-          <div className="title title-light mt-2">
-            Terms & Conditions
-          </div>
+          <div className="title title-light mt-2">Terms & Conditions</div>
           <div className="mt-3 normal-line-height">
-            Something here about the rewards program that explains what it is and why it’s so great.
+            Something here about the rewards program that explains what it is
+            and why it’s so great.
           </div>
           <div className="terms">
-            These Origin Tokens are being issued in a transaction originally exempt from 
-            registration under the U.S. securities act of 1933, as amended (the securities act), 
-            and may not be transferred in the united states orf to, or for the account or benefit of, 
-            any u.s. person except pursuant to an available exemption from the registration 
-            requirements of the securities act and all applicable state securities laws. Terms 
-            used above have the meanings given to them in regulation s under the securities act of 
-            1933 and all applicable laws and regulations. These Origin Tokens are being issued in a 
-            transaction originally exempt from registration under the U.S. securities act of 1933, 
-            as amended (the securities act), and may not be transferred in the united states orf to, 
-            or for the account or benefit of, any u.s. person except pursuant to an available exemption 
-            from the registration requirements of the securities act and all applicable state securities 
-            laws. Terms used above have the meanings given to them in regulation s under the securities 
-            act of 1933 and all applicable laws and regulations.
+            These Origin Tokens are being issued in a transaction originally
+            exempt from registration under the U.S. securities act of 1933, as
+            amended (the securities act), and may not be transferred in the
+            united states orf to, or for the account or benefit of, any u.s.
+            person except pursuant to an available exemption from the
+            registration requirements of the securities act and all applicable
+            state securities laws. Terms used above have the meanings given to
+            them in regulation s under the securities act of 1933 and all
+            applicable laws and regulations. These Origin Tokens are being
+            issued in a transaction originally exempt from registration under
+            the U.S. securities act of 1933, as amended (the securities act),
+            and may not be transferred in the united states orf to, or for the
+            account or benefit of, any u.s. person except pursuant to an
+            available exemption from the registration requirements of the
+            securities act and all applicable state securities laws. Terms used
+            above have the meanings given to them in regulation s under the
+            securities act of 1933 and all applicable laws and regulations.
           </div>
           <div className="mt-1 d-flex country-check-label justify-content-center">
             <label className="checkbox-holder">
@@ -151,7 +154,9 @@ function withEnrolmentModal(WrappedComponent) {
               children="Cancel"
             />
             <button
-              className={`btn btn-lg ml-2 ${termsAccepted ? 'btn-primary btn-rounded' : 'btn-outline-light'}`}
+              className={`btn btn-lg ml-2 ${
+                termsAccepted ? 'btn-primary btn-rounded' : 'btn-outline-light'
+              }`}
               onClick={this.handleTermsContinue}
               disabled={termsAccepted ? undefined : 'disabled'}
               children="Accept Terms"
@@ -176,15 +181,14 @@ function withEnrolmentModal(WrappedComponent) {
               />
             </div>
           </div>
-          <div className="title mt-4">
-            Oops, {country} is not eligible
-          </div>
+          <div className="title mt-4">Oops, {country} is not eligible</div>
           <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
-            Unfortunately, it looks like you’re currently in a country
-            where government regulations do not allow you to participate
-            in Origin Campaigns.
+            Unfortunately, it looks like you’re currently in a country where
+            government regulations do not allow you to participate in Origin
+            Campaigns.
           </div>
-          { isRestricted && <Fragment>
+          {isRestricted && (
+            <Fragment>
               <div className="mt-4 pt-2">
                 Did we detect your your country incorrectly?
               </div>
@@ -202,7 +206,7 @@ function withEnrolmentModal(WrappedComponent) {
                 <div>I certify I am not a citizen or resident of {country}</div>
               </div>
             </Fragment>
-          }
+          )}
           {(isForbidden || (isRestricted && !notCitizenChecked)) && (
             <button
               className="btn btn-outline-light"
@@ -222,14 +226,11 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderTermsAndEligibilityCheck() {
-      const {
-        notCitizenChecked,
-        notCitizenConfirmed
-      } = this.state
+      const { notCitizenChecked, notCitizenConfirmed } = this.state
 
       return (
         <Query query={growthEligibilityQuery}>
-          {({ networkStatus, error, loading, data, refetch }) => {
+          {({ networkStatus, error, loading, data }) => {
             if (networkStatus === 1 || loading) return `Loading...`
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
@@ -241,12 +242,20 @@ function withEnrolmentModal(WrappedComponent) {
             // const country = 'Saudi Arabia'
             // const eligibility = 'Forbidden'
 
-            if (eligibility === 'Eligible' ||
+            if (
+              eligibility === 'Eligible' ||
               (eligibility === 'Restricted' && notCitizenConfirmed)
-              ) {
+            ) {
               return this.renderTermsModal()
-            } else if (eligibility === 'Restricted' || eligibility === 'Forbidden') {
-              return this.renderRestrictedModal(country, eligibility, notCitizenChecked)
+            } else if (
+              eligibility === 'Restricted' ||
+              eligibility === 'Forbidden'
+            ) {
+              return this.renderRestrictedModal(
+                country,
+                eligibility,
+                notCitizenChecked
+              )
             }
           }}
         </Query>
@@ -263,12 +272,13 @@ function withEnrolmentModal(WrappedComponent) {
             autoPlay
             loop
           >
-            <source src="images/growth/metamask_in_browser_dark_bg.mp4" type="video/mp4"/>
+            <source
+              src="images/growth/metamask_in_browser_dark_bg.mp4"
+              type="video/mp4"
+            />
             Your browser does not support the video tag.
           </video>
-          <div className="title">
-            Confirm Metamask Signature
-          </div>
+          <div className="title">Confirm Metamask Signature</div>
           <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
             Open your Metamask browser extension and confirm your signature.
           </div>
