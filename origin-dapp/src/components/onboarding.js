@@ -293,7 +293,7 @@ class Onboarding extends Component {
         {children}
         {!query['skip-onboarding'] && (
           <Fragment>
-            {networkType === 'Mainnet Beta' && <BetaModal />}
+            {networkType === 'Mainnet' && <BetaModal />}
           </Fragment>
         )}
         {['buyer', 'seller'].includes(notificationsSubscriptionPrompt) && (
