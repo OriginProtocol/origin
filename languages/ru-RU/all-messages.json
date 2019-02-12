@@ -190,6 +190,7 @@
   "listing-create.boost-level": "Уровень рекламы",
   "listing-create.boostLimit": "Boost Limit",
   "listing-create.doneButtonLabel": "Готово",
+  "listing-create.offerButtonLabel": "I want this",
   "listing-create.create-a-listing": "Создание объявления в приложении Origin",
   "listing-create.form-help-schema": "Начните с выбора типа объявления, которое хотите создать. Затем вы сможете указать цену и подробную информацию.",
   "listing-create.add-details": "Добавить детали объявления",
