@@ -87,7 +87,7 @@ class Token extends ContractHelper {
     const supplierBalance = await contract.methods
       .balanceOf(tokenSupplier)
       .call()
-    if (value > supplierBalance) {
+    if (BigNumber(value).gt(supplierBalance)) {
       throw new Error('insufficient funds for token transfer')
     }
     const paused = await contract.methods.paused().call()
