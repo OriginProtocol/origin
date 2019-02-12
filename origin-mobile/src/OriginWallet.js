@@ -477,7 +477,9 @@ class OriginWallet {
     {
       const action = "sign"
       let msg = ""
-      let domiain = ""
+      let domain = ""
+      let listing = undefined
+      let sign_type = undefined
 
       if (event_data.sign.call.params.msg)
       {
@@ -488,8 +490,26 @@ class OriginWallet {
         const data = JSON.parse(event_data.sign.call.params.data)
         domain = data.domain
         msg = data.message
+        if (data)
+        {
+          sign_type = data.primaryType
+          if (data.primaryType == "Listing")
+          {
+            listing = msg
+          }
+          else if (data.primaryType == "AcceptOffer")
+          {
+            const listingId = origin.reflection.makeSignedListingId(this.state.netId, msg.listingID)
+            listing = await origin.marketplace.getListing(listingId)
+          }
+          else if (data.primaryType == "Finalize")
+          {
+            const listingId = origin.reflection.makeSignedListingId(this.state.netId, msg.listingID)
+            listing = await origin.marketplace.getListing(listingId)
+          }
+        }
       }
-      return {...event_data, msg, domain, action}
+      return {...event_data, listing, sign_type, msg, domain, action}
     }
     //this is the bare event
     return event_data
