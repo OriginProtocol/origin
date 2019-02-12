@@ -122,12 +122,12 @@ class VA_MarketplaceAdapter {
 
       //set commission to 0 because estimate cannot handle 
       const estimate_args = args.slice(0)
-      estimate_args[5] = "0"
+      estimate_args[5] = '0'
 
       // In order to estimate gas correctly, we need to add the call to a create listing since that's called by the token
       const extra_estimated_gas = await this.contract.methods['makeOffer'](
         ...estimate_args
-      ).estimateGas({ from, value:opts.value })
+      ).estimateGas({ from, value: opts.value })
       opts.additionalGas = extra_estimated_gas
 
       const { transactionReceipt, timestamp } = await this.contractService.call(
@@ -137,7 +137,7 @@ class VA_MarketplaceAdapter {
         opts
       )
       //asumptions are made
-      const offerIndex = 0;
+      const offerIndex = 0
 
       return Object.assign({ timestamp, offerIndex }, transactionReceipt)
     } else {
