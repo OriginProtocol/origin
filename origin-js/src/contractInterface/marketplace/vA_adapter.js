@@ -23,7 +23,7 @@ const offerStatusToBuyerNotificationType = {
   'sellerReviewed': 'buyer_offer_review',
   'withdrawn': 'buyer_offer_withdrawn',
 }
-//const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
+const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 
@@ -70,7 +70,9 @@ class VA_MarketplaceAdapter {
 
   async makeOffer(listingIndex, ipfsBytes, data, confirmationCallback) {
     const {
+      affiliate,
       arbitrator,
+      commission,
       finalizes,
       totalPrice = {},
       listingIpfsHash,
@@ -78,6 +80,7 @@ class VA_MarketplaceAdapter {
       verifier
     } = data
     const price = await this.contractService.moneyToUnits(totalPrice)
+    const commissionUnits = await this.contractService.moneyToUnits(commission)
     const currencies = await this.contractService.currencies()
 
     const args = [
@@ -85,6 +88,8 @@ class VA_MarketplaceAdapter {
       listingIpfsHash,
       ipfsBytes,
       finalizes || 30 * 24 * 60 * 60, // 30 days from offer acceptance
+      affiliate || emptyAddress,
+      commissionUnits,
       price,
       currencies[totalPrice.currency].address,
       arbitrator || emptyAddress,
@@ -98,15 +103,54 @@ class VA_MarketplaceAdapter {
       opts.value = price
     }
 
-    const { transactionReceipt, timestamp } = await this.call(
-      'makeOffer',
-      args,
-      opts
-    )
-    const offerIndex =
-      transactionReceipt.events['OfferCreated'].returnValues.offerID
+    const { amount, currency } = commission
 
-    return Object.assign({ timestamp, offerIndex }, transactionReceipt)
+    if (currency && !SUPPORTED_DEPOSIT_CURRENCIES.includes(currency)) {
+        throw `${currency} is not a supported deposit currency`
+    }
+
+    if (amount > 0) {
+      const from = (await this.contractService.currentAccount()) || this.contractService.placeholderAccount()
+      const {
+        market_address,
+        selector,
+        call_params
+      } = await this._getTokenAndCallWithSenderParams(
+        'makeOfferWithSender',
+        ...args
+      )
+
+      //set commission to 0 because estimate cannot handle 
+      const estimate_args = args.slice(0)
+      estimate_args[5] = "0"
+
+      // In order to estimate gas correctly, we need to add the call to a create listing since that's called by the token
+      const extra_estimated_gas = await this.contract.methods['makeOffer'](
+        ...estimate_args
+      ).estimateGas({ from, value:opts.value })
+      opts.additionalGas = extra_estimated_gas
+
+      const { transactionReceipt, timestamp } = await this.contractService.call(
+        this.tokenContractName,
+        'approveAndCallWithSender',
+        [market_address, commissionUnits, selector, call_params],
+        opts
+      )
+      //asumptions are made
+      const offerIndex = 0;
+
+      return Object.assign({ timestamp, offerIndex }, transactionReceipt)
+    } else {
+      const { transactionReceipt, timestamp } = await this.call(
+        'makeOffer',
+        args,
+        opts
+      )
+      const offerIndex =
+        transactionReceipt.events['OfferCreated'].returnValues.offerID
+
+      return Object.assign({ timestamp, offerIndex }, transactionReceipt)
+    }
   }
 
   async withdrawOffer(
