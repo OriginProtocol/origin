@@ -27,14 +27,18 @@ query Search($search: String, $filters: [ListingFilter!]) {
 }`
 
 async function searchIds(search, filters) {
+  const variables = {}
+  if (search) {
+    variables['search'] = search
+  }
+  if (filters) {
+    variables['filters'] = filters
+  }
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
-      body: JSON.stringify({
-        query: discoveryQuery,
-        variables: { search, filters }
-      })
+      body: JSON.stringify({ query: discoveryQuery, variables })
     })
       .then(response => response.json())
       .then(response => resolve(response.data.listings))
