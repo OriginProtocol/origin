@@ -104,6 +104,7 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:9090`,
     ipfsRPC: `http://${HOST}:5002`,
+    discovery: `http://${HOST}:4000/graphql`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',

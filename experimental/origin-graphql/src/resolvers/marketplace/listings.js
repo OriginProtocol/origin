@@ -1,6 +1,6 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
-import isNull from 'lodash/isNull'
+import isNil from 'lodash/isNil'
 import pick from 'lodash/pick'
 import identity from 'lodash/identity'
 
@@ -18,6 +18,13 @@ function atob(input) {
   return new Buffer(input, 'base64').toString('binary')
 }
 
+function getVariables({ search, filters }) {
+  if (isNil(search)) {
+    return { filters }
+  } else {
+    return { search, filters }
+  }
+}
 const discoveryQuery = `
 query Search($search: String, $filters: [ListingFilter!]) {
   listings(
@@ -31,13 +38,15 @@ query Search($search: String, $filters: [ListingFilter!]) {
 }`
 
 async function searchIds(props) {
+  const variables = getVariables(props)
+
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
         query: discoveryQuery,
-        variables: pick(props, identity)
+        variables
       })
     })
       .then(response => response.json())
@@ -124,7 +133,7 @@ export default async function listings(
   let ids = [],
     totalCount = 0
 
-  if ((!isNull(search) || filters.length) && contracts.discovery) {
+  if ((!isNil(search) || filters.length) && contracts.discovery) {
     ;({ totalCount, ids } = await searchIds({ search, filters })) // eslint-disable-line
   } else {
     ;({ totalCount, ids } = await allIds({ contract, sort, hidden })) // eslint-disable-line

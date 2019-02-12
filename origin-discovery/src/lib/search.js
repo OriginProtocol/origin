@@ -94,6 +94,7 @@ class Listing {
    * @returns A list of listings (can be empty).
    */
   static async search (query, filters, numberOfItems, offset, idsOnly, hiddenIds = [], featuredIds = []) {
+  static async search (query, filters = [], numberOfItems, offset, idsOnly, hiddenIds = [], featuredIds = []) {
     const esQuery = {
       bool: {
         must: [{
