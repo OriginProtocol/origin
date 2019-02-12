@@ -82,24 +82,24 @@ async function updateSearch(listingId, listing) {
 async function _verifyListing(listing, signature) {
   if (!listing.createDate)
   {
-    throw('CreateDate required to inject this listing')
+    throw new Error('CreateDate required to inject this listing')
   }
 
   if (listing.ipfs.data.signature != signature)
   {
-    throw('signature not encoded into ipfs blob')
+    throw new Error('signature not encoded into ipfs blob')
   }
 
   console.log('creator vs seller:', listing.creator, listing.seller)
   if (listing.creator != listing.seller)
   {
-    throw('Creator must be same as the seller!')
+    throw new Error('Creator must be same as the seller!')
   }
   //looks like I need a raw response to verify this hash else it hashes the processed one
 
   if (!(await origin.marketplace.verifyListingSignature(listing, listing.seller)))
   {
-    throw('Signature does not match that of the seller')
+    throw new Error('Signature does not match that of the seller')
   }
 }
 
@@ -122,7 +122,7 @@ async function injectListing(injectedListingInput, signature) {
   const existingRow = await db.getListing(listingId)
 
   if (existingRow) {
-    throw('Row already created, update instead')
+    throw new Error('Row already created, update instead')
   }
   const blockNumber = await origin.contractService.web3.eth.getBlockNumber()
 
@@ -152,7 +152,7 @@ async function updateListing(listingId, injectedListingInput, signature) {
 
   if (((existingRow.updateVersion && Number(existingRow.updateVersion)) || 0) 
     >= ((listing.updateVersion && Number(listing.updateVersion)) || 0)) {
-    throw('Update date is earlier than the existing date')
+    throw new Error('Update date is earlier than the existing date')
   }
 
   await _verifyListing(listing, signature)

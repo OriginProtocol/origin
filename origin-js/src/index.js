@@ -80,7 +80,7 @@ export default class Origin {
         arbitrator,
         store,
         blockEpoch,
-        perfModeEnabled,
+        perfModeEnabled
       })
 
       this.discovery = new Discovery({

@@ -354,7 +354,6 @@ class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
 
     const offer = await origin.marketplace.getOffer(offerId)
 
-    console.log('offer details', offer)
     checkEventsFreshness(offer.events, blockInfo)
 
     // TODO: need to load from db to verify that the listingIpfs haven't already been set!!!

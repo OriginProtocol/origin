@@ -70,7 +70,6 @@ class VA_MarketplaceAdapter {
 
   async makeOffer(listingIndex, ipfsBytes, data, confirmationCallback) {
     const {
-      affiliate,
       arbitrator,
       finalizes,
       totalPrice = {},
