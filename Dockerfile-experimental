@@ -18,6 +18,7 @@ COPY ./origin-messaging/package*.json ./origin-messaging/
 COPY ./origin-notifications/package*.json ./origin-notifications/
 COPY ./origin-tests/package*.json ./origin-tests/
 COPY ./origin-growth/package*.json ./origin-growth/
+COPY ./origin-token/package*.json ./origin-token/
 COPY ./experimental/origin-dapp2/package*.json ./experimental/origin-dapp2/
 COPY ./experimental/origin-graphql/package*.json ./experimental/origin-graphql/
 COPY ./experimental/origin-ipfs/package*.json ./experimental/origin-ipfs/

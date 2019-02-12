@@ -75,7 +75,10 @@
     "schema.resumes": "CV's",
     "schema.volunteers": "Vrijwilligers"
   },
-  "odYsB": "Beoordelingen",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "De gedecentraliseerde app Origin laat kopers en verkopers toe om transacties uit te voeren zonder huurzoekende tussenpersonen met behulp van de Ethereum blockchain en IPFS.",
@@ -83,12 +86,15 @@
   "421TH8": "Bezoek onze Github",
   "1xF0Sp": "Kopen",
   "3i2AJC": "Advertentie toevoegen",
+  "2AYKWR": "This page has been machine translated, see any errors?",
+  "rlRRa": "Help Translate",
   "1r15SU": "Verifieer uw Airbnb account",
   "4iptAy": "Voer hieronder de URL van uw Airbnb-profiel in",
   "1jSLWC": "Andere gebruikers weten hierdoor dat u een geverifieerd Airbnb-profiel heeft.",
   "561FZ": "Annuleren",
   "47VMoo": "Ga naar Airbnb, bewerk uw profiel en plak de volgende tekst in uw profielbeschrijving.",
   "4ppTCb": "Ga door wanneer de bevestigingscode is toegevoegd aan uw Airbnb-profiel.",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"

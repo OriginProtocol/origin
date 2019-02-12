@@ -258,4 +258,10 @@ describe('download', () => {
         done()
       })
   })
+
+  /* TODO
+  https://github.com/visionmedia/superagent/issues/1362
+  it('should return an error on malformed request', done => {
+  })
+  */
 })
