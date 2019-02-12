@@ -190,6 +190,7 @@
   "listing-create.boost-level": "Tăng cấp độ",
   "listing-create.boostLimit": "Boost Limit",
   "listing-create.doneButtonLabel": "Đã xong",
+  "listing-create.offerButtonLabel": "I want this",
   "listing-create.create-a-listing": "Tạo một danh sách trên Origin DApp",
   "listing-create.form-help-schema": "Bắt đầu bằng cách chọn loại danh sách bạn muốn tạo. Sau đó, bạn sẽ có thể đặt giá và chi tiết về danh sách.",
   "listing-create.add-details": "Thêm chi tiết về danh sách",
