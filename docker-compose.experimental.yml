@@ -55,19 +55,19 @@ services:
       - ./origin-growth/:/app/origin-growth/
       - ./origin-token/:/app/origin-token/
     # Exclude all node_modules
-      - /app/experimental/origin-dapp2/node_modules
-      - /app/experimental/origin-services/node_modules
-      - /app/experimental/origin-graphql/node_modules
-      - /app/experimental/origin-eventsource/node_modules
-      - /app/experimental/origin-ipfs/node_modules
-      - /app/experimental/origin-messaging-client/node_modules
-      - /app/experimental/origin-validator/node_modules
-      - /origin-discovery/node_modules
-      - /origin-ipfs-proxy/node_modules
-      - /origin-messaging/node_modules
-      - /origin-notifications/node_modules
-      - /origin-growth/node_modules
-      - /origin-token/node_modules
+      - /app/experimental/origin-dapp2/node_modules/
+      - /app/experimental/origin-services/node_modules/
+      - /app/experimental/origin-graphql/node_modules/
+      - /app/experimental/origin-eventsource/node_modules/
+      - /app/experimental/origin-ipfs/node_modules/
+      - /app/experimental/origin-messaging-client/node_modules/
+      - /app/experimental/origin-validator/node_modules/
+      - /app/origin-discovery/node_modules/
+      - /app/origin-ipfs-proxy/node_modules/
+      - /app/origin-messaging/node_modules/
+      - /app/origin-notifications/node_modules/
+      - /app/origin-growth/node_modules/
+      - /app/origin-token/node_modules/
       # IPFS data
       - ipfs:/app/ipfs
     ports:
