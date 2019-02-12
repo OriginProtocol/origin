@@ -30,7 +30,7 @@ discoveryImageTag: '412cb1f'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'f91846f'
+messagingImageTag: '4a8c5fd'
 
 # origin-notifications
 notificationsImage: origin-notifications
