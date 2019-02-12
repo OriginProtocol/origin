@@ -52,7 +52,7 @@ class App extends Component {
     }
     return (
       <>
-        <BetaBanner locale={this.props.locale} />
+        <BetaBanner />
         <BetaModal />
         <Nav />
         <main>
