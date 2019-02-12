@@ -190,6 +190,7 @@
   "listing-create.boost-level": "Επίπεδο Ενίσχυσης",
   "listing-create.boostLimit": "Όριο ενίσχυσης",
   "listing-create.doneButtonLabel": "Ολοκληρώθηκε",
+  "listing-create.offerButtonLabel": "I want this",
   "listing-create.create-a-listing": "Δημιουργήστε μια καταχώρηση για την Origin DApp",
   "listing-create.form-help-schema": "Ξεκινήστε επιλέγοντας τον τύπο της καταχώρισης που θέλετε να δημιουργήσετε. Στη συνέχεια, θα μπορείτε να ορίσετε μια τιμή και στοιχεία καταχώρισης.",
   "listing-create.add-details": "Προσθήκη Λεπτομερειών Καταχώρησης",
