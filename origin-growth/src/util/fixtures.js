@@ -7,7 +7,7 @@ const enums = require('../enums')
 // Accounts generated using Truffle default mnemonic:
 // "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
 // Token supplier. Account 1.
-const account1 = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'.toLowerCase()
+// const account1 = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'.toLowerCase()
 
 // User. Account 2.
 const account2 = '0xf17f52151EbEF6C7334FAD080c5704D77216b732'.toLowerCase()
