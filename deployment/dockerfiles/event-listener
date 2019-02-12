@@ -18,6 +18,7 @@ COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-discovery ./origin-discovery
 COPY ./origin-growth ./origin-growth
+COPY ./origin-token ./origin-token
 COPY ./experimental/origin-eventsource ./experimental/origin-eventsource
 COPY ./experimental/origin-graphql ./experimental/origin-graphql
 COPY ./experimental/origin-ipfs ./experimental/origin-ipfs

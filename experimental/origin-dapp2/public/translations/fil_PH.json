@@ -75,7 +75,10 @@
     "schema.resumes": "Mga resume",
     "schema.volunteers": "Mga nagboluntaryo"
   },
-  "odYsB": "Mga Review",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Ang Pinagmulan ng desentralisadong app ay nagbibigay-daan sa mga mamimili at nagbebenta na mag-transact nang walang renta-naghahanap ng mga middleman gamit ang Ethereum blockchain at IPFS.",
@@ -83,12 +86,15 @@
   "421TH8": "Bisitahin ang aming Github",
   "1xF0Sp": "Bumibili",
   "3i2AJC": "Magdagdag ng listahan",
+  "2AYKWR": "This page has been machine translated, see any errors?",
+  "rlRRa": "Help Translate",
   "1r15SU": "I-verify ang iyong Airbnb account",
   "4iptAy": "Ilagay ang Airbnb profile Url sa ibaba",
   "1jSLWC": "Malalaman ng iba pang mga user na mayroon kang isang na-verify na profile ng Airbnb.",
   "561FZ": "Kanselahin",
   "47VMoo": "Magpunta sa website ng Airbnb, i-edit ang iyong profile at ilagay ang sumusunod na teksto sa profile description.",
   "4ppTCb": "Magpatuloy kapag nailagay na ang confirmation code sa iyong profile ng Airbnb.",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
