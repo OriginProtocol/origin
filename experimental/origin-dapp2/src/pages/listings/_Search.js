@@ -51,8 +51,7 @@ class Search extends Component {
                 <SearchDropdown
                   onChange={category =>
                     this.setState({ category, open: false }, () => {
-                      this.props.saveFilters(CategoriesEnum[category.id])
-                      this.props.refetch()
+                      this.props.saveFilters('category', category.id)
                     })
                   }
                 />

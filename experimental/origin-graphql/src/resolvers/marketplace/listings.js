@@ -1,8 +1,6 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
 import isNil from 'lodash/isNil'
-import pick from 'lodash/pick'
-import identity from 'lodash/identity'
 
 import { getFeatured, getHidden } from './_featuredAndHidden'
 
