@@ -7,7 +7,7 @@ import query from 'queries/AllContracts'
 import Address from 'components/Address'
 import DeployToken from './_DeployToken'
 import DeployMarketplace from './_DeployMarketplace'
-import DeployContract from './_DeployContract'
+import DeployIdentityEvents from './_DeployIdentityEvents'
 import AddAffiliate from './_AddAffiliate'
 
 function totalSupply(supply, decimals) {
@@ -135,30 +135,9 @@ class Contracts extends Component {
                 <Button
                   small={true}
                   icon="plus"
-                  text="User Registry"
+                  text="Identity Events"
                   className="ml-2"
-                  onClick={() => this.setState({ deployUserRegistry: true })}
-                />
-                <Button
-                  small={true}
-                  icon="plus"
-                  text="Key Holder Lib"
-                  className="ml-2"
-                  onClick={() => this.setState({ deployKeyHolderLib: true })}
-                />
-                <Button
-                  small={true}
-                  icon="plus"
-                  text="Claim Holder Lib"
-                  className="ml-2"
-                  onClick={() => this.setState({ deployClaimHolderLib: true })}
-                />
-                <Button
-                  small={true}
-                  icon="plus"
-                  text="Origin Identity"
-                  className="ml-2"
-                  onClick={() => this.setState({ deployOriginIdentity: true })}
+                  onClick={() => this.setState({ deployIdentityEvents: true })}
                 />
               </div>
 
@@ -176,32 +155,10 @@ class Contracts extends Component {
                 from={this.state.addAffiliate}
                 onCompleted={() => this.setState({ addAffiliate: false })}
               />
-              <DeployContract
-                title="Deploy User Registry"
-                contract="UserRegistry"
-                isOpen={this.state.deployUserRegistry ? true : false}
-                onCompleted={() => this.setState({ deployUserRegistry: false })}
-              />
-              <DeployContract
-                title="Deploy Key Holder Lib"
-                contract="KeyHolderLibrary"
-                isOpen={this.state.deployKeyHolderLib ? true : false}
-                onCompleted={() => this.setState({ deployKeyHolderLib: false })}
-              />
-              <DeployContract
-                title="Deploy Claim Holder Lib"
-                contract="ClaimHolderLibrary"
-                isOpen={this.state.deployClaimHolderLib ? true : false}
+              <DeployIdentityEvents
+                isOpen={this.state.deployIdentityEvents ? true : false}
                 onCompleted={() =>
-                  this.setState({ deployClaimHolderLib: false })
-                }
-              />
-              <DeployContract
-                title="Deploy Origin Identity"
-                contract="OriginIdentity"
-                isOpen={this.state.deployOriginIdentity ? true : false}
-                onCompleted={() =>
-                  this.setState({ deployOriginIdentity: false })
+                  this.setState({ deployIdentityEvents: false })
                 }
               />
             </div>

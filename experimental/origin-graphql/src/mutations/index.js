@@ -30,6 +30,7 @@ import markConversationRead from './messaging/markConversationRead'
 import deployToken from './token/deployToken'
 import transferToken from './token/transferToken'
 import updateTokenAllowance from './token/updateTokenAllowance'
+import useFaucet from './token/useFaucet'
 
 import deployIdentity from './identity/deployIdentity'
 import deployIdentityEvents from './identity/deployIdentityEvents'
@@ -76,6 +77,7 @@ export default {
   updateListing,
   updateRefund,
   updateTokenAllowance,
+  useFaucet,
   verifyAirbnbCode,
   verifyEmailCode,
   verifyFacebook,

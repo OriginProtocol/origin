@@ -37,6 +37,7 @@ require('react-styl')(`
     border-radius: 5px
     padding: 1rem
     display: flex
+    margin-bottom: 2rem
     .main-pic
       width: 200px
       min-height: 150px
