@@ -146,6 +146,7 @@ services:
     image: origin-experimental
     volumes: *volumes
     environment:
+      - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - IPFS_URL=http://origin-ipfs-proxy:9999
