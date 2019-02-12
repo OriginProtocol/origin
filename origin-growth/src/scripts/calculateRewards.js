@@ -219,7 +219,8 @@ logger.info(config)
 const token = new Token({})
 const job = new CalculateRewards(config, token)
 
-job.process()
+job
+  .process()
   .then(() => {
     logger.info('Rewards calculation stats:')
     logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)

@@ -91,7 +91,7 @@ class DistributeRewards {
     let status, txnHash, txnReceipt
     try {
       txnReceipt = await this.distributor.credit(ethAddress, total)
-    } catch(e) {
+    } catch (e) {
       logger.error('Credit failed: ', e)
     }
     if (txnReceipt && txnReceipt.status) {
@@ -191,9 +191,13 @@ class DistributeRewards {
     let allConfirmed = true
     for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
       try {
-        const confirmed = await this._confirmTransaction(ethAddress, rewards, blockNumber)
+        const confirmed = await this._confirmTransaction(
+          ethAddress,
+          rewards,
+          blockNumber
+        )
         allConfirmed = allConfirmed && confirmed
-      } catch(e) {
+      } catch (e) {
         logger.error('Failed verifying transaction:', e)
         allConfirmed = false
       }
@@ -249,7 +253,9 @@ class DistributeRewards {
       }
 
       // Confirm the transactions.
-      const allConfirmed = await this._confirmAllTransactions(ethAddressToRewards)
+      const allConfirmed = await this._confirmAllTransactions(
+        ethAddressToRewards
+      )
 
       // Update the campaign reward status to indicate it was distributed.
       if (allConfirmed) {
@@ -307,10 +313,14 @@ if (!config.networkId) {
 const distributor = new TokenDistributor()
 distributor.init(config.networkId).then(() => {
   const job = new DistributeRewards(config, distributor)
-  job.process()
+  job
+    .process()
     .then(() => {
       logger.info('Distribution job stats:')
-      logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
+      logger.info(
+        '  Number of campaigns processed:     ',
+        job.stats.numCampaigns
+      )
       logger.info('  Number of transactions:            ', job.stats.numTxns)
       logger.info(
         '  Grand total distributed (natural): ',

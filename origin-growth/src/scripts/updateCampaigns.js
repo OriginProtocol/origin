@@ -95,7 +95,8 @@ logger.info(config)
 
 const job = new UpdateCampaigns(config)
 
-job.process()
+job
+  .process()
   .then(() => {
     logger.info('Campaigns update stats:')
     logger.info('  Num processed:            ', job.stats.numProcessed)
