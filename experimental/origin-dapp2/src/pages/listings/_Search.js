@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 import Categories from 'origin-graphql/src/constants/Categories'
+import FilterGroup from 'pages/listings/filters/'
 
 const CategoriesEnum = require('Categories$FbtEnum')
 
@@ -28,74 +29,120 @@ function getStateFromQuery(props) {
 class Search extends Component {
   constructor(props) {
     super(props)
-    this.state = getStateFromQuery(props)
+    this.state = {
+      ...getStateFromQuery(props),
+      maxPrice: 10000,
+      minPrice: 0
+    }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.location.search !== this.props.location.search) {
       this.setState(getStateFromQuery(this.props))
+    }
+
+    const catType = get(this.state, 'category.type', '')
+    const prevType = get(prevState, 'category.type', '')
+    if (catType !== prevType) {
+      const filterSchemaPath = `schemas/searchFilters/${catType}-search.json`
+
+      fetch(filterSchemaPath)
+        .then(response => response.json())
+        .then(schemaJson => {
+          // this.validateFilterSchema(schemaJson)
+          if (this.state.category.type === schemaJson.listingType)
+            this.setState({ filterSchema: schemaJson, yes: false })
+        })
+        .catch(function(e) {
+          console.error(`Error reading schema ${filterSchemaPath}: ${e}`)
+          throw e
+        })
     }
   }
 
   render() {
+    const {
+      category = {},
+      searchInput,
+      filterSchema,
+      minPrice,
+      maxPrice,
+      open
+    } = this.state
     const enabled = get(this.props, 'config.discovery', false)
-    const category = this.state.category || {}
 
     return (
-      <div className="search-bar">
-        <div className="container">
-          <div className="input-group">
-            <Dropdown
-              className="input-group-prepend"
-              content={
-                <SearchDropdown
-                  onChange={category =>
-                    this.setState({ category, open: false }, () => {
-                      this.props.saveFilters('category', category.id)
-                    })
-                  }
-                />
-              }
-              open={this.state.open}
-              onClose={() => this.setState({ open: false })}
-            >
-              <button
-                className="btn btn-outline-secondary dropdown-toggle"
-                onClick={() =>
-                  this.setState({ open: this.state.open ? false : true })
+      <>
+        <div className="search-bar">
+          <div className="container">
+            <div className="input-group">
+              <Dropdown
+                className="input-group-prepend"
+                content={
+                  <SearchDropdown
+                    onChange={category =>
+                      this.setState(
+                        { category, open: false, yes: true },
+                        () => {
+                          this.props.saveFilters('category', category.id)
+                        }
+                      )
+                    }
+                  />
                 }
+                open={open}
+                onClose={() => this.setState({ open: false })}
               >
-                {CategoriesEnum[category.id] ? (
-                  <fbt desc="category">
-                    <fbt:enum enum-range={CategoriesEnum} value={category.id} />
-                  </fbt>
-                ) : (
-                  fbt('All', 'listingType.all')
-                )}
-              </button>
-            </Dropdown>
-            <input
-              type="text"
-              className="form-control"
-              placeholder={enabled ? null : 'Note: Search unavailable'}
-              value={this.state.searchInput}
-              onChange={e => this.setState({ searchInput: e.target.value })}
-              onKeyUp={e => {
-                if (e.keyCode === 13) this.doSearch()
-              }}
-            />
-            <div className="input-group-append">
-              <button
-                className="btn btn-primary"
-                onClick={() => this.doSearch()}
+                <button
+                  className="btn btn-outline-secondary dropdown-toggle"
+                  onClick={() => this.setState({ open: open ? false : true })}
+                >
+                  {CategoriesEnum[category.id] ? (
+                    <fbt desc="category">
+                      <fbt:enum
+                        enum-range={CategoriesEnum}
+                        value={category.id}
+                      />
+                    </fbt>
+                  ) : (
+                    fbt('All', 'listingType.all')
+                  )}
+                </button>
+              </Dropdown>
+              <input
+                type="text"
+                className="form-control"
+                placeholder={enabled ? null : 'Note: Search unavailable'}
+                value={searchInput}
+                onChange={e => this.setState({ searchInput: e.target.value })}
+                onKeyUp={e => {
+                  if (e.keyCode === 13) this.doSearch()
+                }}
               />
+              <div className="input-group-append">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => this.doSearch()}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        <div className="i-exist">
+          <FilterGroup
+            filterSchema={filterSchema}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            category={category}
+          />
+        </div>
+      </>
     )
   }
 
+  renderFilter() {
+    return null
+  }
   doSearch() {
     this.props.history.replace({
       to: '/search',

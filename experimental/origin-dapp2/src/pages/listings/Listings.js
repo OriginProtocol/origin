@@ -65,6 +65,7 @@ class Listings extends Component {
         <Search
           value={this.state.search}
           saveFilters={this.saveFilters}
+          filters={this.state.filters}
           onSearch={search => {
             this.setState({ search })
             memStore.set('listingsPage.search', search)

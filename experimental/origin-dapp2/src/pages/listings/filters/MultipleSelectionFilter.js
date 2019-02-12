@@ -1,12 +1,24 @@
 import React, { Component } from 'react'
-import {
-  FILTER_OPERATOR_CONTAINS,
-  VALUE_TYPE_ARRAY_STRING
-} from 'components/search/constants'
-
-import schemaMessages from '../../schemaMessages/index'
+import Categories from 'origin-graphql/src/constants/Categories'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 
+export const FILTER_OPERATOR_EQUALS = 'EQUALS'
+export const FILTER_OPERATOR_CONTAINS = 'CONTAINS' //for array values where at least one must match E.g. list of categories
+export const FILTER_OPERATOR_GREATER = 'GREATER'
+export const FILTER_OPERATOR_GREATER_OR_EQUAL = 'GREATER_OR_EQUAL'
+export const FILTER_OPERATOR_LESSER = 'LESSER'
+export const FILTER_OPERATOR_LESSER_OR_EQUAL = 'LESSER_OR_EQUAL'
+
+export const VALUE_TYPE_STRING = 'STRING'
+export const VALUE_TYPE_FLOAT = 'FLOAT'
+export const VALUE_TYPE_DATE = 'DATE'
+export const VALUE_TYPE_ARRAY_STRING = 'ARRAY_STRING'
+
+const categories = Categories.root.map(c => ({
+  id: c[0],
+  type: c[0].split('.').slice(-1)[0]
+}))
+categories.unshift({ id: '', type: '' })
 class MultipleSelectionFilter extends Component {
   constructor(props) {
     super(props)
@@ -15,17 +27,9 @@ class MultipleSelectionFilter extends Component {
     }
 
     this.onHandleClick = this.onHandleClick.bind(this)
-
-    this.multipleSelectionValues = listingSchemaMetadata.listingSchemasByCategory[props.listingType.type]
-      .map(subCategory => subCategory.translationName.id)
-  }
-
-  componentWillUnmount() {
-    this.props.onChildUnMounted(this)
-  }
-
-  componentDidMount() {
-    this.props.onChildMounted(this)
+    this.multipleSelectionValues = listingSchemaMetadata.listingSchemasByCategory[
+      props.category.type
+    ].map(subCategory => subCategory.translationName.id)
   }
 
   // Called by filter-group
@@ -46,11 +50,11 @@ class MultipleSelectionFilter extends Component {
       ]
   }
 
-  componentDidUpdate(previousProps) {
-    // When new search is triggered, search filters get reset, so component should reset their state
-    if (this.props.generalSearchId !== previousProps.generalSearchId)
-      this.onClear()
-  }
+  // componentDidUpdate(previousProps) {
+  //   // When new search is triggered, search filters get reset, so component should reset their state
+  //   if (this.props.generalSearchId !== previousProps.generalSearchId)
+  //     this.onClear()
+  // }
 
   // Called by filter-group
   onClear(callback) {
@@ -99,11 +103,7 @@ class MultipleSelectionFilter extends Component {
               }
             />
             <label htmlFor={multipleSelectionValue}>
-              {this.props.intl.formatMessage(
-                schemaMessages[
-                  multipleSelectionValue
-                ]
-              )}
+              {categories[multipleSelectionValue]}
             </label>
           </div>
         ))}

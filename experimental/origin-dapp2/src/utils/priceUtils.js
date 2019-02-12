@@ -19,7 +19,10 @@ const setDefaults = (fiatCode, cryptoCode, exchangeRates) => {
  */
 
 const getCachedCurrencyPair = (fiatCurrencyCode, cryptoCurrencyCode) => {
-  const { fiatCode, cryptoCode, exchangeRates } = setDefaults(fiatCurrencyCode, cryptoCurrencyCode)
+  const { fiatCode, cryptoCode, exchangeRates } = setDefaults(
+    fiatCurrencyCode,
+    cryptoCurrencyCode
+  )
   const currencyPair = `${fiatCode.toUpperCase()}/${cryptoCode.toUpperCase()}`
 
   return (exchangeRates && exchangeRates[currencyPair]) || {}
