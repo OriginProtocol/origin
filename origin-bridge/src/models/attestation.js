@@ -1,9 +1,16 @@
-'use strict'
-
+'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Attestation = sequelize.define('Attestation', {
     // Attestation id
-    id: { type: DataTypes.INTEGER, primaryKey: true },
+    id:
+      {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+    // Attestation method
+    method: DataTypes.ENUM('PHONE', 'EMAIL', 'AIRBNB', 'FACEBOOK', 'TWITTER'),
     // Ethereum address of the attestation
     ethAddress: DataTypes.CHAR(42),
     // Value of the attestation
@@ -15,12 +22,17 @@ module.exports = (sequelize, DataTypes) => {
     // Creation date
     createdAt: DataTypes.DATE,
   }, {
-    tableName: 'listing'
-  })
-
-  Attestation.associate = function () {
-    // associations can be defined here
+    tableName: 'attestation'
+  });
+  Attestation.AttestationTypes = {
+    'PHONE': 'PHONE',
+    'EMAIL': 'EMAIL',
+    'AIRBNB': 'AIRBNB',
+    'FACEBOOK': 'FACEBOOK',
+    'TWITTER': 'TWITTER'
   }
-
-  return Attestation
-}
+  Attestation.associate = function(models) {
+    // associations can be defined here
+  };
+  return Attestation;
+};

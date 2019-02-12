@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const request = require('superagent');
 const crypto = require('crypto');
-const Attestation = require('../models/attestation')
+const Attestation = require('../models/index').Attestation;
+const AttestationTypes = Attestation.AttestationTypes
 
 const { getAbsoluteUrl, mapObjectToQueryParams, asyncMiddleware, generateAttestationSignature } = require('../utils')
 const constants = require('../constants')
@@ -51,13 +52,20 @@ router.post('/verify', asyncMiddleware( async (req, res) => {
   }
 
   const name = JSON.parse(userDataResponse.text)['name']
+  const ethAddress = req.body.identity
 
   const signature = {
-    'bytes': generateAttestationSignature(process.env.ATTESTATION_SIGNING_KEY, req.body.identity, JSON.stringify(data)),
+    'bytes': generateAttestationSignature(process.env.ATTESTATION_SIGNING_KEY, ethAddress, JSON.stringify(data)),
     'version': '1.0.0'
   }
 
-  // TODO - save to db
+  await Attestation.create({
+    method: AttestationTypes.FACEBOOK,
+    eth_address: ethAddress,
+    value: name,
+    signature: signature['bytes'],
+    remote_ip_address: req.ip
+  });
 
   res.send({
     'schemaId': 'https://schema.originprotocol.com/attestation_1.0.0.json',
