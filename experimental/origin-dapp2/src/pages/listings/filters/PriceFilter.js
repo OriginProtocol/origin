@@ -3,17 +3,11 @@ import { Range } from 'rc-slider'
 import get from 'lodash/get'
 import { getCryptoPrice } from 'utils/priceUtils'
 
-export const FILTER_OPERATOR_EQUALS = 'EQUALS'
-export const FILTER_OPERATOR_CONTAINS = 'CONTAINS' //for array values where at least one must match E.g. list of categories
-export const FILTER_OPERATOR_GREATER = 'GREATER'
-export const FILTER_OPERATOR_GREATER_OR_EQUAL = 'GREATER_OR_EQUAL'
-export const FILTER_OPERATOR_LESSER = 'LESSER'
-export const FILTER_OPERATOR_LESSER_OR_EQUAL = 'LESSER_OR_EQUAL'
-
-export const VALUE_TYPE_STRING = 'STRING'
-export const VALUE_TYPE_FLOAT = 'FLOAT'
-export const VALUE_TYPE_DATE = 'DATE'
-export const VALUE_TYPE_ARRAY_STRING = 'ARRAY_STRING'
+import {
+  FILTER_OPERATOR_GREATER_OR_EQUAL,
+  FILTER_OPERATOR_LESSER_OR_EQUAL,
+  VALUE_TYPE_FLOAT
+} from 'constants/Filters'
 
 class PriceFilter extends Component {
   constructor(props) {
@@ -34,14 +28,13 @@ class PriceFilter extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    // New max price property... reset filter
-    if (previousProps.maxPrice !== this.props.maxPrice) this.onClear()
+    const newMaxPrice = previousProps.maxPrice !== this.props.maxPrice
+    if (newMaxPrice) this.onClear()
   }
   componentWillUnmount() {
     this.props.onChildUnMounted(this)
   }
 
-  // Called by filter-group
   onClear(callback) {
     this.setState(
       {
@@ -54,7 +47,6 @@ class PriceFilter extends Component {
     )
   }
 
-  // Called by filter-group
   async getFilters() {
     return [
       {

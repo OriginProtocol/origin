@@ -41,10 +41,10 @@ class Search extends Component {
       this.setState(getStateFromQuery(this.props))
     }
 
-    const catType = get(this.state, 'category.type', '')
-    const prevType = get(prevState, 'category.type', '')
-    if (catType !== prevType) {
-      const filterSchemaPath = `schemas/searchFilters/${catType}-search.json`
+    const categoryType = get(this.state, 'category.type', '')
+    const prevCategoryType = get(prevState, 'category.type', '')
+    if (categoryType !== prevCategoryType) {
+      const filterSchemaPath = `schemas/searchFilters/${categoryType}-search.json`
 
       fetch(filterSchemaPath)
         .then(response => response.json())

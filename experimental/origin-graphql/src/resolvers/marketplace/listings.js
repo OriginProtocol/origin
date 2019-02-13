@@ -35,8 +35,8 @@ query Search($search: String, $filters: [ListingFilter!]) {
   }
 }`
 
-async function searchIds(props) {
-  const variables = getVariables(props)
+async function searchIds(args) {
+  const variables = getVariables(args)
 
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {
