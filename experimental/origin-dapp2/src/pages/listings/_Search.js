@@ -121,17 +121,26 @@ class Search extends Component {
             </div>
           </div>
         </div>
-        <div className="i-exist">
-          {get(this.state, 'filterSchema.items', []).map((filterGroup, key) => (
-            <FilterGroup
-              key={filterGroup.title + key}
-              filterGroup={filterGroup}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-              category={category}
-            />
-          ))}
-        </div>
+        <nav
+          id="search-filters-bar"
+          className="navbar filter-group navbar-expand-sm"
+        >
+          <div className="container d-flex flex-row">
+            <ul className="navbar-nav collapse navbar-collapse">
+              {get(this.state, 'filterSchema.items', []).map(
+                (filterGroup, key) => (
+                  <FilterGroup
+                    key={filterGroup.title + key}
+                    filterGroup={filterGroup}
+                    minPrice={minPrice}
+                    maxPrice={maxPrice}
+                    category={category}
+                  />
+                )
+              )}
+            </ul>
+          </div>
+        </nav>
       </>
     )
   }
@@ -203,4 +212,32 @@ require('react-styl')(`
       border-color: var(--dusk)
       padding-left: 1.25rem
       padding-right: 1.25rem
+
+  .navbar
+    &.filter-group
+      background-color: var(--white) !important
+      ul
+        padding-top: 4px
+
+      .container .navbar-nav
+        border-bottom: 1px solid var(--light)
+
+      .navbar-nav .nav-item > a
+        font-size: 0.875rem
+        color: var(--dark)
+        padding: 0.09rem 0.40rem
+        margin: 0.12rem 0.30rem
+        font-weight: normal
+        white-space: nowrap
+        overflow: hidden
+        border-radius: 4px
+
+      .navbar-nav .nav-item > a:hover
+        background-color: var(--pale-grey-three)
+        cursor: pointer
+
+      .navbar-nav .nav-item.show > a
+        border: 0.06rem solid var(--dusk)
+        padding: 0.03rem 0.34rem
+
 `)
