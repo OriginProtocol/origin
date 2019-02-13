@@ -13,7 +13,7 @@
   "about-tokens.exchanges": "Exchanges",
   "about-tokens.exchanges-text": "During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.",
   "arbitration.confirmHeading": "Gibt es ein Problem?",
-  "arbitration.confirmText1": "Are you sure you want to report a problem?",
+  "arbitration.confirmText1": "Sind Sie sicher, dass Sie ein Problem melden möchten?",
   "arbitration.confirmText2": "This will start the conflict resolution process,\n            someone from Origin will be notified and all chat history will be made\n            public to a moderator.",
   "arbitration.confirmCancel": "Oops, no wait...",
   "arbitration.confirmSubmit": "Ja, bitte",
