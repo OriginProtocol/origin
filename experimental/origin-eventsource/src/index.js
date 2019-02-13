@@ -398,16 +398,19 @@ class OriginEventSource {
     }
   }
 
-  async getReview(listingId, offerId, party, ipfsHash) {
+  async getReview(listingId, offerId, party, ipfsHash, event) {
     const data = await get(this.ipfsGateway, ipfsHash)
     const networkId = await this.getNetworkId()
+    const offerIdExp = `${networkId}-0-${listingId}-${offerId}`
+    const listing = await this.getListing(listingId, event.blockNumber)
     return {
-      id: `${networkId}-0-${listingId}-${offerId}`,
+      id: offerIdExp,
       reviewer: { id: party, account: { id: party } },
-      listing: { id: listingId },
-      offer: { id: offerId },
+      listing,
+      offer: { id: offerIdExp },
       review: data.text,
-      rating: data.rating
+      rating: data.rating,
+      event
     }
   }
 

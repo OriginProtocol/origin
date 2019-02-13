@@ -32,7 +32,7 @@ require('react-styl')(`
     width: 100%
     padding-top: 100%
     background-size: contain
-    border-radius: 5px
+    border-radius: var(--default-radius)
     background-repeat: no-repeat
     background-position: center
 
