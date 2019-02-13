@@ -57,6 +57,8 @@ const config = {
   // ipfs url
   ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
   // Origin-js configs
+  web3Url:
+    args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
   arbitratorAccount: process.env.ARBITRATOR_ACCOUNT,
   affiliateAccount: process.env.AFFILIATE_ACCOUNT,
   attestationAccount: process.env.ATTESTATION_ACCOUNT,

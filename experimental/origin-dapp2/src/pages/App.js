@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
+import TranslationModal from './_TranslationModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
@@ -83,6 +84,7 @@ class App extends Component {
             <Route component={Listings} />
           </Switch>
         </main>
+        <TranslationModal locale={this.props.locale} />
         <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
       </>
     )

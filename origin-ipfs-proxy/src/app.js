@@ -31,12 +31,22 @@ function isValidImage(buffer) {
 }
 
 function handleFileUpload(req, res) {
-  const busboy = new Busboy({
-    headers: req.headers,
-    limits: {
-      fileSize: 2 * 1024 * 1024
-    }
-  })
+  let busboy
+
+  try {
+    busboy = new Busboy({
+      headers: req.headers,
+      limits: {
+        fileSize: 2 * 1024 * 1024
+      }
+    })
+  } catch (error) {
+    // Busboy failed to parse request, missing headers?
+    logger.error(`Malformed request: ${error}`)
+    res.writeHead(400, { Connection: 'close' })
+    res.end()
+    return
+  }
 
   busboy.on('file', function(fieldname, file) {
     file.fileRead = []
