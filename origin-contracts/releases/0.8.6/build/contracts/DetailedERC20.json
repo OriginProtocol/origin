@@ -241,9 +241,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\nimport \"./ERC20.sol\";\n\n\n/**\n * @title DetailedERC20 token\n * @dev The decimals are only for visualization purposes.\n * All the operations are done using the smallest and indivisible token unit,\n * just as on Ethereum all the operations are done in wei.\n */\ncontract DetailedERC20 is ERC20 {\n  string public name;\n  string public symbol;\n  uint8 public decimals;\n\n  constructor(string _name, string _symbol, uint8 _decimals) public {\n    name = _name;\n    symbol = _symbol;\n    decimals = _decimals;\n  }\n}\n",
-  "sourcePath": "/Users/tom/Code/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol",
+  "sourcePath": "/Users/franck/src/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol",
   "ast": {
-    "absolutePath": "/Users/tom/Code/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol",
+    "absolutePath": "/Users/franck/src/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol",
     "exportedSymbols": {
       "DetailedERC20": [
         6649
@@ -264,7 +264,7 @@
         "src": "0:24:24"
       },
       {
-        "absolutePath": "/Users/tom/Code/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol",
+        "absolutePath": "/Users/franck/src/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol",
         "file": "./ERC20.sol",
         "id": 6618,
         "nodeType": "ImportDirective",
@@ -649,7 +649,7 @@
     "src": "0:531:24"
   },
   "legacyAST": {
-    "absolutePath": "/Users/tom/Code/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol",
+    "absolutePath": "/Users/franck/src/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol",
     "exportedSymbols": {
       "DetailedERC20": [
         6649
@@ -670,7 +670,7 @@
         "src": "0:24:24"
       },
       {
-        "absolutePath": "/Users/tom/Code/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol",
+        "absolutePath": "/Users/franck/src/origin/origin-contracts/node_modules/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol",
         "file": "./ERC20.sol",
         "id": 6618,
         "nodeType": "ImportDirective",
@@ -1060,5 +1060,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-02-12T22:02:26.049Z"
+  "updatedAt": "2019-02-13T04:44:01.220Z"
 }

@@ -291,9 +291,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\n\ncontract ERC735 {\n\n    event ClaimRequested(uint256 indexed claimRequestId, uint256 indexed topic, uint256 scheme, address indexed issuer, bytes signature, bytes data, string uri);\n    event ClaimAdded(bytes32 indexed claimId, uint256 indexed topic, uint256 scheme, address indexed issuer, bytes signature, bytes data, string uri);\n    event ClaimRemoved(bytes32 indexed claimId, uint256 indexed topic, uint256 scheme, address indexed issuer, bytes signature, bytes data, string uri);\n    event ClaimChanged(bytes32 indexed claimId, uint256 indexed topic, uint256 scheme, address indexed issuer, bytes signature, bytes data, string uri);\n\n    struct Claim {\n        uint256 topic;\n        uint256 scheme;\n        address issuer; // msg.sender\n        bytes signature; // this.address + topic + data\n        bytes data;\n        string uri;\n    }\n\n    function getClaim(bytes32 _claimId) public view returns(uint256 topic, uint256 scheme, address issuer, bytes signature, bytes data, string uri);\n    function getClaimIdsByTopic(uint256 _topic) public view returns(bytes32[] claimIds);\n    function addClaim(uint256 _topic, uint256 _scheme, address issuer, bytes _signature, bytes _data, string _uri) public returns (bytes32 claimRequestId);\n    function removeClaim(bytes32 _claimId) public returns (bool success);\n}\n",
-  "sourcePath": "/Users/tom/Code/origin/origin-contracts/contracts/identity/ERC735.sol",
+  "sourcePath": "/Users/franck/src/origin/origin-contracts/contracts/identity/ERC735.sol",
   "ast": {
-    "absolutePath": "/Users/tom/Code/origin/origin-contracts/contracts/identity/ERC735.sol",
+    "absolutePath": "/Users/franck/src/origin/origin-contracts/contracts/identity/ERC735.sol",
     "exportedSymbols": {
       "ERC735": [
         1151
@@ -1919,7 +1919,7 @@
     "src": "0:1343:7"
   },
   "legacyAST": {
-    "absolutePath": "/Users/tom/Code/origin/origin-contracts/contracts/identity/ERC735.sol",
+    "absolutePath": "/Users/franck/src/origin/origin-contracts/contracts/identity/ERC735.sol",
     "exportedSymbols": {
       "ERC735": [
         1151
@@ -3550,5 +3550,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-02-12T22:02:26.068Z"
+  "updatedAt": "2019-02-13T04:44:01.240Z"
 }

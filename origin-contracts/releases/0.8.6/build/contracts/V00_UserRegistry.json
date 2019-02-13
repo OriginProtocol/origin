@@ -56,14 +56,14 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b506101c6806100206000396000f3006080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634d3820eb811461005b57806376b1658814610072578063a87430ba14610087575b600080fd5b34801561006757600080fd5b506100706100de565b005b34801561007e57600080fd5b50610070610146565b34801561009357600080fd5b506100b573ffffffffffffffffffffffffffffffffffffffff60043516610172565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3260008181526020818152604091829020805473ffffffffffffffffffffffffffffffffffffffff19163390811790915582519384529083015280517fff3eabe1067b08ba8af3e8d3191eebeae9b35de7a7aeee40f2ad1ceb6a8876079281900390910190a1565b336000908152602081905260409020805473ffffffffffffffffffffffffffffffffffffffff19169055565b60006020819052908152604090205473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820c073e6c0ca259e39ee94d7d117aa4044aa7936ec5af2d654787719a7a4ac2c2c0029",
-  "deployedBytecode": "0x6080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634d3820eb811461005b57806376b1658814610072578063a87430ba14610087575b600080fd5b34801561006757600080fd5b506100706100de565b005b34801561007e57600080fd5b50610070610146565b34801561009357600080fd5b506100b573ffffffffffffffffffffffffffffffffffffffff60043516610172565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3260008181526020818152604091829020805473ffffffffffffffffffffffffffffffffffffffff19163390811790915582519384529083015280517fff3eabe1067b08ba8af3e8d3191eebeae9b35de7a7aeee40f2ad1ceb6a8876079281900390910190a1565b336000908152602081905260409020805473ffffffffffffffffffffffffffffffffffffffff19169055565b60006020819052908152604090205473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820c073e6c0ca259e39ee94d7d117aa4044aa7936ec5af2d654787719a7a4ac2c2c0029",
+  "bytecode": "0x608060405234801561001057600080fd5b506101c6806100206000396000f3006080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634d3820eb811461005b57806376b1658814610072578063a87430ba14610087575b600080fd5b34801561006757600080fd5b506100706100de565b005b34801561007e57600080fd5b50610070610146565b34801561009357600080fd5b506100b573ffffffffffffffffffffffffffffffffffffffff60043516610172565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3260008181526020818152604091829020805473ffffffffffffffffffffffffffffffffffffffff19163390811790915582519384529083015280517fff3eabe1067b08ba8af3e8d3191eebeae9b35de7a7aeee40f2ad1ceb6a8876079281900390910190a1565b336000908152602081905260409020805473ffffffffffffffffffffffffffffffffffffffff19169055565b60006020819052908152604090205473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820dbe27844d4b24aef3f1a1404e2d3b2c3d2e5a42d6d9b04115edde9db7a4306dc0029",
+  "deployedBytecode": "0x6080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634d3820eb811461005b57806376b1658814610072578063a87430ba14610087575b600080fd5b34801561006757600080fd5b506100706100de565b005b34801561007e57600080fd5b50610070610146565b34801561009357600080fd5b506100b573ffffffffffffffffffffffffffffffffffffffff60043516610172565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3260008181526020818152604091829020805473ffffffffffffffffffffffffffffffffffffffff19163390811790915582519384529083015280517fff3eabe1067b08ba8af3e8d3191eebeae9b35de7a7aeee40f2ad1ceb6a8876079281900390910190a1565b336000908152602081905260409020805473ffffffffffffffffffffffffffffffffffffffff19169055565b60006020819052908152604090205473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820dbe27844d4b24aef3f1a1404e2d3b2c3d2e5a42d6d9b04115edde9db7a4306dc0029",
   "sourceMap": "264:618:12:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;264:618:12;;;;;;;",
   "deployedSourceMap": "264:618:12:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;606:134;;8:9:-1;5:2;;;30:1;27;20:12;5:2;606:134:12;;;;;;802:78;;8:9:-1;5:2;;;30:1;27;20:12;5:2;802:78:12;;;;465:40;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;465:40:12;;;;;;;;;;;;;;;;;;;;;;;;;;606:134;665:9;659:5;:16;;;;;;;;;;;;:29;;-1:-1:-1;;659:29:12;678:10;659:29;;;;;;703:30;;;;;;;;;;;;;;;;;;;;;606:134::o;802:78::-;858:10;872:1;852:17;;;;;;;;;;:21;;-1:-1:-1;;852:21:12;;;802:78::o;465:40::-;;;;;;;;;;;;;;;;:::o",
   "source": "pragma solidity ^0.4.24;\n\nimport \"./ClaimHolderPresigned.sol\";\n\n/// @title UserRegistry\n/// @dev Used to keep registry of user identifies\n/// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>\n\n\ncontract V00_UserRegistry {\n    /*\n    * Events\n    */\n\n    event NewUser(address _address, address _identity);\n\n    /*\n    * Storage\n    */\n\n    // Mapping from ethereum wallet to ERC725 identity\n    mapping(address => address) public users;\n\n    /*\n    * Public functions\n    */\n\n    /// @dev registerUser(): Add a user to the registry\n    function registerUser()\n        public\n    {\n        users[tx.origin] = msg.sender;\n        emit NewUser(tx.origin, msg.sender);\n    }\n\n    /// @dev clearUser(): Remove user from the registry\n    function clearUser()\n        public\n    {\n        users[msg.sender] = 0;\n    }\n}\n",
-  "sourcePath": "/Users/tom/Code/origin/origin-contracts/contracts/identity/V00_UserRegistry.sol",
+  "sourcePath": "/Users/franck/src/origin/origin-contracts/contracts/identity/V00_UserRegistry.sol",
   "ast": {
-    "absolutePath": "/Users/tom/Code/origin/origin-contracts/contracts/identity/V00_UserRegistry.sol",
+    "absolutePath": "/Users/franck/src/origin/origin-contracts/contracts/identity/V00_UserRegistry.sol",
     "exportedSymbols": {
       "V00_UserRegistry": [
         2186
@@ -84,7 +84,7 @@
         "src": "0:24:12"
       },
       {
-        "absolutePath": "/Users/tom/Code/origin/origin-contracts/contracts/identity/ClaimHolderPresigned.sol",
+        "absolutePath": "/Users/franck/src/origin/origin-contracts/contracts/identity/ClaimHolderPresigned.sol",
         "file": "./ClaimHolderPresigned.sol",
         "id": 2145,
         "nodeType": "ImportDirective",
@@ -601,7 +601,7 @@
     "src": "0:883:12"
   },
   "legacyAST": {
-    "absolutePath": "/Users/tom/Code/origin/origin-contracts/contracts/identity/V00_UserRegistry.sol",
+    "absolutePath": "/Users/franck/src/origin/origin-contracts/contracts/identity/V00_UserRegistry.sol",
     "exportedSymbols": {
       "V00_UserRegistry": [
         2186
@@ -622,7 +622,7 @@
         "src": "0:24:12"
       },
       {
-        "absolutePath": "/Users/tom/Code/origin/origin-contracts/contracts/identity/ClaimHolderPresigned.sol",
+        "absolutePath": "/Users/franck/src/origin/origin-contracts/contracts/identity/ClaimHolderPresigned.sol",
         "file": "./ClaimHolderPresigned.sol",
         "id": 2145,
         "nodeType": "ImportDirective",
@@ -1163,5 +1163,5 @@
     }
   },
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-02-12T22:15:42.274Z"
+  "updatedAt": "2019-02-13T04:44:01.221Z"
 }
