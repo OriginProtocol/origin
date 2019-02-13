@@ -33,7 +33,7 @@ class SendMessage extends Component {
           } else if (loading) {
             return <div>Checking if messaging enabled...</div>
           } else if (!data || !data.messaging) {
-            return <p className="p-3">Cannot query messaging</p>
+            return null
           }
 
           if (!data.messaging.enabled) {
