@@ -11,7 +11,7 @@ import eventCache from './utils/eventCache'
 import genericEventCache from './utils/genericEventCache'
 import pubsub from './utils/pubsub'
 
-let metaMask, metaMaskEnabled, web3WS, wsSub, web3
+let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 const HOST = process.env.HOST || 'localhost'
 
 let OriginMessaging
@@ -92,12 +92,18 @@ const Configs = {
   },
   kovanTst: {
     provider: 'https://kovan.infura.io',
-    providerWS: 'wss://kovan.infura.io/ws',
+    providerWS: 'wss://kovan.infura.io/ws/v3/98df57f0748e455e871c48b96f2095b2',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
-    OriginToken: '0xf2D5AeA9057269a1d97A952BAf5E1887462c67b6',
-    V00_Marketplace: '0x66E8c312dC89599c84A93353d6914631ce7857Cc',
-    V00_Marketplace_Epoch: '10135260'
+    discovery: 'https://discovery.staging.originprotocol.com',
+    bridge: 'https://bridge.staging.originprotocol.com',
+    OriginToken: '0xb0efa5A1f199B7562Dd4f34758497594797C05E9',
+    V00_Marketplace: '0xaE145bE14b9369fE5DF917B58daDe2589ddB48C9',
+    V00_Marketplace_Epoch: '10329348',
+    IdentityEvents: '0x967DB2Ed91000efA8d5Ce860d5A8B34a6BCfb6E2',
+    IdentityEvents_Epoch: '10339753',
+    affiliate: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C',
+    arbitrator: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C'
   },
   localhost: {
     provider: `http://${HOST}:8545`,
@@ -153,6 +159,19 @@ function applyWeb3Hack(web3Instance) {
   return web3Instance
 }
 
+let lastBlock
+function newBlock(blockHeaders) {
+  if (!blockHeaders) return
+  if (blockHeaders.number <= lastBlock) return
+  lastBlock = blockHeaders.number
+  context.marketplace.eventCache.updateBlock(blockHeaders.number)
+  context.identityEvents.eventCache.updateBlock(blockHeaders.number)
+  context.eventSource.resetCache()
+  pubsub.publish('NEW_BLOCK', {
+    newBlock: { ...blockHeaders, id: blockHeaders.hash }
+  })
+}
+
 export function setNetwork(net, customConfig) {
   if (process.env.DOCKER) {
     net = 'docker'
@@ -193,6 +212,7 @@ export function setNetwork(net, customConfig) {
   if (wsSub) {
     wsSub.unsubscribe()
   }
+  clearInterval(blockInterval)
 
   web3 = applyWeb3Hack(new Web3(config.provider))
   if (typeof window !== 'undefined') {
@@ -223,25 +243,21 @@ export function setNetwork(net, customConfig) {
 
   if (typeof window !== 'undefined') {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
-    wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
-      context.marketplace.eventCache.updateBlock(blockHeaders.number)
-      context.identityEvents.eventCache.updateBlock(blockHeaders.number)
-      context.eventSource.resetCache()
-      pubsub.publish('NEW_BLOCK', {
-        newBlock: { ...blockHeaders, id: blockHeaders.hash }
-      })
-    })
-    web3.eth.getBlockNumber().then(block => {
-      web3.eth.getBlock(block).then(blockHeaders => {
-        if (blockHeaders) {
-          context.marketplace.eventCache.updateBlock(blockHeaders.number)
-          context.identityEvents.eventCache.updateBlock(blockHeaders.number)
-          context.eventSource.resetCache()
-          pubsub.publish('NEW_BLOCK', {
-            newBlock: { ...blockHeaders, id: blockHeaders.hash }
+    wsSub = web3WS.eth
+      .subscribe('newBlockHeaders')
+      .on('data', newBlock)
+      .on('error', () => {
+        console.log('WS connection error. Polling for new blocks...')
+        blockInterval = setInterval(() => {
+          web3.eth.getBlockNumber().then(block => {
+            if (block > lastBlock) {
+              web3.eth.getBlock(block).then(newBlock)
+            }
           })
-        }
+        }, 3000)
       })
+    web3.eth.getBlockNumber().then(block => {
+      web3.eth.getBlock(block).then(newBlock)
     })
     context.pubsub = pubsub
   }

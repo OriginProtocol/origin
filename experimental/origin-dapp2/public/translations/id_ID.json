@@ -75,7 +75,10 @@
     "schema.resumes": "Resume",
     "schema.volunteers": "Relawan"
   },
-  "odYsB": "Ulasan",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Aplikasi asal desentralisasi memungkinkan pembeli dan penjual bertransaksi tanpa perantara pencari sewa menggunakan Ethereum blockchain dan IPFS.",
@@ -83,12 +86,15 @@
   "421TH8": "Kunjungi Github kami",
   "1xF0Sp": "Membeli",
   "3i2AJC": "Tambah listing",
+  "2AYKWR": "This page has been machine translated, see any errors?",
+  "rlRRa": "Help Translate",
   "1r15SU": "Verifikasi Akun Airbnb Anda",
   "4iptAy": "Masukkan Url profil Airbnb di bawah ini",
   "1jSLWC": "Pengguna lain akan mengetahui bahwa Anda mempunyai profil Airbnb terverifikasi.",
   "561FZ": "Batalkan",
   "47VMoo": "Pergi ke website Airbnb, suting profil Anda dan tempel teks berikut ini ke deskripsi profil.",
   "4ppTCb": "Lanjutkan setelah kode konfirmasi Anda dimasukkan dalam profil Airbnb Anda.",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"

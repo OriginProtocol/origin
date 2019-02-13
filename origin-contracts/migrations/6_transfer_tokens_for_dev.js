@@ -49,5 +49,6 @@ async function transferTokensToTestAccounts(deployer, network) {
       tokensPerAccount * 10**decimals,
       { from: lastAccount }
     )
+    console.log(`Transfered ${tokensPerAccount * 10**decimals} from ${lastAccount} to ${accounts[i]}`)
   }
 }

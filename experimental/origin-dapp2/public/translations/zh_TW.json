@@ -75,7 +75,10 @@
     "schema.resumes": "個人簡歷",
     "schema.volunteers": "志願者"
   },
-  "odYsB": "評價",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Origin分散式應用程序允許買家和賣家使用以太坊區塊鍊和IPFS進行交易而無需尋租中間商。",
@@ -83,12 +86,15 @@
   "421TH8": "訪問我們的Github",
   "1xF0Sp": "購買",
   "3i2AJC": "新增刊登",
+  "2AYKWR": "This page has been machine translated, see any errors?",
+  "rlRRa": "Help Translate",
   "1r15SU": "驗証你的Airbnb帳號",
   "4iptAy": "在下面輸入 Airbnb 檔案 Url",
   "1jSLWC": "其他使用者將知道您有一個經過驗證的 Airbnb 設定檔。",
   "561FZ": "取消",
   "47VMoo": "前往 Airbnb 網站, 編輯您的個人資料, 並將以下文本粘貼到設定檔描述中。",
   "4ppTCb": "在 Airbnb 設定檔中輸入確認代碼後繼續。",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"

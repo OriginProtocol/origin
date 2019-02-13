@@ -31,6 +31,7 @@ class EditListing extends Component {
         quantity: String(props.listing.unitsTotal),
         price: String(props.listing.price.amount),
         boost: '0',
+        boostLimit: '0',
         media: props.listing.media
       }
     }
