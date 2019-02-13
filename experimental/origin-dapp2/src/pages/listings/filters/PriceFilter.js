@@ -29,8 +29,29 @@ class PriceFilter extends Component {
     this.handlePriceChange = this.handlePriceChange.bind(this)
   }
 
-  handlePriceChange([bottomAmount, topAmount]) {
-    this.setState({ value: [bottomAmount, topAmount] })
+  componentDidMount() {
+    this.props.onChildMounted(this)
+  }
+
+  componentDidUpdate(previousProps) {
+    // New max price property... reset filter
+    if (previousProps.maxPrice !== this.props.maxPrice) this.onClear()
+  }
+  componentWillUnmount() {
+    this.props.onChildUnMounted(this)
+  }
+
+  // Called by filter-group
+  onClear(callback) {
+    this.setState(
+      {
+        value: [
+          Math.floor(parseFloat(this.props.minPrice)),
+          Math.ceil(parseFloat(this.props.maxPrice))
+        ]
+      },
+      callback
+    )
   }
 
   // Called by filter-group
@@ -51,26 +72,12 @@ class PriceFilter extends Component {
     ]
   }
 
-  componentDidUpdate(previousProps) {
-    // New max price property... reset filter
-    if (previousProps.maxPrice !== this.props.maxPrice) this.onClear()
-  }
-
-  // Called by filter-group
-  onClear(callback) {
-    this.setState(
-      {
-        value: [
-          Math.floor(parseFloat(this.props.minPrice)),
-          Math.ceil(parseFloat(this.props.maxPrice))
-        ]
-      },
-      callback
-    )
+  handlePriceChange([bottomAmount, topAmount]) {
+    this.setState({ value: [bottomAmount, topAmount] })
   }
 
   render() {
-    const priceUnit = get(this.props, 'filter.priceUnit', 'USD')
+    const priceUnit = get(this.props, 'filter.priceUnit.defaultMessage', 'USD')
     const minPrice = Math.floor(parseFloat(this.props.minPrice))
     const maxPrice = Math.ceil(parseFloat(this.props.maxPrice))
 

@@ -61,14 +61,7 @@ class Search extends Component {
   }
 
   render() {
-    const {
-      category = {},
-      searchInput,
-      filterSchema,
-      minPrice,
-      maxPrice,
-      open
-    } = this.state
+    const { category = {}, searchInput, minPrice, maxPrice, open } = this.state
     const enabled = get(this.props, 'config.discovery', false)
 
     return (
@@ -129,12 +122,15 @@ class Search extends Component {
           </div>
         </div>
         <div className="i-exist">
-          <FilterGroup
-            filterSchema={filterSchema}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            category={category}
-          />
+          {get(this.state, 'filterSchema.items', []).map((filterGroup, key) => (
+            <FilterGroup
+              key={filterGroup.title + key}
+              filterGroup={filterGroup}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              category={category}
+            />
+          ))}
         </div>
       </>
     )

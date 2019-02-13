@@ -32,6 +32,14 @@ class MultipleSelectionFilter extends Component {
     ].map(subCategory => subCategory.translationName.id)
   }
 
+  componentDidMount() {
+    this.props.onChildMounted(this)
+  }
+
+  componentWillUnmount() {
+    this.props.onChildUnMounted(this)
+  }
+
   // Called by filter-group
   async getFilters() {
     const values = Object.keys(this.state.checkboxValue)
