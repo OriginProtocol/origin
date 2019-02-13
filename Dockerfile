@@ -24,6 +24,7 @@ COPY ./experimental/origin-graphql/package*.json ./experimental/origin-graphql/
 COPY ./experimental/origin-ipfs/package*.json ./experimental/origin-ipfs/
 COPY ./experimental/origin-validator/package*.json ./experimental/origin-validator/
 COPY ./experimental/origin-messaging-client/package*.json ./experimental/origin-messaging-client/
+COPY ./experimental/origin-linker-client/package*.json ./experimental/origin-linker-client/
 COPY ./experimental/origin-eventsource/package*.json ./experimental/origin-eventsource/
 COPY ./experimental/origin-services/package*.json ./experimental/origin-services/
 
@@ -42,6 +43,7 @@ COPY ./experimental/origin-ipfs ./experimental/origin-ipfs
 COPY ./experimental/origin-validator ./experimental/origin-validator
 COPY ./experimental/origin-eventsource ./experimental/origin-eventsource
 COPY ./experimental/origin-messaging-client ./experimental/origin-messaging-client
+COPY ./experimental/origin-linker-client ./experimental/origin-linker-client
 COPY ./experimental/origin-services ./experimental/origin-services
 COPY ./origin-growth ./origin-growth
 COPY ./origin-ipfs-proxy ./origin-ipfs-proxy

@@ -21,6 +21,7 @@ COPY ./experimental/origin-graphql/ ./experimental/origin-graphql/
 COPY ./experimental/origin-ipfs/ ./experimental/origin-ipfs/
 COPY ./experimental/origin-validator/ ./experimental/origin-validator/
 COPY ./experimental/origin-messaging-client/ ./experimental/origin-messaging-client/
+COPY ./experimental/origin-linker-client/ ./experimental/origin-linker-client/
 COPY ./experimental/origin-eventsource/ ./experimental/origin-eventsource/
 COPY ./experimental/origin-services/ ./experimental/origin-services/
 COPY ./scripts ./scripts
