@@ -20,7 +20,7 @@ class PriceFilter extends Component {
       ]
     }
 
-    this.handlePriceChange = this.handlePriceChange.bind(this)
+    this.updatePrice = this.updatePrice.bind(this)
   }
 
   componentDidMount() {
@@ -64,7 +64,7 @@ class PriceFilter extends Component {
     ]
   }
 
-  handlePriceChange([bottomAmount, topAmount]) {
+  updatePrice([bottomAmount, topAmount]) {
     this.setState({ value: [bottomAmount, topAmount] })
   }
 
@@ -92,7 +92,7 @@ class PriceFilter extends Component {
           count={2}
           pushable={(maxPrice - minPrice) / 20}
           tipFormatter={value => `${value}$`}
-          onChange={this.handlePriceChange}
+          onChange={this.updatePrice}
         />
         <div className="d-flex flex-row justify-content-between mt-4 price-filter">
           <div className="d-flex flex-row">

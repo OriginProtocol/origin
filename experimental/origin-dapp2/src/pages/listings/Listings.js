@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import pick from 'lodash/pick'
+import get from 'lodash/get'
 import find from 'lodash/find'
 import remove from 'lodash/remove'
 import { fbt } from 'fbt-runtime'
@@ -38,6 +39,15 @@ function prepareValue(value) {
   return value
 }
 
+function prepareFilters(filters = []) {
+  if (filters.length) {
+    return filters.map(({ value, ...filter }) => {
+      return { ...filter, value: prepareValue(value) }
+    })
+  }
+  return filters
+}
+
 class Listings extends Component {
   constructor(props) {
     super(props)
@@ -57,8 +67,6 @@ class Listings extends Component {
     if (!value) {
       this.setState({ filters: [] })
     } else {
-      const updatedValue = prepareValue(value)
-
       this.setState(state => {
         const filters = ensureOneCategoryFilter(state.filters, name)
 
@@ -68,7 +76,7 @@ class Listings extends Component {
             ...filters,
             {
               name,
-              value: updatedValue,
+              value,
               operator,
               valueType
             }
@@ -79,14 +87,9 @@ class Listings extends Component {
   }
 
   render() {
-    const vars = pick(
-      this.state,
-      'first',
-      'sort',
-      'hidden',
-      'search',
-      'filters'
-    )
+    const unchangedVars = pick(this.state, 'first', 'sort', 'hidden', 'search')
+    const filters = prepareFilters(get(this.state, 'filters', []))
+    const vars = { ...unchangedVars, filters }
 
     return (
       <>

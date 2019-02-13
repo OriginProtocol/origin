@@ -139,6 +139,25 @@ export default class FilterGroup extends Component {
 }
 
 require('react-styl')(`
+  .search-filters .rc-slider-rail
+    height: 15px
+    border-radius: 10px
+    background-color: var(--light)
+    margin-left: -5px
+    margin-right: -5px
+    width: 104%
+
+  .search-filters .rc-slider-handle
+    margin-top: auto
+    border: 1px solid var(--steel)
+    width: 15px
+    height: 15px
+
+  .search-filters .rc-slider-track
+    height: 15px
+    border-radius: 0px
+    background-color: var(--steel)
+  
   .search-filters .dropdown-menu
     left: auto
     padding: 0px

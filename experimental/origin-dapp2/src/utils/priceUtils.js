@@ -29,6 +29,29 @@ const getCachedCurrencyPair = (fiatCurrencyCode, cryptoCurrencyCode) => {
 }
 
 /**
+ * @function getCryptoPrice
+ * @description takes a fiat price and returns the corresponding cryptocurrency price
+ *
+ * @param {number} priceFiat - the price in fiat that is being converted to crypto
+ * @param {string} fiatCurrencyCode - defaults to "USD"
+ * @param {string} cryptoCurrencyCode - defaults to "ETH"
+ * @return {number} crypto price
+ */
+
+export const getCryptoPrice = async (
+  priceFiat,
+  fiatCurrencyCode,
+  cryptoCurrencyCode
+) => {
+  if (!priceFiat) {
+    priceFiat = 0
+  }
+  const { rate } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
+
+  return Number(priceFiat / rate)
+}
+
+/**
  * @function getFiatPrice
  * @description takes a cryptocurrency price and returns the corresponding fiat price
  *
