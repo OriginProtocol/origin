@@ -457,9 +457,7 @@ class ContractService {
     }
     // set gas
     //opts.gas = "5000000"
-    console.log("estiamting gas...")
     opts.gas = (opts.gas || (await method.estimateGas(opts))) + additionalGas
-    console.log("estiamted gas...", opts.gas)
     const transactionReceipt = await new Promise((resolve, reject) => {
       if (!opts.from && this.isActiveWalletLinker() && !this.walletLinker.linked) {
         opts.from = this.walletPlaceholderAccount()
