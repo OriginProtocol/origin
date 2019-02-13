@@ -176,6 +176,19 @@ services:
       npm run migrate --prefix origin-notifications &&
       npm run start --prefix origin-notifications"
 
+  origin-growth:
+    container_name: origin-growth
+    image: origin-experimental
+    volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+    depends_on:
+      - postgres
+    ports:
+      - "4001:4001"
+    #command: sleep infinity
+    command: npm run start:growth --prefix origin-growth
+
   origin-bridge:
     container_name: origin-bridge
     image: origin-bridge
