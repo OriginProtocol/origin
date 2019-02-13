@@ -30,6 +30,7 @@ const rule = {
             eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
             numEventsRequired: 2,
             reward: null,
+            visible: true,
             nextLevelCondition: true
           }
         }
@@ -46,6 +47,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -59,6 +61,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -72,6 +75,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -85,6 +89,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -99,6 +104,7 @@ const rule = {
               'AirbnbAttestationPublished',
               'TwitterAttestationPublished'
             ],
+            visible: false,
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true
@@ -118,6 +124,7 @@ const rule = {
               currency: 'OGN'
             },
             limit: 100,
+            visible: true,
             nextLevelCondition: false
           }
         },
@@ -130,6 +137,7 @@ const rule = {
               amount: tokenNaturalUnits(5),
               currency: 'OGN'
             },
+            visible: true,
             limit: 10,
             nextLevelCondition: false
           }
@@ -143,8 +151,133 @@ const rule = {
               amount: tokenNaturalUnits(5),
               currency: 'OGN'
             },
+            visible: true,
             limit: 10,
             nextLevelCondition: false
+          }
+        }
+      ]
+    }
+  }
+}
+
+const alternateRule = {
+  numLevels: 2,
+  levels: {
+    0: {
+      rules: [
+        {
+          id: 'ProfilePublished',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'ProfilePublished',
+            reward: null,
+            nextLevelCondition: false,
+            visible: true
+          },
+        },
+        {
+          id: 'EmailAttestation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'EmailAttestationPublished',
+            reward: {
+              amount: tokenNaturalUnits(10),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 1,
+            nextLevelCondition: false
+          }
+        },
+        {
+          id: 'BothRules',
+          class: 'MultiEvents',
+          config: {
+            eventTypes: [
+              'ProfilePublished',
+              'EmailAttestationPublished'
+            ],
+            visible: false,
+            numEventsRequired: 2,
+            reward: null,
+            nextLevelCondition: true
+          }
+        }
+      ]
+    },
+    1: {
+      rules: [
+        {
+          id: 'PhoneAttestation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'PhoneAttestationPublished',
+            reward: {
+              amount: tokenNaturalUnits(10),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 1,
+            nextLevelCondition: false
+          }
+        },
+        {
+          id: 'FacebookAttestation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'FacebookAttestationPublished',
+            reward: {
+              amount: tokenNaturalUnits(10),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 1,
+            nextLevelCondition: false
+          }
+        },
+        {
+          id: 'AirbnbAttestation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'AirbnbAttestationPublished',
+            reward: {
+              amount: tokenNaturalUnits(10),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 1,
+            nextLevelCondition: false
+          }
+        },
+        {
+          id: 'TwitterAttestation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'TwitterAttestationPublished',
+            reward: {
+              amount: tokenNaturalUnits(10),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 1,
+            nextLevelCondition: false
+          }
+        },
+        {
+          id: 'TwoAttestations',
+          class: 'MultiEvents',
+          config: {
+            eventTypes: [
+              'PhoneAttestationPublished',
+              'FacebookAttestationPublished',
+              'AirbnbAttestationPublished',
+              'TwitterAttestationPublished'
+            ],
+            visible: false,
+            numEventsRequired: 2,
+            reward: null,
+            nextLevelCondition: true
           }
         }
       ]
@@ -179,7 +312,7 @@ async function createTestData() {
   await db.GrowthCampaign.upsert({
     id: 2,
     name: 'FEB 2019',
-    rules: JSON.stringify(rule),
+    rules: JSON.stringify(alternateRule),
     startDate: Date.parse('February 1, 2019'),
     endDate: Date.parse('February 28, 2019'),
     distributionDate: Date.parse('March 28, 2019'),
@@ -192,7 +325,7 @@ async function createTestData() {
   await db.GrowthCampaign.upsert({
     id: 3,
     name: 'MAR 2019',
-    rules: JSON.stringify(rule),
+    rules: JSON.stringify(alternateRule),
     startDate: Date.parse('March 1, 2019'),
     endDate: Date.parse('March 31, 2019'),
     distributionDate: Date.parse('April 28, 2019'),
@@ -205,7 +338,7 @@ async function createTestData() {
   await db.GrowthCampaign.upsert({
     id: 4,
     name: 'APR 2019',
-    rules: JSON.stringify(rule),
+    rules: JSON.stringify(alternateRule),
     startDate: Date.parse('April 1, 2019'),
     endDate: Date.parse('April 30, 2019'),
     distributionDate: Date.parse('May 28, 2019'),

@@ -5,7 +5,8 @@ import find from 'lodash/find'
 import dayjs from 'dayjs'
 
 import QueryError from 'components/QueryError'
-import query from 'queries/AllGrowthCampaigns'
+import allCampaignsQuery from 'queries/AllGrowthCampaigns'
+import Link from 'components/Link'
 
 function CampaignNavItem(props) {
   const { campaign, selected, onClick } = props
@@ -79,6 +80,96 @@ function ProgressBar(props) {
   )
 }
 
+function Action(props) {
+  const { type, status, reward } = props.action
+  const showLockIcon = status === 'inactive'
+  const bgImage = status === 'completed' || status === 'exhausted' ? 
+    'images/identity/verification-shape-green.svg' : 'images/identity/verification-shape-blue.svg'
+
+  let fgImage
+  let title
+  let infoText
+
+  if (type === 'email'){
+    fgImage = '/images/identity/email-icon-light.svg'
+    title = 'Verify your Email'
+    infoText = 'Confirm your email in attestations'
+  } else if (type === 'profile'){
+    fgImage = '/images/identity/email-icon-light.svg'
+    title = 'Update your name and picture'
+    infoText = 'Edit your profile and update your name and picture'
+  } else if (type === 'phoneNumber'){
+    fgImage = '/images/identity/phone-icon-light.svg'
+    title = 'Verify your Phone Number'
+    infoText = 'Confirm your phone number in attestations'
+  } else if (type === 'twitter'){
+    fgImage = '/images/identity/twitter-icon-light.svg'
+    title = 'Connect your Twitter Profile'
+    infoText = 'Connect your Twitter Profile in attestationts'
+  } else if (type === 'airbnb'){
+    fgImage = '/images/identity/airbnb-icon-light.svg'
+    title = 'Connect your Airbnb Profile'
+    infoText = 'Connect your Airbnb Profile in attestations'
+  } else if (type === 'facebook'){
+    fgImage = '/images/identity/facebook-icon-light.svg'
+    title = 'Connect your Facebook Profile'
+    infoText = 'Connect your Facebook Profile in attestations'
+  }
+
+  console.log("REward", reward)
+
+  return (
+    <div className="d-flex action">
+      <div className="col-2 d-flex justify-content-center">
+        <div className="image-holder mt-auto mb-auto">
+          <img className="background" src={bgImage}/>
+          <img className="foreground" src={fgImage}/>
+          {showLockIcon && 
+            <img className="foreground" src={fgImage}/>
+          }
+        </div>
+      </div>
+      <div className="col-8 d-flex flex-column">
+        <div className="title">{title}</div>
+        <div className="info-text">{infoText}</div>
+        {reward !== null && <div className="reward d-flex mr-auto align-items-center p-2 mt-2">
+          <img
+            className="mr-2"
+            src="images/ogn-icon.svg"
+          /> 
+          +{reward.amount / Math.pow(10, 18)}
+        </div>}
+      </div>
+      <div className="col-2">
+        <Link to="/" className="navbar-brand">
+        </Link>
+        <button
+            className="btn btn-outline-light mr-2"
+            children="Go"
+          />
+      </div>
+    </div>
+  )
+}
+
+function ActionList(props) {
+  console.log("CAMPAIGN", props.campaign)
+  const { actions } = props.campaign
+
+  return (
+    <Fragment>
+      <div className="d-flex flex-column">
+        {actions.map(action => {
+          return (<Action
+            action={action}
+            key={`${action.type}:${action.status}`}
+          />)
+        })}
+      </div>
+    </Fragment>
+  )
+}
+
 function Campaign(props) {
   const { campaign } = props
   const timeLeftDays = dayjs(campaign.endDate).diff(dayjs(), 'day')
@@ -96,7 +187,7 @@ function Campaign(props) {
     timeLeftLabel += ` ${timeLeftMinutes}m`
   }
 
-  const tokensEarned = campaign.rewardEarned.amount
+  const tokensEarned = campaign.rewardEarned ? campaign.rewardEarned.amount : 0
   const tokenEarnProgress = Math.min(100, tokensEarned)
   return (
     <Fragment>
@@ -116,6 +207,7 @@ function Campaign(props) {
         <div className="font-weight-bold">Time left:{timeLeftLabel}</div>
       </div>
       <ProgressBar progress={tokenEarnProgress} />
+      <ActionList campaign={campaign}/>
     </Fragment>
   )
 }
@@ -128,12 +220,14 @@ class GrowthCampaigns extends Component {
 
   render() {
     const vars = pick(this.state, 'first')
+    vars.walletAddress = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
+
     let selectedCampaignId = this.state.selectedCampaignId
 
     return (
       <div className="container growth-campaigns">
         <Query
-          query={query}
+          query={allCampaignsQuery}
           variables={vars}
           notifyOnNetworkStatusChange={true}
         >
@@ -141,7 +235,7 @@ class GrowthCampaigns extends Component {
             if (networkStatus === 1 || loading) {
               return <h5 className="p-2">Loading...</h5>
             } else if (error) {
-              return <QueryError error={error} query={query} vars={vars} />
+              return <QueryError error={error} query={allCampaignsQuery} vars={vars} />
             }
 
             const campaigns = data.campaigns.nodes
@@ -239,4 +333,35 @@ require('react-styl')(`
         width: 20px;
         height: 20px;
         vertical-align: inherit;
+    .action
+      height: 140px;
+      border: 1px solid var(--light);
+      border-radius: 5px;
+      margin-top: 20px;
+      padding: 20px;
+    .action .background
+      width: 72px;
+    .action .foreground
+      position: absolute;
+      left: 20px;
+      top: 27px;
+      width: 30px;
+    .action .image-holder
+      position: relative;
+    .action .title
+      font-size: 18px;
+      font-weight: bold;
+    .action .info-text
+      font-size: 18px;
+      font-weight: 300;
+    .action .reward
+      height: 28px;
+      background-color: var(--pale-grey);
+      border-radius: 52px;
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--clear-blue);
+    .action img
+      width: 19px;
+
 `)

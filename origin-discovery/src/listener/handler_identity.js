@@ -136,7 +136,10 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthAttestationEvents(user, blockInfo) {
+    console.log("Happened123")
+    console.log(JSON.stringify(user))
     await Promise.all(user.attestations.map(attestation => {
+      console.log("Happened", JSON.stringify(attestation))
       const eventType = AttestationServiceToEventType[attestation.service]
       if (!eventType) {
         logger.error(`Unrecognized attestation service received: ${attestation.service}. Skipping.`)

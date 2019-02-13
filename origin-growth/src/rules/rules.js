@@ -46,12 +46,11 @@ const eventTypeToActionType = (eventType) => {
     return 'phoneNumber'
   } else if (eventType === 'RefereeSignedUp'){
     return 'referral'
-  } else if (eventType === 'ProfileListingCreatedPublished'){
+  } else if (eventType === 'ListingCreated'){
     return 'listingCreated'
   } else if (eventType === 'ListingPurchased'){
-    return 'ListingPurchased'
+    return 'listingPurchased'
   } 
-
 }
 
 class Reward {
@@ -200,7 +199,10 @@ class Campaign {
     //TODO: change to true, true
     //const events = this.getEvents(ethAddress, true, true)
     const events = await this.getEvents(ethAddress, false, false)
-    const level = this.levels[await this.getCurrentLevel(ethAddress, events)]
+    console.log("EVENTS: ", JSON.stringify(events))
+    const levels = Object.values(this.levels)
+    const rules = levels.flatMap(level => level.rules)
+    const currentLevel = await this.getCurrentLevel(ethAddress, events)
 
     return {
       id: this.campaign.id,
@@ -209,8 +211,12 @@ class Campaign {
       endDate: this.campaign.endDate,
       distributionDate: this.campaign.distributionDate,
       status: this.getStatus(),
-      actions: level.rules.map(rule => rule.toApolloObject(ethAddress, events, level)),
-      rewardEarned: sumUpRewards(level.getRewards())
+      actions: rules
+        .filter(rule => rule.isVisible())
+        .map(rule => rule.toApolloObject(ethAddress, events, currentLevel)),
+      rewardEarned: sumUpRewards(
+        levels.flatMap(level => level.getRewards(ethAddress, events))
+      )
     }
   }
 }
@@ -269,6 +275,9 @@ class BaseRule {
 
     if (this.config.reward && !this.config.limit) {
       throw new Error(`${this.str()}: missing limit`)
+    }
+    if (this.config.visible === undefined) {
+      throw new Error(`Missing 'visible' property`)
     }
     this.limit = Math.min(this.config.limit, MAX_NUM_REWARDS_PER_RULE)
 
@@ -344,12 +353,22 @@ class BaseRule {
   }
 
   /**
+   * Rules that are not visible are required for backend logic. The visible ones
+   * are displayed in the UI
+   * 
+   * @returns {boolean}
+   */
+  isVisible() {
+    return this.config.visible
+  }
+
+  /**
    * Return status of this rule. One of: inactive, active, exhausted, completed
    * 
    * @returns {Enum<GrowthActionStatus>}
    */
   getStatus(ethAddress, events, currentUserLevel) {
-    if (currentUserLevel < this.level){
+    if (currentUserLevel < this.levelId){
       return GrowthActionStatus.inactive
     } else {
       if (this.evaluate(ethAddress, events)){
@@ -416,10 +435,9 @@ class SingleEventRule extends BaseRule {
    */
   toApolloObject(ethAddress, events, currentUserLevel) {
     const rewards = this.getRewards(ethAddress, events)
-
     return {
       type: eventTypeToActionType(this.config.eventType),
-      status: this.getStatus(ethAddress, events),
+      status: this.getStatus(ethAddress, events, currentUserLevel),
       rewardEarned: sumUpRewards(rewards),
       reward: this.config.reward
     }
@@ -515,7 +533,7 @@ class MultiEventsRule extends BaseRule {
     return {
       // TODO: we need event types for MultiEventsRule
       type: eventTypeToActionType(this.config.eventTypes[0]),
-      status: this.getStatus(ethAddress, events),
+      status: this.getStatus(ethAddress, events, currentUserLevel),
       rewardEarned: sumUpRewards(rewards),
       reward: this.config.reward
     }

@@ -304,6 +304,8 @@ const config = {
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
 }
 
+logger.debug("CONFIG", JSON.stringify(config))
+
 const port = 9499
 
 // Create an express server for Prometheus to scrape metrics

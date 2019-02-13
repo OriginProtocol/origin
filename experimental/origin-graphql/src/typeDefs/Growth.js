@@ -35,7 +35,7 @@ module.exports =
     referral
     profile
     listingCreated
-    ListingPurchased
+    listingPurchased
   }
 
   enum GrowthInviteStatus {
