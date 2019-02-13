@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { injectIntl } from 'react-intl'
+import { connect } from 'react-redux'
 import {
   FILTER_OPERATOR_CONTAINS,
   VALUE_TYPE_ARRAY_STRING
@@ -112,4 +114,14 @@ class MultipleSelectionFilter extends Component {
   }
 }
 
-export default MultipleSelectionFilter
+const mapStateToProps = state => ({
+  filters: state.search.filters,
+  generalSearchId: state.search.generalSearchId
+})
+
+const mapDispatchToProps = () => ({})
+
+export default connect(
+  mapStateToProps,	
+  mapDispatchToProps
+)(injectIntl(MultipleSelectionFilter))
