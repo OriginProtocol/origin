@@ -88,7 +88,7 @@ steps:
           --build-arg ENVKEY=$${_ENVKEY} \
           .
 
-  # Push the origin-dapp container image
+  # Push the container image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:
