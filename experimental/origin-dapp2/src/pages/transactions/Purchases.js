@@ -169,7 +169,7 @@ require('react-styl')(`
         color: var(--white)
     .purchase
       border: 1px solid var(--pale-grey-two);
-      border-radius: 5px;
+      border-radius: var(--default-radius);
       padding: 0.5rem;
       display: flex
       margin-bottom: 1rem

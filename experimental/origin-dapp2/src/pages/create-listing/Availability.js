@@ -236,7 +236,7 @@ require('react-styl')(`
     .availability-editor
       margin-top: 10.5rem
       border: 1px solid var(--light)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 1rem
       font-size: 18px
       font-weight: normal

@@ -57,7 +57,7 @@ require('react-styl')(`
       min-width: 10rem
       font-size: 18px
     h2
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 40px
       font-weight: 200
       font-style: normal
@@ -66,14 +66,14 @@ require('react-styl')(`
     .explanation
       margin-bottom: 2.5rem
     .step
-      font-family: Lato
+      font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
       text-transform: uppercase
       margin-top: 0.75rem
     h3
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 28px
       font-weight: 300
       font-style: normal
@@ -82,7 +82,7 @@ require('react-styl')(`
 
     .listing-preview,.onboard-help
       background: var(--pale-grey-eight)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 1rem
       margin-bottom: 2rem
       font-size: 16px
@@ -106,7 +106,7 @@ require('react-styl')(`
 
   .onboard-box
     border: 1px solid var(--light)
-    border-radius: 5px
+    border-radius: var(--default-radius)
     padding: 8rem 2rem
     display: flex
     flex-direction: column
@@ -114,7 +114,7 @@ require('react-styl')(`
     text-align: center
 
     .status
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
       margin: 2rem 0 0.5rem 0

@@ -284,7 +284,7 @@ require('react-styl')(`
     margin-top: 3rem
     .gray-box
       border: 1px solid var(--light)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 1rem
       margin-bottom: 2rem
     .avatar-wrap
@@ -314,7 +314,7 @@ require('react-styl')(`
       background-size: 5rem;
       padding-top: 8rem;
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .profile-edit
       margin-top: 1rem
       .avatar-wrap

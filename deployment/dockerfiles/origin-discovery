@@ -25,6 +25,9 @@ COPY ./scripts ./scripts
 RUN npm install --unsafe-perm
 
 # Copy release contracts into build directory overwriting existing built
-COPY ./origin-contracts/releases/0.8.5/build/ ./origin-contracts/build/
+COPY ./origin-contracts/releases/0.8.6/build/ ./origin-contracts/build/
+
+# Build origin-js so it is available for the discovery server to import.
+RUN npm run build --prefix origin-js
 
 CMD npm run start:discovery --prefix origin-discovery

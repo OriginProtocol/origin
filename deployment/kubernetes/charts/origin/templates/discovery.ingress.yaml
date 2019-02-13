@@ -16,6 +16,9 @@ metadata:
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
     nginx.ingress.kubernetes.io/rewrite-target: /graphql
     nginx.ingress.kubernetes.io/limit-rps: "50"
 spec:

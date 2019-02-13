@@ -159,7 +159,7 @@ module.exports = `
     offers(first: Int, after: String, filter: String): OfferConnection!
     sales(first: Int, after: String, filter: String): OfferConnection!
     reviews(first: Int, after: String): ReviewConnection!
-    notifications(first: Int, after: String): UserNotificationConnection!
+    notifications(first: Int, after: String, filter: String): UserNotificationConnection!
     transactions(first: Int, after: String): UserTransactionConnection!
   }
 
@@ -204,6 +204,7 @@ module.exports = `
     offer: Offer
     review: String
     rating: Int
+    event: Event
   }
 
   type ListingConnection {
