@@ -457,22 +457,46 @@ class ContractService {
     }
     // set gas
     //opts.gas = "5000000"
+    console.log("estiamting gas...")
     opts.gas = (opts.gas || (await method.estimateGas(opts))) + additionalGas
+    console.log("estiamted gas...", opts.gas)
     const transactionReceipt = await new Promise((resolve, reject) => {
       if (!opts.from && this.isActiveWalletLinker() && !this.walletLinker.linked) {
         opts.from = this.walletPlaceholderAccount()
       }
-      const sendCallback = method
-        .send(opts)
 
-      this.handleTransactionCallbacks(
-        contract,
-        sendCallback,
-        resolve,
-        reject,
-        confirmationCallback,
-        transactionHashCallback
-      )
+      if (this.transactionSigner)
+      {
+        //This is needed for infura nodes
+        opts.data = method.encodeABI()
+        opts.to = contract.options.address
+        this.transactionSigner(opts).then(sig => {
+          const sendCallback = this.web3.eth.sendSignedTransaction(sig.rawTransaction)
+          
+          this.handleTransactionCallbacks(
+            contract,
+            sendCallback,
+            resolve,
+            reject,
+            confirmationCallback,
+            transactionHashCallback
+          )
+        })
+
+      } else {
+        const sendCallback = method
+          .send(opts)
+
+        this.handleTransactionCallbacks(
+          contract,
+          sendCallback,
+          resolve,
+          reject,
+          confirmationCallback,
+          transactionHashCallback
+        )
+      }
+
     })
 
     const block = await this.web3.eth.getBlock(transactionReceipt.blockNumber)
@@ -529,7 +553,6 @@ class ContractService {
 
   async signFinalizeData(listingID, offerID, ipfsHash, payout, fee) {
     const signData = await this.getSignData(finalizeToSignData, listingID, offerID, ipfsHash, payout, fee)
-    console.log('signFinalize:', signData)
     return await this.signTypedDataV3(JSON.stringify(signData))
   }
   
