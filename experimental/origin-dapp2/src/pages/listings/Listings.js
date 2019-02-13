@@ -45,7 +45,8 @@ class Listings extends Component {
     }
   }
 
-  saveFilters({ name, value, operator = 'EQUALS', valueType = 'STRING' }) {
+  saveFilters(filter = {}) {
+    const { name, value, operator = 'EQUALS', valueType = 'STRING' } = filter
     if (!value) {
       this.setState({ filters: [] })
     } else {

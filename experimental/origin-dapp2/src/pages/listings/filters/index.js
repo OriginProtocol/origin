@@ -21,12 +21,13 @@ export default class FilterGroup extends Component {
 
   async clearFilters(event) {
     event.preventDefault()
+    event.persist()
     this.setState({ open: false })
 
     this.childFilters.forEach(childFilter =>
-      childFilter.onClear(async () => {
-        await this.applyFilters(event)
-      })
+      childFilter.onClear(() =>
+        this.props.saveFilters()
+      )
     )
   }
 
