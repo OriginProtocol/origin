@@ -36,7 +36,8 @@ export default class FilterGroup extends Component {
     Promise.all(
       this.childFilters.map(childFilter => childFilter.getFilters())
     ).then(values => {
-      const filters = values.flatMap(childFilters => childFilters)
+      console.log('Values in Apply Filters', values)
+      // const filters = values.flatMap(childFilters => childFilters)
       //deal w/ state change
     })
   }

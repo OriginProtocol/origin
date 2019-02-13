@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import pick from 'lodash/pick'
+import find from 'lodash/find'
+import remove from 'lodash/remove'
 import { fbt } from 'fbt-runtime'
 
 import BottomScrollListener from 'components/BottomScrollListener'
@@ -18,6 +20,17 @@ import query from 'queries/Listings'
 const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
 
+function ensureOneCategoryFilter(filters) {
+  const stateCategoryFilter = find(filters, { name: 'category' })
+
+  if (stateCategoryFilter) {
+    filters = remove(filters, ({ name }) => {
+      name === stateCategoryFilter.name
+    })
+  }
+  return filters
+}
+
 class Listings extends Component {
   constructor(props) {
     super(props)
@@ -32,19 +45,25 @@ class Listings extends Component {
     }
   }
 
-  saveFilters(name, value) {
+  saveFilters({ name, value, operator = 'EQUALS', valueType = 'STRING' }) {
     if (!value) {
       this.setState({ filters: [] })
     } else {
-      this.setState({
-        filters: [
-          {
-            name,
-            value,
-            operator: 'EQUALS',
-            valueType: 'STRING'
-          }
-        ]
+      this.setState(state => {
+        const filters = ensureOneCategoryFilter(state.filters)
+
+        return {
+          ...state,
+          filters: [
+            ...filters,
+            {
+              name,
+              value,
+              operator,
+              valueType
+            }
+          ]
+        }
       })
     }
   }

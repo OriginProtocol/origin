@@ -49,9 +49,8 @@ class Search extends Component {
       fetch(filterSchemaPath)
         .then(response => response.json())
         .then(schemaJson => {
-          // this.validateFilterSchema(schemaJson)
           if (this.state.category.type === schemaJson.listingType)
-            this.setState({ filterSchema: schemaJson, yes: false })
+            this.setState({ filterSchema: schemaJson })
         })
         .catch(function(e) {
           console.error(`Error reading schema ${filterSchemaPath}: ${e}`)
@@ -77,7 +76,9 @@ class Search extends Component {
                       this.setState(
                         { category, open: false, yes: true },
                         () => {
-                          this.props.saveFilters('category', category.id)
+                          const name = 'category'
+                          const value = category.id
+                          this.props.saveFilters({ name, value })
                         }
                       )
                     }
