@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import get from 'lodash/get'
-import flattenDeep from 'lodash/flattenDeep'
 
 import PriceFilter from 'pages/listings/filters/PriceFilter'
 import MultipleSelectionFilter from 'pages/listings/filters/MultipleSelectionFilter'
@@ -25,9 +24,7 @@ export default class FilterGroup extends Component {
     this.setState({ open: false })
 
     this.childFilters.forEach(childFilter =>
-      childFilter.onClear(() =>
-        this.props.saveFilters()
-      )
+      childFilter.onClear(() => this.props.saveFilters())
     )
   }
 

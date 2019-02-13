@@ -31,6 +31,13 @@ function ensureOneCategoryFilter(filters, name) {
   return filters
 }
 
+function prepareValue(value) {
+  if (Array.isArray(value)) {
+    return value.join(',')
+  }
+  return value
+}
+
 class Listings extends Component {
   constructor(props) {
     super(props)
@@ -50,6 +57,8 @@ class Listings extends Component {
     if (!value) {
       this.setState({ filters: [] })
     } else {
+      const updatedValue = prepareValue(value)
+
       this.setState(state => {
         const filters = ensureOneCategoryFilter(state.filters, name)
 
@@ -59,7 +68,7 @@ class Listings extends Component {
             ...filters,
             {
               name,
-              value,
+              value: updatedValue,
               operator,
               valueType
             }
