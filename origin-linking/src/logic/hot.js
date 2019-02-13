@@ -10,6 +10,7 @@ class Hot {
     // grab the version that allows for behalf submits
     this.marketplace_adapter = origin.marketplace.resolver.adapters['A']
     this.account = web3.eth.accounts.wallet.add(HOT_WALLET_PK)
+    origin.contractService.transactionSigner = this.account.signTransaction
   }
 
   async submitMarketplace(cmd, params) {

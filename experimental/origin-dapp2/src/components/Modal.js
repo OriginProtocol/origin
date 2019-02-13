@@ -259,7 +259,7 @@ require('react-styl')(`
 
   .pl-modal-content
     h5
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 22px
       font-weight: normal
     .actions
@@ -267,7 +267,7 @@ require('react-styl')(`
       .btn
         margin: 0 0.5rem 1rem 0.5rem
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .pl-modal
       .pl-modal-table
         .pl-modal-cell
