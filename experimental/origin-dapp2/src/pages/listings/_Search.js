@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 import Categories from 'origin-graphql/src/constants/Categories'
-import FilterGroup from 'pages/listings/filters/'
+import FilterGroup from 'pages/listings/filters/index'
 
 const CategoriesEnum = require('Categories$FbtEnum')
 

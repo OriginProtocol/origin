@@ -9,20 +9,43 @@ export default class FilterGroup extends Component {
     super(props)
 
     this.childFilters = []
-    this.handleFilterMounted = this.handleFilterMounted.bind(this)
-    this.handleFilterUnMounted = this.handleFilterUnMounted.bind(this)
-    // this.handleApplyClick = this.handleApplyClick.bind(this)
-    // this.handleClearClick = this.handleClearClick.bind(this)
+    this.addChildFilter = this.addChildFilter.bind(this)
+    this.removeChildFilter = this.removeChildFilter.bind(this)
+    this.applyFilters = this.applyFilters.bind(this)
+    this.clearFilter = this.clearFilter.bind(this)
     this.handleOpenDropdown = this.handleOpenDropdown.bind(this)
 
     this.state = { open: false }
   }
 
-  handleFilterMounted(filter) {
+  async clearFilter(event) {
+    event.preventDefault()
+    this.setState({ open: false })
+
+    this.childFilters.forEach(childFilter =>
+      childFilter.onClear(async () => {
+        await this.applyFilters(event)
+      })
+    )
+  }
+
+  async applyFilters(event) {
+    event.preventDefault()
+    this.setState({ open: false })
+
+    Promise.all(
+      this.childFilters.map(childFilter => childFilter.getFilters())
+    ).then(values => {
+      const filters = values.flatMap(childFilters => childFilters)
+      //deal w/ state change
+    })
+  }
+
+  addChildFilter(filter) {
     this.childFilters.push(filter)
   }
 
-  handleFilterUnMounted(filter) {
+  removeChildFilter(filter) {
     const index = this.childFilters.indexOf(filter)
     if (index !== -1) this.childFilters.splice(index, 1)
   }
@@ -76,8 +99,8 @@ export default class FilterGroup extends Component {
                       filter={filter}
                       maxPrice={this.props.maxPrice}
                       minPrice={this.props.minPrice}
-                      onChildMounted={this.handleFilterMounted}
-                      onChildUnMounted={this.handleFilterUnMounted}
+                      onChildMounted={this.addChildFilter}
+                      onChildUnMounted={this.removeChildFilter}
                     />
                   )
                 }
@@ -88,8 +111,8 @@ export default class FilterGroup extends Component {
                       filter={filter}
                       category={this.props.category}
                       title={'Title'}
-                      onChildMounted={this.handleFilterMounted}
-                      onChildUnMounted={this.handleFilterUnMounted}
+                      onChildMounted={this.addChildFilter}
+                      onChildUnMounted={this.removeChildFilter}
                     />
                   )
                 }
@@ -97,13 +120,13 @@ export default class FilterGroup extends Component {
             </div>
             <div className="d-flex flex-row button-container">
               <a
-                onClick={this.handleClearClick}
+                onClick={this.clearFilter}
                 className="dropdown-button dropdown-button-left align-middle"
               >
                 Clear
               </a>
               <a
-                onClick={this.handleApplyClick}
+                onClick={this.applyFilters}
                 className="dropdown-button dropdown-button-right align-middle align-self-center"
               >
                 Apply
@@ -123,7 +146,6 @@ require('react-styl')(`
     margin: auto
     margin-top: 0.125rem
     border: 0px
-    top: auto
     background-color: transparent
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5)
     border-radius: 0.25rem
