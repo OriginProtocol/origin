@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Categories from 'origin-graphql/src/constants/Categories'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
+import schemaMessages from '../../../schemaMessages/index'
 
 export const FILTER_OPERATOR_EQUALS = 'EQUALS'
 export const FILTER_OPERATOR_CONTAINS = 'CONTAINS' //for array values where at least one must match E.g. list of categories
@@ -111,7 +112,7 @@ class MultipleSelectionFilter extends Component {
               }
             />
             <label htmlFor={multipleSelectionValue}>
-              {categories[multipleSelectionValue]}
+              {schemaMessages[multipleSelectionValue].defaultMessage}
             </label>
           </div>
         ))}
