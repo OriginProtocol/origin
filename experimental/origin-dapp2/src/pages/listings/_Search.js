@@ -136,6 +136,7 @@ class Search extends Component {
                     minPrice={minPrice}
                     maxPrice={maxPrice}
                     category={category}
+                    saveFilters={this.props.saveFilters}
                   />
                 )
               )}

@@ -20,12 +20,12 @@ import query from 'queries/Listings'
 const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
 
-function ensureOneCategoryFilter(filters) {
+function ensureOneCategoryFilter(filters, name) {
   const stateCategoryFilter = find(filters, { name: 'category' })
 
   if (stateCategoryFilter) {
-    filters = remove(filters, ({ name }) => {
-      name === stateCategoryFilter.name
+    filters = remove(filters, filter => {
+      filter.name === name
     })
   }
   return filters
@@ -50,7 +50,7 @@ class Listings extends Component {
       this.setState({ filters: [] })
     } else {
       this.setState(state => {
-        const filters = ensureOneCategoryFilter(state.filters)
+        const filters = ensureOneCategoryFilter(state.filters, name)
 
         return {
           ...state,

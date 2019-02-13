@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import get from 'lodash/get'
+import flattenDeep from 'lodash/flattenDeep'
 
 import PriceFilter from 'pages/listings/filters/PriceFilter'
 import MultipleSelectionFilter from 'pages/listings/filters/MultipleSelectionFilter'
@@ -12,13 +13,13 @@ export default class FilterGroup extends Component {
     this.addChildFilter = this.addChildFilter.bind(this)
     this.removeChildFilter = this.removeChildFilter.bind(this)
     this.applyFilters = this.applyFilters.bind(this)
-    this.clearFilter = this.clearFilter.bind(this)
+    this.clearFilters = this.clearFilters.bind(this)
     this.handleOpenDropdown = this.handleOpenDropdown.bind(this)
 
     this.state = { open: false }
   }
 
-  async clearFilter(event) {
+  async clearFilters(event) {
     event.preventDefault()
     this.setState({ open: false })
 
@@ -36,9 +37,8 @@ export default class FilterGroup extends Component {
     Promise.all(
       this.childFilters.map(childFilter => childFilter.getFilters())
     ).then(values => {
-      console.log('Values in Apply Filters', values)
-      // const filters = values.flatMap(childFilters => childFilters)
-      //deal w/ state change
+      const filters = values[0][0]
+      this.props.saveFilters(filters)
     })
   }
 
@@ -111,7 +111,7 @@ export default class FilterGroup extends Component {
                       key={index}
                       filter={filter}
                       category={this.props.category}
-                      title={'Title'}
+                      title={formTitle}
                       onChildMounted={this.addChildFilter}
                       onChildUnMounted={this.removeChildFilter}
                     />
@@ -121,7 +121,7 @@ export default class FilterGroup extends Component {
             </div>
             <div className="d-flex flex-row button-container">
               <a
-                onClick={this.clearFilter}
+                onClick={this.clearFilters}
                 className="dropdown-button dropdown-button-left align-middle"
               >
                 Clear
