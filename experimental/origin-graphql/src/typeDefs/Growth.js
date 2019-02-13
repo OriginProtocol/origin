@@ -27,9 +27,15 @@ module.exports =
   }
 
   enum GrowthActionType {
-    basicProfile
-    attestations
+    email
+    phoneNumber
+    twitter
+    airbnb
+    facebook
     referral
+    profile
+    listingCreated
+    ListingPurchased
   }
 
   enum GrowthInviteStatus {
@@ -54,14 +60,14 @@ module.exports =
     type: GrowthActionType!
     status: GrowthActionStatus!
     rewardEarned: Price
-    reward: Price!            # information about reward
+    reward: Price            # information about reward
   }
 
   type GrowthAction implements GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
     rewardEarned: Price
-    reward: Price!            # information about reward
+    reward: Price            # information about reward
   }
 
   type GrowthInviteConnection {
@@ -75,7 +81,7 @@ module.exports =
     status: GrowthActionStatus!
     rewardEarned: Price
     rewardPending: Price
-    reward: Price!            # information about reward
+    reward: Price            # information about reward
     # first property specifies the number of items to return
     # after is the cursor
     invites(first: Int, after: String): [GrowthInviteConnection]
@@ -89,7 +95,7 @@ module.exports =
     distributionDate: DateTime
     status: GrowthCampaignStatus!
     actions: [GrowthBaseAction]
-    rewardEarned: Price!      # amount earned all actions combined
+    rewardEarned: Price      # amount earned all actions combined
   }
 
   type GrowthCampaignConnection {
@@ -139,8 +145,8 @@ module.exports =
   type Query {
     # first property specifies the number of items to return
     # after is the cursor
-    campaigns(first: Int, after: String): GrowthCampaignConnection
-    campaign(id: String): GrowthCampaign
+    campaigns(first: Int, after: String, walletAddress: ID!): GrowthCampaignConnection
+    campaign(id: String, walletAddress: ID!): GrowthCampaign
     isEligible: EligibilityInfo
     InviteInformation(inviteCode: String!): InviteInformation
   }

@@ -1,10 +1,58 @@
 const Sequelize = require('sequelize')
 
 const db = require('../models')
-const { GrowthEventTypes, GrowthEventStatuses } = require('../enums')
+const {
+  GrowthEventTypes,
+  GrowthEventStatuses,
+  GrowthCampaignStatuses,
+  GrowthActionStatus,
+  GrowthActionType } = require('../enums')
 
 // System cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
+
+const sumUpRewards = (rewards) => {
+  if (rewards === null || rewards.length === 0){
+    return null
+  }
+
+  const finalReward = rewards.reduce((first, second) => {
+    if (first.currency !== second.currency)
+      throw new Error(`At least two rewards have different currencies. ${first.currency} ${second.currency}`)
+    return {
+      amount: first.amount.plus(second.amount),
+      currency: first.currency
+    }
+  })
+
+  return {
+    amount: finalReward.amount.toString(),
+    currency: finalReward.currency
+  }
+}
+
+const eventTypeToActionType = (eventType) => {
+  if (eventType === 'ProfilePublished'){
+    return 'profile'
+  } else if (eventType === 'EmailAttestationPublished'){
+    return 'email'
+  } else if (eventType === 'FacebookAttestationPublished'){
+    return 'facebook'
+  } else if (eventType === 'AirbnbAttestationPublished'){
+    return 'airbnb'
+  } else if (eventType === 'TwitterAttestationPublished'){
+    return 'twitter'
+  } else if (eventType === 'PhoneAttestationPublished'){
+    return 'phoneNumber'
+  } else if (eventType === 'RefereeSignedUp'){
+    return 'referral'
+  } else if (eventType === 'ProfileListingCreatedPublished'){
+    return 'listingCreated'
+  } else if (eventType === 'ListingPurchased'){
+    return 'ListingPurchased'
+  } 
+
+}
 
 class Reward {
   constructor(campaignId, levelId, ruleId, value) {
@@ -122,6 +170,48 @@ class Campaign {
       rewards.push(...this.levels[i].getRewards(ethAddress, events))
     }
     return rewards
+  }
+
+  /**
+   * Returns campaign status 
+   *
+   * @returns {Enum<GrowthCampaignStatuses>} - campaign status
+   */  
+  getStatus() {
+    if (this.campaign.startDate > Date.now()) {
+      return GrowthCampaignStatuses.pending
+    } else if (this.campaign.startDate < Date.now() && this.campaign.endDate > Date.now()){
+      //TODO: check if cap reached
+      return GrowthCampaignStatuses.active
+    } else if (this.campaign.endDate < Date.now()){
+      return GrowthCampaignStatuses.completed
+    } else {
+      throw new Error(`Unexpected campaign id: ${this.campaign.id} status`)
+    }
+
+  }
+
+  /**
+   * Formats the campaign object according to the Growth schema
+   *
+   * @returns {Object} - formatted object
+   */
+  async toApolloObject(ethAddress) {
+    //TODO: change to true, true
+    //const events = this.getEvents(ethAddress, true, true)
+    const events = await this.getEvents(ethAddress, false, false)
+    const level = this.levels[await this.getCurrentLevel(ethAddress, events)]
+
+    return {
+      id: this.campaign.id,
+      name: this.campaign.name,
+      startDate: this.campaign.startDate,
+      endDate: this.campaign.endDate,
+      distributionDate: this.campaign.distributionDate,
+      status: this.getStatus(),
+      actions: level.rules.map(rule => rule.toApolloObject(ethAddress, events, level)),
+      rewardEarned: sumUpRewards(level.getRewards())
+    }
   }
 }
 
@@ -252,6 +342,29 @@ class BaseRule {
 
     return rewards
   }
+
+  /**
+   * Return status of this rule. One of: inactive, active, exhausted, completed
+   * 
+   * @returns {Enum<GrowthActionStatus>}
+   */
+  getStatus(ethAddress, events, currentUserLevel) {
+    if (currentUserLevel < this.level){
+      return GrowthActionStatus.inactive
+    } else {
+      if (this.evaluate(ethAddress, events)){
+        return GrowthActionStatus.completed
+      }
+      return GrowthActionStatus.active
+    }
+  }
+
+  /**
+   * classes extending this one should implement this method
+   */
+  toApolloObject(ethAddress, events, currentUserLevel) {
+    throw new Error('Not implemented')
+  }
 }
 
 /**
@@ -294,6 +407,22 @@ class SingleEventRule extends BaseRule {
   evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
+  }
+
+  /**
+   * Formats the campaign object according to the Growth schema
+   *
+   * @returns {Object} - formatted object
+   */
+  toApolloObject(ethAddress, events, currentUserLevel) {
+    const rewards = this.getRewards(ethAddress, events)
+
+    return {
+      type: eventTypeToActionType(this.config.eventType),
+      status: this.getStatus(ethAddress, events),
+      rewardEarned: sumUpRewards(rewards),
+      reward: this.config.reward
+    }
   }
 }
 
@@ -374,8 +503,34 @@ class MultiEventsRule extends BaseRule {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length >= this.numEventsRequired
   }
+
+  /**
+   * Formats the campaign object according to the Growth schema
+   *
+   * @returns {Object} - formatted object
+   */
+  toApolloObject(ethAddress, events, currentUserLevel) {
+    const rewards = this.getRewards(ethAddress, events)
+
+    return {
+      // TODO: we need event types for MultiEventsRule
+      type: eventTypeToActionType(this.config.eventTypes[0]),
+      status: this.getStatus(ethAddress, events),
+      rewardEarned: sumUpRewards(rewards),
+      reward: this.config.reward
+    }
+  }
+}
+
+const Fetcher = {
+  getAllCampaigns: async () => {
+    const campaigns = await db.GrowthCampaign.findAll({})
+
+    return campaigns.map(campaign => new Campaign(campaign, JSON.parse(campaign.rules)))
+  }
 }
 
 module.exports = {
-  Campaign
+  Campaign,
+  Fetcher
 }

@@ -20,6 +20,32 @@ const GrowthCampaignRewardStatuses = new Enum(
   'Distributed'
 )
 
+const GrowthCampaignStatuses = new Enum(
+  'pending',
+  'active',
+  'capReached',
+  'completed'
+)
+
+const GrowthActionStatus = new Enum(
+  'inactive',
+  'active',
+  'exhausted',
+  'completed'
+)
+
+const GrowthActionType = new Enum(
+  'profile',
+  'email',
+  'phoneNumber',
+  'twitter',
+  'airbnb',
+  'facebook',
+  'referral',
+  'listingCreated',
+  'ListingPurchased'
+)
+
 const GrowthEventStatuses = new Enum('Logged', 'Verified', 'Fraud')
 
 const GrowthEventTypes = new Enum(
@@ -57,5 +83,8 @@ module.exports = {
   GrowthParticipantStatuses,
   GrowthRewardStatuses,
   GrowthInviteContactTypes,
-  GrowthInviteStatuses
+  GrowthInviteStatuses,
+  GrowthCampaignStatuses,
+  GrowthActionStatus,
+  GrowthActionType
 }

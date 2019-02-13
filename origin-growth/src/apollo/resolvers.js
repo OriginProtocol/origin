@@ -1,6 +1,7 @@
 //const GraphQLJSON = require('graphql-type-json')
 const { GraphQLDateTime } = require('graphql-iso-date')
-const db = require('./db')
+const { Campaign } = require('../rules/rules')
+const { Fetcher } = require('../rules/rules')
 const { getLocationInfo } = require('../util/locationInfo')
 
 // Resolvers define the technique for fetching the types in the schema.
@@ -11,12 +12,18 @@ const resolvers = {
    */
   //JSON: GraphQLJSON,
   DateTime: GraphQLDateTime,
+  GrowthBaseAction: {
+    __resolveType(obj) {
+      return 'GrowthAction'
+    },
+  },
   Query: {
-    async campaigns() {
-      const campaigns = await db.getCampaigns()
+    async campaigns(_, args) {
+
+      const campaigns = await Fetcher.getAllCampaigns()
       return {
         totalCount: campaigns.length,
-        nodes: await db.getCampaigns(),
+        nodes: campaigns.map(async (campaign) => await campaign.toApolloObject(args.walletAddress)),
         pageInfo: {
           endCursor: 'TODO implement',
           hasNextPage: false,
