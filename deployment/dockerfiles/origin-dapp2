@@ -27,7 +27,8 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-# Use EnvKey so that environment variables are available to DApp at build time
+COPY ./origin-contracts/releases/0.8.5/build/ ./origin-contracts/build/
+
 RUN npm run build --prefix experimental/origin-dapp2
 
 RUN mv /app/experimental/origin-dapp2/public/kovan.html \
