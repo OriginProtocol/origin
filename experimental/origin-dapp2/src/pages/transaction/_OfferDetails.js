@@ -71,7 +71,7 @@ export default OfferDetails
 require('react-styl')(`
   .offer-details
     background: var(--pale-grey-eight)
-    border-radius: 5px
+    border-radius: var(--default-radius)
     font-size: 18px
     font-weight: normal
     padding: 1rem 1.5rem
