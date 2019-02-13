@@ -82,7 +82,7 @@ It is recommended to use the lerna local setup rather than docker compose.
 ### Copy Mainnet contracts
 ```
 rm origin-contracts/build/contracts/*
-cp origin-contracts/releases/0.8.5/build/contracts/* origin-contracts/build/contracts
+cp origin-contracts/releases/0.8.6/build/contracts/* origin-contracts/build/contracts
 ```
 
 ### Build origin-js
