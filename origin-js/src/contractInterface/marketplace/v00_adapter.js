@@ -36,6 +36,10 @@ class V00_MarketplaceAdapter {
   }
 
 
+  toListingID(listingIndex) {
+    return listingIndex
+  }
+
   toListingIndex(listingID) {
     return listingID
   }

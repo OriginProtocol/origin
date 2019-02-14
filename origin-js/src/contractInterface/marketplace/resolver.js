@@ -44,14 +44,14 @@ export default class MarketplaceResolver {
         listingIndexes.forEach(listingData => {
           const { listingIndex } = listingData
           listingIds.unshift({
-            listingId: generateListingId({ version, network, listingIndex }),
+            listingId: this.generateListingId({ version, network, listingIndex }),
             ...listingData
           })
         })
       } else {
         listingIndexes.forEach(listingIndex => {
           listingIds.unshift(
-            generateListingId({ version, network, listingIndex })
+            this.generateListingId({ version, network, listingIndex })
           )
         })
       }
@@ -82,7 +82,7 @@ export default class MarketplaceResolver {
       version,
       network
     } = this.parseOfferId(offerId)
-    const listingId = generateListingId({ version, network, listingIndex })
+    const listingId = this.generateListingId({ version, network, listingIndex })
 
     // Load chain data.
     const chainOffer = await adapter.getOffer(listingIndex, offerIndex)
@@ -99,7 +99,7 @@ export default class MarketplaceResolver {
     const version = this.currentVersion
     const network = await this.contractService.web3.eth.net.getId()
     const { listingIndex } = transactionReceipt
-    const listingId = generateListingId({ network, version, listingIndex })
+    const listingId = this.generateListingId({ network, version, listingIndex })
 
     return Object.assign({ listingId }, transactionReceipt)
   }
@@ -373,7 +373,7 @@ export default class MarketplaceResolver {
     if (!adapter) {
       throw new Error(`Adapter not found for version ${version}`)
     }
-    return { adapter, listingIndex, version, network }
+    return { adapter, listingIndex: adapter.toListingID(listingIndex), version, network }
   }
 
   parseOfferId(offerId) {
@@ -383,14 +383,18 @@ export default class MarketplaceResolver {
     if (!adapter) {
       throw new Error(`Adapter not found for version ${version}`)
     }
-    return { adapter, listingIndex, offerIndex, version, network }
+    return { adapter, listingIndex: adapter.toListingID(listingIndex), offerIndex, version, network }
+  }
+
+  generateListingId({ version, network, listingIndex }) {
+    return generateListingId({ version, network, listingIndex: this.adapters[version].toListingIndex(listingIndex) })
   }
 
   makeListingId(network, contractName, listingId) {
     for (const version of this.versions) {
       if (this.adapters[version].contractName == contractName)
       {
-        return generateListingId({ version, network, listingIndex: this.adapters[version].toListingIndex(listingId) })
+        return this.generateListingId({ version, network, listingId })
       }
     }
   }
