@@ -667,6 +667,41 @@
           "translation": "Memverifikasi profil Anda memungkinkan pengguna lain untuk mengetahui bahwa Anda adalah orang yang nyata dan meningkatkan peluang keberhasilan transaksi pada Origin."
         }
       ]
+    },
+    "6qJXNMMKNFfx4VLsW2kJuA==": {
+      "translations": [
+        {
+          "translation": "Telepon"
+        }
+      ]
+    },
+    "4KDtIeVHCSQ1Hx+o9Ugqwg==": {
+      "translations": [
+        {
+          "translation": "Email"
+        }
+      ]
+    },
+    "2SbGufFmkCTCGY4+q2WOjw==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "jZSZDglXvA/EatmncZtt0w==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "yOqgkm4YAMH2/l+qOpjzXQ==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
     }
   }
 }

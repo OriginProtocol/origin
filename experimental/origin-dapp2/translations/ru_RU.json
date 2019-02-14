@@ -667,6 +667,41 @@
           "translation": "Проверка вашего профиля позволяет другим пользователям узнать, что вы настоящий человек, и увеличивает шансы на успешные транзакции на Origin."
         }
       ]
+    },
+    "6qJXNMMKNFfx4VLsW2kJuA==": {
+      "translations": [
+        {
+          "translation": "Телефон"
+        }
+      ]
+    },
+    "4KDtIeVHCSQ1Hx+o9Ugqwg==": {
+      "translations": [
+        {
+          "translation": "Адрес электронной почты"
+        }
+      ]
+    },
+    "2SbGufFmkCTCGY4+q2WOjw==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "jZSZDglXvA/EatmncZtt0w==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "yOqgkm4YAMH2/l+qOpjzXQ==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
     }
   }
 }

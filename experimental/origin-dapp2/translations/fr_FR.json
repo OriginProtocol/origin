@@ -667,6 +667,41 @@
           "translation": "La vérification de votre profil permet aux autres utilisateurs de savoir que vous êtes une personne réelle et augmente les chances de réussite des transactions sur Origin."
         }
       ]
+    },
+    "6qJXNMMKNFfx4VLsW2kJuA==": {
+      "translations": [
+        {
+          "translation": "Téléphone"
+        }
+      ]
+    },
+    "4KDtIeVHCSQ1Hx+o9Ugqwg==": {
+      "translations": [
+        {
+          "translation": "Email"
+        }
+      ]
+    },
+    "2SbGufFmkCTCGY4+q2WOjw==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "jZSZDglXvA/EatmncZtt0w==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "yOqgkm4YAMH2/l+qOpjzXQ==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
     }
   }
 }

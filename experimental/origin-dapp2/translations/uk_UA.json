@@ -667,6 +667,41 @@
           "translation": "Підтвердження вашого профілю дозволяє іншим користувачам дізнатись, що ви - справжня особа, і збільшує шанси на успішні транзакції з Origin."
         }
       ]
+    },
+    "6qJXNMMKNFfx4VLsW2kJuA==": {
+      "translations": [
+        {
+          "translation": "Телефон"
+        }
+      ]
+    },
+    "4KDtIeVHCSQ1Hx+o9Ugqwg==": {
+      "translations": [
+        {
+          "translation": "Електронна пошта"
+        }
+      ]
+    },
+    "2SbGufFmkCTCGY4+q2WOjw==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "jZSZDglXvA/EatmncZtt0w==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "yOqgkm4YAMH2/l+qOpjzXQ==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
     }
   }
 }

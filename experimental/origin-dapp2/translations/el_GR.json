@@ -667,6 +667,41 @@
           "translation": "Η επαλήθευση του προφίλ σας επιτρέπει σε άλλους χρήστες να γνωρίζουν ότι είστε πραγματικό πρόσωπο και αυξάνει τις πιθανότητες επιτυχημένων συναλλαγών στο Origin."
         }
       ]
+    },
+    "6qJXNMMKNFfx4VLsW2kJuA==": {
+      "translations": [
+        {
+          "translation": "Τηλέφωνο"
+        }
+      ]
+    },
+    "4KDtIeVHCSQ1Hx+o9Ugqwg==": {
+      "translations": [
+        {
+          "translation": "Διεύθυνση Ηλεκτρονικού Ταχυδρομείου"
+        }
+      ]
+    },
+    "2SbGufFmkCTCGY4+q2WOjw==": {
+      "translations": [
+        {
+          "translation": "Facebook"
+        }
+      ]
+    },
+    "jZSZDglXvA/EatmncZtt0w==": {
+      "translations": [
+        {
+          "translation": "Twitter"
+        }
+      ]
+    },
+    "yOqgkm4YAMH2/l+qOpjzXQ==": {
+      "translations": [
+        {
+          "translation": "Airbnb"
+        }
+      ]
     }
   }
 }
