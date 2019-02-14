@@ -109,7 +109,7 @@ class MultipleSelectionFilter extends Component {
               type="checkbox"
               className="form-check-input"
               id={multipleSelectionValue}
-              onClick={this.onHandleClick}
+              onChange={this.onHandleClick}
               checked={
                 this.state.checkboxValue[multipleSelectionValue]
                   ? this.state.checkboxValue[multipleSelectionValue]

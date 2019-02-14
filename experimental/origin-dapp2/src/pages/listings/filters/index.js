@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import get from 'lodash/get'
 
+import withWallet from 'hoc/withWallet'
 import PriceFilter from 'pages/listings/filters/PriceFilter'
 import MultipleSelectionFilter from 'pages/listings/filters/MultipleSelectionFilter'
 
-export default class FilterGroup extends Component {
+class FilterGroup extends Component {
   constructor(props) {
     super(props)
 
@@ -13,7 +14,7 @@ export default class FilterGroup extends Component {
     this.removeChildFilter = this.removeChildFilter.bind(this)
     this.applyFilters = this.applyFilters.bind(this)
     this.clearFilters = this.clearFilters.bind(this)
-    this.handleOpenDropdown = this.handleOpenDropdown.bind(this)
+    this.toggleDropDown = this.toggleDropDown.bind(this)
 
     this.state = { open: false }
   }
@@ -35,7 +36,7 @@ export default class FilterGroup extends Component {
     Promise.all(
       this.childFilters.map(childFilter => childFilter.getFilters())
     ).then(values => {
-      const filters = values[0][0]
+      const filters = Object.values(values).flatMap(arrayOfFilters => arrayOfFilters)
       this.props.saveFilters(filters)
     })
   }
@@ -49,24 +50,13 @@ export default class FilterGroup extends Component {
     if (index !== -1) this.childFilters.splice(index, 1)
   }
 
-  handleOpenDropdown() {
+  toggleDropDown() {
     if (this.state.open) {
       this.setState({ open: false })
       return
     } else {
       this.setState({ open: true })
     }
-    const containsDateFilter = this.props.filterGroup.items.some(
-      filter => filter.type === 'date'
-    )
-    if (!containsDateFilter) return
-
-    /* Because of a workaround in `react-dates` module we need to message the DateFilter
-     * when it gets shown - when dropdown containing date filter is opened
-     */
-    this.childFilters
-      .filter(filter => filter.props.filter.type === 'date')
-      .forEach(dateFilter => dateFilter.onOpen())
   }
 
   render() {
@@ -78,7 +68,7 @@ export default class FilterGroup extends Component {
     return (
       <li className="search-filters nav-item">
         <a
-          onClick={this.handleOpenDropdown}
+          onClick={this.toggleDropDown}
           className="nav-link"
           data-parent="#search-filters-bar"
         >
@@ -96,6 +86,9 @@ export default class FilterGroup extends Component {
                     <PriceFilter
                       key={index}
                       filter={filter}
+                      token='OGN'
+                      wallet={this.props.wallet}
+                      currency={get(filter, 'priceUnit.defaultMessage')}
                       maxPrice={this.props.maxPrice}
                       minPrice={this.props.minPrice}
                       onChildMounted={this.addChildFilter}
@@ -138,6 +131,8 @@ export default class FilterGroup extends Component {
   }
 }
 
+export default withWallet(FilterGroup)
+
 require('react-styl')(`
   .search-filters .rc-slider-rail
     height: 15px
@@ -157,7 +152,7 @@ require('react-styl')(`
     height: 15px
     border-radius: 0px
     background-color: var(--steel)
-  
+
   .search-filters .dropdown-menu
     left: auto
     padding: 0px

@@ -21,20 +21,23 @@ import query from 'queries/Listings'
 const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
 
-function ensureOneCategoryFilter(filters, name) {
-  const stateCategoryFilter = find(filters, { name: 'category' })
+function ensureOneCategoryFilter(stateFilters, filters) {
+  const stateCategoryFilter = find(stateFilters, { name: 'category' })
+  const newCategoryFilter = find(filters, { name: 'category' })
 
-  if (stateCategoryFilter) {
-    filters = remove(filters, filter => {
-      filter.name === name
+  if (stateCategoryFilter && newCategoryFilter) {
+    stateFilters = remove(stateFilters, filter => {
+      filter.name === newCategoryFilter.name
     })
   }
-  return filters
+  return stateFilters
 }
 
 function prepareValue(value) {
   if (Array.isArray(value)) {
     return value.join(',')
+  } else if (parseFloat(value) !== NaN) {
+    return value.toString()
   }
   return value
 }
@@ -62,24 +65,18 @@ class Listings extends Component {
     }
   }
 
-  saveFilters(filter = {}) {
-    const { name, value, operator = 'EQUALS', valueType = 'STRING' } = filter
-    if (!value) {
+  saveFilters(filters = []) {
+    if (!filters.length) {
       this.setState({ filters: [] })
     } else {
       this.setState(state => {
-        const filters = ensureOneCategoryFilter(state.filters, name)
+        const stateFilters = ensureOneCategoryFilter(state.filters, filters)
 
         return {
           ...state,
           filters: [
-            ...filters,
-            {
-              name,
-              value,
-              operator,
-              valueType
-            }
+            ...stateFilters,
+            ...filters
           ]
         }
       })
