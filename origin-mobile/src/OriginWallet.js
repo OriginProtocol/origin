@@ -27,6 +27,13 @@ const WALLET_STORE = "WALLET_STORE"
 const WALLET_INFO = "WALLET_INFO"
 const WALLET_LINK = "WALLET_LINK"
 const REMOTE_LOCALHOST_STORE = "REMOTE_LOCAL_STORE"
+const DEFAULT_NOTIFICATION_PERMISSIONS = {
+  alert: true,
+  badge: true,
+  sound: true
+}
+
+const GCM_SENDER_ID = process.env.GCM_SENDER_ID || '388021423484' // TODO: @mikeshultz's personal key, fix before merge
 
 const Events = keyMirror({
   PROMPT_LINK:null,
@@ -112,7 +119,11 @@ class OriginWallet {
   }
 
   getNotifyType() {
-    return EthNotificationTypes.APN
+    if (Platform.OS === 'ios') {
+      return EthNotificationTypes.APN
+    } else if (Platform.OS === 'android') {
+      return EthNotificationTypes.FCM
+    }
   }
 
   initNotifications() {
@@ -133,14 +144,10 @@ class OriginWallet {
       }.bind(this),
 
       // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
-      senderID: "YOUR GCM SENDER ID",
+      senderID: GCM_SENDER_ID,
 
       // IOS ONLY (optional): default: all - Permissions to register.
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true
-      },
+      permissions: DEFAULT_NOTIFICATION_PERMISSIONS,
 
       // Should the initial notification be popped automatically
       // default: true
@@ -151,13 +158,18 @@ class OriginWallet {
         * - Specified if permissions (ios) and token (android and ios) will requested or not,
         * - if not, you must call PushNotificationsHandler.requestPermissions() later
         */
-      requestPermissions: false,
+      requestPermissions: Platform.OS !== 'ios',
     })
   }
 
   requestNotifications() {
     if (Platform.OS === 'ios') {
       return PushNotificationIOS.requestPermissions()
+    } else {
+      // Function callers expect a Promise
+      return new Promise((resolve, reject) => {
+        resolve(DEFAULT_NOTIFICATION_PERMISSIONS)
+      })
     }
   }
 
