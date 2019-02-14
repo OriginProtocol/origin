@@ -4,8 +4,8 @@ import get from 'lodash/get'
 
 import query from 'queries/TokenBalance'
 
-function withTokens(WrappedComponent) {
-  const WithTokens = props => (
+function withExchangeRate(WrappedComponent) {
+  const WithExchangeRate = props => (
     <Query
       query={query}
       variables={{
@@ -24,7 +24,7 @@ function withTokens(WrappedComponent) {
       }}
     </Query>
   )
-  return WithTokens
+  return WithExchangeRate
 }
 
-export default withTokens
+export default withExchangeRate
