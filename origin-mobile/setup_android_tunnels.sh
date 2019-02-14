@@ -20,7 +20,7 @@ adb reverse tcp:3008 tcp:3008
 adb reverse tcp:8080 tcp:8080
 # IPFS API
 adb reverse tcp:5002 tcp:5002
-# dapp, why?
+# dapp
 adb reverse tcp:3000 tcp:3000
 # IPFS
 adb reverse tcp:9999 tcp:9999
