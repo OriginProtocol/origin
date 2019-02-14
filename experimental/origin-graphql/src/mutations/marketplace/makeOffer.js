@@ -37,6 +37,12 @@ async function makeOffer(_, data) {
     ipfsData.commission.amount,
     'ether'
   )
+
+  // TODO: Finish support for ERC20 offers
+  // Currently assumes value is priced in ETH
+  if (data.currency != ZeroAddress) {
+    throw new Error('ERC20 offers not currently supported')
+  }
   const value = contracts.web3.utils.toWei(data.value, 'ether')
   const arbitrator = data.arbitrator || contracts.config.arbitrator
 

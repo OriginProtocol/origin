@@ -9,6 +9,9 @@ async function addFunds(_, data) {
   await checkMetaMask(data.from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)
+
+  // TODO: Finish support for ERC20 offers
+  // Currently assumes value is priced in ETH
   const value = contracts.web3.utils.toWei(data.value, 'ether')
 
   const tx = contracts.marketplaceExec.methods
