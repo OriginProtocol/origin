@@ -5,7 +5,6 @@ const { withRetries } = require('./util')
 class ContractHelper {
   constructor(config) {
     this.config = config
-    this.retries = 7
   }
 
   /**

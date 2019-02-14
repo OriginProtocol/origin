@@ -1,3 +1,5 @@
+import get from 'lodash/get'
+
 import contracts from '../contracts'
 
 let ethPrice, activeMessaging
@@ -76,8 +78,12 @@ export default {
       }
       let id = args.id
       if (id === 'defaultAccount') {
-        const accounts = await contracts.metaMask.eth.getAccounts()
-        if (!accounts || !accounts.length) return null
+        // web3Exec is either MetaMask or a web3 instance using the linker
+        // client provider
+        const accounts = await contracts.web3Exec.eth.getAccounts()
+        if (!accounts || !accounts.length) {
+          return resolve(null)
+        }
         id = accounts[0]
       } else if (id === 'currentAccount') {
         if (contracts.messaging.account_key) {
@@ -92,6 +98,10 @@ export default {
         activeMessaging = id
         setTimeout(() => resolve({ id }), 500)
       })
+      const messagingData = get(contracts, 'linker.session.privData.messaging')
+      if (contracts.linker && messagingData) {
+        await contracts.messaging.onPreGenKeys(messagingData)
+      }
       await contracts.messaging.init(id)
     }),
 
@@ -107,5 +117,6 @@ export default {
       totalUnread: 0,
       nodes: []
     }
-  }
+  },
+  walletLinker: () => ({})
 }

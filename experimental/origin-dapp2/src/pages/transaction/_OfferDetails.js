@@ -4,16 +4,15 @@ import dayjs from 'dayjs'
 
 const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">
-    {offer.listing.__typename === 'FractionalListing' ? null : (
+    {offer.listing.__typename === 'FractionalListing' ||
+    offer.quantity === 1 ? null : (
       <>
-        {offer.quantity === 1 ? null : (
-          <li className="price-unit">
-            <span>Price / unit</span>
-            <span>
-              <TokenPrice {...offer.listing.price} />
-            </span>
-          </li>
-        )}
+        <li className="price-unit">
+          <span>Price / unit</span>
+          <span>
+            <TokenPrice {...offer.listing.price} />
+          </span>
+        </li>
         <li className="quantity">
           <span>Quantity</span>
           <span>{offer.quantity}</span>
@@ -72,7 +71,7 @@ export default OfferDetails
 require('react-styl')(`
   .offer-details
     background: var(--pale-grey-eight)
-    border-radius: 5px
+    border-radius: var(--default-radius)
     font-size: 18px
     font-weight: normal
     padding: 1rem 1.5rem

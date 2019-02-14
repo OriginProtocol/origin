@@ -6,6 +6,10 @@ export default gql`
       metaMaskAccount {
         id
       }
+      walletType
+      mobileWalletAccount {
+        id
+      }
     }
   }
 `

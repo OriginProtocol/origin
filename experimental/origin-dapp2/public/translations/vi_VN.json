@@ -75,7 +75,10 @@
     "schema.resumes": "Sơ yếu lý lịch",
     "schema.volunteers": "Tình nguyện viên"
   },
-  "odYsB": "Đánh giá",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Ứng dụng phi tập trung nguồn gốc cho phép người mua và người bán giao dịch mà không cần thuê trung gian sử dụng blockchain Ethereum và IPFS.",
@@ -83,12 +86,15 @@
   "421TH8": "Ghé thăm Github của chúng tôi",
   "1xF0Sp": "Đang mua",
   "3i2AJC": "Thêm danh sách",
+  "2AYKWR": "This page has been machine translated, see any errors?",
+  "rlRRa": "Help Translate",
   "1r15SU": "Xác minh tài khoản Airbnb của bạn",
   "4iptAy": "Nhập Url hồ sơ Airbnb bên dưới",
   "1jSLWC": "Những người dùng khác sẽ biết rằng bạn có một hồ sơ Airbnb đã được xác minh.",
   "561FZ": "Hủy bỏ",
   "47VMoo": "Truy cập trang web Airbnb, chỉnh sửa tiểu sử của bạn và dán văn bản sau vào mô tả hồ sơ của mình.",
   "4ppTCb": "Tiếp tục một khi mã xác nhận được đưa vào hồ sơ Airbnb của bạn.",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"

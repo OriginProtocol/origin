@@ -3,6 +3,7 @@ import { Mutation } from 'react-apollo'
 import { Button } from '@blueprintjs/core'
 import { Dialog, FormGroup, InputGroup, HTMLSelect } from '@blueprintjs/core'
 
+import rnd from 'utils/rnd'
 import withAccounts from 'hoc/withAccounts'
 import { DeployTokenMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
@@ -10,18 +11,16 @@ import ErrorCallout from 'components/ErrorCallout'
 class DeployToken extends Component {
   constructor(props) {
     super()
-    const admin = props.accounts.filter(a => a.role === 'Admin')
+    let admin = rnd(props.accounts.filter(a => a.role === 'Admin'))
+    if (!admin) admin = rnd(props.accounts)
+
     this.state = {
       name: 'Origin Token',
       symbol: 'OGN',
       decimals: '18',
       supply: '1000000000',
       type: 'OriginToken',
-      from: admin[0]
-        ? admin[0].id
-        : props.accounts[0]
-        ? props.accounts[0].id
-        : null
+      from: admin ? admin.id : ''
     }
   }
 
@@ -44,17 +43,29 @@ class DeployToken extends Component {
             <div className="bp3-dialog-body">
               <ErrorCallout error={error} />
               <div style={{ display: 'flex' }}>
-                <div style={{ flex: 2, marginRight: 20 }}>
+                <div style={{ flex: 1, marginRight: 20 }}>
                   <FormGroup label="Name">
                     <InputGroup {...input('name')} />
                   </FormGroup>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <FormGroup label="Type">
+                <div style={{ flex: 1, marginRight: 20 }}>
+                  <FormGroup label="Owner">
                     <HTMLSelect
                       {...input('type')}
                       fill={true}
                       options={['OriginToken', 'Standard']}
+                    />
+                  </FormGroup>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <FormGroup label="Owner">
+                    <HTMLSelect
+                      {...input('from')}
+                      fill={true}
+                      options={this.props.accounts.map(a => ({
+                        label: `${(a.name || a.id).substr(0, 24)}`,
+                        value: a.id
+                      }))}
                     />
                   </FormGroup>
                 </div>
@@ -103,15 +114,3 @@ class DeployToken extends Component {
 }
 
 export default withAccounts(DeployToken)
-
-// mutation sendFromNode($from: String, $to: String, $value: String) {
-//   sendFromNode(from: $from, to: $to, value: $value) {
-//     fromAccount
-//     toAccount
-//   }
-// }
-// { "from": "0xBECf244F615D69AaE9648E4bB3f32161A87caFF1",
-//  "to": "0x25A7ACe6bD49f1dB57B11ae005EF40ae30195Ef6",
-//  "value": "1"}
-
-// import query from './_query'
