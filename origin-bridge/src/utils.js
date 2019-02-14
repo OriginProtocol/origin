@@ -1,5 +1,7 @@
 const web3 = require('web3')
 const eth = require('web3-eth')
+const OAuth = require('oauth').OAuth
+const util = require('util');
 
 // 128 words to map character codes to words
 const words = ["surprise", "now", "mimic", "hood", "say", "glance", "there",
@@ -21,6 +23,28 @@ const words = ["surprise", "now", "mimic", "hood", "say", "glance", "there",
   "rule", "engage", "vicious", "struggle", "century", "nephew", "try",
   "vehicle", "crystal"
 ]
+
+const twitterOAuth = new OAuth(
+  'https://api.twitter.com/oauth/request_token',
+  'https://api.twitter.com/oauth/access_token',
+  process.env.TWITTER_CONSUMER_KEY,
+  process.env.TWITTER_CONSUMER_SECRET,
+  '1.0',
+  getAbsoluteUrl('/redirects/twitter/'),
+  'HMAC-SHA1'
+  )
+
+function getTwitterOAuthRequestToken() {
+  return new Promise( (resolve, reject) => {
+    twitterOAuth.getOAuthRequestToken(function (error, oAuthToken, oAuthTokenSecret) {
+      if (error){
+        reject(error)
+      } else {
+        resolve({oAuthToken, oAuthTokenSecret})
+      }
+    })
+  })
+}
 
 function asyncMiddleware (fn) {
   return (req, res, next) => {
@@ -73,4 +97,13 @@ function generateAttestationSignature(privateKey, subject, data) {
   return signedMessage.signature
 }
 
-module.exports = { generateAirbnbCode, generateSixDigitCode, getAbsoluteUrl, mapObjectToQueryParams, asyncMiddleware, generateAttestationSignature }
+module.exports = {
+  generateAirbnbCode,
+  generateSixDigitCode,
+  getAbsoluteUrl,
+  mapObjectToQueryParams,
+  asyncMiddleware,
+  generateAttestationSignature,
+  twitterOAuth,
+  getTwitterOAuthRequestToken
+ }
