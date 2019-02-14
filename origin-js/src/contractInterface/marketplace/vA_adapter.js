@@ -297,8 +297,10 @@ class VA_MarketplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async getListing(listingId, blockInfo, ipfsHash) {
+  async getListing(listingIndex, blockInfo, ipfsHash) {
     await this.getContract()
+
+    const listingId = this.toListingID(listingIndex)
 
     // Find all events related to this listing
     const listingTopic = this.padTopic(listingId)
@@ -341,10 +343,6 @@ class VA_MarketplaceAdapter {
         offers[event.returnValues.offerID] = { status: 'sellerReviewed', event }
       }
     })
-
-    if (!ipfsHash) {
-      throw(`ipfsHash not found in events for listing ${listingId}`)
-    }
 
     // Return the raw listing along with events and IPFS hash
     return Object.assign({}, { ipfsHash, events, offers, status })
