@@ -1,7 +1,11 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query AccountTokenBalance($account: String!, $token: String! $currency: String) {
+  query AccountTokenBalance(
+    $account: String!
+    $token: String!
+    $currency: String
+  ) {
     web3 {
       account(id: $account) {
         id

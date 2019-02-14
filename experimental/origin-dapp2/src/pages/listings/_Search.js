@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 import Categories from 'origin-graphql/src/constants/Categories'
@@ -29,6 +30,8 @@ function getStateFromQuery(props) {
 class Search extends Component {
   constructor(props) {
     super(props)
+
+    this.filterByDropDown = this.filterByDropDown.bind(this)
     this.state = {
       ...getStateFromQuery(props),
       maxPrice: 10000,
@@ -41,15 +44,16 @@ class Search extends Component {
       this.setState(getStateFromQuery(this.props))
     }
 
-    const categoryType = get(this.state, 'category.type', '')
+    const stateCategory = get(this.state, 'category.type', 'all')
+    const category = isEmpty(stateCategory) ? 'all' : stateCategory
     const prevCategoryType = get(prevState, 'category.type', '')
-    if (categoryType !== prevCategoryType) {
-      const filterSchemaPath = `schemas/searchFilters/${categoryType}-search.json`
+    if (category !== prevCategoryType) {
+      const filterSchemaPath = `schemas/searchFilters/${category}-search.json`
 
       fetch(filterSchemaPath)
         .then(response => response.json())
         .then(schemaJson => {
-          if (this.state.category.type === schemaJson.listingType)
+          if (category === schemaJson.listingType)
             this.setState({ filterSchema: schemaJson })
         })
         .catch(function(e) {
@@ -59,10 +63,22 @@ class Search extends Component {
     }
   }
 
+  filterByDropDown(category) {
+    this.setState({ category, open: false, yes: true }, () => {
+      const name = 'category'
+      const value = category.id
+      if (value) {
+        this.props.saveFilters([
+          { name, value, operator: 'EQUALS', valueType: 'STRING' }
+        ])
+      } else {
+        this.props.saveFilters()
+      }
+    })
+  }
   render() {
     const { category = {}, searchInput, minPrice, maxPrice, open } = this.state
     const enabled = get(this.props, 'config.discovery', false)
-
     return (
       <>
         <div className="search-bar">
@@ -70,20 +86,7 @@ class Search extends Component {
             <div className="input-group">
               <Dropdown
                 className="input-group-prepend"
-                content={
-                  <SearchDropdown
-                    onChange={category =>
-                      this.setState(
-                        { category, open: false, yes: true },
-                        () => {
-                          const name = 'category'
-                          const value = category.id
-                          this.props.saveFilters({ name, value })
-                        }
-                      )
-                    }
-                  />
-                }
+                content={<SearchDropdown onChange={this.filterByDropDown} />}
                 open={open}
                 onClose={() => this.setState({ open: false })}
               >

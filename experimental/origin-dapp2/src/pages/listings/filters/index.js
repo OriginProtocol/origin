@@ -36,7 +36,9 @@ class FilterGroup extends Component {
     Promise.all(
       this.childFilters.map(childFilter => childFilter.getFilters())
     ).then(values => {
-      const filters = Object.values(values).flatMap(arrayOfFilters => arrayOfFilters)
+      const filters = Object.values(values).flatMap(
+        arrayOfFilters => arrayOfFilters
+      )
       this.props.saveFilters(filters)
     })
   }
@@ -86,7 +88,7 @@ class FilterGroup extends Component {
                     <PriceFilter
                       key={index}
                       filter={filter}
-                      token='OGN'
+                      token="OGN"
                       wallet={this.props.wallet}
                       currency={get(filter, 'priceUnit.defaultMessage')}
                       maxPrice={this.props.maxPrice}

@@ -36,7 +36,7 @@ function ensureOneCategoryFilter(stateFilters, filters) {
 function prepareValue(value) {
   if (Array.isArray(value)) {
     return value.join(',')
-  } else if (parseFloat(value) !== NaN) {
+  } else if (!isNaN(parseFloat(value))) {
     return value.toString()
   }
   return value
@@ -74,10 +74,7 @@ class Listings extends Component {
 
         return {
           ...state,
-          filters: [
-            ...stateFilters,
-            ...filters
-          ]
+          filters: [...stateFilters, ...filters]
         }
       })
     }

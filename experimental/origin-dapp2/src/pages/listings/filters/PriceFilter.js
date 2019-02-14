@@ -1,17 +1,14 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
 import { Range } from 'rc-slider'
 import get from 'lodash/get'
 
-import query from 'queries/TokenBalance'
 import withExchangeRate from 'hoc/withExchangeRate'
-import { getCryptoPrice } from 'utils/priceUtils'
 
 import {
   FILTER_OPERATOR_GREATER_OR_EQUAL,
   FILTER_OPERATOR_LESSER_OR_EQUAL,
   VALUE_TYPE_FLOAT
-} from 'constants/Filters'
+} from 'constants/Search'
 
 class PriceFilter extends Component {
   constructor(props) {

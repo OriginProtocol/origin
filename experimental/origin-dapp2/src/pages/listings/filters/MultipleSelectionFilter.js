@@ -5,7 +5,7 @@ import schemaMessages from '../../../schemaMessages/index'
 import {
   FILTER_OPERATOR_CONTAINS,
   VALUE_TYPE_ARRAY_STRING
-} from 'constants/Filters'
+} from 'constants/Search'
 
 const categories = Categories.root.map(c => ({
   id: c[0],
