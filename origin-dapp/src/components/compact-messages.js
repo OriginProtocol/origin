@@ -19,7 +19,7 @@ function sortOrder(a = {}, b = {}) {
   return (firstDate < nextDate) ? -1 : 1
 }
 
-function compareMessages(prevMessages = [], currentMessages = []) {
+function compareMessages(prevMessages = [], currentMessages) {
   const sortArgs = ['created', 'timestamp']
   const sortedPreviousMessages = sortBy(prevMessages, sortArgs)
   const sortedCurrentMessages = sortBy(currentMessages, sortArgs)
