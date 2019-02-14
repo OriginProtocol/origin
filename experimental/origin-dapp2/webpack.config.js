@@ -94,6 +94,8 @@ const config = {
     }),
     new webpack.EnvironmentPlugin({
       HOST: 'localhost',
+      ORIGIN_LINKING: null,
+      LINKER_HOST: 'localhost',
       DOCKER: false,
       IPFS_SWARM: ''
     })

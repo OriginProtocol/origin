@@ -12,6 +12,7 @@ import Token from './Token'
 import Identity from './Identity'
 import Conversation from './messaging/Conversation'
 import UserRegistry from './UserRegistry'
+import WalletLinker from './WalletLinker'
 import Mutation from '../mutations/index'
 
 export default {
@@ -29,5 +30,6 @@ export default {
   TokenHolder,
   Identity,
   Conversation,
-  UserRegistry
+  UserRegistry,
+  WalletLinker
 }

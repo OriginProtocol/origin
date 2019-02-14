@@ -40,14 +40,8 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
 }
 
 async function createListing(_, input) {
-  const {
-    depositManager,
-    data,
-    unitData,
-    fractionalData,
-    from,
-    autoApprove
-  } = input
+  const { depositManager, data, unitData, fractionalData, autoApprove } = input
+  const from = input.from || contracts.defaultLinkerAccount
   await checkMetaMask(from)
 
   const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
