@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import Categories from 'origin-graphql/src/constants/Categories'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import schemaMessages from '../../../schemaMessages/index'
@@ -43,7 +44,7 @@ class MultipleSelectionFilter extends Component {
       checkboxValue: {}
     }
 
-    this.onHandleClick = this.onHandleClick.bind(this)
+    this.onChange = this.onChange.bind(this)
     this.multipleSelectionValues = listingSchemaMetadata.listingSchemasByCategory[
       props.category.type
     ].map(subCategory => subCategory.translationName.id)
@@ -57,36 +58,29 @@ class MultipleSelectionFilter extends Component {
     this.props.onChildUnMounted(this)
   }
 
-  // Called by filter-group
   async getFilters() {
     const values = Object.keys(this.state.checkboxValue)
-      //keep only selected values
-      .filter(checkBoxKey => this.state.checkboxValue[checkBoxKey])
+    const selectedValues = values.filter(
+      checkBoxKey => this.state.checkboxValue[checkBoxKey]
+    )
 
-    if (values.length === 0) return []
+    if (selectedValues.length === 0) return []
     else
       return [
         {
           name: this.props.filter.searchParameterName,
-          value: values,
+          value: selectedValues,
           valueType: VALUE_TYPE_ARRAY_STRING,
           operator: FILTER_OPERATOR_CONTAINS
         }
       ]
   }
 
-  // componentDidUpdate(previousProps) {
-  //   // When new search is triggered, search filters get reset, so component should reset their state
-  //   if (this.props.generalSearchId !== previousProps.generalSearchId)
-  //     this.onClear()
-  // }
-
-  // Called by filter-group
   onClear(callback) {
     this.setState({ checkboxValue: {} }, callback)
   }
 
-  onHandleClick(event) {
+  onChange(event) {
     const stateObject = this.state
     const currentVal =
       stateObject.checkboxValue[event.target.getAttribute('id')]
@@ -109,7 +103,7 @@ class MultipleSelectionFilter extends Component {
               type="checkbox"
               className="form-check-input"
               id={multipleSelectionValue}
-              onChange={this.onHandleClick}
+              onChange={this.onChange}
               checked={
                 this.state.checkboxValue[multipleSelectionValue]
                   ? this.state.checkboxValue[multipleSelectionValue]

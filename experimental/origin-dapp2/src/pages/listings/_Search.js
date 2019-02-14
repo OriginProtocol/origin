@@ -150,9 +150,6 @@ class Search extends Component {
     )
   }
 
-  renderFilter() {
-    return null
-  }
   doSearch() {
     this.props.history.replace({
       to: '/search',
