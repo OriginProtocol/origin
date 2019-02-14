@@ -5,6 +5,7 @@ export default gql`
     web3 {
       networkId
       networkName
+      walletType
     }
   }
 `

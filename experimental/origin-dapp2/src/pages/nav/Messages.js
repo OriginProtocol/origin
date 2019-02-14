@@ -22,7 +22,7 @@ class MessagesNav extends Component {
       <Query query={MessagingQuery} pollInterval={2000}>
         {({ data, loading, error }) => {
           if (loading || error) return null
-          if (!get(data, 'web3.metaMaskAccount.id')) {
+          if (!get(data, 'messaging.enabled')) {
             return null
           }
 
