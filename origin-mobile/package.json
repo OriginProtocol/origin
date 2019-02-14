@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/plugin-transform-new-target": "^7.0.0",
+    "@babel/polyfill": "^7.2.5",
     "install-local": "^0.6.2",
     "jest": "^23.6.0",
     "jest-react-native": "^18.0.0",
+    "metro-react-native-babel-preset": "^0.51.1",
     "react-native-dotenv": "^0.2.0",
     "react-test-renderer": "16.6.3"
   },
