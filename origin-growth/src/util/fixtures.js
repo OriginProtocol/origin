@@ -281,6 +281,52 @@ const alternateRule = {
           }
         }
       ]
+    },
+    2: {
+      rules: [
+        {
+          id: 'Referral',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'RefereeSignedUp',
+            reward: {
+              amount: tokenNaturalUnits(10),
+              currency: 'OGN'
+            },
+            limit: 100,
+            visible: true,
+            nextLevelCondition: false
+          }
+        },
+        {
+          id: 'ListingCreation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'ListingCreated',
+            reward: {
+              amount: tokenNaturalUnits(5),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 10,
+            nextLevelCondition: false
+          }
+        },
+        {
+          id: 'ListingPurchase',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'ListingPurchased',
+            reward: {
+              amount: tokenNaturalUnits(5),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 10,
+            nextLevelCondition: false
+          }
+        }
+      ]
     }
   }
 }

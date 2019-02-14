@@ -16,6 +16,7 @@ class ProfileNav extends Component {
     super()
     this.state = {}
   }
+
   render() {
     return (
       <Query query={ProfileQuery}>

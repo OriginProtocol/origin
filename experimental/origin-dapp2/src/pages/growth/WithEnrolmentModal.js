@@ -5,6 +5,8 @@ import growthEligibilityQuery from 'queries/GrowthEligibility'
 import profileQuery from 'queries/Profile'
 import signMessageMutation from 'mutations/SignMessage'
 import QueryError from 'components/QueryError'
+//TODO: delete this
+import { withRouter } from 'react-router-dom'
 
 function withEnrolmentModal(WrappedComponent) {
   const MyComponent = class WithEnrolmentModal extends Component {
@@ -95,6 +97,7 @@ function withEnrolmentModal(WrappedComponent) {
       })
 
       console.log('MUTATION RESULT', result)
+      this.props.history.push('/campaigns')
     }
 
     handleCloseModal() {
@@ -241,9 +244,9 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
 
-            const { country, eligibility } = data.isEligible
-            // const country = 'Canada'
-            // const eligibility = 'Restricted'
+            //const { country, eligibility } = data.isEligible
+            const country = 'Canada'
+            const eligibility = 'Restricted'
             // const country = 'Saudi Arabia'
             // const eligibility = 'Forbidden'
 
@@ -313,7 +316,7 @@ function withEnrolmentModal(WrappedComponent) {
     }
   }
 
-  return withApollo(MyComponent)
+  return withRouter(withApollo(MyComponent))
 }
 
 export default withEnrolmentModal

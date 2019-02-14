@@ -1,12 +1,13 @@
 import React, { Component, Fragment } from 'react'
-import { Query } from 'react-apollo'
+import { withApollo, Query } from 'react-apollo'
 import pick from 'lodash/pick'
 import find from 'lodash/find'
 import dayjs from 'dayjs'
 
 import QueryError from 'components/QueryError'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
-import Link from 'components/Link'
+import profileQuery from 'queries/Profile'
+import { Link } from 'react-router-dom'
 
 function CampaignNavItem(props) {
   const { campaign, selected, onClick } = props
@@ -81,51 +82,50 @@ function ProgressBar(props) {
 }
 
 function Action(props) {
-  const { type, status, reward } = props.action
+  let { type, status, reward } = props.action
   const showLockIcon = status === 'inactive'
-  const bgImage = status === 'completed' || status === 'exhausted' ? 
-    'images/identity/verification-shape-green.svg' : 'images/identity/verification-shape-blue.svg'
+  const actionCompleted = status === 'completed' || status === 'exhausted'
+  let backgroundImgSrc = actionCompleted ? 'images/identity/verification-shape-green.svg' :
+    'images/identity/verification-shape-blue.svg'
 
-  let fgImage
+  let foregroundImgSrc
   let title
   let infoText
 
   if (type === 'email'){
-    fgImage = '/images/identity/email-icon-light.svg'
+    foregroundImgSrc = '/images/identity/email-icon-light.svg'
     title = 'Verify your Email'
     infoText = 'Confirm your email in attestations'
   } else if (type === 'profile'){
-    fgImage = '/images/identity/email-icon-light.svg'
+    foregroundImgSrc = '/images/identity/email-icon-light.svg'
     title = 'Update your name and picture'
     infoText = 'Edit your profile and update your name and picture'
   } else if (type === 'phoneNumber'){
-    fgImage = '/images/identity/phone-icon-light.svg'
+    foregroundImgSrc = '/images/identity/phone-icon-light.svg'
     title = 'Verify your Phone Number'
     infoText = 'Confirm your phone number in attestations'
   } else if (type === 'twitter'){
-    fgImage = '/images/identity/twitter-icon-light.svg'
+    foregroundImgSrc = '/images/identity/twitter-icon-light.svg'
     title = 'Connect your Twitter Profile'
     infoText = 'Connect your Twitter Profile in attestationts'
   } else if (type === 'airbnb'){
-    fgImage = '/images/identity/airbnb-icon-light.svg'
+    foregroundImgSrc = '/images/identity/airbnb-icon-light.svg'
     title = 'Connect your Airbnb Profile'
     infoText = 'Connect your Airbnb Profile in attestations'
   } else if (type === 'facebook'){
-    fgImage = '/images/identity/facebook-icon-light.svg'
+    foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
     title = 'Connect your Facebook Profile'
     infoText = 'Connect your Facebook Profile in attestations'
   }
-
-  console.log("REward", reward)
 
   return (
     <div className="d-flex action">
       <div className="col-2 d-flex justify-content-center">
         <div className="image-holder mt-auto mb-auto">
-          <img className="background" src={bgImage}/>
-          <img className="foreground" src={fgImage}/>
+          <img className="background" src={backgroundImgSrc}/>
+          <img className={type} src={foregroundImgSrc}/>
           {showLockIcon && 
-            <img className="foreground" src={fgImage}/>
+            <img className="lock" src="images/growth/lock-icon.svg"/>
           }
         </div>
       </div>
@@ -140,20 +140,24 @@ function Action(props) {
           +{reward.amount / Math.pow(10, 18)}
         </div>}
       </div>
-      <div className="col-2">
-        <Link to="/" className="navbar-brand">
-        </Link>
-        <button
-            className="btn btn-outline-light mr-2"
-            children="Go"
-          />
+      <div className="col-2 d-flex">
+        {!actionCompleted &&
+          <Link
+            to="/profile"
+            className="mt-auto mb-auto"
+          >
+            <button
+              className="btn btn-primary btn-rounded mr-2"
+              children="Go"
+            />
+          </Link>
+        }
       </div>
     </div>
   )
 }
 
 function ActionList(props) {
-  console.log("CAMPAIGN", props.campaign)
   const { actions } = props.campaign
 
   return (
@@ -219,18 +223,14 @@ class GrowthCampaigns extends Component {
   }
 
   render() {
-    const vars = pick(this.state, 'first')
-    vars.walletAddress = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
-
     let selectedCampaignId = this.state.selectedCampaignId
 
     return (
       <div className="container growth-campaigns">
         <Query
-          query={allCampaignsQuery}
-          variables={vars}
-          notifyOnNetworkStatusChange={true}
-        >
+            query={profileQuery}
+            notifyOnNetworkStatusChange={true}
+          >
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
               return <h5 className="p-2">Loading...</h5>
@@ -238,29 +238,48 @@ class GrowthCampaigns extends Component {
               return <QueryError error={error} query={allCampaignsQuery} vars={vars} />
             }
 
-            const campaigns = data.campaigns.nodes
-            if (campaigns.length == 0) {
-              return <h5 className="p-2">No campaigns detected</h5>
-            }
-
-            selectedCampaignId =
-              selectedCampaignId !== null ? selectedCampaignId : campaigns[0].id
-            const selectedCampaign = find(
-              campaigns,
-              campaign => campaign.id === selectedCampaignId
-            )
+            const vars = pick(this.state, 'first')
+            vars.walletAddress = data.web3.metaMaskAccount.id
 
             return (
-              <Fragment>
-                <CampaignNavList
-                  campaigns={campaigns}
-                  onCampaignClick={campaignId => {
-                    this.setState({ selectedCampaignId: campaignId })
-                  }}
-                  selectedCampaignId={selectedCampaignId}
-                />
-                <Campaign campaign={selectedCampaign} />
-              </Fragment>
+              <Query
+                query={allCampaignsQuery}
+                variables={vars}
+                notifyOnNetworkStatusChange={true}
+              >
+                {({ error, data, networkStatus, loading }) => {
+                  if (networkStatus === 1 || loading) {
+                    return <h5 className="p-2">Loading...</h5>
+                  } else if (error) {
+                    return <QueryError error={error} query={allCampaignsQuery} vars={vars} />
+                  }
+
+                  const campaigns = data.campaigns.nodes
+                  if (campaigns.length == 0) {
+                    return <h5 className="p-2">No campaigns detected</h5>
+                  }
+
+                  selectedCampaignId =
+                    selectedCampaignId !== null ? selectedCampaignId : campaigns[0].id
+                  const selectedCampaign = find(
+                    campaigns,
+                    campaign => campaign.id === selectedCampaignId
+                  )
+
+                  return (
+                    <Fragment>
+                      <CampaignNavList
+                        campaigns={campaigns}
+                        onCampaignClick={campaignId => {
+                          this.setState({ selectedCampaignId: campaignId })
+                        }}
+                        selectedCampaignId={selectedCampaignId}
+                      />
+                      <Campaign campaign={selectedCampaign} />
+                    </Fragment>
+                  )
+                }}
+              </Query>
             )
           }}
         </Query>
@@ -269,7 +288,7 @@ class GrowthCampaigns extends Component {
   }
 }
 
-export default GrowthCampaigns
+export default withApollo(GrowthCampaigns)
 
 require('react-styl')(`
   .growth-campaigns.container
@@ -341,10 +360,40 @@ require('react-styl')(`
       padding: 20px;
     .action .background
       width: 72px;
-    .action .foreground
+    .action .profile
       position: absolute;
       left: 20px;
       top: 27px;
+      width: 30px;
+    .action .email
+      position: absolute;
+      left: 20px;
+      top: 27px;
+      width: 30px;
+    .action .phoneNumber
+      position: absolute;
+      left: 25px;
+      top: 20px;
+      width: 22px;
+    .action .facebook
+      position: absolute;
+      left: 24px;
+      top: 18px;
+      width: 21px;
+    .action .airbnb
+      position: absolute;
+      left: 15px;
+      top: 19px;
+      width: 44px;
+    .action .twitter
+      position: absolute;
+      left: 17px;
+      top: 22px;
+      width: 39px;
+    .action .lock
+      position: absolute;
+      right: -12px;
+      bottom: 0px;
       width: 30px;
     .action .image-holder
       position: relative;

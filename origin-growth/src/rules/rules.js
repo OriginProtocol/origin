@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize')
+const BigNumber = require('bignumber.js')
 
 const db = require('../models')
 const {
@@ -20,7 +21,7 @@ const sumUpRewards = (rewards) => {
     if (first.currency !== second.currency)
       throw new Error(`At least two rewards have different currencies. ${first.currency} ${second.currency}`)
     return {
-      amount: first.amount.plus(second.amount),
+      amount: BigNumber(first.amount).plus(BigNumber(second.amount)),
       currency: first.currency
     }
   })
@@ -199,7 +200,6 @@ class Campaign {
     //TODO: change to true, true
     //const events = this.getEvents(ethAddress, true, true)
     const events = await this.getEvents(ethAddress, false, false)
-    console.log("EVENTS: ", JSON.stringify(events))
     const levels = Object.values(this.levels)
     const rules = levels.flatMap(level => level.rules)
     const currentLevel = await this.getCurrentLevel(ethAddress, events)
@@ -247,6 +247,7 @@ class Level {
     this.rules.forEach(rule => {
       rewards.push(...rule.getRewards(ethAddress, events))
     })
+
     return rewards
   }
 }
@@ -326,7 +327,7 @@ class BaseRule {
     events
       .filter(event => {
         return (
-          event.ethAddress === ethAddress &&
+          event.ethAddress.toLowerCase() === ethAddress.toLowerCase() &&
           eventTypes.includes(event.type) &&
           (event.status === GrowthEventStatuses.Logged ||
             event.status === GrowthEventStatuses.Verified)
@@ -337,6 +338,7 @@ class BaseRule {
           ? tally[event.type] + 1
           : 1
       })
+
     return tally
   }
 
@@ -347,7 +349,7 @@ class BaseRule {
     }
 
     const numRewards = this._numRewards(ethAddress, events)
-    const rewards = Array(numRewards).fill(this.reward)
+    const rewards = Array(numRewards).fill(this.reward.value)
 
     return rewards
   }
@@ -425,6 +427,7 @@ class SingleEventRule extends BaseRule {
    */
   evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
+
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
   }
 
