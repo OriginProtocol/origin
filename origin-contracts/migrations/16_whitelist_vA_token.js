@@ -1,5 +1,5 @@
 const OriginToken = artifacts.require('./token/OriginToken.sol')
-const VA_Marketplace = artifacts.require('./V00_Marketplace.sol')
+const VA_Marketplace = artifacts.require('./VA_Marketplace.sol')
 
 module.exports = function(deployer, network) {
   return createTokenWhitelist(network)

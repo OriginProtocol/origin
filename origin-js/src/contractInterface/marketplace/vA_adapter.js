@@ -444,7 +444,7 @@ class VA_MarketplaceAdapter {
     await this.getContract()
 
     let filter = {}
-    if (listingIndex) {
+    if (listingID) {
       filter = Object.assign(filter, { listingID })
     }
     if (opts.for) {

@@ -373,7 +373,7 @@ export default class MarketplaceResolver {
     if (!adapter) {
       throw new Error(`Adapter not found for version ${version}`)
     }
-    return { adapter, listingIndex:adapter.toListingID(listingIndex), version, network }
+    return { adapter, listingIndex: adapter.toListingID(listingIndex), version, network }
   }
 
   parseOfferId(offerId) {
@@ -383,10 +383,10 @@ export default class MarketplaceResolver {
     if (!adapter) {
       throw new Error(`Adapter not found for version ${version}`)
     }
-    return { adapter, listingIndex:adapter.toListingID(listingIndex), offerIndex, version, network }
+    return { adapter, listingIndex: adapter.toListingID(listingIndex), offerIndex, version, network }
   }
 
-  generateListingId({version, network, listingIndex}) {
+  generateListingId({ version, network, listingIndex }) {
     return generateListingId({ version, network, listingIndex: this.adapters[version].toListingIndex(listingIndex) })
   }
 

@@ -23,6 +23,8 @@ class Hot {
     if (call_const)
     {
       const {feeIndex, minFee} = call_const
+      // check to make sure that behalfFee at the parameter spot is greater than or equals to the fee
+      // this makes sure that our hot wallet will always get refunded more gas than we put in
       if (web3.utils.toBN(params[feeIndex]).gte(web3.utils.toBN(minFee)))
       {
         return true
