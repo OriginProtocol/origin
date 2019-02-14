@@ -15,7 +15,7 @@ export default class Reflection {
   }
 
   makeSignedListingId(networkId, listingID) {
-    return this.marketplace.resolver.makeListingId(networkId, "VA_Marketplace", listingID)
+    return this.marketplace.resolver.makeListingId(networkId, 'VA_Marketplace', listingID)
   }
 
   async _addOriginMeta(networkId, address, meta) {
