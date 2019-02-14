@@ -4,6 +4,11 @@ import { TypedDataUtils, concatSig } from 'eth-sig-util'
 import ethUtil from 'ethereumjs-util'
 const HOT_WALLET_PK = process.env.HOT_WALLET_PK
 
+const ALLOWED_CALLS = {
+  acceptOfferOnBehalf: {feeIndex:3, minFee:'200000000000000'},
+  verifiedOnBehalfFinalize: {feeIndex:3, minFee:'200000000000000'}
+}
+
 
 class Hot {
   constructor({}={}) {
@@ -13,7 +18,23 @@ class Hot {
     origin.contractService.transactionSigner = this.account.signTransaction
   }
 
+  isAllowedCall(cmd, params){
+    const call_const = ALLOWED_CALLS[cmd]
+    if (call_const)
+    {
+      const {feeIndex, minFee} = call_const
+      if (web3.utils.toBN(params[feeIndex]).gte(web3.utils.toBN(minFee)))
+      {
+        return true
+      }
+    }
+  }
+
   async submitMarketplace(cmd, params) {
+    if (!this.isAllowedCall(cmd, params))
+    {
+      throw new Error(`Error cmd:${cmd} params: ${params} is not an allowed call`)
+    }
     const from = this.account.address
     console.log("Submitting...", cmd, params)
     console.log("Pre market balance...", await web3.eth.getBalance(from))
@@ -28,7 +49,7 @@ class Hot {
     console.log("offerId:", offerId)
     const { adapter, listingIndex, offerIndex } = origin.marketplace.resolver.parseOfferId(offerId)
     const offerID = offerIndex
-    const listingID = adapter.toListingID(listingIndex)
+    const listingID = listingIndex
     const verifyTerms = offer.verifyTerms
     const acceptTerms = await origin.ipfsService.loadObjFromFile(origin.contractService.getIpfsHashFromBytes32(offer.acceptIpfsHash))
 

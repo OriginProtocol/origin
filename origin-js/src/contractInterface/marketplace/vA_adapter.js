@@ -167,7 +167,7 @@ class VA_MarketplaceAdapter {
     return Object.assign({ timestamp }, transactionReceipt)
   }
 
-  async acceptOffer(listingIndex, offerIndex, ipfsBytes, confirmationCallback) {
+  async acceptOffer(listingID, offerIndex, ipfsBytes, confirmationCallback) {
     const currentAccount = await this.contractService.currentAccount()
     const balance = await web3.eth.getBalance(currentAccount)
 
