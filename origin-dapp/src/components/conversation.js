@@ -4,6 +4,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment-timezone'
 import remove from 'lodash/remove'
+import isEqual from 'lodash/isEqual'
 
 import { fetchUser } from 'actions/User'
 import { showMainNav } from 'actions/App'
@@ -95,10 +96,10 @@ class Conversation extends Component {
     }
 
     // on new message
-    const newMessage = JSON.stringify(this.getLatestMessage(messages))
-    const prevPropsNewMessage = JSON.stringify(this.getLatestMessage(prevProps.messages))
+    const newMessage = this.getLatestMessage(messages)
+    const prevPropsNewMessage = this.getLatestMessage(prevProps.messages)
 
-    if (newMessage !== prevPropsNewMessage) {
+    if (!isEqual(newMessage, prevPropsNewMessage)) {
       this.loadListing()
       // auto-scroll to most recent message
       this.scrollToBottom()
