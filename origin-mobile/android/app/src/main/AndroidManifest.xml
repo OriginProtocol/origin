@@ -25,6 +25,22 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+
+      <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
+      <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
+        <intent-filter> <action android:name="android.intent.action.BOOT_COMPLETED" /> </intent-filter>
+      </receiver>
+      <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
+      <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="false" >
+        <intent-filter> <action android:name="com.google.firebase.MESSAGING_EVENT" /> </intent-filter>
+      </service>
+      <service
+        android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerServiceGcm"
+        android:exported="false" >
+        <intent-filter>
+          <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+        </intent-filter>
+      </service>
     </application>
 
 </manifest>
