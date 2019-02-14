@@ -105,7 +105,7 @@ module.exports = `
     withdrawOffer(offerID: ID!, from: String): Transaction
     finalizeOffer(offerID: ID!, from: String, rating: Int, review: String): Transaction
     disputeOffer(offerID: ID!, from: String): Transaction
-    addFunds(offerID: ID!, amount: String!, from: String): Transaction
+    addFunds(offerID: ID!, value: String!, from: String): Transaction
     updateRefund(offerID: ID!, amount: String!, from: String): Transaction
   }
 

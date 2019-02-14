@@ -9,10 +9,11 @@ async function addFunds(_, data) {
   await checkMetaMask(data.from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)
+  const value = contracts.web3.utils.toWei(data.value, 'ether')
 
   const tx = contracts.marketplaceExec.methods
-    .addFunds(listingId, offerId, ipfsHash, data.amount)
-    .send({ gas: cost.addFunds, from, value: data.amount })
+    .addFunds(listingId, offerId, ipfsHash, value)
+    .send({ gas: cost.addFunds, from, value: value })
 
   return txHelper({ tx, from, mutation: 'addFunds' })
 }

@@ -205,6 +205,20 @@ describe('Marketplace', function() {
       assert(events.OfferAccepted)
     })
 
+    it('should add funds to an offer', async function() {
+      const offer = await getOffer('999-0-0', 1, false)
+      const events = await mutate(
+        mutations.AddFunds,
+        {
+          offerID: '999-0-0-1',
+          from: Buyer,
+          value: '0.015',
+        },
+        true
+      )
+      assert(events.OfferFundsAdded)
+    })
+
     it('should finalize an offer', async function() {
       const events = await mutate(
         mutations.FinalizeOffer,

@@ -59,7 +59,7 @@ export async function getOffer(listingId, offerIdx, checkValid) {
 
   const offers = get(res, 'data.marketplace.listing.allOffers')
     .filter(o => o.id === offerId)
-  assert.strictEqual(offers.length, 1)
+  assert.strictEqual(offers.length, 1, 'offer not found on listing')
   const offer = offers[0]
   assert.ok(offer)
   assert.strictEqual(offer.id, offerId)
