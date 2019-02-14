@@ -10,7 +10,7 @@ export default {
   withdrawListing: 29367,
   addFunds: 200000, // GraphQL test with ETH at 33,312. ERC20 offers make external function call.
   updateRefund: 200000, // Needs real value. Needs GraphQL tests.
-  disputeOffer: 60000, // Contract test at 32164. Needs GraphQL tests.
+  disputeOffer: 40000,
   executeRuling: 200000, // Needs real value. Needs GraphQL tests.
   addData: 28690, // Contract test. Uses offer addData, since amount is larger.
 

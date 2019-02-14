@@ -723,4 +723,92 @@ describe('Marketplace', function() {
       await mutate(mutations.CreateListing, listingData)
     })
   })
+
+  describe('Dispute flow', async function() {
+    let listingIdx
+    let listingId
+    let offerIdx
+    let offerId
+
+    beforeEach(async function() {
+      // Create Listing
+      const listingData = {
+        deposit: '0',
+        depositManager: Arbitrator,
+        from: Seller,
+        data: {
+          title: 'Test Listing',
+          description: 'Test description',
+          price: {
+            currency: ZeroAddress,
+            amount: '0.01'
+          },
+          category: 'Test category',
+          subCategory: 'Test sub-category'
+        },
+        unitData: {
+          unitsTotal: 1
+        }
+      }
+      const listingEvents = await mutate(mutations.CreateListing, listingData, true)
+      assert(listingEvents.ListingCreated)
+      listingIdx  = listingEvents.ListingCreated.listingID
+      listingId = `999-0-${listingIdx}`
+
+      // Create Offer
+      const offerData = {
+        listingID: listingId,
+        from: Buyer,
+        finalizes: 123,
+        affiliate: ZeroAddress,
+        value: '0.01',
+        currency: ZeroAddress,
+        arbitrator: Arbitrator,
+        quantity: 1
+      }
+      const offerEvents = await mutate(mutations.MakeOffer, offerData, true)
+      assert(offerEvents.OfferCreated)
+      offerIdx  = offerEvents.OfferCreated.offerID
+      offerId = `999-0-${listingIdx}-${offerIdx}`
+
+      // Accept Offer
+      const acceptEvents = await mutate(
+        mutations.AcceptOffer,
+        {
+          offerID: offerId,
+          from: Seller
+        },
+        true
+      )
+      assert(acceptEvents.OfferAccepted)
+    })
+
+    it('should allow the buyer to create a dispute', async function (){
+      const disputeEvents = await mutate(
+        mutations.DisputeOffer,
+        {
+          offerID: offerId,
+          additionalDeposit: '0',
+          from: Buyer,
+          data: JSON.stringify({})
+        },
+        true
+      )
+      assert(disputeEvents.OfferDisputed)
+    })
+
+    it('should allow the seller to create a dispute', async function (){
+      const disputeEvents = await mutate(
+        mutations.DisputeOffer,
+        {
+          offerID: offerId,
+          additionalDeposit: '0',
+          from: Seller,
+          data: JSON.stringify({})
+        },
+        true
+      )
+      assert(disputeEvents.OfferDisputed)
+    })
+  })
 })

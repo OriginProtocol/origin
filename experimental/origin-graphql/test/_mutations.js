@@ -168,6 +168,14 @@ const AddFunds = gql`
   }
 `
 
+const DisputeOffer = gql`
+  mutation DisputeOffer($offerID: String!, $data: String!, $from: String) {
+    disputeOffer(offerID: $offerID, data: $data, from: $from) {
+      id
+    }
+  }
+`
+
 const UpdateTokenAllowance = gql`
   mutation UpdateTokenAllowance(
     $token: String!
@@ -203,6 +211,7 @@ export default {
   FinalizeOffer,
   AddData,
   AddFunds,
+  DisputeOffer,
   UpdateTokenAllowance,
   TransferToken,
   AddAffiliate,
