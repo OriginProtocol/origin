@@ -11,6 +11,10 @@ import CryptoJS from 'crypto-js'
 import UUIDGenerator from 'react-native-uuid-generator'
 import { randomBytes } from 'react-native-randombytes'
 
+import {
+  GCM_SENDER_ID,
+} from 'react-native-dotenv'
+
 import {setRemoteLocal, localfy, storeData, loadData} from './tools'
 
 import origin, {apiUrl, defaultProviderUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
@@ -32,8 +36,6 @@ const DEFAULT_NOTIFICATION_PERMISSIONS = {
   badge: true,
   sound: true
 }
-
-const GCM_SENDER_ID = process.env.GCM_SENDER_ID || '388021423484' // TODO: @mikeshultz's personal key, fix before merge
 
 const Events = keyMirror({
   PROMPT_LINK:null,
@@ -127,6 +129,7 @@ class OriginWallet {
   }
 
   initNotifications() {
+    console.log('GCM_SENDER_ID: ', GCM_SENDER_ID)
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function(device_token) {
