@@ -13,7 +13,7 @@ function getElapsedTime(latestTime, earlierTime) {
   return isNaN(elapsedTime) ? 0 : elapsedTime
 }
 
-function sortOrder(a, b) {
+function sortOrder(a = {}, b = {}) {
   const firstDate = (a.created && a.created) || (a.timestamp * 1000)
   const nextDate = (b.created && b.created) || (b.timestamp * 1000)
   return (firstDate < nextDate) ? -1 : 1
@@ -69,7 +69,7 @@ export default class CompactMessages extends Component {
   render() {
     const { formatOfferMessage, includeNav, smallScreenOrDevice } = this.props
     const { sortedMessages } = this.state
-    const firstMessage = sortedMessages.find((message) => message.created)
+    const firstMessage = sortedMessages.find((message = {}) => message.created)
 
     return sortedMessages.map((message, i) => {
       if (!message) return

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment-timezone'
+import remove from 'lodash/remove'
 
 import { fetchUser } from 'actions/User'
 import { showMainNav } from 'actions/App'
@@ -365,7 +366,7 @@ class Conversation extends Component {
       origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
       canDeliverMessage
     const offerEvents = getOfferEvents(purchase)
-    const combinedMessages = [...offerEvents, ...messages]
+    const combinedMessages = remove([...offerEvents, ...messages], undefined)
     const textAreaSize = smallScreenOrDevice ? '2' : '4'
 
     return (
