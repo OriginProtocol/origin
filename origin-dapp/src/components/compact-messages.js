@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { formattedAddress } from 'utils/user'
 import Message from 'components/message'
+import isEqual from 'lodash/isEqual'
+import sortBy from 'lodash/sortBy'
 
 const MAX_MINUTES = 10
 
@@ -17,19 +19,29 @@ function sortOrder(a, b) {
   return (firstDate < nextDate) ? -1 : 1
 }
 
+function compareMessages(prevMessages = [], currentMessages = []) {
+  const sortArgs = ['created', 'timestamp']
+  const sortedPreviousMessages = sortBy(prevMessages, sortArgs)
+  const sortedCurrentMessages = sortBy(currentMessages, sortArgs)
+
+  return !isEqual(sortedPreviousMessages, sortedCurrentMessages)
+}
+
 export default class CompactMessages extends Component {
   constructor(props) {
     super(props)
     const { messages = [] } = props
-    const sortedMessages = messages.sort(sortOrder)
+    const sortedMessages = [...messages].sort(sortOrder)
 
     this.state = { sortedMessages }
   }
 
   componentDidUpdate(prevProps) {
     const { messages = [] } = this.props
-    if (prevProps.messages !== messages) {
-      const sortedMessages = messages.sort(sortOrder)
+    const messagesChanged = compareMessages(prevProps.messages, messages)
+
+    if (messagesChanged) {
+      const sortedMessages = [...messages].sort(sortOrder)
       this.setState({ sortedMessages })
     }
   }
