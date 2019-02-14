@@ -9,9 +9,9 @@ import Avatar from 'components/Avatar'
 import UserListings from './_UserListings'
 
 function parseUserSocialID(attestations) {
-  let socialUrlObject = {}
+  const socialUrlObject = {}
   attestations.forEach(attestation => {
-    let socialData = JSON.parse(attestation)
+    const socialData = JSON.parse(attestation)
     socialUrlObject[socialData.data.attestation.site.siteName] =
       socialData.data.attestation.site.userId.raw
   })
