@@ -161,7 +161,7 @@ class OriginWallet {
   }
 
   initUrls() {
-    const remote_is_url = this.remote_localhost.startsWith("http://") 
+    const remote_is_url = this.remote_localhost.startsWith("http://")
       || this.remote_localhost.startsWith("https://")
 
     const localApiUrl = remote_is_url ? this.remote_localhost : localfy(apiUrl)
@@ -390,8 +390,8 @@ class OriginWallet {
     if (state.ethAddress && state.notificationType && state.deviceToken)
     {
       console.log("save wallet info:", this.save_wallet_info)
-      if (this.save_wallet_info && 
-        ( (this.save_wallet_info.ethAddress != state.ethAddress 
+      if (this.save_wallet_info &&
+        ( (this.save_wallet_info.ethAddress != state.ethAddress
           || this.save_wallet_info.localApiUrl != state.localApiUrl
           || this.save_wallet_info.deviceToken != state.deviceToken)))
       {
@@ -574,7 +574,6 @@ class OriginWallet {
     return params && params.txn_object && (web3.utils.toBN(params.txn_object.gas).mul(web3.utils.toBN(params.txn_object.gasPrice)))
   }
 
- 
   async handleEvent(e) {
     if (e.link)
     {
@@ -965,7 +964,7 @@ class OriginWallet {
 
   checkStripOriginUrl(url){
     const urlWithoutQueryParams = url.split('?')[0]
-    
+
     if (urlWithoutQueryParams.startsWith(ORIGIN_PROTOCOL_PREFIX))
     {
       return urlWithoutQueryParams.substr(ORIGIN_PROTOCOL_PREFIX.length)
@@ -1066,7 +1065,7 @@ class OriginWallet {
     const encrypted_accounts = []
     for (let i=0; i< web3.eth.accounts.wallet.length; i++) {
       const account = web3.eth.accounts.wallet[i]
-      encrypted_accounts.push({crypt:"aes", 
+      encrypted_accounts.push({crypt:"aes",
         enc:CryptoJS.AES.encrypt(account.privateKey, WALLET_PASSWORD).toString()})
     }
     try {
@@ -1145,6 +1144,7 @@ class OriginWallet {
         perf_mode_enabled,
         discovery_server_url
       } = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
+
       const newProviderUrl = localfy(provider_url)
       console.log("Set network to:", newProviderUrl, contract_addresses)
       console.log("Service urls:", dapp_url, messaging_url, profile_url, selling_url)
@@ -1240,7 +1240,7 @@ class OriginWallet {
 
   openWallet() {
     let state = this.state
-    const wallet_data = loadData(WALLET_STORE).then(async (wallet_data) => { 
+    const wallet_data = loadData(WALLET_STORE).then(async (wallet_data) => {
       let wallet_info = await loadData(WALLET_INFO)
       if (!wallet_info)
       {

@@ -6,7 +6,11 @@ import contracts from '../../contracts'
 import validateAttestation from '../../utils/validateAttestation'
 import costs from '../_gasCost.js'
 
-async function deployIdentity(_, { from, profile = {}, attestations = [] }) {
+async function deployIdentity(
+  _,
+  { from = contracts.defaultLinkerAccount, profile = {}, attestations = [] }
+) {
+  console.log('deployIdentity:', from)
   await checkMetaMask(from)
 
   attestations = attestations
