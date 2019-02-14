@@ -95,7 +95,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    //buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.origincatcher"
