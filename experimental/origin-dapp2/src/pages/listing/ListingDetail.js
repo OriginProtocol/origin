@@ -193,7 +193,7 @@ class ListingDetail extends Component {
         </div>
         <h2>{listing.title}</h2>
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-8 pb-3">
             <Gallery pics={listing.media} />
             <div className="description">{listing.description}</div>
             {!isFractional ? null : (
@@ -206,8 +206,6 @@ class ListingDetail extends Component {
                 />
               </>
             )}
-            <hr />
-            <Reviews id={listing.seller.id} />
           </div>
           <div className="col-md-4">
             {listing.seller.id === this.props.from ? (
@@ -232,6 +230,8 @@ class ListingDetail extends Component {
             <AboutParty id={listing.seller.id} />
           </div>
         </div>
+        <hr />
+        <Reviews id={listing.seller.id} />
       </div>
     )
   }
@@ -244,7 +244,7 @@ require('react-styl')(`
     margin-top: 2.5rem
 
     h2
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 40px
       font-weight: 200
       font-style: normal
@@ -256,7 +256,7 @@ require('react-styl')(`
       justify-content: space-between
 
     .category
-      font-family: Lato
+      font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
@@ -278,7 +278,7 @@ require('react-styl')(`
 
     .listing-buy
       padding: 1.5rem
-      border-radius: 5px;
+      border-radius: var(--default-radius);
       background-color: var(--pale-grey-eight)
       > .btn
         border-radius: 2rem
@@ -286,7 +286,7 @@ require('react-styl')(`
         width: 100%
       .quantity,.total
         padding: 1rem
-        font-family: Lato
+        font-family: var(--default-font)
         font-size: 18px
         font-weight: normal
         display: flex
@@ -298,7 +298,7 @@ require('react-styl')(`
         background-size: 1.5rem
         padding: 0.2rem 0 1.5rem 2rem
         line-height: 1rem
-        font-family: Lato
+        font-family: var(--default-font)
         font-size: 24px
         font-weight: bold
         font-style: normal
@@ -314,7 +314,7 @@ require('react-styl')(`
           margin-bottom: 1rem
 
           div:nth-child(1),div:nth-child(3)
-            border-radius: 5px;
+            border-radius: var(--default-radius);
             padding: 0 5px;
             cursor: pointer
             &:hover
@@ -339,7 +339,7 @@ require('react-styl')(`
         > div:nth-child(3)
           margin-bottom: 1rem
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .listing-detail
       margin-top: 0.5rem
       h2

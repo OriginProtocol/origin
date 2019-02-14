@@ -42,7 +42,7 @@ require('react-styl')(`
     background-color: var(--dark);
     margin-bottom: 2rem;
     padding: 1rem;
-    border-radius: 5px;
+    border-radius: var(--default-radius);
     word-break: break-all;
     font-size: 14px;
     .wallet-info

@@ -159,7 +159,7 @@ require('react-styl')(`
         li
           margin-bottom: 0.5rem
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .make-offer-modal
       .btn
         margin-top: 1rem

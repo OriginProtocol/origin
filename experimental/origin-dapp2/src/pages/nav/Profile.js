@@ -179,7 +179,7 @@ require('react-styl')(`
           background: var(--greenblue)
           width: 10px
           height: 10px
-          border-radius: 5px
+          border-radius: var(--default-radius)
           margin-right: 4px
           margin-left: 6px
     .nav-link img
@@ -249,7 +249,7 @@ require('react-styl')(`
     &.google
       background-image: url(images/identity/google-icon-verified.svg)
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .dropdown-menu.profile
       width: auto
 `)

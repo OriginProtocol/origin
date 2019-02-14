@@ -87,6 +87,7 @@ require('react-styl')(`
       padding: 0.375rem 0.5rem
       font-size: 14px
       font-weight: bold
+      line-height: 1
       .container
         padding-right: 0
       .badge
