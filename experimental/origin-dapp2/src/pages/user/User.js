@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import IdentityQuery from 'queries/Identity'
 import Reviews from 'components/Reviews'
@@ -28,7 +29,11 @@ class User extends Component {
             if (loading || error) return null
             const profile = get(data, 'web3.account.identity')
             if (!profile) {
-              return <div>User Not Found</div>
+              return (
+                <div>
+                  <fbt desc="User.notFound">User Not Found</fbt>
+                </div>
+              )
             }
             const socialUrls = parseUserSocialID(profile.attestations)
             return (
@@ -38,23 +43,25 @@ class User extends Component {
                     <Avatar avatar={profile.avatar} className="main-avatar" />
                     {profile.attestations.length > 0 && (
                       <div className="verified-info">
-                        <h5>Verified Info</h5>
+                        <h5>
+                          <fbt desc="User.verifiedInfo">Verified Info</fbt>
+                        </h5>
                         {profile.phoneVerified && (
                           <div>
                             <div className="attestation phone" />
-                            Phone
+                            <fbt desc="User.phone">Phone</fbt>
                           </div>
                         )}
                         {profile.emailVerified && (
                           <div>
                             <div className="attestation email" />
-                            Email
+                            <fbt desc="User.email">Email</fbt>
                           </div>
                         )}
                         {profile.facebookVerified && (
                           <div>
                             <div className="attestation facebook" />
-                            Facebook
+                            <fbt desc="User.facebook">Facebook</fbt>
                           </div>
                         )}
                         {profile.twitterVerified && (
@@ -69,14 +76,14 @@ class User extends Component {
                               rel="noopener noreferrer"
                             >
                               <div className="attestation twitter" />
-                              Twitter
+                              <fbt desc="User.twitter">Twitter</fbt>
                             </a>
                           </div>
                         )}
                         {profile.googleVerified && (
                           <div>
                             <div className="attestation google" />
-                            Google
+                            <fbt desc="User.google">Google</fbt>
                           </div>
                         )}
                         {profile.airbnbVerified && (
@@ -91,7 +98,7 @@ class User extends Component {
                               rel="noopener noreferrer"
                             >
                               <div className="attestation airbnb" />
-                              AirBnb
+                              <fbt desc="User.airbnb">AirBnb</fbt>
                             </a>
                           </div>
                         )}
