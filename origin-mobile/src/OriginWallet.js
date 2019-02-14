@@ -672,18 +672,21 @@ class OriginWallet {
     const params = call.params
     return new Promise((resolve, reject) => {
       let ret
+      let shash
       if (params.method == "eth_signTypedData_v3")
       {
         const data = JSON.parse(params.data)
         const pkey = this.getCurrentWeb3Account().privateKey
         const sig = ethUtil.ecsign(TypedDataUtils.sign(data), ethUtil.toBuffer(pkey))
         const result = ethUtil.bufferToHex(concatSig(sig.v, sig.r, sig.s))
+        shash = result.slice(2, 6)
         ret = {result}
       } else {
         const msg = params.msg
         const post_phrase_prefix = params.post_phrase_prefix
         console.log("signing message:", msg)
         const signature = this.getCurrentWeb3Account().sign(msg).signature
+        shash = result.slice(2, 6)
         ret = {msg, signature, account:this.state.ethAddress}
 
         if (post_phrase_prefix)
@@ -695,6 +698,7 @@ class OriginWallet {
           const post_signature = this.getCurrentWeb3Account().sign(post_phrase).signature
           ret.post_phrase = post_phrase
           ret.post_signature = post_signature
+
         }
       }
       console.log("Signing result:", ret)
@@ -703,8 +707,9 @@ class OriginWallet {
           (success) => {
             if (return_url)
             {
+              const successUrl = this.addSignHashToUrl(return_url, shash)
               console.log("transaction approved returning to:", return_url)
-              Linking.openURL(return_url)
+              Linking.openURL(successUrl)
             }
             resolve(success)
           })
@@ -861,6 +866,11 @@ class OriginWallet {
   addTransactionHashToUrl(url, thash) {
     return url + (url.includes('?') ? '&' : '?' ) + 'thash=' + thash
   }
+
+  addSignHashToUrl(url, shash) {
+    return url + (url.includes('?') ? '&' : '?' ) + 'shash=' + shash
+  }
+
 
   async open(url) {
     switch(url) {
