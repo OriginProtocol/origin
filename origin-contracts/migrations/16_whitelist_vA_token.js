@@ -2,7 +2,9 @@ const OriginToken = artifacts.require('./token/OriginToken.sol')
 const VA_Marketplace = artifacts.require('./VA_Marketplace.sol')
 
 module.exports = function(deployer, network) {
-  return createTokenWhitelist(network)
+  if (!(network === 'mainnet' || process.env['SIMULATE_MAINNET'])) {
+    return createTokenWhitelist(network)
+  }
 }
 
 async function createTokenWhitelist(network) {
