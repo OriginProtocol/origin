@@ -26,7 +26,7 @@ class Price extends Component {
           if (usdAmount > 0 && rounded === 0) rounded = 0.01
           rounded = numberFormat(rounded, 2)
           if (el === 'input') {
-            return <input className={className} value={rounded} readOnly tabindex="-1") />
+            return <input className={className} value={rounded} readOnly tabindex="-1" />
           }
           return <span className={className}>{`${rounded} USD`}</span>
         }}
