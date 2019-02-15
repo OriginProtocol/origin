@@ -13,8 +13,13 @@ function parseUserSocialID(attestations) {
   const socialUrlObject = {}
   attestations.forEach(attestation => {
     const socialData = JSON.parse(attestation)
-    socialUrlObject[socialData.data.attestation.site.siteName] =
-      socialData.data.attestation.site.userId.raw
+    if (
+      socialData.data.attestation.site &&
+      socialData.data.attestation.site.userId
+    ) {
+      socialUrlObject[socialData.data.attestation.site.siteName] =
+        socialData.data.attestation.site.userId.raw
+    }
   })
   return socialUrlObject
 }
