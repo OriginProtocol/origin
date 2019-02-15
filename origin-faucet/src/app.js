@@ -7,21 +7,18 @@ try {
 
 const express = require('express')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
-const Web3 = require('web3')
 
 const Config = require('origin-token/src/config')
-const Token = require('origin-token/src/token')
+
+const EthDistributor = require('./ogn')
+const OgnDistributor = require('./eth')
 
 const DEFAULT_SERVER_PORT = 5000
 const DEFAULT_NETWORK_ID = '999' // Local blockchain.
 
-// Credit 100 tokens per request.
-const NUM_TOKENS = 100
-
 // Starts the Express server.
 function runApp(config) {
   const app = express()
-  const token = new Token(config)
 
   // Configure rate limiting. Allow at most 1 request per IP every 60 sec.
   const opts = {
@@ -54,35 +51,13 @@ function runApp(config) {
   // Configure directory for public assets.
   app.use(express.static(__dirname + '/../public'))
 
-  // Register the /tokens route for crediting tokens.
-  app.get('/tokens', async function(req, res, next) {
-    const networkId = req.query.network_id
-    const wallet = req.query.wallet
-    if (!req.query.wallet) {
-      res.send('<h2>Error: A wallet address must be supplied.</h2>')
-    } else if (!Web3.utils.isAddress(wallet)) {
-      res.send(`<h2>Error: ${wallet} is a malformed wallet address.</h2>`)
-      return
-    }
+  // Register the /tokens route for distributing tokens.
+  const ognDistributor = new OgnDistributor(config)
+  app.get('/tokens', ognDistributor.process)
 
-    try {
-      // Transfer NUM_TOKENS to specified wallet.
-      const value = token.toNaturalUnit(NUM_TOKENS)
-      const contractAddress = token.contractAddress(networkId)
-      const receipt = await token.credit(networkId, wallet, value)
-      const txHash = receipt.transactionHash
-      console.log(`${NUM_TOKENS} OGN -> ${wallet} TxHash=${txHash}`)
-
-      // Send response back to client.
-      const resp =
-        `Credited ${NUM_TOKENS} OGN tokens to wallet ${wallet}<br>` +
-        `TxHash = ${txHash}<br>` +
-        `OGN token contract address = ${contractAddress}`
-      res.send(resp)
-    } catch (err) {
-      next(err) // Errors will be passed to Express.
-    }
-  })
+  // Register the /eth route for distributing Eth.
+  const ethDistributor = new EthDistributor(config)
+  app.get('/tokens', ethDistributor.process)
 
   // Start the server.
   app.listen(config.port || DEFAULT_SERVER_PORT, () =>
