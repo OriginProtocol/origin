@@ -8,6 +8,7 @@ import QueryError from 'components/QueryError'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import { Link } from 'react-router-dom'
+import AccountTokenBalance from 'queries/TokenBalance'
 
 function CampaignNavItem(props) {
   const { campaign, selected, onClick } = props
@@ -175,7 +176,7 @@ function ActionList(props) {
 }
 
 function Campaign(props) {
-  const { campaign } = props
+  const { campaign, accountId } = props
   const timeLeftDays = dayjs(campaign.endDate).diff(dayjs(), 'day')
   const timeLeftHours = dayjs(campaign.endDate).diff(dayjs(), 'hour') % 24
   const timeLeftMinutes = dayjs(campaign.endDate).diff(dayjs(), 'minute') % 60
@@ -191,28 +192,46 @@ function Campaign(props) {
     timeLeftLabel += ` ${timeLeftMinutes}m`
   }
 
-  const tokensEarned = campaign.rewardEarned ? campaign.rewardEarned.amount : 0
-  const tokenEarnProgress = Math.min(100, tokensEarned)
   return (
-    <Fragment>
-      <div className="d-flex justify-content-between">
-        <h1 className="mb-2 pt-3">{campaign.name}</h1>
-        <a>
-          <img src="images/eth-icon.svg" />
-        </a>
-      </div>
-      <div>Get Origin Tokens by completing tasks below</div>
-      <div className="d-flex justify-content-between campaign-info">
-        <div>
-          <span className="font-weight-bold">Tokens earned</span>
-          <img className="ogn-icon pl-2 pr-1" src="images/ogn-icon.svg" />
-          <span className="ogn-amount font-weight-bold">{tokensEarned}</span>
-        </div>
-        <div className="font-weight-bold">Time left:{timeLeftLabel}</div>
-      </div>
-      <ProgressBar progress={tokenEarnProgress} />
-      <ActionList campaign={campaign}/>
-    </Fragment>
+    <Query query={AccountTokenBalance} variables={{ account: accountId, token: 'OGN' }}>
+      {({ loading, error, data }) => {
+        const toBn = web3.utils.toBN
+        let tokensEarned = toBn(0)
+        let tokenEarnProgress = 0
+
+        if (!loading && !error) {
+          const tokenHolder = data.web3.account.token
+          if (tokenHolder && tokenHolder.token){
+            // campaign rewards converted normalized to token value according to number of decimals
+            tokensEarned = toBn(campaign.rewardEarned ? campaign.rewardEarned.amount : 0)
+              .div(toBn(10).pow(toBn(tokenHolder.token.decimals)))
+            tokenEarnProgress = Math.min(100, tokensEarned.toString())
+          }
+        }
+
+        return (
+          <Fragment>
+            <div className="d-flex justify-content-between">
+              <h1 className="mb-2 pt-3">{campaign.name}</h1>
+              <a>
+                <img src="images/eth-icon.svg" />
+              </a>
+            </div>
+            <div>Get Origin Tokens by completing tasks below</div>
+            <div className="d-flex justify-content-between campaign-info">
+              <div>
+                <span className="font-weight-bold">Tokens earned</span>
+                <img className="ogn-icon pl-2 pr-1" src="images/ogn-icon.svg" />
+                <span className="ogn-amount font-weight-bold">{tokensEarned.toString()}</span>
+              </div>
+              <div className="font-weight-bold">Time left:{timeLeftLabel}</div>
+            </div>
+            <ProgressBar progress={tokenEarnProgress} />
+            <ActionList campaign={campaign}/>
+          </Fragment>
+        )
+      }}
+    </Query>
   )
 }
 
@@ -239,8 +258,8 @@ class GrowthCampaigns extends Component {
             }
 
             const vars = pick(this.state, 'first')
-            vars.walletAddress = data.web3.metaMaskAccount.id
-
+            const accountId = data.web3.metaMaskAccount.id
+            vars.walletAddress = accountId
             return (
               <Query
                 query={allCampaignsQuery}
@@ -275,7 +294,10 @@ class GrowthCampaigns extends Component {
                         }}
                         selectedCampaignId={selectedCampaignId}
                       />
-                      <Campaign campaign={selectedCampaign} />
+                      <Campaign
+                        campaign={selectedCampaign}
+                        accountId={accountId}
+                      />
                     </Fragment>
                   )
                 }}
