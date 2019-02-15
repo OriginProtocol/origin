@@ -9,6 +9,9 @@ const NUM_TOKENS = 100
 class OgnDistributor {
   constructor(config) {
     this.token = new Token(config)
+
+    // Needed to be able to use process as a route in Express.
+    this.process  = this.process.bind(this)
   }
 
   async process(req, res, next) {
@@ -22,7 +25,7 @@ class OgnDistributor {
     }
 
     try {
-      // Transfer NUM_TOKENS to specified wallet.
+      // Transfer NUM_TOKENS to the specified wallet.
       const value = this.token.toNaturalUnit(NUM_TOKENS)
       const contractAddress = this.token.contractAddress(networkId)
       const receipt = await this.token.credit(networkId, wallet, value)

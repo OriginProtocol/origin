@@ -4,8 +4,8 @@ const Sequelize = require('sequelize')
 const Web3 = require('web3')
 
 const logger = require('./logger')
-const db = require('../models')
-const enums = require('../enums')
+const db = require('./models')
+const enums = require('./enums')
 
 class EthDistributor {
   constructor(config) {
@@ -13,8 +13,8 @@ class EthDistributor {
 
     // Create a web3 provider.
     let hotWalletPk, providerUrl
-    if (config.networkId === 999) {
-      // On local, use truffle's default account.
+    if (config.networkIds[0] === 999) {
+      // In dev environment, use truffle's default account as hot wallet.
       hotWalletPk =
         'c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3'
       providerUrl = 'http://localhost:8545'
@@ -27,11 +27,14 @@ class EthDistributor {
     const provider = new PrivateKeyProvider(hotWalletPk, providerUrl)
     this.web3 = new Web3(provider)
     this.hotWalletAddress = provider.address
+
+    // Needed to be able to use the process method as a route in Express.
+    this.process  = this.process.bind(this)
   }
 
   error(res, message) {
     logger.error(message)
-    res.send(`<h2>Error: ${message}.</h2>`)
+    res.send(`<h2>Error: ${message}</h2>`)
   }
 
   async process(req, res, next) {
@@ -53,8 +56,8 @@ class EthDistributor {
       const campaign = await db.FaucetCampaign.findOne({
         where: {
           inviteCode: code,
-          startDate: { [Sequelize.Op.gt]: now },
-          endDate: { [Sequelize.Op.lt]: now }
+          startDate: { [Sequelize.Op.lt]: now },
+          endDate: { [Sequelize.Op.gt]: now }
         }
       })
       if (!campaign) {
@@ -78,7 +81,7 @@ class EthDistributor {
       })
       const budgetUsed = faucetsTxns
         .map(faucetTxn => faucetTxn.amount)
-        .reduce((x, y) => BigNumber(x).plus(y))
+        .reduce((x, y) => BigNumber(x).plus(y), BigNumber(0))
       if (budgetUsed.plus(amount).gt(budget)) {
         return this.error(res, `Campaign budget exhausted.`)
       }
@@ -87,7 +90,7 @@ class EthDistributor {
       const existingTxn = await db.FaucetTxn.findOne({
         where: {
           campaignId: campaign.id,
-          ethAddress: ethAddress.toLowerCase(),
+          toAddress: ethAddress.toLowerCase(),
           status: {
             [Sequelize.Op.in]: [
               enums.FaucetTxnStatuses.Pending,
@@ -97,8 +100,15 @@ class EthDistributor {
         }
       })
       if (existingTxn) {
-        return this.error(`Address ${ethAddress} already used this code.`)
+        return this.error(res, `Address ${ethAddress} already used this code.`)
       }
+
+      logger.error('CHECKING BALANCES')
+      let balance
+      balance = await this.web3.eth.getBalance(this.hotWalletAddress)
+      logger.info("FROM BALANCE=", balance)
+      balance = await this.web3.eth.getBalance(ethAddress)
+      logger.info("TARGET BALANCE=", balance)
 
       // Create a FaucetTxn row in Pending status.
       const faucetTxn = await db.FaucetTxn.create({
@@ -112,22 +122,49 @@ class EthDistributor {
       })
 
       // Issue the blockchain transaction.
-      const txnHash = await Web3.eth.sendTransaction({
+      logger.info(`Blockchain call to send ${amount.toFixed()} to ${ethAddress} from ${this.hotWalletAddress}`)
+      //let txnHash
+      const receipt = await this.web3.eth.sendTransaction({
         from: this.hotWalletAddress,
         to: ethAddress,
-        value: amount.toFixed()
+        //value: amount.toFixed()
+        value: '46295600000000000'
       })
+      //  .then('transactionHash', hash => {
+      //    logger.error("GOT TXN HASH", hash)
+      //    txnHash = hash
+      //  })
+      logger.info("RECEIPT=", receipt)
+      const txnHash = receipt.transactionHash
       logger.info(
-        `Distributed ${amount} to ${ethAddress} from {this.hotWalletAddress} TxnHash=${txnHash}`
+        `Distributed ${amount} to ${ethAddress} from ${this.hotWalletAddress} TxnHash=${txnHash}`
       )
 
+      balance = await this.web3.eth.getBalance(this.hotWalletAddress)
+      logger.info("FROM BALANCE=", balance)
+      balance = await this.web3.eth.getBalance(ethAddress)
+      logger.info("TARGET BALANCE=", balance)
+
+      let count = 0
+      do {
+        if (txnHash) {
+          const receipt = await this.web3.eth.getTransactionReceipt(txnHash)
+          logger.error("GOT RECEIPT ", receipt)
+          break
+        } else {
+          logger.error("WAITING FOR RECEIPT....")
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+        count++
+      } while (count < 100)
+
       // Wait for the transaction receipt.
-      const txnReceipt = await this.web3.eth.getTransactionReceipt(txnHash)
-      if (!txnReceipt.status) {
-        logger.error(`Failed getting receipt for txnHash ${txnHash}`)
-        await faucetTxn.update({ status: enums.FaucetTxnStatuses.Failed })
-        return this.error('An error occurred. Please retry again later.')
-      }
+      //const txnReceipt = await this.web3.eth.getTransactionReceipt(txnHash)
+      //if (!txnReceipt.status) {
+      //  logger.error(`Failed getting receipt for txnHash ${txnHash}`)
+      //  await faucetTxn.update({ status: enums.FaucetTxnStatuses.Failed })
+      //  return this.error(res, 'An error occurred. Please retry again later.')
+     // }
 
       // Record the transaction hash and update the row status to Confirmed.
       await faucetTxn.update({
@@ -139,6 +176,7 @@ class EthDistributor {
       const resp = `Distributed ${amount} to ${ethAddress} TxnHash=${txnHash}`
       res.send(resp)
     } catch (err) {
+      logger.error(err)
       next(err) // Errors will be passed to Express.
     }
   }

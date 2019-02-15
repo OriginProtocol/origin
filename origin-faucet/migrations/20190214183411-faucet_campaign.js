@@ -31,6 +31,14 @@ module.exports = {
       },
       currency: {
         type: Sequelize.STRING
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE
       }
     }).then(() => queryInterface.addIndex(tableName, ['invite_code']))
   },

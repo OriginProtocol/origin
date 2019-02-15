@@ -6,10 +6,8 @@ module.exports = (sequelize, DataTypes) => {
   const FaucetTxn = sequelize.define(
     'FaucetTxn',
     {
-      id: { type: DataTypes.INTEGER, primaryKey: true },
-      status: DataTypes.ENUM(enums.FaucetTxnStatuses),
       campaignId: DataTypes.INTEGER,
-      inviteCode: DataTypes.STRING,
+      status: DataTypes.ENUM(enums.FaucetTxnStatuses),
       fromAddress: DataTypes.STRING,
       toAddress: DataTypes.STRING,
       amount: DataTypes.DECIMAL,
@@ -17,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       txnHash: DataTypes.STRING
     },
     {
-      tableName: 'faucet_campaign'
+      tableName: 'faucet_txn'
     }
   )
 

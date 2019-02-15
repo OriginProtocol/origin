@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       campaign_id: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       status: {
         type: Sequelize.ENUM(enums.FaucetTxnStatuses)
@@ -33,6 +33,14 @@ module.exports = {
       },
       txn_hash: {
         type: Sequelize.STRING
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE
       }
     }).then(() => queryInterface.addIndex(tableName, ['campaign_id']))
   },

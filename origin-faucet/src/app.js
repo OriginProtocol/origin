@@ -10,8 +10,10 @@ const { RateLimiterMemory } = require('rate-limiter-flexible')
 
 const Config = require('origin-token/src/config')
 
-const EthDistributor = require('./ogn')
-const OgnDistributor = require('./eth')
+const logger = require('./logger')
+
+const EthDistributor = require('./eth')
+const OgnDistributor = require('./ogn')
 
 const DEFAULT_SERVER_PORT = 5000
 const DEFAULT_NETWORK_ID = '999' // Local blockchain.
@@ -37,7 +39,7 @@ function runApp(config) {
         })
         .catch(() => {
           // Not enough points. Block the request.
-          console.log(`Rejecting request due to rate limiting.`)
+          logger.error(`Rejecting request due to rate limiting.`)
           res.status(429).send('<h2>Too Many Requests</h2>')
         })
     } else {
@@ -57,7 +59,7 @@ function runApp(config) {
 
   // Register the /eth route for distributing Eth.
   const ethDistributor = new EthDistributor(config)
-  app.get('/tokens', ethDistributor.process)
+  app.get('/eth', ethDistributor.process)
 
   // Start the server.
   app.listen(config.port || DEFAULT_SERVER_PORT, () =>
@@ -83,10 +85,12 @@ const config = {
     .map(parseInt)
 }
 
+logger.info('Config: ', config)
+
 try {
   config.providers = Config.createProviders(config.networkIds)
 } catch (err) {
-  console.log('Config error:', err)
+  logger.error('Config error:', err)
   process.exit(-1)
 }
 
