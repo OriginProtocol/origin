@@ -7,7 +7,7 @@ import contracts, { setNetwork } from '../src/contracts'
 import { getOffer, mutate } from './_helpers'
 import queries from './_queries'
 import mutations from './_mutations'
-import {trackGas, showGasTable} from './_gasTable'
+import { trackGas, showGasTable } from './_gasTable'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -206,7 +206,6 @@ describe('Marketplace', function() {
     })
 
     it('should add funds to an offer', async function() {
-      const offer = await getOffer('999-0-0', 1, false)
       const events = await mutate(
         mutations.AddFunds,
         {
