@@ -780,23 +780,8 @@ describe('Marketplace', function() {
         true
       )
       assert(acceptEvents.OfferAccepted)
-    })
 
-    it('should allow the buyer to create a dispute', async function (){
-      const disputeEvents = await mutate(
-        mutations.DisputeOffer,
-        {
-          offerID: offerId,
-          additionalDeposit: '0',
-          from: Buyer,
-          data: JSON.stringify({})
-        },
-        true
-      )
-      assert(disputeEvents.OfferDisputed)
-    })
-
-    it('should allow the seller to create a dispute', async function (){
+      // Dispute Offer
       const disputeEvents = await mutate(
         mutations.DisputeOffer,
         {
@@ -808,6 +793,97 @@ describe('Marketplace', function() {
         true
       )
       assert(disputeEvents.OfferDisputed)
+    })
+
+    it('should allow a pay-seller ruling from an arbitrator', async function() {
+      // Rule on dispute
+      const rulingEvents = await mutate(
+        mutations.ExecuteRuling,
+        {
+          offerID: offerId,
+          from: Arbitrator,
+          ruling: 'pay-seller',
+          refund: '0.001',
+          commission: 'refund',
+          message: 'Buyer failed to show for non-refundable appointment.'
+        },
+        true
+      )
+      assert(rulingEvents.OfferRuling)
+    })
+
+    it('should allow a partial-refund ruling from an arbitrator', async function() {
+      // Rule on dispute
+      const rulingEvents = await mutate(
+        mutations.ExecuteRuling,
+        {
+          offerID: offerId,
+          from: Arbitrator,
+          ruling: 'partial-refund',
+          refund: '0.001',
+          commission: 'pay',
+          message: 'Product was shipped late, but was as described.'
+        },
+        true
+      )
+      assert(rulingEvents.OfferRuling)
+    })
+
+    it('should allow a refund-buyer ruling from an arbitrator', async function() {
+      // Rule on dispute
+      const events = await mutate(
+        mutations.ExecuteRuling,
+        {
+          offerID: offerId,
+          from: Arbitrator,
+          ruling: 'refund-buyer',
+          commission: 'pay',
+          message: 'No tracking number ever provided by seller.'
+        },
+        true
+      )
+      assert(events.OfferRuling)
+    })
+
+    it('should not allow an invalid ruling', async function() {
+      try{
+        await mutate(
+          mutations.ExecuteRuling,
+          {
+            offerID: offerId,
+            from: Arbitrator,
+            ruling: 'foo',
+            refund: '0.001',
+            commission: 'pay',
+            message: 'No tracking number ever provided by seller.'
+          },
+          true
+        )
+        assert(false)
+      } catch (e) {
+        assert(true)
+      }
+    })
+
+    it('should not allow an invalid commission', async function() {
+      try{
+        await mutate(
+          mutations.ExecuteRuling,
+          {
+            offerID: offerId,
+            from: Arbitrator,
+            ruling: 'pay-seller',
+            refund: '0.001',
+            commission: 'foobar',
+            message: 'No tracking number ever provided by seller.'
+          },
+          true
+        )
+        assert(false)
+      } catch (e) {
+        console.log(e)
+        assert(true)
+      }
     })
   })
 })
