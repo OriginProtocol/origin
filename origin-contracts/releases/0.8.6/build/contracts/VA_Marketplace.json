@@ -59777,6 +59777,429 @@
     "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
   },
   "networks": {
+    "1": {
+      "events": {
+        "0x8e530f3a09c59fdf1b0d5ed714b7a5b94c059256cdc29b8521e9891734c6a2b7": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "MarketplaceData",
+          "type": "event"
+        },
+        "0x5e48128fde8c162f70ea9f59d0a58f1d1cc40c2eec4b4c71356ab395650bfbdf": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "AffiliateAdded",
+          "type": "event"
+        },
+        "0x3553c89fbe376344fc3e6cfb39cce65e6d961cece468c297dad2a1e31d4fa2b6": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "AffiliateRemoved",
+          "type": "event"
+        },
+        "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ListingCreated",
+          "type": "event"
+        },
+        "0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ListingUpdated",
+          "type": "event"
+        },
+        "0xafa3dc4f271ef3419006f21140d375eba48ef3def56e8bfe6d54d0c72a81a307": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ListingWithdrawn",
+          "type": "event"
+        },
+        "0x9c9827b799328bcbadbd04862686713436136571c54d7ca0388bd952f314f890": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ListingArbitrated",
+          "type": "event"
+        },
+        "0x12dc84d4005dd5b86fd88951106aa76927a62b83b85ba9c912a7268582906aa9": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "ListingData",
+          "type": "event"
+        },
+        "0x51925063546fd5f89ac754d8da769e20ede0fbc4adbfdbd397862aceb9533521": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "offerID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "name": "listingIpfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "OfferCreated",
+          "type": "event"
+        },
+        "0x449224201a35688b74a38ff24770e8b2a326ebf42357bf19a36f5fedbbe552a0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "offerID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "OfferAccepted",
+          "type": "event"
+        },
+        "0xbfefa76df66ac53c6517b1939b14bfc4d5fdf714b93a71aea2e50977d1b3b8e6": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "offerID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "OfferFinalized",
+          "type": "event"
+        },
+        "0xe9ae767ab1c8f3f874a5b2810a1f6323b43283a5b462b52a4de5f8ed53a4fe25": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "offerID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "OfferWithdrawn",
+          "type": "event"
+        },
+        "0x5f0e66c42b81a43cbd35b11ea0a599d0be1d8e1fdb61d1d4f7a98243ba6cc26b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "offerID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "OfferFundsAdded",
+          "type": "event"
+        },
+        "0x11c45991938e1dec0b00887cd2368a2195fccb46b08cc56483ac3053ddb609b2": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "offerID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "OfferDisputed",
+          "type": "event"
+        },
+        "0x3e4d55eb2a402ba6f500db5d75f9303dfe863a2e8319054aeddb6a35ec7e3c61": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "offerID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "name": "ruling",
+              "type": "uint256"
+            }
+          ],
+          "name": "OfferRuling",
+          "type": "event"
+        },
+        "0x9b7312a236066d2da679eba7e3a2e86d2d07a973819499846c0efd2fd2506c80": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "party",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "listingID",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "offerID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "ipfsHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "OfferData",
+          "type": "event"
+        },
+        "0xf8df31144d9c2f0f6b59d69b8b98abd5459d07f2742c4df920b25aae33c64820": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "previousOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipRenounced",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x3ddb21eff50640af57bcea41374001aff245bf28",
+      "transactionHash": "0x0a9d87d452d099945355eba51ce19b60360a29f17865f53e357c5fa632d295a1"
+    },
     "4": {
       "events": {
         "0x8e530f3a09c59fdf1b0d5ed714b7a5b94c059256cdc29b8521e9891734c6a2b7": {
@@ -60625,5 +61048,5 @@
     }
   },
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-02-13T18:36:52.940Z"
+  "updatedAt": "2019-02-15T18:27:15.164Z"
 }
