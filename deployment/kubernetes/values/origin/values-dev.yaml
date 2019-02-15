@@ -6,7 +6,7 @@ bridgeImageTag: '12ac36f'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'e428ab6'
+dappImageTag: '5467678'
 
 # origin-dapp2
 dapp2Image: origin-dapp2
@@ -26,7 +26,7 @@ faucetImageTag: '14de9d3'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'e428ab6'
+eventlistenerImageTag: '0431d45'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -55,4 +55,4 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: '43bd8df'
+linkingImageTag: '0431d45'

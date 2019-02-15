@@ -224,7 +224,7 @@ class ListingCreate extends Component {
       }
     } else if (
       web3.currentProvider.isOrigin ||
-      (this.props.messagingRequired && !this.props.messagingEnabled && !origin.contractService.walletLinker.linked)
+      (this.props.messagingRequired && !this.props.messagingEnabled && !(origin.contractService.walletLinker && origin.contractService.walletLinker.linked))
     ) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
