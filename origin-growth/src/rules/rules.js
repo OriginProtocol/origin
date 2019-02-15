@@ -202,7 +202,7 @@ class Campaign {
     const events = await this.getEvents(ethAddress, false, false)
     const levels = Object.values(this.levels)
     const rules = levels.flatMap(level => level.rules)
-    const currentLevel = await this.getCurrentLevel(ethAddress, events)
+    const currentLevel = await this.getCurrentLevel(ethAddress, false)
 
     return {
       id: this.campaign.id,
@@ -235,7 +235,7 @@ class Level {
   qualifyForNextLevel(ethAddress, events) {
     for (let i = 0; i < this.rules.length; i++) {
       const result = this.rules[i].qualifyForNextLevel(ethAddress, events)
-      if (result != null && result === false) {
+      if (result !== null && result === false) {
         return false
       }
     }

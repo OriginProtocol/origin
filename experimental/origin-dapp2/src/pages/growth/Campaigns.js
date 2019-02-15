@@ -60,34 +60,57 @@ function CampaignNavList(props) {
   )
 }
 
-function ProgressBar(props) {
-  const { progress } = props
+class ProgressBar extends Component {
+  constructor(props) {
+    super(props)
+    this.triggerAnimation = true
+  }
 
-  return (
-    <Fragment>
-      <div className="campaign-progress mt-3" style={{ width: '100%' }}>
-        <div className="background" />
-        {progress > 0 && (
-          <div className="foreground" style={{ width: `${progress}%` }} />
-        )}
-      </div>
-      <div className="indicators d-flex justify-content-between mt-2">
-        <div>0</div>
-        <div>25</div>
-        <div>50</div>
-        <div>75</div>
-        <div>100</div>
-      </div>
-    </Fragment>
-  )
+  render() {
+    const { progress } = this.props
+
+    /* For triggering animation first render of react component needs to set
+     * the width to 0. All subsequent renders set it to the actuall value. 
+     */
+    const triggerAnimationThisFrame = this.triggerAnimation
+    if (progress > 0 && this.triggerAnimation){
+      setTimeout(() => {
+        this.triggerAnimation = false
+        this.forceUpdate()
+      }, 250)
+    }
+
+    return (
+      <Fragment>
+        <div className="campaign-progress mt-3" style={{ width: '100%' }}>
+          <div className="background" />
+          {progress > 0 && (
+            <div className="foreground" style={{ width: `${!triggerAnimationThisFrame ? progress : '0'}%` }} />
+          )}
+        </div>
+        <div className="indicators d-flex justify-content-between mt-2">
+          <div>0</div>
+          <div>25</div>
+          <div>50</div>
+          <div>75</div>
+          <div>100</div>
+        </div>
+      </Fragment>
+    )
+  }
 }
 
 function Action(props) {
-  let { type, status, reward } = props.action
+  let { type, status, reward, rewardEarned } = props.action
   const showLockIcon = status === 'inactive'
-  const actionCompleted = status === 'completed' || status === 'exhausted'
+  const actionCompleted = ['exhausted', 'completed'].includes(status)
   let backgroundImgSrc = actionCompleted ? 'images/identity/verification-shape-green.svg' :
     'images/identity/verification-shape-blue.svg'
+
+  const formatTokens = (tokenAmount) => {
+    return web3.utils.toBN(tokenAmount)
+      .div(props.decimalDevision).toString()
+  }
 
   let foregroundImgSrc
   let title
@@ -119,6 +142,17 @@ function Action(props) {
     infoText = 'Connect your Facebook Profile in attestations'
   }
 
+  const renderReward = (amount, renderPlusSign) => {
+    return (<div className="reward d-flex mr-auto align-items-center pl-2 pt-2 pb-2 mt-2">
+      <img
+        src="images/ogn-icon.svg"
+      />
+        <div className="value">
+          {renderPlusSign ? '+' : ''}{formatTokens(amount)}
+        </div> 
+    </div>)
+  }
+
   return (
     <div className="d-flex action">
       <div className="col-2 d-flex justify-content-center">
@@ -133,13 +167,19 @@ function Action(props) {
       <div className="col-8 d-flex flex-column">
         <div className="title">{title}</div>
         <div className="info-text">{infoText}</div>
-        {reward !== null && <div className="reward d-flex mr-auto align-items-center p-2 mt-2">
-          <img
-            className="mr-2"
-            src="images/ogn-icon.svg"
-          /> 
-          +{reward.amount / Math.pow(10, 18)}
-        </div>}
+        <div
+          className="d-flex"
+        >
+          {actionCompleted && rewardEarned !== null && 
+            <Fragment>
+              <div className="d-flex align-items-center sub-text">Earned</div>
+              {renderReward(rewardEarned.amount, false)}
+            </Fragment>
+          }
+          {!actionCompleted && reward !== null && 
+            renderReward(reward.amount, true)
+          }
+        </div>
       </div>
       <div className="col-2 d-flex">
         {!actionCompleted &&
@@ -159,14 +199,18 @@ function Action(props) {
 }
 
 function ActionList(props) {
-  const { actions } = props.campaign
-
   return (
     <Fragment>
       <div className="d-flex flex-column">
-        {actions.map(action => {
+        {props.title !== undefined && <div
+          className="action-title"
+        >
+          {props.title}
+        </div>}
+        {props.actions.map(action => {
           return (<Action
             action={action}
+            decimalDevision={props.decimalDevision}
             key={`${action.type}:${action.status}`}
           />)
         })}
@@ -195,26 +239,35 @@ function Campaign(props) {
   return (
     <Query query={AccountTokenBalance} variables={{ account: accountId, token: 'OGN' }}>
       {({ loading, error, data }) => {
-        const toBn = web3.utils.toBN
-        let tokensEarned = toBn(0)
+        const toBN = web3.utils.toBN
+        let tokensEarned = toBN(0)
         let tokenEarnProgress = 0
+        let decimalDevision = toBN(1)
 
         if (!loading && !error) {
           const tokenHolder = data.web3.account.token
           if (tokenHolder && tokenHolder.token){
+            decimalDevision = toBN(10).pow(toBN(tokenHolder.token.decimals))
             // campaign rewards converted normalized to token value according to number of decimals
-            tokensEarned = toBn(campaign.rewardEarned ? campaign.rewardEarned.amount : 0)
-              .div(toBn(10).pow(toBn(tokenHolder.token.decimals)))
+            tokensEarned = toBN(campaign.rewardEarned ? campaign.rewardEarned.amount : 0)
+              .div(decimalDevision)
             tokenEarnProgress = Math.min(100, tokensEarned.toString())
           }
         }
+
+        const actionCompleted = (action) => {
+          return ['exhausted', 'completed'].includes(action.status)
+        }
+
+        const completedActions = campaign.actions.filter(action => actionCompleted(action))
+        const nonCompletedActions = campaign.actions.filter(action => !actionCompleted(action))
 
         return (
           <Fragment>
             <div className="d-flex justify-content-between">
               <h1 className="mb-2 pt-3">{campaign.name}</h1>
               <a>
-                <img src="images/eth-icon.svg" />
+                <img src="images/growth/info-icon-inactive.svg" />
               </a>
             </div>
             <div>Get Origin Tokens by completing tasks below</div>
@@ -227,7 +280,12 @@ function Campaign(props) {
               <div className="font-weight-bold">Time left:{timeLeftLabel}</div>
             </div>
             <ProgressBar progress={tokenEarnProgress} />
-            <ActionList campaign={campaign}/>
+            {nonCompletedActions.length > 0 &&
+              <ActionList actions={nonCompletedActions} decimalDevision={decimalDevision} />
+            }
+            {completedActions.length > 0 && 
+              <ActionList title="Completed" actions={completedActions} decimalDevision={decimalDevision} />
+            }
           </Fragment>
         )
       }}
@@ -338,6 +396,8 @@ require('react-styl')(`
         height: 100%;
         z-index: 2;
         position: relative;
+        -webkit-transition: width 0.5s;
+        transition: width 0.5s;
       height: 10px;
       position: relative;
     .ogn-amount
@@ -349,6 +409,12 @@ require('react-styl')(`
       padding-top: 40px;
     h5
       text-align: center;
+    .action-title
+      font-weight: bold;
+      color: var(--steel);
+      margin-top: 30px;
+      margin-left: 5px;
+      margin-bottom: -5px;
     .campaign-list
       .status
         width: 20px;
@@ -426,12 +492,22 @@ require('react-styl')(`
       font-size: 18px;
       font-weight: 300;
     .action .reward
+      padding-right: 10px;
       height: 28px;
       background-color: var(--pale-grey);
       border-radius: 52px;
       font-size: 14px;
       font-weight: bold;
       color: var(--clear-blue);
+    .action .reward .value
+      padding-bottom: 1px;
+    .action .sub-text
+      font-size: 14px;
+      font-weight: bold;
+      padding-top: 5px;
+      margin-right: 6px;
+    .action .reward img
+      margin-right: 6px;
     .action img
       width: 19px;
 
