@@ -203,7 +203,7 @@ You can access the React-Native remote debugger at http://localhost:8081/debugge
 
 > How do I access the developer menu in the app?
 
-Shake you phone.  *Seriously*
+Shake you phone.  Or pretend you did by sending this keycode: `adb shell input keyevent 82`
 
 > Is there a way to trigger a reload on Android?
 
@@ -245,3 +245,9 @@ This is likely a network error because your tunnels are not setup.  See [Android
 Add the `NODE_OPTIONS` env var to your Metro builder startup command to add the `--max_old_space_size` option like this: 
 
     NODE_OPTIONS="--max_old_space_size=8196" npm run start
+
+-----------
+
+    INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com.origincatcher signatures do not match previously installed version; ignoring!
+
+Uninstall the app from your phone and try again.
