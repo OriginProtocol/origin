@@ -100,6 +100,8 @@ IPFS_GATEWAY_PORT=8080
 IPFS_GATEWAY_PROTOCOL=http
 
 NOTIFY_TOKEN=
+
+HOT_WALLET_PK=0x82d052c865f5763aad42add438569276c00d3d88a2d062d36b2bae914d58b8c8
 ```
 
 **origin-mobile/.env**
@@ -143,11 +145,19 @@ If you want to test with mobile Safari on the same device as the application, fi
 - origin $ `npm run install:mobile` 👈 instead of `npm install` at the Origin monorepo root
 - origin/origin-linking $ `npm run migrate`
 
-### Startup
+### Startup (dapp)
 - origin/origin-js $ `npm run start`
 - origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
 - origin/origin-linking $ `npm run start`
 - origin/origin-dapp $ `npm run start`
+- origin/origin-mobile $ `npm run install-local`
+- origin/origin-mobile $ `npm run start -- --reset-cache`
+- Open Xcode and build for your desired device
+
+### Startup (dapp2)
+- origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
+- origin/origin-linking $ `npm run start`
+- origin/experimental/origin-dapp2 $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
 - origin/origin-mobile $ `npm run install-local`
 - origin/origin-mobile $ `npm run start -- --reset-cache`
 - Open Xcode and build for your desired device

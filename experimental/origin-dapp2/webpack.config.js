@@ -94,6 +94,8 @@ const config = {
     }),
     new webpack.EnvironmentPlugin({
       HOST: 'localhost',
+      ORIGIN_LINKING: null,
+      LINKER_HOST: 'localhost',
       DOCKER: false,
       IPFS_SWARM: ''
     })
@@ -128,6 +130,12 @@ if (isProduction) {
       inject: false,
       filename: 'mainnet.html',
       network: 'mainnet'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'kovan.html',
+      network: 'kovanTst'
     })
   )
   config.resolve.alias = {

@@ -14,6 +14,10 @@ export default class Reflection {
     this.users = users
   }
 
+  makeSignedListingId(networkId, listingID) {
+    return this.marketplace.resolver.makeListingId(networkId, 'VA_Marketplace', listingID)
+  }
+
   async _addOriginMeta(networkId, address, meta) {
     if (this.contractService.marketplaceContracts[meta.contract])
     {

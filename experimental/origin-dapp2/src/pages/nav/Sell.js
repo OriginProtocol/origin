@@ -49,7 +49,9 @@ class SellNav extends Component {
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <fbt desc="navbar.selling">Sell</fbt>
+          <span>
+            <fbt desc="navbar.selling">Sell</fbt>
+          </span>
         </a>
       </Dropdown>
     )
@@ -68,7 +70,7 @@ require('react-styl')(`
       padding: 0.75rem 1rem
       font-weight: bold
       &:first-child
-        border-radius: 5px 5px 0 0
+        border-radius: var(--default-radius) 5px 0 0
       &:last-child
         border-bottom: 0
         border-radius: 0 0 5px 5px

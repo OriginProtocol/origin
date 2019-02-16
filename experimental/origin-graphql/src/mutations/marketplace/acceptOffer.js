@@ -5,7 +5,7 @@ import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function acceptOffer(_, data) {
-  const { from } = data
+  const from = data.from || contracts.defaultLinkerAccount
   await checkMetaMask(from)
   const ipfsHash = await post(contracts.ipfsRPC, {
     schemaId: 'https://schema.originprotocol.com/offer-accept_1.0.0.json'

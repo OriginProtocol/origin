@@ -5,7 +5,10 @@ import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
+import queryString from 'query-string'
 
+
+import { originToDAppListing } from 'utils/listing'
 
 import { handleNotificationsSubscription } from 'actions/Activation'
 import { storeWeb3Intent } from 'actions/App'
@@ -90,7 +93,11 @@ class ListingCreate extends Component {
       },
       showDetailsFormErrorMsg: false,
       showBoostFormErrorMsg: false,
-      showBoostTutorial: false
+      showBoostTutorial: false,
+      verifyObj: JSON.stringify({ verifyURL: 'https://api.github.com/repos/OriginProtocol/origin/issues/<put issue number here>',
+        checkArg: 'state',
+        matchValue: 'closed',
+        verifyFee: '100' })
     }
 
     this.state = { ...this.defaultState }
@@ -163,6 +170,16 @@ class ListingCreate extends Component {
   }
 
   async componentDidMount() {
+
+    const { location } = this.props
+    const query = queryString.parse(location.search)
+    const showRequestListing = query['showRequestListing']
+
+    if (showRequestListing)
+    {
+      sessionStorage.setItem('showRequestListing', showRequestListing)
+    }
+
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
     if (this.props.listingId) {
       this.props.storeWeb3Intent('edit a listing')
@@ -207,10 +224,12 @@ class ListingCreate extends Component {
       }
     } else if (
       web3.currentProvider.isOrigin ||
-      (this.props.messagingRequired && !this.props.messagingEnabled)
+      (this.props.messagingRequired && !this.props.messagingEnabled && !(origin.contractService.walletLinker && origin.contractService.walletLinker.linked))
     ) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
+      } else {
+        origin.contractService.showLinkPopUp()
       }
       this.props.storeWeb3Intent('create a listing')
     }
@@ -632,6 +651,66 @@ class ListingCreate extends Component {
     window.scrollTo(0, 0)
   }
 
+  async onOfferListing(formListing, verifyData) {
+    const { isEditMode } = this.state
+    this.setState({ step: this.STEP.METAMASK })
+    const listing = dappFormDataToOriginListing(formListing.formData)
+    if (this.props.marketplacePublisher) {
+      listing['marketplacePublisher'] = this.props.marketplacePublisher
+    }
+    if (!isEditMode) {
+      console.log('creating offer listing:', listing, ' verifyData: ', verifyData)
+
+      await origin.marketplace.offerListing(listing, 
+        async (createdListing) => {
+          const {
+            boostValue,
+            isMultiUnit,
+            isFractional,
+            listingType,
+            price,
+            boostRemaining
+          } = await originToDAppListing(createdListing)
+
+          const listingPrice = price
+          const quantity = 1
+          const offerData = {
+            listingId: createdListing.id,
+            listingType: listingType,
+            totalPrice: {
+              amount: listingPrice,
+              currency: 'ETH'
+            },
+            commission: {
+              amount: boostValue.toString(),
+              currency: 'OGN'
+            },
+            // Set the finalization time to ~1 year after the offer is accepted.
+            // This is the window during which the buyer may file a dispute.
+            finalizes: 365 * 24 * 60 * 60
+          }
+
+          if (isFractional) {
+            //TODO: does commission change according to amount of slots bought?
+            //TODO: actually support fractional offering
+          } else if (isMultiUnit) {
+            offerData.unitsPurchased = quantity
+            /* If listing has enough boost remaining, take commission for each unit purchased.
+             * In the case listing has ran out of boost, take up the remaining boost.
+             */
+            offerData.commission.amount = Math.min(boostValue * quantity, boostRemaining).toString()
+          } else {
+            offerData.unitsPurchased = 1
+          }
+          offerData.verifyTerms = verifyData
+          return offerData
+        }
+      )
+      this.setState({ step: this.STEP.SUCCESS })
+      this.props.handleNotificationsSubscription('seller', this.props)
+    }
+  }
+
   async onSubmitListing(formListing) {
     const { isEditMode } = this.state
 
@@ -652,12 +731,25 @@ class ListingCreate extends Component {
           }
         )
       } else {
-        transactionReceipt = await origin.marketplace.createListing(
-          listing,
-          (confirmationCount, transactionReceipt) => {
-            this.props.updateTransaction(confirmationCount, transactionReceipt)
-          }
-        )
+        const account = await origin.contractService.currentAccount()
+        const balance = await web3.eth.getBalance(account)
+        console.log('creating balance:', balance, ' listing: ', listing)
+        if (origin.marketplace.injectPossible && web3.utils.toBN(balance).lte(web3.utils.toBN(0)))
+        {
+          await origin.marketplace.injectListing(listing)
+          this.setState({ step: this.STEP.SUCCESS })
+          this.props.handleNotificationsSubscription('seller', this.props)
+          return
+        }
+        else
+        {
+          transactionReceipt = await origin.marketplace.createListing(
+            listing,
+            (confirmationCount, transactionReceipt) => {
+              this.props.updateTransaction(confirmationCount, transactionReceipt)
+            }
+          )
+        }
       }
 
       const transactionTypeKey = isEditMode ? 'updateListing' : 'createListing'
@@ -1540,7 +1632,22 @@ class ListingCreate extends Component {
                       defaultMessage={'Done'}
                     />
                   </button>
+
                 </div>
+              {sessionStorage.getItem('showRequestListing') && <div className="d-block">
+                <textarea style={{ width: '100%' }} value={this.state.verifyObj} onChange={ (e) => {this.setState({ verifyObj: e.target.value })}  }/>
+                  <button
+                    className="btn btn-primary float-right btn-listing-create"
+                    onClick={() => this.onOfferListing(formListing, JSON.parse(this.state.verifyObj))}
+                    ga-category="create_listing"
+                    ga-label="review_step_done"
+                  >
+                    <FormattedMessage
+                      id={'listing-create.offerButtonLabel'}
+                      defaultMessage={'I want this'}
+                    />
+                  </button>
+                </div>}
               </div>
             )}
             {step !== this.STEP.AVAILABILITY &&

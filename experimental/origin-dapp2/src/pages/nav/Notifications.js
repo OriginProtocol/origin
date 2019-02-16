@@ -13,14 +13,16 @@ import NotificationRow from 'pages/notifications/NotificationRow'
 class NotificationsNav extends Component {
   render() {
     const vars = { first: 5, id: this.props.wallet }
+    const skip = !this.props.wallet || !this.props.open
     return (
-      <Query query={query} variables={vars} skip={!this.props.wallet}>
-        {({ loading, error, data }) => {
-          if (loading || error) {
-            return null
-          }
-          return <NotificationsDropdown {...this.props} data={data} />
-        }}
+      <Query query={query} variables={vars} skip={skip}>
+        {({ data, loading }) => (
+          <NotificationsDropdown
+            {...this.props}
+            data={data}
+            loading={loading}
+          />
+        )}
       </Query>
     )
   }
@@ -45,7 +47,7 @@ class NotificationsDropdown extends Component {
       return <Redirect to={`/purchases/${this.state.redirect.offer.id}`} push />
     }
 
-    const { data, open, onOpen, onClose } = this.props
+    const { data, open, onOpen, onClose, loading } = this.props
 
     const { nodes, totalCount } = get(
       data,
@@ -62,15 +64,21 @@ class NotificationsDropdown extends Component {
         open={open}
         onClose={() => onClose()}
         content={
-          <NotificationsContent
-            totalCount={totalCount}
-            nodes={nodes}
-            onClose={() => onClose()}
-            onClick={node => {
-              this.setState({ redirect: node })
-              onClose()
-            }}
-          />
+          loading ? (
+            <div className="dropdown-menu dropdown-menu-right show p-3">
+              Loading...
+            </div>
+          ) : (
+            <NotificationsContent
+              totalCount={totalCount}
+              nodes={nodes}
+              onClose={() => onClose()}
+              onClick={node => {
+                this.setState({ redirect: node })
+                onClose()
+              }}
+            />
+          )
         }
       >
         <a

@@ -34,9 +34,10 @@ export default ListingDetail
 require('react-styl')(`
   .tx-listing-detail
     border: 1px solid var(--light)
-    border-radius: 5px
+    border-radius: var(--default-radius)
     padding: 1rem
     display: flex
+    margin-bottom: 2rem
     .main-pic
       width: 200px
       min-height: 150px

@@ -75,7 +75,10 @@
     "schema.resumes": "เรซูเม่",
     "schema.volunteers": "อาสาสมัคร"
   },
-  "odYsB": "ความคิดเห็น",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "แอ็พพลิเคชันการกระจายข้อมูล Origin ช่วยให้ผู้ซื้อและผู้ขายสามารถทำธุรกรรมได้โดยไม่ต้องหาพ่อค้าคนกลางเช่าโดยใช้ Ethereum blockchain และ IPFS",
@@ -83,12 +86,15 @@
   "421TH8": "เยี่ยมชม Github ของเรา",
   "1xF0Sp": "การซื้อ",
   "3i2AJC": "เพิ่มรายการ",
+  "2AYKWR": "This page has been machine translated, see any errors?",
+  "rlRRa": "Help Translate",
   "1r15SU": "ยืนยันบัญชี Airbnb ของคุณ",
   "4iptAy": "ป้อน Url โปรไฟล์ Airbnb ด้านล่าง",
   "1jSLWC": "ผู้ใช้รายอื่นจะทราบว่าคุณมีโปรไฟล์ Airbnb ที่ได้รับการยืนยันแล้ว",
   "561FZ": "ยกเลิก",
   "47VMoo": "ไปที่เว็บไซต์ Airbnb แก้ไขโปรไฟล์ของคุณและวางข้อความต่อไปนี้ลงในรายละเอียดโปรไฟล์",
   "4ppTCb": "ดำเนินการต่อเมื่อป้อนรหัสยืนยันในโปรไฟล์ Airbnb ของคุณแล้ว",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"

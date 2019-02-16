@@ -147,5 +147,17 @@ export async function identities(
 
 export default {
   id: contract => contract.options.address,
-  identities
+  identities,
+  facebookAuthUrl: async () => {
+    const bridgeServer = contracts.config.bridge
+    if (!bridgeServer) {
+      return null
+    }
+    const authUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
+    const response = await fetch(authUrl, {
+      headers: { 'content-type': 'application/json' }
+    })
+    const authData = await response.json()
+    return authData.url
+  }
 }

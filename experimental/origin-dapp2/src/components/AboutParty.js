@@ -110,7 +110,7 @@ export default AboutParty
 require('react-styl')(`
   .about-party
     background: var(--pale-grey-eight)
-    border-radius: 5px
+    border-radius: var(--default-radius)
     padding: 1rem
     font-size: 14px
     font-weight: normal

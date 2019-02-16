@@ -25,7 +25,7 @@ const offerStatusToBuyerNotificationType = {
 const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
-class V00_MarkeplaceAdapter {
+class V00_MarketplaceAdapter {
   constructor({ contractService, blockEpoch }) {
     this.web3 = contractService.web3
     this.contractService = contractService
@@ -33,6 +33,15 @@ class V00_MarkeplaceAdapter {
     this.tokenContractName = 'OriginToken'
     this.blockEpoch = blockEpoch || 0
     this.contract = null
+  }
+
+
+  toListingID(listingIndex) {
+    return listingIndex
+  }
+
+  toListingIndex(listingID) {
+    return listingID
   }
 
   async getContract() {
@@ -652,4 +661,4 @@ class V00_MarkeplaceAdapter {
   }
 }
 
-export default V00_MarkeplaceAdapter
+export default V00_MarketplaceAdapter

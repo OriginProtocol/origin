@@ -75,7 +75,10 @@
     "schema.resumes": "Currículos",
     "schema.volunteers": "Voluntários"
   },
-  "odYsB": "Avaliações",
+  "37AG7y": {
+    "*": "{number} Reviews",
+    "_1": "1 Review"
+  },
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "O aplicativo Origin descentralizado permite que compradores e vendedores realizem transações sem intermediários que buscam renda usando o blockchain Ethereum e o IPFS.",
@@ -83,12 +86,15 @@
   "421TH8": "Visite nosso Github",
   "1xF0Sp": "Compras",
   "3i2AJC": "Adicionar um anúncio",
+  "2AYKWR": "This page has been machine translated, see any errors?",
+  "rlRRa": "Help Translate",
   "1r15SU": "Confirme sua conta do Airbnb",
   "4iptAy": "Digite o perfil do Airbnb Url abaixo",
   "1jSLWC": "Outros usuários saberão que você tem um perfil verificado do Airbnb.",
   "561FZ": "Cancelar",
   "47VMoo": "Ir para o site Airbnb, edite seu perfil e cole o seguinte texto na descrição do perfil.",
   "4ppTCb": "Continue assim que o código de confirmação for inserido no seu perfil do Airbnb.",
+  "4mIku4": "All",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"

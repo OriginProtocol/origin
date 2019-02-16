@@ -11,26 +11,29 @@ class WaitForFinalize extends Component {
     const { offer } = this.props
     return (
       <div className="transaction-progress">
-        <h4>Next Step:</h4>
-        <div className="next-step">Wait for buyer to confirm receipt</div>
-        <div className="help">
-          Make sure you fulfill the order and wait for the buyer’s confirmation
-        </div>
-        <button
-          className="btn btn-link"
-          onClick={() => this.setState({ open: true })}
-          children=""
-        >
-          View Fulfillment Checklist &rsaquo;
-        </button>
+        <div className="top">
+          <h4>Next Step:</h4>
+          <div className="next-step">Wait for buyer to confirm receipt</div>
+          <div className="help">
+            Make sure you fulfill the order and wait for the buyer’s
+            confirmation
+          </div>
+          <button
+            className="btn btn-link"
+            onClick={() => this.setState({ open: true })}
+            children=""
+          >
+            View Fulfillment Checklist &rsaquo;
+          </button>
 
-        <DisputeOffer
-          offer={this.props.offer}
-          party="seller"
-          className="btn btn-link withdraw mt-3"
-        >
-          Report a Problem
-        </DisputeOffer>
+          <DisputeOffer
+            offer={this.props.offer}
+            party="seller"
+            className="btn btn-link withdraw mt-3"
+          >
+            Report a Problem
+          </DisputeOffer>
+        </div>
 
         <div className="stages">
           <EventTick className="active bg" event={offer.createdEvent}>
