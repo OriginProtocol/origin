@@ -37,6 +37,21 @@ class Configure extends React.Component {
     this.setState({ redirect: '/metamask' })
   }
 
+  componentDidMount() {
+    // Handle the case where filter by own listings is enabled but the Ethereum
+    // address is different to the currently active web3 account (which will
+    // populate the config.marketplacePublisher attribute)
+    if (
+      this.state.config.filters.listings.marketplacePublisher &&
+      this.state.config.filters.listings.marketplacePublisher !==
+        web3.eth.accounts[0]
+    ) {
+      this.setListingFilters({
+        marketplacePublisher: web3.eth.accounts[0]
+      })
+    }
+  }
+
   // Retrieve the category object from the filter value in the config
   getCategoryFromConfig() {
     if (!this.props.config.filters.listings.category) return null
