@@ -244,8 +244,8 @@ export const AcceptOfferMutation = gql`
 `
 
 export const AddFundsMutation = gql`
-  mutation AddFunds($offerID: String!, $amount: String!, $from: String) {
-    addFunds(offerID: $offerID, amount: $amount, from: $from) {
+  mutation AddFunds($offerID: String!, $value: String!, $from: String) {
+    addFunds(offerID: $offerID, value: $value, from: $from) {
       id
     }
   }
@@ -254,10 +254,10 @@ export const AddFundsMutation = gql`
 export const UpdateRefundMutation = gql`
   mutation UpdateRefundMutation(
     $offerID: String!
-    $amount: String!
+    $value: String!
     $from: String
   ) {
-    updateRefund(offerID: $offerID, amount: $amount, from: $from) {
+    updateRefund(offerID: $offerID, value: $value, from: $from) {
       id
     }
   }

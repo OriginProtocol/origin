@@ -143,7 +143,7 @@ describe('Marketplace', function() {
           from: Buyer,
           finalizes: 123,
           affiliate: ZeroAddress,
-          value: '0.005',
+          amount: '0.005',
           currency: ZeroAddress,
           arbitrator: Arbitrator,
           quantity: 1
@@ -170,7 +170,7 @@ describe('Marketplace', function() {
           from: Buyer,
           finalizes: 123,
           affiliate: ZeroAddress,
-          value: '0.01',
+          amount: '0.01',
           currency: ZeroAddress,
           arbitrator: Arbitrator,
           quantity: 1
@@ -211,7 +211,7 @@ describe('Marketplace', function() {
         {
           offerID: '999-0-0-1',
           from: Buyer,
-          value: '0.015',
+          amount: '0.015',
         },
         true
       )
@@ -328,7 +328,7 @@ describe('Marketplace', function() {
           from: Buyer,
           finalizes: 123,
           affiliate: Affiliate,
-          value: '0.1',
+          amount: '0.1',
           currency: ZeroAddress,
           arbitrator: Arbitrator,
           quantity: 1
@@ -404,7 +404,7 @@ describe('Marketplace', function() {
           from: Buyer,
           finalizes: 123,
           affiliate: Affiliate,
-          value: '0.01',
+          amount: '0.01',
           currency: ZeroAddress,
           arbitrator: Arbitrator,
           quantity: 1
@@ -426,7 +426,7 @@ describe('Marketplace', function() {
           from: Buyer,
           finalizes: 123,
           affiliate: Affiliate,
-          value: '0.01',
+          amount: '0.01',
           currency: ZeroAddress,
           arbitrator: Arbitrator,
           quantity: 1
@@ -476,7 +476,7 @@ describe('Marketplace', function() {
           from: Buyer,
           finalizes: 123,
           affiliate: Affiliate,
-          value: '0.02',
+          amount: '0.02',
           currency: ZeroAddress,
           arbitrator: Arbitrator,
           quantity: 2
@@ -666,7 +666,7 @@ describe('Marketplace', function() {
             from: Buyer,
             finalizes: 123,
             affiliate: Affiliate,
-            value: '0.05',
+            amount: '0.05',
             currency: ZeroAddress,
             arbitrator: Arbitrator,
             quantity: 5
@@ -760,7 +760,7 @@ describe('Marketplace', function() {
         from: Buyer,
         finalizes: 123,
         affiliate: ZeroAddress,
-        value: '0.01',
+        amount: '0.01',
         currency: ZeroAddress,
         arbitrator: Arbitrator,
         quantity: 1

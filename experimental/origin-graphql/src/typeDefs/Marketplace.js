@@ -77,7 +77,7 @@ module.exports = `
       listingID: ID!
       finalizes: Int
       commission: String
-      value: String
+      amount: String
       currency: String
       from: String
       withdraw: String
@@ -114,7 +114,7 @@ module.exports = `
     withdrawOffer(offerID: ID!, from: String): Transaction
     finalizeOffer(offerID: ID!, from: String, rating: Int, review: String): Transaction
     disputeOffer(offerID: ID!, data: String!, from: String): Transaction
-    addFunds(offerID: ID!, value: String!, from: String): Transaction
+    addFunds(offerID: ID!, amount: String!, from: String): Transaction
     updateRefund(offerID: ID!, amount: String!, from: String): Transaction
   }
 
@@ -281,7 +281,7 @@ module.exports = `
     history: [OfferHistory]
 
     # On-Chain
-    value: String
+    amount: String
     commission: String
     refund: String
     currency: String

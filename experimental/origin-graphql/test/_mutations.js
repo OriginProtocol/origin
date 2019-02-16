@@ -102,7 +102,7 @@ const MakeOffer = gql`
     $finalizes: Int
     $affiliate: String
     $commission: String
-    $value: String
+    $amount: String
     $currency: String
     $arbitrator: String
     $data: MakeOfferInput
@@ -115,7 +115,7 @@ const MakeOffer = gql`
       finalizes: $finalizes
       affiliate: $affiliate
       commission: $commission
-      value: $value
+      amount: $amount
       currency: $currency
       arbitrator: $arbitrator
       data: $data
@@ -161,8 +161,8 @@ const AddData = gql`
 `
 
 const AddFunds = gql`
-  mutation AddFunds($offerID: String!, $value: String!, $from: String) {
-    addFunds(offerID: $offerID, value: $value, from: $from) {
+  mutation AddFunds($offerID: String!, $amount: String!, $from: String) {
+    addFunds(offerID: $offerID, amount: $amount, from: $from) {
       id
     }
   }

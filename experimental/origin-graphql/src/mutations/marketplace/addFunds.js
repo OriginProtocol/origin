@@ -12,11 +12,11 @@ async function addFunds(_, data) {
 
   // TODO: Finish support for ERC20 offers
   // Currently assumes value is priced in ETH
-  const value = contracts.web3.utils.toWei(data.value, 'ether')
+  const amount = contracts.web3.utils.toWei(data.amount, 'ether')
 
   const tx = contracts.marketplaceExec.methods
-    .addFunds(listingId, offerId, ipfsHash, value)
-    .send({ gas: cost.addFunds, from, value: value })
+    .addFunds(listingId, offerId, ipfsHash, amount)
+    .send({ gas: cost.addFunds, from, value: amount })
 
   return txHelper({ tx, from, mutation: 'addFunds' })
 }

@@ -39,11 +39,11 @@ async function makeOffer(_, data) {
   )
 
   // TODO: Finish support for ERC20 offers
-  // Currently assumes value is priced in ETH
+  // Currently assumes amount is priced in ETH
   if (data.currency != ZeroAddress) {
     throw new Error('ERC20 offers not currently supported')
   }
-  const value = contracts.web3.utils.toWei(data.value, 'ether')
+  const amount = contracts.web3.utils.toWei(data.amount, 'ether')
   const arbitrator = data.arbitrator || contracts.config.arbitrator
 
   const { listingId } = parseId(data.listingID)
@@ -53,7 +53,7 @@ async function makeOffer(_, data) {
     ipfsData.finalizes,
     affiliate,
     commission,
-    value,
+    amount,
     data.currency || ZeroAddress,
     arbitrator
   ]
@@ -65,7 +65,7 @@ async function makeOffer(_, data) {
   const tx = marketplace.methods.makeOffer(...args).send({
     gas: cost.makeOffer,
     from: buyer,
-    value
+    value: amount
   })
   return txHelper({ tx, from: buyer, mutation: 'makeOffer' })
 }
@@ -106,7 +106,7 @@ async function toIpfsData(data) {
     listingType: 'unit',
     unitsPurchased: Number.parseInt(data.quantity),
     totalPrice: {
-      amount: data.value,
+      amount: data.amount,
       currency: 'ETH'
     },
     commission,
