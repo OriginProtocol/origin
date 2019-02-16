@@ -101,10 +101,20 @@ android {
         applicationId "com.origincatcher"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         ndk {
             abiFilters "armeabi-v7a", "x86"
+        }
+    }
+    signingConfigs {
+        release {
+            if (project.hasProperty('ORIGIN_RELEASE_STORE_FILE')) {
+                storeFile file(ORIGIN_RELEASE_STORE_FILE)
+                storePassword ORIGIN_RELEASE_STORE_PASSWORD
+                keyAlias ORIGIN_RELEASE_KEY_ALIAS
+                keyPassword ORIGIN_RELEASE_KEY_PASSWORD
+            }
         }
     }
     splits {
@@ -119,6 +129,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -137,11 +148,11 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-push-notification')
-    compile project(':react-native-uuid-generator')
-    compile project(':react-native-webview')
-    compile project(':react-native-camera')
-    compile project(':react-native-randombytes')
+    implementation project(':react-native-push-notification')
+    implementation project(':react-native-uuid-generator')
+    implementation project(':react-native-webview')
+    implementation project(':react-native-camera')
+    implementation project(':react-native-randombytes')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"

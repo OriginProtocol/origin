@@ -38,7 +38,7 @@
     "react-native-qrcode-scanner": "^1.1.0",
     "react-native-randombytes": "^3.5.1",
     "react-native-uuid-generator": "^5.0.0",
-    "react-native-webview": "^2.14.3",
+    "react-native-webview": "^5.2.1",
     "react-navigation": "^2.2.5",
     "react-redux": "^5.0.7",
     "redux": "^4.0.1",

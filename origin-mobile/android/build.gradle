@@ -1,4 +1,32 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+import groovy.json.JsonSlurper
+
+ext.kotlin_version = '1.3.21'
+
+/**
+ * Versioning by package.json
+ * Inspired by https://medium.com/@andr3wjack/versioning-react-native-apps-407469707661
+ */
+ext.versioning = [
+    getNpmVersion: { ->
+        def inputFile = new File("../package.json")
+        def packageJson = new JsonSlurper().parseText(inputFile.text)
+        return packageJson["version"]
+    },
+    getNpmVersionArray: { -> // major [0], minor [1], patch [2]
+        def (major, minor, patch) = versioning.getNpmVersion().tokenize('.')
+        return [Integer.parseInt(major), Integer.parseInt(minor), Integer.parseInt(patch)] as int[]
+    }
+]
+
+subprojects {
+    ext {
+        def npmVersion = versioning.getNpmVersionArray()
+        versionMajor = npmVersion[0]
+        versionMinor = npmVersion[1]
+        versionPatch = npmVersion[2]
+    }
+}
 
 buildscript {
     ext {
@@ -18,7 +46,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.3.1'
         classpath 'com.google.gms:google-services:4.0.1'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -40,6 +68,6 @@ allprojects {
 
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    gradleVersion = '4.10'
     distributionUrl = distributionUrl.replace("bin", "all")
 }
