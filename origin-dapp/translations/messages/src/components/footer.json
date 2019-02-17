@@ -5,10 +5,22 @@
   },
   {
     "id": "footer.websiteLink",
-    "defaultMessage": "Visit our Website"
+    "defaultMessage": "Learn more about Origin"
   },
   {
-    "id": "footer.githubLink",
-    "defaultMessage": "Visit our Github"
+    "id": "footer.mpLink",
+    "defaultMessage": "Create Your Own Marketplace"
+  },
+  {
+    "id": "footer.aupLink",
+    "defaultMessage": "Acceptance Use Policy"
+  },
+  {
+    "id": "footer.tosLink",
+    "defaultMessage": "Terms"
+  },
+  {
+    "id": "footer.privacyLink",
+    "defaultMessage": "Privacy"
   }
 ]
