@@ -63,8 +63,8 @@ export function validateSignature(req, res, next) {
     // Validate signature matches
     const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)
     // Address from recover is checksummed so lower case it
-    if (signer.toLowerCase() !== address.toLowerCase()) {
-      res.status(400).send('Signature was invalid')
+    if (!signature || signer.toLowerCase() !== address.toLowerCase()) {
+      return res.status(400).send('Signature was invalid')
     }
   }
   logger.debug('Validated signature of configuration')
