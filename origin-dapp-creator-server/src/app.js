@@ -60,7 +60,7 @@ app.post('/config', async (req, res) => {
       }
     } catch (error) {
       logger.error(error)
-      res.status(500).send('Failed to configure DNS records')
+      return res.status(500).send('Failed to configure DNS records')
     }
   }
 
@@ -85,7 +85,11 @@ app.post('/config/preview', async (req, res) => {
   }
 
   // Remove hash of preview config from pinset because this can be GCed
-  ipfsClient.pin.rm(ipfsHash)
+  ipfsClient.pin.rm(ipfsHash, (err, pinset) => {
+    if (err) {
+      logger.warn(`Could not unpin old configuration: ${err}`)
+    }
+  })
 
   res.send(ipfsHash)
 })
