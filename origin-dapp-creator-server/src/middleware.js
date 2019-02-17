@@ -13,7 +13,9 @@ export async function validateSubdomain(req, res, next) {
   if (config.subdomain) {
     // Check for subdomain blacklisting
     if (subdomainBlacklist.includes(config.subdomain.toLowerCase())) {
-      logger.warn(`Attempted publication to blacklisted subdomain: ${config.subdomain}`)
+      logger.warn(
+        `Attempted publication to blacklisted subdomain: ${config.subdomain}`
+      )
       return res.status(400).send('Subdomain is not allowed')
     }
 
@@ -27,7 +29,9 @@ export async function validateSubdomain(req, res, next) {
     if (req.dnsRecord) {
       req.existingConfigIpfsHash = parseDnsTxtRecord(req.dnsRecord.data[0])
       if (!req.existingConfigIpfsHash) {
-        logger.warn(`Failed to retrieve existing DApp configuration: ${config.subdomain}`)
+        logger.warn(
+          `Failed to retrieve existing DApp configuration: ${config.subdomain}`
+        )
         return res
           .status(500)
           .send('An error occurred retrieving an existing DApp configuration')
@@ -42,7 +46,9 @@ export async function validateSubdomain(req, res, next) {
           // Attempting to publish a subdomain where the publisher Ethereum
           // address is different from the address of the previous
           // publication
-          logger.warn(`Publication overwrite address mismatch: ${config.subdomain}`)
+          logger.warn(
+            `Publication overwrite address mismatch: ${config.subdomain}`
+          )
           return res
             .status(400)
             .send('Subdomain is in use by another Ethereum adddress')
