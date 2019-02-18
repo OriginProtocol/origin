@@ -12,12 +12,12 @@ const start = async () => {
     console.log(chalk`\n{bold.hex('#1a82ff') ⬢  Starting Local Blockchain }\n`)
     await startGanache()
   }
-//  console.log(chalk`\n{bold.hex('#26d198') ⬢  Deploying Smart Contracts }\n`)
-//  await deployContracts()
- // console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Starting Local IPFS }\n`)
-//  await startIpfs()
+  console.log(chalk`\n{bold.hex('#26d198') ⬢  Deploying Smart Contracts }\n`)
+  await deployContracts()
+  console.log(chalk`\n{bold.hex('#6e3bea') ⬢  Starting Local IPFS }\n`)
+  await startIpfs()
 
-//  await debugOutput()
+  await debugOutput()
 }
 
 start()

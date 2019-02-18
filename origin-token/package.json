@@ -23,9 +23,9 @@
   "dependencies": {
     "bignumber.js": "^8.0.1",
     "origin-contracts": "^0.8.6",
-    "truffle-hdwallet-provider": "1.0.4",
+    "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
-    "web3": "^1.0.0-beta.34"
+    "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "chai": "^4.2.0",

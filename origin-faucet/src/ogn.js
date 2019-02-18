@@ -11,7 +11,7 @@ class OgnDistributor {
     this.token = new Token(config)
 
     // Needed to be able to use process as a route in Express.
-    this.process  = this.process.bind(this)
+    this.process = this.process.bind(this)
   }
 
   async process(req, res, next) {

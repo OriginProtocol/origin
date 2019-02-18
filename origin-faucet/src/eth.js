@@ -1,7 +1,4 @@
 const BigNumber = require('bignumber.js')
-const PrivateKeyProvider = require('truffle-privatekey-provider')
-const HDWalletProvider = require('truffle-hdwallet-provider')
-
 const Sequelize = require('sequelize')
 const Web3 = require('web3')
 
@@ -10,7 +7,6 @@ const db = require('./models')
 const enums = require('./enums')
 
 class EthDistributor {
-
   constructor(config) {
     this.config = config
 
@@ -36,7 +32,7 @@ class EthDistributor {
     this.hotWalletAddress = account.address
 
     // Needed to be able to use the process method as a route in Express.
-    this.process  = this.process.bind(this)
+    this.process = this.process.bind(this)
   }
 
   error(res, message) {
@@ -122,10 +118,14 @@ class EthDistributor {
       })
 
       // Issue the blockchain transaction.
-      logger.info(`Blockchain call to send ${amount.toFixed()} to ${ethAddress} from ${this.hotWalletAddress}`)
+      logger.info(
+        `Blockchain call to send ${amount.toFixed()} to ${ethAddress} from ${
+          this.hotWalletAddress
+        }`
+      )
 
       // FIXME(franck): calculate nonce so as to handle parallel
-      // transaction issued from hotwallet.
+      // transactions issued from the same hotwallet.
       const receipt = await await this.web3.eth.sendTransaction({
         from: this.hotWalletAddress,
         to: ethAddress,

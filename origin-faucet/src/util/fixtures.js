@@ -1,7 +1,6 @@
 const db = require('./models')
 
 async function createCampaign() {
-
   await db.FaucetCampaign.destroy({
     where: {},
     truncate: true
