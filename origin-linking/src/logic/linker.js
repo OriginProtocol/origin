@@ -18,7 +18,7 @@ const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
 
 const FIREBASE_SERVICE_JSON = process.env.FIREBASE_SERVICE_JSON
-const FIREBASE_DB_URL = process.env.FIREBASE_DB_URL || 'https://mikeshultz-origin-mobile-test.firebaseio.com' // TODO
+const FIREBASE_DB_URL = process.env.FIREBASE_DB_URL || 'https://origin-wallet.firebaseio.com'
 
 class Linker {
   constructor({}={}) {
