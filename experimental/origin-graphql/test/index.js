@@ -7,6 +7,7 @@ import contracts, { setNetwork } from '../src/contracts'
 import { getOffer, mutate } from './_helpers'
 import queries from './_queries'
 import mutations from './_mutations'
+import { trackGas, showGasTable } from './_gasTable'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -16,9 +17,14 @@ describe('Marketplace', function() {
 
   before(async function() {
     setNetwork('test')
+    trackGas()
     const res = await client.query({ query: queries.GetNodeAccounts })
     const nodeAccounts = get(res, 'data.web3.nodeAccounts').map(a => a.id)
     ;[Admin, Seller, Buyer, Arbitrator, Affiliate] = nodeAccounts
+  })
+  
+  after(async function(){
+    showGasTable()
   })
 
   it('should deploy the token contract', async function() {
