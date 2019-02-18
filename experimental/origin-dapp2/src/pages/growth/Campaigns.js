@@ -140,6 +140,12 @@ function Action(props) {
     foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
     title = 'Connect your Facebook Profile'
     infoText = 'Connect your Facebook Profile in attestations'
+  } else if (type === 'listingCreated'){
+    title = 'Create a listing'
+    infoText = 'Create a new listing on the marketplace'
+  } else if (type === 'listingPurchased'){
+    title = 'Purchase a listing'
+    infoText = 'Purchase a listing on marketplace'
   }
 
   const renderReward = (amount, renderPlusSign) => {
@@ -221,19 +227,45 @@ function ActionList(props) {
 
 function Campaign(props) {
   const { campaign, accountId } = props
-  const timeLeftDays = dayjs(campaign.endDate).diff(dayjs(), 'day')
-  const timeLeftHours = dayjs(campaign.endDate).diff(dayjs(), 'hour') % 24
-  const timeLeftMinutes = dayjs(campaign.endDate).diff(dayjs(), 'minute') % 60
+  const {
+    startDate,
+    endDate,
+    status,
+    rewardEarned,
+    actions,
+    name
+  } = campaign
 
-  let timeLeftLabel = ''
-  if (timeLeftDays > 0) {
-    timeLeftLabel += ` ${timeLeftDays}d`
+  const formatTimeDifference = (start, end) => {
+    let timeLabel = ''
+    const timeDiffDays = dayjs(end).diff(dayjs(start), 'day')
+    const timeDiffHours = dayjs(end).diff(dayjs(start), 'hour') % 24
+    const timeDiffMinutes = dayjs(end).diff(dayjs(start), 'minute') % 60
+
+    if (timeDiffDays > 0) {
+      timeLabel += ` ${timeDiffDays}d`
+    }
+    if (timeDiffHours > 0) {
+      timeLabel += ` ${timeDiffHours}h`
+    }
+    if (timeDiffMinutes > 0) {
+      timeLabel += ` ${timeDiffMinutes}m`
+    }
+
+    return timeLabel
   }
-  if (timeLeftHours > 0) {
-    timeLeftLabel += ` ${timeLeftHours}h`
-  }
-  if (timeLeftMinutes > 0) {
-    timeLeftLabel += ` ${timeLeftMinutes}m`
+
+  let timeLabel = ''
+  let subTitleText = ''
+
+  if (status === 'active') {
+    timeLabel = `Time left:${formatTimeDifference(Date.now(), endDate)}`
+    subTitleText = 'Get Origin Tokens by completing tasks below'
+  } else if (status === 'pending') {
+    timeLabel = `Starts in:${formatTimeDifference(Date.now(), startDate)}`
+    subTitleText = 'Campaign has not started yet'
+  } else if (status === 'completed') {
+    subTitleText = 'This campaign has finished'
   }
 
   return (
@@ -249,7 +281,7 @@ function Campaign(props) {
           if (tokenHolder && tokenHolder.token){
             decimalDevision = toBN(10).pow(toBN(tokenHolder.token.decimals))
             // campaign rewards converted normalized to token value according to number of decimals
-            tokensEarned = toBN(campaign.rewardEarned ? campaign.rewardEarned.amount : 0)
+            tokensEarned = toBN(rewardEarned ? rewardEarned.amount : 0)
               .div(decimalDevision)
             tokenEarnProgress = Math.min(100, tokensEarned.toString())
           }
@@ -259,31 +291,34 @@ function Campaign(props) {
           return ['exhausted', 'completed'].includes(action.status)
         }
 
-        const completedActions = campaign.actions.filter(action => actionCompleted(action))
-        const nonCompletedActions = campaign.actions.filter(action => !actionCompleted(action))
+        console.log("ACTIONS: ", actions)
+        const completedActions = actions.filter(action => actionCompleted(action))
+        const nonCompletedActions = actions.filter(action => !actionCompleted(action))
 
         return (
           <Fragment>
             <div className="d-flex justify-content-between">
-              <h1 className="mb-2 pt-3">{campaign.name}</h1>
-              <a>
+              <h1 className="mb-2 pt-3">{name}</h1>
+              <a className="info-icon">
                 <img src="images/growth/info-icon-inactive.svg" />
               </a>
             </div>
-            <div>Get Origin Tokens by completing tasks below</div>
+            <div>{subTitleText}</div>
             <div className="d-flex justify-content-between campaign-info">
               <div>
-                <span className="font-weight-bold">Tokens earned</span>
-                <img className="ogn-icon pl-2 pr-1" src="images/ogn-icon.svg" />
-                <span className="ogn-amount font-weight-bold">{tokensEarned.toString()}</span>
+              {status !== 'pending' && <Fragment>
+                  <span className="font-weight-bold">Tokens earned</span>
+                  <img className="ogn-icon pl-2 pr-1" src="images/ogn-icon.svg" />
+                  <span className="ogn-amount font-weight-bold">{tokensEarned.toString()}</span>
+                </Fragment> }
               </div>
-              <div className="font-weight-bold">Time left:{timeLeftLabel}</div>
+              <div className="font-weight-bold">{timeLabel}</div>
             </div>
             <ProgressBar progress={tokenEarnProgress} />
-            {nonCompletedActions.length > 0 &&
+            {status === 'active' && nonCompletedActions.length > 0 &&
               <ActionList actions={nonCompletedActions} decimalDevision={decimalDevision} />
             }
-            {completedActions.length > 0 && 
+            {status !== 'pending' && completedActions.length > 0 &&
               <ActionList title="Completed" actions={completedActions} decimalDevision={decimalDevision} />
             }
           </Fragment>
@@ -374,6 +409,10 @@ require('react-styl')(`
   .growth-campaigns.container
     max-width: 760px;
   .growth-campaigns
+    .info-icon
+      padding-top: 30px;
+    .info-icon img
+      width: 28px;
     .indicators
       font-size: 10px;
       color: #455d75;
