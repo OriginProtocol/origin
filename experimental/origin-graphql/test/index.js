@@ -703,4 +703,168 @@ describe('Marketplace', function() {
       await mutate(mutations.CreateListing, listingData)
     })
   })
+
+  describe('Dispute flow', async function() {
+    let listingIdx
+    let listingId
+    let offerIdx
+    let offerId
+
+    beforeEach(async function() {
+      // Create Listing
+      const listingData = {
+        deposit: '0',
+        depositManager: Arbitrator,
+        from: Seller,
+        data: {
+          title: 'Test Listing',
+          description: 'Test description',
+          price: {
+            currency: ZeroAddress,
+            amount: '0.01'
+          },
+          category: 'Test category',
+          subCategory: 'Test sub-category'
+        },
+        unitData: {
+          unitsTotal: 1
+        }
+      }
+      const listingEvents = await mutate(mutations.CreateListing, listingData, true)
+      assert(listingEvents.ListingCreated)
+      listingIdx  = listingEvents.ListingCreated.listingID
+      listingId = `999-0-${listingIdx}`
+
+      // Create Offer
+      const offerData = {
+        listingID: listingId,
+        from: Buyer,
+        finalizes: 123,
+        affiliate: ZeroAddress,
+        value: '0.01',
+        currency: ZeroAddress,
+        arbitrator: Arbitrator,
+        quantity: 1
+      }
+      const offerEvents = await mutate(mutations.MakeOffer, offerData, true)
+      assert(offerEvents.OfferCreated)
+      offerIdx  = offerEvents.OfferCreated.offerID
+      offerId = `999-0-${listingIdx}-${offerIdx}`
+
+      // Accept Offer
+      const acceptEvents = await mutate(
+        mutations.AcceptOffer,
+        {
+          offerID: offerId,
+          from: Seller
+        },
+        true
+      )
+      assert(acceptEvents.OfferAccepted)
+
+      // Dispute Offer
+      const disputeEvents = await mutate(
+        mutations.DisputeOffer,
+        {
+          offerID: offerId,
+          additionalDeposit: '0',
+          from: Seller,
+          data: JSON.stringify({})
+        },
+        true
+      )
+      assert(disputeEvents.OfferDisputed)
+    })
+
+    it('should allow a pay-seller ruling from an arbitrator', async function() {
+      // Rule on dispute
+      const rulingEvents = await mutate(
+        mutations.ExecuteRuling,
+        {
+          offerID: offerId,
+          from: Arbitrator,
+          ruling: 'pay-seller',
+          refund: '0.001',
+          commission: 'refund',
+          message: 'Buyer failed to show for non-refundable appointment.'
+        },
+        true
+      )
+      assert(rulingEvents.OfferRuling)
+    })
+
+    it('should allow a partial-refund ruling from an arbitrator', async function() {
+      // Rule on dispute
+      const rulingEvents = await mutate(
+        mutations.ExecuteRuling,
+        {
+          offerID: offerId,
+          from: Arbitrator,
+          ruling: 'partial-refund',
+          refund: contracts.web3.utils.toWei('0.001'),
+          commission: 'pay',
+          message: 'Product was shipped late, but was as described.'
+        },
+        true
+      )
+      assert(rulingEvents.OfferRuling)
+    })
+
+    it('should allow a refund-buyer ruling from an arbitrator', async function() {
+      // Rule on dispute
+      const events = await mutate(
+        mutations.ExecuteRuling,
+        {
+          offerID: offerId,
+          from: Arbitrator,
+          ruling: 'refund-buyer',
+          commission: 'pay',
+          message: 'No tracking number provided by seller.'
+        },
+        true
+      )
+      assert(events.OfferRuling)
+    })
+
+    it('should not allow an invalid ruling', async function() {
+      try{
+        await mutate(
+          mutations.ExecuteRuling,
+          {
+            offerID: offerId,
+            from: Arbitrator,
+            ruling: 'foo',
+            refund: contracts.web3.utils.toWei('0.003'),
+            commission: 'pay',
+            message: 'No tracking number provided by seller.'
+          },
+          true
+        )
+        assert(false)
+      } catch (e) {
+        assert(true)
+      }
+    })
+
+    it('should not allow an invalid commission', async function() {
+      try{
+        await mutate(
+          mutations.ExecuteRuling,
+          {
+            offerID: offerId,
+            from: Arbitrator,
+            ruling: 'pay-seller',
+            refund: contracts.web3.utils.toWei('0.001'),
+            commission: 'foobar',
+            message: 'No tracking number provided by seller.'
+          },
+          true
+        )
+        assert(false)
+      } catch (e) {
+        console.log(e)
+        assert(true)
+      }
+    })
+  })
 })

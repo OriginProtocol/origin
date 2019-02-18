@@ -159,6 +159,36 @@ const AddData = gql`
     }
   }
 `
+const DisputeOffer = gql`
+  mutation DisputeOffer($offerID: String!, $data: String!, $from: String) {
+    disputeOffer(offerID: $offerID, data: $data, from: $from) {
+      id
+    }
+  }
+`
+
+const ExecuteRuling = gql`
+  mutation ExecuteRuling(
+    $offerID: ID!,
+    $ruling: String!,
+    $commission: String!,
+    $message: String,
+    $refund: String,
+    $from: String
+  ) {
+    executeRuling(
+      offerID: $offerID,
+      ruling: $ruling,
+      commission: $commission,
+      message: $message,
+      refund: $refund,
+      from: $from
+    ) {
+      id
+    }
+  }
+`
+
 
 const UpdateTokenAllowance = gql`
   mutation UpdateTokenAllowance(
@@ -194,6 +224,8 @@ export default {
   AcceptOffer,
   FinalizeOffer,
   AddData,
+  DisputeOffer,
+  ExecuteRuling,
   UpdateTokenAllowance,
   TransferToken,
   AddAffiliate,
