@@ -81,7 +81,7 @@ require('react-styl')(`
       justify-content: space-between
 
     .category
-      font-family: Lato
+      font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
@@ -92,7 +92,7 @@ require('react-styl')(`
       margin-top: 0.75rem
 
     h5
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
       color: var(--dark)
@@ -105,7 +105,7 @@ require('react-styl')(`
       background: url(images/eth-icon.svg) no-repeat
       padding-left: 2rem
       line-height: 1.25rem
-      font-family: Lato
+      font-family: var(--default-font)
 
       .eth
         font-size: 18px

@@ -21,7 +21,7 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./origin-contracts/releases/0.8.5/build/ ./origin-contracts/build/
+COPY ./origin-contracts/releases/0.8.6/build/ ./origin-contracts/build/
 
 RUN npm run build --prefix origin-js
 RUN npm run build --prefix origin-linking

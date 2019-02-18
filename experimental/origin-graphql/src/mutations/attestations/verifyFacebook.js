@@ -1,20 +1,23 @@
 import contracts from '../../contracts'
 import get from 'lodash/get'
 
-async function verifyFacebook(_, { identity }) {
+async function verifyFacebook(_, { identity, authUrl }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
-    return { success: false }
+    return { success: false, reason: 'No bridge server configured' }
   }
-  const authUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
-  const response = await fetch(authUrl, {
-    headers: { 'content-type': 'application/json' }
-  })
 
-  const authData = await response.json()
+  if (!authUrl) {
+    const getAuthUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
+    const response = await fetch(getAuthUrl, {
+      headers: { 'content-type': 'application/json' }
+    })
+    const authData = await response.json()
+    authUrl = authData.url
+  }
 
   return new Promise(resolve => {
-    const fbWindow = window.open(authData.url, '', 'width=650,height=500')
+    const fbWindow = window.open(authUrl, '', 'width=650,height=500')
 
     const finish = async e => {
       const iframeData = String(e.data)

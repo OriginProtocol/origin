@@ -30,6 +30,7 @@ import markConversationRead from './messaging/markConversationRead'
 import deployToken from './token/deployToken'
 import transferToken from './token/transferToken'
 import updateTokenAllowance from './token/updateTokenAllowance'
+import useFaucet from './token/useFaucet'
 
 import deployIdentity from './identity/deployIdentity'
 import deployIdentityEvents from './identity/deployIdentityEvents'
@@ -42,6 +43,8 @@ import verifyFacebook from './attestations/verifyFacebook'
 import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
+
+import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
 
 export default {
   acceptOffer,
@@ -73,9 +76,11 @@ export default {
   setNetwork,
   toggleMetaMask,
   transferToken,
+  unlinkMobileWallet,
   updateListing,
   updateRefund,
   updateTokenAllowance,
+  useFaucet,
   verifyAirbnbCode,
   verifyEmailCode,
   verifyFacebook,

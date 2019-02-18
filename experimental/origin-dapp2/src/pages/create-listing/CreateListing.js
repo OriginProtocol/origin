@@ -120,19 +120,19 @@ require('react-styl')(`
   .create-listing
     padding-top: 3rem
     .gray-box
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 2rem
       background-color: var(--pale-grey-eight)
 
     .step
-      font-family: Lato
+      font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
       text-transform: uppercase
       margin-top: 0.75rem
     .step-description
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
       line-height: normal
@@ -146,4 +146,20 @@ require('react-styl')(`
         border-radius: 2rem
         padding: 0.625rem
         font-size: 18px
+
+  @media (max-width: 767.98px)
+    .create-listing
+      padding-top: 1rem
+      .actions
+        margin-top: 2rem
+        .btn
+          min-width: auto
+          flex: 1
+          margin: 0 0.5rem
+          &:first-child
+            margin-left: 0
+          &:last-child
+            margin-right: 0
+        margin-bottom: 2rem
+
 `)

@@ -4,7 +4,7 @@ import get from 'lodash/get'
 async function verifyAirbnbCode(_, { identity, airbnbUserId }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
-    return { success: false }
+    return { success: false, reason: 'No bridge server configured' }
   }
   const match = airbnbUserId.match(/([0-9]+)/)
   if (!match) {

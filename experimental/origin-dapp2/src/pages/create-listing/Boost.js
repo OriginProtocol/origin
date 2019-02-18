@@ -235,7 +235,7 @@ require('react-styl')(`
     .boost-totals,.no-ogn
       padding: 2rem
       border: 1px solid var(--golden-rod)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       text-align: center
       background-color: var(--golden-rod-light)
     .boost-totals
@@ -344,13 +344,4 @@ require('react-styl')(`
       &.premium input::-webkit-slider-thumb
         box-shadow: -1000px 0 0 990px var(--boost-premium)
 
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
 `)
