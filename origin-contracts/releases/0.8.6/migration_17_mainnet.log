@@ -1,0 +1,11 @@
+npx truffle migrate --network mainnet
+Configured truffle to use PrivateKey provider for Mainnet.
+Using network 'mainnet'.
+
+Running migration: 17_transfer_vA_ownership_for_mainnet.js
+  Running step...
+  ... 0x7493b213b905305a7c257a9a9f95a64a4ee984851613904945cfb798305c5060
+marketplace contract owner set to 0x8a1a4f77f9f0eb35fb9930696038be6220986c1b
+Saving successful migration to network...
+  ... 0x3e16f262c99db71142b403374b36c711a4f7350505f45600abda8ba23f43f44a
+Saving artifacts...

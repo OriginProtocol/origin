@@ -183,9 +183,6 @@ class AirbnbAttestation extends Component {
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
-              topic: result.claimType,
-              issuer: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', //result.issuer,
-              signature: result.signature,
               data: result.data,
               loading: false
             })

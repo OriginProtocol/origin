@@ -66,7 +66,7 @@ require('react-styl')(`
   .country-code
     cursor: pointer
     background-color: var(--dark-two)
-    border-radius: 5px
+    border-radius: var(--default-radius)
     padding: 0.5rem
     margin-right: 0.5rem
     display: flex

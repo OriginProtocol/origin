@@ -372,7 +372,7 @@ class Linker {
     await this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
     // send push notification via APN or fcm
-    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta, account), {call_id})
+    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta || {}, account), {call_id})
   }
 
   async walletCalled(walletToken, callId, linkId, sessionToken, result) {

@@ -18,33 +18,35 @@ class Buy extends Component {
       return <Redirect to={this.state.redirect} push />
     }
     return (
-      <Mutation
-        mutation={MakeOfferMutation}
-        onCompleted={({ makeOffer }) => {
-          this.setState({ waitFor: makeOffer.id })
-        }}
-        onError={errorData =>
-          this.setState({ waitFor: false, error: 'mutation', errorData })
-        }
-      >
-        {makeOffer => (
-          <>
-            <button
-              className={this.props.className}
-              onClick={() => this.onClick(makeOffer)}
-              children={this.props.children}
-            />
-            {this.renderWaitModal()}
-            {this.state.error && (
-              <TransactionError
-                reason={this.state.error}
-                data={this.state.errorData}
-                onClose={() => this.setState({ error: false })}
+      <>
+        <Mutation
+          mutation={MakeOfferMutation}
+          onCompleted={({ makeOffer }) => {
+            this.setState({ waitFor: makeOffer.id })
+          }}
+          onError={errorData =>
+            this.setState({ waitFor: false, error: 'mutation', errorData })
+          }
+        >
+          {makeOffer => (
+            <>
+              <button
+                className={this.props.className}
+                onClick={() => this.onClick(makeOffer)}
+                children={this.props.children}
               />
-            )}
-          </>
-        )}
-      </Mutation>
+              {this.renderWaitModal()}
+              {this.state.error && (
+                <TransactionError
+                  reason={this.state.error}
+                  data={this.state.errorData}
+                  onClose={() => this.setState({ error: false })}
+                />
+              )}
+            </>
+          )}
+        </Mutation>
+      </>
     )
   }
 
@@ -77,9 +79,13 @@ class Buy extends Component {
 
   renderWaitModal() {
     if (!this.state.waitFor) return null
-
+    const walletType = this.props.web3.walletType
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="OfferCreated">
+      <WaitForTransaction
+        hash={this.state.waitFor}
+        event="OfferCreated"
+        walletType={walletType}
+      >
         {({ event }) => (
           <div className="make-offer-modal success">
             <div className="success-icon" />
@@ -152,4 +158,12 @@ require('react-styl')(`
         margin-top: 1rem
         li
           margin-bottom: 0.5rem
+
+  @media (max-width: 767.98px)
+    .make-offer-modal
+      .btn
+        margin-top: 1rem
+      .spinner,.error-icon
+        margin-bottom: 1rem
+
 `)

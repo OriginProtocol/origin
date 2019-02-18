@@ -1,0 +1,15 @@
+[
+  { "name" : "id", "type" : "string" },
+  { "name" : "title", "type" : "string" },
+  { "name" : "price", "type" : "Money" },
+  { "name" : "commision", "type" : "Money" },
+  { "name" : "category", "type" : "string" },
+  { "name" : "type", "type" : "string" },
+  { "name" : "unitsTotal", "type" : "int256" },
+  { "name" : "createDate", "type" : "string" },
+  { "name" : "deposit", "type": "string" },
+  { "name" : "depositManager", "type": "address" },
+  { "name" : "updateVersion", "type" : "uint256" },
+  { "name" : "status", "type": "string"},
+  { "name" : "raw_ipfs_hash", "type" : "bytes32" }
+]

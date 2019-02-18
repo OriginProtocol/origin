@@ -37,23 +37,23 @@ class Review extends Component {
 
           <div className="detail">
             <div className="row">
-              <div className="col-3 label">Title</div>
-              <div className="col-9">{listing.title}</div>
+              <div className="col-sm-4 col-lg-3 label">Title</div>
+              <div className="col-sm-8 col-lg-9">{listing.title}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">Cagegory</div>
-              <div className="col-9">
+              <div className="col-sm-4 col-lg-3 label">Cagegory</div>
+              <div className="col-sm-8 col-lg-9">
                 <Category listing={listing} />
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">Description</div>
-              <div className="col-9">{listing.description}</div>
+              <div className="col-sm-4 col-lg-3 label">Description</div>
+              <div className="col-sm-8 col-lg-9">{listing.description}</div>
             </div>
             {isFractional ? null : (
               <div className="row">
-                <div className="col-3 label">Listing Price</div>
-                <div className="col-9">
+                <div className="col-sm-4 col-lg-3 label">Listing Price</div>
+                <div className="col-sm-8 col-lg-9">
                   <CoinPrice price={listing.price} coin="eth" />
                   <div className="fiat">
                     ~ <Price amount={listing.price} />
@@ -63,13 +63,13 @@ class Review extends Component {
             )}
             {quantity <= 1 ? null : (
               <div className="row">
-                <div className="col-3 label">Quantity</div>
-                <div className="col-9">{listing.quantity}</div>
+                <div className="col-sm-4 col-lg-3 label">Quantity</div>
+                <div className="col-sm-8 col-lg-9">{listing.quantity}</div>
               </div>
             )}
             <div className="row">
-              <div className="col-3 label">Boost Level</div>
-              <div className="col-9">
+              <div className="col-sm-4 col-lg-3 label">Boost Level</div>
+              <div className="col-sm-8 col-lg-9">
                 <CoinPrice price={boost} coin="ogn" />
                 {isMulti ? ' / unit' : ''}
                 {isFractional ? ' / night' : ''}
@@ -77,15 +77,15 @@ class Review extends Component {
             </div>
             {!isMulti && !isFractional ? null : (
               <div className="row">
-                <div className="col-3 label">Boost Cap</div>
-                <div className="col-9">
+                <div className="col-sm-4 col-lg-3 label">Boost Cap</div>
+                <div className="col-sm-8 col-lg-9">
                   <CoinPrice price={listing.boostLimit} coin="ogn" />
                 </div>
               </div>
             )}
             <div className="row">
-              <div className="col-3 label">Photos</div>
-              <div className="col-9">
+              <div className="col-sm-4 col-lg-3 label">Photos</div>
+              <div className="col-sm-8 col-lg-9">
                 {listing.media.length ? (
                   <div className="photos">
                     {listing.media.map((image, idx) => (
@@ -103,8 +103,8 @@ class Review extends Component {
             </div>
             {!isFractional ? null : (
               <div className="row">
-                <div className="col-3 label">Availability</div>
-                <div className="col-9">
+                <div className="col-sm-4 col-lg-3 label">Availability</div>
+                <div className="col-sm-8 col-lg-9">
                   <Calendar
                     interactive={false}
                     small={true}
@@ -174,7 +174,7 @@ require('react-styl')(`
       font-size: 28px
     .detail
       border: 1px solid var(--light)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 1rem 2rem
       font-size: 18px
       font-weight: normal
@@ -199,13 +199,8 @@ require('react-styl')(`
         background-size: contain
         background-repeat: no-repeat
 
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
+  @media (max-width: 767.98px)
+    .create-listing .create-listing-review
+      .detail
+        padding: 1rem
 `)
