@@ -51,10 +51,14 @@ class Create extends React.Component {
       newState.titleError = 'Title is too short'
     }
 
+    const subdomainRe = /[^a-zA-Z0-9\-]/
+
     if (!this.state.subdomain) {
       newState.subdomainError = 'Subdomain is required'
     } else if (this.state.subdomain.length < 2) {
       newState.subdomainError = 'Subdomain is too short'
+    } else if (subdomainRe.test(this.state.subdomain)) {
+      newState.subdomainError = 'Subdomain contains invalid characters'
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
