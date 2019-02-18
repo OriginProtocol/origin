@@ -1,6 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.origincatcher">
 
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_icon"
+      android:resource="@mipmap/ic_launcher" />
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_color"
+      android:resource="@color/origin_blue" />
+
     <uses-feature android:name="android.hardware.camera.any" android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -8,10 +15,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <permission
-        android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <application
       android:name=".MainApplication"
@@ -46,16 +49,9 @@
       </receiver>
 
       <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
-      <service
-        android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerServiceGcm"
-        android:exported="false" >
-        <intent-filter>
-          <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-        </intent-filter>
-      </service>
-      <!--<service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="false" >
+      <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="false" >
         <intent-filter> <action android:name="com.google.firebase.MESSAGING_EVENT" /> </intent-filter>
-      </service>//-->
+      </service>
     </application>
 
 </manifest>

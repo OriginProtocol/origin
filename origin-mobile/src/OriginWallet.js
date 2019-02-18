@@ -879,7 +879,10 @@ class OriginWallet {
       await timeout(1000)
     }
     console.log("notification.message:", notification.message)
-    if (notification.data.newMessage)
+    if (!notification.data) {
+      console.log("notification has no data", notification)
+    }
+    if (notification.data && notification.data.newMessage)
     {
       if (notification.foreground)
       {
@@ -891,7 +894,7 @@ class OriginWallet {
         this.fireEvent(Events.SHOW_MESSAGES)
       }
     }
-    else if (notification.data.to_dapp && notification.data.url)
+    else if (notification.data && notification.data.to_dapp && notification.data.url)
     {
       if (notification.foreground)
       {
