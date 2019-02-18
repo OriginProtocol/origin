@@ -11,6 +11,13 @@ export async function validateSubdomain(req, res, next) {
   const { address, config } = req.body
 
   if (config.subdomain) {
+    // Check subdomain doesn't contain invalid characters
+
+    const subdomainRe = /[^a-zA-Z0-9\-]/
+    if (subdomainRe.test(config.subdomain)) {
+      return res.status(400).send('Subdomain contains invalid characters')
+    }
+
     // Check for subdomain blacklisting
     if (subdomainBlacklist.includes(config.subdomain.toLowerCase())) {
       logger.warn(
