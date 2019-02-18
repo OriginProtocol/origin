@@ -10,7 +10,6 @@ class Configure extends React.Component {
     super(props)
 
     this.state = {
-      config: props.config,
       expandedCategories: [],
       filterByTypeEnabled: this.getCategoryFromConfig(),
       listingTypes: listingSchemaMetadata.listingTypes,
@@ -42,8 +41,8 @@ class Configure extends React.Component {
     // address is different to the currently active web3 account (which will
     // populate the config.marketplacePublisher attribute)
     if (
-      this.state.config.filters.listings.marketplacePublisher &&
-      this.state.config.filters.listings.marketplacePublisher !==
+      this.props.config.filters.listings.marketplacePublisher &&
+      this.props.config.filters.listings.marketplacePublisher !==
         web3.eth.accounts[0]
     ) {
       this.setListingFilters({
@@ -108,18 +107,15 @@ class Configure extends React.Component {
 
   setListingFilters(obj) {
     const newConfig = {
-      ...this.state.config,
+      ...this.props.config,
       filters: {
-        ...this.state.config.filters,
+        ...this.props.config.filters,
         listings: {
-          ...this.state.config.filters.listings,
+          ...this.props.config.filters.listings,
           ...obj
         }
       }
     }
-
-    // Update config for this component
-    this.setState({ config: newConfig })
     // Propagate to parent
     this.props.onChange(newConfig)
   }
@@ -215,7 +211,7 @@ class Configure extends React.Component {
             <input
               className="form-check-input"
               type="checkbox"
-              checked={this.state.config.filters.listings.marketplacePublisher}
+              checked={this.props.config.filters.listings.marketplacePublisher}
               onChange={this.toggleFilterByOwn}
             />
             Only use listings from my marketplace
