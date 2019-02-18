@@ -10,21 +10,10 @@ if [[ $(adb devices | grep -v List | grep device | wc -l) -lt 1 ]]; then
     exit 1
 fi
 
-# Bundler
-adb reverse tcp:8081 tcp:8081
-# JSON-RPC
-adb reverse tcp:8545 tcp:8545
-# origin-linker
-adb reverse tcp:3008 tcp:3008
-# IPFS gateway
-adb reverse tcp:8080 tcp:8080
-# IPFS API
-adb reverse tcp:5002 tcp:5002
-# dapp
-adb reverse tcp:3000 tcp:3000
-# IPFS
-adb reverse tcp:9999 tcp:9999
-# origin-discovery
-adb reverse tcp:4000 tcp:4000
-# origin-messaging
-adb reverse tcp:9012 tcp:9012
+ports_to_forward=(8081 8545 3008 8080 5002 3000 9999 4000 9012)
+
+for port in ${ports_to_forward[*]}
+do
+    echo "Creating tunnel for TCP port $port"
+    adb reverse tcp:$port tcp:$port
+done
