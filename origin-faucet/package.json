@@ -20,7 +20,7 @@
     "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "migrate": "sequelize db:migrate",
     "start": "per-env",
-    "start:development": "nodemon src/app.js",
+    "start:development": "nodemon src/app.js --network_ids=999",
     "start:production": "node src/app.js"
   },
   "dependencies": {
@@ -32,7 +32,6 @@
     "rate-limiter-flexible": "^0.19.4",
     "sequelize": "^5.0.0-beta.14",
     "sequelize-cli": "^5.4.0",
-    "truffle-privatekey-provider": "^0.1.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {

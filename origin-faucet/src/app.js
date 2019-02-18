@@ -19,7 +19,7 @@ const DEFAULT_SERVER_PORT = 5000
 const DEFAULT_NETWORK_ID = '999' // Local blockchain.
 
 // Starts the Express server.
-function runApp(config) {
+async function runApp(config) {
   const app = express()
 
   // Configure rate limiting. Allow at most 1 request per IP every 60 sec.
@@ -86,6 +86,15 @@ const config = {
 }
 
 logger.info('Config: ', config)
+
+if (!config.networkIds) {
+  logger.error('Network ids not configured.')
+  process.exit(-1)
+}
+if (!process.env.DATABASE_URL) {
+  logger.error('DATABASE_URL not configured.')
+  process.exit(-1)
+}
 
 try {
   config.providers = Config.createProviders(config.networkIds)

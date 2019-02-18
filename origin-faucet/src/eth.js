@@ -1,5 +1,7 @@
 const BigNumber = require('bignumber.js')
 const PrivateKeyProvider = require('truffle-privatekey-provider')
+const HDWalletProvider = require('truffle-hdwallet-provider')
+
 const Sequelize = require('sequelize')
 const Web3 = require('web3')
 
@@ -8,15 +10,15 @@ const db = require('./models')
 const enums = require('./enums')
 
 class EthDistributor {
+
   constructor(config) {
     this.config = config
 
-    // Create a web3 provider.
     let hotWalletPk, providerUrl
     if (config.networkIds[0] === 999) {
       // In dev environment, use truffle's default account as hot wallet.
       hotWalletPk =
-        'c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3'
+        '0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3'
       providerUrl = 'http://localhost:8545'
     } else {
       hotWalletPk = process.env.HOT_WALLET_PK
@@ -24,9 +26,14 @@ class EthDistributor {
         process.env.INFURA_ACCESS_TOKEN
       }`
     }
-    const provider = new PrivateKeyProvider(hotWalletPk, providerUrl)
+
+    const provider = new Web3.providers.HttpProvider(providerUrl)
     this.web3 = new Web3(provider)
-    this.hotWalletAddress = provider.address
+
+    const account = this.web3.eth.accounts.privateKeyToAccount(hotWalletPk)
+    this.web3.eth.accounts.wallet.add(account)
+    this.web3.eth.defaultAccount = account.address
+    this.hotWalletAddress = account.address
 
     // Needed to be able to use the process method as a route in Express.
     this.process  = this.process.bind(this)
@@ -46,7 +53,7 @@ class EthDistributor {
     const ethAddress = req.query.wallet
     if (!ethAddress) {
       return this.error(res, 'A wallet address must be supplied.')
-    } else if (!Web3.utils.isAddress(ethAddress)) {
+    } else if (!this.web3.utils.isAddress(ethAddress)) {
       return this.error(res, `Invalid wallet address ${ethAddress}.`)
     }
 
@@ -103,13 +110,6 @@ class EthDistributor {
         return this.error(res, `Address ${ethAddress} already used this code.`)
       }
 
-      logger.error('CHECKING BALANCES')
-      let balance
-      balance = await this.web3.eth.getBalance(this.hotWalletAddress)
-      logger.info("FROM BALANCE=", balance)
-      balance = await this.web3.eth.getBalance(ethAddress)
-      logger.info("TARGET BALANCE=", balance)
-
       // Create a FaucetTxn row in Pending status.
       const faucetTxn = await db.FaucetTxn.create({
         campaignId: campaign.id,
@@ -123,48 +123,16 @@ class EthDistributor {
 
       // Issue the blockchain transaction.
       logger.info(`Blockchain call to send ${amount.toFixed()} to ${ethAddress} from ${this.hotWalletAddress}`)
-      //let txnHash
-      const receipt = await this.web3.eth.sendTransaction({
+
+      // FIXME(franck): calculate nonce so as to handle parallel
+      // transaction issued from hotwallet.
+      const receipt = await await this.web3.eth.sendTransaction({
         from: this.hotWalletAddress,
         to: ethAddress,
-        //value: amount.toFixed()
-        value: '46295600000000000'
+        value: amount.toFixed(),
+        gas: 21000
       })
-      //  .then('transactionHash', hash => {
-      //    logger.error("GOT TXN HASH", hash)
-      //    txnHash = hash
-      //  })
-      logger.info("RECEIPT=", receipt)
       const txnHash = receipt.transactionHash
-      logger.info(
-        `Distributed ${amount} to ${ethAddress} from ${this.hotWalletAddress} TxnHash=${txnHash}`
-      )
-
-      balance = await this.web3.eth.getBalance(this.hotWalletAddress)
-      logger.info("FROM BALANCE=", balance)
-      balance = await this.web3.eth.getBalance(ethAddress)
-      logger.info("TARGET BALANCE=", balance)
-
-      let count = 0
-      do {
-        if (txnHash) {
-          const receipt = await this.web3.eth.getTransactionReceipt(txnHash)
-          logger.error("GOT RECEIPT ", receipt)
-          break
-        } else {
-          logger.error("WAITING FOR RECEIPT....")
-          await new Promise(resolve => setTimeout(resolve, 1000))
-        }
-        count++
-      } while (count < 100)
-
-      // Wait for the transaction receipt.
-      //const txnReceipt = await this.web3.eth.getTransactionReceipt(txnHash)
-      //if (!txnReceipt.status) {
-      //  logger.error(`Failed getting receipt for txnHash ${txnHash}`)
-      //  await faucetTxn.update({ status: enums.FaucetTxnStatuses.Failed })
-      //  return this.error(res, 'An error occurred. Please retry again later.')
-     // }
 
       // Record the transaction hash and update the row status to Confirmed.
       await faucetTxn.update({
@@ -173,7 +141,11 @@ class EthDistributor {
       })
 
       // Send response back to client.
-      const resp = `Distributed ${amount} to ${ethAddress} TxnHash=${txnHash}`
+      const amountEth = this.web3.utils.fromWei(amount.toFixed(), 'ether')
+      const resp = `
+        Distributed <b>${amountEth}</b> ETH to account <b>${ethAddress}</b>
+        </br></br>
+        TransactionHash=<a href="https://etherscan.io/tx/${txnHash}">${txnHash}</a>`
       res.send(resp)
     } catch (err) {
       logger.error(err)
