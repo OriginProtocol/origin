@@ -85,7 +85,7 @@ app.post('/config/preview', async (req, res) => {
   }
 
   // Remove hash of preview config from pinset because this can be GCed
-  ipfsClient.pin.rm(ipfsHash, (err, pinset) => {
+  ipfsClient.pin.rm(ipfsHash, err => {
     if (err) {
       logger.warn(`Could not unpin old configuration: ${err}`)
     }

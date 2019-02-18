@@ -13,6 +13,7 @@ export async function validateSubdomain(req, res, next) {
   if (config.subdomain) {
     // Check subdomain doesn't contain invalid characters
 
+    // eslint-disable-next-line no-useless-escape
     const subdomainRe = /[^a-zA-Z0-9\-]/
     if (subdomainRe.test(config.subdomain)) {
       return res.status(400).send('Subdomain contains invalid characters')

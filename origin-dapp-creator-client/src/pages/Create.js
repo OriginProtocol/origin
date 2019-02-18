@@ -51,6 +51,7 @@ class Create extends React.Component {
       newState.titleError = 'Title is too short'
     }
 
+    // eslint-disable-next-line no-useless-escape
     const subdomainRe = /[^a-zA-Z0-9\-]/
 
     if (!this.state.subdomain) {
