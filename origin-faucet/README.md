@@ -27,7 +27,7 @@ You can start the faucet using either docker or lerna.
   Run migration files to create the DB tables.
   
         export DATABASE_URL=postgres://origin:origin@localhost/origin
-        lern run migrate --scope origin-faucet 
+        lerna run migrate --scope origin-faucet 
 
   Bootstrap lerna
   
