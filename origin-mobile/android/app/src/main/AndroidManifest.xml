@@ -7,6 +7,10 @@
     <meta-data
       android:name="com.google.firebase.messaging.default_notification_color"
       android:resource="@color/origin_blue" />
+    <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name"
+                android:value="Dapp"/>
+    <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
+                android:value="Notifications from the dapp, usually about transactions"/>
 
     <uses-feature android:name="android.hardware.camera.any" android:required="false" />
 

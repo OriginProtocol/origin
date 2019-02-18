@@ -194,6 +194,12 @@ class Linker {
       {
         // Message: https://firebase.google.com/docs/reference/admin/node/admin.messaging.Message
         const message = {
+          android: {
+            priority: 'high',
+            notification: {
+              channelId: 'Dapp'
+            }
+          },
           notification: {
             title: 'Origin notficiation', // TODO: Better verbiage?
             body: msg,
