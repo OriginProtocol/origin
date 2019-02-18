@@ -82,7 +82,6 @@ class Footer extends Component {
               </div>
             </div>
             <div className="col-12 col-lg-7">
-              {!this.props.isWhiteLabel &&
                 <div className="d-lg-flex footer-links-container justify-content-between">
                     <Dropdown
                       className="d-flex dropup"
@@ -223,7 +222,6 @@ class Footer extends Component {
                     </div>
                   */}
                 </div>
-              }
             </div>
           </div>
         </div>
@@ -234,7 +232,6 @@ class Footer extends Component {
 
 const mapStateToProps = state => ({
   about: state.config.about,
-  isWhiteLabel: state.config.isWhiteLabel,
   selectedLanguageCode: state.app.translations.selectedLanguageCode,
   selectedLanguageFull: state.app.translations.selectedLanguageFull,
   availableLanguages: state.app.translations.availableLanguages,
