@@ -10,7 +10,7 @@ class OgnDistributor {
   constructor(config) {
     this.token = new Token(config)
 
-    // Needed to be able to use process as a route in Express.
+    // Needed to use the process method as a route in Express.
     this.process = this.process.bind(this)
   }
 

@@ -31,7 +31,7 @@ class EthDistributor {
     this.web3.eth.defaultAccount = account.address
     this.hotWalletAddress = account.address
 
-    // Needed to be able to use the process method as a route in Express.
+    // Needed to use the process method as a route in Express.
     this.process = this.process.bind(this)
   }
 
@@ -118,14 +118,13 @@ class EthDistributor {
       })
 
       // Issue the blockchain transaction.
+      // FIXME(franck): calculate nonce so as to handle parallel
+      // transactions issued from the same hotwallet.
       logger.info(
         `Blockchain call to send ${amount.toFixed()} to ${ethAddress} from ${
           this.hotWalletAddress
         }`
       )
-
-      // FIXME(franck): calculate nonce so as to handle parallel
-      // transactions issued from the same hotwallet.
       const receipt = await await this.web3.eth.sendTransaction({
         from: this.hotWalletAddress,
         to: ethAddress,
