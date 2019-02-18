@@ -110,7 +110,7 @@ async function injectListing(injectedListingInput, signature) {
   const ipfsHash = origin.marketplace.contractService.getIpfsHashFromBytes32(
     injectedListingInput.ipfsHash
   )
-  logger.info(`Loading listing data from IPFFS hash ${ipfsHash}`)
+  logger.info(`Loading listing data from IPFS hash ${ipfsHash}`)
   const listing = await origin.marketplace._listingFromData(undefined, injectedListingInput)
   logger.info(`Loaded listing data: ${listing}`)
 
