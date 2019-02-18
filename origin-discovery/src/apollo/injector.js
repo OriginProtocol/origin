@@ -1,9 +1,11 @@
+const logger = require('./logger')
+
 const db = require('./db')
 require('dotenv').config()
 try {
   require('envkey')
 } catch (error) {
-  console.log('EnvKey not configured')
+  logger.error('EnvKey not configured')
 }
 
 const search = require('../lib/search.js')
@@ -52,11 +54,11 @@ process.argv.forEach(arg => {
 
 
 const config = {
-  // Verbose mode, includes dumping events on the console.
-  verbose: args['--verbose'] || (process.env.VERBOSE === 'true'),
   // ipfs url
   ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
   // Origin-js configs
+  web3Url:
+    args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
   arbitratorAccount: process.env.ARBITRATOR_ACCOUNT,
   affiliateAccount: process.env.AFFILIATE_ACCOUNT,
   attestationAccount: process.env.ATTESTATION_ACCOUNT,
@@ -71,9 +73,8 @@ const origin = setupOriginJS(config, web3)
 async function updateSearch(listingId, listing) {
     if (config.elasticsearch) {
       const seller = await origin.users.get(listing.seller)
-      console.log(`Indexing listing in Elastic: id=${listingId}`)
+      logger.info(`Indexing listing in Elastic: id=${listingId}`)
       await search.Listing.index(listingId, seller.address, listing.ipfsHash, listing)
-      //await search.User.index(seller)
       return true
     }
 }
@@ -90,7 +91,6 @@ async function _verifyListing(listing, signature) {
     throw new Error('signature not encoded into ipfs blob')
   }
 
-  console.log('creator vs seller:', listing.creator, listing.seller)
   if (listing.creator != listing.seller)
   {
     throw new Error('Creator must be same as the seller!')
@@ -104,28 +104,32 @@ async function _verifyListing(listing, signature) {
 }
 
 async function injectListing(injectedListingInput, signature) {
-  //
-  // please very signature first
-  //
-  console.log('verifying:', injectedListingInput, ' against ', signature)
-  // schema ListingInput in graphql
+  // First, verify signature.
+  logger.info(`injectListing called. Input: ${injectedListingInput} Signature: ${signature}`)
+
+  const ipfsHash = origin.marketplace.contractService.getIpfsHashFromBytes32(
+    injectedListingInput.ipfsHash
+  )
+  logger.info(`Loading listing data from IPFS hash ${ipfsHash}`)
   const listing = await origin.marketplace._listingFromData(undefined, injectedListingInput)
+  logger.info(`Loaded listing data: ${listing}`)
 
   // set the listing id for the current network
   const network = await origin.contractService.web3.eth.net.getId()
   const listingId = generateListingId({ version: 'A', network, uniqueId: listing.uniqueId })
-
   listing.id = listingId
+  logger.info(`Generated listing Id ${listingId}`)
 
+  logger.info('Verifying signature')
   await _verifyListing(listing, signature)
 
   const existingRow = await db.getListing(listingId)
-
   if (existingRow) {
     throw new Error('Row already created, update instead')
   }
-  const blockNumber = await origin.contractService.web3.eth.getBlockNumber()
 
+  logger.info(`Inserting listing ${listingId} in DB and Search index`)
+  const blockNumber = await origin.contractService.web3.eth.getBlockNumber()
   const listingData = {
     id: listingId,
     blockNumber,
@@ -135,7 +139,6 @@ async function injectListing(injectedListingInput, signature) {
     data: listing
   }
   const newListing = await db.createListing(listingData)
-  console.log('indexing:', listingId)
   await updateSearch(listingId, listing)
   return newListing
 }
@@ -146,8 +149,9 @@ async function updateListing(listingId, injectedListingInput, signature) {
   //
   // schema ListingInput in graphql
   //
-  console.log('verifying:', injectedListingInput, ' against ', signature)
+  logger.info(`Verifying ${injectedListingInput} against ${signature}`)
   const existingRow = await db.getListing(listingId)
+
   const listing = await origin.marketplace._listingFromData(listingId, injectedListingInput)
 
   if (((existingRow.updateVersion && Number(existingRow.updateVersion)) || 0) 

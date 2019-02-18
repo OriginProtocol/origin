@@ -6,7 +6,8 @@ import parseId from '../../utils/parseId'
 import { listingInputToIPFS } from './createListing'
 
 async function updateListing(_, args) {
-  const { data, unitData, fractionalData, from, autoApprove } = args
+  const { data, unitData, fractionalData, autoApprove } = args
+  const from = args.from || contracts.defaultLinkerAccount
   const { listingId } = parseId(args.listingID)
   await checkMetaMask(from)
 

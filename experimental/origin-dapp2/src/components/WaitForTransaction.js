@@ -3,22 +3,41 @@ import { Query } from 'react-apollo'
 import get from 'lodash/get'
 
 import Modal from 'components/Modal'
+import MobileLinkerCode from 'components/MobileLinkerCode'
 import query from 'queries/TransactionReceipt'
+
+// Returns the role of an Ethereum event, which is used by the web site to
+// render the correct call-to-action for downloading the mobile wallet.
+function roleForEvent(e) {
+  if (!e) return ''
+  if (e.startsWith('Listing')) return 'seller'
+  if (e.startsWith('Offer')) return 'buyer'
+  if (e.startsWith('Identity')) return ''
+}
 
 class WaitForTransaction extends Component {
   render() {
     const id = this.props.hash
+    const role = roleForEvent(this.props.event)
     if (id === 'pending') {
+      const walletType = this.props.walletType
+      const provider =
+        walletType && walletType.startsWith('mobile-')
+          ? 'mobile wallet'
+          : 'MetaMask'
       return (
-        <Modal>
-          <div className="make-offer-modal">
-            <div className="spinner light" />
-            <div>
-              <b>Confirm Transaction</b>
+        <>
+          <MobileLinkerCode role={role} />
+          <Modal>
+            <div className="make-offer-modal">
+              <div className="spinner light" />
+              <div>
+                <b>Confirm Transaction</b>
+              </div>
+              <div>Please confirm this transaction in {provider}</div>
             </div>
-            <div>Please accept or confirm this transaction in MetaMask</div>
-          </div>
-        </Modal>
+          </Modal>
+        </>
       )
     }
 

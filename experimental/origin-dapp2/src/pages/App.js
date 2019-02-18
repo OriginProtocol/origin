@@ -6,6 +6,7 @@ import queryString from 'query-string'
 
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
+import TranslationModal from './_TranslationModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
@@ -67,6 +68,7 @@ class App extends Component {
       )
     }
     return (
+<<<<<<< HEAD
       <Query query={CreatorConfigQuery} variables={{creatorConfigUrl: creatorConfigUrl}}>
        {({ loading, error, data, networkStatus }) => {
          if (networkStatus === 1) {
@@ -113,6 +115,7 @@ class App extends Component {
                 />
               </Switch>
             </main>
+            <TranslationModal locale={this.props.locale} />
             <Footer locale={this.props.locale}
               onLocale={this.props.onLocale}
               creatorConfig={creatorConfig}

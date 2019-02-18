@@ -118,12 +118,12 @@ export default Listings
 
 require('react-styl')(`
   .listings-count
-    font-family: Poppins;
+    font-family: var(--heading-font);
     font-size: 40px;
     font-weight: 200;
     color: var(--dark);
     margin-top: 3rem
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .listings-count
       margin: 1rem 0 0 0
       font-size: 32px

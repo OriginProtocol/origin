@@ -96,7 +96,6 @@ require('react-styl')(`
       display: flex
       align-items: center
       min-height: 3.75rem
-      font-family: Lato
       font-size: 14px
       font-weight: bold
       font-style: normal
@@ -105,11 +104,6 @@ require('react-styl')(`
         background-color: var(--white)
         .nav-link
           color: var(--dark)
-          &:hover
-            background-color: initial
-            &.text span
-              background-color: initial
-
       &.dark
         &.show
           background-color: var(--dark)
@@ -119,10 +113,6 @@ require('react-styl')(`
         height: 100%
         display: flex
         align-items: center
-        &:hover
-          background-color: var(--dark-grey-blue)
-          &.text span
-            background-color: var(--dark-grey-blue)
         &.text
           background-color: initial
           padding: 0 0.5rem
@@ -144,10 +134,10 @@ require('react-styl')(`
         position: absolute !important
         margin-top: 1rem
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
-        border-radius: 5px 0 5px 5px
+        border-radius: var(--default-radius) 0 5px 5px
         border: 0
         font-weight: normal
-        border-radius: 5px 0 5px 5px
+        border-radius: var(--default-radius) 0 5px 5px
 
         &::before
           width: 1rem
@@ -180,7 +170,18 @@ require('react-styl')(`
     img
       max-height: 40px
 
-  @media (max-width: 575.98px)
+  @media (pointer: fine)
+    .navbar .nav-item
+      &.show .nav-link:hover
+        background-color: initial
+        &.text span
+          background-color: initial
+      .nav-link:hover
+        background-color: var(--dark-grey-blue)
+        &.text span
+          background-color: var(--dark-grey-blue)
+
+  @media (max-width: 767.98px)
     .navbar
       padding: 0
       .nav-item
@@ -188,5 +189,4 @@ require('react-styl')(`
         .dropdown-menu
           left: 1rem
           right: 1rem
-
 `)

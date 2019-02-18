@@ -10,7 +10,7 @@ const ZeroAddress = '0x0000000000000000000000000000000000000000'
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
 
-  const buyer = data.from
+  const buyer = data.from || contracts.defaultLinkerAccount
   const marketplace = contracts.marketplaceExec
   const ipfsData = await toIpfsData(data)
 
@@ -61,7 +61,7 @@ async function makeOffer(_, data) {
     from: buyer,
     value
   })
-  return txHelper({ tx, from: data.from, mutation: 'makeOffer' })
+  return txHelper({ tx, from: buyer, mutation: 'makeOffer' })
 }
 
 async function toIpfsData(data) {

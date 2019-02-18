@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import distanceToNow from 'utils/distanceToNow'
 
 import StarRating from 'components/StarRating'
 import Avatar from 'components/Avatar'
+import Link from 'components/Link'
 import ReviewsQuery from 'queries/Reviews'
 import EthAddress from './EthAddress'
 
@@ -46,18 +48,30 @@ export default class Reviews extends Component {
                     }
                   >
                     <div className="user-info">
-                      <Avatar size="4rem" avatar={profile.avatar} />
-                      <div className="user">
-                        <div className="name">
-                          {profile.fullName || (
-                            <fbt desc="reviews.unamedUser">Unnamed User</fbt>
-                          )}
-                        </div>
-                        <EthAddress address={review.reviewer.id} />
+                      <div className="avatar-wrap">
+                        <Avatar size="4rem" avatar={profile.avatar} />
                       </div>
-                      <div className="info">
-                        <StarRating small={true} active={review.rating} />
-                        <div className="time">2d</div>
+                      <div className="user">
+                        <div className="top">
+                          <div className="name">
+                            {profile.fullName || (
+                              <fbt desc="reviews.unamedUser">Unnamed User</fbt>
+                            )}
+                          </div>
+                          <EthAddress address={review.reviewer.id} />
+                          <StarRating small={true} active={review.rating} />
+                        </div>
+                        <div className="info">
+                          <div className="purchase">
+                            {`Purchased `}
+                            <Link to={`/listings/${review.listing.id}`}>
+                              {review.listing.title}
+                            </Link>
+                          </div>
+                          <div className="time">
+                            {distanceToNow(review.event.timestamp)}
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div className="text">{review.review}</div>
@@ -84,26 +98,47 @@ require('react-styl')(`
       .user-info
         display: flex
         width: 100%;
-        justify-content: space-around
+        align-items: flex-start
         .avatar
           margin-right: 1rem
         .user
+          min-width: 0
           flex: 1
-          display: flex
-          flex-direction: column
-          justify-content: center
-          .name
-            font-size: 18px
-            font-weight: bold
-            color: var(--black)
-          .eth-address
-            color: var(--steel)
+          .top
+            flex: 1
+            min-width: 0
+            display: flex
+            flex-direction: row
+            align-items: baseline
+            .name
+              font-size: 18px
+              font-weight: bold
+              color: var(--black)
+              margin-right: 0.5rem
+              overflow: hidden
+              text-overflow: ellipsis
+              white-space: nowrap
+            .eth-address
+              color: var(--steel)
+              font-size: 12px
+              font-weight: 300
+              overflow: hidden
+              text-overflow: ellipsis
+              white-space: nowrap
+              flex: 1
+              margin-right: 0.5rem
+          .purchase
+            flex: 1
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
+            margin-right: 0.5rem
         .info
-          text-align: right
-          color: var(--steel)
           display: flex
-          flex-direction: column
+          min-width: 0
+          flex-direction: row
           justify-content: space-around
+          color: var(--steel)
       .text
         margin: 0.5rem 0 3rem 0
       &:last-child .text

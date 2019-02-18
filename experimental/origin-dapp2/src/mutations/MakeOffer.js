@@ -4,7 +4,7 @@ export default gql`
   mutation MakeOffer(
     $listingID: String!
     $value: String!
-    $from: String!
+    $from: String
     $quantity: Int!
     $fractionalData: FractionalOfferInput
   ) {

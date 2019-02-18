@@ -126,7 +126,7 @@ require('react-styl')(`
       margin-top: 1rem
 
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     footer
       margin-top: 2rem
       padding-top: 2rem
