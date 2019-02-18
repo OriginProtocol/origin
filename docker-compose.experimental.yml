@@ -73,10 +73,10 @@ services:
       # IPFS data
       - ipfs:/app/ipfs
     ports:
-      - "3001:3001"
+      - "3000:3000"
       - "8083:8083" # Webpack
       - "8545:8545"
-      - "9090:9090"
+      - "8080:8080"
     environment:
       - DEPLOY_CONTRACTS=true
       - DOCKER=true
