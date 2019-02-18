@@ -171,7 +171,7 @@ class Configure extends React.Component {
 
   toggleFilterByOwn(event) {
     this.setListingFilters({
-      marketplacePublisher: event.target.checked ? web3.eth.accounts[0] : null
+      marketplacePublisher: event.target.checked ? web3.eth.accounts[0] : ''
     })
   }
 
