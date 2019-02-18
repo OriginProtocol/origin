@@ -70,10 +70,10 @@ class ProgressBar extends Component {
     const { progress } = this.props
 
     /* For triggering animation first render of react component needs to set
-     * the width to 0. All subsequent renders set it to the actuall value. 
+     * the width to 0. All subsequent renders set it to the actuall value.
      */
     const triggerAnimationThisFrame = this.triggerAnimation
-    if (progress > 0 && this.triggerAnimation){
+    if (progress > 0 && this.triggerAnimation) {
       setTimeout(() => {
         this.triggerAnimation = false
         this.forceUpdate()
@@ -85,7 +85,12 @@ class ProgressBar extends Component {
         <div className="campaign-progress mt-3" style={{ width: '100%' }}>
           <div className="background" />
           {progress > 0 && (
-            <div className="foreground" style={{ width: `${!triggerAnimationThisFrame ? progress : '0'}%` }} />
+            <div
+              className="foreground"
+              style={{
+                width: `${!triggerAnimationThisFrame ? progress : '0'}%`
+              }}
+            />
           )}
         </div>
         <div className="indicators d-flex justify-content-between mt-2">
@@ -101,104 +106,124 @@ class ProgressBar extends Component {
 }
 
 function Action(props) {
-  let { type, status, reward, rewardEarned } = props.action
-  const showLockIcon = status === 'inactive'
+  let { type, status, reward, rewardEarned, rewardPending } = props.action
+  //const showLockIcon = status === 'inactive'
+  const showLockIcon = true
   const actionCompleted = ['exhausted', 'completed'].includes(status)
-  let backgroundImgSrc = actionCompleted ? 'images/identity/verification-shape-green.svg' :
-    'images/identity/verification-shape-blue.svg'
+  let backgroundImgSrc = actionCompleted
+    ? 'images/identity/verification-shape-green.svg'
+    : 'images/identity/verification-shape-blue.svg'
 
-  const formatTokens = (tokenAmount) => {
-    return web3.utils.toBN(tokenAmount)
-      .div(props.decimalDevision).toString()
+  const formatTokens = tokenAmount => {
+    return web3.utils
+      .toBN(tokenAmount)
+      .div(props.decimalDevision)
+      .toString()
   }
 
   let foregroundImgSrc
   let title
   let infoText
 
-  if (type === 'email'){
+  if (type === 'email') {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
     title = 'Verify your Email'
     infoText = 'Confirm your email in attestations'
-  } else if (type === 'profile'){
+  } else if (type === 'profile') {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
     title = 'Update your name and picture'
     infoText = 'Edit your profile and update your name and picture'
-  } else if (type === 'phoneNumber'){
+  } else if (type === 'phoneNumber') {
     foregroundImgSrc = '/images/identity/phone-icon-light.svg'
     title = 'Verify your Phone Number'
     infoText = 'Confirm your phone number in attestations'
-  } else if (type === 'twitter'){
+  } else if (type === 'twitter') {
     foregroundImgSrc = '/images/identity/twitter-icon-light.svg'
     title = 'Connect your Twitter Profile'
     infoText = 'Connect your Twitter Profile in attestationts'
-  } else if (type === 'airbnb'){
+  } else if (type === 'airbnb') {
     foregroundImgSrc = '/images/identity/airbnb-icon-light.svg'
     title = 'Connect your Airbnb Profile'
     infoText = 'Connect your Airbnb Profile in attestations'
-  } else if (type === 'facebook'){
+  } else if (type === 'facebook') {
     foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
     title = 'Connect your Facebook Profile'
     infoText = 'Connect your Facebook Profile in attestations'
-  } else if (type === 'listingCreated'){
+  } else if (type === 'listingCreated') {
     title = 'Create a listing'
     infoText = 'Create a new listing on the marketplace'
-  } else if (type === 'listingPurchased'){
+  } else if (type === 'listingPurchased') {
     title = 'Purchase a listing'
     infoText = 'Purchase a listing on marketplace'
+  } else if (type === 'referral') {
+    title = 'Invite Friends'
+    infoText = 'Get your friends to join Origin with active accounts.'
   }
 
   const renderReward = (amount, renderPlusSign) => {
-    return (<div className="reward d-flex mr-auto align-items-center pl-2 pt-2 pb-2 mt-2">
-      <img
-        src="images/ogn-icon.svg"
-      />
+    return (
+      <div className="reward d-flex mr-4 align-items-center pl-2 pt-2 pb-2 mt-2">
+        <img src="images/ogn-icon.svg" />
         <div className="value">
-          {renderPlusSign ? '+' : ''}{formatTokens(amount)}
-        </div> 
-    </div>)
+          {renderPlusSign ? '+' : ''}
+          {formatTokens(amount)}
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="d-flex action">
       <div className="col-2 d-flex justify-content-center">
         <div className="image-holder mt-auto mb-auto">
-          <img className="background" src={backgroundImgSrc}/>
-          <img className={type} src={foregroundImgSrc}/>
-          {showLockIcon && 
-            <img className="lock" src="images/growth/lock-icon.svg"/>
-          }
+          {type !== 'referral' && (
+            <Fragment>
+              <img className="background" src={backgroundImgSrc} />
+              <img className={type} src={foregroundImgSrc} />
+            </Fragment>
+          )}
+          {type === 'referral' && (
+            <img className="astronaut" src="images/growth/astronaut-icon.svg" />
+          )}
+          {showLockIcon && (
+            <img className="lock" src="images/growth/lock-icon.svg" />
+          )}
         </div>
       </div>
       <div className="col-8 d-flex flex-column">
         <div className="title">{title}</div>
         <div className="info-text">{infoText}</div>
-        <div
-          className="d-flex"
-        >
-          {actionCompleted && rewardEarned !== null && 
+        <div className="d-flex">
+          {type === 'referral' &&
+            rewardPending !== null &&
+            rewardPending.amount > 0 && (
+              <Fragment>
+                <div className="d-flex align-items-center sub-text">
+                  Pending
+                </div>
+                {renderReward(rewardPending.amount, true)}
+              </Fragment>
+            )}
+          {actionCompleted && rewardEarned !== null && (
             <Fragment>
               <div className="d-flex align-items-center sub-text">Earned</div>
               {renderReward(rewardEarned.amount, false)}
             </Fragment>
-          }
-          {!actionCompleted && reward !== null && 
-            renderReward(reward.amount, true)
-          }
+          )}
+          {!actionCompleted &&
+            reward !== null &&
+            renderReward(reward.amount, true)}
         </div>
       </div>
       <div className="col-2 d-flex">
-        {!actionCompleted &&
-          <Link
-            to="/profile"
-            className="mt-auto mb-auto"
-          >
+        {!actionCompleted && (
+          <Link to="/profile" className="mt-auto mb-auto">
             <button
               className="btn btn-primary btn-rounded mr-2"
               children="Go"
             />
           </Link>
-        }
+        )}
       </div>
     </div>
   )
@@ -208,17 +233,17 @@ function ActionList(props) {
   return (
     <Fragment>
       <div className="d-flex flex-column">
-        {props.title !== undefined && <div
-          className="action-title"
-        >
-          {props.title}
-        </div>}
+        {props.title !== undefined && (
+          <div className="action-title">{props.title}</div>
+        )}
         {props.actions.map(action => {
-          return (<Action
-            action={action}
-            decimalDevision={props.decimalDevision}
-            key={`${action.type}:${action.status}`}
-          />)
+          return (
+            <Action
+              action={action}
+              decimalDevision={props.decimalDevision}
+              key={`${action.type}:${action.status}`}
+            />
+          )
         })}
       </div>
     </Fragment>
@@ -227,14 +252,7 @@ function ActionList(props) {
 
 function Campaign(props) {
   const { campaign, accountId } = props
-  const {
-    startDate,
-    endDate,
-    status,
-    rewardEarned,
-    actions,
-    name
-  } = campaign
+  const { startDate, endDate, status, rewardEarned, actions, name } = campaign
 
   const formatTimeDifference = (start, end) => {
     let timeLabel = ''
@@ -269,7 +287,10 @@ function Campaign(props) {
   }
 
   return (
-    <Query query={AccountTokenBalance} variables={{ account: accountId, token: 'OGN' }}>
+    <Query
+      query={AccountTokenBalance}
+      variables={{ account: accountId, token: 'OGN' }}
+    >
       {({ loading, error, data }) => {
         const toBN = web3.utils.toBN
         let tokensEarned = toBN(0)
@@ -278,22 +299,26 @@ function Campaign(props) {
 
         if (!loading && !error) {
           const tokenHolder = data.web3.account.token
-          if (tokenHolder && tokenHolder.token){
+          if (tokenHolder && tokenHolder.token) {
             decimalDevision = toBN(10).pow(toBN(tokenHolder.token.decimals))
             // campaign rewards converted normalized to token value according to number of decimals
-            tokensEarned = toBN(rewardEarned ? rewardEarned.amount : 0)
-              .div(decimalDevision)
+            tokensEarned = toBN(rewardEarned ? rewardEarned.amount : 0).div(
+              decimalDevision
+            )
             tokenEarnProgress = Math.min(100, tokensEarned.toString())
           }
         }
 
-        const actionCompleted = (action) => {
+        const actionCompleted = action => {
           return ['exhausted', 'completed'].includes(action.status)
         }
 
-        console.log("ACTIONS: ", actions)
-        const completedActions = actions.filter(action => actionCompleted(action))
-        const nonCompletedActions = actions.filter(action => !actionCompleted(action))
+        const completedActions = actions.filter(action =>
+          actionCompleted(action)
+        )
+        const nonCompletedActions = actions.filter(
+          action => !actionCompleted(action)
+        )
 
         return (
           <Fragment>
@@ -306,21 +331,35 @@ function Campaign(props) {
             <div>{subTitleText}</div>
             <div className="d-flex justify-content-between campaign-info">
               <div>
-              {status !== 'pending' && <Fragment>
-                  <span className="font-weight-bold">Tokens earned</span>
-                  <img className="ogn-icon pl-2 pr-1" src="images/ogn-icon.svg" />
-                  <span className="ogn-amount font-weight-bold">{tokensEarned.toString()}</span>
-                </Fragment> }
+                {status !== 'pending' && (
+                  <Fragment>
+                    <span className="font-weight-bold">Tokens earned</span>
+                    <img
+                      className="ogn-icon pl-2 pr-1"
+                      src="images/ogn-icon.svg"
+                    />
+                    <span className="ogn-amount font-weight-bold">
+                      {tokensEarned.toString()}
+                    </span>
+                  </Fragment>
+                )}
               </div>
               <div className="font-weight-bold">{timeLabel}</div>
             </div>
             <ProgressBar progress={tokenEarnProgress} />
-            {status === 'active' && nonCompletedActions.length > 0 &&
-              <ActionList actions={nonCompletedActions} decimalDevision={decimalDevision} />
-            }
-            {status !== 'pending' && completedActions.length > 0 &&
-              <ActionList title="Completed" actions={completedActions} decimalDevision={decimalDevision} />
-            }
+            {status === 'active' && nonCompletedActions.length > 0 && (
+              <ActionList
+                actions={nonCompletedActions}
+                decimalDevision={decimalDevision}
+              />
+            )}
+            {status !== 'pending' && completedActions.length > 0 && (
+              <ActionList
+                title="Completed"
+                actions={completedActions}
+                decimalDevision={decimalDevision}
+              />
+            )}
           </Fragment>
         )
       }}
@@ -339,15 +378,18 @@ class GrowthCampaigns extends Component {
 
     return (
       <div className="container growth-campaigns">
-        <Query
-            query={profileQuery}
-            notifyOnNetworkStatusChange={true}
-          >
+        <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
               return <h5 className="p-2">Loading...</h5>
             } else if (error) {
-              return <QueryError error={error} query={allCampaignsQuery} vars={vars} />
+              return (
+                <QueryError
+                  error={error}
+                  query={allCampaignsQuery}
+                  vars={vars}
+                />
+              )
             }
 
             const vars = pick(this.state, 'first')
@@ -363,7 +405,13 @@ class GrowthCampaigns extends Component {
                   if (networkStatus === 1 || loading) {
                     return <h5 className="p-2">Loading...</h5>
                   } else if (error) {
-                    return <QueryError error={error} query={allCampaignsQuery} vars={vars} />
+                    return (
+                      <QueryError
+                        error={error}
+                        query={allCampaignsQuery}
+                        vars={vars}
+                      />
+                    )
                   }
 
                   const campaigns = data.campaigns.nodes
@@ -371,8 +419,17 @@ class GrowthCampaigns extends Component {
                     return <h5 className="p-2">No campaigns detected</h5>
                   }
 
-                  selectedCampaignId =
-                    selectedCampaignId !== null ? selectedCampaignId : campaigns[0].id
+                  if (selectedCampaignId === null) {
+                    const activeCampaign = campaigns.find(
+                      campaign => campaign.status === 'active'
+                    )
+                    if (activeCampaign !== undefined) {
+                      selectedCampaignId = activeCampaign.id
+                    } else {
+                      selectedCampaignId = campaigns[0].id
+                    }
+                  }
+
                   const selectedCampaign = find(
                     campaigns,
                     campaign => campaign.id === selectedCampaignId
@@ -485,69 +542,73 @@ require('react-styl')(`
       border-radius: 5px;
       margin-top: 20px;
       padding: 20px;
-    .action .background
-      width: 72px;
-    .action .profile
-      position: absolute;
-      left: 20px;
-      top: 27px;
-      width: 30px;
-    .action .email
-      position: absolute;
-      left: 20px;
-      top: 27px;
-      width: 30px;
-    .action .phoneNumber
-      position: absolute;
-      left: 25px;
-      top: 20px;
-      width: 22px;
-    .action .facebook
-      position: absolute;
-      left: 24px;
-      top: 18px;
-      width: 21px;
-    .action .airbnb
-      position: absolute;
-      left: 15px;
-      top: 19px;
-      width: 44px;
-    .action .twitter
-      position: absolute;
-      left: 17px;
-      top: 22px;
-      width: 39px;
-    .action .lock
-      position: absolute;
-      right: -12px;
-      bottom: 0px;
-      width: 30px;
-    .action .image-holder
-      position: relative;
-    .action .title
-      font-size: 18px;
-      font-weight: bold;
-    .action .info-text
-      font-size: 18px;
-      font-weight: 300;
-    .action .reward
-      padding-right: 10px;
-      height: 28px;
-      background-color: var(--pale-grey);
-      border-radius: 52px;
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--clear-blue);
-    .action .reward .value
-      padding-bottom: 1px;
-    .action .sub-text
-      font-size: 14px;
-      font-weight: bold;
-      padding-top: 5px;
-      margin-right: 6px;
-    .action .reward img
-      margin-right: 6px;
-    .action img
-      width: 19px;
+      .background
+        width: 72px;
+      .profile
+        position: absolute;
+        left: 20px;
+        top: 27px;
+        width: 30px;
+      .email
+        position: absolute;
+        left: 20px;
+        top: 27px;
+        width: 30px;
+      .phoneNumber
+        position: absolute;
+        left: 25px;
+        top: 20px;
+        width: 22px;
+      .facebook
+        position: absolute;
+        left: 24px;
+        top: 18px;
+        width: 21px;
+      .airbnb
+        position: absolute;
+        left: 15px;
+        top: 19px;
+        width: 44px;
+      .twitter
+        position: absolute;
+        left: 17px;
+        top: 22px;
+        width: 39px;
+      .lock
+        position: absolute;
+        right: -12px;
+        bottom: 0px;
+        width: 30px;
+      .image-holder
+        position: relative;
+      .title
+        font-size: 18px;
+        font-weight: bold;
+      .info-text
+        font-size: 18px;
+        font-weight: 300;
+      .reward
+        padding-right: 10px;
+        height: 28px;
+        background-color: var(--pale-grey);
+        border-radius: 52px;
+        font-size: 14px;
+        font-weight: bold;
+        color: var(--clear-blue);
+      .reward .value
+        padding-bottom: 1px;
+      .sub-text
+        font-size: 14px;
+        font-weight: bold;
+        padding-top: 5px;
+        margin-right: 6px;
+      .reward img
+        margin-right: 6px;
+      img
+        width: 19px;
+      .astronaut
+        width: 77px;
+        margin-top: -10px;
+        margin-left: -15px;
 
 `)

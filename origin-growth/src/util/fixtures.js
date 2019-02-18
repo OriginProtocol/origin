@@ -19,150 +19,8 @@ function tokenNaturalUnits(x) {
 }
 
 const rule = {
-  numLevels: 3,
-  levels: {
-    0: {
-      rules: [
-        {
-          id: 'PreRequisite',
-          class: 'MultiEvents',
-          config: {
-            eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
-            numEventsRequired: 2,
-            reward: null,
-            visible: true,
-            nextLevelCondition: true
-          }
-        }
-      ]
-    },
-    1: {
-      rules: [
-        {
-          id: 'PhoneAttestation',
-          class: 'SingleEvent',
-          config: {
-            eventType: 'PhoneAttestationPublished',
-            reward: {
-              amount: tokenNaturalUnits(10),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 1,
-            nextLevelCondition: false
-          }
-        },
-        {
-          id: 'FacebookAttestation',
-          class: 'SingleEvent',
-          config: {
-            eventType: 'FacebookAttestationPublished',
-            reward: {
-              amount: tokenNaturalUnits(10),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 1,
-            nextLevelCondition: false
-          }
-        },
-        {
-          id: 'AirbnbAttestation',
-          class: 'SingleEvent',
-          config: {
-            eventType: 'AirbnbAttestationPublished',
-            reward: {
-              amount: tokenNaturalUnits(10),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 1,
-            nextLevelCondition: false
-          }
-        },
-        {
-          id: 'TwitterAttestation',
-          class: 'SingleEvent',
-          config: {
-            eventType: 'TwitterAttestationPublished',
-            reward: {
-              amount: tokenNaturalUnits(10),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 1,
-            nextLevelCondition: false
-          }
-        },
-        {
-          id: 'TwoAttestations',
-          class: 'MultiEvents',
-          config: {
-            eventTypes: [
-              'PhoneAttestationPublished',
-              'FacebookAttestationPublished',
-              'AirbnbAttestationPublished',
-              'TwitterAttestationPublished'
-            ],
-            visible: false,
-            numEventsRequired: 2,
-            reward: null,
-            nextLevelCondition: true
-          }
-        }
-      ]
-    },
-    2: {
-      rules: [
-        {
-          id: 'Referral',
-          class: 'SingleEvent',
-          config: {
-            eventType: 'RefereeSignedUp',
-            reward: {
-              amount: tokenNaturalUnits(10),
-              currency: 'OGN'
-            },
-            limit: 100,
-            visible: true,
-            nextLevelCondition: false
-          }
-        },
-        {
-          id: 'ListingCreation',
-          class: 'SingleEvent',
-          config: {
-            eventType: 'ListingCreated',
-            reward: {
-              amount: tokenNaturalUnits(5),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 10,
-            nextLevelCondition: false
-          }
-        },
-        {
-          id: 'ListingPurchase',
-          class: 'SingleEvent',
-          config: {
-            eventType: 'ListingPurchased',
-            reward: {
-              amount: tokenNaturalUnits(5),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 10,
-            nextLevelCondition: false
-          }
-        }
-      ]
-    }
-  }
-}
-
-const alternateRule = {
-  numLevels: 2,
+  numLevels: 3
+  ,
   levels: {
     0: {
       rules: [
@@ -358,7 +216,7 @@ async function createTestData() {
   await db.GrowthCampaign.upsert({
     id: 2,
     name: 'FEB 2019',
-    rules: JSON.stringify(alternateRule),
+    rules: JSON.stringify(rule),
     startDate: Date.parse('February 1, 2019'),
     endDate: Date.parse('February 28, 2019'),
     distributionDate: Date.parse('March 28, 2019'),
@@ -371,7 +229,7 @@ async function createTestData() {
   await db.GrowthCampaign.upsert({
     id: 3,
     name: 'MAR 2019',
-    rules: JSON.stringify(alternateRule),
+    rules: JSON.stringify(rule),
     startDate: Date.parse('March 1, 2019'),
     endDate: Date.parse('March 31, 2019'),
     distributionDate: Date.parse('April 28, 2019'),
@@ -384,7 +242,7 @@ async function createTestData() {
   await db.GrowthCampaign.upsert({
     id: 4,
     name: 'APR 2019',
-    rules: JSON.stringify(alternateRule),
+    rules: JSON.stringify(rule),
     startDate: Date.parse('April 1, 2019'),
     endDate: Date.parse('April 30, 2019'),
     distributionDate: Date.parse('May 28, 2019'),

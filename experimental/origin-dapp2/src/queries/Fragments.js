@@ -163,6 +163,12 @@ export default {
             amount
             currency
           }
+          ... on ReferralAction {
+            rewardPending {
+              amount
+              currency
+            }
+          }
         }
         rewardEarned {
           amount

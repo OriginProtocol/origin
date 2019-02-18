@@ -438,12 +438,19 @@ class SingleEventRule extends BaseRule {
    */
   toApolloObject(ethAddress, events, currentUserLevel) {
     const rewards = this.getRewards(ethAddress, events)
-    return {
+    const objectToReturn = {
       type: eventTypeToActionType(this.config.eventType),
       status: this.getStatus(ethAddress, events, currentUserLevel),
       rewardEarned: sumUpRewards(rewards),
       reward: this.config.reward
     }
+
+    if (objectToReturn.type === 'referral') {
+      // TODO implement this
+      objectToReturn.rewardPending = this.config.reward
+    }
+
+    return objectToReturn
   }
 }
 

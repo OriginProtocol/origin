@@ -14,7 +14,11 @@ const resolvers = {
   DateTime: GraphQLDateTime,
   GrowthBaseAction: {
     __resolveType(obj) {
-      return 'GrowthAction'
+      if (obj.type === 'referral'){
+        return 'ReferralAction'
+      } else {
+        return 'GrowthAction'
+      }
     },
   },
   Query: {
