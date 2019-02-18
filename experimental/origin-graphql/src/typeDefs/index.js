@@ -16,6 +16,6 @@ export default [
   Messaging,
   Notifications,
   Attestations,
-  CreatorConfig
+  CreatorConfig,
   WalletLinker
 ]

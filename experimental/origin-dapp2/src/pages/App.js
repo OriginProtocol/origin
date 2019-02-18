@@ -68,7 +68,6 @@ class App extends Component {
       )
     }
     return (
-<<<<<<< HEAD
       <Query query={CreatorConfigQuery} variables={{creatorConfigUrl: creatorConfigUrl}}>
        {({ loading, error, data, networkStatus }) => {
          if (networkStatus === 1) {
