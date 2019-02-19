@@ -12,7 +12,7 @@ const html = fs.readFileSync(`${__dirname}/../public/eth.html`).toString()
 
 /**
  * Singleton class for managing a monotonically increasing nonce
- * for sending web3 transactions.
+ * to send web3 transactions.
  *
  * This is necessary since the faucet may be handling multiple requests
  * in parallel but web3.eth.sendTransaction does not take into
@@ -23,34 +23,51 @@ const html = fs.readFileSync(`${__dirname}/../public/eth.html`).toString()
  * the *same* nonce.  All transactions except one would therefore fail.
  *
  * Note: This solution is far from perfect.
- *  - The nonce would go out of sync if any other anything else than
- *  the faucet process sends a transaction using the hotwallet.
- *  - A transaction failure will leave a hole in the nonce sequence
- *  and cause subsequent transactions to fail.
- *  TODO(franck): consider periodically resyncing the nonce in the
- *  background when there are no Pending transaction.
- *  - Ethereum nodes have a limit of max 64 transactions per
- *  source address that they can store in their buffer. If the faucet
- *  overflows that buffer our NonceManager will go out of sync.
- *  See this discussion:
- *   https://ethereum.stackexchange.com/questions/2808/what-happens-when-a-transaction-nonce-is-too-high
+ *  - It only works if we run a single instance of the faucet process.
+ *  An improvement could be to store the nonce in a central storage like
+ *  Redis or Postgres.
+ *  - The nonce would go out of sync if anything else than
+ *  the faucet process sends a transaction from the hotwallet.
+ *  - A failure of one of the transaction within a batch will cause some others
+ *  to fail. For more info on hole in nonce sequence, see this article:
+ *  https://ethereum.stackexchange.com/questions/2808/what-happens-when-a-transaction-nonce-is-too-high
+ *  - Ethereum nodes have an upper limit of 64 transactions per
+ *  source address that they can store in their buffer. Which translates
+ *  directly into the max number of pending transactions the faucet
+ *  can hendle before some start failing. This is roughly 64 / 15 = 4tps.
  */
 class NonceManager {
   constructor(web3, ethAddress) {
     this.web3 = web3
     this.ethAddress = ethAddress
-    this.web3.eth.getTransactionCount(this.ethAddress).then(txnCount => {
-      this.nonce = txnCount - 1
-      logger.info('Nonce initialized to ', this.nonce)
-    })
+    this.pendingTxnCount = 0
   }
 
-  // Generates next nonce.
-  next() {
-    if (this.nonce === undefined) {
-      throw new Error('Nonce not initialized yet.')
+  // This must be called once a transaction is confirmed or failed
+  // otherwise the nonce can go out of sync.
+  decPendingTxnCount() {
+    this.pendingTxnCount--
+  }
+
+  // Yields next nonce to use.
+  async next() {
+    this.pendingTxnCount++
+    if (this.pendingTxnCount === 1) {
+      // No other pending transaction.
+      // Set nonce based on fetched transaction count.
+      this.nonce = null
+      this.nonce = await this.web3.eth.getTransactionCount(this.ethAddress)
+    } else {
+      // There is at least one pending transaction.
+      // Wait for nonce to be set and increment it.
+      for (let retries = 0; this.nonce === null && retries < 50; retries++) {
+        await new Promise(resolve => setTimeout(resolve, 100))
+      }
+      if (this.nonce === null) {
+        throw new Error('Timeout waiting for nonce.')
+      }
+      this.nonce++
     }
-    this.nonce++
     return this.nonce
   }
 }
@@ -107,14 +124,14 @@ class EthDistributor {
   async process(req, res, next) {
     const code = req.query.code
     if (!code) {
-      return this.error(res, 'An invite code must be supplied.')
+      return this._error(res, 'An invite code must be supplied.')
     }
 
     const ethAddress = req.query.wallet
     if (!ethAddress) {
-      return this.error(res, 'A wallet address must be supplied.')
+      return this._error(res, 'A wallet address must be supplied.')
     } else if (!this.web3.utils.isAddress(ethAddress)) {
-      return this.error(res, `Invalid wallet address ${ethAddress}.`)
+      return this._error(res, `Invalid wallet address ${ethAddress}.`)
     }
 
     try {
@@ -128,7 +145,7 @@ class EthDistributor {
         }
       })
       if (!campaign) {
-        return this.error(res, `Invalid campaign code ${code}`)
+        return this._error(res, `Invalid campaign code ${code}`)
       }
 
       // Check the campaign's budget is not exhausted by summing up
@@ -150,7 +167,7 @@ class EthDistributor {
         .map(faucetTxn => faucetTxn.amount)
         .reduce((x, y) => BigNumber(x).plus(y), BigNumber(0))
       if (budgetUsed.plus(amount).gt(budget)) {
-        return this.error(res, `Campaign budget exhausted.`)
+        return this._error(res, `Campaign budget exhausted.`)
       }
 
       // Check the ethAddress hasn't already been used for this campaign.
@@ -167,10 +184,11 @@ class EthDistributor {
         }
       })
       if (existingTxn) {
-        return this.error(res, `Address ${ethAddress} already used this code.`)
+        return this._error(res, `Address ${ethAddress} already used this code.`)
       }
 
       // Create a FaucetTxn row in Pending status.
+      let txnHash = null
       const faucetTxn = await db.FaucetTxn.create({
         campaignId: campaign.id,
         status: enums.FaucetTxnStatuses.Pending,
@@ -178,31 +196,37 @@ class EthDistributor {
         toAddress: ethAddress.toLowerCase(),
         amount: campaign.amount,
         currency: campaign.currency,
-        txnHash: null
-      })
-
-      // Calculate nonce to use for the transaction.
-      const nonce = this.nonceMgr.next()
-
-      // Issue the blockchain transaction.
-      logger.info(
-        `Blockchain call to send ${amount.toFixed()} to ${ethAddress}
-        from ${this.hotWalletAddress} with nonce ${nonce}`
-      )
-      const receipt = await await this.web3.eth.sendTransaction({
-        from: this.hotWalletAddress,
-        to: ethAddress,
-        value: amount.toFixed(),
-        gas: 21000,
-        nonce
-      })
-      const txnHash = receipt.transactionHash
-
-      // Record the transaction hash and update the row status to Confirmed.
-      await faucetTxn.update({
-        status: enums.FaucetTxnStatuses.Confirmed,
         txnHash
       })
+
+      try {
+        // Calculate the nonce to use for this transaction.
+        const nonce = await this.nonceMgr.next()
+
+        // Issue the blockchain transaction.
+        logger.info(
+          `Blockchain call to send ${amount.toFixed()} to ${ethAddress}
+          from ${this.hotWalletAddress} with nonce ${nonce}`
+        )
+        const receipt = await await this.web3.eth.sendTransaction({
+          from: this.hotWalletAddress,
+          to: ethAddress,
+          value: amount.toFixed(),
+          gas: 21000,
+          nonce
+        })
+        txnHash = receipt.transactionHash
+      } catch (e) {
+        throw e
+      } finally {
+        // Decrement the nonce manager pending txn count and
+        // store the txn status and hash in the DB.
+        this.nonceMgr.decPendingTxnCount()
+        const status = txnHash
+          ? enums.FaucetTxnStatuses.Confirmed
+          : enums.FaucetTxnStatuses.Failed
+        await faucetTxn.update({ status, txnHash })
+      }
 
       // Send response back to client.
       const amountEth = this.web3.utils.fromWei(amount.toFixed(), 'ether')
