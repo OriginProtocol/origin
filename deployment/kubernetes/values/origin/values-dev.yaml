@@ -30,7 +30,7 @@ eventlistenerImageTag: '391cc9c'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '0804495'
+discoveryImageTag: '68bc7d9'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -42,11 +42,11 @@ notificationsImageTag: '30de4cf'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: 'c235b98'
+creatorClientImageTag: '6f68ee1'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: '82c63a2'
+creatorServerImageTag: '6f68ee1'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
