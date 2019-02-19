@@ -16,10 +16,10 @@ class Footer extends Component {
     return (
       <footer>
         <div className="container">
-          <div class="logo-box">
-            {this.props.creatorConfig.isCreatedMarketplace &&
+          <div className="logo-box">
+            {this.props.creatorConfig.isCreatedMarketplace && (
               <span className="font-weight-bold">Powered by</span>
-            }
+            )}
             <div className="logo" />
           </div>
           <div className="separator" />

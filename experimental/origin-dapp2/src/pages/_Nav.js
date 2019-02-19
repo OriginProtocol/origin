@@ -47,7 +47,10 @@ class Nav extends Component {
             </Link>
           ) : (
             <Link to="/" className="custom-brand">
-              <img src={this.props.creatorConfig.logoUrl} alt={this.props.creatorConfig.title} />
+              <img
+                src={this.props.creatorConfig.logoUrl}
+                alt={this.props.creatorConfig.title}
+              />
             </Link>
           )}
           {!this.props.wallet ? (

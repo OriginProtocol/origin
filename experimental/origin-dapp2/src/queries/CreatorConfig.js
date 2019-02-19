@@ -1,10 +1,8 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query CreatorConfig (
-    $creatorConfigUrl: String
-  ) {
-    creatorConfig ( creatorConfigUrl: $creatorConfigUrl ) {
+  query CreatorConfig($creatorConfigUrl: String) {
+    creatorConfig(creatorConfigUrl: $creatorConfigUrl) {
       title
       about
       logoUrl

@@ -30,9 +30,10 @@ class Listings extends Component {
   render() {
     const vars = {
       ...pick(this.state, 'first', 'sort', 'hidden', 'search'),
-      filters: this.props.filters.map((filter) => {
-        return omit(filter, '__typename')
-      }) || []
+      filters:
+        this.props.filters.map(filter => {
+          return omit(filter, '__typename')
+        }) || []
     }
 
     return (
@@ -75,28 +76,88 @@ class Listings extends Component {
                   }}
                 >
                   <>
-                    <h5 className="listings-count">
-                      <fbt desc="Num Listings">
-                        <fbt:plural count={totalCount} showCount="yes">
-                          Listing
-                        </fbt:plural>
-                      </fbt>
-                    </h5>
-                    <ListingsGallery
-                      listings={nodes}
-                      hasNextPage={hasNextPage}
-                    />
-                    {!hasNextPage ? null : (
-                      <button
-                        className="btn btn-outline-primary btn-rounded mt-3"
-                        onClick={() => {
-                          if (!loading) {
-                            nextPage(fetchMore, { ...vars, after })
-                          }
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Load more'}
-                      </button>
+                    {totalCount == 0 && (
+                      <div className="listings-empty">
+                        <div className="row">
+                          <div className="col text-center">
+                            <img src="images/empty-listings-graphic.svg" />
+                            {this.state.search && (
+                              <h1>
+                                <fbt desc="listings.noListingsSearch">
+                                  No search results found
+                                </fbt>
+                              </h1>
+                            )}
+
+                            {this.props.isCreatedMarketplace &&
+                              !this.state.search && (
+                                <>
+                                  <h1>
+                                    <fbt desc="listings.noListingsWhitelabel">
+                                      Your marketplace doesn&apos;t have any
+                                      listings yet
+                                    </fbt>
+                                  </h1>
+                                  <p>
+                                    <fbt desc="listings.noListingsWhitelabelMessage">
+                                      You can create listings yourself or invite
+                                      sellers to join your platform!
+                                    </fbt>
+                                  </p>
+                                  <div className="row">
+                                    <div className="col text-center">
+                                      <a
+                                        href="#/create"
+                                        className="btn btn-lg btn-primary"
+                                      >
+                                        <fbt desc="listings.createListingButton">
+                                          Create a Listing
+                                        </fbt>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                            {!this.props.isCreatedMarketplace &&
+                              !this.state.search && (
+                                <h1>
+                                  <fbt desc="listings.noListings">
+                                    No listings found
+                                  </fbt>
+                                </h1>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {totalCount > 0 && (
+                      <>
+                        <h5 className="listings-count">
+                          <fbt desc="Num Listings">
+                            <fbt:plural count={totalCount} showCount="yes">
+                              Listing
+                            </fbt:plural>
+                          </fbt>
+                        </h5>
+                        <ListingsGallery
+                          listings={nodes}
+                          hasNextPage={hasNextPage}
+                        />
+                        {!hasNextPage ? null : (
+                          <button
+                            className="btn btn-outline-primary btn-rounded mt-3"
+                            onClick={() => {
+                              if (!loading) {
+                                nextPage(fetchMore, { ...vars, after })
+                              }
+                            }}
+                          >
+                            {loading ? 'Loading...' : 'Load more'}
+                          </button>
+                        )}
+                      </>
                     )}
                   </>
                 </BottomScrollListener>
@@ -123,6 +184,8 @@ require('react-styl')(`
     font-weight: 200;
     color: var(--dark);
     margin-top: 3rem
+  .listings-empty
+    margin-top: 10rem
   @media (max-width: 767.98px)
     .listings-count
       margin: 1rem 0 0 0

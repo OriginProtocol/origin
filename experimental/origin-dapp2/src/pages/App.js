@@ -68,52 +68,66 @@ class App extends Component {
       )
     }
     return (
-      <Query query={CreatorConfigQuery} variables={{creatorConfigUrl: creatorConfigUrl}}>
-       {({ loading, error, data, networkStatus }) => {
-         if (networkStatus === 1) {
+      <Query
+        query={CreatorConfigQuery}
+        variables={{ creatorConfigUrl: creatorConfigUrl }}
+      >
+        {({ loading, error, data, networkStatus }) => {
+          if (networkStatus === 1) {
+            return (
+              <div className="app-loading">
+                <h5>Loading</h5>
+                <div>Please wait</div>
+              </div>
+            )
+          }
+          const creatorConfig = get(data, 'creatorConfig', {})
+          applyConfiguration(creatorConfig)
           return (
-            <div className="app-loading">
-              <h5>Loading</h5>
-              <div>Please wait</div>
-            </div>
+            <>
+              <BetaBanner />
+              <BetaModal />
+              <Nav creatorConfig={creatorConfig} />
+              <main>
+                <Switch>
+                  <Route path="/listings/:listingID" component={Listing} />
+                  <Route path="/purchases/:offerId" component={Transaction} />
+                  <Route
+                    path="/my-purchases/:filter?"
+                    component={MyPurchases}
+                  />
+                  <Route path="/my-sales/:filter?" component={MySales} />
+                  <Route path="/my-listings/:filter?" component={MyListings} />
+                  <Route path="/create" component={CreateListing} />
+                  <Route path="/user/:id" component={User} />
+                  <Route path="/profile" component={Profile} />
+                  <Route path="/messages/:room?" component={Messages} />
+                  <Route path="/notifications" component={Notifications} />
+                  <Route path="/about/dapp-info" component={DappInfo} />
+                  <Route path="/about/tokens" component={AboutToken} />
+                  <Route
+                    render={props => (
+                      <Listings
+                        {...props}
+                        isCreatedMarketplace={
+                          creatorConfig.isCreatedMarketplace
+                        }
+                        filters={creatorConfig.listingFilters}
+                      />
+                    )}
+                  />
+                </Switch>
+              </main>
+              <TranslationModal locale={this.props.locale} />
+              <Footer
+                locale={this.props.locale}
+                onLocale={this.props.onLocale}
+                creatorConfig={creatorConfig}
+              />
+            </>
           )
-        }
-        const creatorConfig = get(data, 'creatorConfig', {})
-        applyConfiguration(creatorConfig)
-        return (
-          <>
-            <BetaBanner />
-            <BetaModal />
-            <Nav creatorConfig={creatorConfig} />
-            <main>
-              <Switch>
-                <Route path="/listings/:listingID" component={Listing} />
-                <Route path="/purchases/:offerId" component={Transaction} />
-                <Route path="/my-purchases/:filter?" component={MyPurchases} />
-                <Route path="/my-sales/:filter?" component={MySales} />
-                <Route path="/my-listings/:filter?" component={MyListings} />
-                <Route path="/create" component={CreateListing} />
-                <Route path="/user/:id" component={User} />
-                <Route path="/profile" component={Profile} />
-                <Route path="/messages/:room?" component={Messages} />
-                <Route path="/notifications" component={Notifications} />
-                <Route path="/about/dapp-info" component={DappInfo} />
-                <Route path="/about/tokens" component={AboutToken} />
-                <Route render={(props) =>
-                    <Listings {...props} filters={creatorConfig.listingFilters} />
-                  }
-                />
-              </Switch>
-            </main>
-            <TranslationModal locale={this.props.locale} />
-            <Footer locale={this.props.locale}
-              onLocale={this.props.onLocale}
-              creatorConfig={creatorConfig}
-            />
-          </>
-        )
-       }}
-     </Query>
+        }}
+      </Query>
     )
   }
 }

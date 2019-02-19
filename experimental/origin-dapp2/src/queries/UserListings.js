@@ -3,9 +3,9 @@ import fragments from './Fragments'
 
 const UserListingsQuery = gql`
   query UserListings(
-    $id: ID!,
-    $first: Int,
-    $after: String,
+    $id: ID!
+    $first: Int
+    $after: String
     $filters: [ListingFilterInput!]
   ) {
     marketplace {
