@@ -10,6 +10,9 @@ const enums = require('./enums')
 // HTML template for the /eth landing page.
 const html = fs.readFileSync(`${__dirname}/../public/eth.html`).toString()
 
+// Max number of transactions that can be waiting to be mined.
+const MaxNumberPendingTxnCount = 30
+
 /**
  * Singleton class for managing a monotonically increasing nonce
  * to send web3 transactions.
@@ -28,13 +31,14 @@ const html = fs.readFileSync(`${__dirname}/../public/eth.html`).toString()
  *  Redis or Postgres.
  *  - The nonce would go out of sync if anything else than
  *  the faucet process sends a transaction from the hotwallet.
- *  - A failure of one of the transaction within a batch will cause some others
- *  to fail. For more info on hole in nonce sequence, see this article:
+ *  - A failure of one of the transaction within a batch will cause subsequent
+ *  transaction to be stuck until the nonce hole is filled.
+ *  For more info on hole in nonce sequence, see this article:
  *  https://ethereum.stackexchange.com/questions/2808/what-happens-when-a-transaction-nonce-is-too-high
  *  - Ethereum nodes have an upper limit of 64 transactions per
  *  source address that they can store in their buffer. Which translates
  *  directly into the max number of pending transactions the faucet
- *  can hendle before some start failing. This is roughly 64 / 15 = 4tps.
+ *  can handle before some start failing. This is roughly 64 / 15 = 4tps.
  */
 class NonceManager {
   constructor(web3, ethAddress) {
@@ -187,6 +191,12 @@ class EthDistributor {
         return this._error(res, `Address ${ethAddress} already used this code.`)
       }
 
+      // Safety valve ! Refuse to submit too many pending transactions.
+      if (this.nonceMgr.pendingTxnCount > MaxNumberPendingTxnCount) {
+        logger.error('Too many pending transactions: ${this.pendingTxnCount}')
+        throw new Error('Too many pending transactions. Retry later.')
+      }
+
       // Create a FaucetTxn row in Pending status.
       let txnHash = null
       const faucetTxn = await db.FaucetTxn.create({
@@ -208,13 +218,16 @@ class EthDistributor {
           `Blockchain call to send ${amount.toFixed()} to ${ethAddress}
           from ${this.hotWalletAddress} with nonce ${nonce}`
         )
-        const receipt = await await this.web3.eth.sendTransaction({
+        const receipt = await this.web3.eth.sendTransaction({
           from: this.hotWalletAddress,
           to: ethAddress,
           value: amount.toFixed(),
           gas: 21000,
           nonce
         })
+        if (!receipt || !receipt.status) {
+          throw new Error('No receipt or receipt status false')
+        }
         txnHash = receipt.transactionHash
       } catch (e) {
         throw e
