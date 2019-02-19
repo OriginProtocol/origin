@@ -3,7 +3,6 @@ import { Query } from 'react-apollo'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 import find from 'lodash/find'
-import remove from 'lodash/remove'
 import filter from 'lodash/filter'
 import { fbt } from 'fbt-runtime'
 
@@ -31,7 +30,7 @@ function filteredState(stateFilters, newFilters) {
       filter.name !== newCategoryFilter.name
     })
   } else if (find(newFilters, { name: 'price.amount' })) {
-    return filter(stateFilters, (filter) => {
+    return filter(stateFilters, filter => {
       filter.name !== 'price.amount'
     })
   }
@@ -93,9 +92,7 @@ class Listings extends Component {
     return (
       <>
         <PageTitle>
-          <fbt desc="Listings.title">
-            Listings
-          </fbt>
+          <fbt desc="Listings.title">Listings</fbt>
         </PageTitle>
         <Search
           value={this.state.search}

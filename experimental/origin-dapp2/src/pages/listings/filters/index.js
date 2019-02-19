@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 import PriceFilter from 'pages/listings/filters/PriceFilter'
@@ -93,7 +94,9 @@ class FilterGroup extends Component {
           className="nav-link"
           data-parent="#search-filters-bar"
         >
-          {formTitle}
+          <fbt desc="searchForm.title">
+            <fbt:param name="title">{formTitle}</fbt:param>
+          </fbt>
         </a>
         <form
           className={`dropdown-menu${this.props.open ? ' show' : ''}`}

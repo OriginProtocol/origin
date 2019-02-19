@@ -3,7 +3,11 @@ import get from 'lodash/get'
 
 export default class PageTitle extends Component {
   componentDidMount() {
-    const content = get(this.props, 'children.props.content', this.props.children)
+    const content = get(
+      this.props,
+      'children.props.content',
+      this.props.children
+    )
     const title = this._cleanTitle(content)
     document.title = title + ' - Origin'
   }

@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import Categories from 'origin-graphql/src/constants/Categories'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
-import schemaMessages from '../../../schemaMessages/index'
+const CategoriesEnum = require('Categories$FbtEnum')
+
 import {
   FILTER_OPERATOR_CONTAINS,
   VALUE_TYPE_ARRAY_STRING
@@ -111,7 +113,11 @@ class MultipleSelectionFilter extends Component {
               }
             />
             <label htmlFor={multipleSelectionValue}>
-              {schemaMessages[multipleSelectionValue].defaultMessage}
+              <fbt desc="multipleSelection.message">
+                <fbt:param name="selectionValue">
+                  {CategoriesEnum[multipleSelectionValue]}
+                </fbt:param>
+              </fbt>
             </label>
           </div>
         ))}
