@@ -16,8 +16,8 @@ import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 class CreateListing extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       listing: {
         title: '',
@@ -38,6 +38,9 @@ class CreateListing extends Component {
         booked: [],
         customPricing: [],
         unavailable: [],
+
+        // Marketplace creator fields:
+        marketplacePublisher: this.props.marketplacePublisher,
 
         ...store.get('create-listing', {})
       }

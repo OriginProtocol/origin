@@ -98,7 +98,17 @@ class App extends Component {
                   />
                   <Route path="/my-sales/:filter?" component={MySales} />
                   <Route path="/my-listings/:filter?" component={MyListings} />
-                  <Route path="/create" component={CreateListing} />
+                  <Route
+                    path="/create"
+                    render={props => (
+                      <CreateListing
+                        {...props}
+                        marketplacePublisher={
+                          creatorConfig.marketplacePublisher
+                        }
+                      />
+                    )}
+                  />
                   <Route path="/user/:id" component={User} />
                   <Route path="/profile" component={Profile} />
                   <Route path="/messages/:room?" component={Messages} />

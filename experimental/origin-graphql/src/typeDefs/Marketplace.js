@@ -339,6 +339,8 @@ module.exports = `
     commission: String
     "commission, in natural units, to be paid for each unit sold"
     commissionPerUnit: String
+
+    marketplacePublisher: String
   }
 
   input UnitListingInput {
