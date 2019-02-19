@@ -24,4 +24,4 @@ COPY ./origin-contracts/releases/0.8.6/build/ ./origin-contracts/build/
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix origin-faucet && \
-	npm run start:listener --prefix origin-faucet
+	npm run start --prefix origin-faucet
