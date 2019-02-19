@@ -6,8 +6,7 @@ const {
   GrowthEventTypes,
   GrowthEventStatuses,
   GrowthCampaignStatuses,
-  GrowthActionStatus,
-  GrowthActionType } = require('../enums')
+  GrowthActionStatus } = require('../enums')
 
 // System cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
@@ -377,7 +376,7 @@ class BaseRule {
   /**
    * classes extending this one should implement this method
    */
-  toApolloObject(ethAddress, events, currentUserLevel) {
+  toApolloObject() {
     throw new Error('Not implemented')
   }
 }

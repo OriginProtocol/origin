@@ -1,6 +1,5 @@
 //const GraphQLJSON = require('graphql-type-json')
 const { GraphQLDateTime } = require('graphql-iso-date')
-const { Campaign } = require('../rules/rules')
 const { Fetcher } = require('../rules/rules')
 const { getLocationInfo } = require('../util/locationInfo')
 

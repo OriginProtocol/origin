@@ -256,8 +256,8 @@ const countryMap = {
 const getLocationInfo = countryCode => {
   if (!countryCode)
     return null
-  
-  return response = {
+
+  return {
     countryName: countryCode && countryMap[countryCode],
     countryCode: countryCode,
     isRestricted: restrictedCountryCodes.includes(countryCode),
