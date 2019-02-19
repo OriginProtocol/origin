@@ -30,8 +30,11 @@ class PriceFilter extends Component {
 
   componentDidUpdate(previousProps) {
     const newMaxPrice = previousProps.maxPrice !== this.props.maxPrice
-    if (newMaxPrice) this.onClear()
+    const newMinPrice = previousProps.minPrice !== this.props.minPrice
+
+    if (newMaxPrice || newMinPrice) this.onClear()
   }
+
   componentWillUnmount() {
     this.props.onChildUnMounted(this)
   }
