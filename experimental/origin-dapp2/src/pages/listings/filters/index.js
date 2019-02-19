@@ -14,15 +14,12 @@ class FilterGroup extends Component {
     this.removeChildFilter = this.removeChildFilter.bind(this)
     this.applyFilters = this.applyFilters.bind(this)
     this.clearFilters = this.clearFilters.bind(this)
-    this.toggleDropDown = this.toggleDropDown.bind(this)
-
-    this.state = { open: false }
   }
 
   async clearFilters(event) {
     event.preventDefault()
     event.persist()
-    this.setState({ open: false })
+    this.props.toggleDropDown()
 
     this.childFilters.forEach(childFilter =>
       childFilter.onClear(() => this.props.saveFilters())
@@ -31,7 +28,7 @@ class FilterGroup extends Component {
 
   async applyFilters(event) {
     event.preventDefault()
-    this.setState({ open: false })
+    this.props.toggleDropDown()
 
     Promise.all(
       this.childFilters.map(childFilter => childFilter.getFilters())
@@ -52,15 +49,6 @@ class FilterGroup extends Component {
     if (index !== -1) this.childFilters.splice(index, 1)
   }
 
-  toggleDropDown() {
-    if (this.state.open) {
-      this.setState({ open: false })
-      return
-    } else {
-      this.setState({ open: true })
-    }
-  }
-
   render() {
     const formTitle = get(
       this.props,
@@ -70,14 +58,14 @@ class FilterGroup extends Component {
     return (
       <li className="search-filters nav-item">
         <a
-          onClick={this.toggleDropDown}
+          onClick={this.props.toggleDropDown}
           className="nav-link"
           data-parent="#search-filters-bar"
         >
           {formTitle}
         </a>
         <form
-          className={`dropdown-menu${this.state.open ? ' show' : ''}`}
+          className={`dropdown-menu${this.props.open ? ' show' : ''}`}
           id={formTitle}
         >
           <div className="d-flex flex-column">

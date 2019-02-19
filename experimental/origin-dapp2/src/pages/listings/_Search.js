@@ -32,6 +32,8 @@ class Search extends Component {
     super(props)
 
     this.filterByDropDown = this.filterByDropDown.bind(this)
+    this.toggleDropDown = this.toggleDropDown.bind(this)
+
     this.state = {
       ...getStateFromQuery(props),
       maxPrice: 10000,
@@ -76,6 +78,18 @@ class Search extends Component {
       }
     })
   }
+
+  toggleDropDown(title) {
+    return (e) => {
+      if (this.state.open[title]) {
+        this.setState({ open: {} })
+      } else {
+        this.setState({ open: { [title]: true } })
+      }
+      return
+    }
+  }
+
   render() {
     const { category = {}, searchInput, minPrice, maxPrice, open } = this.state
     const enabled = get(this.props, 'config.discovery', false)
@@ -88,12 +102,12 @@ class Search extends Component {
               <Dropdown
                 className="input-group-prepend"
                 content={<SearchDropdown onChange={this.filterByDropDown} />}
-                open={open}
-                onClose={() => this.setState({ open: false })}
+                open={open['Category Dropdown']}
+                onClose={this.toggleDropDown('Category Dropdown')}
               >
                 <button
                   className="btn btn-outline-secondary dropdown-toggle"
-                  onClick={() => this.setState({ open: open ? false : true })}
+                  onClick={this.toggleDropDown('Category Dropdown')}
                 >
                   {CategoriesEnum[category.id] ? (
                     <fbt desc="category">
@@ -133,16 +147,22 @@ class Search extends Component {
           <div className="container d-flex flex-row">
             <ul className={filterSchemaItems.length ? 'navbar-nav collapse navbar-collapse' : ''}>
               {filterSchemaItems.map(
-                (filterGroup, key) => (
-                  <FilterGroup
-                    key={filterGroup.title + key}
-                    filterGroup={filterGroup}
-                    minPrice={minPrice}
-                    maxPrice={maxPrice}
-                    category={category}
-                    saveFilters={this.props.saveFilters}
-                  />
-                )
+                (filterGroup, key) => {
+                  const filterTitle = get(filterGroup, 'title.defaultMessage', '')
+
+                  return (
+                    <FilterGroup
+                      key={filterTitle + key}
+                      filterGroup={filterGroup}
+                      minPrice={minPrice}
+                      maxPrice={maxPrice}
+                      category={category}
+                      saveFilters={this.props.saveFilters}
+                      toggleDropDown={this.toggleDropDown(filterTitle)}
+                      open={this.state.open[filterTitle]}
+                    />
+                  )
+                }
               )}
             </ul>
           </div>
