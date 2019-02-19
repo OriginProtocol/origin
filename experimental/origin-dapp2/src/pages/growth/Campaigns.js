@@ -82,7 +82,7 @@ class ProgressBar extends Component {
 
     return (
       <Fragment>
-        <div className="campaign-progress mt-3" style={{ width: '100%' }}>
+        <div className="campaign-progress mt-3">
           <div className="background" />
           {progress > 0 && (
             <div
@@ -107,8 +107,8 @@ class ProgressBar extends Component {
 
 function Action(props) {
   let { type, status, reward, rewardEarned, rewardPending } = props.action
-  //const showLockIcon = status === 'inactive'
-  const showLockIcon = true
+  const showLockIcon = status === 'inactive'
+
   const actionCompleted = ['exhausted', 'completed'].includes(status)
   let backgroundImgSrc = actionCompleted
     ? 'images/identity/verification-shape-green.svg'
@@ -133,7 +133,7 @@ function Action(props) {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
     title = 'Update your name and picture'
     infoText = 'Edit your profile and update your name and picture'
-  } else if (type === 'phoneNumber') {
+  } else if (type === 'phone') {
     foregroundImgSrc = '/images/identity/phone-icon-light.svg'
     title = 'Verify your Phone Number'
     infoText = 'Confirm your phone number in attestations'
@@ -281,7 +281,7 @@ function Campaign(props) {
     subTitleText = 'Get Origin Tokens by completing tasks below'
   } else if (status === 'pending') {
     timeLabel = `Starts in:${formatTimeDifference(Date.now(), startDate)}`
-    subTitleText = 'Campaign has not started yet'
+    subTitleText = `This campaign hasn't started yet`
   } else if (status === 'completed') {
     subTitleText = 'This campaign has finished'
   }
@@ -495,6 +495,7 @@ require('react-styl')(`
         -webkit-transition: width 0.5s;
         transition: width 0.5s;
       height: 10px;
+      width: 100%;
       position: relative;
     .ogn-amount
       color: var(--clear-blue);
@@ -554,7 +555,7 @@ require('react-styl')(`
         left: 20px;
         top: 27px;
         width: 30px;
-      .phoneNumber
+      .phone
         position: absolute;
         left: 25px;
         top: 20px;

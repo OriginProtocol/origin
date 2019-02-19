@@ -28,7 +28,7 @@ module.exports =
 
   enum GrowthActionType {
     email
-    phoneNumber
+    phone
     twitter
     airbnb
     facebook
@@ -44,9 +44,9 @@ module.exports =
   }
 
   enum Eligibility {
-    Eligible
-    Restricted
-    Forbidden
+    eligible
+    restricted
+    forbidden
   }
 
   type Invite {

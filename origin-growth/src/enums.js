@@ -37,13 +37,13 @@ const GrowthActionStatus = new Enum(
 const GrowthActionType = new Enum(
   'profile',
   'email',
-  'phoneNumber',
+  'phone',
   'twitter',
   'airbnb',
   'facebook',
   'referral',
   'listingCreated',
-  'ListingPurchased'
+  'listingPurchased'
 )
 
 const GrowthEventStatuses = new Enum('Logged', 'Verified', 'Fraud')

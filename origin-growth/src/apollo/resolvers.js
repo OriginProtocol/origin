@@ -44,13 +44,13 @@ const resolvers = {
         return {
           code: 200,
           success: true,
-          eligibility: 'Eligible',
+          eligibility: 'eligible',
           countryName: 'N/A',
           countryCode: 'N/A'
         }
       }
 
-      const locationInfo = await getLocationInfo(context.userIp)
+      const locationInfo = getLocationInfo(context.countryCode)
       if (!locationInfo) {
         return {
           code: 500,
@@ -58,9 +58,9 @@ const resolvers = {
           message: 'Internal server error'
         }
       }
-      let eligibility = 'Eligible'
-      if (locationInfo.isForbidden) eligibility = 'Forbidden'
-      else if (locationInfo.isRestricted) eligibility = 'Restricted'
+      let eligibility = 'eligible'
+      if (locationInfo.isForbidden) eligibility = 'forbidden'
+      else if (locationInfo.isRestricted) eligibility = 'restricted'
 
       return {
         code: 200,

@@ -39,10 +39,7 @@ const rule = {
           class: 'SingleEvent',
           config: {
             eventType: 'EmailAttestationPublished',
-            reward: {
-              amount: tokenNaturalUnits(10),
-              currency: 'OGN'
-            },
+            reward: null,
             visible: true,
             limit: 1,
             nextLevelCondition: false

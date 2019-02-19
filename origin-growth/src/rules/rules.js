@@ -17,7 +17,7 @@ const sumUpRewards = (rewards) => {
     return null
   }
 
-  const finalReward = rewards.reduce((first, second) => {
+  const totalReward = rewards.reduce((first, second) => {
     if (first.currency !== second.currency)
       throw new Error(`At least two rewards have different currencies. ${first.currency} ${second.currency}`)
     return {
@@ -27,31 +27,25 @@ const sumUpRewards = (rewards) => {
   })
 
   return {
-    amount: finalReward.amount.toString(),
-    currency: finalReward.currency
+    amount: totalReward.amount.toString(),
+    currency: totalReward.currency
   }
 }
 
 const eventTypeToActionType = (eventType) => {
-  if (eventType === 'ProfilePublished'){
-    return 'profile'
-  } else if (eventType === 'EmailAttestationPublished'){
-    return 'email'
-  } else if (eventType === 'FacebookAttestationPublished'){
-    return 'facebook'
-  } else if (eventType === 'AirbnbAttestationPublished'){
-    return 'airbnb'
-  } else if (eventType === 'TwitterAttestationPublished'){
-    return 'twitter'
-  } else if (eventType === 'PhoneAttestationPublished'){
-    return 'phoneNumber'
-  } else if (eventType === 'RefereeSignedUp'){
-    return 'referral'
-  } else if (eventType === 'ListingCreated'){
-    return 'listingCreated'
-  } else if (eventType === 'ListingPurchased'){
-    return 'listingPurchased'
-  } 
+  const eventToActionType = {
+    'ProfilePublished': 'profile',
+    'EmailAttestationPublished': 'email',
+    'FacebookAttestationPublished': 'facebook',
+    'AirbnbAttestationPublished': 'airbnb',
+    'TwitterAttestationPublished': 'twitter',
+    'PhoneAttestationPublished': 'phone',
+    'RefereeSignedUp': 'referral',
+    'ListingCreated': 'listingCreated',
+    'ListingPurchased': 'listingPurchased'
+  }
+
+  return eventToActionType[eventType]
 }
 
 class Reward {

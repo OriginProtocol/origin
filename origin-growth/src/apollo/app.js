@@ -39,18 +39,17 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   context: context => {
-    let userIp = null
+    let countryCode = null
     const headers = context.req.headers
-    /* TODO: this needs to be tested on production. On localhost x-forwarded-for headers are not set
-     * - mark this as a Pull Request check list item and then delete it
+    /* TODO: this needs to be tested on production that google rightly sets X-AppEngine-Country
      */
     if (headers) {
-      userIp = headers['x-forwarded-for'] || null
+      countryCode = headers['X-AppEngine-Country'] || null
     }
 
     return {
       ...context,
-      userIp
+      countryCode
     }
   }
 })

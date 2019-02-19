@@ -20,7 +20,7 @@ export default {
   },
   Listing: {
     basic: gql`
-      fragment basicListingFields on Listing {
+      fragment basicListingFields on ListingResult {
         id
         status
         totalEvents

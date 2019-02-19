@@ -45,7 +45,7 @@ class GrowthWelcome extends Component {
             </div>
             <div className="sub-title-text">
               Create an account on Origin today and start completing tasks for
-              the chance to will up to 2000 OGN currently valued at 2000 USD.
+              the chance to earn up to 2000 OGN currently valued at 2000 USD.
               Don’t miss this amazing opportunity!
             </div>
             <this.EnrollButton
