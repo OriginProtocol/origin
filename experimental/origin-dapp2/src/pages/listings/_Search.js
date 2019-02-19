@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import get from 'lodash/get'
-import find from 'lodash/find'
-import isNil from 'lodash/isNil'
 
 import isEmpty from 'lodash/isEmpty'
 import queryString from 'query-string'

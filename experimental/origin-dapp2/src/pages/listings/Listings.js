@@ -104,7 +104,7 @@ class Listings extends Component {
             notifyOnNetworkStatusChange={true}
           >
             {({ error, data, fetchMore, networkStatus, loading }) => {
-              if (networkStatus === 1) {
+              if (networkStatus === 1 || loading) {
                 return <h5 className="listings-count">Loading...</h5>
               } else if (error) {
                 return <QueryError error={error} query={query} vars={vars} />

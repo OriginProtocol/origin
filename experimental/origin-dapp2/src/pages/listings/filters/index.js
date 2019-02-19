@@ -86,7 +86,8 @@ class FilterGroup extends Component {
       <li
         onMouseOver={() => (this.mouseOver = true)}
         onMouseOut={() => (this.mouseOver = false)}
-        className="search-filters nav-item">
+        className="search-filters nav-item"
+      >
         <a
           onClick={this.props.onClose}
           className="nav-link"
