@@ -53,23 +53,25 @@ const DappInfo = () => (
       <section className="col-lg-6">
         <table className="config-table">
           {sectionThead({ title: 'DApp' })}
-          <tbody>{dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}</tbody>
-          <Query query={growthEligibilityQuery}>
-          {({ networkStatus, error, loading, data }) => {
-            if (networkStatus === 1 || loading) {
-              return `Loading...`
-            }
-            else if (error) {
-              return `Error loading location information`
-            }
+          <tbody>
+            {dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}
+            <Query query={growthEligibilityQuery}>
+            {({ networkStatus, error, loading, data }) => {
+              if (networkStatus === 1 || loading) {
+                return dataTr({ key: 'Detected country', value: 'Loading...' })
+              }
+              else if (error) {
+                return dataTr({ key: 'Detected country', value: 'Error getching country' })
+              }
 
-            const { countryName, eligibility } = data.isEligible
-            return (<Fragment>
-              <tbody>{dataTr({ key: 'Detected country', value: countryName })}</tbody>
-              <tbody>{dataTr({ key: 'Growth eligibility: ', value: eligibility })}</tbody>
-            </Fragment>)
-          }}
-          </Query>
+              const { countryName, eligibility } = data.isEligible
+              return (<Fragment>
+                {dataTr({ key: 'Detected country', value: countryName })}
+                {dataTr({ key: 'Growth eligibility: ', value: eligibility })}
+              </Fragment>)
+            }}
+            </Query>
+          </tbody>
         </table>
 
         <Query query={configQuery} notifyOnNetworkStatusChange={true}>
