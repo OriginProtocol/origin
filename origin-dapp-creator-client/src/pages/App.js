@@ -57,9 +57,13 @@ class App extends React.Component {
     ) {
       this.setState({
         config: {
-          listings: {
-            ...this.state.config.filters.listings,
-            marketplacePublisher: nextAddress
+          ...this.state.config,
+          filters: {
+            ...this.state.config.filters,
+            listings: {
+              ...this.state.config.filters.listings,
+              marketplacePublisher: nextAddress
+            }
           }
         }
       })
