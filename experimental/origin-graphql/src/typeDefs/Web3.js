@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   type Subscription {
     newBlock: Block
     newTransaction: NewTransaction
@@ -26,6 +26,21 @@ export default `
     tokens: [Token]
     token(id: String!): Token
     ethUsd: String
+    configObj: Config
+  }
+
+  type Config {
+    affiliate: String
+    arbitrator: String
+    discovery: String
+    bridge: String
+    facebookAuthUrl: String
+    ipfsRPC: String
+    ipfsGateway: String
+    ipfsEventCache: String
+    provider: String
+    providerWS: String
+    originGraphQLVersion: String
   }
 
   type Mutation {
@@ -35,6 +50,7 @@ export default `
     deployToken(name: String!, symbol: String!, decimals: String!, supply: String!, type: String, from: String): Transaction
     transferToken(token: String!, from: String!, to: String!, value: String!): Transaction
     updateTokenAllowance(token: String!, from: String!, to: String!, value: String!): Transaction
+    useFaucet(wallet: String!, networkId: String): Boolean
 
     sendFromNode(from: String!, to: String!, value: String!): Transaction
     sendFromWallet(from: String!, to: String!, value: String!): Transaction
@@ -56,12 +72,6 @@ export default `
     defaultAccount: Account
     transaction(id: ID!): Transaction
     transactionReceipt(id: ID!): TransactionReceipt
-    transactions(
-      first: Int
-      last: Int
-      before: String
-      after: String
-    ): TransactionConnection!
     useMetaMask: Boolean
     metaMaskAvailable: Boolean
     metaMaskEnabled: Boolean
@@ -70,11 +80,9 @@ export default `
     metaMaskAccount: Account
     metaMaskNetworkId: Int
     metaMaskNetworkName: String
-  }
-
-  type Price {
-    currency: String
-    amount: String
+    walletType: String
+    mobileWalletAccount: Account
+    primaryAccount: Account
   }
 
   type Account {
@@ -129,13 +137,6 @@ export default `
     from: TokenHolder
   }
 
-  type TransactionConnection {
-    nodes: [Transaction]
-    pageInfo: PageInfo!
-    totalCount: Int!
-    hasPending: Boolean
-  }
-
   type Transaction {
     id: ID!
     status: String
@@ -151,6 +152,9 @@ export default `
     value: String
     pct: Float
     receipt: TransactionReceipt
+
+    # Timestamp transaction originally submitted
+    submittedAt: Int
   }
 
   type TransactionReceipt {
@@ -191,6 +195,7 @@ export default `
     logIndex: Int
     raw: EventRaw
     returnValues: EventReturnValues
+    returnValuesArr: [EventReturnValuesArr]
     signature: String
     transactionHash: String
     transactionIndex: Int
@@ -208,6 +213,12 @@ export default `
     offerID: ID
     party: String!
     ipfsHash: String!
+    ipfsUrl: String
+  }
+
+  type EventReturnValuesArr {
+    field: String
+    value: String
   }
 
   type Block {

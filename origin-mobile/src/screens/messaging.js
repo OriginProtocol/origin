@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { WebView } from 'react-native-webview'
+import { connect } from 'react-redux'
 
 import originWallet from '../OriginWallet'
 
@@ -14,13 +15,20 @@ class MessagingScreen extends Component {
   }
 
   render() {
+    const { address } = this.props
     return (
       <WebView
         source={{ uri: originWallet.getMessagingUrl() }}
-        injectedJavaScript = {`window.__linkToWalletContainer && window.__linkToWalletContainer('${originWallet.getWalletToken()};')`}
+        injectedJavaScript = {`window.__setWalletMessaging && window.__setWalletMessaging('${address}', ${JSON.stringify(originWallet.getMessagingKeys())});`}
       />
     )
   }
 }
 
-export default MessagingScreen
+const mapStateToProps = state => {
+  return {
+    address: state.wallet.address,
+  }
+}
+
+export default connect(mapStateToProps)(MessagingScreen)

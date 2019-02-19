@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.3</string>
+	<string>0.2.7</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6</string>
+	<string>3</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -54,6 +54,8 @@
 	<string>We would like to use your camera to scan in the QR link address</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We will not be using the location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We will not be using microphone</string>
 	<key>NSMotionUsageDescription</key>
 	<string>We will not be using Motion</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

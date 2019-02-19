@@ -1,5 +1,5 @@
 /*
- * Implementation of the Origin GraphQL server.
+ * Implementation of the Origin Growth GraphQL server.
  * Uses the Apollo framework: https://www.apollographql.com/server
  */
 require('dotenv').config()

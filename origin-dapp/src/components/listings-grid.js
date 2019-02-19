@@ -70,48 +70,103 @@ class ListingsGrid extends Component {
             </div>
           </div>
         )}
+
         {contractFound && (
           <div className="listings-grid">
             {resultsCount > 0 && (
-              <h1>
-                <FormattedMessage
-                  id={'listings-grid.listingsCount'}
-                  defaultMessage={'{listingIdsCount} Listings'}
-                  values={{
-                    listingIdsCount: (
-                      <FormattedNumber value={resultsCount} />
-                    )
-                  }}
-                />
-              </h1>
-            )}
+              <>
+                <h1>
+                  <FormattedMessage
+                    id={'listings-grid.listingsCount'}
+                    defaultMessage={'{listingIdsCount} Listings'}
+                    values={{
+                      listingIdsCount: (
+                        <FormattedNumber value={resultsCount} />
+                      )
+                    }}
+                  />
+                </h1>
+              <div className="row">
+                {currentPageListingIds.map(id => (
+                  <ListingCard
+                    listingId={id}
+                    key={id}
+                  />
+                ))}
+              </div>
+              <Pagination
+                activePage={parseInt(activePage)}
+                itemsCountPerPage={LISTINGS_PER_PAGE}
+                totalItemsCount={resultsCount}
+                pageRangeDisplayed={5}
+                onChange={this.handleOnChange}
+                itemClass="page-item"
+                linkClass="page-link"
+                hideDisabled="true"
+              />
+            </>
+          )}
+
+          {resultsCount == 0 && this.props.renderMode !== 'search' && this.props.isWhiteLabel && (
             <div className="row">
-              {currentPageListingIds.map(id => (
-                <ListingCard
-                  listingId={id}
-                  key={id}
-                />
-              ))}
+              <div className="col-12 text-center">
+                <img src="images/empty-listings-graphic.svg" />
+                <h1>
+                  <FormattedMessage
+                    id={'listings.no-listings-whitelabel'}
+                    defaultMessage={"Your marketplace doesn't have any listings yet."}
+                  />
+                </h1>
+                <p>
+                  <FormattedMessage
+                    id={'listings.no-listings-whitelabel-message'}
+                    defaultMessage={
+                      'You can create listings yourself or invite sellers to join your platform!'
+                    }
+                  />
+                </p>
+                <br />
+                <br />
+                <div className="row">
+                  <div className="col text-center">
+                    <a
+                      href="#/create"
+                      className="btn btn-lrg btn-primary btn-auto-width"
+                    >
+                      <FormattedMessage
+                        id={'listings.create-listing'}
+                        defaultMessage={'Create a Listing'}
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
-            <Pagination
-              activePage={parseInt(activePage)}
-              itemsCountPerPage={LISTINGS_PER_PAGE}
-              totalItemsCount={resultsCount}
-              pageRangeDisplayed={5}
-              onChange={this.handleOnChange}
-              itemClass="page-item"
-              linkClass="page-link"
-              hideDisabled="true"
-            />
-          </div>
-        )}
-      </div>
+          )}
+
+          {resultsCount == 0 && this.props.renderMode === 'search' && (
+            <div className="row">
+              <div className="col-12 text-center">
+                <img src="images/empty-listings-graphic.svg" />
+                <h1>
+                  <FormattedMessage
+                    id={'listings.no-search-results'}
+                    defaultMessage={'No search results found.'}
+                  />
+                </h1>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
   contractFound: state.listings.contractFound,
+  isWhiteLabel: state.config.isWhiteLabel,
   listingIds: state.listings.ids
 })
 

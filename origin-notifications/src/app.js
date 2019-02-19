@@ -5,6 +5,7 @@ try {
   console.log('EnvKey not configured')
 }
 
+const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const webpush = require('web-push')
@@ -155,7 +156,7 @@ app.post('/events', async (req, res) => {
     const receivers = {}
     const buyerMessage = getNotificationMessage(eventName, party, buyerAddress, 'buyer')
     const sellerMessage = getNotificationMessage(eventName, party, sellerAddress, 'seller')
-    const event_data = { url: offer && dapp_offer_url + offer.id, to_dapp: true }
+    const event_data = { url: offer && path.join(dapp_offer_url, offer.id), to_dapp: true }
 
     if (buyerMessage || sellerMessage)
     {

@@ -1,0 +1,34 @@
+{{- if eq .Release.Namespace "dev" -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "dapp2.fullname" . }}
+  labels:
+    app: {{ template "dapp2.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: origin-dapp
+  annotations:
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/limit-rps: "50"
+spec:
+  tls:
+    - secretName: {{ template "dapp2.host" . }}
+      hosts:
+        - {{ template "dapp2.host" . }}
+  rules:
+  - host: {{ template "dapp2.host" . }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{ template "dapp2.fullname" . }}
+            servicePort: 80
+{{- end -}}

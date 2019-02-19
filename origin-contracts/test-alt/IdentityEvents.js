@@ -22,7 +22,7 @@ describe('IdentityEvents', async function() {
     // Check an update event was emitted
     const events = await identityEvents.getPastEvents(
       'IdentityUpdated',
-      { filter: { user } },
+      { filter: { account: user } },
     )
     const updateEvent = events[0]
     assert.equal(updateEvent.returnValues.account, user)
@@ -35,7 +35,7 @@ describe('IdentityEvents', async function() {
     // Check a delete event was emitted.
     const events = await identityEvents.getPastEvents(
       'IdentityDeleted',
-      { filter: { user } },
+      { filter: { account: user } },
     )
     const deleteEvent = events[0]
     assert.equal(deleteEvent.returnValues.account, user)

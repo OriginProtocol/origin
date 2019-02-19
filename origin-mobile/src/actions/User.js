@@ -1,6 +1,6 @@
-import origin from 'services/origin'
-
 import keyMirror from 'utils/keyMirror'
+
+import origin from '../services/origin'
 
 export const UserConstants = keyMirror(
   {
@@ -20,7 +20,7 @@ export function fetchUser(address) {
         type: UserConstants.FETCH_SUCCESS,
         user,
       })
-    } catch(error) {
+    } catch (error) {
       dispatch({ type: UserConstants.FETCH_ERROR, error })
     }
   }

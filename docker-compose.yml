@@ -39,8 +39,11 @@ services:
       # Addresses for deployment of contracts to local blockchain will get
       # written to the build files
       - ./origin-contracts/build:/app/origin-contracts/build
+      - ./origin-contracts/migrations:/app/origin-contracts/migrations
       - ./origin-js/scripts:/app/origin-js/scripts
       - ./origin-js/package.json:/app/origin-js/package.json
+      - ./origin-js/test:/app/origin-js/test
+      - ./origin-js/src:/app/origin-js/src
     command: npm run start --prefix origin-js
 
   origin-ipfs-proxy:
@@ -67,6 +70,9 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
+      - AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
+      - ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
+      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
     depends_on:
       - origin
       - postgres
@@ -74,6 +80,22 @@ services:
     ports:
       - "4000:4000"
     command: npm run start:discovery --prefix origin-discovery
+
+  origin-growth:
+    container_name: origin-growth
+    image: origin
+    volumes:
+      - ./experimental/origin-graphql/src:/app/experimental/origin-graphql/src
+      - ./origin-growth/src:/app/origin-growth/src
+      - ./origin-growth/config:/app/origin-growth/config
+      - ./origin-growth/package.json:/app/origin-growth/package.json
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+    depends_on:
+      - postgres
+    ports:
+      - "4001:4001"
+    command: npm run start:growth --prefix origin-growth
 
   event-listener:
     container_name: event-listener

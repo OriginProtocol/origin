@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Animated, Dimensions, FlatList, Image, SafeAreaView, StatusBar } from 'react-native'
+import { Animated, Dimensions, FlatList, Image, SafeAreaView, StatusBar, StyleSheet } from 'react-native'
 
 import OnboardingPage from 'components/onboarding-page'
 import OnboardingPagination from 'components/onboarding-pagination'
@@ -62,14 +62,13 @@ class Onboarding extends Component {
       controlStatusBar,
       pages,
       onCompletion,
+      onEnable,
     } = this.props
     const { height, width } = Dimensions.get('window')
     const currentPage = pages[this.state.currentPage]
 
     return (
-      <Animated.View
-        style={{ flex: 1, backgroundColor: '#293f55', justifyContent: 'center', paddingVertical: 56 }}
-      >
+      <Animated.View style={styles.container}>
         <StatusBar barStyle={'light-content'} />
         <SafeAreaView style={{ alignItems: 'center', width }}>
           <Image source={require(IMAGES_PATH + 'origin-logo-light.png')} />
@@ -94,6 +93,7 @@ class Onboarding extends Component {
             controlStatusBar={controlStatusBar}
             pagesCount={pages.length}
             onCompletion={onCompletion}
+            onEnable={onEnable}
             onNext={this.goNext}
           />
         </SafeAreaView>
@@ -103,3 +103,13 @@ class Onboarding extends Component {
 }
 
 export default Onboarding
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#293f55',
+    flex: 1,
+    justifyContent: 'center',
+    paddingBottom: '5%',
+    paddingTop: 56,
+  }
+})

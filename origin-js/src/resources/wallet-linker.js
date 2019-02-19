@@ -55,6 +55,11 @@ export default class WalletLinker {
       })
 
       this.linked = linked
+
+      if (linked && priv_key)
+      {
+        localStorage.setItem(LOCAL_KEY_STORE, priv_key)
+      }
       if (this.session_token != session_token)
       {
         this.session_token = session_token
@@ -131,6 +136,10 @@ export default class WalletLinker {
     return provider
   }
 
+  testSignMessage() {
+    console.log('signMessage fired..', arguments)
+  }
+
   getAccounts(callback) {
     if (callback) {
       callback(undefined, this.accounts)
@@ -138,6 +147,35 @@ export default class WalletLinker {
       return new Promise(resolve => {
         resolve(this.accounts)
       })
+    }
+  }
+
+  // NOTE this is emulate metamask's sendAsync for eth_signTypedData_v3
+  sendAsync({ method, params, from }, callback) {
+    console.log('sendAsync:', method, params, from)
+
+    if (method == 'eth_signTypedData_v3')
+    {
+      const call_id = uuidv1()
+      //translate gas to gasLimit
+      this.callbacks[call_id] = async data => {
+        callback(undefined, data)
+      }
+      const call = this.createCall('signMessage', { method, data: params[1], signer: params[0] })
+      if (!this.linked) {
+        throw new Error('Cannot sign from an unlinked wallet')
+      } else {
+        const result = this.post('call-wallet/'+ this.session_token, {
+          call_id,
+          accounts: this.accounts,
+          call,
+          return_url: this.getReturnUrl()
+        })
+        result.then(() => {}).catch(error_data => {
+          delete this.callbacks[call_id]
+          callback(error_data, undefined)
+        })
+      }
     }
   }
 
@@ -270,14 +308,12 @@ export default class WalletLinker {
           {
             const data = JSON.parse(this.ecDecrypt(device.priv_data))
 
-            if (!data)
+            if (data)
             {
-              // something is very wrong here, and we need to reset the link
-              this.logout()
-            }
-            else if (data.messaging && this.callbacks['messaging'])
-            {
-              this.callbacks['messaging'](data.messaging)
+              if (data.messaging && this.callbacks['messaging'])
+              {
+                this.callbacks['messaging'](data.messaging)
+              }
             }
           }
         }
@@ -421,7 +457,7 @@ export default class WalletLinker {
           if (this.msg_ws === ws) {
             this.syncLinkMessages()
           }
-        }, 60000) // check in 60 seconds
+        }, 30000) // check in 60 seconds
       }
     }
     this.msg_ws = ws

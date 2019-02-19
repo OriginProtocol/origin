@@ -4,6 +4,9 @@ import get from 'lodash/get'
 
 import IdentityQuery from 'queries/Identity'
 import Reviews from 'components/Reviews'
+import Avatar from 'components/Avatar'
+
+import UserListings from './_UserListings'
 
 class User extends Component {
   render() {
@@ -13,23 +16,16 @@ class User extends Component {
         <Query query={IdentityQuery} variables={{ id }}>
           {({ data, loading, error }) => {
             if (loading || error) return null
-            const profile = get(data, 'web3.account.identity.profile')
+            const profile = get(data, 'web3.account.identity')
             if (!profile) {
-              return null
+              return <div>User Not Found</div>
             }
 
             return (
               <>
                 <div className="row">
                   <div className="col-lg-2 col-md-3">
-                    {profile.avatar ? (
-                      <div
-                        className="main-avatar"
-                        style={{ backgroundImage: `url(${profile.avatar})` }}
-                      />
-                    ) : (
-                      <div className="main-avatar empty" />
-                    )}
+                    <Avatar avatar={profile.avatar} className="main-avatar" />
                     <div className="verified-info">
                       <h5>Verified Info</h5>
                       {profile.phoneVerified && (
@@ -77,6 +73,8 @@ class User extends Component {
                     <div className="reviews-container">
                       <Reviews id={id} />
                     </div>
+
+                    <UserListings user={id} />
                   </div>
                 </div>
               </>
@@ -94,15 +92,10 @@ require('react-styl')(`
   .user-profile
     padding-top: 3rem
     .main-avatar
-      width: 100%
-      padding-top: 100%
-      background-size: contain;
       border-radius: 1rem;
-      background-repeat: no-repeat
-      background-position: center
-      &.empty
-        background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
-        background-size: 63%
+    .description
+      max-width: 50rem
+
     .verified-info
       background-color: var(--pale-grey)
       padding: 1rem

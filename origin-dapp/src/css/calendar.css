@@ -22,62 +22,8 @@
   float: right;
 }
 
-.rbc-event,
-.rbc-event-content {
-  border: none !important;
-  padding: 0;
-}
-
-.rbc-event,
-.rbc-event-content,
-.calendar-event {
-  background-color: var(--dusk) !important;
-  border: 1px solid var(--dusk) !important;
-  border-radius: 0;
-}
-
-.calendar-event {
-  font-size: 12px;
-  padding: 0 5px;
-}
-
-.calendar-event.recurring {
-  background-color: var(--dusk) !important;
-  border: 1px solid var(--dusk) !important;
-}
-
-.calendar-event.non-recurring {
-  background-color: var(--dark-grey) !important;
-  border: 1px solid var(--dark-grey) !important;
-}
-
-.calendar-container.daily-view .calendar-event {
-  font-size: 15px;
-  font-weight: bold;
-}
-
-.rbc-event.rbc-selected .calendar-event {
-  background-color: var(--dark-grey) !important;
-  border: 1px solid var(--dark-grey) !important;
-}
-
-.calendar-container.hourly-view .rbc-event-content {
-  position: absolute;
-  bottom: 0;
-  height: inherit !important;
-  min-height: inherit !important;
-}
-
-.calendar-container.hourly-view .calendar-event {
-  position: absolute;
-  bottom: 0;
-  padding-bottom: 5px;
-}
-
-.rbc-event-label {
-  max-width: 100%;
-  font-size: 12px;
-  white-space: inherit;
+.rbc-event {
+  display: none !important;
 }
 
 .rbc-allday-cell {
@@ -101,6 +47,7 @@
 
 .rbc-day-bg {
   position: relative;
+  border: 1px solid #ddd;
 }
 
 .rbc-day-bg span {
@@ -109,34 +56,63 @@
   position: absolute;
 }
 
-.calendar-container.buyer-view .rbc-day-bg.past-date,
-.calendar-container.buyer-view .rbc-time-slot.unavailable {
+.rbc-day-bg.unavailable {
   background: var(--pale-grey) !important;
 }
 
-.calendar-container.buyer-view .rbc-day-bg.selected,
-.calendar-container.buyer-view .rbc-time-slot.selected {
-  background: var(--dusk) !important;
-  color: white;
+.rbc-day-bg.unavailable.future-date {
+  background: var(--pale-grey-four) !important;
 }
 
-.calendar-container.buyer-view .rbc-time-slot {
+.calendar-container .rbc-time-slot.unavailable {
+  background: var(--pale-grey);
+}
+
+.calendar-container .rbc-day-bg.selected,
+.calendar-container .rbc-day-bg.dragging {
+  border: 1px solid var(--dark);
+}
+
+.calendar-container .rbc-day-bg.selected.first-selected,
+.calendar-container .rbc-day-bg.dragging.first-selected {
+  border-right: 1px solid #ddd;
+}
+
+.calendar-container .rbc-day-bg.selected.last-selected,
+.calendar-container .rbc-day-bg.dragging.last-selected {
+  border-left: 1px solid #ddd;
+}
+
+.calendar-container .rbc-day-bg.selected.middle-selected,
+.calendar-container .rbc-day-bg.dragging.middle-selected {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.calendar-container .rbc-time-slot {
   font-size: 15px;
   display: flex;
   align-items: flex-end;
   padding: 2px 3px;
 }
 
-.calendar-container.buyer-view.hourly-view .rbc-calendar .rbc-day-bg {
+.calendar-container.hourly-view .rbc-calendar .rbc-day-bg {
   font-size: 7px;
 }
 
-.rbc-day-bg.unavailable {
-  background: url(/images/diagonal-line.png);
-  background-size: 100% 100%;
+.rbc-month-row,
+.rbc-month-row + .rbc-month-row {
+  border-top: none;
+}
+
+.rbc-row-content,
+.rbc-time-header-cell,
+.rbc-events-container {
+  pointer-events: none;
 }
 
 .rbc-date-cell {
+  pointer-events: none;
   padding-left: 5px;
   text-align: left;
   vertical-align: top;
@@ -146,6 +122,22 @@
 .calendar-container.buyer-view.hourly-view .rbc-calendar .rbc-date-cell {
   cursor: default;
   font-size: 10px;
+}
+
+.buyer-view .rbc-time-slot.available:not(.selected):hover,
+.buyer-view .rbc-day-bg.available:not(.selected):hover {
+  background: var(--pale-grey-eight) !important;
+  cursor: pointer;
+}
+
+.seller-view .rbc-time-slot.future-date:not(.selected):hover,
+.seller-view .rbc-day-bg.future-date:not(.selected):hover {
+  background: var(--pale-grey-eight) !important;
+  cursor: pointer;
+}
+
+.slot-price {
+  pointer-events: none;
 }
 
 .calendar-nav {
@@ -172,25 +164,27 @@
   cursor: pointer;
 }
 
-.calendar-cta {
-  color: white;
-  background: var(--dark);
-  padding: 1px 15px 15px;
-  margin-top: 45px;
-  position: relative;
+.calendar-nav .go-to-today-btn {
+  cursor: pointer;
+  margin-left: 40px;
+  margin-top: -5px;
+  display: inline-block;
+  vertical-align: bottom;
+  margin-bottom: 5px;
 }
 
-.calendar-cta .delete-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+.calendar-right-column {
+  padding-top: 45px;
+}
+
+.calendar-cta {
+  padding: 1px 15px 15px;
+  position: relative;
+  border: 1px solid var(--light);
+  border-radius: 5px;
 }
 
 .calendar-cta p, .calendar-cta label {
-  color: white;
   font-size: 18px;
   margin-bottom: 5px;
 }
@@ -204,31 +198,36 @@
 }
 
 .calendar-cta input[type="number"] {
-  background: var(--dark);
-  border: 1px solid white;
-  color: white;
+  background: var(--pale-grey-four);
+  border: 1px solid var(--light);
   width: 50%;
   padding: 5px;
 }
 
 .calendar-cta input[type="number"]::placeholder,
 .calendar-cta input[type="number"]::-webkit-input-placeholder {
-  color: white;
   font-size: 18px;
 }
 
 .calendar-cta select,
 .calendar-cta select:focus,
 .calendar-cta select:active {
-  background: var(--dark);
-  color: white;
-  border: none;
+  background: var(--pale-grey-four);
+  border: 1px solid var(--light);
   height: 34px;
 }
 
 .calendar-cta .btn {
   display: inline-block;
   width: inherit;
+  border: 1px solid var(--clear-blue);
+  color: var(--clear-blue);
+  background: white;
+}
+
+.calendar-cta .btn:hover {
+  background: var(--clear-blue);
+  color: white;
 }
 
 .calendar-cta .price-label {
@@ -237,10 +236,11 @@
 
 .calendar-cta .cta-btns .col-md-6 {
   padding-top: 20px;
+  text-align: center;
 }
 
-.calendar-cta .cta-btns .col-md-6 {
-  text-align: center;
+.calendar-cta .edit-series-container {
+  padding-top: 25px;
 }
 
 /* Media queries */
@@ -260,7 +260,7 @@
 /* lg + */
 @media (min-width: 992px) {
   .calendar-container {
-    height: 475px;
+    height: 503px;
   }
 }
 

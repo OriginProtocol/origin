@@ -2,14 +2,16 @@ import React, { Component } from 'react'
 import { Prompt } from 'react-router-dom'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import { storeWeb3Intent, showMainNav, showWelcomeWarning } from 'actions/App'
 import {
   deployProfile,
   deployProfileReset,
   updateProfile,
-  addAttestation
+  addAttestation,
+  resetIdentity,
+  oldIdentityVersion
 } from 'actions/Profile'
 
 import Avatar from 'components/avatar'
@@ -30,8 +32,13 @@ import VerifyFacebook from './VerifyFacebook'
 import VerifyTwitter from './VerifyTwitter'
 import VerifyAirbnb from './VerifyAirbnb'
 import ConfirmPublish from './ConfirmPublish'
+import ConfirmReset from './ConfirmReset'
 import ConfirmUnload from './ConfirmUnload'
 import AttestationSuccess from './AttestationSuccess'
+
+import origin from '../../services/origin'
+
+const { web3 } = origin.contractService
 
 /*
 const etherscanNetworkUrls = {
@@ -81,7 +88,13 @@ class Profile extends Component {
         publish: false,
         twitter: false,
         unload: false,
-        imageCropper: false
+        imageCropper: false,
+        // Show the identity reset modal if the following conditions are met:
+        //  1. Old identity
+        //  2. Not a mobile device (since unlikely user can publish a new identity from mobile)
+        // Note that the profile may not have been fetched yet. In such case,
+        // modal may get enabled as part of the logic in componentDidUpdate.
+        reset: this.props.profile.user.version === oldIdentityVersion && !this.props.mobileDevice
       },
       // percentage widths for two progress bars
       progress: {
@@ -146,6 +159,16 @@ class Profile extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // Show identity reset modal if:
+    //  1. prevProps indicates the user profile just got loaded
+    //  2. It's an old identity version
+    //  3. Not a mobile device (since unlikely user can publish a new identity from mobile)
+    if (!prevProps.profile.user.version &&
+      this.props.profile.user.version === oldIdentityVersion &&
+      !this.props.mobileDevice) {
+      this.setState( { modalsOpen: { ...this.state.modalsOpen, reset: true } })
+    }
+
     // prompt user if tab/window is closing before changes have been published
     if (this.props.changes.length) {
       window.addEventListener('beforeunload', this.handleUnload)
@@ -282,6 +305,15 @@ class Profile extends Component {
 
     window.addEventListener('resize', this.updateProfileMobileLayout)
     this.updateProfileMobileLayout()
+
+    if (
+      !this.props.wallet.address &&
+      web3.currentProvider.isOrigin &&
+      origin.contractService.walletLinker
+    ) {
+      this.props.storeWeb3Intent('edit your profile')
+      origin.contractService.showLinkPopUp()
+    }
   }
 
   updateProfileMobileLayout() {
@@ -619,6 +651,17 @@ class Profile extends Component {
           }}
         />
 
+        <ConfirmReset
+          open={modalsOpen.reset}
+          changes={changes}
+          handleToggle={this.handleToggle}
+          onConfirm={() => {
+            this.setState({ modalsOpen: { ...modalsOpen, reset: false } })
+            this.props.resetIdentity()
+          }}
+          mobileDevice={mobileDevice}
+        />
+
         <ConfirmPublish
           open={modalsOpen.publish}
           changes={changes}
@@ -792,6 +835,7 @@ const mapDispatchToProps = dispatch => ({
   addAttestation: data => dispatch(addAttestation(data)),
   deployProfile: opts => dispatch(deployProfile(opts)),
   deployProfileReset: () => dispatch(deployProfileReset()),
+  resetIdentity: () => dispatch(resetIdentity()),
   storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
   showMainNav: (showNav) => dispatch(showMainNav(showNav)),
   showWelcomeWarning: (showWarning) => dispatch(showWelcomeWarning(showWarning)),

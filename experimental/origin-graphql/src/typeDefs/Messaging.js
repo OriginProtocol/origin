@@ -1,11 +1,12 @@
-export default `
+module.exports = `
   extend type Query {
     messaging(id: String!): Messaging
   }
 
   extend type Mutation {
     enableMessaging: Boolean
-    sendMessage(to: String!, content: String!): Boolean
+    sendMessage(to: String!, content: String, media: [MediaInput]): Conversation
+    markConversationRead(id: String!): Boolean
   }
 
   type Messaging {
@@ -16,12 +17,16 @@ export default `
     pubKey: String
     pubSig: String
     conversations: [Conversation]
+    conversation(id: String!): Conversation
+    totalUnread: Int
   }
 
   type Conversation {
     id: ID!
-    timestamp: String
+    timestamp: Int
     messages: [Message]
+    lastMessage: Message
+    totalUnread: Int
   }
 
   type Message {
@@ -29,12 +34,10 @@ export default `
     address: String
     hash: String
     index: Int
-    msg: MessageContent
-  }
-
-  type MessageContent {
     content: String
-    created: String
+    media: [Media]
+    timestamp: Int
+    status: String
   }
 
 `

@@ -1,0 +1,7 @@
+[
+  { "name" : "listingID", "type" : "uint256" },
+  { "name" : "offerID", "type" : "uint256" },
+  { "name" : "ipfsHash", "type" : "bytes32" },
+  { "name" : "payOut", "type" : "uint256" },
+  { "name" : "behalfFee", "type" : "uint256" }
+]

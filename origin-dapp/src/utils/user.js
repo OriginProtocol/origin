@@ -2,7 +2,16 @@ import origin from '../services/origin'
 
 const { web3 } = origin.contractService
 
-const MAX_ADDRESS_LENGTH = 9
+const MAX_ADDRESS_LENGTH = 10
+
+export function abbreviateName(party = {}, defaultName = '') {
+  const { profile = {}, fullName } = party
+  const { firstName = '', lastName = '' } = profile
+  const lastNameLetter = lastName.length ? `${lastName.charAt(0)}.` : ''
+  const abbreviatedName = fullName && `${firstName} ${lastNameLetter}`
+
+  return abbreviatedName || defaultName
+}
 
 /**
  * Takes an Ethereum address and formats it for reliable comparison or display
@@ -16,23 +25,11 @@ export function formattedAddress(string) {
   return web3.utils.toChecksumAddress(string)
 }
 
-
-export function truncateAddress(address = '') {
+export function truncateAddress(address = '', chars = 5) {
   if (address.length <= MAX_ADDRESS_LENGTH) return address
   const separator = '...'
-  const frontChars = 5
-  const backChars = 4
 
-  return address.substr(0, frontChars)
+  return address.substr(0, chars)
     + separator
-    + address.substr(address.length - backChars)
-}
-
-export function abbreviateName(party = {}, defaultName = '') {
-  const { profile = {}, fullName } = party
-  const { firstName = '', lastName = '' } = profile
-  const lastNameLetter = lastName.length ? `${lastName.charAt(0)}.` : ''
-  const abbreviatedName = fullName && `${firstName} ${lastNameLetter}`
-
-  return abbreviatedName || defaultName
+    + address.substr(address.length - chars)
 }

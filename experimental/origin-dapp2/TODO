@@ -1,0 +1,97 @@
+# Messaging
+
+- Dropdown
+- Conversation page
+- Upload pictures
+- Read / unread
+
+
+# Listing detail
+
+- 'Pending Listing' state
+
+
+# Transaction Detail
+
+- Arbitration
+- Fulfillment checklist: https://app.zeplin.io/project/59fa2311bac7acbc8d953da9/screen/5be35b6f08d1323cf3a0723b
+
+
+# Notifications dropdown
+
+# Notifications page
+
+# Transaction dropdown
+
+---------------------------------
+
+# General
+
+- 'Connected' nav
+- Mainnet Beta modal
+- Mainnet Beta top bar
+
+
+# Search results
+
+- Sub-category search filters
+- Alter URL when searching
+- 'Load more' button styling / spinner
+
+
+# Create listing
+
+- Success modal
+
+
+# Listing detail
+
+- 'Pending Listing' state
+- Contact seller button
+- Mobile view
+
+
+# Transaction Detail
+
+- Tx History: Hash link
+- Listing detail
+
+
+# My Purchases / Listings / Sales
+
+- Active / Inactive filters
+- Order most recent first
+
+
+# Onboarding
+
+- Notifications icon
+- Question mark / checkmark icon
+- Help box copy
+- Visit Browser Settings link on desktop notifications
+- Buy button when MetaMask pointed to non-existant private network
+- Show bell when approved wallet present
+
+
+# User Profile
+
+- Save provisional attestations / profile changes across page refresh
+
+
+# Create / Edit Profile
+
+# Reviews
+
+# Identity Nav
+
+# Edit Listing
+
+# Notifications dropdown
+
+# Notifications page
+
+# Transaction dropdown
+
+# About page
+
+# DApp info page

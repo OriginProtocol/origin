@@ -37,6 +37,20 @@ const config = {
         type: 'javascript/auto'
       },
       {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'babel-loader'
+          },
+          {
+            loader: 'react-svg-loader',
+            options: {
+              jsx: true // true outputs JSX tags
+            }
+          }
+        ]
+      },
+      {
         test: /\.css$/,
         use: [
           {
@@ -75,34 +89,38 @@ const config = {
     new HtmlWebpackPlugin({ template: 'public/index.html', inject: false }),
     new CopyWebpackPlugin([
       'public/favicon.ico',
+      'public/metamask.mp4',
       { from: 'public/images', to: 'images' }
     ]),
     new Dotenv(),
-    new webpack.EnvironmentPlugin([
-      'DAPP_CREATOR_API_URL',
-      'DAPP_CREATOR_DOMAIN',
-      'DAPP_URL',
-      'PROVIDER_URL',
-      'IPFS_GATEWAY_URL'
-    ])
+    new webpack.EnvironmentPlugin({
+      DAPP_CREATOR_API_URL: null,
+      DAPP_CREATOR_DOMAIN: null,
+      DAPP_URL: null,
+      IPFS_API_URL: null,
+      IPFS_GATEWAY_URL: null,
+      SSL_ISSUER_IP: null
+    })
   ],
   optimization: {}
 }
 
 if (isProduction) {
-  config.output.filename = '[name].[hash:8].js',
+  config.output.filename = '[name].[hash:8].js'
+
   config.optimization.minimizer = [
     new TerserPlugin({ cache: true, parallel: true }),
     new OptimizeCSSAssetsPlugin({})
   ]
+
   config.plugins.push(
     new CleanWebpackPlugin(['public/app.*', 'public/styles.*']),
     new MiniCssExtractPlugin({
       filename: '[name].[hash:8].css'
     })
   )
+
   config.plugins.push(new webpack.IgnorePlugin(/redux-logger/))
 }
 
 module.exports = config
-

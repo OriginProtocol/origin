@@ -1,6 +1,8 @@
-const featured = {}, hidden = {}
+const featured = {},
+  hidden = {}
 
 export async function getFeatured(net) {
+  if (net === 'localhost') return [1]
   let netId
   if (net === 'mainnet') netId = 1
   if (net === 'rinkeby') netId = 4

@@ -32,10 +32,6 @@
     "defaultMessage": "In order to {web3Intent}, you must sign in to {currentProvider}."
   },
   {
-    "id": "web3-provider.connecting",
-    "defaultMessage": "Connecting to network..."
-  },
-  {
     "id": "web3-provider.shouldBeOnRinkeby",
     "defaultMessage": "{currentProvider} should be set to {supportedNetworkName}."
   },

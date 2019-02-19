@@ -28,17 +28,26 @@ function verifyConversationSignature(keysMap) {
   }
 }
 
-function verifyConversers(conversee, keysMap){
+function verifyConversers(conversee, keysMap) {
   return (o, contentObject) => {
-    const checkString = joinConversationKey(conversee, o.parentSub) +
-      contentObject.ts.toString()
-    const verifyAddress = web3.eth.accounts.recover(checkString, contentObject.sig)
+    const checkString =
+      joinConversationKey(conversee, o.parentSub) + contentObject.ts.toString()
+    const verifyAddress = web3.eth.accounts.recover(
+      checkString,
+      contentObject.sig
+    )
     const parentKey = keysMap.get(o.parentSub)
     const converseeKey = keysMap.get(conversee)
 
-    if ((parentKey && verifyAddress == parentKey.address) ||
-        (converseeKey && verifyAddress == keysMap.get(conversee).address)) {
-      logger.debug(`Verified conv init for ${conversee}, Signature: ${contentObject.sign}, Signed with: ${verifyAddress}`)
+    if (
+      (parentKey && verifyAddress == parentKey.address) ||
+      (converseeKey && verifyAddress == keysMap.get(conversee).address)
+    ) {
+      logger.debug(
+        `Verified conv init for ${conversee}, Signature: ${
+          contentObject.sign
+        }, Signed with: ${verifyAddress}`
+      )
       return true
     }
     return false
@@ -47,7 +56,9 @@ function verifyConversers(conversee, keysMap){
 
 function verifyMessageSignature(keysMap, orbitGlobal) {
   return (signature, key, message, buffer) => {
-    logger.debug(`Verify message: ${message.id}, Key: ${key}, Signature: ${signature}`)
+    logger.debug(
+      `Verify message: ${message.id}, Key: ${key}, Signature: ${signature}`
+    )
 
     const verifyAddress = web3.eth.accounts.recover(
       buffer.toString('utf8'),
@@ -56,20 +67,31 @@ function verifyMessageSignature(keysMap, orbitGlobal) {
     const entry = keysMap.get(key)
 
     const db_store = orbitGlobal.stores[message.id]
-    if (config.NOTIFY_API_ENDPOINT && db_store && db_store.__snapshot_loaded && db_store.access.write.includes(key))
-    {
+    if (
+      config.LINKING_NOTIFY_ENDPOINT &&
+      db_store &&
+      db_store.__snapshot_loaded &&
+      db_store.access.write.includes(key)
+    ) {
       const value = message.payload.value
       if (value.length && value[0].emsg) {
-        const receivers = db_store.access.write.filter(address => address != key).
-          reduce((acc, i) => {acc[i] = { newMessage: true }; return acc}, {})
+        const receivers = db_store.access.write
+          .filter(address => address != key)
+          .reduce((acc, i) => {
+            acc[i] = { newMessage: true }
+            return acc
+          }, {})
 
-        fetch(config.NOTIFY_API_ENDPOINT, {
+        fetch(config.LINKING_NOTIFY_ENDPOINT, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ receivers, token: config.NOTIFY_API_SECURE_TOKEN })
+          body: JSON.stringify({
+            receivers,
+            token: config.LINKING_NOTIFY_TOKEN
+          })
         })
       }
     }
@@ -88,10 +110,13 @@ function verifyRegistrySignature(signature, key, message) {
     const extractedAddress = '0x' + web3.utils.sha3(value.pub_key).substr(-40)
 
     if (extractedAddress == value.address.toLowerCase()) {
-
       const verifyPhAddress = web3.eth.accounts.recover(value.ph, value.phs)
       if (verifyPhAddress == value.address) {
-        logger.debug(`Key verified: ${value.msg}, Signature: ${signature}, Signed with, ${verifyAddress}`)
+        logger.debug(
+          `Key verified: ${
+            value.msg
+          }, Signature: ${signature}, Signed with, ${verifyAddress}`
+        )
         return true
       }
     }

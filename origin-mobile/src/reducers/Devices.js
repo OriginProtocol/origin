@@ -1,7 +1,7 @@
 import { DevicesConstants } from 'actions/Devices'
 
 const initialState = {
-  devices: []
+  devices: [],
 }
 
 export default function Devices(state = initialState, action = {}) {

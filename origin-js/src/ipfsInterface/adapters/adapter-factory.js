@@ -1,4 +1,5 @@
 import DisputeAdapterV1 from './dispute/v1-dispute-adapter'
+import IdentityAdapterV1 from './identity/v1-identity-adapter'
 import ListingAdapterV1 from './listing/v1-listing-adapter'
 import ListingWithdrawAdapterV1 from './listing-withdraw/v1-listing-withdraw-adapter'
 import OfferAdapterV1 from './offer/v1-offer-adapter'
@@ -7,6 +8,7 @@ import OfferWithdrawAdapterV1 from './offer-withdraw/v1-offer-withdraw-adapter'
 import ProfileAdapterV1 from './profile/v1-profile-adapter'
 import ResolutionAdapterV1 from './resolution/v1-resolution-adapter'
 import ReviewAdapterV1 from './review/v1-review-adapter'
+
 
 const adapterConfig = {
   'listing': {
@@ -35,6 +37,9 @@ const adapterConfig = {
   },
   'review': {
     '1.0.0': ReviewAdapterV1,
+  },
+  'identity': {
+    '1.0.0': IdentityAdapterV1,
   }
 }
 

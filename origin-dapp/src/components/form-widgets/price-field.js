@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getFiatPrice } from 'utils/priceUtils'
-import { FormattedMessage } from 'react-intl'
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl'
 
 class PriceField extends Component {
   constructor(props) {
@@ -14,11 +14,25 @@ class PriceField extends Component {
     const { options } = props
     const { selectedSchema } = options
     const enumeratedPrice =
-      selectedSchema && selectedSchema.properties['price'].enum
+      selectedSchema &&
+      selectedSchema.properties['price'] &&
+      selectedSchema.properties['price'].enum
+
     this.priceHidden =
       enumeratedPrice &&
       enumeratedPrice.length === 1 &&
       enumeratedPrice[0] === 0
+
+    this.intlMessages = defineMessages({
+      'singularPrice': {
+        id: 'schema.priceInEth.singular',
+        defaultMessage: 'Price'
+      },
+      'multiUnitPrice': {
+        id: 'schema.priceInEth.multiUnit',
+        defaultMessage: 'Price (per unit)'
+      }
+    })
   }
 
   componentDidMount() {
@@ -54,12 +68,23 @@ class PriceField extends Component {
   render() {
     const { price, currencyCode } = this.state
     const priceUsd = getFiatPrice(price, currencyCode, 'ETH')
+    const { isMultiUnitListing } = this.props.formContext
+    const fieldTitle = this.props.schema.title
 
     return (
       !this.priceHidden && (
         <div className="price-field">
           <label className="control-label" htmlFor="root_price">
-            {this.props.schema.title}
+            {
+              fieldTitle === 'price' ?
+                this.props.intl.formatMessage(
+                  isMultiUnitListing ?
+                    this.intlMessages.multiUnitPrice :
+                    this.intlMessages.singularPrice
+                )
+                :
+                fieldTitle
+            }
             {this.props.required && <span className="required">*</span>}
           </label>
           <div className="row">
@@ -92,8 +117,8 @@ class PriceField extends Component {
           </div>
           <p className="help-block">
             <FormattedMessage
-              id={'price-field.price-help'}
-              defaultMessage={'The price is always in {currency}. '}
+              id={'price-field.price-help-v1'}
+              defaultMessage={'Listings are always priced in {currency}. '}
               values={{
                 currency: (
                   <a
@@ -124,4 +149,4 @@ const mapStateToProps = ({ exchangeRates }) => ({
   exchangeRates
 })
 
-export default connect(mapStateToProps)(PriceField)
+export default connect(mapStateToProps)(injectIntl(PriceField))

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import origin from '../services/origin'
 
 class DappInfo extends Component {
@@ -62,7 +62,7 @@ class DappInfo extends Component {
     }
 
     return (
-      <React.Fragment>
+      <Fragment>
         <tr>
           <td>Contract Address</td>
           <td>{token._address}</td>
@@ -95,7 +95,7 @@ class DappInfo extends Component {
           <td>Transactor Whitelist</td>
           <td>{whitelistStatus}</td>
         </tr>
-      </React.Fragment>
+      </Fragment>
     )
   }
 
@@ -200,6 +200,7 @@ class DappInfo extends Component {
               <h1>DApp Info</h1>
               <h3 className="lead">Developer information about this build</h3>
               <table width="100%">
+                <tbody>
                 <tr>
                   <th colSpan="2">origin.js</th>
                 </tr>
@@ -231,6 +232,10 @@ class DappInfo extends Component {
                   <td>{process.env.ARBITRATOR_ACCOUNT}</td>
                 </tr>
                 <tr>
+                  <td>ATTESTATION_ACCOUNT</td>
+                  <td>{process.env.ATTESTATION_ACCOUNT}</td>
+                </tr>
+                <tr>
                   <td>BRIDGE_SERVER_DOMAIN</td>
                   <td>{process.env.BRIDGE_SERVER_DOMAIN}</td>
                 </tr>
@@ -255,10 +260,6 @@ class DappInfo extends Component {
                 <tr>
                   <td>DISCOVERY_SERVER_URL</td>
                   <td>{process.env.DISCOVERY_SERVER_URL}</td>
-                </tr>
-                <tr title="Temp env var for enabling fractional usage.">
-                  <td>ENABLE_FRACTIONAL</td>
-                  <td>{process.env.ENABLE_FRACTIONAL}</td>
                 </tr>
                 <tr title="For enabling fetching data from backend.">
                   <td>ENABLE_PERFORMANCE_MODE</td>
@@ -336,6 +337,18 @@ class DappInfo extends Component {
                   <td>RINKEBY_DAPP_BASEURL</td>
                   <td>{process.env.RINKEBY_DAPP_BASEURL}</td>
                 </tr>
+                <tr>
+                  <td>SHOW_WALLET_LINKER</td>
+                  <td>{process.env.SHOW_WALLET_LINKER}</td>
+                </tr>
+                <tr>
+                  <td>WALLET_LANDING_URL</td>
+                  <td>{process.env.WALLET_LANDING_URL}</td>
+                </tr>
+                <tr>
+                  <td>WALLET_LINKER_URL</td>
+                  <td>{process.env.WALLET_LINKER_URL}</td>
+                </tr>
 
                 <tr>
                   <th colSpan="2">Marketplace Contracts</th>
@@ -351,6 +364,7 @@ class DappInfo extends Component {
                   <th colSpan="2">ABIs</th>
                 </tr>
                 {this.state.multiSigData}
+                </tbody>
               </table>
               &nbsp;
             </div>

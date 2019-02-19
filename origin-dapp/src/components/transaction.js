@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import TransactionMessage from 'components/transaction-message'
 

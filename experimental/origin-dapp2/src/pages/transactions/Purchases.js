@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
+import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
 
@@ -8,38 +9,43 @@ import TokenPrice from 'components/TokenPrice'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
+import QueryError from 'components/QueryError'
+import PageTitle from 'components/PageTitle'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import nextPageFactory from 'utils/nextPageFactory'
-import PurchasesQuery from 'queries/Purchases'
+import query from 'queries/Purchases'
 
 const nextPage = nextPageFactory('marketplace.user.offers')
 
 class Purchases extends Component {
   render() {
-    const vars = { first: 15, id: this.props.wallet }
+    const vars = { first: 5, id: this.props.wallet }
+    const filter = get(this.props, 'match.params.filter', 'pending')
+    if (filter !== 'all') {
+      vars.filter = filter
+    }
 
     return (
       <div className="container purchases">
+        <PageTitle>My Purchases</PageTitle>
         <Query
-          query={PurchasesQuery}
+          query={query}
           variables={vars}
           notifyOnNetworkStatusChange={true}
+          skip={!this.props.wallet}
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1 || !this.props.wallet) {
-              return <div>Loading...</div>
+              return <LoadingSpinner />
+            } else if (error) {
+              return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {
               return <p className="p-3">No marketplace contract?</p>
-            } else if (error) {
-              return <p className="p-3">Error :(</p>
             }
 
             const { nodes, pageInfo, totalCount } = data.marketplace.user.offers
             const { hasNextPage, endCursor: after } = pageInfo
-
-            if (!totalCount) {
-              return <NoPurchases />
-            }
 
             return (
               <BottomScrollListener
@@ -77,6 +83,7 @@ class Purchases extends Component {
                       </ul>
                     </div>
                     <div className="col-md-9">
+                      {totalCount > 0 ? null : <NoPurchases />}
                       {nodes.map(({ listing, ...offer }) => (
                         <div
                           className="purchase"
@@ -115,10 +122,10 @@ class Purchases extends Component {
                       ))}
                       {!hasNextPage ? null : (
                         <button
-                          text={
-                            networkStatus === 3 ? 'Loading' : 'Load more...'
+                          children={
+                            networkStatus === 3 ? 'Loading...' : 'Load more'
                           }
-                          className="mt-3"
+                          className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>
                             nextPage(fetchMore, { ...vars, after })
                           }
@@ -143,7 +150,7 @@ const NoPurchases = () => (
       <h1>You haven’t bought anything yet.</h1>
       <p>Click below to view all listings.</p>
       <br />
-      <Link to="/" className="btn btn-lrg btn-primary">
+      <Link to="/" className="btn btn-lg btn-primary btn-rounded">
         Browse Listings
       </Link>
     </div>
@@ -162,9 +169,10 @@ require('react-styl')(`
         color: var(--white)
     .purchase
       border: 1px solid var(--pale-grey-two);
-      border-radius: 5px;
+      border-radius: var(--default-radius);
       padding: 0.5rem;
       display: flex
+      margin-bottom: 1rem
       .main-pic
         width: 360px
         margin-right: 1rem

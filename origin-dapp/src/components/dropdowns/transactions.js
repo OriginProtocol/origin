@@ -4,8 +4,7 @@ import { connect } from 'react-redux'
 
 import Dropdown from 'components/dropdown'
 import Transaction from '../transaction'
-
-const CONFIRMATION_COMPLETION_COUNT = 12
+import { getDerivedTransactionData } from 'utils/transaction'
 
 class TransactionsDropdown extends Component {
   constructor(props) {
@@ -31,11 +30,11 @@ class TransactionsDropdown extends Component {
     }
   }
 
-  handleClick() {
+  handleClick(confirmationCompletionCount) {
     this.setState({
       hideList: this.props.transactions.map(
         ({ confirmationCount, transactionHash }) => {
-          return confirmationCount >= CONFIRMATION_COMPLETION_COUNT
+          return confirmationCount >= confirmationCompletionCount
             ? transactionHash
             : false
         }
@@ -51,15 +50,14 @@ class TransactionsDropdown extends Component {
   render() {
     const { transactions } = this.props
     const { hideList, open } = this.state
-    const transactionsNotHidden = transactions.filter(
-      t => !hideList.includes(t.transactionHash)
-    )
-    const transactionsNotCompleted = transactions.filter(
-      t => t.confirmationCount < CONFIRMATION_COMPLETION_COUNT
-    )
-    const transactionsCanBeCleared = !!transactionsNotHidden.filter(
-      t => t.confirmationCount >= CONFIRMATION_COMPLETION_COUNT
-    ).length
+
+    const {
+      transactionsNotHidden,
+      transactionsNotCompleted,
+      transactionsCanBeCleared,
+      transactionsArePending,
+      CONFIRMATION_COMPLETION_COUNT
+    } = getDerivedTransactionData(transactions, hideList)
 
     return (
       <Dropdown
@@ -87,11 +85,7 @@ class TransactionsDropdown extends Component {
             className="transactions selected"
             alt="Blockchain transactions"
           />
-          {!!transactions.filter(
-            ({ confirmationCount }) =>
-              !confirmationCount ||
-              confirmationCount < CONFIRMATION_COMPLETION_COUNT
-          ).length && (
+          {transactionsArePending && (
             <div className="arrows-container">
               <img
                 src="images/blue-circle-arrows.svg"
@@ -147,7 +141,7 @@ class TransactionsDropdown extends Component {
                 {!transactionsCanBeCleared && (
                   <button
                     className="btn btn-clear"
-                    onClick={this.handleClick}
+                    onClick={ () => this.handleClick(CONFIRMATION_COMPLETION_COUNT)}
                     disabled
                   >
                     <FormattedMessage
@@ -157,7 +151,7 @@ class TransactionsDropdown extends Component {
                   </button>
                 )}
                 {transactionsCanBeCleared && (
-                  <button className="btn btn-clear" onClick={this.handleClick}>
+                  <button className="btn btn-clear" onClick={() => this.handleClick(CONFIRMATION_COMPLETION_COUNT)}>
                     <FormattedMessage
                       id={'transactions.clear'}
                       defaultMessage={'Clear'}

@@ -3,44 +3,43 @@ import parseId from '../utils/parseId'
 import { getFeatured, getHidden } from './marketplace/_featuredAndHidden'
 
 export default {
-  events: async listing =>
-    await listing.contract.eventCache.listings(listing.id),
-  totalEvents: async listing =>
-    (await listing.contract.eventCache.listings(listing.id)).length,
+  __resolveType() {
+    return 'UnitListing'
+  },
+  events: async listing => {
+    const { listingId } = parseId(listing.id)
+    return await listing.contract.eventCache.listings(listingId)
+  },
+  totalEvents: async listing => {
+    const { listingId } = parseId(listing.id)
+    return (await listing.contract.eventCache.listings(listingId)).length
+  },
   totalOffers: listing => {
-    return listing.contract.methods.totalOffers(listing.id).call()
+    const { listingId } = parseId(listing.id)
+    return listing.contract.methods.totalOffers(listingId).call()
   },
   offer: async (listing, args) => {
     const { listingId, offerId } = parseId(args.id)
     return contracts.eventSource.getOffer(listingId, offerId)
   },
-  offers: async listing => {
-    if (!listing.contract) {
-      return null
-    }
-    const totalOffers = await listing.contract.methods
-      .totalOffers(listing.id)
-      .call()
-
-    const offers = []
-    for (const id of Array.from({ length: Number(totalOffers) }, (v, i) => i)) {
-      offers.push(await contracts.eventSource.getOffer(listing.id, id))
-    }
-    return offers
-  },
+  offers: async listing => listing.allOffers.filter(o => o.valid),
   createdEvent: async listing => {
+    const { listingId } = parseId(listing.id)
     const events = await listing.contract.eventCache.listings(
-      listing.id,
+      listingId,
       'ListingCreated'
     )
     return events[0]
   },
   featured: async listing => {
+    const { listingId } = parseId(listing.id)
     const featuredIds = await getFeatured(contracts.net)
-    return featuredIds.indexOf(listing.id) >= 0
+    return featuredIds.indexOf(listingId) >= 0
   },
   hidden: async listing => {
+    const { listingId } = parseId(listing.id)
     const hiddenIds = await getHidden(contracts.net)
-    return hiddenIds.indexOf(listing.id) >= 0
-  }
+    return hiddenIds.indexOf(listingId) >= 0
+  },
+  price: listing => listing.price || {}
 }

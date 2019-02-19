@@ -113,78 +113,82 @@ const MessagingEnabled = () => (
 class OnboardMessaging extends Component {
   state = {}
   render() {
-    const { listing } = this.props
+    const { nextLink } = this.props
     return (
-      <>
-        <div className="step">Step 2</div>
-        <h3>Enable Messaging</h3>
-        <div className="row">
-          <div className="col-md-8">
-            <Steps steps={4} step={2} />
-            <Query query={query} notifyOnNetworkStatusChange={true}>
-              {({ data, error, networkStatus }) => {
-                if (networkStatus === 1) {
-                  return <MessagingInitializing />
-                } else if (error) {
-                  return <p className="p-3">Error :(</p>
-                } else if (!data || !data.web3) {
-                  return <p className="p-3">No Web3</p>
-                }
+      <Query query={query} notifyOnNetworkStatusChange={true}>
+        {({ data, error, networkStatus }) => {
+          if (networkStatus === 1) {
+            return <MessagingInitializing />
+          } else if (error) {
+            return <p className="p-3">Error :(</p>
+          } else if (!data || !data.web3) {
+            return <p className="p-3">No Web3</p>
+          }
 
-                const nextLink = `/listings/${listing.id}/onboard/notifications`
-                let nextEnabled = false
+          let nextEnabled = false
 
-                let cmp
-                if (!data.messaging.synced) {
-                  cmp = <MessagingSyncing pct={data.messaging.syncProgress} />
-                } else if (
-                  !data.messaging.enabled &&
-                  !this.state.waitForSignature
-                ) {
-                  cmp = (
-                    <EnableMessaging
-                      next={() => this.setState({ waitForSignature: true })}
-                    />
-                  )
-                } else if (!data.messaging.pubKey) {
-                  cmp = <SignMessage num={1} />
-                } else if (!data.messaging.pubSig) {
-                  cmp = <SignMessage num={2} />
-                } else {
-                  nextEnabled = true
-                  cmp = <MessagingEnabled />
-                }
+          let cmp
+          if (!data.messaging.synced) {
+            cmp = <MessagingSyncing pct={data.messaging.syncProgress} />
+          } else if (!data.messaging.enabled && !this.state.waitForSignature) {
+            cmp = (
+              <EnableMessaging
+                next={() => this.setState({ waitForSignature: true })}
+              />
+            )
+          } else if (!data.messaging.pubKey) {
+            cmp = <SignMessage num={1} />
+          } else if (!data.messaging.pubSig) {
+            cmp = <SignMessage num={2} />
+          } else {
+            nextEnabled = true
+            cmp = <MessagingEnabled />
+          }
 
-                return (
-                  <>
-                    {cmp}
-                    <div className="continue-btn">
-                      <Link
-                        to={nextLink}
-                        className={`btn btn-primary${
-                          nextEnabled ? '' : ' disabled'
-                        }`}
-                      >
-                        Continue
-                      </Link>
-                    </div>
-                    {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}
-                  </>
-                )
-              }}
-            </Query>
-          </div>
-          <div className="col-md-4">
-            <ListingPreview listing={listing} />
-            <HelpMessaging />
-          </div>
-        </div>
-      </>
+          return (
+            <>
+              {cmp}
+              <div className="continue-btn">
+                {nextLink && (
+                  <Link
+                    to={nextLink}
+                    className={`btn btn-primary${
+                      nextEnabled ? '' : ' disabled'
+                    }`}
+                  >
+                    Continue
+                  </Link>
+                )}
+              </div>
+              {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}
+            </>
+          )
+        }}
+      </Query>
     )
   }
 }
 
-export default OnboardMessaging
+const Messaging = ({ listing }) => (
+  <>
+    <div className="step">Step 2</div>
+    <h3>Enable Messaging</h3>
+    <div className="row">
+      <div className="col-md-8">
+        <Steps steps={4} step={2} />
+        <OnboardMessaging
+          nextLink={`/listings/${listing.id}/onboard/notifications`}
+        />
+      </div>
+      <div className="col-md-4">
+        <ListingPreview listing={listing} />
+        <HelpMessaging />
+      </div>
+    </div>
+  </>
+)
+
+export { Messaging, OnboardMessaging }
 
 require('react-styl')(`
   .onboard-box

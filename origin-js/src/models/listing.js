@@ -1,7 +1,10 @@
+const base58 = require('bs58')
+const web3 = require('web3')
+
 //
 // Listing is the main object exposed by Origin Protocol to access listing data.
 //
-export class Listing {
+class Listing {
   /**
    * Listing object model.
    *
@@ -14,7 +17,6 @@ export class Listing {
    *  - {string} title
    *  - {string} description
    *  - {string} category
-   *  - {Object} commission - consists of 'amount' and 'currency' properties
    *  - {string} subCategory
    *  - {string} status - 'active', 'inactive'
    *  - {string} type - 'unit', 'fractional'
@@ -28,18 +30,21 @@ export class Listing {
    *  - {string} seller - address of the seller
    *  - {string} display - 'normal', 'featured', 'hidden'
    *  - {Array<Object>} media
-   *  - {Object} comission - consists of 'amount' and 'currency' properties
-   *  - {Array} slots
+   *  - {Object} commission - Total commission of a listing. Consists of 'amount' and 'currency' properties
+   *  - {Array} availability - to be implemented
    *  - {Integer} slotLength - defines the length of a time slot in a fractional listing
    *  - {String} slotLengthUnit - defines the unit of measurement for a fractional usage time slot
    *  - {string} schemaId
    *  - {string} dappSchemaId - Optional. JSON schema used by the DApp to create the listing.
    *  - {string} deposit
    *  - {string} depositManager - address of depositManager
+   *  - {string} marketplacePublisher - address of the publisher of the marketplace that the listing originated from
+   *  - {Object} commissionPerUnit - Commission per unit in multi unit listings. Consists of 'amount' and 'currency' properties
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
-    unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit }) {
+    unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, availability,
+    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit,
+    marketplacePublisher, createDate, updateVersion, creator }) {
 
     this.id = id
     this.title = title
@@ -59,7 +64,7 @@ export class Listing {
     this.display = display
     this.media = media
     this.commission = commission
-    this.slots = slots
+    this.availability = availability
     this.slotLength = slotLength
     this.slotLengthUnit = slotLengthUnit
     this.schemaId = schemaId
@@ -67,6 +72,10 @@ export class Listing {
     this.deposit = deposit
     this.depositManager = depositManager
     this.commissionPerUnit = commissionPerUnit
+    this.marketplacePublisher = marketplacePublisher
+    this.createDate = createDate
+    this.updateVersion = updateVersion
+    this.creator = creator
   }
 
   // creates a Listing using on-chain and off-chain data
@@ -91,7 +100,7 @@ export class Listing {
       display: 'normal',
       media: ipfsListing.media,
       commission: ipfsListing.commission,
-      slots: ipfsListing.slots,
+      availability: ipfsListing.availability,
       slotLength: ipfsListing.slotLength,
       slotLengthUnit: ipfsListing.slotLengthUnit,
       schemaId: ipfsListing.schemaId,
@@ -99,6 +108,10 @@ export class Listing {
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
       commissionPerUnit: ipfsListing.commissionPerUnit,
+      createDate: ipfsListing.createDate,
+      marketplacePublisher: ipfsListing.marketplacePublisher,
+      updateVersion: ipfsListing.updateVersion,
+      creator: ipfsListing.creator
     })
   }
 
@@ -123,7 +136,7 @@ export class Listing {
       display: discoveryNodeData.display,
       media: discoveryNodeData.media,
       commission: discoveryNodeData.commission,
-      slots: discoveryNodeData.slots,
+      availability: discoveryNodeData.availability,
       slotLength: discoveryNodeData.slotLength,
       slotLengthUnit: discoveryNodeData.slotLengthUnit,
       schemaId: discoveryNodeData.schemaId,
@@ -131,10 +144,83 @@ export class Listing {
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
       commissionPerUnit: discoveryNodeData.commissionPerUnit,
+      marketplacePublisher: discoveryNodeData.marketplacePublisher,
+      creator: discoveryNodeData.creator,
+      updateVersion: discoveryNodeData.updateVersion,
+      createDate: discoveryNodeData.createDate
     })
   }
 
   get active() {
     return this.status === 'active'
   }
+
+  get unitsPending() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    return this.offers
+      // only keep offers that are in a pending state
+      .filter(offer => ['created', 'accepted', 'disputed'].includes(offer.status))
+      .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
+  }
+
+  get unitsSold() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    return this.offers
+      // only keep offers that are in a sold state
+      .filter(offer => ['finalized', 'sellerReviewed', 'ruling'].includes(offer.status))
+      .reduce((agg, offer) => agg + offer.unitsPurchased, 0)
+  }
+
+  get unitsRemaining() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    const unitsRemaining = Math.max(0, this.unitsTotal - this.unitsPending - this.unitsSold)
+
+    // this must not be NaN because it throws an error in react-jsonschema-form
+    return isNaN(unitsRemaining) ? 1 : unitsRemaining
+  }
+
+  get commissionRemaining() {
+    if (!Array.isArray(this.offers))
+      return undefined
+
+    // if not multi unit
+    if (!(this.type === 'unit' && this.unitsTotal > 1))
+      return undefined
+
+    const commissionUsedInOffers = this.offers
+      .reduce((agg, offer) => agg + parseInt(offer.commission.amount), 0)
+
+    return Math.max(0, this.commission.amount - commissionUsedInOffers)
+  }
+
+  // Commission used to prioritize this listing over the others in search functionality
+  get boostCommission() {
+    // if is multi unit listing
+    if (this.type === 'unit' && this.unitsTotal > 1) {
+      return {
+        currency: this.commissionPerUnit.currency,
+        amount: Math.min(this.commissionRemaining, this.commissionPerUnit.amount) 
+      }
+    } else {
+      return this.commission
+    }
+  }
+
+  get uniqueId() {
+    const hash = web3.utils.soliditySha3({ t: 'address', v: this.creator },
+      { t: 'bytes32', v: web3.utils.fromAscii(this.createDate) })
+    return base58.encode(Buffer.from(hash.slice(2), 'hex'))
+  }
+
+  get isEmptySeller() {
+    return this.seller == '0x0000000000000000000000000000000000000000'
+  }
 }
+
+module.exports = { Listing }

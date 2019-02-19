@@ -7,12 +7,13 @@
  *  - Perhaps send related data as it was at the time of the event, not as of crawl time
  *  - Possible configurable log levels
  */
+const logger = require('./logger')
 
 require('dotenv').config()
 try {
   require('envkey')
 } catch (error) {
-  console.log('EnvKey not configured')
+  logger.warn('EnvKey not configured')
 }
 
 const express = require('express')
@@ -21,7 +22,7 @@ const urllib = require('url')
 const Origin = require('origin').default
 const Web3 = require('web3')
 
-const { handleLog, LISTEN_RULES } = require('./rules')
+const { handleLog, EVENT_TO_HANDLER_MAP } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
 
 const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
@@ -37,37 +38,38 @@ const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
  *           { contractName: 'V00_Marketplace',
  *             eventName: 'ListingCreated',
  *             eventAbi: [Object],
- *             ruleFn: [...] } },
+ *             handler: [...] } },
  *    '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
  *       { V00_Marketplace:
  *           { contractName: 'V00_Marketplace',
  *             eventName: 'ListingUpdated',
  *             eventAbi: [Object],
- *             ruleFn: [...] } }
+ *             handler: [...] } }
  *  }
  */
-function buildSignatureToRules (context) {
+function buildSignatureToRules (config, origin, web3) {
   const signatureLookup = {}
-  for (const contractName in LISTEN_RULES) {
-    const eventRules = LISTEN_RULES[contractName]
-    const contract = context.origin.contractService.contracts[contractName]
+  for (const contractName in EVENT_TO_HANDLER_MAP) {
+    const eventHandlers = EVENT_TO_HANDLER_MAP[contractName]
+    const contract = origin.contractService.contracts[contractName]
     if (contract === undefined) {
       throw Error("Can't find contract " + contractName)
     }
     contract.abi.filter(x => x.type === 'event').forEach(eventAbi => {
-      const ruleFn = eventRules[eventAbi.name]
-      if (ruleFn === undefined) {
+      const handlerClass = eventHandlers[eventAbi.name]
+      if (handlerClass === undefined) {
         return
       }
-      const signature = context.web3.eth.abi.encodeEventSignature(eventAbi)
+      const handler = new handlerClass(config, origin)
+      const signature = web3.eth.abi.encodeEventSignature(eventAbi)
       if (signatureLookup[signature] === undefined) {
         signatureLookup[signature] = {}
       }
       signatureLookup[signature][contractName] = {
-        contractName: contractName,
+        contractName,
         eventName: eventAbi.name,
-        eventAbi: eventAbi,
-        ruleFn: ruleFn
+        eventAbi,
+        handler
       }
     })
   }
@@ -75,7 +77,7 @@ function buildSignatureToRules (context) {
 }
 
 /**
- * Builds a lookup object of marketplace contract names and versions
+ * Builds a lookup object of marketplace and identity contract names and versions
  * by ETH contract addresses.
  * @example
  * buildAddressToVersion()
@@ -83,19 +85,28 @@ function buildSignatureToRules (context) {
  *      { versionKey: '000', contractName: 'V00_Marketplace' }
  *  }
  */
-async function buildAddressToVersion (context) {
-  const versionList = {}
-  const adapters = context.origin.marketplace.resolver.adapters
-  const versionKeys = Object.keys(adapters)
-  for (const versionKey of versionKeys) {
-    const adapter = adapters[versionKey]
-    await adapter.getContract()
-    const contract = adapter.contract
-    versionList[contract._address] = {
-      versionKey: versionKey,
-      contractName: adapter.contractName
+async function buildAddressToVersion (origin) {
+  async function extractVersions(adapters, excludeVersions) {
+    for (const versionKey of Object.keys(adapters)) {
+      if (excludeVersions.includes(versionKey)) {
+        continue
+      }
+      const adapter = adapters[versionKey]
+      await adapter.getContract()
+      const contract = adapter.contract
+      versionList[contract._address] = {
+        versionKey: versionKey,
+        contractName: adapter.contractName
+      }
     }
   }
+
+  const versionList = {}
+  await extractVersions(origin.marketplace.resolver.adapters, [])
+  // Note: Ignore identity contract V00 since it is deprecated.
+  await extractVersions(origin.users.resolver.adapters, ['000'])
+
+  logger.debug('Contracts version list:', versionList)
   return versionList
 }
 
@@ -112,12 +123,13 @@ function setupOriginJS (config, web3) {
   if (!config.affiliateAccount) {
     throw new Error('AFFILIATE_ACCOUNT not set')
   }
+  if (!config.attestationAccount) {
+    throw new Error('ATTESTATION_ACCOUNT not set')
+  }
 
   // Issue a warning for any recommended env var that is not set.
   if (!config.blockEpoch) {
-    console.log(
-      'WARNING: For performance reasons it is recommended to set BLOCK_EPOCH'
-    )
+    logger.warn('For performance reasons it is recommended to set BLOCK_EPOCH')
   }
 
   return new Origin({
@@ -126,6 +138,7 @@ function setupOriginJS (config, web3) {
     ipfsGatewayPort: ipfsUrl.port,
     arbitrator: config.arbitratorAccount,
     affiliate: config.affiliateAccount,
+    attestationAccount: config.attestationAccount,
     blockEpoch: config.blockEpoch,
     web3
   })
@@ -144,16 +157,18 @@ class Context {
     this.networkId = undefined
   }
 
-  async init (config) {
+  async init (config, errorCounter) {
     this.config = config
+    this.errorCounter = errorCounter
 
     const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
     this.web3 = new Web3(web3Provider)
+    this.networkId = await this.web3.eth.net.getId()
+
     this.origin = setupOriginJS(config, this.web3)
 
-    this.signatureToRules = buildSignatureToRules(this)
-    this.addressToVersion = await buildAddressToVersion(this)
-    this.networkId = await this.web3.eth.net.getId()
+    this.signatureToRules = buildSignatureToRules(config, this.origin, this.web3)
+    this.addressToVersion = await buildAddressToVersion(this.origin)
     return this
   }
 }
@@ -166,9 +181,7 @@ async function runBatch (opts, context) {
   const toBlock = opts.toBlock
   let lastLogBlock
 
-  console.log(
-    'Looking for logs from block ' + fromBlock + ' to ' + (toBlock || 'Latest')
-  )
+  logger.info(`Looking for logs from block ${fromBlock} to ${toBlock || 'Latest'}`)
 
   const eventTopics = Object.keys(context.signatureToRules)
   const logs = await context.web3.eth.getPastLogs({
@@ -178,7 +191,7 @@ async function runBatch (opts, context) {
   })
 
   if (logs.length > 0) {
-    console.log('' + logs.length + ' logs found')
+    logger.info(`${logs.length} logs found`)
   }
 
   for (const log of logs) {
@@ -214,10 +227,10 @@ async function liveTracking (context) {
       start = new Date()
       const currentBlockNumber = await context.web3.eth.getBlockNumber()
       if (currentBlockNumber === lastCheckedBlock) {
-        console.log('No new block.')
+        logger.debug('No new block.')
         return scheduleNextCheck()
       }
-      console.log('New block: ' + currentBlockNumber)
+      logger.info(`New block: ${currentBlockNumber}`)
       blockGauge.set(currentBlockNumber)
       const toBlock = Math.min(
         // Pick the smallest of either
@@ -258,16 +271,20 @@ const config = {
   // Unique id. Used to differentiate between the several listeners instances
   // that may run concurrently (ex: main vs webhook vs re-indexing).
   listenerId: args['--listener-id'] || process.env.LISTENER_ID || 'main',
-  // Call webhook to process event.
+  // Notification web hook URL.
   webhook: args['--webhook'] || process.env.WEBHOOK,
-  // Call post to discord webhook to process event.
+  // Discord webhook URL.
   discordWebhook: args['--discord-webhook'] || process.env.DISCORD_WEBHOOK,
+  // Mailing list webhook URL.
+  emailWebhook: args['--email-webhook'] || process.env.EMAIL_WEBHOOK,
   // Index events in the search index.
   elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
-  // Index events in the database.
-  db: args['--db'] || (process.env.DATABASE === 'true'),
-  // Verbose mode, includes dumping events on the console.
-  verbose: args['--verbose'] || (process.env.VERBOSE === 'true'),
+  // Index marketplace events.
+  marketplace: args['--marketplace'] || (process.env.INDEX_MARKETPLACE === 'true'),
+  // Index identity events.
+  identity: args['--identity'] || (process.env.INDEX_IDENTITY === 'true'),
+  // Index growth events.
+  growth: args['--growth'] || (process.env.INDEX_GROWTH === 'true'),
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
@@ -281,22 +298,13 @@ const config = {
   // Origin-js configs
   arbitratorAccount: process.env.ARBITRATOR_ACCOUNT,
   affiliateAccount: process.env.AFFILIATE_ACCOUNT,
+  attestationAccount: process.env.ATTESTATION_ACCOUNT,
   blockEpoch: parseInt(process.env.BLOCK_EPOCH || 0),
   // Default continue block.
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
 }
 
 const port = 9499
-
-/**
- * Creates runtime context and starts the live tracking engine.
- * @return {Promise<void>}
- */
-async function main() {
-  const context = await new Context().init(config)
-  liveTracking(context)
-}
-
 
 // Create an express server for Prometheus to scrape metrics
 const app = express()
@@ -310,16 +318,31 @@ const bundle = promBundle({
 })
 app.use(bundle)
 
+// Create metrics.
 const blockGauge = new bundle.promClient.Gauge({
   name: 'event_listener_last_block',
   help: 'The last block processed by the event listener'
 })
 
+const errorCounter = new bundle.promClient.Counter({
+  name: 'event_listener_handler_error',
+  help: 'Number of errors from the event listener handler '
+})
+
+/**
+ * Creates runtime context and starts the live tracking engine.
+ * @return {Promise<void>}
+ */
+async function main() {
+  const context = await new Context().init(config, errorCounter)
+  liveTracking(context)
+}
+
 app.listen({ port: port }, () => {
-  console.log(`Serving Prometheus metrics on port ${port}`)
+  logger.info(`Serving Prometheus metrics on port ${port}`)
 
   // Start the listener.
-  console.log(`Starting event-listener with config:\n${
-    JSON.stringify(config, (k, v) => v === undefined ? null : v, 2)}`)
+  logger.info(`Starting event-listener with config:\n
+    ${JSON.stringify(config, (k, v) => v === undefined ? null : v, 2)}`)
   main()
 })

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Redirect from 'components/Redirect'
 import Price from 'components/Price'
+import ListingBadge from 'components/ListingBadge'
+import Category from 'components/Category'
 
 class Listings extends Component {
   state = {}
@@ -24,11 +26,21 @@ class Listings extends Component {
                   backgroundImage: `url(${a.media[0].urlExpanded})`
                 }}
               />
-            ) : null}
-            <div className="category">{a.categoryStr}</div>
+            ) : (
+              <div className="main-pic empty" />
+            )}
+            <div className="header">
+              <div className="category">
+                <Category listing={a} />
+              </div>
+              <ListingBadge status={a.status} featured={a.featured} />
+            </div>
             <h5>{a.title}</h5>
             <div className="price">
-              <div className="eth">{`${a.price.amount} ETH`}</div>
+              <div className="eth">
+                {`${a.price.amount} ETH`}
+                {a.__typename !== 'FractionalListing' ? '' : ' / night'}
+              </div>
               <div className="usd">
                 <Price amount={a.price.amount} />
               </div>
@@ -52,20 +64,35 @@ require('react-styl')(`
     margin-bottom: 2rem
     margin-top: 1rem
     cursor: pointer
+
     .main-pic
       padding-top: 66.6%
       background-size: cover
       background-repeat: no-repeat
       background-position: center
+      &.empty
+        background: var(--light) url(images/default-image.svg)
+        background-repeat: no-repeat
+        background-position: center
+
+    .header
+      display: flex
+      align-items: center
+      justify-content: space-between
+
     .category
-      font-family: Lato
+      font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
       text-transform: uppercase
       margin-top: 0.75rem
+
+    .badge
+      margin-top: 0.75rem
+
     h5
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
       color: var(--dark)
@@ -73,15 +100,18 @@ require('react-styl')(`
       overflow: hidden
       text-overflow: ellipsis
       margin-top: 0.5rem
+
     .price
       background: url(images/eth-icon.svg) no-repeat
       padding-left: 2rem
       line-height: 1.25rem
-      font-family: Lato
+      font-family: var(--default-font)
+
       .eth
         font-size: 18px
         font-weight: normal
         color: var(--bluish-purple)
+
       .usd
         font-size: 10px
         font-weight: normal

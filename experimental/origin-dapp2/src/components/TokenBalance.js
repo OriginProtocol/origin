@@ -1,25 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 
-import gql from 'graphql-tag'
-
-const AccountTokenBalance = gql`
-  query AccountTokenBalance($account: String!, $token: String!){
-    web3 {
-      account(id: $account) {
-        id
-        token(symbol: $token) {
-          id
-          balance
-          token {
-            id
-            decimals
-          }
-        }
-      }
-    }
-  }
-`
+import AccountTokenBalance from 'queries/TokenBalance'
 
 function tokenBalance(amount, decimals) {
   const supplyBN = web3.utils.toBN(amount)

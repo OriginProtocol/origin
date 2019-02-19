@@ -4,7 +4,9 @@
   "description": "A proxy that validates Origin content being uploaded and downloaded from Origin's IPFS servers",
   "main": "app.js",
   "scripts": {
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
@@ -23,8 +25,8 @@
   "homepage": "https://github.com/OriginProtocol/origin#readme",
   "dependencies": {
     "busboy": "^0.2.14",
+    "file-type": "^10.7.1",
     "http-proxy": "^1.17.0",
-    "image-type": "^3.0.0",
     "ipfs": "^0.33.1",
     "ipfsd-ctl": "^0.40.1",
     "is-json": "^2.0.1",
@@ -43,5 +45,9 @@
     "nodemon": "^1.18.7",
     "supertest": "^3.3.0",
     "webrtcsupport": "^2.2.0"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

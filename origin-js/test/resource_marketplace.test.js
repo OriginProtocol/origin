@@ -160,6 +160,15 @@ describe('Marketplace Resource', function() {
       listings.map(validateListing)
     })
 
+    it ('should return all detailed listings with offers', async () => {
+      const listings = await marketplace.getListings({ loadOffers: true })
+      expect(listings).to.have.lengthOf(1)
+      expect(listings[0].offers).to.have.lengthOf(1)
+
+      listings[0].offers.map(validateOffer)
+      listings.map(validateListing)
+    })
+
     it('should return all listing ids when idsOnly is true', async () => {
       await marketplace.createListing(listingData)
       const listings = await marketplace.getListings({ idsOnly: true })
@@ -991,6 +1000,7 @@ describe('Marketplace Resource', function() {
 describe('Marketplace Resource - Performance mode', function() {
   const unitListingData = Object.assign({}, listingValid, { type: 'unit' })
   const unitListing = Listing.init('1-000-123', {}, unitListingData)
+  const unitListing2 = Listing.init('1-000-124', {}, unitListingData)
   const unitOffer1 = Offer.init('1-000-123-1', '1-000-123', {}, offerValid)
   const unitOffer2 = Offer.init('1-000-123-2', '1-000-123', {}, offerValid)
 
@@ -1012,8 +1022,21 @@ describe('Marketplace Resource - Performance mode', function() {
 
   describe('getListings', () => {
     it('Should call discovery service to fetch listings', async () => {
+      mockDiscoveryService.getListings = sinon.stub().resolves([ unitListing, unitListing2 ])
+      mockDiscoveryService.getOffers = sinon.stub().resolves([ unitOffer1 ])
       await marketplace.getListings()
       expect(mockDiscoveryService.getListings.callCount).to.equal(1)
+      expect(mockDiscoveryService.getOffers.callCount).to.equal(0)
+    })
+  })
+
+  describe('getListings', () => {
+    it('Should call discovery service to fetch listings and also call getOffers', async () => {
+      mockDiscoveryService.getListings = sinon.stub().resolves([ unitListing, unitListing2  ])
+      mockDiscoveryService.getOffers = sinon.stub().resolves([ unitOffer1 ])
+      await marketplace.getListings({ loadOffers: true })
+      expect(mockDiscoveryService.getListings.callCount).to.equal(1)
+      expect(mockDiscoveryService.getOffers.callCount).to.equal(2)
     })
   })
 

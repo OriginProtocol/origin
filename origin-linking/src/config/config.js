@@ -16,6 +16,9 @@ module.exports = {
     },
     'production': {
       'use_env_variable':'DATABASE_URL',
-      operatorsAliases: false
+      define: {
+        freezeTableName: true,
+        underscored: true
+      }
     }
   }

@@ -3,7 +3,7 @@ import { ActivationConstants } from 'actions/Activation'
 const initialState = {
   carouselCompleted: false,
   notifications: {
-    prompt: false,
+    prompt: null,
     permissions: {
       hard: {},
       soft: {},
@@ -26,7 +26,7 @@ export default function Activation(state = initialState, action = {}) {
           },
         },
       }
-console.log(obj)
+
       return obj
 
     case ActivationConstants.UPDATE_CAROUSEL_STATUS:

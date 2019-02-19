@@ -47,7 +47,13 @@ export const validateListing = (listing) => {
   expect(listing).to.have.property('depositManager').startsWith('0x')
   expect(listing).to.have.property('seller').startsWith('0x')
   expect(listing).to.have.property('status').that.is.a('string')
-  expect(listing).to.have.property('offers').that.is.an('object')
+  /* We have inconsistancies here. By default offers is an object where keys are (simplified) offer ids (0,1,2...)
+   * and values are offer events. If `loadOffers` option is passed along offers is an array consisting of 
+   * offer models.
+   *
+   * This shall be resolved once we rewrite to GraphQl
+   */
+  //expect(listing).to.have.property('offers').that.is.an('array')
   expect(listing).to.have.property('events').that.is.an('array')
 
   if (listing.events.length) {
@@ -84,10 +90,8 @@ export const validateOffer = (offer) => {
 export const validateAttestation = (attestation) => {
   expect(attestation).to.have.property('topic').that.is.a('number')
   expect(attestation).to.have.property('service').that.is.a('string')
-  expect(attestation).to.have.property('data').that.is.a('string')
-  expect(attestation).to.have.property('data').to.startWith('0x')
-  expect(attestation).to.have.property('signature').that.is.a('string')
-  expect(attestation).to.have.property('signature').to.startWith('0x')
+  expect(attestation).to.have.property('data')
+  expect(attestation).to.have.property('signature')
 }
 
 export const validateUser = (user) => {
@@ -95,11 +99,7 @@ export const validateUser = (user) => {
   expect(user).to.have.property('profile').that.is.an('object')
   expect(user.profile).to.have.property('firstName').that.is.a('string')
   expect(user.profile).to.have.property('lastName').that.is.a('string')
-
   expect(user.profile).to.have.property('schemaId').that.is.a('string')
-  expect(user.profile).to.have.property('ipfs').that.is.an('object')
-  expect(user.profile.ipfs).to.have.property('hash').that.is.a('string')
-  expect(user.profile.ipfs).to.have.property('data').that.is.an('object')
 
   expect(user.attestations).to.be.an('array')
   if (user.attestations.length) user.attestations.map(validateAttestation)

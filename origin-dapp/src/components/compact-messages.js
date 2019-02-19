@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { formattedAddress } from 'utils/user'
 import Message from 'components/message'
+import isEqual from 'lodash/isEqual'
+import sortBy from 'lodash/sortBy'
 
 const MAX_MINUTES = 10
 
@@ -11,25 +13,35 @@ function getElapsedTime(latestTime, earlierTime) {
   return isNaN(elapsedTime) ? 0 : elapsedTime
 }
 
-function sortOrder(a, b) {
+function sortOrder(a = {}, b = {}) {
   const firstDate = (a.created && a.created) || (a.timestamp * 1000)
   const nextDate = (b.created && b.created) || (b.timestamp * 1000)
   return (firstDate < nextDate) ? -1 : 1
+}
+
+function compareMessages(prevMessages = [], currentMessages) {
+  const sortArgs = ['created', 'timestamp']
+  const sortedPreviousMessages = sortBy(prevMessages, sortArgs)
+  const sortedCurrentMessages = sortBy(currentMessages, sortArgs)
+
+  return !isEqual(sortedPreviousMessages, sortedCurrentMessages)
 }
 
 export default class CompactMessages extends Component {
   constructor(props) {
     super(props)
     const { messages = [] } = props
-    const sortedMessages = messages.sort(sortOrder)
+    const sortedMessages = [...messages].sort(sortOrder)
 
     this.state = { sortedMessages }
   }
 
   componentDidUpdate(prevProps) {
     const { messages = [] } = this.props
-    if (prevProps.messages !== messages) {
-      const sortedMessages = messages.sort(sortOrder)
+    const messagesChanged = compareMessages(prevProps.messages, messages)
+
+    if (messagesChanged) {
+      const sortedMessages = [...messages].sort(sortOrder)
       this.setState({ sortedMessages })
     }
   }
@@ -42,7 +54,7 @@ export default class CompactMessages extends Component {
       get the next index from recursion or set the
       index based on the current message
     */
-    const index = previousIdx || idx - 1
+    const index = (previousIdx === undefined) ? idx - 1 : previousIdx
     const previousMessage = sortedMessages[index]
 
     if (previousMessage.timestamp) {
@@ -57,7 +69,7 @@ export default class CompactMessages extends Component {
   render() {
     const { formatOfferMessage, includeNav, smallScreenOrDevice } = this.props
     const { sortedMessages } = this.state
-    const firstMessage = sortedMessages.find((message) => message.created)
+    const firstMessage = sortedMessages.find((message = {}) => message.created)
 
     return sortedMessages.map((message, i) => {
       if (!message) return

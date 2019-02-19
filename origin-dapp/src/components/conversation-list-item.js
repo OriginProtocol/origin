@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import Avatar from 'components/avatar'
 import { getListing } from 'utils/listing'
 import { defineMessages, injectIntl } from 'react-intl'
@@ -80,7 +80,7 @@ class ConversationListItem extends Component {
     }
     const lastMessage = this.getLastMessage(conversation)
 
-    const listing = lastMessage.listingId ? await getListing(lastMessage.listingId, true) : {}
+    const listing = lastMessage.listingId ? await getListing(lastMessage.listingId, { translate: true }) : {}
     moment.updateLocale(modifiedLanguageCode, localeConfig)
     const createdAt = moment(lastMessage.created).fromNow()
     this.setState({ listing, lastMessage, createdAt })

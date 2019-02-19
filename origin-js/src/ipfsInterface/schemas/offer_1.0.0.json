@@ -19,26 +19,6 @@
         "amount"
       ]
     },
-    "timeSlot": {
-      "type": "object",
-      "properties": {
-        "startDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "endDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "price": {
-          "$ref": "#/definitions/money"
-        }
-      },
-      "required": [
-        "startDate",
-        "endDate"
-      ]
-    },
     "unitOffer": {
       "type": "object",
       "properties": {
@@ -53,16 +33,219 @@
     "fractionalOffer": {
       "type": "object",
       "properties": {
-        "slots": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/timeSlot"
-          }
+        "timeSlots": {
+          "$ref": "#/definitions/jCal"
         }
       },
       "required": [
-        "slots"
+        "timeSlots"
       ]
+    },
+    "jCal":   {
+      "description": "Validates an Origin Protocol jCal data set for a listing or offer",
+      "type": "array",
+      "minItems": 2,
+      "items": [
+        {
+          "type": "string",
+          "enum": ["vcalendar"]
+        },
+        {
+          "type": "array",
+          "minItems": 2,
+          "items": [
+            {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": [
+                {
+                  "type": "string",
+                  "enum": ["version"]
+                },
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "string",
+                  "enum": ["text"]
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": [
+                {
+                  "type": "string",
+                  "enum": ["prodid"]
+                },
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "string",
+                  "enum": ["text"]
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "additionalItems": {
+        "type": "array",
+        "minItems": 6,
+        "items": [
+          {
+            "type": "string",
+            "enum": ["vevent"]
+          },
+          {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": [
+              {
+                "type": "string",
+                "enum": ["uid"]
+              },
+              {
+                "type": "object"
+              },
+              {
+                "type": "string",
+                "enum": ["text"]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": [
+              {
+                "type": "string",
+                "enum": ["dtstart"]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "tzid": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tzid"
+                ]
+              },
+              {
+                "type": "string",
+                "enum": ["date-time"]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": [
+              {
+                "type": "string",
+                "enum": ["dtend"]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "tzid": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tzid"
+                ]
+              },
+              {
+                "type": "string",
+                "enum": ["date-time"]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": [
+              {
+                "type": "string",
+                "enum": ["x-currency"]
+              },
+              {
+                "type": "object"
+              },
+              {
+                "type": "string",
+                "enum": ["text"]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": [
+              {
+                "type": "string",
+                "enum": ["x-price"]
+              },
+              {
+                "type": "object"
+              },
+              {
+                "type": "string",
+                "enum": ["text"]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "additionalItems": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      }
     }
   },
   "type": "object",
@@ -81,6 +264,9 @@
     },
     "commission": {
       "$ref": "#/definitions/money"
+    },
+    "verifyTerms": {
+      "type" : "object"
     }
   },
   "oneOf": [

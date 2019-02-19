@@ -1,0 +1,10 @@
+[
+  {
+    "id": "xxx.price-help",
+    "defaultMessage": "The price is always in {currency}."
+  },
+  {
+    "id": "xxxx.price-usd-disclaimer",
+    "defaultMessage": "USD is an estimate."
+  }
+]

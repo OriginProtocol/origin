@@ -5,6 +5,7 @@ import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
 import {
+  detectMessagingEnabled,
   enableMessaging,
   handleNotificationsSubscription,
   setMessagingEnabled,
@@ -23,7 +24,6 @@ import {
   RecommendationModal,
   WarningModal
 } from 'components/modals/notifications-modals'
-import SellingModal from 'components/onboarding-modal'
 
 import getCurrentNetwork from 'utils/currentNetwork'
 import { createSubscription, requestPermission } from 'utils/notifications'
@@ -34,7 +34,6 @@ import analytics from '../services/analytics'
 import origin from '../services/origin'
 
 const { web3 } = origin.contractService
-const ETH_ADDRESS = process.env.MESSAGING_ACCOUNT
 const ONE_SECOND = 1000
 const storeKeys = {
   messageCongratsTimestamp: 'message_congrats_timestamp',
@@ -90,6 +89,7 @@ class Onboarding extends Component {
     })
 
     // detect existing messaging account
+    // (potentially redundant if detectMessagingEnabled already returned true)
     origin.messaging.events.on('ready', accountKey => {
       this.props.setMessagingEnabled(!!accountKey)
     })
@@ -132,6 +132,12 @@ class Onboarding extends Component {
       wallet
     } = this.props
 
+    // on account change
+    if (wallet.address && wallet.address !== prevProps.wallet.address) {
+      // cheat and detect activation from central server
+      this.props.detectMessagingEnabled(wallet.address)
+    }
+
     if (wallet.address && !this.notificationsInterval) {
       // Poll for notifications every 60 seconds.
       this.notificationsInterval = setInterval(() => {
@@ -139,9 +145,9 @@ class Onboarding extends Component {
       }, 60 * ONE_SECOND)
     }
 
-    const welcomeAccountEnabled =
-      ETH_ADDRESS &&
-      formattedAddress(ETH_ADDRESS) !== formattedAddress(wallet.address)
+    const supportAccount = this.props.messagingRequired
+    const welcomeAccountEnabled = supportAccount &&
+      formattedAddress(supportAccount) !== formattedAddress(wallet.address)
 
     if (
       // wait for initialization so that account key is available in origin.js
@@ -152,11 +158,11 @@ class Onboarding extends Component {
       return
     }
 
-    const roomId = origin.messaging.generateRoomId(ETH_ADDRESS, wallet.address)
+    const roomId = origin.messaging.generateRoomId(supportAccount, wallet.address)
     const recipients = origin.messaging.getRecipients(roomId)
 
     if (!messages.find(({ hash }) => hash === 'origin-welcome-message')) {
-      this.debouncedFetchUser(ETH_ADDRESS)
+      this.debouncedFetchUser(supportAccount)
 
       const scopedWelcomeMessageKeyName = `${
         storeKeys.messageWelcomeTimestamp
@@ -182,14 +188,14 @@ class Onboarding extends Component {
         index: -2,
         recipients,
         roomId,
-        senderAddress: ETH_ADDRESS
+        senderAddress: supportAccount
       }
       message.status = origin.messaging.getStatus(message)
       this.props.addMessage(message)
     }
     // on messaging enabled
     if (messagingEnabled !== prevProps.messagingEnabled) {
-      this.debouncedFetchUser(ETH_ADDRESS)
+      this.debouncedFetchUser(supportAccount)
 
       const scopedCongratsMessageKeyName = `${
         storeKeys.messageCongratsTimestamp
@@ -215,7 +221,7 @@ class Onboarding extends Component {
         index: -1,
         recipients,
         roomId,
-        senderAddress: ETH_ADDRESS
+        senderAddress: supportAccount
       }
       message.status = origin.messaging.getStatus(message)
       this.props.addMessage(message)
@@ -273,6 +279,7 @@ class Onboarding extends Component {
       enableMessaging,
       location,
       messagingEnabled,
+      messagingRequired,
       networkId,
       notificationsSubscriptionPrompt,
       web3Intent
@@ -286,8 +293,7 @@ class Onboarding extends Component {
         {children}
         {!query['skip-onboarding'] && (
           <Fragment>
-            {networkType === 'Mainnet Beta' && <BetaModal />}
-            <SellingModal />
+            {networkType === 'Mainnet' && <BetaModal />}
           </Fragment>
         )}
         {['buyer', 'seller'].includes(notificationsSubscriptionPrompt) && (
@@ -308,7 +314,7 @@ class Onboarding extends Component {
         {!web3.currentProvider.isOrigin &&
           web3Intent &&
           web3Intent !== 'manage your profile' &&
-          !messagingEnabled && (
+          messagingRequired && !messagingEnabled && (
             <Modal
               backdrop="static"
               className="not-messaging-enabled"
@@ -368,6 +374,7 @@ class Onboarding extends Component {
 const mapStateToProps = ({ activation, app, messages, wallet }) => ({
   messages,
   messagingEnabled: activation.messaging.enabled,
+  messagingRequired: app.messagingRequired,
   messagingInitialized: activation.messaging.initialized,
   networkId: app.web3.networkId,
   notificationsHardPermission: activation.notifications.permissions.hard,
@@ -381,6 +388,7 @@ const mapStateToProps = ({ activation, app, messages, wallet }) => ({
 
 const mapDispatchToProps = dispatch => ({
   addMessage: obj => dispatch(addMessage(obj)),
+  detectMessagingEnabled: addr => dispatch(detectMessagingEnabled(addr)),
   enableMessaging: () => dispatch(enableMessaging()),
   fetchNotifications: () => dispatch(fetchNotifications()),
   fetchUser: addr => dispatch(fetchUser(addr)),

@@ -39,12 +39,15 @@ const index = {
         'price.currency': { type: 'text' },
         'commission.amount': { type: 'double' },
         'commission.currency': { type: 'text' },
+        'boostCommission.amount': { type: 'double' },
+        'boostCommission.currency': { type: 'text' },
         'securityDeposit.amount': { type: 'double' },
         'securityDeposit.currency': { type: 'text' },
         unitsTotal: { type: 'integer' },
         language: { type: 'keyword' },
         listingType: { type: 'keyword' },
         status: { type: 'keyword' },
+        marketplacePublisher: { type: 'keyword' },
         category: { type: 'keyword', copy_to: 'all_text' },
         subCategory: { type: 'keyword', copy_to: 'all_text' },
         description: { type: 'text', copy_to: 'all_text' },
@@ -114,9 +117,17 @@ async function executeGetRequest(uri) {
 }
 
 function printUsage() {
+  console.log(`
+    Usage:
+    es-cli.js createIndex [indexName]
+    es-cli.js deleteIndex [indexName]
+    es-cli.js -i   --> interactive mode
+  `)
+}
+
+function printInteractiveUsage() {
   console.log('\x1b[44m%s\x1b[0m', 'Elasticsearch devops tool.')
-  console.log(
-    `1 show index info
+  console.log(`1 show index info
 2 create index (with mappings defined in configuration)
 3 create alias
 4 delete alias
@@ -178,12 +189,26 @@ async function createIndex() {
   process.stdout.write('Index to create: ')
   const indexName = await waitForInput()
 
-  const res = await executePayloadRequest(
+  const res = await createIndexWithName(indexName)
+
+  console.log('Response: ', res)
+}
+
+async function createIndexWithName(indexName) {
+  return await executePayloadRequest(
     indexName,
     JSON.stringify(index),
     'PUT'
   )
-  console.log('Response: ', res)
+}
+
+async function validateCliResponse(callback, args, validationPredicate){
+  const response = await callback(...args)
+  if (validationPredicate(response)){
+    return
+  }
+  console.error('Unexpected repsonse: ', response)
+  process.exit(1)
 }
 
 async function deleteIndex() {
@@ -195,9 +220,13 @@ async function deleteIndex() {
   const answer = await waitForInput()
 
   if (answer.toLowerCase() === 'y') {
-    const res = await executePayloadRequest(indexName, null, 'DELETE')
+    const res = await deleteIndexWithName(indexName)
     console.log('Response: ', res)
   }
+}
+
+async function deleteIndexWithName(indexName) {
+  return await executePayloadRequest(indexName, null, 'DELETE')
 }
 
 async function reindex() {
@@ -248,37 +277,67 @@ async function waitForInput() {
 }
 
 (async () => {
-  printUsage()
-  process.stdout.write('Select option: ')
-
-  rl.on('line', async input => {
-    input = input.trim()
-
-    // Some other function was waiting for input. Send the value to it
-    if (inputResolveCallback !== null) {
-      inputResolveCallback(input)
-      inputResolveCallback = null
-      return
-    }
-
-    if (input === '1') {
-      await showIndexInfo()
-    } else if (input === '2') {
-      await createIndex()
-    } else if (input === '3') {
-      await createAlias()
-    } else if (input === '4') {
-      await deleteAlias()
-    } else if (input === '5') {
-      await deleteIndex()
-    } else if (input === '6') {
-      await reindex()
-    } else if (input === '9') {
-      printUsage()
-    } else {
-      console.log('\n\n\x1b[41m%s\x1b[0m', 'Unknown command.')
-      printUsage()
-    }
+  if (process.argv[2] === 'createIndex' && process.argv.length === 4) {
+    const indexName = process.argv[3]
+    await validateCliResponse(
+      createIndexWithName,
+      [indexName],
+      (response) => {
+        return JSON.parse(response).acknowledged === true
+      }
+    )
+    console.log(`Index ${indexName} created!`)
+    process.exit(1)
+  }
+  else if (process.argv[2] === 'deleteIndex' && process.argv.length === 4) {
+    const indexName = process.argv[3]
+    await validateCliResponse(
+      deleteIndexWithName,
+      [indexName],
+      (response) => {
+        return JSON.parse(response).acknowledged === true
+      }
+    )
+    console.log(`Index ${indexName} deleted!`)
+    process.exit(1)
+  }
+  // interactive mode
+  else if (process.argv[2] === '-i' && process.argv.length === 3) {
+    printInteractiveUsage()
     process.stdout.write('Select option: ')
-  })
+
+    rl.on('line', async input => {
+      input = input.trim()
+
+      // Some other function was waiting for input. Send the value to it
+      if (inputResolveCallback !== null) {
+        inputResolveCallback(input)
+        inputResolveCallback = null
+        return
+      }
+
+      if (input === '1') {
+        await showIndexInfo()
+      } else if (input === '2') {
+        await createIndex()
+      } else if (input === '3') {
+        await createAlias()
+      } else if (input === '4') {
+        await deleteAlias()
+      } else if (input === '5') {
+        await deleteIndex()
+      } else if (input === '6') {
+        await reindex()
+      } else if (input === '9') {
+        printInteractiveUsage()
+      } else {
+        console.log('\n\n\x1b[41m%s\x1b[0m', 'Unknown command.')
+        printInteractiveUsage()
+      }
+      process.stdout.write('Select option: ')
+    })
+  } else {
+    printUsage()
+    process.exit(1)
+  }
 })()

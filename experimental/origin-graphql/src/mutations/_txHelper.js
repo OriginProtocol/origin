@@ -17,14 +17,32 @@ export async function checkMetaMask(from) {
   }
 }
 
-export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
+// Do not listen for confirmations if we're on the server as it causes mocha
+// to hang
+const isServer = typeof window === 'undefined'
+
+export default function txHelper({
+  tx,
+  mutation,
+  onConfirmation,
+  onReceipt,
+  from
+}) {
   return new Promise((resolve, reject) => {
     let txHash
+
     tx.once('transactionHash', async hash => {
       txHash = hash
       resolve({ id: hash })
 
-      contracts.transactions.push({ id: hash })
+      contracts.transactions[from] = contracts.transactions[from] || []
+      contracts.transactions[from].unshift({
+        id: hash,
+        submittedAt: Math.round(+new Date() / 1000)
+      })
+      // Only store last 10 transactions...
+      contracts.transactions[from] = contracts.transactions[from].slice(0, 10)
+
       try {
         window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
           contracts.transactions
@@ -54,19 +72,23 @@ export default function txHelper({ tx, mutation, onConfirmation, onReceipt }) {
           transactionUpdated: {
             id: receipt.transactionHash,
             status: 'receipt',
+            gasUsed: receipt.gasUsed,
             mutation
           }
         })
         if (contracts.automine) {
           setTimeout(() => {
-            contracts.web3Exec.currentProvider.send(
+            // This needs to be sendAsync, because the provider engine used for
+            // the mobile wallet linker client doesn't support synchronous
+            // transactions.
+            contracts.web3.currentProvider.send(
               { method: 'evm_mine' },
               () => {}
             )
           }, contracts.automine)
         }
       })
-      .on('confirmation', function(confNumber, receipt) {
+      .on(`confirmation${isServer ? 'X' : ''}`, function(confNumber, receipt) {
         if (confNumber === 1 && onConfirmation) {
           onConfirmation(receipt)
         }

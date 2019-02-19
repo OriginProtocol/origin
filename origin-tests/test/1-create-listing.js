@@ -50,7 +50,7 @@ describe('create listing with offer and retrieve using discovery', () => {
 
   it('discovery should return all listings', async () => {
     const listings = await this.origin.marketplace.getListings()
-    assert.equal(listings.length, 6)
+    assert.equal(listings.length, 7)
   })
 
   it('discovery should return newly created listing', async () => {

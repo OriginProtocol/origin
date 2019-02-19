@@ -3,7 +3,7 @@ export const baseConfig = {
   about: '',
   subdomain: '',
   logoUrl: '',
-  iconUrl: '',
+  faviconUrl: '',
   cssVars: {
     // Fonts
     defaultFont: ['Lato', 'Helvetica Neue', 'Arial', 'Sans-Serif'],
@@ -54,5 +54,9 @@ export const baseConfig = {
     boostPremium: 'var(--golden-rod',
     // Misc
     defaultRadius: '5px'
-  }
+  },
+  filters: {
+    listings: {}
+  },
+  marketplacePublisher: ''
 }

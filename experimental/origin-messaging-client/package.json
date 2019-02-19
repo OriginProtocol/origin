@@ -8,6 +8,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
+    "debug": "^4.1.1",
     "eth-ecies": "^1.0.3",
     "orbit-db": "^0.19.9",
     "ipfs": "^0.33.1",

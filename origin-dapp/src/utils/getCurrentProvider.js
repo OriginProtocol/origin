@@ -6,6 +6,8 @@ export default function getCurrentProvider(web3) {
     return
   }
 
+  if (web3.currentProvider.isOrigin) return 'Origin Wallet'
+
   if (web3.currentProvider.isMetaMask) return 'MetaMask'
 
   if (web3.currentProvider.isTrust) return 'Trust Wallet'

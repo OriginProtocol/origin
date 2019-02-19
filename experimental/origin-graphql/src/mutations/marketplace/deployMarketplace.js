@@ -1,24 +1,26 @@
 import Marketplace from 'origin-contracts/build/contracts/V00_Marketplace'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts, { setMarketplace } from '../../contracts'
+const data = Marketplace.bytecode
 
 async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
   const web3 = contracts.web3Exec
   await checkMetaMask(from)
   const Contract = new web3.eth.Contract(Marketplace.abi)
-  const tx = Contract.deploy({
-    data: Marketplace.bytecode,
-    arguments: [token]
-  }).send({
+  const tx = Contract.deploy({ data, arguments: [token] }).send({
     gas: 5500000,
-    from: from || web3.eth.defaultAccount
+    from
   })
 
   return txHelper({
     tx,
+    from,
     mutation: 'deployMarketplace',
     onReceipt: receipt => {
-      window.localStorage.marketplaceContract = receipt.contractAddress
+      // console.log('Deployed marketplace to', receipt.contractAddress)
+      if (typeof window !== 'undefined') {
+        window.localStorage.marketplaceContract = receipt.contractAddress
+      }
 
       let marketplaces = {}
       try {
@@ -27,7 +29,9 @@ async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
         /* Ignore */
       }
       marketplaces[version] = receipt.contractAddress
-      localStorage.marketplaces = JSON.stringify(marketplaces)
+      if (typeof window !== 'undefined') {
+        window.localStorage.marketplaces = JSON.stringify(marketplaces)
+      }
 
       setMarketplace(receipt.contractAddress, receipt.blockNumber)
 
@@ -40,7 +44,7 @@ async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
         Token.methods
           .addCallSpenderWhitelist(receipt.contractAddress)
           .send({
-            gas: 4000000,
+            gas: 4612388,
             from: from
           })
           .then(() => {})

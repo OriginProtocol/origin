@@ -25,6 +25,10 @@ export default defineMessages({
     id: 'schema.selectPhotos',
     defaultMessage: 'Select photos'
   },
+  'schema.unitsTotal': {
+    id: 'schema.unitsTotal',
+    defaultMessage: 'Quantity'
+  },
   'schema.activities': {
     id: 'schema.activities',
     defaultMessage: 'Activities'
@@ -560,5 +564,13 @@ export default defineMessages({
   'schema.transportation': {
     id: 'schema.transportation',
     defaultMessage: 'Transportation'
+  },
+  'schema.weekdayPricing': {
+    id: 'schema.weekdayPricing',
+    defaultMessage: 'Default Weekday Pricing (Sunday through Thursday nights)'
+  },
+  'schema.weekendPricing': {
+    id: 'schema.weekendPricing',
+    defaultMessage: 'Default Weekend Pricing (Friday and Saturday nights)'
   }
 })

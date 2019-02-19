@@ -27,7 +27,11 @@ function _makeListing (row) {
     price: row.data.price,
     commission: row.data.commission,
     commissionPerUnit: row.data.commissionPerUnit,
-    display: listingMetadata.getDisplay(row.id)
+    display: listingMetadata.getDisplay(row.id),
+    marketplacePublisher: row.data.marketplacePublisher,
+    updatedAt: row.updatedAt,
+    updateVersion: row.data.updateVersion,
+    createDate: row.data.createDate
   }
 }
 
@@ -224,10 +228,31 @@ async function getOffer (offerId) {
   return _makeOffer(row)
 }
 
+/**
+ * Query DB for creating a Listing
+ * @param listingData
+ * @return {Promise<Object|null>}
+ *
+ */
+async function createListing(listingData) {
+  await db.Listing.upsert(listingData)
+  return getListing(listingData.id)
+}
+
+async function updateListing(listingId, listingData) {
+  const listing = await db.Listing.findById(listingId)
+  if (listing) {
+    await listing.update(listingData)
+    return _makeListing(listing)
+  }
+}
+
 module.exports = {
   getListing,
   getListingsById,
   getListingsBySeller,
   getOffer,
-  getOffers
+  getOffers,
+  createListing,
+  updateListing
 }

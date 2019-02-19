@@ -1,5 +1,9 @@
 export const defaultBoostValue = 50
 export const minBoostValue = 0
+/* If this value changes from 100 to another value, the boost ranking search function needs to be updated as well.
+ * See this document: https://docs.google.com/spreadsheets/d/1bgBlwWvYL7kgAb8aUH4cwDtTHQuFThQ4BCp870O-zEs/edit#gid=0
+ * and do the required changes.
+ */
 export const maxBoostValue = 100
 const range = maxBoostValue - minBoostValue
 

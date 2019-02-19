@@ -28,7 +28,7 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
+COPY ./origin-contracts/releases/0.8.6/build/ ./origin-contracts/build/
 
 # Use EnvKey so that environment variables are available to DApp at build time
 RUN eval $(envkey-source) && npm run build --prefix origin-dapp

@@ -27,16 +27,11 @@ spec:
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.messagingImage }}:{{ .Values.messagingImageTag }}"
         imagePullPolicy: Always
         env:
-          - name: MESSAGING_NAMESPACE
-            {{- if ne .Release.Namespace "prod" }}
-            value: "origin:{{ .Release.Namespace }}"
-            {{- else }}
-            value: "origin"
-            {{- end }}
-          - name: IPFS_REPO_PATH
-            value: "/data/ipfs"
-          - name: ORBIT_DB_PATH
-            value: "/data/odb"
+          - name: ENVKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "messaging.fullname" . }}
+                key: ENVKEY
         port:
           - name: websocket
             containerPort: 9012

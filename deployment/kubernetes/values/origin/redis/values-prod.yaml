@@ -1,0 +1,6 @@
+usePassword: false
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+

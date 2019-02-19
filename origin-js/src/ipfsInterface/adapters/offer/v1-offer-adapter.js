@@ -16,14 +16,15 @@ export default class OfferAdapterV1 extends AdapterBase {
       schemaId: ipfsData.schemaId,
       listingType: ipfsData.listingType,
       totalPrice: new Money(ipfsData.totalPrice),
-      commission: new Money(ipfsData.commission)
+      commission: new Money(ipfsData.commission),
+      verifyTerms: ipfsData.verifyTerms
     }
 
     // Unit data.
     if (offer.listingType === 'unit') {
       offer.unitsPurchased = ipfsData.unitsPurchased
     } else if (offer.listingType === 'fractional') {
-      offer.slots = ipfsData.slots
+      offer.timeSlots = ipfsData.timeSlots
     } else {
       throw new Error(`Unexpected listing type: ${offer.listingType}`)
     }

@@ -16,6 +16,10 @@ export default gql`
             party
             ipfsHash
           }
+          returnValuesArr {
+            field
+            value
+          }
         }
       }
     }

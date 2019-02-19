@@ -1,9 +1,10 @@
 import { AppConstants } from 'actions/App'
 
 const initialState = {
-  betaModalDismissed: false,
+  betaModalDismissed: true,
   // a timestamp for when the messages dropdown was last closed
   messagingDismissed: null,
+  messagingRequired: process.env.MESSAGING_ACCOUNT,
   mobileDevice: null,
   // a list of ids that were present last time the notifications dropdown was closed
   notificationsDismissed: [],

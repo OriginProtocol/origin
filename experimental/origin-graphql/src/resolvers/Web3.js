@@ -2,11 +2,8 @@ import graphqlFields from 'graphql-fields'
 import contracts from '../contracts'
 import get from 'lodash/get'
 
-import {
-  transactions,
-  getTransaction,
-  getTransactionReceipt
-} from './web3/transactions'
+import { getTransaction, getTransactionReceipt } from './web3/transactions'
+import balancesFromWei from '../utils/balancesFromWei'
 
 function networkName(netId) {
   if (netId === 1) return 'Ethereum Main Network'
@@ -16,13 +13,13 @@ function networkName(netId) {
   return `Private Network (${netId})`
 }
 
-export default {
+const web3Resolver = {
   networkId: () => contracts.web3.eth.net.getId(),
   networkName: async () => {
     const netId = await contracts.web3.eth.net.getId()
     return networkName(netId)
   },
-  blockNumber: () => contracts.web3.eth.getBlockNumber(),
+  blockNumber: () => contracts.marketplace.eventCache.getBlockNumber(),
   nodeAccounts: () =>
     new Promise(resolve => {
       contracts.web3.eth
@@ -44,14 +41,9 @@ export default {
       ? { id: contracts.web3.eth.defaultAccount }
       : null,
 
-  transaction: async (_, args, context, info) => {
-    const fields = graphqlFields(info)
-    return getTransaction(args.id, fields)
-  },
-  transactionReceipt: async (_, args) => {
-    return await getTransactionReceipt(args.id)
-  },
-  transactions: transactions,
+  transaction: async (_, args, context, info) =>
+    getTransaction(args.id, graphqlFields(info)),
+  transactionReceipt: (_, args) => getTransactionReceipt(args.id),
   metaMaskAvailable: () => (contracts.metaMask ? true : false),
   metaMaskNetworkId: async () => {
     if (!contracts.metaMask) return null
@@ -88,5 +80,46 @@ export default {
     const accounts = await contracts.metaMask.eth.getAccounts()
     if (!accounts || !accounts.length) return null
     return { id: accounts[0] }
+  },
+  walletType: () => {
+    if (contracts.metaMaskEnabled) return 'metaMask'
+    if (!contracts.linker) return null
+    return contracts.linker.session.linked && contracts.linker.session.accounts
+      ? 'mobile-linked'
+      : 'mobile-unlinked'
+  },
+  mobileWalletAccount: async () => {
+    if (
+      !contracts.linker ||
+      !contracts.linker.session.linked ||
+      contracts.linker.session.accounts.length == 0
+    ) {
+      return null
+    }
+    const id = contracts.linker.session.accounts[0]
+    let balance
+    try {
+      const wei = await contracts.web3.eth.getBalance(id)
+      balance = balancesFromWei(wei)
+    } catch (e) {
+      console.error('balance error:', e)
+      balance = null
+    }
+    return {
+      id,
+      checksumAddress: contracts.web3.utils.toChecksumAddress(id),
+      balance
+    }
+  },
+  primaryAccount: async () => {
+    if (contracts.metaMaskEnabled) {
+      return web3Resolver.metaMaskAccount()
+    }
+    if (contracts.linker) {
+      return web3Resolver.mobileWalletAccount()
+    }
+    return null
   }
 }
+
+export default web3Resolver

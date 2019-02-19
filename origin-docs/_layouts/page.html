@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{page.title}} - Origin</title>
+
+  <link rel="stylesheet" href="/assets/css/highlight.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
+  <link rel="stylesheet" href="/assets/css/site.css"/>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
+        <nav>
+                <a class="topNav {% unless page.dir contains 'reference' %}{% unless page.dir contains 'software' %}current{% endunless %}{% endunless %}" href="/">Guides</a>
+                <a class="topNav {% if page.dir contains 'reference' %}current{% endif %}" href="/reference/">API Reference</a>
+                <a class="topNav {% if page.dir contains 'software' %}current{% endif %}" href="/software/">Software</a>
+        </nav>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            {% assign menuPages = site.pages %}
+            {% if page.dir contains "software" %}
+                {% assign menuPages = site.pages | where_exp:"page",
+            "page.dir contains 'software'" %}
+            {% elsif page.dir contains "reference" %}
+                {% assign menuPages = site.pages | where_exp:"page",
+            "page.dir contains 'reference'" %}
+            {% elsif page.dir contains "guides" %}
+                {% assign menuPages = site.pages | where_exp:"page",
+            "page.dir contains 'guides'" %}
+            {% else %}
+                {% assign menuPages = site.pages | where_exp:"page",
+            "page.dir contains 'guides'" %}
+            {% endif %}
+
+
+            {% assign menuPages = menuPages | sort: 'nav_weight' | reverse %}
+            {% assign pageGroups = menuPages | group_by: "category" %}
+            <ul>
+            {% for cat in pageGroups %}
+                {% if cat.name != "" %}
+                    <li class="category"><strong>{{cat.name}}</strong>
+                        <ul>
+                {% endif %}                   
+                {% for p in cat.items %}
+                <li class="normal"> 
+                    <a href="{{ p.url }}">{{ p.title }}</a> <!-- {{ p.nav_weight }}-->
+                    {% if p.toc == true and p.url == page.url %}
+                        {{ content | toc_only }}
+                    {% endif %}
+                </li>
+                {% endfor %}
+                {% if cat.name != nil%}
+                    </ul></li>
+                {% endif %} 
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="content">
+            <h1 class="title">{{page.title}}</h1>
+
+            {{ content | inject_anchors }}
+
+        </div>    
+    </div>
+
+    <footer>
+        <a href="https://www.originprotocol.com/">Origin Protocol</a>
+        <span>|</span>
+        <a href="https://dapp.originprotocol.com/">DApp</a>
+        <a href="https://github.com/OriginProtocol">GitHub</a>
+        <a href="https://www.originprotocol.com/discord">Discord</a>
+    </footer>
+</body>

@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import { Mutation, Query } from 'react-apollo'
 import get from 'lodash/get'
 
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
+import UnlinkMobileWalletMutation from 'mutations/UnlinkMobileWallet'
 
 import Link from 'components/Link'
 import Identicon from 'components/Identicon'
 import Dropdown from 'components/Dropdown'
-import Price from 'components/Price'
-import TokenBalance from 'components/TokenBalance'
+import Balances from 'components/Balances'
+import Avatar from 'components/Avatar'
 
 class ProfileNav extends Component {
   constructor() {
@@ -18,13 +19,15 @@ class ProfileNav extends Component {
   }
   render() {
     return (
-      <Query query={ProfileQuery}>
+      <Query query={ProfileQuery} pollInterval={1000}>
         {({ data, loading, error }) => {
+          if (error) console.error(error)
           if (loading || error) return null
-          if (!data || !data.web3 || !data.web3.metaMaskAccount) {
+          if (!data || !data.web3 || !data.web3.primaryAccount) {
             return null
           }
-          const { checksumAddress } = data.web3.metaMaskAccount
+
+          const { checksumAddress } = data.web3.primaryAccount
           return (
             <Dropdown
               el="li"
@@ -60,52 +63,44 @@ class ProfileNav extends Component {
 }
 
 const ProfileDropdown = ({ data, onClose }) => {
-  const { checksumAddress, balance, id } = data.web3.metaMaskAccount
+  const { checksumAddress, balance, id } = data.web3.primaryAccount
+  const mobileWallet = data.web3.walletType.startsWith('mobile-')
   return (
-    <div className="dropdown-menu dark dropdown-menu-right show profile">
-      <div className="connected">
-        {`Connected to `}
-        <span className="net">{data.web3.networkName}</span>
-      </div>
-      <div className="wallet-info">
-        <div>
-          <h5>ETH Address</h5>
-          <div className="wallet-address">{checksumAddress}</div>
-        </div>
-        <div className="identicon">
-          <Identicon size={50} address={checksumAddress} />
-        </div>
-      </div>
-      <div className="balances">
-        <h5>Account Balance</h5>
-        <div className="account eth">
-          <div className="icon" />
-          <div className="balance">
-            <div className="coin">
-              {balance.eth}
-              <span>ETH</span>
+    <Mutation mutation={UnlinkMobileWalletMutation}>
+      {unlinkMutation => (
+        <div className="dropdown-menu dark dropdown-menu-right show profile">
+          <div className="connected">
+            {`Connected to `}
+            <span className="net">{data.web3.networkName}</span>
+          </div>
+          <div className="wallet-info">
+            <div>
+              <h5>ETH Address</h5>
+              <div className="wallet-address">{checksumAddress}</div>
             </div>
-            <div className="usd">
-              <Price amount={balance.eth} />
+            <div className="identicon">
+              <Identicon size={50} address={checksumAddress} />
             </div>
           </div>
+          <Balances balance={balance} account={id} />
+          <Identity id={id} />
+          {mobileWallet && (
+            <Link
+              onClick={e => {
+                unlinkMutation()
+                e.preventDefault()
+              }}
+              to="#"
+            >
+              Unlink Mobile
+            </Link>
+          )}
+          <Link onClick={() => onClose()} to="/profile">
+            Edit Profile
+          </Link>
         </div>
-        <div className="account ogn">
-          <div className="icon" />
-          <div className="balance">
-            <div className="coin">
-              <TokenBalance account={id} token="OGN" />
-              <span>OGN</span>
-            </div>
-            <div className="usd">0.00 USD</div>
-          </div>
-        </div>
-      </div>
-      <Identity id={id} />
-      <Link onClick={() => onClose()} to={`/user/${id}`}>
-        View Profile
-      </Link>
-    </div>
+      )}
+    </Mutation>
   )
 }
 
@@ -113,7 +108,7 @@ const Identity = ({ id }) => (
   <Query query={IdentityQuery} variables={{ id }}>
     {({ data, loading, error }) => {
       if (loading || error) return null
-      const profile = get(data, 'web3.account.identity.profile')
+      const profile = get(data, 'web3.account.identity')
       if (!profile) {
         return null
       }
@@ -122,11 +117,9 @@ const Identity = ({ id }) => (
         <div className="identity">
           <h5>My Identity</h5>
           <div className="info">
-            <div className="avatar" />
+            <Avatar avatar={profile.avatar} size="3rem" />
             <div>
-              <div className="name">{`${profile.firstName} ${
-                profile.lastName
-              }`}</div>
+              <div className="name">{profile.fullName}</div>
               <div className="attestations">
                 {profile.twitterVerified && (
                   <div className="attestation twitter" />
@@ -149,10 +142,10 @@ const Identity = ({ id }) => (
             <div className="progress">
               <div
                 className="progress-bar"
-                style={{ width: profile.strength }}
+                style={{ width: `${profile.strength}%` }}
               />
             </div>
-            {`Profile Strength - ${profile.strength}`}
+            {`Profile Strength - ${profile.strength}%`}
           </div>
         </div>
       )
@@ -165,7 +158,7 @@ export default ProfileNav
 require('react-styl')(`
   .dropdown-menu.profile
     width: 300px
-    font-size: 14px;
+    font-size: 14px
     > div
       padding: 0.75rem 1.5rem
       border-bottom: 2px solid black;
@@ -186,7 +179,7 @@ require('react-styl')(`
           background: var(--greenblue)
           width: 10px
           height: 10px
-          border-radius: 5px
+          border-radius: var(--default-radius)
           margin-right: 4px
           margin-left: 6px
     .nav-link img
@@ -202,35 +195,6 @@ require('react-styl')(`
         margin-left: 0.5rem
         display: flex
         align-items: center
-    .balances
-      .account
-        display: flex
-        margin-bottom: 1rem
-        margin-top: 0.75rem
-        &:last-child
-          margin-bottom: 0
-        .icon
-          width: 1.5rem
-          height: 1.5rem
-          background: url(images/eth-icon.svg) no-repeat center
-          background-size: cover
-          margin-right: 0.5rem
-        &.ogn .icon
-          background-image: url(images/ogn-icon.svg)
-        .balance
-          font-weight: bold
-          .coin
-            font-size: 24px
-            line-height: 24px
-            > span
-              color: var(--dark-purple)
-              font-size: 10px
-              margin-left: 0.25rem
-          .usd
-            font-size: 10px
-            line-height: 10px
-            color: var(--steel)
-            letter-spacing: 0.8px
     .identity
       font-weight: bold
       .info
@@ -238,12 +202,7 @@ require('react-styl')(`
         margin-top: 0.75rem
         display: flex
         .avatar
-          background: var(--dark-grey-blue) url(images/avatar-blue.svg) no-repeat center bottom;
-          background-size: 1.9rem;
-          width: 3rem;
-          height: 3rem;
           margin-right: 0.75rem
-          border-radius: 0.5rem
         .name
           font-size: 18px
 
@@ -290,4 +249,7 @@ require('react-styl')(`
     &.google
       background-image: url(images/identity/google-icon-verified.svg)
 
+  @media (max-width: 767.98px)
+    .dropdown-menu.profile
+      width: auto
 `)

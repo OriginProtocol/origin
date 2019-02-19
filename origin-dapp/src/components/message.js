@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment-timezone'
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
@@ -9,7 +9,9 @@ import { updateMessage } from 'actions/Message'
 
 import Avatar from 'components/avatar'
 
-import { abbreviateName, truncateAddress, formattedAddress } from 'utils/user'
+import { abbreviateName, formattedAddress, truncateAddress } from 'utils/user'
+
+import origin from '../services/origin'
 
 const imageMaxSize = process.env.IMAGE_MAX_SIZE || (2 * 1024 * 1024) // 2 MiB
 
@@ -35,7 +37,7 @@ class Message extends Component {
       previousOfferMessage,
       includeNav
     } = this.props
-    const { created, hash } = message
+    const { created, hash, acceptance } = message
     const { address, profile } = user
     const userName = abbreviateName(user, 'Unnamed User')
     const currentUser = web3Account === user.address
@@ -86,6 +88,10 @@ class Message extends Component {
                   )}
                 </div>
                 <div className="chat-content">{chatContent}</div>
+                {acceptance && <button onClick = { () => {
+                  origin.marketplace.resolver.acceptSignedOffer(acceptance.offerId, acceptance.ipfsHash, address, acceptance.signature)  
+                    } }> Accept Offer</button>
+                }
               </div>
             </div>
             <div className="align-self-end conversation-avatar right">

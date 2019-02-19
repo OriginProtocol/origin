@@ -1,46 +1,65 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
-import set from 'lodash/set'
-import cloneDeep from 'lodash/cloneDeep'
 
-import TransactionsQuery from 'queries/Transactions'
-import TransactionsSubscription from 'queries/TransactionsSubscription'
+import query from 'queries/UserTransactions'
+import distanceToNow from 'utils/distanceToNow'
+
+import withWallet from 'hoc/withWallet'
 
 import Dropdown from 'components/Dropdown'
-
-function subscribeToNewTransactions(subscribeToMore) {
-  subscribeToMore({
-    document: TransactionsSubscription,
-    updateQuery: (prev, { subscriptionData }) => {
-      const newNode = get(subscriptionData, 'data.newTransaction.node')
-      if (!newNode) return prev
-      prev = cloneDeep(prev)
-      const oldNodes = get(prev, 'web3.transactions.nodes', [])
-      const newNodes = [newNode, ...oldNodes]
-      prev = set(prev, 'web3.transactions.nodes', [newNode, ...oldNodes])
-      prev = set(prev, 'web3.transactions.totalCount', newNodes.length)
-      return prev
-    }
-  })
-}
+import Segments from 'components/Segments'
+import TransactionDescription from 'components/TransactionDescription'
 
 class TransactionsNav extends Component {
   render() {
     return (
-      <Query query={TransactionsQuery}>
-        {({ subscribeToMore, ...result }) => {
-          if (result.loading || result.error) return null
-          if (!get(result, 'data.web3.metaMaskAccount.id')) return null
+      <Query
+        query={query}
+        pollInterval={3000}
+        variables={{ first: 5, id: this.props.wallet }}
+        skip={!this.props.wallet}
+      >
+        {({ loading, error, data }) => {
+          if (loading || error) return null
+
+          const blockNumber = get(data, 'web3.blockNumber', 0)
+          const allNodes = get(data, 'marketplace.user.transactions.nodes', [])
+          const pendingNodes = allNodes.filter(
+            n => blockNumber - n.blockNumber <= 6
+          )
+          const pending = pendingNodes.length > 0
 
           return (
-            <TransactionsDropdown
-              {...this.props}
-              {...result}
-              subscribeToNewTransactions={() =>
-                subscribeToNewTransactions(subscribeToMore)
+            <Dropdown
+              el="li"
+              className="nav-item confirmations d-none d-md-flex"
+              open={this.props.open}
+              onClose={() => this.props.onClose()}
+              content={
+                <TransactionsContent
+                  nodes={allNodes}
+                  blockNumber={blockNumber}
+                  pending={pendingNodes.length}
+                />
               }
-            />
+            >
+              <a
+                className="nav-link"
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  this.props.open ? this.props.onClose() : this.props.onOpen()
+                }}
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <div
+                  className={`confirmations-icon${pending ? ' active' : ''}`}
+                />
+              </a>
+            </Dropdown>
           )
         }}
       </Query>
@@ -48,81 +67,51 @@ class TransactionsNav extends Component {
   }
 }
 
-class TransactionsDropdown extends Component {
-  componentDidMount() {
-    this.props.subscribeToNewTransactions()
-  }
+const TransactionsContent = ({ pending, nodes, blockNumber }) => {
+  const title = `Pending Blockchain Confirmation${pending === 1 ? '' : 's'}`
 
-  // componentDidUpdate(prevProps) {
-  //   const unread = get(this.props, 'data.web3.transactions.totalCount', 0),
-  //     prevUnread = get(prevProps, 'data.web3.transactions.totalCount', 0)
-  //
-  //   if (unread > prevUnread && !prevProps.open) {
-  //     this.props.onOpen()
-  //   }
-  // }
-
-  render() {
-    const { data, loading, error, open, onOpen, onClose } = this.props
-
-    if (loading || error) return null
-    if (!get(data, 'web3.transactions')) {
-      return null
-    }
-    const hasUnread = '' //data.web3.transactions.totalCount > 0 ? ' active' : ''
-
-    return (
-      <Dropdown
-        el="li"
-        className="nav-item confirmations"
-        open={open}
-        onClose={() => onClose()}
-        content={<TransactionsContent {...data.web3.transactions} />}
-      >
-        <a
-          className="nav-link"
-          href="#"
-          onClick={e => {
-            e.preventDefault()
-            open ? onClose() : onOpen()
-          }}
-          role="button"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          <div className={`confirmations-icon${hasUnread}`} />
-        </a>
-      </Dropdown>
-    )
-  }
-}
-
-const TransactionsContent = ({ totalCount = 0, nodes = [] }) => {
-  const title = `Pending Blockchain Confirmation${totalCount === 1 ? '' : 's'}`
-  console.log(nodes)
   return (
     <div className="dropdown-menu dropdown-menu-right show confirmations">
       <div className="count">
-        <div className="total">{totalCount}</div>
+        <div className="total">{pending}</div>
         <div className="title">{title}</div>
       </div>
-      {nodes.map(node => (
-        <div key={node.id} className="confirmation">
-          <div className="avatar" />
-          <div className="detail">
-            <div className="title">
-              {get(node, 'receipt.events.0.event', '?')}
-              <span>{node.timestamp}</span>
+      {nodes.map(node => {
+        const confirmations = blockNumber - node.blockNumber
+        return (
+          <div key={node.id} className="confirmation">
+            <div>
+              <div>
+                <div className="title">
+                  <TransactionDescription receipt={node.receipt} />
+                </div>
+                <div className="time">{distanceToNow(node.submittedAt)}</div>
+              </div>
+              <div>
+                <div className="parties">{`Tx: ${node.id}`}</div>
+                <div className="confirmations">
+                  {confirmations <= 6
+                    ? `${confirmations} of 6 confirmations`
+                    : `Complete (${confirmations} confirmations)`}
+                </div>
+              </div>
             </div>
-            <div className="description">{node.content}</div>
+            {confirmations > 6 ? (
+              <div className="complete" />
+            ) : (
+              <Segments
+                size={40}
+                filled={confirmations <= 6 ? confirmations : 6}
+              />
+            )}
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
 
-export default TransactionsNav
+export default withWallet(TransactionsNav)
 
 require('react-styl')(`
   @keyframes spin
@@ -144,7 +133,7 @@ require('react-styl')(`
           width: 16px
           height: 16px
           background: url(images/nav/blue-circle-arrows.svg) no-repeat
-          background-position: -1px -1px
+          background-position: center
           background-size: 16px 16px
           border-radius: 10px
           border: 2px solid var(--dusk)
@@ -162,11 +151,58 @@ require('react-styl')(`
           border-color: var(--white)
 
       .dropdown-menu.confirmations
-        padding: 1rem
-        width: 500px
+        max-width: 500px
+        background-color: var(--pale-grey-three)
         .count
           display: flex
+          padding: 1rem
+          box-shadow: 0 1px 0 0 #c2cbd3;
+          background: var(--white)
+          font-size: 18px
+          color: #000
+          font-weight: bold;
+          border-radius: var(--default-radius) 0 0 0
+          white-space: nowrap
+          .total
+            background: var(--clear-blue)
+            border-radius: 1rem
+            color: var(--white)
+            padding: 0 0.5rem
           .title
-            margin-left: 0.25rem
+            margin-left: 0.5rem
+        .confirmation
+          padding: 1rem 1rem 0 1rem
+          align-items: center
+          &:last-child
+            padding-bottom: 1rem
+          display: flex
+          font-size: 16px
+          .complete
+            width: 2rem
+            height: 2rem
+            border-radius: 1rem
+            background: var(--greenblue) url(images/checkmark.svg) center no-repeat
+          .time,.confirmations
+            font-size: 12px
+            color: var(--bluey-grey)
+          .parties
+            white-space: nowrap
+            font-size: 12px
+            color: var(--steel)
+            overflow: hidden
+            margin-right: 1rem
+            text-overflow: ellipsis
+          > div:nth-child(1)
+            flex: 1
+            min-width: 0
+            > div
+              display: flex
+              flex: 1
+              margin-right: 1rem
+              align-items: flex-end
+              > div:nth-child(1)
+                flex: 1
+            > div:nth-child(2)
+              margin-top: 0.125rem
 
 `)

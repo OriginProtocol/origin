@@ -24,6 +24,10 @@
     "defaultMessage": "Select photos"
   },
   {
+    "id": "schema.unitsTotal",
+    "defaultMessage": "Quantity"
+  },
+  {
     "id": "schema.activities",
     "defaultMessage": "Activities"
   },
@@ -558,5 +562,13 @@
   {
     "id": "schema.transportation",
     "defaultMessage": "Transportation"
+  },
+  {
+    "id": "schema.weekdayPricing",
+    "defaultMessage": "Default Weekday Pricing (Sunday through Thursday nights)"
+  },
+  {
+    "id": "schema.weekendPricing",
+    "defaultMessage": "Default Weekend Pricing (Friday and Saturday nights)"
   }
 ]

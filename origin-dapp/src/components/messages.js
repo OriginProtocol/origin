@@ -42,15 +42,18 @@ class Messages extends Component {
     const query = queryString.parse(location.search)
     const walletContainer = query['wallet-container']
     if (walletContainer && origin.contractService.walletLinker) {
-      window.__linkToWalletContainer = notify_wallet => {
-        origin.contractService.walletLinker.setLinkCode = () => {
-          // don't do anything here
+      window.__setWalletMessaging = (messageAccount, messageKeys) => {
+        origin.contractService.currentAccount = async () => {
+          return messageAccount
         }
-        origin.contractService.walletLinker.notify_wallet = notify_wallet
-
-        if (!this.props.wallet.address && web3.currentProvider.isOrigin) {
-          origin.contractService.showLinkPopUp()
+        origin.contractService.web3.eth.getAccounts = async (callback) => {
+          if (callback) {
+            callback(undefined, [messageAccount])
+          }
+          return [messageAccount]
         }
+        origin.contractService.web3.isOrigin = false
+        origin.messaging.onPreGenKeys(messageKeys)
       }
     }
   }

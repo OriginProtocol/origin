@@ -1,18 +1,28 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import { getFiatPrice } from 'utils/priceUtils'
 
 class ListingCardPrices extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      price: props.price,
       approxPrice: 'Loading...',
       fiatCurrencyCode: 'USD',
       cryptoCurrencyCode: 'ETH',
       defaultDecimalPlaces: this.getPrecision(props.price)
     }
+
+    this.intlMessages = defineMessages({
+      each: {
+        id: 'listing-card-prices.multiUnitListing.each',
+        defaultMessage: 'each'
+      },
+      averagePrice: {
+        id: 'listing-card-prices.multiUnitListing.averagePrice',
+        defaultMessage: 'average price'
+      }
+    })
   }
 
   getPrecision(n) {
@@ -27,7 +37,13 @@ class ListingCardPrices extends Component {
   }
 
   render() {
-    const { price, fiatCurrencyCode, cryptoCurrencyCode } = this.state
+    const { fiatCurrencyCode, cryptoCurrencyCode } = this.state
+    const {
+      price,
+      isMultiUnit,
+      isFractional
+    } = this.props
+
     const fiatPrice = getFiatPrice(
       price,
       fiatCurrencyCode,
@@ -52,12 +68,20 @@ class ListingCardPrices extends Component {
                   className="eth-icon"
                 />
                 <div className="values">
-                  <div className="eth">
-                    {`${Number(this.state.price).toLocaleString(undefined, {
-                      minimumFractionDigits: 5,
-                      maximumFractionDigits: 5
-                    })}`}
-                      &nbsp;ETH
+                  <div>
+                    <span className="eth">
+                      {`${Number(price).toLocaleString(undefined, {
+                        minimumFractionDigits: 5,
+                        maximumFractionDigits: 5
+                      })}`}
+                        &nbsp;ETH
+                    </span>
+                    {isMultiUnit && (<span className="append">
+                      &nbsp;{this.props.intl.formatMessage(this.intlMessages.each)}
+                    </span>)}
+                    {isFractional && (<span className="append">
+                      &nbsp;{this.props.intl.formatMessage(this.intlMessages.averagePrice)}
+                    </span>)}
                   </div>
                   <div className="fiat">
                     {fiatPrice === null && 'Loading'}
@@ -80,4 +104,4 @@ const mapStateToProps = ({ exchangeRates }) => ({
 
 export default connect(
   mapStateToProps
-)(ListingCardPrices)
+)(injectIntl(ListingCardPrices))

@@ -29,6 +29,7 @@ const Offers = ({ listing, offers, accounts }) => {
           <th>ID</th>
           <th>Status</th>
           <th>Offer</th>
+          <th>Qty</th>
           <th>Refund</th>
           <th>Buyer</th>
           <th>Commission</th>
@@ -160,6 +161,7 @@ class OfferRow extends Component {
         <td>{offer.offerId}</td>
         <td>{status(offer)}</td>
         <td>{price(offer)}</td>
+        <td>{offer.quantity}</td>
         <td>{price(offer, 'refund')}</td>
         <td>
           <AccountButton account={offer.buyer} />
@@ -343,6 +345,14 @@ function price(offer, field = 'value') {
 }
 
 function status(offer) {
+  if (!offer.valid) {
+    return (
+      <Tooltip content={offer.validationError}>
+        <Tag icon="cross">Invalid</Tag>
+      </Tooltip>
+    )
+  }
+
   if (offer.status === 0) {
     if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
       return <Tag icon="cross">Declined</Tag>
@@ -370,7 +380,11 @@ function status(offer) {
     )
   }
   if (offer.status === 5) {
-    return <Tag intent="success" icon="tick">Dispute Resolved</Tag>
+    return (
+      <Tag intent="success" icon="tick">
+        Dispute Resolved
+      </Tag>
+    )
   }
   return offer.status
 }

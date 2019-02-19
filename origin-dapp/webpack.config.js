@@ -16,13 +16,13 @@ const isProduction = process.env.NODE_ENV === 'production'
 const env = {
   ARBITRATOR_ACCOUNT: null,
   AFFILIATE_ACCOUNT: null,
+  ATTESTATION_ACCOUNT: null,
   BLOCK_EPOCH: 0,
   BRIDGE_SERVER_DOMAIN: 'bridge.originprotocol.com',
   BRIDGE_SERVER_PROTOCOL: 'https',
   CONTRACT_ADDRESSES: '{}',
   DEPLOY_TAG: false,
   DISCOVERY_SERVER_URL: 'https://discovery.originprotocol.com',
-  ENABLE_FRACTIONAL: false,
   ENABLE_PERFORMANCE_MODE: false,
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,
@@ -36,12 +36,16 @@ const env = {
   IPFS_SWARM: 'None',
   MESSAGING_ACCOUNT: null,
   MESSAGING_NAMESPACE: null,
+  MESSAGING_API_URL: null,
   MAINNET_DAPP_BASEURL: 'https://dapp.originprotocol.com',
   NOTIFICATIONS_KEY: null,
   NOTIFICATIONS_URL: 'https://notifications.originprotocol.com',
   PROVIDER_URL: null,
   REDUX_LOGGER: false,
-  RINKEBY_DAPP_BASEURL: 'https://demo.staging.originprotocol.com'
+  RINKEBY_DAPP_BASEURL: 'https://dapp.staging.originprotocol.com',
+  SHOW_WALLET_LINKER: true,
+  WALLET_LANDING_URL: null,
+  WALLET_LINKER_URL: null
 }
 
 var config = {
@@ -110,7 +114,7 @@ var config = {
     }
   },
   watchOptions: {
-    poll: 500,
+    poll: 2000,
     ignored: [
       // Ignore node_modules in watch except for the origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,

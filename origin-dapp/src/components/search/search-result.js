@@ -9,7 +9,7 @@ import 'rc-slider/assets/index.css'
 import { showAlert } from 'actions/Alert'
 import ListingsGrid from 'components/listings-grid'
 import SearchBar from 'components/search/searchbar'
-import { generalSearch } from 'actions/Search'
+import { generalSearch, resetSearchState } from 'actions/Search'
 import origin from '../../services/origin'
 import FilterGroup from 'components/search/filter-group'
 import { getFiatPrice } from 'utils/priceUtils'
@@ -72,6 +72,11 @@ class SearchResult extends Component {
 
     // Keep dropdown opened when user clicks on any element in the dropdownw
     // TODO - reimplement now that we no longer use jQuery
+  }
+
+  componentWillUnmount() {
+    // reset search properties when leaving search page
+    this.props.resetSearchState()
   }
 
   componentDidUpdate(previousProps, prevState) {
@@ -187,6 +192,22 @@ class SearchResult extends Component {
         }
       }
 
+      // Filters from the marketplace creator
+      if (this.props.config.filters && this.props.config.filters.listings) {
+        const listingFilterAttributes = ['marketplacePublisher', 'category', 'subCategory']
+
+        listingFilterAttributes.map((listingFilterAttribute) => {
+          if (this.props.config.filters.listings[listingFilterAttribute]) {
+            filters[listingFilterAttribute] = {
+              name: listingFilterAttribute,
+              value: this.props.config.filters.listings[listingFilterAttribute],
+              valueType: 'STRING',
+              operator: 'EQUALS'
+            }
+          }
+        })
+      }
+
       const searchResp = await origin.discovery.search({
         searchQuery: this.props.query || '',
         numberOfItems: LISTINGS_PER_PAGE,
@@ -235,10 +256,11 @@ class SearchResult extends Component {
   }
 
   render() {
+    const { mobileDevice } = this.props
     return (
       <Fragment>
         <SearchBar />
-        <nav
+        {!mobileDevice && <nav
           id="search-filters-bar"
           className="navbar search-filters navbar-expand-sm"
         >
@@ -263,7 +285,7 @@ class SearchResult extends Component {
                 ''
               )}
           </div>
-        </nav>
+        </nav>}
         <div className="container">
           <ListingsGrid
             renderMode="search"
@@ -282,9 +304,11 @@ class SearchResult extends Component {
 
 const mapStateToProps = state => ({
   listingType: state.search.listingType,
+  config: state.config,
   query: state.search.query,
   filters: state.search.filters,
-  generalSearchId: state.search.generalSearchId
+  generalSearchId: state.search.generalSearchId,
+  mobileDevice: state.app.mobileDevice
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -302,6 +326,7 @@ const mapDispatchToProps = dispatch => ({
         forceIssueOfGeneralSearch
       )
     ),
+  resetSearchState: () => dispatch(resetSearchState()),
   showAlert: error => dispatch(showAlert(error))
 })
 

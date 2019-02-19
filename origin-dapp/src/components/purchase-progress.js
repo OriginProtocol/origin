@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { FormattedMessage } from 'react-intl'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import Tooltip from 'components/tooltip'
 
@@ -67,7 +67,7 @@ class PurchaseProgress extends Component {
       <div
         className={`progress-container${progressCalculated ? ' ready' : ''}${
           subdued ? ' subdued' : ''
-        }`}
+        } mt-auto mb-3`}
       >
         <div className="progress">
           <div
@@ -84,13 +84,14 @@ class PurchaseProgress extends Component {
           {offerCreated && (
             <Tooltip
               placement="top"
+              triggerClass="progress-circle checked"
               content={
                 <Fragment>
                   <div>Offer made on</div>
                   <strong>{formatDate(offerCreated.timestamp)}</strong>
                 </Fragment>
               }
-              children={<span className="progress-circle checked" />}
+              children={<span/>}
             />
           )}
           {!offerAccepted && !offerWithdrawn && (
@@ -99,25 +100,27 @@ class PurchaseProgress extends Component {
           {offerAccepted && (
             <Tooltip
               placement="top"
+              triggerClass="progress-circle checked"
               content={
                 <Fragment>
                   <div>Offer accepted on</div>
                   <strong>{formatDate(offerAccepted.timestamp)}</strong>
                 </Fragment>
               }
-              children={<span className="progress-circle checked" />}
+              children={<span />}
             />
           )}
           {offerWithdrawn && (
             <Tooltip
               placement="top"
+              triggerClass="progress-circle checked"
               content={
                 <Fragment>
                   <div>Offer {withdrawnOrRejected} on</div>
                   <strong>{formatDate(offerWithdrawn.timestamp)}</strong>
                 </Fragment>
               }
-              children={<span className="progress-circle checked" />}
+              children={<span />}
             />
           )}
           {!offerFinalized && !offerDisputed && (
@@ -126,13 +129,14 @@ class PurchaseProgress extends Component {
           {offerFinalized && (
             <Tooltip
               placement="top"
+              triggerClass="progress-circle checked"
               content={
                 <Fragment>
                   <div>Sale completed on</div>
                   <strong>{formatDate(offerFinalized.timestamp)}</strong>
                 </Fragment>
               }
-              children={<span className="progress-circle checked" />}
+              children={<span />}
             />
           )}
           {perspective === 'seller' && !offerDisputed && !offerData && (
@@ -141,19 +145,21 @@ class PurchaseProgress extends Component {
           {perspective === 'seller' && offerData && (
             <Tooltip
               placement="top"
+              triggerClass="progress-circle checked"
               content={
                 <Fragment>
                   <div>Sale reviewed on</div>
                   <strong>{formatDate(offerData.timestamp)}</strong>
                 </Fragment>
               }
-              children={<span className="progress-circle checked" />}
+              children={<span />}
             />
           )}
           {offerDisputed && !offerRuling && (
             <Fragment>
               <Tooltip
                 placement="top"
+                triggerClass="progress-circle exclaimed"
                 content={
                   <Fragment>
                     <div>Dispute started on</div>
@@ -161,7 +167,7 @@ class PurchaseProgress extends Component {
                   </Fragment>
                 }
                 children={
-                  <span className="progress-circle exclaimed">
+                  <span >
                     {subdued ? null : '!'}
                   </span>
                 }
@@ -173,23 +179,25 @@ class PurchaseProgress extends Component {
             <Fragment>
               <Tooltip
                 placement="top"
+                triggerClass="progress-circle checked"
                 content={
                   <Fragment>
                     <div>Dispute started on</div>
                     <strong>{formatDate(offerDisputed.timestamp)}</strong>
                   </Fragment>
                 }
-                children={<span className="progress-circle checked" />}
+                children={<span />}
               />
               <Tooltip
                 placement="top"
+                triggerClass="progress-circle checked"
                 content={
                   <Fragment>
                     <div>Ruling made on</div>
                     <strong>{formatDate(offerRuling.timestamp)}</strong>
                   </Fragment>
                 }
-                children={<span className="progress-circle checked" />}
+                children={<span />}
               />
             </Fragment>
           )}

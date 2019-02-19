@@ -7,13 +7,13 @@ ENV NODE_ENV=production
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./origin-contracts ./origin-contracts
-COPY ./origin-faucet ./origin-faucet
+COPY ./origin-token ./origin-token
 COPY ./origin-token-transfer/server ./origin-token-transfer/server
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./origin-contracts/releases/0.8.4/build/ ./origin-contracts/build/
+COPY ./origin-contracts/releases/0.8.6/build/ ./origin-contracts/build/
 
 CMD npm run migrate --prefix origin-token-transfer/server && \
 	npm run start --prefix origin-token-transfer/server

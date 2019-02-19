@@ -1,87 +1,186 @@
 import React, { Component } from 'react'
+import pick from 'lodash/pick'
 
 import Steps from 'components/Steps'
+import Redirect from 'components/Redirect'
 import Link from 'components/Link'
+import Wallet from 'components/Wallet'
+import ImagePicker from 'components/ImagePicker'
+
+import UnitListing from './listing-types/Unit'
+import HomeShareListing from './listing-types/HomeShare'
+
+import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Step2 extends Component {
-  state = {}
+  constructor(props) {
+    super(props)
+    this.state = {
+      ...props.listing,
+      fields: Object.keys(props.listing)
+    }
+  }
+
+  componentDidMount() {
+    if (this.titleInput) {
+      this.titleInput.focus()
+    }
+  }
+
   render() {
+    const prefix =
+      this.props.mode === 'edit'
+        ? `/listings/${this.props.listingId}/edit`
+        : '/create'
+
+    let ListingType = UnitListing,
+      listingType = 'UnitListing'
+    const { category, subCategory } = this.state
+    if (category === 'schema.forRent' && subCategory === 'schema.housing') {
+      ListingType = HomeShareListing
+      listingType = 'HomeShareListing'
+    }
+    const isFractional = this.props.listingType === 'fractional'
+
+    if (this.state.valid) {
+      if (isFractional) {
+        return <Redirect to={`${prefix}/availability`} push />
+      } else {
+        return <Redirect to={`${prefix}/boost`} push />
+      }
+    } else if (!this.state.subCategory) {
+      return <Redirect to={`${prefix}/step-1`} />
+    }
+
+    const input = formInput(this.state, state => this.setState(state))
+    const Feedback = formFeedback(this.state)
+
     return (
-      <div className="create-listing-step-2">
-        <div className="wrap">
-          <div className="step">Step 2</div>
-          <div className="step-description">Provide listing details</div>
-          <Steps steps={3} step={2} />
+      <div className="row">
+        <div className="col-md-8">
+          <div className="create-listing-step-2">
+            <div className="wrap">
+              <div className="step">Step 2</div>
+              <div className="step-description">Provide listing details</div>
+              <Steps steps={isFractional ? 4 : 3} step={2} />
 
-          <form onSubmit={e => e.preventDefault()}>
-            <div className="form-group">
-              <label>Title</label>
-              <input
-                className="form-control form-control-lg"
-                placeholder="This is the title of your listing"
-                required
-              />
-              {/* <div className="invalid-feedback">Invalid</div> */}
-            </div>
-            <div className="form-group">
-              <label>Category</label>
-              <select className="form-control form-control-lg">
-                <option>Select one</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label className="mb-0">Description</label>
-              <div className="help-text">
-                Make sure to include any product variant details here. Learn
-                more
-              </div>
-              <textarea
-                placeholder="Tell us a bit about this listing"
-                className="form-control form-control-lg"
-              />
-            </div>
-            <div className="form-group">
-              <label>Location</label>
-              <input
-                className="form-control form-control-lg"
-                placeholder="Where is this listing being offered"
-              />
-            </div>
-            <div className="form-group">
-              <label>Add Photos</label>
-              <div className="add-photos">Add photo</div>
-            </div>
-            <div className="form-group">
-              <label>Quantity</label>
-              <input
-                className="form-control form-control-lg"
-                placeholder="How many are you selling?"
-              />
-            </div>
-            <div className="form-group">
-              <label>Listing Price (per unit)</label>
-              <input className="form-control form-control-lg" />
-              <div className="help-text price">
-                The cost to buy this listing. Price is always in ETH, USD is an
-                estimate.
-              </div>
-            </div>
+              <form
+                onSubmit={e => {
+                  e.preventDefault()
+                  this.validate(listingType)
+                }}
+              >
+                {this.state.valid !== false ? null : (
+                  <div className="alert alert-danger">
+                    Please fix the errors below...
+                  </div>
+                )}
+                <div className="form-group">
+                  <label>Title</label>
+                  <input
+                    {...input('title')}
+                    placeholder="This is the title of your listing"
+                    ref={r => (this.titleInput = r)}
+                  />
+                  {Feedback('title')}
+                </div>
+                <div className="form-group">
+                  <label className="mb-0">Description</label>
+                  <div className="help-text">
+                    Make sure to include any product variant details here. Learn
+                    more
+                  </div>
+                  <textarea
+                    {...input('description')}
+                    placeholder="Tell us a bit about this listing"
+                  />
+                  {Feedback('description')}
+                </div>
 
-            <div className="actions">
-              <Link className="btn btn-outline-primary" to="/create">
-                Back
-              </Link>
-              <button type="submit" className="btn btn-primary">
-                Continue
-              </button>
-              {/* <Link className="btn btn-primary" to="/create/step-3">
-                Continue
-              </Link> */}
+                <ListingType
+                  listing={this.state}
+                  onChange={state => this.setState(state)}
+                />
+
+                <div className="form-group">
+                  <label>Add Photos</label>
+                  <ImagePicker
+                    images={this.state.media}
+                    onChange={media => this.setState({ media })}
+                  >
+                    <div className="add-photos">Add photo</div>
+                  </ImagePicker>
+                </div>
+
+                <div className="actions">
+                  <Link className="btn btn-outline-primary" to={prefix}>
+                    Back
+                  </Link>
+                  <button type="submit" className="btn btn-primary">
+                    Continue
+                  </button>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <Wallet />
+          <div className="gray-box">
+            <h5>Add Listing Details</h5>
+            Be sure to give your listing an appropriate title and description to
+            let others know what you&apos;re offering. Adding some photos will
+            increase the chances of selling your listing.
+          </div>
         </div>
       </div>
     )
+  }
+
+  validate(listingType) {
+    const newState = {}
+
+    if (!this.state.title) {
+      newState.titleError = 'Title is required'
+    } else if (this.state.title.length < 3) {
+      newState.titleError = 'Title is too short'
+    }
+
+    if (!this.state.description) {
+      newState.descriptionError = 'Description is required'
+    } else if (this.state.description.length < 10) {
+      newState.descriptionError = 'Description is too short'
+    }
+
+    if (!this.state.price) {
+      newState.priceError = 'Price is required'
+    } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
+      newState.priceError = 'Price must be a number'
+    } else if (Number(this.state.price) <= 0) {
+      newState.priceError = 'Price must be greater than zero'
+    }
+
+    if (listingType === 'UnitListing') {
+      if (!this.state.quantity) {
+        newState.quantityError = 'Quantity is required'
+      } else if (!this.state.quantity.match(/^-?[0-9]+$/)) {
+        newState.quantityError = 'Quantity must be a number'
+      } else if (Number(this.state.quantity) <= 0) {
+        newState.quantityError = 'Quantity must be greater than zero'
+      }
+    } else if (listingType === 'HomeShareListing') {
+      // HomeShare validation
+    }
+
+    newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
+
+    if (!newState.valid) {
+      window.scrollTo(0, 0)
+    } else if (this.props.onChange) {
+      this.props.onChange(pick(this.state, this.state.fields))
+    }
+    this.setState(newState)
+    return newState.valid
   }
 }
 
@@ -102,11 +201,6 @@ require('react-styl')(`
       font-size: 18px;
       &.is-invalid
         border-color: #dc3545
-        // padding-right: 2.25rem;
-        // background-repeat: no-repeat;
-        // background-position: center right calc(2.25rem / 4);
-        // background-size: calc(2.25rem / 2) calc(2.25rem / 2);
-        // background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23dc3545' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E")
       &::-webkit-input-placeholder
         color: var(--bluey-grey)
         font-size: 18px;
@@ -114,17 +208,15 @@ require('react-styl')(`
       font-weight: normal
     textarea
       min-height: 120px
+    .image-picker label
+      margin: 0
     .add-photos
       border: 1px dashed var(--light)
-      // border-image-source: url(http://i.stack.imgur.com/wLdVc.png)
-      // border-image-slice: 2
-      // border-image-repeat: round;
-
       font-size: 14px;
       font-weight: normal;
       color: var(--bluey-grey);
-      width: 15rem;
-      height: 9rem;
+      height: 100%
+      min-height: 9rem
       display: flex
       align-items: center
       justify-content: center
@@ -138,6 +230,8 @@ require('react-styl')(`
         background-size: 100%;
         background-position: center;
         opacity: 0.4;
+      &:hover::before
+        opacity: 0.6
     .help-text
       font-size: 14px
       font-weight: normal
@@ -145,14 +239,54 @@ require('react-styl')(`
       color: var(--dusk)
       &.price
         color: var(--bluey-grey)
-        margin-top: 1rem
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
+        margin-top: 0.5rem
+  .with-symbol
+    position: relative
+    &.corner::before
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 9px solid transparent;
+      border-right: 9px solid var(--light);
+      border-bottom: 9px solid transparent;
+    &.corner::after
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 7px solid transparent;
+      border-right: 7px solid #e9ecef;
+      border-bottom: 7px solid transparent;
+    > span
+      position: absolute
+      right: 10px
+      top: 50%
+      transform: translateY(-50%)
+      padding: 2px 9px 2px 9px
+      border-radius: 12px
+      background: var(--pale-grey)
+      background-repeat: no-repeat
+      background-position: 6px center
+      background-size: 17px
+      font-weight: bold
+      font-size: 14px
+      &.eth
+        padding-left: 1.75rem
+        color: var(--bluish-purple)
+        background-image: url(images/eth-icon.svg)
+      &.ogn
+        padding-left: 1.75rem
+        color: var(--clear-blue)
+        background-image: url(images/ogn-icon.svg)
+      &.usd
+        &::before
+          content: "$"
+          margin-right: 0.25rem
 `)

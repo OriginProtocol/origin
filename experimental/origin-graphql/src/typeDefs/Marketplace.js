@@ -1,4 +1,43 @@
-export default `
+const ListingInterface = `
+  id: ID!
+
+  # On-chain:
+  seller: Account
+  deposit: String
+  arbitrator: Account
+
+  # Connections
+  offers: [Offer]
+  allOffers: [Offer]
+  offer(id: ID!): Offer
+  totalOffers: Int
+  events: [Event]
+  totalEvents: Int
+  createdEvent: Event
+
+  # Computed
+  status: String
+  hidden: Boolean
+  featured: Boolean
+  depositAvailable: String
+  type: String
+
+  # IPFS
+  title: String
+  description: String
+  currencyId: String
+  price: Price
+  category: String
+  subCategory: String
+  categoryStr: String
+  media: [Media]
+  "IPFS: total commission, in natural units, available across all units"
+  commission: String
+  "IPFS: commission, in natural units, to be paid for each unit sold"
+  commissionPerUnit: String
+`
+
+module.exports = `
   extend type Query {
     marketplace: Marketplace
     marketplaces: [Marketplace]
@@ -8,19 +47,23 @@ export default `
     deployMarketplace(token: String!, version: String, from: String, autoWhitelist: Boolean): Transaction
 
     createListing(
-      deposit: String!
+      from: String!
+      deposit: String
       depositManager: String
-      from: String
-      data: NewListingInput
       autoApprove: Boolean
+      data: ListingInput!
+      unitData: UnitListingInput
+      fractionalData: FractionalListingInput
     ): Transaction
 
     updateListing(
       listingID: ID!
+      from: String!
       additionalDeposit: String
-      from: String,
-      data: NewListingInput
       autoApprove: Boolean
+      data: ListingInput!
+      unitData: UnitListingInput
+      fractionalData: FractionalListingInput
     ): Transaction
 
     withdrawListing(
@@ -33,18 +76,32 @@ export default `
     makeOffer(
       listingID: ID!
       finalizes: Int
-      affiliate: String
       commission: String
       value: String
       currency: String
-      arbitrator: String
       from: String
       withdraw: String
+      quantity: Int
+
+      # Optional: normally inherited from listing
+      arbitrator: String
+      affiliate: String
+      fractionalData: FractionalOfferInput
     ): Transaction
 
     executeRuling(
       offerID: ID!
+      offerID: ID!
+      # ruling may be one of:
+      # 
+      # - refund-buyer: Buyer gets all value in the offer
+      # - pay-seller: Seller gets all value in the offer
+      # - partial-refund: Buyer the refund value, Seller gets all remaining value
       ruling: String!
+      # commission may be one of:
+      # 
+      # - pay: Affiliate receives commission tokens, if any
+      # - refund: Seller refunded commission tokens, if any
       commission: String!
       message: String
       refund: String
@@ -71,7 +128,7 @@ export default `
     account: Account
     totalListings: Int
 
-    listing(id: ID!): Listing
+    listing(id: ID!): ListingResult
     listings(
       first: Int
       last: Int
@@ -108,10 +165,12 @@ export default `
     account: Account!
     firstEvent: Event
     lastEvent: Event
-    listings(first: Int, after: String): ListingConnection!
-    offers(first: Int, after: String): OfferConnection!
-    sales(first: Int, after: String): OfferConnection!
+    listings(first: Int, after: String, filter: String): ListingConnection!
+    offers(first: Int, after: String, filter: String): OfferConnection!
+    sales(first: Int, after: String, filter: String): OfferConnection!
     reviews(first: Int, after: String): ReviewConnection!
+    notifications(first: Int, after: String, filter: String): UserNotificationConnection!
+    transactions(first: Int, after: String): UserTransactionConnection!
   }
 
   type OfferConnection {
@@ -126,67 +185,77 @@ export default `
     totalCount: Int!
   }
 
+  type UserNotificationConnection {
+    nodes: [UserNotification]
+    pageInfo: PageInfo!
+    totalCount: Int!
+  }
+
+  type UserNotification {
+    id: ID!
+    offer: Offer!
+    party: User!
+    event: Event!
+    read: Boolean
+  }
+
+  type UserTransactionConnection {
+    nodes: [Transaction]
+    pageInfo: PageInfo!
+    totalCount: Int!
+    hasPending: Boolean
+  }
+
   type Review {
     id: ID!
     reviewer: User
     target: User
-    listing: Listing
+    listing: ListingResult
     offer: Offer
     review: String
     rating: Int
+    event: Event
   }
 
   type ListingConnection {
     edges: [ListingEdge]
-    nodes: [Listing]
+    nodes: [ListingResult]
     pageInfo: PageInfo!
     totalCount: Int!
   }
 
   type ListingEdge {
     cursor: String!
-    node: Listing
+    node: ListingResult
   }
 
-  type PageInfo {
-    endCursor: String
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
+  interface Listing {
+    ${ListingInterface}
   }
 
-  type Listing {
-    id: ID!
-
-    # On-chain:
-    seller: Account
-    deposit: String
-    arbitrator: Account
-
-    # Connections
-    offers: [Offer]
-    offer(id: ID!): Offer
-    totalOffers: Int
-    events: [Event]
-    totalEvents: Int
-    createdEvent: Event
+  type UnitListing implements Listing {
+    ${ListingInterface}
 
     # Computed
-    status: String
-    hidden: Boolean
-    featured: Boolean
+    unitsAvailable: Int
+    unitsSold: Int
+    multiUnit: Boolean
 
     # IPFS
-    title: String
-    description: String
-    currencyId: String
-    price: Price
-    category: String
-    subCategory: String
-    categoryStr: String
     unitsTotal: Int
-    media: [Media]
   }
+
+  type FractionalListing implements Listing {
+    ${ListingInterface}
+
+    # IPFS
+    weekendPrice: Price
+    unavailable: [String]
+    customPricing: [String]
+    booked: [String]
+  }
+
+  union ListingResult = UnitListing | FractionalListing
 
   type Media {
     url: String
@@ -201,9 +270,16 @@ export default `
     createdBlock: Int
 
     # Connections
-    listing: Listing
+    listing: ListingResult
     events: [Event]
     createdEvent: Event
+    acceptedEvent: Event
+    finalizedEvent: Event
+    withdrawnEvent: Event
+    fundsAddedEvent: Event
+    disputedEvent: Event
+    rulingEvent: Event
+    history: [OfferHistory]
 
     # On-Chain
     value: String
@@ -219,16 +295,47 @@ export default `
     # Computed
     withdrawnBy: Account
     statusStr: String
+    valid: Boolean
+    validationError: String
+
+    # IPFS
+    quantity: Int
+    startDate: String
+    endDate: String
   }
 
-  input NewListingInput {
+  type OfferHistory {
+    id: ID!
+    event: Event
+    party: Account
+    ipfsHash: String
+    ipfsUrl: String
+  }
+
+  input ListingInput {
     title: String!
     description: String
     category: String
+    subCategory: String
     currency: String
-    price: PriceInput
-    unitsTotal: Int
     media: [MediaInput]
+    price: PriceInput
+
+    "total commission, in natural units, for all units"
+    commission: String
+    "commission, in natural units, to be paid for each unit sold"
+    commissionPerUnit: String
+  }
+
+  input UnitListingInput {
+    unitsTotal: Int
+  }
+
+  input FractionalListingInput {
+    weekendPrice: PriceInput
+    unavailable: [String]
+    customPricing: [String]
+    booked: [String]
   }
 
   input MediaInput {
@@ -238,6 +345,11 @@ export default `
 
   input MakeOfferInput {
     currency: String
+  }
+
+  input FractionalOfferInput {
+    startDate: String
+    endDate: String
   }
 
   input PriceInput {

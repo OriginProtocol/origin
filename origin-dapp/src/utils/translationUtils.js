@@ -230,6 +230,8 @@ export function getLanguageNativeName(langCode) {
     } else if (langCode === 'zh-TW') {
       selectedLanguageFull = '繁體中文'
     }
+  } else if (/fil/.test(langCode)) {
+    selectedLanguageFull = 'Filipino'
   } else {
     selectedLanguageFull = localeCode.getLanguageNativeName(langCode)
   }

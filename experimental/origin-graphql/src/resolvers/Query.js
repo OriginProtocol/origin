@@ -1,11 +1,15 @@
+import get from 'lodash/get'
+
 import contracts from '../contracts'
 
-let ethPrice
-const marketplaceExists = {},
-  messagingInitialized = {}
+let ethPrice, activeMessaging
+const marketplaceExists = {}
+
+import { identity } from './IdentityEvents'
 
 export default {
   config: () => contracts.net,
+  configObj: () => contracts.config,
   web3: () => ({}),
   marketplace: async () => {
     const address = contracts.marketplace.options.address
@@ -18,7 +22,9 @@ export default {
         marketplaceExists[address] = true
         return contracts.marketplace
       }
-    } catch(e) { /* Ignore */ }
+    } catch (e) {
+      /* Ignore */
+    }
   },
   contracts: () => {
     let contracts = []
@@ -30,11 +36,12 @@ export default {
     return contracts
   },
   marketplaces: () => contracts.marketplaces,
-  userRegistry: () => {
-    const address = contracts.userRegistry.options.address
+  identityEvents: () => {
+    const address = contracts.identityEvents.options.address
     if (!address) return null
-    return contracts.userRegistry
+    return contracts.identityEvents
   },
+  identity: (_, args) => identity({ id: args.id }),
   tokens: () => contracts.tokens,
   token: (_, args) => {
     if (args.id === '0x0000000000000000000000000000000000000000') {
@@ -63,19 +70,38 @@ export default {
     }),
   messaging: (_, args) =>
     new Promise(async resolve => {
+      if (
+        typeof window !== 'undefined' &&
+        window.localStorage.disableMessaging
+      ) {
+        return resolve(null)
+      }
       let id = args.id
       if (id === 'defaultAccount') {
-        const accounts = await contracts.metaMask.eth.getAccounts()
-        if (!accounts || !accounts.length) return null
+        // web3Exec is either MetaMask or a web3 instance using the linker
+        // client provider
+        const accounts = await contracts.web3Exec.eth.getAccounts()
+        if (!accounts || !accounts.length) {
+          return resolve(null)
+        }
         id = accounts[0]
+      } else if (id === 'currentAccount') {
+        if (contracts.messaging.account_key) {
+          id = contracts.messaging.account_key
+        }
       }
-      if (messagingInitialized[id]) {
+      id = contracts.web3.utils.toChecksumAddress(id)
+      if (activeMessaging === id) {
         return resolve({ id })
       }
       contracts.messaging.events.once('initRemote', async () => {
-        messagingInitialized[id] = true
+        activeMessaging = id
         setTimeout(() => resolve({ id }), 500)
       })
+      const messagingData = get(contracts, 'linker.session.privData.messaging')
+      if (contracts.linker && messagingData) {
+        await contracts.messaging.onPreGenKeys(messagingData)
+      }
       await contracts.messaging.init(id)
     }),
 
@@ -91,5 +117,6 @@ export default {
       totalUnread: 0,
       nodes: []
     }
-  }
+  },
+  walletLinker: () => ({})
 }

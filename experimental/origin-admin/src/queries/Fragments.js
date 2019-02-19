@@ -20,7 +20,7 @@ export default {
   },
   Listing: {
     basic: gql`
-      fragment basicListingFields on Listing {
+      fragment basicListingFields on ListingResult {
         id
         status
         totalEvents
@@ -31,6 +31,7 @@ export default {
           id
         }
         deposit
+        depositAvailable
         createdEvent {
           timestamp
         }
@@ -40,7 +41,6 @@ export default {
         title
         description
         currencyId
-        unitsTotal
         featured
         hidden
         price {
@@ -50,6 +50,14 @@ export default {
         media {
           url
           contentType
+        }
+        commission
+        commissionPerUnit
+
+        ... on UnitListing {
+          unitsTotal
+          unitsAvailable
+          unitsSold
         }
       }
     `
@@ -66,6 +74,9 @@ export default {
         commission
         status
         finalizes
+        quantity
+        valid
+        validationError
         arbitrator {
           id
         }

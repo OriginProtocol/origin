@@ -283,7 +283,7 @@ const listingSchemaMetadata = {
         }
       },
       {
-        schema: 'forRent-housing_1.0.0.json',
+        schema: 'forRent-housing_2.0.0.json',
         translationName: {
           id: 'schema.housing',
           defaultMessage: 'Housing'

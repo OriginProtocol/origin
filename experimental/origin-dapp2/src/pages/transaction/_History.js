@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import dayjs from 'dayjs'
 
 import OfferEventsQuery from 'queries/OfferEvents'
+import TxHash from './_TxHash'
 
 const date = timestamp => dayjs.unix(timestamp).format('MMM. D, YYYY h:mmA')
 const eventName = name => {
@@ -15,8 +16,19 @@ class TxHistory extends Component {
   state = {}
   render() {
     const offerId = this.props.offer.id
+
+    const trProps = (idx, info) => ({
+      className: `${info ? 'info' : ''}${
+        this.state[`row${idx}`] ? ' active' : ''
+      }${idx % 2 === 1 ? '' : ' odd'}`,
+      onClick: () =>
+        this.setState({
+          [`row${idx}`]: this.state[`row${idx}`] ? false : true
+        })
+    })
+
     return (
-      <table className="tx-history table table-sm table-striped table-hover">
+      <table className="tx-history table table-sm">
         <thead>
           <tr>
             <th>TxName</th>
@@ -26,41 +38,47 @@ class TxHistory extends Component {
         </thead>
         <Query query={OfferEventsQuery} variables={{ offerId }}>
           {({ loading, error, data }) => {
-            const events = get(data, 'marketplace.offer.events', [])
-            if (loading || error || !events.length) {
+            const history = get(data, 'marketplace.offer.history', [])
+            if (loading || error || !history.length) {
               return null
             }
 
             return (
               <tbody>
-                {events.map((event, idx) => (
-                  <tr
-                    className={this.state[`row${idx}`] ? 'active' : ''}
-                    key={idx}
-                    onClick={() =>
-                      this.setState({
-                        [`row${idx}`]: this.state[`row${idx}`] ? false : true
-                      })
-                    }
-                  >
-                    <td>
-                      <div className="tx">
-                        <i />
-                        {eventName(event.event)}
-                        <div className="info">
-                          {'Tx Hash: '}
-                          <a href="#">{event.transactionHash}</a>
-                          <br />
-                          {'IPFS Hash: '}
-                          <a href="#">{event.returnValues.ipfsHash}</a>
+                {history.map((item, idx) => (
+                  <React.Fragment key={idx}>
+                    <tr {...trProps(idx)}>
+                      <td>
+                        <div className="tx">
+                          <i />
+                          {eventName(item.event.event)}
                         </div>
-                      </div>
-                    </td>
-                    <td>{date(event.block.timestamp)}</td>
-                    <td>
-                      <i className="caret" />
-                    </td>
-                  </tr>
+                      </td>
+                      <td>{date(item.event.block.timestamp)}</td>
+                      <td>
+                        <i className="caret" />
+                      </td>
+                    </tr>
+                    {!this.state[`row${idx}`] ? null : (
+                      <tr {...trProps(idx, true)}>
+                        <td colSpan={3} className="info">
+                          <div>
+                            IPFS Hash:
+                            <a
+                              onClick={e => e.stopPropagation()}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={item.ipfsUrl}
+                              children={item.ipfsHash}
+                            />
+                          </div>
+                          <div>
+                            Tx Hash: <TxHash hash={item.id} />
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             )
@@ -89,12 +107,14 @@ require('react-styl')(`
       font-weight: normal
       tr
         cursor: pointer
+        &.active .caret
+          transform: rotate(270deg)
+        &.odd td
+          background-color: var(--pale-grey-eight)
+
       .tx
         padding-left: 2rem
         position: relative
-        .info
-          display: none
-          margin-top: 0.5rem
         i
           position: absolute
           left: 0
@@ -105,6 +125,15 @@ require('react-styl')(`
           width: 1.2rem
           height: 1.2rem
           display: inline-block
+      .info
+        padding-left: 2.8rem
+        padding-top: 0
+        overflow: hidden
+        a
+          margin-left: 0.5rem
+        > div
+          overflow: hidden
+          text-overflow: ellipsis
 
       .caret
         background: url(images/caret-dark.svg) center no-repeat
@@ -113,12 +142,4 @@ require('react-styl')(`
         display: inline-block
         transform: rotate(90deg)
         vertical-align: -2px
-      tr.active
-        .info
-          display: block
-        .caret
-          transform: rotate(270deg)
-
-    &.table-striped tbody tr:nth-of-type(odd)
-      background-color: var(--pale-grey-eight)
 `)

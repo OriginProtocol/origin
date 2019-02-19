@@ -4,7 +4,12 @@
   "required": [
     "name",
     "description",
-    "price"
+    "price",
+    "unitsTotal",
+    "dappSchemaId",
+    "category",
+    "subCategory",
+    "listingType"
   ],
   "properties": {
     "dappSchemaId": {
@@ -27,6 +32,10 @@
       "title": "schema.description",
       "minLength": 10,
       "maxLength": 1024
+    },
+    "unitsTotal": {
+      "type": "integer",
+      "title": "schema.unitsTotal"
     },
     "price": {
       "type": "number",

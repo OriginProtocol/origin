@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 
 import Wallet from './Wallet'
 import MetaMask from './MetaMask'
-import Messaging from './Messaging'
+import { Messaging } from './Messaging'
 import Notifications from './Notifications'
 import Profile from './Profile'
 
@@ -57,7 +57,7 @@ require('react-styl')(`
       min-width: 10rem
       font-size: 18px
     h2
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 40px
       font-weight: 200
       font-style: normal
@@ -66,14 +66,14 @@ require('react-styl')(`
     .explanation
       margin-bottom: 2.5rem
     .step
-      font-family: Lato
+      font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
       text-transform: uppercase
       margin-top: 0.75rem
     h3
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 28px
       font-weight: 300
       font-style: normal
@@ -82,7 +82,7 @@ require('react-styl')(`
 
     .listing-preview,.onboard-help
       background: var(--pale-grey-eight)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 1rem
       margin-bottom: 2rem
       font-size: 16px
@@ -96,40 +96,47 @@ require('react-styl')(`
       .learn-more
         margin-top: 1rem
 
-    .onboard-box
-      border: 1px solid var(--light)
-      border-radius: 5px
-      padding: 8rem 2rem
-      display: flex
-      flex-direction: column
-      align-items: center
-      text-align: center
+    .spinner
+      margin: 2rem 0
+    .continue-btn
+      margin-top: 2rem
+      text-align: right
+      .btn.disabled
+        opacity: 0.25
 
-      .status
-        font-family: Poppins
-        font-size: 24px
-        font-weight: 300
-        margin: 2rem 0 0.5rem 0
-        &.mb
-          margin-bottom: 4rem
-        i
-          font-size: 20px
-          display: block
-          margin-bottom: 1rem
-      .help.mb
-        margin-bottom: 2rem
-      em
-        font-weight: normal
-        margin-top: 1rem
-        margin-bottom: 2rem
-      a.cancel
-        font-size: 14px
-        font-weight: normal
-        margin-top: 1rem
-        &.big
-          font-size: 18px
-          font-weight: 900
+  .onboard-box
+    border: 1px solid var(--light)
+    border-radius: var(--default-radius)
+    padding: 8rem 2rem
+    display: flex
+    flex-direction: column
+    align-items: center
+    text-align: center
 
+    .status
+      font-family: var(--heading-font)
+      font-size: 24px
+      font-weight: 300
+      margin: 2rem 0 0.5rem 0
+      &.mb
+        margin-bottom: 4rem
+      i
+        font-size: 20px
+        display: block
+        margin-bottom: 1rem
+    .help.mb
+      margin-bottom: 2rem
+    em
+      font-weight: normal
+      margin-top: 1rem
+      margin-bottom: 2rem
+    a.cancel
+      font-size: 14px
+      font-weight: normal
+      margin-top: 1rem
+      &.big
+        font-size: 18px
+        font-weight: 900
     .qm
       width: 2rem
       height: 2rem
@@ -157,14 +164,6 @@ require('react-styl')(`
         line-height: 1.8rem
         &::after
           content: "×"
-
-    .spinner
-      margin: 2rem 0
-    .continue-btn
-      margin-top: 2rem
-      text-align: right
-      .btn.disabled
-        opacity: 0.25
 
   .spinner
     background: url(images/spinner-animation-dark.svg) no-repeat center

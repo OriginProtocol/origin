@@ -31,16 +31,17 @@ export default {
           id
         }
         deposit
+        depositAvailable
         createdEvent {
           timestamp
         }
 
         category
         categoryStr
+        subCategory
         title
         description
         currencyId
-        unitsTotal
         featured
         hidden
         price {
@@ -51,6 +52,21 @@ export default {
           url
           urlExpanded
           contentType
+        }
+        ... on UnitListing {
+          multiUnit
+          unitsTotal
+          unitsAvailable
+          unitsSold
+        }
+        ... on FractionalListing {
+          weekendPrice {
+            amount
+            currency
+          }
+          booked
+          customPricing
+          unavailable
         }
       }
     `
@@ -63,6 +79,7 @@ export default {
         offerId
         value
         currency
+        quantity
         refund
         commission
         status
@@ -82,7 +99,24 @@ export default {
         createdEvent {
           timestamp
         }
+        acceptedEvent {
+          timestamp
+        }
+        finalizedEvent {
+          timestamp
+        }
+        withdrawnEvent {
+          timestamp
+        }
+        disputedEvent {
+          timestamp
+        }
+        rulingEvent {
+          timestamp
+        }
         statusStr
+        startDate
+        endDate
       }
     `
   },
@@ -91,9 +125,12 @@ export default {
       fragment basicTransactionFields on Transaction {
         id
         status
+        submittedAt
+        blockNumber
         receipt {
           id
           events {
+            id
             event
             returnValues {
               listingID

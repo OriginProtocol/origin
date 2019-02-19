@@ -25,13 +25,23 @@ const offerStatusToBuyerNotificationType = {
 const SUPPORTED_DEPOSIT_CURRENCIES = ['OGN']
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
-class V00_MarkeplaceAdapter {
+class V00_MarketplaceAdapter {
   constructor({ contractService, blockEpoch }) {
     this.web3 = contractService.web3
     this.contractService = contractService
     this.contractName = 'V00_Marketplace'
     this.tokenContractName = 'OriginToken'
     this.blockEpoch = blockEpoch || 0
+    this.contract = null
+  }
+
+
+  toListingID(listingIndex) {
+    return listingIndex
+  }
+
+  toListingIndex(listingID) {
+    return listingID
   }
 
   async getContract() {
@@ -40,6 +50,7 @@ class V00_MarkeplaceAdapter {
         this.contractService.contracts[this.contractName]
       )
     }
+    return this.contract
   }
 
   async call(methodName, args, opts) {
@@ -400,9 +411,9 @@ class V00_MarkeplaceAdapter {
         const listingId = Number(e.returnValues.listingID)
 
         if (opts.withBlockInfo) {
-          const existingId = listingIds.find(obj => obj.id === listingId)
+          const idExists = listingIds.some(obj => obj.listingIndex === listingId)
 
-          if (!existingId) {
+          if (!idExists) {
             const { blockNumber, logIndex } = e
             listingIds.push({
               listingIndex: listingId,
@@ -650,4 +661,4 @@ class V00_MarkeplaceAdapter {
   }
 }
 
-export default V00_MarkeplaceAdapter
+export default V00_MarketplaceAdapter

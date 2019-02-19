@@ -1,37 +1,47 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
+import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
 
+import QueryError from 'components/QueryError'
 import TokenPrice from 'components/TokenPrice'
 import Link from 'components/Link'
+import LoadingSpinner from 'components/LoadingSpinner'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
+import PageTitle from 'components/PageTitle'
 
 import nextPageFactory from 'utils/nextPageFactory'
-import UserListingsQuery from 'queries/UserListings'
+import query from 'queries/UserListings'
 
 const nextPage = nextPageFactory('marketplace.user.listings')
 
 class Listings extends Component {
   render() {
-    const vars = { first: 15, id: this.props.wallet }
+    const vars = { first: 5, id: this.props.wallet }
+    const filter = get(this.props, 'match.params.filter', 'pending')
+    if (filter !== 'all') {
+      vars.filter = filter
+    }
 
     return (
       <div className="container purchases">
+        <PageTitle>My Listings</PageTitle>
         <Query
-          query={UserListingsQuery}
+          query={query}
           variables={vars}
           notifyOnNetworkStatusChange={true}
+          skip={!this.props.wallet}
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1 || !this.props.wallet) {
-              return <div>Loading...</div>
+              return <LoadingSpinner />
+            } else if (error) {
+              return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {
               return <p className="p-3">No marketplace contract?</p>
-            } else if (error) {
-              return <p className="p-3">Error :(</p>
             }
 
             const {
@@ -113,10 +123,10 @@ class Listings extends Component {
                         ))}
                         {!hasNextPage ? null : (
                           <button
-                            text={
-                              networkStatus === 3 ? 'Loading' : 'Load more...'
+                            children={
+                              networkStatus === 3 ? 'Loading...' : 'Load more'
                             }
-                            className="mt-3"
+                            className="btn btn-outline-primary btn-rounded mt-3"
                             onClick={() =>
                               nextPage(fetchMore, { ...vars, after })
                             }
@@ -142,7 +152,7 @@ const NoListings = () => (
       <h1>You don&apos;t have any listings yet.</h1>
       <p>Follow the steps below to create your first listing!</p>
       <br />
-      <Link to="/create" className="btn btn-lrg btn-primary">
+      <Link to="/create" className="btn btn-lg btn-primary btn-rounded">
         Create Your First Listing
       </Link>
     </div>

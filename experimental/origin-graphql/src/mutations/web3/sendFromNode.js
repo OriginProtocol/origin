@@ -10,7 +10,7 @@ async function sendFromNode(_, { from, to, value }) {
     value: web3.utils.toWei(value, 'ether'),
     gas: 4612388
   })
-  return txHelper({ tx, mutation: 'sendFromNode' })
+  return txHelper({ tx, from, mutation: 'sendFromNode' })
 }
 
 export default sendFromNode

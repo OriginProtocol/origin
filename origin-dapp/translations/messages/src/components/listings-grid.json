@@ -10,5 +10,21 @@
   {
     "id": "listings-grid.listingsCount",
     "defaultMessage": "{listingIdsCount} Listings"
+  },
+  {
+    "id": "listings.no-listings-whitelabel",
+    "defaultMessage": "Your marketplace doesn't have any listings yet."
+  },
+  {
+    "id": "listings.no-listings-whitelabel-message",
+    "defaultMessage": "You can create listings yourself or invite sellers to join your platform!"
+  },
+  {
+    "id": "listings.create-listing",
+    "defaultMessage": "Create a Listing"
+  },
+  {
+    "id": "listings.no-search-results",
+    "defaultMessage": "No search results found."
   }
 ]

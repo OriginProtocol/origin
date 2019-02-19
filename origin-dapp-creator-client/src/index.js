@@ -1,19 +1,30 @@
 require('dotenv').config()
 
+import { Route, HashRouter } from 'react-router-dom'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Route, HashRouter } from 'react-router-dom'
-import { Web3Provider } from 'react-web3'
+import Styl from 'react-styl'
+import * as Sentry from '@sentry/browser'
 
-import App from './App'
+import './css/app.css'
+import App from './pages/App'
 
-ReactDOM.render(
-  <Web3Provider>
-    <HashRouter>
-      <Route component={App} />
-    </HashRouter>,
-  </Web3Provider>,
-  document.getElementById('app')
-)
+if (process.env.NODE_ENV === 'production') {
+  Sentry.init({
+    dsn: 'https://bdd3bd39b52c4aeea53c401b7eb76a71@sentry.io/1377204'
+  })
+}
 
-require('react-styl').addStylesheet()
+class AppWrapper extends React.Component {
+  render() {
+    return (
+      <HashRouter>
+        <Route component={App} />
+      </HashRouter>
+    )
+  }
+}
+
+ReactDOM.render(<AppWrapper />, document.getElementById('app'))
+
+Styl.addStylesheet()

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import OriginButton from 'components/origin-button'
 
@@ -58,12 +58,6 @@ const styles = StyleSheet.create({
   above: {
     backgroundColor: 'transparent',
     height: 88,
-  },
-  address: {
-    color: '#3e5d77',
-    fontFamily: 'Lato',
-    fontSize: 12,
-    fontWeight: '300',
   },
   arrow: {
     height: 22,

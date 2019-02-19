@@ -6,11 +6,22 @@
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
   "dependencies": {
   },
   "devDependencies": {
-    "bs58": "^4.0.1"
+    "bs58": "^4.0.1",
+    "cross-fetch": "^3.0.0",
+    "eslint": "^5.13.0",
+    "prettier": "^1.16.3",
+    "form-data": "^2.3.3"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

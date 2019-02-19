@@ -3,6 +3,15 @@ git:
   depth: 6
 matrix:
   include:
+    - name: "origin-graphql unit tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts --scope origin-eventsource --scope origin-ipfs --scope origin-messaging-client --scope origin-services --scope origin-validator --scope origin-linker-client --scope origin-graphql
+      script:
+        - npm run test --prefix experimental/origin-graphql
+
     # Run integration tests using docker compose
     - name: "integration tests"
       language: minimal
@@ -54,12 +63,16 @@ matrix:
         - postgresql
       env:
         - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+        - AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
+        - ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
+        - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope origin-discovery
+        - lerna run migrate --scope origin-growth
       install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope origin-contracts --scope origin --scope origin-discovery
+        - npm install
+        - lerna run build --scope origin
       script:
         - npm run test --prefix origin-discovery
 
@@ -86,7 +99,7 @@ matrix:
       node_js: 10
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope origin-contracts --scope origin-faucet --scope origin-token-transfer-client --scope origin-token-transfer-server
+        - npm run bootstrap -- --scope origin-contracts --scope origin-token --scope origin-token-transfer-client --scope origin-token-transfer-server
       script:
         - npm run test --prefix origin-token-transfer/server
         - npm run test --prefix origin-token-transfer/client

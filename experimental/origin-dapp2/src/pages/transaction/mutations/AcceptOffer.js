@@ -20,14 +20,14 @@ class AcceptOffer extends Component {
           this.setState({ waitFor: false, error: 'mutation', errorData })
         }
       >
-        {acceptOffer => (
+        {(acceptOffer, { client }) => (
           <>
             <button
               className={this.props.className}
               onClick={() => this.onClick(acceptOffer)}
               children={this.props.children}
             />
-            {this.renderWaitModal()}
+            {this.renderWaitModal(client)}
             {this.state.error && (
               <TransactionError
                 reason={this.state.error}
@@ -63,18 +63,25 @@ class AcceptOffer extends Component {
     if (!this.state.waitFor) return null
 
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="OfferAccepted">
-        {({ client }) => (
+      <WaitForTransaction
+        hash={this.state.waitFor}
+        event="OfferAccepted"
+        onClose={async () => {
+          if (this.props.refetch) {
+            this.props.refetch()
+          }
+          window.scrollTo(0, 0)
+        }}
+        shouldClose={this.state.waitForShouldClose}
+      >
+        {() => (
           <div className="make-offer-modal">
             <div className="success-icon" />
             <div>Success!</div>
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={() => {
-                client.resetStore()
-                this.setState({ waitFor: false })
-              }}
+              onClick={() => this.setState({ waitForShouldClose: true })}
               children="OK"
             />
           </div>

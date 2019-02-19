@@ -16,6 +16,10 @@
     "defaultMessage": "Seller"
   },
   {
+    "id": "badges.soldOut",
+    "defaultMessage": "Sold Out"
+  },
+  {
     "id": "badges.sold",
     "defaultMessage": "Sold"
   },

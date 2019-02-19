@@ -5,6 +5,9 @@
 //   return bytes32Hex;
 // }
 const bs58 = require('bs58')
+const FormData = require('form-data')
+const fetch = require('cross-fetch')
+const cache = {}
 
 function getBytes32FromIpfsHash(hash) {
   return `0x${bs58
@@ -26,18 +29,24 @@ function getIpfsHashFromBytes32(bytes32Hex) {
   return hashStr
 }
 
-async function postFile(gateway, file) {
-  const body = new FormData()
-  body.append('file', file)
-
-  const rawRes = await fetch(`${gateway}/api/v0/add`, { method: 'POST', body })
-  const res = await rawRes.json()
-  return res.Hash
-}
+// async function postFile(gateway, file) {
+//   const body = new FormData()
+//   body.append('file', file)
+//
+//   const rawRes = await fetch(`${gateway}/api/v0/add`, { method: 'POST', body })
+//   const res = await rawRes.json()
+//   return res.Hash
+// }
 
 async function post(gateway, json, rawHash) {
   const formData = new FormData()
-  formData.append('file', new Blob([JSON.stringify(json)]))
+  let file
+  if (typeof Blob === 'undefined') {
+    file = Buffer.from(JSON.stringify(json))
+  } else {
+    file = new Blob([JSON.stringify(json)])
+  }
+  formData.append('file', file)
 
   const rawRes = await fetch(`${gateway}/api/v0/add`, {
     method: 'POST',
@@ -51,40 +60,40 @@ async function post(gateway, json, rawHash) {
   }
 }
 
-async function postEnc(gateway, json, pubKeys) {
-  const formData = new FormData()
+// async function postEnc(gateway, json, pubKeys) {
+//   const formData = new FormData()
+//
+//   const publicKeys = pubKeys.reduce(
+//     (acc, val) => acc.concat(openpgp.key.readArmored(val).keys),
+//     []
+//   )
+//
+//   const encrypted = await openpgp.encrypt({
+//     data: JSON.stringify(json),
+//     publicKeys
+//   })
+//
+//   formData.append('file', new Blob([encrypted.data]))
+//
+//   const rawRes = await fetch(`${gateway}/api/v0/add`, {
+//     method: 'POST',
+//     body: formData
+//   })
+//   const res = await rawRes.json()
+//
+//   return getBytes32FromIpfsHash(res.Hash)
+// }
 
-  const publicKeys = pubKeys.reduce(
-    (acc, val) => acc.concat(openpgp.key.readArmored(val).keys),
-    []
-  )
-
-  const encrypted = await openpgp.encrypt({
-    data: JSON.stringify(json),
-    publicKeys
-  })
-
-  formData.append('file', new Blob([encrypted.data]))
-
-  const rawRes = await fetch(`${gateway}/api/v0/add`, {
-    method: 'POST',
-    body: formData
-  })
-  const res = await rawRes.json()
-
-  return getBytes32FromIpfsHash(res.Hash)
-}
-
-async function decode(text, key, pass) {
-  const privKeyObj = openpgp.key.readArmored(key).keys[0]
-  await privKeyObj.decrypt(pass)
-
-  const decrypted = await openpgp.decrypt({
-    message: openpgp.message.readArmored(text),
-    privateKeys: [privKeyObj]
-  })
-  return decrypted.data
-}
+// async function decode(text, key, pass) {
+//   const privKeyObj = openpgp.key.readArmored(key).keys[0]
+//   await privKeyObj.decrypt(pass)
+//
+//   const decrypted = await openpgp.decrypt({
+//     message: openpgp.message.readArmored(text),
+//     privateKeys: [privKeyObj]
+//   })
+//   return decrypted.data
+// }
 
 async function getText(gateway, hashAsBytes) {
   const hash =
@@ -117,15 +126,19 @@ async function getText(gateway, hashAsBytes) {
   return await response.text()
 }
 
-async function get(gateway, hashAsBytes, party) {
-  let text = await getText(gateway, hashAsBytes)
-  if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
-    try {
-      text = await decode(text, party.privateKey, party.pgpPass)
-    } catch (e) {
-      return { encrypted: true, decryptError: e }
-    }
-  }
+async function get(gateway, hashAsBytes) {
+  // }, party) {
+  if (!hashAsBytes) return null
+
+  const text = cache[hashAsBytes] || (await getText(gateway, hashAsBytes))
+  // if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
+  //   try {
+  //     text = await decode(text, party.privateKey, party.pgpPass)
+  //   } catch (e) {
+  //     return { encrypted: true, decryptError: e }
+  //   }
+  // }
+  cache[hashAsBytes] = text
   return JSON.parse(text)
 }
 

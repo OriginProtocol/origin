@@ -71,7 +71,11 @@ export default class ListingAdapterV1 extends AdapterBase {
       language: ipfsData.language,
       title: ipfsData.title,
       description: ipfsData.description,
-      media: ipfsData.media
+      media: ipfsData.media,
+      marketplacePublisher: ipfsData.marketplacePublisher,
+      createDate: ipfsData.createDate,
+      updateVersion: ipfsData.updateVersion,
+      creator: ipfsData.creator
     }
 
     // Unit data.
@@ -85,9 +89,12 @@ export default class ListingAdapterV1 extends AdapterBase {
         ? new Money(ipfsData.commissionPerUnit)
         : null
     } else if (listing.type === 'fractional') {
-      listing.slots = ipfsData.slots
+      listing.availability = ipfsData.availability
       listing.slotLength = ipfsData.slotLength
       listing.slotLengthUnit = ipfsData.slotLengthUnit
+      listing.commission = ipfsData.commission
+        ? new Money(ipfsData.commission)
+        : null
     } else {
       throw new Error(`Unexpected listing type: ${listing.type}`)
     }

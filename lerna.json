@@ -6,6 +6,7 @@
     "origin-dapp-creator-client",
     "origin-dapp-creator-server",
     "origin-discovery",
+    "origin-growth",
     "origin-faucet",
     "origin-ipfs-proxy",
     "origin-js",
@@ -14,6 +15,7 @@
     "origin-mobile",
     "origin-notifications",
     "origin-tests",
+    "origin-token",
     "origin-token-transfer/*"
   ],
   "command": {

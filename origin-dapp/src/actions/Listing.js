@@ -14,7 +14,7 @@ export const ListingConstants = keyMirror(
 )
 
 export function getListingIds() {
-  return async function(dispatch) {
+  return async function(dispatch, getState) {
     dispatch({ type: ListingConstants.FETCH_IDS })
 
     // let hideList = []
@@ -39,17 +39,30 @@ export function getListingIds() {
         console.error(message)
       }
 
-      // if (networkId < 10) {
-      //   // Networks > 9 are local development
-      //   const response = await fetch(
-      //     `https://raw.githubusercontent.com/OriginProtocol/origin-dapp/hide_list/hidelist_${networkId}.json`
-      //   )
-      //   if (response.status === 200) {
-      //     hideList = await response.json()
-      //   }
-      // }
+      const config = getState().config
 
-      const ids = await origin.marketplace.getListings({ idsOnly: true })
+      const filters = []
+
+      // Filters from the marketplace creator
+      if (config.filters && config.filters.listings) {
+        const listingFilterAttributes = ['marketplacePublisher', 'category', 'subCategory']
+
+        listingFilterAttributes.map((listingFilterAttribute) => {
+          if (config.filters.listings[listingFilterAttribute]) {
+            filters.push({
+              name: listingFilterAttribute,
+              value: config.filters.listings[listingFilterAttribute],
+              valueType: 'STRING',
+              operator: 'EQUALS'
+            })
+          }
+        })
+      }
+
+      const ids = await origin.marketplace.getListings({
+        idsOnly: true,
+        filters: filters
+      })
 
       dispatch({
         type: ListingConstants.FETCH_IDS_SUCCESS,

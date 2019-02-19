@@ -1,0 +1,76 @@
+@import '~bootstrap/dist/css/bootstrap.css';
+@import '~typeface-lato';
+@import '~typeface-poppins';
+@import 'origin-bootstrap.css';
+
+body {
+  background-color: var(--pale-grey-four);
+}
+
+.logo {
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.main {
+  background-color: white;
+  border-bottom-left-radius: var(--default-radius);
+  border-bottom-right-radius: var(--default-radius);
+  border: 1px solid var(--light);
+  margin: 2rem auto;
+  width: 810px;
+}
+
+.form {
+  padding: 4rem 8rem;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.42;
+}
+
+h4 {
+  font-size: 1rem;
+  font-weight: 300;
+  margin-bottom: 2.5rem;
+}
+
+label {
+  margin-top: 0.5rem;
+}
+
+video {
+  margin-bottom: 3rem;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.btn-left {
+  float: left;
+}
+
+.btn-right {
+  float: right;
+}
+
+.metamask-prompt {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.copyright {
+  color: var(--steel);
+  text-align: center;
+  font-size: 12px;
+  margin: 2rem 0 4rem;
+}

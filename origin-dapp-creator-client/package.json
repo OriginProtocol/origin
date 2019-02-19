@@ -6,7 +6,9 @@
   "scripts": {
     "build": "per-env",
     "build:production": "webpack --loglevel notice",
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "start": "per-env",
     "start:development": "webpack-dev-server --watch --open",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,20 +27,22 @@
   "dependencies": {
     "@babel/core": "^7.2.0",
     "@babel/node": "^7.2.0",
-    "@babel/polyfill": "^7.0.0",
     "@babel/plugin-proposal-decorators": "^7.2.0",
+    "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
-    "@blueprintjs/core": "^3.9.0",
-    "@blueprintjs/select": "^3.4.0",
+    "@sentry/browser": "^4.5.3",
+    "acorn": "^6.0.5",
     "babel-loader": "^8.0.4",
     "babel-plugin-module-resolver": "^3.1.1",
     "clean-webpack-plugin": "^1.0.0",
+    "clipboard-polyfill": "^2.7.0",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^1.0.1",
     "dotenv-webpack": "^1.5.7",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.4.5",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "origin-dapp": "^0.3.0",
@@ -48,16 +52,21 @@
     "react-dom": "^16.6.3",
     "react-router-dom": "^4.3.1",
     "react-styl": "^0.0.3",
+    "react-svg-loader": "^2.1.0",
     "react-web3": "^1.2.0",
     "rework": "^1.0.1",
     "style-loader": "0.23.1",
     "superagent": "^4.0.0",
+    "terser": "3.14.1",
     "terser-webpack-plugin": "^1.1.0",
-    "web3": "^1.0.0-beta.37",
+    "web3": "1.0.0-beta.34",
     "webpack": "^4.27.0",
     "webpack-cli": "^3.1.2"
   },
   "devDependencies": {
+    "bootstrap": "^4.2.1",
+    "typeface-lato": "0.0.54",
+    "typeface-poppins": "0.0.54",
     "webpack-dev-server": "^3.1.10"
   },
   "babel": {
@@ -85,5 +94,9 @@
         }
       ]
     ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

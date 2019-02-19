@@ -81,7 +81,9 @@ class Listing extends Component {
                   {!media.length && !listing.description ? null : (
                     <div style={{ maxWidth: 300, margin: '20px 20px 0 0' }}>
                       {!media.length ? null : <Gallery pics={media} />}
-                      <div className="mt-2">{listing.description}</div>
+                      <div className="mt-2" style={{ whiteSpace: 'pre-wrap' }}>
+                        {listing.description}
+                      </div>
                     </div>
                   )}
                   <div>
@@ -112,7 +114,7 @@ class Listing extends Component {
                             <Offers
                               listing={listing}
                               listingId={listingId}
-                              offers={listing.offers}
+                              offers={listing.allOffers}
                             />
 
                             <Button
@@ -173,9 +175,10 @@ class Listing extends Component {
       a => listing.seller && a.id === listing.seller.id
     )
     const units = listing.unitsTotal <= 1 ? '' : `${listing.unitsTotal} items `
+    const available = ` (${listing.unitsAvailable} available) `
     return (
       <div style={{ marginBottom: 10 }}>
-        {`${units}${listing.categoryStr} by `}
+        {`${units}${available}${listing.categoryStr} by `}
         <Identity account={listing.seller} />
         <span style={{ marginRight: 10 }}>
           {` for `}
@@ -185,9 +188,6 @@ class Listing extends Component {
           />
           {`. Deposit managed by `}
           <Identity account={listing.arbitrator} />
-          <span style={{ marginLeft: 10 }}>
-            {currency({ amount: listing.deposit, currency: 'OGN' })}
-          </span>
         </span>
         {this.renderActions(sellerPresent, listing)}
         {listing.status === 'withdrawn' ? (
@@ -197,6 +197,16 @@ class Listing extends Component {
             Active
           </Tag>
         )}
+        <br />
+        <span style={{ marginRight: 10 }}>
+          Commission:{' '}
+          {currency({ amount: listing.depositAvailable, currency: 'OGN' })}/
+          {currency({ amount: listing.commission, currency: 'OGN' })}
+        </span>
+        <span>
+          Per-unit commission:{' '}
+          {currency({ amount: listing.commissionPerUnit, currency: 'OGN' })}
+        </span>
       </div>
     )
   }
@@ -239,7 +249,7 @@ class Listing extends Component {
   }
 
   renderBreadcrumbs() {
-    const listingId = Number(this.props.match.params.listingID)
+    const listingId = this.props.match.params.listingID
     return (
       <ul className="bp3-breadcrumbs">
         <li>

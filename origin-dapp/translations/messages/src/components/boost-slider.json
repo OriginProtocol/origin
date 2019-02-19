@@ -1,5 +1,9 @@
 [
   {
+    "id": "boost-slider.boost-level-multi-unit",
+    "defaultMessage": "Boost Level (per unit)"
+  },
+  {
     "id": "boost-slider.boost-level",
     "defaultMessage": "Boost Level"
   },

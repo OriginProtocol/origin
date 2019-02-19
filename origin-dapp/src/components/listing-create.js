@@ -1,11 +1,14 @@
+import { showAlert } from 'actions/Alert'
 import React, { Component, Fragment } from 'react'
 import { withRouter } from 'react-router'
 import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
+import queryString from 'query-string'
 
-import { showAlert } from 'actions/Alert'
+
+import { originToDAppListing } from 'utils/listing'
 
 import { handleNotificationsSubscription } from 'actions/Activation'
 import { storeWeb3Intent } from 'actions/App'
@@ -16,13 +19,16 @@ import {
 import { getOgnBalance } from 'actions/Wallet'
 
 import BoostSlider from 'components/boost-slider'
+import StepsProgress from 'components/steps-progress'
 import PhotoPicker from 'components/form-widgets/photo-picker'
 import PriceField from 'components/form-widgets/price-field'
+import BoostLimitField from 'components/form-widgets/boost-limit-field'
+import QuantityField from 'components/form-widgets/quantity-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
 
 import { getListing } from 'utils/listing'
-import { prepareSlotsToSave } from 'utils/calendarHelpers'
+import { generateDefaultPricing } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
@@ -31,7 +37,7 @@ import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { dappFormDataToOriginListing } from 'utils/listing'
 import { getFiatPrice } from 'utils/priceUtils'
 import { formattedAddress } from 'utils/user'
-import { getDataURIsFromImgURLs } from 'utils/fileUtils'
+import { getDataURIsFromImgURLs, picURIsOnly } from 'utils/fileUtils'
 
 import {
   translateSchema,
@@ -41,7 +47,6 @@ import {
 import origin from '../services/origin'
 
 const { web3 } = origin.contractService
-const enableFractional = process.env.ENABLE_FRACTIONAL === 'true'
 
 class ListingCreate extends Component {
   constructor(props) {
@@ -66,6 +71,7 @@ class ListingCreate extends Component {
     })
 
     this.defaultState = {
+      boostCapTooLow: false,
       step: this.STEP.PICK_CATEGORY,
       selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
       selectedCategory: null,
@@ -86,7 +92,12 @@ class ListingCreate extends Component {
         }
       },
       showDetailsFormErrorMsg: false,
-      showBoostTutorial: false
+      showBoostFormErrorMsg: false,
+      showBoostTutorial: false,
+      verifyObj: JSON.stringify({ verifyURL: 'https://api.github.com/repos/OriginProtocol/origin/issues/<put issue number here>',
+        checkArg: 'state',
+        matchValue: 'closed',
+        verifyFee: '100' })
     }
 
     this.state = { ...this.defaultState }
@@ -97,11 +108,43 @@ class ListingCreate extends Component {
         defaultMessage:
           'Are you sure you want to leave? If you leave this page your progress will be lost.'
       },
+      boostLimit: {
+         id: 'schema.boostLimitInOgn',
+         defaultMessage: 'Boost Limit'
+      },
+      positiveNumber: {
+        id: 'schema.positiveNumber',
+        defaultMessage: 'should be a positive number'
+      },
+      notEnoughOgnFunds: {
+        id: 'schema.notEnoughOgnFunds',
+        defaultMessage: 'not enough funds in wallet.'
+      },
+      boostLimitTooHigh: {
+        id: 'schema.boostLimitTooHigh',
+        defaultMessage: 'value too high. Should be equal or smaller of the Total boost required.'
+      },
       selectOne: {
         id: 'listing-create.selectOne',
         defaultMessage: 'Select One'
+      },
+      incorrectQuantity: {
+        id: 'listing-create.incorrectQuantity',
+        defaultMessage: 'Buyers have active (and finalized) purchases for {unitsInOffers} units. The quantity can not be lower than that.'
       }
     })
+
+    this.boostSchema = {
+      $schema: 'http://json-schema.org/draft-06/schema#',
+      type: 'object',
+      required: [],
+      properties: {
+        boostLimit: {
+          type: 'number',
+          title: this.props.intl.formatMessage(this.intlMessages.boostLimit)
+        }
+      }
+    }
 
     this.checkOgnBalance = this.checkOgnBalance.bind(this)
     this.handleCategorySelection = this.handleCategorySelection.bind(this)
@@ -113,15 +156,30 @@ class ListingCreate extends Component {
     this.backFromBoostStep = this.backFromBoostStep.bind(this)
     this.backFromDetailsStep = this.backFromDetailsStep.bind(this)
     this.onFormDataChange = this.onFormDataChange.bind(this)
+    this.onBoostLimitChange = this.onBoostLimitChange.bind(this)
     this.onReview = this.onReview.bind(this)
     this.pollOgnBalance = this.pollOgnBalance.bind(this)
     this.resetForm = this.resetForm.bind(this)
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
     this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
+    this.transformFormErrors = this.transformFormErrors.bind(this)
+    this.updateBoostCap = this.updateBoostCap.bind(this)
+    this.validateBoostForm = this.validateBoostForm.bind(this)
+    this.validateListingForm = this.validateListingForm.bind(this)
   }
 
   async componentDidMount() {
+
+    const { location } = this.props
+    const query = queryString.parse(location.search)
+    const showRequestListing = query['showRequestListing']
+
+    if (showRequestListing)
+    {
+      sessionStorage.setItem('showRequestListing', showRequestListing)
+    }
+
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
     if (this.props.listingId) {
       this.props.storeWeb3Intent('edit a listing')
@@ -129,16 +187,20 @@ class ListingCreate extends Component {
       try {
         // Pass false as second param so category doesn't get translated
         // because the form only understands the category ID, not the translated phrase
-        const listing = await getListing(this.props.listingId, false)
+        const listing = await getListing(this.props.listingId, { translate: false, loadOffers: true })
+
+        this.ensureUserIsSeller(listing.seller)
         const state = {
           formListing: {
-            formData: listing
+            formData: {
+              boostLimit: listing.totalBoostValue,
+              ...listing
+            }
           },
           selectedSchemaId: listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
           isEditMode: true
         }
-        this.ensureUserIsSeller(listing.seller)
 
         if (listing.pictures.length) {
           const pictures = await getDataURIsFromImgURLs(listing.pictures)
@@ -160,9 +222,14 @@ class ListingCreate extends Component {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
-    } else if (web3.currentProvider.isOrigin || !this.props.messagingEnabled) {
+    } else if (
+      web3.currentProvider.isOrigin ||
+      (this.props.messagingRequired && !this.props.messagingEnabled && !(origin.contractService.walletLinker && origin.contractService.walletLinker.linked))
+    ) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
+      } else {
+        origin.contractService.showLinkPopUp()
       }
       this.props.storeWeb3Intent('create a listing')
     }
@@ -262,12 +329,12 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(selectedSchemaId) {
+  handleSchemaSelection(e, selectedSchemaId) {
     let schemaFileName = selectedSchemaId
 
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
-    if (event.target.value) {
-      schemaFileName = event.target.value
+    if (!selectedSchemaId) {
+      schemaFileName = e.target.value
     }
 
     return fetch(`schemas/${schemaFileName}`)
@@ -284,6 +351,7 @@ class ListingCreate extends Component {
         selectedSchema: schemaJson
       }
     }
+
     this.uiSchema = {
       slotLength: {
         'ui:widget': 'hidden'
@@ -300,6 +368,18 @@ class ListingCreate extends Component {
       price: {
         'ui:field': PriceField
       },
+      weekdayPricing: {
+        'ui:field': PriceField
+      },
+      weekendPricing: {
+        'ui:field': PriceField
+      },
+      unitsTotal: {
+        'ui:field': QuantityField
+      },
+      boostLimit: {
+        'ui:field': BoostLimitField
+      },
       description: {
         'ui:widget': 'textarea',
         'ui:options': {
@@ -313,23 +393,15 @@ class ListingCreate extends Component {
 
     const { properties } = schemaJson
 
-    // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
-    const isFractionalListing = enableFractional &&
-      properties &&
+    const isFractionalListing = properties &&
       properties.listingType &&
       properties.listingType.const === 'fractional'
 
-    const slotLength = enableFractional &&
-      this.state.formListing.formData.slotLength ?
-      this.state.formListing.formData.slotLength :
-        properties &&
+    const slotLength = properties &&
         properties.slotLength &&
         properties.slotLength.default
 
-    const slotLengthUnit = enableFractional &&
-      this.state.formListing.formData.slotLengthUnit ?
-      this.state.formListing.formData.slotLengthUnit :
-        properties &&
+    const slotLengthUnit = properties &&
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
 
@@ -341,9 +413,34 @@ class ListingCreate extends Component {
       }
     }
 
+    const schemaSetValues = {}
+    for (const key in properties) {
+      if (properties[key].const) {
+        schemaSetValues[key] = properties[key].const
+      }
+
+      if (properties[key].default) {
+        schemaSetValues[key] = properties[key].default
+      }
+    }
+
+    if (this.state.isEditMode && isFractionalListing) {
+      this.uiSchema = {
+        ...this.uiSchema,
+        ...{
+          weekdayPricing: {
+            'ui:widget': 'hidden'
+          },
+          weekendPricing: {
+            'ui:widget': 'hidden'
+          }
+        }
+      }
+    }
+
     const translatedSchema = translateSchema(schemaJson)
 
-    this.setState({
+    this.setState(prevState => ({
       schemaFetched: true,
       fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
@@ -351,15 +448,16 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
-          ...this.state.formListing.formData,
+          ...prevState.formListing.formData,
+          ...schemaSetValues,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
           slotLength,
-          slotLengthUnit
+          slotLengthUnit,
         }
       }
-    })
+    }))
   }
 
   goToDetailsStep() {
@@ -376,10 +474,6 @@ class ListingCreate extends Component {
   }
 
   onAvailabilityEntered(slots, direction) {
-    if (!slots || !slots.length) {
-      return
-    }
-
     let nextStep
     switch(direction) {
       case 'forward':
@@ -393,14 +487,12 @@ class ListingCreate extends Component {
         break
     }
 
-    slots = prepareSlotsToSave(slots)
-
     this.setState({
       formListing: {
         ...this.state.formListing,
         formData: {
           ...this.state.formListing.formData,
-          slots
+          availability: slots
         }
       },
       step: this.STEP[nextStep]
@@ -414,7 +506,13 @@ class ListingCreate extends Component {
       step,
       selectedSchema: null,
       schemaFetched: false,
-      formData: null
+      formListing: {
+        ...this.state.formListing,
+        formData: {
+          ...this.state.formListing.formData,
+          unitsTotal: 1
+        }
+      }
     })
   }
 
@@ -430,8 +528,13 @@ class ListingCreate extends Component {
         [this.STEP.PREVIEW, 'unit'] :
         [this.STEP.BOOST, 'unit']
 
-    formListing.formData.listingType = listingType
+    if (formListing.formData.weekdayPricing || formListing.formData.weekendPricing) {
+      formListing.formData.availability = generateDefaultPricing(formListing.formData)
+    }
 
+    formListing.formData.listingType = listingType
+    // multiUnit listings specify unitsTotal, others default to 1
+    formListing.formData.unitsTotal = formListing.formData.unitsTotal || 1
     this.setState({
       formListing: {
         ...this.state.formListing,
@@ -442,20 +545,23 @@ class ListingCreate extends Component {
         }
       },
       step: nextStep,
-      showDetailsFormErrorMsg: false
+      showDetailsFormErrorMsg: false,
+      showBoostFormErrorMsg: false
     })
     window.scrollTo(0, 0)
     this.checkOgnBalance()
   }
 
   onFormDataChange({ formData }) {
+  const pictures = picURIsOnly(formData.pictures)
 
     this.setState({
       formListing: {
         ...this.state.formListing,
         formData: {
           ...this.state.formListing.formData,
-          ...formData
+          ...formData,
+          pictures
         }
       }
     })
@@ -473,6 +579,23 @@ class ListingCreate extends Component {
     }
   }
 
+  onBoostLimitChange({ formData }) {
+    const boostLimit = formData.boostLimit
+    if (boostLimit !== undefined && boostLimit !== this.state.formListing.formData.boostLimit
+    ) {
+      this.setState({
+        formListing: {
+          ...this.state.formListing,
+          formData: {
+            ...this.state.formListing.formData,
+            boostLimit: formData.boostLimit
+          }
+        }
+      })
+      this.updateBoostCap()
+    }
+  }
+
   setBoost(boostValue, boostLevel) {
     this.setState({
       formListing: {
@@ -484,6 +607,29 @@ class ListingCreate extends Component {
         }
       },
       selectedBoostAmount: boostValue
+    })
+
+    this.updateBoostCap()
+  }
+
+  /* This hack is required to be performed with delay, because boostLimit amount
+   * is updated via setState with 1-2 frames of delay after the boost slider value
+   * changes. When react renders the form inside those 2 frames the boostCapTooLow
+   * message can appear for a short time and then dissapear. This workaround prevents
+   * that sort of twitching.
+   */
+  updateBoostCap(){
+    const formData = this.state.formListing.formData
+    const boostAmount = formData.boostValue || this.state.selectedBoostAmount
+    const requiredBoost = formData.unitsTotal * boostAmount
+
+    if (this.updateBoostTimeout)
+      clearTimeout(this.updateBoostTimeout)
+
+    this.updateBoostTimeout = setTimeout(() => {
+      this.setState({
+        boostCapTooLow: requiredBoost > this.state.formListing.formData.boostLimit
+      })
     })
   }
 
@@ -505,12 +651,75 @@ class ListingCreate extends Component {
     window.scrollTo(0, 0)
   }
 
+  async onOfferListing(formListing, verifyData) {
+    const { isEditMode } = this.state
+    this.setState({ step: this.STEP.METAMASK })
+    const listing = dappFormDataToOriginListing(formListing.formData)
+    if (this.props.marketplacePublisher) {
+      listing['marketplacePublisher'] = this.props.marketplacePublisher
+    }
+    if (!isEditMode) {
+      console.log('creating offer listing:', listing, ' verifyData: ', verifyData)
+
+      await origin.marketplace.offerListing(listing, 
+        async (createdListing) => {
+          const {
+            boostValue,
+            isMultiUnit,
+            isFractional,
+            listingType,
+            price,
+            boostRemaining
+          } = await originToDAppListing(createdListing)
+
+          const listingPrice = price
+          const quantity = 1
+          const offerData = {
+            listingId: createdListing.id,
+            listingType: listingType,
+            totalPrice: {
+              amount: listingPrice,
+              currency: 'ETH'
+            },
+            commission: {
+              amount: boostValue.toString(),
+              currency: 'OGN'
+            },
+            // Set the finalization time to ~1 year after the offer is accepted.
+            // This is the window during which the buyer may file a dispute.
+            finalizes: 365 * 24 * 60 * 60
+          }
+
+          if (isFractional) {
+            //TODO: does commission change according to amount of slots bought?
+            //TODO: actually support fractional offering
+          } else if (isMultiUnit) {
+            offerData.unitsPurchased = quantity
+            /* If listing has enough boost remaining, take commission for each unit purchased.
+             * In the case listing has ran out of boost, take up the remaining boost.
+             */
+            offerData.commission.amount = Math.min(boostValue * quantity, boostRemaining).toString()
+          } else {
+            offerData.unitsPurchased = 1
+          }
+          offerData.verifyTerms = verifyData
+          return offerData
+        }
+      )
+      this.setState({ step: this.STEP.SUCCESS })
+      this.props.handleNotificationsSubscription('seller', this.props)
+    }
+  }
+
   async onSubmitListing(formListing) {
     const { isEditMode } = this.state
 
     try {
       this.setState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
+      if (this.props.marketplacePublisher) {
+        listing['marketplacePublisher'] = this.props.marketplacePublisher
+      }
       let transactionReceipt
       if (isEditMode) {
         transactionReceipt = await origin.marketplace.updateListing(
@@ -522,12 +731,25 @@ class ListingCreate extends Component {
           }
         )
       } else {
-        transactionReceipt = await origin.marketplace.createListing(
-          listing,
-          (confirmationCount, transactionReceipt) => {
-            this.props.updateTransaction(confirmationCount, transactionReceipt)
-          }
-        )
+        const account = await origin.contractService.currentAccount()
+        const balance = await web3.eth.getBalance(account)
+        console.log('creating balance:', balance, ' listing: ', listing)
+        if (origin.marketplace.injectPossible && web3.utils.toBN(balance).lte(web3.utils.toBN(0)))
+        {
+          await origin.marketplace.injectListing(listing)
+          this.setState({ step: this.STEP.SUCCESS })
+          this.props.handleNotificationsSubscription('seller', this.props)
+          return
+        }
+        else
+        {
+          transactionReceipt = await origin.marketplace.createListing(
+            listing,
+            (confirmationCount, transactionReceipt) => {
+              this.props.updateTransaction(confirmationCount, transactionReceipt)
+            }
+          )
+        }
       }
 
       const transactionTypeKey = isEditMode ? 'updateListing' : 'createListing'
@@ -555,6 +777,113 @@ class ListingCreate extends Component {
     this.setState({ step: this.STEP.PREVIEW })
   }
 
+  renderBoostButtons(isMultiUnitListing) {
+    return(
+      <div className="btn-container">
+        <button
+          type="button"
+          className="btn btn-other btn-listing-create"
+          onClick={this.backFromBoostStep}
+          ga-category="create_listing"
+          ga-label="boost_listing_step_back"
+        >
+          <FormattedMessage
+            id={'backButtonLabel'}
+            defaultMessage={'Back'}
+          />
+        </button>
+        <button
+          type={isMultiUnitListing ? 'submit' : undefined}
+          className="float-right btn btn-primary btn-listing-create"
+          onClick={isMultiUnitListing ? undefined : this.onReview}
+          ga-category="create_listing"
+          ga-label="boost_listing_step_continue"
+        >
+          <FormattedMessage
+            id={'listing-create.review'}
+            defaultMessage={'Review'}
+          />
+        </button>
+      </div>
+    )
+  }
+
+  transformFormErrors(errors) {
+    return errors.map(error => {
+      if (error.property === '.unitsTotal') {
+        error.message = this.props.intl.formatMessage(this.intlMessages.positiveNumber)
+      }
+      return error
+    })
+  }
+
+  validateBoostForm(data, errors) {
+    const formData = this.state.formListing.formData
+    // clear errors
+    errors.boostLimit.__errors = []
+    let boostLimit = formData.boostLimit
+    // if a Nan set to -1 so it triggers the 'positiveNumber' error
+    boostLimit = isNaN(boostLimit) ? -1 : parseFloat(boostLimit)
+
+    let errorFound = false
+    if (this.props.wallet.ognBalance < boostLimit) {
+      errorFound = true
+      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.notEnoughOgnFunds))
+    }
+    if (boostLimit < 0) {
+      errorFound = true
+      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.positiveNumber))
+    }
+
+    if (boostLimit > formData.unitsTotal * formData.boostValue) {
+      errorFound = true
+      errors.boostLimit.addError(this.props.intl.formatMessage(this.intlMessages.boostLimitTooHigh))
+    }
+
+    if (!errorFound){
+      this.setState({
+        showBoostFormErrorMsg: false
+      })
+    }
+    return errors
+  }
+
+  validateListingForm(data, errors) {
+    const {
+      isEditMode,
+      formListing
+    } = this.state
+
+    const formData = formListing.formData
+    const {
+      unitsTotal,
+      unitsPending,
+      unitsSold
+    } = formData
+
+    if (isEditMode) {
+      const unitsLockedInOffers = unitsPending + unitsSold
+      /* considers the case where a user would edit the quantity to 1 on a multi unit listing
+       * that already has offers for more than 1 unit.
+       */
+      const isMultiUnitListing = (!!formData.unitsTotal && formData.unitsTotal) > 1 || unitsLockedInOffers > 1
+
+      // do not allow quantity to be edited below the value of units already in offers
+      if (isMultiUnitListing && unitsTotal < unitsLockedInOffers) {
+        errors.unitsTotal.addError(
+          this.props.intl.formatMessage(
+            this.intlMessages.incorrectQuantity,
+            {
+              unitsInOffers: unitsLockedInOffers
+            }
+          )
+        )
+      }
+    }
+
+    return errors
+  }
+
   getStepNumber(stepNum) {
     // We have a different number of steps in the workflow based on
     // mobile vs. desktop and fractional vs. unit.
@@ -580,8 +909,12 @@ class ListingCreate extends Component {
   }
 
   render() {
-    const { wallet, intl } = this.props
     const {
+      wallet,
+      intl
+    } = this.props
+    const {
+      boostCapTooLow,
       formListing,
       fractionalTimeIncrement,
       selectedBoostAmount,
@@ -594,14 +927,19 @@ class ListingCreate extends Component {
       step,
       translatedSchema,
       showDetailsFormErrorMsg,
+      showBoostFormErrorMsg,
       showBoostTutorial,
       isFractionalListing,
       isEditMode
     } = this.state
+    const totalNumberOfSteps = isFractionalListing ? 5 : 4
     const { formData } = formListing
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
+    const boostAmount = formData.boostValue || selectedBoostAmount
+    const isMultiUnitListing = !!formData.unitsTotal && formData.unitsTotal > 1
     const category = translateListingCategory(formData.category)
     const subCategory = translateListingCategory(formData.subCategory)
+    const stepNumber = this.getStepNumber(step)
 
     return (!web3.currentProvider.isOrigin || origin.contractService.walletLinker) ? (
       <div className="listing-form">
@@ -613,7 +951,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -624,6 +962,10 @@ class ListingCreate extends Component {
                     }
                   />
                 </h2>
+                <StepsProgress
+                  stepsTotal={totalNumberOfSteps}
+                  stepCurrent={stepNumber}
+                />
                 <div className="schema-options">
                   {this.categoryList.map(category => (
                     <div
@@ -702,7 +1044,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -734,7 +1076,7 @@ class ListingCreate extends Component {
                         selectedSchemaId === schemaObj.schema ? ' selected' : ''
                       }`}
                       key={schemaObj.schema}
-                      onClick={() => this.handleSchemaSelection(schemaObj.schema)}
+                      onClick={e => this.handleSchemaSelection(e, schemaObj.schema)}
                       ga-category="create_listing"
                       ga-label={ `select_schema_${schemaObj.schema}`}
                     >
@@ -765,24 +1107,34 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
                   <FormattedMessage
                     id={'listing-create.createListingHeading'}
-                    defaultMessage={'Create Your Listing'}
+                    defaultMessage={'Listing Details'}
                   />
                 </h2>
+                <StepsProgress
+                  stepsTotal={totalNumberOfSteps}
+                  stepCurrent={stepNumber}
+                />
                 <Form
                   schema={translatedSchema}
                   onSubmit={this.onDetailsEntered}
                   formData={formListing.formData}
-                  onError={() =>
+                  onError={(error) => {
+                    console.error('Listing form errors: ', error)
                     this.setState({ showDetailsFormErrorMsg: true })
-                  }
+                  }}
                   onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
+                  transformErrors={this.transformFormErrors}
+                  formContext={{
+                    isMultiUnitListing: isMultiUnitListing
+                  }}
+                  validate={this.validateListingForm}
                 >
                   {showDetailsFormErrorMsg && (
                     <div className="info-box warn">
@@ -827,16 +1179,37 @@ class ListingCreate extends Component {
               </div>
             )}
             {step === this.STEP.AVAILABILITY &&
-              <div className="col-md-12 listing-availability">
-                <Calendar
-                  slots={ formData && formData.slots }
-                  userType="seller"
-                  viewType={ fractionalTimeIncrement }
-                  step={ 60 }
-                  onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
-                  onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
-                />
-              </div>
+              <Fragment>
+                <div className="col-md-6 col-lg-5">
+                  <label>
+                    <FormattedMessage
+                      id={'listing-create.stepNumberLabel'}
+                      defaultMessage={'STEP {stepNumber}'}
+                      values={{ stepNumber: this.getStepNumber(step) }}
+                    />
+                  </label>
+                  <h2>
+                    <FormattedMessage
+                      id={'listing-create.availabilityHeading'}
+                      defaultMessage={'Pricing & Availability'}
+                    />
+                  </h2>
+                  <StepsProgress
+                    stepsTotal={totalNumberOfSteps}
+                    stepCurrent={stepNumber}
+                  />
+                </div>
+                <div className="col-md-12 listing-availability">
+                  <Calendar
+                    slots={formData && formData.availability}
+                    userType="seller"
+                    viewType={fractionalTimeIncrement}
+                    step={60}
+                    onComplete={(slots) => this.onAvailabilityEntered(slots, 'forward')}
+                    onGoBack={(slots) => this.onAvailabilityEntered(slots, 'back')}
+                  />
+                </div>
+              </Fragment>
             }
             {step === this.STEP.BOOST && (
               <div className="col-md-6 col-lg-5 select-boost">
@@ -844,7 +1217,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -853,6 +1226,10 @@ class ListingCreate extends Component {
                     defaultMessage={'Boost Your Listing'}
                   />
                 </h2>
+                <StepsProgress
+                  stepsTotal={totalNumberOfSteps}
+                  stepCurrent={stepNumber}
+                />
                 <p className="help-block">
                   <FormattedMessage
                     id={'listing-create.form-help-boost'}
@@ -905,37 +1282,86 @@ class ListingCreate extends Component {
                   </div>
                 )}
                 {!showBoostTutorial && (
-                  <BoostSlider
-                    onChange={this.setBoost}
-                    ognBalance={wallet.ognBalance}
-                    selectedBoostAmount={formData.boostValue || selectedBoostAmount}
-                  />
+                  <Fragment>
+                    <BoostSlider
+                      onChange={this.setBoost}
+                      ognBalance={wallet.ognBalance}
+                      selectedBoostAmount={boostAmount}
+                      isMultiUnitListing={isMultiUnitListing}
+                    />
+                    {isMultiUnitListing && (
+                      <Fragment>
+                        <Form
+                          className="rjsf mt-2"
+                          schema={this.boostSchema}
+                          onError={() => {
+                            this.setState({ showBoostFormErrorMsg: true })
+                          }}
+                          onSubmit={this.onReview}
+                          onChange={this.onBoostLimitChange}
+                          uiSchema={this.uiSchema}
+                          formContext={{
+                            formData: formData,
+                            wallet: this.props.wallet
+                          }}
+                          transformErrors={this.transformFormErrors}
+                          validate={this.validateBoostForm}
+                        >
+                          <div className="boost-info p-4">
+                            <p className="boost-text boost-italic mt-4 mb-0">
+                              <FormattedMessage
+                                id={'listing-create.totalNumberOfUnits'}
+                                defaultMessage={'Total number of units: {units}'}
+                                values={{
+                                  units: formData.unitsTotal
+                                }}
+                              />
+                            </p>
+                            <p className="boost-text boost-italic mt-1">
+                              <FormattedMessage
+                                id={'listing-create.totalBoostRequired'}
+                                defaultMessage={'Total boost required: {boost}'}
+                                values={{
+                                  boost: (
+                                  <Fragment>{formData.unitsTotal * boostAmount}&nbsp;
+                                      <Link
+                                        className="ogn-abbrev"
+                                        to="/about-tokens"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        OGN
+                                      </Link>
+                                    </Fragment>)
+                                }}
+                              />
+                            </p>
+                            {boostCapTooLow && <p className="boost-text mt-4">
+                              <FormattedMessage
+                                id={'listing-create.boostCapTooLow'}
+                                defaultMessage={'Your boost limit is lower than the total amount needed to boost all your units. After the limit is reached, the remaining units will not be boosted.'}
+                              />
+                            </p>}
+                          </div>
+                          {showBoostFormErrorMsg && (
+                            <div className="info-box warn">
+                              <p>
+                                <FormattedMessage
+                                  id={'listing-create.showBoostFormErrorMsg'}
+                                  defaultMessage={
+                                    'Please fix errors before continuing.'
+                                  }
+                                />
+                              </p>
+                            </div>
+                          )}
+                          {this.renderBoostButtons(true)}
+                        </Form>
+                      </Fragment>
+                    )}
+                  </Fragment>
                 )}
-                <div className="btn-container">
-                  <button
-                    type="button"
-                    className="btn btn-other btn-listing-create"
-                    onClick={this.backFromBoostStep}
-                    ga-category="create_listing"
-                    ga-label="boost_listing_step_back"
-                  >
-                    <FormattedMessage
-                      id={'backButtonLabel'}
-                      defaultMessage={'Back'}
-                    />
-                  </button>
-                  <button
-                    className="float-right btn btn-primary btn-listing-create"
-                    onClick={this.onReview}
-                    ga-category="create_listing"
-                    ga-label="boost_listing_step_continue"
-                  >
-                    <FormattedMessage
-                      id={'listing-create.review'}
-                      defaultMessage={'Review'}
-                    />
-                  </button>
-                </div>
+                {(showBoostTutorial || !showBoostTutorial && !isMultiUnitListing) && this.renderBoostButtons(false)}
               </div>
             )}
             {step >= this.STEP.PREVIEW && (
@@ -944,7 +1370,7 @@ class ListingCreate extends Component {
                   <FormattedMessage
                     id={'listing-create.stepNumberLabel'}
                     defaultMessage={'STEP {stepNumber}'}
-                    values={{ stepNumber: this.getStepNumber(step) }}
+                    values={{ stepNumber: stepNumber }}
                   />
                 </label>
                 <h2>
@@ -953,6 +1379,10 @@ class ListingCreate extends Component {
                     defaultMessage={'Review your listing'}
                   />
                 </h2>
+                <StepsProgress
+                  stepsTotal={totalNumberOfSteps}
+                  stepCurrent={stepNumber}
+                />
                 <div className="preview">
                   <div className="row">
                     <div className="col-md-3">
@@ -1006,22 +1436,23 @@ class ListingCreate extends Component {
                       <p className="ws-aware">{formData.description}</p>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-3">
-                      <p className="label">Photos</p>
-                    </div>
-                    <div className="col-md-9 photo-row">
-                      {formData.pictures &&
-                        formData.pictures.map((dataUri, idx) => (
-                          <img
-                            key={idx}
-                            src={dataUri}
-                            className="photo"
-                            role="presentation"
+                  {isMultiUnitListing &&
+                    <div className="row">
+                      <div className="col-md-3">
+                        <p className="label">
+                          <FormattedMessage
+                            id={'listing-create.quantity'}
+                            defaultMessage={'Quantity'}
                           />
-                        ))}
+                        </p>
+                      </div>
+                      <div className="col-md-9">
+                        <p>
+                          {formData.unitsTotal}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  }
                   <div className="row">
                     <div className="col-md-3">
                       <p className="label">
@@ -1114,6 +1545,52 @@ class ListingCreate extends Component {
                       </div>
                     </div>
                   }
+                  {isMultiUnitListing && !isEditMode &&
+                    <div className="row">
+                      <div className="col-md-3">
+                        <p className="label">
+                          <FormattedMessage
+                            id={'listing-create.boostLimit'}
+                            defaultMessage={'Boost Limit'}
+                          />
+                        </p>
+                      </div>
+                      <div className="col-md-9">
+                        <p>
+                          <img
+                            className="ogn-icon"
+                            src="images/ogn-icon.svg"
+                            role="presentation"
+                          />
+                          <span className="text-bold">{formData.boostLimit}</span>&nbsp;
+                          <Link
+                            className="ogn-abbrev"
+                            to="/about-tokens"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            OGN
+                          </Link>
+                        </p>
+                      </div>
+                    </div>
+                  }
+                  <div className="row">
+                    <div className="col-md-3">
+                      <p className="label">Photos</p>
+                    </div>
+                    <div className="col-md-9 photo-row">
+                      {formData.pictures &&
+                        formData.pictures.map((dataUri, idx) => (
+                          <img
+                            key={idx}
+                            src={dataUri}
+                            className="photo"
+                            role="presentation"
+                          />
+                        ))}
+                    </div>
+                  </div>
                 </div>
                 {/* Revisit this later
                   <Link
@@ -1155,7 +1632,22 @@ class ListingCreate extends Component {
                       defaultMessage={'Done'}
                     />
                   </button>
+
                 </div>
+              {sessionStorage.getItem('showRequestListing') && <div className="d-block">
+                <textarea style={{ width: '100%' }} value={this.state.verifyObj} onChange={ (e) => {this.setState({ verifyObj: e.target.value })}  }/>
+                  <button
+                    className="btn btn-primary float-right btn-listing-create"
+                    onClick={() => this.onOfferListing(formListing, JSON.parse(this.state.verifyObj))}
+                    ga-category="create_listing"
+                    ga-label="review_step_done"
+                  >
+                    <FormattedMessage
+                      id={'listing-create.offerButtonLabel'}
+                      defaultMessage={'I want this'}
+                    />
+                  </button>
+                </div>}
               </div>
             )}
             {step !== this.STEP.AVAILABILITY &&
@@ -1197,9 +1689,17 @@ class ListingCreate extends Component {
                     <p>
                       <FormattedMessage
                         id={'listing-create.form-help-details'}
-                        defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos of your listing will help potential buyers decide if they want to buy your listing.`}
+                        defaultMessage={`Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos will increase the chances of selling your listing.`}
                       />
                     </p>
+                    {isFractionalListing && (
+                      <p>
+                        <FormattedMessage
+                          id={'listing-create.form-help-details-fractional'}
+                          defaultMessage={`You will be able to customize pricing and availability in the next step.`}
+                        />
+                      </p>
+                    )}
                   </div>
                 )}
                 {step === this.STEP.BOOST && (
@@ -1409,10 +1909,12 @@ class ListingCreate extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, app, exchangeRates, wallet }) => {
+const mapStateToProps = ({ activation, app, config, exchangeRates, wallet }) => {
   return {
     exchangeRates,
+    marketplacePublisher: config.marketplacePublisher,
     messagingEnabled: activation.messaging.enabled,
+    messagingRequired: app.messagingRequired,
     notificationsHardPermission: activation.notifications.permissions.hard,
     notificationsSoftPermission: activation.notifications.permissions.soft,
     pushNotificationsSupported: activation.notifications.pushEnabled,

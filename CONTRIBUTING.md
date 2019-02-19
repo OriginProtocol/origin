@@ -2,7 +2,7 @@
 
 Thanks for helping out! 👍
 
-Before you summit a PR, you'll want to make sure that:
+Before you submit a PR, you'll want to make sure that:
 
 1. Any changes are tested.
 2. All tests pass. Run `npm run test` from the root of the repository to run all packages tests or run `lerna run test --scope <package_name>` to run the tests for a single package.

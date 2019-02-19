@@ -4,12 +4,15 @@ import uuidv4 from 'uuid/v4'
 import { Op } from 'sequelize'
 import { MessageTypes,EthNotificationTypes } from 'origin/common/enums'
 import MessageQueue from './../utils/message-queue'
-import origin, {providerUrl, web3} from './../services/origin'
+import origin, {providerUrl, perfModeEnabled, discoveryServerUrl, web3} from './../services/origin'
 import {sha3_224} from 'js-sha3'
 import apn from 'apn'
 
-
-const MESSAGING_URL = process.env.MESSAGING_URL
+const ATTESTATION_ACCOUNT = process.env.ATTESTATION_ACCOUNT
+const DAPP_URL = process.env.DAPP_URL
+const MESSAGING_URL = `${DAPP_URL}/#/messages?no-nav=true&skip-onboarding=true&wallet-container=`
+const PROFILE_URL = `${DAPP_URL}/#/profile`
+const SELLING_URL = `${DAPP_URL}/#/create`
 const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
 
@@ -162,7 +165,10 @@ class Linker {
         payload:data,
         topic:this.apnBundle
       })
-      this.apnProvider.send(note, notify.deviceToken)
+      this.apnProvider.send(note, notify.deviceToken).then( result => {
+        console.log("APNS sent:", result.sent.length);
+        console.log("APNS failed:", result.failed);
+      });
     }
   }
 
@@ -191,6 +197,7 @@ class Linker {
     // keys have to match
     if (linkedObj.clientPubKey != pubKey)
     {
+      console.log("Pub key: ", linkedObj.clientPubKey, " does not match: ", pubKey)
       linkedObj.clientPubKey = pubKey
       linkedObj.linked = false
     }
@@ -237,8 +244,19 @@ class Linker {
   }
 
   getServerInfo() {
-    return {providerUrl:providerUrl, contractAddresses:origin.contractService.getContractAddresses(),
-    ipfsGateway:origin.ipfsService.gateway, ipfsApi:origin.ipfsService.api, messagingUrl:MESSAGING_URL}
+    return {
+      providerUrl,
+      contractAddresses:origin.contractService.getContractAddresses(),
+      ipfsGateway:origin.ipfsService.gateway,
+      ipfsApi:origin.ipfsService.api,
+      dappUrl:DAPP_URL,
+      messagingUrl:MESSAGING_URL,
+      profileUrl:PROFILE_URL,
+      sellingUrl:SELLING_URL,
+      attestationAccount:ATTESTATION_ACCOUNT,
+      perfModeEnabled,
+      discoveryServerUrl
+    }
   }
 
   async getMetaFromCall({call, net_id, params:{txn_object}}){
@@ -247,19 +265,50 @@ class Linker {
     }
   }
 
-  getMessageFromMeta(meta) {
+  getMessageFromMeta(meta, account) {
+    console.log("meta is:", meta)
     if (meta.subMeta)
     {
-      meta = subMeta
+      meta = meta.subMeta
     }
 
     if (meta.listing)
     {
-        return `${meta.method} pending for ${meta.listing.title}`
+      switch(meta.method) {
+        case 'createListing':
+          return `Confirm your listing for ${meta.listing.title}`
+        case 'makeOffer':
+          return `Confirm your offer for ${meta.listing.title}`
+        case 'withdrawOffer':
+          return meta.listing.seller === account ?
+            `Confirm the rejection of an offer for ${meta.listing.title}` :
+            `Confirm the withdrawal of an offer for ${meta.listing.title}`
+        case 'acceptOffer':
+          return `Confirm the acceptance of an offer for ${meta.listing.title}`
+        case 'dispute':
+          return `Confirm your reporting of a problem ${meta.listing.title}`
+        case 'finalize':
+          return `Confirm the release of funds for ${meta.listing.title}`
+        case 'addData':
+          return `Confirm your review from selling ${meta.listing.title}`
+        default:
+          return `${meta.method} pending for ${meta.listing.title}`
+      }
+    }
+    else if (meta.identity)
+    {
+      return 'Confirm the publishing of your identity'
     }
     else
     {
-      return `Pending call to ${meta.contract}.${meta.method}`
+      if (meta.contract && meta.method)
+      {
+        return `Pending call to ${meta.contract}.${meta.method}`
+      }
+      else
+      {
+        return `There is a pending call for your approval`
+      }
     }
   }
 
@@ -278,7 +327,7 @@ class Linker {
     await this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
     // send push notification via APN or fcm
-    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta), {call_id})
+    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta || {}, account), {call_id})
   }
 
   async walletCalled(walletToken, callId, linkId, sessionToken, result) {

@@ -1,12 +1,15 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
+import Address from 'components/address'
 import OriginButton from 'components/origin-button'
+
+const IMAGES_PATH = '../../assets/images/'
 
 export default class SignModal extends Component {
   render() {
-    const { item, address, balance, handleApprove, handleReject, toggleModal } = this.props
-    const msg = item.sign && item.sign.params.msg
+    const { item, address, handleApprove, handleReject, toggleModal } = this.props
+    const msg = item.msg && JSON.stringify(item.msg).substr(0, 100)
 
     return (
       <Modal
@@ -21,7 +24,7 @@ export default class SignModal extends Component {
         <View style={styles.main}>
           <TouchableOpacity onPress={toggleModal} style={{ width: '100%' }}>
             <View style={styles.close}>
-              <Image source={require('../../assets/images/arrow-down.png')} />
+              <Image source={require(`${IMAGES_PATH}arrow-down.png`)} />
             </View>
           </TouchableOpacity>
           <View style={styles.promptContainer}>
@@ -33,12 +36,10 @@ export default class SignModal extends Component {
             </Text>
           </View>
           <View style={styles.counterparties}>
-            <TouchableOpacity onPress={() => Alert.alert('From ETH Address', address)}>
-              <View style={styles.party}>
-                <Image source={require('../../assets/images/avatar.png')} style={styles.avatar} />
-                <Text style={styles.address}>{`${address.slice(0, 4)}...${address.slice(38)}`}</Text>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.party}>
+              <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
+              <Address address={address} label="From Address" style={styles.address} />
+            </View>
           </View>
           <View style={styles.fundingAvailable}>
             <View style={{ marginBottom: 20 }}>

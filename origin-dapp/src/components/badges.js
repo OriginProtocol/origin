@@ -37,12 +37,18 @@ export const SellerBadge = () => (
   </span>
 )
 
-export const SoldBadge = () => (
+export const SoldBadge = props => (
   <span className="sold badge">
-    <FormattedMessage
+  {props.isMultiUnit && <FormattedMessage
+      id={'badges.soldOut'}
+      defaultMessage={'Sold Out'}
+    />
+  }
+  {(!props.isMultiUnit || props.isMultiUnit === undefined) && <FormattedMessage
       id={'badges.sold'}
       defaultMessage={'Sold'}
     />
+  }
   </span>
 )
 

@@ -9,11 +9,13 @@
   "scripts": {
     "build": "per-env",
     "build:production": "babel src/* -d dist --presets @babel/env",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "prestart:production": "npm run build",
     "start": "per-env",
     "start:development": "nodemon --exec 'babel-node' src/index.js --presets @babel/env",
-    "prestart:production": "npm run build",
     "start:production": "node dist/index.js",
-    "lint": "eslint '**/*.js'",
     "test": "echo \"Warning: no tests specified\""
   },
   "repository": {
@@ -32,6 +34,7 @@
     "@babel/preset-env": "^7.2.0",
     "cross-fetch": "^3.0.0",
     "dotenv": "^6.2.0",
+    "envkey": "^1.2.4",
     "ipfs": "^0.33.1",
     "ipfs-api": "^26.1.2",
     "ipfs-log": "^4.2.0",
@@ -46,5 +49,9 @@
     "@babel/node": "^7.2.0",
     "eslint": "^5.9.0",
     "nodemon": "^1.18.7"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

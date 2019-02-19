@@ -1,3 +1,4 @@
+const logger = require('./logger')
 const db = require('../models')
 const fs = require('fs')
 
@@ -18,7 +19,10 @@ async function getLastBlock (config) {
     } else {
       const json = fs.readFileSync(config.continueFile, { encoding: 'utf8' })
       const data = JSON.parse(json)
-      if (!data.lastLogBlock) {
+
+      // check for undefined explicitly -> just checking `if (!data.lastLogBlock)` will throw
+      // an error when lastLogBlock === 0
+      if (data.lastLogBlock === undefined) {
         throw new Error(`Error: invalid format for continue file.`)
       }
       lastBlock = data.lastLogBlock
@@ -50,6 +54,25 @@ async function setLastBlock (config, blockNumber) {
 }
 
 /**
+ * Ensures data fetched from the blockchain meets the freshness criteria
+ * specified in blockInfo. This is to catch the case where data is fetched from
+ * an out of sync node that returns stale data.
+ * @param {Array<Event>} events
+ * @param {{blockNumber: number, logIndex: number}} blockInfo
+ * @throws {Error} If freshness check fails
+ */
+function checkEventsFreshness(events, blockInfo) {
+  // Find at least 1 event that is as fresh as blockInfo.
+  const fresh = events.some(event => {
+    return (event.blockNumber > blockInfo.blockNumber) ||
+      (event.blockNumber === blockInfo.blockNumber && event.logIndex >= blockInfo.logIndex)
+  })
+  if (!fresh) {
+    throw new Error('Freshness check failed')
+  }
+}
+
+/**
  * Retries up to N times, with exponential backoff.
  * @param {async function} fn - Async function to call
  * @param {boolean} exitOnError - Whether or not to exit the process when
@@ -68,14 +91,13 @@ async function withRetrys (fn, exitOnError = true) {
       waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
       // Max out at two minutes
       waitTime = Math.min(waitTime, MAX_RETRY_WAIT_MS)
-      console.log('ERROR', e)
-      console.log(`will retry in ${waitTime / 1000} seconds`)
+      logger.error(e, `will retry in ${waitTime / 1000} seconds`)
       tryCount += 1
       await new Promise(resolve => setTimeout(resolve, waitTime))
     }
     if (tryCount >= MAX_RETRYS) {
       if (exitOnError) {
-        console.log('EXITING: Maximum number of retrys reached')
+        logger.error('EXITING ! Maximum number of retrys reached')
         // Now it's up to our environment to restart us.
         // Hopefully with a clean start, things will work better
         process.exit(1)
@@ -86,4 +108,9 @@ async function withRetrys (fn, exitOnError = true) {
   }
 }
 
-module.exports = { getLastBlock, setLastBlock, withRetrys }
+module.exports = {
+  getLastBlock,
+  setLastBlock,
+  checkEventsFreshness,
+  withRetrys
+}

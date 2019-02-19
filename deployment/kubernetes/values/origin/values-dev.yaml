@@ -2,16 +2,15 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'a263250'
+bridgeImageTag: '12ac36f'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '892185d'
+dappImageTag: '391cc9c'
 
-# Origin network configuration
-gethTxReplicas: 1
-gethMinerReplicas: 2
-gethMinerCpuLimit: 0.5
+# origin-dapp2
+dapp2Image: origin-dapp2
+dapp2ImageTag: '340eb69'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -19,32 +18,41 @@ ipfsImageTag: master
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'ff20be8'
+ipfsProxyImageTag: '899b2e7'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '98315f6'
+faucetImageTag: '2eacb16'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '299fede'
+eventlistenerImageTag: '391cc9c'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: 'afe6cf0'
+discoveryImageTag: '68bc7d9'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '1cf7dc5'
+messagingImageTag: '4a8c5fd'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '1cf7dc5'
+notificationsImageTag: '30de4cf'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: 'b752f05'
+creatorClientImageTag: '6f68ee1'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: 'e53b079'
+creatorServerImageTag: '6f68ee1'
+
+# origin-dapp-creator-issuer
+creatorIssuerImage: origin-dapp-creator-issuer
+creatorIssuerImageTag: 'latest'
+creatorIssuerIp: '35.233.181.44'
+
+# origin-linking
+linkingImage: origin-linking
+linkingImageTag: '0431d45'

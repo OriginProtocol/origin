@@ -5,6 +5,8 @@ import { createSubscription } from 'utils/notifications'
 
 import origin from '../services/origin'
 
+const MESSAGING_API_URL = process.env.MESSAGING_API_URL
+
 export const ActivationConstants = keyMirror(
   {
     MESSAGING_ENABLED: null,
@@ -16,6 +18,35 @@ export const ActivationConstants = keyMirror(
   },
   'ACTIVATION'
 )
+
+export function detectMessagingEnabled(account) {
+  return async function(dispatch) {
+    if (MESSAGING_API_URL) {
+      try {
+        const clientResponse = origin.messaging.canSendMessages()
+
+        if (!clientResponse) {
+          return dispatch({
+            type: ActivationConstants.MESSAGING_ENABLED,
+            enabled: false
+          })
+        }
+
+        const serverResponse = await fetch(`${MESSAGING_API_URL}/accounts/${account}`)
+        const enabled = serverResponse.status === 200
+
+        dispatch({
+          type: ActivationConstants.MESSAGING_ENABLED,
+          enabled
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      console.log('Add an environment variable for MESSAGING_API_URL to detect whether or not messaging is enabled through the REST endpoint.')
+    }
+  }
+}
 
 export function handleNotificationsSubscription(role, props = {}) {
   return async function(dispatch) {

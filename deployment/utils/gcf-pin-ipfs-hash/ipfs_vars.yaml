@@ -1,0 +1,3 @@
+IPFS_CLUSTER_URL: http://example.com:9094
+IPFS_CLUSTER_USERNAME: username
+IPFS_CLUSTER_PASSWORD: password

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ipfs.fullname" . }}
+  labels:
+    app: {{ template "ipfs.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: ipfs
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ template "ipfs.fullname" . }}
+  ports:
+    - name: swarm
+      port: 4001

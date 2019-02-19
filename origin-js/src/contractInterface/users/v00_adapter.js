@@ -23,6 +23,13 @@ export default class V00_UsersAdapter {
     this.blockAttestattionV1 = blockAttestattionV1 || 0
   }
 
+  /**
+   * Creates or updates an identity.
+   * @param {string} profile - JSON profile data compliant with profile JSON schema.
+   * @param {List<AttestationObject>} attestations
+   * @param options
+   * @return {Promise<txReceipt>}
+   */
   async set({ profile, attestations = [], options = {} }) {
     if (profile) {
       const selfAttestation = await this.profileAttestation(profile)
@@ -32,6 +39,15 @@ export default class V00_UsersAdapter {
     return await this.addAttestations(newAttestations, options)
   }
 
+  /**
+   * Loads an identity. Returns false if no identity found associated with the address.
+   * @param address - User's wallet address. If not specified, use current account.
+   * @return {Promise<{
+   *    profile: Object,
+   *    attestations: List<AttestationObject>,
+   *    address: string,
+   *    identityAddress: string} | false>}
+   */
   async get(address) {
     const identityAddress = await this.identityAddress(address)
     if (identityAddress) {
@@ -41,6 +57,11 @@ export default class V00_UsersAdapter {
     return false
   }
 
+  /**
+   * Looks up user registry for an identity. Returns identity address or false.
+   * @param {string} address - User's wallet address. If not specified, uses current account.
+   * @return {Promise<string|false>}
+   */
   async identityAddress(address) {
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
@@ -55,6 +76,11 @@ export default class V00_UsersAdapter {
     }
   }
 
+  /**
+   * Validates a profile data and saves it as a JSON blob in IPFS.
+   * @param {Object} profile - Profile data. Validates against JSON schema for profile.
+   * @return {Promise<Attestation>} Attestation model object.
+   */
   async profileAttestation(profile) {
     // Validate the profile data and submits it to IPFS
     const ipfsHash = await this.ipfsDataStore.save(PROFILE_DATA_TYPE, profile)
@@ -71,6 +97,13 @@ export default class V00_UsersAdapter {
     })
   }
 
+  /**
+   * Compares attestations passed in as argument with existing
+   * attestations loaded from the identity contract.
+   * Only returns the new attestations.
+   * @param {List<AttestationObject>} attestations
+   * @return {Promise<List<AttestationObject>>}
+   */
   async newAttestations(attestations) {
     const identityAddress = await this.identityAddress()
     let existingAttestations = []
@@ -94,6 +127,12 @@ export default class V00_UsersAdapter {
     })
   }
 
+  /**
+   * Adds a set of attestations to the identity contract.
+   * @param {List<AttestationObject>} attestations
+   * @param options
+   * @return {Promise<txReceipt>}
+   */
   async addAttestations(attestations, options) {
     const account = await this.contractService.currentAccount()
     const userRegistry = await this.contractService.deployed(
@@ -161,6 +200,11 @@ export default class V00_UsersAdapter {
     }
   }
 
+  /**
+   * Loads profile and attestations.
+   * @param identityAddress
+   * @return {Promise<{profile: Object, attestations: List<AttestationObject>}>}
+   */
   async getClaims(identityAddress) {
     const identity = await this.contractService.deployed(
       this.contractService.contracts.ClaimHolderRegistered,
@@ -222,6 +266,14 @@ export default class V00_UsersAdapter {
     return { profile, attestations }
   }
 
+  /**
+   * Helper method to validate an attestation.
+   * @param topic
+   * @param data
+   * @param signature
+   * @param identityAddress
+   * @return {Promise<*>}
+   */
   async isValidAttestation({ topic, data, signature }, identityAddress) {
     try {
       const originIdentity = await this.contractService.deployed(
@@ -243,6 +295,12 @@ export default class V00_UsersAdapter {
     }
   }
 
+  /**
+   * Helper method to filter out invalid attestations.
+   * @param identityAddress
+   * @param attestations
+   * @return {Promise<List<AttestationObject>>}
+   */
   async validAttestations(identityAddress, attestations) {
     const promiseWithValidation = attestations.map(async attestation => {
       const isValid = await this.isValidAttestation(

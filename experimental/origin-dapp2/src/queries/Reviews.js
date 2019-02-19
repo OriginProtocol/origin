@@ -16,15 +16,21 @@ export default gql`
               account {
                 id
                 identity {
-                  profile {
-                    id
-                    firstName
-                    lastName
-                    description
-                    avatar
-                  }
+                  id
+                  fullName
+                  avatar
                 }
               }
+            }
+            listing {
+              ... on Listing {
+                id
+                title
+              }
+            }
+            event {
+              id
+              timestamp
             }
           }
         }

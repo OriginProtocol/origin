@@ -8,7 +8,7 @@ const PUBSUB_PREFIX = "ps."
 class MessageQueue {
   constructor({queueTimeout=24 * 3600, maxQueueSize = 255, redis = _redis} = {}) {
     // TODO: pass config in here, for now connect to local client
-    this.redis = redis.createClient()
+    this.redis = redis.createClient(process.env.REDIS_URL)
     this.redis_sub = this.redis.duplicate()
     this.queueTimeout = queueTimeout
     this.maxQueueSize = maxQueueSize

@@ -1,12 +1,11 @@
-import moment from 'moment'
-import uuid from 'uuid/v1'
+import moment from 'moment-timezone'
+import uuid from 'utils/uuid'
 
-export function generateCalendarSlots(events) {
+export function generateCalendarSlots(jCal) {
+  const events = jCalToCalendarSlots(jCal)
 
-  const eventsClone = JSON.parse(JSON.stringify(events))
-
-  for (let i = 0, eventsLen = eventsClone.length; i < eventsLen; i++) {
-    const event = eventsClone[i]
+  for (let i = 0, eventsLen = events.length; i < eventsLen; i++) {
+    const event = events[i]
     const startDate = new Date(event.startDate)
     const endDate = new Date(event.endDate)
     let eventDate = moment(event.startDate)
@@ -24,16 +23,27 @@ export function generateCalendarSlots(events) {
     event.slots = slots
   }
 
-  return eventsClone
+  return events
 }
 
-export function checkSlotsForExistingEvent(slotInfo, events) {
+// Generate a slot with start / end dates that are one slotLength long according to the listing schema
+export function generateSlotStartEnd(selectionStart, viewType, slotIndex) {
+  const slotLength = viewType === 'hourly' ? 'hour' : 'day'
+  const start = moment(selectionStart).add(slotIndex, slotLength)
+  const end = moment(selectionStart).add(slotIndex, slotLength).add(1, slotLength).subtract(1, 'second')
+  return {
+    start: start.toDate(),
+    end: end.toDate()
+  }
+}
+
+export function checkSlotForExistingEvents(slotInfo, events) {
   return events.filter((event) => {
     let isEventInSlot = false
 
     // loop over event's slots and check to see if any of them
     // match any of the selected slot's time periods
-    for (let i = 0, existSlotsLen = event.slots.length; i < existSlotsLen; i++) {
+    for (let i = 0, existSlotsLen = event.slots && event.slots.length; i < existSlotsLen; i++) {
       const existSlot = event.slots[i]
 
       // loop over the time periods included in selected slot
@@ -56,14 +66,36 @@ export function doAllEventsRecur(events) {
   return recurringEvents.length === events.length
 }
 
-// This is a hackky way of showing the price in hourly time slots
+// Used in the dateCellWrapper callback to determine if a particular date is selected
+export function isDateSelected(selection, calendarDate) {
+  if (!selection) {
+    return false
+  }
+
+  let selected = false
+
+  function isSelected(slot) {
+    return moment(calendarDate).isBetween(moment(slot.start).subtract(1, 'second'), moment(slot.end).add(1, 'second'))
+  }
+
+  if (Array.isArray(selection)) {
+    const selectedDates = selection.filter((slot) =>
+      isSelected(slot)
+    )
+
+    selected = selectedDates && !!selectedDates.length
+  } else {
+    selected = isSelected(selection)
+  }
+
+  return selected
+}
+
+// This is a hackey way of showing the price in hourly time slots
 // since React Big Calendar doesn't give us full control over the content of those slots
 // Possible future optimization would be to create a PR to React Big Calendar to support custom slot content.
-export function renderHourlyPrices(viewType, userType) {
-  if (viewType &&
-      viewType === 'hourly' &&
-      userType &&
-      userType === 'buyer') {
+export function renderHourlyPrices(viewType) {
+  if (viewType && viewType === 'hourly') {
     const slots = document.querySelectorAll('.rbc-time-slot')
 
     for (let i = 0, slotsLen = slots.length; i < slotsLen; i++) {
@@ -72,33 +104,22 @@ export function renderHourlyPrices(viewType, userType) {
       const isAvailable = classes.indexOf('unavailable') === -1
       const priceIdx = classes.indexOf('priceEth-')
 
-      slot.innerHTML = ''
+      // slot.innerHTML = ''
+      const childSpan = slot.querySelector('span')
+      if (childSpan && !childSpan.className.includes('rbc-label')) {
+        childSpan.remove()
+      }
+
 
       if (priceIdx > -1 && isAvailable) {
         const price = classes.substring(priceIdx + 9, classes.length)
-        const priceNode = document.createTextNode(`${price} ETH`)
-        slot.appendChild(priceNode)
+        const priceWrapper = document.createElement('span')
+        const priceText = document.createTextNode(`${price} ETH`)
+        priceWrapper.appendChild(priceText)
+        slot.appendChild(priceWrapper)
       }
     }
   }
-}
-
-// Moves user's event edits from a cloned recurring event to the original event
-// in preparation to save the original event
-export function updateOriginalEvent(selectedEvent, events) {
-  return events.map((eventObj) => {
-    if (eventObj.id === selectedEvent.originalEventId) {
-      const { start, end, isAvailable, price, isRecurringEvent } = selectedEvent
-      Object.assign(eventObj, {
-        start,
-        end,
-        isAvailable,
-        price,
-        isRecurringEvent
-      })
-    }
-    return eventObj
-  })
 }
 
 // Re-calculates slots after the date is changed via the dropdown menus
@@ -124,16 +145,17 @@ export function getSlotsForDateChange(selectedEvent, whichDropdown, value, viewT
   return slots
 }
 
-export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents) {
+export function getDateDropdownOptions(date, viewType, userType, selectedEvent, allEvents, offers) {
   const numDatesToShow = 10
   const timeToAdd = viewType === 'daily' ? 'days' : 'hours'
   let beforeSelectedConflict
   let afterSelectedConflict
-  const eventsWithoutSelected = allEvents &&
-    allEvents.length &&
-    allEvents.filter((event) => event.id !== selectedEvent.id)
 
   const isSlotAvailable = (date) => {
+    const eventsWithoutSelected = allEvents &&
+      allEvents.length &&
+      allEvents.filter((event) => event.id !== selectedEvent.id)
+
     if (!eventsWithoutSelected || !eventsWithoutSelected.length) {
       return true
     }
@@ -141,7 +163,7 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
       date = moment(date).startOf('day').toDate()
     }
     const slotInfo = { slots: [date] }
-    const existingEventInSlot = checkSlotsForExistingEvent(slotInfo, eventsWithoutSelected)
+    const existingEventInSlot = checkSlotForExistingEvents(slotInfo, eventsWithoutSelected)
     return !existingEventInSlot.length || doAllEventsRecur(existingEventInSlot)
   }
 
@@ -151,7 +173,15 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .map((_, i) => {
       const thisDate = moment(date).subtract(i + 1, timeToAdd).toDate()
       if (!beforeSelectedConflict) {
-        const isAvailable = isSlotAvailable(thisDate)
+        let isAvailable
+
+        if (userType === 'seller') {
+          isAvailable = isSlotAvailable(thisDate)
+        } else {
+          const availData = getDateAvailabilityAndPrice(thisDate, allEvents, offers)
+          isAvailable = availData.isAvailable
+        }
+
         if (isAvailable) {
           return thisDate
         } else {
@@ -166,8 +196,15 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .reverse()
 
   if (viewType === 'hourly') {
-    const isNextSlotAvailable = isSlotAvailable(date)
-    if (!isNextSlotAvailable) {
+    let isAvailable
+
+    if (userType === 'seller') {
+      isAvailable = isSlotAvailable(date)
+    } else {
+      const availData = getDateAvailabilityAndPrice(date, allEvents, offers)
+      isAvailable = availData.isAvailable
+    }
+    if (!isAvailable) {
       afterSelectedConflict = true
     }
   }
@@ -176,7 +213,15 @@ export function getDateDropdownOptions(date, viewType, selectedEvent, allEvents)
     .map((_, i) => {
       const thisDate = moment(date).add(i + 1, timeToAdd).toDate()
       if (!afterSelectedConflict) {
-        const isAvailable = isSlotAvailable(thisDate)
+        let isAvailable
+
+        if (userType === 'seller') {
+          isAvailable = isSlotAvailable(thisDate)
+        } else {
+          const availData = getDateAvailabilityAndPrice(thisDate, allEvents, offers)
+          isAvailable = availData.isAvailable
+        }
+
         if (isAvailable) {
           return thisDate
         } else {
@@ -288,20 +333,23 @@ export function getRecurringEvents(date, existingEvents, viewType) {
 
 // When buyer is ready to reserve slots, prepares data to be saved to IPFS
 export function getSlotsToReserve(buyerSelectedSlotData) {
-  return  buyerSelectedSlotData &&
+  const slots = buyerSelectedSlotData &&
           buyerSelectedSlotData.map((slot) => {
             const toReturn = {
               startDate: slot.start,
               endDate: slot.end,
+              timeZone: slot.timeZone,
               price: slot.price,
             }
 
             if (slot.isRecurringEvent) {
-              toReturn.recurs = 'weekly'
+              toReturn.rrule = 'FREQ=WEEKLY;'
             }
 
             return toReturn
-          })
+          }) || []
+
+  return slotsToJCal(slots, 'offer')
 }
 
 // Removes cloned events and prepares data for saving to IPFS
@@ -315,12 +363,13 @@ export function getCleanEvents(events) {
       const toReturn = {
         startDate: event.start.toISOString(),
         endDate: event.end.toISOString(),
+        timeZone: event.timeZone,
         isAvailable: event.isAvailable,
         price: event.price
       }
 
       if (event.isRecurringEvent) {
-        toReturn.recurs = 'weekly'
+        toReturn.rrule = 'FREQ=WEEKLY;'
       }
       return toReturn
     })
@@ -330,9 +379,10 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
   const isDateBooked = function(date) {
     let bookingsMatchingDate = []
     offers && offers.map((offer) => {
-      const bookingsForThisOffer = offer.slots.filter(slot => 
-        moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
-      )
+      const offerSlots = jCalToCalendarSlots(offer.timeSlots) || []
+      const bookingsForThisOffer = offerSlots.filter(slot => 
+          moment(date).isBetween(moment(slot.startDate).subtract(1, 'second'), moment(slot.endDate).add(1, 'second'))
+        )
       bookingsMatchingDate = [...bookingsMatchingDate, ...bookingsForThisOffer]
     })
 
@@ -353,8 +403,10 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
         !moment(date).isBefore(moment().startOf('day'))
       ) {
 
-        event.isAvailable = event.isAvailable ? !isDateBooked(date) : false
-        eventsInSlot.push(event)
+        const eventClone = JSON.parse(JSON.stringify(event))
+
+        eventClone.isAvailable = eventClone.isAvailable ? !isDateBooked(date) : false
+        eventsInSlot.push(eventClone)
       }
     }
   }
@@ -372,23 +424,199 @@ export function getDateAvailabilityAndPrice(date, events, offers) {
   return toReturn
 }
 
-export const prepareSlotsToSave = (slots) => {
-  return slots.map((slot) => {
-    let amount = '0'
-    const { price, startDate, endDate } = slot
+export const slotsToJCal = (events, listingOrOffer) => {
+  const jCal = [
+    'vcalendar',
+      [
+        ['version', {}, 'text', '1.0'],
+        ['prodid', {}, 'text', 'origin.js'],
+      ]
+  ]
 
-    if (price && (typeof price === 'number' || typeof price.amount === 'number')) {
-      amount = price.toString()
+  events && events.forEach((event) => {
+    const { startDate, endDate, price, rrule, isAvailable } = event
+    const vEvent = [
+      'vevent',
+      ['uid', {}, 'text', uuid()],
+      [
+        'dtstart',
+        { 'tzid': '/US/Eastern' },
+        'date-time',
+        typeof startDate === 'string' ? startDate : startDate.toISOString()
+      ],
+      [
+        'dtend',
+        { 'tzid': '/US/Eastern' },
+        'date-time',
+        typeof endDate === 'string' ? endDate : endDate.toISOString()
+      ],
+      ['x-currency', {}, 'text', 'ETH'], 
+      ['x-price', {}, 'text', price.toString()]
+    ]
+
+    if (listingOrOffer === 'listing') {
+      vEvent.splice(4, 0, ['rrule', {}, 'text', (rrule || '')])
+      vEvent.push.apply(
+        vEvent,
+        [
+          ['x-is-available', {}, 'boolean', isAvailable],
+          ['x-priority', {}, 'integer', rrule ? 1 : 2]
+        ]
+      )
     }
 
-    slot.price = {
-      currency: 'ETH',
-      amount
-    }
-
-    slot.startDate = typeof startDate === 'string' ? startDate : startDate.toISOString()
-    slot.endDate = typeof endDate === 'string' ? endDate : endDate.toISOString()
-
-    return slot
+    jCal.push(vEvent)
   })
+
+  return jCal
+}
+
+export const jCalToCalendarSlots = (jCal) => {
+  const vEvents = jCal.filter(item => item[0] === 'vevent')
+  return vEvents.map(vEvent => {
+    const rrule = vEvent.find(item => item[0] === 'rrule')
+    const isAvailable = vEvent.find(item => item[0] === 'x-is-available')
+    const priority = vEvent.find(item => item[0] === 'x-priority')
+
+    return {
+      uid: vEvent.find(item => item[0] === 'uid')[3],
+      startDate: vEvent.find(item => item[0] === 'dtstart')[3],
+      endDate: vEvent.find(item => item[0] === 'dtend')[3],
+      timeZone: vEvent.find(item => item[0] === 'dtstart')[1].tzid,
+      rrule: rrule ? rrule[3] : '',
+      price: {
+        amount: vEvent.find(item => item[0] === 'x-price')[3],
+        currency: vEvent.find(item => item[0] === 'x-currency')[3]
+      },
+      isAvailable: isAvailable ? isAvailable[3] : '',
+      priority: priority ? priority[3] : ''
+    }
+  })
+}
+
+export const getTotalPriceFromJCal = (jCal) => {
+  const vEvents = jCal.filter(item => item[0] === 'vevent')
+  const prices = vEvents.map(event => event.find(item => item[0] === 'x-price')[3])
+
+  return prices.reduce((totalPrice, nextPrice) => totalPrice + parseFloat(nextPrice), 0).toString()
+}
+
+export const getStartEndDatesFromSlots = (slots, slotLengthUnit) => {
+  const timeFormat = slotLengthUnit === 'schema.hours' ? 'l LT' : 'LL'
+
+  return {
+    startDate: moment(slots[0].startDate).format(timeFormat),
+    endDate: moment(slots[slots.length - 1].endDate).format(timeFormat)
+  }
+}
+
+export const generateDefaultPricing = (formData) => {
+  const events = []
+
+  for (const key in formData) {
+    if (key === 'weekdayPricing' || key === 'weekendPricing') {
+
+      const startDateDayOffset = key === 'weekdayPricing' ? /* Sunday */ 0 : /* Friday */ 5        
+      const endDateDayOffset = key === 'weekdayPricing' ? /* Thursday */ 4 : /* Saturday */ 6
+
+      events.push({
+        startDate: moment().day(startDateDayOffset).startOf('day').toDate(),
+        endDate: moment().day(endDateDayOffset).endOf('day').toDate(),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        rrule: 'FREQ=WEEKLY;',
+        isAvailable: true,
+        price: formData[key]
+      })
+    }
+  }
+
+  return slotsToJCal(events, 'listing')
+}
+
+export const highlightCalendarDrag = () => {
+  setTimeout(() => {
+    const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
+
+    function addDraggingClass(evt) {
+      if (evt.target.classList.value.includes('available')) {
+        evt.target.classList.add('dragging')
+      }
+    }
+
+    function mouseUpHandler(evt){
+      const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
+
+      calendarDays.map((element) => {
+        element.removeEventListener('mousemove', addDraggingClass)
+        setTimeout(() => { evt.target.classList.remove('dragging') }, 300)
+      })
+    }
+
+    function mouseDownHandler(evt) {
+      const calendarDays = [...document.querySelectorAll('.rbc-day-bg')]
+
+      addDraggingClass(evt)
+
+      calendarDays.map((element) => {
+        element.addEventListener('mousemove', addDraggingClass)
+      })
+    }
+
+    calendarDays.map((element) => {
+      element.removeEventListener('mousedown', mouseDownHandler)
+      element.addEventListener('mousedown', mouseDownHandler)
+    })
+
+    document.removeEventListener('mouseup', mouseUpHandler)
+    document.addEventListener('mouseup', mouseUpHandler)
+  }, 1000)
+}
+
+export const doFancyDateSelectionBorders = () => {
+  const calendarDays = [...document.querySelectorAll('.rbc-day-bg.selected, .rbc-day-bg.dragging')]
+
+  calendarDays.map((element, index) => {
+    element.classList.remove('first-selected', 'last-selected', 'middle-selected')
+
+    const prevDate = calendarDays[index - 1]
+    const nextDate = calendarDays[index + 1]
+    let isFirstSelected = true
+    let isLastSelected = true
+
+    if (
+      prevDate &&
+      (
+        prevDate.classList.contains('selected') || 
+        prevDate.classList.contains('dragging')
+      )
+    ) {
+      isFirstSelected = false
+    }
+
+    if (
+      nextDate &&
+      (
+        nextDate.classList.contains('selected') || 
+        nextDate.classList.contains('dragging')
+      )
+    ) {
+      isLastSelected = false
+    }
+
+    if (isFirstSelected && isLastSelected) {
+      return
+    } else if (isFirstSelected) {
+      element.classList.add('first-selected')
+    } else if (isLastSelected) {
+      element.classList.add('last-selected')
+    } else {
+      element.classList.add('middle-selected')
+    }
+  })
+}
+
+export const deSelectAllCells = () => {
+  [...document.querySelectorAll('.rbc-day-bg')].map(
+    (element) => element.classList.remove('selected', 'dragging')
+  )
 }

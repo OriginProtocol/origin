@@ -56,13 +56,13 @@ class MyListings extends Component {
       })
       const listings = await Promise.all(
         ids.map(id => {
-          return getListing(id, true)
+          return getListing(id, { translate: true })
         })
       )
 
       this.setState({ listings, loading: false })
     } catch (error) {
-      console.error('Error fetching listing ids')
+      console.error('Error fetching listing ids', error)
     }
   }
 

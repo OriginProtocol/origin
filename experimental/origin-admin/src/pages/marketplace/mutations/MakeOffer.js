@@ -34,8 +34,9 @@ class MakeOffer extends Component {
     this.state = {
       finalizes: new Date(+new Date() + 1000 * 60 * 60 * 24 * 3),
       affiliate: affiliate ? affiliate.id : ZeroAddress,
-      commission: '2',
+      commission: '5',
       value: '0.1',
+      quantity: 1,
       currency: ZeroAddress,
       arbitrator: arbitrator ? arbitrator.id : '',
       from: buyer ? buyer.id : ''
@@ -77,6 +78,11 @@ class MakeOffer extends Component {
                       {...input('value')}
                       rightElement={<Tag minimal={true}>ETH</Tag>}
                     />
+                  </FormGroup>
+                </div>
+                <div style={{ flex: 1, marginRight: 20 }}>
+                  <FormGroup label="Quantity">
+                    <InputGroup {...input('quantity')} />
                   </FormGroup>
                 </div>
                 <div style={{ flex: 1, marginRight: 20 }}>
@@ -169,15 +175,20 @@ class MakeOffer extends Component {
 
   getVars() {
     const { affiliate } = this.state
+    const commission =
+      affiliate === ZeroAddress
+        ? '0'
+        : web3.utils.toWei(this.state.commission, 'ether')
     const variables = {
       listingID: String(this.props.listing.id),
       from: this.state.from,
       finalizes: Math.floor(Number(this.state.finalizes) / 1000),
       affiliate,
-      commission: affiliate === ZeroAddress ? '0' : this.state.commission,
+      commission,
       value: this.state.value,
       currency: ZeroAddress,
-      arbitrator: this.state.arbitrator
+      arbitrator: this.state.arbitrator,
+      quantity: Number(this.state.quantity)
     }
     if (this.props.offer) {
       variables.withdraw = String(this.props.offer.id)

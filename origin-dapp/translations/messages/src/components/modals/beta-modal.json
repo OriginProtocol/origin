@@ -1,30 +1,26 @@
 [
   {
     "id": "beta-modal.message1",
-    "defaultMessage": "Welcome to Origin's decentralized app! Please use at your own risk while we fix bugs and get our contracts audited."
+    "defaultMessage": "Welcome to {title} Beta! {title} is a decentralized marketplace that works a little differently than most apps."
   },
   {
     "id": "beta-modal.message2",
-    "defaultMessage": "Transactions use real ETH. Take offers to buy/sell seriously."
+    "defaultMessage": "We're in Beta mode, but all transactions are real and use ETH."
   },
   {
     "id": "beta-modal.message3",
-    "defaultMessage": "Use caution with counterparties you don't know. Please verify your own identity."
+    "defaultMessage": "Please {link} so other buyers and sellers know who you are."
   },
   {
     "id": "beta-modal.message4",
-    "defaultMessage": "Check back often for status updates. There are currently no push/email notifications."
+    "defaultMessage": "Don't forget to {link} so you can communicate with other users. It's free."
   },
   {
     "id": "beta-modal.message5",
-    "defaultMessage": "Disputes for escrowed funds are resolved by Origin's arbitration team."
-  },
-  {
-    "id": "beta-modal.message6",
-    "defaultMessage": "No insurance is currently offered on any listings."
+    "defaultMessage": "If you have any questions or need to dispute a transaction, {link}."
   },
   {
     "id": "beta-modal.proceed",
-    "defaultMessage": "Proceed"
+    "defaultMessage": "I got it."
   }
 ]

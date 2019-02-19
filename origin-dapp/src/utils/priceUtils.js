@@ -1,8 +1,8 @@
 import store from '../Store'
 import { setExchangeRate } from 'actions/ExchangeRates'
 
-const DEFAULT_FIAT = 'USD'
 const DEFAULT_CRYPTO = 'ETH'
+const DEFAULT_FIAT = 'USD'
 const EXCHANGE_RATE_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
 const EXCHANGE_RATE_POLL_INTERVAL = 2 * 60 * 1000 // 2 minutes
 
@@ -107,8 +107,8 @@ const getCachedCurrencyPair = (fiatCurrencyCode, cryptoCurrencyCode) => {
 
 export const getFiatPrice = (
   priceEth,
-  fiatCurrencyCode,
-  cryptoCurrencyCode,
+  fiatCurrencyCode = DEFAULT_FIAT,
+  cryptoCurrencyCode = DEFAULT_CRYPTO,
   formatResult = true
 ) => {
   if (!priceEth) {
