@@ -73,10 +73,10 @@ services:
       # IPFS data
       - ipfs:/app/ipfs
     ports:
-      - "3001:3001"
+      - "3000:3000"
       - "8083:8083" # Webpack
       - "8545:8545"
-      - "9090:9090"
+      - "8080:8080"
     environment:
       - DEPLOY_CONTRACTS=true
       - DOCKER=true
@@ -111,7 +111,7 @@ services:
       - "9999:9999"
     environment:
       - IPFS_API_URL=http://origin-dapp2:5002
-      - IPFS_GATEWAY_URL=http://origin-dapp2:9090
+      - IPFS_GATEWAY_URL=http://origin-dapp2:8080
     command: npm run start --prefix origin-ipfs-proxy
 
   origin-event-listener:
@@ -137,7 +137,7 @@ services:
       - origin-ipfs-proxy
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 --
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3000 --
       wait-for.sh -t 0 -q elasticsearch:9200 --
       npm run migrate --prefix origin-discovery &&
       npm run migrate --prefix origin-growth &&
@@ -162,7 +162,7 @@ services:
       - "4000:4000"
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 &&
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3000 &&
       npm run start:discovery --prefix origin-discovery"
 
   origin-notifications:
