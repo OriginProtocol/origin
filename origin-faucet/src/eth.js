@@ -92,39 +92,10 @@ class EthDistributor {
     res.send(`Error: ${message}`)
   }
 
-  async _computeNonce(ethAddress) {
-    //
-    const lastDbTxn = await db.FaucetTxn.findOne({
-      where: {
-        status: {
-          [Sequelize.Op.in]: [
-            enums.FaucetTxnStatuses.Pending,
-            enums.FaucetTxnStatuses.Confirmed
-          ]
-        },
-        order: [['id', 'ASC']],
-        limit: 1
-      }
-    })
-    if (lastTxHash) {
-      var tx = web3.eth.getTransaction(lastTxHash)
-      var txCount = web3.eth.getTransactionCount(ethereumAddress)
-      if (tx) {
-        nonce = txCount > tx.nonce + 1 ? txCount + 1 : tx.nonce + 1
-      } else if (txCount === 0) {
-        nonce = 0
-      } else {
-        nonce = txCount + 1
-      }
-    } else {
-      nonce = web3.eth.getTransactionCount(ethereumAddress)
-    }
-  }
-
   // Renders the main /eth page.
-  async main(req, res, next) {
+  async main(req, res) {
     // Basic templating.
-    var out = html
+    const out = html
       .replace('${code}', req.query.code || '')
       .replace('${wallet}', req.query.wallet || '')
     return res.send(out)
