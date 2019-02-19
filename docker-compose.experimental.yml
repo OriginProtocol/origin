@@ -111,7 +111,7 @@ services:
       - "9999:9999"
     environment:
       - IPFS_API_URL=http://origin-dapp2:5002
-      - IPFS_GATEWAY_URL=http://origin-dapp2:9090
+      - IPFS_GATEWAY_URL=http://origin-dapp2:8080
     command: npm run start --prefix origin-ipfs-proxy
 
   origin-event-listener:
