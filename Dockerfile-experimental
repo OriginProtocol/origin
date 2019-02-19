@@ -27,7 +27,6 @@ COPY ./experimental/origin-messaging-client/package*.json ./experimental/origin-
 COPY ./experimental/origin-linker-client/package*.json ./experimental/origin-linker-client/
 COPY ./experimental/origin-eventsource/package*.json ./experimental/origin-eventsource/
 COPY ./experimental/origin-services/package*.json ./experimental/origin-services/
-COPY ./experimental/origin-linker-client/package*.json ./experimental/origin-linker-client/
 
 # Complete contracts source needs to be available so that `truffle compile contracts`
 # which is calleed by the prepare script can succeed
