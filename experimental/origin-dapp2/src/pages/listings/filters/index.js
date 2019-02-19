@@ -11,15 +11,42 @@ class FilterGroup extends Component {
 
     this.childFilters = []
     this.addChildFilter = this.addChildFilter.bind(this)
+    this.onBlur = this.onBlur.bind(this)
     this.removeChildFilter = this.removeChildFilter.bind(this)
     this.applyFilters = this.applyFilters.bind(this)
     this.clearFilters = this.clearFilters.bind(this)
   }
 
+  componentDidMount() {
+    if (this.props.open) {
+      document.addEventListener('click', this.onBlur)
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.open) {
+      document.removeEventListener('click', this.onBlur)
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.open && !this.props.open) {
+      document.removeEventListener('click', this.onBlur)
+    } else if (!prevProps.open && this.props.open) {
+      document.addEventListener('click', this.onBlur)
+    }
+  }
+
+  onBlur() {
+    if (!this.mouseOver && this.props.onClose) {
+      this.props.onClose()
+    }
+  }
+
   async clearFilters(event) {
     event.preventDefault()
     event.persist()
-    this.props.toggleDropDown()
+    this.props.onClose()
 
     this.childFilters.forEach(childFilter =>
       childFilter.onClear(() => this.props.saveFilters())
@@ -28,7 +55,7 @@ class FilterGroup extends Component {
 
   async applyFilters(event) {
     event.preventDefault()
-    this.props.toggleDropDown()
+    this.props.onClose()
 
     Promise.all(
       this.childFilters.map(childFilter => childFilter.getFilters())
@@ -56,9 +83,12 @@ class FilterGroup extends Component {
       'Title'
     )
     return (
-      <li className="search-filters nav-item">
+      <li
+        onMouseOver={() => (this.mouseOver = true)}
+        onMouseOut={() => (this.mouseOver = false)}
+        className="search-filters nav-item">
         <a
-          onClick={this.props.toggleDropDown}
+          onClick={this.props.onClose}
           className="nav-link"
           data-parent="#search-filters-bar"
         >

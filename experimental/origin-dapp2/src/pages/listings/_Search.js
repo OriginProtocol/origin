@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import get from 'lodash/get'
 import find from 'lodash/find'
+import isNil from 'lodash/isNil'
 
 import isEmpty from 'lodash/isEmpty'
 import queryString from 'query-string'
@@ -35,22 +36,12 @@ class Search extends Component {
 
     this.filterByDropDown = this.filterByDropDown.bind(this)
     this.toggleDropDown = this.toggleDropDown.bind(this)
-    this.node = {}
-    this.outsideClickResponse = this.outsideClickResponse.bind(this)
 
     this.state = {
       ...getStateFromQuery(props),
       maxPrice: 10000,
       minPrice: 0
     }
-  }
-
-  componentDidMount() {
-    document.addEventListener('mousedown', this.outsideClickResponse, false)
-  }
-
-  componentWillUnmount() {
-    document.addEventListener('mousedown', this.outsideClickResponse, false)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -91,22 +82,13 @@ class Search extends Component {
     })
   }
 
-  outsideClickResponse(e) {
-    if (this.node && !this.node.contains(e.target)) {
-      this.setState({ open: {} })
-    }
-  }
-
   toggleDropDown(title) {
     return () => {
-      const { open } = this.state
-      const openValues = Object.values(open)
-      if (find(openValues, value => value === true)) {
-        this.setState({ open: {} })
+      if (this.state.open[title]) {
+        this.setState({ open: { [title]: false } })
       } else {
         this.setState({ open: { [title]: true } })
       }
-      return
     }
   }
 
@@ -116,7 +98,7 @@ class Search extends Component {
     const filterSchemaItems = get(this.state, 'filterSchema.items', [])
     return (
       <>
-        <div ref={node => (this.node = node)} className="search-bar">
+        <div className="search-bar">
           <div className="container">
             <div className="input-group">
               <Dropdown
@@ -183,7 +165,7 @@ class Search extends Component {
                     maxPrice={maxPrice}
                     category={category}
                     saveFilters={this.props.saveFilters}
-                    toggleDropDown={this.toggleDropDown(filterTitle)}
+                    onClose={this.toggleDropDown(filterTitle)}
                     open={this.state.open[filterTitle]}
                   />
                 )
