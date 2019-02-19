@@ -55,6 +55,12 @@ class NonceManager {
 
   // Yields next nonce to use.
   async next() {
+    // Safety valve ! Refuse to submit too many pending transactions.
+    if (this.pendingTxnCount > MaxNumberPendingTxnCount) {
+      logger.error('Too many pending transactions: ${this.pendingTxnCount}')
+      throw new Error('Too many pending transactions. Retry later.')
+    }
+
     this.pendingTxnCount++
     if (this.pendingTxnCount === 1) {
       // No other pending transaction.
@@ -73,6 +79,74 @@ class NonceManager {
       this.nonce++
     }
     return this.nonce
+  }
+}
+
+class TxnManager {
+  constructor(web3, nonceMgr) {
+    this.web3 = web3
+    this.nonceMgr = nonceMgr
+    this.hash = null
+    this.receipt = null
+    this.error = null
+  }
+
+  _txnCallback(error, hash) {
+    if (error) {
+      this.error = error
+    } else {
+      this.hash = hash
+    }
+  }
+
+  // Submits a transaction and returns a promise that resolves
+  // with the transaction hash.
+  async send(from, to, value) {
+    try {
+      // Calculate the nonce to use for this transaction.
+      const nonce = await this.nonceMgr.next()
+
+      // Issue the blockchain transaction.
+      logger.info(`sendTransaction
+        value:${value.toFixed()} from:${from} to:${to} nonce:${nonce}`
+      )
+      this.web3.eth.sendTransaction(
+        { from, to, value, gas: 21000, nonce }, this._txnCallback)
+    } catch (e) {
+      throw e
+    } finally {
+      // Decrement the nonce manager pending txn count and
+      // store the txn status and hash in the DB.
+      this.nonceMgr.decPendingTxnCount()
+    }
+
+    return new Promise(async function(resolve, reject) {
+      for (let retries=0; retries < 120; retries++) {
+        if (this.hash !== null) {
+          resolve(this.hash)
+          return
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000)) // wait 1 sec.
+      }
+      reject(this.error || 'TxnManager: hash timeout')
+    })
+  }
+
+  // Returns transaction receipt or throws an error.
+  async receipt(hash) {
+    for (let retries=0; retries < 5; retries++) {
+      try {
+        const receipt = await this.web3.eth.getTransactionReceipt(hash)
+        if (receipt) {
+          return receipt
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000)) // wait 1 sec.
+        logger.error('Retrying call to getTransactionReceipt')
+      } catch (error) {
+        logger.error('getTransactionReceipt hash: ${hash} returned error:', error)
+      }
+    }
+    throw new Error(`Failed getting receipt for hash ${hash}`)
   }
 }
 
@@ -198,7 +272,6 @@ class EthDistributor {
       }
 
       // Create a FaucetTxn row in Pending status.
-      let txnHash = null
       const faucetTxn = await db.FaucetTxn.create({
         campaignId: campaign.id,
         status: enums.FaucetTxnStatuses.Pending,
@@ -206,39 +279,30 @@ class EthDistributor {
         toAddress: ethAddress.toLowerCase(),
         amount: campaign.amount,
         currency: campaign.currency,
-        txnHash
       })
 
+      const txnManager = new TxnManager(this.web3, this.nonceMgr)
+      let txnHash = null
       try {
-        // Calculate the nonce to use for this transaction.
-        const nonce = await this.nonceMgr.next()
 
-        // Issue the blockchain transaction.
-        logger.info(
-          `Blockchain call to send ${amount.toFixed()} to ${ethAddress}
-          from ${this.hotWalletAddress} with nonce ${nonce}`
-        )
-        const receipt = await this.web3.eth.sendTransaction({
-          from: this.hotWalletAddress,
-          to: ethAddress,
-          value: amount.toFixed(),
-          gas: 21000,
-          nonce
-        })
-        if (!receipt || !receipt.status) {
-          throw new Error('No receipt or receipt status false')
-        }
-        txnHash = receipt.transactionHash
-      } catch (e) {
+        // Submit the transaction and wait for a hash.
+        txnHash = await txnManager.send(this.hotWalletAddress, ethAddress, amount)
+
+        // Update the txnHash in the DB.
+        await faucetTxn.update({ txnHash })
+
+        // Wait for the transaction receipt.
+        const receipt = await txnManager.receipt()
+        logger.info(`Received receipt. blockNumber: ${receipt.blockNumber}`)
+
+        // Update status to Confirmed.
+        await faucetTxn.update({ status: enums.FaucetTxnStatuses.Confirmed })
+      } catch(e) {
+        // Log error and update txn status in the DB.
+        logger.error(`Transaction failure. txnHash: ${txnHash} error:`, e)
+        await faucetTxn.update({ status: enums.FaucetTxnStatuses.Failed })
+        // Rethrow to show an error to the user.
         throw e
-      } finally {
-        // Decrement the nonce manager pending txn count and
-        // store the txn status and hash in the DB.
-        this.nonceMgr.decPendingTxnCount()
-        const status = txnHash
-          ? enums.FaucetTxnStatuses.Confirmed
-          : enums.FaucetTxnStatuses.Failed
-        await faucetTxn.update({ status, txnHash })
       }
 
       // Send response back to client.
