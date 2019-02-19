@@ -72,7 +72,7 @@ class App extends Component {
         query={CreatorConfigQuery}
         variables={{ creatorConfigUrl: creatorConfigUrl }}
       >
-        {({ loading, error, data, networkStatus }) => {
+        {({ data, networkStatus }) => {
           if (networkStatus === 1) {
             return (
               <div className="app-loading">

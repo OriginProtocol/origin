@@ -2,9 +2,9 @@ import get from 'lodash/get'
 
 export default {
   listingFilters: (config) => {
-    let filters = []
-    let listingFilterConfig = get(config.filters, 'listings', {})
-    for (let [name, value] of Object.entries(listingFilterConfig)) {
+    const filters = []
+    const listingFilterConfig = get(config.filters, 'listings', {})
+    for (const [name, value] of Object.entries(listingFilterConfig)) {
       filters.push({
         name: name,
         value: value,

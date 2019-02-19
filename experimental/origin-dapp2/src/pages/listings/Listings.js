@@ -107,8 +107,10 @@ class Listings extends Component {
                                   </p>
                                   <div className="row">
                                     <div className="col text-center">
-                                      <Link to="/create"
-                                        className="btn btn-lg btn-primary">
+                                      <Link
+                                        to="/create"
+                                        className="btn btn-lg btn-primary"
+                                      >
                                         <fbt desc="listings.createListingButton">
                                           Create a Listing
                                         </fbt>

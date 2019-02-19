@@ -90,7 +90,7 @@ const config = {
     ignored: [
       // Ignore node_modules in watch except for the origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,
-      /\origin([\\]+|\/)node_modules/
+      /\origin([\\]+|\/)node_modules/ // eslint-disable-line no-useless-escape
     ]
   },
   mode: isProduction ? 'production' : 'development',
