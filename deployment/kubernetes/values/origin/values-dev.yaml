@@ -46,7 +46,7 @@ creatorClientImageTag: 'c235b98'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: '82c63a2'
+creatorServerImageTag: '6f68ee1'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
