@@ -58,7 +58,7 @@ class NonceManager {
       this.nonce = null
       this.nonce = await this.web3.eth.getTransactionCount(this.ethAddress)
     } else {
-      // There is at least one pending transaction.
+      // There is at least one other pending transaction.
       // Wait for nonce to be set and increment it.
       for (let retries = 0; this.nonce === null && retries < 50; retries++) {
         await new Promise(resolve => setTimeout(resolve, 100))
