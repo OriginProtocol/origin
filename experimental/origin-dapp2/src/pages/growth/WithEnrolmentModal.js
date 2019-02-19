@@ -251,16 +251,16 @@ function withEnrolmentModal(WrappedComponent) {
             // const eligibility = 'Forbidden'
 
             if (
-              eligibility === 'Eligible' ||
-              (eligibility === 'Restricted' && notCitizenConfirmed)
+              eligibility === 'eligible' ||
+              (eligibility === 'restricted' && notCitizenConfirmed)
             ) {
               return this.renderTermsModal()
             } else if (
-              eligibility === 'Restricted' ||
-              eligibility === 'Forbidden'
+              eligibility === 'restricted' ||
+              eligibility === 'forbidden'
             ) {
               return this.renderRestrictedModal(
-                country,
+                countryName,
                 eligibility,
                 notCitizenChecked
               )
