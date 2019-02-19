@@ -244,9 +244,9 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
 
-            //const { country, eligibility } = data.isEligible
-            const country = 'Canada'
-            const eligibility = 'Restricted'
+            const { countryName, eligibility } = data.isEligible
+            // const countryName = 'Canada'
+            // const eligibility = 'Restricted'
             // const country = 'Saudi Arabia'
             // const eligibility = 'Forbidden'
 
