@@ -1,3 +1,4 @@
+import setLocale from 'utils/setLocale'
 import camelToDash from 'utils/camelToDash'
 
 /* Determine if the DApp is being white labelled by comparing the current
@@ -39,10 +40,7 @@ function applyConfiguration(config) {
 
   // Set the language code
   if (config.languageCode) {
-    if (config.languageCode !== selectedLanguageCode) {
-      store.set('preferredLang', config.languageCode)
-      window.location.reload()
-    }
+    setLocale(config.languageCode)
   }
 
   // Set the favicon
