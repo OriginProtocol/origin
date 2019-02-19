@@ -7,6 +7,7 @@ import { fbt } from 'fbt-runtime'
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
 import PageTitle from 'components/PageTitle'
+import Link from 'components/Link'
 
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
@@ -106,14 +107,12 @@ class Listings extends Component {
                                   </p>
                                   <div className="row">
                                     <div className="col text-center">
-                                      <a
-                                        href="#/create"
-                                        className="btn btn-lg btn-primary"
-                                      >
+                                      <Link to="/create"
+                                        className="btn btn-lg btn-primary">
                                         <fbt desc="listings.createListingButton">
                                           Create a Listing
                                         </fbt>
-                                      </a>
+                                      </Link>
                                     </div>
                                   </div>
                                 </>
