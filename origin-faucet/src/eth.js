@@ -1,10 +1,57 @@
 const BigNumber = require('bignumber.js')
+const fs = require('fs')
 const Sequelize = require('sequelize')
 const Web3 = require('web3')
 
 const logger = require('./logger')
 const db = require('./models')
 const enums = require('./enums')
+
+// HTML template for the /eth landing page.
+const html = fs.readFileSync(`${__dirname}/../public/eth.html`).toString()
+
+/**
+ * Singleton class for managing a monotonically increasing nonce
+ * for sending web3 transactions.
+ *
+ * This is necessary since the faucet may be handling multiple requests
+ * in parallel but web3.eth.sendTransaction does not take into
+ * account pending transactions when generating the nonce to use.
+ * For example, assume 50 users attempt to redeem ETH from the faucet
+ * at about the same time. Relying on web3.eth.sendTransaction to calculate
+ * the nonce for those transactions would result in all of them getting
+ * the *same* nonce.  All transactions except one would therefore fail.
+ *
+ * Note: This solution is far from perfect.
+ *  - A transaction failure will leave a hole in the nonce sequence
+ *  and cause subsequent transactions to fail.
+ *  TODO(franck): consider periodically resyncing the nonce in the
+ *  background when there are no Pending transaction.
+ *  - Ethereum nodes have a limit of max 64 transactions per
+ *  source address that they can store in their buffer. If the faucet
+ *  overflows that buffer our NonceManager will go out of sync.
+ *  See this discussion:
+ *   https://ethereum.stackexchange.com/questions/2808/what-happens-when-a-transaction-nonce-is-too-high
+ */
+class NonceManager {
+  constructor(web3, ethAddress) {
+    this.web3 = web3
+    this.ethAddress = ethAddress
+    this.web3.eth.getTransactionCount(this.ethAddress).then(txnCount => {
+      this.nonce = txnCount - 1
+      logger.info('Nonce initialized to ', this.nonce)
+    })
+  }
+
+  // Generates next nonce.
+  next() {
+    if (this.nonce === undefined) {
+      throw new Error('Nonce not initialized yet.')
+    }
+    this.nonce++
+    return this.nonce
+  }
+}
 
 class EthDistributor {
   constructor(config) {
@@ -30,16 +77,60 @@ class EthDistributor {
     this.web3.eth.accounts.wallet.add(account)
     this.web3.eth.defaultAccount = account.address
     this.hotWalletAddress = account.address
+    logger.info('Hotwallet address: ', this.hotWalletAddress)
+
+    // Initialize the NonceManager.
+    this.nonceMgr = new NonceManager(this.web3, this.hotWalletAddress)
 
     // Needed to use the process method as a route in Express.
     this.process = this.process.bind(this)
   }
 
-  error(res, message) {
+  // Returns HML with an error message.
+  _error(res, message) {
     logger.error(message)
-    res.send(`<h2>Error: ${message}</h2>`)
+    res.send(`Error: ${message}`)
   }
 
+  async _computeNonce(ethAddress) {
+    //
+    const lastDbTxn = await db.FaucetTxn.findOne({
+      where: {
+        status: {
+          [Sequelize.Op.in]: [
+            enums.FaucetTxnStatuses.Pending,
+            enums.FaucetTxnStatuses.Confirmed
+          ]
+        },
+        order: [['id', 'ASC']],
+        limit: 1
+      }
+    })
+    if (lastTxHash) {
+      var tx = web3.eth.getTransaction(lastTxHash)
+      var txCount = web3.eth.getTransactionCount(ethereumAddress)
+      if (tx) {
+        nonce = txCount > tx.nonce + 1 ? txCount + 1 : tx.nonce + 1
+      } else if (txCount === 0) {
+        nonce = 0
+      } else {
+        nonce = txCount + 1
+      }
+    } else {
+      nonce = web3.eth.getTransactionCount(ethereumAddress)
+    }
+  }
+
+  // Renders the main /eth page.
+  async main(req, res, next) {
+    // Basic templating.
+    var out = html
+      .replace('${code}', req.query.code || '')
+      .replace('${wallet}', req.query.wallet || '')
+    return res.send(out)
+  }
+
+  // Processes ETH distribution requests.
   async process(req, res, next) {
     const code = req.query.code
     if (!code) {
@@ -117,19 +208,20 @@ class EthDistributor {
         txnHash: null
       })
 
+      // Calculate nonce to use for the transaction.
+      const nonce = this.nonceMgr.next()
+
       // Issue the blockchain transaction.
-      // FIXME(franck): calculate nonce so as to handle parallel
-      // transactions issued from the same hotwallet.
       logger.info(
-        `Blockchain call to send ${amount.toFixed()} to ${ethAddress} from ${
-          this.hotWalletAddress
-        }`
+        `Blockchain call to send ${amount.toFixed()} to ${ethAddress}
+        from ${this.hotWalletAddress} with nonce ${nonce}`
       )
       const receipt = await await this.web3.eth.sendTransaction({
         from: this.hotWalletAddress,
         to: ethAddress,
         value: amount.toFixed(),
-        gas: 21000
+        gas: 21000,
+        nonce
       })
       const txnHash = receipt.transactionHash
 
