@@ -4,6 +4,7 @@ import pick from 'lodash/pick'
 import get from 'lodash/get'
 import find from 'lodash/find'
 import remove from 'lodash/remove'
+import filter from 'lodash/filter'
 import { fbt } from 'fbt-runtime'
 
 import BottomScrollListener from 'components/BottomScrollListener'
@@ -21,13 +22,17 @@ import query from 'queries/Listings'
 const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
 
-function ensureOneCategoryFilter(stateFilters, filters) {
+function filteredState(stateFilters, newFilters) {
   const stateCategoryFilter = find(stateFilters, { name: 'category' })
-  const newCategoryFilter = find(filters, { name: 'category' })
+  const newCategoryFilter = find(newFilters, { name: 'category' })
 
   if (stateCategoryFilter && newCategoryFilter) {
-    stateFilters = remove(stateFilters, filter => {
-      filter.name === newCategoryFilter.name
+    return filter(stateFilters, filter => {
+      filter.name !== newCategoryFilter.name
+    })
+  } else if (find(newFilters, { name: 'price.amount' })) {
+    return filter(stateFilters, (filter) => {
+      filter.name !== 'price.amount'
     })
   }
   return stateFilters
@@ -70,7 +75,7 @@ class Listings extends Component {
       this.setState({ filters: [] })
     } else {
       this.setState(state => {
-        const stateFilters = ensureOneCategoryFilter(state.filters, filters)
+        const stateFilters = filteredState(state.filters, filters)
 
         return {
           ...state,
