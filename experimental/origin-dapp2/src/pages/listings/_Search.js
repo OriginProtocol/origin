@@ -79,6 +79,7 @@ class Search extends Component {
   render() {
     const { category = {}, searchInput, minPrice, maxPrice, open } = this.state
     const enabled = get(this.props, 'config.discovery', false)
+    const filterSchemaItems = get(this.state, 'filterSchema.items', [])
     return (
       <>
         <div className="search-bar">
@@ -130,8 +131,8 @@ class Search extends Component {
           className="navbar filter-group navbar-expand-sm"
         >
           <div className="container d-flex flex-row">
-            <ul className="navbar-nav collapse navbar-collapse">
-              {get(this.state, 'filterSchema.items', []).map(
+            <ul className={filterSchemaItems.length ? 'navbar-nav collapse navbar-collapse' : ''}>
+              {filterSchemaItems.map(
                 (filterGroup, key) => (
                   <FilterGroup
                     key={filterGroup.title + key}
