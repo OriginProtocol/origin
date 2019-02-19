@@ -137,7 +137,7 @@ services:
       - origin-ipfs-proxy
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 --
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3000 --
       wait-for.sh -t 0 -q elasticsearch:9200 --
       npm run migrate --prefix origin-discovery &&
       npm run migrate --prefix origin-growth &&
@@ -159,7 +159,7 @@ services:
       - "4000:4000"
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 &&
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3000 &&
       npm run start:discovery --prefix origin-discovery"
 
   origin-notifications:
