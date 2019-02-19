@@ -16,12 +16,14 @@
                     <h1 class="card-title"><strong>Origin Protocol</strong></h1>
                     <h1 class="card-title secondary"><strong>ETH Faucet</strong></h1>
                     <fieldset>
-                        <form action="/eth">
+                        <form action="/eth_dist">
                             <div class="form-row">
                                 <div class="col-lg-12">
                                     Invite code:
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="code" size="42">
+                                        <input type="text" class="form-control" name="code" size="42"
+                                        value="${code}"
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -29,7 +31,9 @@
                                 <div class="col-lg-12">
                                     Wallet address:
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="wallet" size="42">
+                                        <input type="text" class="form-control" name="wallet" size="42"
+                                        value="${wallet}"
+                                        >
                                     </div>
                                 </div>
                             </div>

@@ -59,7 +59,8 @@ async function runApp(config) {
 
   // Register the /eth route for distributing Eth.
   const ethDistributor = new EthDistributor(config)
-  app.get('/eth', ethDistributor.process)
+  app.get('/eth', ethDistributor.main)
+  app.get('/eth_dist', ethDistributor.process)
 
   // Start the server.
   app.listen(config.port || DEFAULT_SERVER_PORT, () =>
