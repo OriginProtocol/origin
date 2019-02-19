@@ -84,23 +84,14 @@ class App extends Component {
           <>
             <BetaBanner />
             <BetaModal />
-            <Nav />
+            <Nav creatorConfig={creatorConfig} />
             <main>
               <Switch>
                 <Route path="/listings/:listingID" component={Listing} />
                 <Route path="/purchases/:offerId" component={Transaction} />
-                <Route path="/my-purchases/:filter?" render={(props) =>
-                    <MyPurchases {...props} filters={creatorConfig.listingFilters} />
-                  }
-                />
-                <Route path="/my-sales/:filter?" render={(props) =>
-                    <MySales {...props} filters={creatorConfig.listingFilters} />
-                  }
-                />
-                <Route path="/my-listings/:filter?" render={(props) =>
-                    <MyListings {...props} filters={creatorConfig.listingFilters} />
-                  }
-                />
+                <Route path="/my-purchases/:filter?" component={MyPurchases} />
+                <Route path="/my-sales/:filter?" component={MySales} />
+                <Route path="/my-listings/:filter?" component={MyListings} />
                 <Route path="/create" component={CreateListing} />
                 <Route path="/user/:id" component={User} />
                 <Route path="/profile" component={Profile} />

@@ -16,7 +16,12 @@ class Footer extends Component {
     return (
       <footer>
         <div className="container">
-          <div className="logo" />
+          <div class="logo-box">
+            {this.props.creatorConfig.isCreatedMarketplace &&
+              <span className="font-weight-bold">Powered by</span>
+            }
+            <div className="logo" />
+          </div>
           <div className="separator" />
           <div className="about">
             {this.props.creatorConfig.isCreatedMarketplace ? (
@@ -67,16 +72,13 @@ class Footer extends Component {
               </a>
             </Dropdown>
 
-            {!this.props.creatorConfig.isCreatedMarketplace && (
-              <>
-                <a href="https://www.originprotocol.com/">
-                  <fbt desc="footer.websiteLink">Visit our Website</fbt>
-                </a>
-                <a href="https://github.com/OriginProtocol">
-                  <fbt desc="footer.githubLink">Visit our GitHub</fbt>
-                </a>
-              </>
-            )}
+            <a href="https://www.originprotocol.com/">
+              <fbt desc="footer.websiteLink">Learn More About Origin</fbt>
+            </a>
+
+            <a href="https://www.originprotocol.com/creator">
+              <fbt desc="footer.creatorLink">Create Your Own Marketplace</fbt>
+            </a>
           </div>
         </div>
       </footer>
@@ -105,6 +107,8 @@ require('react-styl')(`
       max-width: 320px
       flex: 1
       margin-right: 35px
+    .logo-box
+      text-align: center
     .logo
       background: url(images/origin-logo-footer.svg) no-repeat
       height: 25px
@@ -140,8 +144,14 @@ require('react-styl')(`
         .logo
           margin-bottom: 1rem
         .links
-          flex-direction: column
           align-items: center
+
+  @media (max-width: 1200px)
+    footer
+      .container
+        .links
+          flex-direction: column
+          align-items: left
           margin-top: 1rem
           a
             margin: 0

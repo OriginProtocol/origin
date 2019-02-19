@@ -41,13 +41,13 @@ class Nav extends Component {
       <nav className="navbar navbar-expand-md">
         <div className="container">
           <Mobile {...navProps('mobile')} />
-          {!this.props.logoUrl ? (
+          {!this.props.creatorConfig.logoUrl ? (
             <Link to="/" className="navbar-brand">
               Origin
             </Link>
           ) : (
             <Link to="/" className="custom-brand">
-              <img src={this.props.logoUrl} alt={this.props.title} />
+              <img src={this.props.creatorConfig.logoUrl} alt={this.props.creatorConfig.title} />
             </Link>
           )}
           {!this.props.wallet ? (
@@ -167,8 +167,10 @@ require('react-styl')(`
     text-indent: -9999px
 
   .custom-brand
+    padding-top: 0.4125rem;
+    padding-bottom: 0.4125rem;
     img
-      max-height: 40px
+      max-height: 2.8rem
 
   @media (pointer: fine)
     .navbar .nav-item
