@@ -37,7 +37,7 @@ class Search extends Component {
 
     this.state = {
       ...getStateFromQuery(props),
-      maxPrice: 10000,
+      maxPrice: 1140410,
       minPrice: 0
     }
   }
