@@ -23,6 +23,8 @@ const html = fs.readFileSync(`${__dirname}/../public/eth.html`).toString()
  * the *same* nonce.  All transactions except one would therefore fail.
  *
  * Note: This solution is far from perfect.
+ *  - The nonce would go out of sync if any other anything else than
+ *  the faucet process sends a transaction using the hotwallet.
  *  - A transaction failure will leave a hole in the nonce sequence
  *  and cause subsequent transactions to fail.
  *  TODO(franck): consider periodically resyncing the nonce in the
