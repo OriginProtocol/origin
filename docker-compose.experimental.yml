@@ -78,6 +78,7 @@ services:
     environment:
       - DEPLOY_CONTRACTS=true
       - DOCKER=true
+      - ENABLE_GROWTH=true
     command:
       # Waits for origin-messaging to start then uses a script to read the
       # origin-messaging IPFS peer id and export the IPFS_SWARM variable

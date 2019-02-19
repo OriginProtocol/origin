@@ -95,6 +95,7 @@ const config = {
     new webpack.EnvironmentPlugin({
       HOST: 'localhost',
       DOCKER: false,
+      ENABLE_GROWTH: false,
       IPFS_SWARM: ''
     })
   ],

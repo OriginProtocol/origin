@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
 
@@ -59,7 +59,6 @@ class App extends Component {
       }
       return true
     }
-
     return (
       <>
         <BetaBanner />
@@ -78,9 +77,11 @@ class App extends Component {
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
             <Route path="/about/dapp-info" component={DappInfo} />
-            <Route path="/campaigns" component={GrowthCampaigns} />
-            <Route path="/welcome" component={GrowthWelcome} />
             <Route path="/about/tokens" component={AboutToken} />
+            {process.env.ENABLE_GROWTH && <Fragment>
+              <Route path="/campaigns" component={GrowthCampaigns} />
+              <Route path="/welcome" component={GrowthWelcome} />
+            </Fragment>}
             <Route component={Listings} />
           </Switch>
         </main>
