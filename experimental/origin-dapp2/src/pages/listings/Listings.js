@@ -92,7 +92,11 @@ class Listings extends Component {
 
     return (
       <>
-        <PageTitle>Listings</PageTitle>
+        <PageTitle>
+          <fbt desc="Listings.title">
+            Listings
+          </fbt>
+        </PageTitle>
         <Search
           value={this.state.search}
           saveFilters={this.saveFilters}
