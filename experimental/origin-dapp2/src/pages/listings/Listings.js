@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
+import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
@@ -29,12 +32,15 @@ class Listings extends Component {
   }
 
   render() {
+    const isCreatedMarketplace = get(
+      this.props,
+      'creatorConfig.isCreatedMarketplace'
+    )
+    const filters = get(this.props, 'creatorConfig.listingFilters', [])
+
     const vars = {
       ...pick(this.state, 'first', 'sort', 'hidden', 'search'),
-      filters:
-        this.props.filters.map(filter => {
-          return omit(filter, '__typename')
-        }) || []
+      filters: filters.map(filter => omit(filter, '__typename'))
     }
 
     return (
@@ -90,44 +96,42 @@ class Listings extends Component {
                               </h1>
                             )}
 
-                            {this.props.isCreatedMarketplace &&
-                              !this.state.search && (
-                                <>
-                                  <h1>
-                                    <fbt desc="listings.noListingsWhitelabel">
-                                      Your marketplace doesn&apos;t have any
-                                      listings yet
-                                    </fbt>
-                                  </h1>
-                                  <p>
-                                    <fbt desc="listings.noListingsWhitelabelMessage">
-                                      You can create listings yourself or invite
-                                      sellers to join your platform!
-                                    </fbt>
-                                  </p>
-                                  <div className="row">
-                                    <div className="col text-center">
-                                      <Link
-                                        to="/create"
-                                        className="btn btn-lg btn-primary"
-                                      >
-                                        <fbt desc="listings.createListingButton">
-                                          Create a Listing
-                                        </fbt>
-                                      </Link>
-                                    </div>
-                                  </div>
-                                </>
-                              )}
-
-                            {!this.props.isCreatedMarketplace &&
-                              !this.state.search && (
+                            {isCreatedMarketplace && !this.state.search && (
+                              <>
                                 <h1>
-                                  <fbt desc="listings.noListings">
-                                    No listings found
+                                  <fbt desc="listings.noListingsWhitelabel">
+                                    Your marketplace doesn&apos;t have any
+                                    listings yet
                                   </fbt>
                                 </h1>
-                              )}
+                                <p>
+                                  <fbt desc="listings.noListingsWhitelabelMessage">
+                                    You can create listings yourself or invite
+                                    sellers to join your platform!
+                                  </fbt>
+                                </p>
+                                <div className="row">
+                                  <div className="col text-center">
+                                    <Link
+                                      to="/create"
+                                      className="btn btn-lg btn-primary"
+                                    >
+                                      <fbt desc="listings.createListingButton">
+                                        Create a Listing
+                                      </fbt>
+                                    </Link>
+                                  </div>
+                                </div>
+                              </>
+                            )}
+
+                            {!isCreatedMarketplace && !this.state.search && (
+                              <h1>
+                                <fbt desc="listings.noListings">
+                                  No listings found
+                                </fbt>
+                              </h1>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -176,7 +180,7 @@ class Listings extends Component {
   }
 }
 
-export default Listings
+export default withCreatorConfig(Listings)
 
 require('react-styl')(`
   .listings-count

@@ -12,19 +12,23 @@ export default {
   config: () => contracts.net,
   configObj: () => contracts.config,
   creatorConfig: async (_, args) => {
-    let config = creatorConfig
-    if (args.creatorConfigUrl) {
-      // Retrieve the config
-      await fetch(args.creatorConfigUrl)
-        .then(response => response.json())
-        .then(responseJson => {
-          config = Object.assign(config, {
-            ...responseJson.config,
-            isCreatedMarketplace: true
-          })
+    let configUrl = args.creatorConfigUrl
+    if (configUrl) {
+      try {
+        if (!configUrl.match(/^http/)) {
+          configUrl = `${contracts.config.ipfsGateway}/ipns/${configUrl}`
+        }
+        const response = await fetch(configUrl)
+        const json = await response.json()
+        return Object.assign(creatorConfig, {
+          ...json.config,
+          isCreatedMarketplace: true
         })
+      } catch (e) {
+        console.log('Could not fetch marketplace config')
+      }
     }
-    return config
+    return creatorConfig
   },
   web3: () => ({}),
   marketplace: async () => {

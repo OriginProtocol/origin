@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
+import get from 'lodash/get'
 
 import withTokenBalance from 'hoc/withTokenBalance'
 import withWallet from 'hoc/withWallet'
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import PageTitle from 'components/PageTitle'
 
@@ -40,7 +42,7 @@ class CreateListing extends Component {
         unavailable: [],
 
         // Marketplace creator fields:
-        marketplacePublisher: this.props.marketplacePublisher,
+        marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
         ...store.get('create-listing', {})
       }
@@ -117,7 +119,7 @@ class CreateListing extends Component {
   }
 }
 
-export default withWallet(withTokenBalance(CreateListing))
+export default withCreatorConfig(withWallet(withTokenBalance(CreateListing)))
 
 require('react-styl')(`
   .create-listing

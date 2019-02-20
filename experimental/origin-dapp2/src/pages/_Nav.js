@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import Link from 'components/Link'
 import NavLink from 'components/NavLink'
@@ -86,7 +87,7 @@ class Nav extends Component {
   }
 }
 
-export default withWallet(Nav)
+export default withWallet(withCreatorConfig(Nav))
 
 require('react-styl')(`
   .navbar

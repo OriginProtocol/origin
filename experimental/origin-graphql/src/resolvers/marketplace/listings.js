@@ -29,10 +29,10 @@ query Search($search: String, $filters: [ListingFilter!]) {
 async function searchIds(search, filters) {
   const variables = {}
   if (search) {
-    variables['search'] = search
+    variables.search = search
   }
   if (filters) {
-    variables['filters'] = filters
+    variables.filters = filters
   }
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {

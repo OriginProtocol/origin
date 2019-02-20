@@ -10,6 +10,8 @@ export default gql`
       marketplacePublisher
       isCreatedMarketplace
       cssVars {
+        defaultFont
+        headingFont
         lightFooter
         background
         dark

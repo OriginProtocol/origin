@@ -12,20 +12,20 @@ const LanguagesByKey = Languages.reduce((m, o) => {
 class Footer extends Component {
   state = {}
   render() {
-    const { locale, onLocale } = this.props
+    const { locale, onLocale, creatorConfig } = this.props
     return (
       <footer>
         <div className="container">
           <div className="logo-box">
-            {this.props.creatorConfig.isCreatedMarketplace && (
+            {creatorConfig.isCreatedMarketplace && (
               <span className="font-weight-bold">Powered by</span>
             )}
             <div className="logo" />
           </div>
           <div className="separator" />
           <div className="about">
-            {this.props.creatorConfig.isCreatedMarketplace ? (
-              this.props.creatorConfig.aboutText
+            {creatorConfig.isCreatedMarketplace ? (
+              creatorConfig.about
             ) : (
               <>
                 <fbt desc="footer.description">

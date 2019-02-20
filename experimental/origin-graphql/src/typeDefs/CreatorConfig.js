@@ -22,6 +22,8 @@ module.exports = `
   }
 
   type CssVars {
+    defaultFont: [String]
+    headingFont: [String]
     lightFooter: String
     background: String
     dark: String
