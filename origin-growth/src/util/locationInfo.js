@@ -45,7 +45,7 @@ const countryMap = {
   CF: 'Central African Republic',
   CG: 'Congo',
   CH: 'Switzerland',
-  CI: 'Côte d\'Ivoire',
+  CI: "Côte d'Ivoire",
   CK: 'Cook Islands',
   CL: 'Chile',
   CM: 'Cameroon',
@@ -127,7 +127,7 @@ const countryMap = {
   KW: 'Kuwait',
   KY: 'Cayman Islands',
   KZ: 'Kazakhstan',
-  LA: 'Lao People\'s Democratic Republic',
+  LA: "Lao People's Democratic Republic",
   LB: 'Lebanon',
   LC: 'Saint Lucia',
   LI: 'Liechtenstein',
@@ -254,8 +254,7 @@ const countryMap = {
 }
 
 const getLocationInfo = countryCode => {
-  if (!countryCode)
-    return null
+  if (!countryCode) return null
 
   return {
     countryName: countryCode && countryMap[countryCode],

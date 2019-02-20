@@ -280,11 +280,13 @@ function Campaign(props) {
         if (!loading && !error) {
           const tokenHolder = data.web3.account.token
           if (tokenHolder && tokenHolder.token) {
-            decimalDevision = BigNumber(10).pow(BigNumber(tokenHolder.token.decimals))
-            // campaign rewards converted normalized to token value according to number of decimals
-            tokensEarned = BigNumber(rewardEarned ? rewardEarned.amount : 0).div(
-              decimalDevision
+            decimalDevision = BigNumber(10).pow(
+              BigNumber(tokenHolder.token.decimals)
             )
+            // campaign rewards converted normalized to token value according to number of decimals
+            tokensEarned = BigNumber(
+              rewardEarned ? rewardEarned.amount : 0
+            ).div(decimalDevision)
             tokenEarnProgress = Math.min(100, tokensEarned.toString())
           }
         }

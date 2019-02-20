@@ -86,10 +86,12 @@ class App extends Component {
             <Route path="/notifications" component={Notifications} />
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />
-            {process.env.ENABLE_GROWTH && <Fragment>
-              <Route path="/campaigns" component={GrowthCampaigns} />
-              <Route path="/welcome" component={GrowthWelcome} />
-            </Fragment>}
+            {process.env.ENABLE_GROWTH && (
+              <Fragment>
+                <Route path="/campaigns" component={GrowthCampaigns} />
+                <Route path="/welcome" component={GrowthWelcome} />
+              </Fragment>
+            )}
             <Route component={Listings} />
           </Switch>
         </main>

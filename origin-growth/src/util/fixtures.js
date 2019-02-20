@@ -19,8 +19,7 @@ function tokenNaturalUnits(x) {
 }
 
 const rule = {
-  numLevels: 3
-  ,
+  numLevels: 3,
   levels: {
     0: {
       rules: [
@@ -32,7 +31,7 @@ const rule = {
             reward: null,
             nextLevelCondition: false,
             visible: true
-          },
+          }
         },
         {
           id: 'EmailAttestation',
@@ -49,10 +48,7 @@ const rule = {
           id: 'BothRules',
           class: 'MultiEvents',
           config: {
-            eventTypes: [
-              'ProfilePublished',
-              'EmailAttestationPublished'
-            ],
+            eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
             visible: false,
             numEventsRequired: 2,
             reward: null,

@@ -13,20 +13,21 @@ const resolvers = {
   DateTime: GraphQLDateTime,
   GrowthBaseAction: {
     __resolveType(obj) {
-      if (obj.type === 'Referral'){
+      if (obj.type === 'Referral') {
         return 'ReferralAction'
       } else {
         return 'GrowthAction'
       }
-    },
+    }
   },
   Query: {
     async campaigns(_, args) {
-
       const campaigns = await Fetcher.getAllCampaigns()
       return {
         totalCount: campaigns.length,
-        nodes: campaigns.map(async (campaign) => await campaign.toApolloObject(args.walletAddress)),
+        nodes: campaigns.map(
+          async campaign => await campaign.toApolloObject(args.walletAddress)
+        ),
         pageInfo: {
           endCursor: 'TODO implement',
           hasNextPage: false,

@@ -56,20 +56,30 @@ const DappInfo = () => (
           <tbody>
             {dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}
             <Query query={growthEligibilityQuery}>
-            {({ networkStatus, error, loading, data }) => {
-              if (networkStatus === 1 || loading) {
-                return dataTr({ key: 'Detected country', value: 'Loading...' })
-              }
-              else if (error) {
-                return dataTr({ key: 'Detected country', value: 'Error getching country' })
-              }
+              {({ networkStatus, error, loading, data }) => {
+                if (networkStatus === 1 || loading) {
+                  return dataTr({
+                    key: 'Detected country',
+                    value: 'Loading...'
+                  })
+                } else if (error) {
+                  return dataTr({
+                    key: 'Detected country',
+                    value: 'Error getching country'
+                  })
+                }
 
-              const { countryName, eligibility } = data.isEligible
-              return (<Fragment>
-                {dataTr({ key: 'Detected country', value: countryName })}
-                {dataTr({ key: 'Growth eligibility: ', value: eligibility })}
-              </Fragment>)
-            }}
+                const { countryName, eligibility } = data.isEligible
+                return (
+                  <Fragment>
+                    {dataTr({ key: 'Detected country', value: countryName })}
+                    {dataTr({
+                      key: 'Growth eligibility: ',
+                      value: eligibility
+                    })}
+                  </Fragment>
+                )
+              }}
             </Query>
           </tbody>
         </table>

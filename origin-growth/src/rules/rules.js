@@ -6,19 +6,24 @@ const {
   GrowthEventTypes,
   GrowthEventStatuses,
   GrowthCampaignStatuses,
-  GrowthActionStatus } = require('../enums')
+  GrowthActionStatus
+} = require('../enums')
 
 // System cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
 
-const sumUpRewards = (rewards) => {
-  if (rewards === null || rewards.length === 0){
+const sumUpRewards = rewards => {
+  if (rewards === null || rewards.length === 0) {
     return null
   }
 
   const totalReward = rewards.reduce((first, second) => {
     if (first.currency !== second.currency)
-      throw new Error(`At least two rewards have different currencies. ${first.currency} ${second.currency}`)
+      throw new Error(
+        `At least two rewards have different currencies. ${first.currency} ${
+          second.currency
+        }`
+      )
     return {
       amount: BigNumber(first.amount).plus(BigNumber(second.amount)),
       currency: first.currency
@@ -31,17 +36,17 @@ const sumUpRewards = (rewards) => {
   }
 }
 
-const eventTypeToActionType = (eventType) => {
+const eventTypeToActionType = eventType => {
   const eventToActionType = {
-    'ProfilePublished': 'Profile',
-    'EmailAttestationPublished': 'Email',
-    'FacebookAttestationPublished': 'Facebook',
-    'AirbnbAttestationPublished': 'Airbnb',
-    'TwitterAttestationPublished': 'Twitter',
-    'PhoneAttestationPublished': 'Phone',
-    'RefereeSignedUp': 'Referral',
-    'ListingCreated': 'ListingCreated',
-    'ListingPurchased': 'ListingPurchased'
+    ProfilePublished: 'Profile',
+    EmailAttestationPublished: 'Email',
+    FacebookAttestationPublished: 'Facebook',
+    AirbnbAttestationPublished: 'Airbnb',
+    TwitterAttestationPublished: 'Twitter',
+    PhoneAttestationPublished: 'Phone',
+    RefereeSignedUp: 'Referral',
+    ListingCreated: 'ListingCreated',
+    ListingPurchased: 'ListingPurchased'
   }
 
   return eventToActionType[eventType]
@@ -166,22 +171,25 @@ class Campaign {
   }
 
   /**
-   * Returns campaign status 
+   * Returns campaign status
    *
    * @returns {Enum<GrowthCampaignStatuses>} - campaign status
-   */  
+   */
+
   getStatus() {
     if (this.campaign.startDate > Date.now()) {
       return GrowthCampaignStatuses.Pending
-    } else if (this.campaign.startDate < Date.now() && this.campaign.endDate > Date.now()){
+    } else if (
+      this.campaign.startDate < Date.now() &&
+      this.campaign.endDate > Date.now()
+    ) {
       //TODO: check if cap reached
       return GrowthCampaignStatuses.Active
-    } else if (this.campaign.endDate < Date.now()){
+    } else if (this.campaign.endDate < Date.now()) {
       return GrowthCampaignStatuses.Completed
     } else {
       throw new Error(`Unexpected campaign id: ${this.campaign.id} status`)
     }
-
   }
 
   /**
@@ -350,7 +358,7 @@ class BaseRule {
   /**
    * Rules that are not visible are required for backend logic. The visible ones
    * are displayed in the UI
-   * 
+   *
    * @returns {boolean}
    */
   isVisible() {
@@ -359,14 +367,14 @@ class BaseRule {
 
   /**
    * Return status of this rule. One of: inactive, active, exhausted, completed
-   * 
+   *
    * @returns {Enum<GrowthActionStatus>}
    */
   getStatus(ethAddress, events, currentUserLevel) {
-    if (currentUserLevel < this.levelId){
+    if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
     } else {
-      if (this.evaluate(ethAddress, events)){
+      if (this.evaluate(ethAddress, events)) {
         return GrowthActionStatus.Completed
       }
       return GrowthActionStatus.Active
@@ -547,7 +555,9 @@ const Fetcher = {
   getAllCampaigns: async () => {
     const campaigns = await db.GrowthCampaign.findAll({})
 
-    return campaigns.map(campaign => new Campaign(campaign, JSON.parse(campaign.rules)))
+    return campaigns.map(
+      campaign => new Campaign(campaign, JSON.parse(campaign.rules))
+    )
   }
 }
 
