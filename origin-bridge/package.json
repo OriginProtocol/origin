@@ -34,6 +34,7 @@
     "express-session": "^1.15.6",
     "express-validator": "^5.3.1",
     "logplease": "^1.2.15",
+    "nock": "^10.0.6",
     "oauth": "^0.9.15",
     "per-env": "^1.0.2",
     "pg": "^7.8.0",
