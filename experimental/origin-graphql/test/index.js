@@ -17,14 +17,14 @@ describe('Marketplace', function() {
 
   before(async function() {
     setNetwork('test')
-    trackGas()
+    await trackGas()
     const res = await client.query({ query: queries.GetNodeAccounts })
     const nodeAccounts = get(res, 'data.web3.nodeAccounts').map(a => a.id)
     ;[Admin, Seller, Buyer, Arbitrator, Affiliate] = nodeAccounts
   })
-  
-  after(async function(){
-    showGasTable()
+
+  after(async function() {
+    await showGasTable()
   })
 
   it('should deploy the token contract', async function() {
@@ -736,9 +736,13 @@ describe('Marketplace', function() {
           unitsTotal: 1
         }
       }
-      const listingEvents = await mutate(mutations.CreateListing, listingData, true)
+      const listingEvents = await mutate(
+        mutations.CreateListing,
+        listingData,
+        true
+      )
       assert(listingEvents.ListingCreated)
-      listingIdx  = listingEvents.ListingCreated.listingID
+      listingIdx = listingEvents.ListingCreated.listingID
       listingId = `999-0-${listingIdx}`
 
       // Create Offer
@@ -754,7 +758,7 @@ describe('Marketplace', function() {
       }
       const offerEvents = await mutate(mutations.MakeOffer, offerData, true)
       assert(offerEvents.OfferCreated)
-      offerIdx  = offerEvents.OfferCreated.offerID
+      offerIdx = offerEvents.OfferCreated.offerID
       offerId = `999-0-${listingIdx}-${offerIdx}`
 
       // Accept Offer
@@ -833,7 +837,7 @@ describe('Marketplace', function() {
     })
 
     it('should not allow an invalid ruling', async function() {
-      try{
+      try {
         await mutate(
           mutations.ExecuteRuling,
           {
@@ -853,7 +857,7 @@ describe('Marketplace', function() {
     })
 
     it('should not allow an invalid commission', async function() {
-      try{
+      try {
         await mutate(
           mutations.ExecuteRuling,
           {
@@ -868,7 +872,6 @@ describe('Marketplace', function() {
         )
         assert(false)
       } catch (e) {
-        console.log(e)
         assert(true)
       }
     })

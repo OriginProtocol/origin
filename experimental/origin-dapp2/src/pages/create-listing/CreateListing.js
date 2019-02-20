@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
+import get from 'lodash/get'
 
 import withTokenBalance from 'hoc/withTokenBalance'
 import withWallet from 'hoc/withWallet'
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import PageTitle from 'components/PageTitle'
 
@@ -16,8 +18,8 @@ import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 class CreateListing extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       listing: {
         title: '',
@@ -38,6 +40,9 @@ class CreateListing extends Component {
         booked: [],
         customPricing: [],
         unavailable: [],
+
+        // Marketplace creator fields:
+        marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
         ...store.get('create-listing', {})
       }
@@ -114,7 +119,7 @@ class CreateListing extends Component {
   }
 }
 
-export default withWallet(withTokenBalance(CreateListing))
+export default withCreatorConfig(withWallet(withTokenBalance(CreateListing)))
 
 require('react-styl')(`
   .create-listing

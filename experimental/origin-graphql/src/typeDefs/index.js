@@ -5,6 +5,7 @@ import Identity from './Identity'
 import Attestations from './Attestations'
 import Messaging from './Messaging'
 import Notifications from './Notifications'
+import CreatorConfig from './CreatorConfig'
 import WalletLinker from './WalletLinker'
 
 export default [
@@ -15,5 +16,6 @@ export default [
   Messaging,
   Notifications,
   Attestations,
+  CreatorConfig,
   WalletLinker
 ]
