@@ -44,8 +44,10 @@ class App extends React.Component {
   signConfig() {
     if (this.state.config.subdomain) {
       // Generate a valid signature if a subdomain is in use
-      const dataToSign = JSON.stringify(this.state.config)
-      return this.web3Sign(dataToSign, web3.eth.accounts[0])
+      return this.web3Sign(
+        'I would like to publish an Origin marketplace.',
+        web3.eth.accounts[0]
+      )
     }
   }
 

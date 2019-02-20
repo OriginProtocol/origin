@@ -12,19 +12,30 @@ const LanguagesByKey = Languages.reduce((m, o) => {
 class Footer extends Component {
   state = {}
   render() {
-    const { locale, onLocale } = this.props
+    const { locale, onLocale, creatorConfig } = this.props
     return (
       <footer>
         <div className="container">
-          <div className="logo" />
+          <div className="logo-box">
+            {creatorConfig.isCreatedMarketplace && (
+              <span className="font-weight-bold">Powered by</span>
+            )}
+            <div className="logo" />
+          </div>
           <div className="separator" />
           <div className="about">
-            <fbt desc="footer.description">
-              The Origin decentralized app allows buyers and sellers to transact
-              without rent-seeking middlemen using the Ethereum blockchain and
-              IPFS.
-            </fbt>
-            <div className="copyright">© 2019 Origin Protocol, Inc.</div>
+            {creatorConfig.isCreatedMarketplace ? (
+              creatorConfig.about
+            ) : (
+              <>
+                <fbt desc="footer.description">
+                  The Origin decentralized app allows buyers and sellers to
+                  transact without rent-seeking middlemen using the Ethereum
+                  blockchain and IPFS.
+                </fbt>
+                <div className="copyright">© 2019 Origin Protocol, Inc.</div>
+              </>
+            )}
           </div>
           <div className="links">
             <Dropdown
@@ -62,10 +73,11 @@ class Footer extends Component {
             </Dropdown>
 
             <a href="https://www.originprotocol.com/">
-              <fbt desc="footer.websiteLink">Visit our Website</fbt>
+              <fbt desc="footer.websiteLink">Learn More About Origin</fbt>
             </a>
-            <a href="https://github.com/OriginProtocol">
-              <fbt desc="footer.githubLink">Visit our GitHub</fbt>
+
+            <a href="https://www.originprotocol.com/creator">
+              <fbt desc="footer.creatorLink">Create Your Own Marketplace</fbt>
             </a>
           </div>
         </div>
@@ -95,6 +107,8 @@ require('react-styl')(`
       max-width: 320px
       flex: 1
       margin-right: 35px
+    .logo-box
+      text-align: center
     .logo
       background: url(images/origin-logo-footer.svg) no-repeat
       height: 25px
@@ -130,8 +144,14 @@ require('react-styl')(`
         .logo
           margin-bottom: 1rem
         .links
-          flex-direction: column
           align-items: center
+
+  @media (max-width: 1200px)
+    footer
+      .container
+        .links
+          flex-direction: column
+          align-items: left
           margin-top: 1rem
           a
             margin: 0

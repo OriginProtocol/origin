@@ -22,7 +22,7 @@ ipfsProxyImageTag: '899b2e7'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '61e2cfe'
+faucetImageTag: '93d6d4d'
 
 # event-listener
 eventlistenerImage: event-listener
@@ -42,11 +42,11 @@ notificationsImageTag: '30de4cf'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: '1981e94'
+creatorClientImageTag: '440d464'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: '6f68ee1'
+creatorServerImageTag: 'd94b81c'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
