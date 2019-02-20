@@ -1,6 +1,7 @@
 import express from 'express'
 import expressWs from 'express-ws'
 import Linker from './logic/linker'
+// TODO: uncomment
 import Hot from './logic/hot'
 
 const router = express.Router()
@@ -87,17 +88,17 @@ router.post("/wallet-called/:walletToken", async (req, res) => {
 router.post("/link-wallet/:walletToken", async (req, res) => {
   const {walletToken} = req.params
   const {code, current_rpc, current_accounts, priv_data} = req.body
-  const {linked, pendingCallContext, appInfo, linkId, linkedAt} 
+  const {linked, pendingCallContext, appInfo, linkId, linkedAt}
     = await linker.linkWallet(walletToken, code, current_rpc, current_accounts, priv_data)
 
-  res.send({linked, pending_call_context:pendingCallContext, 
+  res.send({linked, pending_call_context:pendingCallContext,
     app_info:appInfo, link_id:linkId, linked_at:linkedAt})
 })
 
 router.post("/prelink-wallet/:walletToken", async (req, res) => {
   const {walletToken} = req.params
   const {pub_key, current_rpc, current_accounts, priv_data} = req.body
-  const {code, linkId} 
+  const {code, linkId}
     = await linker.prelinkWallet(walletToken, pub_key, current_rpc, current_accounts, priv_data)
 
   res.send({code, link_id:linkId})
@@ -105,7 +106,7 @@ router.post("/prelink-wallet/:walletToken", async (req, res) => {
 
 router.post("/link-prelinked", async (req, res) => {
   const {code, link_id, return_url} = req.body
-  const {clientToken, sessionToken, linked} 
+  const {clientToken, sessionToken, linked}
     = await linker.linkPrelinked(code, link_id, req.useragent, return_url)
 
   clientTokenHandler(res, clientToken)
@@ -186,7 +187,7 @@ router.ws("/linked-messages/:sessionToken/:readId", async (ws, req) => {
     ws.close(1000, error)
   }
 
-  
+
 })
 
 router.ws("/wallet-messages/:walletToken/:readId", (ws, req) => {
@@ -219,6 +220,22 @@ router.post("/verify-offer", async (req, res) => {
   const {offerId, params} = req.body
   const result = await hot.verifyOffer(offerId, params)
   res.send(result)
+})
+
+// For debugging one's dev environment
+router.get('/marketplace-addresses', async (req, res) => {
+  console.log(req.params)
+  const name = req.query.name || 'V00_Marketplace'
+  const { contractAddresses } = linker.getServerInfo()
+  try {
+    const addresses = Object.entries(contractAddresses[name])
+      .map( ([networkId, entry]) => `network ${networkId}: ${entry.address}`)
+      .join('\n')
+    res.send(`Addresses for ${name}:\n${addresses}\n`)
+  } catch(e) {
+    console.error(e)
+    res.status(500).send(`Error getting address for contract ${name}\n`)
+  }
 })
 
 

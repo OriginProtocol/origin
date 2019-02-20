@@ -18,17 +18,22 @@
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"src/**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "migrate": "sequelize db:migrate",
     "start": "per-env",
-    "start:development": "nodemon src/app.js",
+    "start:development": "nodemon src/app.js --network_ids=999",
     "start:production": "node src/app.js"
   },
   "dependencies": {
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
     "express": "^4.16.4",
+    "logplease": "^1.2.15",
     "origin-token": "^0.1.0",
     "per-env": "^1.0.2",
+    "pg": "^7.7.1",
     "rate-limiter-flexible": "^0.19.4",
+    "sequelize": "^5.0.0-beta.14",
+    "sequelize-cli": "^5.4.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {

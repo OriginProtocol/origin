@@ -72,12 +72,16 @@ export default function txHelper({
           transactionUpdated: {
             id: receipt.transactionHash,
             status: 'receipt',
+            gasUsed: receipt.gasUsed,
             mutation
           }
         })
         if (contracts.automine) {
           setTimeout(() => {
-            contracts.web3Exec.currentProvider.send(
+            // This needs to be sendAsync, because the provider engine used for
+            // the mobile wallet linker client doesn't support synchronous
+            // transactions.
+            contracts.web3.currentProvider.send(
               { method: 'evm_mine' },
               () => {}
             )

@@ -13,10 +13,21 @@ import pubsub from './utils/pubsub'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 const HOST = process.env.HOST || 'localhost'
+// We need a separate LINKER_HOST for the mobile wallet, because cookie sharing
+// between http and ws only works when using non-localhost linker URLs. At the
+// same time, js-ipfs only works for non-secure http when the URL is localhost.
+// So, the hostname in the DApp URL can't be the same as the linker hostname
+// when testing locally.
+const LINKER_HOST = process.env.LINKER_HOST || HOST
 
 let OriginMessaging
 if (typeof window !== 'undefined') {
   OriginMessaging = require('origin-messaging-client').default
+}
+
+let OriginLinkerClient
+if (typeof window !== 'undefined') {
+  OriginLinkerClient = require('origin-linker-client').default
 }
 
 const Configs = {
@@ -110,14 +121,16 @@ const Configs = {
   localhost: {
     provider: `http://${HOST}:8545`,
     providerWS: `ws://${HOST}:8545`,
-    ipfsGateway: `http://${HOST}:9090`,
+    ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`,
     growth: `http://${HOST}:4001`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
-    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544'
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
+    linker: `http://${LINKER_HOST}:3008`,
+    linkerWS: `ws://${LINKER_HOST}:3008`
   },
   docker: {
     provider: `http://localhost:8545`,
@@ -138,7 +151,7 @@ const Configs = {
   test: {
     provider: `http://${HOST}:8545`,
     providerWS: `ws://${HOST}:8545`,
-    ipfsGateway: `http://${HOST}:9090`,
+    ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`
   }
 }
@@ -230,7 +243,16 @@ export function setNetwork(net, customConfig) {
   if (typeof window !== 'undefined') {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
-    context.messaging = OriginMessaging({ ...MessagingConfig, web3 })
+    context.linker = OriginLinkerClient({
+      httpUrl: config.linker,
+      wsUrl: config.linkerWS,
+      web3: context.web3
+    })
+    context.messaging = OriginMessaging({
+      ...MessagingConfig,
+      web3,
+      walletLinker: context.linker
+    })
   }
 
   context.metaMaskEnabled = metaMaskEnabled
@@ -324,6 +346,7 @@ export function setNetwork(net, customConfig) {
     })
   }
   setMetaMask()
+  setLinkerClient()
 }
 
 function setMetaMask() {
@@ -343,6 +366,48 @@ function setMetaMask() {
   if (context.messaging) {
     context.messaging.web3 = context.web3Exec
   }
+}
+
+function setLinkerClient() {
+  const linkingEnabled =
+    (typeof window !== 'undefined' && window.linkingEnabled) ||
+    process.env.ORIGIN_LINKING
+
+  if (context.metaMaskEnabled) return
+  if (!linkingEnabled) return
+  if (!context.linker) return
+  if (metaMask && metaMaskEnabled) return
+
+  const linkerProvider = context.linker.getProvider()
+  context.web3Exec = applyWeb3Hack(new Web3(linkerProvider))
+  context.defaultLinkerAccount = '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
+  // Funnel marketplace contract transactions through mobile wallet
+  context.marketplaceL = new context.web3Exec.eth.Contract(
+    MarketplaceContract.abi,
+    context.marketplace._address
+  )
+  context.marketplaceExec = context.marketplaceL
+
+  // Funnel token contract transactions through mobile wallet
+  context.ognExecL = new context.web3Exec.eth.Contract(
+    OriginTokenContract.abi,
+    context.ogn._address
+  )
+  context.ognExec = context.ognExecL
+
+  // Funnel identity contract transactions through mobile wallet
+  context.identityEventsExecL = new context.web3Exec.eth.Contract(
+    IdentityEventsContract.abi,
+    context.identityEvents._address
+  )
+  context.identityEventsExec = context.identityEventsExecL
+
+  if (context.messaging) {
+    context.messaging.web3 = context.web3Exec
+  }
+
+  context.linker.start()
 }
 
 export function toggleMetaMask(enabled) {

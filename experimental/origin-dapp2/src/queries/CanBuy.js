@@ -13,6 +13,7 @@ export default gql`
           eth
         }
       }
+      walletType
     }
   }
 `

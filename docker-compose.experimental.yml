@@ -47,6 +47,7 @@ services:
       - ./experimental/origin-eventsource/:/app/experimental/origin-eventsource/
       - ./experimental/origin-ipfs/:/app/experimental/origin-ipfs/
       - ./experimental/origin-messaging-client/:/app/experimental/origin-messaging-client/
+      - ./experimental/origin-linker-client/:/app/experimental/origin-linker-client/
       - ./experimental/origin-validator/src:/app/experimental/origin-validator/
       - ./origin-discovery/:/app/origin-discovery/
       - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
@@ -61,6 +62,7 @@ services:
       - /app/experimental/origin-eventsource/node_modules/
       - /app/experimental/origin-ipfs/node_modules/
       - /app/experimental/origin-messaging-client/node_modules/
+      - /app/experimental/origin-linker-client/node_modules/
       - /app/experimental/origin-validator/node_modules/
       - /app/origin-discovery/node_modules/
       - /app/origin-ipfs-proxy/node_modules/
@@ -71,10 +73,10 @@ services:
       # IPFS data
       - ipfs:/app/ipfs
     ports:
-      - "3001:3001"
+      - "3000:3000"
       - "8083:8083" # Webpack
       - "8545:8545"
-      - "9090:9090"
+      - "8080:8080"
     environment:
       - DEPLOY_CONTRACTS=true
       - DOCKER=true
@@ -110,7 +112,7 @@ services:
       - "9999:9999"
     environment:
       - IPFS_API_URL=http://origin-dapp2:5002
-      - IPFS_GATEWAY_URL=http://origin-dapp2:9090
+      - IPFS_GATEWAY_URL=http://origin-dapp2:8080
     command: npm run start --prefix origin-ipfs-proxy
 
   origin-event-listener:
@@ -136,7 +138,7 @@ services:
       - origin-ipfs-proxy
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 --
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3000 --
       wait-for.sh -t 0 -q elasticsearch:9200 --
       npm run migrate --prefix origin-discovery &&
       npm run migrate --prefix origin-growth &&
@@ -147,6 +149,9 @@ services:
     image: origin-experimental
     volumes: *volumes
     environment:
+      - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
+      - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
+      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - IPFS_URL=http://origin-ipfs-proxy:9999
@@ -158,7 +163,7 @@ services:
       - "4000:4000"
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3001 &&
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp2:3000 &&
       npm run start:discovery --prefix origin-discovery"
 
   origin-notifications:

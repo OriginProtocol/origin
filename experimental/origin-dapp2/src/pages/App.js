@@ -2,6 +2,8 @@ import React, { Component, Fragment } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
 
+import withCreatorConfig from 'hoc/withCreatorConfig'
+
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
 import TranslationModal from './_TranslationModal'
@@ -23,6 +25,7 @@ import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
+import { applyConfiguration } from 'utils/marketplaceCreator'
 
 class App extends Component {
   state = { hasError: false }
@@ -46,13 +49,22 @@ class App extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="app-error">
+        <div className="app-spinner">
           <h5>Error!</h5>
           <div>Please refresh the page</div>
         </div>
       )
+    } else if (this.props.creatorConfigLoading) {
+      return (
+        <div className="app-spinner">
+          <h5>Loading</h5>
+          <div>Please wait</div>
+        </div>
+      )
     }
 
+    const { creatorConfig } = this.props
+    applyConfiguration(creatorConfig)
     const shouldRenderNavbar = this.props.location.pathname !== '/welcome'
 
     return (
@@ -82,16 +94,20 @@ class App extends Component {
           </Switch>
         </main>
         <TranslationModal locale={this.props.locale} />
-        <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
+        <Footer
+          locale={this.props.locale}
+          onLocale={this.props.onLocale}
+          creatorConfig={creatorConfig}
+        />
       </>
     )
   }
 }
 
-export default withRouter(App)
+export default withCreatorConfig(withRouter(App))
 
 require('react-styl')(`
-  .app-error
+  .app-spinner
     position: fixed
     top: 50%
     left: 50%
