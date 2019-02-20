@@ -10,7 +10,7 @@ import CreatorConfigQuery from 'queries/CreatorConfig'
 let creatorConfigUrl
 
 function withCreatorConfig(WrappedComponent) {
-  const WithTokens = props => {
+  const WithCreatorConfig = props => {
     const parsed = queryString.parse(props.location.search)
     if (parsed.config) {
       // Config URL was passed in the query string
@@ -34,7 +34,7 @@ function withCreatorConfig(WrappedComponent) {
       </Query>
     )
   }
-  return withRouter(WithTokens)
+  return withRouter(WithCreatorConfig)
 }
 
 export default withCreatorConfig
