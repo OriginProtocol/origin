@@ -11,6 +11,8 @@ export default class SignItem extends Component {
     const { item, handleApprove, handlePress, handleReject, style } = this.props
     // placeholders
     const msg = item.msg && JSON.stringify(item.msg).substring(0, 40)
+    const listing = item.listing
+    const sign_type = item.sign_type || ""
     const status = item.status
 
     return (
@@ -19,7 +21,7 @@ export default class SignItem extends Component {
           <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
           <View style={styles.content}>
             <Text style={styles.imperative}>Do you wish to sign the following message?</Text>
-            <Text style={styles.subject}>{msg}</Text>
+            <Text style={styles.subject}>{ sign_type && "[" }{ sign_type }{ sign_type && "]" }{ (listing && listing.title) || msg}</Text>
             {handleApprove &&
               <View style={styles.actions}>
                 <View style={{ marginRight: 10 }}>
