@@ -44,7 +44,7 @@ notificationsImageTag: 'fe43875'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: '0001088'
+creatorClientImageTag: 'c2f19a0'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
