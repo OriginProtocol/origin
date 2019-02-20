@@ -29,8 +29,10 @@ const MaxNumberPendingTxnCount = 30
  *  - It only works if we run a single instance of the faucet process.
  *  An improvement could be to store the nonce in a central storage like
  *  Redis or Postgres.
- *  - The nonce would go out of sync if anything else than
- *  the faucet process sends a transaction from the hotwallet.
+ *  - The nonce could go out of sync if the server is restarted while
+ *  it is processing a batch of transactions.
+ *  - The nonce could go out of sync if anything else than
+ *  the faucet server sends a transaction from the hotwallet.
  *  - A failure of one of the transaction within a batch will cause subsequent
  *  transaction to be stuck until the nonce hole is filled.
  *  For more info on hole in nonce sequence, see this article:
