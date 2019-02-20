@@ -65,7 +65,7 @@ class WalletModal extends Component {
   }
 
   render() {
-    const { address, onPress, visible, wallet } = this.props
+    const { address, onPress, visible, wallet, onRequestClose } = this.props
     const { /*dai, */eth, ogn } = wallet.balances
 
     const ethBalance = web3.utils.fromWei(eth, 'ether')
@@ -76,6 +76,10 @@ class WalletModal extends Component {
       <Modal
         animationType="slide"
         visible={visible}
+        onRequestClose={() => {
+          console.log('Wallet modal closed')
+          onRequestClose()
+        } }
       >
         <SafeAreaView style={styles.container}>
           <View style={styles.nav}>
