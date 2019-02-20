@@ -1,3 +1,4 @@
+import "@babel/polyfill"
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import expressWs from 'express-ws'

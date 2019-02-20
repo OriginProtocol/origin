@@ -15,6 +15,7 @@ import IdentityEvents from './IdentityEvents'
 import WalletLinker from './linker/WalletLinker'
 import Config from './Config'
 import Mutation from '../mutations/index'
+import CreatorConfig from './CreatorConfig'
 
 export default {
   Query,
@@ -39,6 +40,7 @@ export default {
   Conversation,
   Messaging,
   IdentityEvents,
+  Config,
   WalletLinker,
-  Config
+  CreatorConfig
 }
