@@ -40,7 +40,7 @@ const Messages = props => (
 
             return (
               <div className="row">
-                <div className={`back ${displayBackNav} flex-row justify-content-start`}>
+                <div className={`back ${displayBackNav} d-md-none flex-row justify-content-start`}>
                   <div className="align-self-start">
                     <i className="icon-arrow-left align-self-start mr-auto" onClick={() => props.history.push(`/messages`)}></i>
                   </div>
@@ -81,6 +81,7 @@ require('react-styl')(`
       height: 60px
       width: 100%
       margin-bottom: 10px
+      margin-top: -16px
 
       .avatar-container
         height: 30px
