@@ -40,8 +40,7 @@ function showItems(props) {
     }
   }
   if (nextMessage) {
-    const futureTimeDiff =
-      nextMessage.timestamp - message.timestamp
+    const futureTimeDiff = nextMessage.timestamp - message.timestamp
     if (futureTimeDiff / 60 < MAX_MINUTES) {
       if (nextMessage.address === wallet) {
         showTailAndAvatar = false
@@ -53,7 +52,9 @@ function showItems(props) {
 }
 
 function getCssClasses(isUser, showTailAndAvatar) {
-  const justifyContent = isUser ? 'justify-content-end' : 'justify-content-start'
+  const justifyContent = isUser
+    ? 'justify-content-end'
+    : 'justify-content-start'
   const contentOnly = showTailAndAvatar ? '' : ' content-only'
   const userType = isUser ? ' user' : ' counterparty'
 
@@ -66,7 +67,10 @@ const Message = props => {
   const messageContent = renderContent(message)
 
   const { showTime, showTailAndAvatar } = showItems(props)
-  const { justifyContent, contentOnly, userType } = getCssClasses(props.isUser, showTailAndAvatar)
+  const { justifyContent, contentOnly, userType } = getCssClasses(
+    props.isUser,
+    showTailAndAvatar
+  )
 
   return (
     <>
@@ -78,7 +82,7 @@ const Message = props => {
       <div
         className={`d-flex flex-row ${justifyContent} message${userType}${contentOnly}`}
       >
-        <div className="flex-row">
+        <div className={`d-flex ${justifyContent}`}>
           {!props.isUser && showTailAndAvatar && (
             <div className="align-self-end avatar-container">
               <Avatar avatar={get(props, 'identity.avatar')} size={60} />
@@ -92,7 +96,7 @@ const Message = props => {
             <div className="content">{messageContent}</div>
           </div>
           {props.isUser && showTailAndAvatar && (
-            <div className="align-self-end avatar-container mr-auto">
+            <div className="align-self-end avatar-container">
               <Avatar avatar={get(props, 'identity.avatar')} size={60} />
             </div>
           )}
@@ -116,13 +120,13 @@ require('react-styl')(`
         width: 60px
         display: inline-block
         vertical-align: bottom
+    &.content-only
+      margin-bottom: 0
     &.counterparty
       &.content-only
-        margin-bottom: 0
         margin-left: 60px
     &.user
       &.content-only
-        margin-bottom: 0
         margin-right: 60px
     .bubble
       display: inline-block

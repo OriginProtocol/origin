@@ -10,7 +10,6 @@ import SendMessage from './SendMessage'
 import Message from './Message'
 import QueryError from 'components/QueryError'
 
-
 const MessageWithIdentity = withIdentity(Message)
 
 class AllMessages extends Component {
