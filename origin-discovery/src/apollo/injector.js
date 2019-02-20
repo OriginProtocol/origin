@@ -72,9 +72,8 @@ const origin = setupOriginJS(config, web3)
 
 async function updateSearch(listingId, listing) {
     if (config.elasticsearch) {
-      const seller = await origin.users.get(listing.seller)
       logger.info(`Indexing listing in Elastic: id=${listingId}`)
-      await search.Listing.index(listingId, seller.address, listing.ipfsHash, listing)
+      await search.Listing.index(listingId, listing.seller, listing.ipfsHash, listing)
       return true
     }
 }
@@ -112,7 +111,7 @@ async function injectListing(injectedListingInput, signature) {
   )
   logger.info(`Loading listing data from IPFS hash ${ipfsHash}`)
   const listing = await origin.marketplace._listingFromData(undefined, injectedListingInput)
-  logger.info(`Loaded listing data: ${listing}`)
+  logger.info('Loaded listing data from IPFS:', listing)
 
   // set the listing id for the current network
   const network = await origin.contractService.web3.eth.net.getId()
@@ -128,7 +127,7 @@ async function injectListing(injectedListingInput, signature) {
     throw new Error('Row already created, update instead')
   }
 
-  logger.info(`Inserting listing ${listingId} in DB and Search index`)
+  logger.info('Getting block number from network')
   const blockNumber = await origin.contractService.web3.eth.getBlockNumber()
   const listingData = {
     id: listingId,
@@ -138,8 +137,11 @@ async function injectListing(injectedListingInput, signature) {
     sellerAddress: listing.seller.toLowerCase(),
     data: listing
   }
+  logger.info(`Inserting listing ${listingId} in DB`)
   const newListing = await db.createListing(listingData)
+  logger.info(`Inserting listing ${listingId} in Search index`)
   await updateSearch(listingId, listing)
+  logger.info(`Done injecting listing ${listingId}`)
   return newListing
 }
 

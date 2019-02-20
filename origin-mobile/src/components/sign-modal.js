@@ -16,7 +16,10 @@ export default class SignModal extends Component {
         animationType="slide"
         transparent={true}
         visible={!!item}
-        onRequestClose={() => { console.log('Modal closed') } }
+        onRequestClose={() => {
+          console.log('Modal closed')
+          toggleModal()
+        } }
       >
         <TouchableOpacity onPress={toggleModal}>
           <View style={styles.above}></View>

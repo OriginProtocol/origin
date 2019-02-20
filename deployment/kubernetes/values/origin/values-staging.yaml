@@ -24,7 +24,7 @@ ipfsProxyImageTag: '6eb593e'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '0001088'
+faucetImageTag: '69381ba'
 
 # event-listener
 eventlistenerImage: event-listener
@@ -32,7 +32,7 @@ eventlistenerImageTag: '0001088'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '0001088'
+discoveryImageTag: '69381ba'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -44,11 +44,11 @@ notificationsImageTag: 'fe43875'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: '0001088'
+creatorClientImageTag: '69381ba'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: '0001088'
+creatorServerImageTag: 'c2f19a0'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
@@ -57,4 +57,4 @@ creatorIssuerIp: '35.233.135.239'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: 'd3bcb60'
+linkingImageTag: '69381ba'
