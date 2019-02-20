@@ -2,8 +2,9 @@ import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import pick from 'lodash/pick'
 import find from 'lodash/find'
-import dayjs from 'dayjs'
+import BigNumber from 'big-number'
 
+import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
@@ -115,8 +116,7 @@ function Action(props) {
     : 'images/identity/verification-shape-blue.svg'
 
   const formatTokens = tokenAmount => {
-    return web3.utils
-      .toBN(tokenAmount)
+    return BigNumber(tokenAmount)
       .div(props.decimalDevision)
       .toString()
   }
@@ -254,25 +254,6 @@ function Campaign(props) {
   const { campaign, accountId } = props
   const { startDate, endDate, status, rewardEarned, actions, name } = campaign
 
-  const formatTimeDifference = (start, end) => {
-    let timeLabel = ''
-    const timeDiffDays = dayjs(end).diff(dayjs(start), 'day')
-    const timeDiffHours = dayjs(end).diff(dayjs(start), 'hour') % 24
-    const timeDiffMinutes = dayjs(end).diff(dayjs(start), 'minute') % 60
-
-    if (timeDiffDays > 0) {
-      timeLabel += ` ${timeDiffDays}d`
-    }
-    if (timeDiffHours > 0) {
-      timeLabel += ` ${timeDiffHours}h`
-    }
-    if (timeDiffMinutes > 0) {
-      timeLabel += ` ${timeDiffMinutes}m`
-    }
-
-    return timeLabel
-  }
-
   let timeLabel = ''
   let subTitleText = ''
 
@@ -292,17 +273,16 @@ function Campaign(props) {
       variables={{ account: accountId, token: 'OGN' }}
     >
       {({ loading, error, data }) => {
-        const toBN = web3.utils.toBN
-        let tokensEarned = toBN(0)
+        let tokensEarned = BigNumber(0)
         let tokenEarnProgress = 0
-        let decimalDevision = toBN(1)
+        let decimalDevision = BigNumber(1)
 
         if (!loading && !error) {
           const tokenHolder = data.web3.account.token
           if (tokenHolder && tokenHolder.token) {
-            decimalDevision = toBN(10).pow(toBN(tokenHolder.token.decimals))
+            decimalDevision = BigNumber(10).pow(BigNumber(tokenHolder.token.decimals))
             // campaign rewards converted normalized to token value according to number of decimals
-            tokensEarned = toBN(rewardEarned ? rewardEarned.amount : 0).div(
+            tokensEarned = BigNumber(rewardEarned ? rewardEarned.amount : 0).div(
               decimalDevision
             )
             tokenEarnProgress = Math.min(100, tokensEarned.toString())

@@ -53,17 +53,13 @@ class App extends Component {
       )
     }
 
-    const shouldRenderNavbar = () => {
-      if (this.props.location.pathname === '/welcome') {
-        return false
-      }
-      return true
-    }
+    const shouldRenderNavbar = this.props.location.pathname !== '/welcome'
+
     return (
       <>
         <BetaBanner />
         <BetaModal />
-        {shouldRenderNavbar() && <Nav />}
+        {shouldRenderNavbar && <Nav />}
         <main>
           <Switch>
             <Route path="/listings/:listingID" component={Listing} />
