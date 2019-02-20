@@ -46,10 +46,10 @@ function showItems(props) {
   }
   if (nextMessage) {
     const futureTimeDiff = nextMessage.timestamp - message.timestamp
-    if (futureTimeDiff / 60 < MAX_MINUTES) {
-      if (nextMessage.address === wallet) {
-        showTailAndAvatar = false
-      }
+    const sameSender = nextMessage.address === wallet
+
+    if (futureTimeDiff / 60 < MAX_MINUTES && sameSender) {
+      showTailAndAvatar = false
     }
   }
 
