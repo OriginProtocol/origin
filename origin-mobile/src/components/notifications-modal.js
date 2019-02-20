@@ -125,6 +125,7 @@ class NotifcationsModal extends Component {
         animationType="fade"
         transparent={true}
         visible={!!visible}
+        onRequestClose={() => { console.log('Wallet modal closed') } }
       >
         <View style={styles.backdrop}>
           <View style={styles.content}>
