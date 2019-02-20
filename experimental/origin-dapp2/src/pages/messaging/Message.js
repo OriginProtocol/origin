@@ -1,9 +1,14 @@
-import React, { Component } from 'react'
-import Avatar from 'components/Avatar'
+import React from 'react'
+import { Link } from 'react-router-dom'
 import get from 'lodash/get'
-
+import isNil from 'lodash/isNil'
 import dayjs from 'dayjs'
+
+import withIdentity from 'hoc/withIdentity'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
+
+import Avatar from 'components/Avatar'
+import { abbreviateName, truncateAddress } from 'utils/user'
 
 dayjs.extend(advancedFormat)
 
@@ -63,13 +68,21 @@ function getCssClasses(isUser, showTailAndAvatar) {
 
 const Message = props => {
   const message = get(props, 'message', {})
-  const name = get(props, 'identity.fullName', '')
+  const identity = isNil(props.identity) ? {} : props.identity
   const messageContent = renderContent(message)
-
+  const userName = abbreviateName(identity, 'Unnamed User')
+  const userAddress = truncateAddress(props.wallet)
   const { showTime, showTailAndAvatar } = showItems(props)
   const { justifyContent, contentOnly, userType } = getCssClasses(
     props.isUser,
     showTailAndAvatar
+  )
+
+  const UserInfo = () => (
+    <>
+      <div className="name text-truncate align-self-center">{userName}</div>
+      <span className="account">{userAddress}</span>
+    </>
   )
 
   return (
@@ -82,7 +95,7 @@ const Message = props => {
       <div
         className={`d-flex flex-row ${justifyContent} message${userType}${contentOnly}`}
       >
-        <div className={`d-flex ${justifyContent}`}>
+        <div className={`d-flex message-container ${justifyContent}`}>
           {!props.isUser && showTailAndAvatar && (
             <div className="align-self-end avatar-container">
               <Avatar avatar={get(props, 'identity.avatar')} size={60} />
@@ -90,8 +103,11 @@ const Message = props => {
           )}
           <div className={`bubble ${showTailAndAvatar ? 'tail' : ''}`}>
             <div className="top">
-              {name && <div className="name">{name}</div>}
-              <div className="account">{message.address}</div>
+              {props.isUser ? <UserInfo /> : (
+                <Link to={`/user/${props.wallet}`} className="d-flex flex-row justify-content-start">
+                  <UserInfo />
+                </Link>
+              )}
             </div>
             <div className="content">{messageContent}</div>
           </div>
@@ -106,13 +122,15 @@ const Message = props => {
   )
 }
 
-export default Message
+export default withIdentity(Message)
 
 require('react-styl')(`
   .message
-    margin: 20px 0
+    margin: 10px 0 20px 0
     flex: 1 0 auto
     width: 100%
+    .message-container
+      max-width: 70%
     .avatar-container
       display: inline
       .avatar
@@ -125,9 +143,13 @@ require('react-styl')(`
     &.counterparty
       &.content-only
         margin-left: 60px
+      .account, .name
+        color: var(--dark-blue-grey)
     &.user
       &.content-only
         margin-right: 60px
+      .account, .name
+        color: white
     .bubble
       display: inline-block
       margin-left: 1.75rem
@@ -135,7 +157,6 @@ require('react-styl')(`
       background-color: var(--pale-grey)
       border-radius: 1rem
       position: relative
-      max-width: 70%
       flex: 1
       .top
         font-size: 14px
@@ -150,6 +171,8 @@ require('react-styl')(`
       .content
         font-weight: normal
         font-size: 16px
+        .image-container
+          overflow: auto
       &.tail::after
         content: ''
         bottom: 8px

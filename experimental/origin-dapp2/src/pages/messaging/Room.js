@@ -3,14 +3,11 @@ import { Query } from 'react-apollo'
 import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
-import withIdentity from 'hoc/withIdentity'
 
 import query from 'queries/Room'
 import SendMessage from './SendMessage'
-import Message from './Message'
+import MessageWithIdentity from './Message'
 import QueryError from 'components/QueryError'
-
-const MessageWithIdentity = withIdentity(Message)
 
 class AllMessages extends Component {
   componentDidMount() {
