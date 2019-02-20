@@ -3,6 +3,7 @@ const router = express.Router()
 const request = require('superagent')
 
 const Attestation = require('../models/attestation')
+const logger = require('../logger')
 
 router.post('/generate-code', (req, res) => {
   if (!['sms', 'call'].includes(req.body.method)) {
@@ -36,16 +37,15 @@ router.post('/generate-code', (req, res) => {
       return res.status(200).end()
     })
     .catch(error => {
-      console.log(error)
-      const twilioErrorCode = error.body['error_code']
+      const twilioErrorCode = error.response.body['error_code']
       if (twilioErrorCode === '60033') {
-        return res.status(400).json({
+        return res.status(400).send({
           errors: {
             phone: 'Phone number is invalid.'
           }
         })
       } else if (twilioErrorCode === '60083') {
-        return res.status(400).json({
+        return res.status(400).send({
           errors: {
             phone: 'Cannot send SMS to landline.'
           }

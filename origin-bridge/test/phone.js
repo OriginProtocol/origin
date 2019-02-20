@@ -49,7 +49,29 @@ describe('phone attestations', () => {
       })
   })
 
-  it('should error on generate code with incorrect number format', () => {})
+  it('should error on generate code with incorrect number format', async () => {
+    const params = {
+      country_calling_code: '1',
+      phone_number: '12341234',
+      method: 'sms',
+      locale: 'en'
+    }
+
+    nock('https://api.authy.com')
+      .post('/protected/json/phones/verification/start')
+      .reply(400, {
+        'error_code': '60033'
+      })
+
+    await request(app)
+      .post('/phone/generate-code')
+      .send(params)
+      .expect(400)
+      .then(response => {
+        expect(response.body.errors.phone).to.equal('Phone number is invalid.')
+      })
+
+  })
 
   it('should error on generate code using sms on landline number', () => {})
 
