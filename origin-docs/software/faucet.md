@@ -4,7 +4,7 @@ title: Testnet Faucet
 category: Software
 ---
 
-Our Origin testnet faucet provides OGN for developers on TestNets. The faucet is deployed at [faucet.originprotocol.com](https://faucet.originprotocol.com)
+Our Origin testnet faucet provides OGN for developers on TestNets. The faucet is deployed at [faucet.staging.originprotocol.coq](https://faucet.staging.originprotocol.coq)
 
 ## Code structure
 
