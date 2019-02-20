@@ -100,8 +100,11 @@ class TxnManager {
     this.nonce = await this.nonceMgr.next()
 
     // Issue the blockchain transaction.
-    logger.info(`sendTransaction
-      value:${value.toFixed()} from:${from} to:${to} nonce:${this.nonce}`)
+    logger.info(
+      `sendTransaction value:${value.toFixed()} from:${from} to:${to} nonce:${
+        this.nonce
+      }`
+    )
 
     return new Promise((resolve, reject) => {
       try {
@@ -125,8 +128,8 @@ class TxnManager {
       throw new Error('Cannot get receipt without transaction hash')
     }
 
-    let retries = 0
-    do {
+    // 60 retries * 5sec = 5min.
+    for (let retries = 0; retries < 60; retries++) {
       try {
         const receipt = await this.web3.eth.getTransactionReceipt(this.txnHash)
         if (receipt) {
@@ -136,19 +139,20 @@ class TxnManager {
             throw new Error('Receipt status false. Transaction failed.')
           }
         }
-        await new Promise(resolve => setTimeout(resolve, 10000)) // wait 10 sec.
         logger.info(
-          `No receipt available yet after ${retries * 10} sec for hash ${
+          `No receipt available yet after ${(retries + 1) * 5} sec for hash ${
             this.txnHash
           }`
         )
+        // Wait 5 sec before retrying.
+        await new Promise(resolve => setTimeout(resolve, 5000))
       } catch (error) {
         logger.error(
           `getTransactionReceipt error for hash ${this.txnHash}`,
           error
         )
       }
-    } while (++retries < 30) // 30 retries * 10sec = 5min.
+    }
     throw new Error(`Timeout: Failed getting receipt for hash ${this.txnHash}`)
   }
 
@@ -196,7 +200,7 @@ class EthDistributor {
   // Returns HTML with an error message.
   _error(res, message) {
     logger.error(message)
-    res.send(`Error: ${message}`)
+    res.send(`<b>Server error</b></br></br>${message}`)
   }
 
   // Returns HTML with amount and transaction hash.
@@ -232,6 +236,7 @@ class EthDistributor {
       return this._error(res, `Invalid wallet address ${ethAddress}.`)
     }
 
+    let txnHash = null
     try {
       // Load the campaign based on invite code.
       const now = new Date()
@@ -301,7 +306,6 @@ class EthDistributor {
         currency: campaign.currency
       })
 
-      let txnHash = null
       const txnMgr = new TxnManager(this.web3, this.nonceMgr)
       try {
         // Submit the transaction and wait for its hash.
@@ -324,17 +328,22 @@ class EthDistributor {
         await faucetTxn.update({ status: enums.FaucetTxnStatuses.Confirmed })
       } catch (e) {
         // Log error and update txn status in the DB.
-        logger.error(`Transaction failure. txnHash: ${txnHash} error:`, e)
+        logger.error(`Transaction failure. txnHash: ${txnHash}`)
         await faucetTxn.update({ status: enums.FaucetTxnStatuses.Failed })
 
         // Rethrow to show an error to the user.
         throw e
       } finally {
+        logger.info('Done. Cleaning up TxnMgr.')
         txnMgr.done()
       }
     } catch (err) {
-      logger.error(err)
-      next(err) // Errors will be passed to Express.
+      // If txnHash exists, response was sent back so no need to send an error.
+      if (txnHash) {
+        logger.error(err)
+      } else {
+        this._error(res, err)
+      }
     }
   }
 }
