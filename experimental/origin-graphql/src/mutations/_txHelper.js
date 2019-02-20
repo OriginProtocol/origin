@@ -72,6 +72,7 @@ export default function txHelper({
           transactionUpdated: {
             id: receipt.transactionHash,
             status: 'receipt',
+            gasUsed: receipt.gasUsed,
             mutation
           }
         })
