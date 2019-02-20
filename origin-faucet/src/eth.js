@@ -61,12 +61,6 @@ class NonceManager {
 
   // Yields next nonce to use.
   async next() {
-    // Safety valve ! Refuse to submit too many pending transactions.
-    if (this.pendingTxnCount > MaxNumberPendingTxnCount) {
-      logger.error('Too many pending transactions: ${this.pendingTxnCount}')
-      throw new Error('Too many pending transactions. Retry later.')
-    }
-
     this.pendingTxnCount++
     if (this.pendingTxnCount === 1) {
       // No other pending transaction.
@@ -136,7 +130,11 @@ class TxnManager {
       try {
         const receipt = await this.web3.eth.getTransactionReceipt(this.txnHash)
         if (receipt) {
-          return receipt
+          if (receipt.status) {
+            return receipt
+          } else {
+            throw new Error('Receipt status false. Transaction failed.')
+          }
         }
         await new Promise(resolve => setTimeout(resolve, 10000)) // wait 10 sec.
         logger.info(
