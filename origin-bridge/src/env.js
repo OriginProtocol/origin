@@ -1,6 +1,6 @@
 require('dotenv').config()
 try {
   require('envkey')
-} catch(error) {
+} catch (error) {
   console.warn('ENVKEY not configured')
 }

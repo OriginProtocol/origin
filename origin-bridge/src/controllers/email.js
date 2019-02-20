@@ -16,7 +16,6 @@ router.post('/generate-code', (req, res) => {
   res.send({ code: code }).end()
 })
 
-router.post('/verify', (req, res) => {
-})
+router.post('/verify', (req, res) => {})
 
 module.exports = router

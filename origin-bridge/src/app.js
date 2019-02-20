@@ -18,8 +18,8 @@ if (process.env.NODE_ENV == 'production') {
   sess.cookie.secure = true
 }
 app.use(session(sess))
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(require('./controllers'))
 

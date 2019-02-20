@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('attestation', {
@@ -10,7 +10,7 @@ module.exports = {
       },
       ethAddress: {
         type: Sequelize.CHAR(42)
-      },      
+      },
       method: {
         type: Sequelize.ENUM('PHONE', 'EMAIL', 'AIRBNB', 'FACEBOOK', 'TWITTER')
       },
@@ -27,9 +27,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('attestation');
+    return queryInterface.dropTable('attestation')
   }
-};
+}
