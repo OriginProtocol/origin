@@ -1,4 +1,5 @@
 console.log("init import")
+import "@babel/polyfill";
 import { AppRegistry } from 'react-native'
 import './global'
 import App from './src/App'

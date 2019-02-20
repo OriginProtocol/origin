@@ -78,7 +78,10 @@ export function validateSignature(req, res, next) {
   const { address, config, signature } = req.body
   if (config.subdomain) {
     // Validate signature matches
-    const signer = web3.eth.accounts.recover(JSON.stringify(config), signature)
+    const signer = web3.eth.accounts.recover(
+      'I would like to publish an Origin marketplace.',
+      signature
+    )
     // Address from recover is checksummed so lower case it
     if (!signature || signer.toLowerCase() !== address.toLowerCase()) {
       logger.warn(`Invalid signature: ${config.subdomain}`)

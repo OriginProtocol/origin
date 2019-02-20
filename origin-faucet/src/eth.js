@@ -29,8 +29,10 @@ const MaxNumberPendingTxnCount = 30
  *  - It only works if we run a single instance of the faucet process.
  *  An improvement could be to store the nonce in a central storage like
  *  Redis or Postgres.
- *  - The nonce would go out of sync if anything else than
- *  the faucet process sends a transaction from the hotwallet.
+ *  - The nonce could go out of sync if the server is restarted while
+ *  it is processing a batch of transactions.
+ *  - The nonce could go out of sync if anything else than
+ *  the faucet server sends a transaction from the hotwallet.
  *  - A failure of one of the transaction within a batch will cause subsequent
  *  transaction to be stuck until the nonce hole is filled.
  *  For more info on hole in nonce sequence, see this article:
@@ -39,6 +41,10 @@ const MaxNumberPendingTxnCount = 30
  *  source address that they can store in their buffer. Which translates
  *  directly into the max number of pending transactions the faucet
  *  can handle before some start failing. This is roughly 64 / 15 = 4tps.
+ *
+ *  If a hole in the nonce sequence for the hot wallet ever happens, a
+ *  way to fix is to issue transaction(s) with missing nonce(s).
+ *  Even 0 ETH transaction with hot wallet as both from and to would do.
  */
 class NonceManager {
   constructor(web3, ethAddress) {
@@ -76,6 +82,88 @@ class NonceManager {
   }
 }
 
+/**
+ * Wrapper class for sending a transaction and getting hash and receipt.
+ */
+class TxnManager {
+  constructor(web3, nonceMgr) {
+    this.web3 = web3
+    this.nonceMgr = nonceMgr
+    this.nonce = null
+    this.txnHash = null
+  }
+
+  // Submits a transaction and returns a promise that resolves
+  // with the transaction hash.
+  async send(from, to, value) {
+    // Get a nonce.
+    this.nonce = await this.nonceMgr.next()
+
+    // Issue the blockchain transaction.
+    logger.info(
+      `sendTransaction value:${value.toFixed()} from:${from} to:${to} nonce:${
+        this.nonce
+      }`
+    )
+
+    return new Promise((resolve, reject) => {
+      try {
+        this.web3.eth
+          .sendTransaction({ from, to, value, gas: 21000, nonce: this.nonce })
+          .on('transactionHash', hash => {
+            logger.info('Transaction hash: ', hash)
+            this.txnHash = hash
+            resolve(hash)
+          })
+      } catch (e) {
+        logger.error('Transaction failure: ', e)
+        reject(e)
+      }
+    })
+  }
+
+  // Waits for a transaction receipt.
+  async receipt() {
+    if (!this.txnHash) {
+      throw new Error('Cannot get receipt without transaction hash')
+    }
+
+    // 60 retries * 5sec = 5min.
+    for (let retries = 0; retries < 60; retries++) {
+      try {
+        const receipt = await this.web3.eth.getTransactionReceipt(this.txnHash)
+        if (receipt) {
+          if (receipt.status) {
+            return receipt
+          } else {
+            throw new Error('Receipt status false. Transaction failed.')
+          }
+        }
+        logger.info(
+          `No receipt available yet after ${(retries + 1) * 5} sec for hash ${
+            this.txnHash
+          }`
+        )
+        // Wait 5 sec before retrying.
+        await new Promise(resolve => setTimeout(resolve, 5000))
+      } catch (error) {
+        logger.error(
+          `getTransactionReceipt error for hash ${this.txnHash}`,
+          error
+        )
+      }
+    }
+    throw new Error(`Timeout: Failed getting receipt for hash ${this.txnHash}`)
+  }
+
+  // Must be called to clean up once the transaction completes or fails.
+  done() {
+    if (this.nonce) {
+      this.nonceMgr.decPendingTxnCount()
+    }
+  }
+}
+
 class EthDistributor {
   constructor(config) {
     this.config = config
@@ -109,10 +197,20 @@ class EthDistributor {
     this.process = this.process.bind(this)
   }
 
-  // Returns HML with an error message.
+  // Returns HTML with an error message.
   _error(res, message) {
     logger.error(message)
-    res.send(`Error: ${message}`)
+    res.send(`<b>Server error</b></br></br>${message}`)
+  }
+
+  // Returns HTML with amount and transaction hash.
+  _success(res, to, amount, txnHash) {
+    const amountEth = Web3.utils.fromWei(amount.toFixed(), 'ether')
+    const resp = `
+      Initiated transaction for crediting <b>${amountEth}</b> ETH to account <b>${to}</b>
+      </br></br>
+      Pending transaction hash: <a href="https://etherscan.io/tx/${txnHash}">${txnHash}</a>`
+    res.send(resp)
   }
 
   // Renders the main /eth page.
@@ -125,7 +223,7 @@ class EthDistributor {
   }
 
   // Processes ETH distribution requests.
-  async process(req, res, next) {
+  async process(req, res) {
     const code = req.query.code
     if (!code) {
       return this._error(res, 'An invite code must be supplied.')
@@ -138,6 +236,7 @@ class EthDistributor {
       return this._error(res, `Invalid wallet address ${ethAddress}.`)
     }
 
+    let txnHash = null
     try {
       // Load the campaign based on invite code.
       const now = new Date()
@@ -198,59 +297,53 @@ class EthDistributor {
       }
 
       // Create a FaucetTxn row in Pending status.
-      let txnHash = null
       const faucetTxn = await db.FaucetTxn.create({
         campaignId: campaign.id,
         status: enums.FaucetTxnStatuses.Pending,
         fromAddress: this.hotWalletAddress.toLowerCase(),
         toAddress: ethAddress.toLowerCase(),
         amount: campaign.amount,
-        currency: campaign.currency,
-        txnHash
+        currency: campaign.currency
       })
 
+      const txnMgr = new TxnManager(this.web3, this.nonceMgr)
       try {
-        // Calculate the nonce to use for this transaction.
-        const nonce = await this.nonceMgr.next()
+        // Submit the transaction and wait for its hash.
+        txnHash = await txnMgr.send(this.hotWalletAddress, ethAddress, amount)
 
-        // Issue the blockchain transaction.
+        // Waiting for the receipt takes too long (up to several min on Mainnet).
+        // Send response back to client showing the transaction hash right away.
+        this._success(res, ethAddress, amount, txnHash)
+
+        // Store the txnHash in the DB.
+        await faucetTxn.update({ txnHash })
+
+        // Wait for the transaction receipt.
+        const receipt = await txnMgr.receipt()
         logger.info(
-          `Blockchain call to send ${amount.toFixed()} to ${ethAddress}
-          from ${this.hotWalletAddress} with nonce ${nonce}`
+          `Got receipt. txnHash: ${txnHash} blockNumber: ${receipt.blockNumber}`
         )
-        const receipt = await this.web3.eth.sendTransaction({
-          from: this.hotWalletAddress,
-          to: ethAddress,
-          value: amount.toFixed(),
-          gas: 21000,
-          nonce
-        })
-        if (!receipt || !receipt.status) {
-          throw new Error('No receipt or receipt status false')
-        }
-        txnHash = receipt.transactionHash
+
+        // Update status to Confirmed in the DB.
+        await faucetTxn.update({ status: enums.FaucetTxnStatuses.Confirmed })
       } catch (e) {
+        // Log error and update txn status in the DB.
+        logger.error(`Transaction failure. txnHash: ${txnHash}`)
+        await faucetTxn.update({ status: enums.FaucetTxnStatuses.Failed })
+
+        // Rethrow to show an error to the user.
         throw e
       } finally {
-        // Decrement the nonce manager pending txn count and
-        // store the txn status and hash in the DB.
-        this.nonceMgr.decPendingTxnCount()
-        const status = txnHash
-          ? enums.FaucetTxnStatuses.Confirmed
-          : enums.FaucetTxnStatuses.Failed
-        await faucetTxn.update({ status, txnHash })
+        logger.info('Done. Cleaning up TxnMgr.')
+        txnMgr.done()
       }
-
-      // Send response back to client.
-      const amountEth = this.web3.utils.fromWei(amount.toFixed(), 'ether')
-      const resp = `
-        Distributed <b>${amountEth}</b> ETH to account <b>${ethAddress}</b>
-        </br></br>
-        TransactionHash=<a href="https://etherscan.io/tx/${txnHash}">${txnHash}</a>`
-      res.send(resp)
     } catch (err) {
-      logger.error(err)
-      next(err) // Errors will be passed to Express.
+      // If txnHash exists, response was sent back so no need to send an error.
+      if (txnHash) {
+        logger.error(err)
+      } else {
+        this._error(res, err)
+      }
     }
   }
 }

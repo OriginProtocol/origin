@@ -1,4 +1,6 @@
 rootProject.name = 'OriginCatcher'
+include ':react-native-push-notification'
+project(':react-native-push-notification').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-push-notification/android')
 include ':react-native-uuid-generator'
 project(':react-native-uuid-generator').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-uuid-generator/android')
 include ':react-native-webview'
