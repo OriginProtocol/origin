@@ -13,7 +13,8 @@ export default function applyListingData(props, data) {
       category: listing.category,
       subCategory: listing.subCategory,
       media: listing.media.map(m => pick(m, 'contentType', 'url')),
-      commissionPerUnit: listing.boost
+      commissionPerUnit: listing.boost,
+      marketplacePublisher: listing.marketplacePublisher
     }
   }
   if (listingType === 'unit') {

@@ -52,6 +52,7 @@
     "origin-graphql": "^0.1.0",
     "origin-services": "^0.1.0",
     "prettier": "^1.16.3",
+    "query-string": "^6.2.0",
     "qrcode.react": "^0.8.0",
     "react": "^16.8.1",
     "react-apollo": "^2.4.1",
