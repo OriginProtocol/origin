@@ -107,11 +107,11 @@ class ProgressBar extends Component {
 }
 
 function Action(props) {
-  let { type, status, reward, rewardEarned, rewardPending } = props.action
+  const { type, status, reward, rewardEarned, rewardPending } = props.action
   const showLockIcon = status === 'Inactive'
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
-  let backgroundImgSrc = actionCompleted
+  const backgroundImgSrc = actionCompleted
     ? 'images/identity/verification-shape-green.svg'
     : 'images/identity/verification-shape-blue.svg'
 
