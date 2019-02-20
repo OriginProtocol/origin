@@ -113,7 +113,14 @@ describe('phone attestations', () => {
       })
   })
 
-  it('should generate attestation on valid verification code', () => {})
+  it('should generate attestation on valid verification code', () => {
+    nock('https://api.authy.com')
+      .post('/protected/json/phones/verification/check')
+      .reply(200, {
+        message: 'Verification code is correct',
+        success: true
+      })
+  })
 
   it('should error on missing verification code', () => {})
 
