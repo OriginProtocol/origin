@@ -21,7 +21,7 @@ To learn more about Origin Protocol, please read our [product brief](https://www
 
 To use the DApp you will need to install and configure the [MetaMask browser extension](https://metamask.io). Once you have set up a wallet you will need to make sure that you have selected the correct Ethereum network depending on which version of the DApp you are using.
 
-If you are running on Rinkeby you can get test Ether from the [Rinkeby faucet](https://faucet.rinkeby.io). You can also get test OGN tokens from the [Origin faucet](https://faucet.originprotocol.com).
+If you are running on Rinkeby you can get test Ether from the [Rinkeby faucet](https://faucet.rinkeby.io). You can also get test OGN tokens from the [Origin faucet](https://faucet.staging.originprotocol.com).
 
 ## Run Demo DApp
 
