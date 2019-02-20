@@ -33,15 +33,15 @@ const sumUpRewards = (rewards) => {
 
 const eventTypeToActionType = (eventType) => {
   const eventToActionType = {
-    'ProfilePublished': 'profile',
-    'EmailAttestationPublished': 'email',
-    'FacebookAttestationPublished': 'facebook',
-    'AirbnbAttestationPublished': 'airbnb',
-    'TwitterAttestationPublished': 'twitter',
-    'PhoneAttestationPublished': 'phone',
-    'RefereeSignedUp': 'referral',
-    'ListingCreated': 'listingCreated',
-    'ListingPurchased': 'listingPurchased'
+    'ProfilePublished': 'Profile',
+    'EmailAttestationPublished': 'Email',
+    'FacebookAttestationPublished': 'Facebook',
+    'AirbnbAttestationPublished': 'Airbnb',
+    'TwitterAttestationPublished': 'Twitter',
+    'PhoneAttestationPublished': 'Phone',
+    'RefereeSignedUp': 'Referral',
+    'ListingCreated': 'ListingCreated',
+    'ListingPurchased': 'ListingPurchased'
   }
 
   return eventToActionType[eventType]
@@ -172,12 +172,12 @@ class Campaign {
    */  
   getStatus() {
     if (this.campaign.startDate > Date.now()) {
-      return GrowthCampaignStatuses.pending
+      return GrowthCampaignStatuses.Pending
     } else if (this.campaign.startDate < Date.now() && this.campaign.endDate > Date.now()){
       //TODO: check if cap reached
-      return GrowthCampaignStatuses.active
+      return GrowthCampaignStatuses.Active
     } else if (this.campaign.endDate < Date.now()){
-      return GrowthCampaignStatuses.completed
+      return GrowthCampaignStatuses.Completed
     } else {
       throw new Error(`Unexpected campaign id: ${this.campaign.id} status`)
     }
@@ -364,12 +364,12 @@ class BaseRule {
    */
   getStatus(ethAddress, events, currentUserLevel) {
     if (currentUserLevel < this.levelId){
-      return GrowthActionStatus.inactive
+      return GrowthActionStatus.Inactive
     } else {
       if (this.evaluate(ethAddress, events)){
-        return GrowthActionStatus.completed
+        return GrowthActionStatus.Completed
       }
-      return GrowthActionStatus.active
+      return GrowthActionStatus.Active
     }
   }
 
@@ -438,7 +438,7 @@ class SingleEventRule extends BaseRule {
       reward: this.config.reward
     }
 
-    if (objectToReturn.type === 'referral') {
+    if (objectToReturn.type === 'Referral') {
       // TODO implement this
       objectToReturn.rewardPending = this.config.reward
     }

@@ -13,12 +13,12 @@ import AccountTokenBalance from 'queries/TokenBalance'
 function CampaignNavItem(props) {
   const { campaign, selected, onClick } = props
   const completedIndicator =
-    campaign.status === 'completed' || campaign.status === 'capReached'
+    campaign.status === 'Completed' || campaign.status === 'CapReached'
 
   let statusClass = ''
-  if (campaign.status === 'active') {
+  if (campaign.status === 'Active') {
     statusClass = 'active'
-  } else if (campaign.status === 'pending') {
+  } else if (campaign.status === 'Pending') {
     statusClass = 'inactive'
   }
 
@@ -107,9 +107,9 @@ class ProgressBar extends Component {
 
 function Action(props) {
   let { type, status, reward, rewardEarned, rewardPending } = props.action
-  const showLockIcon = status === 'inactive'
+  const showLockIcon = status === 'Inactive'
 
-  const actionCompleted = ['exhausted', 'completed'].includes(status)
+  const actionCompleted = ['Exhausted', 'Completed'].includes(status)
   let backgroundImgSrc = actionCompleted
     ? 'images/identity/verification-shape-green.svg'
     : 'images/identity/verification-shape-blue.svg'
@@ -125,37 +125,37 @@ function Action(props) {
   let title
   let infoText
 
-  if (type === 'email') {
+  if (type === 'Email') {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
     title = 'Verify your Email'
     infoText = 'Confirm your email in attestations'
-  } else if (type === 'profile') {
+  } else if (type === 'Profile') {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
     title = 'Update your name and picture'
     infoText = 'Edit your profile and update your name and picture'
-  } else if (type === 'phone') {
+  } else if (type === 'Phone') {
     foregroundImgSrc = '/images/identity/phone-icon-light.svg'
     title = 'Verify your Phone Number'
     infoText = 'Confirm your phone number in attestations'
-  } else if (type === 'twitter') {
+  } else if (type === 'Twitter') {
     foregroundImgSrc = '/images/identity/twitter-icon-light.svg'
     title = 'Connect your Twitter Profile'
     infoText = 'Connect your Twitter Profile in attestationts'
-  } else if (type === 'airbnb') {
+  } else if (type === 'Airbnb') {
     foregroundImgSrc = '/images/identity/airbnb-icon-light.svg'
     title = 'Connect your Airbnb Profile'
     infoText = 'Connect your Airbnb Profile in attestations'
-  } else if (type === 'facebook') {
+  } else if (type === 'Facebook') {
     foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
     title = 'Connect your Facebook Profile'
     infoText = 'Connect your Facebook Profile in attestations'
-  } else if (type === 'listingCreated') {
+  } else if (type === 'ListingCreated') {
     title = 'Create a listing'
     infoText = 'Create a new listing on the marketplace'
-  } else if (type === 'listingPurchased') {
+  } else if (type === 'ListingPurchased') {
     title = 'Purchase a listing'
     infoText = 'Purchase a listing on marketplace'
-  } else if (type === 'referral') {
+  } else if (type === 'Referral') {
     title = 'Invite Friends'
     infoText = 'Get your friends to join Origin with active accounts.'
   }
@@ -176,13 +176,13 @@ function Action(props) {
     <div className="d-flex action">
       <div className="col-2 d-flex justify-content-center">
         <div className="image-holder mt-auto mb-auto">
-          {type !== 'referral' && (
+          {type !== 'Referral' && (
             <Fragment>
               <img className="background" src={backgroundImgSrc} />
-              <img className={type} src={foregroundImgSrc} />
+              <img className={type.toLowerCase()} src={foregroundImgSrc} />
             </Fragment>
           )}
-          {type === 'referral' && (
+          {type === 'Referral' && (
             <img className="astronaut" src="images/growth/astronaut-icon.svg" />
           )}
           {showLockIcon && (
@@ -194,7 +194,7 @@ function Action(props) {
         <div className="title">{title}</div>
         <div className="info-text">{infoText}</div>
         <div className="d-flex">
-          {type === 'referral' &&
+          {type === 'Referral' &&
             rewardPending !== null &&
             rewardPending.amount > 0 && (
               <Fragment>
@@ -276,13 +276,13 @@ function Campaign(props) {
   let timeLabel = ''
   let subTitleText = ''
 
-  if (status === 'active') {
+  if (status === 'Active') {
     timeLabel = `Time left:${formatTimeDifference(Date.now(), endDate)}`
     subTitleText = 'Get Origin Tokens by completing tasks below'
-  } else if (status === 'pending') {
+  } else if (status === 'Pending') {
     timeLabel = `Starts in:${formatTimeDifference(Date.now(), startDate)}`
     subTitleText = `This campaign hasn't started yet`
-  } else if (status === 'completed') {
+  } else if (status === 'Completed' || status === 'CapReached') {
     subTitleText = 'This campaign has finished'
   }
 
@@ -310,7 +310,7 @@ function Campaign(props) {
         }
 
         const actionCompleted = action => {
-          return ['exhausted', 'completed'].includes(action.status)
+          return ['Exhausted', 'Completed'].includes(action.status)
         }
 
         const completedActions = actions.filter(action =>
@@ -331,7 +331,7 @@ function Campaign(props) {
             <div>{subTitleText}</div>
             <div className="d-flex justify-content-between campaign-info">
               <div>
-                {status !== 'pending' && (
+                {status !== 'Pending' && (
                   <Fragment>
                     <span className="font-weight-bold">Tokens earned</span>
                     <img
@@ -347,13 +347,13 @@ function Campaign(props) {
               <div className="font-weight-bold">{timeLabel}</div>
             </div>
             <ProgressBar progress={tokenEarnProgress} />
-            {status === 'active' && nonCompletedActions.length > 0 && (
+            {status === 'Active' && nonCompletedActions.length > 0 && (
               <ActionList
                 actions={nonCompletedActions}
                 decimalDevision={decimalDevision}
               />
             )}
-            {status !== 'pending' && completedActions.length > 0 && (
+            {status !== 'Pending' && completedActions.length > 0 && (
               <ActionList
                 title="Completed"
                 actions={completedActions}

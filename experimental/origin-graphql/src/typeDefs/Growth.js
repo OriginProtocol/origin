@@ -13,40 +13,41 @@ module.exports =
   ###############################################
 
   enum GrowthCampaignStatus {
-    pending                   #not yet started
-    active
-    capReached
-    completed
+    Pending                   #not yet started
+    Active
+    CapReached
+    Completed
   }
 
   enum GrowthActionStatus {
-    inactive
-    active
-    exhausted
-    completed
+    Inactive
+    Active
+    Exhausted
+    Completed
   }
 
   enum GrowthActionType {
-    email
-    phone
-    twitter
-    airbnb
-    facebook
-    referral
-    profile
-    listingCreated
-    listingPurchased
+    Email
+    Phone
+    Twitter
+    Airbnb
+    Facebook
+    Referral
+    Profile
+    ListingCreated
+    ListingPurchased
   }
 
   enum GrowthInviteStatus {
-    pending
-    successful
+    Pending
+    Successful
   }
 
   enum Eligibility {
-    eligible
-    restricted
-    forbidden
+    Unknown
+    Eligible
+    Restricted
+    Forbidden
   }
 
   type Invite {

@@ -21,29 +21,29 @@ const GrowthCampaignRewardStatuses = new Enum(
 )
 
 const GrowthCampaignStatuses = new Enum(
-  'pending',
-  'active',
-  'capReached',
-  'completed'
+  'Pending',
+  'Active',
+  'CapReached',
+  'Completed'
 )
 
 const GrowthActionStatus = new Enum(
-  'inactive',
-  'active',
-  'exhausted',
-  'completed'
+  'Inactive',
+  'Active',
+  'Exhausted',
+  'Completed'
 )
 
 const GrowthActionType = new Enum(
-  'profile',
-  'email',
-  'phone',
-  'twitter',
-  'airbnb',
-  'facebook',
-  'referral',
-  'listingCreated',
-  'listingPurchased'
+  'Profile',
+  'Email',
+  'Phone',
+  'Twitter',
+  'Airbnb',
+  'Facebook',
+  'Referral',
+  'ListingCreated',
+  'ListingPurchased'
 )
 
 const GrowthEventStatuses = new Enum('Logged', 'Verified', 'Fraud')

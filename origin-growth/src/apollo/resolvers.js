@@ -13,7 +13,7 @@ const resolvers = {
   DateTime: GraphQLDateTime,
   GrowthBaseAction: {
     __resolveType(obj) {
-      if (obj.type === 'referral'){
+      if (obj.type === 'Referral'){
         return 'ReferralAction'
       } else {
         return 'GrowthAction'
@@ -41,9 +41,7 @@ const resolvers = {
     async isEligible(obj, args, context) {
       if (process.env.NODE_ENV !== 'production') {
         return {
-          code: 200,
-          success: true,
-          eligibility: 'eligible',
+          eligibility: 'Eligible',
           countryName: 'N/A',
           countryCode: 'N/A'
         }
@@ -52,18 +50,16 @@ const resolvers = {
       const locationInfo = getLocationInfo(context.countryCode)
       if (!locationInfo) {
         return {
-          code: 500,
-          success: false,
-          message: 'Internal server error'
+          eligibility: 'Unknown',
+          countryName: 'N/A',
+          countryCode: 'N/A'
         }
       }
-      let eligibility = 'eligible'
-      if (locationInfo.isForbidden) eligibility = 'forbidden'
-      else if (locationInfo.isRestricted) eligibility = 'restricted'
+      let eligibility = 'Eligible'
+      if (locationInfo.isForbidden) eligibility = 'Forbidden'
+      else if (locationInfo.isRestricted) eligibility = 'Restricted'
 
       return {
-        code: 200,
-        success: true,
         eligibility: eligibility,
         countryName: locationInfo.countryName,
         countryCode: locationInfo.countryCode
