@@ -223,7 +223,7 @@ class EthDistributor {
   }
 
   // Processes ETH distribution requests.
-  async process(req, res, next) {
+  async process(req, res) {
     const code = req.query.code
     if (!code) {
       return this._error(res, 'An invite code must be supplied.')
