@@ -59,7 +59,7 @@ describe('phone attestations', () => {
     nock('https://api.authy.com')
       .post('/protected/json/phones/verification/start')
       .reply(400, {
-        'error_code': '60033'
+        error_code: '60033'
       })
 
     await request(app)
@@ -81,7 +81,7 @@ describe('phone attestations', () => {
     nock('https://api.authy.com')
       .post('/protected/json/phones/verification/start')
       .reply(400, {
-        'error_code': '60083'
+        error_code: '60083'
       })
 
     await request(app)
@@ -89,7 +89,9 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
       .then(response => {
-        expect(response.body.errors.phone).to.equal('Cannot send SMS to landline.')
+        expect(response.body.errors.phone).to.equal(
+          'Cannot send SMS to landline.'
+        )
       })
   })
 
@@ -109,7 +111,9 @@ describe('phone attestations', () => {
       .send(params)
       .expect(500)
       .then(response => {
-        expect(response.body.errors[0]).to.equal('Could not send phone verification code, please try again later.')
+        expect(response.body.errors[0]).to.equal(
+          'Could not send phone verification code, please try again shortly.'
+        )
       })
   })
 
