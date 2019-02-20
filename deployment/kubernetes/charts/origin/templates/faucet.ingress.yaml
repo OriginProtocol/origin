@@ -1,4 +1,3 @@
-{{ if ne .Release.Namespace "prod" }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -27,8 +26,16 @@ spec:
   - host: {{ template "faucet.host" . }}
     http:
       paths:
+        {{ if eq .Release.Namespace "prod" }}
+        # Production faucet used for distributing ETH via invite codes
+        - path: /eth
+          backend:
+            serviceName: {{ template "faucet.fullname" . }}
+            servicePort: 5000
+        {{ else }}
+        ## Staging, dev faucet used for distributing OGN on test network
         - path: /
           backend:
             serviceName: {{ template "faucet.fullname" . }}
             servicePort: 5000
-{{ end }}
+        {{ end }}
