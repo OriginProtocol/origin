@@ -53,8 +53,7 @@ describe('phone attestations', () => {
     const params = {
       country_calling_code: '1',
       phone_number: '12341234',
-      method: 'sms',
-      locale: 'en'
+      method: 'sms'
     }
 
     nock('https://api.authy.com')
@@ -70,12 +69,49 @@ describe('phone attestations', () => {
       .then(response => {
         expect(response.body.errors.phone).to.equal('Phone number is invalid.')
       })
-
   })
 
-  it('should error on generate code using sms on landline number', () => {})
+  it('should error on generate code using sms on landline number', async () => {
+    const params = {
+      country_calling_code: '1',
+      phone_number: '12341234',
+      method: 'sms'
+    }
 
-  it('should return a message on twilio api error', () => {})
+    nock('https://api.authy.com')
+      .post('/protected/json/phones/verification/start')
+      .reply(400, {
+        'error_code': '60083'
+      })
+
+    await request(app)
+      .post('/phone/generate-code')
+      .send(params)
+      .expect(400)
+      .then(response => {
+        expect(response.body.errors.phone).to.equal('Cannot send SMS to landline.')
+      })
+  })
+
+  it('should return a message on twilio api error', async () => {
+    const params = {
+      country_calling_code: '1',
+      phone_number: '12341234',
+      method: 'sms'
+    }
+
+    nock('https://api.authy.com')
+      .post('/protected/json/phones/verification/start')
+      .reply(500)
+
+    await request(app)
+      .post('/phone/generate-code')
+      .send(params)
+      .expect(500)
+      .then(response => {
+        expect(response.body.errors[0]).to.equal('Could not send phone verification code, please try again later.')
+      })
+  })
 
   it('should generate attestation on valid verification code', () => {})
 

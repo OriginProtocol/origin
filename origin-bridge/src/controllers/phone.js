@@ -54,9 +54,9 @@ router.post('/generate-code', (req, res) => {
         logger.error(`Could not send phone verification code: ${error}`)
         return res
           .status(500)
-          .send(
-            'Could not send phone verification code, please try again later.'
-          )
+          .send({
+            errors: ['Could not send phone verification code, please try again later.']
+          })
       }
     })
 })
