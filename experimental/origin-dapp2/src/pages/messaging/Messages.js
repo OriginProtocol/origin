@@ -34,11 +34,18 @@ const Messages = props => (
 
             const conversations = get(data, 'messaging.conversations', [])
             const room = get(props, 'match.params.room')
-            const active = room || get(conversations, '0.id')
+            const active = room
+            const displayConversations = !!room ? 'd-none' : 'd-block'
+            const displayBackNav = !!room ? 'd-block' : 'd-none'
 
             return (
               <div className="row">
-                <div className="col-md-3">
+                <div className={`back ${displayBackNav} flex-row justify-content-start`}>
+                  <div className="align-self-start">
+                    <i className="icon-arrow-left align-self-start mr-auto" onClick={() => props.history.push(`/messages`)}></i>
+                  </div>
+                </div>
+                <div className={`col-md-3 ${displayConversations} d-md-block`}>
                   {conversations.length ? null : <div>No conversations!</div>}
                   {conversations.map((conv, idx) => (
                     <RoomStatus
@@ -69,4 +76,43 @@ export default withWallet(Messages)
 require('react-styl')(`
   .messages-page
     margin-top: 1rem
+    .back
+      background-color: var(--dusk)
+      height: 60px
+      width: 100%
+      margin-bottom: 10px
+
+      .avatar-container
+        height: 30px
+        width: 30px
+
+      i
+        width: 18px
+        height: 18px
+        border-radius: 3px
+        border: solid white
+        border-width: 0 4px 4px 0
+        display: inline-block
+        padding: 3px
+
+        &.icon-arrow-left
+          margin-left: 18px
+          margin-top: 20px
+          transform: rotate(135deg)
+          -webkit-transform: rotate(135deg)
+
+      .counterparty
+        font-size: 22px
+        font-weight: bold
+        color: white
+        margin-bottom: 5px
+        width: 200px
+        text-align: left
+        line-height: 57px
+
+      a
+        color: white
+
+      &:hover
+        color: white
 `)
