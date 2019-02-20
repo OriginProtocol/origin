@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { ActivityIndicator, Alert, Dimensions, Image, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, Image, Platform, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { connect, Provider } from 'react-redux'
 
@@ -128,9 +128,11 @@ const OriginNavigator = createBottomTabNavigator({
 // Origin Nav wrapper
 class OriginNavWrapper extends Component {
   componentDidMount() {
-    PushNotificationIOS.checkPermissions(permissions => {
-      this.props.storeNotificationsPermissions(permissions)
-    })
+    if (Platform.OS === 'ios') {
+      PushNotificationIOS.checkPermissions(permissions => {
+        this.props.storeNotificationsPermissions(permissions)
+      })
+    }
 
     originWallet.initNotifications()
     // skip the prompt
