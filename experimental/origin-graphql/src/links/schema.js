@@ -5,6 +5,7 @@ import {
   mergeSchemas
 } from 'graphql-tools'
 
+import fetch from 'node-fetch'
 import typeDefs from '../typeDefs/index'
 import resolvers from '../resolvers/index'
 import growthTypeDefs from '../typeDefs/Growth'
