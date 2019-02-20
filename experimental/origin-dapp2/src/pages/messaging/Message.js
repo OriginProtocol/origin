@@ -66,6 +66,13 @@ function getCssClasses(isUser, showTailAndAvatar) {
   return { justifyContent, contentOnly, userType }
 }
 
+const UserInfo = ({ userName, userAddress }) => (
+  <>
+    <div className="name text-truncate align-self-center">{userName}</div>
+    <span className="account">{userAddress}</span>
+  </>
+)
+
 const Message = props => {
   const message = get(props, 'message', {})
   const identity = isNil(props.identity) ? {} : props.identity
@@ -76,13 +83,6 @@ const Message = props => {
   const { justifyContent, contentOnly, userType } = getCssClasses(
     props.isUser,
     showTailAndAvatar
-  )
-
-  const UserInfo = () => (
-    <>
-      <div className="name text-truncate align-self-center">{userName}</div>
-      <span className="account">{userAddress}</span>
-    </>
   )
 
   return (
@@ -103,9 +103,14 @@ const Message = props => {
           )}
           <div className={`bubble ${showTailAndAvatar ? 'tail' : ''}`}>
             <div className="top">
-              {props.isUser ? <UserInfo /> : (
-                <Link to={`/user/${props.wallet}`} className="d-flex flex-row justify-content-start">
-                  <UserInfo />
+              {props.isUser ? (
+                <UserInfo userName={userName} userAddress={userAddress} />
+              ) : (
+                <Link
+                  to={`/user/${props.wallet}`}
+                  className="d-flex flex-row justify-content-start"
+                >
+                  <UserInfo userName={userName} userAddress={userAddress} />
                 </Link>
               )}
             </div>
