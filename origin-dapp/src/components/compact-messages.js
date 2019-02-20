@@ -101,6 +101,7 @@ export default class CompactMessages extends Component {
           message={message}
           contentOnly={contentOnly}
           previousOfferMessage={previousOfferMessage}
+          previousMessage={isFirstMessage ? {} : sortedMessages[i-1]}
         />
       )
     })

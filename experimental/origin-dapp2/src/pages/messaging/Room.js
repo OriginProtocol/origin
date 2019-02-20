@@ -36,10 +36,27 @@ const Message = props => {
   const isUser = props.isUser ? ' user' : ''
 
   let showTime = true
+  let showTailAndAvatar = true
+
   if (props.lastMessage) {
     const timeDiff = message.timestamp - props.lastMessage.timestamp
-    if (timeDiff < 60 * 5) showTime = false
+    if (timeDiff / 60 < 5) {
+      showTime = false
+      if (props.lastMessage === props.wallet) {
+        showTailAndAvatar = false
+      }
+    }
   }
+  if (props.nextMessage) {
+    const futureTimeDiff =
+      get(props, 'nextMessage.timestamp') - message.timestamp
+    if (futureTimeDiff / 60 < 5) {
+      if (get(props, 'nextMessage.address') === props.wallet) {
+        showTailAndAvatar = false
+      }
+    }
+  }
+
   return (
     <>
       {showTime && (
@@ -48,7 +65,9 @@ const Message = props => {
         </div>
       )}
       <div className={`message${isUser}`}>
-        {!isUser && <Avatar avatar={get(props, 'identity.avatar')} size={60} />}
+        {!isUser && showTailAndAvatar && (
+          <Avatar avatar={get(props, 'identity.avatar')} size={60} />
+        )}
         <div className="bubble">
           <div className="top">
             {name && <div className="name">{name}</div>}
@@ -56,7 +75,9 @@ const Message = props => {
           </div>
           <div className="content">{messageContent}</div>
         </div>
-        {isUser && <Avatar avatar={get(props, 'identity.avatar')} size={60} />}
+        {isUser && showTailAndAvatar && (
+          <Avatar avatar={get(props, 'identity.avatar')} size={60} />
+        )}
       </div>
     </>
   )
@@ -93,6 +114,7 @@ class AllMessages extends Component {
           <MessageWithIdentity
             message={message}
             lastMessage={idx > 0 ? messages[idx - 1] : null}
+            nextMessage={messages[idx + 1]}
             key={idx}
             wallet={get(message, 'address')}
             isUser={this.props.wallet === get(message, 'address')}
