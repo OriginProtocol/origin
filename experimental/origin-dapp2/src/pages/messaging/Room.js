@@ -1,87 +1,15 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
-import dayjs from 'dayjs'
-import advancedFormat from 'dayjs/plugin/advancedFormat'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 
 import query from 'queries/Room'
 import SendMessage from './SendMessage'
-import Avatar from 'components/Avatar'
+import Message from './Message'
 import QueryError from 'components/QueryError'
 
-dayjs.extend(advancedFormat)
-
-function renderContent(message) {
-  const { content, media } = message
-  const contentWithLineBreak = `${content}\n`
-
-  if (!media || !media.length) {
-    return contentWithLineBreak
-  } else {
-    return media.map(image => (
-      <div key={image.url} className="image-container mx-auto">
-        <img src={image.url} alt={'fileName'} />
-      </div>
-    ))
-  }
-}
-
-const Message = props => {
-  const message = get(props, 'message', {})
-  const name = get(props, 'identity.fullName', '')
-  const messageContent = renderContent(message)
-  const isUser = props.isUser ? ' user' : ''
-
-  let showTime = true
-  let showTailAndAvatar = true
-
-  if (props.lastMessage) {
-    const timeDiff = message.timestamp - props.lastMessage.timestamp
-    if (timeDiff / 60 < 5) {
-      showTime = false
-      if (props.lastMessage === props.wallet) {
-        showTailAndAvatar = false
-      }
-    }
-  }
-  if (props.nextMessage) {
-    const futureTimeDiff =
-      get(props, 'nextMessage.timestamp') - message.timestamp
-    if (futureTimeDiff / 60 < 5) {
-      if (get(props, 'nextMessage.address') === props.wallet) {
-        showTailAndAvatar = false
-      }
-    }
-  }
-
-  return (
-    <>
-      {showTime && (
-        <div className="timestamp">
-          {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
-        </div>
-      )}
-      <div className={`message${isUser}`}>
-        {!isUser && showTailAndAvatar && (
-          <Avatar avatar={get(props, 'identity.avatar')} size={60} />
-        )}
-        <div className="bubble">
-          <div className="top">
-            {name && <div className="name">{name}</div>}
-            <div className="account">{message.address}</div>
-          </div>
-          <div className="content">{messageContent}</div>
-        </div>
-        {isUser && showTailAndAvatar && (
-          <Avatar avatar={get(props, 'identity.avatar')} size={60} />
-        )}
-      </div>
-    </>
-  )
-}
 
 const MessageWithIdentity = withIdentity(Message)
 
@@ -183,61 +111,4 @@ require('react-styl')(`
       font-size: 12px;
       align-self: center
       margin-bottom: 1rem
-    .message
-      margin: 20px 0
-      .avatar
-        height: 60px
-        width: 60px
-        display: inline-block
-        vertical-align: bottom
-      .bubble
-        display: inline-block
-        margin-left: 1.75rem
-        padding: 1rem
-        background-color: var(--pale-grey)
-        border-radius: 1rem
-        position: relative
-        max-width: 70%
-        flex: 1
-        .top
-          font-size: 14px
-          display: flex
-          .name
-            font-weight: normal
-            margin-right: 0.5rem
-          .account
-            max-width: 6rem
-            overflow: hidden
-            text-overflow: ellipsis
-        .content
-          font-weight: normal
-          font-size: 16px
-        &::after
-          content: ''
-          bottom: 8px
-          left: -34px
-          position: absolute
-          border: 0px solid
-          display: block
-          width: 38px
-          height: 26px
-          background-color: transparent
-          border-bottom-left-radius: 50%
-          border-bottom-right-radius: 50%
-          box-shadow: 10px 11px 0px -3px var(--pale-grey)
-          transform: rotate(-42deg)
-
-      &.user
-        align-self: flex-end
-        flex-direction: row-reverse
-        .bubble
-          background-color: var(--clear-blue)
-          color: var(--white)
-          margin-right: 1.5rem
-          &::after
-            right: -34px
-            left: auto
-            box-shadow: -10px 11px 0px -3px var(--clear-blue)
-            transform: rotate(42deg)
-
 `)
