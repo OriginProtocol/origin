@@ -11,6 +11,11 @@ const constants = require('../constants')
 
 const { generateAttestationSignature } = require('../utils')
 
+/* Generate a verification code for verifying a via using the Twilio Verify API.
+ * The API supports verification by SMS or call.
+ *
+ * https://www.twilio.com/docs/verify/api
+ */
 router.post(
   '/generate-code',
   [
@@ -89,6 +94,12 @@ router.post(
   }
 )
 
+/* Verify a phone using a previously generated verification code created through
+ * the Twilio Verify API.
+ *
+ * The client should have a cookie set with the phoneVerificationMethod attribute
+ * set from a previous call to the generate code method above.
+ */
 router.post(
   '/verify',
   [
