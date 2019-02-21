@@ -22,11 +22,10 @@ router.post(
       .not()
       .isEmpty()
       .trim(),
-    check('method')
-      .trim()
+    check('method').trim()
   ],
   async (req, res) => {
-    const errors = validationResult(req);
+    const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
     }
@@ -90,90 +89,111 @@ router.post(
   }
 )
 
-router.post('/verify', async (req, res) => {
-  const params = {
-    country_code: req.body.country_calling_code,
-    phone_number: req.body.phone_number,
-    code: req.body.code
-  }
+router.post(
+  '/verify',
+  [
+    check('country_calling_code')
+      .not()
+      .isEmpty()
+      .trim(),
+    check('phone_number')
+      .not()
+      .isEmpty()
+      .trim(),
+    check('code')
+      .not()
+      .isEmpty()
+      .trim()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
 
-  let response
-  try {
-    response = await request
-      .post('https://api.authy.com/protected/json/phones/verification/check')
-      .send(params)
-      .set('X-Authy-API-Key', process.env.TWILIO_VERIFY_API_KEY)
-  } catch (error) {
-    const twilioErrorCode = error.response.body['error_code']
-    if (twilioErrorCode === '60023') {
-      return res.status(400).send({
-        errors: {
-          phone: 'Verification code has expired.'
-        }
-      })
-    } else if (twilioErrorCode === '60022') {
-      return res.status(400).send({
-        errors: {
-          phone: 'Verification code is incorrect.'
-        }
-      })
-    } else {
-      logger.error(`Could not verify phone verification code: ${error}`)
+    const params = {
+      country_code: req.body.country_calling_code,
+      phone_number: req.body.phone_number,
+      code: req.body.code
+    }
+    let response
+    try {
+      response = await request
+        .post('https://api.authy.com/protected/json/phones/verification/check')
+        .send(params)
+        .set('X-Authy-API-Key', process.env.TWILIO_VERIFY_API_KEY)
+    } catch (error) {
+      const twilioErrorCode = error.response.body['error_code']
+      if (twilioErrorCode === '60023') {
+        return res.status(400).send({
+          errors: {
+            phone: 'Verification code has expired.'
+          }
+        })
+      } else if (twilioErrorCode === '60022') {
+        return res.status(400).send({
+          errors: {
+            phone: 'Verification code is incorrect.'
+          }
+        })
+      } else {
+        logger.error(`Could not verify phone verification code: ${error}`)
+        return res.status(500).send({
+          errors: [
+            'Could not verify phone verification code, please try again shortly.'
+          ]
+        })
+      }
+    }
+
+    // This may be unnecessary because the response has a 200 status code
+    // but it a good precaution to handle any inconsistency between the
+    // success field and the status code
+    if (!response.body['success']) {
+      logger.error(`Could not verify phone verification code: ${response.body}`)
       return res.status(500).send({
         errors: [
           'Could not verify phone verification code, please try again shortly.'
         ]
       })
     }
-  }
 
-  // This may be unnecessary because the response has a 200 status code
-  // but it a good precaution to handle any inconsistency between the
-  // success field and the status code
-  if (!response.body['success']) {
-    logger.error(`Could not verify phone verification code: ${response.body}`)
-    return res.status(500).send({
-      errors: [
-        'Could not verify phone verification code, please try again shortly.'
-      ]
-    })
-  }
-
-  data = {
-    issuer: constants.ISSUER,
-    issueDate: new Date(),
-    attestation: {
-      verificationMethod: {
-        [req.session.phoneVerificationMethod]: true
-      },
-      phone: {
-        verified: true
+    data = {
+      issuer: constants.ISSUER,
+      issueDate: new Date(),
+      attestation: {
+        verificationMethod: {
+          [req.session.phoneVerificationMethod]: true
+        },
+        phone: {
+          verified: true
+        }
       }
     }
+
+    const signature = {
+      bytes: generateAttestationSignature(
+        process.env.ATTESTATION_SIGNING_KEY,
+        req.body.eth_address,
+        JSON.stringify(data)
+      ),
+      version: '1.0.0'
+    }
+
+    await Attestation.create({
+      method: AttestationTypes.PHONE,
+      eth_address: req.body.eth_address,
+      value: `${req.body.country_calling_code} ${req.body.phone_number}`,
+      signature: signature['bytes'],
+      remote_ip_address: req.ip
+    })
+
+    res.send({
+      schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
+      data: data,
+      signature: signature
+    })
   }
-
-  const signature = {
-    bytes: generateAttestationSignature(
-      process.env.ATTESTATION_SIGNING_KEY,
-      req.body.eth_address,
-      JSON.stringify(data)
-    ),
-    version: '1.0.0'
-  }
-
-  await Attestation.create({
-    method: AttestationTypes.PHONE,
-    eth_address: req.body.eth_address,
-    value: `${req.body.country_calling_code} ${req.body.phone_number}`,
-    signature: signature['bytes'],
-    remote_ip_address: req.ip
-  })
-
-  res.send({
-    schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
-    data: data,
-    signature: signature
-  })
-})
+)
 
 module.exports = router

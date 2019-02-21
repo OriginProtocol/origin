@@ -93,7 +93,8 @@ describe('phone attestations', () => {
       .post('/phone/generate-code')
       .send(params)
       .expect(400)
-      .then(response => { expect(response.body.errors.phone).to.equal(
+      .then(response => {
+        expect(response.body.errors.phone).to.equal(
           'Cannot send SMS to landline.'
         )
       })
@@ -145,11 +146,10 @@ describe('phone attestations', () => {
         cookie = response.headers['set-cookie']
       })
 
-
     const checkParams = {
       eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
       country_calling_code: '1',
-      phone: '12341234',
+      phone_number: '12341234',
       code: '123456'
     }
 
@@ -166,23 +166,41 @@ describe('phone attestations', () => {
       .send(checkParams)
       .expect(200)
       .then(response => {
-        expect(response.body.schemaId).to.equal('https://schema.originprotocol.com/attestation_1.0.0.json')
+        expect(response.body.schemaId).to.equal(
+          'https://schema.originprotocol.com/attestation_1.0.0.json'
+        )
         expect(response.body.data.issuer.name).to.equal('Origin Protocol')
-        expect(response.body.data.issuer.url).to.equal('https://www.originprotocol.com')
-        expect(response.body.data.attestation.verificationMethod.sms).to.equal(true)
+        expect(response.body.data.issuer.url).to.equal(
+          'https://www.originprotocol.com'
+        )
+        expect(response.body.data.attestation.verificationMethod.sms).to.equal(
+          true
+        )
         expect(response.body.data.attestation.phone.verified).to.equal(true)
         // TODO check database insert
       })
   })
 
   it('should error on missing verification code', async () => {
+    const params = {
+      eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+      country_calling_code: '1',
+      phone: '12341234'
+    }
+
+    await request(app)
+      .post('/phone/verify')
+      .send(params)
+      .expect(400)
+      .then(response => {})
   })
 
   it('should error on incorrect verification code', async () => {
     const params = {
       eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
       country_calling_code: '1',
-      phone: '12341234',
+      phone_number: '12341234',
+      code: '5678'
     }
 
     nock('https://api.authy.com')
@@ -206,7 +224,8 @@ describe('phone attestations', () => {
     const params = {
       eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
       country_calling_code: '1',
-      phone: '12341234',
+      phone_number: '12341234',
+      code: '1234'
     }
 
     nock('https://api.authy.com')

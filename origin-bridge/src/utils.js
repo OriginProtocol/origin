@@ -235,7 +235,7 @@ function mapObjectToQueryParams(obj) {
 
 function generateAttestationSignature(privateKey, subject, data) {
   if (!web3.utils.isHexStrict(privateKey)) {
-    throw('Invalid private key, not a hex string')
+    throw 'Invalid private key, not a hex string'
   }
   const hashToSign = web3.utils.soliditySha3(
     {
