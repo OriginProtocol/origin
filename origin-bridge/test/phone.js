@@ -1,15 +1,20 @@
+const Logger = require('logplease')
+Logger.setLogLevel('NONE')
 const chai = require('chai')
 const expect = chai.expect
 const nock = require('nock')
 const request = require('supertest')
-const app = require('../src/app')
+const SequelizeMock = require('sequelize-mock')
 
-const Logger = require('logplease')
-Logger.setLogLevel('NONE')
+const app = require('../src/app')
 
 describe('phone attestations', () => {
   beforeEach(() => {
+    // Configure environment variables required for tests
+    process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
     process.env.TWILIO_VERIFY_API_KEY = '1234'
+
+    const dbMock = new SequelizeMock()
   })
 
   it('should generate a verification code', async () => {
@@ -88,8 +93,7 @@ describe('phone attestations', () => {
       .post('/phone/generate-code')
       .send(params)
       .expect(400)
-      .then(response => {
-        expect(response.body.errors.phone).to.equal(
+      .then(response => { expect(response.body.errors.phone).to.equal(
           'Cannot send SMS to landline.'
         )
       })
@@ -117,20 +121,51 @@ describe('phone attestations', () => {
       })
   })
 
-  it('should generate attestation on valid verification code', () => {
+  it('should generate attestation on valid verification code', async () => {
+    const verifyParams = {
+      country_calling_code: '1',
+      phone_number: '12341234',
+      method: 'sms',
+      locale: 'en'
+    }
+
+    nock('https://api.authy.com')
+      .post('/protected/json/phones/verification/start')
+      .reply(200)
+
+    await request(app)
+      .post('/phone/generate-code')
+      .send(verifyParams)
+      .expect(200)
+
+    const checkParams = {
+      eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+      country_calling_code: '1',
+      phone: '12341234',
+      code: '123456'
+    }
+
     nock('https://api.authy.com')
       .post('/protected/json/phones/verification/check')
       .reply(200, {
         message: 'Verification code is correct',
         success: true
       })
+
+    await request(app)
+      .post('/phone/verify')
+      .send(checkParams)
+      .expect(200)
+      .then(response => {
+        console.log(response.body)
+      })
   })
 
-  it('should error on missing verification code', () => {})
+  it('should error on missing verification code', async () => {})
 
-  it('should error on incorrect verification code', () => {})
+  it('should error on incorrect verification code', async () => {})
 
-  it('should error on expired verification code', () => {})
+  it('should error on expired verification code', async () => {})
 
   it('should use en locale for sms in india', async () => {
     const params = {
