@@ -22,16 +22,19 @@ module.exports = {
       campaign_id: {
         type: Sequelize.INTEGER
       },
-      campaign_level: {
+      level_id: {
         type: Sequelize.INTEGER
       },
-      campaign_rule: {
+      rule_id: {
         type: Sequelize.STRING
       },
       amount: {
         type: Sequelize.DECIMAL
       },
       currency: {
+        type: Sequelize.STRING
+      },
+      txn_hash: {
         type: Sequelize.STRING
       },
       created_at: {
@@ -46,5 +49,7 @@ module.exports = {
   },
   down: (queryInterface) => {
     return queryInterface.dropTable(tableName)
+      .then(queryInterface.sequelize.query('DROP TYPE enum_growth_reward_status;'))
+
   }
 }

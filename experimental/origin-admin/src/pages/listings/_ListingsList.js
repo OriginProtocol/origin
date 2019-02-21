@@ -54,8 +54,12 @@ const Listings = ({ listings, history }) => {
             <td>{a.categoryStr}</td>
             <td>
               <div className="ellip">
-                {a.featured ? <Icon icon="clean" className="mr-1 bp3-text-muted" /> : null}
-                {a.hidden ? <Icon icon="eye-off" className="mr-1 bp3-text-muted" /> : null}
+                {a.featured ? (
+                  <Icon icon="clean" className="mr-1 bp3-text-muted" />
+                ) : null}
+                {a.hidden ? (
+                  <Icon icon="eye-off" className="mr-1 bp3-text-muted" />
+                ) : null}
                 {a.title}
               </div>
             </td>

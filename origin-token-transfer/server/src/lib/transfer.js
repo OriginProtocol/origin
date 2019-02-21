@@ -1,6 +1,6 @@
 
-const Token = require('origin-faucet/lib/token')
-const { createProviders } = require('origin-faucet/lib/config')
+const Token = require('origin-token/src/token')
+const { createProviders } = require('origin-token/src/config')
 
 const { GRANT_TRANSFER } = require('../constants/events')
 const { Event, Grant, sequelize  } = require('../models')

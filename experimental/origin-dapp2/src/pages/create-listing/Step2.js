@@ -33,7 +33,8 @@ class Step2 extends Component {
         ? `/listings/${this.props.listingId}/edit`
         : '/create'
 
-    let ListingType = UnitListing, listingType = 'UnitListing'
+    let ListingType = UnitListing,
+      listingType = 'UnitListing'
     const { category, subCategory } = this.state
     if (category === 'schema.forRent' && subCategory === 'schema.housing') {
       ListingType = HomeShareListing
@@ -151,6 +152,14 @@ class Step2 extends Component {
       newState.descriptionError = 'Description is too short'
     }
 
+    if (!this.state.price) {
+      newState.priceError = 'Price is required'
+    } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
+      newState.priceError = 'Price must be a number'
+    } else if (Number(this.state.price) <= 0) {
+      newState.priceError = 'Price must be greater than zero'
+    }
+
     if (listingType === 'UnitListing') {
       if (!this.state.quantity) {
         newState.quantityError = 'Quantity is required'
@@ -159,22 +168,8 @@ class Step2 extends Component {
       } else if (Number(this.state.quantity) <= 0) {
         newState.quantityError = 'Quantity must be greater than zero'
       }
-
-      if (!this.state.price) {
-        newState.priceError = 'Price is required'
-      } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
-        newState.priceError = 'Price must be a number'
-      } else if (Number(this.state.price) <= 0) {
-        newState.priceError = 'Price must be greater than zero'
-      }
     } else if (listingType === 'HomeShareListing') {
-      if (!this.state.weekdayPrice) {
-        newState.weekdayPriceError = 'Weekday Price is required'
-      } else if (!this.state.weekdayPrice.match(/^-?[0-9.]+$/)) {
-        newState.weekdayPriceError = 'Weekday Price must be a number'
-      } else if (Number(this.state.weekdayPrice) <= 0) {
-        newState.weekdayPriceError = 'Weekday Price must be greater than zero'
-      }
+      // HomeShare validation
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

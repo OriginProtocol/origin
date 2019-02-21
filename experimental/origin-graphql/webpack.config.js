@@ -1,7 +1,7 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
 
-var config = {
+const config = {
   target: 'web',
   entry: {
     app: './src/index.js'
@@ -34,9 +34,7 @@ var config = {
     fs: 'empty'
   },
   mode: 'development',
-  plugins: [
-    new webpack.EnvironmentPlugin({ HOST: 'localhost' })
-  ]
+  plugins: [new webpack.EnvironmentPlugin({ HOST: 'localhost' })]
 }
 
 module.exports = config

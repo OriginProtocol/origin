@@ -7,6 +7,7 @@ import MessageQueue from './../utils/message-queue'
 import origin, {providerUrl, perfModeEnabled, discoveryServerUrl, web3} from './../services/origin'
 import {sha3_224} from 'js-sha3'
 import apn from 'apn'
+import * as firebase from 'firebase-admin' // AKA "admin"
 
 const ATTESTATION_ACCOUNT = process.env.ATTESTATION_ACCOUNT
 const DAPP_URL = process.env.DAPP_URL
@@ -15,6 +16,9 @@ const PROFILE_URL = `${DAPP_URL}/#/profile`
 const SELLING_URL = `${DAPP_URL}/#/create`
 const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
+
+const FIREBASE_SERVICE_JSON = process.env.FIREBASE_SERVICE_JSON
+const FIREBASE_DB_URL = process.env.FIREBASE_DB_URL || 'https://origin-wallet.firebaseio.com'
 
 class Linker {
   constructor({}={}) {
@@ -31,6 +35,20 @@ class Linker {
         production:process.env.APNS_PRODUCTION?true:false
       })
       this.apnBundle = process.env.APNS_BUNDLE_ID
+    }
+
+    // Firebase Admin SDK
+    // ref: https://firebase.google.com/docs/reference/admin/node/admin.messaging
+    if (FIREBASE_SERVICE_JSON)
+    {
+      const serviceJSON = require(FIREBASE_SERVICE_JSON)
+
+      firebase.initializeApp({
+        credential: firebase.credential.cert(serviceJSON),
+        databaseURL: FIREBASE_DB_URL
+      });
+
+      this.firebaseMessaging = firebase.messaging()
     }
   }
 
@@ -157,18 +175,45 @@ class Linker {
   }
 
   sendNotify(notify, msg, data = {}) {
-    if (notify && notify.deviceType == EthNotificationTypes.APN && this.apnProvider)
+    if (notify)
     {
-      const note = new apn.Notification({
-        alert:msg,
-        sound:'default',
-        payload:data,
-        topic:this.apnBundle
-      })
-      this.apnProvider.send(note, notify.deviceToken).then( result => {
-        console.log("APNS sent:", result.sent.length);
-        console.log("APNS failed:", result.failed);
-      });
+      if (notify.deviceType == EthNotificationTypes.APN && this.apnProvider)
+      {
+        const note = new apn.Notification({
+          alert:msg,
+          sound:'default',
+          payload:data,
+          topic:this.apnBundle
+        })
+        this.apnProvider.send(note, notify.deviceToken).then( result => {
+          console.log("APNS sent:", result.sent.length);
+          console.log("APNS failed:", result.failed);
+        });
+      }
+      else if (notify.deviceType == EthNotificationTypes.FCM && this.firebaseMessaging)
+      {
+        // Message: https://firebase.google.com/docs/reference/admin/node/admin.messaging.Message
+        const message = {
+          android: {
+            priority: 'high',
+            notification: {
+              channelId: 'Dapp'
+            }
+          },
+          notification: {
+            title: 'Origin notficiation', // TODO: Better verbiage?
+            body: msg,
+          },
+          data: data,
+          token: notify.deviceToken
+        }
+
+        this.firebaseMessaging.send(message).then(resp => {
+          console.log('FCM message sent:', resp)
+        }).catch(err => {
+          console.log('ERROR Sending FCM message', err)
+        })
+      }
     }
   }
 
@@ -295,6 +340,10 @@ class Linker {
           return `${meta.method} pending for ${meta.listing.title}`
       }
     }
+    else if (meta.identity)
+    {
+      return 'Confirm the publishing of your identity'
+    }
     else
     {
       if (meta.contract && meta.method)
@@ -323,7 +372,7 @@ class Linker {
     await this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
     // send push notification via APN or fcm
-    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta, account), {call_id})
+    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta || {}, account), {call_id})
   }
 
   async walletCalled(walletToken, callId, linkId, sessionToken, result) {

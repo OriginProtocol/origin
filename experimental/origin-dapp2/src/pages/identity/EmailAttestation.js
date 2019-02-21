@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import pick from 'lodash/pick'
 
 import Modal from 'components/Modal'
 
@@ -57,8 +56,9 @@ class EmailAttestation extends Component {
         </div>
         <div className="mt-3">
           <input
+            type="email"
             ref={ref => (this.inputRef = ref)}
-            className="form-control form-control-lg"
+            className="form-control form-control-lg text-center"
             placeholder="Verify email address"
             value={this.state.email}
             onChange={e => this.setState({ email: e.target.value })}
@@ -155,9 +155,6 @@ class EmailAttestation extends Component {
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
-              topic: result.claimType,
-              issuer: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', //result.issuer,
-              signature: result.signature,
               data: result.data,
               loading: false
             })
@@ -206,9 +203,7 @@ class EmailAttestation extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => {
-              this.props.onComplete(
-                pick(this.state, 'topic', 'issuer', 'signature', 'data')
-              )
+              this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
             children="Continue"

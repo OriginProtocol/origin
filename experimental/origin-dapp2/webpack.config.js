@@ -27,7 +27,18 @@ const config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        query: {
+          plugins: [
+            [
+              'babel-plugin-fbt',
+              {
+                fbtEnumManifest: require('./translations/.enum_manifest.json')
+              }
+            ],
+            'babel-plugin-fbt-runtime'
+          ]
+        }
       },
       {
         test: /\.mjs$/,
@@ -62,7 +73,8 @@ const config = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.json']
+    extensions: ['.js', '.json'],
+    modules: [path.resolve(__dirname, 'src/constants'), './node_modules']
   },
   node: {
     fs: 'empty'
@@ -73,10 +85,28 @@ const config = {
       'Access-Control-Allow-Origin': '*'
     }
   },
+  watchOptions: {
+    poll: 2000,
+    ignored: [
+      // Ignore node_modules in watch except for the origin-js directory
+      /node_modules([\\]+|\/)+(?!origin)/,
+      /\origin([\\]+|\/)node_modules/ // eslint-disable-line no-useless-escape
+    ]
+  },
   mode: isProduction ? 'production' : 'development',
   plugins: [
-    new HtmlWebpackPlugin({ template: 'public/template.html', inject: false }),
-    new webpack.EnvironmentPlugin({ HOST: 'localhost' })
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      network: 'rinkeby'
+    }),
+    new webpack.EnvironmentPlugin({
+      HOST: 'localhost',
+      ORIGIN_LINKING: null,
+      LINKER_HOST: 'localhost',
+      DOCKER: false,
+      IPFS_SWARM: ''
+    })
   ],
 
   optimization: {
@@ -102,7 +132,19 @@ if (isProduction) {
   config.plugins.push(
     new CleanWebpackPlugin(['public/app.*.css', 'public/app.*.js']),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
-    new webpack.IgnorePlugin(/redux-logger/)
+    new webpack.IgnorePlugin(/redux-logger/),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'mainnet.html',
+      network: 'mainnet'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'kovan.html',
+      network: 'kovanTst'
+    })
   )
   config.resolve.alias = {
     'react-styl': 'react-styl/prod.js'

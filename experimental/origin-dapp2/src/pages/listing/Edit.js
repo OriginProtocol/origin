@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import pick from 'lodash/pick'
+import get from 'lodash/get'
+
+import PageTitle from 'components/PageTitle'
 
 import Step1 from '../create-listing/Step1'
 import Step2 from '../create-listing/Step2'
@@ -14,26 +17,21 @@ class EditListing extends Component {
     this.state = {
       listing: {
         // HomeShare fields:
-        weekdayPrice: '',
-        weekendPrice: '',
-        booked: [],
-        customPricing: [],
-        unavailable: [],
+        weekendPrice: get(props, 'listing.weekendPrice.amount', ''),
+        booked: get(props, 'listing.booked', []),
+        customPricing: get(props, 'listing.customPricing', []),
+        unavailable: get(props, 'listing.unavailable', []),
 
         ...pick(props.listing, [
           'title',
           'description',
           'category',
-          'subCategory',
-          'weekdayPrice',
-          'weekendPrice',
-          'booked',
-          'customPricing',
-          'unavailable'
+          'subCategory'
         ]),
         quantity: String(props.listing.unitsTotal),
         price: String(props.listing.price.amount),
         boost: '0',
+        boostLimit: '0',
         media: props.listing.media
       }
     }
@@ -54,6 +52,7 @@ class EditListing extends Component {
     }
     return (
       <div className="container create-listing">
+        <PageTitle>Edit Listing</PageTitle>
         <Switch>
           <Route
             path="/listings/:listingID/edit/step-2"
@@ -69,7 +68,9 @@ class EditListing extends Component {
           />
           <Route
             path="/listings/:listingID/edit/review"
-            render={() => <Review {...stepProps} />}
+            render={() => (
+              <Review {...stepProps} refetch={this.props.refetch} />
+            )}
           />
           <Route render={() => <Step1 {...stepProps} />} />
         </Switch>

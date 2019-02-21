@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
+import omit from 'lodash/omit'
 import pick from 'lodash/pick'
+import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
+
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
+import PageTitle from 'components/PageTitle'
+import Link from 'components/Link'
 
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
@@ -25,10 +32,20 @@ class Listings extends Component {
   }
 
   render() {
-    const vars = pick(this.state, 'first', 'sort', 'hidden', 'search')
+    const isCreatedMarketplace = get(
+      this.props,
+      'creatorConfig.isCreatedMarketplace'
+    )
+    const filters = get(this.props, 'creatorConfig.listingFilters', [])
+
+    const vars = {
+      ...pick(this.state, 'first', 'sort', 'hidden', 'search'),
+      filters: filters.map(filter => omit(filter, '__typename'))
+    }
 
     return (
       <>
+        <PageTitle>Listings</PageTitle>
         <Search
           value={this.state.search}
           onSearch={search => {
@@ -66,24 +83,86 @@ class Listings extends Component {
                   }}
                 >
                   <>
-                    <h5 className="listings-count">{`${totalCount} Listings`}</h5>
+                    {totalCount == 0 && (
+                      <div className="listings-empty">
+                        <div className="row">
+                          <div className="col text-center">
+                            <img src="images/empty-listings-graphic.svg" />
+                            {this.state.search && (
+                              <h1>
+                                <fbt desc="listings.noListingsSearch">
+                                  No search results found
+                                </fbt>
+                              </h1>
+                            )}
 
-                    <ListingsGallery
-                      listings={nodes}
-                      hasNextPage={hasNextPage}
-                    />
+                            {isCreatedMarketplace && !this.state.search && (
+                              <>
+                                <h1>
+                                  <fbt desc="listings.noListingsWhitelabel">
+                                    Your marketplace doesn&apos;t have any
+                                    listings yet
+                                  </fbt>
+                                </h1>
+                                <p>
+                                  <fbt desc="listings.noListingsWhitelabelMessage">
+                                    You can create listings yourself or invite
+                                    sellers to join your platform!
+                                  </fbt>
+                                </p>
+                                <div className="row">
+                                  <div className="col text-center">
+                                    <Link
+                                      to="/create"
+                                      className="btn btn-lg btn-primary"
+                                    >
+                                      <fbt desc="listings.createListingButton">
+                                        Create a Listing
+                                      </fbt>
+                                    </Link>
+                                  </div>
+                                </div>
+                              </>
+                            )}
 
-                    {!hasNextPage ? null : (
-                      <button
-                        className="btn btn-outline-primary btn-rounded mt-3"
-                        onClick={() => {
-                          if (!loading) {
-                            nextPage(fetchMore, { ...vars, after })
-                          }
-                        }}
-                      >
-                        {loading ? 'Loading...' : 'Load more'}
-                      </button>
+                            {!isCreatedMarketplace && !this.state.search && (
+                              <h1>
+                                <fbt desc="listings.noListings">
+                                  No listings found
+                                </fbt>
+                              </h1>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {totalCount > 0 && (
+                      <>
+                        <h5 className="listings-count">
+                          <fbt desc="Num Listings">
+                            <fbt:plural count={totalCount} showCount="yes">
+                              Listing
+                            </fbt:plural>
+                          </fbt>
+                        </h5>
+                        <ListingsGallery
+                          listings={nodes}
+                          hasNextPage={hasNextPage}
+                        />
+                        {!hasNextPage ? null : (
+                          <button
+                            className="btn btn-outline-primary btn-rounded mt-3"
+                            onClick={() => {
+                              if (!loading) {
+                                nextPage(fetchMore, { ...vars, after })
+                              }
+                            }}
+                          >
+                            {loading ? 'Loading...' : 'Load more'}
+                          </button>
+                        )}
+                      </>
                     )}
                   </>
                 </BottomScrollListener>
@@ -101,13 +180,19 @@ class Listings extends Component {
   }
 }
 
-export default Listings
+export default withCreatorConfig(Listings)
 
 require('react-styl')(`
   .listings-count
-    font-family: Poppins;
+    font-family: var(--heading-font);
     font-size: 40px;
     font-weight: 200;
     color: var(--dark);
     margin-top: 3rem
+  .listings-empty
+    margin-top: 10rem
+  @media (max-width: 767.98px)
+    .listings-count
+      margin: 1rem 0 0 0
+      font-size: 32px
 `)

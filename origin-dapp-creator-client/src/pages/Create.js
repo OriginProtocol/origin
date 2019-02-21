@@ -1,3 +1,5 @@
+'use strict'
+
 import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
 import React from 'react'
 import pick from 'lodash/pick'
@@ -17,7 +19,7 @@ class Create extends React.Component {
       subdomainValidationRequest: null
     }
 
-    this.availableLanguages = getAvailableLanguages().map((language) => {
+    this.availableLanguages = getAvailableLanguages().map(language => {
       return {
         value: language.selectedLanguageCode,
         label: language.selectedLanguageFull
@@ -26,15 +28,19 @@ class Create extends React.Component {
     // Add English to the list of available languages
     this.availableLanguages.unshift({ value: 'en-US', label: 'English' })
 
-    this.availableLanguageOptions = this.availableLanguages.map((x) => {
-      return (<option key={x.value} value={x.value}>{x.label}</option>)
+    this.availableLanguageOptions = this.availableLanguages.map(x => {
+      return (
+        <option key={x.value} value={x.value}>
+          {x.label}
+        </option>
+      )
     })
 
     this.handleSubdomainChange = this.handleSubdomainChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  handleSubmit (event) {
+  handleSubmit(event) {
     event.preventDefault()
 
     const newState = {}
@@ -45,10 +51,15 @@ class Create extends React.Component {
       newState.titleError = 'Title is too short'
     }
 
+    // eslint-disable-next-line no-useless-escape
+    const subdomainRe = /[^a-zA-Z0-9\-]/
+
     if (!this.state.subdomain) {
       newState.subdomainError = 'Subdomain is required'
     } else if (this.state.subdomain.length < 2) {
       newState.subdomainError = 'Subdomain is too short'
+    } else if (subdomainRe.test(this.state.subdomain)) {
+      newState.subdomainError = 'Subdomain contains invalid characters'
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
@@ -64,20 +75,21 @@ class Create extends React.Component {
     return newState.valid
   }
 
-  handleSubdomainChange () {
+  handleSubdomainChange() {
     if (this.state.subdomainValidationRequest) {
       this.state.subdomainValidationRequest.cancel()
     }
 
     const func = debounce(() => {
-      return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/validate/subdomain`)
+      return superagent
+        .post(`${process.env.DAPP_CREATOR_API_URL}/validate/subdomain`)
         .send({
           config: {
-            subdomain: this.state.subdomain,
+            subdomain: this.state.subdomain
           },
           address: web3.eth.accounts[0]
         })
-        .catch((error) => {
+        .catch(error => {
           if (error.status === 400) {
             this.setState({
               subdomainError: error.response.text
@@ -95,15 +107,12 @@ class Create extends React.Component {
     func()
   }
 
-  render () {
+  render() {
     const input = formInput(this.state, state => this.setState(state))
-    const subdomainInput = formInput(
-      this.state,
-      state => {
-        this.setState(state)
-        this.handleSubdomainChange()
-      }
-    )
+    const subdomainInput = formInput(this.state, state => {
+      this.setState(state)
+      this.handleSubdomainChange()
+    })
     const Feedback = formFeedback(this.state)
 
     if (this.state.valid) {
@@ -133,11 +142,12 @@ class Create extends React.Component {
               </div>
               {Feedback('subdomain')}
             </div>
-            {/*
-            <div className="helper-text">
-              You can use your own custom domain name. <a href="#">Here's how</a>
-            </div>
-            */}
+            {
+              <div className="helper-text">
+                You can set up your own custom domain name after you create your
+                marketplace.
+              </div>
+            }
           </div>
 
           <div className="form-group">

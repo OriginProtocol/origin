@@ -18,7 +18,7 @@ class Availability extends Component {
       available: true,
       range: '',
       calculator: new AvailabilityCalculator({
-        weekdayPrice: props.listing.weekdayPrice,
+        weekdayPrice: props.listing.price,
         weekendPrice: props.listing.weekendPrice,
         booked: props.listing.booked,
         unavailable: props.listing.unavailable,
@@ -62,6 +62,7 @@ class Availability extends Component {
                   range={this.state.range}
                   availability={this.state.calculator}
                   onChange={state => this.setState(state)}
+                  showBooked={true}
                 />
 
                 <div className="actions">
@@ -235,7 +236,7 @@ require('react-styl')(`
     .availability-editor
       margin-top: 10.5rem
       border: 1px solid var(--light)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 1rem
       font-size: 18px
       font-weight: normal

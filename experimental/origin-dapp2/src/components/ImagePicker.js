@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import Tooltip from 'components/Tooltip'
 import ImageCropper from 'components/ImageCropperModal'
 
+import loadImage from 'blueimp-load-image'
+
 import { fileSize, postFile } from 'utils/fileUtils'
 const acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
 
@@ -12,14 +14,23 @@ async function getImages(ipfsRPC, files) {
   const newImages = []
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
-    const hash = await postFile(ipfsRPC, file, file.type)
+
+    const newFile = await new Promise(resolve => {
+      loadImage(file, img => img.toBlob(blob => resolve(blob), 'image/jpeg'), {
+        orientation: true,
+        maxWidth: 2000,
+        maxHeight: 2000
+      })
+    })
+
+    const hash = await postFile(ipfsRPC, newFile, file.type)
     if (acceptedFileTypes.indexOf(file.type) >= 0) {
       newImages.push({
         contentType: file.type,
         size: fileSize(file.size),
         name: file.name,
-        src: window.URL.createObjectURL(file),
-        urlExpanded: window.URL.createObjectURL(file),
+        src: window.URL.createObjectURL(newFile),
+        urlExpanded: window.URL.createObjectURL(newFile),
         hash
       })
     }

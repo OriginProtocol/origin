@@ -1,10 +1,11 @@
 import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function acceptOffer(_, data) {
-  const { from } = data
+  const from = data.from || contracts.defaultLinkerAccount
   await checkMetaMask(from)
   const ipfsHash = await post(contracts.ipfsRPC, {
     schemaId: 'https://schema.originprotocol.com/offer-accept_1.0.0.json'
@@ -18,7 +19,7 @@ async function acceptOffer(_, data) {
 
   const tx = contracts.marketplaceExec.methods
     .acceptOffer(listingId, offerId, ipfsHash)
-    .send({ gas: 4612388, from })
+    .send({ gas: cost.acceptOffer, from })
   return txHelper({ tx, from, mutation: 'acceptOffer' })
 }
 

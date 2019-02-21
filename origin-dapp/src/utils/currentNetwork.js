@@ -1,11 +1,11 @@
 const networks = [
-  { id: 1, name: 'Main Ethereum Network', type: 'Mainnet Beta' },
-  { id: 2, name: 'Morden Test Network', type: 'Testnet Beta' },
-  { id: 3, name: 'Ropsten Test Network', type: 'Testnet Beta' },
-  { id: 4, name: 'Rinkeby Test Network', type: 'Testnet Beta' },
-  { id: 42, name: 'Kovan Test Network', type: 'Testnet Beta' },
-  { id: 999, name: 'Localhost', type: 'Beta on Localhost' },
-  { id: 2222, name: 'Origin Test Network', type: 'Origin Testnet Beta' }
+  { id: 1, name: 'Main Ethereum Network', type: 'Mainnet' },
+  { id: 2, name: 'Morden Test Network', type: 'Testnet' },
+  { id: 3, name: 'Ropsten Test Network', type: 'Testnet' },
+  { id: 4, name: 'Rinkeby Test Network', type: 'Testnet' },
+  { id: 42, name: 'Kovan Test Network', type: 'Testnet' },
+  { id: 999, name: 'Localhost', type: 'Localhost' },
+  { id: 2222, name: 'Origin Test Network', type: 'Testnet' }
 ]
 
 /*

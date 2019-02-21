@@ -5499,6 +5499,11 @@ a:not([href]):not([tabindex]).span-link {
   width: auto;
 }
 
+.beta .disclaimer a {
+  color: white;
+  text-decoration: underline;
+}
+
 /* Warning */
 
 .warning .badge {
@@ -5516,6 +5521,11 @@ a:not([href]):not([tabindex]).span-link {
 .warning p {
   font-weight: normal;
   margin-bottom: 0;
+}
+
+.warning .reminders:not([href]):not([tabindex]) {
+  color: var(--clear-blue);
+  cursor: pointer;
 }
 
 /* Media queries */

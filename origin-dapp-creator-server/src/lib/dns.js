@@ -3,12 +3,7 @@ const { DNS } = require('@google-cloud/dns')
 const dns = new DNS({ projectId: process.env.GCLOUD_PROJECT })
 const zone = dns.zone(process.env.GCLOUD_DNS_ZONE || 'test-zone')
 
-export const subdomainBlacklist = [
-  'admin',
-  'login',
-  'system',
-  'account'
-]
+export const subdomainBlacklist = ['admin', 'login', 'system', 'account']
 
 /* Generates the DNS name of the CNAME and TXT entries.
  *
@@ -18,7 +13,9 @@ export const subdomainBlacklist = [
  * @param {string} recordType The DNS record type.
  */
 function getDnsName(subdomain, recordType) {
-  const baseName = `${subdomain}.${process.env.DAPP_CREATOR_DOMAIN}.`.toLowerCase()
+  const baseName = `${subdomain}.${
+    process.env.DAPP_CREATOR_DOMAIN
+  }.`.toLowerCase()
   if (recordType.toLowerCase() === 'cname') {
     return baseName
   } else if (recordType.toLowerCase() === 'txt') {
@@ -44,10 +41,14 @@ export function parseDnsTxtRecord(data) {
  */
 export function getDnsRecord(subdomain, recordType) {
   return new Promise((resolve, reject) => {
-    zone.getRecordsStream()
+    zone
+      .getRecordsStream()
       .on('error', reject)
       .on('data', record => {
-        if (record.type == recordType && record.name == getDnsName(subdomain, recordType)) {
+        if (
+          record.type == recordType &&
+          record.name == getDnsName(subdomain, recordType)
+        ) {
           resolve(record)
         }
       })

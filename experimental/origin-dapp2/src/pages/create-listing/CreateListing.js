@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
+import get from 'lodash/get'
 
 import withTokenBalance from 'hoc/withTokenBalance'
 import withWallet from 'hoc/withWallet'
+import withCreatorConfig from 'hoc/withCreatorConfig'
+
+import PageTitle from 'components/PageTitle'
 
 import Step1 from './Step1'
 import Step2 from './Step2'
@@ -14,8 +18,8 @@ import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 class CreateListing extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       listing: {
         title: '',
@@ -32,11 +36,13 @@ class CreateListing extends Component {
         price: '',
 
         // HomeShare fields:
-        weekdayPrice: '',
         weekendPrice: '',
         booked: [],
         customPricing: [],
         unavailable: [],
+
+        // Marketplace creator fields:
+        marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
         ...store.get('create-listing', {})
       }
@@ -56,6 +62,7 @@ class CreateListing extends Component {
     }
     return (
       <div className="container create-listing">
+        <PageTitle>Add a Listing</PageTitle>
         <Switch>
           <Route
             path="/create/step-2"
@@ -112,25 +119,25 @@ class CreateListing extends Component {
   }
 }
 
-export default withWallet(withTokenBalance(CreateListing))
+export default withCreatorConfig(withWallet(withTokenBalance(CreateListing)))
 
 require('react-styl')(`
   .create-listing
     padding-top: 3rem
     .gray-box
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 2rem
       background-color: var(--pale-grey-eight)
 
     .step
-      font-family: Lato
+      font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
       text-transform: uppercase
       margin-top: 0.75rem
     .step-description
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
       line-height: normal
@@ -144,4 +151,20 @@ require('react-styl')(`
         border-radius: 2rem
         padding: 0.625rem
         font-size: 18px
+
+  @media (max-width: 767.98px)
+    .create-listing
+      padding-top: 1rem
+      .actions
+        margin-top: 2rem
+        .btn
+          min-width: auto
+          flex: 1
+          margin: 0 0.5rem
+          &:first-child
+            margin-left: 0
+          &:last-child
+            margin-right: 0
+        margin-bottom: 2rem
+
 `)

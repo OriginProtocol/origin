@@ -223,6 +223,14 @@ describe('Marketplace.sol', async function() {
       assert(result.events.OfferAccepted)
     })
 
+    it('should allow data to be added to an offer', async function() {
+      const result = await Marketplace.methods
+        .addData(0, 0, IpfsHash)
+        .send({ from: Seller })
+        .once('receipt', trackGas('Add Offer Data'))
+      assert(result.events.OfferData)
+    })
+
     it('should allow an offer to be finalized by buyer', async function() {
       const balanceBefore = await web3.eth.getBalance(Seller)
 

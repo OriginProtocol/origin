@@ -13,8 +13,9 @@ module.exports = Object.freeze({
   IPFS_ADDRESS: process.env.IPFS_ADDRESS || null,
   IPFS_PORT: process.env.IPFS_PORT || '5001',
 
-  IPFS_MAX_CONNECTIONS: process.env.IPFS_MAX_CONNECTIONS ?
-    Number(process.env.IPFS_MAX_CONNECTIONS) : 16384,
+  IPFS_MAX_CONNECTIONS: process.env.IPFS_MAX_CONNECTIONS
+    ? Number(process.env.IPFS_MAX_CONNECTIONS)
+    : 16384,
   IPFS_REPO_PATH: process.env.IPFS_REPO_PATH || './ipfs',
   IPFS_WS_ADDRESS: process.env.IPFS_WS_ADDRESS || '/ip4/0.0.0.0/tcp/9012/ws',
 
@@ -24,5 +25,5 @@ module.exports = Object.freeze({
   ORBIT_DB_PATH: process.env.ORBIT_DB_PATH || './odb',
 
   RPC_SERVER: process.env.RPC_SERVER,
-  SNAPSHOT_BATCH_SIZE: process.env.SNAPSHOT_BATCH_SIZE || 150,
+  SNAPSHOT_BATCH_SIZE: process.env.SNAPSHOT_BATCH_SIZE || 150
 })

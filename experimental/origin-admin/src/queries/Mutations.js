@@ -131,6 +131,14 @@ export const DeployIdentityContractMutation = gql`
   }
 `
 
+export const DeployIdentityEventsContractMutation = gql`
+  mutation DeployIdentityEventsContract($from: String!) {
+    deployIdentityEvents(from: $from) {
+      id
+    }
+  }
+`
+
 export const CreateListingMutation = gql`
   mutation CreateListing(
     $from: String!
@@ -324,7 +332,7 @@ export const DeployIdentityMutation = gql`
   mutation DeployIdentity(
     $from: String!
     $profile: ProfileInput
-    $attestations: [AttestationInput]
+    $attestations: [String]
   ) {
     deployIdentity(
       from: $from

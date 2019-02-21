@@ -4,6 +4,7 @@ const get = ipfs.get
 // import { get } from 'origin-ipfs'
 const startCase = require('lodash/startCase')
 const pick = require('lodash/pick')
+const _get = require('lodash/get')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 class OriginEventSource {
@@ -51,6 +52,7 @@ class OriginEventSource {
     try {
       listing = await this.contract.methods.listings(listingId).call()
     } catch (e) {
+      console.log(`No such listing on contract ${listingId}`)
       return null
     }
 
@@ -83,6 +85,7 @@ class OriginEventSource {
       data = await get(this.ipfsGateway, ipfsHash)
       data = pick(
         data,
+        'listingType',
         'title',
         'description',
         'currencyId',
@@ -92,9 +95,15 @@ class OriginEventSource {
         'media',
         'unitsTotal',
         'commission',
-        'commissionPerUnit'
+        'commissionPerUnit',
+
+        'weekendPrice',
+        'booked',
+        'unavailable',
+        'customPricing'
       )
     } catch (e) {
+      console.log(`Error retrieving IPFS data for ${ipfsHash}`)
       return null
     }
 
@@ -115,6 +124,7 @@ class OriginEventSource {
           )
         }
       } catch (e) {
+        console.log(`Error retrieving old IPFS data for ${ipfsHash}`)
         return null
       }
     }
@@ -144,8 +154,10 @@ class OriginEventSource {
       commission = this.web3.utils.toWei(commissionOgn, 'ether')
     }
 
-    this.listingCache[cacheKey] = await this.withOffers(listingId, {
+    const listingWithOffers = await this.withOffers(listingId, {
       ...data,
+      __typename:
+        data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
       id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
@@ -162,6 +174,8 @@ class OriginEventSource {
       commission
     })
 
+    this.listingCache[cacheKey] = listingWithOffers
+
     return this.listingCache[cacheKey]
   }
 
@@ -172,15 +186,26 @@ class OriginEventSource {
       .totalOffers(listingId)
       .call()
 
-    const allOffers = []
-    for (const id of Array.from({ length: totalOffers }, (_, i) => i)) {
-      allOffers.push(await this._getOffer(listing, listingId, id))
-    }
+    const allOffers = await Promise.all(
+      Array.from({ length: totalOffers }, (_, i) => i).map(id =>
+        this._getOffer(listing, listingId, id)
+      )
+    )
 
     // Compute fields from valid offers.
     let commissionAvailable = this.web3.utils.toBN(listing.commission)
     let unitsAvailable = listing.unitsTotal
-    if (listing.type === 'unit') {
+    const booked = []
+
+    if (listing.listingType === 'fractional') {
+      allOffers.forEach(offer => {
+        if (!offer.valid || offer.status === 0) {
+          // No need to do anything here.
+        } else if (offer.startDate && offer.endDate) {
+          booked.push(`${offer.startDate}-${offer.endDate}`)
+        }
+      })
+    } else if (listing.type === 'unit') {
       const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
@@ -222,6 +247,7 @@ class OriginEventSource {
       : '0'
     return Object.assign({}, listing, {
       allOffers,
+      booked,
       unitsAvailable,
       unitsSold: listing.unitsTotal - unitsAvailable,
       depositAvailable: commissionAvailable
@@ -278,8 +304,7 @@ class OriginEventSource {
       status = offer.status
     }
 
-    let data = await get(this.ipfsGateway, ipfsHash)
-    data = pick(data, 'unitsPurchased')
+    const data = await get(this.ipfsGateway, ipfsHash)
 
     const networkId = await this.getNetworkId()
 
@@ -300,17 +325,24 @@ class OriginEventSource {
       buyer: { id: offer.buyer },
       affiliate: { id: offer.affiliate },
       arbitrator: { id: offer.arbitrator },
-      quantity: data.unitsPurchased
+      quantity: _get(data, 'unitsPurchased'),
+      startDate: _get(data, 'startDate'),
+      endDate: _get(data, 'endDate')
     }
     offerObj.statusStr = offerStatus(offerObj)
 
-    try {
-      await this.validateOffer(offerObj, listing)
-      offerObj.valid = true
-      offerObj.validationError = null
-    } catch (e) {
+    if (!data) {
       offerObj.valid = false
-      offerObj.validationError = e.message
+      offerObj.validationError = 'IPFS data not found'
+    } else {
+      try {
+        await this.validateOffer(offerObj, listing)
+        offerObj.valid = true
+        offerObj.validationError = null
+      } catch (e) {
+        offerObj.valid = false
+        offerObj.validationError = e.message
+      }
     }
 
     this.offerCache[cacheKey] = offerObj
@@ -366,16 +398,19 @@ class OriginEventSource {
     }
   }
 
-  async getReview(listingId, offerId, party, ipfsHash) {
+  async getReview(listingId, offerId, party, ipfsHash, event) {
     const data = await get(this.ipfsGateway, ipfsHash)
     const networkId = await this.getNetworkId()
+    const offerIdExp = `${networkId}-0-${listingId}-${offerId}`
+    const listing = await this.getListing(listingId, event.blockNumber)
     return {
-      id: `${networkId}-0-${listingId}-${offerId}`,
+      id: offerIdExp,
       reviewer: { id: party, account: { id: party } },
-      listing: { id: listingId },
-      offer: { id: offerId },
+      listing,
+      offer: { id: offerIdExp },
       review: data.text,
-      rating: data.rating
+      rating: data.rating,
+      event
     }
   }
 

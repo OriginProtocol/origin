@@ -86,11 +86,22 @@ module.exports = `
       # Optional: normally inherited from listing
       arbitrator: String
       affiliate: String
+      fractionalData: FractionalOfferInput
     ): Transaction
 
     executeRuling(
       offerID: ID!
+      offerID: ID!
+      # ruling may be one of:
+      # 
+      # - refund-buyer: Buyer gets all value in the offer
+      # - pay-seller: Seller gets all value in the offer
+      # - partial-refund: Buyer the refund value, Seller gets all remaining value
       ruling: String!
+      # commission may be one of:
+      # 
+      # - pay: Affiliate receives commission tokens, if any
+      # - refund: Seller refunded commission tokens, if any
       commission: String!
       message: String
       refund: String
@@ -124,6 +135,7 @@ module.exports = `
       before: String
       after: String
       search: String
+      filters: [ListingFilterInput!]
       sort: String
       hidden: Boolean
     ): ListingConnection!
@@ -158,7 +170,7 @@ module.exports = `
     offers(first: Int, after: String, filter: String): OfferConnection!
     sales(first: Int, after: String, filter: String): OfferConnection!
     reviews(first: Int, after: String): ReviewConnection!
-    notifications(first: Int, after: String): UserNotificationConnection!
+    notifications(first: Int, after: String, filter: String): UserNotificationConnection!
     transactions(first: Int, after: String): UserTransactionConnection!
   }
 
@@ -203,6 +215,7 @@ module.exports = `
     offer: Offer
     review: String
     rating: Int
+    event: Event
   }
 
   type ListingConnection {
@@ -237,7 +250,7 @@ module.exports = `
     ${ListingInterface}
 
     # IPFS
-    weekendPrice: String
+    weekendPrice: Price
     unavailable: [String]
     customPricing: [String]
     booked: [String]
@@ -279,13 +292,17 @@ module.exports = `
     arbitrator: Account
     finalizes: Int
     status: Int
-    quantity: Int
 
     # Computed
     withdrawnBy: Account
     statusStr: String
     valid: Boolean
     validationError: String
+
+    # IPFS
+    quantity: Int
+    startDate: String
+    endDate: String
   }
 
   type OfferHistory {
@@ -294,6 +311,29 @@ module.exports = `
     party: Account
     ipfsHash: String
     ipfsUrl: String
+  }
+
+  enum ValueType {
+    STRING
+    FLOAT
+    DATE
+    ARRAY_STRING
+  }
+
+  enum FilterOperator {
+    EQUALS
+    CONTAINS
+    GREATER
+    GREATER_OR_EQUAL
+    LESSER
+    LESSER_OR_EQUAL
+  }
+
+  input ListingFilterInput {
+    name: String!
+    value: String!
+    valueType: ValueType!
+    operator: FilterOperator!
   }
 
   input ListingInput {
@@ -309,6 +349,8 @@ module.exports = `
     commission: String
     "commission, in natural units, to be paid for each unit sold"
     commissionPerUnit: String
+
+    marketplacePublisher: String
   }
 
   input UnitListingInput {
@@ -331,9 +373,13 @@ module.exports = `
     currency: String
   }
 
+  input FractionalOfferInput {
+    startDate: String
+    endDate: String
+  }
+
   input PriceInput {
     amount: String
     currency: String
   }
-
 `

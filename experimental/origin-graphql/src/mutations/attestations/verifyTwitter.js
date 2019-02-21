@@ -4,11 +4,12 @@ import get from 'lodash/get'
 async function verifyTwitter(_, { identity }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
-    return { success: false }
+    return { success: false, reason: 'No bridge server configured' }
   }
   const authUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
   const response = await fetch(authUrl, {
-    headers: { 'content-type': 'application/json' }
+    headers: { 'content-type': 'application/json' },
+    credentials: 'include'
   })
 
   const authData = await response.json()
@@ -29,7 +30,7 @@ async function verifyTwitter(_, { identity }) {
       const url = `${bridgeServer}/api/attestations/twitter/verify`
 
       const response = await fetch(url, {
-        headers: { 'content-type': 'application/json' },
+        headers: { 'content-type': 'application/json', accept: '*/*' },
         credentials: 'include',
         method: 'POST',
         body: JSON.stringify({
@@ -48,9 +49,7 @@ async function verifyTwitter(_, { identity }) {
 
       resolve({
         success: true,
-        claimType: data['claim-type'],
-        data: contracts.web3.utils.soliditySha3(data.data),
-        signature: data.signature
+        data: JSON.stringify(data)
       })
     }
 

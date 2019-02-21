@@ -28,5 +28,7 @@ if (isWatchMode) {
   process.once('exit', () => process.exit(0))
 } else {
   // Shutdown ganache etc if we're not in watch mode and tests are finished.
-  after(() => shutdown())
+  after(async function() {
+    await shutdown()
+  })
 }

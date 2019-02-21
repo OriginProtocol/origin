@@ -105,14 +105,23 @@ class AvailabilityCalculator {
     return modifiedSlots
   }
 
+  estimatePrice(range) {
+    const [startStr, endStr] = range.split('-')
+    const availability = this.getAvailability(startStr, endStr)
+    const available = availability.every(slot => slot.unavailable === false)
+    const price = availability.reduce((m, slot) => m + Number(slot.price), 0)
+    return { available, price: Math.round(price * 100000) / 100000 }
+  }
+
   getAvailability(startStr, endStr) {
     let start = typeof startStr === 'string' ? dayjs(startStr) : startStr
-    const end =
-        typeof endStr === 'string' ? dayjs(endStr).add(1, 'day') : endStr,
-      days = []
+    let end = typeof endStr === 'string' ? dayjs(endStr).add(1, 'day') : endStr
+    const days = []
 
     if (end.isBefore(start)) {
-      throw new Error('End is before start')
+      const newEnd = start
+      start = end
+      end = newEnd
     }
 
     const unavailable = {}

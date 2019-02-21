@@ -9,6 +9,7 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
 import Redirect from 'components/Redirect'
+import PageTitle from 'components/PageTitle'
 
 import NotificationRow from './NotificationRow'
 
@@ -24,7 +25,7 @@ const NavPills = () => (
         className="nav-link"
         to="/notifications"
         exact
-        children="Unread"
+        children="Pending"
       />
     </li>
     <li className="nav-item">
@@ -50,6 +51,7 @@ class Notifications extends Component {
 
     return (
       <div className="container purchases">
+        <PageTitle>Notifications</PageTitle>
         <Query
           query={query}
           variables={vars}
@@ -138,5 +140,5 @@ export default withWallet(Notifications)
 require('react-styl')(`
   .notifications-list
     border: 1px solid var(--light)
-    border-radius: 5px
+    border-radius: var(--default-radius)
 `)

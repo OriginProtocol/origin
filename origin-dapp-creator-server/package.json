@@ -6,7 +6,9 @@
   "scripts": {
     "build": "per-env",
     "build:production": "babel -d dist --presets @babel/env src",
-    "lint": "eslint 'src/**/*.js'",
+    "lint": "eslint \"src/**/*.js\" && npm run prettier:check",
+    "prettier": "prettier --write \"src/**/*.js\"",
+    "prettier:check": "prettier -c \"src/**/*.js\"",
     "start": "per-env",
     "start:development": "nodemon --exec 'babel-node' -r src/env.js src/app.js --presets @babel/env",
     "prestart:production": "npm run build",
@@ -35,11 +37,11 @@
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
     "express": "^4.16.4",
-    "ipfs-api": "^26.1.2",
+    "ipfs-http-client": "^29.1.0",
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
     "raven": "^2.6.4",
-    "web3": "1.0.0-beta.37"
+    "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -51,5 +53,9 @@
     "presets": [
       "@babel/preset-env"
     ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }
