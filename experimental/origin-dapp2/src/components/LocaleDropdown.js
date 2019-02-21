@@ -16,7 +16,7 @@ class LocaleDropdown extends Component {
     }
   }
 
-  render () {
+  render() {
     return (
       <Dropdown
         className="dropup"
