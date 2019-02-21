@@ -122,6 +122,8 @@ describe('phone attestations', () => {
   })
 
   it('should generate attestation on valid verification code', async () => {
+    // Execute a generate code request first so the session gets populated with
+    // phoneVerificationMethod
     const verifyParams = {
       country_calling_code: '1',
       phone_number: '12341234',
@@ -133,10 +135,16 @@ describe('phone attestations', () => {
       .post('/protected/json/phones/verification/start')
       .reply(200)
 
+    let cookie
     await request(app)
       .post('/phone/generate-code')
       .send(verifyParams)
       .expect(200)
+      .then(response => {
+        // Save the cookie for use in the next request
+        cookie = response.headers['set-cookie']
+      })
+
 
     const checkParams = {
       eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
@@ -154,18 +162,69 @@ describe('phone attestations', () => {
 
     await request(app)
       .post('/phone/verify')
+      .set('Cookie', cookie)
       .send(checkParams)
       .expect(200)
       .then(response => {
-        console.log(response.body)
+        expect(response.body.schemaId).to.equal('https://schema.originprotocol.com/attestation_1.0.0.json')
+        expect(response.body.data.issuer.name).to.equal('Origin Protocol')
+        expect(response.body.data.issuer.url).to.equal('https://www.originprotocol.com')
+        expect(response.body.data.attestation.verificationMethod.sms).to.equal(true)
+        expect(response.body.data.attestation.phone.verified).to.equal(true)
+        // TODO check database insert
       })
   })
 
-  it('should error on missing verification code', async () => {})
+  it('should error on missing verification code', async () => {
+  })
 
-  it('should error on incorrect verification code', async () => {})
+  it('should error on incorrect verification code', async () => {
+    const params = {
+      eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+      country_calling_code: '1',
+      phone: '12341234',
+    }
 
-  it('should error on expired verification code', async () => {})
+    nock('https://api.authy.com')
+      .post('/protected/json/phones/verification/check')
+      .reply(400, {
+        error_code: '60022'
+      })
+
+    await request(app)
+      .post('/phone/verify')
+      .send(params)
+      .expect(400)
+      .then(response => {
+        expect(response.body.errors.phone).to.equal(
+          'Verification code is incorrect.'
+        )
+      })
+  })
+
+  it('should error on expired verification code', async () => {
+    const params = {
+      eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+      country_calling_code: '1',
+      phone: '12341234',
+    }
+
+    nock('https://api.authy.com')
+      .post('/protected/json/phones/verification/check')
+      .reply(400, {
+        error_code: '60023'
+      })
+
+    await request(app)
+      .post('/phone/verify')
+      .send(params)
+      .expect(400)
+      .then(response => {
+        expect(response.body.errors.phone).to.equal(
+          'Verification code has expired.'
+        )
+      })
+  })
 
   it('should use en locale for sms in india', async () => {
     const params = {
