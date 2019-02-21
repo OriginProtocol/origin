@@ -6,7 +6,7 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
-
+import MobileLinkToggle from 'components/MobileLinkToggle'
 
 const configurableFields = [
   'bridge',
@@ -116,9 +116,7 @@ class Settings extends Component {
                   <div className="form-text form-text-muted">
                     <small>Disconnect from your mobile wallet by clicking the button below.</small>
                   </div>
-                  <button className="btn btn-outline-danger">
-                    Disconnect
-                  </button>
+                  <MobileLinkToggle />
                 </div>
               </div>
             </div>
