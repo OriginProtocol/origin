@@ -187,6 +187,8 @@ router.post(
       }
     }
 
+    // TODO: verify determinism of JSONifying data for hashing
+
     const signature = {
       bytes: generateAttestationSignature(
         process.env.ATTESTATION_SIGNING_KEY,
@@ -196,6 +198,7 @@ router.post(
       version: '1.0.0'
     }
 
+    // Save the attestation in the database
     await Attestation.create({
       method: AttestationTypes.PHONE,
       ethAddress: req.body.eth_address,

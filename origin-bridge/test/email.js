@@ -14,15 +14,11 @@ describe('email attestations', () => {
     testSession = session(app)
   })
 
-  it('should generate a verification code', () => {
-    response = testSession
+  it('should generate a verification code', async () => {
+    const response = testSession
       .post('/email/generate-code')
       .send({ email: 'origin@protocol.foo' })
       .expect(200)
-      .then(response => {
-        expect(typeof response.body.code).equal('number')
-        expect(String(response.body.code).length).equal(6)
-      })
   })
 
   it('should return a message on sendgrid error', () => {})
