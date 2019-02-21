@@ -1,0 +1,25 @@
+{
+  "fb-locale": "fb_HX",
+  "translations": {
+    "BFrTfCZ9EtXiz3llu4N2aw==": {
+      "tokens": [],
+      "types": [],
+      "translations": [
+        {
+          "translation": "{number} LISTINGS",
+          "variations": {}
+        }
+      ]
+    },
+    "+0fI9MUbai7EjA2MflxNgQ==": {
+      "tokens": [],
+      "types": [],
+      "translations": [
+        {
+          "translation": "1 LISTING",
+          "variations": {}
+        }
+      ]
+    }
+  }
+}

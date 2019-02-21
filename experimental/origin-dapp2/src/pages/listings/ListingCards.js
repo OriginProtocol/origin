@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import Redirect from 'components/Redirect'
 import Price from 'components/Price'
 import ListingBadge from 'components/ListingBadge'
-
-import category from 'utils/category'
+import Category from 'components/Category'
 
 class Listings extends Component {
   state = {}
@@ -31,12 +30,17 @@ class Listings extends Component {
               <div className="main-pic empty" />
             )}
             <div className="header">
-              <div className="category">{category(a)}</div>
+              <div className="category">
+                <Category listing={a} />
+              </div>
               <ListingBadge status={a.status} featured={a.featured} />
             </div>
             <h5>{a.title}</h5>
             <div className="price">
-              <div className="eth">{`${a.price.amount} ETH`}</div>
+              <div className="eth">
+                {`${a.price.amount} ETH`}
+                {a.__typename !== 'FractionalListing' ? '' : ' / night'}
+              </div>
               <div className="usd">
                 <Price amount={a.price.amount} />
               </div>
@@ -77,7 +81,7 @@ require('react-styl')(`
       justify-content: space-between
 
     .category
-      font-family: Lato
+      font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
@@ -88,7 +92,7 @@ require('react-styl')(`
       margin-top: 0.75rem
 
     h5
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
       color: var(--dark)
@@ -101,7 +105,7 @@ require('react-styl')(`
       background: url(images/eth-icon.svg) no-repeat
       padding-left: 2rem
       line-height: 1.25rem
-      font-family: Lato
+      font-family: var(--default-font)
 
       .eth
         font-size: 18px

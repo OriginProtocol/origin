@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
+import { openBetaModal } from 'actions/App'
+
 import { BetaBadge } from 'components/badges'
+
 import getCurrentNetwork from 'utils/currentNetwork'
 
 class Warning extends Component {
@@ -20,9 +23,14 @@ class Warning extends Component {
   }
 
   render() {
-    const { web3NetworkId } = this.props
+    const { config, openBetaModal, web3NetworkId } = this.props
     const currentNetwork = getCurrentNetwork(web3NetworkId)
     const networkType = currentNetwork && currentNetwork.type
+    let { title } = config
+
+    if (!title) {
+      title = 'Origin'
+    }
 
     let wrapperClass = 'warning alert alert-warning'
     if (this.state.warningExpanded)
@@ -42,21 +50,26 @@ class Warning extends Component {
                     <strong id="desktop-message">
                       <FormattedMessage
                         id={'warning.desktopMessage'}
-                        defaultMessage={`You're currently using the Origin {networkType}.`}
-                        values={{ networkType }}
+                        defaultMessage={`You're currently using {title} Beta on {networkType}.`}
+                        values={{ title, networkType }}
                       />
+                      &nbsp;
+                      <a className="reminders" onClick={openBetaModal}>Important Reminders</a>
                     </strong>
                     <strong id="mobile-message">
                       <FormattedMessage
                         id={'warning.mobileMessage'}
-                        defaultMessage={`Welcome to the Origin Beta!`}
+                        defaultMessage={`Welcome to {title} Beta!`}
+                        values={{ title }}
                       />
+                      &nbsp;
+                      <a className="reminders" onClick={openBetaModal}>Reminders</a>
                     </strong>
                   </p>
                   <p id="invitation-message">
                     <FormattedMessage
                       id={'warning.invitation'}
-                      defaultMessage={`Found a bug? Open an issue on {github} or report it in our #bug-reports channel on {discord}.`}
+                      defaultMessage={`Found a bug or have feedback? Send an email to {email}, open an issue on {github}, or post in our #bug-reports channel on {discord}.`}
                       values={{
                         discord: (
                           <a
@@ -68,6 +81,18 @@ class Warning extends Component {
                             onClick={(e) => e.stopPropagation()} // prevent parent divs receiving onClick event
                           >
                             Discord
+                          </a>
+                        ),
+                        email: (
+                          <a
+                            href="mailto:support@originprotocol.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            ga-category="beta"
+                            ga-label="banner_discord_report_bug"
+                            onClick={(e) => e.stopPropagation()} // prevent parent divs receiving onClick event
+                          >
+                            support@originprotocol.com
                           </a>
                         ),
                         github: (
@@ -98,11 +123,16 @@ class Warning extends Component {
   }
 }
 
-const mapStateToProps = ({ app }) => {
+const mapStateToProps = ({ app, config }) => {
   return {
-    web3NetworkId: app.web3.networkId,
-    showWelcome: app.showWelcome
+    config,
+    showWelcome: app.showWelcome,
+    web3NetworkId: app.web3.networkId
   }
 }
 
-export default connect(mapStateToProps)(Warning)
+const mapDispatchToProps = dispatch => ({
+  openBetaModal: () => dispatch(openBetaModal())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Warning)

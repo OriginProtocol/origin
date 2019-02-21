@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
+import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
+import Calendar from 'components/Calendar'
+import Category from 'components/Category'
 
 import CreateListing from './mutations/CreateListing'
 import UpdateListing from './mutations/UpdateListing'
-
-import category from 'utils/category'
 
 class Review extends Component {
   state = {}
@@ -26,6 +27,7 @@ class Review extends Component {
 
     const quantity = Number(listing.quantity || 0)
     const isMulti = quantity > 1
+    const isFractional = this.props.listingType === 'fractional'
     const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
 
     return (
@@ -35,49 +37,55 @@ class Review extends Component {
 
           <div className="detail">
             <div className="row">
-              <div className="col-3 label">Title</div>
-              <div className="col-9">{listing.title}</div>
+              <div className="col-sm-4 col-lg-3 label">Title</div>
+              <div className="col-sm-8 col-lg-9">{listing.title}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">Cagegory</div>
-              <div className="col-9">{category(listing)}</div>
-            </div>
-            <div className="row">
-              <div className="col-3 label">Description</div>
-              <div className="col-9">{listing.description}</div>
-            </div>
-            <div className="row">
-              <div className="col-3 label">Listing Price</div>
-              <div className="col-9">
-                <CoinPrice price={listing.price} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.price} />
-                </div>
+              <div className="col-sm-4 col-lg-3 label">Cagegory</div>
+              <div className="col-sm-8 col-lg-9">
+                <Category listing={listing} />
               </div>
             </div>
+            <div className="row">
+              <div className="col-sm-4 col-lg-3 label">Description</div>
+              <div className="col-sm-8 col-lg-9">{listing.description}</div>
+            </div>
+            {isFractional ? null : (
+              <div className="row">
+                <div className="col-sm-4 col-lg-3 label">Listing Price</div>
+                <div className="col-sm-8 col-lg-9">
+                  <CoinPrice price={listing.price} coin="eth" />
+                  <div className="fiat">
+                    ~ <Price amount={listing.price} />
+                  </div>
+                </div>
+              </div>
+            )}
             {quantity <= 1 ? null : (
               <div className="row">
-                <div className="col-3 label">Quantity</div>
-                <div className="col-9">{listing.quantity}</div>
+                <div className="col-sm-4 col-lg-3 label">Quantity</div>
+                <div className="col-sm-8 col-lg-9">{listing.quantity}</div>
               </div>
             )}
             <div className="row">
-              <div className="col-3 label">Boost Level</div>
-              <div className="col-9">
+              <div className="col-sm-4 col-lg-3 label">Boost Level</div>
+              <div className="col-sm-8 col-lg-9">
                 <CoinPrice price={boost} coin="ogn" />
+                {isMulti ? ' / unit' : ''}
+                {isFractional ? ' / night' : ''}
               </div>
             </div>
-            {!isMulti ? null : (
+            {!isMulti && !isFractional ? null : (
               <div className="row">
-                <div className="col-3 label">Boost Cap</div>
-                <div className="col-9">
+                <div className="col-sm-4 col-lg-3 label">Boost Cap</div>
+                <div className="col-sm-8 col-lg-9">
                   <CoinPrice price={listing.boostLimit} coin="ogn" />
                 </div>
               </div>
             )}
-            <div className="row mb-0">
-              <div className="col-3 label">Photos</div>
-              <div className="col-9">
+            <div className="row">
+              <div className="col-sm-4 col-lg-3 label">Photos</div>
+              <div className="col-sm-8 col-lg-9">
                 {listing.media.length ? (
                   <div className="photos">
                     {listing.media.map((image, idx) => (
@@ -93,23 +101,46 @@ class Review extends Component {
                 )}
               </div>
             </div>
+            {!isFractional ? null : (
+              <div className="row">
+                <div className="col-sm-4 col-lg-3 label">Availability</div>
+                <div className="col-sm-8 col-lg-9">
+                  <Calendar
+                    interactive={false}
+                    small={true}
+                    availability={
+                      new AvailabilityCalculator({
+                        weekdayPrice: listing.price,
+                        weekendPrice: listing.weekendPrice,
+                        booked: listing.booked,
+                        unavailable: listing.unavailable,
+                        customPricing: listing.customPricing
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="actions">
-            <Link className="btn btn-outline-primary" to={`${prefix}/step-3`}>
+            <Link className="btn btn-outline-primary" to={`${prefix}/boost`}>
               Back
             </Link>
             {isEdit ? (
               <UpdateListing
                 listing={this.props.listing}
                 listingId={this.props.listingId}
+                listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
+                refetch={this.props.refetch}
                 className="btn btn-primary"
                 children="Done"
               />
             ) : (
               <CreateListing
                 listing={this.props.listing}
+                listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"
@@ -143,7 +174,7 @@ require('react-styl')(`
       font-size: 28px
     .detail
       border: 1px solid var(--light)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 1rem 2rem
       font-size: 18px
       font-weight: normal
@@ -168,13 +199,8 @@ require('react-styl')(`
         background-size: contain
         background-repeat: no-repeat
 
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
+  @media (max-width: 767.98px)
+    .create-listing .create-listing-review
+      .detail
+        padding: 1rem
 `)

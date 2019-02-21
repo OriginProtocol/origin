@@ -35,13 +35,16 @@ describe('TokenMigration.sol', async function() {
       path: `${contractPath}/token/`,
       args: [OldToken._address, NewToken._address]
     })
-    await NewToken.methods.transferOwnership(TokenMigration._address).send({from: owner})
-    assert.equal(await TokenMigration.methods.finished().call(), false)
+
+    await OldToken.methods.pause().send({from: owner})
+    await NewToken.methods.pause().send({from: owner})
   })
 
-  it('migrates a single account', async function() {
+  it('disallow migrating when fromToken is not paused', async function() {
     const initialSupply = 100
     const account = accounts[2]
+
+    await OldToken.methods.unpause().send({from: owner})
 
     // Create old token
     const mintRes = await OldToken.methods.mint(account, initialSupply).send({from: owner})
@@ -54,7 +57,59 @@ describe('TokenMigration.sol', async function() {
       await OldToken.methods.totalSupply().call(),
       initialSupply
     )
-    await OldToken.methods.pause().send({from: owner})
+
+    // Should revert since the fromToken is not paused
+    await assertRevert(
+      TokenMigration.methods.migrateAccount(account).send({from: owner}),
+      'fromToken should be paused during migration'
+    );
+  })
+
+  it('disallow migrating when toToken is not paused', async function() {
+    const initialSupply = 100
+    const account = accounts[2]
+
+    await NewToken.methods.unpause().send({from: owner})
+    await NewToken.methods.transferOwnership(TokenMigration._address).send({from: owner})
+    assert.equal(await TokenMigration.methods.finished().call(), false)
+
+    // Create old token
+    const mintRes = await OldToken.methods.mint(account, initialSupply).send({from: owner})
+    assert(mintRes.events.Mint)
+    assert.equal(
+      await OldToken.methods.balanceOf(account).call(),
+      initialSupply
+    )
+    assert.equal(
+      await OldToken.methods.totalSupply().call(),
+      initialSupply
+    )
+
+    // Should revert since the fromToken is not paused
+    await assertRevert(
+      TokenMigration.methods.migrateAccount(account).send({from: owner}),
+      'toToken should be paused during migration'
+    );
+  })
+
+  it('migrates a single account', async function() {
+    const initialSupply = 100
+    const account = accounts[2]
+
+    await NewToken.methods.transferOwnership(TokenMigration._address).send({from: owner})
+    assert.equal(await TokenMigration.methods.finished().call(), false)
+
+    // Create old token
+    const mintRes = await OldToken.methods.mint(account, initialSupply).send({from: owner})
+    assert(mintRes.events.Mint)
+    assert.equal(
+      await OldToken.methods.balanceOf(account).call(),
+      initialSupply
+    )
+    assert.equal(
+      await OldToken.methods.totalSupply().call(),
+      initialSupply
+    )
 
     // Migrate tokens
     const res = await TokenMigration.methods.migrateAccount(account).send({from: owner})
@@ -77,11 +132,15 @@ describe('TokenMigration.sol', async function() {
   })
 
   it('does not allow migrations after finishing migration', async function() {
+    await NewToken.methods.transferOwnership(TokenMigration._address).send({from: owner})
+    assert.equal(await TokenMigration.methods.finished().call(), false)
+
     await TokenMigration.methods.finish(owner).send({from: owner})
     assert.equal(await TokenMigration.methods.finished().call(), true)
 
     await assertRevert(
-      TokenMigration.methods.migrateAccount(owner).send({from: owner})
+      TokenMigration.methods.migrateAccount(owner).send({from: owner}),
+      'migration already finished'
     )
   })
 
@@ -90,6 +149,10 @@ describe('TokenMigration.sol', async function() {
     const account2 = accounts[3]
     await OldToken.methods.mint(account1, 1).send({from: owner})
     await OldToken.methods.mint(account2, 2).send({from: owner})
+    
+
+    await NewToken.methods.transferOwnership(TokenMigration._address).send({from: owner})
+    assert.equal(await TokenMigration.methods.finished().call(), false)
 
     const res = await TokenMigration.methods.migrateAccount(account1).send({from: owner})
     assert(res.events.Migrated)
@@ -97,22 +160,26 @@ describe('TokenMigration.sol', async function() {
     assert.equal(await TokenMigration.methods.migrated(account2).call(), false)
 
     await assertRevert(
-      TokenMigration.methods.finish(owner).send({from: owner})
+      TokenMigration.methods.finish(owner).send({from: owner}),
+      'total token supplies do not match'
     )
   })
 
   it('disallows migration of already migrated account', async function() {
+    await NewToken.methods.transferOwnership(TokenMigration._address).send({from: owner})
+    assert.equal(await TokenMigration.methods.finished().call(), false)
+    
     let res
 
     res = await OldToken.methods.mint(owner, 100).send({from: owner})
     assert(res.events.Mint)
-    await OldToken.methods.pause().send({from: owner})
-
+    
     res = await TokenMigration.methods.migrateAccount(owner).send({from: owner})
     assert(res.events.Migrated)
 
     await assertRevert(
-      TokenMigration.methods.migrateAccount(owner).send({from: owner})
+      TokenMigration.methods.migrateAccount(owner).send({from: owner}),
+      'holder already migrated'
     )
   })
 
@@ -121,6 +188,9 @@ describe('TokenMigration.sol', async function() {
     const balances = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
     const supply = balances.reduce((total, num) => total + num)
     assert(accounts.length >= balances.length)
+
+    await NewToken.methods.transferOwnership(TokenMigration._address).send({from: owner})
+    assert.equal(await TokenMigration.methods.finished().call(), false)
 
     // Mint balances for old token
     for (let i = 0; i < balances.length; i++) {
@@ -133,7 +203,6 @@ describe('TokenMigration.sol', async function() {
       )
     }
     assert.equal(await OldToken.methods.totalSupply().call(), supply)
-    await OldToken.methods.pause().send({from: owner})
 
     // Migrate balances in batches
     for (let i = 0; i < balances.length; i += batchSize) {
@@ -172,6 +241,10 @@ describe('TokenMigration.sol', async function() {
   it('disallows operations by non-owners', async function() {
     const other = accounts[5]
     assert.notEqual(owner, other)
+
+    await NewToken.methods.transferOwnership(TokenMigration._address).send({from: owner})
+    assert.equal(await TokenMigration.methods.finished().call(), false)
+
     await assertRevert(
       TokenMigration.methods.migrateAccounts([owner]).send({from: other})
     )
@@ -184,8 +257,12 @@ describe('TokenMigration.sol', async function() {
   })
 
   it('does not allow new token to be owned by migration contract', async function() {
+    await NewToken.methods.transferOwnership(TokenMigration._address).send({from: owner})
+    assert.equal(await TokenMigration.methods.finished().call(), false)
+
     await assertRevert(
-      TokenMigration.methods.finish(TokenMigration._address).send({from: owner})
+      TokenMigration.methods.finish(TokenMigration._address).send({from: owner}),
+      'this contract cannot own the token contract'
     )
   })
 })

@@ -11,10 +11,11 @@ const Wallet = () => (
   <Query query={ProfileQuery}>
     {({ data, loading, error }) => {
       if (loading || error) return null
-      if (!data || !data.web3 || !data.web3.metaMaskAccount) {
+
+      if (!data || !data.web3 || !data.web3.primaryAccount) {
         return null
       }
-      const { checksumAddress, balance, id } = data.web3.metaMaskAccount
+      const { checksumAddress, balance, id } = data.web3.primaryAccount
       return (
         <div className="wallet">
           <div className="wallet-info">
@@ -41,7 +42,7 @@ require('react-styl')(`
     background-color: var(--dark);
     margin-bottom: 2rem;
     padding: 1rem;
-    border-radius: 5px;
+    border-radius: var(--default-radius);
     word-break: break-all;
     font-size: 14px;
     .wallet-info

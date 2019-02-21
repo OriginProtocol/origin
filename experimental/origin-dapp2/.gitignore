@@ -2,6 +2,8 @@ node_modules
 .DS_Store
 public/app.*
 public/index.html
+public/mainnet.html
+public/kovan.html
 public/fonts
 data/db
 data/ipfs
@@ -10,3 +12,8 @@ src/contracts/deployed.js
 issuer-services/package-lock.json
 issuer-services/up.json
 issuer-services/config.json
+
+/.enum_manifest.json
+/.src_manifest.json
+/.source_strings.json
+/.translated_fbts.json

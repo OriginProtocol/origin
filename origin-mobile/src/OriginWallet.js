@@ -10,6 +10,9 @@ import ecies from 'eth-ecies'
 import CryptoJS from 'crypto-js'
 import UUIDGenerator from 'react-native-uuid-generator'
 import { randomBytes } from 'react-native-randombytes'
+import { TypedDataUtils, concatSig } from 'eth-sig-util'
+import ethUtil from 'ethereumjs-util'
+
 
 import {setRemoteLocal, localfy, storeData, loadData} from './tools'
 
@@ -158,7 +161,7 @@ class OriginWallet {
   }
 
   initUrls() {
-    const remote_is_url = this.remote_localhost.startsWith("http://") 
+    const remote_is_url = this.remote_localhost.startsWith("http://")
       || this.remote_localhost.startsWith("https://")
 
     const localApiUrl = remote_is_url ? this.remote_localhost : localfy(apiUrl)
@@ -387,8 +390,8 @@ class OriginWallet {
     if (state.ethAddress && state.notificationType && state.deviceToken)
     {
       console.log("save wallet info:", this.save_wallet_info)
-      if (this.save_wallet_info && 
-        ( (this.save_wallet_info.ethAddress != state.ethAddress 
+      if (this.save_wallet_info &&
+        ( (this.save_wallet_info.ethAddress != state.ethAddress
           || this.save_wallet_info.localApiUrl != state.localApiUrl
           || this.save_wallet_info.deviceToken != state.deviceToken)))
       {
@@ -457,12 +460,13 @@ class OriginWallet {
       const cost = this.extractTransactionCost(transaction.call)
       const gas_cost = this.extractTransactionGasCost(transaction.call)
       const ogn_cost = this.extractOgnCost(meta)
+      const identity = this.extractIdentity(meta)
       const listing = this.extractListing(meta)
       const to = this.extractTo(transaction.call)
       const transaction_type = this.extractTransactionActionType(meta)
       console.log("meta:", meta, " ogn_cost:", ogn_cost)
       const action = "transaction"
-      return {...event_data, meta, net_id, action, to, cost, gas_cost, ogn_cost, listing, transaction_type}
+      return {...event_data, meta, net_id, action, to, cost, gas_cost, ogn_cost, identity, listing, transaction_type}
     }
     else if (link)
     {
@@ -472,7 +476,40 @@ class OriginWallet {
     else if (event_data.sign)
     {
       const action = "sign"
-      return {...event_data, action}
+      let msg = ""
+      let domain = ""
+      let listing = undefined
+      let sign_type = undefined
+
+      if (event_data.sign.call.params.msg)
+      {
+        msg = event_data.sign.call.params.msg
+      }
+      else if(event_data.sign.call.params.method == "eth_signTypedData_v3")
+      {
+        const data = JSON.parse(event_data.sign.call.params.data)
+        domain = data.domain
+        msg = data.message
+        if (data)
+        {
+          sign_type = data.primaryType
+          if (data.primaryType == "Listing")
+          {
+            listing = msg
+          }
+          else if (data.primaryType == "AcceptOffer")
+          {
+            const listingId = origin.reflection.makeSignedListingId(this.state.netId, msg.listingID)
+            listing = await origin.marketplace.getListing(listingId)
+          }
+          else if (data.primaryType == "Finalize")
+          {
+            const listingId = origin.reflection.makeSignedListingId(this.state.netId, msg.listingID)
+            listing = await origin.marketplace.getListing(listingId)
+          }
+        }
+      }
+      return {...event_data, listing, sign_type, msg, domain, action}
     }
     //this is the bare event
     return event_data
@@ -519,6 +556,9 @@ class OriginWallet {
     return params && params.txn_object && params.txn_object.to
   }
 
+  extractIdentity({identity, subMeta}) {
+    return identity || (subMeta && subMeta.identity)
+  }
 
   extractListing({listing, subMeta}) {
     return listing || (subMeta && subMeta.listing)
@@ -534,7 +574,6 @@ class OriginWallet {
     return params && params.txn_object && (web3.utils.toBN(params.txn_object.gas).mul(web3.utils.toBN(params.txn_object.gasPrice)))
   }
 
- 
   async handleEvent(e) {
     if (e.link)
     {
@@ -631,13 +670,23 @@ class OriginWallet {
     const method = call.method
     const params = call.params
     return new Promise((resolve, reject) => {
-      if (call_name == "signMessage")
+      let ret
+      let shash
+      if (params.method == "eth_signTypedData_v3")
       {
+        const data = JSON.parse(params.data)
+        const pkey = this.getCurrentWeb3Account().privateKey
+        const sig = ethUtil.ecsign(TypedDataUtils.sign(data), ethUtil.toBuffer(pkey))
+        const result = ethUtil.bufferToHex(concatSig(sig.v, sig.r, sig.s))
+        shash = result.slice(2, 6)
+        ret = {result}
+      } else {
         const msg = params.msg
         const post_phrase_prefix = params.post_phrase_prefix
         console.log("signing message:", msg)
         const signature = this.getCurrentWeb3Account().sign(msg).signature
-        const ret = {msg, signature, account:this.state.ethAddress}
+        shash = result.slice(2, 6)
+        ret = {msg, signature, account:this.state.ethAddress}
 
         if (post_phrase_prefix)
         {
@@ -648,19 +697,21 @@ class OriginWallet {
           const post_signature = this.getCurrentWeb3Account().sign(post_phrase).signature
           ret.post_phrase = post_phrase
           ret.post_signature = post_signature
-        }
-        console.log("Signing result:", ret)
 
-        this.returnCall(event_id, call_id, session_token, link_id, ret, Events.TRANSACTED).then(
-            (success) => {
-              if (return_url)
-              {
-                console.log("transaction approved returning to:", return_url)
-                Linking.openURL(return_url)
-              }
-              resolve(success)
-            })
+        }
       }
+      console.log("Signing result:", ret)
+
+      this.returnCall(event_id, call_id, session_token, link_id, ret, Events.TRANSACTED).then(
+          (success) => {
+            if (return_url)
+            {
+              const successUrl = this.addSignHashToUrl(return_url, shash)
+              console.log("transaction approved returning to:", return_url)
+              Linking.openURL(successUrl)
+            }
+            resolve(success)
+          })
     })
   }
 
@@ -815,6 +866,11 @@ class OriginWallet {
     return url + (url.includes('?') ? '&' : '?' ) + 'thash=' + thash
   }
 
+  addSignHashToUrl(url, shash) {
+    return url + (url.includes('?') ? '&' : '?' ) + 'shash=' + shash
+  }
+
+
   async open(url) {
     switch(url) {
       case 'profile':
@@ -908,7 +964,7 @@ class OriginWallet {
 
   checkStripOriginUrl(url){
     const urlWithoutQueryParams = url.split('?')[0]
-    
+
     if (urlWithoutQueryParams.startsWith(ORIGIN_PROTOCOL_PREFIX))
     {
       return urlWithoutQueryParams.substr(ORIGIN_PROTOCOL_PREFIX.length)
@@ -1009,7 +1065,7 @@ class OriginWallet {
     const encrypted_accounts = []
     for (let i=0; i< web3.eth.accounts.wallet.length; i++) {
       const account = web3.eth.accounts.wallet[i]
-      encrypted_accounts.push({crypt:"aes", 
+      encrypted_accounts.push({crypt:"aes",
         enc:CryptoJS.AES.encrypt(account.privateKey, WALLET_PASSWORD).toString()})
     }
     try {
@@ -1088,6 +1144,7 @@ class OriginWallet {
         perf_mode_enabled,
         discovery_server_url
       } = await this.doFetch(this.API_WALLET_SERVER_INFO, 'GET')
+
       const newProviderUrl = localfy(provider_url)
       console.log("Set network to:", newProviderUrl, contract_addresses)
       console.log("Service urls:", dapp_url, messaging_url, profile_url, selling_url)
@@ -1183,7 +1240,7 @@ class OriginWallet {
 
   openWallet() {
     let state = this.state
-    const wallet_data = loadData(WALLET_STORE).then(async (wallet_data) => { 
+    const wallet_data = loadData(WALLET_STORE).then(async (wallet_data) => {
       let wallet_info = await loadData(WALLET_INFO)
       if (!wallet_info)
       {

@@ -28,18 +28,18 @@ class Resolver extends React.Component {
   }
 
   async checkDnsPropagation() {
-    const dappHostname = `${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`
+    const dappHostname = `${this.props.config.subdomain}.${
+      process.env.DAPP_CREATOR_DOMAIN
+    }`
     await superagent
       .get(`https://cloudflare-dns.com/dns-query`)
-      .set({ 'Accept': 'application/dns-json' })
+      .set({ Accept: 'application/dns-json' })
       .query({ name: dappHostname })
       .type('json')
-      .then((response) => {
+      .then(response => {
         const json = JSON.parse(response.text)
         if (json.Status === 0) {
           this.redirectToSuccess()
-        } else {
-          console.log('DNS propagation incomplete')
         }
       })
   }
@@ -50,7 +50,7 @@ class Resolver extends React.Component {
     })
   }
 
-  render () {
+  render() {
     return (
       <div className="resolver">
         {this.renderRedirect()}
@@ -58,12 +58,16 @@ class Resolver extends React.Component {
           <img src="images/spinner-animation-dark.svg" />
           <h1>Setting up your marketplace...</h1>
           <h4>Please wait. This will take a few minutes.</h4>
+          <p>
+            If you ever need to edit your marketplace, you can repeat this
+            process. Make sure you use the same subdomain and Ethereum wallet.
+          </p>
         </div>
       </div>
     )
   }
 
-  renderRedirect () {
+  renderRedirect() {
     if (this.state.redirect !== null) {
       return <Redirect to={this.state.redirect} />
     }

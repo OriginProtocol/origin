@@ -38,7 +38,9 @@ export default function ListingCreate(state = initialState, action = {}){
   case ListingCreateConstants.UPDATE:
     const data = { ...state, ...action.payload }
     const stepData = Object.assign({}, data, { 'step': data.step > 5 && data.step !== 8 ? 5 : data.step })
-    store.set(data_key, stepData)
+    if (!stepData.editListingId) {
+      store.set(data_key, stepData)
+    }
     return data
 
   case ListingCreateConstants.CLEAR:

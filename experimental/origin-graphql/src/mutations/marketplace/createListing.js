@@ -3,18 +3,19 @@ import validator from 'origin-validator'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 
-export function listingInputToIPFS(data) {
+export function listingInputToIPFS(data, unitData, fractionalData) {
+  const listingType = fractionalData ? 'fractional' : 'unit'
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
-    listingType: 'unit',
+    listingType,
     category: data.category,
     subCategory: data.subCategory,
     language: 'en-US',
     title: data.title,
     description: data.description,
     media: data.media,
-    unitsTotal: data.unitsTotal,
     price: data.price,
     commission: {
       currency: 'OGN',
@@ -25,15 +26,25 @@ export function listingInputToIPFS(data) {
       amount: data.commissionPerUnit || '0'
     }
   }
+  if (listingType === 'unit') {
+    ipfsData.unitsTotal = unitData.unitsTotal
+  } else if (listingType === 'fractional') {
+    ipfsData.weekendPrice =
+      fractionalData.weekendPrice || fractionalData.price || '0'
+    ipfsData.unavailable = fractionalData.unavailable || []
+    ipfsData.customPricing = fractionalData.customPricing || []
+    ipfsData.booked = fractionalData.booked || []
+  }
   validator('https://schema.originprotocol.com/listing_1.0.0.json', ipfsData)
   return ipfsData
 }
 
 async function createListing(_, input) {
-  const { depositManager, data, from, autoApprove } = input
+  const { depositManager, data, unitData, fractionalData, autoApprove } = input
+  const from = input.from || contracts.defaultLinkerAccount
   await checkMetaMask(from)
 
-  const ipfsData = listingInputToIPFS(data)
+  const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   let createListingCall
@@ -61,7 +72,7 @@ async function createListing(_, input) {
     )
   }
 
-  const tx = createListingCall.send({ gas: 4612388, from })
+  const tx = createListingCall.send({ gas: cost.createListing, from })
   return txHelper({ tx, from, mutation: 'createListing' })
 }
 

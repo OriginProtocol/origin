@@ -9,10 +9,10 @@ import Offer from './Offer'
 import TokenHolder from './TokenHolder'
 import Event from './Event'
 import Token from './Token'
-import Identity from './Identity'
 import Conversation from './messaging/Conversation'
 import Messaging from './messaging/Messaging'
-import UserRegistry from './UserRegistry'
+import IdentityEvents from './IdentityEvents'
+import WalletLinker from './linker/WalletLinker'
 import Config from './Config'
 import Mutation from '../mutations/index'
 
@@ -25,13 +25,20 @@ export default {
   Account,
   Marketplace,
   Listing,
+  UnitListing: Listing,
+  FractionalListing: Listing,
+  ListingResult: {
+    __resolveType(obj) {
+      return obj.__typename
+    }
+  },
   User,
   Offer,
   Token,
   TokenHolder,
-  Identity,
   Conversation,
   Messaging,
-  UserRegistry,
+  IdentityEvents,
+  WalletLinker,
   Config
 }

@@ -60,9 +60,7 @@ function withAccounts(WrappedComponent, marketplace) {
             if (loading || error) {
               return null
             }
-            return (
-              <WrappedComponent {...this.props} {...data.web3} />
-            )
+            return <WrappedComponent {...this.props} {...data.web3} />
           }}
         </Query>
       )

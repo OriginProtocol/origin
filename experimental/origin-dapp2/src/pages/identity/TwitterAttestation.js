@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import pick from 'lodash/pick'
 
 import Modal from 'components/Modal'
 
@@ -53,6 +52,9 @@ class TwitterAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
+        <div className="alert alert-danger mt-3 d-block d-sm-none">
+          <b>Warning:</b> Currently unavailable on mobile devices
+        </div>
         <div className="help">
           Other users will know that you have a verified Twitter account, but
           your account details will not be published on the blockchain. We will
@@ -79,9 +81,6 @@ class TwitterAttestation extends Component {
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
-              topic: result.claimType,
-              issuer: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', //result.issuer,
-              signature: result.signature,
               data: result.data,
               loading: false
             })
@@ -96,7 +95,7 @@ class TwitterAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className="btn btn-outline-light"
+            className="btn btn-outline-light d-none d-sm-block"
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
@@ -130,9 +129,7 @@ class TwitterAttestation extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => {
-              this.props.onComplete(
-                pick(this.state, 'topic', 'issuer', 'signature', 'data')
-              )
+              this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
             children="Continue"

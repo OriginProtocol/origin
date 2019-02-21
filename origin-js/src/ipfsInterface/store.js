@@ -78,15 +78,28 @@ export class IpfsDataStore {
 
     return data
   }
+  
+  async processData(dataType, ipfsData) {
+    if (!DATA_TYPES.includes(dataType)) {
+      throw new Error(`Unsupported data type: ${dataType}`)
+    }
 
-  /**
-   * Validates and saves data to IPFS.
-   * @param {string} dataType - Type of object to store.
-   * @param {object} data - Object compliant with Origin Protocol schema.
-   * @returns {bytes} Base58 encoded IPFS Hash.
-   * @throws {Error}
-   */
-  async save(dataType, data) {
+    const { schemaId, schemaVersion } = generateSchemaId(dataType)
+    ipfsData.schemaId = schemaId
+
+    // Get an adapter to handle the data.
+    const adapter = adapterFactory(ipfsData.schemaId, dataType, schemaVersion)
+
+    // Decode and validate the data.
+    const data = adapter.decode(ipfsData)
+
+    // Apply any post-processing after loading data.
+    if (adapter.postProcessor) adapter.postProcessor(data, this.ipfsService)
+
+    return data
+  }
+
+  async encodeData(dataType, data) {
     if (!DATA_TYPES.includes(dataType)) {
       throw new Error(`Unsupported data type: ${dataType}`)
     }
@@ -103,7 +116,20 @@ export class IpfsDataStore {
     if (adapter.preProcessor) await adapter.preProcessor(data, this.ipfsService)
 
     // Validate and encode the input data.
-    const ipfsData = adapter.encode(data)
+    return adapter.encode(data)
+  }
+
+
+  /**
+   * Validates and saves data to IPFS.
+   * @param {string} dataType - Type of object to store.
+   * @param {object} data - Object compliant with Origin Protocol schema.
+   * @returns {bytes} Base58 encoded IPFS Hash.
+   * @throws {Error}
+   */
+  async save(dataType, data) {
+    // Validate and encode the input data.
+    const ipfsData = await this.encodeData(dataType, data)
 
     // Write data to storage.
     const ipfsHash = await this.ipfsService.saveObjAsFile(ipfsData)

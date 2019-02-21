@@ -111,7 +111,8 @@ export async function getText(gateway, hashAsBytes) {
   return await response.text()
 }
 
-export async function get(gateway, hashAsBytes) { //}, party) {
+export async function get(gateway, hashAsBytes) {
+  //}, party) {
   const text = await getText(gateway, hashAsBytes)
   // if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
   //   try {

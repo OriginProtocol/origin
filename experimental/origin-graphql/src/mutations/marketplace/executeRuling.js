@@ -1,10 +1,11 @@
 import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function executeRuling(_, data) {
-  const { from } = data
+  const from = data.from || contracts.defaultLinkerAccount
   await checkMetaMask(from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)
@@ -22,7 +23,7 @@ async function executeRuling(_, data) {
 
   const tx = contracts.marketplaceExec.methods
     .executeRuling(listingId, offerId, ipfsHash, ruling, refund)
-    .send({ gas: 4612388, from })
+    .send({ gas: cost.executeRuling, from })
 
   return txHelper({ tx, from, mutation: 'executeRuling' })
 }

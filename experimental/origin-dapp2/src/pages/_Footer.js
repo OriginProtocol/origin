@@ -1,25 +1,78 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
-const Footer = () => (
-  <footer>
-    <div className="container">
-      <div className="logo" />
-      <div className="separator" />
-      <div className="about">
-        The Origin decentralized app allows buyers and sellers to transact
-        without rent-seeking middlemen using the Ethereum blockchain and IPFS.
-        <div className="copyright">© 2018 Origin Protocol, Inc.</div>
-      </div>
-      <div className="links">
-        <a href="#" onClick={e => e.preventDefault()}>
-          English
-        </a>
-        <a href="https://www.originprotocol.com/">Visit our Website</a>
-        <a href="https://github.com/OriginProtocol">Visit our GitHub</a>
-      </div>
-    </div>
-  </footer>
-)
+import Dropdown from 'components/Dropdown'
+import Languages from '../constants/Languages'
+
+const LanguagesByKey = Languages.reduce((m, o) => {
+  m[o[0]] = o[1]
+  return m
+}, {})
+
+class Footer extends Component {
+  state = {}
+  render() {
+    const { locale, onLocale } = this.props
+    return (
+      <footer>
+        <div className="container">
+          <div className="logo" />
+          <div className="separator" />
+          <div className="about">
+            <fbt desc="footer.description">
+              The Origin decentralized app allows buyers and sellers to transact
+              without rent-seeking middlemen using the Ethereum blockchain and
+              IPFS.
+            </fbt>
+            <div className="copyright">© 2019 Origin Protocol, Inc.</div>
+          </div>
+          <div className="links">
+            <Dropdown
+              className="dropup"
+              content={
+                <div className="dropdown-menu show">
+                  {Languages.map(lang => (
+                    <a
+                      className="dropdown-item"
+                      key={lang[0]}
+                      title={lang[0]}
+                      href="#"
+                      onClick={e => {
+                        e.preventDefault()
+                        onLocale(lang[0])
+                        this.setState({ open: false })
+                      }}
+                      children={lang[1]}
+                    />
+                  ))}
+                </div>
+              }
+              open={this.state.open}
+              onClose={() => this.setState({ open: false })}
+            >
+              <a
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  this.setState({ open: !this.state.open })
+                }}
+              >
+                {LanguagesByKey[locale]}
+              </a>
+            </Dropdown>
+
+            <a href="https://www.originprotocol.com/">
+              <fbt desc="footer.websiteLink">Visit our Website</fbt>
+            </a>
+            <a href="https://github.com/OriginProtocol">
+              <fbt desc="footer.githubLink">Visit our GitHub</fbt>
+            </a>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+}
 
 export default Footer
 
@@ -63,4 +116,23 @@ require('react-styl')(`
       margin-top: 1rem
 
 
+  @media (max-width: 767.98px)
+    footer
+      margin-top: 2rem
+      padding-top: 2rem
+      padding-bottom: 2rem
+      .container
+        flex-direction: column
+        align-items: center
+        text-align: center
+        .about
+          margin-right: 0
+        .logo
+          margin-bottom: 1rem
+        .links
+          flex-direction: column
+          align-items: center
+          margin-top: 1rem
+          a
+            margin: 0
 `)

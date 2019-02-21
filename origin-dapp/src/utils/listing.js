@@ -154,7 +154,8 @@ export async function originToDAppListing(originListing) {
     availability: originListing.availability,
     fractionalTimeIncrement: isFractional && slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily',
     offers: originListing.offers,
-    events: originListing.events
+    events: originListing.events,
+    isEmptySeller: originListing.isEmptySeller
   }
 
   if (isMultiUnit) {
@@ -287,7 +288,7 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
   const isPending = isMultiUnit ? false : offerWithStatusExists('pending')
   const isSold = isMultiUnit ? multiUnitListingIsSold() : offerWithStatusExists('sold')
   const isAvailable = isMultiUnit ? unitsRemaining > 0 : (!isPending && !isSold && !isWithdrawn)
-  const showPendingBadge = isPending && !isWithdrawn && !isFractional
+  const showPendingBadge = isPending && !isWithdrawn && !isFractional && !listing.isEmptySeller
   const showSoldBadge = (isSold || isWithdrawn) && !isFractional
   const showRemainingBoost = isMultiUnit && boostRemaining > 0
 

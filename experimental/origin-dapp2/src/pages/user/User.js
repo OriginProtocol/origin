@@ -6,6 +6,8 @@ import IdentityQuery from 'queries/Identity'
 import Reviews from 'components/Reviews'
 import Avatar from 'components/Avatar'
 
+import UserListings from './_UserListings'
+
 class User extends Component {
   render() {
     const id = this.props.match.params.id
@@ -14,7 +16,7 @@ class User extends Component {
         <Query query={IdentityQuery} variables={{ id }}>
           {({ data, loading, error }) => {
             if (loading || error) return null
-            const profile = get(data, 'web3.account.identity.profile')
+            const profile = get(data, 'web3.account.identity')
             if (!profile) {
               return <div>User Not Found</div>
             }
@@ -71,6 +73,8 @@ class User extends Component {
                     <div className="reviews-container">
                       <Reviews id={id} />
                     </div>
+
+                    <UserListings user={id} />
                   </div>
                 </div>
               </>
@@ -89,6 +93,9 @@ require('react-styl')(`
     padding-top: 3rem
     .main-avatar
       border-radius: 1rem;
+    .description
+      max-width: 50rem
+
     .verified-info
       background-color: var(--pale-grey)
       padding: 1rem

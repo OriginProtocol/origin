@@ -12,22 +12,22 @@ export default function store(type = 'localStorage') {
     let currentValue = {}
     try {
       currentValue = JSON.parse(storage.uiState)
-    } catch(e) {
+    } catch (e) {
       /* Ignore */
     }
     lSet(currentValue, path, value)
     storage.uiState = JSON.stringify(currentValue)
   }
 
-   function get(path, defaultValue) {
-     let currentValue = {}
-     try {
-       currentValue = JSON.parse(storage.uiState)
-     } catch(e) {
-       /* Ignore */
-     }
-     return lGet(currentValue, path, defaultValue)
-   }
+  function get(path, defaultValue) {
+    let currentValue = {}
+    try {
+      currentValue = JSON.parse(storage.uiState)
+    } catch (e) {
+      /* Ignore */
+    }
+    return lGet(currentValue, path, defaultValue)
+  }
 
-   return { get, set }
+  return { get, set }
 }

@@ -4,9 +4,11 @@ import pick from 'lodash/pick'
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
-import Price from 'components/Price'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
+
+import UnitListing from './listing-types/Unit'
+import HomeShareListing from './listing-types/HomeShare'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -31,15 +33,27 @@ class Step2 extends Component {
         ? `/listings/${this.props.listingId}/edit`
         : '/create'
 
+    let ListingType = UnitListing,
+      listingType = 'UnitListing'
+    const { category, subCategory } = this.state
+    if (category === 'schema.forRent' && subCategory === 'schema.housing') {
+      ListingType = HomeShareListing
+      listingType = 'HomeShareListing'
+    }
+    const isFractional = this.props.listingType === 'fractional'
+
     if (this.state.valid) {
-      return <Redirect to={`${prefix}/step-3`} push />
+      if (isFractional) {
+        return <Redirect to={`${prefix}/availability`} push />
+      } else {
+        return <Redirect to={`${prefix}/boost`} push />
+      }
     } else if (!this.state.subCategory) {
       return <Redirect to={`${prefix}/step-1`} />
     }
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
-    const isMulti = Number(this.state.quantity || 0) > 1
 
     return (
       <div className="row">
@@ -48,12 +62,12 @@ class Step2 extends Component {
             <div className="wrap">
               <div className="step">Step 2</div>
               <div className="step-description">Provide listing details</div>
-              <Steps steps={3} step={2} />
+              <Steps steps={isFractional ? 4 : 3} step={2} />
 
               <form
                 onSubmit={e => {
                   e.preventDefault()
-                  this.validate()
+                  this.validate(listingType)
                 }}
               >
                 {this.state.valid !== false ? null : (
@@ -82,40 +96,12 @@ class Step2 extends Component {
                   />
                   {Feedback('description')}
                 </div>
-                <div className="form-group">
-                  <label>Quantity</label>
-                  <input
-                    {...input('quantity')}
-                    placeholder="How many are you selling?"
-                  />
-                  {Feedback('quantity')}
-                </div>
-                <div className="form-group">
-                  <label>{`Price${isMulti ? ' (per unit)' : ''}`}</label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('price')} />
-                        <span className="eth">ETH</span>
-                      </div>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.price}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
-                    </div>
-                  </div>
-                  {Feedback('price')}
-                  <div className="help-text price">
-                    The cost to buy this listing. Price is always in ETH, USD is
-                    an estimate.
-                  </div>
-                </div>
+
+                <ListingType
+                  listing={this.state}
+                  onChange={state => this.setState(state)}
+                />
+
                 <div className="form-group">
                   <label>Add Photos</label>
                   <ImagePicker
@@ -151,7 +137,7 @@ class Step2 extends Component {
     )
   }
 
-  validate() {
+  validate(listingType) {
     const newState = {}
 
     if (!this.state.title) {
@@ -166,20 +152,24 @@ class Step2 extends Component {
       newState.descriptionError = 'Description is too short'
     }
 
-    if (!this.state.quantity) {
-      newState.quantityError = 'Quantity is required'
-    } else if (!this.state.quantity.match(/^-?[0-9]+$/)) {
-      newState.quantityError = 'Quantity must be a number'
-    } else if (Number(this.state.quantity) <= 0) {
-      newState.quantityError = 'Quantity must be greater than zero'
-    }
-
     if (!this.state.price) {
       newState.priceError = 'Price is required'
     } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
       newState.priceError = 'Price must be a number'
     } else if (Number(this.state.price) <= 0) {
       newState.priceError = 'Price must be greater than zero'
+    }
+
+    if (listingType === 'UnitListing') {
+      if (!this.state.quantity) {
+        newState.quantityError = 'Quantity is required'
+      } else if (!this.state.quantity.match(/^-?[0-9]+$/)) {
+        newState.quantityError = 'Quantity must be a number'
+      } else if (Number(this.state.quantity) <= 0) {
+        newState.quantityError = 'Quantity must be greater than zero'
+      }
+    } else if (listingType === 'HomeShareListing') {
+      // HomeShare validation
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
@@ -250,15 +240,6 @@ require('react-styl')(`
       &.price
         color: var(--bluey-grey)
         margin-top: 0.5rem
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
   .with-symbol
     position: relative
     &.corner::before
@@ -299,11 +280,11 @@ require('react-styl')(`
       &.eth
         padding-left: 1.75rem
         color: var(--bluish-purple)
-        background-image: url(/images/eth-icon.svg)
+        background-image: url(images/eth-icon.svg)
       &.ogn
         padding-left: 1.75rem
         color: var(--clear-blue)
-        background-image: url(/images/ogn-icon.svg)
+        background-image: url(images/ogn-icon.svg)
       &.usd
         &::before
           content: "$"

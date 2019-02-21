@@ -1,5 +1,7 @@
 import contracts from '../../contracts'
 
+import { totalUnread } from './Conversation'
+
 export default {
   conversations: () =>
     new Promise(async resolve => {
@@ -25,6 +27,12 @@ export default {
       contracts.messaging.account.publicKey
       ? true
       : false
+  },
+  totalUnread: async () => {
+    const convos = await contracts.messaging.getMyConvs()
+    const ids = Object.keys(convos)
+    const allUnreads = await Promise.all(ids.map(c => totalUnread(c)))
+    return allUnreads.reduce((m, o) => m + o, 0)
   },
   synced: () => {
     if (contracts.messaging.globalKeyServer) return true

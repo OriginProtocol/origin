@@ -8,8 +8,10 @@ import withWallet from 'hoc/withWallet'
 import QueryError from 'components/QueryError'
 import TokenPrice from 'components/TokenPrice'
 import Link from 'components/Link'
+import LoadingSpinner from 'components/LoadingSpinner'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
+import PageTitle from 'components/PageTitle'
 
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/UserListings'
@@ -26,6 +28,7 @@ class Listings extends Component {
 
     return (
       <div className="container purchases">
+        <PageTitle>My Listings</PageTitle>
         <Query
           query={query}
           variables={vars}
@@ -34,7 +37,7 @@ class Listings extends Component {
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1 || !this.props.wallet) {
-              return <div>Loading...</div>
+              return <LoadingSpinner />
             } else if (error) {
               return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {

@@ -221,18 +221,6 @@ const NoWeb3Account = ({ currentProvider, storeWeb3Intent, web3Intent }) => (
   </Modal>
 )
 
-const UnconnectedNetwork = () => (
-  <Modal backdrop="static" className="web3-unavailable" isOpen={true}>
-    <div className="image-container">
-      <img src="images/flat_cross_icon.svg" role="presentation" />
-    </div>
-    <FormattedMessage
-      id={'web3-provider.connecting'}
-      defaultMessage={'Connecting to network...'}
-    />
-  </Modal>
-)
-
 const UnsupportedNetwork = props => {
   const { currentNetworkName, currentProvider, networkId, supportedNetworkName } = props
   const url = new URL(window.location)
@@ -374,7 +362,6 @@ class Web3Provider extends Component {
     this.handleAccounts = this.handleAccounts.bind(this)
     this.handleLinker = this.handleLinker.bind(this)
     this.state = {
-      networkConnected: null,
       networkError: null,
       currentProvider: getCurrentProvider(web3),
       provider: null,
@@ -540,24 +527,6 @@ class Web3Provider extends Component {
   fetchNetwork() {
     const providerExists = web3.currentProvider
     const previousNetworkId = this.props.networkId
-    const networkConnected =
-      web3.currentProvider.connected ||
-      (typeof web3.currentProvider.isConnected === 'function' &&
-        web3.currentProvider.isConnected())
-
-    if (networkConnected !== this.state.networkConnected) {
-      if (this.state.networkConnected !== null) {
-        // switch from one second to one minute after change
-        clearInterval(this.networkInterval)
-
-        this.networkInterval = setInterval(this.fetchNetwork, ONE_MINUTE)
-      }
-
-      if (web3.currentProvider.connected !== undefined && web3.currentProvider.isConnected !== undefined)
-      {
-        this.setState({ networkConnected })
-      }
-    }
 
     providerExists &&
       web3.version &&
@@ -573,12 +542,11 @@ class Web3Provider extends Component {
           this.setState({
             networkError: null
           })
-        }
 
-        if (!this.state.networkConnected) {
-          this.setState({
-            networkConnected: true
-          })
+          // switch from one second to one minute after change
+          clearInterval(this.networkInterval)
+
+          this.networkInterval = setInterval(this.fetchNetwork, ONE_MINUTE)
         }
       })
   }
@@ -632,7 +600,7 @@ class Web3Provider extends Component {
 
   render() {
     const { mobileDevice, networkId, storeWeb3Intent, wallet, web3Intent } = this.props
-    const { currentProvider, linkerCode, linkerPopUp, networkConnected } = this.state
+    const { currentProvider, linkerCode, linkerPopUp } = this.state
     const currentNetwork = getCurrentNetwork(networkId) || {}
     const currentNetworkName = currentNetwork.name || networkId
     const isProduction = process.env.NODE_ENV === 'production'
@@ -644,9 +612,6 @@ class Web3Provider extends Component {
       <Fragment>
         {/* currentProvider should always be present */
           !currentProvider && <Web3Unavailable mobileDevice={mobileDevice} />}
-
-        {/* networkConnected initial state is null */
-          currentProvider && networkConnected === false && <UnconnectedNetwork />}
 
         {/* production  */
           currentProvider &&

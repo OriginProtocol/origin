@@ -44,6 +44,8 @@ class TransactionDescription extends Component {
       description = 'You created a listing'
     } else if (name === 'ListingUpdated') {
       description = 'You updated a listing'
+    } else if (name === 'IdentityUpdated') {
+      description = 'You updated your profile'
     }
 
     return <div>{description}</div>

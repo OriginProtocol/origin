@@ -63,13 +63,18 @@ class FinalizeOffer extends Component {
     })
   }
 
-  renderWaitModal(client) {
+  renderWaitModal() {
     if (!this.state.waitFor) return null
 
     return (
       <WaitForTransaction
         shouldClose={this.state.waitForShouldClose}
-        onClose={async () => await client.resetStore()}
+        onClose={async () => {
+          if (this.props.refetch) {
+            this.props.refetch()
+          }
+          window.scrollTo(0, 0)
+        }}
         hash={this.state.waitFor}
         event="OfferFinalized"
       >

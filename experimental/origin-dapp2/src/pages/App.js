@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
 
 import BetaBanner from './_BetaBanner'
 import BetaModal from './_BetaModal'
+import TranslationModal from './_TranslationModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
@@ -19,6 +20,7 @@ import CreateListing from './create-listing/CreateListing'
 import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
+import AboutToken from './about/AboutTokens'
 
 class App extends Component {
   state = { hasError: false }
@@ -66,16 +68,18 @@ class App extends Component {
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
             <Route path="/about/dapp-info" component={DappInfo} />
+            <Route path="/about/tokens" component={AboutToken} />
             <Route component={Listings} />
           </Switch>
         </main>
-        <Footer />
+        <TranslationModal locale={this.props.locale} />
+        <Footer locale={this.props.locale} onLocale={this.props.onLocale} />
       </>
     )
   }
 }
 
-export default App
+export default withRouter(App)
 
 require('react-styl')(`
   .app-error

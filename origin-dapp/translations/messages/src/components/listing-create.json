@@ -160,6 +160,10 @@
     "defaultMessage": "Done"
   },
   {
+    "id": "listing-create.offerButtonLabel",
+    "defaultMessage": "I want this"
+  },
+  {
     "id": "listing-create.create-a-listing",
     "defaultMessage": "Create A Listing On The Origin DApp"
   },

@@ -6,7 +6,9 @@
   "scripts": {
     "build": "per-env",
     "build:production": "webpack --loglevel notice",
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "start": "per-env",
     "start:development": "webpack-dev-server --watch --open",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -34,6 +36,7 @@
     "babel-loader": "^8.0.4",
     "babel-plugin-module-resolver": "^3.1.1",
     "clean-webpack-plugin": "^1.0.0",
+    "clipboard-polyfill": "^2.7.0",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^1.0.1",
     "dotenv-webpack": "^1.5.7",
@@ -54,8 +57,9 @@
     "rework": "^1.0.1",
     "style-loader": "0.23.1",
     "superagent": "^4.0.0",
+    "terser": "3.14.1",
     "terser-webpack-plugin": "^1.1.0",
-    "web3": "^1.0.0-beta.37",
+    "web3": "1.0.0-beta.34",
     "webpack": "^4.27.0",
     "webpack-cli": "^3.1.2"
   },
@@ -90,5 +94,9 @@
         }
       ]
     ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

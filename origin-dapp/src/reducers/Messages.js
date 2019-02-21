@@ -14,7 +14,8 @@ export default function Messages(state = [], action = {}) {
       recipients,
       roomId,
       senderAddress,
-      status
+      status,
+      acceptance
     } = action.obj
 
     // prevent addition of duplicate messages
@@ -35,7 +36,8 @@ export default function Messages(state = [], action = {}) {
         created,
         status,
         index,
-        hash
+        hash,
+        acceptance
       }
     ]
 

@@ -17,10 +17,9 @@ const DefaultQuery = `{
         seller {
           id
           identity {
-            profile {
-              firstName
-              lastName
-            }
+            id
+            firstName
+            lastName
           }
         }
       }

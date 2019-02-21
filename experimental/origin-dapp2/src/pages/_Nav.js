@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
@@ -8,6 +9,7 @@ import Profile from './nav/Profile'
 import Notifications from './nav/Notifications'
 import Messages from './nav/Messages'
 import Confirmations from './nav/Confirmations'
+import Mobile from './nav/Mobile'
 import Sell from './nav/Sell'
 
 const GetStarted = () => (
@@ -38,6 +40,7 @@ class Nav extends Component {
     return (
       <nav className="navbar navbar-expand-md">
         <div className="container">
+          <Mobile {...navProps('mobile')} />
           <Link to="/" className="navbar-brand">
             Origin
           </Link>
@@ -45,22 +48,22 @@ class Nav extends Component {
             <GetStarted />
           ) : (
             <>
-              <div className="collapse navbar-collapse">
-                <ul className="navbar-nav ml-auto">
-                  <li className="nav-item extra-margin">
-                    <NavLink to="/my-purchases" className="nav-link text">
-                      Buy
-                    </NavLink>
-                  </li>
-                  <Sell {...navProps('sell')} />
-                  <li className="nav-item extra-margin">
-                    <NavLink to="/create" className="nav-link add-listing text">
-                      Add Listing
-                    </NavLink>
-                  </li>
-                </ul>
-              </div>
-              <ul className="navbar-nav ml-auto flex-row">
+              <ul className="navbar-nav">
+                <li className="nav-item d-none d-md-flex">
+                  <NavLink to="/my-purchases" className="nav-link text">
+                    <span>
+                      <fbt desc="navbar.buying">Buy</fbt>
+                    </span>
+                  </NavLink>
+                </li>
+                <Sell {...navProps('sell')} />
+                <li className="nav-item d-none d-md-flex">
+                  <NavLink to="/create" className="nav-link add-listing text">
+                    <span>
+                      <fbt desc="navbar.addListing">Add Listing</fbt>
+                    </span>
+                  </NavLink>
+                </li>
                 <Confirmations {...navProps('confirmations')} />
                 <Messages {...navProps('messages')} />
                 <Notifications {...navProps('notifications')} />
@@ -80,18 +83,17 @@ require('react-styl')(`
   .navbar
     padding: 0 1rem
     background-color: var(--dusk) !important
+    > .container
+      align-items: stretch
 
     .nav-item
       display: flex
       align-items: center
       min-height: 3.75rem
-      font-family: Lato
       font-size: 14px
       font-weight: bold
       font-style: normal
       color: var(--pale-grey)
-      &.extra-margin
-        margin: 0 0.5rem
       &.show
         background-color: var(--white)
         .nav-link
@@ -102,12 +104,20 @@ require('react-styl')(`
       .nav-link
         padding: 0 0.75rem
         color: var(--pale-grey)
+        height: 100%
+        display: flex
+        align-items: center
         &.text
-          padding: 0.25rem 0.75rem;
-          border-radius: 1rem;
-          &:hover,&.active
-            background-color: var(--dark-grey-blue);
-        &.add-listing
+          background-color: initial
+          padding: 0 0.5rem
+          span
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            &:hover,&.active
+              background-color: var(--dark-grey-blue)
+          &.active span
+            background-color: var(--dark-grey-blue)
+        &.add-listing span
           display: inline-block
           padding-left: 2rem
           background: url(images/add-listing-icon.svg) no-repeat 0.5rem center
@@ -118,10 +128,10 @@ require('react-styl')(`
         position: absolute !important
         margin-top: 1rem
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
-        border-radius: 5px 0 5px 5px
+        border-radius: var(--default-radius) 0 5px 5px
         border: 0
         font-weight: normal
-        border-radius: 5px 0 5px 5px
+        border-radius: var(--default-radius) 0 5px 5px
 
         &::before
           width: 1rem
@@ -150,11 +160,24 @@ require('react-styl')(`
     width: 90px
     text-indent: -9999px
 
-  @media (max-width: 575.98px)
+  @media (pointer: fine)
     .navbar .nav-item
-      position: initial
-      .dropdown-menu
-        left: 1rem
-        right: 1rem
+      &.show .nav-link:hover
+        background-color: initial
+        &.text span
+          background-color: initial
+      .nav-link:hover
+        background-color: var(--dark-grey-blue)
+        &.text span
+          background-color: var(--dark-grey-blue)
+
+  @media (max-width: 767.98px)
+    .navbar
+      padding: 0
+      .nav-item
+        position: initial
+        .dropdown-menu
+          left: 1rem
+          right: 1rem
 
 `)

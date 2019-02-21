@@ -7,7 +7,7 @@ import logger from './logger'
 const Web3 = require('web3')
 const web3 = new Web3(process.env.PROVIDER_URL)
 
-export async function validateSubdomain (req, res, next) {
+export async function validateSubdomain(req, res, next) {
   const { address, config } = req.body
 
   if (config.subdomain) {
@@ -26,7 +26,8 @@ export async function validateSubdomain (req, res, next) {
     if (req.dnsRecord) {
       req.existingConfigIpfsHash = parseDnsTxtRecord(req.dnsRecord.data[0])
       if (!req.existingConfigIpfsHash) {
-        return res.status(500)
+        return res
+          .status(500)
           .send('An error occurred retrieving an existing DApp configuration')
       }
 
@@ -39,13 +40,15 @@ export async function validateSubdomain (req, res, next) {
           // Attempting to publish a subdomain where the publisher Ethereum
           // address is different from the address of the previous
           // publication
-          return res.status(400)
+          return res
+            .status(400)
             .send('Subdomain is in use by another Ethereum adddress')
         }
       } else {
         // No config was found, but the config should always be available here
         // because a DNS record exists
-        return res.send(500)
+        return res
+          .send(500)
           .send('An error occurred retrieving configuration from IPFS')
       }
     }
@@ -54,7 +57,7 @@ export async function validateSubdomain (req, res, next) {
   next()
 }
 
-export function validateSignature (req, res, next) {
+export function validateSignature(req, res, next) {
   const { address, config, signature } = req.body
   if (config.subdomain) {
     // Validate signature matches

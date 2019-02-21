@@ -295,6 +295,10 @@ class Linker {
           return `${meta.method} pending for ${meta.listing.title}`
       }
     }
+    else if (meta.identity)
+    {
+      return 'Confirm the publishing of your identity'
+    }
     else
     {
       if (meta.contract && meta.method)
@@ -323,7 +327,7 @@ class Linker {
     await this.sendWalletMessage(linkedObj, MessageTypes.CALL, call_data)
 
     // send push notification via APN or fcm
-    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta, account), {call_id})
+    await this.sendNotificationMessage(linkedObj, this.getMessageFromMeta(meta || {}, account), {call_id})
   }
 
   async walletCalled(walletToken, callId, linkId, sessionToken, result) {

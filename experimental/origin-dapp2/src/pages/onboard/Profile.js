@@ -41,7 +41,7 @@ class OnboardProfile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const profile = get(this.props, 'identity.profile')
+    const profile = get(this.props, 'identity')
     if (!prevProps.identity && profile) {
       this.setState(
         pick(profile, [
@@ -137,7 +137,7 @@ class OnboardProfile extends Component {
                 </div>
 
                 <ProfileStrength
-                  published={get(this.props, 'identity.profile.strength', 0)}
+                  published={get(this.props, 'identity.strength', 0)}
                   unpublished={unpublishedProfileStrength(this)}
                 />
 
@@ -174,7 +174,7 @@ class OnboardProfile extends Component {
 
   renderAtt(type, text, soon) {
     const { wallet } = this.props
-    const profile = get(this.props, 'identity.profile', {})
+    const profile = get(this.props, 'identity', {})
 
     let status = ''
     if (profile[`${type}Verified`]) {
@@ -239,7 +239,7 @@ require('react-styl')(`
     .no-funds
       background-color: rgba(244, 193, 16, 0.1)
       border: 1px solid var(--golden-rod)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 2rem 2rem 2rem 5rem
       position: relative
       &::before
@@ -252,7 +252,7 @@ require('react-styl')(`
         left: 1rem;
         top: 1rem;
       h5
-        font-family: Poppins;
+        font-family: var(--heading-font);
         font-size: 24px;
         font-weight: 200;
     .avatar
@@ -288,7 +288,7 @@ require('react-styl')(`
     .profile-attestation
       padding: 0.75rem 1rem
       border: 1px dashed var(--light)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       display: flex
       position: relative
       font-size: 18px

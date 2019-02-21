@@ -16,14 +16,16 @@ class Gallery extends Component {
         />
         {pics.length === 1 ? null : (
           <div className="thumbnails">
-            {pics.map((m, idx) => (
-              <div
-                key={idx}
-                onClick={() => this.setState({ active: idx })}
-                style={{ backgroundImage: `url(${m.urlExpanded})` }}
-                className={this.state.active === idx ? 'active' : ''}
-              />
-            ))}
+            <div className="inner">
+              {pics.map((m, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => this.setState({ active: idx })}
+                  style={{ backgroundImage: `url(${m.urlExpanded})` }}
+                  className={this.state.active === idx ? 'active' : ''}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -41,23 +43,40 @@ require('react-styl')(`
       flex: 1
     .thumbnails
       display: flex
-      flex-direction: column
       width: 100px
       margin-left: 1rem
-      > div
-        height: 70px
-        margin-bottom: 5px
-        padding: 5px
-        background-position: center
-        background-repeat: no-repeat
-        background-size: contain
-        background-origin: content-box
-        cursor: pointer
-        opacity: 0.75
-        &:hover
-          opacity: 1
-        &.active
-          box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5)
-          opacity: 1
+      .inner
+        display: flex
+        flex: 1
+        flex-direction: column
+        > div
+          height: 70px
+          margin-bottom: 5px
+          padding: 5px
+          background-position: center
+          background-repeat: no-repeat
+          background-size: contain
+          background-origin: content-box
+          cursor: pointer
+          opacity: 0.75
+          &:hover
+            opacity: 1
+          &.active
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5)
+            opacity: 1
 
+  @media (max-width: 767.98px)
+    .gallery
+      flex-direction: column
+      .thumbnails
+        margin-top: 1rem
+        overflow: auto
+        width: auto
+        margin-left: 0
+        .inner
+          flex-direction: row
+          justify-content: center
+          > div
+            width: 75px
+            height: 50px
 `)

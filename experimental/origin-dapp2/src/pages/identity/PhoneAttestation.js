@@ -69,6 +69,7 @@ class PhoneAttestation extends Component {
           />
           <div className="form-control-wrap">
             <input
+              type="tel"
               ref={ref => (this.inputRef = ref)}
               className="form-control form-control-lg"
               placeholder="Area code and phone number"
@@ -103,6 +104,8 @@ class PhoneAttestation extends Component {
         <div className="instructions">Enter the code we sent you below</div>
         <div className="my-3 verification-code">
           <input
+            type="number"
+            pattern="\d*"
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg"
             placeholder="Verification code"
@@ -168,9 +171,6 @@ class PhoneAttestation extends Component {
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
-              topic: result.claimType,
-              issuer: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', //result.issuer,
-              signature: result.signature,
               data: result.data,
               loading: false
             })
@@ -220,9 +220,7 @@ class PhoneAttestation extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => {
-              this.props.onComplete(
-                pick(this.state, 'topic', 'issuer', 'signature', 'data')
-              )
+              this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
             children="Continue"
@@ -275,12 +273,11 @@ require('react-styl')(`
           max-width: 15rem
           text-align: center
       .actions
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        display: flex
+        flex-direction: column !important
+        align-items: center
         margin-top: 1.5rem
         .btn-link
-          margin-top: 1rem
           text-decoration: none
 
     &.phone > div h2::before

@@ -2,224 +2,185 @@
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
-# Origin Mobile App
+# Origin Wallet
 
-More info coming here.
+[![app-store](https://user-images.githubusercontent.com/273937/52288003-25b7b700-2920-11e9-9c9a-0a76d04e0c99.png)](https://itunes.apple.com/app/origin-wallet/id1446091928)
 
-# React Native 
-This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
+Read about Origin Wallet [on Medium](https://medium.com/originprotocol/introducing-origin-wallet-decentralized-commerce-goes-mobile-ecb0f41aa543).
 
-Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
+Origin Wallet is an "ejected" React Native application. Go [here](https://facebook.github.io/react-native/docs/getting-started.html#installing-dependencies) to read about getting started with React Native. This application was created with the now-archived [Create React Native App](https://github.com/react-community/create-react-native-app).
 
-## Table of Contents
+## Local Development
 
-* [Updating to New Releases](#updating-to-new-releases)
-* [Available Scripts](#available-scripts)
-  * [npm start](#npm-start)
-  * [npm test](#npm-test)
-  * [npm run ios](#npm-run-ios)
-  * [npm run android](#npm-run-android)
-  * [npm run eject](#npm-run-eject)
-* [Writing and Running Tests](#writing-and-running-tests)
-* [Environment Variables](#environment-variables)
-  * [Configuring Packager IP Address](#configuring-packager-ip-address)
-* [Customizing App Display Name and Icon](#customizing-app-display-name-and-icon)
-* [Sharing and Deployment](#sharing-and-deployment)
-  * [Publishing to Expo's React Native Community](#publishing-to-expos-react-native-community)
-  * [Building an Expo "standalone" app](#building-an-expo-standalone-app)
-  * [Ejecting from Create React Native App](#ejecting-from-create-react-native-app)
-    * [Build Dependencies (Xcode & Android Studio)](#build-dependencies-xcode-android-studio)
-    * [Should I Use ExpoKit?](#should-i-use-expokit)
-* [Troubleshooting](#troubleshooting)
-  * [Networking](#networking)
-  * [iOS Simulator won't open](#ios-simulator-wont-open)
-  * [QR Code does not scan](#qr-code-does-not-scan)
+This guide will help you to install a local build of Origin Wallet on a device or simulator so that you can modify the application itself. An alternative would be to connect the App Store or TestFlight version of the application to a local blockchain running on your machine, which would be a simpler way to test with Origin Wallet.
 
-## Updating to New Releases
+### Dependencies
 
-You should only need to update the global installation of `create-react-native-app` very rarely, ideally never.
+You should be familiar with running Origin.js and the DApp outside of Origin Box as described [here](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md#using-npm--lerna).
 
-Updating the `react-native-scripts` dependency of your app should be as simple as bumping the version number in `package.json` and reinstalling your project's dependencies.
+Install the following:
 
-Upgrading to a new version of React Native requires updating the `react-native`, `react`, and `expo` package versions, and setting the correct `sdkVersion` in `app.json`. See the [versioning guide](https://github.com/react-community/create-react-native-app/blob/master/VERSIONS.md) for up-to-date information about package version compatibility.
+- [Watchman](https://facebook.github.io/watchman/): `brew install watchman`
 
-## Available Scripts
+- [React Native CLI](https://facebook.github.io/react-native/docs/understanding-cli): `npm install -g react-native-cli`
 
-If Yarn was installed when the project was initialized, then dependencies will have been installed via Yarn, and you should probably use it to run these commands as well. Unlike dependency installation, command running syntax is identical for Yarn and NPM at the time of this writing.
+- [Xcode](https://developer.apple.com/xcode/)
 
-### `npm start`
+- Xcode Command Line Tools: `xcode-select --install`
 
-Runs your app in development mode.
+- [Redis](https://redis.io/): `brew install redis`
 
-Open it in the [Expo app](https://expo.io) on your phone to view it. It will reload if you save edits to your files, and you will see build errors and logs in the terminal.
+- [PostgreSQL](https://www.postgresql.org/)
 
-Sometimes you may need to reset or clear the React Native packager's cache. To do so, you can pass the `--reset-cache` flag to the start script:
+### Environment Variables
 
+You will need to create four `.env` files to hold the environment variables that are required by [origin-dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp), [origin-discovery](https://github.com/OriginProtocol/origin/tree/master/origin-discovery), [origin-linking](https://github.com/OriginProtocol/origin/tree/master/origin-linking), [origin-mobile](https://github.com/OriginProtocol/origin/tree/master/origin-mobile), and [origin-notifications](https://github.com/OriginProtocol/origin/tree/master/origin-notifications). Here are examples with suggested values:
+
+**origin-dapp/.env**
 ```
-npm start --reset-cache
-# or
-yarn start --reset-cache
-```
+BRIDGE_SERVER_DOMAIN=bridge.staging.originprotocol.com
+BRIDGE_SERVER_PROTOCOL=https
 
-#### `npm test`
+ETH_NETWORK_ID=999
+MAINNET_DAPP_BASEURL="https://dapp.originprotocol.com"
+RINKEBY_DAPP_BASEURL="https://demo.staging.originprotocol.com"
 
-Runs the [jest](https://github.com/facebook/jest) test runner on your tests.
+PROVIDER_URL=http://localhost:8545
 
+BLOCK_EPOCH=0
 
-### Using local origin-js install
+# MetaMask account 4 (default local blockchain)
+AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
+# MetaMask account 5 (default local blockchain)
+ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
+# MetaMask account 6 (default local blockchain)
+MESSAGING_ACCOUNT=0x2932b7a2355d6fecc4b5c0b6bd44cc31df247a2e
 
-Instal the install-local script to install a static depedency into the node_modules
+IPFS_API_PORT=5002
+IPFS_DOMAIN=localhost
+IPFS_GATEWAY_PORT=8080
+IPFS_GATEWAY_PROTOCOL=http
+IPFS_SWARM=
 
-```
-npm install -g install-local
+MOBILE_LOCALHOST_IP=YOUR-WIFI-IP-ADDRESS
+SHOW_WALLET_LINKER=true
+WALLET_LANDING_URL=https://www.originprotocol.com/mobile
+WALLET_LINKER_URL=http://localhost:3008
 ```
 
-Install the origin-js library using the script. NOTE: please be in the directory of the react native repo. `../` assumes that the origin-js directory exists at the same level.
-
+**origin-discovery/.env**
 ```
-install-local <../directory of origin-js>
-```
-
-#### `npm run ios`
-
-Like `npm start`, but also attempts to open your app in the iOS Simulator if you're on a Mac and have it installed.
-
-#### `npm run android`
-
-Like `npm start`, but also attempts to open your app on a connected Android device or emulator. Requires an installation of Android build tools (see [React Native docs](https://facebook.github.io/react-native/docs/getting-started.html) for detailed setup). We also recommend installing Genymotion as your Android emulator. Once you've finished setting up the native build environment, there are two options for making the right copy of `adb` available to Create React Native App:
-
-##### Using Android Studio's `adb`
-
-1. Make sure that you can run adb from your terminal.
-2. Open Genymotion and navigate to `Settings -> ADB`. Select “Use custom Android SDK tools” and update with your [Android SDK directory](https://stackoverflow.com/questions/25176594/android-sdk-location).
-
-##### Using Genymotion's `adb`
-
-1. Find Genymotion’s copy of adb. On macOS for example, this is normally `/Applications/Genymotion.app/Contents/MacOS/tools/`.
-2. Add the Genymotion tools directory to your path (instructions for [Mac](http://osxdaily.com/2014/08/14/add-new-path-to-path-command-line/), [Linux](http://www.computerhope.com/issues/ch001647.htm), and [Windows](https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/)).
-3. Make sure that you can run adb from your terminal.
-
-#### `npm run eject`
-
-This will start the process of "ejecting" from Create React Native App's build scripts. You'll be asked a couple of questions about how you'd like to build your project.
-
-**Warning:** Running eject is a permanent action (aside from whatever version control system you use). An ejected app will require you to have an [Xcode and/or Android Studio environment](https://facebook.github.io/react-native/docs/getting-started.html) set up.
-
-## Customizing App Display Name and Icon
-
-You can edit `app.json` to include [configuration keys](https://docs.expo.io/versions/latest/guides/configuration.html) under the `expo` key.
-
-To change your app's display name, set the `expo.name` key in `app.json` to an appropriate string.
-
-To set an app icon, set the `expo.icon` key in `app.json` to be either a local path or a URL. It's recommended that you use a 512x512 png file with transparency.
-
-## Writing and Running Tests
-
-This project is set up to use [jest](https://facebook.github.io/jest/) for tests. You can configure whatever testing strategy you like, but jest works out of the box. Create test files in directories called `__tests__` or with the `.test` extension to have the files loaded by jest. See the [the template project](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/App.test.js) for an example test. The [jest documentation](https://facebook.github.io/jest/docs/en/getting-started.html) is also a wonderful resource, as is the [React Native testing tutorial](https://facebook.github.io/jest/docs/en/tutorial-react-native.html).
-
-## Environment Variables
-
-You can configure some of Create React Native App's behavior using environment variables.
-
-### Configuring Packager IP Address
-
-When starting your project, you'll see something like this for your project URL:
-
-```
-exp://192.168.0.2:19000
+AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
+ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
+ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
+BLOCK_EPOCH=0
+DATABASE_URL=postgresql://localhost/discovery
+NETWORK_ID=999
+IPFS_URL=http://localhost:8080/
+WEB3_URL=http://localhost:8545/
 ```
 
-The "manifest" at that URL tells the Expo app how to retrieve and load your app's JavaScript bundle, so even if you load it in the app via a URL like `exp://localhost:19000`, the Expo client app will still try to retrieve your app at the IP address that the start script provides.
-
-In some cases, this is less than ideal. This might be the case if you need to run your project inside of a virtual machine and you have to access the packager via a different IP address than the one which prints by default. In order to override the IP address or hostname that is detected by Create React Native App, you can specify your own hostname via the `REACT_NATIVE_PACKAGER_HOSTNAME` environment variable:
-
-Mac and Linux:
-
+**origin-linking/.env**
 ```
-REACT_NATIVE_PACKAGER_HOSTNAME='my-custom-ip-address-or-hostname' npm start
-```
+ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
 
-Windows:
-```
-set REACT_NATIVE_PACKAGER_HOSTNAME='my-custom-ip-address-or-hostname'
-npm start
-```
+APNS_BUNDLE_ID=com.originprotocol.catcher
+APNS_KEY_FILE=
+APNS_KEY_ID=
+APNS_TEAM_ID=
 
-The above example would cause the development server to listen on `exp://my-custom-ip-address-or-hostname:19000`.
+DAPP_URL=http://localhost:3000/
+DATABASE_URL=postgresql://localhost/origin
+PROVIDER_URL=http://localhost:8545/
+REDIS_URL=redis://127.0.0.1:6379
 
-## Sharing and Deployment
+IPFS_API_PORT=5002
+IPFS_DOMAIN=localhost
+IPFS_GATEWAY_PORT=8080
+IPFS_GATEWAY_PROTOCOL=http
 
-Create React Native App does a lot of work to make app setup and development simple and straightforward, but it's very difficult to do the same for deploying to Apple's App Store or Google's Play Store without relying on a hosted service.
+NOTIFY_TOKEN=
 
-### Publishing to Expo's React Native Community
-
-Expo provides free hosting for the JS-only apps created by CRNA, allowing you to share your app through the Expo client app. This requires registration for an Expo account.
-
-Install the `exp` command-line tool, and run the publish command:
-
-```
-$ npm i -g exp
-$ exp publish
+HOT_WALLET_PK=0x82d052c865f5763aad42add438569276c00d3d88a2d062d36b2bae914d58b8c8
 ```
 
-### Building an Expo "standalone" app
-
-You can also use a service like [Expo's standalone builds](https://docs.expo.io/versions/latest/guides/building-standalone-apps.html) if you want to get an IPA/APK for distribution without having to build the native code yourself.
-
-### Ejecting from Create React Native App
-
-If you want to build and deploy your app yourself, you'll need to eject from CRNA and use Xcode and Android Studio.
-
-This is usually as simple as running `npm run eject` in your project, which will walk you through the process. Make sure to install `react-native-cli` and follow the [native code getting started guide for React Native](https://facebook.github.io/react-native/docs/getting-started.html).
-
-#### Should I Use ExpoKit?
-
-If you have made use of Expo APIs while working on your project, then those API calls will stop working if you eject to a regular React Native project. If you want to continue using those APIs, you can eject to "React Native + ExpoKit" which will still allow you to build your own native code and continue using the Expo APIs. See the [ejecting guide](https://github.com/react-community/create-react-native-app/blob/master/EJECTING.md) for more details about this option.
-
-## Troubleshooting
-
-### Networking
-
-If you're unable to load your app on your phone due to a network timeout or a refused connection, a good first step is to verify that your phone and computer are on the same network and that they can reach each other. Create React Native App needs access to ports 19000 and 19001 so ensure that your network and firewall settings allow access from your device to your computer on both of these ports.
-
-Try opening a web browser on your phone and opening the URL that the packager script prints, replacing `exp://` with `http://`. So, for example, if underneath the QR code in your terminal you see:
-
+**origin-mobile/.env**
 ```
-exp://192.168.0.1:19000
+API_SERVER_PROTOCOL=http
+API_SERVER_DOMAIN=localhost
+API_SERVER_PORT=3008
+DEFAULT_API_SERVER_DOMAIN=
+
+IPFS_API_PORT=5002
+IPFS_DOMAIN=localhost
+IPFS_GATEWAY_PORT=8080
+IPFS_GATEWAY_PROTOCOL=http
+IPFS_SWARM=
+
+MAINNET_API_SERVER=https://linking.originprotocol.com
+RINKEBY_API_SERVER=https://linking.staging.originprotocol.com
+PROVIDER_URL=http://localhost:8545/
+CB_BW_CODE=
 ```
 
-Try opening Safari or Chrome on your phone and loading
-
+**origin-notifications/.env**
 ```
-http://192.168.0.1:19000
+DAPP_OFFER_URL=http://localhost:3000/#/purchases/
+DATABASE_URL=postgresql://localhost/notification
+LINKING_NOTIFY_ENDPOINT=http://localhost:3008/api/wallet-linker/eth-notify
+LINKING_NOTIFY_TOKEN=
+VAPID_EMAIL_ADDRESS=
+VAPID_PRIVATE_KEY=
+VAPID_PUBLIC_KEY=
 ```
 
-and
+In the origin-linking and origin-notifications `.env` files, two of the values will need to match. Add any string of your choice to both the `NOTIFY_TOKEN` and `LINKING_NOTIFY_TOKEN` values.
 
-```
-http://192.168.0.1:19001
-```
+If you want to test with mobile Safari on the same device as the application, find your computer's [internal WiFi network IP address](https://www.wikihow.com/Find-Your-IP-Address-on-a-Mac#Finding_Your_Internal_IP_.28OS_X_10.4.29_sub) and add it to the `MOBILE_LOCALHOST_IP` value for origin-dapp.
 
-If this works, but you're still unable to load your app by scanning the QR code, please open an issue on the [Create React Native App repository](https://github.com/react-community/create-react-native-app) with details about these steps and any other error messages you may have received.
+### Setup
+- Start PostgreSQL
+- Start Redis: `redis-server`
+- `createdb origin`
+- origin $ `npm run install:mobile` 👈 instead of `npm install` at the Origin monorepo root
+- origin/origin-linking $ `npm run migrate`
 
-If you're not able to load the `http` URL in your phone's web browser, try using the tethering/mobile hotspot feature on your phone (beware of data usage, though), connecting your computer to that WiFi network, and restarting the packager. If you are using a VPN you may need to disable it.
+### Startup (dapp)
+- origin/origin-js $ `npm run start`
+- origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
+- origin/origin-linking $ `npm run start`
+- origin/origin-dapp $ `npm run start`
+- origin/origin-mobile $ `npm run install-local`
+- origin/origin-mobile $ `npm run start -- --reset-cache`
+- Open Xcode and build for your desired device
 
-### iOS Simulator won't open
+### Startup (dapp2)
+- origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
+- origin/origin-linking $ `npm run start`
+- origin/experimental/origin-dapp2 $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
+- origin/origin-mobile $ `npm run install-local`
+- origin/origin-mobile $ `npm run start -- --reset-cache`
+- Open Xcode and build for your desired device
 
-If you're on a Mac, there are a few errors that users sometimes see when attempting to `npm run ios`:
+### Troubleshooting
 
-* "non-zero exit code: 107"
-* "You may need to install Xcode" but it is already installed
-* and others
+> Linker command failed with exit code…
 
-There are a few steps you may want to take to troubleshoot these kinds of errors:
+- origin/origin-mobile $ `npm run ios`
+- Close simulator
+- In Xcode, Project > Clean Build Folder
+- Try again
 
-1. Make sure Xcode is installed and open it to accept the license agreement if it prompts you. You can install it from the Mac App Store.
-2. Open Xcode's Preferences, the Locations tab, and make sure that the `Command Line Tools` menu option is set to something. Sometimes when the CLI tools are first installed by Homebrew this option is left blank, which can prevent Apple utilities from finding the simulator. Make sure to re-run `npm/yarn run ios` after doing so.
-3. If that doesn't work, open the Simulator, and under the app menu select `Reset Contents and Settings...`. After that has finished, quit the Simulator, and re-run `npm/yarn run ios`.
+-----------
 
-### QR Code does not scan
+> error: bundling failed: Error: Unable to resolve module origin/common/enums...
 
-If you're not able to scan the QR code, make sure your phone's camera is focusing correctly, and also make sure that the contrast on the two colors in your terminal is high enough. For example, WebStorm's default themes may [not have enough contrast](https://github.com/react-community/create-react-native-app/issues/49) for terminal QR codes to be scannable with the system barcode scanners that the Expo app uses.
+This can be caused by not running `npm run install-local` or not _rerunning_ it after doing a root-level `npm install` (which deletes various things from origin/origin-mobile/node_modules).
 
-If this causes problems for you, you may want to try changing your terminal's color theme to have more contrast, or running Create React Native App from a different terminal. You can also manually enter the URL printed by the packager script in the Expo app's search bar to load it manually.
+-----------
+
+Check [the React Native docs](https://facebook.github.io/react-native/docs/troubleshooting).
+
+-----------
+
+📲 Don't forget to have WiFi enabled on your both of your devices and connected.

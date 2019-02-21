@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import { Mutation, Query } from 'react-apollo'
 import get from 'lodash/get'
 
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
+import UnlinkMobileWalletMutation from 'mutations/UnlinkMobileWallet'
 
 import Link from 'components/Link'
 import Identicon from 'components/Identicon'
@@ -18,13 +19,15 @@ class ProfileNav extends Component {
   }
   render() {
     return (
-      <Query query={ProfileQuery}>
+      <Query query={ProfileQuery} pollInterval={1000}>
         {({ data, loading, error }) => {
+          if (error) console.error(error)
           if (loading || error) return null
-          if (!data || !data.web3 || !data.web3.metaMaskAccount) {
+          if (!data || !data.web3 || !data.web3.primaryAccount) {
             return null
           }
-          const { checksumAddress } = data.web3.metaMaskAccount
+
+          const { checksumAddress } = data.web3.primaryAccount
           return (
             <Dropdown
               el="li"
@@ -60,28 +63,44 @@ class ProfileNav extends Component {
 }
 
 const ProfileDropdown = ({ data, onClose }) => {
-  const { checksumAddress, balance, id } = data.web3.metaMaskAccount
+  const { checksumAddress, balance, id } = data.web3.primaryAccount
+  const mobileWallet = data.web3.walletType.startsWith('mobile-')
   return (
-    <div className="dropdown-menu dark dropdown-menu-right show profile">
-      <div className="connected">
-        {`Connected to `}
-        <span className="net">{data.web3.networkName}</span>
-      </div>
-      <div className="wallet-info">
-        <div>
-          <h5>ETH Address</h5>
-          <div className="wallet-address">{checksumAddress}</div>
+    <Mutation mutation={UnlinkMobileWalletMutation}>
+      {unlinkMutation => (
+        <div className="dropdown-menu dark dropdown-menu-right show profile">
+          <div className="connected">
+            {`Connected to `}
+            <span className="net">{data.web3.networkName}</span>
+          </div>
+          <div className="wallet-info">
+            <div>
+              <h5>ETH Address</h5>
+              <div className="wallet-address">{checksumAddress}</div>
+            </div>
+            <div className="identicon">
+              <Identicon size={50} address={checksumAddress} />
+            </div>
+          </div>
+          <Balances balance={balance} account={id} />
+          <Identity id={id} />
+          {mobileWallet && (
+            <Link
+              onClick={e => {
+                unlinkMutation()
+                e.preventDefault()
+              }}
+              to="#"
+            >
+              Unlink Mobile
+            </Link>
+          )}
+          <Link onClick={() => onClose()} to="/profile">
+            Edit Profile
+          </Link>
         </div>
-        <div className="identicon">
-          <Identicon size={50} address={checksumAddress} />
-        </div>
-      </div>
-      <Balances balance={balance} account={id} />
-      <Identity id={id} />
-      <Link onClick={() => onClose()} to="/profile">
-        Edit Profile
-      </Link>
-    </div>
+      )}
+    </Mutation>
   )
 }
 
@@ -89,7 +108,7 @@ const Identity = ({ id }) => (
   <Query query={IdentityQuery} variables={{ id }}>
     {({ data, loading, error }) => {
       if (loading || error) return null
-      const profile = get(data, 'web3.account.identity.profile')
+      const profile = get(data, 'web3.account.identity')
       if (!profile) {
         return null
       }
@@ -100,9 +119,7 @@ const Identity = ({ id }) => (
           <div className="info">
             <Avatar avatar={profile.avatar} size="3rem" />
             <div>
-              <div className="name">{`${profile.firstName} ${
-                profile.lastName
-              }`}</div>
+              <div className="name">{profile.fullName}</div>
               <div className="attestations">
                 {profile.twitterVerified && (
                   <div className="attestation twitter" />
@@ -162,7 +179,7 @@ require('react-styl')(`
           background: var(--greenblue)
           width: 10px
           height: 10px
-          border-radius: 5px
+          border-radius: var(--default-radius)
           margin-right: 4px
           margin-left: 6px
     .nav-link img
@@ -232,7 +249,7 @@ require('react-styl')(`
     &.google
       background-image: url(images/identity/google-icon-verified.svg)
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .dropdown-menu.profile
       width: auto
 `)

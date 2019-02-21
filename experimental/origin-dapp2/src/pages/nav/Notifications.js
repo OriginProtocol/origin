@@ -12,15 +12,17 @@ import NotificationRow from 'pages/notifications/NotificationRow'
 
 class NotificationsNav extends Component {
   render() {
-    if (!this.props.wallet) return null
     const vars = { first: 5, id: this.props.wallet }
+    const skip = !this.props.wallet || !this.props.open
     return (
-      <Query query={query} variables={vars}>
-        {({ loading, error, data }) => {
-          if (loading || error) return null
-
-          return <NotificationsDropdown {...this.props} data={data} />
-        }}
+      <Query query={query} variables={vars} skip={skip}>
+        {({ data, loading }) => (
+          <NotificationsDropdown
+            {...this.props}
+            data={data}
+            loading={loading}
+          />
+        )}
       </Query>
     )
   }
@@ -45,7 +47,7 @@ class NotificationsDropdown extends Component {
       return <Redirect to={`/purchases/${this.state.redirect.offer.id}`} push />
     }
 
-    const { data, open, onOpen, onClose } = this.props
+    const { data, open, onOpen, onClose, loading } = this.props
 
     const { nodes, totalCount } = get(
       data,
@@ -58,19 +60,25 @@ class NotificationsDropdown extends Component {
     return (
       <Dropdown
         el="li"
-        className="nav-item notifications"
+        className="nav-item notifications d-none d-md-flex"
         open={open}
         onClose={() => onClose()}
         content={
-          <NotificationsContent
-            totalCount={totalCount}
-            nodes={nodes}
-            onClose={() => onClose()}
-            onClick={node => {
-              this.setState({ redirect: node })
-              onClose()
-            }}
-          />
+          loading ? (
+            <div className="dropdown-menu dropdown-menu-right show p-3">
+              Loading...
+            </div>
+          ) : (
+            <NotificationsContent
+              totalCount={totalCount}
+              nodes={nodes}
+              onClose={() => onClose()}
+              onClick={node => {
+                this.setState({ redirect: node })
+                onClose()
+              }}
+            />
+          )
         }
       >
         <a
@@ -116,23 +124,25 @@ const NotificationsContent = ({ totalCount, nodes, onClose, onClick }) => {
 export default withWallet(NotificationsNav)
 
 require('react-styl')(`
-  .notifications
+  .nav-item.notifications,
+  .nav-item.messages
     .count
-      display: flex;
+      display: flex
+      white-space: nowrap
       align-items: center
-      padding: 0.85rem 1.25rem;
-      font-size: 18px;
+      padding: 0.85rem 1.25rem
+      font-size: 18px
       font-weight: bold
       border-bottom: 1px solid var(--light)
       .total
-        background: var(--greenblue);
-        color: var(--white);
-        min-width: 1.6rem;
+        background: var(--greenblue)
+        color: var(--white)
+        min-width: 1.6rem
         padding: 0 0.5rem
-        height: 1.6rem;
-        border-radius: 2rem;
-        line-height: 1.6rem;
-        text-align: center;
+        height: 1.6rem
+        border-radius: 2rem
+        line-height: 1.6rem
+        text-align: center
       .title
         margin-left: 1.1rem
     .dropdown-menu
@@ -140,9 +150,11 @@ require('react-styl')(`
         background: var(--pale-grey-two)
         font-size: 18px
         text-align: center
-        padding: 0.5rem;
-        display: block;
-        border-radius: 0 0 5px 5px;
+        padding: 0.5rem
+        display: block
+        border-radius: 0 0 5px 5px
+
+  .nav-item.notifications
     .notification-row
       max-width: 540px
 
@@ -155,15 +167,15 @@ require('react-styl')(`
       position:relative
       &.active
         &::after
-          content: "";
-          width: 14px;
-          height: 14px;
-          background: var(--greenblue);
-          border-radius: 10px;
-          border: 2px solid var(--dusk);
-          position: absolute;
-          top: 0;
-          right: 2px;
+          content: ""
+          width: 14px
+          height: 14px
+          background: var(--greenblue)
+          border-radius: 10px
+          border: 2px solid var(--dusk)
+          position: absolute
+          top: 0
+          right: 2px
 
     &.show .notifications-icon
       background-image: url(images/alerts-icon-selected.svg)
