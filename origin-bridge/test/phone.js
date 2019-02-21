@@ -5,6 +5,8 @@ const expect = chai.expect
 const nock = require('nock')
 const request = require('supertest')
 
+const Attestation = require('../src/models/index').Attestation
+const AttestationTypes = Attestation.AttestationTypes
 const app = require('../src/app')
 
 describe('phone attestations', () => {
@@ -45,8 +47,8 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal(
-      'Invalid phone verification method: magic'
+    expect(response.body.errors.method).to.equal(
+      'Invalid phone verification method'
     )
   })
 
@@ -137,8 +139,10 @@ describe('phone attestations', () => {
         cookie = response.headers['set-cookie']
       })
 
+    const ethAddress = '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
+
     const checkParams = {
-      eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+      eth_address: ethAddress,
       country_calling_code: '1',
       phone_number: '12341234',
       code: '123456'
@@ -166,20 +170,28 @@ describe('phone attestations', () => {
     )
     expect(response.body.data.attestation.verificationMethod.sms).to.equal(true)
     expect(response.body.data.attestation.phone.verified).to.equal(true)
-    // TODO check database insert
+
+    // Verify attestation was recorded in the database
+    const results = await Attestation.findAll()
+    expect(results.length).to.equal(1)
+    expect(results[0].ethAddress).to.equal(ethAddress)
+    expect(results[0].method).to.equal(AttestationTypes.PHONE)
+    expect(results[0].value).to.equal('1 12341234')
   })
 
   it('should error on missing verification code', async () => {
     const params = {
       eth_address: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
       country_calling_code: '1',
-      phone: '12341234'
+      phone_numberr: '12341234'
     }
 
     const response = await request(app)
       .post('/phone/verify')
       .send(params)
       .expect(400)
+
+    expect(response.body.errors.phone_number).to.equal('Invalid value')
   })
 
   it('should error on incorrect verification code', async () => {

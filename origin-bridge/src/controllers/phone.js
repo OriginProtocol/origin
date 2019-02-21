@@ -22,17 +22,17 @@ router.post(
       .not()
       .isEmpty()
       .trim(),
-    check('method').trim()
+    check('method', 'Invalid phone verification method')
+      .isIn(['sms', 'call'])
+      .trim()
   ],
   async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
-    }
-
-    if (!['sms', 'call'].includes(req.body.method)) {
       return res.status(400).json({
-        errors: [`Invalid phone verification method: ${req.body.method}`]
+        errors: {
+          [errors.array()[0].param]: errors.array()[0].msg
+        }
       })
     }
 
@@ -108,7 +108,11 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(400).json({
+        errors: {
+          [errors.array()[0].param]: errors.array()[0].msg
+        }
+      })
     }
 
     const params = {
@@ -116,6 +120,7 @@ router.post(
       phone_number: req.body.phone_number,
       code: req.body.code
     }
+
     let response
     try {
       response = await request
@@ -182,10 +187,10 @@ router.post(
 
     await Attestation.create({
       method: AttestationTypes.PHONE,
-      eth_address: req.body.eth_address,
+      ethAddress: req.body.eth_address,
       value: `${req.body.country_calling_code} ${req.body.phone_number}`,
       signature: signature['bytes'],
-      remote_ip_address: req.ip
+      remoteIpAddress: req.ip
     })
 
     res.send({
