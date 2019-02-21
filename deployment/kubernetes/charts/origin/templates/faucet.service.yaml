@@ -1,4 +1,3 @@
-{{ if ne .Release.Namespace "prod" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,4 +18,3 @@ spec:
   ports:
   - name: http
     port: 5000
-{{ end }}
