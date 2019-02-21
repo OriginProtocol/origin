@@ -160,31 +160,37 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthReferral(user) {
-    if (!user.metadata || !user.metadata.refereeEthAddress) {
+    if (!user.metadata || !user.metadata.referrerCode) {
       // Nothing to record, the user did not come from referral program.
       return
     }
 
-    const referrer = user.metadata.refereeEthAddress.toLowerCase()
     const referee = user.address.toLowerCase()
 
-    if (!Web3.utils.isAddress(referrer)) {
-      logger.error(
-        `Invalid referrer address ${referrer} found in identity of ${referee}`)
+    // Lookup the invite code to get the referrer.
+    const code = await db.GrowthInviteCode.findOne({ where: { code } })
+    if (!code) {
+      logger.error(`Invalid referral code present in identity of ${referee}`)
       return
     }
+    const referrer = code.ethAddress
 
-    // Check if we already recorded the referrer/referee relationship.
-    const rows = db.GrowthReferral.findOne({
+    // Check for any existing referral data for this referee.
+    const row = db.GrowthReferral.findOne({
       where: {
-        referrer_eth_address: referrer,
         referee_eth_address: referee
       }
     })
-    if (rows.length > 0) {
+    if (row) {
+      if (row.referrerEthAddress != referrer) {
+        // This should never happen.
+        logger.error(`Referee ${referee} already referred by ${row.referrerEthAddress}`)
+      }
+      // It's possible the listener is reprocessing data and that the referral was already recorded.
       return
     }
 
+    // Record the referee/referrer relationship.
     await db.GrowthReferral.create({
       referrer_eth_address: referrer,
       referee_eth_address: referee
