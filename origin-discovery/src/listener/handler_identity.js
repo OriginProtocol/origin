@@ -125,7 +125,6 @@ class IdentityEventHandler {
       null,
       { blockInfo }
     )
-
   }
 
   /**
@@ -151,6 +150,46 @@ class IdentityEventHandler {
         { blockInfo }
       )
     }))
+  }
+
+  /**
+   * If the user signed up via a referral, links the referrer and referee
+   * by inserting a row in the growth_referral table.
+   * @param {UserModel} user - Origin-js user model object.
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _recordGrowthReferral(user) {
+    if (!user.metadata || !user.metadata.refereeEthAddress) {
+      // Nothing to record, the user did not come from referral program.
+      return
+    }
+
+    const referrer = user.metadata.refereeEthAddress.toLowerCase()
+    const referee = user.address.toLowerCase()
+
+    if (!Web3.utils.isAddress(referrer)) {
+      logger.error(
+        `Invalid referrer address ${referrer} found in identity of ${referee}`)
+      return
+    }
+
+    // Check if we already recorded the referrer/referee relationship.
+    const rows = db.GrowthReferral.findOne({
+      where: {
+        referrer_eth_address: referrer,
+        referee_eth_address: referee
+      }
+    })
+    if (rows.length > 0) {
+      return
+    }
+
+    await db.GrowthReferral.create({
+      referrer_eth_address: referrer,
+      referee_eth_address: referee
+    })
+    logger.info(`Recorded referral. Referrer: ${referrer} Referee: ${referee}`)
   }
 
   /**
@@ -189,6 +228,7 @@ class IdentityEventHandler {
     if (this.config.growth) {
       await this._recordGrowthProfileEvent(user, blockInfo)
       await this._recordGrowthAttestationEvents(user, blockInfo)
+      await this._recordGrowthReferral(user)
     }
 
     return { user }
