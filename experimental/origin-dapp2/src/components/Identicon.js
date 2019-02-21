@@ -4,7 +4,7 @@ import { toDataUrl } from 'myetherwallet-blockies'
 const Identicon = ({ address, size = 30 }) => {
   const blankDataUrl =
     'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
-  const dataUrl = address ? toDataUrl(address) : blankDataUrl
+  const dataUrl = address ? toDataUrl(web3.utils.toChecksumAddress(address)) : blankDataUrl
 
   return (
     <img
