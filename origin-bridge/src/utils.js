@@ -213,7 +213,6 @@ function asyncMiddleware(fn) {
 
 function generateAirbnbCode(ethAddress, userId) {
   const hashCode = web3.utils.sha3(ethAddress + userId).substr(-7)
-  console.log(hashCode)
   return Array.prototype.map
     .call(hashCode, i => words[i.charCodeAt(0)])
     .join(' ')

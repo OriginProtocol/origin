@@ -97,8 +97,6 @@ router.post('/verify', async (req, res) => {
     code: req.body.code
   }
 
-  console.log(req.session)
-
   let response
   try {
     response = await request
