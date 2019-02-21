@@ -108,7 +108,7 @@ class ProgressBar extends Component {
 
 function Action(props) {
   const { type, status, reward, rewardEarned, rewardPending } = props.action
-  const showLockIcon = status === 'Inactive'
+  const actionLocked = status === 'Inactive'
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
   const backgroundImgSrc = actionCompleted
@@ -185,7 +185,7 @@ function Action(props) {
           {type === 'Referral' && (
             <img className="astronaut" src="images/growth/astronaut-icon.svg" />
           )}
-          {showLockIcon && (
+          {actionLocked && (
             <img className="lock" src="images/growth/lock-icon.svg" />
           )}
         </div>
@@ -216,7 +216,7 @@ function Action(props) {
         </div>
       </div>
       <div className="col-2 d-flex">
-        {!actionCompleted && (
+        {!actionCompleted && !actionLocked && (
           <Link to="/profile" className="mt-auto mb-auto">
             <button
               className="btn btn-primary btn-rounded mr-2"
@@ -375,7 +375,7 @@ class GrowthCampaigns extends Component {
             }
 
             const vars = pick(this.state, 'first')
-            const accountId = data.web3.metaMaskAccount.id
+            const accountId = data.web3.primaryAccount.id
             vars.walletAddress = accountId
             return (
               <Query
