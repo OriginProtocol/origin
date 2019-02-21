@@ -4,7 +4,6 @@ const chai = require('chai')
 const expect = chai.expect
 const nock = require('nock')
 const request = require('supertest')
-const SequelizeMock = require('sequelize-mock')
 
 const app = require('../src/app')
 
@@ -13,8 +12,6 @@ describe('phone attestations', () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
     process.env.TWILIO_VERIFY_API_KEY = '1234'
-
-    const dbMock = new SequelizeMock()
   })
 
   it('should generate a verification code', async () => {
@@ -43,15 +40,14 @@ describe('phone attestations', () => {
       locale: 'en'
     }
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/generate-code')
       .send(params)
       .expect(400)
-      .then(response => {
-        expect(response.body.errors[0]).to.equal(
-          'Invalid phone verification method: magic'
-        )
-      })
+
+    expect(response.body.errors[0]).to.equal(
+      'Invalid phone verification method: magic'
+    )
   })
 
   it('should error on generate code with incorrect number format', async () => {
@@ -67,13 +63,12 @@ describe('phone attestations', () => {
         error_code: '60033'
       })
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/generate-code')
       .send(params)
       .expect(400)
-      .then(response => {
-        expect(response.body.errors.phone).to.equal('Phone number is invalid.')
-      })
+
+    expect(response.body.errors.phone).to.equal('Phone number is invalid.')
   })
 
   it('should error on generate code using sms on landline number', async () => {
@@ -89,15 +84,12 @@ describe('phone attestations', () => {
         error_code: '60083'
       })
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/generate-code')
       .send(params)
       .expect(400)
-      .then(response => {
-        expect(response.body.errors.phone).to.equal(
-          'Cannot send SMS to landline.'
-        )
-      })
+
+    expect(response.body.errors.phone).to.equal('Cannot send SMS to landline.')
   })
 
   it('should return a message on twilio api error', async () => {
@@ -111,15 +103,14 @@ describe('phone attestations', () => {
       .post('/protected/json/phones/verification/start')
       .reply(500)
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/generate-code')
       .send(params)
       .expect(500)
-      .then(response => {
-        expect(response.body.errors[0]).to.equal(
-          'Could not send phone verification code, please try again shortly.'
-        )
-      })
+
+    expect(response.body.errors[0]).to.equal(
+      'Could not send phone verification code, please try again shortly.'
+    )
   })
 
   it('should generate attestation on valid verification code', async () => {
@@ -160,25 +151,22 @@ describe('phone attestations', () => {
         success: true
       })
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/verify')
       .set('Cookie', cookie)
       .send(checkParams)
       .expect(200)
-      .then(response => {
-        expect(response.body.schemaId).to.equal(
-          'https://schema.originprotocol.com/attestation_1.0.0.json'
-        )
-        expect(response.body.data.issuer.name).to.equal('Origin Protocol')
-        expect(response.body.data.issuer.url).to.equal(
-          'https://www.originprotocol.com'
-        )
-        expect(response.body.data.attestation.verificationMethod.sms).to.equal(
-          true
-        )
-        expect(response.body.data.attestation.phone.verified).to.equal(true)
-        // TODO check database insert
-      })
+
+    expect(response.body.schemaId).to.equal(
+      'https://schema.originprotocol.com/attestation_1.0.0.json'
+    )
+    expect(response.body.data.issuer.name).to.equal('Origin Protocol')
+    expect(response.body.data.issuer.url).to.equal(
+      'https://www.originprotocol.com'
+    )
+    expect(response.body.data.attestation.verificationMethod.sms).to.equal(true)
+    expect(response.body.data.attestation.phone.verified).to.equal(true)
+    // TODO check database insert
   })
 
   it('should error on missing verification code', async () => {
@@ -188,11 +176,10 @@ describe('phone attestations', () => {
       phone: '12341234'
     }
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/verify')
       .send(params)
       .expect(400)
-      .then(response => {})
   })
 
   it('should error on incorrect verification code', async () => {
@@ -209,15 +196,14 @@ describe('phone attestations', () => {
         error_code: '60022'
       })
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/verify')
       .send(params)
       .expect(400)
-      .then(response => {
-        expect(response.body.errors.phone).to.equal(
-          'Verification code is incorrect.'
-        )
-      })
+
+    expect(response.body.errors.phone).to.equal(
+      'Verification code is incorrect.'
+    )
   })
 
   it('should error on expired verification code', async () => {
@@ -234,15 +220,14 @@ describe('phone attestations', () => {
         error_code: '60023'
       })
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/verify')
       .send(params)
       .expect(400)
-      .then(response => {
-        expect(response.body.errors.phone).to.equal(
-          'Verification code has expired.'
-        )
-      })
+
+    expect(response.body.errors.phone).to.equal(
+      'Verification code has expired.'
+    )
   })
 
   it('should use en locale for sms in india', async () => {
@@ -260,13 +245,12 @@ describe('phone attestations', () => {
       })
       .reply(200)
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/generate-code')
       .send(params)
       .expect(200)
-      .then(response => {
-        expect(parsedBody.locale).to.equal('en')
-      })
+
+    expect(parsedBody.locale).to.equal('en')
   })
 
   it('should allow locale override for sms in india', async () => {
@@ -285,12 +269,11 @@ describe('phone attestations', () => {
       })
       .reply(200)
 
-    await request(app)
+    const response = await request(app)
       .post('/phone/generate-code')
       .send(params)
       .expect(200)
-      .then(response => {
-        expect(parsedBody.locale).to.equal('de')
-      })
+
+    expect(parsedBody.locale).to.equal('de')
   })
 })

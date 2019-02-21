@@ -50,7 +50,6 @@
     "eslint": "^5.14.1",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.9",
-    "sequelize-mock": "^0.10.2",
     "supertest": "^3.3.0",
     "supertest-session": "^3.3.0"
   },
