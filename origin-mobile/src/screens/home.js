@@ -124,7 +124,7 @@ class HomeScreen extends Component {
             />
             */}
           </ScrollView>
-          <WalletModal address={address} visible={this.state.walletExpanded} onPress={this.toggleWallet} />
+          <WalletModal address={address} visible={this.state.walletExpanded} onPress={this.toggleWallet} onRequestClose={this.toggleWallet} />
         </View>
         {!eventsCount &&
           <Selling />
