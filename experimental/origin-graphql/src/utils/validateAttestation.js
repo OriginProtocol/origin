@@ -1,5 +1,6 @@
 import contracts from '../contracts'
 import stringify from 'json-stable-stringify'
+window.stringify = stringify
 
 export default function validateAttestation(account, attestation) {
   const web3 = contracts.web3

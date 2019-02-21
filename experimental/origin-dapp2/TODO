@@ -1,3 +1,14 @@
+- Enable notifications after create listing
+- Enable messaging before create listing
+
+- Marketplace contract ID 000
+
+- Check fractional listing
+- Check identity + attestations
+- Check messaging
+
+- Move 'enable messaging' on AboutParty to modal
+
 # Messaging
 
 - Dropdown

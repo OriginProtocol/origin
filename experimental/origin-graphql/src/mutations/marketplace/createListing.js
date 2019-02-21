@@ -7,11 +7,23 @@ import cost from '../_gasCost'
 
 export function listingInputToIPFS(data, unitData, fractionalData) {
   const listingType = fractionalData ? 'fractional' : 'unit'
+  const category = data.category || ''
+  const subCategory = data.subCategory || ''
+
+  const dappSchemaId = [
+    'https://dapp.originprotocol.com/schemas/',
+    category.replace('schema.', ''),
+    '-',
+    subCategory.replace('schema.', ''),
+    '_1.0.0.json'
+  ].join('')
+
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+    dappSchemaId,
     listingType,
-    category: data.category,
-    subCategory: data.subCategory,
+    category,
+    subCategory,
     language: 'en-US',
     title: data.title,
     description: data.description,
@@ -20,12 +32,19 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     commission: {
       currency: 'OGN',
       amount: data.commission || '0'
-    },
-    commissionPerUnit: {
+    }
+  }
+  if (
+    (data.unitsTotal && data.unitsTotal > 1) ||
+    listingType === 'fractional'
+  ) {
+    ipfsData.commissionPerUnit = {
       currency: 'OGN',
       amount: data.commissionPerUnit || '0'
-    },
-    marketplacePublisher: data.marketplacePublisher
+    }
+  }
+  if (data.marketplacePublisher) {
+    ipfsData.marketplacePublisher = data.marketplacePublisher
   }
   if (listingType === 'unit') {
     ipfsData.unitsTotal = unitData.unitsTotal
