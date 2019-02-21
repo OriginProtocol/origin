@@ -36,7 +36,7 @@ const GetReceipt = gql`
 `
 
 const GetAllOffers = gql`
-  query GetAllOffers($id: String!) {
+  query GetAllOffers($id: ID!) {
     marketplace {
       listing(id: $id) {
         id
@@ -55,7 +55,7 @@ const GetAllOffers = gql`
 `
 
 const GetListing = gql`
-  query GetListing($id: String!) {
+  query GetListing($id: ID!) {
     marketplace {
       listing(id: $id) {
         id
@@ -87,6 +87,7 @@ const GetListing = gql`
         }
         media {
           url
+          urlExpanded
           contentType
         }
         commission
@@ -95,6 +96,15 @@ const GetListing = gql`
           unitsTotal
           unitsAvailable
           unitsSold
+        }
+        ... on FractionalListing {
+          weekendPrice {
+            amount
+            currency
+          }
+          booked
+          customPricing
+          unavailable
         }
       }
     }
