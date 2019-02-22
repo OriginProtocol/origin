@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import queryString from 'query-string'
 
 import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
 import query from 'queries/Conversations'
 import MarkConversationRead from 'mutations/MarkConversationRead'
 
@@ -12,7 +13,29 @@ import { OnboardMessaging } from 'pages/onboard/Messaging'
 import RoomStatus from './RoomStatus'
 import Room from './Room'
 import QueryError from 'components/QueryError'
+import Avatar from 'components/Avatar'
 import PageTitle from 'components/PageTitle'
+
+import { abbreviateName, truncateAddress } from 'utils/user'
+
+const MobileNavigation = props => (
+  <div
+    className={`back ${
+      props.displayBackNav
+    } d-md-none flex-row justify-content-start`}
+  >
+    <i
+      className="icon-arrow-left align-self-start mr-auto"
+      onClick={() => props.history.push('/messages?back=true')}
+    />
+    <Avatar avatar={get(props, 'identity.avatar')} size={30} />
+    <span className="counterparty">
+      {abbreviateName(props.identity) || truncateAddress(props.wallet)}
+    </span>
+  </div>
+)
+
+const MobileNavigationWithIdentity = withIdentity(MobileNavigation)
 
 class Messages extends Component {
   constructor(props) {
@@ -20,7 +43,7 @@ class Messages extends Component {
     const isSmallScreen = window.innerWidth <= 991
 
     this.checkForSmallScreen = this.checkForSmallScreen.bind(this)
-    this.state = { smallScreen: isSmallScreen }
+    this.state = { smallScreen: isSmallScreen, conversationId: '' }
   }
 
   componentDidMount() {
@@ -31,14 +54,13 @@ class Messages extends Component {
     window.removeEventListener('resize', this.checkForSmallScreen)
   }
 
-  checkForSmallScreen(room, conversations) {
+  checkForSmallScreen() {
+    const { smallScreen, conversationId } = this.state
     const query = get(this.props, 'location.search', {})
     const backButtonPressed = queryString.parse(query).back
-    const id = get(conversations, '0.id', undefined)
     const isSmallScreen = window.innerWidth <= 991
-    const convoWithMissingRoom = !room && id
 
-    if (this.state.smallScreen !== isSmallScreen) {
+    if (smallScreen !== isSmallScreen) {
       this.setState({ smallScreen: isSmallScreen })
     }
 
@@ -46,8 +68,8 @@ class Messages extends Component {
       this.props.history.replace('/messages')
     }
 
-    if (isSmallScreen && !backButtonPressed && convoWithMissingRoom) {
-      this.props.history.replace(`/messages/${id}`)
+    if (isSmallScreen && !backButtonPressed && conversationId) {
+      this.props.history.replace(`/messages/${conversationId}`)
     }
 
     return isSmallScreen
@@ -80,22 +102,15 @@ class Messages extends Component {
                   : get(conversations, '0.id')
                 const active = room || defaultRoom
                 const displayConversations = room ? 'd-none' : 'd-block'
-                const displayBackNav = room ? 'd-block' : 'd-none'
+                const displayBackNav = room ? 'd-block d-flex' : 'd-none'
 
                 return (
                   <div className="row">
-                    <div
-                      className={`back ${displayBackNav} d-md-none flex-row justify-content-start`}
-                    >
-                      <div className="align-self-start">
-                        <i
-                          className="icon-arrow-left align-self-start mr-auto"
-                          onClick={() =>
-                            this.props.history.push('/messages?back=true')
-                          }
-                        />
-                      </div>
-                    </div>
+                    <MobileNavigationWithIdentity
+                      history={this.props.history}
+                      wallet={this.state.conversationId || active}
+                      displayBackNav={displayBackNav}
+                    />
                     <div
                       className={`col-md-3 ${displayConversations} d-md-block`}
                     >
@@ -108,9 +123,10 @@ class Messages extends Component {
                           active={active === conv.id}
                           conversation={conv}
                           wallet={conv.id}
-                          onClick={() =>
+                          onClick={() => {
+                            this.setState({ conversationId: conv.id })
                             this.props.history.push(`/messages/${conv.id}`)
-                          }
+                          }}
                         />
                       ))}
                     </div>
@@ -142,6 +158,11 @@ require('react-styl')(`
       margin-bottom: 10px
       margin-top: -16px
 
+      .avatar
+        margin-right: 10px
+        align-self: center
+        display: inline-block
+        vertical-align: sub
       .avatar-container
         height: 30px
         width: 30px
@@ -162,6 +183,7 @@ require('react-styl')(`
           -webkit-transform: rotate(135deg)
 
       .counterparty
+        margin-right: auto
         font-size: 22px
         font-weight: bold
         color: white
