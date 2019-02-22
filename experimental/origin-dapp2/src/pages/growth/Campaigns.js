@@ -115,7 +115,8 @@ function Action(props) {
     : 'images/identity/verification-shape-blue.svg'
 
   const formatTokens = tokenAmount => {
-    return web3.utils.toBN(tokenAmount)
+    return web3.utils
+      .toBN(tokenAmount)
       .div(props.decimalDevision)
       .toString()
   }
@@ -279,13 +280,13 @@ function Campaign(props) {
         if (!loading && !error) {
           const tokenHolder = data.web3.account.token
           if (tokenHolder && tokenHolder.token) {
-            decimalDevision = web3.utils.toBN(10).pow(
-              web3.utils.toBN(tokenHolder.token.decimals)
-            )
+            decimalDevision = web3.utils
+              .toBN(10)
+              .pow(web3.utils.toBN(tokenHolder.token.decimals))
             // campaign rewards converted normalized to token value according to number of decimals
-            tokensEarned = web3.utils.toBN(
-              rewardEarned ? rewardEarned.amount : 0
-            ).div(decimalDevision)
+            tokensEarned = web3.utils
+              .toBN(rewardEarned ? rewardEarned.amount : 0)
+              .div(decimalDevision)
             tokenEarnProgress = Math.min(100, tokensEarned.toString())
           }
         }
