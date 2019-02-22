@@ -273,7 +273,7 @@ class MarketplaceEventHandler {
       case 'ListingCreated':
         await GrowthEvent.insert(
           logger,
-          details.listing.seller,
+          details.listing.seller.toLowerCase(),
           GrowthEventTypes.ListingCreated,
           details.listing.id,
           { blockInfo }
@@ -284,14 +284,14 @@ class MarketplaceEventHandler {
         // a ListingSold event on the seller side.
         await GrowthEvent.insert(
           logger,
-          details.listing.buyer,
+          details.offer.buyer.toLowerCase(),
           GrowthEventTypes.ListingPurchased,
           details.offer.id,
           { blockInfo }
         )
         await GrowthEvent.insert(
           logger,
-          details.listing.seller,
+          details.listing.seller.toLowerCase(),
           GrowthEventTypes.ListingSold,
           details.offer.id,
           { blockInfo }
