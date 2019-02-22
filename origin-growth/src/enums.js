@@ -32,7 +32,7 @@ const GrowthEventTypes = new Enum(
   'RefereeSignedUp',
   'ListingCreated',
   'ListingPurchased', // Buyer side event.
-  'ListingSold'       // Seller side event.
+  'ListingSold' // Seller side event.
 )
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')
