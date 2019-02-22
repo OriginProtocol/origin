@@ -5,6 +5,7 @@ const AttestationTypes = Attestation.AttestationTypes
 const constants = require('../constants')
 
 async function generateAttestation(
+  attestationType,
   attestationBody,
   attestationValue,
   ethAddress,
@@ -29,7 +30,7 @@ async function generateAttestation(
 
   // Save the attestation in the database
   await Attestation.create({
-    method: AttestationTypes.PHONE,
+    method: attestationType,
     ethAddress: ethAddress,
     value: attestationValue,
     signature: signature['bytes'],

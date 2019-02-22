@@ -14,6 +14,11 @@ describe('phone attestations', () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
     process.env.TWILIO_VERIFY_API_KEY = '1234'
+
+    Attestation.destroy({
+      where: {},
+      truncate: true
+    })
   })
 
   it('should generate a verification code', async () => {

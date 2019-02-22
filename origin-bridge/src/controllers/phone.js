@@ -3,9 +3,10 @@ const router = express.Router()
 const request = require('superagent')
 const { check, validationResult } = require('express-validator/check')
 
-const logger = require('../logger')
-
+const Attestation = require('../models/index').Attestation
+const AttestationTypes = Attestation.AttestationTypes
 const { generateAttestation } = require('../utils/attestation')
+const logger = require('../logger')
 
 /* Generate a verification code for verifying a via using the Twilio Verify API.
  * The API supports verification by SMS or call.
@@ -183,6 +184,7 @@ router.post(
     }`
 
     const attestation = await generateAttestation(
+      AttestationTypes.PHONE,
       attestationBody,
       attestationValue,
       req.body.eth_address,
