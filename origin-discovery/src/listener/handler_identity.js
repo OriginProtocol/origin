@@ -168,7 +168,9 @@ class IdentityEventHandler {
     const referee = user.address.toLowerCase()
 
     // Lookup the invite code to get the referrer.
-    const code = await db.GrowthInviteCode.findOne({ where: { code } })
+    const code = await db.GrowthInviteCode.findOne({
+      where: { code: user.metadata.referrerCode }
+    })
     if (!code) {
       logger.error(`Invalid referral code present in identity of ${referee}`)
       return
