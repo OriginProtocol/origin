@@ -4,26 +4,16 @@ import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
+import dapp1Compatibility from './_dapp1Compat'
 
 export function listingInputToIPFS(data, unitData, fractionalData) {
   const listingType = fractionalData ? 'fractional' : 'unit'
-  const category = data.category || ''
-  const subCategory = data.subCategory || ''
-
-  const dappSchemaId = [
-    'https://dapp.originprotocol.com/schemas/',
-    category.replace('schema.', ''),
-    '-',
-    subCategory.replace('schema.', ''),
-    '_1.0.0.json'
-  ].join('')
 
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
-    dappSchemaId,
     listingType,
-    category,
-    subCategory,
+    category: data.category || '',
+    subCategory: data.subCategory || '',
     language: 'en-US',
     title: data.title,
     description: data.description,
@@ -55,6 +45,10 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     ipfsData.customPricing = fractionalData.customPricing || []
     ipfsData.booked = fractionalData.booked || []
   }
+
+  // Dapp1 compatibility:
+  dapp1Compatibility(ipfsData)
+
   validator('https://schema.originprotocol.com/listing_1.0.0.json', ipfsData)
   return ipfsData
 }
