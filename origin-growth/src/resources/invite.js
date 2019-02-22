@@ -12,6 +12,10 @@ class GrowthInvite {
     const referrer = inviteCode.ethAddress
 
     // Load the referrer's identity.
+    // TODO(franck): Once our data model and GraphQL services interfaces are
+    // stable, we should consider:
+    //  a. fetching identity by making a call to the identity graphql endpoint.
+    //  b. putting all the identity code in a separate origin-identity package.
     const identity = await db2.Identity.findOne({
       where: { ethAddress: referrer }
     })
