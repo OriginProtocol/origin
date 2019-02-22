@@ -186,7 +186,7 @@ function newBlock(blockHeaders) {
 }
 
 export function setNetwork(net, customConfig) {
-  if (process.env.DOCKER) {
+  if (process.env.DOCKER && net !== 'test') {
     net = 'docker'
   }
   let config = JSON.parse(JSON.stringify(Configs[net]))
