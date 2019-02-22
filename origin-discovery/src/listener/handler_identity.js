@@ -183,10 +183,20 @@ class IdentityEventHandler {
     })
     if (row) {
       if (row.referrerEthAddress != referrer) {
-        // This should never happen.
+        // The referrer present in the referee's identity does not match
+        // with the referral data recorded in the DB.
+        // A corner case scenario this might happen is as follow:
+        //  - referee receives multiple invites.
+        //  - referee clicks on an invite, publishes their profile and
+        //    an entry is created in growth_referral table.
+        //  - referee wipes out their browser local storage or uses a different
+        //    browser and clicks on an invite link from a different referrer.
+        //  - referrer updates their profile which now contains
+        //    different invite code from another referrer.
         logger.error(`Referee ${referee} already referred by ${row.referrerEthAddress}`)
       }
-      // It's possible the listener is reprocessing data and that the referral was already recorded.
+      // Referral was already recorded. It could be an identity update,
+      // or it's possible the listener is reprocessing data.
       return
     }
 
