@@ -1,7 +1,9 @@
 - Enable notifications after create listing
 - Enable messaging before create listing
-
-- Marketplace contract ID 000
+- Ready to release funds warning modal on finalize offer
+- 'Sale reviewed' step
+  Next Step: Leave a review of the buyer
+  Leaving a review lets other sellers know about your experience with this buyer.
 
 - Check fractional listing
 - Check identity + attestations
