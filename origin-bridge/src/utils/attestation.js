@@ -1,7 +1,6 @@
 const eth = require('web3-eth')
 const web3 = require('web3')
 const Attestation = require('../models/index').Attestation
-const AttestationTypes = Attestation.AttestationTypes
 const constants = require('../constants')
 
 async function generateAttestation(
