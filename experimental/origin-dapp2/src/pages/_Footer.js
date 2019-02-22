@@ -1,13 +1,7 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
-import Dropdown from 'components/Dropdown'
-import Languages from '../constants/Languages'
-
-const LanguagesByKey = Languages.reduce((m, o) => {
-  m[o[0]] = o[1]
-  return m
-}, {})
+import LocaleDropdown from 'components/LocaleDropdown'
 
 class Footer extends Component {
   state = {}
@@ -38,39 +32,7 @@ class Footer extends Component {
             )}
           </div>
           <div className="links">
-            <Dropdown
-              className="dropup"
-              content={
-                <div className="dropdown-menu show">
-                  {Languages.map(lang => (
-                    <a
-                      className="dropdown-item"
-                      key={lang[0]}
-                      title={lang[0]}
-                      href="#"
-                      onClick={e => {
-                        e.preventDefault()
-                        onLocale(lang[0])
-                        this.setState({ open: false })
-                      }}
-                      children={lang[1]}
-                    />
-                  ))}
-                </div>
-              }
-              open={this.state.open}
-              onClose={() => this.setState({ open: false })}
-            >
-              <a
-                href="#"
-                onClick={e => {
-                  e.preventDefault()
-                  this.setState({ open: !this.state.open })
-                }}
-              >
-                {LanguagesByKey[locale]}
-              </a>
-            </Dropdown>
+            <LocaleDropdown locale={locale} onLocale={onLocale} />
 
             <a href="https://www.originprotocol.com/">
               <fbt desc="footer.websiteLink">Learn More About Origin</fbt>
