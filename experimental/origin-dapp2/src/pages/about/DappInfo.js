@@ -65,7 +65,7 @@ const DappInfo = () => (
                 } else if (error) {
                   return dataTr({
                     key: 'Detected country',
-                    value: 'Error getching country'
+                    value: 'Error fetching country'
                   })
                 }
 
