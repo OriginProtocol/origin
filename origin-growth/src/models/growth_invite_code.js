@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       id: { type: DataTypes.INTEGER, primaryKey: true },
       ethAddress: DataTypes.STRING,
-      code: DataTypes.STRING
+      code: { type: DataTypes.STRING, unique: true }
     },
     {
       tableName: 'growth_invite_code'
