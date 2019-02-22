@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
+import { Link } from 'react-router-dom'
 import get from 'lodash/get'
 import queryString from 'query-string'
 
@@ -28,10 +29,12 @@ const MobileNavigation = props => (
       className="icon-arrow-left align-self-start mr-auto"
       onClick={() => props.history.push('/messages?back=true')}
     />
-    <Avatar avatar={get(props, 'identity.avatar')} size={30} />
-    <span className="counterparty">
-      {abbreviateName(props.identity) || truncateAddress(props.wallet)}
-    </span>
+    <Link to={`/user/${props.wallet}`} className="mr-auto">
+      <Avatar avatar={get(props, 'identity.avatar')} size={30} />
+      <span className="counterparty">
+        {abbreviateName(props.identity) || truncateAddress(props.wallet)}
+      </span>
+    </Link>
   </div>
 )
 
@@ -163,7 +166,7 @@ require('react-styl')(`
         margin-left: auto
         align-self: center
         display: inline-block
-        vertical-align: sub
+        vertical-align: text-bottom
       .avatar-container
         height: 30px
         width: 30px
