@@ -160,6 +160,7 @@ require('react-styl')(`
 
       .avatar
         margin-right: 10px
+        margin-left: auto
         align-self: center
         display: inline-block
         vertical-align: sub
