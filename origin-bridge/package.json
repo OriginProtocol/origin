@@ -45,6 +45,7 @@
     "prettier": "^1.16.4",
     "sequelize": "^5.0.0-beta.16",
     "sequelize-cli": "^5.4.0",
+    "sinon": "^7.2.4",
     "web3": "^1.0.0-beta.37"
   },
   "devDependencies": {

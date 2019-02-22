@@ -250,14 +250,14 @@ describe('phone attestations', () => {
     }
 
     let parsedBody = null
-    const scope = nock('https://api.authy.com')
+    nock('https://api.authy.com')
       .post('/protected/json/phones/verification/start', body => {
         parsedBody = body
         return body
       })
       .reply(200)
 
-    const response = await request(app)
+    await request(app)
       .post('/phone/generate-code')
       .send(params)
       .expect(200)
@@ -274,14 +274,14 @@ describe('phone attestations', () => {
     }
 
     let parsedBody = null
-    const scope = nock('https://api.authy.com')
+    nock('https://api.authy.com')
       .post('/protected/json/phones/verification/start', body => {
         parsedBody = body
         return body
       })
       .reply(200)
 
-    const response = await request(app)
+    await request(app)
       .post('/phone/generate-code')
       .send(params)
       .expect(200)

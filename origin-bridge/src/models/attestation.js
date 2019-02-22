@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     FACEBOOK: 'FACEBOOK',
     TWITTER: 'TWITTER'
   }
-  Attestation.associate = function(models) {
+  Attestation.associate = function() {
     // associations can be defined here
   }
   return Attestation

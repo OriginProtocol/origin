@@ -1,15 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const session = require('express-session')
 const request = require('superagent')
 const { check, validationResult } = require('express-validator/check')
 
-const Attestation = require('../models/index').Attestation
-const AttestationTypes = Attestation.AttestationTypes
 const logger = require('../logger')
-const constants = require('../constants')
 
-const { generateAttestationSignature } = require('../utils')
+const { generateAttestation } = require('../utils/attestation')
 
 /* Generate a verification code for verifying a via using the Twilio Verify API.
  * The API supports verification by SMS or call.
@@ -174,44 +170,26 @@ router.post(
       })
     }
 
-    data = {
-      issuer: constants.ISSUER,
-      issueDate: new Date(),
-      attestation: {
-        verificationMethod: {
-          [req.session.phoneVerificationMethod]: true
-        },
-        phone: {
-          verified: true
-        }
+    const attestationBody = {
+      verificationMethod: {
+        [req.session.phoneVerificationMethod]: true
+      },
+      phone: {
+        verified: true
       }
     }
+    const attestationValue = `${req.body.country_calling_code} ${
+      req.body.phone_number
+    }`
 
-    // TODO: verify determinism of JSONifying data for hashing
+    const attestation = await generateAttestation(
+      attestationBody,
+      attestationValue,
+      req.body.eth_address,
+      req.ip
+    )
 
-    const signature = {
-      bytes: generateAttestationSignature(
-        process.env.ATTESTATION_SIGNING_KEY,
-        req.body.eth_address,
-        JSON.stringify(data)
-      ),
-      version: '1.0.0'
-    }
-
-    // Save the attestation in the database
-    await Attestation.create({
-      method: AttestationTypes.PHONE,
-      ethAddress: req.body.eth_address,
-      value: `${req.body.country_calling_code} ${req.body.phone_number}`,
-      signature: signature['bytes'],
-      remoteIpAddress: req.ip
-    })
-
-    res.send({
-      schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
-      data: data,
-      signature: signature
-    })
+    res.send(attestation)
   }
 )
 

@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 
 app.use(express.json())
 
-let sess = {
+const sess = {
   name: process.env.COOKIE_NAME || 'origin-bridge',
   secret: process.env.SESSION_SECRET || 'secret',
   resave: false,

@@ -1,139 +1,6 @@
 const web3 = require('web3')
-const eth = require('web3-eth')
 const OAuth = require('oauth').OAuth
-const util = require('util')
-
-// 128 words to map character codes to words
-const words = [
-  'surprise',
-  'now',
-  'mimic',
-  'hood',
-  'say',
-  'glance',
-  'there',
-  'lava',
-  'mimic',
-  'crouch',
-  'utility',
-  'sorry',
-  'address',
-  'marine',
-  'century',
-  'wing',
-  'farm',
-  'citizen',
-  'alone',
-  'dentist',
-  'knee',
-  'bracket',
-  'measure',
-  'faith',
-  'shine',
-  'disagree',
-  'hood',
-  'slot',
-  'spirit',
-  'announce',
-  'truly',
-  'process',
-  'response',
-  'guard',
-  'two',
-  'connect',
-  'assist',
-  'ordinary',
-  'raise',
-  'muscle',
-  'mistake',
-  'festival',
-  'mix',
-  'flock',
-  'puzzle',
-  'ill',
-  'border',
-  'spy',
-  'ozone',
-  'uphold',
-  'trumpet',
-  'figure',
-  'borrow',
-  'topple',
-  'wedding',
-  'february',
-  'above',
-  'ordinary',
-  'term',
-  'nerve',
-  'sure',
-  'else',
-  'hope',
-  'submit',
-  'ghost',
-  'scatter',
-  'limit',
-  'above',
-  'jewel',
-  'bundle',
-  'tail',
-  'reform',
-  'drama',
-  'model',
-  'stove',
-  'bachelor',
-  'kitchen',
-  'combine',
-  'swing',
-  'trust',
-  'mad',
-  'segment',
-  'affair',
-  'forest',
-  'grocery',
-  'album',
-  'subway',
-  'concert',
-  'aware',
-  'bullet',
-  'nominee',
-  'juice',
-  'oak',
-  'sand',
-  'toast',
-  'celery',
-  'noble',
-  'giraffe',
-  'bitter',
-  'across',
-  'federal',
-  'clean',
-  'catalog',
-  'citizen',
-  'street',
-  'husband',
-  'prefer',
-  'term',
-  'fun',
-  'ranch',
-  'entry',
-  'install',
-  'appear',
-  'purse',
-  'virtual',
-  'improve',
-  'sea',
-  'ghost',
-  'grant',
-  'rule',
-  'engage',
-  'vicious',
-  'struggle',
-  'century',
-  'nephew',
-  'try',
-  'vehicle',
-  'crystal'
-]
+const dictionary = require('./dictionary')
 
 const twitterOAuth = new OAuth(
   'https://api.twitter.com/oauth/request_token',
@@ -214,7 +81,7 @@ function asyncMiddleware(fn) {
 function generateAirbnbCode(ethAddress, userId) {
   const hashCode = web3.utils.sha3(ethAddress + userId).substr(-7)
   return Array.prototype.map
-    .call(hashCode, i => words[i.charCodeAt(0)])
+    .call(hashCode, i => dictionary[i.charCodeAt(0)])
     .join(' ')
 }
 
@@ -223,7 +90,7 @@ function generateSixDigitCode() {
 }
 
 function getAbsoluteUrl(relativeUrl) {
-  protocol = process.env.HTTPS ? 'https' : 'http'
+  const protocol = process.env.HTTPS ? 'https' : 'http'
   return protocol + '://' + process.env.HOST + relativeUrl
 }
 
@@ -233,31 +100,12 @@ function mapObjectToQueryParams(obj) {
     .join('&')
 }
 
-function generateAttestationSignature(privateKey, subject, data) {
-  if (!web3.utils.isHexStrict(privateKey)) {
-    throw 'Invalid private key, not a hex string'
-  }
-  const hashToSign = web3.utils.soliditySha3(
-    {
-      t: 'address',
-      v: web3.utils.toChecksumAddress(subject)
-    },
-    {
-      t: 'bytes32',
-      v: web3.utils.sha3(data)
-    }
-  )
-  const signedMessage = new eth().accounts.sign(hashToSign, privateKey)
-  return signedMessage.signature
-}
-
 module.exports = {
   generateAirbnbCode,
   generateSixDigitCode,
   getAbsoluteUrl,
   mapObjectToQueryParams,
   asyncMiddleware,
-  generateAttestationSignature,
   twitterOAuth,
   getTwitterOAuthRequestToken,
   getTwitterOAuthAccessToken,
