@@ -84,7 +84,7 @@ router.post(
     ) {
       return res.status(400).send({
         errors: {
-          email: 'No verification code was not found that email.'
+          email: 'No verification code was found for that email.'
         }
       })
     }
