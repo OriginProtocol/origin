@@ -1,8 +1,7 @@
 import { post } from 'origin-ipfs'
 import validator from 'origin-validator'
-import txHelper, { checkMetaMask } from '../_txHelper'
+import { checkMetaMask, txHelperSend } from '../_txHelper'
 import contracts from '../../contracts'
-import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
@@ -56,12 +55,8 @@ async function makeOffer(_, data) {
     args.push(offerId)
   }
 
-  const tx = marketplace.methods.makeOffer(...args).send({
-    gas: cost.makeOffer,
-    from: buyer,
-    value
-  })
-  return txHelper({ tx, from: buyer, mutation: 'makeOffer' })
+  const tx = marketplace.methods.makeOffer(...args)
+  return txHelperSend({ tx, from: buyer, mutation: 'makeOffer', value })
 }
 
 async function toIpfsData(data) {

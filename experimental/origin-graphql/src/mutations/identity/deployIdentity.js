@@ -1,10 +1,9 @@
 import { post } from 'origin-ipfs'
 import validator from 'origin-validator'
 
-import txHelper, { checkMetaMask } from '../_txHelper'
+import { checkMetaMask, txHelperSend } from '../_txHelper'
 import contracts from '../../contracts'
 import validateAttestation from '../../utils/validateAttestation'
-import costs from '../_gasCost.js'
 
 async function deployIdentity(
   _,
@@ -43,11 +42,9 @@ async function deployIdentity(
   })
 
   const ipfsHash = await post(contracts.ipfsRPC, data)
-  const tx = contracts.identityEventsExec.methods
-    .emitIdentityUpdated(ipfsHash)
-    .send({ gas: costs.emitIdentityUpdated, from })
+  const tx = contracts.identityEventsExec.methods.emitIdentityUpdated(ipfsHash)
 
-  return txHelper({ tx, from, mutation: 'deployIdentity' })
+  return txHelperSend({ tx, from, mutation: 'deployIdentity' })
 }
 
 export default deployIdentity

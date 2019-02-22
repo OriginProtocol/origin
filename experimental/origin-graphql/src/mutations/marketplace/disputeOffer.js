@@ -1,7 +1,6 @@
 import { post } from 'origin-ipfs'
-import txHelper, { checkMetaMask } from '../_txHelper'
+import { checkMetaMask, txHelperSend } from '../_txHelper'
 import contracts from '../../contracts'
-import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function disputeOffer(_, data) {
@@ -10,11 +9,13 @@ async function disputeOffer(_, data) {
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)
 
-  const tx = contracts.marketplaceExec.methods
-    .dispute(listingId, offerId, ipfsHash)
-    .send({ gas: cost.disputeOffer, from })
+  const tx = contracts.marketplaceExec.methods.dispute(
+    listingId,
+    offerId,
+    ipfsHash
+  )
 
-  return txHelper({ tx, from, mutation: 'disputeOffer' })
+  return txHelperSend({ tx, from, mutation: 'disputeOffer' })
 }
 
 export default disputeOffer

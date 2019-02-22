@@ -1,7 +1,6 @@
 import { post } from 'origin-ipfs'
-import txHelper, { checkMetaMask } from '../_txHelper'
+import { checkMetaMask, txHelperSend } from '../_txHelper'
 import contracts from '../../contracts'
-import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function executeRuling(_, data) {
@@ -33,11 +32,15 @@ async function executeRuling(_, data) {
     throw new Error('commission must be either "pay", or "refund"')
   }
 
-  const tx = contracts.marketplaceExec.methods
-    .executeRuling(listingId, offerId, ipfsHash, ruling, refund)
-    .send({ gas: cost.executeRuling, from })
+  const tx = contracts.marketplaceExec.methods.executeRuling(
+    listingId,
+    offerId,
+    ipfsHash,
+    ruling,
+    refund
+  )
 
-  return txHelper({ tx, from, mutation: 'executeRuling' })
+  return txHelperSend({ tx, from, mutation: 'executeRuling' })
 }
 
 export default executeRuling

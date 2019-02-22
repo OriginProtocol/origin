@@ -17,6 +17,33 @@ export async function checkMetaMask(from) {
   }
 }
 
+/**
+ * Sends a transaction, auto-calculating gas prices and attaching listeners.
+ */
+
+export async function txHelperSend({
+  tx,
+  mutation,
+  onConfirmation,
+  onReceipt,
+  from,
+  value,
+  additionalGas
+}) {
+  if (tx == undefined) {
+    throw new Error(`You must pass in a transaction to be sent`)
+  }
+  const gas = (await tx.estimateGas({ from, value })) + (additionalGas || 0)
+  tx = tx.send({ gas, from, value })
+  return txHelper({
+    tx,
+    mutation,
+    onConfirmation,
+    onReceipt,
+    from
+  })
+}
+
 // Do not listen for confirmations if we're on the server as it causes mocha
 // to hang
 const isServer = typeof window === 'undefined'

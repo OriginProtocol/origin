@@ -1,8 +1,7 @@
 import { post } from 'origin-ipfs'
-import txHelper, { checkMetaMask } from '../_txHelper'
+import { checkMetaMask, txHelperSend } from '../_txHelper'
 import parseId from '../../utils/parseId'
 import contracts from '../../contracts'
-import cost from '../_gasCost'
 
 async function withdrawListing(_, data) {
   const from = data.from || contracts.defaultLinkerAccount
@@ -12,11 +11,13 @@ async function withdrawListing(_, data) {
     schemaId: 'https://schema.originprotocol.com/listing-withdraw_1.0.0.json'
   })
 
-  const tx = contracts.marketplaceExec.methods
-    .withdrawListing(listingId, data.target, ipfsHash)
-    .send({ gas: cost.withdrawListing, from })
+  const tx = contracts.marketplaceExec.methods.withdrawListing(
+    listingId,
+    data.target,
+    ipfsHash
+  )
 
-  return txHelper({ tx, from, mutation: 'withdrawListing' })
+  return txHelperSend({ tx, from, mutation: 'withdrawListing' })
 }
 
 export default withdrawListing

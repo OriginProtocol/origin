@@ -1,5 +1,5 @@
 import Marketplace from 'origin-contracts/build/contracts/V00_Marketplace'
-import txHelper, { checkMetaMask } from '../_txHelper'
+import { checkMetaMask, txHelperSend } from '../_txHelper'
 import contracts, { setMarketplace } from '../../contracts'
 const data = Marketplace.bytecode
 
@@ -7,12 +7,9 @@ async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
   const web3 = contracts.web3Exec
   await checkMetaMask(from)
   const Contract = new web3.eth.Contract(Marketplace.abi)
-  const tx = Contract.deploy({ data, arguments: [token] }).send({
-    gas: 5500000,
-    from
-  })
+  const tx = Contract.deploy({ data, arguments: [token] })
 
-  return txHelper({
+  return txHelperSend({
     tx,
     from,
     mutation: 'deployMarketplace',
