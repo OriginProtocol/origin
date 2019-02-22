@@ -75,7 +75,7 @@ class TransactionItem extends Component {
       <TouchableHighlight onPress={handlePress}>
         <View style={[ styles.listItem, styles.completed, style ]}>
           {!picture && <View style={{ ...styles.thumbnail, ...styles.imageless }} />}
-          {picture !== '' && <Image source={{ uri: picture.url || picture }} style={styles.thumbnail} />}
+          {Boolean(picture) && <Image source={{ uri: picture.url || picture }} style={styles.thumbnail} />}
           <View style={styles.content}>
             {(listing.seller || identity.profile) &&
               <View>
@@ -120,7 +120,7 @@ class TransactionItem extends Component {
           navigation.navigate('Transaction', { item })
         }}>
           <View style={styles.listingCard}>
-            {typeof picture !== 'undefined' &&
+            {Boolean(picture) &&
               <View style={styles.imageContainer}>
                 <Image
                   source={{ uri: picture.url || picture }}

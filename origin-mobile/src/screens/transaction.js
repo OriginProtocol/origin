@@ -125,7 +125,7 @@ class TransactionScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.details}>
-          {picture !== '' &&
+          {Boolean(picture) &&
             <View style={[styles.imageContainer, { height: innerWidth * 0.75 }]}>
               <Image
                 source={{ uri: picture.url || picture }}
