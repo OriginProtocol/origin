@@ -162,11 +162,10 @@ require('react-styl')(`
       margin-top: -16px
 
       .avatar
-        margin-right: 10px
-        margin-left: auto
+        margin: 0 10px 12px auto
         align-self: center
         display: inline-block
-        vertical-align: text-bottom
+        vertical-align: bottom
       .avatar-container
         height: 30px
         width: 30px
