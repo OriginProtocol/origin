@@ -1,4 +1,4 @@
-Our Origin testnet faucet provides OGN for developers on TestNets. The faucet is deployed at [faucet.originprotocol.com](https://faucet.originprotocol.com)
+Our Origin testnet faucet provides OGN for developers on TestNets. The faucet is deployed at [faucet.staging.originprotocol.com](https://faucet.staging.originprotocol.com)
 
 ## Code structure
 

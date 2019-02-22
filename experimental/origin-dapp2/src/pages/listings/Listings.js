@@ -3,6 +3,7 @@ import { Query } from 'react-apollo'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
+import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
@@ -20,15 +21,27 @@ import Search from './_Search'
 
 import query from 'queries/Listings'
 
+import { getFilters, getStateFromQuery } from './_filters'
+
 const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
 
 class Listings extends Component {
-  state = {
-    first: 15,
-    search: memStore.get('listingsPage.search'),
-    sort: 'featured',
-    hidden: true
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      first: 15,
+      search: getStateFromQuery(props),
+      sort: 'featured',
+      hidden: true
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      this.setState({ search: getStateFromQuery(this.props) })
+    }
   }
 
   render() {
@@ -36,10 +49,12 @@ class Listings extends Component {
       this.props,
       'creatorConfig.isCreatedMarketplace'
     )
-    const filters = get(this.props, 'creatorConfig.listingFilters', [])
+    const creatorFilters = get(this.props, 'creatorConfig.listingFilters', [])
+    const filters = [...getFilters(this.state.search), ...creatorFilters]
 
     const vars = {
-      ...pick(this.state, 'first', 'sort', 'hidden', 'search'),
+      ...pick(this.state, 'first', 'sort', 'hidden'),
+      search: this.state.search.searchInput,
       filters: filters.map(filter => omit(filter, '__typename'))
     }
 
@@ -51,6 +66,15 @@ class Listings extends Component {
           onSearch={search => {
             this.setState({ search })
             memStore.set('listingsPage.search', search)
+            this.props.history.push({
+              to: '/search',
+              search: queryString.stringify({
+                q: search.searchInput || undefined,
+                category: search.category.type || undefined,
+                priceMin: search.priceMin || undefined,
+                priceMax: search.priceMax || undefined
+              })
+            })
           }}
         />
         <div className="container">
@@ -60,14 +84,13 @@ class Listings extends Component {
             notifyOnNetworkStatusChange={true}
           >
             {({ error, data, fetchMore, networkStatus, loading }) => {
-              if (networkStatus === 1) {
+              if (networkStatus <= 2) {
                 return <h5 className="listings-count">Loading...</h5>
               } else if (error) {
                 return <QueryError error={error} query={query} vars={vars} />
               } else if (!data || !data.marketplace) {
                 return <p className="p-3">No marketplace contract?</p>
               }
-
               const { nodes, pageInfo, totalCount } = data.marketplace.listings
               const { hasNextPage, endCursor: after } = pageInfo
 
