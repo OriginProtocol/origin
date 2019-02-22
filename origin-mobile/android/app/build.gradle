@@ -149,7 +149,7 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-sentry')
+    implementation project(':react-native-sentry')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-uuid-generator')
     implementation project(':react-native-webview')
