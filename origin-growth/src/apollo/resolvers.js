@@ -1,6 +1,7 @@
 //const GraphQLJSON = require('graphql-type-json')
 const { GraphQLDateTime } = require('graphql-iso-date')
 const db = require('./db')
+const { Invite } = require('../resources/invite')
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -19,6 +20,9 @@ const resolvers = {
     },
     async campaign() {
       return null
+    },
+    async invites(root, args) {
+      return Invite.getAll(args.walletAddress, args.campaignId)
     }
   },
   Mutation: {

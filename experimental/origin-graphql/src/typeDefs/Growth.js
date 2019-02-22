@@ -123,6 +123,7 @@ module.exports =
     # after is the cursor
     campaigns(first: Int, after: String): GrowthCampaignConnection
     campaign(id: String): GrowthCampaign
+    invites(walletAddress: ID!, campaignId: Int!): ReferralAction
   }
 
   type Mutation {
