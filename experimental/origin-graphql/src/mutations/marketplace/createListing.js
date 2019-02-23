@@ -22,17 +22,13 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     commission: {
       currency: 'OGN',
       amount: data.commission || '0'
-    }
-  }
-  if (
-    (data.unitsTotal && data.unitsTotal > 1) ||
-    listingType === 'fractional'
-  ) {
-    ipfsData.commissionPerUnit = {
+    },
+    commissionPerUnit: {
       currency: 'OGN',
       amount: data.commissionPerUnit || '0'
     }
   }
+
   if (data.marketplacePublisher) {
     ipfsData.marketplacePublisher = data.marketplacePublisher
   }
