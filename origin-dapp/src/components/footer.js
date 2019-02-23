@@ -52,7 +52,7 @@ class Footer extends Component {
       <footer className="light-footer">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-12 col-lg-5 offset-2">
+            <div className="col-12 col-lg-5 offset-1">
               <div className="logo-container">
                 <a
                   href="https://www.originprotocol.com"
@@ -124,7 +124,7 @@ class Footer extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-lg-3">
+            <div className="col-12 col-lg-5">
                 <div className="d-lg-flex footer-links-container justify-content-between">
                     <Dropdown
                       className="d-flex dropup"
