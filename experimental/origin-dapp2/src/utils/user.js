@@ -1,7 +1,7 @@
 const MAX_ADDRESS_LENGTH = 10
 
-export function abbreviateName(party = {}, defaultName = '') {
-  const { firstName = '', lastName = '', fullName } = party
+export function abbreviateName(party, defaultName = '') {
+  const { firstName = '', lastName = '', fullName } = party || {}
   const lastNameLetter = lastName.length ? `${lastName.charAt(0)}.` : ''
   const abbreviatedName = fullName && `${firstName} ${lastNameLetter}`
 
