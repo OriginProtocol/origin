@@ -16,7 +16,7 @@ import { evenlySplitAddress } from 'utils/user'
 
 import originWallet from '../OriginWallet'
 
-const FIVE_MINUTES = 1000 * 60 * 5
+const ONE_MINUTE = 1000 * 60
 const IMAGES_PATH = '../../assets/images/'
 
 class WalletModal extends Component {
@@ -52,7 +52,7 @@ class WalletModal extends Component {
   async handleDangerousCopy(privateKey) {
     Alert.alert(
       'Important!',
-      'As a security precaution, your key will be removed after five minutes.',
+      'As a security precaution, your key will be removed from the clipboard after one minute.',
       [
         { text: 'Got it.', onPress: async () => {
           await Clipboard.setString(privateKey)
@@ -61,11 +61,11 @@ class WalletModal extends Component {
 
           setTimeout(async () => {
             const s = Clipboard.getString()
-            
+
             if (s === privateKey) {
               Clipboard.setString('')
             }
-          }, FIVE_MINUTES)
+          }, ONE_MINUTE)
         }},
       ],
     )
