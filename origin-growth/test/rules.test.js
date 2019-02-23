@@ -456,6 +456,19 @@ describe('Growth Engine rules', () => {
                   limit: 10,
                   nextLevelCondition: false
                 }
+              },
+              {
+                id: 'ListingSold',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'ListingSold',
+                  reward: {
+                    amount: 5,
+                    currency: 'OGN'
+                  },
+                  limit: 10,
+                  nextLevelCondition: false
+                }
               }
             ],
           }
@@ -470,7 +483,7 @@ describe('Growth Engine rules', () => {
       expect(this.campaign.levels[1]).to.be.an('object')
       expect(this.campaign.levels[1].rules.length).to.equal(5)
       expect(this.campaign.levels[2]).to.be.an('object')
-      expect(this.campaign.levels[2].rules.length).to.equal(3)
+      expect(this.campaign.levels[2].rules.length).to.equal(4)
 
       this.ethAddress = '0x123'
       this.expectedRewards = []
@@ -636,6 +649,33 @@ describe('Growth Engine rules', () => {
       expect(level).to.equal(2)
     })
 
+    it(`Should remain on level 2 when a listing is sold`, async () => {
+      this.events.push(
+        {
+          id: 6,
+          type: GrowthEventTypes.ListingSold,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        }
+      )
+      this.campaign.getEvents = () => { return this.events }
+
+      const rewards = await this.campaign.getRewards(this.ethAddress)
+      this.expectedRewards.push({
+        campaignId: 1,
+        levelId: 2,
+        ruleId: 'ListingSold',
+        value: {
+          currency: 'OGN',
+          amount: 5
+        }
+      })
+      expect(rewards).to.deep.equal(this.expectedRewards)
+
+      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(2)
+    })
+
     it(`Should honor limits`, async () => {
       this.events.push(
         ...Array(200).fill({
@@ -653,6 +693,12 @@ describe('Growth Engine rules', () => {
         ...Array(200).fill({
           id: 16,
             type: GrowthEventTypes.ListingPurchased,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        }),
+        ...Array(200).fill({
+          id: 16,
+          type: GrowthEventTypes.ListingSold,
           status: GrowthEventStatuses.Logged,
           ethAddress: this.ethAddress
         })
@@ -695,6 +741,15 @@ describe('Growth Engine rules', () => {
           campaignId: 1,
           levelId: 2,
           ruleId: 'ListingPurchase',
+          value: {
+            currency: 'OGN',
+            amount: 5
+          }
+        }),
+        ...Array(10).fill({
+          campaignId: 1,
+          levelId: 2,
+          ruleId: 'ListingSold',
           value: {
             currency: 'OGN',
             amount: 5

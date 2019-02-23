@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('Identity', {
+  const Identity = sequelize.define('Identity', {
     ethAddress: { type: DataTypes.STRING, primaryKey: true },
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
@@ -15,5 +15,5 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'identity'
   })
 
-  return User
+  return Identity
 }
