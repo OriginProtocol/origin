@@ -60,7 +60,7 @@ class WalletModal extends Component {
           Alert.alert('Copied to clipboard!')
 
           setTimeout(async () => {
-            const s = Clipboard.getString()
+            const s = await Clipboard.getString()
 
             if (s === privateKey) {
               Clipboard.setString('')
