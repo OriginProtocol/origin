@@ -16,6 +16,7 @@ import { evenlySplitAddress } from 'utils/user'
 
 import originWallet from '../OriginWallet'
 
+const FIVE_MINUTES = 1000 * 60 * 5
 const IMAGES_PATH = '../../assets/images/'
 
 class WalletModal extends Component {
@@ -48,16 +49,23 @@ class WalletModal extends Component {
     }
   }
 
-  handleDangerousCopy(privateKey) {
+  async handleDangerousCopy(privateKey) {
     Alert.alert(
-      'Warning!',
-      'Copying your private key to the clipboard is dangerous. It could potentially be read by other malicious programs. Are you sure that you want to do this?',
+      'Important!',
+      'As a security precaution, your key will be removed after five minutes.',
       [
-        { text: 'No, cancel!' },
-        { text: 'Yes, I understand.', onPress: async () => {
+        { text: 'Got it.', onPress: async () => {
           await Clipboard.setString(privateKey)
 
           Alert.alert('Copied to clipboard!')
+
+          setTimeout(async () => {
+            const s = Clipboard.getString()
+            
+            if (s === privateKey) {
+              Clipboard.setString('')
+            }
+          }, FIVE_MINUTES)
         }},
       ],
     )
