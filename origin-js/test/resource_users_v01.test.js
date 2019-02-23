@@ -5,7 +5,6 @@ import stringify from 'json-stable-stringify'
 import Web3 from 'web3'
 
 import Users from '../src/resources/users'
-import { Attestations } from '../src/resources/attestations'
 import AttestationObject from '../src/models/attestation'
 import ContractService from '../src/services/contract-service'
 import IpfsService from '../src/services/ipfs-service'
