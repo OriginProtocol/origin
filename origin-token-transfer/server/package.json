@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bignumber.js": "^8.0.1",
+    "bignumber.js": "8.0.2",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "connect-sqlite3": "^0.9.11",
