@@ -6,7 +6,7 @@ bridgeImageTag: '12ac36f'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'fa06dbe'
+dappImageTag: '2ecdcd0'
 
 # origin-dapp2
 dapp2Image: origin-dapp2
