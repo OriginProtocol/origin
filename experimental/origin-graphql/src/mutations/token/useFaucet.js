@@ -1,4 +1,4 @@
-const faucetUrl = 'https://faucet.originprotocol.com/tokens'
+const faucetUrl = 'https://faucet.staging.originprotocol.com/tokens'
 
 async function useFaucet(_, { networkId = 4, wallet }) {
   const url = `${faucetUrl}?wallet=${wallet}&network_id=${networkId}`

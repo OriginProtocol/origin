@@ -24,17 +24,39 @@ Install the following:
 
 - [React Native CLI](https://facebook.github.io/react-native/docs/understanding-cli): `npm install -g react-native-cli`
 
-- [Xcode](https://developer.apple.com/xcode/)
-
-- Xcode Command Line Tools: `xcode-select --install`
-
 - [Redis](https://redis.io/): `brew install redis`
 
 - [PostgreSQL](https://www.postgresql.org/)
 
-### Environment Variables
+#### iOS Development
 
-You will need to create four `.env` files to hold the environment variables that are required by [origin-dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp), [origin-discovery](https://github.com/OriginProtocol/origin/tree/master/origin-discovery), [origin-linking](https://github.com/OriginProtocol/origin/tree/master/origin-linking), [origin-mobile](https://github.com/OriginProtocol/origin/tree/master/origin-mobile), and [origin-notifications](https://github.com/OriginProtocol/origin/tree/master/origin-notifications). Here are examples with suggested values:
+- [Xcode](https://developer.apple.com/xcode/)
+
+- Xcode Command Line Tools: `xcode-select --install`
+
+#### Android Development
+
+- [Android SDK or Android Studio](https://developer.android.com/studio/) - If you're on Linux, find the instructions for your specific distribution
+
+- jre-openjdk
+
+### Backend Services
+
+Either follow the guide for Origin Box **OR** Manual Setup to get your backend services running.
+
+#### Origin Box
+
+You can use [Origin Box](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md) for development, however, there are a couple of additional steps you must perform for it to work for origin-mobile.
+
+- Manually run [origin-linking](#Startup) following the instructions under "Manual Setup" below since it is not included in the Box
+
+- Expose PostgreSQL's port 5432 in `docker-compose.yml`
+
+#### Manual Setup
+
+##### Environment Variables
+
+You will need to create five `.env` files to hold the environment variables that are required by [origin-dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp), [origin-discovery](https://github.com/OriginProtocol/origin/tree/master/origin-discovery), [origin-linking](https://github.com/OriginProtocol/origin/tree/master/origin-linking), [origin-mobile](https://github.com/OriginProtocol/origin/tree/master/origin-mobile), and [origin-notifications](https://github.com/OriginProtocol/origin/tree/master/origin-notifications). Here are examples with suggested values:
 
 **origin-dapp/.env**
 ```
@@ -100,6 +122,8 @@ IPFS_GATEWAY_PORT=8080
 IPFS_GATEWAY_PROTOCOL=http
 
 NOTIFY_TOKEN=
+
+HOT_WALLET_PK=0x82d052c865f5763aad42add438569276c00d3d88a2d062d36b2bae914d58b8c8
 ```
 
 **origin-mobile/.env**
@@ -136,14 +160,14 @@ In the origin-linking and origin-notifications `.env` files, two of the values w
 
 If you want to test with mobile Safari on the same device as the application, find your computer's [internal WiFi network IP address](https://www.wikihow.com/Find-Your-IP-Address-on-a-Mac#Finding_Your_Internal_IP_.28OS_X_10.4.29_sub) and add it to the `MOBILE_LOCALHOST_IP` value for origin-dapp.
 
-### Setup
+##### Setup
 - Start PostgreSQL
 - Start Redis: `redis-server`
 - `createdb origin`
 - origin $ `npm run install:mobile` 👈 instead of `npm install` at the Origin monorepo root
 - origin/origin-linking $ `npm run migrate`
 
-### Startup
+##### Startup (w/dapp)
 - origin/origin-js $ `npm run start`
 - origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
 - origin/origin-linking $ `npm run start`
@@ -151,6 +175,48 @@ If you want to test with mobile Safari on the same device as the application, fi
 - origin/origin-mobile $ `npm run install-local`
 - origin/origin-mobile $ `npm run start -- --reset-cache`
 - Open Xcode and build for your desired device
+
+#### Startup (w/dapp2)
+- origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
+- origin/origin-linking $ `npm run start`
+- origin/experimental/origin-dapp2 $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
+- origin/origin-mobile $ `npm run install-local`
+- origin/origin-mobile $ `npm run start -- --reset-cache`
+- Open Xcode and build for your desired device
+
+### Android Device Configuration
+
+If you intend to develop using a physical device rather than a VM, make sure you complete the following.  You can use [the Android developer's guide](https://developer.android.com/studio/run/device) for reference.
+
+- Connect your phone to your machine with a USB cable
+- Make sure `JAVA_HOME` points to Android's java (for me, at: `/opt/android-studio/jre/`)
+- Run `sdkmanager --licenses` and accept license agreements
+- Enable developer mode on your device by tapping "Build number" in settings 7 times.
+- Turn on "USB Debugging" in "Developer options"
+- Start the adb server `adb start-server`
+- Verify your device is recognized with `adb devices`
+- Setup TCP tunnels to your device by running `./setup_android_tunnels.sh`. This allows the mobile app to access backend services at `localhost`
+
+### Running Development
+
+To run the mobile app on your phone, you need to both start the Metro builder service, and launch the app on your device.
+
+- Run Metro builder with `npm run start`
+- Compile and build your app with `react-native run-android` or `react-native run-ios`
+
+### Tips
+
+> Is there a way to remotely debug the app?
+
+You can access the React-Native remote debugger at http://localhost:8081/debugger-ui/
+
+> How do I access the developer menu in the app?
+
+Shake you phone.  Or pretend you did by sending this keycode: `adb shell input keyevent 82`
+
+> Is there a way to trigger a reload on Android?
+
+You can do this from the developer menu, or by running this in your terminal: `adb shell input text "RR"`
 
 ### Troubleshooting
 
@@ -174,3 +240,23 @@ Check [the React Native docs](https://facebook.github.io/react-native/docs/troub
 -----------
 
 📲 Don't forget to have WiFi enabled on your both of your devices and connected.
+
+-----------
+
+> unable to load script from assets index.android.bundle
+https://github.com/OriginProtocol/origin/tree/mikeshultz/android/origin-mobile
+This is likely a network error because your tunnels are not setup.  See [Android Device Configuration](#android-device-configuration).
+
+-----------
+
+> FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+
+Add the `NODE_OPTIONS` env var to your Metro builder startup command to add the `--max_old_space_size` option like this: 
+
+    NODE_OPTIONS="--max_old_space_size=8196" npm run start
+
+-----------
+
+    INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com.origincatcher signatures do not match previously installed version; ignoring!
+
+Uninstall the app from your phone and try again.

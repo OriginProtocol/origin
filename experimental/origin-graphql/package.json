@@ -14,11 +14,11 @@
   ],
   "scripts": {
     "start": "node -r @babel/register server",
-    "test": "mocha -r @babel/register --file test/setup test",
-    "test:watch": "mocha -r @babel/register --file test/setup test -w",
+    "test": "NODE_ENV=test mocha -r @babel/register --file test/setup test",
+    "test:watch": "NODE_ENV=test mocha -r @babel/register --file test/setup test -w",
     "lint": "eslint . && npm run prettier:check",
-    "prettier": "prettier --write *.js \"src/**/*.js\"",
-    "prettier:check": "prettier -c *.js \"src/**/*.js\""
+    "prettier": "prettier --write *.js \"src/**/*.js\" \"test/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\" \"test/**/*.js\""
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
@@ -29,6 +29,7 @@
     "mocha": "^5.2.0",
     "origin-eventsource": "^0.1.0",
     "origin-ipfs": "^0.1.0",
+    "origin-linker-client": "^0.1.0",
     "origin-messaging-client": "^0.1.0",
     "origin-services": "^0.1.0",
     "origin-validator": "^0.1.0",

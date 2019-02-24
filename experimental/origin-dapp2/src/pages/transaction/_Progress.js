@@ -13,9 +13,6 @@ import SendMessage from 'components/SendMessage'
 
 const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
   const props = { offer, loading }
-  if (offer.status === 4) {
-    return <Finalized {...props} />
-  }
   if (offer.status === 3) {
     return <Disputed {...props} />
   }
@@ -23,7 +20,9 @@ const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
     return <DisputeResolved {...props} />
   }
   if (offer.listing.seller.id === wallet) {
-    if (offer.status === 2) {
+    if (offer.status === 4) {
+      return <Finalized party="seller" {...props} />
+    } else if (offer.status === 2) {
       return <WaitForFinalize {...props} />
     } else if (offer.status === 0) {
       if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
@@ -34,6 +33,8 @@ const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
     } else {
       return <AcceptOrReject {...props} refetch={refetch} />
     }
+  } else if (offer.status === 4) {
+    return <Finalized party="buyer" {...props} />
   }
   if (offer.status === 2) {
     return <ReviewAndFinalize {...props} refetch={refetch} />
@@ -78,7 +79,7 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
         Offer Placed
       </EventTick>
       <EventTick>Offer Accepted</EventTick>
-      <EventTick>Received by buyer</EventTick>
+      <EventTick>Sale Completed</EventTick>
       <EventTick>Funds withdrawn</EventTick>
     </div>
   </div>
@@ -134,7 +135,7 @@ class ReviewAndFinalize extends Component {
           <EventTick className="active bgl" event={offer.acceptedEvent}>
             Offer Accepted
           </EventTick>
-          <EventTick>Received by buyer</EventTick>
+          <EventTick>Sale Completed</EventTick>
         </div>
       </div>
     )
@@ -157,7 +158,7 @@ const MessageSeller = ({ offer, refetch, loading }) => (
         Offer Placed
       </EventTick>
       <EventTick>Offer Accepted</EventTick>
-      <EventTick>Received by buyer</EventTick>
+      <EventTick>Sale Completed</EventTick>
     </div>
   </div>
 )
@@ -175,7 +176,7 @@ const WaitForSeller = ({ offer, refetch, loading }) => (
         Offer Placed
       </EventTick>
       <EventTick>Offer Accepted</EventTick>
-      <EventTick>Received by buyer</EventTick>
+      <EventTick>Sale Completed</EventTick>
     </div>
   </div>
 )
@@ -285,7 +286,7 @@ const Finalized = ({ offer, loading }) => (
         Offer Accepted
       </EventTick>
       <EventTick className="active bg" event={offer.finalizedEvent}>
-        Received by buyer
+        Sale Completed
       </EventTick>
     </div>
   </div>

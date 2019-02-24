@@ -32,7 +32,7 @@ function _updateAndMove(matcher, update, new_event, events_from, events_to) {
   let event = new_event || _findEvent(matcher, events_from)
 
   if (!event) {
-    return events_from, events_to
+    return [events_from, events_to]
   }
 
   event = { ...event, ...update }
@@ -52,7 +52,6 @@ export default function WalletEvents(state = initialState, action = {}) {
 
     case WalletEventsConstants.PROCESSED_EVENT:
       const [pending_events, processed_events] = _updateAndMove(action.matcher, action.update, action.new_event, state.pending_events, state.processed_events)
-
       return { ...state, pending_events, processed_events }
 
     case WalletEventsConstants.SET_ACTIVE_EVENT:

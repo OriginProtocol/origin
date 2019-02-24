@@ -73,7 +73,7 @@ class CreateListing extends Component {
     } else {
       this.state = {
         title: '',
-        currency: '0x0000000000000000000000000000000000000000',
+        currency: 'ETH',
         price: '0.1',
         depositManager: arbitrator ? arbitrator.id : '',
         from: seller ? seller.id : '',
@@ -99,11 +99,11 @@ class CreateListing extends Component {
     const currencyOpts = [
       {
         label: 'ETH',
-        value: '0x0000000000000000000000000000000000000000'
+        value: 'ETH'
       },
       ...this.props.tokens.map(token => ({
         label: token.symbol,
-        value: token.id
+        value: token.symbol
       }))
     ]
 

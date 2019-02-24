@@ -127,6 +127,9 @@
       "minLength": 10,
       "maxLength": 1024
     },
+    "marketplacePublisher": {
+      "type": "string"
+    },
     "media": {
       "type": "array",
       "items": {

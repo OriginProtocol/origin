@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import Link from 'components/Link'
 import NavLink from 'components/NavLink'
@@ -36,9 +37,18 @@ class Nav extends Component {
       <nav className="navbar navbar-expand-md">
         <div className="container">
           <Mobile {...navProps('mobile')} />
-          <Link to="/" className="navbar-brand">
-            Origin
-          </Link>
+          {!this.props.creatorConfig.logoUrl ? (
+            <Link to="/" className="navbar-brand">
+              Origin
+            </Link>
+          ) : (
+            <Link to="/" className="custom-brand">
+              <img
+                src={this.props.creatorConfig.logoUrl}
+                alt={this.props.creatorConfig.title}
+              />
+            </Link>
+          )}
           {!this.props.wallet ? (
             <GetStarted />
           ) : (
@@ -72,7 +82,7 @@ class Nav extends Component {
   }
 }
 
-export default withWallet(Nav)
+export default withWallet(withCreatorConfig(Nav))
 
 require('react-styl')(`
   .navbar
@@ -155,6 +165,12 @@ require('react-styl')(`
     width: 90px
     text-indent: -9999px
 
+  .custom-brand
+    padding-top: 0.4125rem;
+    padding-bottom: 0.4125rem;
+    img
+      max-height: 2.8rem
+
   @media (pointer: fine)
     .navbar .nav-item
       &.show .nav-link:hover
@@ -174,5 +190,4 @@ require('react-styl')(`
         .dropdown-menu
           left: 1rem
           right: 1rem
-
 `)

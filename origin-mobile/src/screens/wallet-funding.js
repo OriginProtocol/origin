@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Alert, Clipboard, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { promptForNotifications } from 'actions/Activation'
+import { promptForNotifications, updateBackupWarningStatus } from 'actions/Activation'
 
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
@@ -10,6 +10,8 @@ import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
 import { sufficientFunds } from 'utils/transaction'
 import { evenlySplitAddress } from 'utils/user'
+
+import originWallet from '../OriginWallet'
 
 class WalletFundingScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -27,6 +29,24 @@ class WalletFundingScreen extends Component {
     const { method } = navigation.state.params.item.meta
     
     !hasNotificationsEnabled && this.props.promptForNotifications(method)
+
+    // prompt with private key backup warning if before recommending funding
+    if (!activation.backupWarningDismissed) {
+      Alert.alert(
+        'Important!',
+        `Be sure to back up your private key so that you don't lose access to your wallet. If your device is lost or you delete this app, we won't be able to help recover your funds.`,
+        [
+          { text: `Done. Don't show me this again.`, onPress: () => {
+            this.props.updateBackupWarningStatus(true, Date.now())
+          }},
+          { text: 'Show Private Key', onPress: () => {
+            originWallet.showPrivateKey()
+
+            this.props.updateBackupWarningStatus(true)
+          }},
+        ],
+      )
+    }
   }
 
   render() {
@@ -97,6 +117,7 @@ const mapStateToProps = ({ activation, wallet }) => {
 
 const mapDispatchToProps = dispatch => ({
   promptForNotifications: method => dispatch(promptForNotifications(method)),
+  updateBackupWarningStatus: (bool, datetime) => dispatch(updateBackupWarningStatus(bool, datetime)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletFundingScreen)

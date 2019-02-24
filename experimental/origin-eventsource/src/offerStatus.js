@@ -15,7 +15,7 @@ function offerStatus(offer) {
   if (status === 3) {
     return 'Disputed'
   }
-  if (status === 4) {
+  if (status === 4 || status === 6) {
     return 'Finalized'
   }
   if (status === 5) {

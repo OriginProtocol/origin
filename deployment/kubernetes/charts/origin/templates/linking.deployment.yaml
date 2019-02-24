@@ -37,7 +37,10 @@ spec:
                 key: ENVKEY
         volumeMounts:
           - name: origin-apns-key-file
-            mountPath: /secrets
+            mountPath: /secrets/apns
+            readOnly: true
+          - name: firebase-service-json-file
+            mountPath: /secrets/firebase
             readOnly: true
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
@@ -58,3 +61,7 @@ spec:
         - name: origin-apns-key-file
           secret:
             secretName: origin-apns-key-file
+        - name: firebase-service-json-file
+          secret:
+            secretName: firebase-service-json-file
+
