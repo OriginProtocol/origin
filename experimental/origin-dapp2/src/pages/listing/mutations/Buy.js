@@ -117,7 +117,7 @@ class Buy extends Component {
                 }
                 const netId = get(this.props, 'web3.networkId')
                 const { listingID, offerID } = event.returnValues
-                const offerId = `${netId}-0-${listingID}-${offerID}`
+                const offerId = `${netId}-000-${listingID}-${offerID}`
                 this.setState({ redirect: `/purchases/${offerId}` })
               }}
               children={this.state.loading ? 'Loading...' : 'View Purchase'}

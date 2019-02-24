@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "apollo-server-express": "^2.2.6",
-    "bignumber.js": "^8.0.1",
+    "bignumber.js": "8.0.2",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
