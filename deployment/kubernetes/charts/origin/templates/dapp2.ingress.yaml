@@ -1,4 +1,4 @@
-{{- if eq .Release.Namespace "dev" -}}
+{{- if ne .Release.Namespace "prod" -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
