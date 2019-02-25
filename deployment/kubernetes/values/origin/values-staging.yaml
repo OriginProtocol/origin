@@ -5,9 +5,13 @@ bridgeImage: origin-bridge
 bridgeImageTag: '2f4ddcd'
 bridgeReplicas: 2
 
+# origin-dapp2
+dapp2Image: origin-dapp2
+dapp2ImageTag: 'e38b66f'
+
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '11fc61a'
+dappImageTag: 'c7a2ff3'
 dappReplicas: 2
 
 # Rinkeby network configuration
@@ -28,7 +32,7 @@ faucetImageTag: '11fc61a'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '11fc61a'
+eventlistenerImageTag: '84e3d39'
 
 # origin-discovery
 discoveryImage: origin-discovery

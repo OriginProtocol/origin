@@ -1,4 +1,4 @@
-import {AppState, Platform, PushNotificationIOS, Linking, Clipboard} from 'react-native'
+import {Alert, AppState, Platform, PushNotificationIOS, Linking, Clipboard} from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
@@ -1243,6 +1243,10 @@ class OriginWallet {
       await this.updateLinks()
       return true
     }
+  }
+
+  showPrivateKey() {
+    Alert.alert('Private Key', this.getCurrentWeb3Account().privateKey)
   }
 
   setWeb3Address() {

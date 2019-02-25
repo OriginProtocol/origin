@@ -37,13 +37,15 @@ class AppWrapper extends Component {
   }
 
   render() {
-    if (!this.state.ready) return null
+    const { ready, locale } = this.state
+
+    if (!ready) return null
     return (
       <ApolloProvider client={client}>
         <HashRouter>
           <Analytics>
             <App
-              locale={this.state.locale}
+              locale={locale}
               onLocale={async newLocale => {
                 const locale = await setLocale(newLocale)
                 this.setState({ locale })
