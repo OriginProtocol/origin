@@ -23,7 +23,6 @@
     "http": "0.0.0",
     "node-fetch": "^2.3.0",
     "logplease": "^1.2.15",
-    "origin-discovery": "^0.1.0",
     "origin-graphql": "^0.1.0",
     "origin-token": "^0.1.0",
     "per-env": "^1.0.2",
