@@ -107,7 +107,6 @@ export function enableMessaging() {
 }
 
 export function setMessagingEnabled(enabled) {
-console.log('setMessagingEnabled', enabled)
   return {
     type: ActivationConstants.MESSAGING_ENABLED,
     enabled
