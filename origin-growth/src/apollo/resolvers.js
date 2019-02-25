@@ -21,7 +21,7 @@ const resolvers = {
     async campaign() {
       return null
     },
-    async inviteInfo(root, args) {
+    async inviteInfo() {
       //return await GrowthInvite.getInfo(args.code)
       return {
         firstName: 'TODO: to be implemented',
