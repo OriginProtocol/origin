@@ -5,6 +5,10 @@ bridgeImage: origin-bridge
 bridgeImageTag: '2f4ddcd'
 bridgeReplicas: 2
 
+# origin-dapp2
+dapp2Image: origin-dapp2
+dapp2ImageTag: 'latest'
+
 # origin-dapp
 dappImage: origin-dapp
 dappImageTag: '11fc61a'
