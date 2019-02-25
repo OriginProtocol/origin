@@ -105,6 +105,7 @@ const config = {
       ORIGIN_LINKING: null,
       LINKER_HOST: 'localhost',
       DOCKER: false,
+      ENABLE_GROWTH: false,
       IPFS_SWARM: ''
     })
   ],
