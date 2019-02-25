@@ -1,7 +1,9 @@
 //const GraphQLJSON = require('graphql-type-json')
 const { GraphQLDateTime } = require('graphql-iso-date')
 const db = require('./db')
-//const { GrowthInvite } = require('../resources/invite')
+const { Fetcher } = require('../rules/rules')
+const { getLocationInfo } = require('../util/locationInfo')
+// const { GrowthInvite } = require('../resources/invite')
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -11,11 +13,29 @@ const resolvers = {
    */
   //JSON: GraphQLJSON,
   DateTime: GraphQLDateTime,
+  GrowthBaseAction: {
+    __resolveType(obj) {
+      if (obj.type === 'Referral') {
+        return 'ReferralAction'
+      } else {
+        return 'GrowthAction'
+      }
+    }
+  },
   Query: {
-    async campaigns() {
-      // query campaigns from DB
+    async campaigns(_, args) {
+      const campaigns = await Fetcher.getAllCampaigns()
       return {
-        nodes: await db.getCampaigns()
+        totalCount: campaigns.length,
+        nodes: campaigns.map(
+          async campaign => await campaign.toApolloObject(args.walletAddress)
+        ),
+        pageInfo: {
+          endCursor: 'TODO implement',
+          hasNextPage: false,
+          hasPreviousPage: false,
+          startCursor: 'TODO implement'
+        }
       }
     },
     async campaign() {
@@ -27,7 +47,34 @@ const resolvers = {
         firstName: 'TODO: to be implemented',
         lastName: 'TODO: to be implemented'
       }
-    }
+    },
+    async isEligible(obj, args, context) {
+      if (process.env.NODE_ENV !== 'production') {
+        return {
+          eligibility: 'Eligible',
+          countryName: 'N/A',
+          countryCode: 'N/A'
+        }
+      }
+
+      const locationInfo = getLocationInfo(context.countryCode)
+      if (!locationInfo) {
+        return {
+          eligibility: 'Unknown',
+          countryName: 'N/A',
+          countryCode: 'N/A'
+        }
+      }
+      let eligibility = 'Eligible'
+      if (locationInfo.isForbidden) eligibility = 'Forbidden'
+      else if (locationInfo.isRestricted) eligibility = 'Restricted'
+
+      return {
+        eligibility: eligibility,
+        countryName: locationInfo.countryName,
+        countryCode: locationInfo.countryCode
+      }
+    },
   },
   Mutation: {
     async invite() {
