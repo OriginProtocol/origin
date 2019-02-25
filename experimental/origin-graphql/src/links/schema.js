@@ -13,7 +13,10 @@ import context from '../contracts'
 
 const growthServerAddress = context.growth || 'http://localhost:4001'
 const growthSchema = makeExecutableSchema({
-  typeDefs: growthTypeDefs
+  typeDefs: growthTypeDefs,
+  resolverValidationOptions: {
+    requireResolversForResolveType: false
+  }
 })
 
 const schema = mergeSchemas({

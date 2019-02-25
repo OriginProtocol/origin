@@ -67,6 +67,7 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
     const shouldRenderNavbar = this.props.location.pathname !== '/welcome'
+    const enableGrowth = process.env.ENABLE_GROWTH === 'true'
     return (
       <>
         <BetaBanner />
@@ -86,9 +87,15 @@ class App extends Component {
             <Route path="/notifications" component={Notifications} />
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />
-            <Route exact path="/campaigns" component={process.env.ENABLE_GROWTH === 'true' ? GrowthCampaigns : Listings} />
-            <Route exact path="/campaigns/invite" component={process.env.ENABLE_GROWTH === 'true' ? GrowthInvite : Listings} />
-            <Route path="/welcome" component={process.env.ENABLE_GROWTH === 'true' ? GrowthWelcome : Listings} />
+            {enableGrowth && (
+              <Route exact path="/campaigns" component={GrowthCampaigns} />
+            )}
+            {enableGrowth && (
+              <Route exact path="/campaigns/invite" component={GrowthInvite} />
+            )}
+            {enableGrowth && (
+              <Route path="/welcome" component={GrowthWelcome} />
+            )}
             <Route component={Listings} />
           </Switch>
         </main>

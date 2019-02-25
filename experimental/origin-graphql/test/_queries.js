@@ -11,7 +11,7 @@ const GetNodeAccounts = gql`
 `
 
 const GetReceipt = gql`
-  query TransactionReceipt($id: String!) {
+  query TransactionReceipt($id: ID!) {
     web3 {
       transactionReceipt(id: $id) {
         id
@@ -39,15 +39,17 @@ const GetAllOffers = gql`
   query GetAllOffers($id: ID!) {
     marketplace {
       listing(id: $id) {
-        id
-        title
-        allOffers {
+        ... on Listing {
           id
-          status
-          statusStr
-          valid
-          validationError
-          commission
+          title
+          allOffers {
+            id
+            status
+            statusStr
+            valid
+            validationError
+            commission
+          }
         }
       }
     }
@@ -58,40 +60,41 @@ const GetListing = gql`
   query GetListing($id: ID!) {
     marketplace {
       listing(id: $id) {
-        id
-        status
-        totalEvents
-        seller {
+        ... on Listing {
           id
+          status
+          totalEvents
+          seller {
+            id
+          }
+          arbitrator {
+            id
+          }
+          deposit
+          depositAvailable
+          createdEvent {
+            timestamp
+          }
+          category
+          categoryStr
+          subCategory
+          title
+          description
+          currencyId
+          featured
+          hidden
+          price {
+            amount
+            currency
+          }
+          media {
+            url
+            urlExpanded
+            contentType
+          }
+          commission
+          commissionPerUnit
         }
-        arbitrator {
-          id
-        }
-        deposit
-        depositAvailable
-        createdEvent {
-          timestamp
-        }
-
-        category
-        categoryStr
-        subCategory
-        title
-        description
-        currencyId
-        featured
-        hidden
-        price {
-          amount
-          currency
-        }
-        media {
-          url
-          urlExpanded
-          contentType
-        }
-        commission
-        commissionPerUnit
         ... on UnitListing {
           unitsTotal
           unitsAvailable

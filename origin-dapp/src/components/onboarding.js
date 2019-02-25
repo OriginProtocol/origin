@@ -5,7 +5,6 @@ import { withRouter } from 'react-router'
 import queryString from 'query-string'
 
 import {
-  detectMessagingEnabled,
   enableMessaging,
   handleNotificationsSubscription,
   setMessagingEnabled,
@@ -131,12 +130,6 @@ class Onboarding extends Component {
       messagingInitialized,
       wallet
     } = this.props
-
-    // on account change
-    if (wallet.address && wallet.address !== prevProps.wallet.address) {
-      // cheat and detect activation from central server
-      this.props.detectMessagingEnabled(wallet.address)
-    }
 
     if (wallet.address && !this.notificationsInterval) {
       // Poll for notifications every 60 seconds.
@@ -388,7 +381,6 @@ const mapStateToProps = ({ activation, app, messages, wallet }) => ({
 
 const mapDispatchToProps = dispatch => ({
   addMessage: obj => dispatch(addMessage(obj)),
-  detectMessagingEnabled: addr => dispatch(detectMessagingEnabled(addr)),
   enableMessaging: () => dispatch(enableMessaging()),
   fetchNotifications: () => dispatch(fetchNotifications()),
   fetchUser: addr => dispatch(fetchUser(addr)),

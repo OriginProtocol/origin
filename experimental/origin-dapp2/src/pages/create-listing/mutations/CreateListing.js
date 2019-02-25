@@ -92,7 +92,9 @@ class CreateListing extends Component {
               onClick={() => {
                 store.set('create-listing', undefined)
                 const { listingID } = event.returnValues
-                this.setState({ redirect: `/listings/${netId}-0-${listingID}` })
+                this.setState({
+                  redirect: `/listings/${netId}-000-${listingID}`
+                })
               }}
               children="View Listing"
             />

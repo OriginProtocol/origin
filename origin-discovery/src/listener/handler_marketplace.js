@@ -260,7 +260,8 @@ class MarketplaceEventHandler {
   }
 
   /**
-   * Records ListingCreated and ListingPurchase events in the growth DB.
+   * Records ListingCreated, ListingPurchased and ListingSold events
+   * in the growth DB.
    * @param log
    * @param details
    * @param blockInfo
@@ -268,24 +269,35 @@ class MarketplaceEventHandler {
    * @private
    */
   async _recordGrowthEvent(log, details, blockInfo) {
-    let address, eventType, customId
     switch (log.eventName) {
       case 'ListingCreated':
-        address = details.listing.seller
-        eventType = GrowthEventTypes.ListingCreated
-        customId = details.listing.id
+        await GrowthEvent.insert(
+          logger,
+          details.listing.seller.toLowerCase(),
+          GrowthEventTypes.ListingCreated,
+          details.listing.id,
+          { blockInfo }
+        )
         break
       case 'OfferFinalized':
-        address = details.offer.buyer
-        eventType = GrowthEventTypes.ListingPurchased
-        customId = details.offer.id
+        // Insert a ListingPurchased event on the buyer side and
+        // a ListingSold event on the seller side.
+        await GrowthEvent.insert(
+          logger,
+          details.offer.buyer.toLowerCase(),
+          GrowthEventTypes.ListingPurchased,
+          details.offer.id,
+          { blockInfo }
+        )
+        await GrowthEvent.insert(
+          logger,
+          details.listing.seller.toLowerCase(),
+          GrowthEventTypes.ListingSold,
+          details.offer.id,
+          { blockInfo }
+        )
         break
-      default:
-        return
     }
-
-    // Record the event.
-    await GrowthEvent.insert(logger, address, eventType, customId, { blockInfo })
   }
 
   /**

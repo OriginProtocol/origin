@@ -1,6 +1,7 @@
 import { ActivationConstants } from 'actions/Activation'
 
 const initialState = {
+  backupWarningDismissed: false,
   carouselCompleted: false,
   notifications: {
     prompt: null,
@@ -28,6 +29,9 @@ export default function Activation(state = initialState, action = {}) {
       }
 
       return obj
+
+    case ActivationConstants.UPDATE_BACKUP_WARNING_STATUS:
+      return { ...state, backupWarningDismissed: action.dismissed }
 
     case ActivationConstants.UPDATE_CAROUSEL_STATUS:
       return { ...state, carouselCompleted: action.completed }

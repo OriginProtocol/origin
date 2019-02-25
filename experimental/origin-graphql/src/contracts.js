@@ -140,6 +140,9 @@ const Configs = {
     bridge: 'http://localhost:5000',
     discovery: 'http://localhost:4000/graphql',
     automine: 2000,
+    OriginToken: get(OriginTokenContract, 'networks.999.address'),
+    V00_Marketplace: get(MarketplaceContract, 'networks.999.address'),
+    IdentityEvents: get(IdentityEventsContract, 'networks.999.address'),
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     messaging: {
@@ -190,7 +193,7 @@ function newBlock(blockHeaders) {
 }
 
 export function setNetwork(net, customConfig) {
-  if (process.env.DOCKER) {
+  if (process.env.DOCKER && net !== 'test') {
     net = 'docker'
   }
   let config = JSON.parse(JSON.stringify(Configs[net]))
@@ -199,16 +202,10 @@ export function setNetwork(net, customConfig) {
   }
   if (net === 'test') {
     config = { ...config, ...customConfig }
-  } else if (net === 'localhost' || net === 'docker') {
-    config.OriginToken =
-      window.localStorage.OGNContract ||
-      get(OriginTokenContract, 'networks.999.address')
-    config.V00_Marketplace =
-      window.localStorage.marketplaceContract ||
-      get(MarketplaceContract, 'networks.999.address')
-    config.IdentityEvents =
-      window.localStorage.identityEventsContract ||
-      get(IdentityEventsContract, 'networks.999.address')
+  } else if (net === 'localhost') {
+    config.OriginToken = window.localStorage.OGNContract
+    config.V00_Marketplace = window.localStorage.marketplaceContract
+    config.IdentityEvents = window.localStorage.identityEventsContract
   }
   context.net = net
   context.config = config

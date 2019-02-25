@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import pick from 'lodash/pick'
 import find from 'lodash/find'
-import BigNumber from 'big-number'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
@@ -117,7 +116,8 @@ function Action(props) {
     : 'images/identity/verification-shape-blue.svg'
 
   const formatTokens = tokenAmount => {
-    return BigNumber(tokenAmount)
+    return web3.utils
+      .toBN(tokenAmount)
       .div(props.decimalDevision)
       .toString()
   }
@@ -278,20 +278,20 @@ function Campaign(props) {
       variables={{ account: accountId, token: 'OGN' }}
     >
       {({ loading, error, data }) => {
-        let tokensEarned = BigNumber(0)
+        let tokensEarned = web3.utils.toBN(0)
         let tokenEarnProgress = 0
-        let decimalDevision = BigNumber(1)
+        let decimalDevision = web3.utils.toBN(1)
 
         if (!loading && !error) {
           const tokenHolder = data.web3.account.token
           if (tokenHolder && tokenHolder.token) {
-            decimalDevision = BigNumber(10).pow(
-              BigNumber(tokenHolder.token.decimals)
-            )
+            decimalDevision = web3.utils
+              .toBN(10)
+              .pow(web3.utils.toBN(tokenHolder.token.decimals))
             // campaign rewards converted normalized to token value according to number of decimals
-            tokensEarned = BigNumber(
-              rewardEarned ? rewardEarned.amount : 0
-            ).div(decimalDevision)
+            tokensEarned = web3.utils
+              .toBN(rewardEarned ? rewardEarned.amount : 0)
+              .div(decimalDevision)
             tokenEarnProgress = Math.min(100, tokensEarned.toString())
           }
         }

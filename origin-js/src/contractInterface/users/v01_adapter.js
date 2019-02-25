@@ -113,7 +113,10 @@ export default class V01_UsersAdapter {
       .map(a => { return AttestationObject.create(a) })
       .filter(a => this._validateAttestation(address, a))
 
-    return { address, identityAddress: address, profile, attestations }
+    // Pass-thru metadata information.
+    const metadata = ipfsIdentity.metadata
+
+    return { address, identityAddress: address, profile, attestations, metadata }
   }
 
   /**

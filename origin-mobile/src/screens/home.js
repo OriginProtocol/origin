@@ -32,7 +32,6 @@ class HomeScreen extends Component {
     this.toggleWallet = this.toggleWallet.bind(this)
     this.state = {
       recentItems: [],
-      walletExpanded: false,
     }
   }
 
@@ -72,7 +71,10 @@ class HomeScreen extends Component {
   }
 
   toggleWallet() {
-    this.setState({ walletExpanded: !this.state.walletExpanded })
+    const { navigation } = this.props
+    const { params = {} } = navigation.state
+
+    navigation.setParams({ walletExpanded: !params.walletExpanded })
   }
 
   render() {
@@ -82,6 +84,7 @@ class HomeScreen extends Component {
     // const daiBalance = dai
     const ognBalance = toOgns(ogn)
     const eventsCount = pending_events.length + processed_events.length + notifications.length
+    const { params = {} } = navigation.state
 
     return (
       <Fragment>
@@ -124,7 +127,7 @@ class HomeScreen extends Component {
             />
             */}
           </ScrollView>
-          <WalletModal address={address} visible={this.state.walletExpanded} onPress={this.toggleWallet} />
+          <WalletModal address={address} backupWarning={params.backupWarning} visible={params.walletExpanded} onPress={this.toggleWallet} onRequestClose={this.toggleWallet} />
         </View>
         {!eventsCount &&
           <Selling />

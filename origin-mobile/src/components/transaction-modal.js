@@ -22,7 +22,10 @@ export default class TransactionModal extends Component {
         animationType="slide"
         transparent={true}
         visible={!!item}
-        onRequestClose={() => { console.log('Modal closed') } }
+        onRequestClose={() => {
+          console.log('Transaction modal closed')
+          toggleModal()
+        } }
       >
 
         <TouchableOpacity onPress={toggleModal}>

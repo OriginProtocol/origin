@@ -23,7 +23,7 @@ export function detectMessagingEnabled(account) {
   return async function(dispatch) {
     if (MESSAGING_API_URL) {
       try {
-        const clientResponse = origin.messaging.canSendMessages()
+        const clientResponse = origin.messaging.getMessagingKey()
 
         if (!clientResponse) {
           return dispatch({
@@ -107,6 +107,7 @@ export function enableMessaging() {
 }
 
 export function setMessagingEnabled(enabled) {
+console.log('setMessagingEnabled', enabled)
   return {
     type: ActivationConstants.MESSAGING_ENABLED,
     enabled
