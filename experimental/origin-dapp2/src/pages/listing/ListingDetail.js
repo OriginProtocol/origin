@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
+import get from 'lodash/get'
 
 import Gallery from 'components/Gallery'
 import Link from 'components/Link'
@@ -166,11 +167,11 @@ class ListingDetail extends Component {
     this.state = {}
     if (props.listing.__typename === 'FractionalListing') {
       this.state.availability = new AvailabilityCalculator({
-        weekdayPrice: props.listing.price.amount,
-        weekendPrice: props.listing.weekendPrice.amount,
-        booked: props.listing.booked,
-        unavailable: props.listing.unavailable,
-        customPricing: props.listing.customPricing
+        weekdayPrice: get(props, 'listing.price.amount'),
+        weekendPrice: get(props, 'listing.weekendPrice.amount'),
+        booked: get(props, 'listing.booked'),
+        unavailable: get(props, 'listing.unavailable'),
+        customPricing: get(props, 'listing.customPricing')
       })
     }
   }
@@ -273,8 +274,10 @@ require('react-styl')(`
       background-position: top center
 
     .description
-      margin-top: 2rem
       white-space: pre-wrap
+
+    .gallery
+      margin-bottom: 2rem
 
     .listing-buy
       padding: 1.5rem

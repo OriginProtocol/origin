@@ -10,6 +10,9 @@
 - Check messaging
 
 - Move 'enable messaging' on AboutParty to modal
+- 'Listing unavailable' when IPFS doesn't load
+- Less padding when no gallery images http://localhost:3000/#/listings/4-000-149
+- Hide sold listings
 
 # Messaging
 

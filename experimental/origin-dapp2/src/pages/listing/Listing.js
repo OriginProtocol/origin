@@ -24,7 +24,7 @@ class Listing extends Component {
         <PageTitle>Listing {listingId}</PageTitle>
         <Query query={query} variables={vars}>
           {({ networkStatus, error, data, refetch }) => {
-            if (networkStatus === 1) {
+            if (networkStatus <= 2) {
               return <LoadingSpinner />
             } else if (error) {
               return <QueryError error={error} query={query} vars={vars} />
