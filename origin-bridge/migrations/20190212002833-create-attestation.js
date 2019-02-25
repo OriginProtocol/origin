@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      ethAddress: {
+      eth_address: {
         type: Sequelize.CHAR(42)
       },
       method: {
@@ -20,16 +20,20 @@ module.exports = {
       signature: {
         type: Sequelize.STRING
       },
-      remoteIpAddress: {
+      remote_ip_address: {
         type: Sequelize.INET
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        allowNull: true
       }
     })
   },
-  down: (queryInterface, Sequelize) => {
+  down: queryInterface => {
     return queryInterface.dropTable('attestation')
   }
 }

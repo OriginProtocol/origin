@@ -4,9 +4,10 @@
   "description": "Third party identity verification attestation server",
   "main": "src/app.js",
   "scripts": {
-    "builld": "per-env",
+    "build": "per-env",
     "build:production": "babel src -d dist",
     "lint": "eslint '**/*.js' && npm run prettier:check",
+    "migrate": "sequelize db:migrate",
     "prettier": "prettier --write *.js \"**/*.js\"",
     "prettier:check": "prettier -c *.js \"**/*.js\"",
     "start": "per-env",
@@ -27,6 +28,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
+    "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
@@ -34,21 +37,24 @@
     "express-session": "^1.15.6",
     "express-validator": "^5.3.1",
     "logplease": "^1.2.15",
+    "mock-session": "0.0.5",
+    "nock": "^10.0.6",
     "oauth": "^0.9.15",
     "per-env": "^1.0.2",
     "pg": "^7.8.0",
     "pg-hstore": "^2.3.2",
     "prettier": "^1.16.4",
-    "sequelize": "^4.42.0",
+    "sequelize": "^5.0.0-beta.16",
     "sequelize-cli": "^5.4.0",
+    "sinon": "^7.2.4",
     "web3": "^1.0.0-beta.37"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^5.14.1",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.9",
-    "supertest": "^3.3.0",
-    "supertest-session": "^3.3.0"
+    "supertest": "^3.3.0"
   },
   "prettier": {
     "semi": false,
