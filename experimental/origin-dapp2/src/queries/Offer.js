@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 import fragments from './Fragments'
 
 export default gql`
-  query Offer($offerId: String!) {
+  query Offer($offerId: ID!) {
     marketplace {
       offer(id: $offerId) {
         listing {

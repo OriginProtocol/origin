@@ -38,6 +38,7 @@ const Configs = {
     ipfsRPC: 'https://ipfs.originprotocol.com',
     ipfsEventCache: 'QmbNYwVLSLmaKmuA1R2v7VU9w1z3jxJVbTJNtstRU4TzPr',
     discovery: 'https://discovery.originprotocol.com',
+    growth: 'http://growth.originprotocol.com',
     bridge: 'https://bridge.originprotocol.com',
     IdentityEvents: '0x8ac16c08105de55a02e2b7462b1eec6085fa4d86',
     IdentityEvents_Epoch: '7046530',
@@ -79,6 +80,7 @@ const Configs = {
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     ipfsEventCache: 'QmdMTYdXtKHzhTHDuUmx4eGG372pwbK4sQptPtoS6q3LsK',
     discovery: 'https://discovery.staging.originprotocol.com',
+    growth: 'http://growth.staging.originprotocol.com',
     bridge: 'https://bridge.staging.originprotocol.com',
     IdentityEvents: '0x160455a06d8e5aa38862afc34e4eca0566ee4e7e',
     IdentityEvents_Epoch: '3670528',
@@ -123,9 +125,11 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`,
+    growth: `http://${HOST}:4001`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
+    attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     linker: `http://${LINKER_HOST}:3008`,
     linkerWS: `ws://${LINKER_HOST}:3008`
@@ -138,6 +142,9 @@ const Configs = {
     bridge: 'http://localhost:5000',
     discovery: 'http://localhost:4000/graphql',
     automine: 2000,
+    OriginToken: get(OriginTokenContract, 'networks.999.address'),
+    V00_Marketplace: get(MarketplaceContract, 'networks.999.address'),
+    IdentityEvents: get(IdentityEventsContract, 'networks.999.address'),
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     messaging: {
@@ -197,16 +204,10 @@ export function setNetwork(net, customConfig) {
   }
   if (net === 'test') {
     config = { ...config, ...customConfig }
-  } else if (net === 'localhost' || net === 'docker') {
-    config.OriginToken =
-      window.localStorage.OGNContract ||
-      get(OriginTokenContract, 'networks.999.address')
-    config.V00_Marketplace =
-      window.localStorage.marketplaceContract ||
-      get(MarketplaceContract, 'networks.999.address')
-    config.IdentityEvents =
-      window.localStorage.identityEventsContract ||
-      get(IdentityEventsContract, 'networks.999.address')
+  } else if (net === 'localhost') {
+    config.OriginToken = window.localStorage.OGNContract
+    config.V00_Marketplace = window.localStorage.marketplaceContract
+    config.IdentityEvents = window.localStorage.identityEventsContract
   }
   context.net = net
   context.config = config
@@ -215,6 +216,7 @@ export function setNetwork(net, customConfig) {
   context.ipfsGateway = config.ipfsGateway
   context.ipfsRPC = config.ipfsRPC
   context.discovery = config.discovery
+  context.growth = config.growth
 
   delete context.marketplace
   delete context.marketplaceExec

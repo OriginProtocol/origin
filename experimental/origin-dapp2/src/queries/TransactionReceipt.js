@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query TransactionReceipt($id: String!) {
+  query TransactionReceipt($id: ID!) {
     web3 {
       blockNumber
       transactionReceipt(id: $id) {

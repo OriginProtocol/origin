@@ -53,8 +53,9 @@ export default {
           urlExpanded
           contentType
         }
+        commission
+        commissionPerUnit
         ... on UnitListing {
-          multiUnit
           unitsTotal
           unitsAvailable
           unitsSold
@@ -138,6 +139,40 @@ export default {
               party
             }
           }
+        }
+      }
+    `
+  },
+  GrowthCampaign: {
+    basic: gql`
+      fragment basicCampaignFields on GrowthCampaign {
+        id
+        name
+        startDate
+        endDate
+        distributionDate
+        status
+        actions {
+          type
+          status
+          rewardEarned {
+            amount
+            currency
+          }
+          reward {
+            amount
+            currency
+          }
+          ... on ReferralAction {
+            rewardPending {
+              amount
+              currency
+            }
+          }
+        }
+        rewardEarned {
+          amount
+          currency
         }
       }
     `
