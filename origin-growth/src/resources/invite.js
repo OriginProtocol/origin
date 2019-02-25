@@ -1,24 +1,59 @@
-const BigNumber = require('bignumber.js')
-
 const db = require('../models')
-const { GrowthInviteStatuses } = require('../enums')
-
+const { Campaign } = require('./campaign')
+const { Rule } = require('../rules/rules')
 
 class Invite {
+  // Returns a list of pending rewards:
+  //  - get all invites
+  //  - filter out invites completed during the current campaign
+  //  - filter out invites completed during prior campaign
+  static async _getPendingRewards(ethAddress, completedInvites, rewardValue) {
+    // Load all invites.
+    const invites = db.GrowthInvite.findAll({
+      where: { referrerEthAddress: ethAddress }
+    })
+    const allReferees = invites.map(invite => invite.referrerEthAddress)
 
-  // Returns all invites and associated status as well as earnings.
-  /**
-    type ReferralAction implements GrowthBaseAction {
-    type: GrowthActionType!
-    status: GrowthActionStatus!
-    rewardEarned: Price
-    rewardPending: Price
-    reward: Price!            # information about reward
-    # first property specifies the number of items to return
-    # after is the cursor
-    invites(first: Int, after: String): [GrowthInviteConnection]
-  */
+    // Filter out referrals completed during the current campaign.
+    let pendingReferees = allReferees.filter(referee => {
+      return !completedInvites.map(i => i.walletAddress).includes(referee)
+    })
 
+    // Load prior campaigns and filter out referrals completed back then.
+    const pastCampaigns = Campaign.getPast(ethAddress)
+    for (const campaign of pastCampaigns) {
+      // TODO(franck): for a campaign for which rewards have been distributed,
+      // it could be faster to load the data from the growth_reward table
+      // as opposed to recalculating the rules.
+      const campaignRule = new Rule(campaign, JSON.parse(campaign.rules))
+      const rewards = await campaignRule.getRewards(ethAddress, false)
+
+      pendingReferees = pendingReferees.filter(referee => {
+        return !rewards.map(r => r.refereeEthAddress).includes(referee)
+      })
+    }
+
+    return pendingReferees.map(referee => {
+      return {
+        refereeEthAddress: referee,
+        value: rewardValue
+      }
+    })
+  }
+
+  static async _decorate(reward, status) {
+    const referee = reward.refereeEthAddress
+
+    return {
+      status,
+      walletAddress: referee,
+      contactName: null, // TODO: load from identity
+      reward: reward.value
+    }
+  }
+
+  // Returns pending and completed invites for a campaign.
+  //
   static async getAll(ethAddress, campaignId) {
     // Load the campaign.
     const campaign = db.GrowthCampaign.findOne({ where: { id: campaignId } })
@@ -26,35 +61,34 @@ class Invite {
       throw new Error('Failed loading campaign with id ${campaignId}')
     }
 
-    // Load all invites.
-    let invites = db.GrowthInvite.findAll({
-      where: { referrerEthAddress: ethAddress }
-    })
+    // Get list of completed referrals during the campaign by evaluating the rules.
+    const campaignRule = new Rule(campaign, JSON.parse(campaign.rules))
+    const rewards = await campaignRule.getRewards(ethAddress, false)
+    const rewardValue = campaignRule.getReferralRewardValue()
+    const completedInvites = rewards.map(r => Invite._decorate(r, 'Completed'))
 
-    // Filter out invites that were completed outside of the campaign's window.
-    invites = invites.filter(invite => {
-      return (invite.status !== GrowthInviteStatuses.Completed ||
-        (invite.updatedAt >= campaign.stardDate && invite.updatedAt <= campaign.endDate))
-    })
+    // We need to compute pending invites only if the campaign is active.
+    let pendingInvites = []
+    const now = new Date()
+    const isActive = campaign.startDate >= now && campaign.endDate <= now
+    if (isActive) {
+      const pendingRewards = await Invite._getPendingRewards(
+        ethAddress,
+        completedInvites,
+        rewardValue
+      )
+      pendingInvites = pendingRewards.map(r => Invite._decorate(r, 'Pending'))
+    }
 
-    const completedInvites = invites
-      .filter(invite => invite.status === GrowthInviteStatuses.Completed)
+    const allInvites = completedInvites.concat(pendingInvites)
 
-    const pendingInvites = invites
-      .filter(invite => invite.status !== GrowthInviteStatuses.Completed)
-
-    // TODO: get the reward amount for a referral.
-    const rewardAmount = BigNumber(1)
-
-    // Calculate total rewards earned during the campaign.
-    const earnedAmount = rewardAmount.times(completedInvites.length)
-
-    // Calculate total rewards that are pending.
-    const pendingAmount = rewardAmount.times(pendingInvites.length)
+    // Calculate total rewards earned and pending.
+    const earnedAmount = rewardValue.amount.times(completedInvites.length)
+    const pendingAmount = rewardValue.amount.times(pendingInvites.length)
 
     return {
       type: 'referral',
-      status: 'active', // FIXME: use Domen's campaign status method
+      status: isActive ? 'active' : 'completed', // FIXME: use Domen's campaign status method
       rewardEarned: {
         amount: earnedAmount.toFixed(),
         currency: campaign.currency
@@ -63,32 +97,21 @@ class Invite {
         amount: pendingAmount.toFixed(),
         currency: campaign.currency
       },
-      reward: {
-        amount: rewardAmount.toFixed(),
-        currency: campaign.currency
-      },
+      reward: rewardValue,
       // TODO: honor invites first and after parameter.
       invites: {
-        nodes: invites.map(invite => {
-          return {
-            status: invite.status,
-            walletAddress: null, // TODO: load from growth_referral
-            contactName: null, // TODO: load from identity
-            reward: {
-              amount: rewardAmount.toFixed(),
-              currency: campaign.currency
-            }
-          }
-        }),
+        nodes: allInvites,
         pageInfo: {
           // TODO: implement pagination.
           endCursor: null,
           hasNextPage: false,
           hasPreviousPage: false,
-          startCursor: null,
+          startCursor: null
         },
-        totalCount: invites.length()
+        totalCount: allInvites.length()
       }
     }
   }
 }
+
+module.exports = { Invite }

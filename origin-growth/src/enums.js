@@ -23,13 +23,13 @@ const GrowthCampaignRewardStatuses = new Enum(
 const GrowthEventStatuses = new Enum('Logged', 'Verified', 'Fraud')
 
 const GrowthEventTypes = new Enum(
+  'AcceptedTerms', // User accepted terms of the reward program.
   'ProfilePublished',
   'EmailAttestationPublished',
   'FacebookAttestationPublished',
   'AirbnbAttestationPublished',
   'TwitterAttestationPublished',
   'PhoneAttestationPublished',
-  'RefereeSignedUp',
   'ListingCreated',
   'ListingPurchased'
 )
