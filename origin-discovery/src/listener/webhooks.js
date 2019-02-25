@@ -135,9 +135,10 @@ async function postToWebhook(urlString, data, contentType='application/json') {
  * Sends a blob of data to a Google Cloud pubsub topic.
  */
 async function publishToGcloudPubsub(projectId, topic, data) {
-  const pubsub = new PubSub()
-
-  console.log(topic)
+  const pubsub = new PubSub({
+    projectId: projectId,
+    keyFilename: process.env.GCLOUD_SERVICE_ACCOUNT_JSON
+  })
 
   return await pubsub
     .topic(topic)
