@@ -62,7 +62,7 @@ const startIpfs = () =>
     const httpAPI = new HttpIPFS(`${__dirname}/data/ipfs`, {
       Addresses: {
         API: '/ip4/0.0.0.0/tcp/5002',
-        Gateway: '/ip4/0.0.0.0/tcp/9090'
+        Gateway: '/ip4/0.0.0.0/tcp/8080'
       },
       Bootstrap: []
     })

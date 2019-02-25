@@ -12,7 +12,7 @@ module.exports = {
       },
       referee_eth_address: {
         allowNull: false,
-        primaryKey: true,
+        unique: true,
         type: Sequelize.STRING
       },
       created_at: {

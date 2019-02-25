@@ -1,0 +1,42 @@
+FROM node:10 as build
+
+WORKDIR /app
+
+ARG DEPLOY_TAG
+ARG ENVKEY
+
+# Set environment variables. NODE_ENV is set to production to avoid installing
+# any dependencies that aren't necessary for the build. The DEPLOY_TAG is to
+# make the commit hash of the currently built version available in the DApp
+# info screen.
+ENV NODE_ENV=production DEPLOY_TAG=$DEPLOY_TAG
+
+# Copy the necessary files for building origin-dapp
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./origin-js ./origin-js
+COPY ./origin-contracts ./origin-contracts
+COPY ./experimental/origin-dapp2/ ./experimental/origin-dapp2/
+COPY ./experimental/origin-graphql/ ./experimental/origin-graphql/
+COPY ./experimental/origin-ipfs/ ./experimental/origin-ipfs/
+COPY ./experimental/origin-validator/ ./experimental/origin-validator/
+COPY ./experimental/origin-messaging-client/ ./experimental/origin-messaging-client/
+COPY ./experimental/origin-linker-client/ ./experimental/origin-linker-client/
+COPY ./experimental/origin-eventsource/ ./experimental/origin-eventsource/
+COPY ./experimental/origin-services/ ./experimental/origin-services/
+COPY ./scripts ./scripts
+
+RUN npm install --unsafe-perm
+
+COPY ./origin-contracts/releases/0.8.5/build/ ./origin-contracts/build/
+
+RUN npm run build --prefix experimental/origin-dapp2
+
+RUN mv /app/experimental/origin-dapp2/public/kovan.html \
+	/app/experimental/origin-dapp2/public/index.html
+
+# Copy built static files to nginx for serving
+FROM nginx:1.15.2-alpine
+COPY --from=build /app/experimental/origin-dapp2/public /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

@@ -6,6 +6,7 @@ import clipboard from 'clipboard-polyfill'
 import QRCode from 'qrcode.react'
 import queryString from 'query-string'
 
+import { detectMessagingEnabled } from 'actions/Activation'
 import { storeWeb3Intent, storeNetwork } from 'actions/App'
 import { fetchProfile } from 'actions/Profile'
 import { getEthBalance, storeAccountAddress } from 'actions/Wallet'
@@ -580,11 +581,13 @@ class Web3Provider extends Component {
 
       // update global state
       storeAccountAddress(current)
-    }
 
-    if (current && !messagingInitialized) {
-      // trigger messaging service
-      origin.messaging.onAccount(current)
+      if (!messagingInitialized) {
+        // trigger messaging service
+        origin.messaging.onAccount(current)
+        // check after initializing messaging
+        this.props.detectMessagingEnabled(current)
+      }
     }
   }
 
@@ -698,6 +701,7 @@ const mapStateToProps = ({ activation, app, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  detectMessagingEnabled: addr => dispatch(detectMessagingEnabled(addr)),
   fetchProfile: () => dispatch(fetchProfile()),
   getEthBalance: () => dispatch(getEthBalance()),
   storeAccountAddress: addr => dispatch(storeAccountAddress(addr)),

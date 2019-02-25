@@ -3,6 +3,8 @@ import { Alert, Clipboard, Image, Modal, ScrollView, StyleSheet, Text, Touchable
 import { SafeAreaView } from 'react-navigation'
 import { connect } from 'react-redux'
 
+import { updateBackupWarningStatus } from 'actions/Activation'
+
 import Address from 'components/address'
 import Currency from 'components/currency'
 import OriginButton from 'components/origin-button'
@@ -14,6 +16,7 @@ import { evenlySplitAddress } from 'utils/user'
 
 import originWallet from '../OriginWallet'
 
+const ONE_MINUTE = 1000 * 60
 const IMAGES_PATH = '../../assets/images/'
 
 class WalletModal extends Component {
@@ -24,16 +27,45 @@ class WalletModal extends Component {
     this.handleFunding = this.handleFunding.bind(this)
   }
 
-  handleDangerousCopy(privateKey) {
+  componentDidUpdate(prevProps) {
+    if (this.props.backupWarning && !prevProps.backupWarning) {
+      // alert will block modal from opening if not delayed
+      setTimeout(() => {
+        Alert.alert(
+          'Important!',
+          `Be sure to back up your private key so that you don't lose access to your wallet. If your device is lost or you delete this app, we won't be able to help recover your funds.`,
+          [
+            { text: `Done. Don't show me this again.`, onPress: () => {
+              this.props.updateBackupWarningStatus(true, Date.now())
+            }},
+            { text: 'Show Private Key', onPress: () => {
+              originWallet.showPrivateKey()
+
+              this.props.updateBackupWarningStatus(true)
+            }},
+          ],
+        )
+      }, 1000)
+    }
+  }
+
+  async handleDangerousCopy(privateKey) {
     Alert.alert(
-      'Warning!',
-      'Copying your private key to the clipboard is dangerous. It could potentially be read by other malicious programs. Are you sure that you want to do this?',
+      'Important!',
+      'As a security precaution, your key will be removed from the clipboard after one minute.',
       [
-        { text: 'No, cancel!', onPress: () => console.log('Canceled private key copy') },
-        { text: 'Yes, I understand.', onPress: async () => {
+        { text: 'Got it.', onPress: async () => {
           await Clipboard.setString(privateKey)
 
           Alert.alert('Copied to clipboard!')
+
+          setTimeout(async () => {
+            const s = await Clipboard.getString()
+
+            if (s === privateKey) {
+              Clipboard.setString('')
+            }
+          }, ONE_MINUTE)
         }},
       ],
     )
@@ -65,7 +97,7 @@ class WalletModal extends Component {
   }
 
   render() {
-    const { address, onPress, visible, wallet } = this.props
+    const { address, backupWarning, onPress, visible, wallet, onRequestClose } = this.props
     const { /*dai, */eth, ogn } = wallet.balances
 
     const ethBalance = web3.utils.fromWei(eth, 'ether')
@@ -75,7 +107,10 @@ class WalletModal extends Component {
     return (
       <Modal
         animationType="slide"
-        visible={visible}
+        visible={!!visible}
+        onRequestClose={() => {
+          onRequestClose()
+        } }
       >
         <SafeAreaView style={styles.container}>
           <View style={styles.nav}>
@@ -132,7 +167,7 @@ class WalletModal extends Component {
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={'Show Private Key'}
-              onPress={() => Alert.alert('Private Key', privateKey)}
+              onPress={originWallet.showPrivateKey}
             />
             <OriginButton
               size="large"
@@ -155,7 +190,11 @@ const mapStateToProps = ({ wallet }) => {
   }
 }
 
-export default connect(mapStateToProps)(WalletModal)
+const mapDispatchToProps = dispatch => ({
+  updateBackupWarningStatus: (bool, datetime) => dispatch(updateBackupWarningStatus(bool, datetime)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(WalletModal)
 
 const styles = StyleSheet.create({
   address: {

@@ -7,21 +7,20 @@ try {
 
 const express = require('express')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
-const Web3 = require('web3')
 
 const Config = require('origin-token/src/config')
-const Token = require('origin-token/src/token')
+
+const logger = require('./logger')
+
+const EthDistributor = require('./eth')
+const OgnDistributor = require('./ogn')
 
 const DEFAULT_SERVER_PORT = 5000
 const DEFAULT_NETWORK_ID = '999' // Local blockchain.
 
-// Credit 100 tokens per request.
-const NUM_TOKENS = 100
-
 // Starts the Express server.
-function runApp(config) {
+async function runApp(config) {
   const app = express()
-  const token = new Token(config)
 
   // Configure rate limiting. Allow at most 1 request per IP every 60 sec.
   const opts = {
@@ -40,7 +39,7 @@ function runApp(config) {
         })
         .catch(() => {
           // Not enough points. Block the request.
-          console.log(`Rejecting request due to rate limiting.`)
+          logger.error(`Rejecting request due to rate limiting.`)
           res.status(429).send('<h2>Too Many Requests</h2>')
         })
     } else {
@@ -54,35 +53,14 @@ function runApp(config) {
   // Configure directory for public assets.
   app.use(express.static(__dirname + '/../public'))
 
-  // Register the /tokens route for crediting tokens.
-  app.get('/tokens', async function(req, res, next) {
-    const networkId = req.query.network_id
-    const wallet = req.query.wallet
-    if (!req.query.wallet) {
-      res.send('<h2>Error: A wallet address must be supplied.</h2>')
-    } else if (!Web3.utils.isAddress(wallet)) {
-      res.send(`<h2>Error: ${wallet} is a malformed wallet address.</h2>`)
-      return
-    }
+  // Register the /tokens route for distributing tokens.
+  const ognDistributor = new OgnDistributor(config)
+  app.get('/tokens', ognDistributor.process)
 
-    try {
-      // Transfer NUM_TOKENS to specified wallet.
-      const value = token.toNaturalUnit(NUM_TOKENS)
-      const contractAddress = token.contractAddress(networkId)
-      const receipt = await token.credit(networkId, wallet, value)
-      const txHash = receipt.transactionHash
-      console.log(`${NUM_TOKENS} OGN -> ${wallet} TxHash=${txHash}`)
-
-      // Send response back to client.
-      const resp =
-        `Credited ${NUM_TOKENS} OGN tokens to wallet ${wallet}<br>` +
-        `TxHash = ${txHash}<br>` +
-        `OGN token contract address = ${contractAddress}`
-      res.send(resp)
-    } catch (err) {
-      next(err) // Errors will be passed to Express.
-    }
-  })
+  // Register the /eth route for distributing Eth.
+  const ethDistributor = new EthDistributor(config)
+  app.get('/eth', ethDistributor.main)
+  app.get('/eth_dist', ethDistributor.process)
 
   // Start the server.
   app.listen(config.port || DEFAULT_SERVER_PORT, () =>
@@ -108,10 +86,21 @@ const config = {
     .map(parseInt)
 }
 
+logger.info('Config: ', config)
+
+if (!config.networkIds) {
+  logger.error('Network ids not configured.')
+  process.exit(-1)
+}
+if (!process.env.DATABASE_URL) {
+  logger.error('DATABASE_URL not configured.')
+  process.exit(-1)
+}
+
 try {
   config.providers = Config.createProviders(config.networkIds)
 } catch (err) {
-  console.log('Config error:', err)
+  logger.error('Config error:', err)
   process.exit(-1)
 }
 

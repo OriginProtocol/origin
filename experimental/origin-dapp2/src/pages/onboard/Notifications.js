@@ -242,7 +242,7 @@ require('react-styl')(`
       justify-content: center;
       font-weight: 800;
       font-size: 4rem;
-      font-family: poppins;
+      font-family: var(--heading-font);
     .btn-success
       margin-top: 2rem
     .btn-link

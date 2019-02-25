@@ -10,7 +10,7 @@ const ZeroAddress = '0x0000000000000000000000000000000000000000'
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
 
-  const buyer = data.from
+  const buyer = data.from || contracts.defaultLinkerAccount
   const marketplace = contracts.marketplaceExec
   const ipfsData = await toIpfsData(data)
 
@@ -61,7 +61,7 @@ async function makeOffer(_, data) {
     from: buyer,
     value
   })
-  return txHelper({ tx, from: data.from, mutation: 'makeOffer' })
+  return txHelper({ tx, from: buyer, mutation: 'makeOffer' })
 }
 
 async function toIpfsData(data) {
@@ -96,7 +96,7 @@ async function toIpfsData(data) {
 
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
-    listingId,
+    listingId: data.listingID,
     listingType: 'unit',
     unitsPurchased: Number.parseInt(data.quantity),
     totalPrice: {
@@ -104,8 +104,7 @@ async function toIpfsData(data) {
       currency: 'ETH'
     },
     commission,
-    finalizes:
-      data.finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24 * 365,
+    finalizes: data.finalizes || 60 * 60 * 24 * 365,
     ...(data.fractionalData || {})
   }
 

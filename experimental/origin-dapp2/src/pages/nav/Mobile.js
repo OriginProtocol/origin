@@ -158,7 +158,7 @@ require('react-styl')(`
           height: 10px
           transform: rotate(45deg)
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .navbar .nav-item.mobile .dropdown-menu
       &::before
         content: none

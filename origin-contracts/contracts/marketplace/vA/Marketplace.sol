@@ -41,8 +41,10 @@ contract VA_Marketplace is Ownable {
     struct Offer {
         uint value;         // Amount in Eth or ERC20 buyer is offering
         uint refund;        // Amount to refund buyer upon finalization
+        uint commission;    // Amount of commission earned if offer is finalized
         ERC20 currency;     // Currency of listing
         address buyer;      // Buyer wallet / identity contract / other contract
+        address affiliate;  // Address to send any commission
         address arbitrator; // Address that settles disputes
         uint finalizes;     // Timestamp offer finalizes
         uint8 status;       // 0: Undefined, 1: Created, 2: Accepted, 3: Disputed
@@ -81,11 +83,14 @@ contract VA_Marketplace is Ownable {
     }
 
     // @dev Buyer makes offer.
-    function makeOffer(
+    function _makeOffer(
+        address _buyer,
         uint listingID,
         bytes32 _listingIpfsHash, // listing IPFS hash that we're making an offer on
         bytes32 _ipfsHash,   // IPFS hash containing offer data
         uint _finalizes,     // Timestamp an accepted offer will finalize
+        address _affiliate,  // Address to send any required commission to
+        uint256 _commission, // Amount of commission to send in Origin Token if offer finalizes
         uint _value,         // Offer amount in ERC20 or Eth
         ERC20 _currency,     // ERC20 token address or 0x0 for Eth
         address _arbitrator,  // Escrow arbitrator
@@ -95,10 +100,25 @@ contract VA_Marketplace is Ownable {
         public
         payable
     {
+        require(
+            allowedAffiliates[address(this)] || allowedAffiliates[_affiliate],
+            "Affiliate not allowed"
+        );
+
+        if (_affiliate == 0x0) {
+            // Avoid commission tokens being trapped in marketplace contract.
+            require(_commission == 0, "commission requires affiliate");
+        }
+        if (_commission > 0) {
+            tokenAddr.transferFrom(_buyer, this, _commission); // Transfer Origin Token
+        }
+
         offers[listingID].push(Offer({
             status: 1,
-            buyer: msg.sender,
+            buyer: _buyer,
             finalizes: _finalizes,
+            affiliate: _affiliate,
+            commission: _commission,
             currency: _currency,
             value: _value,
             arbitrator: _arbitrator,
@@ -117,7 +137,26 @@ contract VA_Marketplace is Ownable {
             );
         }
 
-        emit OfferCreated(msg.sender, listingID, offers[listingID].length-1, _ipfsHash, _listingIpfsHash);
+        emit OfferCreated(_buyer, listingID, offers[listingID].length-1, _ipfsHash, _listingIpfsHash);
+    }
+
+    function makeOffer(
+        uint listingID,
+        bytes32 _listingIpfsHash, // listing IPFS hash that we're making an offer on
+        bytes32 _ipfsHash,   // IPFS hash containing offer data
+        uint _finalizes,     // Timestamp an accepted offer will finalize
+        address _affiliate,  // Address to send any required commission to
+        uint256 _commission, // Amount of commission to send in Origin Token if offer finalizes
+        uint _value,         // Offer amount in ERC20 or Eth
+        ERC20 _currency,     // ERC20 token address or 0x0 for Eth
+        address _arbitrator,  // Escrow arbitrator
+        address _seller,
+        address _verifier
+    )
+        public
+        payable
+    {
+        _makeOffer(msg.sender, listingID, _listingIpfsHash, _ipfsHash, _finalizes, _affiliate, _commission, _value, _currency, _arbitrator, _seller, _verifier);
     }
 
     // @dev Make new offer after withdraw
@@ -126,6 +165,8 @@ contract VA_Marketplace is Ownable {
         bytes32 _listingIpfsHash,
         bytes32 _ipfsHash,
         uint _finalizes,
+        address _affiliate,
+        uint256 _commission,
         uint _value,
         ERC20 _currency,
         address _arbitrator,
@@ -137,9 +178,29 @@ contract VA_Marketplace is Ownable {
         payable
     {
         withdrawOffer(listingID, _withdrawOfferID, _ipfsHash);
-        makeOffer(listingID, _listingIpfsHash, _ipfsHash, _finalizes, _value, _currency, _arbitrator, _seller, _verifier);
+        makeOffer(listingID, _listingIpfsHash, _ipfsHash, _finalizes,  _affiliate, _commission, _value, _currency, _arbitrator, _seller, _verifier);
     }
 
+    function makeOfferWithSender(
+        address _buyer,
+        uint listingID,
+        bytes32 _listingIpfsHash,
+        bytes32 _ipfsHash,
+        uint _finalizes,
+        address _affiliate,
+        uint256 _commission,
+        uint _value,
+        ERC20 _currency,
+        address _arbitrator,
+        address _seller,
+        address _verifier
+    )
+        public payable returns (bool)
+    {
+        require(msg.sender == address(tokenAddr), "Token must call");
+        _makeOffer(_buyer, listingID, _listingIpfsHash, _ipfsHash, _finalizes, _affiliate, _commission, _value, _currency, _arbitrator, _seller, _verifier);
+        return true;
+    }
 
     function hashDomain() internal view returns (bytes32)
     {
@@ -230,6 +291,10 @@ contract VA_Marketplace is Ownable {
         );
         require(offer.status == 1, "status != created");
         refundBuyer(listingID, offerID);
+        if (offer.commission > 0)
+        {
+            refundCommission(listingID, offerID);
+        }
         emit OfferWithdrawn(msg.sender, listingID, offerID, _ipfsHash);
         delete offers[listingID][offerID];
     }
@@ -279,6 +344,7 @@ contract VA_Marketplace is Ownable {
         }
         offer.refund = offer.value - actualPayOut;
         paySeller(listingID, offerID); // Pay seller
+        payCommission(listingID, offerID);
         emit OfferFinalized(offer.verifier, listingID, offerID, _ipfsHash);
         delete offers[listingID][offerID];
     }
@@ -312,6 +378,7 @@ contract VA_Marketplace is Ownable {
         }
         require(offer.status == 2, "status != accepted");
         paySeller(listingID, offerID); // Pay seller
+        payCommission(listingID, offerID);
         emit OfferFinalized(msg.sender, listingID, offerID, _ipfsHash);
         delete offers[listingID][offerID];
     }
@@ -346,6 +413,11 @@ contract VA_Marketplace is Ownable {
             refundBuyer(listingID, offerID);
         } else  {
             paySeller(listingID, offerID);
+        }
+        if (_ruling & 2 == 2) {
+            payCommission(listingID, offerID);
+        } else  { // Refund commission to seller
+            refundCommission(listingID, offerID);
         }
         emit OfferRuling(offer.arbitrator, listingID, offerID, _ipfsHash, _ruling);
         delete offers[listingID][offerID];
@@ -473,5 +545,24 @@ contract VA_Marketplace is Ownable {
         for (uint i = 0; i < sellers.length; i++) {
             emit ListingWithdrawn(sellers[i], listingIds[i], ipfsHashes[i]);
         }
+    }
+
+    // @dev Pay commission to affiliate
+    function payCommission(uint listingID, uint offerID) private {
+        Offer storage offer = offers[listingID][offerID];
+        if (offer.affiliate != 0x0) {
+            require(
+                tokenAddr.transfer(offer.affiliate, offer.commission),
+                "Commission transfer failed"
+            );
+        }
+    }
+
+    function refundCommission(uint listingID, uint offerID) private {
+        Offer storage offer = offers[listingID][offerID];
+        require(
+            tokenAddr.transfer(offer.buyer, offer.commission),
+            "Commission refund failed"
+        );
     }
 }

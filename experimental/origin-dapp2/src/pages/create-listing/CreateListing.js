@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
+import get from 'lodash/get'
 
 import withTokenBalance from 'hoc/withTokenBalance'
 import withWallet from 'hoc/withWallet'
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import PageTitle from 'components/PageTitle'
 
@@ -16,8 +18,8 @@ import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 class CreateListing extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       listing: {
         title: '',
@@ -38,6 +40,9 @@ class CreateListing extends Component {
         booked: [],
         customPricing: [],
         unavailable: [],
+
+        // Marketplace creator fields:
+        marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
         ...store.get('create-listing', {})
       }
@@ -114,25 +119,25 @@ class CreateListing extends Component {
   }
 }
 
-export default withWallet(withTokenBalance(CreateListing))
+export default withCreatorConfig(withWallet(withTokenBalance(CreateListing)))
 
 require('react-styl')(`
   .create-listing
     padding-top: 3rem
     .gray-box
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 2rem
       background-color: var(--pale-grey-eight)
 
     .step
-      font-family: Lato
+      font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
       font-weight: normal
       text-transform: uppercase
       margin-top: 0.75rem
     .step-description
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
       line-height: normal
@@ -147,7 +152,7 @@ require('react-styl')(`
         padding: 0.625rem
         font-size: 18px
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .create-listing
       padding-top: 1rem
       .actions
