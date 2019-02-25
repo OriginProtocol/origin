@@ -89,6 +89,7 @@ services:
       - ./origin-growth/src:/app/origin-growth/src
       - ./origin-growth/config:/app/origin-growth/config
       - ./origin-growth/package.json:/app/origin-growth/package.json
+      - ./development/envfiles/origin-growth.env:/app/origin-growth/.env
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
     depends_on:

@@ -17,6 +17,7 @@ class ProfileNav extends Component {
     super()
     this.state = {}
   }
+
   render() {
     // TODO: Bring back pollInterval={1000} for wallet linking?
     return (
