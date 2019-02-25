@@ -264,6 +264,8 @@ function withEnrolmentModal(WrappedComponent) {
                 eligibility,
                 notCitizenChecked
               )
+            } else {
+              return "Error: can not detect coutry"
             }
           }}
         </Query>
