@@ -24,6 +24,7 @@ import Notifications from './notifications/Notifications'
 import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
+import GrowthInvite from './growth/Invite'
 import AboutToken from './about/AboutTokens'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 
@@ -85,7 +86,8 @@ class App extends Component {
             <Route path="/notifications" component={Notifications} />
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />
-            <Route path="/campaigns" component={process.env.ENABLE_GROWTH === 'true' ? GrowthCampaigns : Listings} />
+            <Route exact path="/campaigns" component={process.env.ENABLE_GROWTH === 'true' ? GrowthCampaigns : Listings} />
+            <Route exact path="/campaigns/invite" component={process.env.ENABLE_GROWTH === 'true' ? GrowthInvite : Listings} />
             <Route path="/welcome" component={process.env.ENABLE_GROWTH === 'true' ? GrowthWelcome : Listings} />
             <Route component={Listings} />
           </Switch>

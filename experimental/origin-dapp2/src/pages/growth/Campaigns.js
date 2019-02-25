@@ -109,6 +109,7 @@ class ProgressBar extends Component {
 function Action(props) {
   const { type, status, reward, rewardEarned, rewardPending } = props.action
   const actionLocked = status === 'Inactive'
+  //const actionLocked = false
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
   const backgroundImgSrc = actionCompleted
@@ -124,6 +125,7 @@ function Action(props) {
   let foregroundImgSrc
   let title
   let infoText
+  let buttonLink = '/profile'
 
   if (type === 'Email') {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
@@ -152,12 +154,15 @@ function Action(props) {
   } else if (type === 'ListingCreated') {
     title = 'Create a listing'
     infoText = 'Create a new listing on the marketplace'
+    buttonLink = '/create'
   } else if (type === 'ListingPurchased') {
     title = 'Purchase a listing'
     infoText = 'Purchase a listing on marketplace'
+    buttonLink = '/'
   } else if (type === 'Referral') {
     title = 'Invite Friends'
     infoText = 'Get your friends to join Origin with active accounts.'
+    buttonLink = '/campaigns/invite'
   }
 
   const renderReward = (amount, renderPlusSign) => {
@@ -217,7 +222,7 @@ function Action(props) {
       </div>
       <div className="col-2 d-flex">
         {!actionCompleted && !actionLocked && (
-          <Link to="/profile" className="mt-auto mb-auto">
+          <Link to={buttonLink} className="mt-auto mb-auto">
             <button
               className="btn btn-primary btn-rounded mr-2"
               children="Go"

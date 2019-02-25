@@ -81,6 +81,7 @@ const DappInfo = () => (
                 )
               }}
             </Query>
+            {dataTr({ key: 'Growth Enabled', value: process.env.ENABLE_GROWTH })}
           </tbody>
         </table>
 
