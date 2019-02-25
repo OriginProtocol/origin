@@ -1,9 +1,9 @@
 //const GraphQLJSON = require('graphql-type-json')
 const { GraphQLDateTime } = require('graphql-iso-date')
+//const db = require('./db')
 const { Fetcher } = require('../rules/rules')
 const { getLocationInfo } = require('../util/locationInfo')
-//const db = require('./db')
-const { GrowthInvite } = require('../resources/invite')
+// const { GrowthInvite } = require('../resources/invite')
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -41,6 +41,13 @@ const resolvers = {
     async campaign() {
       return null
     },
+    async inviteInfo() {
+      //return await GrowthInvite.getInfo(args.code)
+      return {
+        firstName: 'TODO: to be implemented',
+        lastName: 'TODO: to be implemented'
+      }
+    },
     async isEligible(obj, args, context) {
       if (process.env.NODE_ENV !== 'production') {
         return {
@@ -67,9 +74,6 @@ const resolvers = {
         countryName: locationInfo.countryName,
         countryCode: locationInfo.countryCode
       }
-    },
-    async inviteInfo(root, args) {
-      return await GrowthInvite.getInfo(args.code)
     }
   },
   Mutation: {
