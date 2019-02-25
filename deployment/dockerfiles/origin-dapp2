@@ -1,8 +1,9 @@
+ARG DEPLOY_TAG=dev
+ARG NAMESPACE=dev
+
 FROM node:10 as build
 
 WORKDIR /app
-
-ARG DEPLOY_TAG=dev
 
 # The DEPLOY_TAG is to make the commit hash of the currently built version
 # available in the DApp info screen.
@@ -42,8 +43,6 @@ RUN mv /app/experimental/origin-dapp2/public/rinkeby.html \
 FROM build as build-prod
 RUN mv /app/experimental/origin-dapp2/public/mainnet.html \
 	/app/experimental/origin-dapp2/public/index.html
-
-ARG NAMESPACE=dev
 
 FROM build-${NAMESPACE} AS build-complete
 
