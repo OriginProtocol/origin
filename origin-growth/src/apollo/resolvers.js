@@ -1,6 +1,6 @@
 //const GraphQLJSON = require('graphql-type-json')
 const { GraphQLDateTime } = require('graphql-iso-date')
-const db = require('./db')
+//const db = require('./db')
 const { Fetcher } = require('../rules/rules')
 const { getLocationInfo } = require('../util/locationInfo')
 // const { GrowthInvite } = require('../resources/invite')
