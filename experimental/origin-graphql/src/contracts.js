@@ -36,7 +36,6 @@ const Configs = {
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
-    ipfsEventCache: 'QmbNYwVLSLmaKmuA1R2v7VU9w1z3jxJVbTJNtstRU4TzPr',
     discovery: 'https://discovery.originprotocol.com',
     growth: 'http://growth.originprotocol.com',
     bridge: 'https://bridge.originprotocol.com',
@@ -47,6 +46,7 @@ const Configs = {
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
     V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
     V00_Marketplace_Epoch: '6436157',
+    ipfsEventCache: 'QmSjXV4HRo39USnpzbE9cK5Qs989fAEsnv165bZxoJDWPg',
     tokens: [
       {
         id: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',

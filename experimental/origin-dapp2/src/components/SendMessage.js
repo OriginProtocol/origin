@@ -36,10 +36,6 @@ class SendMessage extends Component {
             return null
           }
 
-          if (!data.messaging.enabled) {
-            return <OnboardMessaging />
-          }
-
           return (
             <>
               <button
@@ -58,7 +54,13 @@ class SendMessage extends Component {
                   }
                   className="message-modal"
                 >
-                  {this.state.sent ? this.renderSent() : this.renderSend()}
+                  {!data.messaging.enabled ? (
+                    <OnboardMessaging />
+                  ) : this.state.sent ? (
+                    this.renderSent()
+                  ) : (
+                    this.renderSend()
+                  )}
                 </Modal>
               )}
             </>

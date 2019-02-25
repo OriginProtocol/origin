@@ -35,7 +35,10 @@ class Listing extends Component {
             const listing = data.marketplace.listing
             if (!listing) {
               return <div>Listing not found</div>
+            } else if (!listing.valid) {
+              return <div>Listing invalid</div>
             }
+
             const from = get(data, 'web3.metaMaskAccount.id')
 
             return (

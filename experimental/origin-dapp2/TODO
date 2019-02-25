@@ -9,10 +9,9 @@
 - Check identity + attestations
 - Check messaging
 
-- Move 'enable messaging' on AboutParty to modal
-- 'Listing unavailable' when IPFS doesn't load
-- Less padding when no gallery images http://localhost:3000/#/listings/4-000-149
 - Hide sold listings
+- Styling for listing error / unavailable
+- Scroll when lots of pics? http://localhost:3000/#/listings/1-000-85
 
 # Messaging
 

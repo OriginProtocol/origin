@@ -22,6 +22,8 @@ export default {
     basic: gql`
       fragment basicListingFields on Listing {
         id
+        valid
+        validationError
         status
         totalEvents
         seller {

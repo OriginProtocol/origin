@@ -10,6 +10,7 @@ import ListingBadge from 'components/ListingBadge'
 import Calendar from 'components/Calendar'
 import PageTitle from 'components/PageTitle'
 import Category from 'components/Category'
+import Price from 'components/Price'
 
 import Buy from './mutations/Buy'
 
@@ -56,7 +57,12 @@ const Pending = () => (
 
 const SingleUnit = ({ listing, from, refetch }) => (
   <div className="listing-buy">
-    <div className="price">{`${listing.price.amount} ETH`}</div>
+    <div className="price">
+      <div className="eth">{`${listing.price.amount} ETH`}</div>
+      <div className="usd">
+        <Price amount={listing.price.amount} />
+      </div>
+    </div>
     <Buy
       refetch={refetch}
       listing={listing}
@@ -182,6 +188,7 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const sold = listing.unitsSold >= listing.unitsTotal
     const pending = listing.unitsAvailable <= 0
+    const isAnnouncement = get(listing, 'category', '').match(/announcement/i)
 
     return (
       <div className="listing-detail">
@@ -215,7 +222,7 @@ class ListingDetail extends Component {
               <Sold />
             ) : pending ? (
               <Pending />
-            ) : isFractional ? (
+            ) : isAnnouncement ? null : isFractional ? (
               <Fractional
                 {...this.props}
                 range={this.state.range}
@@ -227,7 +234,7 @@ class ListingDetail extends Component {
               <SingleUnit {...this.props} />
             )}
 
-            <h5 className="mt-3">About the Seller</h5>
+            <h5>About the Seller</h5>
             <AboutParty id={listing.seller.id} />
           </div>
         </div>
@@ -250,6 +257,7 @@ require('react-styl')(`
       font-weight: 200
       font-style: normal
       color: var(--dark)
+      line-height: 1.25
 
     .header
       display: flex
@@ -283,6 +291,7 @@ require('react-styl')(`
       padding: 1.5rem
       border-radius: var(--default-radius);
       background-color: var(--pale-grey-eight)
+      margin-bottom: 1rem
       > .btn
         border-radius: 2rem
         padding: 0.5rem 1rem
@@ -297,17 +306,26 @@ require('react-styl')(`
       .total
         padding-top: 0
       .price
-        background: url(images/eth-icon.svg) no-repeat
-        background-size: 1.5rem
-        padding: 0.2rem 0 1.5rem 2rem
-        line-height: 1rem
-        font-family: var(--default-font)
-        font-size: 24px
-        font-weight: bold
-        font-style: normal
-        color: #000000
-        > span
+        display: flex
+        align-items: baseline
+        margin-bottom: 1.5rem
+        .eth
+          background: url(images/eth-icon.svg) no-repeat
+          background-size: 1.5rem
+          padding-left: 2rem
+          line-height: 1.5rem
+          font-family: var(--default-font)
+          font-size: 24px
+          font-weight: bold
+          font-style: normal
+          color: #000000
+          > span
+            font-weight: normal
+        .usd
+          color: var(--steel)
           font-weight: normal
+          margin-left: 1rem
+          font-size: 16px
       &.multi .price
         border-bottom: 1px solid var(--light)
       &.fractional
