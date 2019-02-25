@@ -144,6 +144,12 @@ if (isProduction) {
       inject: false,
       filename: 'kovan.html',
       network: 'kovanTst'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'rinkeby.html',
+      network: 'rinkeby'
     })
   )
   config.resolve.alias = {
