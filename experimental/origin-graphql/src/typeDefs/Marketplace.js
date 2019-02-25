@@ -21,6 +21,8 @@ const ListingInterface = `
   featured: Boolean
   depositAvailable: String
   type: String
+  valid: Boolean
+  validationError: String
 
   # IPFS
   title: String
@@ -93,13 +95,13 @@ module.exports = `
       offerID: ID!
       offerID: ID!
       # ruling may be one of:
-      # 
+      #
       # - refund-buyer: Buyer gets all value in the offer
       # - pay-seller: Seller gets all value in the offer
       # - partial-refund: Buyer the refund value, Seller gets all remaining value
       ruling: String!
       # commission may be one of:
-      # 
+      #
       # - pay: Affiliate receives commission tokens, if any
       # - refund: Seller refunded commission tokens, if any
       commission: String!

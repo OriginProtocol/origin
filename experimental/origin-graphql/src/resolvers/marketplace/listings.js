@@ -43,7 +43,9 @@ async function searchIds(search, filters) {
       .then(response => response.json())
       .then(response => resolve(response.data.listings))
   })
-  const ids = searchResult.nodes.map(n => Number(n.id.split('-')[2]))
+  const ids = searchResult.nodes
+    .map(n => Number(n.id.split('-')[2]))
+    .filter(id => id >= 0)
   return { totalCount: searchResult.numberOfItems, ids }
 }
 
@@ -115,7 +117,7 @@ export async function listingsBySeller(
 
 export default async function listings(
   contract,
-  { first = 10, after, sort, hidden = true, search, filters }
+  { first = 10, after, sort, hidden = true, search, filters = [] }
 ) {
   if (!contract) {
     return null

@@ -2,6 +2,7 @@ import { Component } from 'react'
 
 export default class PageTitle extends Component {
   componentDidMount() {
+    if (!this.props.children) return 'Origin'
     const title = this._cleanTitle(this.props.children)
     document.title = title + ' - Origin'
   }

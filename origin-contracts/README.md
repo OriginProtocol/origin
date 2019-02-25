@@ -12,7 +12,7 @@ Origin Token is built on the ERC20 standard, inheriting from Open Zeppelin contr
 The marketplace contract facilitates transactions between buyers and sellers. It supports escrow, arbitration and transactions in Eth and ERC20 tokens, as well as incorporating a commission model and staking in OGN.
 
 **Identity**
-The identity contracts are based on ERC725. These contracts should be considered alpha and are currently going through some major redevelopment.
+The identity contract uses simple event-sourced updates and deletions. We are currently phasing out ERC725 identity contracts.
 
 ### Marketplace in depth
 

@@ -39,7 +39,9 @@ class OriginEventSource {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
       return Object.assign({}, this.listingCache[cacheKey], {
-        id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`
+        id: `${networkId}-000-${listingId}${
+          blockNumber ? `-${blockNumber}` : ''
+        }`
       })
     }
 
@@ -69,12 +71,6 @@ class OriginEventSource {
       if (e.event === 'ListingWithdrawn') {
         status = 'withdrawn'
       }
-      if (e.event === 'OfferFinalized') {
-        status = 'sold'
-      }
-      if (e.event === 'OfferRuling') {
-        status = 'sold'
-      }
       if (blockNumber && e.blockNumber <= blockNumber) {
         oldIpfsHash = ipfsHash
       }
@@ -85,6 +81,7 @@ class OriginEventSource {
       data = await get(this.ipfsGateway, ipfsHash)
       data = pick(
         data,
+        'valid',
         'listingType',
         'title',
         'description',
@@ -102,9 +99,18 @@ class OriginEventSource {
         'unavailable',
         'customPricing'
       )
+      data.valid = true
+      // TODO: Investigate why some IPFS data has unitsTotal set to -1, eg #1-000-266
+      if (data.unitsTotal < 0) {
+        data.unitsTotal = 1
+      }
     } catch (e) {
       console.log(`Error retrieving IPFS data for ${ipfsHash}`)
-      return null
+      data = {
+        ...data,
+        valid: false,
+        validationError: 'No IPFS data'
+      }
     }
 
     // If a blockNumber has been specified, override certain fields with the
@@ -125,7 +131,11 @@ class OriginEventSource {
         }
       } catch (e) {
         console.log(`Error retrieving old IPFS data for ${ipfsHash}`)
-        return null
+        data = {
+          ...data,
+          valid: false,
+          validationError: 'No IPFS data'
+        }
       }
     }
 
@@ -158,7 +168,9 @@ class OriginEventSource {
       ...data,
       __typename:
         data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
-      id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
+      id: `${networkId}-000-${listingId}${
+        blockNumber ? `-${blockNumber}` : ''
+      }`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
       arbitrator: listing.depositManager
@@ -245,6 +257,9 @@ class OriginEventSource {
     commissionAvailable = !commissionAvailable.isNeg()
       ? commissionAvailable.toString()
       : '0'
+    if (listing.status === 'active' && unitsAvailable <= 0) {
+      listing.status = 'sold'
+    }
     return Object.assign({}, listing, {
       allOffers,
       booked,
@@ -309,7 +324,7 @@ class OriginEventSource {
     const networkId = await this.getNetworkId()
 
     const offerObj = {
-      id: `${networkId}-0-${listingId}-${offerId}`,
+      id: `${networkId}-000-${listingId}-${offerId}`,
       listingId: String(listing.id),
       offerId: String(offerId),
       createdBlock,
@@ -401,7 +416,7 @@ class OriginEventSource {
   async getReview(listingId, offerId, party, ipfsHash, event) {
     const data = await get(this.ipfsGateway, ipfsHash)
     const networkId = await this.getNetworkId()
-    const offerIdExp = `${networkId}-0-${listingId}-${offerId}`
+    const offerIdExp = `${networkId}-000-${listingId}-${offerId}`
     const listing = await this.getListing(listingId, event.blockNumber)
     return {
       id: offerIdExp,

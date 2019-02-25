@@ -105,6 +105,7 @@ const config = {
       ORIGIN_LINKING: null,
       LINKER_HOST: 'localhost',
       DOCKER: false,
+      ENABLE_GROWTH: false,
       IPFS_SWARM: ''
     })
   ],
@@ -144,6 +145,12 @@ if (isProduction) {
       inject: false,
       filename: 'kovan.html',
       network: 'kovanTst'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'rinkeby.html',
+      network: 'rinkeby'
     })
   )
   config.resolve.alias = {
