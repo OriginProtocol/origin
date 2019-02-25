@@ -74,7 +74,7 @@ const resolvers = {
         countryName: locationInfo.countryName,
         countryCode: locationInfo.countryCode
       }
-    },
+    }
   },
   Mutation: {
     async invite() {
