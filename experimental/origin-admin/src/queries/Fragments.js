@@ -20,7 +20,7 @@ export default {
   },
   Listing: {
     basic: gql`
-      fragment basicListingFields on ListingResult {
+      fragment basicListingFields on Listing {
         id
         status
         totalEvents
@@ -38,6 +38,7 @@ export default {
 
         category
         categoryStr
+        subCategory
         title
         description
         currencyId
@@ -49,15 +50,24 @@ export default {
         }
         media {
           url
+          urlExpanded
           contentType
         }
         commission
         commissionPerUnit
-
         ... on UnitListing {
           unitsTotal
           unitsAvailable
           unitsSold
+        }
+        ... on FractionalListing {
+          weekendPrice {
+            amount
+            currency
+          }
+          booked
+          customPricing
+          unavailable
         }
       }
     `
