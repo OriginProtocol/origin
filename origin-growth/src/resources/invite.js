@@ -48,6 +48,14 @@ class Invite {
   static async _decorate(reward, status) {
     const referee = reward.refereeEthAddress
 
+    const identity = await db2.Identity.findOne({
+      where: { ethAddress: referee }
+    })
+    if (!identity) {
+
+      return { firstName: '', lastName: '' }
+    }
+
     return {
       status,
       walletAddress: referee,
