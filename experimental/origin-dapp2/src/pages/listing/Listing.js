@@ -24,7 +24,7 @@ class Listing extends Component {
         <PageTitle>Listing {listingId}</PageTitle>
         <Query query={query} variables={vars}>
           {({ networkStatus, error, data, refetch }) => {
-            if (networkStatus === 1) {
+            if (networkStatus <= 2) {
               return <LoadingSpinner />
             } else if (error) {
               return <QueryError error={error} query={query} vars={vars} />
@@ -35,7 +35,10 @@ class Listing extends Component {
             const listing = data.marketplace.listing
             if (!listing) {
               return <div>Listing not found</div>
+            } else if (!listing.valid) {
+              return <div>Listing invalid</div>
             }
+
             const from = get(data, 'web3.metaMaskAccount.id')
 
             return (

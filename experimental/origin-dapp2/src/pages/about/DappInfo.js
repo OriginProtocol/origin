@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Query } from 'react-apollo'
 import configQuery from 'queries/Config'
 import contractsQuery from 'queries/AllContracts'
 import PageTitle from 'components/PageTitle'
+import growthEligibilityQuery from 'queries/GrowthEligibility'
 
 const DAPP_VERSION = require('../../../package.json').version
 
@@ -52,7 +53,35 @@ const DappInfo = () => (
       <section className="col-lg-6">
         <table className="config-table">
           {sectionThead({ title: 'DApp' })}
-          <tbody>{dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}</tbody>
+          <tbody>
+            {dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}
+            <Query query={growthEligibilityQuery}>
+              {({ networkStatus, error, loading, data }) => {
+                if (networkStatus === 1 || loading) {
+                  return dataTr({
+                    key: 'Detected country',
+                    value: 'Loading...'
+                  })
+                } else if (error) {
+                  return dataTr({
+                    key: 'Detected country',
+                    value: 'Error fetching country'
+                  })
+                }
+
+                const { countryName, eligibility } = data.isEligible
+                return (
+                  <Fragment>
+                    {dataTr({ key: 'Detected country', value: countryName })}
+                    {dataTr({
+                      key: 'Growth eligibility: ',
+                      value: eligibility
+                    })}
+                  </Fragment>
+                )
+              }}
+            </Query>
+          </tbody>
         </table>
 
         <Query query={configQuery} notifyOnNetworkStatusChange={true}>

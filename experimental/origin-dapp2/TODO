@@ -9,7 +9,9 @@
 - Check identity + attestations
 - Check messaging
 
-- Move 'enable messaging' on AboutParty to modal
+- Hide sold listings
+- Styling for listing error / unavailable
+- Scroll when lots of pics? http://localhost:3000/#/listings/1-000-85
 
 # Messaging
 

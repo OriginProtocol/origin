@@ -21,6 +21,8 @@ const ListingInterface = `
   featured: Boolean
   depositAvailable: String
   type: String
+  valid: Boolean
+  validationError: String
 
   # IPFS
   title: String

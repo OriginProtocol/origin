@@ -86,6 +86,7 @@ steps:
           -t gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA} \
           --build-arg DEPLOY_TAG=${SHORT_SHA} \
           --build-arg ENVKEY=$${_ENVKEY} \
+          --build-arg NAMESPACE=$(cat .namespace)
           .
 
   # Push the container image
