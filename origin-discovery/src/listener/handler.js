@@ -160,7 +160,11 @@ async function handleLog (log, rule, contractVersion, context) {
     logger.info(`Google Cloud Pub/Sub publish to ${context.config.gcloudPubsubTopic}`)
     try {
       await withRetrys(async () => {
-        return publishToGcloudPubsub(context.config.gcloudPubsubTopic, output)
+        return publishToGcloudPubsub(
+          context.config.gcloudProjectId,
+          context.config.gcloudPubsubTopic,
+          output
+        )
       }, false)
     } catch (e) {
       logger.error(`Skipping Google Cloud Pub/Sub for ${logDetails}`)

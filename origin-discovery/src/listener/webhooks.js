@@ -134,12 +134,14 @@ async function postToWebhook(urlString, data, contentType='application/json') {
 /**
  * Sends a blob of data to a Google Cloud pubsub topic.
  */
-async function publishToGcloudPubsub(topic, data) {
+async function publishToGcloudPubsub(projectId, topic, data) {
   const pubsub = new PubSub()
+
+  console.log(topic)
 
   return await pubsub
     .topic(topic)
-    .publish(JSON.stringify(data))
+    .publish(Buffer.from(JSON.stringify(data)))
 }
 
 module.exports = {

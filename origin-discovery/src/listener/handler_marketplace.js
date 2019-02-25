@@ -349,6 +349,10 @@ class MarketplaceEventHandler {
   emailWebhookEnabled() {
     return false
   }
+
+  gcloudPubsubEnabled() {
+    return this.config.marketplace
+  }
 }
 
 class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {

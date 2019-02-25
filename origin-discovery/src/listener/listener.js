@@ -281,6 +281,8 @@ const config = {
   elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
   // Google Cloud pub/sub topic
   gcloudPubsubTopic: args['--gcloud-pubsub-topic'] || (process.env.GCLOUD_PUBSUB_TOPIC),
+  // Google Cloud project id for pub/sub
+  gcloudProjectId: args['--gcloud-project-id'] || (process.env.GCLOUD_PROJECT_ID),
   // Index marketplace events.
   marketplace: args['--marketplace'] || (process.env.INDEX_MARKETPLACE === 'true'),
   // Index identity events.
