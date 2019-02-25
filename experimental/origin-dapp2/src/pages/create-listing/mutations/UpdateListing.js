@@ -93,7 +93,9 @@ class UpdateListing extends Component {
                   await this.props.refetch()
                 }
                 const { listingID } = event.returnValues
-                this.setState({ redirect: `/listings/${netId}-0-${listingID}` })
+                this.setState({
+                  redirect: `/listings/${netId}-000-${listingID}`
+                })
               }}
               children={this.state.loading ? 'Loading' : 'View Listing'}
             />

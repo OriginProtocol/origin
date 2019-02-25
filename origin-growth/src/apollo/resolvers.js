@@ -3,6 +3,7 @@ const { GraphQLDateTime } = require('graphql-iso-date')
 const db = require('./db')
 const { Invite } = require('../resources/invite')
 
+
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
   /* TODO:
@@ -22,7 +23,10 @@ const resolvers = {
       return null
     },
     async invites(root, args) {
-      return Invite.getAll(args.walletAddress, args.campaignId)
+      return Invite.getInvitesStatus(args.walletAddress, args.campaignId)
+    },
+    async inviteInfo(root, args) {
+      return await Invite.getReferrerInfo(args.code)
     }
   },
   Mutation: {

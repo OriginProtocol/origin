@@ -1,3 +1,16 @@
+- Enable notifications after create listing
+- Enable messaging before create listing
+- Ready to release funds warning modal on finalize offer
+- 'Sale reviewed' step
+  Next Step: Leave a review of the buyer
+  Leaving a review lets other sellers know about your experience with this buyer.
+
+- Check fractional listing
+- Check identity + attestations
+- Check messaging
+
+- Move 'enable messaging' on AboutParty to modal
+
 # Messaging
 
 - Dropdown

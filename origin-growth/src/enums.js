@@ -31,7 +31,8 @@ const GrowthEventTypes = new Enum(
   'TwitterAttestationPublished',
   'PhoneAttestationPublished',
   'ListingCreated',
-  'ListingPurchased'
+  'ListingPurchased', // Buyer side event.
+  'ListingSold' // Seller side event.
 )
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')

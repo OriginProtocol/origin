@@ -1,6 +1,10 @@
 const db = require('../models')
-const { Campaign } = require('./campaign')
+const db2 = require('origin-discovery/src/models')
+const logger = require('../logger')
+
+const { GrowthCampaign } = require('./campaign')
 const { Rule } = require('../rules/rules')
+
 
 class Invite {
   // Returns a list of pending rewards:
@@ -9,7 +13,7 @@ class Invite {
   //  - filter out invites completed during prior campaign
   static async _getPendingRewards(ethAddress, completedInvites, rewardValue) {
     // Load all invites.
-    const invites = db.GrowthInvite.findAll({
+    const invites = db.Invite.findAll({
       where: { referrerEthAddress: ethAddress }
     })
     const allReferees = invites.map(invite => invite.referrerEthAddress)
@@ -20,7 +24,7 @@ class Invite {
     })
 
     // Load prior campaigns and filter out referrals completed back then.
-    const pastCampaigns = Campaign.getPast(ethAddress)
+    const pastCampaigns = GrowthCampaign.getPast(ethAddress)
     for (const campaign of pastCampaigns) {
       // TODO(franck): for a campaign for which rewards have been distributed,
       // it could be faster to load the data from the growth_reward table
@@ -54,7 +58,7 @@ class Invite {
 
   // Returns pending and completed invites for a campaign.
   //
-  static async getAll(ethAddress, campaignId) {
+  static async getInvitesStatus(ethAddress, campaignId) {
     // Load the campaign.
     const campaign = db.GrowthCampaign.findOne({ where: { id: campaignId } })
     if (!campaign) {
@@ -112,6 +116,37 @@ class Invite {
       }
     }
   }
+
+  // Returns referrer's information based on an invite code.
+  static async getReferrerInfo(code) {
+    // Lookup the code.
+    const inviteCode = await db.InviteCode.findOne({ where: { code } })
+    if (!inviteCode) {
+      throw new Error('Invalid invite code')
+    }
+    const referrer = inviteCode.ethAddress
+
+    // Load the referrer's identity.
+    // TODO(franck): Once our data model and GraphQL services interfaces are
+    // stable, we should consider:
+    //  a. fetching identity by making a call to the identity graphql endpoint.
+    //  b. putting all the identity code in a separate origin-identity package.
+    const identity = await db2.Identity.findOne({
+      where: { ethAddress: referrer }
+    })
+    if (!identity) {
+      // This should never happen since before being allowed to send any
+      // referral invitation, a referrer must publish their profile.
+      logger.error(`Failed loading identity for referrer ${referrer}`)
+      return { firstName: '', lastName: '' }
+    }
+
+    return {
+      firstName: identity.firstName,
+      lastName: identity.lastName
+    }
+  }
 }
+
 
 module.exports = { Invite }

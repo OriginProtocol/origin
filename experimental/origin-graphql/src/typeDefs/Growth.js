@@ -44,6 +44,11 @@ module.exports =
     reward: Price
   }
 
+  type InviteInfo {
+    firstName: String
+    lastName: String
+  }
+
   interface GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
@@ -124,6 +129,7 @@ module.exports =
     campaigns(first: Int, after: String): GrowthCampaignConnection
     campaign(id: String): GrowthCampaign
     invites(walletAddress: ID!, campaignId: Int!): ReferralAction
+    inviteInfo(code: String): InviteInfo
   }
 
   type Mutation {

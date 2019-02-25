@@ -90,13 +90,13 @@ describe('Marketplace', function() {
     it('should retrieve listing data that matches the provided input', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-0' }
+        variables: { id: '999-000-0' }
       })
 
       const listing = get(res, 'data.marketplace.listing')
       assert.ok(listing)
 
-      assert.strictEqual(listing.id, '999-0-0')
+      assert.strictEqual(listing.id, '999-000-0')
       assert.strictEqual(listing.deposit, listingData.deposit)
       assert.strictEqual(listing.arbitrator.id, listingData.depositManager)
       assert.strictEqual(listing.seller.id, listingData.from)
@@ -124,7 +124,7 @@ describe('Marketplace', function() {
 
     it('should retrieve the listing as of a specfic block', async function() {
       const blockNumber = contracts.marketplace.eventCache.getBlockNumber()
-      const listingId = `999-0-0-${blockNumber}`
+      const listingId = `999-000-0-${blockNumber}`
       const res = await client.query({
         query: queries.GetListing,
         variables: { id: listingId }
@@ -139,7 +139,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.MakeOffer,
         {
-          listingID: '999-0-0',
+          listingID: '999-000-0',
           from: Buyer,
           finalizes: 123,
           affiliate: ZeroAddress,
@@ -154,7 +154,7 @@ describe('Marketplace', function() {
     })
 
     it('should detect that the offer is invalid', async function() {
-      const offer = await getOffer('999-0-0', 0, false)
+      const offer = await getOffer('999-000-0', 0, false)
       assert(!offer.valid)
       assert.strictEqual(
         offer.validationError,
@@ -166,7 +166,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.MakeOffer,
         {
-          listingID: '999-0-0',
+          listingID: '999-000-0',
           from: Buyer,
           finalizes: 123,
           affiliate: ZeroAddress,
@@ -184,7 +184,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.AddData,
         {
-          offerID: '999-0-0-1',
+          offerID: '999-000-0-1',
           from: Seller,
           data: 'Testing'
         },
@@ -197,7 +197,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.AcceptOffer,
         {
-          offerID: '999-0-0-1',
+          offerID: '999-000-0-1',
           from: Seller
         },
         true
@@ -209,7 +209,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.FinalizeOffer,
         {
-          offerID: '999-0-0-1',
+          offerID: '999-000-0-1',
           from: Buyer
         },
         true
@@ -259,7 +259,7 @@ describe('Marketplace', function() {
     it('should retrieve listing data that matches the provided input', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-1' }
+        variables: { id: '999-000-1' }
       })
 
       const listing = get(res, 'data.marketplace.listing')
@@ -267,7 +267,7 @@ describe('Marketplace', function() {
 
       const web3 = contracts.web3
 
-      assert.strictEqual(listing.id, '999-0-1')
+      assert.strictEqual(listing.id, '999-000-1')
       assert.strictEqual(
         listing.deposit,
         web3.utils.toWei(listingData.deposit, 'ether')
@@ -299,11 +299,11 @@ describe('Marketplace', function() {
     it('should retrieve the listing', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-1' }
+        variables: { id: '999-000-1' }
       })
 
       const id = get(res, 'data.marketplace.listing.id')
-      assert.strictEqual(id, '999-0-1')
+      assert.strictEqual(id, '999-000-1')
       // TODO: verify the other listing fields
     })
 
@@ -311,7 +311,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.MakeOffer,
         {
-          listingID: '999-0-1',
+          listingID: '999-000-1',
           from: Buyer,
           finalizes: 123,
           affiliate: Affiliate,
@@ -329,7 +329,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.AcceptOffer,
         {
-          offerID: '999-0-1-0',
+          offerID: '999-000-1-0',
           from: Seller
         },
         true
@@ -339,7 +339,7 @@ describe('Marketplace', function() {
 
     it('should finalize an offer', async function() {
       await mutate(mutations.FinalizeOffer, {
-        offerID: '999-0-1-0',
+        offerID: '999-000-1-0',
         from: Buyer
       })
     })
@@ -387,7 +387,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.MakeOffer,
         {
-          listingID: '999-0-2',
+          listingID: '999-000-2',
           from: Buyer,
           finalizes: 123,
           affiliate: Affiliate,
@@ -400,7 +400,7 @@ describe('Marketplace', function() {
       )
       assert(events.OfferCreated)
 
-      const offer = await getOffer('999-0-2', 0)
+      const offer = await getOffer('999-000-2', 0)
       assert(offer.status === 1)
       assert(offer.commission === '2000000000000000000')
     })
@@ -409,7 +409,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.MakeOffer,
         {
-          listingID: '999-0-2',
+          listingID: '999-000-2',
           from: Buyer,
           finalizes: 123,
           affiliate: Affiliate,
@@ -422,7 +422,7 @@ describe('Marketplace', function() {
       )
       assert(events.OfferCreated)
 
-      const offer = await getOffer('999-0-2', 1)
+      const offer = await getOffer('999-000-2', 1)
       assert.strictEqual(offer.status, 1)
       assert.strictEqual(offer.commission, '1000000000000000000')
     })
@@ -432,21 +432,21 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.AcceptOffer,
         {
-          offerID: '999-0-2-1',
+          offerID: '999-000-2-1',
           from: Seller
         },
         true
       )
       assert(events.OfferAccepted)
 
-      const offer = await getOffer('999-0-2', 1)
+      const offer = await getOffer('999-000-2', 1)
       assert.strictEqual(offer.status, 2)
     })
 
     it('should count units sold and available', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-2' }
+        variables: { id: '999-000-2' }
       })
 
       const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
@@ -459,7 +459,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.MakeOffer,
         {
-          listingID: '999-0-2',
+          listingID: '999-000-2',
           from: Buyer,
           finalizes: 123,
           affiliate: Affiliate,
@@ -472,7 +472,7 @@ describe('Marketplace', function() {
       )
       assert(events.OfferCreated)
 
-      const offer = await getOffer('999-0-2', 2)
+      const offer = await getOffer('999-000-2', 2)
       assert.strictEqual(offer.status, 1)
       assert.strictEqual(offer.commission, '0')
     })
@@ -480,7 +480,7 @@ describe('Marketplace', function() {
     it('should count units sold and available', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-2' }
+        variables: { id: '999-000-2' }
       })
 
       const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
@@ -493,7 +493,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.WithdrawOffer,
         {
-          offerID: '999-0-2-0',
+          offerID: '999-000-2-0',
           from: Buyer
         },
         true
@@ -504,7 +504,7 @@ describe('Marketplace', function() {
     it('should not count withdrawn offer as units sold', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-2' }
+        variables: { id: '999-000-2' }
       })
 
       const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
@@ -520,7 +520,7 @@ describe('Marketplace', function() {
         mutate(
           mutations.UpdateListing,
           {
-            listingID: '999-0-2',
+            listingID: '999-000-2',
             additionalDeposit: '0',
             from: Seller,
             data: updatedListingData.data,
@@ -540,7 +540,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.WithdrawOffer,
         {
-          offerID: '999-0-2-2',
+          offerID: '999-000-2-2',
           from: Seller
         },
         true
@@ -551,7 +551,7 @@ describe('Marketplace', function() {
     it('should not count declined offer as units sold', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-2' }
+        variables: { id: '999-000-2' }
       })
 
       const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
@@ -565,7 +565,7 @@ describe('Marketplace', function() {
         const events = await mutate(
           mutations.FinalizeOffer,
           {
-            offerID: '999-0-2-1',
+            offerID: '999-000-2-1',
             from: Buyer
           },
           true
@@ -577,7 +577,7 @@ describe('Marketplace', function() {
     it('should count units sold and available', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-2' }
+        variables: { id: '999-000-2' }
       })
 
       const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
@@ -592,7 +592,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.UpdateListing,
         {
-          listingID: '999-0-2',
+          listingID: '999-000-2',
           additionalDeposit: '0',
           from: Seller,
           data: updatedListingData.data,
@@ -606,7 +606,7 @@ describe('Marketplace', function() {
     it('should count units sold and available', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-2' }
+        variables: { id: '999-000-2' }
       })
 
       const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
@@ -621,7 +621,7 @@ describe('Marketplace', function() {
       const events = await mutate(
         mutations.UpdateListing,
         {
-          listingID: '999-0-2',
+          listingID: '999-000-2',
           additionalDeposit: '0',
           from: Seller,
           data: updatedListingData.data,
@@ -635,7 +635,7 @@ describe('Marketplace', function() {
     it('should count units sold and available', async function() {
       const res = await client.query({
         query: queries.GetListing,
-        variables: { id: '999-0-2' }
+        variables: { id: '999-000-2' }
       })
 
       const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
@@ -649,7 +649,7 @@ describe('Marketplace', function() {
         mutate(
           mutations.MakeOffer,
           {
-            listingID: '999-0-2',
+            listingID: '999-000-2',
             from: Buyer,
             finalizes: 123,
             affiliate: Affiliate,
@@ -743,7 +743,7 @@ describe('Marketplace', function() {
       )
       assert(listingEvents.ListingCreated)
       listingIdx = listingEvents.ListingCreated.listingID
-      listingId = `999-0-${listingIdx}`
+      listingId = `999-000-${listingIdx}`
 
       // Create Offer
       const offerData = {
@@ -759,7 +759,7 @@ describe('Marketplace', function() {
       const offerEvents = await mutate(mutations.MakeOffer, offerData, true)
       assert(offerEvents.OfferCreated)
       offerIdx = offerEvents.OfferCreated.offerID
-      offerId = `999-0-${listingIdx}-${offerIdx}`
+      offerId = `999-000-${listingIdx}-${offerIdx}`
 
       // Accept Offer
       const acceptEvents = await mutate(
