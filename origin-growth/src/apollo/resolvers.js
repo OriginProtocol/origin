@@ -2,6 +2,8 @@
 const { GraphQLDateTime } = require('graphql-iso-date')
 const { Fetcher } = require('../rules/rules')
 const { getLocationInfo } = require('../util/locationInfo')
+const db = require('./db')
+const { GrowthInvite } = require('../resources/invite')
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -65,6 +67,9 @@ const resolvers = {
         countryName: locationInfo.countryName,
         countryCode: locationInfo.countryCode
       }
+    },
+    async inviteInfo(root, args) {
+      return await GrowthInvite.getInfo(args.code)
     }
   },
   Mutation: {

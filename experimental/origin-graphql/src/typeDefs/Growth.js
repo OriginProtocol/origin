@@ -57,6 +57,11 @@ module.exports =
     reward: Price
   }
 
+  type InviteInfo {
+    firstName: String
+    lastName: String
+  }
+
   interface GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
@@ -137,19 +142,13 @@ module.exports =
     countryCode: String
   }
 
-  type InviteInformation {
-    inviteToken: String!
-    walletAddress: String!
-    userName: String!
-  }
-
   type Query {
     # first property specifies the number of items to return
     # after is the cursor
     campaigns(first: Int, after: String, walletAddress: ID!): GrowthCampaignConnection
     campaign(id: String, walletAddress: ID!): GrowthCampaign
     isEligible: EligibilityInfo
-    InviteInformation(inviteCode: String!): InviteInformation
+    inviteInfo(code: String): InviteInfo
   }
 
   type Mutation {

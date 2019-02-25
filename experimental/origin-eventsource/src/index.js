@@ -39,7 +39,9 @@ class OriginEventSource {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
       return Object.assign({}, this.listingCache[cacheKey], {
-        id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`
+        id: `${networkId}-000-${listingId}${
+          blockNumber ? `-${blockNumber}` : ''
+        }`
       })
     }
 
@@ -158,7 +160,9 @@ class OriginEventSource {
       ...data,
       __typename:
         data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
-      id: `${networkId}-0-${listingId}${blockNumber ? `-${blockNumber}` : ''}`,
+      id: `${networkId}-000-${listingId}${
+        blockNumber ? `-${blockNumber}` : ''
+      }`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
       deposit: listing.deposit,
       arbitrator: listing.depositManager
@@ -309,7 +313,7 @@ class OriginEventSource {
     const networkId = await this.getNetworkId()
 
     const offerObj = {
-      id: `${networkId}-0-${listingId}-${offerId}`,
+      id: `${networkId}-000-${listingId}-${offerId}`,
       listingId: String(listing.id),
       offerId: String(offerId),
       createdBlock,
@@ -401,7 +405,7 @@ class OriginEventSource {
   async getReview(listingId, offerId, party, ipfsHash, event) {
     const data = await get(this.ipfsGateway, ipfsHash)
     const networkId = await this.getNetworkId()
-    const offerIdExp = `${networkId}-0-${listingId}-${offerId}`
+    const offerIdExp = `${networkId}-000-${listingId}-${offerId}`
     const listing = await this.getListing(listingId, event.blockNumber)
     return {
       id: offerIdExp,

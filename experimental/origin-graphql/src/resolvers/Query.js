@@ -42,8 +42,9 @@ export default {
         marketplaceExists[address] = true
         return contracts.marketplace
       }
+      console.log(`Could not find marketplace at ${address}`)
     } catch (e) {
-      /* Ignore */
+      console.log(`Error finding marketplace`, e)
     }
   },
   contracts: () => {
