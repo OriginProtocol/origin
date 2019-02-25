@@ -4,7 +4,7 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 const AccountTokenBalance = gql`
-  query AccountTokenBalance($account: String!, $token: String!) {
+  query AccountTokenBalance($account: ID!, $token: String!) {
     web3 {
       account(id: $account) {
         id

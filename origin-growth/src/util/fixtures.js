@@ -24,10 +24,32 @@ const rule = {
     0: {
       rules: [
         {
-          id: 'PreRequisite',
+          id: 'ProfilePublished',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'ProfilePublished',
+            reward: null,
+            nextLevelCondition: false,
+            visible: true
+          }
+        },
+        {
+          id: 'EmailAttestation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'EmailAttestationPublished',
+            reward: null,
+            visible: true,
+            limit: 1,
+            nextLevelCondition: false
+          }
+        },
+        {
+          id: 'BothRules',
           class: 'MultiEvents',
           config: {
             eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
+            visible: false,
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true
@@ -46,6 +68,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -59,6 +82,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -72,6 +96,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -85,6 +110,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -99,6 +125,7 @@ const rule = {
               'AirbnbAttestationPublished',
               'TwitterAttestationPublished'
             ],
+            visible: false,
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true
@@ -118,6 +145,7 @@ const rule = {
               currency: 'OGN'
             },
             limit: 100,
+            visible: true,
             nextLevelCondition: false
           }
         },
@@ -130,6 +158,7 @@ const rule = {
               amount: tokenNaturalUnits(5),
               currency: 'OGN'
             },
+            visible: true,
             limit: 10,
             nextLevelCondition: false
           }
@@ -143,6 +172,7 @@ const rule = {
               amount: tokenNaturalUnits(5),
               currency: 'OGN'
             },
+            visible: true,
             limit: 10,
             nextLevelCondition: false
           }
