@@ -36,7 +36,6 @@ const Configs = {
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
-    ipfsEventCache: 'QmbNYwVLSLmaKmuA1R2v7VU9w1z3jxJVbTJNtstRU4TzPr',
     discovery: 'https://discovery.originprotocol.com',
     growth: 'http://growth.originprotocol.com',
     bridge: 'https://bridge.originprotocol.com',
@@ -47,6 +46,7 @@ const Configs = {
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
     V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
     V00_Marketplace_Epoch: '6436157',
+    ipfsEventCache: 'QmSjXV4HRo39USnpzbE9cK5Qs989fAEsnv165bZxoJDWPg',
     tokens: [
       {
         id: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
@@ -112,9 +112,11 @@ const Configs = {
     bridge: 'https://bridge.staging.originprotocol.com',
     OriginToken: '0xb0efa5A1f199B7562Dd4f34758497594797C05E9',
     V00_Marketplace: '0xaE145bE14b9369fE5DF917B58daDe2589ddB48C9',
+    ipfsEventCache: 'QmaXMXUws4mq6MQ114Pjqv25hhpYdS6P6cD1z4x5R2ZAja',
     V00_Marketplace_Epoch: '10329348',
     IdentityEvents: '0x967DB2Ed91000efA8d5Ce860d5A8B34a6BCfb6E2',
     IdentityEvents_Epoch: '10339753',
+    IdentityEvents_EventCache: 'QmQ5vJa5oFy9rj3E9aEtVb637G3xiJLnHFyAuwvwfj6XTN',
     affiliate: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C',
     arbitrator: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C'
   },
