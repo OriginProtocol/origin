@@ -45,7 +45,12 @@ const eventTypeToActionType = eventType => {
  *
  * @returns {Object} - formatted object
  */
-const multiEventRuleApolloObject = (rule, ethAddress, events, currentUserLevel) => {
+const multiEventRuleApolloObject = (
+  rule,
+  ethAddress,
+  events,
+  currentUserLevel
+) => {
   const rewards = rule.getRewards(ethAddress, events)
 
   return {
@@ -62,7 +67,12 @@ const multiEventRuleApolloObject = (rule, ethAddress, events, currentUserLevel) 
  *
  * @returns {Object} - formatted object
  */
-const singleEventRuleApolloObject = (rule, ethAddress, events, currentUserLevel) => {
+const singleEventRuleApolloObject = (
+  rule,
+  ethAddress,
+  events,
+  currentUserLevel
+) => {
   const rewards = rule.getRewards(ethAddress, events)
   const objectToReturn = {
     type: eventTypeToActionType(rule.config.eventType),
@@ -103,9 +113,19 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
       .filter(rule => rule.isVisible())
       .map(rule => {
         if (rule.constructor.name === 'SingleEventRule')
-          return singleEventRuleApolloObject(rule, ethAddress, events, currentLevel)
+          return singleEventRuleApolloObject(
+            rule,
+            ethAddress,
+            events,
+            currentLevel
+          )
         else if (rule.constructor.name === 'MultiEventsRule')
-          return multiEventRuleApolloObject(rule, ethAddress, events, currentLevel)
+          return multiEventRuleApolloObject(
+            rule,
+            ethAddress,
+            events,
+            currentLevel
+          )
       }),
     rewardEarned: sumUpRewards(
       levels.flatMap(level => level.getRewards(ethAddress, events))

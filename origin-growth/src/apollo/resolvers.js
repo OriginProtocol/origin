@@ -29,7 +29,8 @@ const resolvers = {
       return {
         totalCount: campaigns.length,
         nodes: campaigns.map(
-          async campaign => await campaignToApolloObject(campaign, args.walletAddress)
+          async campaign =>
+            await campaignToApolloObject(campaign, args.walletAddress)
         ),
         pageInfo: {
           endCursor: 'TODO implement',
