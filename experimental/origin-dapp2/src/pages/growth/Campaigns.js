@@ -12,13 +12,16 @@ import { Link } from 'react-router-dom'
 import AccountTokenBalance from 'queries/TokenBalance'
 
 const GrowthEnum = require('Growth$FbtEnum')
+const CategoriesEnum = require('Categories$FbtEnum')
 
-const GrowthTranslation = ({ growth }) => {
-  console.log("DEBUG,", stringKey, GrowthEnum)
-  
+const GrowthTranslation = ({ stringKey }) => {
+  console.log("DEBUG", CategoriesEnum)
+  console.log("DEBUG1", GrowthEnum)
+  //<fbt:enum enum-range={CategoriesEnum} value={'schema.activities'} />
+  //<fbt:enum enum-range={GrowthEnum} value={'growth.apr2019.name'} />
   return (
     <fbt desc="growth">
-      <fbt:enum enum-range={GrowthEnum} value={growth} />
+      <fbt:enum enum-range={GrowthEnum} value={stringKey} />
     </fbt>
   )}
 
@@ -53,8 +56,6 @@ function CampaignNavItem(props) {
         ) : (
           'Campaign'
         )}
-
-        }
         </div>
         {selected && <div className="select-bar" />}
       </div>
