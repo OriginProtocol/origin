@@ -53,6 +53,7 @@ describe('Listener Handlers', () => {
       this.webhookEnabled = sinon.fake.returns(false)
       this.discordWebhookEnabled = sinon.fake.returns(false)
       this.emailWebhookEnabled = sinon.fake.returns(false)
+      this.gcloudPubsubEnabled = sinon.fake.returns(false)
     }
   }
 

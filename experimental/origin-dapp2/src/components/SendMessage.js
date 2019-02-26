@@ -33,11 +33,7 @@ class SendMessage extends Component {
           } else if (loading) {
             return <div>Checking if messaging enabled...</div>
           } else if (!data || !data.messaging) {
-            return <p className="p-3">Cannot query messaging</p>
-          }
-
-          if (!data.messaging.enabled) {
-            return <OnboardMessaging />
+            return null
           }
 
           return (
@@ -58,7 +54,13 @@ class SendMessage extends Component {
                   }
                   className="message-modal"
                 >
-                  {this.state.sent ? this.renderSent() : this.renderSend()}
+                  {!data.messaging.enabled ? (
+                    <OnboardMessaging />
+                  ) : this.state.sent ? (
+                    this.renderSent()
+                  ) : (
+                    this.renderSend()
+                  )}
                 </Modal>
               )}
             </>

@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   iconsContainer: {
     height: 51,
-    marginRight: '5%',
+    marginRight: 20,
     width: 51,
   },
   identification: {
@@ -91,6 +91,8 @@ const styles = StyleSheet.create({
   },
   muted: {
     color: '#3e5d77',
+    fontSize: 12,
+    fontWeight: '300',
   },
   vendor: {
     fontWeight: 'normal',

@@ -582,7 +582,7 @@ class Web3Provider extends Component {
       // update global state
       storeAccountAddress(current)
 
-      if (!messagingInitialized) {
+      if (current && !messagingInitialized) {
         // trigger messaging service
         origin.messaging.onAccount(current)
         // check after initializing messaging

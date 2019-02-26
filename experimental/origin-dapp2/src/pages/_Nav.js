@@ -12,21 +12,7 @@ import Messages from './nav/Messages'
 import Confirmations from './nav/Confirmations'
 import Mobile from './nav/Mobile'
 import Sell from './nav/Sell'
-
-const GetStarted = () => (
-  <ul className="navbar-nav ml-auto">
-    <li className="nav-item">
-      <a className="nav-link" href="#">
-        Get Started
-      </a>
-    </li>
-    <li className="nav-item">
-      <a className="nav-link" href="#">
-        Sell on Origin
-      </a>
-    </li>
-  </ul>
-)
+import GetStarted from './nav/GetStarted'
 
 class Nav extends Component {
   state = {}
