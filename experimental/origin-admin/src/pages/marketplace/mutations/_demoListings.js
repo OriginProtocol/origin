@@ -231,4 +231,40 @@ const ZincHouse = {
   ]
 }
 
-export default [HawaiiHouse, LakeHouse, ZincHouse, Car, TaylorSwiftTickets]
+const Spaceman = {
+  schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+  dappSchemaId:
+    'https://dapp.originprotocol.com/schemas/forSale-clothingAccessories_1.0.0.json',
+  listingType: 'unit',
+  category: 'schema.forSale',
+  subCategory: 'schema.clothingAccessories',
+  language: 'en-US',
+  title: 'Origin Spaceman Shirt',
+  description:
+    'The amazing Origin Spaceman shirt. Available exclusively on the Origin Marketplace. These shirts are 90% cotton and 10% polyester and 100% amazing.',
+  unitsTotal: 1,
+  price: {
+    currency: 'ETH',
+    amount: '0.12'
+  },
+  commission: {
+    currency: 'OGN',
+    amount: '10'
+  },
+  marketplacePublisher: '0x627306090abab3a6e1400e9345bc60c78a8bef57',
+  media: [
+    {
+      url: 'ipfs://QmdjjwsF7bbejYJ7CecAmMpGB9RMNtFN1Gbs79KmKSGdHD',
+      contentType: 'image/jpeg'
+    }
+  ]
+}
+
+export default [
+  HawaiiHouse,
+  LakeHouse,
+  ZincHouse,
+  Car,
+  TaylorSwiftTickets,
+  Spaceman
+]
