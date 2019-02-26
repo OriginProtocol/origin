@@ -79,7 +79,11 @@ class UpdateListing extends Component {
     const netId = get(this.props, 'web3.networkId')
 
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="ListingUpdated">
+      <WaitForTransaction
+        hash={this.state.waitFor}
+        event="ListingUpdated"
+        onClose={() => this.setState({ waitFor: null })}
+      >
         {({ event }) => (
           <div className="make-offer-modal">
             <div className="success-icon" />
@@ -94,7 +98,7 @@ class UpdateListing extends Component {
                 }
                 const { listingID } = event.returnValues
                 this.setState({
-                  redirect: `/listings/${netId}-000-${listingID}`
+                  redirect: `/listing/${netId}-000-${listingID}`
                 })
               }}
               children={this.state.loading ? 'Loading' : 'View Listing'}

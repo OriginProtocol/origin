@@ -74,7 +74,7 @@ class App extends Component {
         {shouldRenderNavbar && <Nav />}
         <main>
           <Switch>
-            <Route path="/listings/:listingID" component={Listing} />
+            <Route path="/listing/:listingID" component={Listing} />
             <Route path="/purchases/:offerId" component={Transaction} />
             <Route path="/my-purchases/:filter?" component={MyPurchases} />
             <Route path="/my-sales/:filter?" component={MySales} />

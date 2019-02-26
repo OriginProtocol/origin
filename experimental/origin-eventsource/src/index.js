@@ -78,9 +78,9 @@ class OriginEventSource {
 
     let data
     try {
-      data = await get(this.ipfsGateway, ipfsHash)
+      const rawData = await get(this.ipfsGateway, ipfsHash)
       data = pick(
-        data,
+        rawData,
         'valid',
         'listingType',
         'title',
@@ -100,9 +100,26 @@ class OriginEventSource {
         'customPricing'
       )
       data.valid = true
+
       // TODO: Investigate why some IPFS data has unitsTotal set to -1, eg #1-000-266
       if (data.unitsTotal < 0) {
         data.unitsTotal = 1
+      }
+
+      // TODO: Dapp1 fractional compat
+      if (rawData.availability) {
+        try {
+          const isWeekly = _get(rawData, 'availability.2.6.0') === 'x-price'
+          const weekdayPrice = _get(rawData, 'availability.2.6.3')
+          const isWeekend = _get(rawData, 'availability.3.6.0') === 'x-price'
+          const weekendPrice = _get(rawData, 'availability.3.6.3')
+          if (isWeekly && isWeekend) {
+            data.price = { amount: weekdayPrice, currency: 'ETH' }
+            data.weekendPrice = { amount: weekendPrice, currency: 'ETH' }
+          }
+        } catch (e) {
+          /* Ignore */
+        }
       }
     } catch (e) {
       console.log(`Error retrieving IPFS data for ${ipfsHash}`)

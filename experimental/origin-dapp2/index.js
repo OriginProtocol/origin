@@ -9,10 +9,13 @@ import services from 'origin-services'
 const HOST = process.env.HOST || 'localhost'
 const app = express()
 
-app.get('/', (req, res) => {
-  const html = fs.readFileSync(__dirname + '/public/dev.html').toString()
-  res.send(html.replace(/\{HOST\}/g, `http://${HOST}:8083/`))
+app.get('/:net(mainnet|rinkeby|kovan|docker)?', (req, res) => {
+  let html = fs.readFileSync(__dirname + '/public/dev.html').toString()
+  html = html.replace(/\{HOST\}/g, `http://${HOST}:8083/`)
+  html = html.replace(/\{NET\}/g, req.params.net || 'localhost')
+  res.send(html)
 })
+
 app.use(serveStatic('public'))
 
 async function start() {

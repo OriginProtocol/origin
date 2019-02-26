@@ -8,8 +8,9 @@ import Avatar from 'components/Avatar'
 import SendMessage from 'components/SendMessage'
 import Tooltip from 'components/Tooltip'
 import EthAddress from 'components/EthAddress'
+import QueryError from 'components/QueryError'
 
-import IdentityQuery from 'queries/Identity'
+import query from 'queries/Identity'
 
 class AboutParty extends Component {
   state = {}
@@ -22,9 +23,13 @@ class AboutParty extends Component {
 
     return (
       <div className="about-party">
-        <Query query={IdentityQuery} variables={{ id }}>
+        <Query query={query} variables={{ id }}>
           {({ data, loading, error }) => {
-            if (loading || error) return null
+            if (error) {
+              return <QueryError error={error} query={query} vars={{ id }} />
+            }
+            if (loading) return null
+
             const profile = get(data, 'web3.account.identity')
             if (!profile) {
               return null
