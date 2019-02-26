@@ -1,7 +1,12 @@
 const Sequelize = require('sequelize')
 
 const db = require('../models')
-const { GrowthEventTypes, GrowthEventStatuses } = require('../enums')
+const {
+  GrowthEventTypes,
+  GrowthEventStatuses,
+  GrowthCampaignStatuses,
+  GrowthActionStatus
+} = require('../enums')
 
 // System cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
@@ -123,6 +128,28 @@ class Campaign {
     }
     return rewards
   }
+
+  /**
+   * Returns campaign status
+   *
+   * @returns {Enum<GrowthCampaignStatuses>} - campaign status
+   */
+
+  getStatus() {
+    if (this.campaign.startDate > Date.now()) {
+      return GrowthCampaignStatuses.Pending
+    } else if (
+      this.campaign.startDate < Date.now() &&
+      this.campaign.endDate > Date.now()
+    ) {
+      //TODO: check if cap reached
+      return GrowthCampaignStatuses.Active
+    } else if (this.campaign.endDate < Date.now()) {
+      return GrowthCampaignStatuses.Completed
+    } else {
+      throw new Error(`Unexpected campaign id: ${this.campaign.id} status`)
+    }
+  }
 }
 
 class Level {
@@ -139,7 +166,7 @@ class Level {
   qualifyForNextLevel(ethAddress, events) {
     for (let i = 0; i < this.rules.length; i++) {
       const result = this.rules[i].qualifyForNextLevel(ethAddress, events)
-      if (result != null && result === false) {
+      if (result !== null && result === false) {
         return false
       }
     }
@@ -151,6 +178,7 @@ class Level {
     this.rules.forEach(rule => {
       rewards.push(...rule.getRewards(ethAddress, events))
     })
+
     return rewards
   }
 }
@@ -179,6 +207,9 @@ class BaseRule {
 
     if (this.config.reward && !this.config.limit) {
       throw new Error(`${this.str()}: missing limit`)
+    }
+    if (this.config.visible === undefined) {
+      throw new Error(`Missing 'visible' property`)
     }
     this.limit = Math.min(this.config.limit, MAX_NUM_REWARDS_PER_RULE)
 
@@ -227,7 +258,7 @@ class BaseRule {
     events
       .filter(event => {
         return (
-          event.ethAddress === ethAddress &&
+          event.ethAddress.toLowerCase() === ethAddress.toLowerCase() &&
           eventTypes.includes(event.type) &&
           (event.status === GrowthEventStatuses.Logged ||
             event.status === GrowthEventStatuses.Verified)
@@ -238,6 +269,7 @@ class BaseRule {
           ? tally[event.type] + 1
           : 1
       })
+
     return tally
   }
 
@@ -248,9 +280,35 @@ class BaseRule {
     }
 
     const numRewards = this._numRewards(ethAddress, events)
-    const rewards = Array(numRewards).fill(this.reward)
+    const rewards = Array(numRewards).fill(this.reward.value)
 
     return rewards
+  }
+
+  /**
+   * Rules that are not visible are required for backend logic. The visible ones
+   * are displayed in the UI
+   *
+   * @returns {boolean}
+   */
+  isVisible() {
+    return this.config.visible
+  }
+
+  /**
+   * Return status of this rule. One of: inactive, active, exhausted, completed
+   *
+   * @returns {Enum<GrowthActionStatus>}
+   */
+  getStatus(ethAddress, events, currentUserLevel) {
+    if (currentUserLevel < this.levelId) {
+      return GrowthActionStatus.Inactive
+    } else {
+      if (this.evaluate(ethAddress, events)) {
+        return GrowthActionStatus.Completed
+      }
+      return GrowthActionStatus.Active
+    }
   }
 }
 
@@ -293,6 +351,7 @@ class SingleEventRule extends BaseRule {
    */
   evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
+
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
   }
 }
@@ -376,6 +435,17 @@ class MultiEventsRule extends BaseRule {
   }
 }
 
+const Fetcher = {
+  getAllCampaigns: async () => {
+    const campaigns = await db.GrowthCampaign.findAll({})
+
+    return campaigns.map(
+      campaign => new Campaign(campaign, JSON.parse(campaign.rules))
+    )
+  }
+}
+
 module.exports = {
-  Campaign
+  Campaign,
+  Fetcher
 }

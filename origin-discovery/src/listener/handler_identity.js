@@ -125,7 +125,6 @@ class IdentityEventHandler {
       null,
       { blockInfo }
     )
-
   }
 
   /**
@@ -151,6 +150,64 @@ class IdentityEventHandler {
         { blockInfo }
       )
     }))
+  }
+
+  /**
+   * If the user signed up via a referral, links the referrer and referee
+   * by inserting a row in the growth_referral table.
+   * @param {UserModel} user - Origin-js user model object.
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _recordGrowthReferral(user) {
+    if (!user.metadata || !user.metadata.referrerCode) {
+      // Nothing to record, the user did not come from referral program.
+      return
+    }
+
+    const referee = user.address.toLowerCase()
+
+    // Lookup the invite code to get the referrer.
+    const code = await db.GrowthInviteCode.findOne({
+      where: { code: user.metadata.referrerCode }
+    })
+    if (!code) {
+      logger.error(`Invalid referral code present in identity of ${referee}`)
+      return
+    }
+    const referrer = code.ethAddress
+
+    // Check for any existing referral data for this referee.
+    const row = db.GrowthReferral.findOne({
+      where: {
+        referee_eth_address: referee
+      }
+    })
+    if (row) {
+      if (row.referrerEthAddress != referrer) {
+        // The referrer present in the referee's identity does not match
+        // with the referral data recorded in the DB.
+        // A corner case scenario this might happen is as follow:
+        //  - referee receives multiple invites.
+        //  - referee clicks on an invite, publishes their profile and
+        //    an entry is created in growth_referral table.
+        //  - referee wipes out their browser local storage or uses a different
+        //    browser and clicks on an invite link from a different referrer.
+        //  - referrer updates their profile which now contains
+        //    different invite code from another referrer.
+        logger.error(`Referee ${referee} already referred by ${row.referrerEthAddress}`)
+      }
+      // Referral was already recorded. It could be an identity update,
+      // or it's possible the listener is reprocessing data.
+      return
+    }
+
+    // Record the referee/referrer relationship.
+    await db.GrowthReferral.create({
+      referrer_eth_address: referrer,
+      referee_eth_address: referee
+    })
+    logger.info(`Recorded referral. Referrer: ${referrer} Referee: ${referee}`)
   }
 
   /**
@@ -189,6 +246,7 @@ class IdentityEventHandler {
     if (this.config.growth) {
       await this._recordGrowthProfileEvent(user, blockInfo)
       await this._recordGrowthAttestationEvents(user, blockInfo)
+      await this._recordGrowthReferral(user)
     }
 
     return { user }
@@ -207,6 +265,10 @@ class IdentityEventHandler {
   // Call the webhook to add the user's email to Origin's mailing list.
   emailWebhookEnabled() {
     return true
+  }
+
+  gcloudPubsubEnabled() {
+    return false
   }
 }
 

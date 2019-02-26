@@ -48,7 +48,7 @@ services:
       - ./experimental/origin-ipfs/:/app/experimental/origin-ipfs/
       - ./experimental/origin-messaging-client/:/app/experimental/origin-messaging-client/
       - ./experimental/origin-linker-client/:/app/experimental/origin-linker-client/
-      - ./experimental/origin-validator/src:/app/experimental/origin-validator/
+      - ./experimental/origin-validator:/app/experimental/origin-validator/
       - ./origin-discovery/:/app/origin-discovery/
       - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
       - ./origin-messaging/:/app/origin-messaging/
@@ -80,6 +80,7 @@ services:
     environment:
       - DEPLOY_CONTRACTS=true
       - DOCKER=true
+      - ENABLE_GROWTH=false
     command:
       # Waits for origin-messaging to start then uses a script to read the
       # origin-messaging IPFS peer id and export the IPFS_SWARM variable
@@ -180,6 +181,19 @@ services:
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       npm run migrate --prefix origin-notifications &&
       npm run start --prefix origin-notifications"
+
+  origin-growth:
+    container_name: origin-growth
+    image: origin-experimental
+    volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+    depends_on:
+      - postgres
+    ports:
+      - "4001:4001"
+    #command: sleep infinity
+    command: npm run start:growth --prefix origin-growth
 
   origin-bridge:
     container_name: origin-bridge

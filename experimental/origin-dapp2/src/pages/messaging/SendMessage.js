@@ -35,17 +35,18 @@ class SendMessage extends Component {
     this.state = { message: '', images: '' }
   }
 
-  componentDidMount() {
-    if (this.input) {
-      this.input.focus()
-    }
-  }
+  // TODO: Focusing an offscreen element causes page to jump
+  // componentDidMount() {
+  //   if (this.input) {
+  //     this.input.focus()
+  //   }
+  // }
 
-  componentDidUpdate(prevProps) {
-    if (this.input && this.props.to !== prevProps.to) {
-      this.input.focus()
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (this.input && this.props.to !== prevProps.to) {
+  //     this.input.focus()
+  //   }
+  // }
 
   handleClick() {
     this.fileInput.current.click()

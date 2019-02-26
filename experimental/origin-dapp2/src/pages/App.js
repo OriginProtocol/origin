@@ -23,6 +23,8 @@ import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
 import Settings from './settings/Settings'
 import DappInfo from './about/DappInfo'
+import GrowthCampaigns from './growth/Campaigns'
+import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 
@@ -64,12 +66,13 @@ class App extends Component {
 
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
-
+    const shouldRenderNavbar = this.props.location.pathname !== '/welcome'
+    const enableGrowth = process.env.ENABLE_GROWTH === 'true'
     return (
       <>
         <BetaBanner />
         <BetaModal />
-        <Nav />
+        {shouldRenderNavbar && <Nav />}
         <main>
           <Switch>
             <Route path="/listings/:listingID" component={Listing} />
@@ -85,6 +88,12 @@ class App extends Component {
             <Route path="/settings" component={Settings} />
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />
+            {enableGrowth && (
+              <Route path="/campaigns" component={GrowthCampaigns} />
+            )}
+            {enableGrowth && (
+              <Route path="/welcome" component={GrowthWelcome} />
+            )}
             <Route component={Listings} />
           </Switch>
         </main>
