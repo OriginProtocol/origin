@@ -9,6 +9,16 @@ const GitRevisionPlugin = require('git-revision-webpack-plugin')
 
 const gitRevisionPlugin = new GitRevisionPlugin()
 
+let gitCommitHash = process.env.GIT_COMMIT_HASH || process.env.DEPLOY_TAG,
+  gitBranch = process.env.GIT_BRANCH
+
+try {
+  gitCommitHash = gitRevisionPlugin.commithash()
+  gitBranch = gitRevisionPlugin.branch()
+} catch (e) {
+  /* No Git repo found  */
+}
+
 const isProduction = process.env.NODE_ENV === 'production'
 
 const config = {
@@ -110,8 +120,8 @@ const config = {
       DOCKER: false,
       ENABLE_GROWTH: false,
       IPFS_SWARM: '',
-      GIT_COMMIT_HASH: gitRevisionPlugin.commithash(),
-      GIT_BRANCH: gitRevisionPlugin.branch(),
+      GIT_COMMIT_HASH: gitCommitHash,
+      GIT_BRANCH: gitBranch,
       BUILD_TIMESTAMP: +new Date()
     })
   ],
