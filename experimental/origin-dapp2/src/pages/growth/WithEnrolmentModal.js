@@ -80,23 +80,26 @@ function withEnrolmentModal(WrappedComponent) {
         query: profileQuery
       })
 
-      const account_id = data.web3.metaMaskAccount.id
+      const account_id = data.web3.primaryAccount.id
 
       //TODO: delete this. Is just for demonstration purposes
       const delay = ms => new Promise(res => setTimeout(res, ms))
-      await delay(3000)
+      await delay(300)
       //TODO: end delete
 
-      const result = await this.props.client.mutate({
-        mutation: signMessageMutation,
-        variables: {
-          address: account_id,
-          // TODO: change version programatically
-          message: 'I accept the terms of growth campaign version: 1.0'
-        }
-      })
+      try {
+        const result = await this.props.client.mutate({
+          mutation: signMessageMutation,
+          variables: {
+            address: account_id,
+            // TODO: change version programatically
+            message: 'I accept the terms of growth campaign version: 1.0'
+          }
+        })
+      } catch (e) {
+        console.error('Error executing sign message mutation: ', e)
+      }
 
-      console.log('MUTATION RESULT', result)
       this.props.history.push('/campaigns')
     }
 
@@ -175,8 +178,8 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
-      const isRestricted = eligibility === 'Restricted'
-      const isForbidden = eligibility === 'Forbidden'
+      const isRestricted = eligibility === 'restricted'
+      const isForbidden = eligibility === 'forbidden'
 
       return (
         <div>
@@ -243,21 +246,22 @@ function withEnrolmentModal(WrappedComponent) {
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
-
+            
             const { countryName, eligibility } = data.isEligible
+            console.log("YOYO", countryName, eligibility)
             // const countryName = 'Canada'
             // const eligibility = 'Restricted'
             // const country = 'Saudi Arabia'
             // const eligibility = 'Forbidden'
 
             if (
-              eligibility === 'eligible' ||
-              (eligibility === 'restricted' && notCitizenConfirmed)
+              eligibility === 'Eligible' ||
+              (eligibility === 'Restricted' && notCitizenConfirmed)
             ) {
               return this.renderTermsModal()
             } else if (
-              eligibility === 'restricted' ||
-              eligibility === 'forbidden'
+              eligibility === 'Restricted' ||
+              eligibility === 'Forbidden'
             ) {
               return this.renderRestrictedModal(
                 countryName,

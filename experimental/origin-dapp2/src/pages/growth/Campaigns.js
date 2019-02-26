@@ -408,8 +408,9 @@ class GrowthCampaigns extends Component {
 
                   if (selectedCampaignId === null) {
                     const activeCampaign = campaigns.find(
-                      campaign => campaign.status === 'active'
+                      campaign => campaign.status === 'Active'
                     )
+
                     if (activeCampaign !== undefined) {
                       selectedCampaignId = activeCampaign.id
                     } else {

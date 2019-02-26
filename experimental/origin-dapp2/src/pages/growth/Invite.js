@@ -29,15 +29,18 @@ class GrowthInvite extends Component {
       showCopyConfirmation: false 
     }
 
+    this.inviteCode = `${location.protocol}//${location.hostname}/#/welcome/${this.state.inviteCode}`
+
     this.handleNavigationClick = this.handleNavigationClick.bind(this)
     this.renderSendInvites = this.renderSendInvites.bind(this)
     this.renderTrackInvites = this.renderTrackInvites.bind(this)
     this.handleCopyClick = this.handleCopyClick.bind(this)
+    this.handleFbShareClick = this.handleFbShareClick.bind(this)
   }
 
   handleCopyClick(e) {
     const inviteField = document.getElementById("growth-invite-text")
-    inviteField.value = `${location.protocol}//${location.hostname}/#/welcome/${this.state.inviteCode}`
+    inviteField.value = this.inviteCode
     inviteField.select()
     document.execCommand('copy');
     inviteField.value = `${this.state.inviteCode}`
@@ -50,6 +53,20 @@ class GrowthInvite extends Component {
 
   handleNavigationClick(navigationState) {
     this.setState({ subPage: navigationState })
+  }
+
+  handleFbShareClick() {
+    window.open([
+      'https://www.facebook.com/dialog/share?',
+      'app_id=87741124305', // TODO use origin's one
+      `&href=${this.inviteCode}`,
+      '&display=popup',
+      `&redirect_uri=${window.location.href}`
+    ].join(''))
+  }
+
+  handleFbShareClick() {
+    window.open('https://twitter.com/intent/tweet?text=')
   }
 
   renderSendInvites() {
@@ -88,7 +105,10 @@ class GrowthInvite extends Component {
           <div className="col-4 pl-4 pr-0">
             <div className="normal">Share or Tweet</div>
             <div className="d-flex mt-2">
-              <button className="social-btn fb">
+              <button
+                className="social-btn fb"
+                onClick={this.handleFbShareClick}
+              >
                 <img src="/images/growth/facebook-icon.svg" />
               </button>
               <button className="social-btn tw">
