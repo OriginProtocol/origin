@@ -21,7 +21,7 @@ describe('Search', () => {
         lastQuery = query
       }
 
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         resolve({
           hits: {
             hits: [],
