@@ -2,19 +2,21 @@ const web3 = require('web3')
 const OAuth = require('oauth').OAuth
 const dictionary = require('./dictionary')
 
-const twitterOAuth = new OAuth(
-  'https://api.twitter.com/oauth/request_token',
-  'https://api.twitter.com/oauth/access_token',
-  process.env.TWITTER_CONSUMER_KEY,
-  process.env.TWITTER_CONSUMER_SECRET,
-  '1.0',
-  getAbsoluteUrl('/redirects/twitter/'),
-  'HMAC-SHA1'
-)
+function twitterOAuth(dappRedirectUrl = null) {
+  return new OAuth(
+    'https://api.twitter.com/oauth/request_token',
+    'https://api.twitter.com/oauth/access_token',
+    process.env.TWITTER_CONSUMER_KEY,
+    process.env.TWITTER_CONSUMER_SECRET,
+    '1.0',
+    getAbsoluteUrl('/redirects/twitter/', dappRedirectUrl),
+    'HMAC-SHA1'
+  )
+}
 
-function getTwitterOAuthRequestToken() {
+function getTwitterOAuthRequestToken(dappRedirectUrl) {
   return new Promise((resolve, reject) => {
-    twitterOAuth.getOAuthRequestToken(function(
+    twitterOAuth(dappRedirectUrl).getOAuthRequestToken(function(
       error,
       oAuthToken,
       oAuthTokenSecret
@@ -34,7 +36,7 @@ function getTwitterOAuthAccessToken(
   oAuthVerifier
 ) {
   return new Promise((resolve, reject) => {
-    twitterOAuth.getOAuthAccessToken(
+    twitterOAuth().getOAuthAccessToken(
       oAuthToken,
       oAuthTokenSecret,
       oAuthVerifier,
@@ -51,7 +53,7 @@ function getTwitterOAuthAccessToken(
 
 function verifyTwitterCredentials(oAuthAccessToken, oAuthAccessTokenSecret) {
   return new Promise((resolve, reject) => {
-    twitterOAuth.get(
+    twitterOAuth().get(
       'https://api.twitter.com/1.1/account/verify_credentials.json',
       oAuthAccessToken,
       oAuthAccessTokenSecret,
@@ -89,9 +91,13 @@ function generateSixDigitCode() {
   return Math.floor(100000 + Math.random() * 900000)
 }
 
-function getAbsoluteUrl(relativeUrl) {
+function getAbsoluteUrl(relativeUrl, dappRedirectUrl = null) {
   const protocol = process.env.HTTPS ? 'https' : 'http'
-  return protocol + '://' + process.env.HOST + relativeUrl
+  let url = protocol + '://' + process.env.HOST + relativeUrl
+  if (dappRedirectUrl) {
+    url += '?dappRedirectUrl=' + dappRedirectUrl
+  }
+  return url
 }
 
 function mapObjectToQueryParams(obj) {
