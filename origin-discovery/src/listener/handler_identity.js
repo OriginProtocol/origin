@@ -266,6 +266,10 @@ class IdentityEventHandler {
   emailWebhookEnabled() {
     return true
   }
+
+  gcloudPubsubEnabled() {
+    return false
+  }
 }
 
 module.exports = IdentityEventHandler
