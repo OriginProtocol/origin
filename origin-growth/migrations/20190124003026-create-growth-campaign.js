@@ -6,14 +6,17 @@ const { GrowthCampaignRewardStatuses } = require('../src/enums')
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(tableName, {
+    await queryInterface.createTable(tableName, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      name_key: {
+        type: Sequelize.STRING
+      },
+      short_name_key: {
         type: Sequelize.STRING
       },
       rules: {
