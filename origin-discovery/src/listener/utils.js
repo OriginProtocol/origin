@@ -84,8 +84,8 @@ function checkEventsFreshness(events, blockInfo) {
  */
 async function withRetrys(fn, exitOnError = true) {
   let tryCount = 0
+  // eslint-disable-next-line no-constant-condition
   while (true) {
-    // eslint-disable-line no-constant-condition
     try {
       return await fn() // Do our action.
     } catch (e) {

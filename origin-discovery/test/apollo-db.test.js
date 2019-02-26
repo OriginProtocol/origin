@@ -110,7 +110,7 @@ describe('Listing DB methods', () => {
     it(`Should return older version if blockInfo lower than the listing's`, async () => {
       // BlockInfo block number is lower than listing's.
       let blockInfo = { blockNumber: 250, logIndex: 1 }
-      let listing = await getListing(listingId2, blockInfo)
+      const listing = await getListing(listingId2, blockInfo)
       expect(listing.id).to.equal(listingId2)
       expect(listing.blockInfo.blockNumber).to.equal(200)
 

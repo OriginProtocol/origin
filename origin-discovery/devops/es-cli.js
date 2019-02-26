@@ -274,6 +274,7 @@ async function waitForInput() {
   })
 }
 
+// eslint-disable-next-line no-extra-semi
 ;(async () => {
   if (process.argv[2] === 'createIndex' && process.argv.length === 4) {
     const indexName = process.argv[3]
