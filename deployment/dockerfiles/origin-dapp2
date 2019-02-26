@@ -1,13 +1,12 @@
-ARG DEPLOY_TAG=dev
+ARG GIT_COMMIT_HASH=dev
+ARG GIT_BRANCH=dev
 ARG NAMESPACE=dev
 
 FROM node:10 as build
 
 WORKDIR /app
 
-# The DEPLOY_TAG is to make the commit hash of the currently built version
-# available in the DApp info screen.
-ENV DEPLOY_TAG=$DEPLOY_TAG
+ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH GIT_BRANCH=$GIT_BRANCH
 
 # Copy the necessary files for building origin-dapp
 COPY package*.json ./
