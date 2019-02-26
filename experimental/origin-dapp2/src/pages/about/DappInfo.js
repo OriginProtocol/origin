@@ -4,6 +4,8 @@ import configQuery from 'queries/Config'
 import contractsQuery from 'queries/AllContracts'
 import PageTitle from 'components/PageTitle'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
+import dayjs from 'dayjs'
+import distanceToNow from 'utils/distanceToNow'
 
 const DAPP_VERSION = require('../../../package.json').version
 
@@ -41,155 +43,189 @@ function totalSupply(supply, decimals) {
   return supplyBN.div(decimalsBN).toString()
 }
 
-const DappInfo = () => (
-  <div className="container about-info">
-    <PageTitle>About DApp</PageTitle>
-    <h1>About DApp</h1>
-    <p>
-      Developer information about this DApp&#39;s current build and
-      configuration.
-    </p>
-    <div className="row">
-      <section className="col-lg-6">
-        <table className="config-table">
-          {sectionThead({ title: 'DApp' })}
-          <tbody>
-            {dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}
-            <Query query={growthEligibilityQuery}>
-              {({ networkStatus, error, loading, data }) => {
-                if (networkStatus === 1 || loading) {
-                  return dataTr({
-                    key: 'Detected country',
-                    value: 'Loading...'
-                  })
-                } else if (error) {
-                  return dataTr({
-                    key: 'Detected country',
-                    value: 'Error fetching country'
-                  })
-                }
+const DappInfo = () => {
+  const gitHash = (
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      href={`https://github.com/OriginProtocol/origin/commit/${
+        process.env.GIT_COMMIT_HASH
+      }`}
+    >
+      {process.env.GIT_COMMIT_HASH}
+    </a>
+  )
+  const buildTimestamp = process.env.BUILD_TIMESTAMP
+  let buildTime
+  if (buildTimestamp) {
+    buildTime = dayjs(buildTimestamp).format('YYYY-MM-DD H:mma')
+    buildTime += ` (${distanceToNow(buildTimestamp / 1000)} ago)`
+  }
 
-                const { countryName, eligibility } = data.isEligible
-                return (
-                  <Fragment>
-                    {dataTr({ key: 'Detected country', value: countryName })}
-                    {dataTr({
-                      key: 'Growth eligibility: ',
-                      value: eligibility
+  return (
+    <div className="container about-info">
+      <PageTitle>About DApp</PageTitle>
+      <h1>About DApp</h1>
+      <p>
+        Developer information about this DApp&#39;s current build and
+        configuration.
+      </p>
+      <div className="row">
+        <section className="col-lg-6">
+          <table className="config-table">
+            {sectionThead({ title: 'DApp' })}
+            <tbody>
+              {dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}
+              {buildTimestamp
+                ? dataTr({
+                    key: 'Build time',
+                    value: buildTime
+                  })
+                : null}
+              {dataTr({
+                key: 'Git Commit Hash',
+                value: gitHash
+              })}
+              {dataTr({
+                key: 'Git Branch',
+                value: process.env.GIT_BRANCH
+              })}
+              <Query query={growthEligibilityQuery}>
+                {({ networkStatus, error, loading, data }) => {
+                  if (networkStatus === 1 || loading) {
+                    return dataTr({
+                      key: 'Detected country',
+                      value: 'Loading...'
+                    })
+                  } else if (error) {
+                    return dataTr({
+                      key: 'Detected country',
+                      value: 'Error fetching country'
+                    })
+                  }
+
+                  const { countryName, eligibility } = data.isEligible
+                  return (
+                    <Fragment>
+                      {dataTr({ key: 'Detected country', value: countryName })}
+                      {dataTr({
+                        key: 'Growth eligibility: ',
+                        value: eligibility
+                      })}
+                    </Fragment>
+                  )
+                }}
+              </Query>
+            </tbody>
+          </table>
+
+          <Query query={configQuery} notifyOnNetworkStatusChange={true}>
+            {({ error, data, networkStatus }) => {
+              if (networkStatus === 1) {
+                return <p>Loading...</p>
+              } else if (error) {
+                return <p>Error :(</p>
+              }
+              return (
+                <table className="config-table">
+                  {sectionThead({ title: 'Origin GraphQL' })}
+                  <tbody>
+                    {dataTr({ key: 'network', value: data.config })}
+                    {Object.entries(data.configObj).map(entry => {
+                      const [key, value] = entry
+                      if (key == '__typename') {
+                        return
+                      }
+                      return dataTr({ key, value })
                     })}
-                  </Fragment>
-                )
-              }}
-            </Query>
-          </tbody>
-        </table>
+                  </tbody>
+                </table>
+              )
+            }}
+          </Query>
+        </section>
 
-        <Query query={configQuery} notifyOnNetworkStatusChange={true}>
+        <Query query={contractsQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus }) => {
+            const marketplaces = data.marketplaces || []
+            const tokens = data.tokens || []
             if (networkStatus === 1) {
               return <p>Loading...</p>
             } else if (error) {
-              return <p>Error :(</p>
+              return <p>Loading...</p>
             }
             return (
-              <table className="config-table">
-                {sectionThead({ title: 'Origin GraphQL' })}
-                <tbody>
-                  {dataTr({ key: 'network', value: data.config })}
-                  {Object.entries(data.configObj).map(entry => {
-                    const [key, value] = entry
-                    if (key == '__typename') {
-                      return
-                    }
-                    return dataTr({ key, value })
-                  })}
-                </tbody>
-              </table>
+              <section className="col-lg-6">
+                <table className="config-table">
+                  <thead>
+                    <tr>
+                      <th colSpan="5">
+                        <h3>Marketplace Contracts</h3>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>Version</th>
+                      <th>Listings</th>
+                      <th>Token</th>
+                      <th>Address</th>
+                      <th>Owner</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {marketplaces.map(m => (
+                      <tr key={m.address}>
+                        <td>{m.version}</td>
+                        <td>{m.totalListings}</td>
+                        <td>
+                          <Address address={m.token} />
+                        </td>
+                        <td>
+                          <Address address={m.address} />
+                        </td>
+                        <td>
+                          <Address address={m.owner.id} />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <table className="config-table">
+                  <thead>
+                    <tr>
+                      <th colSpan="5">
+                        <h3>Token Contracts</h3>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Name</th>
+                      <th>Address</th>
+                      <th>Decimals</th>
+                      <th>Supply</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tokens.map(m => (
+                      <tr key={m.id}>
+                        <td>{m.symbol}</td>
+                        <td>{m.name}</td>
+                        <td>
+                          <Address address={m.address} />
+                        </td>
+                        <td>{m.decimals}</td>
+                        <td>{totalSupply(m.totalSupply, m.decimals)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </section>
             )
           }}
         </Query>
-      </section>
-
-      <Query query={contractsQuery} notifyOnNetworkStatusChange={true}>
-        {({ error, data, networkStatus }) => {
-          const marketplaces = data.marketplaces || []
-          const tokens = data.tokens || []
-          if (networkStatus === 1) {
-            return <p>Loading...</p>
-          } else if (error) {
-            return <p>Loading...</p>
-          }
-          return (
-            <section className="col-lg-6">
-              <table className="config-table">
-                <thead>
-                  <tr>
-                    <th colSpan="5">
-                      <h3>Marketplace Contracts</h3>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th>Version</th>
-                    <th>Listings</th>
-                    <th>Token</th>
-                    <th>Address</th>
-                    <th>Owner</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {marketplaces.map(m => (
-                    <tr key={m.address}>
-                      <td>{m.version}</td>
-                      <td>{m.totalListings}</td>
-                      <td>
-                        <Address address={m.token} />
-                      </td>
-                      <td>
-                        <Address address={m.address} />
-                      </td>
-                      <td>
-                        <Address address={m.owner.id} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <table className="config-table">
-                <thead>
-                  <tr>
-                    <th colSpan="5">
-                      <h3>Token Contracts</h3>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th>Symbol</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Decimals</th>
-                    <th>Supply</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tokens.map(m => (
-                    <tr key={m.id}>
-                      <td>{m.symbol}</td>
-                      <td>{m.name}</td>
-                      <td>
-                        <Address address={m.address} />
-                      </td>
-                      <td>{m.decimals}</td>
-                      <td>{totalSupply(m.totalSupply, m.decimals)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </section>
-          )
-        }}
-      </Query>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 require('react-styl')(`
   .about-info
