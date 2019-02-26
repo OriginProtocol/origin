@@ -138,7 +138,7 @@ class Onboarding extends Component {
       }, 60 * ONE_SECOND)
     }
 
-    const supportAccount = this.props.messagingRequired
+    const supportAccount = process.env.MESSAGING_ACCOUNT
     const welcomeAccountEnabled = supportAccount &&
       formattedAddress(supportAccount) !== formattedAddress(wallet.address)
 
